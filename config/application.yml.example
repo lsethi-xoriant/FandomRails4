@@ -1,0 +1,9 @@
+GOOGLE_ANALYTICS: <codice>
+APP_EMAIL: <app@email.it>
+APP_PASSWORD: <password>
+APP_EMAIL_ACCOUNT: <account>
+APP_EMAIL_IP: <IP>
+FACEBOOK_APP_ID: <app_fb_id>
+FACEBOOK_APP_SECRET: <app_fb_secret>
+TWITTER_APP_ID: <app_tw_id>
+TWITTER_APP_SECRET: <app_tw_secret>

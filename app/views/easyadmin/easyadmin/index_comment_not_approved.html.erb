@@ -1,0 +1,69 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "comment" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1><%= "Property #{ @current_prop.name }" if @current_prop %></h1>
+    </div> <!-- #content-header --> 
+
+
+    <div id="content-container">
+
+	<ul class="nav nav-tabs">
+	  <li><a href="/easyadmin/comment/toapproved/<%= "#{ @current_prop.id }" if @current_prop %>">Commenti da approvare</a></li>
+	  <li ><a href="/easyadmin/comment/approved/<%= "#{ @current_prop.id }" if @current_prop %>">Commenti pubblicati</a></li>
+	  <li class="active"><a href="/easyadmin/comment/notapproved/<%= "#{ @current_prop.id }" if @current_prop %>">Commenti oscurati</a></li>
+	</ul>
+
+    <h3>Commenti oscurati</h3>
+    <hr/>
+
+    <div class="row">
+		<div class="col-md-12"> 
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Utente</th>
+						<th>Testo</th>
+						<th>Scritto il</th>
+						<th>Azioni</th>
+					</tr>
+				</thead>
+				<% @comment_not_approved.each do |c| %>
+					<tr>
+						<td><%= c.user ? c.user.id : "Anonimo" %></td>
+						<td><%= c.text %></td>
+						<td><%= c.created_at %></td>
+						<td id="comment-<%= c.id %>">
+							<button type="button" class="btn btn-default btn-xs" onclick="updateComment('pub', <%= c.id %>)">Pubblica</button>					
+						</td>
+					</tr>
+				<% end %>
+			</table>
+		</div>
+	</div>
+
+	<div class="row cta-to-show">
+		<div class="col-md-12">
+			<%= render partial: "pagination" %>
+		</div>
+	</div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+	function updateComment(pub_or_hide, comment_id) {
+		$.ajax({
+            type: "POST",
+            url: "/easyadmin/comment/" + comment_id + "/update",
+            data: { "pub_or_hide": pub_or_hide },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+            	$("#comment-" + comment_id).html(pub_or_hide);
+            }
+        });
+	}
+</script>

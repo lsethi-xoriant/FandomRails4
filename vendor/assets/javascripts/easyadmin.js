@@ -1,0 +1,11 @@
+//= require jquery
+//= require jquery_ujs
+//= require bootstrap
+//= require bootstrap-notify
+//= require easyadmin/jquery-ui-1.9.2.custom.min
+//= require easyadmin/jquery.icheck.min
+//= require easyadmin/bootstrap-datepicker
+//= require easyadmin/bootstrap-timepicker
+//= require easyadmin/select2.min
+//= require easyadmin/bootstrap-fileupload.min
+//= require easyadmin/app

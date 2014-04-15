@@ -1,0 +1,101 @@
+<div id="fb-root"></div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body profile-badge">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div class="row">
+          <div class="col-sm-8 col-sm-offset-2 text-center">
+            <img id="badge-image-modal" src="" alt="">
+            <h4 class="text-center" id="badge-name-modal"></h4>
+            <p id="badge-description-modal"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-sm-8 col-sm-offset-2 text-center">
+            <a class="btn btn-default btn-md" href="#"><span class="glyphicon glyphicon-share"></span> Share - TODO</a>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<%= render partial: "/application/user_bar" %>
+
+<div class="container">
+  
+  <div class="row" style="margin-top: 1.5em;">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading profile-heading">
+          <%= render partial: "profile/profile_header" %>
+        </div>
+        <div class="panel-body profile-body">
+          <%= render partial: "profile/profile_navbar", locals: { page: "badges" } %>
+          
+            <% Property.active.each do |p| %>
+              <% ru = current_user.rewarding_users.find_by_property_id(p.id) %>
+
+	          <div class="row">
+	            <div class="col-md-12">
+	              <div id="livelli">
+	                <div class="page-header">
+	                  <h2><%= p.name.upcase %> - Badges <small><%= "#{ ru ? ru.user_badges.count : 0 }/#{ p.badges.count } " %></small></h2>
+	                </div>
+	              </div>
+	            </div>
+	          </div>
+
+	          <div class="row badges text-center">
+	          	<% p.badges.each do |b| %>
+		            <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
+		              <img class="img-responsive badge-image <%= "not-yours" unless ru && ru.user_badges && ru.user_badges.find_by_badge_id(b.id) %>" src="<%= b.image(:thumb) %>" alt="<%= b.name %> img">
+		              <p><small class="badge-name"><%= b.name %></small></p>
+		              <p class="hidden badge-description"><%= b.description %></p>
+		              <p><a href="#" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal" onclick="updateModal(this)">vedi</a></p>
+		            </div>
+	            <% end %>
+	            <!--
+	            <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
+	              <img class="img-responsive not-yours" src="https://playfoursquare.s3.amazonaws.com/badge/200/AEZQ4XA2JMKAE4D5.png" alt="...">
+	              <p><small>Lorem ipsum dolor sit amet</small></p>
+	              <p><a href="#" class="btn btn-default btn-sm" role="button">details</a></p>
+	            </div>
+	            <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
+	              <img class="img-responsive" src="https://playfoursquare.s3.amazonaws.com/badge/200/AEZQ4XA2JMKAE4D5.png" alt="...">
+	              <p><small>Lorem ipsum dolor sit amet</small></p>
+	              <p><a href="#" class="btn btn-default btn-sm" role="button">details</a></p>
+	            </div>
+	            <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
+	              <img class="img-responsive not-yours" src="https://playfoursquare.s3.amazonaws.com/badge/200/bookworm.png" alt="...">
+	              <p><small>Lorem ipsum dolor sit amet</small></p>
+	              <p><a href="#" class="btn btn-default btn-sm" role="button">details</a></p>
+	            </div>
+	            -->
+	          </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer class="bs-footer" role="contentinfo" style="padding-bottom: 1.5em;">
+  <div class="jumbotron bkg-topbar" style="margin-bottom: 0">
+    <div class="container">
+        <p>Copyright </p>
+    </div>
+  </div>
+</footer>
+
+<script type="text/javascript">
+	function updateModal(e) {
+		$("#badge-name-modal").html($(e).parent().parent().find(".badge-name").html());
+		$("#badge-description-modal").html($(e).parent().parent().find(".badge-description").html());
+		$("#badge-image-modal").attr("src", $(e).parent().parent().find(".badge-image").attr("src"));
+	}
+</script>
+        

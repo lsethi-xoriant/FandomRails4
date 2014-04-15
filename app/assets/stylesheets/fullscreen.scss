@@ -1,0 +1,141 @@
+// Cta fullscreen
+
+.btn-fs { background-color: transparent; border: 2px solid; }
+
+.got {
+    text-indent: -9000px;
+    width: 160px;
+    height:45px;
+    background: image-url('got-logo2.png') no-repeat center 8px; 
+    background-size: 100%;
+  }
+
+.navbar-fullscreen {
+  background: #000;
+  border: none; 
+  .form-control {
+    background: #333;
+    border-color: #666;
+    color: #fff;
+    opacity: 0.8;
+    &:focus {
+      opacity: 1;
+      border-color: #fff;
+      background: #fff;
+      color: #666;
+    }
+  }
+  
+  .navbar-fixed-bottom {
+    padding-bottom: 1em;
+  }
+}
+.fullscreen-canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #222;
+
+  .fullscreen {
+    height: 100%;
+    margin-bottom: 0;
+    .carousel-inner {
+      height: 100%;
+      .item {
+        height: 100%;
+        .overvideo {
+          height: 100%;
+          .overvideo-canvas {
+            min-height: 100%; 
+            width: 60%; 
+            margin: 0 auto;
+            h4.lead {
+              font-size: 3em;
+              margin-bottom: 1em;
+            }
+          }
+        }
+      }
+    }
+  }
+  .overvideo.cta{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+    .overvideo-canvas {
+      min-height: 100%; 
+      width: 100%; 
+      margin: 0 auto;
+      .overvideo-content {
+        padding: 1em 3em;
+        h4.lead {
+          color: #fff;
+          font-size: 1.5em;
+          margin-bottom: 0.2em;
+        }
+      }
+      .overvideo-content.interactions {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        left: 0;
+        right: 0;
+        width: 60%;
+        height: 60%;
+        h2 {
+          color: #fff;
+          margin: 1em 0;
+        }
+      }
+    }
+    .close-cta {
+      position: absolute;
+      right: 0;
+      top: 1em;
+      color: #fff;
+      font-size: 1.3em;
+    }
+  }
+  .flex-video {
+    padding-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 55%;
+  }
+  &.description {
+    top: 100%;
+    height: auto;
+    background: #f4f4f4;
+    .overvideo-content.desc-comments {
+      padding: 3em 0;
+      &#desc {
+        background: #fff;
+      }
+    }
+  }
+}
+.fullscreen-matrix {
+  .logo a{
+    text-indent: -9999px;
+    background: url("http://upload.wikimedia.org/wikipedia/commons/2/2e/Game_of_Thrones_2011_logo.svg") no-repeat center center;
+    background-size: 100%;
+    width: 200px;
+    height: 60px;
+    display: block;
+    margin: 2em auto;
+
+  }
+  .tpl-l-img {
+    .panel-body {
+      .cta-img {
+        min-height: 200px;
+        &.only {
+          min-height: 250px;
+        }
+      }
+    }
+  }
+}

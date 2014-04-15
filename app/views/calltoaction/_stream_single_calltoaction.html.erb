@@ -1,0 +1,44 @@
+<% inter_quiz_points = prop_cta.interactions.sum("points") %>
+<% user_inter_done = calltoaction_done? prop_cta %>
+<div class="panel panel-default tpl-l-img">
+	<div class="panel-body background-image">
+	  <div class="row" style="position:relative">
+	    <div class="points">
+	      <h3><span class="label label-warning"><%= inter_quiz_points %> <span class="glyphicon glyphicon-star"></span></span></h3>
+	    </div>
+	    <div class="col-md-5" style="height:250px; background: url('<%= prop_cta.image.url %>') center center no-repeat; background-size: cover;">
+	      <h5 class="visible-xs" style="color: #fff; position: absolute; bottom: 15px;"><span class="glyphicon glyphicon-fire"></span></h5>
+	    </div>
+	    <div class="col-md-7">
+	      <div class="panel panel-default cta-content">
+	        <!-- Default panel contents -->
+	        <div class="panel-heading visible-lg visible-md">
+	          <h5 class="text-muted visible-md visible-lg"><span class=""></span>&nbsp;&nbsp;</h5>
+	        </div>
+	        <div class="panel-body">
+	          <h3><%= prop_cta.title %></h3>
+	          
+	          <div class="row">
+	            <div class="col-md-5">
+	              <p><a href="/<%= prop_cta.property.slug %>/<%= prop_cta.slug %>" class="btn btn-lg btn-block <%= user_inter_done ? "btn-success" : "btn-primary" %>" role="button">Gioca</a></p>
+	            </div>
+	          </div>
+	        </div>
+	        <!-- List group -->
+	        <div class="panel-footer text-muted">
+	          <div class="row">
+	            <div class="col-md-6 col-xs-6">
+	              <span><%= prop_cta.activated_at %></span>
+	            </div>
+	            <div class="col-md-6 col-xs-6 text-right">
+	              
+	                <!--<span class="glyphicon glyphicon-comment"></span> 10 &nbsp;&nbsp;--> <span class="glyphicon glyphicon-thumbs-up"></span> <%= (inter_like = prop_cta.interactions.find_by_resource_type("Like")) ? inter_like.cache_counter : 0 %>
+	              
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</div>

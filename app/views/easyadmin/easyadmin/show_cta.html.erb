@@ -1,0 +1,221 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "calltoaction" } %>
+
+<div id="content">   
+
+  <div id="content-header">
+    <h1>CALLTOACTION INFO</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <% if flash[:notice] %>
+      <div class="row">
+        <div class="col-md-12"> 
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <h3>Dati generali</h3>
+    <hr/>
+    
+    <div class="row">
+      <div class="col-sm-5">
+          <dl class="dl-horizontal">
+            <dt>Nome</dt><dd><p><%= @current_cta.title %></p></dd>
+            <dt>Property</dt><dd><p><%= @current_cta.property.name %></p></dd>
+
+            <dt>Disqus</dt><dd><p><%= @current_cta.enable_disqus ? "abilitato" : "non abilitato" %></p></dd>
+
+            <% unless @current_cta.video_url.blank? %>
+            	<dt>Video</dt><dd><p><%= @current_cta.video_url %></p></dd>
+            <% end %>
+
+            <% unless @tag_list.blank? %>
+            	<dt>Tag</dt><dd><p><%= @tag_list %></p></dd>
+            <% end %>
+
+          </dl>
+      </div>
+      <div class="col-sm-3">
+      	<img class="img-responsive" src="<%= @current_cta.image.url %>" style="border: 1px solid black; border-radius: 10px;">
+      </div>
+    </div> 
+
+    <div class="row">
+      <% play_inter = @current_cta.interactions.find_by_resource_type("Play") %>
+      <% if play_inter %>
+        <div class="col-md-2 col-sm-6">
+            <div class="dashboard-stat tertiary">
+              <div class="details">
+                <span class="content">PLAY</span>
+                <span class="value"><%= play_inter.cache_counter %></span>
+              </div> <!-- /.details -->
+            </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+      <% end %>
+      <% like_inter = @current_cta.interactions.find_by_resource_type("Like") %>
+      <% if like_inter %>
+        <div class="col-md-2 col-sm-6">
+            <div class="dashboard-stat tertiary">
+              <div class="details">
+                <span class="content">LIKE</span>
+                <span class="value"><%= like_inter.cache_counter %></span>
+              </div> <!-- /.details -->
+            </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+      <% end %>
+      <% share_inter = @current_cta.interactions.find_all_by_resource_type("Share") %>
+      <% share_inter.each do |s| %>
+        <div class="col-md-2 col-sm-6">
+            <div class="dashboard-stat tertiary">
+              <div class="details">
+                <span class="content">SHARE <%= s.resource.share_type %></span>
+                <span class="value"><%= s.cache_counter %></span>
+              </div> <!-- /.details -->
+            </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+      <% end %>
+    </div>
+
+    <h3>QUIZ</h3>
+    <hr/>
+
+    <% @current_cta.interactions.where("resource_type='Quiz'").each do |q| %>
+    	<% if q.resource.quiz_type == "TRIVIA" %>
+		    <div class="row">
+		      <div class="col-lg-4">
+		          <dl class="dl-horizontal">
+		            <dt>Domanda</dt><dd><p><%= q.resource.question %></p></dd>
+		            <dt>Punti</dt><dd><p><%= q.points %></p></dd>
+		            <dt>Punti risposta corretta</dt><dd><p><%= q.added_points %></p></dd>
+		            <dt>Tipologia</dt><dd><p><%= q.when_show_interaction %></p></dd>
+		            <dt>Secondo di apparizione</dt><dd><p><%= q.seconds %></p></dd>
+		            <dt>Risposte corrette</dt><dd><p><%= q.resource.cache_correct_answer %></p></dd>
+		            <dt>Risposte errate</dt><dd><p><%= q.resource.cache_wrong_answer %></p></dd>
+		          </dl>
+		      </div>
+		      <div class="col-lg-4">
+		      	<dl class="dl-horizontal">
+		      		<% q.resource.answers.each do |a| %>
+			            <dt>Risposta</dt><dd><p><%= a.text %> (<%= a.userinteractions.count %>) <%= "<i class=\"fa fa-check\"></i>".html_safe if a.correct %></p></dd>		        
+		        	<% end %> 
+		        </dl>
+		      </div>
+		      <div class="col-lg-3">
+			        <div class="portlet">
+			          <div class="portlet-header">
+			            <h3>
+			              <i class="fa fa-bar-chart-o"></i>
+			              RISPOSTE
+			            </h3>
+			          </div> <!-- /.portlet-header -->
+			          <div class="portlet-content">
+			            <div id="reg-donut-chart-<%= q.id %>" class="chart-holder"></div>             
+			          </div> <!-- /.portlet-content -->
+			        </div> <!-- /.portlet -->
+		      </div>
+		    </div> 
+		    <hr/>
+	    <% end %>
+    <% end %>
+
+    <h3>VERSUS</h3>
+    <hr/>
+
+    <% @current_cta.interactions.where("resource_type='Quiz'").each do |q| %>
+    	<% if q.resource.quiz_type == "VERSUS" %>
+		    <div class="row">
+		      <div class="col-lg-4">
+		          <dl class="dl-horizontal">
+		            <dt>Domanda</dt><dd><p><%= q.resource.question %></p></dd>
+		            <dt>Punti</dt><dd><p><%= q.points %></p></dd>
+		            <dt>Tipologia</dt><dd><p><%= q.when_show_interaction %></p></dd>
+		            <dt>Secondo di apparizione</dt><dd><p><%= q.seconds %></p></dd>
+		          </dl>
+		      </div>
+		      <div class="col-lg-4">
+		      	<dl class="dl-horizontal">
+		      		<% q.resource.answers.each do |a| %>
+			            <dt>Risposta</dt>
+			            	<dd>
+			            		<p><%= a.text %> (<%= a.userinteractions.count %>)</p>
+			            		<p><img src="<%= a.image.url %>" style="width: 100px; border: 1px solid black; border-radius: 10px;"></p>
+			            	</dd>		        
+		        	<% end %> 
+		        </dl>
+		      </div>
+          <div class="col-lg-3">
+              <div class="portlet">
+                <div class="portlet-header">
+                  <h3>
+                    <i class="fa fa-bar-chart-o"></i>
+                    RISPOSTE
+                  </h3>
+                </div> <!-- /.portlet-header -->
+                <div class="portlet-content">
+                  <div id="reg-donut-chart-<%= q.id %>" class="chart-holder"></div>             
+                </div> <!-- /.portlet-content -->
+              </div> <!-- /.portlet -->
+          </div>
+		    </div> 
+		    <hr/>
+	    <% end %>
+    <% end %>
+
+  </div>
+
+</div>
+
+<script src="/canvas-admin/js/libs/raphael-2.1.2.min.js"></script>
+<script src="/canvas-admin/js/plugins/morris/morris.min.js"></script>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    buildTriviaDonut();
+    buildVersusDonut();
+  });
+
+  function buildTriviaDonut() {
+    trivia_answer = <%= raw(@trivia_answer.to_json) %>;
+    $.each(trivia_answer, function(key, value) {
+      Morris.Donut({
+            element: "reg-donut-chart-" + key,
+            data: [
+                { label: 'Risposte corrette', value: value["answer_correct"]},
+                { label: 'Risposte errate', value: value["answer_wrong"] }
+            ],
+            hideHover: true,
+            formatter: function (y) { return y + "%" }
+      });
+    });
+  }
+
+  function buildVersusDonut() {
+    versus_answer = <%= raw(@versus_answer.to_json) %>;
+
+    $.each(versus_answer, function(key, value) {
+
+      versus_arr = [];
+      $.each(value, function(k2, v2) {
+        versus_arr.push({
+          label: v2.answer,
+          value: v2.perc
+        });
+      });
+
+      Morris.Donut({
+            element: "reg-donut-chart-" + key,
+            data: versus_arr,
+            hideHover: true,
+            formatter: function (y) { return y + "%" }
+      });
+
+    });
+  }
+</script>

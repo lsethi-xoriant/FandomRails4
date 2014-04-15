@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+      <p>Complimenti!</p> 
+      <p>Hai vinto <%= @price %> partecipando al concorso Amadorabili Chef!</p> 
+
+      <% if @cooking_class %>
+        <p>Bruno Barbieri ti aspetta!<br/>Presto ti invieremo i dettagli sulla data e sul luogo in cui sarà svolta la Cooking Class.</p>
+      <% end %>
+
+      <p>Per convalidare la tua vincita, dovrai  spedire esclusivamente via e-mail, entro e non oltre 7 giorni dalla comunicazione della vincita, la seguente documentazione:
+        <ul>
+          <li>La scansione di un tuo documento d’identità valido (fronte – retro)</li>
+          <li>Indicare all’interno dell’e-mail i dati necessari per la consegna del premio (Nome, Cognome, Indirizzo, CAP, Città, Provincia, Campanello/Recapito, Numero di cellulare  da contattare per la consegna del premio)</li>
+        </ul>
+      </p>  
+
+      <p>All’indirizzo e-mail:<br/>infoconcorsi@ictlabs.it</p>
+      <p>Cordiali saluti,<br/>lo staff Amadori</p>
+
+
+  </body>
+</html>

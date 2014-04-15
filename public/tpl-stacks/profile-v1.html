@@ -1,0 +1,388 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>fandom bootstrap</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:css(.tmp) styles/main.css -->
+  <link href="/assets/application.css" media="all" rel="stylesheet" type="text/css" />
+  <script src="/assets/application.js" type="text/javascript"></script>
+
+    </head>
+    <body style="padding-bottom: 0;">
+        <!--[if lt IE 10]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <header class="navbar navbar-default navbar-fixed-top background-color: #eee;" role="navigation">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a href="../" class="navbar-brand"><span class="glyphicon glyphicon-tower"></span> Fandom</a>-->
+            </div>
+            <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+              <ul class="nav navbar-nav">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="stream-v1.html">Stream (gioca 1)</a></li>
+                    <li><a href="stream-v2.html">Stream (gioca 2)</a></li>
+                    <li><a href="stream-v3.html">Stream (gioca 3)</a></li>
+                    <li><a href="stream-v4.html">Stream (gioca 4)</a></li>
+                    <li class="divider"></li>
+                    <li><a href="premi.html">Premi</a></li>
+                    <li><a href="browse.html">Sfoglia</a></li>
+                    <li class="divider"></li>
+                    <li><a href="cta-quiz.html">Cta Quiz</a></li>
+                    <li><a href="cta-quiz-over.html">Cta Quiz Over</a></li>
+                    <li><a href="cta-versus.html">Cta Versus</a></li>
+                    <li><a href="cta-versus-over.html">Cta Versus Over</a></li>
+                  </ul>
+                </li> 
+                <li><a href="browse.html"><span class="glyphicon glyphicon-search"> </span> Sfoglia</a></li> 
+              </ul>
+              <!--<form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search">
+                </div>
+              </form>-->
+              
+              <ul class="nav navbar-nav navbar-right">
+                <!--<li>
+                  <h5 class="no-margin">7 Biglietti <button class="btn btn-danger btn-sm">Gioca!</button></h5>
+                </li>-->
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-default">2</span></a>
+                  <ul class="dropdown-menu">
+                    <li role="presentation" class="dropdown-header">Notifiche</li>
+                    <li role="presentation" class="divider"></li>
+                    <li class="container-fluid">
+                      <div class="row" style="width: 300px">
+                        <div class="col-xs-3"><img src="http://placehold.it/50x50"></div>
+                        <div class="col-xs-9"><a href="#">Hai guadagnato un nuovo badge!</a></div>
+                      </div>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li class="container-fluid">
+                      <div class="row" style="width: 300px">
+                        <div class="col-xs-3"><img src="http://placehold.it/50x50"></div>
+                        <div class="col-xs-9"><a href="#">Hai guadagnato un nuovo badge!</a></div>
+                      </div>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li><a href="#" class="text-center">Vai alle notifiche</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href=""><span class="label label-warning">7 <span class="glyphicon glyphicon-star"></span></span> Gioca Subito</a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Profile <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="profile-account.html">Account</a></li>
+                    <li class="divider"></li>
+                    <li><a href="profile-livelli.html">Livelli</a></li>
+                    <li><a href="profile-livelli-boxato.html">Livelli boxato</a></li>
+                    <li class="divider"></li>
+                    <li><a href="profile-badges.html">Badges</a></li>
+                    <li class="divider"></li>
+                    <li><a href="profile-premi.html">Miei premi (modal normale)</a></li>
+                    <li><a href="profile-premi-boxato.html">Miei premi boxato</a></li>
+                    <li><a href="profile-premi-vinto.html">Miei premi (modal vinto)</a></li>
+                    <li><a href="profile-premi-novinto.html">Miei premi (modal no vinto)</a></li>
+                    <li class="divider"></li>
+                    <li><a href="profile-classifica.html">Classifica</a></li>
+                    <li><a href="profile-classifica-punteggio.html">Classifica (punteggio)</a></li>
+                    <li class="divider"></li>
+                    <li><a href="profile-notifiche.html">Notifiche</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Logout</a></li>
+                  </ul>
+                </li>
+
+              </ul>
+            </nav>
+          </div>
+        </header>
+        
+        <!-- 
+        <ul class="dropdown-menu">
+          <li><a href="#"><h5>Prima categoria</h5></a></li>
+          <li><a href="#">prima tag</a></li>
+          <li><a href="#">seconda tag</a></li>
+          <li><a href="#">terza tag</a></li>
+          <li class="divider"></li>
+          <li><a href="#"><h5>Prima categoria</h5></a></li>
+          <li><a href="#">prima tag</a></li>
+          <li><a href="#">seconda tag</a></li>
+          <li><a href="#">terza tag</a></li>
+        </ul>
+        -->
+        
+
+        <div class="container">
+          
+          <div class="row" style="margin-top: 1.5em;">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="col-md-4 col-sm-4 col-xs-4">
+                      <img src="http://www.standard.co.uk/panewsfeeds/article8640978.ece/ALTERNATES/w460/Police+said+a+man+has+admitted+making+threats+to+kill+Prince+Harry.jpg" alt="..." class="img-circle img-responsive" style="max-width: 100px;">
+                      </div>
+                      <div class="col-md-8 col-sm-8 col-xs-8">
+                        <h4>Nome utente</h4>
+                        <p>email@email.com</p>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-md-4 col-sm-4 text-center">
+                          <h5>Livello</h5>
+                          <img src="http://placehold.it/300x300" width="48" class="img-circle">
+                        </div>
+                        <div class="col-md-4 col-sm-4 text-center">
+                          <h5>Punti</h5>
+                          <h3>23453</h3>
+                        </div>
+                        <div class="col-md-4 col-sm-4 text-center">
+                          <h5>Classifica</h5>
+                          <h3>#123</h3>
+                        </div>
+                      </div>
+                    </div>     
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <ul class="nav nav-pills">
+                        <li class="active"><a href="#">Liveli</a></li>
+                        <li><a href="#">Badges</a></li>
+                        <li><a href="#">Miei premi</a></li>
+                      </ul>
+                    <div class="col-md-12">
+                      <div id="livelli">
+                        <div class="page-header">
+                          <h2>Livelli <small>2/3</small></h2>
+                        </div>
+                      </div>
+                        <div class="row">
+                          <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail text-center">
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                  <span class="sr-only">40% Complete (success)</span>
+                                </div>
+                              </div>
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300" width="60%" alt="...">
+                              <div class="caption">
+                                <p>Lorem ipsum dolor sit amet</p>
+                                <p><a href="#" class="btn btn-default" role="button">details</a></p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail text-center">
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                  <span class="sr-only">40% Complete (success)</span>
+                                </div>
+                              </div>
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300" width="60%" alt="...">
+                              <div class="caption">
+                                <p>Lorem ipsum dolor sit amet</p>
+                                <p><a href="#" class="btn btn-default" role="button">details</a></p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail text-center">
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                  <span class="sr-only">40% Complete (success)</span>
+                                </div>
+                              </div>
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300" width="60%" alt="...">
+                              <div class="caption">
+                                <p>Lorem ipsum dolor sit amet</p>
+                                <p><a href="#" class="btn btn-default" role="button">details</a></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      <!--
+                      <ul class="nav nav-tabs">
+                        <li class="active"><a href="#">Livelli</a></li>
+                        <li><a href="#">Badges</a></li>
+                        <li><a href="#">Premi <span class="badge">2</span></a></li>
+                        <li><a href="#">Classifica</a></li>
+                      </ul>-->
+                      <div class="anchor" id="badges">
+                        <div class="page-header" >
+                          <h2>Badges <small>1/4</small><span class="badge pull-right">2</span></h2>
+                        </div>
+                      </div>
+                      <div class="row text-center">
+                        <div class="col-xs-6 col-sm-4 col-md-3">
+                          <img class="img-circle img-responsive" src="http://placehold.it/300x300" alt="...">
+                          <p>Lorem ipsum dolor sit amet</p>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3">
+                          <img class="img-circle img-responsive" src="http://placehold.it/300x300" alt="...">
+                          <p>Lorem ipsum dolor sit amet</p>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3">
+                          <img class="img-circle img-responsive" src="http://placehold.it/300x300" alt="...">
+                          <p>Lorem ipsum dolor sit amet</p>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3">
+                          <img class="img-circle img-responsive" src="http://placehold.it/300x300" alt="...">
+                          <p>Lorem ipsum dolor sit amet</p>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="row text-center">
+                        <div class="col-xs-6 col-sm-4 col-md-3">
+                          <img class="img-circle img-responsive" src="http://placehold.it/300x300" alt="...">
+                          <p>Lorem ipsum dolor sit amet</p>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3">
+                          <img class="img-circle img-responsive" src="http://placehold.it/300x300" alt="...">
+                          <p>Lorem ipsum dolor sit amet</p>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3">
+                          <img class="img-circle img-responsive" src="http://placehold.it/300x300" alt="...">
+                          <p>Lorem ipsum dolor sit amet</p>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 col-md-3">
+                          <img class="img-circle img-responsive" src="http://placehold.it/300x300" alt="...">
+                          <p>Lorem ipsum dolor sit amet</p>
+                        </div>
+                      </div>
+                      <div class="anchor" id="premi">
+                        <div class="page-header" >
+                          <h2>Premi <small>+50000</small></h2>
+                        </div>
+                      </div>
+                      <div class="row text-center">
+                        <div class="col-sm-6 col-md-4">
+                          <div class="thumbnail text-center">
+                            <img class="img-responsive" src="http://placehold.it/300x300" alt="...">
+                            <div class="caption">
+                              <p>Lorem ipsum dolor sit amet</p>
+                              <p><a href="#" class="btn btn-default" role="button">details</a></p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                          <div class="thumbnail text-center">
+                            <img class="img-responsive" src="http://placehold.it/300x300" alt="...">
+                            <div class="caption">
+                              <p>Lorem ipsum dolor sit amet</p>
+                              <p><a href="#" class="btn btn-default" role="button">details</a></p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                          <div class="thumbnail text-center">
+                            <img class="img-responsive" src="http://placehold.it/300x300" alt="...">
+                            <div class="caption">
+                              <p>Lorem ipsum dolor sit amet</p>
+                              <p><a href="#" class="btn btn-default" role="button">details</a></p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                          <div class="thumbnail text-center">
+                            <img class="img-responsive" src="http://placehold.it/300x300" alt="...">
+                            <div class="caption">
+                              <p>Lorem ipsum dolor sit amet</p>
+                              <p><a href="#" class="btn btn-default" role="button">details</a></p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                          <div class="thumbnail text-center">
+                            <img class="img-responsive" src="http://placehold.it/300x300" alt="...">
+                            <div class="caption">
+                              <p>Lorem ipsum dolor sit amet</p>
+                              <p><a href="#" class="btn btn-default" role="button">details</a></p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                          <div class="thumbnail text-center">
+                            <img class="img-responsive" src="http://placehold.it/300x300" alt="...">
+                            <div class="caption">
+                              <p>Lorem ipsum dolor sit amet</p>
+                              <p><a href="#" class="btn btn-default" role="button">details</a></p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-5">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-4 col-sm-4 col-xs-4">
+                      <img src="http://placehold.it/300x300" alt="..." class="img-circle img-responsive">
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                      <h4>Nome utente</h4>
+                      <hr>
+                      <p>email@email.com</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel-footer">
+                  <button class="btn btn-default btn-success btn-block">Following</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <ul class="nav nav-tabs">
+                <li class="active"><a href="#">Livelli</a></li>
+                <li><a href="#">Badges</a></li>
+                <li><a href="#">Premi <span class="badge">2</span></a></li>
+                <li><a href="#">Classifica</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <footer class="bs-footer" role="contentinfo" style="padding-bottom: 1.5em;">
+          <div class="jumbotron bkg-topbar" style="margin-bottom: 0">
+            <div class="container">
+                <p>Copyright </p>
+            </div>
+          </div>
+        </footer>
+
+        <!-- endbuild -->
+</body>
+</html>

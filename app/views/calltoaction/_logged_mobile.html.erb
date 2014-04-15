@@ -1,0 +1,217 @@
+<% interactions = @cta_active.interactions.where("resource_type='Quiz'").sort_by{|e| e[:seconds]} %>
+<script type="text/javascript">
+	
+	interactions = <%= raw(interactions.to_json) %>;
+	viewd_inter = new Array();
+	ctaid = <%= @cta_active.id %>;
+
+	var tag = document.createElement('script');
+	tag.src = "//www.youtube.com/iframe_api";
+	var firstScriptTag = document.getElementsByTagName('script')[0];
+	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);       
+
+	$(document).ready(function() {
+	});
+
+    function restartVideo(idvideo) {
+    	ytplayer.loadVideoById(idvideo);
+    }
+
+    function playVideo() {
+        ytplayer.playVideo();
+    }
+
+    player_state = -1;
+    already_answer = new Array;
+    cta_completed = false;
+
+    function onPlayerStateChange(newState) {
+        player_state = ytplayer.getPlayerState();
+      	if(player_state == 1) {
+        	// Non e' necessario un pooling per la versione mobile.
+      	}
+      	if(player_state == 0){
+      		// Stato di fine video.
+      	}
+    }
+     
+  	function onYouTubePlayerReady(playerId) {
+    	loadStartInteraction();
+  	}
+
+  	function onYouTubeIframeAPIReady() {
+    	ytplayer = new YT.Player('cta-video', {
+      		playerVars: { controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 },
+      		height: '354',
+      		width: '630',
+      		videoId: '<%= @cta_active.mobile_url %>',
+      		events: {
+        		'onReady': onYouTubePlayerReady,
+        		'onStateChange': onPlayerStateChange
+      		}
+    	});
+  	}
+
+  	function nextQuiz() {
+  		// Nascondo il modale corrente.
+  		$("#modal-interaction").slideUp(); 
+	    $("div.overlay").remove(); 
+
+	    // Passo al quiz successivo.
+  		current_quiz = (current_quiz + 1)%interactions.length;
+  		inter = interactions[current_quiz]
+		loadQuiz(inter.resource_id);
+  	}
+
+	function loadQuiz(idquiz){
+		$.ajax({
+            type: "POST",
+            url: '/quiz/getquiz.json',
+            data: { "quiz_id": idquiz },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+            	
+            	// Visualizzo la risposta corretta se ho gia' risposto al quiz.
+            	$("#video-content").append("<div class='overlay'><div id='modal-interaction' style='display:none;'></div></div>");
+            	$("#modal-interaction").append(data.premio);
+            	$("#modal-interaction").append("<div id='quiz'></div>'");
+            	$("#quiz").append("<p>" + data.question + "</p>");
+            	$("#quiz").append(data.html_quiz);
+
+            	$("#respuesta a").attr("href", "javascript: void(0)");
+            	if(data.already_answer)
+            		$("#quiz").append("<a href=\"javascript: void(0)\" onclick=\"nextQuiz()\">SUCCESSIVA</a>");
+            	
+            	$("#modal-interaction").slideDown();
+
+            }
+        });
+	}
+
+	function loadShare(ctaid){
+		$.ajax({
+            type: "POST",
+            url: '/quiz/getshare.json',
+            data: { "cta_id": ctaid },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+            	$("#video-share p#links").append(data.html_share);
+            }
+        });
+	}
+
+	function loadDownload(ctaid){
+		$.ajax({
+            type: "POST",
+            url: '/quiz/getdownload.json',
+            data: { "cta_id": ctaid },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+            	$("#download #ricetta").append(data.html_download)
+            }
+        });
+	}
+
+	current_quiz = 0
+
+	function loadStartInteraction(){
+		loadShare(ctaid);
+		loadDownload(ctaid);
+
+		// Carico immediatamente il primo quiz.
+		inter = interactions[current_quiz]
+		loadQuiz(inter.resource_id);
+	}
+
+	function rispquiz(idrisp){
+		$.ajax({
+            type: "POST",
+            url: '/quiz/checkquiz.json',
+            data: { "answer_id": idrisp },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+            	updateTickets();
+            	$("#premio").html(data.message);
+            	$("a#"+data.correct_ans).addClass("btn-success");
+            	
+            	if(data.correct_ans != idrisp){
+            		$("a#"+idrisp).addClass("btn-danger");
+            		$("div#premio").addClass("errata");
+            	} else {
+            		$("div#premio").addClass("corretta");
+            	}
+
+            	$("#respuesta a").attr("href", "javascript: void(0)");
+            	$("#quiz").append("<a href=\"javascript: void(0)\" onclick=\"nextQuiz()\">SUCCESSIVA</a>");
+
+            }
+        });
+	}
+
+	function shareFacebook(ele){
+		window.open($(ele).attr("href"),'Share Facebook');
+		$.ajax({
+            type: "POST",
+            url: '/quiz/doshare.json',
+            data: { "cta_id": ctaid, "type": "facebook" },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+            	updateTickets();
+            }
+        });
+	}
+
+	function shareMail(){
+		$.ajax({
+            type: "POST",
+            url: '/quiz/dosharemail.json',
+            data: { "mail": $("#email").val(), "url": $("#url").val() },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+            	$(".modal-body").html("<h2>Condivisione effettuata!</h2>");
+            }
+        });
+	}
+
+	function shareTwitter(ele){
+		window.open($(ele).attr("href"),'Share Twitter');
+		$.ajax({
+            type: "POST",
+            url: '/quiz/doshare.json',
+            data: { "cta_id": ctaid, "type": "twitter" },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+            	updateTickets();
+            }
+        });
+	}
+
+	function updateTickets(){
+		$.ajax({
+            type: "POST",
+            url: '/quiz/gettickets.json',
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+            	$("span.counter").html(data);
+            	$("span.counter").append("<img src='/assets/ticket.png'>");
+            }
+        });
+	}
+
+    </script>

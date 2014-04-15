@@ -1,0 +1,130 @@
+<% interactions = @cta_active.interactions.sort_by{|e| e[:seconds]} %>
+<script type="text/javascript">
+	
+	interactions = <%= raw(interactions.to_json) %>;
+  viewd_inter = new Array();
+  ctaid = <%= @cta_active.id %>;
+
+	var tag = document.createElement('script');
+	tag.src = "//www.youtube.com/iframe_api";
+	var firstScriptTag = document.getElementsByTagName('script')[0];
+	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);       
+
+	$(document).ready(function() {
+		// empty		
+	});
+
+    function restartVideo(idvideo) {
+    	ytplayer.loadVideoById(idvideo);
+    }
+
+    function continueVideo() {
+        ytplayer.playVideo();
+    }
+
+    function playVideo() {
+        ytplayer.playVideo();
+    }
+
+    function pauseVideo() {
+        ytplayer.pauseVideo();
+    }
+
+    player_state = -1;
+    already_anser = new Array;
+
+    function onPlayerStateChange(newState) {
+      	player_state = ytplayer.getPlayerState();
+        if(player_state == 1) {
+          //codice on play start
+          setInterval(checkInteraction, 800);
+        }
+    }
+
+    function checkInteraction() {
+      player_state = ytplayer.getPlayerState();
+      if(player_state == 1){
+        currentVideoTime = ytplayer.getCurrentTime();
+        seconds = Math.floor(currentVideoTime)
+        $.each(interactions, function(index, inter){
+          if(seconds == inter.seconds && !already_anser[index] ){
+            already_anser[index] = true;
+            loadLoginAlert();
+          }
+        });
+      }   
+    }
+  
+  	function onYouTubePlayerReady(playerId) {
+    	loadStartInteraction();
+  	}
+
+    function loadStartInteraction(){
+        loadShare(ctaid);
+        loadDownload(ctaid);
+      }
+
+    function loadShare(ctaid){
+        $.ajax({
+              type: "POST",
+              url: '/quiz/getshare.json',
+              data: { "cta_id": ctaid },
+              success: function(data) {
+                $("#video-share p#links").append(data.html_share);
+              }
+          });
+      }
+
+    function loadDownload(ctaid){
+      $.ajax({
+            type: "POST",
+            url: '/quiz/getdownload.json',
+            data: { "cta_id": ctaid },
+            success: function(data) {
+              $("#download #ricetta").append(data.html_download)
+            }
+        });
+    }
+
+  	function onYouTubeIframeAPIReady() {
+    	ytplayer = new YT.Player('cta-video', {
+      		playerVars: { controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 },
+      		height: '354',
+          width: '630',
+      		videoId: '<%= @cta_active.mobile_url %>',
+      		events: {
+        		'onReady': onYouTubePlayerReady,
+        		'onStateChange': onPlayerStateChange
+      		}
+    	});
+  	}
+
+    function shareMail(){
+      $.ajax({
+            type: "POST",
+            url: '/quiz/dosharemail.json',
+            data: { "mail": $("#email").val(), "url": $("#url").val() },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+              $(".modal-body").html("<h2>Condivisione effettuata!</h2>");
+            }
+        });
+    }
+
+    function shareFacebook(ele){
+        window.open($(ele).attr("href"),'Share Facebook');
+      }
+
+    function shareTwitter(ele){
+      window.open($(ele).attr("href"),'Share Twitter');
+    }
+    </script>
+
+    <script type="text/javascript">
+
+    	function loadLoginAlert(){
+    		$("#interaction-area").append("<p>Per partecipare devi prima effettuare il <a href='/sign_up'>login</a>.")
+    	}
+    </script>

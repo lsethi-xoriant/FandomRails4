@@ -1,0 +1,16 @@
+<% unless @tag_list.blank? %>
+	<div class="row">
+		<div class="col-xs-12">
+		  <div class="page-header">
+		    <h3>Tags <small></small></h3>
+		  </div>
+		</div>
+	</div>
+	<div class="row brws-item">
+		<div class="col-md-12 lead" >
+		  <% @tag_list.split(",").each do |t| %>
+		  	<a href="javascript: void(0)"><span class="label label-primary"><%= t %></span></a>
+		  <% end %>
+		</div>
+	 </div>
+ <% end %>

@@ -1,0 +1,103 @@
+<header class="navbar navbar-default navbar-fixed-top background-color: #eee;" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!--<a href="../" class="navbar-brand"><span class="glyphicon glyphicon-tower"></span> Fandom</a>-->
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+      	<!--
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="stream-v1.html">Stream (gioca 1)</a></li>
+            <li><a href="stream-v2.html">Stream (gioca 2)</a></li>
+            <li><a href="stream-v3.html">Stream (gioca 3)</a></li>
+            <li class="divider"></li>
+            <li><a href="premi.html">Premi</a></li>
+            <li><a href="browse.html">Sfoglia</a></li>
+            <li class="divider"></li>
+            <li><a href="cta-versus-over.html">Cta Versus Over</a></li>
+          </ul>
+        </li> 
+        -->
+        <li><!--<a href="browse.html"><span class="glyphicon glyphicon-search"> </span> Sfoglia</a>--></li> 
+      </ul>
+      <!--<form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+      </form>-->
+      
+      <ul class="nav navbar-nav navbar-right">
+      	<!--
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-default">2</span></a>
+          <ul class="dropdown-menu">
+            <li role="presentation" class="dropdown-header">Notifiche</li>
+            <li role="presentation" class="divider"></li>
+            <li class="container-fluid">
+              <div class="row" style="width: 300px">
+                <div class="col-xs-3"><img src="http://placehold.it/50x50"></div>
+                <div class="col-xs-9"><a href="#">Hai guadagnato un nuovo badge!</a></div>
+              </div>
+            </li>
+            <li role="presentation" class="divider"></li>
+            <li class="container-fluid">
+              <div class="row" style="width: 300px">
+                <div class="col-xs-3"><img src="http://placehold.it/50x50"></div>
+                <div class="col-xs-9"><a href="#">Hai guadagnato un nuovo badge!</a></div>
+              </div>
+            </li>
+            <li role="presentation" class="divider"></li>
+            <li><a href="#" class="text-center">Vai alle notifiche</a></li>
+          </ul>
+        </li>
+        -->
+        <!--
+        <li>
+          <a href=""><span class="label label-warning">7 <span class="glyphicon glyphicon-star"></span></span> Gioca Subito</a>
+        </li>
+        -->
+
+		<% if current_user %>
+	        <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <%= current_user.first_name %> <b class="caret"></b></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="/profile/edit">Account</a></li>
+	            <li class="divider"></li>
+	            <li><a href="/profile/levels">Livelli</a></li>
+              <li><a href="/profile/badges">Badge</a></li>
+	            <li class="divider"></li>
+              <li><a href="/profile/rankings">Classifica</a></li>
+	            <!--
+	            <li class="divider"></li>
+	            <li><a href="profile-premi.html">Miei premi (modal normale)</a></li>
+	            <li><a href="profile-premi-boxato.html">Miei premi boxato</a></li>
+	            <li><a href="profile-premi-vinto.html">Miei premi (modal vinto)</a></li>
+	            <li><a href="profile-premi-novinto.html">Miei premi (modal no vinto)</a></li>
+	            <li class="divider"></li>
+	            <li><a href="profile-classifica.html">Classifica</a></li>
+	            <li><a href="profile-classifica-punteggio.html">Classifica (punteggio)</a></li>
+	            <li class="divider"></li>
+	            <li><a href="profile-notifiche.html">Notifiche</a></li>
+	            -->
+	            <li class="divider"></li>
+	            <li><a href="/users/sign_out">Logout</a></li>
+	          </ul>
+	        </li>
+        <% else %>
+			<ul class="nav navbar-nav navbar-right">
+        		<li><a href="/users/sign_up"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+      		</ul>
+		<% end %>
+
+      </ul>
+    </nav>
+  </div>
+</header>

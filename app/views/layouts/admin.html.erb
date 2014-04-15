@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+
+<title>FANDOM ADMIN</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Dati Amadorabilichef" content="">
+  <meta name="Amadorabilichef" content="" />
+
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,800italic,400,600,800" type="text/css">
+
+  <%= javascript_include_tag "easyadmin" %>
+  <%= stylesheet_link_tag "easyadmin", :media => "all" %>
+    
+  <%= csrf_meta_tags %>
+
+</head>
+
+<body>
+
+  <div id="wrapper"> 
+    <header id="header">
+
+      <h1 id="site-logo">
+        <a target="_blank" href="http://entertainment.shado.tv/">
+          <img style="width: 200px; margin-top: -10px" src="/assets/fandom-logo.png" alt="Site Logo" />
+        </a>
+      </h1> 
+
+      <a href="javascript:;" data-toggle="collapse" data-target=".top-bar-collapse" id="top-bar-toggle" class="navbar-toggle collapsed">
+        <i class="fa fa-cog"></i>
+      </a>
+
+      <a href="javascript:;" data-toggle="collapse" data-target=".sidebar-collapse" id="sidebar-toggle" class="navbar-toggle collapsed">
+        <i class="fa fa-reorder"></i>
+      </a>
+
+    </header> <!-- header -->
+    <%= render partial: "/easyadmin/easyadmin/top_bar" %>   
+    <%= yield %>
+  </div> <!-- #wrapper -->
+
+  <footer id="footer">
+    <ul class="nav pull-right">
+      <li>
+        Copyright &copy; SHADO
+      </li>
+    </ul>
+  </footer>
+
+
+  <script src="/canvas-admin/js/plugins/magnific/jquery.magnific-popup.min.js"></script>
+  <script src="/canvas-admin/js/plugins/howl/howl.js"></script>
+
+  <script type="text/javascript">
+
+    $(document).ready(function(){
+      $('#calltoaction_activation_time').timepicker({ 
+        showMeridian: false
+      });
+      $("#calltoaction_activation_date_div").datepicker();
+      $("#calltoaction_start_date_div").datepicker();
+      $("#calltoaction_end_date_div").datepicker();
+
+      $('#property_activation_time').timepicker({ 
+        showMeridian: false
+      });
+      $("#property_activation_date_div").datepicker();
+    });
+
+  </script>
+
+</body>
+</html>

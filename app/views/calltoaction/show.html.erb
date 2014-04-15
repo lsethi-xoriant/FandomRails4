@@ -1,0 +1,129 @@
+<%= render partial: "/application/user_bar" %>
+<%= render partial: "/property/property_carousel" %>
+
+<div class="container" 
+	 ng-app="CalltoactionApp" 
+	 ng-controller="CalltoactionCtrl" 
+     ng-init="init('<%= @current_cta.video_url %>', <%= @current_cta.id %>, <%= @current_prop.id %>, <%= @overvideo_during_interaction_list.to_json %>, <%= !current_user.blank? %>, <%= @comment_published_count %>, <%= @comment_must_be_approved.blank? %>)">
+
+	<%= render partial: "/application/share_with", locals: { share: @inter_share } %>
+
+    <div class="row">        
+        <div class="col-md-12 cta">
+
+        	<div class="row">
+	            <div class="col-md-12 hidden-xs">
+	              <h2><%= @current_cta.title %></h2>
+	            </div>
+	        </div>
+	        <div class="row hidden-xs">
+	            <div class="col-md-8 col-xs-8">                      
+	              <!--<h5 class="text-muted"><span class="glyphicon glyphicon-fire"></span> Deserunt mollit </h5>-->
+	            </div>
+	            <div class="col-md-4 col-xs-4 text-right">
+	              <h3><span class="label label-warning"><%= @current_cta.interactions.sum("points") %> <span class="glyphicon glyphicon-star"></span></span></h3>
+	            </div>
+	        </div>
+
+			<div class="panel panel-default cta-page">
+
+		        <div class="panel-heading visible-xs">
+			        <div class="row ">
+			            <div class="col-md-8 col-xs-8">                      
+			            	<h5 class="text-muted"><span class="glyphicon glyphicon-fire"></span> Deserunt mollit </h5>
+			            </div>
+			            <div class="col-md-4 col-xs-4 text-right">
+			            	<h3 style="margin-top:4px;"><span class="label label-warning">10 <span class="glyphicon glyphicon-star"></span></span></h3>
+			            </div>
+			        </div>
+		        </div>
+
+		        <div class="panel-body no-pad cta-versus" style="position:relative;">
+			        <!-- VIDEO -->
+			        <div class="row">
+			            <div class="col-md-12">
+			            	<% if @current_cta.media_type == "VIDEO" %>
+				              	<div class="video flex-video" style="background:#222;">
+				              		<div id="cta-video"></div>
+				              	</div>
+				            <% else %>
+				            	<img src="<%= @current_cta.image %>" style="width: 100%">
+				            <% end %>
+			            </div>
+			        </div>
+
+
+			        <% if @current_cta.media_type == "VIDEO" %>
+				        <div class="row">
+				            <div class="col-md-12">
+				              	<div class="progress" style="border-radius: 0px; height: 24px">
+				                	<div id="interaction-progress-bar" class="progress-bar progress-bar-info" style="width: 1%; background: #444;"><span class="sr-only"></span></div>
+				             	</div>
+				              	<div style="position: absolute; overflow: hidden; top: 0px; width: 100%;" id="interaction-progress-bar-point">
+				                <!--
+				                <div class="progress-bar progress-bar-info" style="width: 20%; background: none;">
+				                  <span class="sr-only">20% Complete (warning)</span>
+				                  <div style="margin: 3px 0; margin-left: auto; background: #444; height: 18px; width: 18px; border-radius: 10px; font-size: 11px;">
+				                  </div>
+				                </div>
+				                <div class="progress-bar progress-bar-info" style="width: 35%; background: none;">
+				                  <span class="sr-only">35% Complete (success)</span>
+				                  <div style="margin: 3px 0; margin-left: auto; background: #f0ad4e; height: 18px; width: 18px; border-radius: 10px; font-size: 11px;">
+				                  </div>
+				                </div>
+				                -->
+				            	</div>
+				        	</div>
+				        </div>
+			        <% end %>
+			     
+			    <%= render partial: "overvideo" %>
+
+				<% inter_quiz_list = @current_cta.interactions.where("(resource_type='Quiz' OR resource_type='Check') AND when_show_interaction='SEMPRE_VISIBILE'") %>							
+				<% inter_quiz_list.each do |inter_quiz| %>
+					<% user_inter_quiz = current_user.userinteractions.find_by_interaction_id(inter_quiz.id) if current_user %>
+					<% if inter_quiz.resource_type == "Quiz" && inter_quiz.resource.quiz_type == "VERSUS" %> 
+						<!-- carico il template per il VERSUS -->
+						<%= render partial: "versus", locals: { user_inter_quiz: user_inter_quiz, inter_quiz: inter_quiz } %>							
+					<% elsif inter_quiz.resource_type == "Quiz" && inter_quiz.resource.quiz_type == "TRIVIA" %>
+						<!-- carico il template per il TRIVIA -->
+						<%= render partial: "trivia", locals: { user_inter_quiz: user_inter_quiz, inter_quiz: inter_quiz } %>						
+					<% elsif inter_quiz.resource_type == "Check" %>
+						<!-- carico il template per il CHECK -->
+						<%= render partial: "check", locals: { user_inter_quiz: user_inter_quiz, inter_quiz: inter_quiz } %>
+					<% end %>
+				<% end %>
+
+		        <%= render partial: "footer" %>	
+			        
+		    </div>
+		</div>
+	</div>
+
+	<div class="row text-muted">
+        <div class="col-md-6 col-xs-6">
+          <span><%= @current_cta.activated_at %></span>
+        </div>
+        <div class="col-md-6 col-xs-6 text-right">
+          <% if @inter_comment %>
+          	<span class="glyphicon glyphicon-comment"></span> <%= @inter_comment.cache_counter %> &nbsp;&nbsp; 
+          <% end %>
+          <% if @inter_like %>
+          	<span class="glyphicon glyphicon-thumbs-up"></span> <%= @inter_like.cache_counter %>  
+          <% end %>                           
+        </div>
+    </div>
+    <hr>
+
+	<%= render partial: "stream_tag" %>	
+
+	<%= render partial: "stream_calltoaction_related", locals: { current_cta_related_list: @current_cta_related_list } %>		
+
+</div>
+
+<div class='notifications bottom-left'></div>
+
+<%= render partial: "disqus" %>
+
+<!-- SEZIONE COMMENTI -->
+<%= render partial: "stream_comment" %>

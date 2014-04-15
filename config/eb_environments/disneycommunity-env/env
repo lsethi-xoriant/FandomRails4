@@ -1,0 +1,10 @@
+APP_NAME="disneycommunity"
+ENVIRONMENT="disneycommunity-env"
+STACK="64bit Amazon Linux running Ruby 1.9.3"
+
+AWS_REGION=eu-west-1
+AWS_ACCESS_KEY_ID=AKIAIKVDOLE6ZDLL2FKA
+AWS_SECRET_ACCESS_KEY=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
+AWS_SECRET_KEY=0fcIdu0UYEOv5fh37Hq/ryYbhub6mEMtF7cQJ907
+AWS_DEPLOY_BUCKET=elasticbeanstalk-eu-west-1-426241546210
+

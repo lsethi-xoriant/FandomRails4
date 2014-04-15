@@ -1,0 +1,10 @@
+<div class="jumbotron bkg-topbar">
+  <div class="container">
+    <h1>FANDOM</h1>
+      <p>TUTTE LE PROPERTY</p>
+      	<% Property.active.each do |p| %>
+			<a href="/<%= p.slug %>" class="btn btn-lg <%= @current_prop && @current_prop.id == p.id ? "btn-primary" : "btn-default" %>"><%= p.name %></a>
+		<% end %>
+		<a href="/" class="btn btn-lg <%= @current_prop ? "btn-default" : "btn-primary" %>">TUTTE</a>
+  </div>
+</div>

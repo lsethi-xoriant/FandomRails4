@@ -1,0 +1,62 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "promocode" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1>Promocode</h1>
+    </div> <!-- #content-header --> 
+
+    	<div id="content-container">
+
+    	<% if flash[:notice] %>
+	    	<div class="row">
+		      <div class="col-md-12">         
+		          <div class="row">
+		            <div class="col-lg-12">
+		              <div class="alert alert-success"><%= flash[:notice] %></div>
+		            </div>
+		          </div>
+		        
+		      </div>
+		    </div>
+	    <% end %>
+
+	    <h3>&nbsp;&nbsp; <a href="/easyadmin/promocode/new_promocode" style="float: right;"><button type="button" class="btn btn-primary">NUOVO PROMOCODE</button></a></h3>
+	    <hr/>
+
+		<div class="row">
+			<div class="col-md-8"> 
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Property</th>
+							<th>Nome</th>
+							<th>Codice</th>
+							<th>Contatore utilizzo</th>
+							<th>Azioni</th>
+						</tr>
+					</thead>
+					<% i = 1 %>
+					<% Property.includes(:promocodes).where("promocodes.id IS NOT NULL").each do |prop| %>
+						<% prop.promocodes.each do |p| %>
+							<tr>
+								<td><%= i %></td>
+								<td><%= Property.name.upcase %></td>
+								<td><%= p.title %></td>
+								<td><%= p.code %></td>
+								<td><%= p.interaction.cache_counter %></td>
+								<td>
+									&nbsp;&nbsp;
+								</td>
+							</tr>
+							<% i = i + 1 %>
+						<% end %>
+					<% end %>
+				</table>
+			</div>
+		</div>
+		
+
+	</div>
+</div>

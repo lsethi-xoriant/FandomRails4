@@ -1,0 +1,71 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "promocode" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>NUOVO PRMOCODE CONTAINER</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if @inter_promocode.errors.any? %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p>Errori nel salvataggio del PROMOCODE CONTAINER:</p>
+                <p>
+                  <ul>
+                    <% @inter_promocode.errors.full_messages.each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% elsif flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <%= form_for @inter_promocode, url: { action: "create_promocode" } do |f| %>    
+	    <%= f.fields_for :resource do |builder| %>
+	    	<%= f.hidden_field :resource_type, :class => "form-control" %>
+        <%= f.hidden_field :name, :class => "form-control" %>
+		    <h3>Dati generali <a style="float: right" href="/easyadmin/promocode" class="btn btn-primary">TORNA AI PROMOCODE</a></h3>
+		    <hr/>
+
+		    <div class="row">
+		        <div class="col-lg-6">
+		          <div class="form-group">
+		              <label class="text-input">Titolo del contenitore</label>
+		              <%= builder.text_field :title, :class => "form-control" %>
+		          </div>
+              <div class="form-group">
+                  <label class="text-input">Punti</label>
+                  <%= f.text_field :points, :class => "form-control" %>
+              </div>
+		          <div class="form-group">	
+		          		<label class="text-input">Property</label>					
+				        <% date_array = Property.all.map { |p| [ "#{ p.name }", p.id] } %>
+			    		<%= builder.select(:property_id, options_for_select(date_array), {}, :class => "form-control") %>
+			      	</div>
+		        </div>
+	        </div>
+
+	        <div class="row text-center">
+	        	<div class="col-sm12">
+	          		<button type="submit" class="btn btn-primary btn-lg">GENERA</button>
+	        	</div>
+	        </div>   
+        <% end %>  
+    <% end %>
+  </div>
+</div>

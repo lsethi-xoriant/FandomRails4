@@ -1,0 +1,87 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "property" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>NUOVO BADGE</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if @badge.errors.any? %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p>Errori nel salvataggio del BADGE:</p>
+                <p>
+                  <ul>
+                    <% @badge.errors.full_messages.each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% elsif flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <%= form_for @badge, url: { action: "save_badge" }, multipart: true do |f| %>
+      <%= f.hidden_field :property_id, value: @current_prop.id %>
+
+      <h3>Dati generali <a style="float: right" href="/easyadmin/property/show/<%= @current_prop.id %>" class="btn btn-primary">TORNA ALLA PROPERTY</a></h3>
+      <hr/>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+              <label class="text-input">Titolo</label>
+              <%= f.text_field :name, :class => "form-control" %>
+          </div>
+          <div class="row">
+          	  <div class="col-lg-6">
+		          <div class="form-group">
+		              <label class="text-input">Regola</label>
+		               <%= f.select(:role, ["VERSUS", "TRIVIA_RIGHT", "PLAY_UNICI", "LIKE", "CHECK"], {}, { :class => "form-control" }) %>
+		          </div>
+		      </div>
+		      <div class="col-lg-6">
+		          <div class="form-group">
+		              <label class="text-input">Limite</label>
+		              <%= f.text_field :role_value, :class => "form-control" %>
+		          </div>
+		      </div>
+          </div>
+        </div>
+        <div class="col-lg-6 text-center">
+          <div class="form-group">
+              <label class="text-input">Immagine badge</label>
+              <div class="fileupload fileupload-new" data-provides="fileupload">
+                <div class="fileupload-preview thumbnail" style="width: 400px; height: 200px; line-height: 20px;"></div>
+                <div>
+                  <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
+                  <span class="fileupload-exists">Change</span><%= f.file_field :image  %></span>
+                  <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row text-center">
+        <div class="col-sm12">
+          <button type="submit" class="btn btn-primary btn-lg">GENERA</button>
+        </div>
+      </div>     
+    <% end %>
+  </div>
+</div>

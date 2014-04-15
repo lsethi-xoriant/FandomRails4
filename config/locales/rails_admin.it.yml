@@ -1,0 +1,131 @@
+it:
+  home:
+    name: Home
+  views:
+    pagination:
+      previous: "&laquo; Prev"
+      next: "Next &raquo;"
+      truncate: "…"
+  admin:
+    misc:
+      search: "Cerca"
+      filter: "Filtra"
+      refresh: "Ricarica"
+      show_all: "Mostra tutto"
+      add_filter: "Aggiungi filtro..."
+      bulk_menu_title: "Seleziona elemento..."
+      remove: "Elimina"
+      add_new: "Aggiungi"
+      chosen: "%{name} scelto"
+      chose_all: "Scelti tutti"
+      clear_all: "Cancella tutto"
+      up: "Su"
+      down: "Giu"
+      navigation: "Menu"
+      log_out: "Log out"
+      ago: "fa"
+    flash:
+      successful: "%{name} %{action} con successo"
+      error: "%{name} non e` stato %{action}"
+      noaction: "Nessuna azione definita"
+      model_not_found: "Il modello '%{model}' non e` stato trovato"
+      object_not_found: "%{model} con id '%{id}' none` stato trovato"
+    table_headers:
+      model_name: "Nome modello"
+      last_used: "Ultimo utilizzo"
+      records: "Records"
+      username: "Utente"
+      changes: "Modifiche"
+      created_at: "Data/Ora"
+      item: "Item"
+      message: "Messaggio"
+    actions:
+      dashboard:
+        title: "Amministrazione"
+        menu: "Dashboard"
+        breadcrumb: "Dashboard"
+      index:
+        title: "Lista di %{model_label_plural}"
+        menu: "Lista"
+        breadcrumb: "%{model_label_plural}"
+      show:
+        title: "Dettagli per %{model_label} '%{object_label}'"
+        menu: "mostra"
+        breadcrumb: "%{object_label}"
+      show_in_app:
+        menu: "Mostra nell'app"
+      new:
+        title: "Nuovo %{model_label}"
+        menu: "Aggiungi"
+        breadcrumb: "Muovo"
+        link: "Aggiungi un %{model_label}"
+        done: "creato"
+      edit:
+        title: "Modifica %{model_label} '%{object_label}'"
+        menu: "Modifica"
+        breadcrumb: "Modifica"
+        link: "Modifica questo %{model_label}"
+        done: "modificato"
+      delete:
+        title: "Elimina %{model_label} '%{object_label}'"
+        menu: "Elimina"
+        breadcrumb: "Elimina"
+        link: "Elimina '%{object_label}'"
+        done: "eliminato"
+      bulk_delete:
+        title: "Elimina %{model_label_plural}"
+        menu: "Cancellazioni multipli"
+        breadcrumb: "Cancellazioni multipli"
+        bulk_link: "Elimina %{model_label_plural} selezionati"
+      export:
+        title: "Esporta %{model_label}"
+        menu: "Esporta"
+        breadcrumb: "Esporta"
+        link: "Esporta %{model_label_plural}"
+        bulk_link: "Esporta %{model_label_plural}"
+        done: "esportati"
+      history_index:
+        title: "Storico per %{model_label_plural}"
+        menu: "Storico"
+        breadcrumb: "Storico"
+      history_show:
+        title: "Storico per %{model_label} '%{object_label}'"
+        menu: "Storico"
+        breadcrumb: "Storico"
+    form:
+      cancel: "Cancella"
+      basic_info: "Info"
+      required: "Richiesto"
+      optional: "Opzionale"
+      one_char: "carattere"
+      char_length_up_to: "length up to"
+      char_length_of: "length of"
+      save: "Salva"
+      save_and_add_another: "Salva e aggiungi"
+      save_and_edit: "Salva e modifica"
+      all_of_the_following_related_items_will_be_deleted: "? The following related items may be deleted or orphaned:"
+      are_you_sure_you_want_to_delete_the_object: "Are you sure you want to delete this %{model_name}"
+      confirmation: "Si, sono sicuro"
+      delete_confirmation: "Conferma eliminazione"
+      bulk_delete: "The following objects will be deleted, which may delete or orphan some of their related dependencies:"
+    export:      
+      confirmation: "Export to %{name}"
+      select: "Seleziona i campi da esportare"
+      fields_from: "Fields from %{name}"
+      fields_from_associated: "Fields from associated %{name}"
+      display: "Visualizza %{name}: %{type}"
+      options_for: "Options for %{name}"
+      empty_value_for_associated_objects: "<empty>"
+      click_to_reverse_selection: 'Click to reverse selection'
+      csv:
+        header_for_root_methods: "%{name}" # 'model' is available
+        header_for_association_methods: "%{name} [%{association}]"
+        encoding_to: "Encode to"
+        encoding_to_help: "Choose output encoding. Leave empty to let current input encoding untouched: (%{name})"
+        skip_header: "No header"
+        skip_header_help: "Do not output a header (no fields description)"
+        default_col_sep: ","
+        col_sep: "Column separator"
+        col_sep_help: "Leave blank for default ('%{value}')" # value is default_col_sep
+    home:
+      name: "Home"

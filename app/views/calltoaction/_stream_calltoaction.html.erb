@@ -1,0 +1,3 @@
+<% @current_prop.calltoactions.active.each do |prop_cta| %>
+	<%= render partial: "stream_single_calltoaction", locals: { prop_cta: prop_cta } %>
+<% end %>

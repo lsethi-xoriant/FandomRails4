@@ -1,0 +1,5 @@
+<% Property.all.each do |p| %>
+	<% if prop_cta = p.calltoactions.active.first %>
+		<%= render partial: "calltoaction/stream_single_calltoaction", locals: { prop_cta: prop_cta } %>
+	<% end %>
+<% end %>

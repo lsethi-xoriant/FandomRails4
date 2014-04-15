@@ -1,0 +1,125 @@
+<% answer_length = (inter_quiz.resource.answers.count.to_f/2.to_f).round %>
+
+<% i = 0 %>
+<div class="row">
+    <div class="col-md-12 text-center">
+		<h5>Guadagna <%= inter_quiz.points %> punti</h5>
+		<!--<span class="label label-default"><span class="glyphicon glyphicon-star"></span></span>-->
+		<hr>
+		<h4><%= inter_quiz.resource.question %></h4>
+		<hr>
+    </div>
+    <div class="col-md-1 col-xs-1 text-center"></div>
+        <div class="col-md-10 col-xs-10 text-center">
+            <div class="row vs-ixd vs-ixd-x">
+            
+            	<div class="col-md-5 col-xs-6">
+		            <% inter_quiz.resource.answers.each do |a| %>
+		            	<%# ui_c contiene il numero di risposte del tipo a date all'interaction. %>
+		            	<% ui_c = Userinteraction.where("interaction_id=? AND answer_id=?", inter_quiz.id, a.id).count %>
+		            	
+		            	<% if answer_length == i %>
+		            		</div>
+		            		<div class="col-md-2 hidden-xs hidden-sm"><h5 class="v-center">VS</h5></div>
+		            		<div class="col-md-5 col-xs-6">
+						<% end %>
+
+						<% if answer_length > i %>								                    
+		                    <% if user_inter_quiz %>
+		                      	<div class="row">
+			                        <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4 choice choosen">
+			                        	<div class="status">
+			                            	<h4 id="data-answ-<%= a.id %>"><%= "#{ (ui_c.to_f/inter_quiz.userinteractions.count.to_f*100).round }%" %></h4>
+			                          	</div>
+			                          	<a href="#" class="thumbnail"><img src="<%= a.image.url %>" alt="..."></a>
+			                        </div>
+			                    </div>
+		                        <div class="row">
+		                            <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4">
+		                              	<div class="vs-level-container">
+		                                	<div id="bar-answ-<%= a.id %>" class="vs-level-inner-sx" style="width: <%= (ui_c.to_f/inter_quiz.userinteractions.count.to_f*100).round %>%"></div>
+		                              	</div>
+		                            </div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4">
+		                            	<button id="button-answ-<%= a.id %>" type="button" class="btn btn-block button-inter-<%= inter_quiz.id %> <%= user_inter_quiz && user_inter_quiz.answer_id == a.id ? "btn-success active" : "btn-danger" %>" onclick="updateVersusAnswer(<%= inter_quiz.id %>, <%= a.id %>)"><%= a.text %></button>
+		                            </div>
+		                        </div>
+		                    <% else %>					 
+		                      	<div class="row">
+			                        <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4 choice choosen">
+			                        	<div class="status"><h4 id="data-answ-<%= a.id %>"></h4></div>
+			                          	<a href="#" class="thumbnail"><img src="<%= a.image.url %>" alt="..."></a>
+			                        </div>
+			                    </div>
+		                      	<div class="row">
+		                            <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4">
+		                            	<div class="vs-level-container">
+		                                	<div id="bar-answ-<%= a.id %>" class="vs-level-inner-sx" style="width: 0%">
+		                                	</div>
+		                              	</div>
+		                            </div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4">
+		                            	<button id="button-answ-<%= a.id %>" type="button" class="btn btn-block button-inter-<%= inter_quiz.id %> btn-info" onclick="updateVersusAnswer(<%= inter_quiz.id %>, <%= a.id %>)"><%= a.text %></button>
+		                            </div>
+		                        </div>
+		                    <% end %>
+		                <% else %>
+		                    <% if user_inter_quiz %>
+		                    	<div class="row">
+		                            <div class="col-md-8 col-sm-8 choice not-choosen">
+		                            	<div class="status">
+		                                	<h4 id="data-answ-<%= a.id %>"><%= "#{ (ui_c.to_f/inter_quiz.userinteractions.count.to_f*100).round }%" %></h4>
+		                              	</div>
+		                              	<a href="#" class="thumbnail disabled"><img src="<%= a.image.url %>" alt="..."></a>
+		                            </div>                                    
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-md-8 col-sm-8">
+		                            	<div class="vs-level-container">
+		                                	<div id="bar-answ-<%= a.id %>" class="vs-level-inner-dx" style="width: <%= (ui_c.to_f/inter_quiz.userinteractions.count.to_f*100).round %>%">
+		                                	</div>
+		                              	</div>
+		                            </div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-md-8 col-sm-8">
+		                            	<button id="button-answ-<%= a.id %>" type="button" class="btn btn-block button-inter-<%= inter_quiz.id %> <%= user_inter_quiz && user_inter_quiz.answer_id == a.id ? "btn-success active" : "btn-danger" %>" onclick="updateVersusAnswer(<%= inter_quiz.id %>, <%= a.id %>)"><%= a.text %></button>
+		                            </div>
+		                        </div> 
+		                    <% else %>
+		                    	<div class="row">
+		                            <div class="col-md-8 col-sm-8 choice not-choosen">
+		                            	<div class="status"><h4 id="data-answ-<%= a.id %>"></h4></div>
+		                              	<a href="#" class="thumbnail disabled"><img src="<%= a.image.url %>" alt="..."></a>
+		                            </div>                                    
+		                        </div>
+		                    	<div class="row">
+		                            <div class="col-md-8 col-sm-8">
+		                            	<div class="vs-level-container">
+		                                	<div id="bar-answ-<%= a.id %>" class="vs-level-inner-dx" style="width: 0%"></div>
+		                              	</div>
+		                            </div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-md-8 col-sm-8">
+		                            	<button id="button-answ-<%= a.id %>" type="button" class="btn btn-block button-inter-<%= inter_quiz.id %> btn-info" onclick="updateVersusAnswer(<%= inter_quiz.id %>, <%= a.id %>)"><%= a.text %></button>
+		                            </div>
+		                        </div>
+		                    <% end %>  	                                  	                
+		            <% end %>
+		            <p>&nbsp;</p>
+		            <% i = i + 1 %>
+				<% end %>
+			</div>            
+
+          </div>
+        </div>
+        <div class="col-md-1 col-xs-1 text-center"></div>
+  </div>
+</div>
+
+

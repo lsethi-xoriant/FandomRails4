@@ -1,0 +1,51 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container-full">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 cta">
+        <div class="panel panel-default cta-page">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-3 col-xs-1"></div>
+              <div class="col-sm-6 col-xs-10 text-center">
+                <h4 class="lead">Imposta la nuova password</h4>
+                <p>&nbsp;</p>
+                <% if resource.errors.any? %>
+                  <div style="margin-top: 10px; margin-bottom: 10px; margin-left: 10px;">
+                    <p style="font-size: 15px; color: red;">Errori nella compilazione del modulo:</p>
+                    <ul style="color:red;">
+                      <% resource.errors.full_messages.each do |error| %>
+                        <li><%= error %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+                <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
+                  <%= f.hidden_field :reset_password_token %>
+                  <div class="form-group text-left">
+                    <!--<label for="exampleInputEmail1">Email address</label>-->
+                    <%= f.password_field :password, :class => "form-control", placeholder: "Password" %>
+                  </div>
+                  <div class="form-group text-left">
+                    <!--<label for="exampleInputEmail1">Email address</label>-->
+                    <%= f.password_field :password_confirmation, :class => "form-control", placeholder: "Conferma password" %>
+                  </div>
+                  <button type="submit" class="btn btn-info btn-lg btn-block">Conferma</button>
+                <% end %>
+                <p>&nbsp;</p>
+              </div>
+              <div class="col-sm-3 col-xs-1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+         

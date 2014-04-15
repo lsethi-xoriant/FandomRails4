@@ -1,0 +1,68 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "property" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1>Elenco PROPERTY</h1>
+    </div> <!-- #content-header --> 
+
+    	<div id="content-container">
+
+    	<% if flash[:notice] %>
+	    	<div class="row">
+		      <div class="col-md-12">         
+		          <div class="row">
+		            <div class="col-lg-12">
+		              <div class="alert alert-success"><%= flash[:notice] %></div>
+		            </div>
+		          </div>
+		        
+		      </div>
+		    </div>
+	    <% end %>
+
+	    <div class="row text-right">
+	    	<div class="col-md-12">
+	    		<a href="/easyadmin/property/new"><button type="button" class="btn btn-primary">NUOVA</button></a>
+	    	</div>
+	    </div>
+
+		<div class="row">
+			<div class="col-md-12"> 
+				<table class="table table-striped">
+					<tr>
+						<th>Nome</th>
+						<th>Codice colore</th>
+						<th>Badge</th>
+						<th>Livelli</th>
+						<th>Data di attivazione</th>
+						<th>Sfondo</th>
+						<th>Azioni</th>
+					</tr>
+					<% @property_list.each do |p| %>
+						<tr>
+							<td><%= p.name %></td>
+							<td><div style="border-radius: 5px; width: 20px; height: 20px; background-color: <%= p.color_code %>;"></div></td>
+							<td><%= p.badges.count %></td>
+							<td><%= p.levels.count %></td>
+							<td><%= p.activated_at %></td>
+							<td>
+								<% unless p.background.blank? %>
+									<img src="<%= p.background.url %>" class="img-responsive" style="max-width: 200px;">
+								<% end %>
+							</td>
+							<td>
+								<a href="/easyadmin/property/show/<%= p.id %>"><i class="fa fa-info" style="color: red"></i></a>
+								&nbsp;&nbsp;
+								<a href="/easyadmin/comment/approved/<%= p.id %>"><i class="fa fa-comment" style="color: red"></i></a>
+								&nbsp;&nbsp;							
+								<a href="/easyadmin/property/edit/<%= p.id %>"><i class="fa fa-gears" style="color: red"></i></a>
+							</td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		</div>
+
+	</div>
+</div>
