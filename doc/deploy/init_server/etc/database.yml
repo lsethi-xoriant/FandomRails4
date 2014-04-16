@@ -1,0 +1,5 @@
+production:
+ adapter: postgresql
+ database: fandom
+ username: 
+ password:

@@ -1,0 +1,27 @@
+Instructions for deployment with capistrano
+
+To initialize a new server
+--------------------------
+
+1) Install your SSH public key on the server.
+
+2) Copy the "init_server" directory in the /tmp folder of the server, and run the doit.sh script as root. 
+WARNING: this script applies several changes to the system as root, it should be checked with care.
+When prompted for the password of the app user, set it as per company policy.
+
+3) When finished, edit the system configuration appropriately; for example edit /etc/nginx/sites-available/default to change the site virtual host.
+
+Deploy with Capistrano
+----------------------
+
+to check if the repository is accessible from the server:
+
+$ cap production git:check
+
+to run a new deploy:
+
+$ cap production deploy
+
+
+
+

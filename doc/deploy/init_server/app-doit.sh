@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+set -x
+
+# this script is called with sudo, passing the working directory as parameter
+cd $(dirname $0)
+
+# create postgresql database
+createdb fandom
+
+# create some configuration file for RVM
+cp etc/app-gemrc ~/.gemrc
+cp etc/app-rvmrc ~/.rvmrc
+cp etc/app-bashrc ~/.bashrc
+
+# setup SSH
+cp -a etc/ssh ~/.ssh/
+chmod 600 ~/.ssh/id_rsa
+
+# create a default database.yml file on the server
+mkdir -p ~/railsapps/Fandom/shared/config/
+cp etc/database.yml ~/railsapps/Fandom/shared/config/
+
+# install RVM and the base gems 
+\curl -sSL https://get.rvm.io | bash -s -- --version latest
+rvm install 1.9.3
+gem install bundler
+gem install rmagick -v '2.13.2'
