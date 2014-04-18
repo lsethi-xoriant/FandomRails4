@@ -9,3 +9,7 @@
 //= require easyadmin/select2.min
 //= require easyadmin/bootstrap-fileupload.min
 //= require easyadmin/app
+//= require canvas-admin/js/plugins/magnific/jquery.magnific-popup.min
+//= require canvas-admin/js/plugins/howl/howl.js
+//= require canvas-admin/js/plugins/morris/morris.min.js
+//= require canvas-admin/js/libs/raphael-2.1.2.min.js
