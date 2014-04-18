@@ -13,7 +13,7 @@ server {
 	listen 80 default;
 
 	# you could put a list of other domain names this application answers
-	server_name Fandom.shado.tv;
+	server_name fandom.shado.tv;
 	root /home/app/railsapps/Fandom/current/public;
 	access_log /var/log/nginx/Fandom.log;
 
@@ -21,7 +21,7 @@ server {
 
 	location / {
     	#all requests are sent to the UNIX socket
-    	proxy_pass  http://Fandom;
+    	proxy_pass  http://unix:/tmp/Fandom.socket:/;
     	proxy_redirect 	off;
 
     	proxy_set_header   Host         	$host;
@@ -46,8 +46,16 @@ server {
 	# cache the resource and navigate faster over the website
 	# this probably needs some work with Rails 3.1's asset pipe_line
 	location ~ ^/(images|javascripts|stylesheets|system)/  {
-  	root /home/app/railsapps/Fandom/current/public;
-  	expires max;
-  	break;
+  	  root /home/app/railsapps/Fandom/current/public;
+  	  expires max;
+  	  break;
 	}
+        
+        location ~ ^/assets/ {
+  	  root /home/app/railsapps/Fandom/current/public;
+          expires 1y;
+          add_header Cache-Control public;
+          add_header ETag "";
+          break;
+        }
 }
