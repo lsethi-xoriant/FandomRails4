@@ -88,3 +88,6 @@ gem 'foreman'
 gem 'eb_fast_deploy', git: 'git@github.com:hackatron/eb_fast_deploy.git'
 gem 'execjs'
 gem 'therubyracer'
+
+# this gem can be used to define models not bound to a database
+gem 'active_attr'
