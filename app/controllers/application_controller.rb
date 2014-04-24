@@ -1,7 +1,13 @@
 #!/bin/env ruby
 # encoding: utf-8
 
+require 'fandom_utils'
+
 class ApplicationController < ActionController::Base
+
+  include FandomUtils
+  before_filter :fandom_before_filter
+
   include ApplicationHelper
 
   rescue_from CanCan::AccessDenied do |exception|

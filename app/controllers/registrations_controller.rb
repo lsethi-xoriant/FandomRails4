@@ -1,5 +1,10 @@
+require 'fandom_utils'
 
 class RegistrationsController < Devise::RegistrationsController
+
+  include FandomUtils
+  before_filter :fandom_before_filter
+
   skip_before_filter :verify_authenticity_token
 
   def new

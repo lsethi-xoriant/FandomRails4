@@ -1,3 +1,6 @@
+require 'fandom_utils'
+include FandomUtils
+
 Fandom::Application.routes.draw do
 
   use_doorkeeper
