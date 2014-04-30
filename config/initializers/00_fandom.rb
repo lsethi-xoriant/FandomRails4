@@ -1,7 +1,8 @@
 # Initializer for Fandom specific settings. Most notably, client-specific configurations are set here.
 module Fandom
   class Application < Rails::Application
-
+    config.deploy_settings = YAML.load_file("config/environments/#{Rails.env}_deploy_settings.yml")
+    
     class FandomSite
       include ActiveAttr::TypecastedAttributes
       include ActiveAttr::MassAssignment
