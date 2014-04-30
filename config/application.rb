@@ -66,5 +66,9 @@ module Fandom
     config.action_view.field_error_proc = Proc.new { |html_tag, instance|
       "#{html_tag}".html_safe
     }
+
+    # Deploy settings are server/installation specific, and so they should not be "versioned". 
+    # Loading should be done the earliest in the boot process.
+    config.deploy_settings = YAML.load_file("config/deploy_settings.yml")
   end
 end

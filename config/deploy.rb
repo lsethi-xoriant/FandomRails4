@@ -1,13 +1,13 @@
 # config valid only for Capistrano 3.1
 lock '3.1.0'
 
-config=YAML.load_file('config/deploy_custom_settings.yml')
-hostname = config['server_hostname']
+config = YAML.load_file('config/deploy_settings.yml')
+hostname = config['capistrano']['server_hostname']
 role :app, hostname
 role :web, hostname
 role :db,  hostname, :primary => true
-set :repo_url, config['repo_url']
-set :ssh_options, { port: config['server_sshport'], forward_agent: true }
+set :repo_url, config['capistrano']['repo_url']
+set :ssh_options, { port: config['capistrano']['server_sshport'], forward_agent: true }
 
 set :application, 'Fandom'
 
@@ -44,7 +44,7 @@ set :scm, :git
 set :pty, true
 
 # Default value for :linked_files is []
-set :linked_files, %w{config/database.yml}
+set :linked_files, %w{config/database.yml config/deploy_settings.yml}
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
