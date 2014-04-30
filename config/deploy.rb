@@ -62,6 +62,11 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
+      puts "restarting unicorn..."
+      execute "/etc/init.d/railsweb restart"
+      sleep 5
+      puts "is unicorn running? Look at this ps!"
+      execute "ps aux | grep unicorn"
     end
   end
 

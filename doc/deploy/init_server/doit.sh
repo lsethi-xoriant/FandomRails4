@@ -57,6 +57,16 @@ cp etc/nginx-default /etc/nginx/sites-available/default
 service nginx restart
 
 #
+# Setup rails init script
+#
+
+cp etc/railsweb-init.d /etc/init.d/railsweb
+mkdir /etc/railsweb
+cp etc/railsweb-unicorn.conf /etc/railsweb/unicorn.conf
+update-rc.d railsweb defaults
+
+
+#
 # Run the other commands as user "app"
 #
 

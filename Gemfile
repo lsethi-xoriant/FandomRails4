@@ -49,7 +49,8 @@ group :development do
   # needed for deployment
   gem 'capistrano-rvm'
   gem 'capistrano'
-  gem 'capistrano-rails'  
+  gem 'capistrano-rails'
+  
 end
 
 group :development, :test do

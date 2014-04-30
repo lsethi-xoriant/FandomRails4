@@ -45,17 +45,23 @@ server {
 	# and add a far future expires header to it, making the browser
 	# cache the resource and navigate faster over the website
 	# this probably needs some work with Rails 3.1's asset pipe_line
-	location ~ ^/(images|javascripts|stylesheets|system)/  {
+	location ~ ^/(images|javascripts|stylesheets|system|fonts)/  {
   	  root /home/app/railsapps/Fandom/current/public;
   	  expires max;
   	  break;
 	}
         
-        location ~ ^/assets/ {
-  	  root /home/app/railsapps/Fandom/current/public;
-          expires 1y;
-          add_header Cache-Control public;
-          add_header ETag "";
-          break;
-        }
+    location ~ ^/assets/ {
+  	root /home/app/railsapps/Fandom/current/public;
+        expires 1y;
+        add_header Cache-Control public;
+        add_header ETag "";
+        break;
+    }
+
+    error_page 501 502 503 /maintenance.html;
+    location = /maintenance.html {
+        root   /home/app/public_html;
+    }
+    
 }
