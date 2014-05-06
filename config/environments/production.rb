@@ -77,7 +77,5 @@ Fandom::Application.configure do
   # config/environments/production.rb
   if config.deploy_settings.key?('paperclip')
     config.paperclip_defaults = config.deploy_settings['paperclip']
-  else
-    config.paperclip_defaults = config.deploy_settings['paperclip']
   end
 end
