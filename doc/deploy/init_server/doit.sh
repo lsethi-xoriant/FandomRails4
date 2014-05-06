@@ -61,6 +61,7 @@ service nginx restart
 #
 
 cp etc/railsweb-init.d /etc/init.d/railsweb
+chmod a+x /etc/init.d/railsweb
 mkdir /etc/railsweb
 cp etc/railsweb-unicorn.conf /etc/railsweb/unicorn.conf
 update-rc.d railsweb defaults
