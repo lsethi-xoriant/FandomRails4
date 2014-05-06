@@ -92,3 +92,5 @@ gem 'therubyracer'
 
 # this gem can be used to define models not bound to a database
 gem 'active_attr'
+
+gem 'apartment'

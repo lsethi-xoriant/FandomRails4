@@ -21,7 +21,9 @@ module Fandom
     def register_fandom_site(params)
       site = FandomSite.new(params)
       site.domains.each do |domain|
-        config.domain_by_site[domain] = site 
+        config.sites << site
+        config.domain_by_site[domain] = site
+        config.domain_by_site_id[domain] = site.id 
       end
       unless site.unbranded?
         ['stylesheets', 'javascripts', 'fonts'].each do |leaf|
@@ -30,7 +32,9 @@ module Fandom
       end      
     end
 
-    config.domain_by_site = {}    
+    config.sites = []
+    config.domain_by_site = {}
+    config.domain_by_site_id = {}
     register_fandom_site(
       id: 'fandom', 
       domains: ['fandom.shado.tv', 'fandom.localdomain']
