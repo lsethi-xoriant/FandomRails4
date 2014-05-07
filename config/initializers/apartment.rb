@@ -1,9 +1,9 @@
 # Require whichever elevator you're using below here...
 #
-#require 'apartment/elevators/generic'
+require 'apartment/elevators/generic'
 #require 'apartment/elevators/domain'
 #require 'apartment/elevators/subdomain'
-require 'apartment/elevators/host_hash'
+#require 'apartment/elevators/host_hash'
 
 #
 # Apartment Configuration
@@ -37,5 +37,13 @@ end
 ##
 # Elevator Configuration
 
-Rails.application.config.middleware.use 'Apartment::Elevators::HostHash', Rails.application.config.domain_by_site_id
+module Fandom
+  class Application < Rails::Application    
+    config.middleware.use 'Apartment::Elevators::Generic', Proc.new { |request| 
+      config.domain_by_site_id.fetch(request.host, config.unbranded_site.id)
+    }
+  end
+end
+
+
 

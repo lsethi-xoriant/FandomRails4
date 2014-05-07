@@ -10,10 +10,13 @@ module FandomUtils
     Rails.configuration.domain_by_site[request.host]
   end
   
-  # A filter that shall be included in all top-level controllers.
+  # A filter that shall be included in all top-level controllers; it handles the uri hostname to site mapping,
+  # showing a message to the user if the hostname has not been recognized
   def fandom_before_filter
     site = get_site_from_request!
-    unless site.unbranded?
+    if site.nil?
+      render template: 'application/url_mistyped'
+    elsif not site.unbranded?
       prepend_view_path "#{Rails.root}/site/#{site.id}/views"
     end
   end

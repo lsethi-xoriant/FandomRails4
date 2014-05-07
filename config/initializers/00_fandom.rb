@@ -25,7 +25,9 @@ module Fandom
         config.domain_by_site[domain] = site
         config.domain_by_site_id[domain] = site.id 
       end
-      unless site.unbranded?
+      if site.unbranded?
+        config.unbranded_site = site
+      else
         ['stylesheets', 'javascripts', 'fonts'].each do |leaf|
           config.assets.paths << Rails.root.join('site', site.id, 'assets', leaf)
         end
