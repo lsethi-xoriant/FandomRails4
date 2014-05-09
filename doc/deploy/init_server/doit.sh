@@ -53,6 +53,7 @@ EOF
 # Setup nginx
 # 
 
+cp etc/nginx.conf /etc/nginx/
 cp etc/nginx-default /etc/nginx/sites-available/default
 service nginx restart
 
