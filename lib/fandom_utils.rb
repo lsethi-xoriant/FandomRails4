@@ -21,21 +21,25 @@ module FandomUtils
     end
   end
   
-  # set browser and frontend caching; the page is cached by the reverse proxy if it's public and it's not authenticated; 
-  # beware: in this case the cookies (hence the session) are completely unset
-  # pages with form should never be cached, as they contain the CSRF token that should match with the user session   
-  def cache_control(seconds, is_public=false)
+  # Enable browser caching. is_public set to false instruct any intermediary cache (such as web proxies) 
+  # to not share the content for multiple users  
+  def browser_caching(seconds, is_public=true)
     if request.method == 'GET' || request.method == 'HEAD' 
       # this would be useful for akamai
       #headers['Edge-control'] = "!no-store, max-age=#{seconds/60}"
       
-      # this sets the Cache-Control header, that drives browser caching
-      expires_in seconds, :public => is_public, 'max-stale' => 0
+      expires_in seconds, :public => is_public, 'max-stale' => 0, 'must-revalidate' => true
+    end
+  end
+
+  # Handle headers in the response to allow frontend caching. Warning: it removes the session cookie, so this 
+  # method should be called only from controller actions that does not require it  
+  def edge_caching(seconds)
+    if current_user.nil?
+      env['rack.session.options'][:skip] = true
       
-      if is_public && current_user.nil?
-        env['rack.session.options'][:skip] = true
-        response.headers.delete('Set-Cookie')
-      end
+      # this tells nginx to ignore the Cache-Control header, used by browsers, and cache the resource for X seconds  
+      response.headers["X-Accel-Expires"] = seconds
     end
   end
 
