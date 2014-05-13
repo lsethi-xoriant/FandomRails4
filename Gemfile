@@ -94,3 +94,6 @@ gem 'therubyracer'
 gem 'active_attr'
 
 gem 'apartment'
+
+# cache store
+gem 'dalli'

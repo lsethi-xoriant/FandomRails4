@@ -9,9 +9,15 @@ Fandom::Application.configure do
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 
-  # Show full error reports and disable caching
+  # Show full error reports
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = false
+  # Caching is disabled by default in development, unless otherwise specified in the deploy settings
+  begin
+    config.action_controller.perform_caching = config.deploy_settings['development']['perform_caching']
+    puts 'caching enabled'
+  rescue
+    config.action_controller.perform_caching = false
+  end
 
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = false
@@ -48,5 +54,4 @@ Fandom::Application.configure do
       :authentication       => 'plain',
       :enable_starttls_auto => true
   }
-
 end

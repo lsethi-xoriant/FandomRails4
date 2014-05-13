@@ -30,7 +30,8 @@ apt-get install vim \
   postgresql-server-dev-${POSTGRESQL_VERSION} \
   nginx \
   curl \
-  libmagickwand-dev
+  libmagickwand-dev \
+  memcached
 apt-get build-dep ruby${RUBY_VERSION}
 
 #
