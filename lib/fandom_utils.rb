@@ -43,18 +43,23 @@ module FandomUtils
     end
   end
 
+  def get_cache_key(key)
+    site = get_site_from_request!
+    "#{site.id}:#{key}"
+  end
+
   # cache a block for a set amount of time
   def cache_short(key, &block)
-    Rails.cache.fetch(key, :expires_in => 1.minute, :race_condition_ttl => 30, &block)
+    Rails.cache.fetch(get_cache_key(key), :expires_in => 1.minute, :race_condition_ttl => 30, &block)
   end
   def cache_medium(key, &block)
-    Rails.cache.fetch(key, :expires_in => 5.minute, :race_condition_ttl => 1.minute, &block)
+    Rails.cache.fetch(get_cache_key(key), :expires_in => 5.minute, :race_condition_ttl => 1.minute, &block)
   end
   def cache_long(key, &block)
-    Rails.cache.fetch(key, :expires_in => 1.hour, :race_condition_ttl => 5.minute, &block)
+    Rails.cache.fetch(get_cache_key(key), :expires_in => 1.hour, :race_condition_ttl => 5.minute, &block)
   end
   def cache_huge(key, &block)
-    Rails.cache.fetch(key, :expires_in => 1.day, :race_condition_ttl => 1.hour, &block)
+    Rails.cache.fetch(get_cache_key(key), :expires_in => 1.day, :race_condition_ttl => 1.hour, &block)
   end
 
   # Can be used as a constrains in routes.rb to define site-specific routes.
