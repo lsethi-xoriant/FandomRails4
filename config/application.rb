@@ -73,7 +73,11 @@ module Fandom
 
     # the cache configuration cannot be moved in initializers because it should be done the earliest
     def config_cache
-      servers = config.deploy_settings['memcache']['servers'].split(',')
+      begin
+        servers = config.deploy_settings['memcache']['servers'].split(',')
+      rescue
+        puts('warning missing deploy settings for memcache!')
+      end
       config.cache_store = :dalli_store, *servers, {
         :namespace => 'f',
         :expires_in => 120,
