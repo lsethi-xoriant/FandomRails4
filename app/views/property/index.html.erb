@@ -1,13 +1,14 @@
 <%= render partial: "/application/user_bar" %>
+<% template_cache_short('home') do %>
+  <%= render partial: "/property/property_carousel" %>
 
-<%= render partial: "/property/property_carousel" %>
-
-<div class="container" ng-controller="CalltoactionListCtrl">
-  <div class="row">
-    <div class="col-md-12">
-    	<%= render partial: "/property/stream_calltoaction" %>
+  <div class="container" ng-controller="CalltoactionListCtrl">
+    <div class="row">
+      <div class="col-md-12">
+    	  <%= render partial: "/property/stream_calltoaction" %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <!--
 <div class="row">
