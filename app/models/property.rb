@@ -19,7 +19,7 @@ class Property < ActiveRecord::Base
 
 	accepts_nested_attributes_for :default_interaction_points
 
-	scope :active, where("activated_at<=? AND activated_at IS NOT NULL", Time.now).order("activated_at DESC")
+	scope :active, -> { where("activated_at<=? AND activated_at IS NOT NULL", Time.now).order("activated_at DESC") }
 
 	def set_activated_at
   	if activation_date.present? && activation_time.present?

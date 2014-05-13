@@ -26,7 +26,7 @@ class Calltoaction < ActiveRecord::Base
 
   accepts_nested_attributes_for :interactions
 
-  scope :active, where("activated_at<=? AND activated_at IS NOT NULL", Time.now).order("activated_at DESC")
+  scope :active, -> { where("activated_at<=? AND activated_at IS NOT NULL", Time.now).order("activated_at DESC") }
 
   def image_url
     image.url
