@@ -1,8 +1,17 @@
 module FandomUtils
 
-  # Returns the Site class defined for the requested domain. The request variable is taken by dynamic scoping
+  # Returns the Site class defined for the requested domain. 
+  # The request variable is taken by dynamic scoping, and the Site is set in the request itself 
   def get_site_from_request!
-    Rails.configuration.domain_by_site[request.host]
+    site = Rails.configuration.domain_by_site[request.host]
+    def request.site=(site)
+      @site = site
+    end
+    def request.site
+      @site
+    end
+    request.site = site
+    site
   end
 
   # Returns the Site class defined for the requested domain.
