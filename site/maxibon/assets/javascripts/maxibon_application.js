@@ -1,0 +1,10 @@
+//= require maxibon
+//= require jquery
+//= require jquery_ujs
+//= require angular
+//= require angular-resource
+//= require angular-route
+//= require angular_calltoaction
+//= require bootstrap
+//= require bootstrap-notify
+//= require bootstrap-fileupload

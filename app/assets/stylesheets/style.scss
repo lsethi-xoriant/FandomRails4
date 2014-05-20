@@ -1,9 +1,13 @@
+/* style style */
+
 $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
 $navbar-default-link-hover-bg: #eee;
 
-@import "/assets/bootstrap/bootstrap.scss";
+$grid-float-breakpoint:     1600px !default;
+
+@import "bootstrap/bootstrap";
 
 .browsehappy {
     margin: 0.2em 0;

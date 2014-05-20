@@ -1,0 +1,3 @@
+/**
+ * Maxibon-specific javascript
+ */
