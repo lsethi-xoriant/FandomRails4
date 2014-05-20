@@ -4,20 +4,19 @@
 require 'fandom_utils'
 
 class ApplicationController < ActionController::Base
+  protect_from_forgery except: :instagram_verify_token_callback
 
   include FandomUtils
-  before_filter :fandom_before_filter
-
   include ApplicationHelper
+
+  before_filter :fandom_before_filter
 
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = "Access denied!"
-    redirect_to root_url
+    redirect_to "/"
   end
 
-  protect_from_forgery except: :instagram_verify_token_callback
-
-  #before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" }
+  # before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" }
 
   def authenticate_admin
     authenticate_or_request_with_http_basic do |username, password|
@@ -34,47 +33,61 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # def sign_in_fb_from_episode
-  #   cookies[:ep] = params[:id].to_i
-  #   redirect_to "/auth/facebook" 
-  # end
+  def sign_in_fb_from_page
+    cookies[:connect_from_page] = request.referrer
+    redirect_to "/auth/facebook" 
+  end
 
-  # def sign_in_simple_from_episode
-  #   cookies[:ep] = params[:id].to_i
-  #   redirect_to "/sign_up"
-  # end
+  def sign_in_tt_from_page
+    cookies[:connect_from_page] = request.referrer
+    redirect_to "/auth/twitter" 
+  end
 
+  def sign_in_simple_from_page
+    cookies[:connect_from_page] = request.referrer
+    redirect_to "/users/sign_up"
+  end
+
+  # curl -F 'client_id=[CLIENT_ID]' \
+  #    -F 'client_secret=[CLIENT_SECRET]' \
+  #    -F 'object=tag' \
+  #    -F 'aspect=media' \
+  #    -F 'object_id=[TAG]' \
+  #    -F 'callback_url=http://[example.com]/instagram_verify_token_callback' \
+  #    https://api.instagram.com/v1/subscriptions/
   def instagram_verify_token_callback
     if params["hub.mode"] && params["hub.mode"] == "subscribe"
       render json: params["hub.challenge"]
     else
-      instagram = JSON.parse(open("https://api.instagram.com/v1/users/1236788604/media/recent/?client_id=#{ ENV["INSTAGRAM_APP_ID"] }&count=5").read)   
       calltoaction_save = true
-      instagram_media = instagram["data"].each do |m|
-        if Calltoaction.find_by_secondary_id(m["id"]).blank? && m["tags"].include?("fandomshado")
-          img = open(m["images"]["standard_resolution"]["url"])
-          calltoaction = Calltoaction.new(title: m["caption"]["text"], image: img, property_id: Property.first.id, 
-                                          activated_at: Time.at(m["created_time"].to_i), secondary_id: m["id"], media_type: "IMAGE")
-          interaction = calltoaction.interactions.build(when_show_interaction: "SEMPRE_VISIBILE", points: 100)
-          interaction.resource = Check.new(title: "CHECK", description: "Foto scattata...")
-          calltoaction_save = calltoaction_save && calltoaction.save
+      InstagramAdminUser.all.each do |iu|
+        begin
+          user = JSON.parse(open("https://api.instagram.com/v1/users/search?q=#{ iu.nickname }&client_id=f77c4dfff5e048b198504cb97a4c6194&count=1").read)
+          instagram = JSON.parse(open("https://api.instagram.com/v1/users/#{ user["data"][0]["id"] }/media/recent/?client_id=#{ ENV["INSTAGRAM_APP_ID"] }&count=5").read)   
+          instagram_media = instagram["data"].each do |m|
+            if Calltoaction.find_by_secondary_id(m["id"]).blank? && m["tags"].include?("NOMETAG")
+              img = open(m["images"]["standard_resolution"]["url"])
+
+              # Customize the calltoaction created.
+              calltoaction = Calltoaction.new(
+                title: m["caption"]["text"], image: img, property_id: Property.first.id, 
+                activated_at: Time.at(m["created_time"].to_i - 1.hour), secondary_id: m["id"], media_type: "IMAGE", 
+                enable_disqus: true, category_id: (category ? category.id : nil)
+              )
+
+              # Anchor interactions to instagram calltoaction.
+              # interaction = calltoaction.interactions.build(when_show_interaction: "SEMPRE_VISIBILE", points: 100)
+              # interaction.resource = Check.new(title: "CHECK", description: "Foto scattata...")
+
+              calltoaction_save = calltoaction_save && calltoaction.save
+            end
+          end
+        rescue Exception
+          calltoaction_save = false
         end
       end
       render json: calltoaction_save.to_json
     end
-  end
-
-  def reset_app
-    RewardingUser.destroy_all
-    GeneralRewardingUser.destroy_all
-    Userinteraction.destroy_all
-    UserBadge.destroy_all
-    UserComment.destroy_all
-    UserLevel.destroy_all
-    Quiz.update_all(cache_correct_answer: 0)
-    Quiz.update_all(cache_wrong_answer: 0)
-    Interaction.update_all(cache_counter: 0)
-    redirect_to "/"
   end
 
 end

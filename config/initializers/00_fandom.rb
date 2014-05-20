@@ -8,6 +8,8 @@ module Fandom
 
       attribute :id, type: String
       attribute :domains
+      attribute :twitter_integration, type: Boolean
+
       def unbranded?
         self.id == 'fandom'
       end
@@ -39,7 +41,8 @@ module Fandom
       config.domain_by_site_id = {}
       register_fandom_site(
         id: 'fandom',
-        domains: ['fandom.shado.tv', 'fandom.localdomain']
+        domains: ['fandom.shado.tv', 'fandom.localdomain'],
+        twitter: true
       )
     end
 

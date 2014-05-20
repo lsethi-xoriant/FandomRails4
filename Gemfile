@@ -85,7 +85,7 @@ gem 'nokogiri'
 
 gem 'aws-sdk', '~> 1.0'
 
-gem 'foreman'
+gem 'figaro'
 gem 'eb_fast_deploy', git: 'git@github.com:hackatron/eb_fast_deploy.git'
 gem 'execjs'
 gem 'therubyracer'
