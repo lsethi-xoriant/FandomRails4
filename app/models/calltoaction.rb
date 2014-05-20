@@ -1,7 +1,7 @@
 class Calltoaction < ActiveRecord::Base
   attr_accessible :title, :video_url, :image, :activated_at, :mobile_url, :interactions_attributes,
   					:activation_date, :activation_time, :cta_template_type, :property_id, :slug, :enable_disqus, :media_type,
-            :secondary_id
+            :secondary_id, :description
 
   extend FriendlyId
   friendly_id :title, use: :slugged
@@ -13,10 +13,11 @@ class Calltoaction < ActiveRecord::Base
 
   before_save :set_activated_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
 
-  has_attached_file :image, :styles => { :large => "600x600", :medium => "234x139>", :thumb => "100x100>" }, :default_url => "/assets/video1.jpg"
+  has_attached_file :image, :styles => { :large => "600x600", :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/video1.jpg"
   
   has_many :interactions, dependent: :destroy
   has_many :calltoaction_tags, dependent: :destroy
+  has_many :answer
 
   belongs_to :property
 
@@ -26,14 +27,14 @@ class Calltoaction < ActiveRecord::Base
 
   accepts_nested_attributes_for :interactions
 
-  scope :active, -> { where("activated_at<=? AND activated_at IS NOT NULL", Time.now).order("activated_at DESC") }
+  scope :active, -> { where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID'", Time.now).order("activated_at DESC") }
 
   def image_url
     image.url
   end
 
   def media_type_enum
-    ["IMAGE", "VIDEO"]
+    ["IMAGE", "VIDEO", "VOID"]
   end
 
   def check_video_interaction

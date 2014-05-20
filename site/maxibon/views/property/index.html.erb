@@ -1,0 +1,47 @@
+<%= render partial: "/application/user_bar" %>
+
+<script type="text/javascript" src="/assets/jquery.jcarousel.js"></script>
+<script type="text/javascript" src="/assets/jcarousel.skeleton.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/assets/jcarousel.skeleton.css">
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-10 col-md-offset-1 text-center">
+
+                <div class="jcarousel-wrapper">
+
+                    <!-- Carousel -->
+                    <div class="jcarousel">
+                        <ul>
+                            <li><img src="/assets/img_template_maxibon.png" style="width: 269px;"></li>
+                            <li><img src="/assets/img_template_maxibon.png" style="width: 269px;"></li>
+                            <li><img src="/assets/img_template_maxibon.png" style="width: 269px;"></li>
+                            <li><img src="/assets/img_template_maxibon.png" style="width: 269px;"></li>
+                            <li><img src="/assets/img_template_maxibon.png" style="width: 269px;"></li>
+                            <li><img src="/assets/img_template_maxibon.png" style="width: 269px;"></li>
+                        </ul>
+                    </div>
+
+                    <!-- Prev/next controls -->
+                    <a href="#" class="jcarousel-control-prev">&lsaquo; Prev</a>
+                    <a href="#" class="jcarousel-control-next">Next &rsaquo;</a>
+
+                    <!-- Pagination -->
+                    <p class="jcarousel-pagination">
+                        <!-- Pagination items will be generated in here -->
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.jcarousel').jcarousel({
+        center: true
+    });
+</script>

@@ -7,12 +7,12 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
-  match "/reset_app", :to => "application#reset_app"
+  post "/", to: "property#index"
 
-  # Captcha
+  # Captcha.
   match "/captcha", :to => "calltoaction#code_image"
 
-  # INSTAGRAM 
+  # Instagram subscribe. 
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
 
   match "profile", :to => "profile#index"
@@ -137,6 +137,5 @@ Fandom::Application.routes.draw do
   end
 
   root :to => "application#index"
-
 
 end

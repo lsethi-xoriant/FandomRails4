@@ -1,4 +1,6 @@
 class Userinteraction < ActiveRecord::Base
+  # TODO: check if after create an userinteraction cached values are update correctly.
+
   attr_accessible :user_id, :interaction_id, :answer_id, :promocode_id, :counter, :points, :added_points
 
   belongs_to :user
@@ -6,124 +8,115 @@ class Userinteraction < ActiveRecord::Base
   belongs_to :answer
   belongs_to :promocode
 
-  # Aggiorno tutti i valori in cache delle interaction ogni volta che aggiorno una userinteraction.
+  # Update all cache interaction value each time a userinteraction is updated or created.
   before_save :update_interaction_counter
 
-  after_create :update_rewarding_user # Ogni volte che compio una NUOVA azione aggiorno i punti utente.
+  # Update user profile each time an user do an action.
+  after_create :update_rewarding_user
 
-  # Alla creazione salvo anche i punti che quella interaction mi ha dato. I punti non possono essere modificati.
-  before_create :update_ui_points
+  before_create :init_ui_points
 
   after_destroy :update_interaction_counter_down
   after_destroy :update_rewarding_user_down
 
-  validates_uniqueness_of :interaction_id, :scope => :user_id, if: Proc.new { |ui| ui.user_id != (-1) }
+  # Move in controller.
+  # def check_interaction_limit_daily
+  #   uicount = Userinteraction.where("user_id=? AND interaction_id=? AND created_at<=? AND created_at>=?", 
+  #     user_id, interaction_id, DateTime.now.utc.change(hour: 23).change(min: 59).change(sec: 59), DateTime.now.utc.change(hour: 0).change(min: 0).change(sec: 0)).count
+  #   errors.add(:limit_exceeded, "hai raggiunto il limite giornaliero di inviti") if uicount > 4
+  # end
 
-  def update_ui_points
-    # Tengo traccia di quanti PUNTI valeva l'interazione nel momento in cui ho giocato.
+  def update_invite_points
+    property_id = interaction.resource.property_id
+    unless (ru = user.rewarding_users.find_by_property_id(property_id))
+      ru = RewardingUser.create(user_id: user.id, property_id: (property_id))
+    end
+
+    if self.points > 0
+      points_for_user = points - points_was
+      ru.update_attributes(points: (ru.points + points_for_user), credits: (ru.credits + points_for_user))
+    end
+  end
+
+  def update_invite_added_points
+    property_id = interaction.resource.property_id
+    unless (ru = user.rewarding_users.find_by_property_id(property_id))
+      ru = RewardingUser.create(user_id: user.id, property_id: (property_id))
+    end
+
+    if self.points > 0
+      points_for_user = added_points - added_points_was
+      ru.update_attributes(points: (ru.points + points_for_user), credits: (ru.credits + points_for_user))
+    end
+  end
+
+  def init_ui_points
     if interaction.resource_type == "Share"
       self.points = check_already_share_cta? ? 0 : interaction.points
     else
       self.points = interaction.points
-      self.added_points = interaction.added_points
+      if interaction.resource_type == "Quiz" && interaction.resource.quiz_type == "TRIVIA" && self.answer.correct
+        self.added_points = interaction.added_points 
+      end
     end
   end
 
   def update_interaction_counter
-    # Un utente puo' inserire un LIKE o UNLIKE ma la UserInteraction non viene cancellata per evitare che i punti
-    # vengano assegnati piu' volte. Ci si basa sul valore del counter 1 per il LIKE o 0 per l'UNLIKE.
-    if interaction.resource_type == "Like" && counter > 0
-      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-    elsif interaction.resource_type == "Like" && counter < 1
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-    end
-
-    if interaction.resource_type == "Play"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-    end
-
-    if interaction.resource_type == "Promocode"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-    end
-
-    if interaction.resource_type == "Share"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-    end
-
-    if interaction.resource_type == "Download"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-    end
-
-    if interaction.resource_type == "Check"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-    end
-
-    if interaction.resource_type == "Quiz" && interaction.resource.quiz_type == "VERSUS"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-    end
-
-    if interaction.resource_type == "Quiz" && interaction.resource.quiz_type == "TRIVIA"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-      if answer && answer.correct
-        interaction.resource.update_attribute(:cache_correct_answer, interaction.resource.cache_correct_answer + 1)
-      elsif answer && answer.correct.blank?
-        interaction.resource.update_attribute(:cache_wrong_answer, interaction.resource.cache_correct_answer + 1)
+    case interaction.resource_type
+    when "Like"
+      if counter > 0
+        interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
+      elsif counter < 1
+        interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
       end
+    when "Quiz"
+      if interaction.resource.quiz_type == "VERSUS"
+        interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
+      elsif interaction.resource.quiz_type == "TRIVIA"
+        interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
+        if answer && answer.correct
+          interaction.resource.update_attribute(:cache_correct_answer, interaction.resource.cache_correct_answer + 1)
+        elsif answer && answer.correct.blank?
+          interaction.resource.update_attribute(:cache_wrong_answer, interaction.resource.cache_correct_answer + 1)
+        end
+      end
+    else
+      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
     end
-
   end
 
   def update_interaction_counter_down
-    # Se vengono eliminate delle UserInteraction devo aggiornare di conseguenza i vari conteggi per mantenere
-    # i valori consistenti.
-    if interaction.resource_type == "Play"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - counter)
-    end
-
-    if interaction.resource_type == "Quiz" && interaction.resource.quiz_type == "VERSUS"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-    end
-
-    if interaction.resource_type == "Like"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-    end
-
-    if interaction.resource_type == "Promocode"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-    end
-
-    if interaction.resource_type == "Check"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-    end
-
-    if interaction.resource_type == "Download"
-      interaction.resource.update_attribute(:cache_counter, interaction.cache_counter - 1)
-    end
-
-    if interaction.resource_type == "Share"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-    end
-
-    if interaction.resource_type == "Quiz" && interaction.resource.quiz_type == "TRIVIA"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-      if answer && answer.correct
-        interaction.resource.update_attribute(:cache_correct_answer, interaction.resource.cache_correct_answer - 1)
-      elsif answer && answer.correct.blank?
-        interaction.resource.update_attribute(:cache_wrong_answer, interaction.resource.cache_correct_answer - 1)
+    case interaction.resource_type
+    when "Like"
+      if counter > 0
+        interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
       end
+    when "Play"
+      interaction.update_attribute(:cache_counter, interaction.cache_counter - counter)
+    when "Quiz"
+      if interaction.resource.quiz_type == "VERSUS"
+        interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
+      elsif interaction.resource.quiz_type == "TRIVIA"
+        interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
+        if answer && answer.correct
+          interaction.resource.update_attribute(:cache_correct_answer, interaction.resource.cache_correct_answer - 1)
+        elsif answer && answer.correct.blank?
+          interaction.resource.update_attribute(:cache_wrong_answer, interaction.resource.cache_correct_answer - 1)
+        end
+      end
+    else
+      interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
     end
-
   end
 
   def update_rewarding_user
     if user && (user != -1)
-      property_id = interaction.resource_type == "Promocode" ? interaction.resource.property_id : interaction.calltoaction.property_id
+      property_id = interaction.calltoaction.property_id
       unless (ru = user.rewarding_users.find_by_property_id(property_id))
         ru = RewardingUser.create(user_id: user.id, property_id: (property_id))
       end
 
       if self.points > 0
-         # I CREDITI aumentano di pari passo con i PUNTI.
         points_for_user = answer_id && answer.correct ? (self.points + self.added_points) : self.points
         ru.update_attributes(points: (ru.points + points_for_user), credits: (ru.credits + points_for_user))
       end
@@ -150,16 +143,15 @@ class Userinteraction < ActiveRecord::Base
     end
   end
 
-    def update_rewarding_user_down
+  def update_rewarding_user_down
     if user && (user != -1)
       # Aggiorno il RewardingUser, alcune azioni vengono tracciate anche per l'utente anonimo.
-      property_id = interaction.resource_type == "Promocode" ? interaction.resource.property_id : interaction.calltoaction.property_id
+      property_id = interaction.calltoaction.property_id
       unless (ru = user.rewarding_users.find_by_property_id(property_id))
         ru = RewardingUser.create(user_id: user.id, property_id: (property_id))
       end
 
       if self.points > 0
-         # Viene considerato che i CREDITI aumentano insieme ai PUNTI.
         points_for_user = answer_id && answer.correct ? (self.points + self.added_points) : self.points
         ru.update_attributes(points: (ru.points - points_for_user), credits: (ru.credits - points_for_user))
       end
@@ -188,9 +180,10 @@ class Userinteraction < ActiveRecord::Base
 
   private
 
-  # Restituisce se la calltoaction e' gia' stata condivisa con un altro tipo di provider.
+  # Return TRUE if the current calltoaction is already shared.
   def check_already_share_cta?
-    return Userinteraction.includes(:interaction).where("interactions.resource_type='Share' AND user_id=?", user_id).any?
+    return Userinteraction.includes(:interaction).where("interactions.calltoaction_id=? AND user_id=?", self.interaction.calltoaction_id, self.user_id).any?
   end
   
 end
+
