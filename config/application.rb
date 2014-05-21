@@ -70,6 +70,9 @@ module Fandom
       "#{html_tag}".html_safe
     }
 
+    # This setting allows to handle error pages (404 etc.) in the router  
+    config.exceptions_app = self.routes
+
     # Deploy settings are server/installation specific, and so they should not be "versioned". 
     # Loading should be done the earliest in the boot process.
     config.deploy_settings = YAML.load_file("config/deploy_settings.yml")
