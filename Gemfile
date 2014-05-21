@@ -23,10 +23,6 @@ gem 'angularjs-rails'
 gem "paperclip", "3.4.2"
 gem "simple_form"
 
-gem 'unicorn' # high performance web server
-gem 'rack-handlers' # needed by unicorn
-
-
 group :assets do
   gem 'turbo-sprockets-rails3'
   gem 'sprockets'
@@ -40,17 +36,19 @@ gem 'ejs'
 
 group :development do
   gem 'letter_opener'
-  gem 'thin'
   gem 'quiet_assets'
   gem 'better_errors', '>= 0.7.2'
   gem 'binding_of_caller'#, '>= 0.7.1', :platforms => [:mri_19, :rbx]
-  gem 'debugger'
+  
+  # the debugger gem does not work from an ide debugger
+  unless Kernel::caller.find { |x| x.match(/ruby-debug-ide/) }
+    gem 'debugger'
+  end
   
   # needed for deployment
   gem 'capistrano-rvm'
   gem 'capistrano'
   gem 'capistrano-rails'
-  
 end
 
 group :development, :test do
@@ -61,6 +59,8 @@ end
 
 group :production do
   gem 'dalli-elasticache'
+  gem 'unicorn' # high performance web server
+  gem 'rack-handlers' # needed by unicorn
 end
 
 gem 'rails_admin', '0.4.9'
