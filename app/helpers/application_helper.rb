@@ -6,7 +6,7 @@ module ApplicationHelper
 		android = request.user_agent =~ /Android/  
 
 		# Mobile and Android identifica il MOBILE di tipo Android, altrimenti con solo Android abbiamo il TABLET.
-		return iphone || (mobile && android)		
+		return !(iphone || (mobile && android)		)
 	end
 
 	def ipad?

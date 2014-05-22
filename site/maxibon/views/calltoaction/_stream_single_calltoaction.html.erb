@@ -1,0 +1,30 @@
+<div class="row">      
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="panel panel-default no-pad">
+      <div class="panel-body no-pad">
+
+        <!-- MEDIA -->
+        <div class="row">
+          <div class="col-md-12">
+            <% if calltoaction.media_type == "VIDEO" %>
+                <div class="video flex-video" style="background:#222;">
+                  <div id="home-stream-video-<%= calltoaction.id %>" iid="calltoaction-active-<%= calltoaction.id %>"></div>
+                </div>
+            <% else %>
+              <img src="<%= calltoaction.image %>" style="width: 100%; margin-bottom: 15px;">
+            <% end %>
+          </div>
+        </div>
+
+        <div class="row" style="height: 200px;">
+          <div class="col-md-12 text-center">
+            <h2><%= calltoaction.title %></h2>
+          </div>
+          <!-- UNDERVIDEO AREA HERE -->
+          <div id="home-undervideo-<%= calltoaction.id %>"></div>
+        </div>
+
+      </div>         
+    </div>        
+  </div>
+</div>

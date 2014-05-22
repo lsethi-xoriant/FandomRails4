@@ -8,3 +8,5 @@
 //= require bootstrap
 //= require bootstrap-notify
 //= require bootstrap-fileupload
+//= require maxibon_desktop_angular_stream_calltoaction
+//= require maxibon_mobile_angular_stream_calltoaction

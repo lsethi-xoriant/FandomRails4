@@ -121,6 +121,10 @@ Fandom::Application.routes.draw do
     end
   end
 
+  match "/append_calltoaction", :to => "property#append_calltoaction", defaults: { format: 'json' }
+  match "/calltoaction_overvideo_end", :to => "calltoaction#calltoaction_overvideo_end", defaults: { format: 'json' }
+  match "/update_play_interaction", :to => "calltoaction#update_play_interaction", defaults: { format: 'json' }
+
   match "rss", :to => "rss#global_rss", defaults: { format: 'rss' }
   resources :property, path: "" do
     match "profile", :to => "profile#show"
@@ -131,7 +135,6 @@ Fandom::Application.routes.draw do
       match "/get_comment_published", :to => "calltoaction#get_comment_published", defaults: { format: 'json' }
       match "/get_closed_comment_published", :to => "calltoaction#get_closed_comment_published", defaults: { format: 'json' }
       match "/next_disqus_page", :to => "calltoaction#next_disqus_page", defaults: { format: 'json' }
-      match "/update_play_interaction", :to => "calltoaction#update_play_interaction"
       match "/get_overvideo_interaction", :to => "calltoaction#get_overvideo_interaction"
     end
   end

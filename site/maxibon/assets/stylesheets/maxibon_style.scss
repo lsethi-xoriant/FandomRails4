@@ -1,0 +1,14 @@
+// MAXIBON
+body {
+    background-color: #7796ED;
+}
+
+.panel-carousel {
+     -webkit-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    float: left; 
+    margin: 15px 15px;
+}
+
+.home-carousel-li.active { color: red }
