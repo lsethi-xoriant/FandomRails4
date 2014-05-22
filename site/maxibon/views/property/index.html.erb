@@ -1,1 +1,5 @@
-<%= render partial: "mobile_index" %>
+<% if mobile_device? %>
+  <%= render partial: "mobile_index" %>
+<% else %>
+  <%= render partial: "desktop_index" %>
+<% end %>
