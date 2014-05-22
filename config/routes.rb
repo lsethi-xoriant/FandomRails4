@@ -125,6 +125,11 @@ Fandom::Application.routes.draw do
   match "/calltoaction_overvideo_end", :to => "calltoaction#calltoaction_overvideo_end", defaults: { format: 'json' }
   match "/update_play_interaction", :to => "calltoaction#update_play_interaction", defaults: { format: 'json' }
 
+  # error handling
+  match "/404", :to => "http_error#not_found_404"
+  match "/500", :to => "http_error#internal_error_500"
+  match "/422", :to => "http_error#unprocessable_entity_422"
+
   match "rss", :to => "rss#global_rss", defaults: { format: 'rss' }
   resources :property, path: "" do
     match "profile", :to => "profile#show"

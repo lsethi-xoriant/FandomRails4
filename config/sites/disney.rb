@@ -3,7 +3,7 @@ module Fandom
     register_fandom_site(
       id: 'disney', 
       domains: ['disney.fandom.localdomain'],
-      twitter: true
+      twitter_integration: true
     )      
   end
 end

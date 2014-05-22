@@ -11,8 +11,11 @@ end
 
 module Fandom
   class Application < Rails::Application
-
+    require_relative '../lib/config_utils'
+    include ConfigUtils
+    
     VERSION = '0.1'
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -67,29 +70,29 @@ module Fandom
       "#{html_tag}".html_safe
     }
 
+    # This setting allows to handle error pages (404 etc.) in the router  
+    config.exceptions_app = self.routes
+
     # Deploy settings are server/installation specific, and so they should not be "versioned". 
     # Loading should be done the earliest in the boot process.
     config.deploy_settings = YAML.load_file("config/deploy_settings.yml")
 
-    # the cache configuration cannot be moved in initializers because it should be done the earliest
-    def config_cache
-      begin
-        servers = config.deploy_settings['memcache']['servers'].split(',')
-      rescue
-        puts('warning missing deploy settings for memcache!')
-      end
-      config.cache_store = :dalli_store, *servers, {
-        :namespace => 'f',
-        :expires_in => 120,
-        # If a cache expires and due to heavy load several different processes will try
-        # to read data natively and then they all will try to write to cache. To avoid
-        # that case the first process to find an expired cache entry will bump the cache
-        # expiration time by the value set in this property
-        :race_condition_ttl => 120,
-        :compress => true
-      }
-    end
-    config_cache()
+    servers = get_deploy_setting('memcache/servers', 'localhost:11211')
+    config.cache_store = :dalli_store, *servers.split(','), {
+      :namespace => 'f',
+      :expires_in => 120,
+      # If a cache expires and due to heavy load several different processes will try
+      # to read data natively and then they all will try to write to cache. To avoid
+      # that case the first process to find an expired cache entry will bump the cache
+      # expiration time by the value set in this property
+      :race_condition_ttl => 120,
+      :compress => true
+    }
 
+    config.sites = []
+    config.domain_by_site = {}
+    config.domain_by_site_id = {}
+
+    load_site_configs()
   end
 end
