@@ -51,20 +51,27 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
   $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, autoplay) {
     key = 'home-video';
     if($scope.youtube_api_ready && ytplayer_hash[key]) {
-      $scope.calltoaction_id = calltoaction_id;
-      $scope.calltoaction_video_code = calltoaction_video_code;
+      $http.post("/update_calltoaction_share_content", { id: calltoaction_id })
+        .success(function(data) {
+          $scope.calltoaction_id = calltoaction_id;
+          $scope.calltoaction_video_code = calltoaction_video_code;
 
-      $("#home-overvideo").html("");
+          $("#share-footer").html(data);
+          $("#home-overvideo").html("");
 
-      $(".home-carousel-li").removeClass("active");
-      $("#home-carousel-li-" + calltoaction_id).addClass("active");
+          $(".home-carousel-li").removeClass("active");
+          $("#home-carousel-li-" + calltoaction_id).addClass("active");
 
-      if(!autoplay) {
-        ytplayer_hash[key].cueVideoById($scope.calltoaction_video_code);
-        playpressed_hash[key] = false;
-      } else {
-        ytplayer_hash[key].loadVideoById($scope.calltoaction_video_code);
-      }
+          playpressed_hash[key] = false;
+          if(!autoplay) {
+            ytplayer_hash[key].cueVideoById($scope.calltoaction_video_code);
+          } else {
+            ytplayer_hash[key].loadVideoById($scope.calltoaction_video_code);
+          }      
+
+        }).error(function() {
+          // Error.
+        });
     }
   }
 
@@ -89,7 +96,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $http.post("/update_play_interaction.json", { calltoaction_id: calltoactionactive.replace("calltoaction-active-", "") })
             .success(function(data) {
               // Evento salvato correttamente.            
-          }).error(function() {
+            }).error(function() {
               // Errore nel salvataggio dell'evento.
             });
             playpressed_hash[key] = true;
@@ -110,42 +117,25 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $("#share-modal").modal("show");
 
         }).error(function() {
-          // ERRORE
+          // ERROR.
         });
   };
 
-  $window.shareWith = function(provider, interaction_id, calltoaction_id) {
-
+  $window.shareWith =function(provider, interaction_id) {
     $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
     $("#share-" + provider + "-" + interaction_id).html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
 
     $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
         .success(function(data) {
-          // Modifico lo stato del bottone e notifico la condivisione.
-          $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
-          $("#share-" + provider + "-" + interaction_id).html("SHARE WITH " + provider);
+          $("#share-" + provider + "-" + interaction_id).attr('disabled', false);
+          $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI");
 
-          $("#share-modal").modal("hide");
-
-          if(provider == "email") {
-            $("#share-email-address-" + interaction_id).val("");
-            $("#share-" + provider + "-" + interaction_id).html("SHARE WITH EMAIL");
-            if(data == "false") {
-              $("#invalid-email-modal").modal("show");  
-            } else {
-              $("#share-" + calltoaction_id).addClass("btn-success");
-              $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
-            }
-
-          } else {
-            $("#share-" + calltoaction_id).addClass("btn-success");
-            $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
-          }
-
+          // TODO: COLOR THE POINT BADGE
+ 
         }).error(function() {
-          // ERRORE
+          // ERROR.
         });
-  };
+  }
 
   $window.closeShareAndOpenWarningModal = function(calltoaction_id, share_type) {
     $("#share-modal").modal("hide");

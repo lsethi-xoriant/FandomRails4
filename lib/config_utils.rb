@@ -46,7 +46,7 @@ module ConfigUtils
     if site.unbranded?
       config.unbranded_site = site
     else
-      ['stylesheets', 'javascripts', 'fonts'].each do |leaf|
+      ['stylesheets', 'javascripts', 'fonts', 'images'].each do |leaf|
         config.assets.paths << Rails.root.join('site', site.id, 'assets', leaf)
       end
     end

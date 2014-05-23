@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140519093001) do
+ActiveRecord::Schema.define(:version => 20140523075749) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20140519093001) do
     t.integer  "user_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.boolean  "new"
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"

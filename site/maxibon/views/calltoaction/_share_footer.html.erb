@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-sm-4 col-sm-offset-4">
+  <% if s = calltoaction.interactions.find_by_resource_type("Share") %>
+    <% s = s.resource %>
+    <% if current_user && (auth = current_user.authentications.find_by_provider(s.share_type.downcase)) %>
+      <button id="share-<%= s.share_type %>-<%= s.interaction.id %>" type="button" class="margin-bottom-10 btn btn-fb btn-block" onclick="shareWith('<%= s.share_type.downcase %>', <%= s.interaction.id %>)">CONDIVIDI</button>
+    <% else %>
+      <a target="_top" href="/sign_in_fb_from_page"><button type="button" class="margin-bottom-10 btn btn-fb btn-block">ENTRA CON <%= s.share_type.upcase %></button></a>
+    <% end %>
+  <% end %>
+  </div>
+</div>
+
+

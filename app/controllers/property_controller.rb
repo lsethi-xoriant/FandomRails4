@@ -8,7 +8,7 @@ class PropertyController < ApplicationController
     if mobile_device?
       @calltoactions = Calltoaction.active.limit(3)
     else
-      @calltoactions = Calltoaction.active
+      @calltoactions = Calltoaction.active_no_order.order("activated_at ASC")
     end
   end
 

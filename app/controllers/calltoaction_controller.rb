@@ -206,6 +206,15 @@ class CalltoactionController < ApplicationController
     end
   end
 
+  def update_calltoaction_share_content
+    calltoaction = Calltoaction.active.find(params[:id])
+    share_str = (render_to_string "/calltoaction/_share_footer", 
+            locals: { calltoaction: calltoaction }, layout: false, formats: :html)
+    respond_to do |format|
+      format.json { render json: share_str }
+    end
+  end
+
   def calltoaction_overvideo_end
     calltoaction = Calltoaction.active.find(params[:id])
     i = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
@@ -368,14 +377,14 @@ class CalltoactionController < ApplicationController
   def share
     i = Interaction.find(params[:interaction_id].to_i)
     ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
-    
+
     ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
 
     if params[:provier] = "facebook" && current_user && current_user.facebook
       if Rails.env.production?
         current_user.facebook.put_wall_post(" ", { name: i.resource.description, link: "#{ request.referer }", picture: i.resource.picture.url })
       else
-        current_user.facebook.put_wall_post(" ", { name: i.resource.description })
+        current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
       end
       respond_to do |format|
         format.json { render :json => "share".to_json }
