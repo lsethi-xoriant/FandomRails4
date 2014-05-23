@@ -24,12 +24,22 @@
                   <ul>
                     <% @calltoactions.each do |calltoaction| %>
                       <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.try(:first).id %>">
+
+
+
+                        <div style="position: relative;">
+                          <div class="home-carousel-cyrcle">
+                            <div class="home-carousel-cyrcle-children <%= "active" if calltoaction.id == @calltoactions.try(:first).id %>" id="home-carousel-cyrcle-children-<%= calltoaction.id %>"></div>
+                          </div>
+                        </div>
+
+
                         <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>)">
                           <div class="col-md-12" style="padding: 0 40px;">
-                            <img src="<%= calltoaction.image(:medium) %>" style="width: 100%;">
+                            <img src="<%= calltoaction.image %>" style="width: 100%;">
                           </div>
                           <div class="col-md-12" style="padding: 0 40px;">
-                            <div class="panel panel-default panel-carousel" style="width: 100%;">
+                            <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.try(:first).id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -38,8 +48,9 @@
                                     </div>                                        
                                 </div>
                             </div>
-                          </div>
+                          </div>                         
                         </div>
+
                       </li>
                     <% end %>
                   </ul>
@@ -60,14 +71,14 @@
 
       <div class="row">      
         <div class="col-md-8 col-md-offset-2">
-          <div class="panel panel-default">
-            <div class="panel-body" style="padding-bottom: 5px;">
+          <div class="panel panel-default" style="padding: 0;">
+            <div class="panel-body" style="padding: 5px;">
 
               <!-- MEDIA -->
               <div class="row">
                 <div class="col-md-12">
                   <% if @calltoactions.try(:first).media_type == "VIDEO" %>
-                      <div class="video flex-video" style="background:#222;">
+                      <div class="video flex-video" style="margin: 0;">
                         <div id="home-video" iid="calltoaction-active-<%= @calltoactions.try(:first).id %>"></div>
                         <!-- OVERVIDEO AREA HERE -->
                         <div id="home-overvideo"></div>
