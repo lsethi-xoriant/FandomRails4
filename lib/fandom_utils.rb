@@ -1,7 +1,8 @@
 module FandomUtils
 
   # Returns the Site class defined for the requested domain. 
-  # The request variable is taken by dynamic scoping, and the Site is set in the request itself 
+  # The request variable is taken by dynamic scoping, and the Site is set in the request itself.
+  # Moreover the environment variables are set according to the site 
   def get_site_from_request!
     site = Rails.configuration.domain_by_site[request.host]
     def request.site=(site)
@@ -11,6 +12,7 @@ module FandomUtils
       @site
     end
     request.site = site
+    ENV.update(site.environment)
     site
   end
 
@@ -84,5 +86,5 @@ module FandomUtils
       @site_ids.include?(site.id)  
     end
   end
-
+  
 end

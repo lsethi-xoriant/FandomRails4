@@ -26,6 +26,7 @@ module ConfigUtils
     attribute :domains
     attribute :twitter_integration, type: Boolean, :default => false
     attribute :assets_precompile, :default => []
+    attribute :environment, :default => {}
 
     def unbranded?
       self.id == 'fandom'
