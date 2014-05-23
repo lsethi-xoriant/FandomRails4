@@ -1,5 +1,3 @@
-/* style style */
-
 $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
@@ -8,6 +6,122 @@ $navbar-default-link-hover-bg: #eee;
 $grid-float-breakpoint:     1600px !default;
 
 @import "bootstrap/bootstrap";
+
+p.oblique { font-style:oblique } 
+
+button, h1, h2, h3, h4, h5, h6, li {
+    font-family: trade-gothic-lt-bold-condensed-20, helvetica, arial, sans-serif;
+}
+
+.bg-fluid {
+    background-image: url(/assets/bg.jpg);
+    background-size: 100% auto; 
+    background-repeat: no-repeat; 
+    background-color: #010437;
+}
+
+.bg-small {
+    background-image: url(/assets/bg.jpg);
+    background-size: 100% auto; 
+    background-repeat: no-repeat; 
+    background-color: #000;
+}
+
+.heading-logo {
+    width: 100%; 
+    height: 100px; 
+    background: url(/assets/logo.png) no-repeat; 
+    background-size: 100%; max-width: 340px; 
+    //background-size: 340px;
+    background-position: center;
+    text-indent: -9999px; 
+    display: block;
+    margin: 0 auto;
+}
+
+// CONFIGURE YOUR BIKE PAGE
+
+#bike-iframe {
+    min-height: 615px;
+    min-width: 1060px;
+    width: 100%
+}
+
+.yellow-point {
+    @extend .btn;
+    @extend .disabled;
+    opacity: 1;
+    background: #FFC629; 
+}
+
+.bike-configurator-paragraph-number {
+    border-radius: 50%; 
+    border: 2px solid #000; 
+    color: #000; 
+    height: 40px; 
+    width: 40px; 
+    font-size: 25px; 
+    padding-left: 11px;
+}
+
+.bike-configurator-paragraph-right {
+    border-radius: 50%; 
+    background: #32BA3B; 
+    color: #fff; 
+    height: 40px; 
+    width: 40px; 
+    font-size: 25px; 
+    padding-top: 4px; 
+    padding-left: 7px;
+}
+
+.how-to-container {
+    background: #6293ce; 
+    color: #fff; 
+    padding-top: 15px; 
+    padding-bottom: 15px;
+}
+
+.how-to {
+    background-image: url(/assets/come-partecipare-bg.jpg); 
+    background-size: 100% 100%; 
+    background-repeat: no-repeat; 
+    background-position: 0px -25px; 
+    padding-top: 15px;
+}
+
+.datepicker-dropdown {
+    background-color: #fff;
+}
+
+.badge.active {
+    background-color: #33CC47;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+.gray-bg {
+    background: #E8E8E8; 
+    padding-top: 20px;  
+}
+
+.gray-shadow {
+    -webkit-box-shadow:inset 0 5px 10px -5px #999999; 
+    box-shadow:inset 0 5px 10px -5px #999999;
+}
+
+.blue-shadow {
+    -webkit-box-shadow:inset 0 5px 10px -5px #182842; 
+    box-shadow:inset 0 5px 10px -5px #182842;
+}
+
+// CONFIGURE YOUR BIKE PAGE END
 
 .browsehappy {
     margin: 0.2em 0;
@@ -82,7 +196,19 @@ body {
     }
 }
 /* CUSTOM */
-.no-pad { padding: 0; padding-bottom: 15px; }
+
+.no-pad { 
+    padding: 0; 
+    //padding-bottom: 15px;
+}
+
+/*
+.panel {
+    .yes-pad {
+        padding: $panel-body-padding ($panel-body-padding*2) 0 $panel-body-padding;
+    }
+}
+*/
 
 .bkg-topbar {
     background-color: #f8f8f8;
@@ -92,36 +218,18 @@ body {
     background-size: cover;
 }
 
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-    .container {
-        max-width: 760px;
-    }
-
-    /* Remove the padding we set earlier */
-    .header,
-    .marketing,
-    .footer {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    /* Space out the masthead */
-    .header {
-        margin-bottom: 30px;
-    }
-    
-    /* Remove the bottom border on the jumbotron for visual effect */
-    .jumbotron {
-        border-bottom: 0;
-    }
-}
-
 /* STREAM */
-.stripes {
-    .row.stripe {
-        background-size: cover; 
-        min-height: 360px;
+
+.cta-stream {
+    h4, h6 {
+        text-transform: uppercase;
+    }
+    h6 { margin-top: 0; }
+    p {
+        line-height: 1em;
+        small {
+            color: #999;
+        }
     }
 }
 
@@ -156,10 +264,10 @@ body {
     }
     .cta-img {
         min-height:250px; 
-        background-position: center center !important; 
+        background-position: center center; 
         background-size: cover !important;
     }
-    h5.visible-xs, h5.category, .matrix-title {
+    h5.visible-xs, h5.category {
         color: #fff; 
         position: absolute; 
         bottom: 15px;
@@ -196,7 +304,7 @@ body {
 .btn-fb {
     color: white;
     background-color: #47639e;
-    border-color: #46b8da;
+    border-color: #5C65E0; //#46b8da;
 }
 
 span.notify {
@@ -220,22 +328,30 @@ span.notify {
     z-index: 1;
     margin: 0;
 }
-// TICKET BUTTON
+
 // NAV 
-.navbar-default .navbar-nav > li.play > a{
+.navbar-nav > li.play > a{
     background: #d9534f;
     color: #fff;
 }
-.navbar-default .navbar-nav > li.play > a:hover{
+.navbar-nav > li.play > a:hover{
     background: darken(#d9534f, 20%);
 }
-.navbar-default .navbar-nav > li.play-2 > a{
-    background: #f0ad4e;
+.navbar-nav > li.play-2 > a {
+    background: #6293ce;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.navbar-nav > li.play-2 > a:hover{
+    background: darken(#6293ce, 10%);
     color: #fff;
 }
-.navbar-default .navbar-nav > li.play-2 > a:hover{
-    //background: lighten(#f0ad4e, 20%);
+
+.navbar-fixed-top {
+    border: 0;
 }
+
 //NAV MOBILE
 .navbar-toggle.nav-avatar {
     border-radius: 24px;
@@ -315,11 +431,6 @@ span.notify {
         }
     }
     .form-control, .btn-account { margin-bottom: 1em; }
-}
-@media screen and (min-width: 300px) and (max-width: 768px) {
-    .img-profile { max-height: 64px; }
-    .border-right { border-right: 1px solid #e4e4e4; }
-    hr { clear: both; }
 }
 
 // LIVELLI
@@ -406,6 +517,12 @@ span.notify {
     .hidden-xs {
         h3 { margin-top:4px; }
     }
+    .panel.cta-stream {
+        .panel-body {
+            padding: 5px 0 5px 5px;
+        }
+    }
+
     .panel.cta-page {
         margin-top:15px;
         .panel-heading {
@@ -569,18 +686,6 @@ span.notify {
     margin-top: 2em;
     .lead { color: #fff; }
 }
-@media screen and (max-width: 768px) {
-    .page-header {
-        h1, h2 { font-size: 2em; }
-        h3 { font-size: 1.3em; }
-    }
-    .overlay-title {
-        .page-header {
-            h3 { margin-top: 0.7em; }
-            h2 { margin-top: 0.25em; }
-        }
-    }
-}
 
 /* COMMENTS */
 .insert-comment textarea {
@@ -591,24 +696,6 @@ span.notify {
     font-size: 13px;
 }
 
-
-/* CUSTOM */
-@media screen and (min-width: 1444px) {
-    .container {
-        max-width: 960px;
-    }
-}
-@media screen and (min-width: 992px) {
-    .v-center {
-      height: 50%;
-      margin: auto;
-      position: absolute;
-      top: 0;
-      left: 15px;
-      bottom: 0;
-      right: 15px;
-    }
-}
 .flex-video {
     position: relative;
     padding-top: 25px;
@@ -632,7 +719,7 @@ height: 100%;
 }
 
 @media only screen and (max-device-width: 800px), only screen and (device-width: 1024px) and (device-height: 600px), only screen and (width: 1280px) and (orientation: landscape), only screen and (device-width: 800px), only screen and (max-width: 767px) {
-.flex-video { padding-top: 0; }
+    .flex-video { padding-top: 0; }
 }
 
 // COVER TEMPLATE FOR LOGIN AND SIGNUP
@@ -642,4 +729,170 @@ height: 100%;
     min-height: 100%; 
     position: absolute; top: 0px;
     padding-top: 70px;
+}
+
+.panel-stream-share {
+    background: #EDEDED;
+    border: 1px solid #E0E0E0;
+    border-radius: 0;
+    -webkit-box-shadow: 0px 2px 1px -1px rgba(45, 45, 45, 0.45);
+    -moz-box-shadow: 0px 2px 1px -1px rgba(45, 45, 45, 0.45);
+    box-shadow: 0px 2px 1px -1px rgba(45, 45, 45, 0.45);
+}
+
+/* CUSTOM */
+@media (max-width: $screen-sm-min) {
+    .img-profile { max-height: 64px; }
+    .border-right { border-right: 1px solid #e4e4e4; }
+    hr { clear: both; }
+    .panel {
+        .yes-pad {
+            padding: $panel-body-padding $panel-body-padding*2 0 $panel-body-padding*2;
+        }
+        .cta-media {
+            overflow: none;
+            img {
+                @extend .image-responsive;
+                width: 100%;
+            }
+        }
+    }
+    .cta {
+        .panel.cta-stream {
+            .panel-body {
+                padding: 0;
+            }
+        }
+    }
+}
+
+@media (max-width: $screen-md-min) {
+    .cta {
+        .panel.cta-stream {
+            .panel-body {
+                padding: 0;
+            }
+        }
+    }
+}
+
+@media (min-width: $screen-sm-min) {
+    .panel {
+        .yes-pad {
+            padding: $panel-body-padding $panel-body-padding*2 0 $panel-body-padding*2;
+        }
+        .cta-media {
+            overflow: none;
+            img {
+                @extend .image-responsive;
+                width: 100%;
+            }
+        }
+        .panel-footer {
+            border-top: 0;
+        }
+    }
+    .page-header {
+        h1, h2 { font-size: 2em; }
+        h3 { font-size: 1.3em; }
+    }
+    .overlay-title {
+        .page-header {
+            h3 { margin-top: 0.7em; }
+            h2 { margin-top: 0.25em; }
+        }
+    }
+    .bike-configurator-instruction {
+        line-height: 40px;
+    }
+    .how-to {
+        background-image: none; 
+    }
+    .container {
+        max-width: 960px; //1060px;
+    }
+
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+    
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
+
+.panel.cta-stream {
+    -webkit-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+}
+
+@media (min-width: $screen-md-min) {
+    .v-center {
+      height: 100%;
+      margin: auto;
+      position: absolute;
+      top: 0;
+      left: 0px;
+      bottom: 0;
+      right: 0px;
+    }
+    .panel {
+        .cta-stream {
+            -webkit-box-shadow: 0px 14px 7px -10px rgba(0, 0, 0, 0.42);
+            -moz-box-shadow: 0px 14px 7px -10px rgba(0, 0, 0, 0.42);
+            box-shadow: 0px 14px 7px -10px rgba(0, 0, 0, 0.42);
+        }
+        .cta-md {
+            margin: 0;
+            position: relative; 
+            height: 380px;
+            background: #000;
+        }
+        .cta-stream-heading {
+            min-height: 235px;
+        }
+        .yes-pad {
+            padding: $panel-body-padding $panel-body-padding 0 $panel-body-padding;
+        }
+        .cta-media {
+            margin: 0;
+            padding-right: 0px; 
+            height: 100%;
+            overflow: hidden;
+            img {
+                height: 120%;
+                width: auto;
+                //width: 120%;
+                //margin: 0 0 0 -10%;
+            }
+        }
+        .cta-content {
+            margin: 0;
+            background: #FFF;
+            height: 100%;
+        }
+
+    }
+}
+
+@media (min-width: $screen-lg-min) {
+    .container {
+        max-width: 960px;
+    }
+    .panel {
+        .yes-pad {
+            padding: 0 $panel-body-padding 0 $panel-body-padding;
+        }
+    }
 }

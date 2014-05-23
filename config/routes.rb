@@ -121,6 +121,10 @@ Fandom::Application.routes.draw do
     end
   end
 
+  match "/append_calltoaction", :to => "property#append_calltoaction", defaults: { format: 'json' }
+  match "/calltoaction_overvideo_end", :to => "calltoaction#calltoaction_overvideo_end", defaults: { format: 'json' }
+  match "/update_play_interaction", :to => "calltoaction#update_play_interaction", defaults: { format: 'json' }
+
   # error handling
   match "/404", :to => "http_error#not_found_404"
   match "/500", :to => "http_error#internal_error_500"
@@ -136,7 +140,6 @@ Fandom::Application.routes.draw do
       match "/get_comment_published", :to => "calltoaction#get_comment_published", defaults: { format: 'json' }
       match "/get_closed_comment_published", :to => "calltoaction#get_closed_comment_published", defaults: { format: 'json' }
       match "/next_disqus_page", :to => "calltoaction#next_disqus_page", defaults: { format: 'json' }
-      match "/update_play_interaction", :to => "calltoaction#update_play_interaction"
       match "/get_overvideo_interaction", :to => "calltoaction#get_overvideo_interaction"
     end
   end

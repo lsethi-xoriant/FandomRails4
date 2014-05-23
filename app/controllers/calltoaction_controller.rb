@@ -206,7 +206,54 @@ class CalltoactionController < ApplicationController
     end
   end
 
-  # Resitiuisco i dati dell'interaction per poter generare il quiz.
+  def calltoaction_overvideo_end
+    calltoaction = Calltoaction.active.find(params[:id])
+    i = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
+
+    if i.resource_type == "Quiz" && i.resource.quiz_type
+      ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
+ 
+      render_calltoaction_overvideo_end_str = String.new
+      if params[:end]
+        calltoaction_correct_answer = i.resource.answers.find_by_correct(true)
+        if calltoaction_correct_answer.calltoaction
+          if mobile_device?
+            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_instantwin", 
+              locals: { }, layout: false, formats: :html)
+          else
+            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instantwin", 
+              locals: { }, layout: false, formats: :html)
+          end
+        end
+      else
+        calltoaction_question = i.resource.question
+
+        calltoaction_answers = Hash.new
+        calltoaction_user_answer = ui ? ui.answer_id : -1
+
+        calltoaction_answers = Array.new
+        i.resource.answers.each do |a|
+          calltoaction_answers << [a.id, a.text]
+        end
+
+        if mobile_device?
+          render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_trivia", 
+            locals: { calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+        else
+          render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", 
+            locals: { calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+        end
+
+      end
+
+    end
+
+    respond_to do |format|
+      format.json { render json: render_calltoaction_overvideo_end_str }
+    end
+  end
+
+  # Return interaction data for generate quiz.
   def get_overvideo_interaction
     i = Interaction.find(params[:interaction_id].to_i)
 
@@ -279,27 +326,28 @@ class CalltoactionController < ApplicationController
     end  
   end
 
-  # Aggiurno la riposta dell'utente inserendo in userinteraction un entry.
+  # Update user answer.
   def update_answer
     i = Interaction.find(params[:interaction_id].to_i)
     ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)
     
-    risp = Hash.new
+    ans = Answer.find(params[:answer_id])
 
-    # Non posso cambiare idea con il TRIVIA
-    if ui && i.resource.quiz_type == "VERSUS"
-      ui.update_attributes(answer_id: params[:answer_id].to_i, counter: (ui.counter + 1))
-    else
-      Userinteraction.create(answer_id: params[:answer_id].to_i, user_id: current_user.id, interaction_id: params[:interaction_id].to_i)    
+    risp = Hash.new
+    if ui && (i.resource.quiz_type == "VERSUS" || ans.calltoaction)
+      ui.update_attributes(answer_id: params[:answer_id], counter: (ui.counter + 1))
+    elsif ui.blank?
+      Userinteraction.create(answer_id: params[:answer_id], user_id: current_user.id, interaction_id: params[:interaction_id])    
     end
 
     if i.resource.quiz_type == "VERSUS"
       i.resource.answers.each do |a|
         ui_c = Userinteraction.where("interaction_id=? AND answer_id=?", i.id, a.id).count
-        risp["#{a.id}"] = ui_c > 0 ? (ui_c.to_f/i.userinteractions.count.to_f*100).round : 0
+        risp["#{a.id}"] = (ui_c.to_f/i.userinteractions.count.to_f*100).round
       end
     elsif i.resource.quiz_type == "TRIVIA"
       risp["current_correct_answer"] = i.resource.answers.find_by_correct(true).id
+      risp["next_calltoaction"] = ans.calltoaction if ans.calltoaction
     end
 
     respond_to do |format|
