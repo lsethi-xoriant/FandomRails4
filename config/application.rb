@@ -77,7 +77,8 @@ module Fandom
     # Loading should be done the earliest in the boot process.
     config.deploy_settings = YAML.load_file("config/deploy_settings.yml")
 
-    servers = get_deploy_setting('memcache/servers', 'localhost:11211')
+    # the IP address has to be used instead of 'localhost' because of a defect in dalli
+    servers = get_deploy_setting('memcache/servers', '127.0.0.1:11211')
     config.cache_store = :dalli_store, *servers.split(','), {
       :namespace => 'f',
       :expires_in => 120,
@@ -92,7 +93,8 @@ module Fandom
     config.sites = []
     config.domain_by_site = {}
     config.domain_by_site_id = {}
-
-    load_site_configs()
+    
+    enabled_sites = config.deploy_settings['enabled_sites'].split(',').map { |s| s.strip }
+    load_site_configs(enabled_sites)
   end
 end
