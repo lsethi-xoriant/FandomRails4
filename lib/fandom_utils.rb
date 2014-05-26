@@ -12,8 +12,15 @@ module FandomUtils
       @site
     end
     request.site = site
+
     ENV.update(site.environment)
-    site
+    begin
+      ENV.update(Rails.configuration.deploy_settings['development']['sites'][site.id]['environment'])
+    rescue
+      # pass
+    end
+
+    return site
   end
 
   # Returns the Site class defined for the requested domain.
