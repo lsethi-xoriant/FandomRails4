@@ -2,7 +2,6 @@ module FandomUtils
 
   # Returns the Site class defined for the requested domain. 
   # The request variable is taken by dynamic scoping, and the Site is set in the request itself.
-  # Moreover the environment variables are set according to the site 
   def get_site_from_request!
     site = Rails.configuration.domain_by_site[request.host]
     def request.site=(site)
@@ -12,14 +11,6 @@ module FandomUtils
       @site
     end
     request.site = site
-
-    ENV.update(site.environment)
-    begin
-      ENV.update(Rails.configuration.deploy_settings['development']['sites'][site.id]['environment'])
-    rescue
-      # pass
-    end
-
     return site
   end
 
@@ -37,7 +28,23 @@ module FandomUtils
     elsif not site.unbranded?
       prepend_view_path "#{Rails.root}/site/#{site.id}/views"
     end
+    configure_environment_for_site(site)
+    configure_omniauth_for_site(site)
   end
+
+  def configure_environment_for_site(site)
+    ENV.update(site.environment)
+    begin
+      ENV.update(Rails.configuration.deploy_settings['development']['sites'][site.id]['environment'])
+    rescue
+      # pass
+    end
+  end
+  
+  def configure_omniauth_for_site(site)
+    # TODO: 
+  end 
+
   
   # Enable browser caching. is_public set to false instruct any intermediary cache (such as web proxies) 
   # to not share the content for multiple users  
