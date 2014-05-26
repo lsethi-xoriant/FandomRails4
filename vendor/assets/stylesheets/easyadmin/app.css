@@ -3163,7 +3163,7 @@ table.dataTable th:active {
   margin-bottom: 2em;
 }
 #content-container .row {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 #content-container .row.row-marginless {
   margin-bottom: 0 !important;

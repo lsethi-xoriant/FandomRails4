@@ -3,6 +3,7 @@
 //= require angular
 //= require angular-resource
 //= require angular-route
+//= require ng-table
 //= require angular_calltoaction
 //= require bootstrap
 //= require bootstrap-notify
