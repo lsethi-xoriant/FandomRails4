@@ -17,13 +17,16 @@ old_pid = "/tmp/unicorn.Fandom.pid.oldbin"
 
 # Production specific settings
 if env == "production"
-  # Help ensure your application will always spawn in the symlinked
-  # "current" directory that Capistrano sets up.
-  working_directory "/home/app/railsapps/Fandom/current"
-
-  # feel free to point this anywhere accessible on the filesystem
-  user 'app', 'app'
-  shared_path = "/home/app/railsapps/Fandom/shared"
+  begin
+    # production paths can be overridden in development 
+    working_directory = Rails.configuration.deploy_settings['development']['unicorn_working_directory']
+    shared_path = working_directory
+  rescue
+    working_directory "/home/app/railsapps/Fandom/current"
+    shared_path = "/home/app/railsapps/Fandom/shared"
+    user 'app', 'app'
+  end
+  
   stderr_path "#{shared_path}/log/unicorn.stderr.log"
   stdout_path "#{shared_path}/log/unicorn.stdout.log"
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140404093303) do
+ActiveRecord::Schema.define(:version => 20140523075749) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -24,8 +24,10 @@ ActiveRecord::Schema.define(:version => 20140404093303) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.integer  "calltoaction_id"
   end
 
+  add_index "answers", ["calltoaction_id"], :name => "index_answers_on_calltoaction_id"
   add_index "answers", ["quiz_id"], :name => "index_answers_on_quiz_id"
 
   create_table "authentications", :force => true do |t|
@@ -39,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20140404093303) do
     t.integer  "user_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.boolean  "new"
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
@@ -81,8 +84,11 @@ ActiveRecord::Schema.define(:version => 20140404093303) do
     t.datetime "image_updated_at"
     t.string   "slug"
     t.string   "secondary_id"
+    t.text     "description"
+    t.integer  "parent"
   end
 
+  add_index "calltoactions", ["parent"], :name => "index_calltoactions_on_parent"
   add_index "calltoactions", ["slug"], :name => "index_calltoactions_on_slug"
 
   create_table "checks", :force => true do |t|
@@ -306,6 +312,12 @@ ActiveRecord::Schema.define(:version => 20140404093303) do
     t.string   "quiz_type"
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
+  end
+
+  create_table "registrations", :force => true do |t|
+    t.string   "title"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "rewarding_users", :force => true do |t|

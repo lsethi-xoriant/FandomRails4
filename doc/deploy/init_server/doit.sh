@@ -30,7 +30,8 @@ apt-get install vim \
   postgresql-server-dev-${POSTGRESQL_VERSION} \
   nginx \
   curl \
-  libmagickwand-dev
+  libmagickwand-dev \
+  memcached
 apt-get build-dep ruby${RUBY_VERSION}
 
 #
@@ -53,6 +54,7 @@ EOF
 # Setup nginx
 # 
 
+cp etc/nginx.conf /etc/nginx/
 cp etc/nginx-default /etc/nginx/sites-available/default
 service nginx restart
 

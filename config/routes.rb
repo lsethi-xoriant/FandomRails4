@@ -7,12 +7,12 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
-  match "/reset_app", :to => "application#reset_app"
+  post "/", to: "property#index"
 
-  # Captcha
+  # Captcha.
   match "/captcha", :to => "calltoaction#code_image"
 
-  # INSTAGRAM 
+  # Instagram subscribe. 
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
 
   match "profile", :to => "profile#index"
@@ -121,6 +121,16 @@ Fandom::Application.routes.draw do
     end
   end
 
+  match "/update_calltoaction_share_content", :to => "calltoaction#update_calltoaction_share_content", defaults: { format: 'json' }
+  match "/append_calltoaction", :to => "property#append_calltoaction", defaults: { format: 'json' }
+  match "/calltoaction_overvideo_end", :to => "calltoaction#calltoaction_overvideo_end", defaults: { format: 'json' }
+  match "/update_play_interaction", :to => "calltoaction#update_play_interaction", defaults: { format: 'json' }
+
+  # error handling
+  match "/404", :to => "http_error#not_found_404"
+  match "/500", :to => "http_error#internal_error_500"
+  match "/422", :to => "http_error#unprocessable_entity_422"
+
   match "rss", :to => "rss#global_rss", defaults: { format: 'rss' }
   resources :property, path: "" do
     match "profile", :to => "profile#show"
@@ -131,12 +141,10 @@ Fandom::Application.routes.draw do
       match "/get_comment_published", :to => "calltoaction#get_comment_published", defaults: { format: 'json' }
       match "/get_closed_comment_published", :to => "calltoaction#get_closed_comment_published", defaults: { format: 'json' }
       match "/next_disqus_page", :to => "calltoaction#next_disqus_page", defaults: { format: 'json' }
-      match "/update_play_interaction", :to => "calltoaction#update_play_interaction"
       match "/get_overvideo_interaction", :to => "calltoaction#get_overvideo_interaction"
     end
   end
 
   root :to => "application#index"
-
 
 end

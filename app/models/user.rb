@@ -14,13 +14,27 @@ class User < ActiveRecord::Base
   has_many :rewarding_users, dependent: :destroy
   has_many :userinteractions
   has_many :user_comments
+
+  after_save :append_rewarding_user # With invitation is enable: if: Proc.new { |u| u.invitation_token.blank? }
   has_one :general_rewarding_user
 
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }
 
   validates_presence_of :first_name
   validates_presence_of :last_name
-  #validates :privacy, :acceptance => { :accept => true }
+  validates :privacy, :acceptance => { :accept => true }
+
+  def append_rewarding_user
+    Property.active.each do |p|
+      registration_calltoaction = p.calltoactions.includes(:interactions).where("interactions.resource_type='Registration'").first
+      if registration_calltoaction
+        registration_intr = registration_calltoaction.interactions.find_by_resource_type("Registration")
+        unless Userinteraction.find_by_user_id_and_interaction_id(self.id, registration_intr.id)
+          Userinteraction.create(user_id: self.id, interaction_id: registration_intr.id, points: registration_intr.points)
+        end
+      end
+    end
+  end
 
   def twitter
     tt_user = self.authentications.find_by_provider("twitter")
@@ -28,15 +42,18 @@ class User < ActiveRecord::Base
       @twitter ||= Twitter::REST::Client.new do |config|
         config.consumer_key = ENV["TWITTER_APP_ID"]
         config.consumer_secret = ENV["TWITTER_APP_SECRET"]
-        config.oauth_token = tw_user.oauth_token
-        config.oauth_token_secret = tw_user.oauth_secret
+        config.access_token = tt_user.oauth_token
+        config.access_token_secret = tt_user.oauth_secret
       end
     end
   end
 
   def facebook
-    fb_user = self.authentications.find_by_provider("facebook")
-    @facebook ||= Koala::Facebook::API.new(fb_user.oauth_token) if fb_user
+    begin
+      fb_user = self.authentications.find_by_provider("facebook")
+      @facebook ||= Koala::Facebook::API.new(fb_user.oauth_token) if fb_user
+    rescue Exception => e
+    end 
   end
 
   def logged_from_omniauth auth, provider

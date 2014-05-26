@@ -1,187 +1,222 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container">
+<div class="container-fluid">
   
   <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :multipart => true }) do |f| %>
-
     <div class="row" style="margin-top: 1.5em;">
-    <div class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading profile-heading">
-          <%= render partial: "profile/profile_header" %>
-        </div>
-        <div class="panel-body profile-body">
-          <%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
-          <div class="row">
-            <div class="col-md-12">
-              <div id="livelli">
-                <div class="page-header">
-                  <h2>Account</h2>
-                </div>
-              </div>
-              <!--
-              <ul class="nav nav-tabs">
-                <li class="active"><a href="#">Livelli</a></li>
-                <li><a href="#">Badges</a></li>
-                <li><a href="#">Premi <span class="badge">2</span></a></li>
-                <li><a href="#">Classifica</a></li>
-              </ul>-->
-            </div>
+      <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-default">
+          <div class="panel-heading profile-heading">
+            <%= render partial: "profile/profile_header" %>
           </div>
-          <form>
+          <div class="panel-body profile-body">
+            <%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
             <div class="row">
-              <%= f.hidden_field :avatar_selected %>
-              <div class="col-xs-12">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                      <div class="col-sm-6">
-                        <div class="fileinput-new thumbnail" style="width: 150px; height: 150px;">
-                          <img src="<%= current_user.avatar %>" alt="...">
+              <div class="col-md-12">
+                <div id="livelli">
+                  <div class="page-header">
+                    <h2>Profilo</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <form>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <% if resource.errors.any? %>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="alert alert-danger">
+                          <p>Errori nel salvataggio dell'utente:</p>
+                          <p>
+                            <ul>
+                              <% resource.errors.full_messages.each do |msg| %>
+                                <li><%= msg %></li>
+                              <% end %>
+                            </ul>
+                          </p>
                         </div>
-                        <div class="fileinput-preview fileinput-exists thumbnail" style="width: 150px; height: 150px;"></div>
-                      </div>
-                      <div class="col-sm-6">
-                        <span class="btn btn-default btn btn-file"><span class="fileinput-new">Cambia immagine</span><span class="fileinput-exists">Modifica</span><%= f.file_field :avatar %></span>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-sm-1"></div>
-                  <div class="col-sm-5">
-                    <div class="list-group">
-                      <a id="upload-avatar" href="javascript: void(0)" onclick="updateAvatar('upload')" class="list-group-item <%= "active" if current_user.avatar_selected == "upload" %> avatar"><img src="<%= current_user.avatar(:thumb) %>" alt="..." class="img-circle img-profile" width="10%">&nbsp;&nbsp;&nbsp;Immagine caricata</a>
-                      <% if (auth = current_user.authentications.find_by_provider("twitter")) %>
-                        <a id="twitter-avatar" href="javascript: void(0)" onclick="updateAvatar('twitter')" class="list-group-item <%= "active" if current_user.avatar_selected == "twitter" %> avatar"><img src="<%= auth.avatar %>" alt="..." class="img-circle img-profile" width="10%">&nbsp;&nbsp;&nbsp;Immagine Twitter</a>
-                      <% end %>
-                      <% if (auth = current_user.authentications.find_by_provider("facebook")) %>
-                        <a id="facebook-avatar" href="javascript: void(0)" onclick="updateAvatar('facebook')" class="list-group-item <%= "active" if current_user.avatar_selected == "facebook" %> avatar"><img src="<%= auth.avatar %>" alt="..." class="img-circle img-profile" width="10%">&nbsp;&nbsp;&nbsp;Immagine Facebook</a>
-                      <% end %>
+                  <% elsif flash[:notice] %>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="alert alert-success"><%= flash[:notice] %></div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr>
-
-            <div class="row">
-              <div class="form-group">
-                <label for="inputEmail3" class="col-xs-3 control-label text-right">Twitter connect</label>
-                <div class="col-xs-9">
-                  <% if current_user.authentications.where("provider='twitter'").any? %>
-                    <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/twitter">disconnetti</a>
-                  <% else %>
-                    <a href="/auth/twitter"><button type="button" class="btn btn-default btn-account">Connect</button></a>
                   <% end %>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="form-group">
-                <label for="inputEmail3" class="col-xs-3 control-label text-right">Facebook connect</label>
-                <div class="col-xs-9">
-                  <% if current_user.authentications.where("provider='facebook'").any? %>
-                     <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/facebook">disconnetti</a>
-                  <% else %>
-                    <a href="/auth/facebook"><button type="button" class="btn btn-default btn-account">Connect</button></a>
-                  <% end %>
+
+              <div class="row">
+                <%= f.hidden_field :avatar_selected %>
+                <div class="col-xs-12">
+                  <div class="row">
+                    <div class="col-sm-4 text-center">
+                      <div class="fileinput fileinput-new" data-provides="fileinput">
+                          <div class="fileinput-new thumbnail" style="width: 150px; height: 115px;">
+                            <img src="<%= current_user.avatar %>">
+                          </div>
+                          <div class="fileinput-preview fileinput-exists thumbnail" style="width: 150px; height: 115px;"></div>
+                          <span class="btn btn-default btn btn-xs btn-file btn-block" style="vertical-align: top;"><span class="fileinput-new">Cambia immagine</span><span class="fileinput-exists">Modifica</span><%= f.file_field :avatar %></span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-5">
+                      <div class="list-group">
+                        <a id="upload-avatar" href="javascript: void(0)" onclick="updateAvatar('upload')" class="list-group-item <%= "active" if current_user.avatar_selected == "upload" %> avatar"><img src="<%= current_user.avatar(:thumb) %>" alt="..." class="img-circle img-profile" width="10%">&nbsp;&nbsp;&nbsp;Immagine caricata</a>
+                        <% if (auth = current_user.authentications.find_by_provider("twitter")) %>
+                          <a id="twitter-avatar" href="javascript: void(0)" onclick="updateAvatar('twitter')" class="list-group-item <%= "active" if current_user.avatar_selected == "twitter" %> avatar btn-tt"><img src="<%= auth.avatar %>" alt="..." class="img-circle img-profile" width="10%">&nbsp;&nbsp;&nbsp;Immagine Twitter</a>
+                        <% end %>
+                        <% if (auth = current_user.authentications.find_by_provider("facebook")) %>
+                          <a id="facebook-avatar" href="javascript: void(0)" onclick="updateAvatar('facebook')" class="list-group-item <%= "active" if current_user.avatar_selected == "facebook" %> avatar"><img src="<%= auth.avatar %>" alt="..." class="img-circle img-profile" width="10%">&nbsp;&nbsp;&nbsp;Immagine Facebook</a>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="row"></div><hr>
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Nome</label>
-              <div class="col-xs-9">
-                <%= f.text_field :first_name, :class => "form-control" %>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Cognome</label>
-              <div class="col-xs-9">
-                <%= f.text_field :last_name, :class => "form-control" %>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Email</label>
-              <div class="col-xs-9">
-                <%= f.text_field :email, :class => "form-control" %>
-              </div>
-            </div>
+              <hr>
 
-            <div class="row"></div><hr>
+              <div class="row">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label text-right">Twitter connect</label>
+                  <div class="col-xs-8 text-left">
+                    <% if current_user.authentications.where("provider='twitter'").any? %>
+                      <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/twitter">disconnetti</a>
+                    <% else %>
+                      <a href="/auth/twitter"><button type="button" class="btn btn-default btn-account">Connect</button></a>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label text-right">Facebook connect</label>
+                  <div class="col-xs-8">
+                    <% if current_user.authentications.where("provider='facebook'").any? %>
+                       <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/facebook">disconnetti</a>
+                    <% else %>
+                      <a href="/auth/facebook"><button type="button" class="btn btn-default btn-account">Connect</button></a>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              <div class="row"></div><hr>
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Nome</label>
+                <div class="col-xs-9">
+                  <%= f.text_field :first_name, :class => "form-control", readonly: "true" %>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Cognome</label>
+                <div class="col-xs-9">
+                  <%= f.text_field :last_name, :class => "form-control", readonly: "true" %>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Email</label>
+                <div class="col-xs-9">
+                  <%= f.text_field :email, :class => "form-control", readonly: "true" %>
+                </div>
+              </div>
 
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Nuova password</label>
-              <div class="col-xs-9">
-                <%= f.password_field :password, :class => "form-control" %>
-              </div>
-            </div>
+              <div class="row"></div><hr>
 
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Conferma nuova password</label>
-              <div class="col-xs-9">
-               <%= f.password_field :password_confirmation, :class => "form-control" %>
-              </div>
-            </div>
+              <!--
 
-            <!--
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Indirizzo</label>
-              <div class="col-xs-7">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="via">
+              <%# if cpu = Property.active.first.complete_profile_user %>
+                <p class="col-xs-12 text-center">Ottieni <span class="badge <%#= "active" if current_user.userinteractions.find_by_interaction_id(cpu.interaction.id) %>">+<%#= cpu.interaction.points %></span> dando altre informazioni su di te</p>
+              <%# end %>
+
+              <div class="form-group">
+                <label class="col-xs-3 control-label text-right">Professione</label>
+                <div class="col-xs-9">
+                  <%#= f.text_field :job, :class => "form-control" %>
+                </div>
               </div>
-              <div class="col-xs-2">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Numero">
+              <div class="form-group">
+                <label class="col-xs-3 control-label text-right">Titolo di studio</label>
+                <div class="col-xs-9">
+                  <%#= f.text_field :educational_qualification, :class => "form-control" %>
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Città</label>
-              <div class="col-xs-5">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Città">
+
+              -->
+
+              <div class="row"></div><hr>
+
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Nuova password</label>
+                <div class="col-xs-9">
+                  <%= f.password_field :password, :class => "form-control" %>
+                </div>
               </div>
-              <div class="col-xs-4">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Cap">
+
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Conferma nuova password</label>
+                <div class="col-xs-9">
+                 <%= f.password_field :password_confirmation, :class => "form-control" %>
+                </div>
               </div>
-            </div>
-            <div class="row"></div><hr>
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Telefono</label>
-              <div class="col-xs-9">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Telefono">
+
+              <!--
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Indirizzo</label>
+                <div class="col-xs-7">
+                  <input type="email" class="form-control" id="inputEmail3" placeholder="via">
+                </div>
+                <div class="col-xs-2">
+                  <input type="email" class="form-control" id="inputEmail3" placeholder="Numero">
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Cellulare</label>
-              <div class="col-xs-9">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Cellulare">
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Città</label>
+                <div class="col-xs-5">
+                  <input type="email" class="form-control" id="inputEmail3" placeholder="Città">
+                </div>
+                <div class="col-xs-4">
+                  <input type="email" class="form-control" id="inputEmail3" placeholder="Cap">
+                </div>
               </div>
-            </div>
-            <div class="row"></div><hr>
-            <div class="form-group">
-              <label for="inputEmail3" class="col-xs-3 control-label text-right">Fedelity code</label>
-              <div class="col-xs-9">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="#######">
+              <div class="row"></div><hr>
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Telefono</label>
+                <div class="col-xs-9">
+                  <input type="email" class="form-control" id="inputEmail3" placeholder="Telefono">
+                </div>
               </div>
-            </div>
-            -->
-          <form>
-        </div>
-        <div class="panel-footer text-right">
-          <button class="btn btn-success">Salva</button>
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Cellulare</label>
+                <div class="col-xs-9">
+                  <input type="email" class="form-control" id="inputEmail3" placeholder="Cellulare">
+                </div>
+              </div>
+              <div class="row"></div><hr>
+              <div class="form-group">
+                <label for="inputEmail3" class="col-xs-3 control-label text-right">Fedelity code</label>
+                <div class="col-xs-9">
+                  <input type="email" class="form-control" id="inputEmail3" placeholder="#######">
+                </div>
+              </div>
+              -->
+            <form>
+          </div>
+          <div class="panel-footer text-right">
+            <button class="btn btn-primary">Salva</button>
+          </div>
         </div>
       </div>
     </div>
-    </div>
-
   <% end %>
-
 </div>
-<footer class="bs-footer" role="contentinfo" style="padding-bottom: 1.5em;">
-  <div class="jumbotron bkg-topbar" style="margin-bottom: 0">
-    <div class="container">
-        <p>Copyright - TODO</p>
-    </div>
-  </div>
-</footer>
+
+<div class="container-fluid">
+  <%= render partial: "/application/footer" %>
+</div>
+
 
 <script type="text/javascript">
 
