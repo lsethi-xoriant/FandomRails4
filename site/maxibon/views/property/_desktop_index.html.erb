@@ -3,106 +3,110 @@
 <script type="text/javascript" src="/assets/jquery.jcarousel.js"></script>
 <script type="text/javascript" src="/assets/jcarousel.responsive.js"></script>
 
-<div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, '<%= @calltoactions.try(:first).video_url %>', '<%= @calltoactions.try(:first).id %>')">   
+<% if @calltoactions.any? %>
 
-    <div class="row" style="margin: 15px 0;">
-      <div class="row">
-        <div class="col-sm-6 col-sm-offset-3 text-center">
-          <img src="/assets/maxibon/logo.png" class="img-responsive" style="width: 100%; max-width: 450px; margin-left: auto; margin-right: auto;">
-          <h1 class="hidden">MAXIBON THE POOL</h1>
-        </div>
-        <div class="col-sm-8 col-sm-offset-2 text-center" style="padding-top: 0;">
-          <h3 style="margin-top: 0; color: #fff;">CALL TO ACTION PER LA VISIONE<br>DEI VIDEO IN DUE RIGHE</h3>
-        </div>
-      </div>
+  <div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, '<%= @calltoactions.first.video_url %>', '<%= @calltoactions.first.id %>')">   
 
-      <div class="row" style="padding-bottom: 20px;">
-        <!-- DESKTOP CAROUSEL -->
-        <div class="col-md-8 col-md-offset-2 text-center home-carousel" style="margin-bottom: 20px;">
-          <div class="jcarousel-wrapper" style="padding: 0 30px;">
-              <div class="jcarousel">
-                  <ul>
-                    <% @calltoactions.each do |calltoaction| %>
-                      <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.try(:first).id %>">
-
-
-
-                        <div style="position: relative;">
-                          <div class="home-carousel-cyrcle">
-                            <div class="home-carousel-cyrcle-children <%= "active" if calltoaction.id == @calltoactions.try(:first).id %>" id="home-carousel-cyrcle-children-<%= calltoaction.id %>"></div>
-                          </div>
-                        </div>
-
-
-                        <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>)">
-                          <div class="col-md-12" style="padding: 0 40px;">
-                            <img src="<%= calltoaction.image %>" style="width: 100%;">
-                          </div>
-                          <div class="col-md-12" style="padding: 0 40px;">
-                            <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.try(:first).id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <%= calltoaction.title %>
-                                        </div>
-                                    </div>                                        
-                                </div>
-                            </div>
-                          </div>                         
-                        </div>
-
-                      </li>
-                    <% end %>
-                  </ul>
-              </div>
-
-              <!-- PREV/NEXT -->
-              <a href="#" class="jcarousel-control-prev"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span></a>
-              <a href="#" class="jcarousel-control-next"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span></a>
-
-              <!-- PAGINATION -->
-              <p class="jcarousel-pagination">
-                  <!-- PAGINATION GENERATE HERE -->
-              </p>
-
+      <div class="row" style="margin: 15px 0;">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3 text-center">
+            <img src="/assets/maxibon/logo.png" class="img-responsive" style="width: 100%; max-width: 450px; margin-left: auto; margin-right: auto;">
+            <h1 class="hidden">MAXIBON THE POOL</h1>
+          </div>
+          <div class="col-sm-8 col-sm-offset-2 text-center" style="padding-top: 0;">
+            <h3 style="margin-top: 0; color: #fff;">CALL TO ACTION PER LA VISIONE<br>DEI VIDEO IN DUE RIGHE</h3>
           </div>
         </div>
-      </div>
 
-      <div class="row">      
-        <div class="col-md-8 col-md-offset-2">
-          <div class="panel panel-default" style="padding: 0;">
-            <div class="panel-body" style="padding: 5px;">
+        <div class="row" style="padding-bottom: 20px;">
+          <!-- DESKTOP CAROUSEL -->
+          <div class="col-md-8 col-md-offset-2 text-center home-carousel" style="margin-bottom: 20px;">
+            <div class="jcarousel-wrapper" style="padding: 0 30px;">
+                <div class="jcarousel">
+                    <ul>
+                      <% i = 1 %>
+                      <% @calltoactions.each do |calltoaction| %>
+                        <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>">
 
-              <!-- MEDIA -->
-              <div class="row">
-                <div class="col-md-12">
-                  <% if @calltoactions.try(:first).media_type == "VIDEO" %>
-                      <div class="video flex-video" style="margin: 0;">
-                        <div id="home-video" iid="calltoaction-active-<%= @calltoactions.try(:first).id %>"></div>
-                        <!-- OVERVIDEO AREA HERE -->
-                        <div id="home-overvideo"></div>
-                      </div>
-                  <% else %>
-                    <img src="<%= @calltoactions.try(:first).image %>" style="width: 100%; margin-bottom: 15px;">
-                  <% end %>
+                          <div style="position: relative;">
+                            <div class="home-carousel-cyrcle">
+                              <div class="home-carousel-cyrcle-children <%= "active" if calltoaction.id == @calltoactions.first.id %>" id="home-carousel-cyrcle-children-<%= calltoaction.id %>"></div>
+                            </div>
+                          </div>
+
+                          <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>)">
+                            <div class="col-md-12" style="padding: 0 40px;">
+                              <img src="<%= calltoaction.image %>" style="width: 100%;">
+                            </div>
+                            <div class="col-md-12" style="padding: 0 40px;">
+                              <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.try(:first).id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
+                                  <div class="panel-body">
+                                      <div class="row">
+                                          <div class="col-md-12">
+                                              <%= calltoaction.title %>
+                                          </div>
+                                      </div>                                        
+                                  </div>
+                              </div>
+                            </div>                         
+                          </div>
+
+                        </li>
+                        <% i = i + 1 %>
+                      <% end %>
+                    </ul>
                 </div>
-              </div>
-          
-            </div>         
-          </div>        
+
+                <!-- PREV/NEXT -->
+                <a href="#" class="jcarousel-control-prev"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span></a>
+                <a href="#" class="jcarousel-control-next"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span></a>
+
+                <!-- PAGINATION -->
+                <p class="jcarousel-pagination">
+                    <!-- PAGINATION GENERATE HERE -->
+                </p>
+
+            </div>
+          </div>
         </div>
+
+        <div class="row">      
+          <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default" style="padding: 0;">
+              <div class="panel-body" style="padding: 5px;">
+
+                <!-- MEDIA -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <% if @calltoactions.first.media_type == "VIDEO" %>
+                        <div class="video flex-video widescreen" style="margin: 0;">
+                          <div id="home-video" iid="calltoaction-active-<%= @calltoactions.first.id %>"></div>
+                          <!-- OVERVIDEO AREA HERE -->
+                          <div id="home-overvideo"></div>
+                          <div id="home-overvideo-title"><%= render partial: "/calltoaction/overvideo_play", locals: { calltoaction: @calltoactions.first, calltoaction_index: 1 } %></div>
+                        </div>
+                    <% else %>
+                      <img src="<%= @calltoactions.first.image %>" style="width: 100%; margin-bottom: 15px;">
+                    <% end %>
+                  </div>
+                </div>
+            
+              </div>         
+            </div>        
+          </div>
+        </div>
+
+        <div class="col-md-12" id="share-footer">
+          <%= render partial: "/calltoaction/share_footer", locals: { calltoaction: @calltoactions.first } %>
+        </div>
+
       </div>
+  </div>
 
-      <div class="col-md-12" id="share-footer">
-        <%= render partial: "/calltoaction/share_footer", locals: { calltoaction: @calltoactions.try(:first) } %>
-      </div>
+  <%= render partial: "/application/footer" %>
 
-    </div>
-</div>
+  <script type="text/javascript">
+      $('.jcarousel').jcarousel(); 
+  </script>
 
-<%= render partial: "/application/footer" %>
-
-<script type="text/javascript">
-    $('.jcarousel').jcarousel(); 
-</script>
+<% end %>
