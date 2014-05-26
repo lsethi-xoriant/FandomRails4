@@ -8,4 +8,5 @@
 *= require ./easyadmin/app
 *= require ./easyadmin/custom
 *= require ./easyadmin/select2
+*= require ./datepicker.css
 */

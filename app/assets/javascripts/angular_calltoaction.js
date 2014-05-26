@@ -36,7 +36,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 
 		if($window.comment_published_count != -1 && !$window.comment_must_be_approved)
 			$timeout(function() { updateCommentViewPolling(); }, 15000);
-	} // init
+	}; // init
 
 	$window.buildCommentHtml = function(c, k) {
 		html_to_return = 
@@ -51,7 +51,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 		        "</div>" + 
 	      	"</div>";
 		return html_to_return;	
-	} // buildCommentHtml
+	}; // buildCommentHtml
 
 	$window.updateCommentViewPolling = function() {
 		$http.post("/" + $scope.property_id + "/" + $scope.calltoaction_id + "/get_comment_published" , { offset: $window.comment_published_count })
@@ -64,7 +64,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 				showNewCommentFeedback();
 				$timeout(function() { updateCommentViewPolling(); }, 15000);
 			});
-	} // updateCommentViewPolling
+	}; // updateCommentViewPolling
 
 	$window.updateCommentViewOneTime = function() {
 		$http.post("/" + $scope.property_id + "/" + $scope.calltoaction_id + "/get_comment_published" , { offset: $window.comment_published_count })
@@ -76,7 +76,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 				});
 				showNewCommentFeedback();
 			});
-	} // updateCommentViewOneTime
+	}; // updateCommentViewOneTime
 
 	$window.updateClosedCommentView = function() {
 		if($window.closed_comment_published_count > 0) {
@@ -93,7 +93,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 					$("#div-comment").append(html_to_append);
 				});
 		}
-	}
+	};
 
 	$window.updateDisqusCommentView = function() {
 		$http.post("/" + $scope.property_id + "/" + $scope.calltoaction_id + "/next_disqus_page" , 
@@ -107,7 +107,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 				});
 				$("#div-comment").append(html_to_append);
 			});
-	}
+	};
 
 	function showNewCommentFeedback() {
 		$(".new-comment").animate({ backgroundColor: "#FFF5E5" }, 1000, function() {  
@@ -149,7 +149,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 		} else {
 			$("#registrate-modal").modal('show');
 		}
-	}
+	};
 
 	$window.updateDownload = function(interaction_id, download_url) {
 		if($scope.current_user) {
@@ -162,7 +162,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 		} else {
 			$("#registrate-modal").modal('show');
 		}
-	}
+	};
 
 	$window.shareWith =function(provider, interaction_id) {
 		$("#share-" + provider).attr('disabled', true); // Modifico lo stato del bottone.
@@ -178,7 +178,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 							message: { html: ("Devi connettere il tuo account a " + provider + " per poter condividere il contenuto") }
 						}).show();	 
 				});
-	}
+	};
 
 	$window.updateCheck = function(interaction_id) {
 		$("#button-inter-" + interaction_id).attr('disabled', true);
@@ -195,7 +195,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 		} else {
 			$("#registrate-modal").modal('show');
 		}
-	} // updateCheck
+	}; // updateCheck
 
 	function check_level_and_badge_up() {
 		if($scope.current_user) {
@@ -223,9 +223,9 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 	            		angular.forEach(data, function(percent, key) {
 							$("#data-answ-" + key).html(" " + percent + "%");
 							$("#bar-answ-" + key).css("width", percent + "%");
-						})
+						});
 
-	            		$("#calltoaction-overvideo-during-info").html("Il video ripartirà tra 3 secondi...")
+	            		$("#calltoaction-overvideo-during-info").html("Il video ripartirà tra 3 secondi...");
 
 						timeout_overvideo_show = $timeout(function() {
 					        ytplayer.playVideo(); 
@@ -241,7 +241,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
         } else {
         	$("#registrate-modal").modal('show');
         }
-	} // updateVersusAnswerOvervideo
+	}; // updateVersusAnswerOvervideo
 
 	$window.updateCheckAnswerOvervideo = function(interaction_id) {
 		$("#button-inter-" + interaction_id).attr('disabled', true);
@@ -254,13 +254,13 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 
 						$("#button-inter-" + interaction_id).removeAttr('onclick');
 
-	            		$("#calltoaction-overvideo-during-info").html("Il video ripartirà tra 3 secondi...")
+	            		$("#calltoaction-overvideo-during-info").html("Il video ripartirà tra 3 secondi...");
 
 						timeout_overvideo_show = $timeout(function() {
 					        ytplayer.playVideo(); 
-					        timeout_unlock_interaction = $timeout(function() { lock_interaction = false; }, 2000); 					        
+					        timeout_unlock_interaction = $timeout(function() { lock_interaction = false; }, 2000);
 					        $(".overvideo").hide();
-					        check_level_and_badge_up();   	
+					        check_level_and_badge_up();
 					    }, 3000);
 
 					}).error(function() {
@@ -270,7 +270,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
         } else {
         	$("#registrate-modal").modal('show');
         }
-	} // updateTriviaAnswerOvervideo
+	}; // updateTriviaAnswerOvervideo
 
 	$window.updateTriviaAnswerOvervideo = function(interaction_id, answer_id) {
 		$(".button-inter-" + interaction_id).attr('disabled', true);
@@ -287,7 +287,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 						$("#button-answ-" + answer_id).addClass("active");
 						$(".button-inter-" + interaction_id).removeAttr('onclick');
 
-	            		$("#calltoaction-overvideo-during-info").html("Il video ripartirà tra 3 secondi...")
+	            		$("#calltoaction-overvideo-during-info").html("Il video ripartirà tra 3 secondi...");
 
 						timeout_overvideo_show = $timeout(function() {
 					        ytplayer.playVideo(); 
@@ -303,7 +303,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
         } else {
         	$("#registrate-modal").modal('show');
         }
-	} // updateTriviaAnswerOvervideo
+	}; // updateTriviaAnswerOvervideo
 
 	$window.updateVersusAnswer = function(interaction_id, answer_id) {
 		$(".button-inter-" + interaction_id).attr('disabled', true); // Disabilito i pulsanti.
@@ -317,7 +317,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 	            		angular.forEach(data, function(percent, key) {
 							$("#data-answ-" + key).html(percent + "%");
 							$("#bar-answ-" + key).css("width", percent + "%");
-						})
+						});
 
 						check_level_and_badge_up();
 
@@ -329,7 +329,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
         	$(".button-inter-" + interaction_id).attr('disabled', false);
         	$("#registrate-modal").modal('show');
         }
-	} // updateVersusAnswerOvervideo
+	}; // updateVersusAnswerOvervideo
 
 	$window.updateTriviaAnswer = function(interaction_id, answer_id) {
 		$(".button-inter-" + interaction_id).attr('disabled', true);
@@ -356,7 +356,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
         	$("#registrate-modal").modal('show');
         	$(".button-inter-" + interaction_id).attr('disabled', false);
         }
-	} // updateTriviaAnswerOvervideo
+	}; // updateTriviaAnswerOvervideo
 
 	// Per includere una generica funzione nella pagina $window.nomefunzione = function().
 	// Inizializzazione player YT.
@@ -368,7 +368,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 			videoId: $scope.vcode,
 			events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
 		});
-	} // onYouTubeIframeAPIReady
+	}; // onYouTubeIframeAPIReady
 
 	$window.jumpTo = function(second) {
 		if(play_pressed) {
@@ -383,11 +383,11 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 				$("#registrate-modal").modal('show');
 			}
 		}
-	} // jumpTo
+	}; // jumpTo
 
 	// Callback chiamata quando il player e' pronto.
 	$window.onYouTubePlayerReady = function(player_id) {
-		ytduration = ytplayer.getDuration()
+		ytduration = ytplayer.getDuration();
 
 		interaction_progress_bar_html = new String(); //$("#interaction-progress-bar-point")
 		interaction_progress_bar_html = 
@@ -413,7 +413,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
           </div>
         </div>
         */
-	} // onYouTubePlayerReady
+	}; // onYouTubePlayerReady
 
 	// Callback chiamata quando lo stato del video viene modificato.
 	$window.onPlayerStateChange = function() {
@@ -435,7 +435,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 	  	} else if(player_state == 0){
 	  		play_pressed = false;
 	  	}
-	} // onPlayerStateChange
+	}; // onPlayerStateChange
 
 	function generateCheckAnswerHtml(answer, interaction_id, done) { 
         answer_html = new String();
@@ -599,7 +599,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
         */
 
         answer_length = Math.round(Object.keys(answer).length/2); var i = 0;
-		answer_html = "<div class=\"col-md-6\">"
+		answer_html = "<div class=\"col-md-6\">";
 		if(!done) {
 			angular.forEach(answer, function(answer, a_key) {
 				if(answer_length == i)
@@ -618,7 +618,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 				i += 1;
 
 				button_type = a_key == correct_answer_id ? "btn-success" : "btn-danger";
-				button_active = a_key == user_answer_id ? "active" : ""
+				button_active = a_key == user_answer_id ? "active" : "";
 				answer_html += 
 					"<button type=\"button\" id=\"button-answ-" + a_key + "\" class=\"btn-lg btn-block button-inter-" + interaction_id + " btn " + button_type + " " + button_active + "\">" + 
 						answer + 
@@ -640,7 +640,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 		current_second = Math.floor(current_video_time);
 		$("#interaction-progress-bar").css("width", ((current_video_time/ytduration*100)+1) + "%");
 		launchInteraction(current_second);
-	} // checkInteraction
+	}; // checkInteraction
 
 	$window.launchInteraction = function(s) {
 		if(!lock_interaction) {
@@ -674,7 +674,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 				}
 			});
 		}
-	} // launchInteraction
+	}; // launchInteraction
 	
 //});
 }

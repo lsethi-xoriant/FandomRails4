@@ -1,5 +1,10 @@
 //= require jquery
 //= require jquery_ujs
+//= require angular
+//= require angular-resource
+//= require angular-route
+//= require ng-table
+//= require angular_eventfilter
 //= require bootstrap
 //= require bootstrap-notify
 //= require easyadmin/jquery-ui-1.9.2.custom.min
@@ -13,3 +18,4 @@
 //= require canvas-admin/js/plugins/howl/howl.js
 //= require canvas-admin/js/plugins/morris/morris.min.js
 //= require canvas-admin/js/libs/raphael-2.1.2.min.js
+//= require bootstrap-datepicker
