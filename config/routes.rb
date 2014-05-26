@@ -21,6 +21,10 @@ Fandom::Application.routes.draw do
   match "profile/rankings", :to => "profile#rankings"
   match "profile/remove-provider/:provider", :to => "profile#remove_provider"
 
+  match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
+  match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
+  match "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
+
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
