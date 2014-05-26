@@ -28,9 +28,9 @@
 		                <% unless shareform.object.picture.blank? %><img src="<%= shareform.object.picture.url %>"><% end %>
 		            </div>
 		            <div>
-		              <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
-		              <span class="fileupload-exists">Change</span><%= shareform.file_field :picture  %></span>
-		              <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+		              <span class="btn btn-default btn-file"><span class="fileupload-new"><i class="fa fa-picture-o"></i></span>
+		              <span class="fileupload-exists"><i class="fa fa-pencil"></i></span><%= shareform.file_field :picture  %></span>
+		              <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload"><i class="fa fa-times-circle"></i></a>
 		            </div>
 		          </div>
 		      </div>

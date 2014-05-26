@@ -242,7 +242,7 @@ class CalltoactionController < ApplicationController
 
         calltoaction_answers = Array.new
         i.resource.answers.each do |a|
-          calltoaction_answers << [a.id, a.text]
+          calltoaction_answers << a
         end
 
         if mobile_device?
