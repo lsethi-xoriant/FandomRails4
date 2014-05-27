@@ -1,5 +1,11 @@
 module InstantwinHelper
 	
+	#
+	# update the points of an user for the contests
+	#
+	# user_id - id of user
+	# points - points gained by the user
+	#
 	def update_contest_points user_id, points
 	  
 	  time_current = Time.now.in_time_zone("Rome")
@@ -17,6 +23,12 @@ module InstantwinHelper
 	  
 	end
 	
+	#
+	# Get number of ticket for a specific user on a specific contest
+	#
+	# user_id - id of current user
+	# contest_id - id of the contest 
+	#
 	def get_tickets user_id, contest_id
 	  c = Contest.find(contest_id)
 	  cp = ContestPoint.where("user_id = ? AND contest_id = ?", user_id, contest_id)

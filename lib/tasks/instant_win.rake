@@ -15,6 +15,9 @@ namespace :instant_win do
   end
 
   #TODO MAXIBON
+  #
+  # create the default contest for maxibon and the periodicity type (daily and 60gg), the contest prizes and generate time to win
+  #
   def createMaxibonWins
     Apartment::Database.switch("maxibon")
     contest = Contest.create(:title => "Maxibon Acquafun", :start_date => "03/06/2014 11:00:00", :end_date => "01/08/2014 23:59:59", :property_id => Property.first.id)
@@ -45,6 +48,12 @@ namespace :instant_win do
   end
   
   #TODO MAXIBON
+  #
+  # create 20 time to win between during the validity contest period
+  #
+  # contest - contest for which generate time to win
+  # cp - contestperiodicity 
+  #
   def create60ggWins(contest,cp)
     beginning_date = contest.start_date.to_date
     day_range = (contest.end_date.to_date - contest.start_date.to_date).to_i
@@ -64,7 +73,13 @@ namespace :instant_win do
       winner_inserted += 1
     end
   end
-
+  
+  #
+  # create one timetowin per day form start_date of contest to end date
+  #
+  # contest - contest for which generate time to win
+  # cp - contestperiodicity 
+  #
   def createDailyWins(contest,cp)
     cdate = contest.start_date.to_date
     while cdate <= contest.end_date.to_date
@@ -78,7 +93,13 @@ namespace :instant_win do
       cdate += 1
     end
   end
-
+  
+  #
+  # Returns days in a month
+  #
+  # month - month want to know days amount
+  # year - specific year
+  # 
   def days_in_month(month, year = Time.now.year)
    return 29 if month == 2 && Date.gregorian_leap?(year)
    DAYS_IN_MONTH[month]
