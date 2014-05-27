@@ -139,6 +139,9 @@ Fandom::Application.routes.draw do
   match "/422", :to => "http_error#unprocessable_entity_422"
 
   match "rss", :to => "rss#global_rss", defaults: { format: 'rss' }
+
+  match "/extra", :to => "property#extra"
+
   resources :property, path: "" do
     match "profile", :to => "profile#show"
     match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }

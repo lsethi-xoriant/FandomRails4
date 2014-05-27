@@ -20,24 +20,21 @@
                       <% @calltoactions.each do |calltoaction| %>
                         <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>">
 
-                          <div style="position: relative;">
+                          <div style="position: relative; z-index: 9999;">
                             <div class="home-carousel-circle">
-                              <div class="home-carousel-circle-children <%= "active" if calltoaction.id == @calltoactions.first.id %>" id="home-carousel-circle-children-<%= calltoaction.id %>"></div>
+                              <div class="home-carousel-circle-children" id="home-carousel-circle-children-<%= calltoaction.id %>" style="width: 50px; height: 50px; margin-top: 30px;"></div>
                             </div>
                           </div>
 
                           <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>)">
                             <div class="col-sm-12" style="padding: 0 40px;">
-                              <img src="<%= calltoaction.image %>" style="width: 100%;">
+                              <img src="<%= calltoaction.image(:extra) %>" style="width: 100%; border: 5px solid #fff; border-radius: 5px;">
                             </div>
-                            <div class="col-sm-12" style="padding: 0 40px;">
-                              <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.try(:first).id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
+                            <div class="col-sm-10 col-sm-offset-1" style="padding: 0 40px; margin-top: -15px;">
+                              <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.first.id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
                                   <div class="panel-body">
                                       <div class="row">
-                                          <div class="col-sm-4 text-left">
-                                            <h2 style="margin-top: 0; margin-bottom: 0;">#<%= i %></h2>
-                                          </div>
-                                          <div class="col-sm-8 text-left" style="padding-left: 0;">
+                                          <div class="col-sm-12 text-center">
                                               <h5 style="margin: 0; padding-left: 0; text-transform: uppercase; word-wrap: break-word"><%= calltoaction.title %></h5>
                                           </div>
                                       </div>                                        

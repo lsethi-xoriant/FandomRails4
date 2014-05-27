@@ -12,6 +12,14 @@ class PropertyController < ApplicationController
     end
   end
 
+  def extra
+    if mobile_device?
+      @calltoactions = Calltoaction.active_extra.limit(3)
+    else
+      @calltoactions = Calltoaction.active_extra_no_order.order("activated_at ASC")
+    end
+  end
+
   def append_calltoaction
     render_calltoaction_str = String.new
     streamcalltoaction = Array.new

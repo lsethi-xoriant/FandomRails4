@@ -13,7 +13,7 @@ class Calltoaction < ActiveRecord::Base
 
   before_save :set_activated_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
 
-  has_attached_file :image, :styles => { :large => "600x600", :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/video1.jpg"
+  has_attached_file :image, :styles => { :large => "600x600", extra: "260x150#", :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/video1.jpg"
   
   has_many :interactions, dependent: :destroy
   has_many :calltoaction_tags, dependent: :destroy
@@ -27,8 +27,11 @@ class Calltoaction < ActiveRecord::Base
 
   accepts_nested_attributes_for :interactions
 
-  scope :active, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NULL OR tags.text<>'step')", Time.now).order("activated_at DESC") }
-  scope :active_no_order, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NULL OR tags.text<>'step')", Time.now) }
+  scope :active, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NULL OR (tags.text<>'step' AND tags.text<>'extra'))", Time.now).order("activated_at DESC") }
+  scope :active_no_order, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NULL OR (tags.text<>'step' AND tags.text<>'extra'))", Time.now) }
+
+  scope :active_extra, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NOT NULL AND tags.text='extra')", Time.now).order("activated_at DESC") }
+  scope :active_extra_no_order, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NOT NULL AND tags.text='extra')", Time.now) }
 
   def image_url
     image.url

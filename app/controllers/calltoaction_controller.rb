@@ -389,7 +389,7 @@ class CalltoactionController < ApplicationController
 
     if params[:provier] = "facebook" && current_user && current_user.facebook
       if Rails.env.production?
-        current_user.facebook.put_wall_post(" ", { name: i.resource.description, link: "#{ request.referer }", picture: i.resource.picture.url })
+        current_user.facebook.put_wall_post(" ", { name: i.resource.description, link: "#{ request.referer }", picture: "#{ root_url }#{i.resource.picture.url}" })
       else
         current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
       end
