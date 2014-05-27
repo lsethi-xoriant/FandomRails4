@@ -32,7 +32,7 @@
         <div class="modal-body text-center">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h2>TODO TODO TODO</h2>
-          <h4>Hai <button class="btn yellow-point user_tickets"><% c=Contest.first %><%= ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> biglietti</h4>
+          <h4>Hai <button class="btn yellow-point user_tickets"><% c = Contest.first %><%= c && ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> biglietti</h4>
 		  <div class="gioca">
 		  	<button class="btn btn-primary" onclick="playTicket()">GIOCA</button>
 		  </div>
@@ -90,7 +90,7 @@
 		$(".nascosto").hide();
 		$.ajax({
 	        type: "POST",
-	        data: {contest_id: <%= Contest.first.id %> },
+	        data: {contest_id: <%= Contest.first.id if Contest.any? %> },
 	        url: '/playticket.json',
 	        beforeSend: function(jqXHR, settings) {
 	            jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));

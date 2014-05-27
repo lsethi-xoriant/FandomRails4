@@ -1,7 +1,5 @@
 namespace :instant_win do
 
-  START_DATE = "2013-12-3"
-  END_DATE = "2014-3-12"
   DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
   desc "Genera tutte le data e ora di vincita del concorso"
@@ -17,7 +15,7 @@ namespace :instant_win do
   #TODO MAXIBON
   def createMaxibonWins
     Apartment::Database.switch("maxibon")
-    contest = Contest.create(:title => "Maxibon Acquafun", :start_date => "03/06/2014 11:00:00", :end_date => "01/08/2014 23:59:59", :property_id => Property.first.id)
+    contest = Contest.create(:title => "Maxibon Acquafun", :start_date => "03/05/2014 11:00:00", :end_date => "01/08/2014 23:59:59", :property_id => Property.first.id)
     periodicity_type_daily = PeriodicityType.create(:name => "Giornaliera", :period => 1)
     periodicity_type_maxibon_custom = PeriodicityType.create(:name => "60gg", :period => 60) 
     contest_periodicity_1 = ContestPeriodicity.create(:title => "Biglietto Aquafun 1", :periodicity_type_id => periodicity_type_daily.id, :contest_id => contest.id)

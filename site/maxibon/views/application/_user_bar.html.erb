@@ -11,14 +11,12 @@
     </div>
     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
       <ul class="nav navbar-nav">
-        <li><a href="#" style="padding-bottom: 5px;">MENU</a></li> 
+        <li><a href="/" style="padding-bottom: 5px;">HOME</a></li> 
         <!--<li><a href="browse.html"><span class="glyphicon glyphicon-search"> </span> Sfoglia</a></li>-->
         <% if current_user %>
-          <li><a href="/profile/edit">Profilo</a></li>
-          <li><a href="/profile/levels">Livelli</a></li>
-          <li><a href="/profile/badges">Badge</a></li>
-          <li><a href="/profile/rankings">Classifica</a></li>
-          <li><a href="/users/sign_out">Logout</a></li>
+          <li><a href="/profile/edit">PROFILO</a></li>
+          <li><a href="/profile/rankings">CLASSIFICA</a></li>
+          <li><a href="/users/sign_out">ESCI</a></li>
         <% else %>
           <li><a href="/users/sign_up"><span class="glyphicon glyphicon-user"></span> Login</a></li>
         <% end %>
