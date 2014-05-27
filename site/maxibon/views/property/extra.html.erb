@@ -1,0 +1,5 @@
+<% if mobile_device? %>
+  <%= render partial: "mobile_extra" %>
+<% else %>
+  <%= render partial: "desktop_extra" %>
+<% end %>
