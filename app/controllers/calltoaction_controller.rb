@@ -206,12 +206,17 @@ class CalltoactionController < ApplicationController
     end
   end
 
-  def update_calltoaction_share_content
+  def update_calltoaction_content
+    response = Hash.new
     calltoaction = Calltoaction.active.find(params[:id])
-    share_str = (render_to_string "/calltoaction/_share_footer", 
-            locals: { calltoaction: calltoaction }, layout: false, formats: :html)
+
+    response = {
+      "share_content" => (render_to_string "/calltoaction/_share_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
+      "overvideo_title" => (render_to_string "/calltoaction/_overvideo_play", locals: { calltoaction: calltoaction, calltoaction_index: params[:index] }, layout: false, formats: :html)
+    }
+
     respond_to do |format|
-      format.json { render json: share_str }
+      format.json { render json: response.to_json }
     end
   end
 
@@ -227,10 +232,10 @@ class CalltoactionController < ApplicationController
         calltoaction_correct_answer = i.resource.answers.find_by_correct(true)
         if calltoaction_correct_answer.calltoaction
           if mobile_device?
-            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_instantwin", 
+            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_instant_win", 
               locals: { }, layout: false, formats: :html)
           else
-            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instantwin", 
+            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
               locals: { }, layout: false, formats: :html)
           end
         end
@@ -242,15 +247,17 @@ class CalltoactionController < ApplicationController
 
         calltoaction_answers = Array.new
         i.resource.answers.each do |a|
-          calltoaction_answers << [a.id, a.text]
+          calltoaction_answers << a
         end
 
+        interaction_points = i.points + i.added_points
+
         if mobile_device?
-          render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_trivia", 
-            locals: { calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+          render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", #_undervideo_trivia
+            locals: { interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
         else
           render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", 
-            locals: { calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+            locals: { interaction_points: interaction_points, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
         end
 
       end

@@ -9,6 +9,11 @@ $grid-float-breakpoint:     1600px !default;
 
 @import "bootstrap/bootstrap";
 
+@font-face {
+    font-family: 'Oswald-Bold';
+    src: url('/assets/maxibon/Oswald-Bold.ttf');
+}
+
 body {
   background-image: url(/assets/maxibon/bg.jpg);
   background-position: top center;
@@ -22,30 +27,52 @@ body {
     color: #fff;
 }
 
+.overvideo-play h1 {
+    color: #fff; 
+    text-transform: uppercase; 
+    margin-top: 20px;
+}
+
+.overvideo-trivia {
+    padding-top: 8%; 
+    padding-bottom: 50%; 
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.img-circle-overvideo {
+    margin: 0 auto; 
+    width: 100%; 
+    border: 6px solid #fff;
+}
+
 .home-carousel-li.active { color: #000; }
 
-.home-carousel-cyrcle {
+.home-carousel-circle {
     position: absolute; top: 10px; left: 0;
 }
 
-.home-carousel-cyrcle-children {
+.home-carousel-circle-children {
     width: 60%; 
     height: 60%; 
     top: 10px;
     border-radius: 50%; 
     margin: 0 auto;
     background-color: #fff;
+
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 1);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 1);
+    box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 1);
 }
 
-.home-carousel-cyrcle-children.active {
+.home-carousel-circle-children.active {
     background-color: #003466;
 }
 
 p.oblique { font-style:oblique } 
 
 button, h1, h2, h3, h4, h5, h6, li {
-  font-family: 'Oswald', helvetica, arial, sans-serif;
-  font-weight: 700;
+  font-family: 'Oswald-Bold', helvetica, arial, sans-serif;
 }
 
 .panel-carousel {
@@ -55,10 +82,6 @@ button, h1, h2, h3, h4, h5, h6, li {
 }
 
 p.oblique { font-style:oblique } 
-
-button, h1, h2, h3, h4, h5, h6, li {
-    font-family: trade-gothic-lt-bold-condensed-20, helvetica, arial, sans-serif;
-}
 
 .bg-fluid {
     background-image: url(/assets/bg.jpg);
@@ -745,14 +768,13 @@ span.notify {
 
 .flex-video {
     position: relative;
-    padding-top: 25px;
     padding-bottom: 67.5%;
     height: 0;
     margin-bottom: 16px;
     overflow: hidden;
 }
  
-.flex-video.widescreen { padding-bottom: 57.25%; }
+.flex-video.widescreen { padding-bottom: 56.25%; }
 .flex-video.vimeo { padding-top: 0; }
  
 .flex-video iframe,
@@ -811,6 +833,35 @@ height: 100%;
             }
         }
     }
+
+    .overvideo-play {
+        h1 {
+            font-size: 16px;
+            color: #fff; 
+            text-transform: uppercase; 
+            margin-top: 15px;
+        }
+        h4 {
+            font-size: 10px;
+        }
+        .img-ticket {
+            width: 30px;
+        }
+    }
+
+    .overvideo-trivia {
+        padding-top: 3%;
+        h2 {
+            font-size: 16px;
+        }
+    }
+
+    .img-circle-overvideo {
+        margin: 0 auto; 
+        width: 100%; 
+        border: 3px solid #fff;
+    }
+
 }
 
 @media (max-width: $screen-md-min) {

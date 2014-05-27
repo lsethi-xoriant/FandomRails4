@@ -55,10 +55,17 @@ module ConfigUtils
   end
   
   # Load Fandom sites configurations from the config/sites directory
-  def load_site_configs
+  #  enabled_sites - consider only sites listed in this array. If empty, take all sites
+  def load_site_configs(enabled_sites)
+    enabled_site_set = Set.new(enabled_sites) 
+    
     dir = Rails.root.join('config', 'sites')
-    dir.entries.find_all { |p| p.to_s.end_with?('.rb') }.each { |p| 
+    dir.entries.find_all { |f| site_config_file?(f, enabled_site_set) }.each { |p| 
       require(dir.join(p)) }
+  end
+  def site_config_file?(file, enabled_site_set)
+    filename = file.to_s
+    filename.end_with?('.rb') && (enabled_site_set.empty? || enabled_site_set.include?(filename[0..-4]))
   end
   
 end

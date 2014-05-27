@@ -3,106 +3,131 @@
 <script type="text/javascript" src="/assets/jquery.jcarousel.js"></script>
 <script type="text/javascript" src="/assets/jcarousel.responsive.js"></script>
 
-<div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, '<%= @calltoactions.try(:first).video_url %>', '<%= @calltoactions.try(:first).id %>')">   
+<% if @calltoactions.any? %>
 
-    <div class="row" style="margin: 15px 0;">
-      <div class="row">
-        <div class="col-sm-6 col-sm-offset-3 text-center">
-          <img src="/assets/maxibon/logo.png" class="img-responsive" style="width: 100%; max-width: 450px; margin-left: auto; margin-right: auto;">
-          <h1 class="hidden">MAXIBON THE POOL</h1>
-        </div>
-        <div class="col-sm-8 col-sm-offset-2 text-center" style="padding-top: 0;">
-          <h3 style="margin-top: 0; color: #fff;">CALL TO ACTION PER LA VISIONE<br>DEI VIDEO IN DUE RIGHE</h3>
-        </div>
-      </div>
+  <div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, '<%= @calltoactions.first.video_url %>', '<%= @calltoactions.first.id %>')">   
 
-      <div class="row" style="padding-bottom: 20px;">
-        <!-- DESKTOP CAROUSEL -->
-        <div class="col-md-8 col-md-offset-2 hidden-xs text-center home-carousel" style="margin-bottom: 20px;">
-          <div class="jcarousel-wrapper" style="padding: 0 30px;">
-              <div class="jcarousel">
-                  <ul>
-                    <% @calltoactions.each do |calltoaction| %>
-                      <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.try(:first).id %>">
-
-
-
-                        <div style="position: relative;">
-                          <div class="home-carousel-cyrcle">
-                            <div class="home-carousel-cyrcle-children <%= "active" if calltoaction.id == @calltoactions.try(:first).id %>" id="home-carousel-cyrcle-children-<%= calltoaction.id %>"></div>
-                          </div>
-                        </div>
-
-
-                        <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>)">
-                          <div class="col-md-12" style="padding: 0 40px;">
-                            <img src="<%= calltoaction.image %>" style="width: 100%;">
-                          </div>
-                          <div class="col-md-12" style="padding: 0 40px;">
-                            <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.try(:first).id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <%= calltoaction.title %>
-                                        </div>
-                                    </div>                                        
-                                </div>
-                            </div>
-                          </div>                         
-                        </div>
-
-                      </li>
-                    <% end %>
-                  </ul>
+      <div class="row" style="margin: 15px 0;">
+        <div class="row">
+          <div class="col-xs-6 col-xs-offset-3 text-center no-pad" style="margin-right: 0;">
+            <img src="/assets/maxibon/logo.png" class="img-responsive" style="width: 100%; max-width: 450px; margin-left: auto; margin-right: auto;">
+            <h1 class="hidden">MAXIBON THE POOL</h1>
+          </div>
+          
+          <div class="col-sm-3 hidden-xs text-left" style="padding: 20px 15px 0 0; margin-left: -15px;">
+            <div style="position: relative;">
+              <div style="position: absolute; left: 120px;">
+                <img class="img-circle" src="<%= current_avatar %>" style="width: 50px; border: 3px solid #fff;">
               </div>
+            </div>
 
-              <!-- PREV/NEXT -->
-              <a href="#" class="jcarousel-control-prev"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span></a>
-              <a href="#" class="jcarousel-control-next"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span></a>
+            <div style="position: relative;">
+              <div style="position: absolute; left: 30px; top: 25px;">
+                <h5 style="text-transform: uppercase; font-size: 11px; padding-left: 0; text-align: left;">i tuoi biglietti</h5>
+                <button class="btn yellow-point" style="margin-right: 5px;">0</button><button class="btn btn-danger" data-toggle="modal" data-target="#instant-win-modal">VINCI</button>
+              </div>
+            </div>
 
-              <!-- PAGINATION -->
-              <p class="jcarousel-pagination">
-                  <!-- PAGINATION GENERATE HERE -->
-              </p>
+            <img src="/assets/maxibon/ticket.png" style="max-width: 200px; margin-right: auto;">
+          </div>
 
+          <div class="col-xs-8 col-xs-offset-2 text-center" style="padding-top: 0;">
+            <h3 style="margin-top: 0; color: #fff;">CALL TO ACTION PER LA VISIONE<br>DEI VIDEO IN DUE RIGHE</h3>
           </div>
         </div>
-      </div>
 
-      <div class="row">      
-        <div class="col-md-8 col-md-offset-2">
-          <div class="panel panel-default" style="padding: 0;">
-            <div class="panel-body" style="padding: 5px;">
+        <div class="row hidden-xs" style="padding-bottom: 20px;">
+          <!-- DESKTOP CAROUSEL -->
+          <div class="col-md-8 col-md-offset-2 text-center home-carousel" style="margin-bottom: 20px;">
+            <div class="jcarousel-wrapper" style="padding: 0 30px;">
+                <div class="jcarousel">
+                    <ul>
+                      <% i = 1 %>
+                      <% @calltoactions.each do |calltoaction| %>
+                        <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>">
 
-              <!-- MEDIA -->
-              <div class="row">
-                <div class="col-md-12">
-                  <% if @calltoactions.try(:first).media_type == "VIDEO" %>
-                      <div class="video flex-video" style="margin: 0;">
-                        <div id="home-video" iid="calltoaction-active-<%= @calltoactions.try(:first).id %>"></div>
-                        <!-- OVERVIDEO AREA HERE -->
-                        <div id="home-overvideo"></div>
-                      </div>
-                  <% else %>
-                    <img src="<%= @calltoactions.try(:first).image %>" style="width: 100%; margin-bottom: 15px;">
-                  <% end %>
+                          <div style="position: relative;">
+                            <div class="home-carousel-circle">
+                              <div class="home-carousel-circle-children <%= "active" if calltoaction.id == @calltoactions.first.id %>" id="home-carousel-circle-children-<%= calltoaction.id %>"></div>
+                            </div>
+                          </div>
+
+                          <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>)">
+                            <div class="col-sm-12" style="padding: 0 40px;">
+                              <img src="<%= calltoaction.image %>" style="width: 100%;">
+                            </div>
+                            <div class="col-sm-12" style="padding: 0 40px;">
+                              <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.try(:first).id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
+                                  <div class="panel-body">
+                                      <div class="row">
+                                          <div class="col-sm-4 text-left">
+                                            <h2 style="margin-top: 0; margin-bottom: 0;">#<%= i %></h2>
+                                          </div>
+                                          <div class="col-sm-8 text-left" style="padding-left: 0;">
+                                              <h5 style="margin: 0; padding-left: 0; text-transform: uppercase; word-wrap: break-word"><%= calltoaction.title %></h5>
+                                          </div>
+                                      </div>                                        
+                                  </div>
+                              </div>
+                            </div>                         
+                          </div>
+
+                        </li>
+                        <% i = i + 1 %>
+                      <% end %>
+                    </ul>
                 </div>
-              </div>
-          
-            </div>         
-          </div>        
+
+                <!-- PREV/NEXT -->
+                <a href="#" class="jcarousel-control-prev"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span></a>
+                <a href="#" class="jcarousel-control-next"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span></a>
+
+                <!-- PAGINATION -->
+                <p class="jcarousel-pagination">
+                    <!-- PAGINATION GENERATE HERE -->
+                </p>
+
+            </div>
+          </div>
         </div>
+
+        <div class="row">      
+          <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default" style="padding: 0;">
+              <div class="panel-body" style="padding: 5px;">
+
+                <!-- MEDIA -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <% if @calltoactions.first.media_type == "VIDEO" %>
+                        <div class="video flex-video widescreen" style="margin: 0;">
+                          <div id="home-video" iid="calltoaction-active-<%= @calltoactions.first.id %>"></div>
+                          <!-- OVERVIDEO AREA HERE -->
+                          <div id="home-overvideo"></div>
+                          <div id="home-overvideo-title"><%= render partial: "/calltoaction/overvideo_play", locals: { calltoaction: @calltoactions.first, calltoaction_index: 1 } %></div>
+                        </div>
+                    <% else %>
+                      <img src="<%= @calltoactions.first.image %>" style="width: 100%; margin-bottom: 15px;">
+                    <% end %>
+                  </div>
+                </div>
+            
+              </div>         
+            </div>        
+          </div>
+        </div>
+
+        <div class="col-md-12" id="share-footer">
+          <%= render partial: "/calltoaction/share_footer", locals: { calltoaction: @calltoactions.first } %>
+        </div>
+
       </div>
+  </div>
 
-      <div class="col-md-12" id="share-footer">
-        <%= render partial: "/calltoaction/share_footer", locals: { calltoaction: @calltoactions.try(:first) } %>
-      </div>
+  <%= render partial: "/application/footer" %>
 
-    </div>
-</div>
+  <script type="text/javascript">
+      $('.jcarousel').jcarousel(); 
+  </script>
 
-<%= render partial: "/application/footer" %>
-
-<script type="text/javascript">
-    $('.jcarousel').jcarousel(); 
-</script>
+<% end %>

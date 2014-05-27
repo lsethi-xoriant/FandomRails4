@@ -1,11 +1,11 @@
 <div class="row">
-  <div class="col-sm-4 col-sm-offset-4">
+  <div class="col-sm-12 text-center">
   <% if s = calltoaction.interactions.find_by_resource_type("Share") %>
     <% s = s.resource %>
     <% if current_user && (auth = current_user.authentications.find_by_provider(s.share_type.downcase)) %>
-      <button id="share-<%= s.share_type %>-<%= s.interaction.id %>" type="button" class="margin-bottom-10 btn btn-fb btn-block" onclick="shareWith('<%= s.share_type.downcase %>', <%= s.interaction.id %>)">CONDIVIDI</button>
+      <button id="share-<%= s.share_type %>-<%= s.interaction.id %>" type="button" class="margin-bottom-10 btn btn-fb" onclick="shareWith('<%= s.share_type.downcase %>', <%= s.interaction.id %>)">CONDIVIDI</button><img style="padding-bottom: 8px; padding-left: 15px;" src="/assets/maxibon/small-ticket.png">
     <% else %>
-      <a target="_top" href="/sign_in_fb_from_page"><button type="button" class="margin-bottom-10 btn btn-fb btn-block">ENTRA CON <%= s.share_type.upcase %></button></a>
+      <a href="/sign_in_fb_from_page"><button type="button" class="margin-bottom-10 btn btn-fb">ENTRA CON <%= s.share_type.upcase %></button></a><img style="padding-bottom: 8px; padding-left: 15px;" src="/assets/maxibon/small-ticket.png">
     <% end %>
   <% end %>
   </div>

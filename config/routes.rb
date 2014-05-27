@@ -21,6 +21,10 @@ Fandom::Application.routes.draw do
   match "profile/rankings", :to => "profile#rankings"
   match "profile/remove-provider/:provider", :to => "profile#remove_provider"
 
+  match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
+  match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
+  match "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
+
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
@@ -124,7 +128,7 @@ Fandom::Application.routes.draw do
     end
   end
 
-  match "/update_calltoaction_share_content", :to => "calltoaction#update_calltoaction_share_content", defaults: { format: 'json' }
+  match "/update_calltoaction_content", :to => "calltoaction#update_calltoaction_content", defaults: { format: 'json' }
   match "/append_calltoaction", :to => "property#append_calltoaction", defaults: { format: 'json' }
   match "/calltoaction_overvideo_end", :to => "calltoaction#calltoaction_overvideo_end", defaults: { format: 'json' }
   match "/update_play_interaction", :to => "calltoaction#update_play_interaction", defaults: { format: 'json' }

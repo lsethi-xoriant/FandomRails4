@@ -114,7 +114,7 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
         playpressed_hash[key] = false;
         $http.post("/calltoaction_overvideo_end", { id: calltoactionactive.replace("calltoaction-active-", ""), end: correctytplayer_hash[key] })
           .success(function(data) {
-            $("#home-undervideo-" + calltoactionactive.replace("calltoaction-active-", "")).html(data);
+            $("#home-overvideo-" + calltoactionactive.replace("calltoaction-active-", "")).html(data);
           });
       }
   }; // onPlayerStateChange
@@ -181,7 +181,7 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             if(data.next_calltoaction) {
               key = 'home-video'; $("#" + key).attr("iid", "calltoaction-active-" + data.next_calltoaction["id"]);
               updateYTIframe(data.next_calltoaction["video_url"], calltoaction_id, true);
-              $("#home-undervideo-" + calltoaction_id).html("");
+              $("#home-overvideo-" + calltoaction_id).html("");
             }
 
             if(data.current_correct_answer == answer_id) {
