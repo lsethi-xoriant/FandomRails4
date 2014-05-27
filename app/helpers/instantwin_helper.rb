@@ -19,8 +19,7 @@ module InstantwinHelper
 	      end  
 		  end
 		rescue Exception => e
-		end
-	  
+		end	  
 	end
 	
 	#
@@ -29,12 +28,13 @@ module InstantwinHelper
 	# user_id - id of current user
 	#
 	def get_current_contest_points user_id
-	time_current = Time.now.utc 
-	if (c = Contest.where("start_date<? AND end_date>?", time_current, time_current)).any? &&
-		 (cp = ContestPoint.find_by_user_id_and_contest_id(user_id, c.first.id))
-	    return cp.points/c.first.conversion_rate
-	else
-		return 0
+		time_current = Time.now.utc 
+		if (c = Contest.where("start_date<? AND end_date>?", time_current, time_current)).any? &&
+			 (cp = ContestPoint.find_by_user_id_and_contest_id(user_id, c.first.id))
+		    return cp.points/c.first.conversion_rate
+		else
+			return 0
+		end
 	end
 
 end
