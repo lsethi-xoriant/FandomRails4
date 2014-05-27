@@ -1,0 +1,30 @@
+
+<% inter_quiz_points = calltoaction.interactions.where("resource_type<>'Share'").sum("points") %>
+<% inter_quiz_points = inter_quiz_points + calltoaction.interactions.where("resource_type<>'Share'").sum("added_points") %>
+
+<% inter_share = calltoaction.interactions.where("resource_type='Share'") %> 
+<% inter_quiz_points = inter_quiz_points + inter_share.maximum("points") if inter_share.count > 0 %>
+
+<!-- OVERVIDEO AREA -->
+<div class="overvideo overvideo-play" style="margin-top: 35%; padding-bottom: 50%; position: relative;">
+    <div class="overvideo-canvas">
+        <div class="overvideo-content">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1>#<%= calltoaction_index %> - <%= calltoaction.title %></h1>
+                    <h4 style="color: #fff;"><span style="margin-right: 15px;">Guarda il video e ottieni fino a <%= inter_quiz_points %> biglietti</span>
+                      <% inter_quiz_points.times do |i| %>
+                        <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
+                      <% end %>
+                    </h4>                  
+                </div>
+                <div class="col-md-1 col-xs-1 text-center"></div>
+                <div class="col-md-10 col-xs-10 text-center">
+                  <div class="row">
+                    <div class="col-xs-4 text-center"></div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -48,38 +48,49 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     }
   };
 
-  $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, autoplay) {
+  $window.updateYTIframeAfterResponse = function(calltoaction_video_code) {
     key = 'home-video';
     if($scope.youtube_api_ready && ytplayer_hash[key]) {
-      $http.post("/update_calltoaction_share_content", { id: calltoaction_id })
+      $("#home-overvideo").html("");
+      playpressed_hash[key] = false;
+      ytplayer_hash[key].loadVideoById(calltoaction_video_code); 
+    }
+  };
+
+  $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, index) {
+    key = 'home-video';
+    if($scope.youtube_api_ready && ytplayer_hash[key]) {
+      $http.post("/update_calltoaction_content", { id: calltoaction_id, index: index })
         .success(function(data) {
           $scope.calltoaction_id = calltoaction_id;
           $scope.calltoaction_video_code = calltoaction_video_code;
 
-          $("#share-footer").html(data);
+          $("#home-video").attr("iid", "calltoaction-active-" + calltoaction_id);
+
+          $("#share-footer").html(data.share_content);
+          $("#home-overvideo-title").html(data.overvideo_title)
+
           $("#home-overvideo").html("");
 
           $(".home-carousel-li").removeClass("active");
           $("#home-carousel-li-" + calltoaction_id).addClass("active");
 
-          $(".home-carousel-cyrcle-children").removeClass("active");
-          $("#home-carousel-cyrcle-children-" + calltoaction_id).addClass("active");
+          $(".home-carousel-circle-children").removeClass("active");
+          $("#home-carousel-circle-children-" + calltoaction_id).addClass("active");
 
           $(".panel-carousel").removeClass("panel-default").removeClass("panel-inactive").addClass("panel-inactive");
           $("#panel-carousel-" + calltoaction_id).removeClass("panel-inactive").addClass("panel-default");
 
           playpressed_hash[key] = false;
-          if(!autoplay) {
-            ytplayer_hash[key].cueVideoById($scope.calltoaction_video_code);
-          } else {
-            ytplayer_hash[key].loadVideoById($scope.calltoaction_video_code);
-          }      
+
+          ytplayer_hash[key].cueVideoById(calltoaction_video_code);
+          //ytplayer_hash[key].loadVideoById($scope.calltoaction_video_code);    
 
         }).error(function() {
           // Error.
         });
     }
-  }
+  };
 
   $window.onYouTubePlayerReady = function(event) {
   }; // onYouTubePlayerReady
@@ -101,7 +112,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
         if(!playpressed_hash[key]) {
           $http.post("/update_play_interaction.json", { calltoaction_id: calltoactionactive.replace("calltoaction-active-", "") })
             .success(function(data) {
-              // Evento salvato correttamente.            
+              // Evento salvato correttamente.   
+              $("#home-overvideo-title").html("");         
             }).error(function() {
               // Errore nel salvataggio dell'evento.
             });
@@ -153,14 +165,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     if($scope.current_user) {
       $http.post("/user_event/update_answer.json", { interaction_id: interaction_id, answer_id: answer_id })
           .success(function(data) {
-
             // Non permetto di selezionare nuovamente la risposta.
             $(".button-inter-" + interaction_id).attr('disabled', false);
             $(".button-inter-" + interaction_id).removeAttr('onclick');
 
             if(data.next_calltoaction) {
               key = 'home-video'; $("#" + key).attr("iid", "calltoaction-active-" + data.next_calltoaction["id"]);
-              updateYTIframe(data.next_calltoaction["video_url"], $scope.calltoaction_id, true);
+              updateYTIframeAfterResponse(data.next_calltoaction["video_url"], $scope.calltoaction_id);
               $("#home-overvideo").html("");
             }
 
@@ -169,15 +180,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             } else {
               correctytplayer_hash[key] = false;
             }
-
-            // Identifico tramite il colore del buttone risposte errate e risposta corretta.
-            /*
-            $(".button-inter-" + interaction_id).removeClass("btn-info").addClass("btn-danger");
-            $("#button-answ-" + data.current_correct_answer).removeClass("btn-danger").addClass("btn-success");
-
-            $("#button-answ-" + answer_id).addClass("active");
-            */
-
           }).error(function() {
             // ERROR.
           });
