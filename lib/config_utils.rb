@@ -52,7 +52,6 @@ module ConfigUtils
       end
     end
     config.assets.precompile += site.assets_precompile
-    register_omniauth_for_site(site)
   end
 
 =begin

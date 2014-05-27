@@ -11,7 +11,7 @@
         <div class="overvideo-content">
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <h1>#<%= calltoaction_index %> - <%= calltoaction.title %></h1>
+                    <h1><%= "##{ calltoaction_index } - " if calltoaction_index > 0 %><%= calltoaction.title %></h1>
                     <h4 style="color: #fff;"><span style="margin-right: 15px;">Guarda il video e ottieni fino a <%= inter_quiz_points %> biglietti</span>
                       <% inter_quiz_points.times do |i| %>
                         <img class="img-ticket" src="/assets/maxibon/small-ticket.png">

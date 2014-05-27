@@ -1,0 +1,26 @@
+<%= render partial: "/application/user_bar" %>
+
+<script type="text/javascript" src="/assets/jquery.jcarousel.js"></script>
+<script type="text/javascript" src="/assets/jcarousel.skeleton.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/assets/jcarousel.skeleton.css">
+
+<div class="container-fluid" ng-app="MobileStreamCalltoactionApp" ng-controller="MobileStreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= Calltoaction.active_extra.count %>')">   
+
+  <div id="calltoaction-stream">
+    <% @calltoactions.each do |calltoaction| %>
+      <%= render partial: "/calltoaction/stream_single_calltoaction", locals: { calltoaction: calltoaction } %>
+    <% end %>
+  </div>
+
+  <div class="row">      
+    <div class="col-sm-6 col-sm-offset-3">
+      <div id="append-other" class="text-center" style="margin-bottom: 20px;">
+        <button class="btn btn-primary" href="javascript: void(0)" onclick="appendCalltoaction()">CARICA ALTRI</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<%#= render partial: "/application/footer" %>

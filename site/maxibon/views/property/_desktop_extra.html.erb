@@ -16,21 +16,20 @@
             <div class="jcarousel-wrapper" style="padding: 0 30px;">
                 <div class="jcarousel">
                     <ul>
-                      <% i = 1 %>
                       <% @calltoactions.each do |calltoaction| %>
-                        <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>">
+                        <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, -1, 'extra')">
 
                           <div style="position: relative; z-index: 9999;">
                             <div class="home-carousel-circle">
-                              <div class="home-carousel-circle-children" id="home-carousel-circle-children-<%= calltoaction.id %>" style="width: 50px; height: 50px; margin-top: 30px;"></div>
+                              <div class="home-carousel-circle-children-extra"><span style="font-size: 20px; top: 15px; color: #fff;" class="glyphicon glyphicon-play"></span></div>
                             </div>
                           </div>
 
-                          <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>)">
+                          <div class="row">
                             <div class="col-sm-12" style="padding: 0 40px;">
                               <img src="<%= calltoaction.image(:extra) %>" style="width: 100%; border: 5px solid #fff; border-radius: 5px;">
                             </div>
-                            <div class="col-sm-10 col-sm-offset-1" style="padding: 0 40px; margin-top: -15px;">
+                            <div class="col-sm-10 col-sm-offset-1" style="padding: 0 40px; margin-top: -20px;">
                               <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.first.id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
                                   <div class="panel-body">
                                       <div class="row">
@@ -44,7 +43,6 @@
                           </div>
 
                         </li>
-                        <% i = i + 1 %>
                       <% end %>
                     </ul>
                 </div>
@@ -72,10 +70,10 @@
                   <div class="col-md-12">
                     <% if @calltoactions.first.media_type == "VIDEO" %>
                         <div class="video flex-video widescreen" style="margin: 0;">
-                          <div id="home-video" iid="calltoaction-active-<%= @calltoactions.first.id %>"></div>
+                          <div id="home-video" type="extra" iid="calltoaction-active-<%= @calltoactions.first.id %>"></div>
                           <!-- OVERVIDEO AREA HERE -->
                           <div id="home-overvideo"></div>
-                          <div id="home-overvideo-title"><%= render partial: "/calltoaction/overvideo_play", locals: { calltoaction: @calltoactions.first, calltoaction_index: 1 } %></div>
+                          <div id="home-overvideo-title"><%= render partial: "/calltoaction/overvideo_play", locals: { calltoaction: @calltoactions.first, calltoaction_index: -1 } %></div>
                         </div>
                     <% else %>
                       <img src="<%= @calltoactions.first.image %>" style="width: 100%; margin-bottom: 15px;">

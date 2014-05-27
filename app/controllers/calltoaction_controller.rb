@@ -208,7 +208,11 @@ class CalltoactionController < ApplicationController
 
   def update_calltoaction_content
     response = Hash.new
-    calltoaction = Calltoaction.active.find(params[:id])
+    if params[:type] == "extra"
+      calltoaction = Calltoaction.active_extra.find(params[:id])
+    else
+      calltoaction = Calltoaction.active.find(params[:id])
+    end
 
     response = {
       "share_content" => (render_to_string "/calltoaction/_share_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
@@ -221,47 +225,58 @@ class CalltoactionController < ApplicationController
   end
 
   def calltoaction_overvideo_end
-    calltoaction = Calltoaction.active.find(params[:id])
-    i = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
 
-    if i.resource_type == "Quiz" && i.resource.quiz_type
-      ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
- 
-      render_calltoaction_overvideo_end_str = String.new
-      if params[:end]
-        calltoaction_correct_answer = i.resource.answers.find_by_correct(true)
-        if calltoaction_correct_answer.calltoaction
-          if mobile_device?
-            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_instant_win", 
-              locals: { }, layout: false, formats: :html)
-          else
-            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
-              locals: { }, layout: false, formats: :html)
-          end
-        end
+    if params[:type] == "extra"
+      if mobile_device?
+        render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
+          locals: { }, layout: false, formats: :html)
       else
-        calltoaction_question = i.resource.question
+        render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
+          locals: { }, layout: false, formats: :html)
+      end     
+    else
+      calltoaction = Calltoaction.active.find(params[:id])
 
-        calltoaction_answers = Hash.new
-        calltoaction_user_answer = ui ? ui.answer_id : -1
+      i = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
 
-        calltoaction_answers = Array.new
-        i.resource.answers.each do |a|
-          calltoaction_answers << a
-        end
+      if i.resource_type == "Quiz" && i.resource.quiz_type
+        ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
 
-        interaction_points = i.points + i.added_points
-
-        if mobile_device?
-          render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", #_undervideo_trivia
-            locals: { interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+        render_calltoaction_overvideo_end_str = String.new
+        if params[:end]
+          calltoaction_correct_answer = i.resource.answers.find_by_correct(true)
+          if calltoaction_correct_answer.calltoaction
+            if mobile_device?
+              render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_instant_win", 
+                locals: { }, layout: false, formats: :html)
+            else
+              render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
+                locals: { }, layout: false, formats: :html)
+            end
+          end
         else
-          render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", 
-            locals: { interaction_points: interaction_points, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+          calltoaction_question = i.resource.question
+
+          calltoaction_answers = Hash.new
+          calltoaction_user_answer = ui ? ui.answer_id : -1
+
+          calltoaction_answers = Array.new
+          i.resource.answers.each do |a|
+            calltoaction_answers << a
+          end
+
+          interaction_points = i.points + i.added_points
+
+          if mobile_device?
+            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", #_undervideo_trivia
+              locals: { interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+          else
+            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", 
+              locals: { interaction_points: interaction_points, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+          end
+
         end
-
       end
-
     end
 
     respond_to do |format|
