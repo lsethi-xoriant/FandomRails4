@@ -24,6 +24,8 @@ Fandom::Application.routes.draw do
   match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
   match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
   match "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
+  
+  match "/playticket", :to => "instantwin#play_ticket_mb"
 
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"

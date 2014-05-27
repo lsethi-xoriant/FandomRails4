@@ -148,17 +148,16 @@ class InstantwinController < ApplicationController
 
   #TODO MAXIBON
   def play_ticket_mb
-    @message = ""
-    @message_premio = ""
-    @premio_class = ""
+    @ticketended = false
+    @win = false
 
     risp = Hash.new;
     if current_user
       contest = Contest.find(params[:contest_id])
-      contest_points = ContestPoint.where("contest.id=? AND user_id = ?",contest.id,current_user.id)   
-      if contest_points.count > 0 && contest_points.first.points/contest.conversion_rate > 0
+      @contest_points = ContestPoint.where("contest_id=? AND user_id = ?",contest.id,current_user.id)   
+      if @contest_points.count > 0 && @contest_points.first.points/contest.conversion_rate > 0
 
-        contest_points = contest_points.first
+        @contest_points = @contest_points.first
 
         time_current = Time.now.in_time_zone("Rome")
         if !checkWin_mb(time_current,contest)
@@ -168,18 +167,17 @@ class InstantwinController < ApplicationController
                                   :user_id => current_user.id)
 
           #tolgo i punti relativi al gioco di un biglietto
-          contest_points.update_attribute(:points,contest_point.points - contest.conversion_rate)
+          @contest_points.update_attribute(:points,@contest_points.points - contest.conversion_rate)
 
-          @message = "<div class='giocata non-vinto' style='display:none;'>NON HAI VINTO, RITENTA</div>"
         end
       else
-        @message = "<div class='giocata non-vinto' style='display:none;'>Hai finito tutti i biglietti!</div>"
+        @ticketended = true
       end
     end
 
-    risp['message'] = @message
-    risp['message_premio'] = @message_premio
-    risp['premio_class'] = @premio_class
+    risp['winner'] = @win
+    risp['ticketended'] = @ticketended
+    risp['prize'] = @prize
     respond_to do |format|
       format.json { render :json => risp.to_json }
     end
@@ -187,20 +185,24 @@ class InstantwinController < ApplicationController
   
   #TODO MAXIBON
   def checkWin_mb(ctime,contest)
-    win = false
     contest.contest_periodicities.each do |cp|
       iw = Instantwin.where("contest_periodicity_id = ? AND instantwins.time_to_win<?",cp.id,ctime).order("instantwins.time_to_win DESC").limit(1)
-      if iw.count > 0 && !check_already_win(iw.first) && !win
-        #vittoria!!
-        win = true
-        prize = iw.contest_periodicity.instant_win_prizes.first
-        @message_premio = "COMPLIMENTI HAI VINTO IL PREMIO #{prize.title}\n #{prize.description}"
-        @premio_class = "#{prize.title.downcase.strip.gsub(' ', '_')}"
+      if iw.count > 0 && !check_already_win(iw.first) && !@win
+        @win = true
+        @prize = iw.first.contest_periodicity.instant_win_prizes.first
+        
+        #inserisco evento biglietto giocato e non vinto
+        PlayticketEvent.create(:points_spent => contest.conversion_rate, :used_at => ctime, :winner => true, 
+                                :user_id => current_user.id, :instantwin_id => iw.first.id)
+
+        #tolgo i punti relativi al gioco di un biglietto
+        @contest_points.update_attribute(:points,@contest_points.points - contest.conversion_rate)
+        
         #invio mail all'utente
         #send_winner_email(iw,prize)
       end
     end
-    return win
+    return @win
   end
   
   #TODO MAXIBON
