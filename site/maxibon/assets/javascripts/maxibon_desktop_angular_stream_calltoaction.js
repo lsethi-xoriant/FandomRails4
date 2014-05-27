@@ -57,10 +57,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     }
   };
 
-  $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, index) {
+  $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, index, type) {
     key = 'home-video';
     if($scope.youtube_api_ready && ytplayer_hash[key]) {
-      $http.post("/update_calltoaction_content", { id: calltoaction_id, index: index })
+      $http.post("/update_calltoaction_content", { id: calltoaction_id, index: index, type: type })
         .success(function(data) {
           $scope.calltoaction_id = calltoaction_id;
           $scope.calltoaction_video_code = calltoaction_video_code;
@@ -75,8 +75,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $(".home-carousel-li").removeClass("active");
           $("#home-carousel-li-" + calltoaction_id).addClass("active");
 
-          $(".home-carousel-circle-children").removeClass("active");
-          $("#home-carousel-circle-children-" + calltoaction_id).addClass("active");
+          if(type != "extra") {
+            $(".home-carousel-circle-children").removeClass("active");
+            $("#home-carousel-circle-children-" + calltoaction_id).addClass("active");
+          }
 
           $(".panel-carousel").removeClass("panel-default").removeClass("panel-inactive").addClass("panel-inactive");
           $("#panel-carousel-" + calltoaction_id).removeClass("panel-inactive").addClass("panel-default");
@@ -121,7 +123,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           }
       } else if(player_state == 0){
         playpressed_hash[key] = false;
-        $http.post("/calltoaction_overvideo_end", { id: $scope.calltoaction_id, end: correctytplayer_hash[key] })
+        $http.post("/calltoaction_overvideo_end", { id: $scope.calltoaction_id, end: correctytplayer_hash[key], type: $("#" + key).attr("type") })
           .success(function(data) {
             $("#home-overvideo").html(data);
           });

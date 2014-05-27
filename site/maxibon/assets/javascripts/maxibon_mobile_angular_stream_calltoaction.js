@@ -51,10 +51,10 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     }
   };
 
-  $window.appendCalltoaction = function() {
+  $window.appendCalltoaction = function(type) {
     if($scope.calltoaction_length > $scope.calltoaction_offset) {
       $("#append-other button").attr('disabled', true);
-      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset })
+      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset, type: type })
       .success(function(data) {
         $scope.calltoaction_offset = $scope.calltoaction_offset + data.streamcalltoaction.length
         $scope.streamcalltoaction.push(data.streamcalltoaction);
@@ -112,7 +112,7 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           }
       } else if(player_state == 0){
         playpressed_hash[key] = false;
-        $http.post("/calltoaction_overvideo_end", { id: calltoactionactive.replace("calltoaction-active-", ""), end: correctytplayer_hash[key] })
+        $http.post("/calltoaction_overvideo_end", { id: calltoactionactive.replace("calltoaction-active-", ""), end: correctytplayer_hash[key], type: $("#" + key).attr("type") })
           .success(function(data) {
             $("#home-overvideo-" + calltoactionactive.replace("calltoaction-active-", "")).html(data);
           });
