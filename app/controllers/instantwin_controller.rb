@@ -9,7 +9,7 @@ class InstantwinController < ApplicationController
     @contest = Contest.find(params[:id])
     @contest.contest_periodicities.each do |cp|
       case cp.periodicity_type.name
-      when "Giornaliero"
+      when "Giornaliera"
         createDailyWins(cp)
       when "Settimanale"
         createWeeklyWins(cp)
@@ -129,7 +129,7 @@ class InstantwinController < ApplicationController
                                   :user_id => current_user.id)
 
           #tolgo i punti relativi al gioco di un biglietto
-          contest_point.update_attribute(:points,contest_point.points - contest.conversion_rate)
+          contest_points.update_attribute(:points,contest_point.points - contest.conversion_rate)
 
           @message = "<div class='giocata non-vinto' style='display:none;'>NON HAI VINTO, RITENTA</div>"
         end

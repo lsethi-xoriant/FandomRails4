@@ -6,74 +6,77 @@ namespace :instant_win do
 
   desc "Genera tutte le data e ora di vincita del concorso"
   task :generate_wins => :environment do
-  	createWins  
+  	createWins
+  end
+  
+  #TODO MAXIBON
+  task :generate_maxibon_wins => :environment do
+    createMaxibonWins
   end
 
-  def createWins
-    contests = Contest.all
-    contests.each do |contest|
-    	case contest.periodicity
-    	when "1"
-    		createDailyWins(contest.id)
-    	when "7"
-    		createWeeklyWins(contest.id)
-    	when "30"
-    		createMonthlyWins(contest.id)
-    	end
-    			
+  #TODO MAXIBON
+  def createMaxibonWins
+    Apartment::Database.switch("fandom")
+    contest = Contest.create(:title => "Maxibon Acquafun", :start_date => "03/06/2014 11:00:00", :end_date => "01/08/2014 23:59:59", :property_id => Property.first.id)
+    periodicity_type_daily = PeriodicityType.create(:name => "Giornaliera", :period => 1)
+    periodicity_type_maxibon_custom = PeriodicityType.create(:name => "60gg", :period => 60) 
+    contest_periodicity_1 = ContestPeriodicity.create(:title => "Biglietto Aquafun 1", :periodicity_type_id => periodicity_type_daily.id, :contest_id => contest.id)
+    contest_periodicity_2 = ContestPeriodicity.create(:title => "Biglietto Aquafun 2", :periodicity_type_id => periodicity_type_daily.id, :contest_id => contest.id)
+    contest_periodicity_3 = ContestPeriodicity.create(:title => "Pacchetto eventi", :periodicity_type_id => periodicity_type_maxibon_custom.id, :contest_id => contest.id)
+    InstantWinPrize.create(:title => "Ingresso Aquafun", :description => "Ingresso gratuito all'Aquafun di riccione", :contest_periodicity_id => contest_periodicity_1.id)
+    InstantWinPrize.create(:title => "Ingresso Aquafun", :description => "Ingresso gratuito all'Aquafun di riccione", :contest_periodicity_id => contest_periodicity_2.id)
+    InstantWinPrize.create(:title => "Pack Eventi Aquafun", :description => "Pacchetto di 5 biglietti di ingresso a eventi Aquafun", :contest_periodicity_id => contest_periodicity_3.id)
+    create_wins_mb(contest)
+  end
+
+  #TODO MAXIBON
+  def create_wins_mb(contest)
+    
+    contest.contest_periodicities.each do |cp|
+      case cp.periodicity_type.name
+      when "Giornaliera"
+        createDailyWins(contest,cp)
+      when "60gg"
+        create60ggWins(contest,cp)
+      end
     end
+
+    contest.update_attributes(:generated => true)
   end
-
-  def createDailyWins(contestid)
-  	cdate = START_DATE.to_date
-  	while cdate <= END_DATE.to_date
-	  	time = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} UTC"
-	  	wintime = Time.parse(cdate.strftime("%Y-%m-%d") +" "+ time)
-	  	iw = Instantwin.new
-	  	iw.contest_id = contestid
-	  	iw.title = "daily"
-	  	iw.time_to_win = wintime
-	  	iw.save
-	  	cdate += 1
-	end
-  end
-
-  def createWeeklyWins(contestid)
-  	cdate = START_DATE.to_date
-  	while cdate < END_DATE.to_date
-	  	time = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} UTC"
-	  	weekly_win_day = cdate + (0..6).to_a.sample
-      while weekly_win_day > END_DATE.to_date
-        weekly_win_day = cdate + (0..6).to_a.sample
-      end
-	  	wintime = Time.parse(weekly_win_day.strftime("%Y-%m-%d") +" "+ time)
-	  	iw = Instantwin.new
-	  	iw.contest_id = contestid
-	  	iw.title = "weekly"
-	  	iw.time_to_win = wintime
-	  	iw.save
-	  	cdate += 7
-	  end
-  end
-
-  def createMonthlyWins(contestid)
-
-    cdate = START_DATE.to_date
-    while cdate < END_DATE.to_date
-      time = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} UTC"
-      monthly_win_day = cdate + (0..27).to_a.sample
-      while monthly_win_day > END_DATE.to_date
-        monthly_win_day = cdate + (0..27).to_a.sample
-      end
-      wintime = Time.parse(monthly_win_day.strftime("%Y-%m-%d") +" "+ time)
+  
+  #TODO MAXIBON
+  def create60ggWins(contest,cp)
+    beginning_date = contest.start_date.to_date
+    day_range = (contest.end_date.to_date - contest.start_date.to_date).to_i
+    total_prizes = 20
+    winner_inserted = 0
+    
+    while winner_inserted < total_prizes
+      offest_day_win = (0..day_range).to_a.sample
+      winday = beginning_date + offest_day_win
+      winhour = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} UTC"
+      wintime = Time.parse(winday.strftime("%Y-%m-%d") +" "+ winhour)
       iw = Instantwin.new
-      iw.contest_id = contestid
-      iw.title = "monthly"
+      iw.contest_periodicity_id = cp.id
+      iw.title = "Random"
       iw.time_to_win = wintime
       iw.save
-      cdate += 28
+      winner_inserted += 1
     end
+  end
 
+  def createDailyWins(contest,cp)
+    cdate = contest.start_date.to_date
+    while cdate <= contest.end_date.to_date
+      time = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} UTC"
+      wintime = Time.parse(cdate.strftime("%Y-%m-%d") +" "+ time)
+      iw = Instantwin.new
+      iw.contest_periodicity_id = cp.id
+      iw.title = "Daily"
+      iw.time_to_win = wintime
+      iw.save
+      cdate += 1
+    end
   end
 
   def days_in_month(month, year = Time.now.year)

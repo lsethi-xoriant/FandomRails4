@@ -87,4 +87,8 @@ module FandomUtils
     end
   end
   
+  def get_model_from_name(name)
+    return name.singularize.classify.constantize
+  end
+  
 end
