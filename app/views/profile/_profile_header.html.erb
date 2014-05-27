@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-6 col-sm-6 ">
 	  <div class="col-md-4 col-sm-4 col-xs-4 text-center">
-	  <img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-responsive img-profile adjust-cyrcle">
+	  <img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-responsive img-profile">
 	  </div>
 	  <div class="col-md-8 col-sm-8 col-xs-8">
 	    <h4><%= "#{ current_user.first_name } #{ current_user.last_name }" %></h4>
@@ -33,17 +33,3 @@
 	</div>  
 	-->   
 </div>
-
-<script type="text/javascript">
-	/*
-	$(document).ready(function() {
-		var cw = $('.adjust-cyrcle').width();
-		$('.adjust-cyrcle').css('height', cw + 'px');
-	});
-
-	window.onresize = function(event) {
-    	var cw = $('.adjust-cyrcle').width();
-		$('.adjust-cyrcle').css('height', cw + 'px');
-	};
-	*/
-</script>

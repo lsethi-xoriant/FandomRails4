@@ -5,9 +5,9 @@
 <div class="col-md-1 col-xs-1 text-center"></div>
 <div class="col-md-10 col-xs-10 text-center">
     <div class="row">
-        <% calltoaction_answers.each do |id, answer|%>
+        <% calltoaction_answers.each do |answer|%>
           <div class="col-md-4">
-              <button type="button" class="btn <%= calltoaction_user_answer == id ? "btn-primary" : "btn-info" %> btn-block" onclick="updateTriviaAnswer(<%= calltoaction_parent_id %>, <%= interaction_overvideo_end_id %>, <%= id %>)"><%= answer %></button>
+              <button type="button" class="btn <%= calltoaction_user_answer == answer.id ? "btn-primary" : "btn-info" %> btn-block" onclick="updateTriviaAnswer(<%= calltoaction_parent_id %>, <%= interaction_overvideo_end_id %>, <%= answer.id %>)"><%= answer.text %></button>
           </div>
         <% end %>
     </div>

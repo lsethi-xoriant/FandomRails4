@@ -75,8 +75,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $(".home-carousel-li").removeClass("active");
           $("#home-carousel-li-" + calltoaction_id).addClass("active");
 
-          $(".home-carousel-cyrcle-children").removeClass("active");
-          $("#home-carousel-cyrcle-children-" + calltoaction_id).addClass("active");
+          $(".home-carousel-circle-children").removeClass("active");
+          $("#home-carousel-circle-children-" + calltoaction_id).addClass("active");
 
           $(".panel-carousel").removeClass("panel-default").removeClass("panel-inactive").addClass("panel-inactive");
           $("#panel-carousel-" + calltoaction_id).removeClass("panel-inactive").addClass("panel-default");

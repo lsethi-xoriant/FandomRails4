@@ -6,15 +6,15 @@
 <% inter_quiz_points = inter_quiz_points + inter_share.maximum("points") if inter_share.count > 0 %>
 
 <!-- OVERVIDEO AREA -->
-<div class="overvideo" style="margin-top: 35%; padding-bottom: 50%; position: relative;">
+<div class="overvideo overvideo-play" style="margin-top: 35%; padding-bottom: 50%; position: relative;">
     <div class="overvideo-canvas">
         <div class="overvideo-content">
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <h1 style="color: #fff; text-transform: uppercase; margin-top: 20px;">#<%= calltoaction_index %> - <%= calltoaction.title %></h1>
+                    <h1>#<%= calltoaction_index %> - <%= calltoaction.title %></h1>
                     <h4 style="color: #fff;"><span style="margin-right: 15px;">Guarda il video e ottieni fino a <%= inter_quiz_points %> biglietti</span>
                       <% inter_quiz_points.times do |i| %>
-                        <img src="/assets/maxibon/small-ticket.png">
+                        <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
                       <% end %>
                     </h4>                  
                 </div>

@@ -9,16 +9,34 @@
 
       <div class="row" style="margin: 15px 0;">
         <div class="row">
-          <div class="col-sm-6 col-sm-offset-3 text-center">
+          <div class="col-xs-6 col-xs-offset-3 text-center no-pad" style="margin-right: 0;">
             <img src="/assets/maxibon/logo.png" class="img-responsive" style="width: 100%; max-width: 450px; margin-left: auto; margin-right: auto;">
             <h1 class="hidden">MAXIBON THE POOL</h1>
           </div>
-          <div class="col-sm-8 col-sm-offset-2 text-center" style="padding-top: 0;">
+          
+          <div class="col-sm-3 hidden-xs text-left" style="padding: 20px 15px 0 0; margin-left: -15px;">
+            <div style="position: relative;">
+              <div style="position: absolute; left: 120px;">
+                <img class="img-circle" src="<%= current_avatar %>" style="width: 50px; border: 3px solid #fff;">
+              </div>
+            </div>
+
+            <div style="position: relative;">
+              <div style="position: absolute; left: 30px; top: 25px;">
+                <h5 style="text-transform: uppercase; font-size: 11px; padding-left: 0; text-align: left;">i tuoi biglietti</h5>
+                <button class="btn yellow-point" style="margin-right: 5px;">0</button><button class="btn btn-danger">VINCI</button>
+              </div>
+            </div>
+
+            <img src="/assets/maxibon/ticket.png" style="max-width: 200px; margin-right: auto;">
+          </div>
+
+          <div class="col-xs-8 col-xs-offset-2 text-center" style="padding-top: 0;">
             <h3 style="margin-top: 0; color: #fff;">CALL TO ACTION PER LA VISIONE<br>DEI VIDEO IN DUE RIGHE</h3>
           </div>
         </div>
 
-        <div class="row" style="padding-bottom: 20px;">
+        <div class="row hidden-xs" style="padding-bottom: 20px;">
           <!-- DESKTOP CAROUSEL -->
           <div class="col-md-8 col-md-offset-2 text-center home-carousel" style="margin-bottom: 20px;">
             <div class="jcarousel-wrapper" style="padding: 0 30px;">
@@ -29,21 +47,24 @@
                         <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>">
 
                           <div style="position: relative;">
-                            <div class="home-carousel-cyrcle">
-                              <div class="home-carousel-cyrcle-children <%= "active" if calltoaction.id == @calltoactions.first.id %>" id="home-carousel-cyrcle-children-<%= calltoaction.id %>"></div>
+                            <div class="home-carousel-circle">
+                              <div class="home-carousel-circle-children <%= "active" if calltoaction.id == @calltoactions.first.id %>" id="home-carousel-circle-children-<%= calltoaction.id %>"></div>
                             </div>
                           </div>
 
                           <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>)">
-                            <div class="col-md-12" style="padding: 0 40px;">
+                            <div class="col-sm-12" style="padding: 0 40px;">
                               <img src="<%= calltoaction.image %>" style="width: 100%;">
                             </div>
-                            <div class="col-md-12" style="padding: 0 40px;">
+                            <div class="col-sm-12" style="padding: 0 40px;">
                               <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.try(:first).id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
                                   <div class="panel-body">
                                       <div class="row">
-                                          <div class="col-md-12">
-                                              <%= calltoaction.title %>
+                                          <div class="col-sm-4 text-left">
+                                            <h2 style="margin-top: 0; margin-bottom: 0;">#<%= i %></h2>
+                                          </div>
+                                          <div class="col-sm-8 text-left" style="padding-left: 0;">
+                                              <h5 style="margin: 0; padding-left: 0; text-transform: uppercase; word-wrap: break-word"><%= calltoaction.title %></h5>
                                           </div>
                                       </div>                                        
                                   </div>

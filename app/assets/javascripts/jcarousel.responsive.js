@@ -13,7 +13,7 @@
                 }
 
                 jcarousel.jcarousel('items').css('width', width + 'px');
-                $(".home-carousel-cyrcle").css('width', width + 'px').css('height', width + 'px');;
+                $(".home-carousel-circle").css('width', width + 'px').css('height', width + 'px');;
             })
             .jcarousel({
                 wrap: 'circular'
