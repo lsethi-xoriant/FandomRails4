@@ -16,7 +16,7 @@ When prompted for the password of the app user, set it as per company policy.
 
 5) Once Fandom has been deployed, manually create the schemas needed for the different tenant: 
 
-rake apartment:create
+RAILS_ENV=production rake apartment:create
 
 
 Deploy with Capistrano
