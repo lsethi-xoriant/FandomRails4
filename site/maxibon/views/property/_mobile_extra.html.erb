@@ -7,6 +7,8 @@
 
 <div class="container-fluid" ng-app="MobileStreamCalltoactionApp" ng-controller="MobileStreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= Calltoaction.active_extra.count %>')">   
 
+  <%= render partial: "/application/header" %>
+
   <div id="calltoaction-stream">
     <% @calltoactions.each do |calltoaction| %>
       <%= render partial: "/calltoaction/stream_single_calltoaction", locals: { calltoaction: calltoaction } %>
