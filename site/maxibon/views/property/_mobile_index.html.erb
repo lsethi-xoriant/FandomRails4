@@ -11,14 +11,14 @@
 
   <div id="calltoaction-stream">
     <% @calltoactions.each do |calltoaction| %>
-      <%= render partial: "/calltoaction/stream_single_calltoaction", locals: { calltoaction: calltoaction } %>
+      <%= render partial: "/calltoaction/stream_single_calltoaction", locals: { calltoaction: calltoaction, type: "" } %>
     <% end %>
   </div>
 
   <div class="row">      
     <div class="col-sm-6 col-sm-offset-3">
       <div id="append-other" class="text-center" style="margin-bottom: 20px;">
-        <button class="btn btn-primary" href="javascript: void(0)" onclick="appendCalltoaction()">CARICA ALTRI</button>
+        <button class="btn btn-primary" href="javascript: void(0)" onclick="appendCalltoaction('')">CARICA ALTRI</button>
       </div>
     </div>
   </div>

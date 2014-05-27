@@ -51,10 +51,10 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     }
   };
 
-  $window.appendCalltoaction = function() {
+  $window.appendCalltoaction = function(type) {
     if($scope.calltoaction_length > $scope.calltoaction_offset) {
       $("#append-other button").attr('disabled', true);
-      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset })
+      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset, type: type })
       .success(function(data) {
         $scope.calltoaction_offset = $scope.calltoaction_offset + data.streamcalltoaction.length
         $scope.streamcalltoaction.push(data.streamcalltoaction);
