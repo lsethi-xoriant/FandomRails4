@@ -43,9 +43,10 @@ class InstantwinController < ApplicationController
       end
     end
 
+    risp = Hash.new
     risp = {
       'winner' => win,
-      'points_updated' => get_current_contest_points current_user.id,
+      'points_updated' => (get_current_contest_points current_user.id),
       'prize' => @prize
     }
 
