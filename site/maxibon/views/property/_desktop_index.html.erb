@@ -76,9 +76,14 @@
                     <% if @calltoactions.first.media_type == "VIDEO" %>
                         <div class="video flex-video widescreen" style="margin: 0;">
                           <div id="home-video" iid="calltoaction-active-<%= @calltoactions.first.id %>"></div>
-                          <!-- OVERVIDEO AREA HERE -->
+                          <!-- OVERVIDEO AREA HERE FOR ANSWER -->
                           <div id="home-overvideo"></div>
+
+                          <!-- OVERVIDEO AREA HERE FOR TITLE -->
                           <div id="home-overvideo-title"><%= render partial: "/calltoaction/overvideo_play", locals: { calltoaction: @calltoactions.first, calltoaction_index: 1 } %></div>
+
+                          <!-- OVERVIDEO AREA HERE FOR FEEDBACK POINTS -->
+                          <div id="home-overvideo-feedback-points"></div>
                         </div>
                     <% else %>
                       <img src="<%= @calltoactions.first.image %>" style="width: 100%; margin-bottom: 15px;">

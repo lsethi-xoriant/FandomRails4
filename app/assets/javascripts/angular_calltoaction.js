@@ -23,13 +23,13 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 
 	// Inizializzazione dello scope.
 	$scope.init = function(vcode, calltoaction_id, property_id, overvideo_during_interaction_list, current_user, comment_published_count, comment_must_be_approved) {
-    	$scope.vcode = vcode; $scope.calltoaction_id = calltoaction_id; $scope.property_id = property_id; $scope.current_user = current_user;
-    	$scope.overvideo_during_interaction_list = overvideo_during_interaction_list;
-    	$window.comment_published_count = comment_published_count;
-    	$window.closed_comment_published_count = comment_published_count - 5;
-    	$window.comment_must_be_approved = comment_must_be_approved;
+  	$scope.vcode = vcode; $scope.calltoaction_id = calltoaction_id; $scope.property_id = property_id; $scope.current_user = current_user;
+  	$scope.overvideo_during_interaction_list = overvideo_during_interaction_list;
+  	$window.comment_published_count = comment_published_count;
+  	$window.closed_comment_published_count = comment_published_count - 5;
+  	$window.comment_must_be_approved = comment_must_be_approved;
 
-    	var tag = document.createElement('script');
+    var tag = document.createElement('script');
 		tag.src = "//www.youtube.com/iframe_api";
 		var firstScriptTag = document.getElementsByTagName('script')[0];
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
