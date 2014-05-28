@@ -14,6 +14,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
   var playpressed_hash = {};
   var correctytplayer_hash = {};
 
+  var overvideo_feedback_timeout;
+
   // Inizializzazione dello scope.
   $scope.init = function(current_user, calltoaction_video_code, calltoaction_id) {
     $scope.current_user = current_user;
@@ -80,6 +82,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             $("#home-carousel-circle-children-" + calltoaction_id).addClass("active");
           }
 
+          flushTimeoutFeedback(); // When I change video and a Timout is running.
+
           $(".panel-carousel").removeClass("panel-default").removeClass("panel-inactive").addClass("panel-inactive");
           $("#panel-carousel-" + calltoaction_id).removeClass("panel-inactive").addClass("panel-default");
 
@@ -95,6 +99,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
   };
 
   $window.onYouTubePlayerReady = function(event) {
+  }; // onYouTubePlayerReady
+
+  $window.flushTimeoutFeedback = function() {
+    $timeout.cancel(overvideo_feedback_timeout);//HERE
+    $("#home-overvideo-feedback-points").html("");
   }; // onYouTubePlayerReady
 
   $window.closeShareAndOpenDenied = function(provider) {
@@ -114,10 +123,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
         if(!playpressed_hash[key]) {
           $http.post("/update_play_interaction.json", { calltoaction_id: calltoactionactive.replace("calltoaction-active-", "") })
             .success(function(data) {
-              // Evento salvato correttamente.   
-              $("#home-overvideo-title").html("");         
+              // OVERVIDEO FEEDBACK POINTS
+              $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
+              overvideo_feedback_timeout = $timeout(function() {
+                $("#home-overvideo-feedback-points").html("");
+              }, 3000);   
+
+              $("#home-overvideo-title").html(""); // REMOVE TITLE LAYER        
             }).error(function() {
-              // Errore nel salvataggio dell'evento.
+              // ERROR.
             });
             playpressed_hash[key] = true;
           }
@@ -177,11 +191,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
               $("#home-overvideo").html("");
             }
 
+            // OVERVIDEO FEEDBACK POINTS
+            $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
+            overvideo_feedback_timeout = $timeout(function() {
+              $("#home-overvideo-feedback-points").html("");
+            }, 3000);
+
             if(data.current_correct_answer == answer_id) {
               correctytplayer_hash[key] = true;
             } else {
               correctytplayer_hash[key] = false;
             }
+
           }).error(function() {
             // ERROR.
           });

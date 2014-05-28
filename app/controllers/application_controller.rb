@@ -48,6 +48,9 @@ class ApplicationController < ActionController::Base
     redirect_to "/users/sign_up"
   end
 
+  def how_to
+  end
+
   # curl -F 'client_id=[CLIENT_ID]' \
   #    -F 'client_secret=[CLIENT_SECRET]' \
   #    -F 'object=tag' \

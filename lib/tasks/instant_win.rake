@@ -1,7 +1,5 @@
 namespace :instant_win do
 
-  START_DATE = "2013-12-3"
-  END_DATE = "2014-3-12"
   DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
   desc "Genera tutte le data e ora di vincita del concorso"

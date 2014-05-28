@@ -10,16 +10,10 @@
   <meta property="og:image" content="" />
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 
-  <!--<link href='http://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>-->
-
   <%= stylesheet_link_tag "maxibon_application", :media => "all" %>
   <%= javascript_include_tag "maxibon_application" %>
 
   <%= csrf_meta_tags %>
-  
-  <style>
-  	.nascosto { display: none; }
-  </style>
 
 </head>
 <body>
@@ -32,13 +26,13 @@
         <div class="modal-body text-center">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h2>TODO TODO TODO</h2>
-          <h4>Hai <button class="btn yellow-point user_tickets"><% c=Contest.first %><%= ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> biglietti</h4>
-		  <div class="gioca">
+          <h4>Hai <button class="btn yellow-point current_user_points"><% c = Contest.first %><%= c && ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> biglietti</h4>
+		  <div id="instant-win-play">
 		  	<button class="btn btn-primary" onclick="playTicket()">GIOCA</button>
 		  </div>
-		  <div class="vinto nascosto"><h4>HAI VINTO</h4></div>
-		  <div class="perso nascosto"><h4>HAI PERSO</h4></div>
-		  <div class="finiti nascosto"><h4>HAI FINITO I BIGLIETTI</h4></div>
+		  <div id="instant-win-win" class="hidden"><h4>HAI VINTO</h4></div>
+		  <div id="instant-win-lost" class="hidden"><h4>HAI PERSO</h4></div>
+		  <div id="instant-win-end" class="hidden"><h4>HAI FINITO I BIGLIETTI</h4></div>
       	  <div class="row" id="premi">
       	  	<% InstantWinPrize.all.each do |prize| %>
       	  		<div class="col-md-4"><h4><%= prize.title %></h4></div>
@@ -83,33 +77,35 @@
     </div>
   </div>
 
-
   <%= yield %>
-<script>
-	function playTicket(){
-		$(".nascosto").hide();
-		$.ajax({
-	        type: "POST",
-	        data: {contest_id: <%= Contest.first.id %> },
-	        url: '/playticket.json',
-	        beforeSend: function(jqXHR, settings) {
-	            jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-	        },
-	        success: function(data) {
-	          if(data.ticketended){
-	          	$(".finiti").show();
-	          	$(".gioca").hide();
-	          }else if(data.winner){
-	          	$(".vinto").show();
-	          }else{
-	          	$(".perso").show();
-	          }
-	          
-	          tickets = parseInt( $(".user_tickets").html() )- 1;
-	          $(".user_tickets").html(tickets) ;
-	        }
-	    });
-	}
-</script>
+
+  <script>
+    <% if Contest.active.any? %>
+    	function playTicket(){
+    		$.ajax({
+    	        type: "POST",
+    	        data: { contest_id: <%= Contest.active.first.id %> },
+    	        url: '/playticket.json',
+    	        beforeSend: function(jqXHR, settings) {
+    	            jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+    	        },
+    	        success: function(data) {
+                
+    	          if(data.points_updated < 1){
+    	          	$("#instant-win-end").show(); $("#instant-win-play").hide();
+    	          } else if(data.winner){
+    	          	$("#instant-win-win").show();
+    	          } else {
+    	          	$("#instant-win-lost").show();
+    	          }
+    	          
+    	          $(".current_user_points").html(data.points_updated) ;
+
+    	        }
+    	    });
+    	}
+    <% end %>
+  </script>
+
 </body>
 </html>

@@ -1,3 +1,5 @@
+include InstantwinHelper
+
 class Userinteraction < ActiveRecord::Base
   # TODO: check if after create an userinteraction cached values are update correctly.
 
@@ -119,6 +121,8 @@ class Userinteraction < ActiveRecord::Base
       if self.points > 0
         points_for_user = answer_id && answer.correct ? (self.points + self.added_points) : self.points
         ru.update_attributes(points: (ru.points + points_for_user), credits: (ru.credits + points_for_user))
+
+        InstantwinHelper.update_contest_points user.id, points_for_user
       end
 
       case interaction.resource_type

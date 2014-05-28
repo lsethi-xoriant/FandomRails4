@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 class InstantwinController < ApplicationController
-  layout "admin"
   DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
   
   # Returns days in a month
@@ -20,34 +19,36 @@ class InstantwinController < ApplicationController
   #
   # contest_id - id of the contest
   def play_ticket_mb
-    @ticketended = false
-    @win = false
 
-    risp = Hash.new;
+    win = false
+
     if current_user
-      contest = Contest.find(params[:contest_id])
-      @contest_points = ContestPoint.where("contest_id=? AND user_id = ?",contest.id,current_user.id)   
-      if @contest_points.count > 0 && @contest_points.first.points/contest.conversion_rate > 0
+      contest = Contest.active.find(params[:contest_id])
+      contest_points = ContestPoint.where("contest_id=? AND user_id=?", contest.id, current_user.id)   
+      if contest_points.count > 0 && contest_points.first.points/contest.conversion_rate > 0
 
-        @contest_points = @contest_points.first
+        contest_points = contest_points.first
 
         time_current = Time.now.utc
+
         if !check_win_mb(time_current,contest)
 
           PlayticketEvent.create(:points_spent => contest.conversion_rate, :used_at => time_current, :winner => false, 
                                   :user_id => current_user.id)
 
-          @contest_points.update_attribute(:points,@contest_points.points - contest.conversion_rate)
+          contest_points.update_attribute(:points, contest_points.points - contest.conversion_rate)
 
         end
-      else
-        @ticketended = true
       end
     end
 
-    risp['winner'] = @win
-    risp['ticketended'] = @ticketended
-    risp['prize'] = @prize
+    risp = Hash.new
+    risp = {
+      'winner' => win,
+      'points_updated' => (get_current_contest_points current_user.id),
+      'prize' => @prize
+    }
+
     respond_to do |format|
       format.json { render :json => risp.to_json }
     end
@@ -77,19 +78,21 @@ class InstantwinController < ApplicationController
           # TODO: send winner mail
           #send_winner_email(iw,prize)
         end
+
       end
     end
     return @win
   end
   
+
   # TODO: maxibon
   #
-  # check if a prize is already winned
+  # Check if a prize is already winned
   #
   # iw - instantwin passed
   #
-  def check_already_win(iw)
-    return !iw.playticket_event.nil?
+  def check_already_win iw
+    return iw.playticket_event.present?
   end
 
 end

@@ -68,6 +68,11 @@ body {
     background-color: rgba(0, 0, 0, 0.7);
 }
 
+.overvideo-points-feedback {
+    padding-top: 38%; 
+    position: relative;
+}
+
 .img-circle-overvideo {
     margin: 0 auto; 
     width: 100%; 
@@ -942,7 +947,7 @@ height: 100%;
         background-image: none; 
     }
     .container {
-        max-width: 960px; //1060px;
+        max-width: 810px;
     }
 
     /* Remove the padding we set earlier */
@@ -1021,7 +1026,7 @@ height: 100%;
 
 @media (min-width: $screen-lg-min) {
     .container {
-        max-width: 960px;
+        max-width: 810px;
     }
     .panel {
         .yes-pad {
