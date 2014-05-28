@@ -44,9 +44,9 @@ class InstantwinController < ApplicationController
     end
 
     risp = {
-      'winner' => win
-      'points_updated' = get_current_contest_points current_user.id
-      'prize' = @prize
+      'winner' => win,
+      'points_updated' => get_current_contest_points current_user.id,
+      'prize' => @prize
     }
 
     respond_to do |format|

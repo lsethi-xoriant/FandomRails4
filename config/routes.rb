@@ -15,6 +15,8 @@ Fandom::Application.routes.draw do
   # Instagram subscribe. 
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
 
+  match "/how_to", :to => "application#how_to"
+
   match "profile", :to => "profile#index"
   match "profile/levels", :to => "profile#levels"
   match "profile/badges", :to => "profile#badges"
