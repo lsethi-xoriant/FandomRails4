@@ -942,7 +942,7 @@ height: 100%;
         background-image: none; 
     }
     .container {
-        max-width: 960px; //1060px;
+        max-width: 810px;
     }
 
     /* Remove the padding we set earlier */
@@ -1021,7 +1021,7 @@ height: 100%;
 
 @media (min-width: $screen-lg-min) {
     .container {
-        max-width: 960px;
+        max-width: 810px;
     }
     .panel {
         .yes-pad {
