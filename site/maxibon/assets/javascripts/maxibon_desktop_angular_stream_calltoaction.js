@@ -87,6 +87,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $(".panel-carousel").removeClass("panel-default").removeClass("panel-inactive").addClass("panel-inactive");
           $("#panel-carousel-" + calltoaction_id).removeClass("panel-inactive").addClass("panel-default");
 
+          correctytplayer_hash[key] = false;
           playpressed_hash[key] = false;
 
           ytplayer_hash[key].cueVideoById(calltoaction_video_code);
@@ -123,11 +124,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
         if(!playpressed_hash[key]) {
           $http.post("/update_play_interaction.json", { calltoaction_id: calltoactionactive.replace("calltoaction-active-", "") })
             .success(function(data) {
+
               // OVERVIDEO FEEDBACK POINTS
-              $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
-              overvideo_feedback_timeout = $timeout(function() {
-                $("#home-overvideo-feedback-points").html("");
-              }, 3000);   
+              if(data.overvideo_feedback > 0) {
+                $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
+                overvideo_feedback_timeout = $timeout(function() {
+                  $("#home-overvideo-feedback-points").html("");
+                }, 3000);  
+              } 
 
               $("#home-overvideo-title").html(""); // REMOVE TITLE LAYER        
             }).error(function() {
@@ -192,10 +196,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             }
 
             // OVERVIDEO FEEDBACK POINTS
-            $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
-            overvideo_feedback_timeout = $timeout(function() {
-              $("#home-overvideo-feedback-points").html("");
-            }, 3000);
+            if(data.overvideo_feedback > 0) {
+              $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
+              overvideo_feedback_timeout = $timeout(function() {
+                $("#home-overvideo-feedback-points").html("");
+              }, 3000);  
+            } 
 
             if(data.current_correct_answer == answer_id) {
               correctytplayer_hash[key] = true;
