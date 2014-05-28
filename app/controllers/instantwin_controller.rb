@@ -62,15 +62,15 @@ class InstantwinController < ApplicationController
   #
   def check_win_mb(ctime,contest)
     contest.contest_periodicities.each do |cp|
-      time_to_win_list = Instantwin.where("contest_periodicity_id = ? AND instantwins.time_to_win<?",cp.id,ctime).order("instantwins.time_to_win DESC").limit(1)
+      time_to_win_list = Instantwin.where("contest_periodicity_id = ? AND instantwins.time_to_win_start<= ? AND (instantwins.time_to_win_end IS NULL OR ? <= instantwins.time_to_win_end)",cp.id,ctime,ctime).order("instantwins.time_to_win_start DESC").limit(1)
       if time_to_win_list.count > 0
         time_to_win = time_to_win_list.first 
-        if !(check_already_win(time_to_win) || @win)
+        if !(check_already_win(time_to_win) || @win )
           @win = true
-          @prize = iw.first.contest_periodicity.instant_win_prizes.first
+          @prize = time_to_win.contest_periodicity.instant_win_prizes.first
           
           PlayticketEvent.create(:points_spent => contest.conversion_rate, :used_at => ctime, :winner => true, 
-                                  :user_id => current_user.id, :instantwin_id => iw.first.id)
+                                  :user_id => current_user.id, :instantwin_id => time_to_win.id)
   
           @contest_points.update_attribute(:points, @contest_points.points - contest.conversion_rate)
           

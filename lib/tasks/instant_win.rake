@@ -20,7 +20,7 @@ namespace :instant_win do
   #
   def createMaxibonWins
     Apartment::Database.switch("maxibon")
-    contest = Contest.create(:title => "Maxibon Acquafun", :start_date => "03/06/2014 11:00:00", :end_date => "01/08/2014 23:59:59", :property_id => Property.first.id)
+    contest = Contest.create(:title => "Maxibon Acquafun", :start_date => "03/06/2014 11:00:00 Rome", :end_date => "01/08/2014 23:59:59 Rome", :property_id => Property.first.id)
     periodicity_type_daily = PeriodicityType.create(:name => "Giornaliera", :period => 1)
     periodicity_type_maxibon_custom = PeriodicityType.create(:name => "60gg", :period => 60) 
     contest_periodicity_1 = ContestPeriodicity.create(:title => "Biglietto Aquafun 1", :periodicity_type_id => periodicity_type_daily.id, :contest_id => contest.id)
@@ -63,12 +63,12 @@ namespace :instant_win do
     while winner_inserted < total_prizes
       offest_day_win = (0..day_range).to_a.sample
       winday = beginning_date + offest_day_win
-      winhour = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} UTC"
+      winhour = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} Rome"
       wintime = Time.parse(winday.strftime("%Y-%m-%d") +" "+ winhour)
       iw = Instantwin.new
       iw.contest_periodicity_id = cp.id
       iw.title = "Random"
-      iw.time_to_win = wintime
+      iw.time_to_win_start = wintime
       iw.save
       winner_inserted += 1
     end
@@ -83,12 +83,14 @@ namespace :instant_win do
   def createDailyWins(contest,cp)
     cdate = contest.start_date.to_date
     while cdate <= contest.end_date.to_date
-      time = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} UTC"
+      time = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} Rome"
       wintime = Time.parse(cdate.strftime("%Y-%m-%d") +" "+ time)
+      wintime_end = Time.parse(cdate.strftime("%Y-%m-%d") +" 23:59:59")
       iw = Instantwin.new
       iw.contest_periodicity_id = cp.id
       iw.title = "Daily"
-      iw.time_to_win = wintime
+      iw.time_to_win_start = wintime
+      iw.time_to_win_end = wintime_end
       iw.save
       cdate += 1
     end
