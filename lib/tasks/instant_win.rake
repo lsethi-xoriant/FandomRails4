@@ -18,7 +18,7 @@ namespace :instant_win do
   #
   def createMaxibonWins
     Apartment::Database.switch("maxibon")
-    contest = Contest.create(:title => "Maxibon Acquafun", :start_date => "03/06/2014 11:00:00 Rome", :end_date => "01/08/2014 23:59:59 Rome", :property_id => Property.first.id)
+    contest = Contest.create(:title => "Maxibon Acquafun", :start_date => "03/05/2014 11:00:00 Rome", :end_date => "01/08/2014 23:59:59 Rome", :property_id => Property.first.id)
     periodicity_type_daily = PeriodicityType.create(:name => "Giornaliera", :period => 1)
     periodicity_type_maxibon_custom = PeriodicityType.create(:name => "60gg", :period => 60) 
     contest_periodicity_1 = ContestPeriodicity.create(:title => "Biglietto Aquafun 1", :periodicity_type_id => periodicity_type_daily.id, :contest_id => contest.id)

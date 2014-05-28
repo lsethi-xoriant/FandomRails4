@@ -1,9 +1,6 @@
 <%= render partial: "/application/user_bar" %>
 
 <script type="text/javascript" src="/assets/jquery.jcarousel.js"></script>
-<script type="text/javascript" src="/assets/jcarousel.skeleton.js"></script>
-
-<link rel="stylesheet" type="text/css" href="/assets/jcarousel.skeleton.css">
 
 <div class="container-fluid" ng-app="MobileStreamCalltoactionApp" ng-controller="MobileStreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= Calltoaction.active.count %>')">   
 

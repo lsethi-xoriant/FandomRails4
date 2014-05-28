@@ -5,6 +5,12 @@ include InstantwinHelper
 
 class InstantwinController < ApplicationController
   DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+  before_filter :authorize_user
+
+  def authorize_user
+    authorize! :play, :contest
+  end
   
   # Returns days in a month
   #

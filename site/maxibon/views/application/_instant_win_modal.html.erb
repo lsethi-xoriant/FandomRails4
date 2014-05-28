@@ -1,0 +1,166 @@
+<% if current_user && Contest.active.any? %>
+
+  <!-- INSTANT WIN MODAL -->
+  <div class="modal fade" id="instant-win-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h2>TODO TODO TODO</h2>
+          <h4>Hai <button class="btn yellow-point current_user_points"><% c = Contest.first %><%= c && ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> biglietti</h4>
+          <div id="instant-win-play">
+            <button class="btn btn-primary" onclick="playTicket()">GIOCA</button>
+          </div>
+          <div id="instant-win-win" class="hidden"><h4>HAI VINTO</h4></div>
+          <div id="instant-win-lost" class="hidden"><h4>HAI PERSO</h4></div>
+          <div id="instant-win-end" class="hidden"><h4>HAI FINITO I BIGLIETTI</h4></div>
+          <div class="row" id="premi">
+            <% InstantWinPrize.all.each do |prize| %>
+              <div class="col-md-4"><h4><%= prize.title %></h4></div>
+            <% end %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTANT WIN MODAL -->
+  <div class="modal fade" id="complete-registration-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="lead">Completa il tuo profilo</h4>
+          <%= form_for current_user, url: "/profile/complete_for_contest", remote: true do |f| %> 
+            <div id="complete-registration-errors"></div>
+
+            <%= f.hidden_field :enable_contest, value: true %>
+
+            <div class="row form-group text-left">
+              <label class="col-sm-3 control-label text-right">Città</label>
+              <div class="col-sm-8 no-pad">
+                <div class="col-sm-12">
+                  <%= f.text_field :location, class: "form-control", placeholder: "Città" %>
+                </div>
+                <div class="col-sm-6" style="margin-top: 15px;">
+                  <%= f.text_field :province, class: "form-control", placeholder: "Provincia" %>
+                </div>
+                <div class="col-sm-6" style="margin-top: 15px;">
+                  <%= f.text_field :cap, class: "form-control", placeholder: "CAP" %>
+                </div>
+              </div>
+            </div>
+
+            <div class="row form-group text-left">
+              <label class="col-sm-3 control-label text-right">Indirizzo</label>
+              <div class="col-sm-5">
+                <%= f.text_field :address, class: "form-control", placeholder: "Via" %>
+              </div>
+              <div class="col-sm-3">
+                <%= f.text_field :number, class: "form-control margin-top-15-mobile", placeholder: "Numero" %>
+              </div>
+            </div>
+
+            <div class="row form-group text-left">
+              <label class="col-sm-3 control-label text-right">Telefono</label>
+              <div class="col-sm-8">
+                <%= f.text_field :phone, class: "form-control" %>
+              </div>
+            </div>
+            
+            <div class="row form-group">
+              <label class="col-sm-3 control-label text-right">Data di nascita</label>         
+              <div class="col-sm-8">
+                <div class="row">
+                  <div class="col-sm-4 margin-top-15-mobile">
+                    <% date_array = (1..31).map { |date| [date, date] } %>
+                    <% date_array.unshift ["Giorno", ""] %>
+                    <%= f.select(:day_of_birth, date_array, {}, id: "date_day_of_birth", class: "form-control") %>
+                  </div>
+
+                  <div class="col-sm-4 margin-top-15-mobile">
+                    <% date_array = (1..12).map { |date| [date, date] } %>
+                    <% date_array.unshift ["Mese", ""] %>
+                    <%= f.select(:month_of_birth, date_array, {}, id: "date_month_of_birth", class: "form-control") %>
+                  </div>
+
+                  <div class="col-sm-4 margin-top-15-mobile">
+                    <% date_array = (1900..1999).map { |date| [date, date] } %>
+                    <% date_array.unshift ["Anno", ""] %>
+                    <%= f.select(:year_of_birth, date_array, {}, id: "date_year_of_birth", class: "form-control") %>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row form-group">
+              <label class="col-sm-3 control-label text-right"></label>
+              <div class="col-sm-9 text-left">
+                <%= f.check_box :rule %> Ho preso visione del regolamento.
+              </div>
+            </div>
+
+            <div class="row" style="padding-top: 15px;">
+              <div class="col-sm-4 col-sm-offset-4">
+                <button type="submit" class="btn btn-info btn-lg btn-block">Registrati</button>
+              </div>
+            </div>
+
+          <% end %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    <% if current_user.birth_date %>
+      $(function() {
+        $("#date_day_of_birth").val(<%= current_user.birth_date.strftime("%d") %>);
+        $("#date_month_of_birth").val(<%= current_user.birth_date.strftime("%m") %>);
+        $("#date_year_of_birth").val(<%= current_user.birth_date.strftime("%Y") %>);
+      });
+    <% end %>
+
+    var enable_contest = <%= current_user.rule? %>;
+    function openInstantWinModal() {
+      if(enable_contest) {
+        $("#instant-win-modal").modal("show");
+      } else {
+        $("#complete-registration-modal").modal("show");
+      }
+    }
+
+    function playTicket() {
+      $.ajax({
+            type: "POST",
+            data: { contest_id: <%= Contest.active.first.id %> },
+            url: '/playticket.json',
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+              
+              if(data.points_updated < 1){
+                $("#instant-win-end").show(); $("#instant-win-play").hide();
+              } else if(data.winner){
+                $("#instant-win-win").show();
+              } else {
+                $("#instant-win-lost").show();
+              }
+              
+              $(".current_user_points").html(data.points_updated) ;
+
+            }
+        });
+    }
+
+  </script>
+
+<% end %>

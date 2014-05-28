@@ -33,6 +33,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def landing
+  end
+
   def sign_in_fb_from_page
     cookies[:connect_from_page] = request.referrer
     redirect_to "/auth/facebook" 

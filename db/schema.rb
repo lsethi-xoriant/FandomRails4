@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140528093124) do
+ActiveRecord::Schema.define(:version => 20140528142808) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -85,8 +85,10 @@ ActiveRecord::Schema.define(:version => 20140528093124) do
     t.string   "slug"
     t.string   "secondary_id"
     t.text     "description"
+    t.integer  "parent"
   end
 
+  add_index "calltoactions", ["parent"], :name => "index_calltoactions_on_parent"
   add_index "calltoactions", ["slug"], :name => "index_calltoactions_on_slug"
 
   create_table "checks", :force => true do |t|
@@ -420,6 +422,14 @@ ActiveRecord::Schema.define(:version => 20140528093124) do
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.string   "cap"
+    t.string   "location"
+    t.string   "province"
+    t.string   "address"
+    t.string   "phone"
+    t.string   "number"
+    t.boolean  "rule"
+    t.date     "birth_date"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

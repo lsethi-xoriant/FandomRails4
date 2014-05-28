@@ -30,6 +30,8 @@ module FandomUtils
     end
     configure_environment_for_site(site)
     configure_omniauth_for_site(site)
+
+    redirect_to "/landing" if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController))
   end
 
   def configure_environment_for_site(site)
