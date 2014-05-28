@@ -851,6 +851,10 @@ height: 100%;
 
 /* CUSTOM */
 @media (max-width: $screen-sm-min) {
+    body {
+        background: #57d0ff;
+    }
+
     .img-profile { max-height: 64px; }
     .border-right { border-right: 1px solid #e4e4e4; }
     hr { clear: both; }
@@ -879,7 +883,6 @@ height: 100%;
             font-size: 16px;
             color: #fff; 
             text-transform: uppercase; 
-            margin-top: 15px;
         }
         h4 {
             font-size: 10px;
