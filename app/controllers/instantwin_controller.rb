@@ -42,7 +42,7 @@ class InstantwinController < ApplicationController
         if !check_win_mb(time_current,contest)
 
           PlayticketEvent.create(:points_spent => contest.conversion_rate, :used_at => time_current, :winner => false, 
-                                  :user_id => current_user.id)
+                                  :user_id => current_user.id, :contest_periodicity_id => cp.id)
 
           contest_points.update_attribute(:points, contest_points.points - contest.conversion_rate)
 
@@ -74,17 +74,16 @@ class InstantwinController < ApplicationController
       time_to_win_list = Instantwin.where("contest_periodicity_id = ? AND instantwins.time_to_win_start<= ? AND (instantwins.time_to_win_end IS NULL OR ? <= instantwins.time_to_win_end)",cp.id,ctime,ctime).order("instantwins.time_to_win_start DESC").limit(1)
       if time_to_win_list.count > 0
         time_to_win = time_to_win_list.first 
-        if !(check_already_win(time_to_win) || @win )
+        if !(check_already_win(time_to_win) || @win || ckeck_already_win_by_user(cp) )
           @win = true
           @prize = time_to_win.contest_periodicity.instant_win_prizes.first
           
           PlayticketEvent.create(:points_spent => contest.conversion_rate, :used_at => ctime, :winner => true, 
-                                  :user_id => current_user.id, :instantwin_id => time_to_win.id)
+                                  :user_id => current_user.id, :instantwin_id => time_to_win.id, :contest_periodicity_id => cp.id)
   
           @contest_points.update_attribute(:points, @contest_points.points - contest.conversion_rate)
           
-          # TODO: send winner mail
-          #send_winner_email(iw,prize)
+          send_winner_email(time_to_win,@prize)
         end
 
       end
@@ -101,6 +100,21 @@ class InstantwinController < ApplicationController
   #
   def check_already_win iw
     return iw.playticket_event.present?
+  end
+  
+  # TODO: maxibon
+  #
+  # Check if a prize is already winned by current user
+  #
+  # iw - instantwin passed
+  #
+  def check_already_win_by_user contest_periodicity
+    return PlayticketEvent.where("user_id = ? AND contest_periodicity_id = ?",current_user.id, contest_periodicity.id).present?
+  end
+  
+  def send_winner_email(price)
+    SystemMailer.win_mail(current_user, price).deliver
+    SystemMailer.win_admin_notice_mail(current_user, price).deliver
   end
 
 end
