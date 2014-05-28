@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140523075749) do
+ActiveRecord::Schema.define(:version => 20140528093124) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -85,10 +85,8 @@ ActiveRecord::Schema.define(:version => 20140523075749) do
     t.string   "slug"
     t.string   "secondary_id"
     t.text     "description"
-    t.integer  "parent"
   end
 
-  add_index "calltoactions", ["parent"], :name => "index_calltoactions_on_parent"
   add_index "calltoactions", ["slug"], :name => "index_calltoactions_on_slug"
 
   create_table "checks", :force => true do |t|
@@ -181,10 +179,11 @@ ActiveRecord::Schema.define(:version => 20140523075749) do
 
   create_table "instantwins", :force => true do |t|
     t.integer  "contest_periodicity_id", :null => false
-    t.datetime "time_to_win",            :null => false
+    t.datetime "time_to_win_start",      :null => false
     t.string   "title"
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
+    t.datetime "time_to_win_end"
   end
 
   create_table "interactions", :force => true do |t|
