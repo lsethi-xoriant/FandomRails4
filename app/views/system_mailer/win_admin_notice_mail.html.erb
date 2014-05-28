@@ -4,9 +4,8 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-  	  <p>Vincitore <%= @price %>:</p>
-  	  <p>Nome e cognome: <%= @cuser.first_name %><%= @cuser.last_name %></p> 
+  	  <p>Premio <%= @price.title %>:</p>
+  	  <p>Nome e cognome: <%= @cuser.first_name %> <%= @cuser.last_name %></p> 
   	  <p>Email: <%= @cuser.email %></p> 
-  	  <p>Orario di vincita: <%= @ticket.used_at %></p>
   </body>
 </html>

@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 class SystemMailer < ActionMailer::Base
-  default from: "amadorabilichef@amadori.it"
+  default from: "noreply@maxibon.it"
 
   def share_mail(mailto, url, user, title)
   	@cuser = user
@@ -17,45 +17,23 @@ class SystemMailer < ActionMailer::Base
 
   def welcome_mail(user)
     @cuser = user
-    mail(to: user.email, subject: "Benvenuto su Amadorabili Chef!")
+    mail(to: user.email, subject: "Benvenuto su MAXIBON!")
   end  
 
   def win_mail(user, price)
 
-    case price.title
-    when "daily"
-      @price = "una Dinner Box di prodotti Amadori"
-      @cooking_class = false
-    when "weekly"
-      @price = "un posto alla Cooking Class"
-      @cooking_class = true
-    when "monthly"
-      @price = "un robot da cucina"
-      @cooking_class = false
-    end   
+    @price = price
 
   	@cuser = user
-  	mail(to: user.email, subject: "Concorso Amadorabili Chef – hai vinto #{ @price }")
+  	mail(to: user.email, subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – hai vinto #{ @price.title }")
   end
 
   def win_admin_notice_mail(user, price)
     
-    case price.title
-    when "daily"
-      @price = "una Dinner Box di prodotti Amadori"
-      @cooking_class = false
-    when "weekly"
-      @price = "un posto alla Cooking Class"
-      @cooking_class = true
-    when "monthly"
-      @price = "un robot da cucina"
-      @cooking_class = false
-    end   
-
-    @ticket = price.ticket
+    @price = price
 
   	@cuser = user
-  	mail(to: [ "infoconcorsi@ictlabs.it", "amadorabilichef@shado.tv" ], subject: "Concorso Amadorabili Chef – Un utente ha vinto #{ @price }")
+  	mail(to: [ "", "maxibon@shado.tv" ], subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – Un utente ha vinto #{ @price.title }")
   end
 
 end

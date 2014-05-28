@@ -75,8 +75,7 @@ class InstantwinController < ApplicationController
   
           @contest_points.update_attribute(:points, @contest_points.points - contest.conversion_rate)
           
-          # TODO: send winner mail
-          #send_winner_email(iw,prize)
+          send_winner_email(time_to_win,@prize)
         end
 
       end
@@ -93,6 +92,11 @@ class InstantwinController < ApplicationController
   #
   def check_already_win iw
     return iw.playticket_event.present?
+  end
+  
+  def send_winner_email(price)
+    SystemMailer.win_mail(current_user, price).deliver
+    SystemMailer.win_admin_notice_mail(current_user, price).deliver
   end
 
 end
