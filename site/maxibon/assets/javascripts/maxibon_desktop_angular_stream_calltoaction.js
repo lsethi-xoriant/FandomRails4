@@ -126,7 +126,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             .success(function(data) {
 
               // OVERVIDEO FEEDBACK POINTS
-              if(data.overvideo_feedback > 0) {
+              if(data.overvideo_feedback) {
                 $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
                 overvideo_feedback_timeout = $timeout(function() {
                   $("#home-overvideo-feedback-points").html("");
@@ -196,7 +196,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             }
 
             // OVERVIDEO FEEDBACK POINTS
-            if(data.overvideo_feedback > 0) {
+            if(data.overvideo_feedback) {
               $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
               overvideo_feedback_timeout = $timeout(function() {
                 $("#home-overvideo-feedback-points").html("");

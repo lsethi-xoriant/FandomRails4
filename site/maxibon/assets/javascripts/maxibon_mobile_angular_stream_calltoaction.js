@@ -102,11 +102,15 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
       if(player_state == 1) { // Lo stato 1 corrisponde al video in riproduzione.
       // Identifico il PLAY del video in modo da poter tracciare l'evento.          
         if(!playpressed_hash[key]) {
-          $http.post("/update_play_interaction.json", { calltoaction_id: calltoactionactive.replace("calltoaction-active-", "") })
+          calltoaction_id = calltoactionactive.replace("calltoaction-active-", "");
+          $http.post("/update_play_interaction.json", { calltoaction_id: calltoaction_id })
             .success(function(data) {
-              // Evento salvato correttamente.            
+              // Event saved. 
+              if(data.undervideo_feedback) {
+                $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
+              }            
           }).error(function() {
-              // Errore nel salvataggio dell'evento.
+              // ERROR.
             });
             playpressed_hash[key] = true;
           }
@@ -183,6 +187,10 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
               updateYTIframe(data.next_calltoaction["video_url"], calltoaction_id, true);
               $("#home-overvideo-" + calltoaction_id).html("");
             }
+
+            if(data.undervideo_feedback) {
+              $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
+            } 
 
             if(data.current_correct_answer == answer_id) {
               correctytplayer_hash[key] = true;

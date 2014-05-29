@@ -172,7 +172,13 @@ class CalltoactionController < ApplicationController
       ui.update_attribute(:counter, ui.counter + 1)
     else
       ui = Userinteraction.create(user_id: user_id, interaction_id: i.id)
-      risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+      if (ui.points + ui.added_points) > 0
+        if mobile_device?
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+        else
+          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+        end
+      end
     end
 
     risp["interaction_save"] = !ui.errors.any? # Ritorno lo stato del salvataggio.
@@ -370,7 +376,13 @@ class CalltoactionController < ApplicationController
       ui.update_attributes(answer_id: params[:answer_id], counter: (ui.counter + 1))
     elsif ui.blank?
       ui = Userinteraction.create(answer_id: params[:answer_id], user_id: current_user.id, interaction_id: params[:interaction_id]) 
-      risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+      if (ui.points + ui.added_points) > 0
+        if mobile_device?
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+        else
+          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+        end
+      end
     end
 
     if i.resource.quiz_type == "VERSUS"
