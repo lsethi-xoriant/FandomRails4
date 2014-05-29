@@ -404,7 +404,6 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def index_periodicity
-    debugger
     @periodicity_list = PeriodicityType.order("period ASC")
   end
 

@@ -12,6 +12,20 @@ class InstantwinController < ApplicationController
     authorize! :play, :contest
   end
   
+  def show_winners
+    @winners = Array.new
+    wins = PlayticketEvent.where("winner = true")
+    @winner_per_page = 15
+    
+    wins.each do |win_event|
+      winner = Hash.new
+      winner['avatar'] = win_event.user.avatar.url(:thumb)
+      winner['name'] = "#{win_event.user.first_name} #{win_event.user.last_name}"
+      winner['prize'] = "#{win_event.contest_periodicity.instant_win_prizes.first.title}"
+      @winners.push(winner)
+    end
+  end
+  
   # Returns days in a month
   #
   # month - month want to know days amount
