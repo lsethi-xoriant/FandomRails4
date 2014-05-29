@@ -6,7 +6,7 @@ include InstantwinHelper
 class InstantwinController < ApplicationController
   DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-  before_filter :authorize_user
+  before_filter :authorize_user, except: :show_winners
 
   def authorize_user
     authorize! :play, :contest
