@@ -448,8 +448,7 @@ class CalltoactionController < ApplicationController
     elsif params[:provider] == "email" && current_user
       if params[:share_email_address] =~ Devise.email_regexp
 
-        # TODO: SEND EMAIL
-        # SystemMailer.share_TODO_(current_user, params[:share_email_address]).deliver
+        SystemMailer.share_content_email(current_user, params[:share_email_address], i.calltoaction).deliver
 
         ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
         risp["email_correct"] = true
