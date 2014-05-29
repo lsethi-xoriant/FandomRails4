@@ -87,11 +87,6 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
   $window.onYouTubePlayerReady = function(event) {
   }; // onYouTubePlayerReady
 
-  $window.closeShareAndOpenDenied = function(provider) {
-    $("#share-modal").modal("hide");
-    $("#share-" + provider + "-disable-modal").modal("show");
-  }; // closeShareAndOpenDenied
-
   // Callback chiamata quando lo stato del video viene modificato.
   $window.onPlayerStateChange = function(newState) {  
     key = newState.target.getIframe().id;
@@ -123,54 +118,43 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
       }
   }; // onPlayerStateChange
 
-  $window.openShareWith = function(property_id, calltoaction_id) {
-    $http.post("/" + property_id + "/" + calltoaction_id + "/generate_share_modal")
-        .success(function(data) {
-          $("#share-modal-container").html(data);
-          $("#share-modal").modal("show");
-
-        }).error(function() {
-          // ERRORE
-        });
-  };
-
   $window.shareWith = function(provider, interaction_id, calltoaction_id) {
 
     $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
     $("#share-" + provider + "-" + interaction_id).html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
 
     $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
-        .success(function(data) {
-          // Modifico lo stato del bottone e notifico la condivisione.
-          $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
-          $("#share-" + provider + "-" + interaction_id).html("SHARE WITH " + provider);
+      .success(function(data) {
+        // Modifico lo stato del bottone e notifico la condivisione.
+        $("#share-" + provider + "-" + interaction_id).attr('disabled', false); // Modifico lo stato del bottone.
+        $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI CON " + provider.toUpperCase());
 
-          $("#share-modal").modal("hide");
+        $("#share-modal-" + calltoaction_id).modal("hide");
 
-          if(provider == "email") {
-            $("#share-email-address-" + interaction_id).val("");
-            $("#share-" + provider + "-" + interaction_id).html("SHARE WITH EMAIL");
-            if(data == "false") {
-              $("#invalid-email-modal").modal("show");  
-            } else {
-              $("#share-" + calltoaction_id).addClass("btn-success");
-              $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
-            }
+        if(provider == "email") {
+          $("#share-email-address-" + interaction_id).val("");
+          $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI");
 
-          } else {
+          if(data.email_correct) {
             $("#share-" + calltoaction_id).addClass("btn-success");
             $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
+          } else {
+            $("#invalid-email-modal").modal("show"); 
           }
 
-        }).error(function() {
-          // ERRORE
-        });
-  };
+        } else {
+          $("#share-" + calltoaction_id).addClass("btn-success");
+          $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
+        }
 
-  $window.closeShareAndOpenWarningModal = function(calltoaction_id, share_type) {
-    $("#share-modal").modal("hide");
-    $("#first-share-modal-" + share_type).modal("show");
-  }; // closeShareAndOpenWarningModal
+        if(data.undervideo_feedback) {
+          $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
+        } 
+
+      }).error(function() {
+        // ERRORE
+      });
+  };
 
   $window.updateTriviaAnswer = function(calltoaction_id, interaction_id, answer_id) {
     $(".button-inter-" + interaction_id).attr('disabled', true);

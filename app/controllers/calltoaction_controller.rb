@@ -172,6 +172,7 @@ class CalltoactionController < ApplicationController
       ui.update_attribute(:counter, ui.counter + 1)
     else
       ui = Userinteraction.create(user_id: user_id, interaction_id: i.id)
+      risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
       if (ui.points + ui.added_points) > 0
         if mobile_device?
           risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
@@ -398,6 +399,7 @@ class CalltoactionController < ApplicationController
     end
 
     risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
+    risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
 
     respond_to do |format|
       format.json { render :json => risp.to_json }
@@ -420,20 +422,47 @@ class CalltoactionController < ApplicationController
     i = Interaction.find(params[:interaction_id].to_i)
     ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
 
-    ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
+    if ui
+      ui.update_attribute(:counter, ui.counter + 1)
+    else
+      ui = Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i)
+      if mobile_device?
+        risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+      end
+    end
+
     risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
 
-    if params[:provier] = "facebook" && current_user && current_user.facebook
+    if params[:provider] == "facebook" && current_user && current_user.facebook
       if Rails.env.production?
         current_user.facebook.put_wall_post(" ", { name: i.resource.description, link: "#{ request.referer }", picture: "#{ root_url }#{i.resource.picture.url}" })
       else
         #current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
       end
+      risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
       respond_to do |format|
         format.json { render :json => risp.to_json }
       end 
-    elsif params[:provier] = "twitter" && current_user && current_user.twitter
-      current_user.twitter.update(i.resource.message)
+    # elsif params[:provier] = "twitter" && current_user && current_user.twitter
+    #   current_user.twitter.update(i.resource.message)
+    elsif params[:provider] == "email" && current_user
+      if params[:share_email_address] =~ Devise.email_regexp
+
+        SystemMailer.share_content_email(current_user, params[:share_email_address], i.calltoaction).deliver
+
+        ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
+        risp["email_correct"] = true
+        risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
+
+        respond_to do |format|
+          format.json { render :json => risp.to_json }
+        end 
+      else
+        risp["email_correct"] = false
+        respond_to do |format|
+          format.json { render :json => risp.to_json }
+        end
+      end
     else
       respond_to do |format|
         format.json { render :json => "current-user-no-provider" }

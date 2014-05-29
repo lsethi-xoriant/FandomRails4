@@ -68,7 +68,8 @@ class InstantwinController < ApplicationController
     risp = {
       'winner' => win,
       'points_updated' => (get_current_contest_points current_user.id),
-      'prize' => @prize
+      'prize' => @prize,
+      'prize_image' => (@prize ? @prize.image.url : "")
     }
 
     respond_to do |format|

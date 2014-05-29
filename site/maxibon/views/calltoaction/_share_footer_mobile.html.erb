@@ -1,6 +1,4 @@
-<div class="row">
-  <div class="col-sm-12 text-center">
-
+<div class="row text-center" style="margin-left: 5px; margin-right: 5px;">
     <% if share_inter = calltoaction.interactions.where("resource_type='Share'") %>
       <% share_inter.each do |s| %>
         <% if s.resource.share_type == "email" && current_user %>
@@ -37,7 +35,7 @@
                       <%= text_field_tag :email_to_share, nil, class: "form-control", id: "share-email-address-#{ s.id }", placeholder: "example@example.com" %>
                     </div>
                     <div class="col-lg-4">
-                      <button id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="btn btn-primary btn-block" onclick="shareWith('<%= s.resource.share_type %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI</button>
+                      <button id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="margin-top-15-mobile btn btn-primary btn-block" onclick="shareWith('<%= s.resource.share_type %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI</button>
                     </div>
                     <div class="col-lg-8 col-lg-offset-4" id="share-info"></div>
                   </div>
@@ -49,7 +47,9 @@
             </div>
           </div>
 
-          <button type="button" class="btn btn-default" onclick="$('#share-modal-<%= calltoaction.id %>').modal('show');">CONDIVIDI VIA EMAIL</button>
+          <div class="col-xs-12">
+            <button style="margin-bottom: 5px;" type="button" class="btn btn-default btn-xs btn-block" onclick="$('#share-modal-<%= calltoaction.id %>').modal('show');">CONDIVIDI VIA EMAIL</button>
+          </div>
 
         <% end %>
       <% end %>
@@ -58,16 +58,23 @@
     <% if share_inter = calltoaction.interactions.where("resource_type='Share'") %>
       <% share_inter.each do |s| %>
         <% if s.resource.share_type == "facebook" %>
-          <% if current_user && (auth = current_user.authentications.find_by_provider(s.resource.share_type.downcase)) %>
-            <button id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="btn btn-fb" onclick="shareWith('<%= s.resource.share_type.downcase %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI CON FACEBOOK</button><img class="img-ticket" style="padding-left: 15px;" src="/assets/maxibon/small-ticket.png">
-          <% else %>
-            <a href="/sign_in_fb_from_page"><button type="button" class="btn btn-fb">ENTRA CON FACEBOOK</button></a><img class="img-ticket" style="padding-left: 15px;" src="/assets/maxibon/small-ticket.png">
-          <% end %>
+
+          <div class="col-xs-12">
+            <% if current_user && (auth = current_user.authentications.find_by_provider(s.resource.share_type.downcase)) %>
+              <button id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="btn btn-fb btn-xs btn-block" onclick="shareWith('<%= s.resource.share_type.downcase %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI CON FACEBOOK</button>
+            <% else %>
+              <a href="/sign_in_fb_from_page"><button type="button" class="btn btn-fb btn-xs btn-lg">ENTRA CON FACEBOOK</button></a>
+            <% end %>
+          </div>
+
         <% end %>
       <% end %>
     <% end %>
 
-  </div>
+    <div class="col-xs-12">
+      <img class="img-ticket" style="padding-left: 15px; margin-bottom: 15px; width: 40px;" src="/assets/maxibon/small-ticket.png">
+    </div>
+
 </div>
 
 

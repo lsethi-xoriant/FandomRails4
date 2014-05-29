@@ -63,15 +63,14 @@ Fandom::Application.configure do
   config.active_support.deprecation = :notify
   Paperclip.options[:command_path] = "/usr/local/bin"
 
-  # email
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_url_options = { :host => 'host.todo' }
+  config.action_mailer.default_url_options = { :host => ENV['EMAIL_HOST'] }
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {    
-        :user_name => ENV["APP_EMAIL_ACCOUNT"], # account
-        :address => ENV["APP_EMAIL_IP"], # indirizzo ip della macchina
-        :password => ENV["APP_PASSWORD"]
+        :user_name => ENV["EMAIL_ACCOUNT"], # account
+        :address => ENV["EMAIL_IP"], # indirizzo ip della macchina
+        :password => ENV["EMAIL_PASSWORD"]
   }
 
   # config/environments/production.rb
