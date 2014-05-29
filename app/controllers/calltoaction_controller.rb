@@ -423,7 +423,7 @@ class CalltoactionController < ApplicationController
     ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
     risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
 
-    if params[:provier] = "facebook" && current_user && current_user.facebook
+    if params[:provier] == "facebook" && current_user && current_user.facebook
       if Rails.env.production?
         current_user.facebook.put_wall_post(" ", { name: i.resource.description, link: "#{ request.referer }", picture: "#{ root_url }#{i.resource.picture.url}" })
       else
@@ -432,8 +432,22 @@ class CalltoactionController < ApplicationController
       respond_to do |format|
         format.json { render :json => risp.to_json }
       end 
-    elsif params[:provier] = "twitter" && current_user && current_user.twitter
-      current_user.twitter.update(i.resource.message)
+    #elsif params[:provier] = "twitter" && current_user && current_user.twitter
+    #  current_user.twitter.update(i.resource.message)
+    elsif params[:provider] == "email" && current_user
+      if params[:share_email_address] =~ Devise.email_regexp
+        #SystemMailer.share_TODO_(current_user, params[:share_email_address]).deliver
+        ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
+        risp["email_correct"] = true
+        respond_to do |format|
+          format.json { render :json => risp.to_json }
+        end 
+      else
+        risp["email_correct"] = false
+        respond_to do |format|
+          format.json { render :json => risp.to_json }
+        end
+      end
     else
       respond_to do |format|
         format.json { render :json => "current-user-no-provider" }
