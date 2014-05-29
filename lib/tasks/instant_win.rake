@@ -23,8 +23,8 @@ namespace :instant_win do
     periodicity_type_maxibon_custom = PeriodicityType.create(:name => "60gg", :period => 60) 
     contest_periodicity_1 = ContestPeriodicity.create(:title => "Ingresso gratuito Aquafan", :periodicity_type_id => periodicity_type_daily.id, :contest_id => contest.id)
     contest_periodicity_3 = ContestPeriodicity.create(:title => "Pacchetto 5 ingressi evento serale", :periodicity_type_id => periodicity_type_maxibon_custom.id, :contest_id => contest.id)
-    InstantWinPrize.create(:title => "Ingresso Aquafun", :description => "Ingresso gratuito all'Aquafun di riccione", :contest_periodicity_id => contest_periodicity_1.id)
-    InstantWinPrize.create(:title => "Pack Eventi Aquafun", :description => "Pacchetto di 5 biglietti di ingresso a eventi Aquafun", :contest_periodicity_id => contest_periodicity_3.id)
+    InstantWinPrize.create(:title => "Ingresso Aquafan", :description => "Ingresso gratuito all'Aquafun di riccione", :contest_periodicity_id => contest_periodicity_1.id)
+    InstantWinPrize.create(:title => "Pack Eventi Aquafan", :description => "Pacchetto di 5 biglietti di ingresso a eventi Aquafun", :contest_periodicity_id => contest_periodicity_3.id)
     create_wins_mb(contest)
   end
 

@@ -15,15 +15,16 @@
       </a>
     </div>
     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav text-center">
         <% if current_user %>
-          <li><a href="/" style="padding-bottom: 5px;">HOME</a></li> 
-          <li><a href="/extra">VIDEO EXTRA</a></li>
+          <li><a href="/">HOME</a></li> 
           <li><a href="/profile/edit">PROFILO</a></li>
-          <li><a href="/profile/rankings">CLASSIFICA</a></li>
+          <li><a href="/extra">VIDEO EXTRA</a></li>
+          <li><a href="/how_to">SCOPRI COME</a></li>
+          <li><a href="/winners">VINCITORI</a></li>
           <li><a href="/users/sign_out">ESCI</a></li>
         <% else %>
-          <li><a href="/users/sign_up"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+          <li><a href="/users/sign_up">LOGIN</a></li>
         <% end %>
       </ul>
 
