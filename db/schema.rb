@@ -85,10 +85,8 @@ ActiveRecord::Schema.define(:version => 20140529075725) do
     t.string   "slug"
     t.string   "secondary_id"
     t.text     "description"
-    t.integer  "parent"
   end
 
-  add_index "calltoactions", ["parent"], :name => "index_calltoactions_on_parent"
   add_index "calltoactions", ["slug"], :name => "index_calltoactions_on_slug"
 
   create_table "checks", :force => true do |t|
