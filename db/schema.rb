@@ -186,6 +186,7 @@ ActiveRecord::Schema.define(:version => 20140528142808) do
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
     t.datetime "time_to_win_end"
+    t.string   "unique_id"
   end
 
   create_table "interactions", :force => true do |t|

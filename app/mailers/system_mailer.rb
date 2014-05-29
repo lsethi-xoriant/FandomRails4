@@ -20,19 +20,25 @@ class SystemMailer < ActionMailer::Base
     mail(to: user.email, subject: "Benvenuto su MAXIBON!")
   end  
 
-  def win_mail(user, price)
+  def win_mail(user, price, time_to_win)
 
     @price = price
 
   	@cuser = user
+  	
+  	@ticket_id = time_to_win.unique_id
+  	
   	mail(to: user.email, subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – hai vinto #{ @price.title }")
   end
 
-  def win_admin_notice_mail(user, price)
+  def win_admin_notice_mail(user, price, time_to_win)
     
     @price = price
 
   	@cuser = user
+  	
+  	@ticket_id = time_to_win.unique_id
+  	
   	mail(to: [ "", "maxibon@shado.tv" ], subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – Un utente ha vinto #{ @price.title }")
   end
 

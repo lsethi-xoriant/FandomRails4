@@ -1,5 +1,5 @@
 namespace :instant_win do
-
+  #require 'digest/md5'
   DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
   desc "Genera tutte le data e ora di vincita del concorso"
@@ -30,7 +30,7 @@ namespace :instant_win do
 
   #TODO MAXIBON
   def create_wins_mb(contest)
-    
+    @hash_counter = 1
     contest.contest_periodicities.each do |cp|
       case cp.periodicity_type.name
       when "Giornaliera"
@@ -61,12 +61,21 @@ namespace :instant_win do
       winday = beginning_date + offest_day_win
       winhour = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} Rome"
       wintime = Time.parse(winday.strftime("%Y-%m-%d") +" "+ winhour)
+      
+      unique_id = Digest::MD5.hexdigest("#{@hash_counter}")
+      while Instantwin.where("unique_id=?",unique_id).present?
+        @hash_counter += 1
+        unique_id = Digest::MD5.hexdigest("#{@hash_counter}")
+      end
+      
       iw = Instantwin.new
       iw.contest_periodicity_id = cp.id
       iw.title = "Random"
       iw.time_to_win_start = wintime
+      iw.unique_id = unique_id
       iw.save
       winner_inserted += 1
+      @hash_counter += 1
     end
   end
   
@@ -84,12 +93,21 @@ namespace :instant_win do
         time = "#{(0..23).to_a.sample}:#{(0..59).to_a.sample}:#{(0..59).to_a.sample} Rome"
         wintime = Time.parse(cdate.strftime("%Y-%m-%d") +" "+ time)
         wintime_end = Time.parse(cdate.strftime("%Y-%m-%d") +" 23:59:59")
+        
+        unique_id = Digest::MD5.hexdigest("#{@hash_counter}")
+        while Instantwin.where("unique_id=?",unique_id).present?
+          @hash_counter += 1
+          unique_id = Digest::MD5.hexdigest("#{@hash_counter}")
+        end
+        
         iw = Instantwin.new
         iw.contest_periodicity_id = cp.id
         iw.title = "Daily"
         iw.time_to_win_start = wintime
         iw.time_to_win_end = wintime_end
+        iw.unique_id = unique_id
         iw.save
+        @hash_counter += 1
       end
       cdate += 1
     end

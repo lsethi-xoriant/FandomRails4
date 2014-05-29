@@ -27,9 +27,7 @@ class InstantwinController < ApplicationController
   #
   # contest_id - id of the contest
   def play_ticket_mb
-
-    win = false
-
+    
     if current_user
       contest = Contest.active.find(params[:contest_id])
       contest_points = ContestPoint.where("contest_id=? AND user_id=?", contest.id, current_user.id)   
@@ -38,11 +36,13 @@ class InstantwinController < ApplicationController
         contest_points = contest_points.first
 
         time_current = Time.now.utc
-
-        if !check_win_mb(time_current,contest)
+        
+        win = check_win_mb(time_current,contest,contest_points)
+        
+        if !win
 
           PlayticketEvent.create(:points_spent => contest.conversion_rate, :used_at => time_current, :winner => false, 
-                                  :user_id => current_user.id, :contest_periodicity_id => cp.id)
+                                  :user_id => current_user.id)
 
           contest_points.update_attribute(:points, contest_points.points - contest.conversion_rate)
 
@@ -66,29 +66,29 @@ class InstantwinController < ApplicationController
   #
   # check if a ticket is winner
   #
-  # ctime - timestamp of played ticket
+  # time_current - timestamp of played ticket
   # contest - contest for which the ticket is used
-  #
-  def check_win_mb(ctime,contest)
-    contest.contest_periodicities.each do |cp|
-      time_to_win_list = Instantwin.where("contest_periodicity_id = ? AND instantwins.time_to_win_start<= ? AND (instantwins.time_to_win_end IS NULL OR ? <= instantwins.time_to_win_end)",cp.id,ctime,ctime).order("instantwins.time_to_win_start DESC").limit(1)
+  def check_win_mb(time_current,contest,contest_points)
+    win = false
+    contest.contest_periodicities.each do |contest_periodicity|
+      time_to_win_list = Instantwin.where("contest_periodicity_id = ? AND instantwins.time_to_win_start<= ? AND (instantwins.time_to_win_end IS NULL OR ? <= instantwins.time_to_win_end)",contest_periodicity.id,time_current,time_current).order("instantwins.time_to_win_start DESC").limit(1)
       if time_to_win_list.count > 0
         time_to_win = time_to_win_list.first 
-        if !(check_already_win(time_to_win) || @win || ckeck_already_win_by_user(cp) )
-          @win = true
+        if !(check_already_win(time_to_win) || win || check_already_win_by_user(contest_periodicity) )
+          win = true
           @prize = time_to_win.contest_periodicity.instant_win_prizes.first
           
-          PlayticketEvent.create(:points_spent => contest.conversion_rate, :used_at => ctime, :winner => true, 
-                                  :user_id => current_user.id, :instantwin_id => time_to_win.id, :contest_periodicity_id => cp.id)
+          PlayticketEvent.create(:points_spent => contest.conversion_rate, :used_at => time_current, :winner => true, 
+                                  :user_id => current_user.id, :instantwin_id => time_to_win.id, :contest_periodicity_id => contest_periodicity.id)
   
-          @contest_points.update_attribute(:points, @contest_points.points - contest.conversion_rate)
+          contest_points.update_attribute(:points, contest_points.points - contest.conversion_rate)
           
           send_winner_email(time_to_win,@prize)
         end
 
       end
     end
-    return @win
+    return win
   end
   
 
@@ -109,12 +109,12 @@ class InstantwinController < ApplicationController
   # iw - instantwin passed
   #
   def check_already_win_by_user contest_periodicity
-    return PlayticketEvent.where("user_id = ? AND contest_periodicity_id = ?",current_user.id, contest_periodicity.id).present?
+    return PlayticketEvent.where("user_id = ? AND winner = true",current_user.id).present?
   end
   
-  def send_winner_email(price)
-    SystemMailer.win_mail(current_user, price).deliver
-    SystemMailer.win_admin_notice_mail(current_user, price).deliver
+  def send_winner_email(time_to_win,price)
+    SystemMailer.win_mail(current_user, price, time_to_win).deliver
+    SystemMailer.win_admin_notice_mail(current_user, price, time_to_win).deliver
   end
 
 end
