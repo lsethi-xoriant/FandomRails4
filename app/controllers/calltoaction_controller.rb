@@ -172,6 +172,7 @@ class CalltoactionController < ApplicationController
       ui.update_attribute(:counter, ui.counter + 1)
     else
       ui = Userinteraction.create(user_id: user_id, interaction_id: i.id)
+      risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
       if (ui.points + ui.added_points) > 0
         if mobile_device?
           risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
@@ -287,6 +288,8 @@ class CalltoactionController < ApplicationController
         end
       end
     end
+
+    risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
 
     respond_to do |format|
       format.json { render json: render_calltoaction_overvideo_end_str }
@@ -437,7 +440,7 @@ class CalltoactionController < ApplicationController
       else
         #current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
       end
-
+      risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
       respond_to do |format|
         format.json { render :json => risp.to_json }
       end 
@@ -451,6 +454,7 @@ class CalltoactionController < ApplicationController
 
         ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
         risp["email_correct"] = true
+        risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
 
         respond_to do |format|
           format.json { render :json => risp.to_json }

@@ -122,6 +122,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
 
               // OVERVIDEO FEEDBACK POINTS.
               if(data.overvideo_feedback) {
+                $(".current_user_points").html(data.points_updated);
                 $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
                 overvideo_feedback_timeout = $timeout(function() {
                   $("#home-overvideo-feedback-points").html("");
@@ -155,6 +156,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
 
     $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
       .success(function(data) {
+        $(".current_user_points").html(data.points_updated);
+
         // Modifico lo stato del bottone e notifico la condivisione.
         $("#share-" + provider + "-" + interaction_id).attr('disabled', false); // Modifico lo stato del bottone.
         $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI CON " + provider.toUpperCase());
@@ -203,6 +206,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
 
             // OVERVIDEO FEEDBACK POINTS
             if(data.overvideo_feedback) {
+              $(".current_user_points").html(data.points_updated);
               $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
               overvideo_feedback_timeout = $timeout(function() {
                 $("#home-overvideo-feedback-points").html("");
