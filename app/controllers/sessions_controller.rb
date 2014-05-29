@@ -14,7 +14,7 @@ class SessionsController < Devise::SessionsController
     redirect_to "/users/sign_up"
   end
 
-  def create
+   def create
     # Controllo se la creazione della sessione viene o meno da un provider per gli utenti.
     if env["omniauth.auth"].nil?
       if !(params['user'].blank?) && !(params['user']['password'].blank?)
@@ -26,20 +26,34 @@ class SessionsController < Devise::SessionsController
           self.resource = warden.authenticate!(auth_options)
           set_flash_message(:notice, :signed_in) if is_navigational_format?
           sign_in(resource_name, resource)
+       
+          unless cookies[:connect_from_page].blank?
+            connect_from_page = cookies[:connect_from_page]
+            cookies.delete(:connect_from_page)
+            redirect_to connect_from_page
+          else
+            redirect_to "/"
+          end
 
-          redirect_to root_url
         end
       else
         flash[:notice] = "Dati non validi"
         redirect_to "/users/sign_up"
       end
     else 
-      debugger
-      user = User.not_logged_from_omniauth env["omniauth.auth"], params[:provider]
+      user, from_registration = User.not_logged_from_omniauth env["omniauth.auth"], params[:provider]
       unless user.errors.any?
         sign_in(user)
-        redirect_to root_url
+        flash[:notice] = "from_registration" if from_registration
+        unless cookies[:connect_from_page].blank?
+          connect_from_page = cookies[:connect_from_page]
+          cookies.delete(:connect_from_page)
+          redirect_to connect_from_page
+        else
+          redirect_to "/"
+        end
       else
+
         session["oauth"] ||= {}
         session["oauth"]["params"] = env["omniauth.auth"].except("extra") # Rimuovo extra per prevenire cookie overflow
         session["oauth"]["params"]["provider"] = params[:provider]
