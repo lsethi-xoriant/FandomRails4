@@ -37,6 +37,10 @@ class RegistrationsController < Devise::RegistrationsController
 
   protected
 
+  def after_update_path_for(resource)
+    "/profile/edit"
+  end
+
   def append_provider resource
     omniauth = session["oauth"]["params"]
     provider = session["oauth"]["params"]["provider"]

@@ -1,28 +1,17 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container-fluid">
+<div class="container">
   
   <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :multipart => true }) do |f| %>
     <div class="row" style="margin-top: 1.5em;">
-      <div class="col-md-8 col-md-offset-2">
+      <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading profile-heading">
             <%= render partial: "profile/profile_header" %>
           </div>
           <div class="panel-body profile-body">
-            <%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
-            <div class="row">
-              <div class="col-md-12">
-                <div id="livelli">
-                  <div class="page-header">
-                    <h2>Profilo</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
             <form>
-
-              <div class="row">
+              <div class="row" style="margin-top: 15px;">
                 <div class="col-md-12">
                   <% if resource.errors.any? %>
                     <div class="row">
@@ -113,29 +102,6 @@
 
               <div class="row"></div><hr>
 
-              <!--
-
-              <%# if cpu = Property.active.first.complete_profile_user %>
-                <p class="col-xs-12 text-center">Ottieni <span class="badge <%#= "active" if current_user.userinteractions.find_by_interaction_id(cpu.interaction.id) %>">+<%#= cpu.interaction.points %></span> dando altre informazioni su di te</p>
-              <%# end %>
-
-              <div class="form-group">
-                <label class="col-xs-3 control-label text-right">Professione</label>
-                <div class="col-xs-9">
-                  <%#= f.text_field :job, :class => "form-control" %>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-xs-3 control-label text-right">Titolo di studio</label>
-                <div class="col-xs-9">
-                  <%#= f.text_field :educational_qualification, :class => "form-control" %>
-                </div>
-              </div>
-
-              -->
-
-              <div class="row"></div><hr>
-
               <div class="form-group">
                 <label for="inputEmail3" class="col-xs-3 control-label text-right">Nuova password</label>
                 <div class="col-xs-9">
@@ -192,8 +158,8 @@
               -->
             <form>
           </div>
-          <div class="panel-footer text-right">
-            <button class="btn btn-primary">Salva</button>
+          <div class="panel-footer text-center">
+            <button class="btn btn-danger">Salva</button>
           </div>
         </div>
       </div>
