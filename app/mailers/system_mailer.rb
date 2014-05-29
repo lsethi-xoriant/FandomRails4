@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 class SystemMailer < ActionMailer::Base
-  default from: "noreply@maxibon.it"
+  default from: ENV['EMAIL_ADDRESS']
 
   def share_content_email(user, address_to_send, calltoaction)
     @calltoaction = calltoaction
