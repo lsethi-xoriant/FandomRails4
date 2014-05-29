@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140528093124) do
+ActiveRecord::Schema.define(:version => 20140529075725) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(:version => 20140528093124) do
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
     t.datetime "time_to_win_end"
+    t.string   "unique_id"
   end
 
   create_table "interactions", :force => true do |t|
