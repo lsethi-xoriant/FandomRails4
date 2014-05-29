@@ -4,7 +4,7 @@ $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
 
-$grid-float-breakpoint: 1600px !default;
+$grid-float-breakpoint: 3600px !default;
 
 // Inverted navbar
 // Reset inverted navbar basics
@@ -77,6 +77,14 @@ body {
     margin: 0 auto; 
     width: 100%; 
     border: 6px solid #fff;
+}
+
+.img-circle-overvideo.right {
+    border-color: #43b34b;
+}
+
+.img-circle-overvideo.wrong {
+    border-color: #ff0000;
 }
 
 .home-carousel-li.active { color: #000; }
