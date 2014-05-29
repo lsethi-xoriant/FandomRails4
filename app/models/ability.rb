@@ -11,6 +11,10 @@ class Ability
     elsif user && user.role == "editor"
       can :access, :easyadmin 
     end
+
+    if user && user.rule
+      can :play, :contest
+    end
     
   end
 end

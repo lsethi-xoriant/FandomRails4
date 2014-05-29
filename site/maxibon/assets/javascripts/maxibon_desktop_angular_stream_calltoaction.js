@@ -125,15 +125,20 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $http.post("/update_play_interaction.json", { calltoaction_id: calltoactionactive.replace("calltoaction-active-", "") })
             .success(function(data) {
 
-              // OVERVIDEO FEEDBACK POINTS
-              if(data.overvideo_feedback > 0) {
+              // OVERVIDEO FEEDBACK POINTS.
+              if(data.overvideo_feedback) {
                 $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
                 overvideo_feedback_timeout = $timeout(function() {
                   $("#home-overvideo-feedback-points").html("");
                 }, 3000);  
               } 
 
-              $("#home-overvideo-title").html(""); // REMOVE TITLE LAYER        
+              // UPDATE CAROUSEL BADGE.
+              if(data.calltoaction_complete) {
+                $("#calltoaction-item-carousel-" + $scope.calltoaction_id).removeClass("hidden");
+              }
+
+              $("#home-overvideo-title").html(""); // REMOVE TITLE LAYER.        
             }).error(function() {
               // ERROR.
             });
@@ -165,10 +170,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
 
     $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
         .success(function(data) {
+
           $("#share-" + provider + "-" + interaction_id).attr('disabled', false);
           $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI");
 
-          // TODO: COLOR THE POINT BADGE
+          if(data.calltoaction_complete) {
+            $("#calltoaction-item-carousel-" + $scope.calltoaction_id).removeClass("hidden");
+          }
  
         }).error(function() {
           // ERROR.
@@ -196,12 +204,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             }
 
             // OVERVIDEO FEEDBACK POINTS
-            if(data.overvideo_feedback > 0) {
+            if(data.overvideo_feedback) {
               $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
               overvideo_feedback_timeout = $timeout(function() {
                 $("#home-overvideo-feedback-points").html("");
               }, 3000);  
             } 
+
+            if(data.calltoaction_complete) {
+              $("#calltoaction-item-carousel-" + $scope.calltoaction_id).removeClass("hidden");
+            }
 
             if(data.current_correct_answer == answer_id) {
               correctytplayer_hash[key] = true;

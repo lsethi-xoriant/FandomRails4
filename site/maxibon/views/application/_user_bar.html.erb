@@ -7,16 +7,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="/extra" class="navbar-brand hidden-xs"><i class="fa fa-play-circle-o"></i>&nbsp;VIDEO EXTRA</a>
+      <% if current_user %>
+        <a href="/extra" class="navbar-brand hidden-xs"><i class="fa fa-play-circle-o"></i>&nbsp;VIDEO EXTRA</a>
+      <% end %>
       <a style="float: right; padding: 3px 10px 3px 3px;" href="/profile/edit" class="navbar-brand hidden-sm hidden-md hidden-lg">
         <img class="img-circle" src="<%= current_avatar %>" style="height: 100%; border: 1px solid #fff;">
       </a>
     </div>
     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
       <ul class="nav navbar-nav">
-        <li><a href="/" style="padding-bottom: 5px;">HOME</a></li> 
-        <!--<li><a href="browse.html"><span class="glyphicon glyphicon-search"> </span> Sfoglia</a></li>-->
         <% if current_user %>
+          <li><a href="/" style="padding-bottom: 5px;">HOME</a></li> 
+          <li><a href="/extra">VIDEO EXTRA</a></li>
           <li><a href="/profile/edit">PROFILO</a></li>
           <li><a href="/profile/rankings">CLASSIFICA</a></li>
           <li><a href="/users/sign_out">ESCI</a></li>

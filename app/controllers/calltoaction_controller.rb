@@ -172,8 +172,16 @@ class CalltoactionController < ApplicationController
       ui.update_attribute(:counter, ui.counter + 1)
     else
       ui = Userinteraction.create(user_id: user_id, interaction_id: i.id)
-      risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+      if (ui.points + ui.added_points) > 0
+        if mobile_device?
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+        else
+          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+        end
+      end
     end
+
+    risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
 
     risp["interaction_save"] = !ui.errors.any? # Ritorno lo stato del salvataggio.
     respond_to do |format|
@@ -370,7 +378,13 @@ class CalltoactionController < ApplicationController
       ui.update_attributes(answer_id: params[:answer_id], counter: (ui.counter + 1))
     elsif ui.blank?
       ui = Userinteraction.create(answer_id: params[:answer_id], user_id: current_user.id, interaction_id: params[:interaction_id]) 
-      risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+      if (ui.points + ui.added_points) > 0
+        if mobile_device?
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+        else
+          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+        end
+      end
     end
 
     if i.resource.quiz_type == "VERSUS"
@@ -382,6 +396,8 @@ class CalltoactionController < ApplicationController
       risp["current_correct_answer"] = i.resource.answers.find_by_correct(true).id
       risp["next_calltoaction"] = ans.calltoaction if ans.calltoaction
     end
+
+    risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
 
     respond_to do |format|
       format.json { render :json => risp.to_json }
@@ -399,19 +415,22 @@ class CalltoactionController < ApplicationController
   end
 
   def share
+    risp = Hash.new
+
     i = Interaction.find(params[:interaction_id].to_i)
     ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
 
     ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
+    risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
 
     if params[:provier] = "facebook" && current_user && current_user.facebook
       if Rails.env.production?
         current_user.facebook.put_wall_post(" ", { name: i.resource.description, link: "#{ request.referer }", picture: "#{ root_url }#{i.resource.picture.url}" })
       else
-        current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
+        #current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
       end
       respond_to do |format|
-        format.json { render :json => "share".to_json }
+        format.json { render :json => risp.to_json }
       end 
     elsif params[:provier] = "twitter" && current_user && current_user.twitter
       current_user.twitter.update(i.resource.message)

@@ -16,12 +16,14 @@ Fandom::Application.routes.draw do
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
 
   match "/how_to", :to => "application#how_to"
+  match "/landing", :to => "landing#index"
 
   match "profile", :to => "profile#index"
   match "profile/levels", :to => "profile#levels"
   match "profile/badges", :to => "profile#badges"
   match "profile/rankings", :to => "profile#rankings"
   match "profile/remove-provider/:provider", :to => "profile#remove_provider"
+  match "profile/complete_for_contest", :to => "profile#complete_for_contest"
 
   match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
   match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"

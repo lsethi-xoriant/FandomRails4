@@ -31,6 +31,16 @@
                               <img src="<%= calltoaction.image %>" style="width: 100%;">
                             </div>
                             <div class="col-sm-12" style="padding: 0 40px;">
+
+                              
+                              <div id="calltoaction-item-carousel-<%= calltoaction.id %>" style="position: relative;" class="<%= "hidden" unless calltoaction_done? calltoaction %>">
+                                <div class="done-carousel-circle">
+                                  <div class="done-carousel-circle-children">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                  </div>
+                                </div>
+                              </div>
+
                               <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.try(:first).id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
                                   <div class="panel-body">
                                       <div class="row">

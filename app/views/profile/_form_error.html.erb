@@ -1,0 +1,14 @@
+ <% if resource.errors.any? %>
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="text-left" style="margin-top: 10px; margin-bottom: 20px; margin-left: -20px;">
+        <ul>
+          <p style="font-size: 15px;">Errori nella compilazione del modulo:</p>
+          <% resource.errors.full_messages.each do |error_message| %>
+              <li style="font-family: helvetiva, arial;"><%= error_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>

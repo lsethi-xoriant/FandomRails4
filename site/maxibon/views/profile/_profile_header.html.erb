@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-md-6 col-sm-6 ">
+    <div class="col-md-4 col-sm-4 col-xs-4 text-center">
+    <img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-responsive img-profile">
+    </div>
+    <div class="col-md-8 col-sm-8 col-xs-8">
+      <h3><%= "#{ current_user.first_name } #{ current_user.last_name }" %></h3>
+      <h5>BIGLIETTI <%= get_current_contest_points current_user.id %></h5>
+    </div>
+  </div>
+  <hr class="visible-xs">
+  <!--
+  <div class="col-md-6 col-sm-6 ">
+    <div class="row">
+      <div class="col-md-4 col-sm-4 col-xs-4 border-right text-center">
+        <h5>Livello</h5>
+        <h3 class="no-margin">1<br><small>/10</small></h3>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-4 border-right text-center">
+        <h5>Classifica</h5>
+        <h3 class="no-margin">134<br><small>/1000</small></h3>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-4 text-center"> 
+        <h5>Biglietti</h5>
+        <h3>7 <button class="btn btn-default btn-sm">Gioca!</button></h3>
+      </div>
+    </div>
+  </div>  
+  -->   
+</div>

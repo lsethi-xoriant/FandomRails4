@@ -8,7 +8,10 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
-    :avatar_selected, :avatar, :swid
+    :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
+    :day_of_birth, :month_of_birth, :year_of_birth, :enable_contest
+
+  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :enable_contest
 
   has_many :authentications, dependent: :destroy
   has_many :rewarding_users, dependent: :destroy
@@ -16,13 +19,35 @@ class User < ActiveRecord::Base
   has_many :user_comments
 
   after_save :append_rewarding_user # With invitation is enable: if: Proc.new { |u| u.invitation_token.blank? }
+  before_save :set_date_of_birth
+
   has_one :general_rewarding_user
 
-  has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }
+  has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/anon.png"
 
   validates_presence_of :first_name
   validates_presence_of :last_name
   validates :privacy, :acceptance => { :accept => true }
+
+  validates_presence_of :day_of_birth, if: Proc.new { |c| c.enable_contest }
+  validates_presence_of :month_of_birth, if: Proc.new { |c| c.enable_contest }
+  validates_presence_of :year_of_birth, if: Proc.new { |c| c.enable_contest }
+  validates_presence_of :location, if: Proc.new { |c| c.enable_contest }
+  validates_presence_of :cap, if: Proc.new { |c| c.enable_contest }
+  validates_presence_of :address, if: Proc.new { |c| c.enable_contest }
+  validates_presence_of :number, if: Proc.new { |c| c.enable_contest }
+  validates_presence_of :province, if: Proc.new { |c| c.enable_contest }
+  validates_presence_of :phone, if: Proc.new { |c| c.enable_contest }
+  validates :rule, :acceptance => { :accept => true }, if: Proc.new { |c| c.enable_contest }
+
+  def set_date_of_birth
+    if year_of_birth.present? && month_of_birth.present? && day_of_birth.present?
+      write_attribute :birth_date, "#{year_of_birth}/#{month_of_birth}/#{day_of_birth}"
+      year_of_birth = nil
+      month_of_birth = nil
+      day_of_birth = nil
+    end
+  end
 
   def append_rewarding_user
     Property.active.each do |p|
@@ -99,8 +124,11 @@ class User < ActiveRecord::Base
           oauth_token: auth.credentials.token,
           oauth_secret: (provider == "twitter" ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-          avatar: auth.info.image
+          avatar: auth.info.image,
       )
+
+      from_registration = false
+
     else
       # Verifico se esiste l'utente con l'email del provider selezionato.
       unless auth.info.email && (user = User.find_by_email(auth.info.email))
@@ -111,8 +139,12 @@ class User < ActiveRecord::Base
           first_name: auth.info.first_name,
           last_name: auth.info.last_name,
           email: auth.info.email,
+          avatar_selected: provider,
           privacy: true
           )
+        from_registration = true
+      else
+        from_registration = false
       end 
 
       # Recupero l'autenticazione associata al provider selezionato.
@@ -126,10 +158,11 @@ class User < ActiveRecord::Base
           provider: provider,
           avatar: auth.info.image
       )
-    end 
 
-    user.save
-    return user
+      user.save
+    end 
+    
+    return user, from_registration
   end
 
   # Permette di aggiornare l'utente senza un nuovo inserimento della password.
