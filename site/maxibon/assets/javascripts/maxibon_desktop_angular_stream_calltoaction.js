@@ -107,11 +107,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     $("#home-overvideo-feedback-points").html("");
   }; // onYouTubePlayerReady
 
-  $window.closeShareAndOpenDenied = function(provider) {
-    $("#share-modal").modal("hide");
-    $("#share-" + provider + "-disable-modal").modal("show");
-  }; // closeShareAndOpenDenied
-
   // Callback chiamata quando lo stato del video viene modificato.
   $window.onPlayerStateChange = function(newState) {  
     key = newState.target.getIframe().id;
@@ -155,16 +150,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
 
   $window.shareWith = function(provider, interaction_id, calltoaction_id) {
 
-  $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
-  $("#share-" + provider + "-" + interaction_id).html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
+    $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
+    $("#share-" + provider + "-" + interaction_id).html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
 
-  $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
+    $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
       .success(function(data) {
         // Modifico lo stato del bottone e notifico la condivisione.
         $("#share-" + provider + "-" + interaction_id).attr('disabled', false); // Modifico lo stato del bottone.
         $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI CON " + provider.toUpperCase());
 
-        $("#share-modal").modal("hide");
+        $("#share-modal-" + calltoaction_id).modal("hide");
 
         if(provider == "email") {
           $("#share-email-address-" + interaction_id).val("");

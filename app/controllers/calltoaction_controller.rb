@@ -420,15 +420,24 @@ class CalltoactionController < ApplicationController
     i = Interaction.find(params[:interaction_id].to_i)
     ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
 
-    ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
+    if ui
+      ui.update_attribute(:counter, ui.counter + 1)
+    else
+      ui = Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i)
+      if mobile_device?
+        risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+      end
+    end
+
     risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
 
-    if params[:provier] == "facebook" && current_user && current_user.facebook
+    if params[:provider] == "facebook" && current_user && current_user.facebook
       if Rails.env.production?
         current_user.facebook.put_wall_post(" ", { name: i.resource.description, link: "#{ request.referer }", picture: "#{ root_url }#{i.resource.picture.url}" })
       else
         #current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
       end
+
       respond_to do |format|
         format.json { render :json => risp.to_json }
       end 
@@ -436,9 +445,13 @@ class CalltoactionController < ApplicationController
     #  current_user.twitter.update(i.resource.message)
     elsif params[:provider] == "email" && current_user
       if params[:share_email_address] =~ Devise.email_regexp
-        #SystemMailer.share_TODO_(current_user, params[:share_email_address]).deliver
+
+        # TODO: SEND EMAIL
+        # SystemMailer.share_TODO_(current_user, params[:share_email_address]).deliver
+
         ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
         risp["email_correct"] = true
+
         respond_to do |format|
           format.json { render :json => risp.to_json }
         end 
