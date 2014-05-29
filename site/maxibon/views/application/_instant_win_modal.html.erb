@@ -4,21 +4,49 @@
   <div class="modal fade" id="instant-win-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-body text-center">
+        <div class="modal-body text-center" style="padding-bottom: 0;">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h2>TODO TODO TODO</h2>
-          <h4>Hai <button class="btn yellow-point current_user_points"><% c = Contest.first %><%= c && ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> biglietti</h4>
-          <div id="instant-win-play">
-            <button class="btn btn-primary" onclick="playTicket()">GIOCA</button>
+          <div id="instant-win-title" class="instant-win-result" style="margin-bottom: 15px;"><h2>GIOCA SUBITO</h2></div>
+          <div id="instant-win-win" class="instant-win-result hidden" style="margin-bottom: 15px;"><h2>HAI VINTO</h2></div>
+          <div id="instant-win-lost" class="instant-win-result hidden" style="margin-bottom: 15px;"><h2>HAI PERSO</h2></div>
+          <div id="instant-win-end" class="instant-win-result hidden" style="margin-bottom: 15px;"><h2>HAI FINITO I BIGLIETTI</h2></div>
+
+          <h4>Hai <button class="btn yellow-point btn-lg current_user_points"><% c = Contest.first %><%= c && ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> biglietti</h4>
+          
+          <div id="instant-win-play" style="margin-bottom: 15px;">
+            <button class="btn btn-danger btn-lg" onclick="playTicket()">GIOCA SUBITO UN BIGLIETTO</button>
           </div>
-          <div id="instant-win-win" class="hidden"><h4>HAI VINTO</h4></div>
-          <div id="instant-win-lost" class="hidden"><h4>HAI PERSO</h4></div>
-          <div id="instant-win-end" class="hidden"><h4>HAI FINITO I BIGLIETTI</h4></div>
-          <div class="row" id="premi">
+
+          <div id="instant-win-prize-overview" class="row" style="background: #E6E6E6; padding-bottom: 20px; margin-bottom: 0;">
+            <div class="col-md-12 text-center" style="margin-bottom: 15px;"><h3>PUOI VINCERE</h3></div>
+            <div class="col-md-6">
+              <img src="/assets/maxibon/how_to/prize_1.png">
+              <h5>OGNI GIORNO 20<br>BIGLIETTI D'INGRESSO ALL'ACQUAFUN</h5>
+              <h6>Testo Testo Testo Testo Testo Testo Testo Testo</h6>
+            </div>
+            <div class="col-md-6">
+              <img src="/assets/maxibon/how_to/prize_2.png">
+              <h5>20 INGRESSI PER 5 AMICI<br>AD EVENTI SERALI</h5>
+              <h6>Testo Testo Testo Testo Testo Testo Testo Testo</h6>
+            </div>
+            <!--
             <% InstantWinPrize.all.each do |prize| %>
               <div class="col-md-4"><h4><%= prize.title %></h4></div>
             <% end %>
+            -->
           </div>
+
+          <div id="instant-win-prize-win" class="row hidden" style="background: #E6E6E6; padding-bottom: 20px; margin-bottom: 0;">
+            <div class="col-md-12 text-center" style="margin-bottom: 15px;"><h3>IL TUO PREMIO</h3></div>
+            <div class="col-md-6">
+              <img id="instant-win-prize" src="" class="img-responsive" style="width: 100%;">
+            </div>
+            <div class="col-md-6">
+              <h5 id="instant-win-title">20 INGRESSI PER 5 AMICI<br>AD EVENTI SERALI</h5>
+              <h6 id="instant-win-description">Testo Testo Testo Testo Testo Testo Testo Testo</h6>
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
@@ -131,6 +159,15 @@
     var enable_contest = <%= current_user.rule? %>;
     function openInstantWinModal() {
       if(enable_contest) {
+        // Initialize title and button.
+        $("#instant-win-play button").attr('disabled', false);
+        $(".instant-win-result").removeClass("hidden").addClass("hidden");
+        $("#instant-win-title").removeClass("hidden");
+
+        // Initialize prize overview.
+        $("#instant-win-prize-overview").removeClass("hidden");
+        $("#instant-win-prize-win").removeClass("hidden").addClass("hidden");
+
         $("#instant-win-modal").modal("show");
       } else {
         $("#complete-registration-modal").modal("show");
@@ -138,27 +175,42 @@
     }
 
     function playTicket() {
+      $("#instant-win-play button").attr('disabled', true);
       $.ajax({
-            type: "POST",
-            data: { contest_id: <%= Contest.active.first.id %> },
-            url: '/playticket.json',
-            beforeSend: function(jqXHR, settings) {
-                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-            },
-            success: function(data) {
-              
-              if(data.points_updated < 1){
-                $("#instant-win-end").show(); $("#instant-win-play").hide();
-              } else if(data.winner){
-                $("#instant-win-win").show();
-              } else {
-                $("#instant-win-lost").show();
-              }
-              
-              $(".current_user_points").html(data.points_updated) ;
+          type: "POST",
+          data: { contest_id: <%= Contest.active.first.id %> },
+          url: '/playticket.json',
+          beforeSend: function(jqXHR, settings) {
+              jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+          },
+          success: function(data) {
+            
+            $(".instant-win-result").removeClass("hidden").addClass("hidden");
+            $("#instant-win-play button").attr('disabled', false);
 
+            $("#instant-win-prize-overview").removeClass("hidden");
+            $("#instant-win-prize-win").removeClass("hidden").addClass("hidden");
+
+            if(data.winner) {
+              $("#instant-win-win").removeClass("hidden");
+
+              $("#instant-win-prize-overview").addClass("hidden");
+              $("#instant-win-prize-win").removeClass("hidden");
+
+              $("#instant-win-prize").html(data.prize.title);
+              $("#instant-win-description").html(data.prize.description);
+              $("#instant-win-prize").attr("src", data.prize_image);
+            } else if(data.points_updated < 1){
+              $("#instant-win-end").removeClass("hidden"); 
+              $("#instant-win-play button").attr('disabled', true);
+            } else {
+              $("#instant-win-lost").removeClass("hidden");
             }
-        });
+            
+            $(".current_user_points").html(data.points_updated) ;
+
+          }
+      });
     }
 
   </script>

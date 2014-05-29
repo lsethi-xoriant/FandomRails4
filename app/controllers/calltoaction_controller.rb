@@ -441,8 +441,8 @@ class CalltoactionController < ApplicationController
       respond_to do |format|
         format.json { render :json => risp.to_json }
       end 
-    #elsif params[:provier] = "twitter" && current_user && current_user.twitter
-    #  current_user.twitter.update(i.resource.message)
+    # elsif params[:provier] = "twitter" && current_user && current_user.twitter
+    #   current_user.twitter.update(i.resource.message)
     elsif params[:provider] == "email" && current_user
       if params[:share_email_address] =~ Devise.email_regexp
 
