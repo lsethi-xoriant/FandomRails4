@@ -289,8 +289,6 @@ class CalltoactionController < ApplicationController
       end
     end
 
-    risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
-
     respond_to do |format|
       format.json { render json: render_calltoaction_overvideo_end_str }
     end
@@ -401,6 +399,7 @@ class CalltoactionController < ApplicationController
     end
 
     risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
+    risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
 
     respond_to do |format|
       format.json { render :json => risp.to_json }
