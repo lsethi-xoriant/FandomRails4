@@ -14,12 +14,16 @@ module ApplicationHelper
 	end
 
 	def calltoaction_done? calltoaction
-		# Restituisce se la calltoaction e' gia' stata terminata.
-	    done = true
-	    if current_user
-		    calltoaction.interactions.where("points>0 AND when_show_interaction!='MAI_VISIBILE'").each do |i|
+		# Check if user completed calltoaction.
+	  done = true
+	  if current_user
+	  		# TODO: when_show_interaction!='MAI_VISIBILE'
+		    calltoaction.interactions.where("points>0 AND resource_type<>'Share'").each do |i|
 		      done = false if Userinteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
 		    end
+
+		    share_inter = calltoaction.interactions.where("points>0 AND resource_type='Share'")
+		    done = false if current_user.userinteractions.where("interaction_id in (?)", share_inter.map.collect { |u| u["id"] }).blank?
 		else
 			done = false
 		end 
