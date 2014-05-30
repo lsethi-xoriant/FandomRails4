@@ -7,12 +7,13 @@
         <div class="modal-body text-center" style="padding-bottom: 0;">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <div id="instant-win-title" class="instant-win-result" style="margin-bottom: 15px;"><h2>GIOCA SUBITO</h2></div>
-          <div id="instant-win-win" class="instant-win-result hidden" style="margin-bottom: 15px;"><h2>HAI VINTO</h2></div>
-          <div id="instant-win-lost" class="instant-win-result hidden" style="margin-bottom: 15px;"><h2>HAI PERSO</h2></div>
-          <div id="instant-win-end" class="instant-win-result hidden" style="margin-bottom: 15px;"><h2>HAI FINITO I BIGLIETTI</h2></div>
-
+          <div id="instant-win-win" class="instant-win-result hidden" style="margin-bottom: 15px; background-color: #329d3d; padding: 10px 0; color: #FFF;"><h2>HAI VINTO</h2></div>
+          <div id="instant-win-lost" class="instant-win-result hidden" style="margin-bottom: 15px; background-color: #d9534f; padding: 10px 0; color: #FFF;"><h2>PECCATO! NON HAI VINTO</h2></div>
+          <div id="instant-win-end" class="instant-win-result hidden" style="margin-bottom: 15px; background-color: #d9534f; padding: 10px 0; color: #FFF;"><h2>HAI FINITO I BIGLIETTI</h2></div>
+          <div id="instant-win-already-won" class="instant-win-result hidden" style="margin-bottom: 15px; background-color: #329d3d; padding: 10px 0; color: #FFF;"><h2>HAI GIA' VINTO UN PREMIO</h2><p>Ti ricordiamo che da regolamento i premi non sono cumulabili.<br />Controlla la tua email per verificare la vincita.</p></div>
+		  
           <h4>Hai <button class="btn yellow-point btn-lg current_user_points"><% c = Contest.first %><%= c && ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> biglietti</h4>
-          
+          <div id="instant-win-loader" class="hidden text-center" style="padding: 10px 0;"><img src="/assets/maxibon/win-loader.gif" /></div>
           <div id="instant-win-play" style="margin-bottom: 15px;">
             <button class="btn btn-danger btn-lg" onclick="playTicket()">GIOCA SUBITO UN BIGLIETTO</button>
           </div>
@@ -21,7 +22,7 @@
             <div class="col-md-12 text-center" style="margin-bottom: 15px;"><h3>PUOI VINCERE</h3></div>
             <div class="col-md-6">
               <img src="/assets/maxibon/how_to/prize_1.png">
-              <h5>OGNI GIORNO 20<br>BIGLIETTI D'INGRESSO ALL'ACQUAFUN</h5>
+              <h5>OGNI GIORNO 2<br>BIGLIETTI D'INGRESSO ALL'ACQUAFUN</h5>
               <h6>Testo Testo Testo Testo Testo Testo Testo Testo</h6>
             </div>
             <div class="col-md-6">
@@ -157,12 +158,23 @@
     <% end %>
 
     var enable_contest = <%= current_user.rule? %>;
+    var user_already_won = <%= (check_user_already_won current_user.id) %>
+    var user_tickets = <%= current_user ? (get_current_contest_points current_user.id) : 0 %>
     function openInstantWinModal() {
       if(enable_contest) {
         // Initialize title and button.
-        $("#instant-win-play button").attr('disabled', false);
+        if (user_tickets == 0 || user_already_won)
+        	$("#instant-win-play button").attr('disabled', true);
+        else
+        	$("#instant-win-play button").attr('disabled', false);
+        
         $(".instant-win-result").removeClass("hidden").addClass("hidden");
-        $("#instant-win-title").removeClass("hidden");
+        
+        if(user_already_won){
+        	$("#instant-win-already-won").removeClass("hidden");
+        }else{
+        	$("#instant-win-title").removeClass("hidden");
+        }
 
         // Initialize prize overview.
         $("#instant-win-prize-overview").removeClass("hidden");
@@ -176,6 +188,8 @@
 
     function playTicket() {
       $("#instant-win-play button").attr('disabled', true);
+      $("#instant-win-title").addClass("hidden");
+      $("#instant-win-loader").removeClass("hidden");
       $.ajax({
           type: "POST",
           data: { contest_id: <%= Contest.active.first.id %> },
@@ -184,30 +198,40 @@
               jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
           },
           success: function(data) {
-            
-            $(".instant-win-result").removeClass("hidden").addClass("hidden");
-            $("#instant-win-play button").attr('disabled', false);
-
-            $("#instant-win-prize-overview").removeClass("hidden");
-            $("#instant-win-prize-win").removeClass("hidden").addClass("hidden");
-
-            if(data.winner) {
-              $("#instant-win-win").removeClass("hidden");
-
-              $("#instant-win-prize-overview").addClass("hidden");
-              $("#instant-win-prize-win").removeClass("hidden");
-
-              $("#instant-win-prize-title").html(data.prize.title);
-              $("#instant-win-description").html(data.prize.description);
-              $("#instant-win-prize").attr("src", data.prize_image);
-            } else if(data.points_updated < 1){
-              $("#instant-win-end").removeClass("hidden"); 
-              $("#instant-win-play button").attr('disabled', true);
-            } else {
-              $("#instant-win-lost").removeClass("hidden");
-            }
-            
-            $(".current_user_points").html(data.points_updated);
+          	setTimeout(function(){
+	            $("#instant-win-loader").addClass("hidden");
+	            $(".instant-win-result").removeClass("hidden").addClass("hidden");
+	            $("#instant-win-play button").attr('disabled', false);
+	
+	            $("#instant-win-prize-overview").removeClass("hidden");
+	            $("#instant-win-prize-win").removeClass("hidden").addClass("hidden");
+	
+	            if(data.winner) {
+	           	  user_already_won = true;
+	              $("#instant-win-win").removeClass("hidden");
+	
+	              $("#instant-win-prize-overview").addClass("hidden");
+	              $("#instant-win-prize-win").removeClass("hidden");
+	
+	              $("#instant-win-prize-title").html(data.prize.title);
+	              $("#instant-win-description").html(data.prize.description);
+	              $("#instant-win-prize").attr("src", data.prize_image);
+	              $("#instant-win-play button").attr('disabled', true);
+	            } else {
+	            	if(data.user_already_wins){
+	            		$("#instant-win-already-won").removeClass("hidden");
+	            		$("#instant-win-play button").attr('disabled', true);
+	            	}else{
+	            		$("#instant-win-lost").removeClass("hidden");
+	            	}
+	            }
+	            
+	            if(data.points_updated < 1){ 
+	              $("#instant-win-play button").attr('disabled', true);
+	            }
+	            
+	            $(".current_user_points").html(data.points_updated);
+	         },2000);
 
           }
       });
