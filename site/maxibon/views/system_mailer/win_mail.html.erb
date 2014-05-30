@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+  	<% if @price.title == "Un ingresso gratuito giornaliero all'Aquafan" %>
+  	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
+
+      <p>Hai vinto un ingresso gratuito giornaliero all’ Aquafan di Riccione.</p>
+      
+      <p>Per avere il tuo ingresso omaggio sarà sufficiente presentarsi alla biglietteria dell’Aquafan esibendo:
+		<ul>
+			<li>una stampa di questa email;</li>
+			<li>un documento di identità del vincitore.</li>
+		</ul>
+	  </p> 
+      
+      <p>Il codice relativo alla tua vincita è: <%= @ticket_id %></p>
+      
+      <p>Potrai utilizzare il tuo ingresso gratuito un qualsiasi giorno compreso fra il XX/XX/2014 e il XX/XX/2014.</p>
+
+      <p>Per qualsiasi dubbio ti invitiamo a contattare Aquafan al numero +390541603050.</p>
+      
+      <p>Continua a seguire The Pool, la web serie targata Maxibon, per vincere altri biglietti omaggio ad 
+      	Aquafan e per avere più possibilità di essere sorteggiato come vincitore dei 5 ingressi gratuiti a uno dei Maxiparty presso Aquafan.</p>  
+
+      <p>Rimorchiare non è mai stato così difficile, ma vincere non è mai stato così facile, segui “The Pool”!</p>
+		
+	  <p>Lo staff di Maxibon</p>
+	<% end %>
+
+	<% if @price.title == "Un pacchetto di 5 biglietti per il Maxiparty con David Guetta" %>
+	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
+
+      <p>Hai vinto un pacchetto di 5 biglietti per te e i tuoi amici per il Maxiparty con David Guetta all’Aquafan di Riccione.</p>
+      
+      <p>Per avere il tuo ingresso omaggio sarà sufficiente presentarsi alla biglietteria dell’Aquafan esibendo:
+		<ul>
+			<li>una stampa di questa email;</li>
+			<li>un documento di identità del vincitore.</li>
+		</ul>
+	  </p> 
+      
+      <p>Il codice relativo alla tua vincita è: <%= @ticket_id %></p>
+      
+      <p>Potrai utilizzare il tuo ingresso il 3 agosto 2014.</p>
+
+      <p>Per qualsiasi dubbio ti invitiamo a contattare Aquafan al numero +390541603050.</p>
+      
+      <p>Continua a seguire The Pool, la web serie targata Maxibon, per vincere altri biglietti omaggio ad 
+      	Aquafan e per avere più possibilità di essere sorteggiato come vincitore dei 5 ingressi gratuiti a uno dei Maxiparty presso Aquafan.</p>  
+
+      <p>Rimorchiare non è mai stato così difficile, ma vincere non è mai stato così facile, segui “The Pool”!</p>
+		
+	  <p>Lo staff di Maxibon</p>
+	<% end %>
+
+	<% if @price.title == "Un pacchetto di 5 biglietti per un evento serale Aquafan" %>
+	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
+
+      <p>Hai vinto un pacchetto di 5 biglietti per un evento serale che si terrà all’Aquafan di Riccione nel mese di agosto.
+		Contatta Aquafan all’indirizzo info@aquafan.it o al numero +390541603050 per scoprire di quale evento si tratta.</p>
+      
+      <p>Per avere il tuo ingresso omaggio sarà sufficiente presentarsi alla biglietteria dell’Aquafan esibendo:
+		<ul>
+			<li>una stampa di questa email;</li>
+			<li>un documento di identità del vincitore.</li>
+		</ul>
+	  </p> 
+      
+      <p>Il codice relativo alla tua vincita è: <%= @ticket_id %></p>
+      
+      <p>Potrai utilizzare il tuo ingresso gratuito un qualsiasi giorno compreso fra il XX/XX/2014 e il XX/XX/2014.</p>
+
+      <p>Per qualsiasi dubbio ti invitiamo a contattare Aquafan al numero +390541603050.</p>
+      
+      <p>Continua a seguire The Pool, la web serie targata Maxibon, per vincere altri biglietti omaggio ad 
+      	Aquafan e per avere più possibilità di essere sorteggiato come vincitore dei 5 ingressi gratuiti a uno dei Maxiparty presso Aquafan.</p>  
+
+      <p>Rimorchiare non è mai stato così difficile, ma vincere non è mai stato così facile, segui “The Pool”!</p>
+		
+	  <p>Lo staff di Maxibon</p>
+	<% end %>
+  </body>
+</html>
