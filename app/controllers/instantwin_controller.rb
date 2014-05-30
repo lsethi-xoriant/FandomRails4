@@ -14,8 +14,9 @@ class InstantwinController < ApplicationController
   
   def show_winners
     @winners = Array.new
-    wins = PlayticketEvent.where("winner = true")
-    @winner_per_page = 15
+    today_midnight = DateTime.now.midnight.utc
+    wins = PlayticketEvent.where("winner = true AND used_at < ?", today_midnight)
+    @winner_per_page = 12
     
     wins.each do |win_event|
       winner = Hash.new

@@ -27,7 +27,11 @@
 
       <div class="row" style="margin: 15px 0;">
         <%= render partial: "/application/header" %>
-		<h1 class="text-center" style="color:#FFF; font-family: 'Oswald-Bold', helvetica, arial, sans-serif; text-shadow: 2px 2px 2px rgba(40, 40, 40, 1);">I VINCITORI</h1>
+		<h1 class="text-center" style="margin-bottom:40px; color:#FFF; font-family: 'Oswald-Bold', helvetica, arial, sans-serif; text-shadow: 2px 2px 2px rgba(40, 40, 40, 1);">I VINCITORI</h1>
+		
+		<% if @winners.count == 0 %>
+			<h2 class="text-center" style="color:#FFF; font-family: 'Oswald-Bold', helvetica, arial, sans-serif;">Al momento non ci sono vincitori.</h2>
+		<% end %>
 		
 		<div id="carousel-example-generic" class="carousel slide hidden-xs" data-ride="carousel">
 		
@@ -37,12 +41,12 @@
 		    	<% i = 1 %>
 		      <% @winners.each do |winner| %>
                         
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                 	<div class="text-center">
                 		<img class="img-circle img-responsive" src="<%= winner['avatar'] %>" />
                 	</div>
                 	<div class="text-center">
-                		<p style="color:#fff; font-family: 'Oswald-Bold', helvetica, arial, sans-serif; text-shadow: 2px 2px 2px rgba(40, 40, 40, 1); letter-spacing: 1px;"><%= winner['name'] %></p>
+                		<p style="margin-top:10px; color:#fff; font-family: 'Oswald-Bold', helvetica, arial, sans-serif; text-shadow: 2px 2px 2px rgba(40, 40, 40, 1); letter-spacing: 1px;"><%= winner['name'] %></p>
                 	</div>
                 </div>
                 
