@@ -1,6 +1,10 @@
 <%= render partial: "/application/user_bar" %>
 
 <div class="container">
+  <%= render partial: "/application/header" %>
+</div>
+
+<div class="container profile">
   
   <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :multipart => true }) do |f| %>
     <div class="row" style="margin-top: 1.5em;">
@@ -45,7 +49,7 @@
                     <div class="col-sm-4 text-center">
                       <div class="fileinput fileinput-new" data-provides="fileinput">
                           <div class="fileinput-new thumbnail" style="width: 150px; height: 115px;">
-                            <img src="<%= current_user.avatar %>">
+                            <img class="img-circle" src="<%= current_user.avatar(:thumb) %>">
                           </div>
                           <div class="fileinput-preview fileinput-exists thumbnail" style="width: 150px; height: 115px;"></div>
                           <span class="btn btn-default btn btn-xs btn-file btn-block" style="vertical-align: top;"><span class="fileinput-new">Cambia immagine</span><span class="fileinput-exists">Modifica</span><%= f.file_field :avatar %></span>
@@ -70,8 +74,9 @@
 
               <div class="row">
                 <div class="form-group">
-                  <label class="col-xs-4 control-label text-right">Facebook connect</label>
-                  <div class="col-xs-8">
+                  <label for="inputEmail3" class="col-sm-4 hidden-xs control-label text-right">Facebook connect</label>
+                  <label for="inputEmail3" class="col-xs-12 hidden-sm hidden-md hidden-lg control-label text-center">Facebook connect</label>
+                  <div class="col-xs-12 col-sm-8">
                     <% if current_user.authentications.where("provider='facebook'").any? %>
                        <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/facebook">disconnetti</a>
                     <% else %>
@@ -82,20 +87,23 @@
               </div>
               <div class="row"></div><hr>
               <div class="form-group">
-                <label for="inputEmail3" class="col-xs-3 control-label text-right">Nome</label>
-                <div class="col-xs-9">
+                <label for="inputEmail3" class="col-sm-3 hidden-xs control-label text-right">Nome</label>
+                <label for="inputEmail3" class="col-xs-12 hidden-sm hidden-md hidden-lg control-label text-center">Nome</label>
+                <div class="col-xs-12 col-sm-9">
                   <%= f.text_field :first_name, :class => "form-control", readonly: "true" %>
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputEmail3" class="col-xs-3 control-label text-right">Cognome</label>
-                <div class="col-xs-9">
+                <label for="inputEmail3" class="col-sm-3 hidden-xs control-label text-right">Cognome</label>
+                <label for="inputEmail3" class="col-xs-12 hidden-sm hidden-md hidden-lg control-label text-center">Cognome</label>
+                <div class="col-xs-12 col-sm-9">
                   <%= f.text_field :last_name, :class => "form-control", readonly: "true" %>
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputEmail3" class="col-xs-3 control-label text-right">Email</label>
-                <div class="col-xs-9">
+                <label for="inputEmail3" class="col-sm-3 hidden-xs control-label text-right">Email</label>
+                <label for="inputEmail3" class="col-xs-12 hidden-sm hidden-md hidden-lg control-label text-center">Email</label>
+                <div class="col-xs-12 col-sm-9">
                   <%= f.text_field :email, :class => "form-control", readonly: "true" %>
                 </div>
               </div>
@@ -103,15 +111,17 @@
               <div class="row"></div><hr>
 
               <div class="form-group">
-                <label for="inputEmail3" class="col-xs-3 control-label text-right">Nuova password</label>
-                <div class="col-xs-9">
+                <label for="inputEmail3" class="col-sm-3 hidden-xs control-label text-right">Nuova password</label>
+                <label for="inputEmail3" class="col-xs-12 hidden-sm hidden-md hidden-lg control-label text-center">Nuova password</label>
+                <div class="col-xs-12 col-sm-9">
                   <%= f.password_field :password, :class => "form-control" %>
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="inputEmail3" class="col-xs-3 control-label text-right">Conferma nuova password</label>
-                <div class="col-xs-9">
+                <label for="inputEmail3" class="col-sm-3 hidden-xs control-label text-right">Conferma nuova password</label>
+                <label for="inputEmail3" class="col-xs-12 hidden-sm hidden-md hidden-lg control-label text-center">Conferma nuova password</label>
+                <div class="col-xs-12 col-sm-9">
                  <%= f.password_field :password_confirmation, :class => "form-control" %>
                 </div>
               </div>

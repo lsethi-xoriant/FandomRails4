@@ -102,6 +102,7 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             .success(function(data) {
               // Event saved. 
               if(data.undervideo_feedback) {
+                $(".current_user_points").html(data.points_updated);
                 $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
               }            
           }).error(function() {
@@ -128,6 +129,8 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
         // Modifico lo stato del bottone e notifico la condivisione.
         $("#share-" + provider + "-" + interaction_id).attr('disabled', false); // Modifico lo stato del bottone.
         $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI CON " + provider.toUpperCase());
+
+        $(".current_user_points").html(data.points_updated);
 
         $("#share-modal-" + calltoaction_id).modal("hide");
 
@@ -173,6 +176,7 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             }
 
             if(data.undervideo_feedback) {
+              $(".current_user_points").html(data.points_updated);
               $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
             } 
 

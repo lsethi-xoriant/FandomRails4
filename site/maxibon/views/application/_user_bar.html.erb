@@ -9,10 +9,15 @@
       </button>
       <% if current_user %>
         <a href="/extra" class="navbar-brand hidden-xs oswald-font"><i class="fa fa-play-circle-o" style="font-size: 21px;"></i>&nbsp;&nbsp;VIDEO EXTRA</a>
+
+        <button class="hidden-sm hidden-md hidden-lg btn yellow-point current_user_points" style="float: right; margin-top: 8px; margin-right: 10px;"><%= current_user ? (get_current_contest_points current_user.id) : 0 %>
+        <button onclick="openInstantWinModal()" style="float: right; margin-top: 8px; margin-right: 10px;" class="hidden-sm hidden-md hidden-lg btn btn-danger">GIOCA</button>
       <% end %>
+      <!--
       <a style="float: right; padding: 3px 10px 3px 3px;" href="/profile/edit" class="navbar-brand hidden-sm hidden-md hidden-lg">
         <img class="img-circle" src="<%= current_avatar %>" style="height: 100%; border: 1px solid #fff;">
       </a>
+      -->
     </div>
     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
       <ul class="nav navbar-nav text-center">
