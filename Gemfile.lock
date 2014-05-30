@@ -431,6 +431,7 @@ DEPENDENCIES
   koala
   letter_opener
   minitest (~> 4.0)
+  net-ssh
   nokogiri
   oauth2
   omniauth

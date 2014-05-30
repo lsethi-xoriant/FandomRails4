@@ -20,7 +20,8 @@ set :rails_env, 'production'
 set :branch, 'master'
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/home/app/railsapps/Fandom'
+deploy_to = '/home/app/railsapps/Fandom'
+set :deploy_to, deploy_to 
 
 # run as normal user
 set :use_sudo, true
@@ -57,16 +58,24 @@ set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/sys
 
 namespace :deploy do
 
+  # This is an example of how to run a task before everything else 
+  #before :starting, :test do
+  #  on roles(:app), in: :groups do
+  #    puts "Starting!"
+  #  end
+  #end
+  
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
-      # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
       puts "restarting unicorn..."
       execute "/etc/init.d/railsweb restart"
       sleep 5
       puts "is unicorn running? Look at this ps!"
       execute "ps aux | grep unicorn"
+      puts "making an archive of the current release (for AWS)"
+      execute "cd #{deploy_to} ; tar chzf current.tgz releases/$(basename $(readlink current))"
     end
   end
 
