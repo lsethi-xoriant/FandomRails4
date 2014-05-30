@@ -31,7 +31,7 @@ module FandomUtils
     configure_environment_for_site(site)
     configure_omniauth_for_site(site)
 
-    if site.disable_x_frame_options_header
+    unless site.enable_x_frame_options_header
       response.headers.except! 'X-Frame-Options'      
     end
     if site.force_ssl

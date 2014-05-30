@@ -7,7 +7,7 @@ module Fandom
       environment: { 
         'EMAIL_ADDRESS' => 'noreply@maxibon.it', 
       },
-      disable_x_frame_options_header: true      
+      enable_x_frame_options_header: false      
     )
   end
 end
