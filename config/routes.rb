@@ -7,6 +7,12 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
+  constraints(SiteMatcher.new('maxibon')) do
+    constraints(NotMatcher.new RefererMatcher.new('facebook.com')) do
+      match '*path', to: redirect("https://www.facebook.com/testshado/app_597403706967732")
+    end
+  end
+
   post "/", to: "property#index"
 
   # Captcha.
