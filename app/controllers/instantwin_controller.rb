@@ -42,7 +42,7 @@ class InstantwinController < ApplicationController
   #
   # contest_id - id of the contest
   def play_ticket_mb
-    
+    @user_already_wins = false
     if current_user
       contest = Contest.active.find(params[:contest_id])
       contest_points = ContestPoint.where("contest_id=? AND user_id=?", contest.id, current_user.id)   
@@ -70,7 +70,8 @@ class InstantwinController < ApplicationController
       'winner' => win,
       'points_updated' => (get_current_contest_points current_user.id),
       'prize' => @prize,
-      'prize_image' => (@prize ? @prize.image.url : "")
+      'prize_image' => (@prize ? @prize.image.url : ""),
+      'user_already_wins' => @user_already_wins
     }
 
     respond_to do |format|
@@ -90,10 +91,9 @@ class InstantwinController < ApplicationController
       time_to_win_list = Instantwin.where("contest_periodicity_id = ? AND instantwins.time_to_win_start<= ? AND (instantwins.time_to_win_end IS NULL OR ? <= instantwins.time_to_win_end)",contest_periodicity.id,time_current,time_current).order("instantwins.time_to_win_start DESC").limit(1)
       if time_to_win_list.count > 0
         time_to_win = time_to_win_list.first 
-        if !(check_already_win(time_to_win) || win || check_already_win_by_user(contest_periodicity) )
+        if !(check_already_win_by_user(contest_periodicity) || check_already_win(time_to_win) || win )
           win = true
           @prize = time_to_win.contest_periodicity.instant_win_prizes.first
-          
           PlayticketEvent.create(:points_spent => contest.conversion_rate, :used_at => time_current, :winner => true, 
                                   :user_id => current_user.id, :instantwin_id => time_to_win.id, :contest_periodicity_id => contest_periodicity.id)
   
@@ -125,6 +125,7 @@ class InstantwinController < ApplicationController
   # iw - instantwin passed
   #
   def check_already_win_by_user contest_periodicity
+    @user_already_wins = true
     return PlayticketEvent.where("user_id = ? AND winner = true",current_user.id).present?
   end
   

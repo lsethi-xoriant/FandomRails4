@@ -32,5 +32,14 @@ module InstantwinHelper
 			return 0
 		end
 	end
+	
+	# TODO MAXIBON
+	#
+	# Check if a user has already won a prize in the active contes
+	#
+	# user_id - id of current user
+	def check_user_already_won user_id
+	  return PlayticketEvent.where("user_id = ? AND winner = true", user_id).present?
+	end
 
 end

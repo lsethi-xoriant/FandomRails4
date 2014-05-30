@@ -6,7 +6,8 @@ module Fandom
       assets_precompile: ['maxibon_application.css', 'maxibon_application.js'],
       environment: { 
         'EMAIL_ADDRESS' => 'noreply@maxibon.it', 
-      }
+      },
+      enable_x_frame_options_header: false      
     )
   end
 end

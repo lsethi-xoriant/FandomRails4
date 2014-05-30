@@ -1,12 +1,9 @@
+require 'fandom_utils'
+
 module ApplicationHelper
 	
 	def mobile_device?
-		iphone = request.user_agent =~ /iPhone/ 
-		mobile = request.user_agent =~ /Mobile/
-		android = request.user_agent =~ /Android/  
-
-		# Mobile and Android identifica il MOBILE di tipo Android, altrimenti con solo Android abbiamo il TABLET.
-		return (iphone || (mobile && android)		)
+	  FandomUtils::mobile_device?(request)
 	end
 
 	def ipad?
