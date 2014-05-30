@@ -42,8 +42,8 @@
               <img id="instant-win-prize" src="" class="img-responsive" style="width: 100%;">
             </div>
             <div class="col-md-6">
-              <h5 id="instant-win-title">20 INGRESSI PER 5 AMICI<br>AD EVENTI SERALI</h5>
-              <h6 id="instant-win-description">Testo Testo Testo Testo Testo Testo Testo Testo</h6>
+              <h5 id="instant-win-prize-title"></h5>
+              <h6 id="instant-win-description"></h6>
             </div>
           </div>
 
@@ -197,7 +197,7 @@
               $("#instant-win-prize-overview").addClass("hidden");
               $("#instant-win-prize-win").removeClass("hidden");
 
-              $("#instant-win-prize").html(data.prize.title);
+              $("#instant-win-prize-title").html(data.prize.title);
               $("#instant-win-description").html(data.prize.description);
               $("#instant-win-prize").attr("src", data.prize_image);
             } else if(data.points_updated < 1){
