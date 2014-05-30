@@ -4,19 +4,29 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-  	  <p>Ciao <%= @cuser.first_name %> <%= @cuser.last_name %>,</p>
-      <p>Congratulazioni!</p> 
-      <p><%= @price.description %></p> 
-      
-      <p>Codice Biglietto: <%= @ticket_id %></p>
+  	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
 
-      <p>I biglietti saranno ritirabili esibendo un documento di identità del vincitore direttamente alla biglietteria dell’Aquafan.</p>
+      <p><%= @prize_won_message %></p>
       
-      <p>Per qualsiasi dubbio ti invitiamo a contattare Aquafan al numero xxxx/xxxxxxx</p>  
+      <p>Per avere il tuo ingresso omaggio sarà sufficiente presentarsi alla biglietteria dell’Aquafan esibendo:
+		<ul>
+			<li>una stampa di questa email;</li>
+			<li>un documento di identità del vincitore.</li>
+		</ul>
+		</p> 
+      
+      <p>Il codice relativo alla tua vincita è: <%= @ticket_id %></p>
+      
+      <p><%= @message_win_validity %></p>
 
-      <p>Continua a seguirci su maxibon.it, il divertimento continua.</p>
+      <p>Per qualsiasi dubbio ti invitiamo a contattare Aquafan al numero +390541603050.</p>
+      
+      <p>Continua a seguire The Pool, la web serie targata Maxibon, per vincere altri biglietti omaggio ad 
+      	Aquafan e per avere più possibilità di essere sorteggiato come vincitore dei 5 ingressi gratuiti a uno dei Maxiparty presso Aquafan.</p>  
+
+      <p>Rimorchiare non è mai stato così difficile, ma vincere non è mai stato così facile, segui “The Pool”!</p>
 		
-	  <p>Lo staff di Maxibon.it</p>
+	  <p>Lo staff di Maxibon</p>
 
   </body>
 </html>
