@@ -65,6 +65,11 @@ body {
     background-repeat: no-repeat;
 }
 
+.landing-button:hover {
+    background: url('/assets/maxibon/landing/fb-landing-hover.png'); 
+    background-repeat: no-repeat;
+}
+
 .white-text-with-shadow {
     color: #fff; 
     text-shadow: 2px 2px 2px rgba(40, 40, 40, 1);
@@ -993,6 +998,10 @@ height: 100%;
 }
 
 @media (max-width: $screen-md-min) {
+    .landing {
+        background: #00cdf0 !important;
+    }
+
     .margin-top-15-mobile {
         margin-top: 15px;
     }
