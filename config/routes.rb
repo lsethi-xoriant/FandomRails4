@@ -1,4 +1,5 @@
 require 'fandom_utils'
+require 'sites/maxibon/utils'
 include FandomUtils
 
 Fandom::Application.routes.draw do
@@ -8,7 +9,7 @@ Fandom::Application.routes.draw do
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   constraints(SiteMatcher.new('maxibon')) do
-    constraints(NotMatcher.new RefererMatcher.new('facebook.com')) do
+    constraints(MaxibonUtils::Matcher.new) do
       match '*path', to: redirect("https://www.facebook.com/testshado/app_597403706967732")
     end
   end
