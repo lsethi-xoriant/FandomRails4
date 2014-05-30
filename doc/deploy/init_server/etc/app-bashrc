@@ -1,1 +1,4 @@
 export RAILS_ENV=production
+export PATH=$PATH:$HOME/bin
+
+alias ls='ls --color'

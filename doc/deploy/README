@@ -16,7 +16,16 @@ When prompted for the password of the app user, set it as per company policy.
 
 5) Once Fandom has been deployed, manually create the schemas needed for the different tenant: 
 
-RAILS_ENV=production rake apartment:create
+  rake apartment:create
+
+6) in case of AWS installation, put the automatic update command in /etc/rc.local:
+
+  sudo -u app -i bash /home/app/bin/aws_remote_update.sh
+
+and, in case of a specific tenant installation, set the hostname of the stage environment in the script itself:
+
+  STAGE_ENVIRONMENT="app@stage.fandomlab.com"
+
 
 
 Deploy with Capistrano

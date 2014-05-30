@@ -49,6 +49,8 @@ group :development do
   gem 'capistrano-rvm'
   gem 'capistrano'
   gem 'capistrano-rails'
+  
+  gem 'colorize'
 end
 
 group :development, :test do

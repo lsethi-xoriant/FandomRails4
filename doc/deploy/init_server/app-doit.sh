@@ -30,6 +30,12 @@ chmod 600 ~/.ssh/id_rsa
 cp -a etc/public_html ~
 
 #
+# Setup bin dir
+#
+mkdir ~/bin
+cp etc/aws_remote_update.sh ~/bin
+
+#
 # create a default database.yml file on the server
 #
 mkdir -p ~/railsapps/Fandom/shared/config/
