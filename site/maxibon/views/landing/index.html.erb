@@ -1,11 +1,14 @@
+<% content_for :bodyclass, "landing" %>
+
 <%= render partial: "/application/user_bar" %>
 
 <div class="container-fluid">   
   <div class="row no-pad">      
     <div class="col-xs-12 text-center no-pad">
-      <div style="max-width: 810px; margin-left: auto; margin-right: auto;">
+      <div style="max-width: 810px; margin-left: auto; margin-right: auto; background: #00cdf0;">
         <img src="/assets/maxibon/landing/landing.jpg" class="img-responsive" style="width: 100%;">
 
+        <!--
         <div class="hidden-xs" style="position: relative; width: 100%;">
           <div style="position: absolute; right: 80px; bottom: 40px">
             <a href="/auth/facebook"><div class="landing-button"></div></a>
@@ -24,9 +27,45 @@
             <p style="font-size: 8px; color: #fff; margin-top: 5px; text-align: center;">Se non sei ancora utente facebook <a href="/users/sign_up">clicca qui</a></p>
           </div>
         </div>
+        -->
+
+        <div class="row hidden-xs" style="background: #00cdf0; margin: 0; color: #003366;">
+          <div class="col-sm-8 no-pad"> 
+            <h1>AIUTA MARCO<br>A CONQUISTARE LARA<br>E VINCI <img src="/assets/maxibon/img-aquafan-footer.png"></h1>
+          </div>
+          <div class="col-sm-4 text-center" style="padding-top: 30px; margin-left: -30px;">
+
+            <a href="/auth/facebook"><div class="landing-button" style="margin-left: auto; margin-right: auto;"></div></a>
+
+            <p style="font-size: 10px; color: #fff; margin-top: 5px;">Se non sei ancora utente facebook <a href="/users/sign_up" style="color: #fff; text-decoration: underline;">clicca qui</a></p>
+
+          </div>
+        </div>
+
+        <div class="row hidden-sm hidden-md hidden-lg" style="background: #00cdf0; margin: 0; color: #003366;">
+
+          <div class="col-xs-8 no-pad"> 
+            <h5>AIUTA MARCO<br>A CONQUISTARE LARA<br>E VINCI <img style="width: 100px;" src="/assets/maxibon/img-aquafan-footer.png"></h5>
+          </div>
+
+          <div class="col-xs-4 text-center" style="padding-top: 10px; margin-left: -30px;">
+
+            <a href="/auth/facebook"><div class="landing-button" style="margin-left: auto; margin-right: auto; background-size: 100px; height: 50px; width: 100px;"></div></a>
+
+          </div>
+
+          <div class="col-xs-12 no-pad">
+            <p style="font-size: 8px; color: #fff; text-align: center;">Se non sei ancora utente facebook <a style="color: #fff; text-decoration: underline;" href="/users/sign_up">clicca qui</a></p>
+          </div>
+        </div>
 
       </div>
 
     </div>
   </div>
+</div>
+<div class="row" style="background-color: #FFF; padding: 10px 0 0 0;">
+	<div class="col-xs-12 text-center">
+		<p style="font-size: 11px; color: #5C5C5C;">Copyright 2014 - Nestlé Italiana S.p.A. - Partita IVA 00777280157  | <a target="_blank" href="/rule/maxibon_the_pool_rule.pdf">Regolamento</a></p>
+	</div>
 </div>
