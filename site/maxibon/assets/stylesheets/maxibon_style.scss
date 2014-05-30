@@ -15,7 +15,7 @@ $navbar-inverse-border:                     darken($navbar-inverse-bg, 10%) !def
 // Inverted navbar links
 $navbar-inverse-link-color:                 #42C5ED !default;
 $navbar-inverse-link-hover-color:           #fff !default;
-$navbar-inverse-link-hover-bg:              transparent !default;
+$navbar-inverse-link-hover-bg:              #42C5ED !default;
 $navbar-inverse-link-active-color:          $navbar-inverse-link-hover-color !default;
 $navbar-inverse-link-active-bg:             darken($navbar-inverse-bg, 10%) !default;
 $navbar-inverse-link-disabled-color:        #444 !default;
@@ -43,6 +43,47 @@ body {
   background-position: top center;
   background-size: 100% auto;
   background-repeat: no-repeat;
+}
+
+.white-text-with-shadow {
+    color: #fff; 
+    text-shadow: 2px 2px 2px rgba(40, 40, 40, 1);
+}
+
+.winner-page {
+    .carousel .item{
+        background-color: transparent;
+        padding-left: 64px;
+        padding-right: 80px;
+    }
+
+    .carousel-control:hover, .carousel-control:focus, .carousel-control {
+        opacity: 1;
+    }
+
+    .carousel-control.left,
+    .carousel-control.right{
+        background-image: none;
+    }
+    
+    .carousel-control span {
+        background-color: #FFF;
+        border-radius: 100px;
+        padding: 7px;
+        color: #000;
+    }
+    
+    .img-circle {
+        border: 3px solid #FFF;
+    }
+
+    .winner-p {
+        margin-top: 5px;
+        color: #fff; 
+        font-family: 'Oswald-Bold', helvetica, arial, sans-serif; 
+        text-shadow: 2px 2px 2px rgba(40, 40, 40, 1); 
+        /* letter-spacing: 1px; */
+    }
 }
 
 .img-ticket {

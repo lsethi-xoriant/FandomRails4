@@ -33,13 +33,12 @@
                 </div>
                 <div class="modal-body">
                   <div class="row" style="margin-bottom: 10px;">
-                    <div class="col-lg-8">
+                    <div class="col-sm-8">
                       <%= text_field_tag :email_to_share, nil, class: "form-control", id: "share-email-address-#{ s.id }", placeholder: "example@example.com" %>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-sm-4">
                       <button id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="btn btn-primary btn-block" onclick="shareWith('<%= s.resource.share_type %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI</button>
                     </div>
-                    <div class="col-lg-8 col-lg-offset-4" id="share-info"></div>
                   </div>
                 </div>
                 <div class="modal-footer">

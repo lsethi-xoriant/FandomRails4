@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   validates_presence_of :last_name
   validates :privacy, :acceptance => { :accept => true }
 
+  validate :major, if: Proc.new { |c| c.enable_contest }
   validates_presence_of :day_of_birth, if: Proc.new { |c| c.enable_contest }
   validates_presence_of :month_of_birth, if: Proc.new { |c| c.enable_contest }
   validates_presence_of :year_of_birth, if: Proc.new { |c| c.enable_contest }
@@ -39,6 +40,12 @@ class User < ActiveRecord::Base
   validates_presence_of :province, if: Proc.new { |c| c.enable_contest }
   validates_presence_of :phone, if: Proc.new { |c| c.enable_contest }
   validates :rule, :acceptance => { :accept => true }, if: Proc.new { |c| c.enable_contest }
+
+  def major
+    if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present?
+      errors.add(" ", "Come stabilito dal regolamento devi essere maggiorenne per poter partecipare al concorso") if (Time.parse("2014-06-03") - Time.parse("#{self.year_of_birth}-#{self.month_of_birth}-#{self.day_of_birth}"))/1.year < 18
+    end
+  end
 
   def set_date_of_birth
     if year_of_birth.present? && month_of_birth.present? && day_of_birth.present?
