@@ -15,15 +15,22 @@ Fandom::Application.routes.draw do
   # Instagram subscribe. 
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
 
+  match "/how_to", :to => "application#how_to"
+  match "/landing", :to => "landing#index"
+
   match "profile", :to => "profile#index"
   match "profile/levels", :to => "profile#levels"
   match "profile/badges", :to => "profile#badges"
   match "profile/rankings", :to => "profile#rankings"
   match "profile/remove-provider/:provider", :to => "profile#remove_provider"
+  match "profile/complete_for_contest", :to => "profile#complete_for_contest"
 
   match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
   match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
   match "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
+  
+  match "/playticket", :to => "instantwin#play_ticket_mb"
+  match "/winners", :to => "instantwin#show_winners"
 
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
@@ -95,6 +102,9 @@ Fandom::Application.routes.draw do
     match "published", :to => "easyadmin#published"
     match "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
     match "dashboard/update_activated_at", :to => "easyadmin#update_activated_at", defaults: { format: 'json' }
+    
+    match "events", :to => "easyadmin_event_console#index_event"
+    match "events/filter", :to => "easyadmin_event_console#filter_event", defaults: { format: 'json' }
   end
 
   devise_for :users, :controllers => { :registrations => "registrations", :sessions => "sessions", :passwords => "passwords" }
@@ -136,6 +146,9 @@ Fandom::Application.routes.draw do
   match "/422", :to => "http_error#unprocessable_entity_422"
 
   match "rss", :to => "rss#global_rss", defaults: { format: 'rss' }
+
+  match "/extra", :to => "property#extra"
+
   resources :property, path: "" do
     match "profile", :to => "profile#show"
     match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }

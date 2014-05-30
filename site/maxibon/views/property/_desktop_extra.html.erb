@@ -1,0 +1,107 @@
+<%= render partial: "/application/user_bar" %>
+
+<script type="text/javascript" src="/assets/jquery.jcarousel.js"></script>
+<script type="text/javascript" src="/assets/jcarousel.responsive.js"></script>
+
+<% if @calltoactions.any? %>
+
+  <div class="container" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, '<%= @calltoactions.first.video_url %>', '<%= @calltoactions.first.id %>')">   
+
+      <div class="row" style="margin: 15px 0;">
+        <%= render partial: "/application/header" %>
+
+        <div class="row hidden-xs" style="padding-bottom: 20px;">
+          <!-- DESKTOP CAROUSEL -->
+          <div class="col-md-12 col-md-offset-0 text-center home-carousel" style="margin-bottom: 20px;">
+            <div class="jcarousel-wrapper" style="padding: 0 30px;">
+                <div class="jcarousel">
+                    <ul>
+                      <% @calltoactions.each do |calltoaction| %>
+                        <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, -1, 'extra')">
+
+                          <div style="position: relative; z-index: 10;">
+                            <div class="home-carousel-circle">
+                              <div class="home-carousel-circle-children-extra"><span style="font-size: 20px; top: 15px; color: #fff;" class="glyphicon glyphicon-play"></span></div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-sm-12" style="padding: 0 40px;">
+                              <img src="<%= calltoaction.image(:extra) %>" style="width: 100%; border: 5px solid #fff; border-radius: 5px;">
+                            </div>
+                            <div class="col-sm-10 col-sm-offset-1" style="padding: 0 40px; margin-top: -20px;">
+                              <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.first.id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
+                                  <div class="panel-body">
+                                      <div class="row">
+                                          <div class="col-sm-12 text-center">
+                                              <h5 style="margin: 0; padding-left: 0; text-transform: uppercase; word-wrap: break-word"><%= calltoaction.title %></h5>
+                                          </div>
+                                      </div>                                        
+                                  </div>
+                              </div>
+                            </div>                         
+                          </div>
+
+                        </li>
+                      <% end %>
+                    </ul>
+                </div>
+
+                <!-- PREV/NEXT -->
+                <a href="#" class="jcarousel-control-prev"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span></a>
+                <a href="#" class="jcarousel-control-next"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span></a>
+
+                <!-- PAGINATION -->
+                <p class="jcarousel-pagination">
+                    <!-- PAGINATION GENERATE HERE -->
+                </p>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row">      
+          <div class="col-md-12 col-md-offset-0">
+            <div class="panel panel-default" style="padding: 0;">
+              <div class="panel-body" style="padding: 5px;">
+
+                <!-- MEDIA -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <% if @calltoactions.first.media_type == "VIDEO" %>
+                        <div class="video flex-video widescreen" style="margin: 0;">
+                          <div id="home-video" type="extra" iid="calltoaction-active-<%= @calltoactions.first.id %>"></div>
+                          <!-- OVERVIDEO AREA HERE FOR ANSWER -->
+                          <div id="home-overvideo"></div>
+
+                          <!-- OVERVIDEO AREA HERE FOR TITLE -->
+                          <div id="home-overvideo-title"><%= render partial: "/calltoaction/overvideo_play", locals: { calltoaction: @calltoactions.first, calltoaction_index: -1 } %></div>
+
+                          <!-- OVERVIDEO AREA HERE FOR FEEDBACK POINTS -->
+                          <div id="home-overvideo-feedback-points"></div>
+                        </div>
+                    <% else %>
+                      <img src="<%= @calltoactions.first.image %>" style="width: 100%; margin-bottom: 15px;">
+                    <% end %>
+                  </div>
+                </div>
+            
+              </div>         
+            </div>        
+          </div>
+        </div>
+
+        <div class="col-md-12" id="share-footer">
+          <%= render partial: "/calltoaction/share_footer", locals: { calltoaction: @calltoactions.first } %>
+        </div>
+
+      </div>
+  </div>
+
+  <%= render partial: "/application/footer" %>
+
+  <script type="text/javascript">
+      $('.jcarousel').jcarousel(); 
+  </script>
+
+<% end %>

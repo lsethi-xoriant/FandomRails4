@@ -2,60 +2,44 @@
 # encoding: utf-8
 
 class SystemMailer < ActionMailer::Base
-  default from: "amadorabilichef@amadori.it"
+  default from: ENV['EMAIL_ADDRESS']
 
-  def share_mail(mailto, url, user, title)
-  	@cuser = user
-  	@link = url
-    @ctatitle = title
-    if @cuser
-     mail(to: mailto, subject: "#{user.first_name} ti ha lanciato una sfida: mettiti alla prova!")
-    else
-  	 mail(to: mailto, subject: "Ti hanno lanciato una sfida: mettiti alla prova!")
-    end
+  def share_content_email(user, address_to_send, calltoaction)
+    @calltoaction = calltoaction
+    mail(to: address_to_send, subject: "Ti hanno condiviso un contenuto da Maxibon - The Pool")
   end
 
   def welcome_mail(user)
     @cuser = user
-    mail(to: user.email, subject: "Benvenuto su Amadorabili Chef!")
+    mail(to: user.email, subject: "Benvenuto su MAXIBON!")
   end  
 
-  def win_mail(user, price)
-
-    case price.title
-    when "daily"
-      @price = "una Dinner Box di prodotti Amadori"
-      @cooking_class = false
-    when "weekly"
-      @price = "un posto alla Cooking Class"
-      @cooking_class = true
-    when "monthly"
-      @price = "un robot da cucina"
-      @cooking_class = false
-    end   
-
+  def win_mail(user, price, time_to_win)
+    @price = price
   	@cuser = user
-  	mail(to: user.email, subject: "Concorso Amadorabili Chef – hai vinto #{ @price }")
+  	@ticket_id = time_to_win.unique_id
+  	
+  	if @price.title == "Ingresso gratuito giornaliero all'Aquafan"
+  	  @prize_won_message = "Hai vinto un ingresso gratuito giornaliero all’ Aquafan di Riccione."
+  	  @message_win_validity = "Potrai utilizzare il tuo ingresso gratuito un qualsiasi giorno compreso fra il XX/XX/2014 e il XX/XX/2014. "
+  	elsif @price.title == "Pacchetto di 5 biglietti per il Maxiparty con David Guetta"
+  	  @prize_won_message = "Hai vinto un pacchetto di 5 biglietti per te e i tuoi amici per il Maxiparty con David Guetta all’Aquafan di Riccione."
+  	  @message_win_validity = "Potrai utilizzare il tuo ingresso il 3 agosto 2014."
+  	elsif @price.title == "Pacchetto di 5 biglietti per un evento serale Aquafan"
+  	  @prize_won_message = "Hai vinto un pacchetto di 5 biglietti per un evento serale che si terrà all’Aquafan di Riccione nel mese di agosto.
+Contatta Aquafan all’indirizzo info@aquafan.it o al numero +390541603050 per scoprire di quale evento si tratta."
+      @message_win_validity = "Potrai utilizzare il tuo ingresso gratuito un qualsiasi giorno compreso fra il XX/XX/2014 e il XX/XX/2014."
+  	end
+  	
+  	mail(to: user.email, subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – hai vinto #{ @price.title }")
   end
 
-  def win_admin_notice_mail(user, price)
-    
-    case price.title
-    when "daily"
-      @price = "una Dinner Box di prodotti Amadori"
-      @cooking_class = false
-    when "weekly"
-      @price = "un posto alla Cooking Class"
-      @cooking_class = true
-    when "monthly"
-      @price = "un robot da cucina"
-      @cooking_class = false
-    end   
-
-    @ticket = price.ticket
-
+  def win_admin_notice_mail(user, price, time_to_win)
+    @price = price
   	@cuser = user
-  	mail(to: [ "infoconcorsi@ictlabs.it", "amadorabilichef@shado.tv" ], subject: "Concorso Amadorabili Chef – Un utente ha vinto #{ @price }")
+  	@ticket_id = time_to_win.unique_id
+  	
+  	mail(to: [ "", "maxibon@shado.tv" ], subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – Un utente ha vinto #{ @price.title }")
   end
 
 end

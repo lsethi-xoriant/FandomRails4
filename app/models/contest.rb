@@ -6,4 +6,7 @@ class Contest < ActiveRecord::Base
   belongs_to :property
 
   accepts_nested_attributes_for :contest_periodicities
+
+  # TODO - Check limit values.
+  scope :active, -> { where("start_date<? AND end_date>?", Time.now.utc, Time.now.utc) }
 end

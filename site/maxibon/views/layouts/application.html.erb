@@ -10,8 +10,6 @@
   <meta property="og:image" content="" />
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 
-  <!--<link href='http://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>-->
-
   <%= stylesheet_link_tag "maxibon_application", :media => "all" %>
   <%= javascript_include_tag "maxibon_application" %>
 
@@ -20,21 +18,7 @@
 </head>
 <body>
 
-  <!-- INSTANT WIN MODAL -->
-  <div class="modal fade" id="instant-win-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body text-center">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h2>TODO TODO TODO</h2>
-          <h4>Hai <button class="btn yellow-point">0</button> biglietti</h4>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <%= render partial: "/application/instant_win_modal" %>
 
   <!-- REGISTRATION MODAL -->
   <div class="modal fade" id="registrate-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -66,9 +50,7 @@
     </div>
   </div>
 
-
   <%= yield %>
 
-</script>
 </body>
 </html>

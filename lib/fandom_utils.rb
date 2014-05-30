@@ -30,6 +30,8 @@ module FandomUtils
     end
     configure_environment_for_site(site)
     configure_omniauth_for_site(site)
+
+    redirect_to "/landing" if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController))
   end
 
   def configure_environment_for_site(site)
@@ -99,6 +101,10 @@ module FandomUtils
       site = get_site_from_request(request)
       @site_ids.include?(site.id)  
     end
+  end
+  
+  def get_model_from_name(name)
+    return name.singularize.classify.constantize
   end
   
 end

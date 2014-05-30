@@ -12,15 +12,29 @@ class PropertyController < ApplicationController
     end
   end
 
+  def extra
+    if mobile_device?
+      @calltoactions = Calltoaction.active_extra.limit(3)
+    else
+      @calltoactions = Calltoaction.active_extra_no_order.order("activated_at ASC")
+    end
+  end
+
   def append_calltoaction
     render_calltoaction_str = String.new
     streamcalltoaction = Array.new
 
     streamcalltoactiontorender = Calltoaction.active.offset(params[:offset]).limit(3)
+
+    if params[:type] == "extra"
+      streamcalltoactiontorender = Calltoaction.active_extra.offset(params[:offset]).limit(3)
+    else
+      streamcalltoactiontorender = Calltoaction.active.offset(params[:offset]).limit(3)
+    end
     
     streamcalltoactiontorender.each do |c|
       streamcalltoaction << c
-      render_calltoaction_str = render_calltoaction_str + (render_to_string "/calltoaction/_stream_single_calltoaction", locals: { calltoaction: c }, layout: false, formats: :html)
+      render_calltoaction_str = render_calltoaction_str + (render_to_string "/calltoaction/_stream_single_calltoaction", locals: { calltoaction: c, type: params[:type] }, layout: false, formats: :html)
     end
 
     risp = Hash.new

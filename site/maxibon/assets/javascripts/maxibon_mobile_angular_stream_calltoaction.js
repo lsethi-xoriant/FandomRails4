@@ -51,10 +51,10 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     }
   };
 
-  $window.appendCalltoaction = function() {
+  $window.appendCalltoaction = function(type) {
     if($scope.calltoaction_length > $scope.calltoaction_offset) {
       $("#append-other button").attr('disabled', true);
-      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset })
+      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset, type: type })
       .success(function(data) {
         $scope.calltoaction_offset = $scope.calltoaction_offset + data.streamcalltoaction.length
         $scope.streamcalltoaction.push(data.streamcalltoaction);
@@ -87,11 +87,6 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
   $window.onYouTubePlayerReady = function(event) {
   }; // onYouTubePlayerReady
 
-  $window.closeShareAndOpenDenied = function(provider) {
-    $("#share-modal").modal("hide");
-    $("#share-" + provider + "-disable-modal").modal("show");
-  }; // closeShareAndOpenDenied
-
   // Callback chiamata quando lo stato del video viene modificato.
   $window.onPlayerStateChange = function(newState) {  
     key = newState.target.getIframe().id;
@@ -102,33 +97,26 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
       if(player_state == 1) { // Lo stato 1 corrisponde al video in riproduzione.
       // Identifico il PLAY del video in modo da poter tracciare l'evento.          
         if(!playpressed_hash[key]) {
-          $http.post("/update_play_interaction.json", { calltoaction_id: calltoactionactive.replace("calltoaction-active-", "") })
+          calltoaction_id = calltoactionactive.replace("calltoaction-active-", "");
+          $http.post("/update_play_interaction.json", { calltoaction_id: calltoaction_id })
             .success(function(data) {
-              // Evento salvato correttamente.            
+              // Event saved. 
+              if(data.undervideo_feedback) {
+                $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
+              }            
           }).error(function() {
-              // Errore nel salvataggio dell'evento.
+              // ERROR.
             });
             playpressed_hash[key] = true;
           }
       } else if(player_state == 0){
         playpressed_hash[key] = false;
-        $http.post("/calltoaction_overvideo_end", { id: calltoactionactive.replace("calltoaction-active-", ""), end: correctytplayer_hash[key] })
+        $http.post("/calltoaction_overvideo_end", { id: calltoactionactive.replace("calltoaction-active-", ""), end: correctytplayer_hash[key], type: $("#" + key).attr("type") })
           .success(function(data) {
             $("#home-overvideo-" + calltoactionactive.replace("calltoaction-active-", "")).html(data);
           });
       }
   }; // onPlayerStateChange
-
-  $window.openShareWith = function(property_id, calltoaction_id) {
-    $http.post("/" + property_id + "/" + calltoaction_id + "/generate_share_modal")
-        .success(function(data) {
-          $("#share-modal-container").html(data);
-          $("#share-modal").modal("show");
-
-        }).error(function() {
-          // ERRORE
-        });
-  };
 
   $window.shareWith = function(provider, interaction_id, calltoaction_id) {
 
@@ -136,37 +124,37 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     $("#share-" + provider + "-" + interaction_id).html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
 
     $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
-        .success(function(data) {
-          // Modifico lo stato del bottone e notifico la condivisione.
-          $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
-          $("#share-" + provider + "-" + interaction_id).html("SHARE WITH " + provider);
+      .success(function(data) {
+        // Modifico lo stato del bottone e notifico la condivisione.
+        $("#share-" + provider + "-" + interaction_id).attr('disabled', false); // Modifico lo stato del bottone.
+        $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI CON " + provider.toUpperCase());
 
-          $("#share-modal").modal("hide");
+        $("#share-modal-" + calltoaction_id).modal("hide");
 
-          if(provider == "email") {
-            $("#share-email-address-" + interaction_id).val("");
-            $("#share-" + provider + "-" + interaction_id).html("SHARE WITH EMAIL");
-            if(data == "false") {
-              $("#invalid-email-modal").modal("show");  
-            } else {
-              $("#share-" + calltoaction_id).addClass("btn-success");
-              $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
-            }
+        if(provider == "email") {
+          $("#share-email-address-" + interaction_id).val("");
+          $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI");
 
-          } else {
+          if(data.email_correct) {
             $("#share-" + calltoaction_id).addClass("btn-success");
             $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
+          } else {
+            $("#invalid-email-modal").modal("show"); 
           }
 
-        }).error(function() {
-          // ERRORE
-        });
-  };
+        } else {
+          $("#share-" + calltoaction_id).addClass("btn-success");
+          $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
+        }
 
-  $window.closeShareAndOpenWarningModal = function(calltoaction_id, share_type) {
-    $("#share-modal").modal("hide");
-    $("#first-share-modal-" + share_type).modal("show");
-  }; // closeShareAndOpenWarningModal
+        if(data.undervideo_feedback) {
+          $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
+        } 
+
+      }).error(function() {
+        // ERRORE
+      });
+  };
 
   $window.updateTriviaAnswer = function(calltoaction_id, interaction_id, answer_id) {
     $(".button-inter-" + interaction_id).attr('disabled', true);
@@ -183,6 +171,10 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
               updateYTIframe(data.next_calltoaction["video_url"], calltoaction_id, true);
               $("#home-overvideo-" + calltoaction_id).html("");
             }
+
+            if(data.undervideo_feedback) {
+              $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
+            } 
 
             if(data.current_correct_answer == answer_id) {
               correctytplayer_hash[key] = true;

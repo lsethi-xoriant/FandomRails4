@@ -3,9 +3,33 @@
 $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
-$navbar-default-link-hover-bg: #eee;
 
-$grid-float-breakpoint:     1600px !default;
+$grid-float-breakpoint: 3600px !default;
+
+// Inverted navbar
+// Reset inverted navbar basics
+$navbar-inverse-color:                      #42C5ED !default;
+$navbar-inverse-bg:                         #013368 !default;
+$navbar-inverse-border:                     darken($navbar-inverse-bg, 10%) !default;
+
+// Inverted navbar links
+$navbar-inverse-link-color:                 #42C5ED !default;
+$navbar-inverse-link-hover-color:           #fff !default;
+$navbar-inverse-link-hover-bg:              #42C5ED !default;
+$navbar-inverse-link-active-color:          $navbar-inverse-link-hover-color !default;
+$navbar-inverse-link-active-bg:             darken($navbar-inverse-bg, 10%) !default;
+$navbar-inverse-link-disabled-color:        #444 !default;
+$navbar-inverse-link-disabled-bg:           transparent !default;
+
+// Inverted navbar brand label
+$navbar-inverse-brand-color:                $navbar-inverse-link-color !default;
+$navbar-inverse-brand-hover-color:          #42C5ED !default;
+$navbar-inverse-brand-hover-bg:             transparent !default;
+
+// Inverted navbar toggle
+$navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 10%) !default;
+$navbar-inverse-toggle-icon-bar-bg:         #42C5ED !default;
+$navbar-inverse-toggle-border-color:        #42C5ED !default;
 
 @import "bootstrap/bootstrap";
 
@@ -19,6 +43,57 @@ body {
   background-position: top center;
   background-size: 100% auto;
   background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.white-text-with-shadow {
+    color: #fff; 
+    text-shadow: 2px 2px 2px rgba(40, 40, 40, 1);
+}
+
+button, h1, h2, h3, h4, h5, h6, li, .oswald-font {
+  font-family: 'Oswald-Bold', helvetica, arial, sans-serif;
+}
+
+.winner-page {
+    .carousel .item{
+        background-color: transparent;
+        padding-left: 64px;
+        padding-right: 80px;
+    }
+
+    .carousel-control:hover, .carousel-control:focus, .carousel-control {
+        opacity: 1;
+    }
+
+    .carousel-control.left,
+    .carousel-control.right{
+        background-image: none;
+    }
+    
+    .carousel-control span {
+        background-color: #FFF;
+        border-radius: 100px;
+        padding: 7px;
+        color: #000;
+    }
+    
+    .img-circle {
+        border: 3px solid #FFF;
+        display: inline-block;
+    }
+
+    .winner-p {
+        margin-top: 5px;
+        color: #fff; 
+        font-family: 'Oswald-Bold', helvetica, arial, sans-serif; 
+        text-shadow: 2px 2px 2px rgba(40, 40, 40, 1); 
+        /* letter-spacing: 1px; */
+    }
+}
+
+.img-ticket {
+    margin-top: 5px;
 }
 
 .panel-inactive {
@@ -33,17 +108,30 @@ body {
     margin-top: 20px;
 }
 
-.overvideo-trivia {
+.overvideo-trivia, .overvideo-instant-win {
     padding-top: 8%; 
     padding-bottom: 50%; 
     position: relative;
     background-color: rgba(0, 0, 0, 0.7);
 }
 
+.overvideo-points-feedback {
+    padding-top: 38%; 
+    position: relative;
+}
+
 .img-circle-overvideo {
     margin: 0 auto; 
     width: 100%; 
     border: 6px solid #fff;
+}
+
+.img-circle-overvideo.right {
+    border-color: #43b34b;
+}
+
+.img-circle-overvideo.wrong {
+    border-color: #ff0000;
 }
 
 .home-carousel-li.active { color: #000; }
@@ -58,22 +146,40 @@ body {
     top: 10px;
     border-radius: 50%; 
     margin: 0 auto;
-    background-color: #fff;
+    background-color: #003466;
 
     -webkit-box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 1);
     -moz-box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 1);
     box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 1);
 }
 
+.done-carousel-circle {
+    position: absolute; top: -15px; right: -10px;
+}
+
+.done-carousel-circle-children {
+    color: #fff;
+    padding-top: 2px;
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%; 
+    border: 2px solid #fff;
+    margin: 0 auto;
+    background-color: #3EDE56;
+}
+
+.home-carousel-circle-children-extra {
+    width: 50px; height: 50px; 
+    border-radius: 50%; 
+    margin: 8% auto 0 auto;
+    background-color: rgba(66, 197, 237, 0.7);
+}
+
 .home-carousel-circle-children.active {
-    background-color: #003466;
+    /* background-color: #003466; */
 }
 
 p.oblique { font-style:oblique } 
-
-button, h1, h2, h3, h4, h5, h6, li {
-  font-family: 'Oswald-Bold', helvetica, arial, sans-serif;
-}
 
 .panel-carousel {
   -webkit-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
@@ -811,6 +917,10 @@ height: 100%;
 
 /* CUSTOM */
 @media (max-width: $screen-sm-min) {
+    body {
+        background: #57d0ff;
+    }
+
     .img-profile { max-height: 64px; }
     .border-right { border-right: 1px solid #e4e4e4; }
     hr { clear: both; }
@@ -839,7 +949,6 @@ height: 100%;
             font-size: 16px;
             color: #fff; 
             text-transform: uppercase; 
-            margin-top: 15px;
         }
         h4 {
             font-size: 10px;
@@ -849,8 +958,8 @@ height: 100%;
         }
     }
 
-    .overvideo-trivia {
-        padding-top: 3%;
+    .overvideo-trivia, .overvideo-instant-win {
+        padding-top: 0;
         h2 {
             font-size: 16px;
         }
@@ -865,6 +974,10 @@ height: 100%;
 }
 
 @media (max-width: $screen-md-min) {
+    .margin-top-15-mobile {
+        margin-top: 15px;
+    }
+
     .cta {
         .panel.cta-stream {
             .panel-body {
@@ -907,7 +1020,7 @@ height: 100%;
         background-image: none; 
     }
     .container {
-        max-width: 960px; //1060px;
+        max-width: 810px;
     }
 
     /* Remove the padding we set earlier */
@@ -986,11 +1099,15 @@ height: 100%;
 
 @media (min-width: $screen-lg-min) {
     .container {
-        max-width: 960px;
+        max-width: 810px;
     }
     .panel {
         .yes-pad {
             padding: 0 $panel-body-padding 0 $panel-body-padding;
         }
+    }
+
+    .home-carousel-circle-children-extra {
+        margin: 10% auto 0 auto;
     }
 }

@@ -1,0 +1,23 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container-fluid" ng-app="MobileStreamCalltoactionApp" ng-controller="MobileStreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= Calltoaction.active_extra.count %>')">   
+
+  <%= render partial: "/application/header" %>
+
+  <div id="calltoaction-stream">
+    <% @calltoactions.each do |calltoaction| %>
+      <%= render partial: "/calltoaction/stream_single_calltoaction", locals: { calltoaction: calltoaction, type: "extra" } %>
+    <% end %>
+  </div>
+
+  <div class="row">      
+    <div class="col-sm-6 col-sm-offset-3">
+      <div id="append-other" class="text-center" style="margin-bottom: 20px;">
+        <button class="btn btn-primary" href="javascript: void(0)" onclick="appendCalltoaction('extra')">CARICA ALTRI</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<%#= render partial: "/application/footer" %>

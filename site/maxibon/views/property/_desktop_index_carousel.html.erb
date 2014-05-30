@@ -1,0 +1,64 @@
+<div class="row hidden-xs" style="padding-bottom: 20px;">
+  <!-- DESKTOP CAROUSEL -->
+  <div class="col-md-12 col-md-offset-0 text-center home-carousel" style="margin-bottom: 20px;">
+    <div class="jcarousel-wrapper" style="padding: 0 30px; margin-top: 0;">
+        <div class="jcarousel">
+            <ul>
+              <% i = 1 %>
+              <% calltoactions.each do |calltoaction| %>
+                <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>">
+
+                  <div style="position: relative;">
+                    <div class="home-carousel-circle">
+                      <div class="home-carousel-circle-children <%= "active" if calltoaction.id == @calltoactions.first.id %>" id="home-carousel-circle-children-<%= calltoaction.id %>"></div>
+                    </div>
+                  </div>
+
+                  <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>)">
+                    <div class="col-sm-12" style="padding: 0 40px;">
+                      <img src="<%= calltoaction.image %>" style="width: 100%;">
+                    </div>
+                    <div class="col-sm-12" style="padding: 0 40px;">
+
+                      
+                      <div id="calltoaction-item-carousel-<%= calltoaction.id %>" style="position: relative;" class="<%= "hidden" unless calltoaction_done? calltoaction %>">
+                        <div class="done-carousel-circle">
+                          <div class="done-carousel-circle-children">
+                            <span class="glyphicon glyphicon-ok"></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.try(:first).id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
+                          <div class="panel-body">
+                              <div class="row">
+                                  <div class="col-sm-4 text-left">
+                                    <h2 style="margin-top: 0; margin-bottom: 0;">#<%= i %></h2>
+                                  </div>
+                                  <div class="col-sm-8 text-left" style="padding-left: 0;">
+                                      <h5 style="margin: 0; padding-left: 0; text-transform: uppercase; word-wrap: break-word"><%= calltoaction.title %></h5>
+                                  </div>
+                              </div>                                        
+                          </div>
+                      </div>
+                    </div>                         
+                  </div>
+
+                </li>
+                <% i = i + 1 %>
+              <% end %>
+            </ul>
+        </div>
+
+        <!-- PREV/NEXT -->
+        <a href="#" class="jcarousel-control-prev"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span></a>
+        <a href="#" class="jcarousel-control-next"><span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span></a>
+
+        <!-- PAGINATION -->
+        <p class="jcarousel-pagination">
+            <!-- PAGINATION GENERATE HERE -->
+        </p>
+
+    </div>
+  </div>
+</div>

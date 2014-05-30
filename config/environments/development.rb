@@ -40,8 +40,7 @@ Fandom::Application.configure do
 
   Paperclip.options[:command_path] = "/usr/local/bin"
 
-
-  # email
+  # EMAIL GMAIL
   config.action_mailer.perform_deliveries = true
   config.action_mailer.default_url_options = { :host => 'localhost' }
 
@@ -49,9 +48,11 @@ Fandom::Application.configure do
   config.action_mailer.smtp_settings = {
       :address              => "smtp.gmail.com",
       :port                 => 587,
-      :user_name            =>  ENV["APP_EMAIL"],
-      :password             =>  ENV["APP_PASSWORD"],
+      :user_name            => ENV["EMAIL_ADDRESS"],
+      :password             => ENV["EMAIL_PASSWORD"],
       :authentication       => 'plain',
       :enable_starttls_auto => true
   }
+
+  
 end

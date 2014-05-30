@@ -52,7 +52,29 @@ module ConfigUtils
       end
     end
     config.assets.precompile += site.assets_precompile
+    #register_omniauth_for_site(site)
   end
+
+=begin
+  def register_omniauth_for_site(site)
+    Rails.application.config.middleware.use OmniAuth::Builder do
+      config =  Rails.configuration
+      debugger
+      begin
+        provider "twitter_#{site.id}".to_sym, config.deploy_settings["sites"]["#{site.id}"]["twitter"]["app_id"], config.deploy_settings["sites"]["#{site.id}"]["twitter"]["app_secret"]
+      rescue Exception => e
+        puts('twitter integration disabled')
+      end
+      begin
+        provider "facebook_#{site.id}".to_sym, config.deploy_settings["sites"]["#{site.id}"]["facebook"]["app_id"], config.deploy_settings["sites"]["#{site.id}"]["facebook"]["app_secret"], :scope => 'email, user_birthday, read_stream, publish_stream', :display => 'popup'
+      rescue Exception => e
+        puts('facebook integration disabled')
+      end
+    end
+
+    OmniAuth.config.on_failure = Proc.new { |env| [302, { 'Location' => "/auth/failure", 'Content-Type'=> 'text/html' }, []] }
+  end
+=end
   
   # Load Fandom sites configurations from the config/sites directory
   #  enabled_sites - consider only sites listed in this array. If empty, take all sites

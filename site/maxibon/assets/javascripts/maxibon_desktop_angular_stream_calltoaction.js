@@ -14,6 +14,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
   var playpressed_hash = {};
   var correctytplayer_hash = {};
 
+  var overvideo_feedback_timeout;
+
   // Inizializzazione dello scope.
   $scope.init = function(current_user, calltoaction_video_code, calltoaction_id) {
     $scope.current_user = current_user;
@@ -57,10 +59,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     }
   };
 
-  $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, index) {
+  $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, index, type) {
     key = 'home-video';
     if($scope.youtube_api_ready && ytplayer_hash[key]) {
-      $http.post("/update_calltoaction_content", { id: calltoaction_id, index: index })
+      $http.post("/update_calltoaction_content", { id: calltoaction_id, index: index, type: type })
         .success(function(data) {
           $scope.calltoaction_id = calltoaction_id;
           $scope.calltoaction_video_code = calltoaction_video_code;
@@ -75,12 +77,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $(".home-carousel-li").removeClass("active");
           $("#home-carousel-li-" + calltoaction_id).addClass("active");
 
-          $(".home-carousel-circle-children").removeClass("active");
-          $("#home-carousel-circle-children-" + calltoaction_id).addClass("active");
+          if(type != "extra") {
+            $(".home-carousel-circle-children").removeClass("active");
+            $("#home-carousel-circle-children-" + calltoaction_id).addClass("active");
+          }
+
+          flushTimeoutFeedback(); // When I change video and a Timout is running.
 
           $(".panel-carousel").removeClass("panel-default").removeClass("panel-inactive").addClass("panel-inactive");
           $("#panel-carousel-" + calltoaction_id).removeClass("panel-inactive").addClass("panel-default");
 
+          correctytplayer_hash[key] = false;
           playpressed_hash[key] = false;
 
           ytplayer_hash[key].cueVideoById(calltoaction_video_code);
@@ -95,10 +102,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
   $window.onYouTubePlayerReady = function(event) {
   }; // onYouTubePlayerReady
 
-  $window.closeShareAndOpenDenied = function(provider) {
-    $("#share-modal").modal("hide");
-    $("#share-" + provider + "-disable-modal").modal("show");
-  }; // closeShareAndOpenDenied
+  $window.flushTimeoutFeedback = function() {
+    $timeout.cancel(overvideo_feedback_timeout);//HERE
+    $("#home-overvideo-feedback-points").html("");
+  }; // onYouTubePlayerReady
 
   // Callback chiamata quando lo stato del video viene modificato.
   $window.onPlayerStateChange = function(newState) {  
@@ -112,53 +119,75 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
         if(!playpressed_hash[key]) {
           $http.post("/update_play_interaction.json", { calltoaction_id: calltoactionactive.replace("calltoaction-active-", "") })
             .success(function(data) {
-              // Evento salvato correttamente.   
-              $("#home-overvideo-title").html("");         
+
+              // OVERVIDEO FEEDBACK POINTS.
+              if(data.overvideo_feedback) {
+                $(".current_user_points").html(data.points_updated);
+                $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
+                overvideo_feedback_timeout = $timeout(function() {
+                  $("#home-overvideo-feedback-points").html("");
+                }, 3000);  
+              } 
+
+              // UPDATE CAROUSEL BADGE.
+              if(data.calltoaction_complete) {
+                $("#calltoaction-item-carousel-" + $scope.calltoaction_id).removeClass("hidden");
+              }
+
+              $("#home-overvideo-title").html(""); // REMOVE TITLE LAYER.        
             }).error(function() {
-              // Errore nel salvataggio dell'evento.
+              // ERROR.
             });
             playpressed_hash[key] = true;
           }
       } else if(player_state == 0){
         playpressed_hash[key] = false;
-        $http.post("/calltoaction_overvideo_end", { id: $scope.calltoaction_id, end: correctytplayer_hash[key] })
+        $http.post("/calltoaction_overvideo_end", { id: $scope.calltoaction_id, end: correctytplayer_hash[key], type: $("#" + key).attr("type") })
           .success(function(data) {
             $("#home-overvideo").html(data);
           });
       }
   }; // onPlayerStateChange
 
-  $window.openShareWith = function(property_id, calltoaction_id) {
-    $http.post("/" + property_id + "/" + calltoaction_id + "/generate_share_modal")
-        .success(function(data) {
-          $("#share-modal-container").html(data);
-          $("#share-modal").modal("show");
+  $window.shareWith = function(provider, interaction_id, calltoaction_id) {
 
-        }).error(function() {
-          // ERROR.
-        });
-  };
-
-  $window.shareWith =function(provider, interaction_id) {
     $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
     $("#share-" + provider + "-" + interaction_id).html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
 
     $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
-        .success(function(data) {
-          $("#share-" + provider + "-" + interaction_id).attr('disabled', false);
+      .success(function(data) {
+        $(".current_user_points").html(data.points_updated);
+
+        // Modifico lo stato del bottone e notifico la condivisione.
+        $("#share-" + provider + "-" + interaction_id).attr('disabled', false); // Modifico lo stato del bottone.
+        $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI CON " + provider.toUpperCase());
+
+        $("#share-modal-" + calltoaction_id).modal("hide");
+
+        if(provider == "email") {
+          $("#share-email-address-" + interaction_id).val("");
           $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI");
 
-          // TODO: COLOR THE POINT BADGE
- 
-        }).error(function() {
-          // ERROR.
-        });
-  }
+          if(data.email_correct) {
+            $("#share-" + calltoaction_id).addClass("btn-success");
+            $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
+          } else {
+            $("#invalid-email-modal").modal("show"); 
+          }
 
-  $window.closeShareAndOpenWarningModal = function(calltoaction_id, share_type) {
-    $("#share-modal").modal("hide");
-    $("#first-share-modal-" + share_type).modal("show");
-  }; // closeShareAndOpenWarningModal
+        } else {
+          $("#share-" + calltoaction_id).addClass("btn-success");
+          $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
+        }
+
+        if(data.calltoaction_complete) {
+          $("#calltoaction-item-carousel-" + $scope.calltoaction_id).removeClass("hidden");
+        }
+
+      }).error(function() {
+        // ERRORE
+      });
+  };
 
   $window.updateTriviaAnswer = function(interaction_id, answer_id) {
     $(".button-inter-" + interaction_id).attr('disabled', true);
@@ -175,11 +204,25 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
               $("#home-overvideo").html("");
             }
 
+            // OVERVIDEO FEEDBACK POINTS
+            if(data.overvideo_feedback) {
+              $(".current_user_points").html(data.points_updated);
+              $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
+              overvideo_feedback_timeout = $timeout(function() {
+                $("#home-overvideo-feedback-points").html("");
+              }, 3000);  
+            } 
+
+            if(data.calltoaction_complete) {
+              $("#calltoaction-item-carousel-" + $scope.calltoaction_id).removeClass("hidden");
+            }
+
             if(data.current_correct_answer == answer_id) {
               correctytplayer_hash[key] = true;
             } else {
               correctytplayer_hash[key] = false;
             }
+
           }).error(function() {
             // ERROR.
           });

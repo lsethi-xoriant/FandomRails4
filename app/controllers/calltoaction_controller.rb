@@ -172,7 +172,17 @@ class CalltoactionController < ApplicationController
       ui.update_attribute(:counter, ui.counter + 1)
     else
       ui = Userinteraction.create(user_id: user_id, interaction_id: i.id)
+      risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
+      if (ui.points + ui.added_points) > 0
+        if mobile_device?
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+        else
+          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+        end
+      end
     end
+
+    risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
 
     risp["interaction_save"] = !ui.errors.any? # Ritorno lo stato del salvataggio.
     respond_to do |format|
@@ -208,7 +218,11 @@ class CalltoactionController < ApplicationController
 
   def update_calltoaction_content
     response = Hash.new
-    calltoaction = Calltoaction.active.find(params[:id])
+    if params[:type] == "extra"
+      calltoaction = Calltoaction.active_extra.find(params[:id])
+    else
+      calltoaction = Calltoaction.active.find(params[:id])
+    end
 
     response = {
       "share_content" => (render_to_string "/calltoaction/_share_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
@@ -221,47 +235,58 @@ class CalltoactionController < ApplicationController
   end
 
   def calltoaction_overvideo_end
-    calltoaction = Calltoaction.active.find(params[:id])
-    i = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
 
-    if i.resource_type == "Quiz" && i.resource.quiz_type
-      ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
- 
-      render_calltoaction_overvideo_end_str = String.new
-      if params[:end]
-        calltoaction_correct_answer = i.resource.answers.find_by_correct(true)
-        if calltoaction_correct_answer.calltoaction
-          if mobile_device?
-            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_instant_win", 
-              locals: { }, layout: false, formats: :html)
-          else
-            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
-              locals: { }, layout: false, formats: :html)
-          end
-        end
+    if params[:type] == "extra"
+      if mobile_device?
+        render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
+          locals: { }, layout: false, formats: :html)
       else
-        calltoaction_question = i.resource.question
+        render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
+          locals: { }, layout: false, formats: :html)
+      end     
+    else
+      calltoaction = Calltoaction.active.find(params[:id])
 
-        calltoaction_answers = Hash.new
-        calltoaction_user_answer = ui ? ui.answer_id : -1
+      i = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
 
-        calltoaction_answers = Array.new
-        i.resource.answers.each do |a|
-          calltoaction_answers << a
-        end
+      if i.resource_type == "Quiz" && i.resource.quiz_type
+        ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
 
-        interaction_points = i.points + i.added_points
-
-        if mobile_device?
-          render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", #_undervideo_trivia
-            locals: { interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+        render_calltoaction_overvideo_end_str = String.new
+        if params[:end]
+          calltoaction_correct_answer = i.resource.answers.find_by_correct(true)
+          if calltoaction_correct_answer.calltoaction
+            if mobile_device?
+              render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_instant_win", 
+                locals: { }, layout: false, formats: :html)
+            else
+              render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
+                locals: { }, layout: false, formats: :html)
+            end
+          end
         else
-          render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", 
-            locals: { interaction_points: interaction_points, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+          calltoaction_question = i.resource.question
+
+          calltoaction_answers = Hash.new
+          calltoaction_user_answer = ui ? ui.answer_id : -1
+
+          calltoaction_answers = Array.new
+          i.resource.answers.each do |a|
+            calltoaction_answers << a
+          end
+
+          interaction_points = i.points + i.added_points
+
+          if mobile_device?
+            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", #_undervideo_trivia
+              locals: { interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+          else
+            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", 
+              locals: { interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+          end
+
         end
-
       end
-
     end
 
     respond_to do |format|
@@ -353,7 +378,14 @@ class CalltoactionController < ApplicationController
     if ui && (i.resource.quiz_type == "VERSUS" || ans.calltoaction)
       ui.update_attributes(answer_id: params[:answer_id], counter: (ui.counter + 1))
     elsif ui.blank?
-      Userinteraction.create(answer_id: params[:answer_id], user_id: current_user.id, interaction_id: params[:interaction_id])    
+      ui = Userinteraction.create(answer_id: params[:answer_id], user_id: current_user.id, interaction_id: params[:interaction_id]) 
+      if (ui.points + ui.added_points) > 0
+        if mobile_device?
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+        else
+          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+        end
+      end
     end
 
     if i.resource.quiz_type == "VERSUS"
@@ -365,6 +397,9 @@ class CalltoactionController < ApplicationController
       risp["current_correct_answer"] = i.resource.answers.find_by_correct(true).id
       risp["next_calltoaction"] = ans.calltoaction if ans.calltoaction
     end
+
+    risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
+    risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
 
     respond_to do |format|
       format.json { render :json => risp.to_json }
@@ -382,22 +417,52 @@ class CalltoactionController < ApplicationController
   end
 
   def share
+    risp = Hash.new
+
     i = Interaction.find(params[:interaction_id].to_i)
     ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
 
-    ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
-
-    if params[:provier] = "facebook" && current_user && current_user.facebook
-      if Rails.env.production?
-        current_user.facebook.put_wall_post(" ", { name: i.resource.description, link: "#{ request.referer }", picture: i.resource.picture.url })
-      else
-        current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
+    if ui
+      ui.update_attribute(:counter, ui.counter + 1)
+    else
+      ui = Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i)
+      if mobile_device?
+        risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
       end
+    end
+
+    risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
+
+    if params[:provider] == "facebook" && current_user && current_user.facebook
+      if Rails.env.production?
+        current_user.facebook.put_wall_post(" ", { name: i.resource.description, link: "#{ request.referer }", picture: "#{ root_url }#{i.resource.picture.url}" })
+      else
+        #current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
+      end
+      risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
       respond_to do |format|
-        format.json { render :json => "share".to_json }
+        format.json { render :json => risp.to_json }
       end 
-    elsif params[:provier] = "twitter" && current_user && current_user.twitter
-      current_user.twitter.update(i.resource.message)
+    # elsif params[:provier] = "twitter" && current_user && current_user.twitter
+    #   current_user.twitter.update(i.resource.message)
+    elsif params[:provider] == "email" && current_user
+      if params[:share_email_address] =~ Devise.email_regexp
+
+        SystemMailer.share_content_email(current_user, params[:share_email_address], i.calltoaction).deliver
+
+        ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
+        risp["email_correct"] = true
+        risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
+
+        respond_to do |format|
+          format.json { render :json => risp.to_json }
+        end 
+      else
+        risp["email_correct"] = false
+        respond_to do |format|
+          format.json { render :json => risp.to_json }
+        end
+      end
     else
       respond_to do |format|
         format.json { render :json => "current-user-no-provider" }

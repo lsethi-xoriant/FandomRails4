@@ -5,6 +5,19 @@ class ProfileController < ApplicationController
   include ProfileHelper
   include ApplicationHelper
 
+  def complete_for_contest
+    unless current_user.update_attributes(params[:user])
+      render_error_str =  (render_to_string "/profile/_form_error", locals: { resource: current_user }, layout: false, formats: :html)
+    else
+      #
+    end
+
+    respond_to do |format|
+      format.js { render "complete_for_contest", locals: { errors: current_user.errors.any?, render_error_str: render_error_str.to_json }}
+    end
+
+  end
+
   def index
   end
 

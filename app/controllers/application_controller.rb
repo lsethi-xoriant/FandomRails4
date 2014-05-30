@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
-  # before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" }
+  before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" }
 
   def authenticate_admin
     authenticate_or_request_with_http_basic do |username, password|
@@ -33,6 +33,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def landing
+  end
+
   def sign_in_fb_from_page
     cookies[:connect_from_page] = request.referrer
     redirect_to "/auth/facebook" 
@@ -46,6 +49,9 @@ class ApplicationController < ActionController::Base
   def sign_in_simple_from_page
     cookies[:connect_from_page] = request.referrer
     redirect_to "/users/sign_up"
+  end
+
+  def how_to
   end
 
   # curl -F 'client_id=[CLIENT_ID]' \

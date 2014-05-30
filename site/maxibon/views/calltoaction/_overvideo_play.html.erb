@@ -10,19 +10,13 @@
     <div class="overvideo-canvas">
         <div class="overvideo-content">
             <div class="row">
-                <div class="col-md-12 text-center">
-                    <h1>#<%= calltoaction_index %> - <%= calltoaction.title %></h1>
+                <div class="col-sm-10 col-sm-offset-1 text-center" style="background: #003466; border-radius: 10px;">
+                    <h1><%= "##{ calltoaction_index } - " if calltoaction_index > 0 %><%= calltoaction.title %></h1>
                     <h4 style="color: #fff;"><span style="margin-right: 15px;">Guarda il video e ottieni fino a <%= inter_quiz_points %> biglietti</span>
                       <% inter_quiz_points.times do |i| %>
                         <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
                       <% end %>
                     </h4>                  
-                </div>
-                <div class="col-md-1 col-xs-1 text-center"></div>
-                <div class="col-md-10 col-xs-10 text-center">
-                  <div class="row">
-                    <div class="col-xs-4 text-center"></div>
-                  </div>
                 </div>
             </div>
         </div>

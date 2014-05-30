@@ -10,25 +10,25 @@
                     <div class="row">
 
                         <% calltoaction_answers.each do |answer|%>
-                          <div class="col-xs-4 text-center">
 
+                          <div class="col-xs-4 text-center hidden-xs" style="padding-left: 15px; padding-right: 15px;">
                             <!-- DESKTOP VIEW -->
-                            <a class="hidden-xs" href="javascript: void(0)" onclick="updateTriviaAnswer(<%= interaction_overvideo_end_id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" class="img-circle img-responsive img-circle-overvideo" ></a>
-
-                            <!-- MOBILE VIEW -->
-                            <a class="hidden-sm hidden-md hidden-lg" href="javascript: void(0)" onclick="updateTriviaAnswer(<%= calltoaction_parent_id %>, <%= interaction_overvideo_end_id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" class="img-circle img-responsive img-circle-overvideo" ></a>
-                            
-                            <!-- BUTTON SIMPLE VIEW -->
-                            <!-- <button type="button" class="btn <%= calltoaction_user_answer == answer.id ? "btn-primary" : "btn-info" %> btn-block" onclick="updateTriviaAnswer(<%= interaction_overvideo_end_id %>, <%= answer.id %>)"><%= answer.text %></button> -->
-
+                            <a href="javascript: void(0)" onclick="updateTriviaAnswer(<%= interaction_overvideo_end_id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" class="img-circle img-responsive img-circle-overvideo <%= (answer.correct ? "right" : "wrong") if calltoaction_user_answer == answer.id %>"></a>
+                            <h5 class="hidden-xs" style="color: #fff;"><%= answer.text %></h5>
                           </div>
+
+                          <div class="col-xs-4 text-center hidden-sm hidden-md hidden-lg">
+                            <!-- MOBILE VIEW -->
+                            <a href="javascript: void(0)" onclick="updateTriviaAnswer(<%= calltoaction_parent_id %>, <%= interaction_overvideo_end_id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" class="img-circle img-responsive img-circle-overvideo <%= (answer.correct ? "right" : "wrong") if calltoaction_user_answer == answer.id %>" ></a>
+                          </div>
+
                         <% end %>
                     </div>
                 </div>
                 <div class="hidden-xs col-xs-12 text-center" style="margin-top: 30px;">
                     <h4 style="color: #fff;"><span style="margin-right: 15px;">Rispondi e ottieni <%= interaction_points %> biglietti</span>
                         <% interaction_points.times do |i| %>
-                            <img src="/assets/maxibon/small-ticket.png">
+                            <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
                         <% end %>
                     </h4>
                 </div>

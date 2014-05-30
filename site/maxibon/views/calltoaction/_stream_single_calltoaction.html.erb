@@ -1,3 +1,9 @@
+<% inter_quiz_points = calltoaction.interactions.where("resource_type<>'Share'").sum("points") %>
+<% inter_quiz_points = inter_quiz_points + calltoaction.interactions.where("resource_type<>'Share'").sum("added_points") %>
+
+<% inter_share = calltoaction.interactions.where("resource_type='Share'") %> 
+<% inter_quiz_points = inter_quiz_points + inter_share.maximum("points") if inter_share.count > 0 %>
+
 <div class="row">      
   <div class="col-sm-6 col-sm-offset-3">
     <div class="panel panel-default no-pad">
@@ -8,7 +14,7 @@
           <div class="col-md-12">
             <% if calltoaction.media_type == "VIDEO" %>
                 <div class="video flex-video widescreen" style="background:#222;">
-                  <div id="home-stream-video-<%= calltoaction.id %>" iid="calltoaction-active-<%= calltoaction.id %>"></div>
+                  <div id="home-stream-video-<%= calltoaction.id %>" type="<%= type %>" iid="calltoaction-active-<%= calltoaction.id %>"></div>
                   <!-- OVERVIDEO AREA -->
                   <div id="home-overvideo-<%= calltoaction.id %>"></div>
                 </div>
@@ -18,12 +24,25 @@
           </div>
         </div>
 
-        <div class="row" style="height: 200px;">
-          <div class="col-md-12 text-center">
-            <h2><%= calltoaction.title %></h2>
-          </div>
+        <div class="row">
           <!-- UNDERVIDEO AREA HERE -->
           <div id="home-undervideo-<%= calltoaction.id %>"></div>
+          
+          <div class="col-md-12 text-center">
+            <h3 style="margin: 0 0 15px 0;"><%= calltoaction.title %></h3>
+          </div>
+          <div class="col-sm-12 text-center">
+            <h5>Guarda il video e ottieni fino a <%= inter_quiz_points %> biglietti</h5>                  
+          </div>
+          <div class="col-sm-12 text-center" style="margin-bottom: 15px;">
+            <% inter_quiz_points.times do |i| %>
+              <img class="img-ticket" src="/assets/maxibon/small-ticket.png" style="width: 40px;">
+            <% end %>
+          </div>
+
+          <div class="col-md-12" id="share-footer">
+            <%= render partial: "/calltoaction/share_footer_mobile", locals: { calltoaction: calltoaction } %>
+          </div>
         </div>
 
       </div>         
