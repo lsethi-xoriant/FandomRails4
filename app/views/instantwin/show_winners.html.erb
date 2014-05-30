@@ -10,37 +10,36 @@
     <div class="col-sm-12 hidden-xs" style="min-height: 300px;">
     <% if @winners.any? %>
 		  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-		
-		  <!-- Wrapper for slides -->
-		  <div class="carousel-inner">
-		    <div class="item active">
-		    	<% i = 1 %>
-		      <% @winners.each do |winner| %>                         
-            <div class="col-sm-2">
-            	<div class="text-center">
-            		<img class="img-circle img-responsive" src="<%= winner['avatar'] %>" />
-            	</div>
-            	<div class="text-center">
-            		<p class="winner-p"><%= winner['name'] %></p>
-            	</div>
-            </div>
-                
-            <% if i % @winner_per_page == 0 && i != @winners.count %>
-              </div><div class="item">
+  		  <!-- Wrapper for slides -->
+  		  <div class="carousel-inner">
+  		    <div class="item active">
+  		    	<% i = 1 %>
+  		      <% @winners.each do |winner| %>                         
+              <div class="col-sm-2">
+              	<div class="text-center">
+              		<img class="img-circle img-responsive" src="<%= winner['avatar'] %>" />
+              	</div>
+              	<div class="text-center">
+              		<p class="winner-p"><%= winner['name'] %></p>
+              	</div>
+              </div>
+                  
+              <% if i % @winner_per_page == 0 && i != @winners.count %>
+                </div><div class="item">
+              <% end %>
+  				    <% i = i + 1 %>
             <% end %>
-				    <% i = i + 1 %>
-          <% end %>
-		    </div>
-		  </div>
-		
-		  <!-- Controls -->
-		  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-		    <span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span>
-		  </a>
-		  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-		    <span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span>
-		  </a>
-		  </div>
+  		    </div>
+  		  </div>
+  		
+  		  <!-- Controls -->
+  		  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+  		    <span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span>
+  		  </a>
+  		  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+  		    <span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span>
+  		  </a>
+  		  </div>
       </div>
         
       <div class="row visible-xs">
