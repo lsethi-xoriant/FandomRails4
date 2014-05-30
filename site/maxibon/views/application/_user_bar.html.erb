@@ -8,7 +8,10 @@
         <span class="icon-bar"></span>
       </button>
       <% if current_user %>
+
+        <!--
         <a href="/extra" class="navbar-brand hidden-xs oswald-font"><i class="fa fa-play-circle-o" style="font-size: 21px;"></i>&nbsp;&nbsp;VIDEO EXTRA</a>
+        -->
 
         <button class="hidden-sm hidden-md hidden-lg btn yellow-point current_user_points" style="float: right; margin-top: 8px; margin-right: 10px;"><%= current_user ? (get_current_contest_points current_user.id) : 0 %>
         <button onclick="openInstantWinModal()" style="float: right; margin-top: 8px; margin-right: 10px;" class="hidden-sm hidden-md hidden-lg btn btn-danger">GIOCA</button>
@@ -24,10 +27,18 @@
         <% if current_user %>
           <li><a href="/">HOME</a></li> 
           <li><a href="/profile/edit">PROFILO</a></li>
-          <li><a href="/extra">VIDEO EXTRA</a></li>
-          <li><a href="/how_to">SCOPRI COME</a></li>
+          <!--<li><a href="/extra">VIDEO EXTRA</a></li>-->
+          <li><a href="/how_to">SCOPRI COME PARTECIPARE</a></li>
           <li><a href="/winners">VINCITORI</a></li>
           <li><a href="/users/sign_out">ESCI</a></li>
+
+          <% if can? :access, :easyadmin %>
+            <li><a href="/easyadmin">EASYADMIN</a></li>
+          <% end %>
+          <% if can? :manage, :all %>
+            <li><a href="/admin">ADMIN</a></li>
+          <% end %>
+
         <% else %>
           <li><a href="/users/sign_up">LOGIN</a></li>
         <% end %>

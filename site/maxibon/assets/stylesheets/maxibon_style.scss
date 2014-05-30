@@ -997,13 +997,15 @@ height: 100%;
 
 }
 
+@media (max-width: 790px) {
+    .margin-top-15-mobile {
+        margin-top: 15px;
+    }
+}
+
 @media (max-width: $screen-md-min) {
     .landing {
         background: #00cdf0 !important;
-    }
-
-    .margin-top-15-mobile {
-        margin-top: 15px;
     }
 
     .cta {
