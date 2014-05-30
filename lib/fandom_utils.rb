@@ -31,7 +31,15 @@ module FandomUtils
     configure_environment_for_site(site)
     configure_omniauth_for_site(site)
 
-    redirect_to "/landing" if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController))
+    if site.disable_x_frame_options_header
+      response.headers.except! 'X-Frame-Options'      
+    end
+    if site.force_ssl
+      force_ssl()
+    end
+    if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController))
+      redirect_to "/landing"
+    end 
   end
 
   def configure_environment_for_site(site)
@@ -102,33 +110,18 @@ module FandomUtils
       @site_ids.include?(site.id)  
     end
   end
-
-  # Inverts a matcher
-  class NotMatcher
-    
-    def initialize(matcher)
-      @matcher = matcher
-    end
-    
-    def matches?(request)
-      ! @matcher.matches? request
-    end
-  end
-
-  # Matches requests that comes from another site
-  class RefererMatcher
-    def initialize(url)
-      @url = url
-    end
-
-    def matches?(request)
-      (request.env['HTTP_REFERER']=~/url/).to_f > 0      
-    end
-  end
-
   
   def get_model_from_name(name)
     return name.singularize.classify.constantize
+  end
+
+  def mobile_device?(request)
+    iphone = request.user_agent =~ /iPhone/ 
+    mobile = request.user_agent =~ /Mobile/
+    android = request.user_agent =~ /Android/  
+
+    # Mobile and Android identifica il MOBILE di tipo Android, altrimenti con solo Android abbiamo il TABLET.
+    return (iphone || (mobile && android))
   end
   
 end
