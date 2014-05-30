@@ -24,12 +24,12 @@ namespace :instant_win do
     contest = Contest.create(:title => "Maxibon Acquafan", :start_date => "03/06/2014 11:00:00 Rome", :end_date => "01/08/2014 23:59:59 Rome", :property_id => Property.first.id)
     periodicity_type_daily = PeriodicityType.create(:name => "Giornaliera", :period => 1)
     periodicity_type_maxibon_custom = PeriodicityType.create(:name => "60gg", :period => 60) 
-    contest_periodicity_1 = ContestPeriodicity.create(:title => "Ingresso gratuito Aquafan", :periodicity_type_id => periodicity_type_daily.id, :contest_id => contest.id)
-    contest_periodicity_2 = ContestPeriodicity.create(:title => "Pacchetto 5 ingressi evento David Guetta", :periodicity_type_id => periodicity_type_maxibon_custom.id, :contest_id => contest.id)
-    contest_periodicity_3 = ContestPeriodicity.create(:title => "Pacchetto 5 ingressi evento Aquafan", :periodicity_type_id => periodicity_type_maxibon_custom.id, :contest_id => contest.id)
-    InstantWinPrize.create(:title => "Ingresso Aquafan", :description => "Ingresso gratuito all'Aquafan di riccione", :contest_periodicity_id => contest_periodicity_1.id)
-    InstantWinPrize.create(:title => "Pacchetto 5 biglietti per David Guetta", :description => "Pacchetto di 5 biglietti per l'ingresso gratuito all'evento con David Guetta", :contest_periodicity_id => contest_periodicity_2.id)
-    InstantWinPrize.create(:title => "Pacchetto 5 biglietti per un evento serale Aquafan", :description => "Pacchetto di 5 biglietti per l'ingresso gratuito a un evento serale di Aquafan, verrai contatta Aquafan per sapere a che evento avrai accesso", :contest_periodicity_id => contest_periodicity_3.id)
+    contest_periodicity_1 = ContestPeriodicity.create(:title => "Ingresso gratuito giornaliero all'Aquafan", :periodicity_type_id => periodicity_type_daily.id, :contest_id => contest.id)
+    contest_periodicity_2 = ContestPeriodicity.create(:title => "Pacchetto di 5 biglietti per il Maxiparty con David Guetta", :periodicity_type_id => periodicity_type_maxibon_custom.id, :contest_id => contest.id)
+    contest_periodicity_3 = ContestPeriodicity.create(:title => "Pacchetto di 5 biglietti per un evento serale Aquafan", :periodicity_type_id => periodicity_type_maxibon_custom.id, :contest_id => contest.id)
+    InstantWinPrize.create(:title => "Ingresso gratuito giornaliero all'Aquafan", :description => "Ingresso gratuito all'Aquafan di riccione", :contest_periodicity_id => contest_periodicity_1.id)
+    InstantWinPrize.create(:title => "Pacchetto di 5 biglietti per il Maxiparty con David Guetta", :description => "Pacchetto di 5 biglietti per l'ingresso gratuito all'evento con David Guetta", :contest_periodicity_id => contest_periodicity_2.id)
+    InstantWinPrize.create(:title => "Pacchetto di 5 biglietti per un evento serale Aquafan", :description => "Pacchetto di 5 biglietti per l'ingresso gratuito a un evento serale di Aquafan, verrai contatta Aquafan per sapere a che evento avrai accesso", :contest_periodicity_id => contest_periodicity_3.id)
     create_wins_mb(contest)
   end
 
