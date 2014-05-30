@@ -46,6 +46,25 @@ body {
   background-attachment: fixed;
 }
 
+.profile {
+    .avatar.active {
+        background-color: #e4e4e4;
+    }
+    .profile-heading {
+        background-color: #ddf8ff;
+    }
+    h1, h2, h3, h4, h5, label {
+        color: #002f61;
+        text-transform: uppercase;
+    }
+}
+
+.landing-button {
+    width: 197px; height: 89px; 
+    background: url('/assets/maxibon/landing/fb-landing.png'); 
+    background-repeat: no-repeat;
+}
+
 .white-text-with-shadow {
     color: #fff; 
     text-shadow: 2px 2px 2px rgba(40, 40, 40, 1);

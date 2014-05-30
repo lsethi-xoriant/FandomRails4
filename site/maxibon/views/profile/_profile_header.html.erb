@@ -1,9 +1,13 @@
 <div class="row">
-  <div class="col-md-6 col-sm-6 ">
-    <div class="col-md-4 col-sm-4 col-xs-4 text-center">
-    <img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-responsive img-profile">
+  <div class="col-md-12 col-sm-12">
+    <div class="col-md-2 col-sm-2 col-xs-12 text-center">
+      <img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-responsive img-profile" style="margin-left: auto; margin-right: auto;">
     </div>
-    <div class="col-md-8 col-sm-8 col-xs-8">
+    <div class="col-md-10 col-sm-10 hidden-xs text-left">
+      <h3 style="text-transform: uppercase;"><%= "#{ current_user.first_name } #{ current_user.last_name }" %></h3>
+      <h5>BIGLIETTI <%= get_current_contest_points current_user.id %></h5>
+    </div>
+    <div class="col-xs-12 hidden-sm hidden-sm hidden-lg text-center">
       <h3 style="text-transform: uppercase;"><%= "#{ current_user.first_name } #{ current_user.last_name }" %></h3>
       <h5>BIGLIETTI <%= get_current_contest_points current_user.id %></h5>
     </div>
