@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-sm-12 text-center">
 
-    <% if share_inter = calltoaction.interactions.where("resource_type='Share'") %>
-      <% share_inter.each do |s| %>
+    <% if all_share_interactions(calltoaction).any? %>  
+      <% all_share_interactions(calltoaction).each do |s| %>
         <% if s.resource.share_type == "email" && current_user %>
 
           <!-- INVALID EMAIL MODAL -->
@@ -54,8 +54,8 @@
       <% end %>
     <% end %>
 
-    <% if share_inter = calltoaction.interactions.where("resource_type='Share'") %>
-      <% share_inter.each do |s| %>
+    <% if all_share_interactions(calltoaction).any? %>
+      <% all_share_interactions(calltoaction).each do |s| %>
         <% if s.resource.share_type == "facebook" %>
           <% if current_user && (auth = current_user.authentications.find_by_provider(s.resource.share_type.downcase)) %>
             <button id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="btn btn-fb" onclick="shareWith('<%= s.resource.share_type.downcase %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI CON FACEBOOK</button><img class="img-ticket" style="padding-left: 15px;" src="/assets/maxibon/small-ticket.png">

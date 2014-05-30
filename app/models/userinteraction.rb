@@ -186,7 +186,7 @@ class Userinteraction < ActiveRecord::Base
 
   # Return TRUE if the current calltoaction is already shared.
   def check_already_share_cta?
-    share_inter = self.interaction.calltoaction.interactions.where("resource_type='Share'")
+    share_inter = all_share_interactions(self.interaction.calltoaction)
     return !self.user.userinteractions.where("interaction_id in (?)", share_inter.map.collect { |u| u["id"] }).blank?
   end
   
