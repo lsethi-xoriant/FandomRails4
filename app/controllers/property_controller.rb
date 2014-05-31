@@ -9,6 +9,7 @@ class PropertyController < ApplicationController
       @calltoactions = cache_short('active_cta_mobile') { Calltoaction.active.limit(3).to_a }
     else
       @calltoactions = cache_short('active_cta') { Calltoaction.active_no_order.order("activated_at ASC").to_a }
+      @calltoactions_comingsoon = cache_short('future_cta') { Calltoaction.future_no_order.order("activated_at ASC").to_a }
     end
   end
 

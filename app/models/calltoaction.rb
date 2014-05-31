@@ -30,6 +30,8 @@ class Calltoaction < ActiveRecord::Base
   scope :active, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NULL OR (tags.text<>'step' AND tags.text<>'extra'))", Time.now).order("activated_at DESC") }
   scope :active_no_order, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NULL OR (tags.text<>'step' AND tags.text<>'extra'))", Time.now) }
 
+  scope :future_no_order, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NULL OR (tags.text<>'step' AND tags.text<>'extra'))", Time.now) }
+
   scope :active_extra, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NOT NULL AND tags.text='extra')", Time.now).order("activated_at DESC") }
   scope :active_extra_no_order, -> { includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NOT NULL AND tags.text='extra')", Time.now) }
 

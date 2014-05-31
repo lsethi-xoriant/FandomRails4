@@ -59,9 +59,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     }
   };
 
-  $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, index, type) {
+  $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, index, type, active) {
     key = 'home-video';
-    if($scope.youtube_api_ready && ytplayer_hash[key]) {
+    if($scope.youtube_api_ready && ytplayer_hash[key] && active) {
       $http.post("/update_calltoaction_content", { id: calltoaction_id, index: index, type: type })
         .success(function(data) {
           $scope.calltoaction_id = calltoaction_id;

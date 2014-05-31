@@ -10,7 +10,7 @@
       <div class="row" style="margin: 15px 0;">
         <%= render partial: "/application/header" %>
 
-        <%= render partial: "/property/desktop_index_carousel", locals: { calltoactions: @calltoactions } %>
+        <%= render partial: "/property/desktop_index_carousel", locals: { calltoactions: @calltoactions, calltoactions_comingsoon: @calltoactions_comingsoon } %>
 
         <div class="row">      
           <div class="col-md-12 col-md-offset-0">
@@ -33,6 +33,7 @@
                           <div id="home-overvideo-feedback-points"></div>
                         </div>
                     <% else %>
+                      <!-- NOT WORK CAROUSEL WITH IMAGE -->
                       <img src="<%= @calltoactions.first.image %>" style="width: 100%; margin-bottom: 15px;">
                     <% end %>
                   </div>

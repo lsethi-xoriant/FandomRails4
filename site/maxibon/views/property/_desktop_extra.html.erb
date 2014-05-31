@@ -17,7 +17,7 @@
                 <div class="jcarousel">
                     <ul>
                       <% @calltoactions.each do |calltoaction| %>
-                        <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, -1, 'extra')">
+                        <li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, -1, 'extra', true)">
 
                           <div style="position: relative; z-index: 10;">
                             <div class="home-carousel-circle">
