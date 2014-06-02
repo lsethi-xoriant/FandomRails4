@@ -1003,11 +1003,13 @@ height: 100%;
     }
 }
 
-@media (max-width: $screen-md-min) {
+@media (max-width: $screen-sm-min) {
     .landing {
         background: #fff !important;
     }
+}
 
+@media (max-width: $screen-md-min) {
     .cta {
         .panel.cta-stream {
             .panel-body {
