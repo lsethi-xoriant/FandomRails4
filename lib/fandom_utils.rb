@@ -84,7 +84,9 @@ module FandomUtils
       parts = caller[1].split(':')
       key = "#{parts[0]}:#{parts[1]}"
     end
-    "#{site.id}:#{key}"
+    result = "#{site.id}:#{key}"
+    logger.info("caching with key: #{result}")
+    result
   end
 
   # cache a block for a set amount of time
