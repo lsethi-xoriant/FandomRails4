@@ -31,6 +31,7 @@ module ConfigUtils
     attribute :enable_x_frame_options_header, :default => true
     # if the site is reached through HTTP redirects to HTTPS, and every other redirect will be set to HTTPS as well
     attribute :force_ssl, :default => false
+    attribute :force_facebook_tab, type: String
 
     def unbranded?
       self.id == 'fandom'

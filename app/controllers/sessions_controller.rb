@@ -47,7 +47,7 @@ class SessionsController < Devise::SessionsController
         flash[:notice] = "from_registration" if from_registration
 
         if request.site.force_facebook_tab
-          redirect_to force_facebook_tab
+          redirect_to request.site.force_facebook_tab
         else
           unless cookies[:connect_from_page].blank?
             connect_from_page = cookies[:connect_from_page]

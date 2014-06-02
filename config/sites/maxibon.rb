@@ -8,7 +8,7 @@ module Fandom
         'EMAIL_ADDRESS' => 'noreply@maxibon.it', 
       },
       enable_x_frame_options_header: false,
-      force_facebook_tab: 'https://www.facebook.com/testshado/app_208195102528120    ' 
+      force_facebook_tab: 'https://www.facebook.com/testshado/app_597403706967732' 
     )
   end
 end
