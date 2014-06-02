@@ -15,7 +15,7 @@ module ApplicationHelper
 	  done = true
 	  if current_user
 	  		# TODO: when_show_interaction!='MAI_VISIBILE'
-	  		calltoactions_except_share = cache_short('calltoactions_except_share_with_points') do
+	  		calltoactions_except_share = cache_short do
 	  		  calltoaction.interactions.where("points>0 AND resource_type<>'Share'").to_a
 	  		end
 	  		
@@ -23,7 +23,7 @@ module ApplicationHelper
 		      done = false if Userinteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
 		    end
 
-		    calltoactions_just_share = cache_short('calltoactions_just_share_with_points') do
+		    calltoactions_just_share = cache_short do
 		      calltoaction.interactions.where("points>0 AND resource_type='Share'").to_a
 		    end
 		    
@@ -125,7 +125,7 @@ module ApplicationHelper
   	end
 
   def calltoactions_totalpoints(calltoaction)
-    cache_short('cta_totalpoints') do
+    cache_short do
       totalpoints = calltoaction.interactions.where("resource_type<>'Share'").sum("points")
       totalpoints = totalpoints + calltoaction.interactions.where("resource_type<>'Share'").sum("added_points")
     
@@ -135,7 +135,7 @@ module ApplicationHelper
   end
 
   def all_share_interactions(calltoaction)
-    cache_short('all_share_interactions') do 
+    cache_short do 
       calltoaction.interactions.where("resource_type='Share'").to_a
     end
   end

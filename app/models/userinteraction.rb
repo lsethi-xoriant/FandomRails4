@@ -1,5 +1,6 @@
 include ApplicationHelper
 include InstantwinHelper
+include FandomUtils
 
 class Userinteraction < ActiveRecord::Base
   # TODO: check if after create an userinteraction cached values are update correctly.

@@ -6,18 +6,18 @@ class PropertyController < ApplicationController
   
   def index
     if mobile_device?
-      @calltoactions = cache_short('active_cta_mobile') { Calltoaction.active.limit(3).to_a }
+      @calltoactions = cache_short { Calltoaction.active.limit(3).to_a }
     else
-      @calltoactions = cache_short('active_cta') { Calltoaction.active_no_order.order("activated_at ASC").to_a }
-      @calltoactions_comingsoon = cache_short('future_cta') { Calltoaction.future_no_order.order("activated_at ASC").to_a }
+      @calltoactions = cache_short { Calltoaction.active_no_order.order("activated_at ASC").to_a }
+      @calltoactions_comingsoon = cache_short() { Calltoaction.future_no_order.order("activated_at ASC").to_a }
     end
   end
 
   def extra
     if mobile_device?
-      @calltoactions = cache_short('active_cta_extra') { Calltoaction.active_extra.limit(3).to_a }
+      @calltoactions = cache_short { Calltoaction.active_extra.limit(3).to_a }
     else
-      @calltoactions = cache_short('active_cta_extra') { Calltoaction.active_extra_no_order.order("activated_at ASC").to_a }
+      @calltoactions = cache_short { Calltoaction.active_extra_no_order.order("activated_at ASC").to_a }
     end
   end
 
