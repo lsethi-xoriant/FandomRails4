@@ -1,3 +1,6 @@
+require 'fandom_utils'
+include FandomUtils
+
 class SessionsController < Devise::SessionsController
   prepend_before_filter :anchor_provider_to_current_user, only: :create, :if => proc {|c| current_user && !env["omniauth.auth"].nil? }
   skip_before_filter :iur_authenticate
@@ -6,8 +9,10 @@ class SessionsController < Devise::SessionsController
     # Aggancio il provider all'utente corrente se loggato.
     current_user.logged_from_omniauth env["omniauth.auth"], params[:provider]
     flash[:notice] = "Agganciato #{ params[:provider] } all'utente"
-    if request.site.force_facebook_tab
-      redirect_to request.site.force_facebook_tab
+
+    site = get_site_from_request(request)
+    if site.force_facebook_tab && !request_is_from_mobile_device?(request)
+      redirect_to site.force_facebook_tab
     else
       redirect_to "/"
     end
@@ -50,7 +55,7 @@ class SessionsController < Devise::SessionsController
         sign_in(user)
         flash[:notice] = "from_registration" if from_registration
 
-        if request.site.force_facebook_tab
+        if request.site.force_facebook_tab && !request_is_from_mobile_device?(request)
           redirect_to request.site.force_facebook_tab
         else
           unless cookies[:connect_from_page].blank?
