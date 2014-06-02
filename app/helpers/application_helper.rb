@@ -2,8 +2,8 @@ require 'fandom_utils'
 
 module ApplicationHelper
 	
-	def mobile_device?
-	  FandomUtils::mobile_device?(request)
+	def mobile_device?()
+	  FandomUtils::request_is_from_mobile_device?(request)
 	end
 
 	def ipad?

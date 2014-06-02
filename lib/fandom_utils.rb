@@ -115,7 +115,8 @@ module FandomUtils
     return name.singularize.classify.constantize
   end
 
-  def mobile_device?(request)
+  # Returns true if the request comes from a mobile device.
+  def request_is_from_mobile_device?(request)
     iphone = request.user_agent =~ /iPhone/ 
     mobile = request.user_agent =~ /Mobile/
     android = request.user_agent =~ /Android/  
