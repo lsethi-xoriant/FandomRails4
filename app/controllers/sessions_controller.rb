@@ -6,7 +6,11 @@ class SessionsController < Devise::SessionsController
     # Aggancio il provider all'utente corrente se loggato.
     current_user.logged_from_omniauth env["omniauth.auth"], params[:provider]
     flash[:notice] = "Agganciato #{ params[:provider] } all'utente"
-    redirect_to "/"
+    if request.site.force_facebook_tab
+      redirect_to request.site.force_facebook_tab
+    else
+      redirect_to "/"
+    end
   end
 
   def omniauth_failure
