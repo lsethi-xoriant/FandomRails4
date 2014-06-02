@@ -1,4 +1,4 @@
-<% if current_user && Contest.active.any? %>
+<% if current_user && cache_short { Contest.active.any? } %>
 
   <!-- INSTANT WIN MODAL -->
   <div class="modal fade" id="instant-win-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -30,11 +30,6 @@
               <h5>20 PACCHETTI PER DA 5 INGRESSI<br />PER GLI EVENTI SERALI AQUAFAN</h5>
               <h6 style="font-family: arial;">In palio 10 pacchetti da 5 ingressi per il concerto di David Guetta del 3 Agosto e 10 pacchetti per un evento serale che verrà comunicato da Aquafan in caso di vincita.</h6>
             </div>
-            <!--
-            <% InstantWinPrize.all.each do |prize| %>
-              <div class="col-md-4"><h4><%= prize.title %></h4></div>
-            <% end %>
-            -->
           </div>
 
           <div id="instant-win-prize-win" class="row hidden" style="background: #E6E6E6; padding-bottom: 20px; margin-bottom: 0;">
