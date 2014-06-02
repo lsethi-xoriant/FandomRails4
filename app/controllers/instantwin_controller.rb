@@ -125,8 +125,8 @@ class InstantwinController < ApplicationController
   # iw - instantwin passed
   #
   def check_already_win_by_user contest_periodicity
-    @user_already_wins = true
-    return PlayticketEvent.where("user_id = ? AND winner = true",current_user.id).present?
+    @user_already_wins = PlayticketEvent.where("user_id=? AND winner=true",current_user.id).present?
+    return @user_already_wins
   end
   
   def send_winner_email(time_to_win,price)
