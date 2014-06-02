@@ -1,4 +1,4 @@
-<li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>">
+<li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>" style="<%= "opacity: 0.5;" unless active  %>">
 
   <div style="position: relative;">
     <div class="home-carousel-circle">
