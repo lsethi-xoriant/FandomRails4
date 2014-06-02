@@ -80,7 +80,7 @@
                     <% if current_user.authentications.where("provider='facebook'").any? %>
                        <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/facebook">disconnetti</a>
                     <% else %>
-                      <a href="/auth/facebook"><button type="button" class="btn btn-default btn-account">Connect</button></a>
+                      <a target="_top" href="/auth/facebook"><button type="button" class="btn btn-default btn-account">Connect</button></a>
                     <% end %>
                   </div>
                 </div>

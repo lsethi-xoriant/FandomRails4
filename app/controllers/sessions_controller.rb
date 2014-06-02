@@ -45,13 +45,19 @@ class SessionsController < Devise::SessionsController
       unless user.errors.any?
         sign_in(user)
         flash[:notice] = "from_registration" if from_registration
-        unless cookies[:connect_from_page].blank?
-          connect_from_page = cookies[:connect_from_page]
-          cookies.delete(:connect_from_page)
-          redirect_to connect_from_page
+
+        if request.site.force_facebook_tab
+          redirect_to force_facebook_tab
         else
-          redirect_to "/"
+          unless cookies[:connect_from_page].blank?
+            connect_from_page = cookies[:connect_from_page]
+            cookies.delete(:connect_from_page)
+            redirect_to connect_from_page
+          else
+            redirect_to "/"
+          end
         end
+
       else
 
         session["oauth"] ||= {}
