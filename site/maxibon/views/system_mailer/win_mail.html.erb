@@ -5,7 +5,7 @@
   </head>
   <body>
   	<% if @price.id == MAXIBON_DAILY_ACCESS %>
-  	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
+  	  <p>Congratulazioni <b><%= @cuser.first_name %> <%= @cuser.last_name %>!</b></p>
 
       <p>Hai vinto un ingresso gratuito giornaliero all'Aquafan di Riccione.</p>
       
@@ -32,7 +32,7 @@
 	<% end %>
 
 	<% if @price.id == MAXIBON_PARTY_GUETTA %>
-	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
+	  <p>Congratulazioni <b><%= @cuser.first_name %> <%= @cuser.last_name %>!</b></p>
 
       <p>Hai vinto un pacchetto di 5 biglietti per te e i tuoi amici per il Maxiparty con David Guetta all'Aquafan di Riccione.</p>
       
@@ -61,7 +61,7 @@
 	<% end %>
 
 	<% if @price.id == MAXIBON_PARTY_NIGHT %>
-	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
+	  <p>Congratulazioni <b><%= @cuser.first_name %> <%= @cuser.last_name %>!</b></p>
 
     <p>Hai vinto un pacchetto di 5 biglietti per un evento serale che si terrà all'Aquafan di Riccione nel mese di agosto.
 		Contatta Aquafan all'indirizzo info@aquafan.it o al numero 05414271 per scoprire di quale evento si tratta.</p>
