@@ -10,8 +10,8 @@ Fandom::Application.routes.draw do
 
   constraints(SiteMatcher.new('maxibon')) do
     constraints(MaxibonUtils::Matcher.new) do
-      match '', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
-      match '*path', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
+      #match '', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
+      #match '*path', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
     end
   end
 
