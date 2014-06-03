@@ -19,7 +19,7 @@ class SystemMailer < ActionMailer::Base
   	@cuser = user
   	@ticket_id = time_to_win.unique_id
   	
-  	mail(to: user.email, subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – hai vinto #{ @price.title }")
+  	mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – hai vinto #{ @price.title }")
   end
 
   def win_admin_notice_mail(user, price, time_to_win)

@@ -61,7 +61,7 @@ body {
 }
 
 .landing {
-    padding-bottom: 70px;
+    padding-bottom: 50px;
 }
 
 .landing-button {
@@ -82,6 +82,15 @@ body {
 
 button, h1, h2, h3, h4, h5, h6, li, .oswald-font {
   font-family: 'Oswald-Bold', helvetica, arial, sans-serif;
+}
+
+.jcarousel li {
+    cursor: pointer;
+    .panel:hover {
+        border-color: #DDDDDD;
+        background-color: #FFFFFF;
+        color: #000000;
+    }
 }
 
 .winner-page {

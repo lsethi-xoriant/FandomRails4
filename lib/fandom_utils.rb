@@ -27,6 +27,7 @@ module FandomUtils
       render template: 'application/url_mistyped'
     elsif not site.unbranded?
       prepend_view_path "#{Rails.root}/site/#{site.id}/views"
+      ActionMailer::Base.prepend_view_path "#{Rails.root}/site/#{site.id}/views"
     end
     configure_environment_for_site(site)
     configure_omniauth_for_site(site)
