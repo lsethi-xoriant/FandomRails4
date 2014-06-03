@@ -144,6 +144,10 @@
 
   <script>
 
+    var enable_contest = <%= current_user.rule? %>;
+    var user_already_won = <%= (check_user_already_won current_user.id) %>;
+    var user_tickets = <%= current_user ? (get_current_contest_points current_user.id) : 0 %>;
+
     <% if current_user.birth_date %>
       $(function() {
         $("#date_day_of_birth").val(<%= current_user.birth_date.strftime("%d") %>);
@@ -152,9 +156,6 @@
       });
     <% end %>
 
-    var enable_contest = <%= current_user.rule? %>;
-    var user_already_won = <%= (check_user_already_won current_user.id) %>
-    var user_tickets = <%= current_user ? (get_current_contest_points current_user.id) : 0 %>
     function openInstantWinModal() {
       if(enable_contest) {
         // Initialize title and button.
@@ -176,6 +177,7 @@
         $("#instant-win-prize-win").removeClass("hidden").addClass("hidden");
 
         $("#instant-win-modal").modal("show");
+        
       } else {
         $("#complete-registration-modal").modal("show");
       }

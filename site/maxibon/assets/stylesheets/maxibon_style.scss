@@ -1025,6 +1025,9 @@ height: 100%;
 }
 
 @media (min-width: $screen-sm-min) {
+    .profile {
+        min-height: 820px;
+    }
     .panel {
         .yes-pad {
             padding: $panel-body-padding $panel-body-padding*2 0 $panel-body-padding*2;
