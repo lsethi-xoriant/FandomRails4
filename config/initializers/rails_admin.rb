@@ -7,8 +7,8 @@ RailsAdmin.config do |config|
   # require 'i18n'
   # I18n.default_locale = :de
 
-  #config.authorize_with :cancan
-  config.authenticate_with {}
+  config.authorize_with :cancan
+  #config.authenticate_with {}
 
   #config.authorize_with :cancan
 
