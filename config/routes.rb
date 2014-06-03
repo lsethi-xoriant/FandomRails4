@@ -8,14 +8,12 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
-=begin
   constraints(SiteMatcher.new('maxibon')) do
     constraints(MaxibonUtils::Matcher.new) do
-      match '', to: redirect("https://www.facebook.com/testshado/app_597403706967732")
-      match '*path', to: redirect("https://www.facebook.com/testshado/app_597403706967732")
+      match '', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
+      match '*path', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
     end
   end
-=end
 
   post "/", to: "property#index"
 
