@@ -4,7 +4,7 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-  	<% if @price.title == "Un ingresso gratuito giornaliero all'Aquafan" %>
+  	<% if @price.id == MAXIBON_DAILY_ACCESS %>
   	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
 
       <p>Hai vinto un ingresso gratuito giornaliero all'Aquafan di Riccione.</p>
@@ -31,7 +31,7 @@
     <p><a href="https://www.maxibon.it">www.maxibon.it</a></p>
 	<% end %>
 
-	<% if @price.title == "Un pacchetto di 5 biglietti per il Maxiparty con David Guetta" %>
+	<% if @price.id == MAXIBON_PARTY_GUETTA %>
 	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
 
       <p>Hai vinto un pacchetto di 5 biglietti per te e i tuoi amici per il Maxiparty con David Guetta all'Aquafan di Riccione.</p>
@@ -60,7 +60,7 @@
     <p><a href="https://www.maxibon.it">www.maxibon.it</a></p>
 	<% end %>
 
-	<% if @price.title == "Un pacchetto di 5 biglietti per un evento serale Aquafan" %>
+	<% if @price.id == MAXIBON_PARTY_NIGHT %>
 	  <p>Congratulazioni <%= @cuser.first_name %> <%= @cuser.last_name %>!</p>
 
     <p>Hai vinto un pacchetto di 5 biglietti per un evento serale che si terrà all'Aquafan di Riccione nel mese di agosto.

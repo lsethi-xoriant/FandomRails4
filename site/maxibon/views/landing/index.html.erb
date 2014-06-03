@@ -1,13 +1,40 @@
 <% content_for :bodyclass, "landing" %>
 
 <%#= render partial: "/application/user_bar" %>
+<script>
+function open_video(){
+	var src = '//www.youtube.com/embed/-TuSo-vrwdA';
+    $('#modalvideo').modal('show');
+    $('#modalvideo iframe').attr('src', src);
 
-<!--
+}
+
+$(document).ready(function(){
+	$('#modalvideo button').click(function () {
+    	$('#modalvideo iframe').removeAttr('src');
+    });
+});
+</script>
+<!-- MODAL VIDEO LANDING -->
+<div class="modal fade" id="modalvideo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body flex-video" style="margin-bottom: 10px;">
+      	<iframe width="560" height="315" src="//www.youtube.com/embed/-TuSo-vrwdA" frameborder="0" allowfullscreen></iframe>
+      </div>
+      
+		<button type="button" class="btn btn-default" data-dismiss="modal" style="float: right; margin: 0 20px 10px 0;">Close</button>
+	  
+    </div>
+  </div>
+</div>
+
+
 <div class="container-fluid" style="position: relative;">   
   <div class="row no-pad">      
     <div class="col-xs-12 text-center no-pad" style="padding-left: 50px; padding-right: 50px;">
 
-      <div style="max-width: 810px; margin-left: auto; margin-right: auto;">
+      <div style="max-width: 810px; margin-left: auto; margin-right: auto; cursor:pointer;" onclick="open_video();">
         <img src="/assets/maxibon/landing/landing.jpg" class="img-responsive hidden-xs" style="width: 100%;">
         <img src="/assets/maxibon/landing/landing-mobile.jpg" class="img-responsive visible-xs" style="width: 100%;">
 
@@ -28,7 +55,7 @@
 
     </div>
   </div>
-  -->
+  <!-- -->
 
   <div class="container-fluid hidden-xs" style="position: relative; margin-top: -50px;">   
     <div class="row no-pad">      
@@ -47,7 +74,7 @@
   </div>
 
   <!--
-  <div class="row hidden-sm hidden-md hidden-lg" style="position:absolute; bottom: 60px; right: 20px; color: #003366;">
+  <div class="row hidden-sm hidden-md hidden-lg" style="position:absolute; bottom: 60px; right: 20px; color: #003366;" onclick="open_video();">
 	  <div class="col-xs-6 col-xs-offset-6 no-pad"> 
 	    <h5>AIUTA MARCO<br>A CONQUISTARE LARA<br>E VINCI <img style="width: 100px;" src="/assets/maxibon/img-aquafan-footer.png"></h5>
 	  </div>
