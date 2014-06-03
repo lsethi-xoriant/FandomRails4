@@ -42,7 +42,7 @@ Fandom::Application.configure do
 
   # EMAIL GMAIL
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_url_options = { :host => 'localhost' }
+  config.action_mailer.default_url_options = { :host => ENV["EMAIL_HOST"] }
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
