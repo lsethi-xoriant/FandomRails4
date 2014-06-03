@@ -1,6 +1,6 @@
 <% content_for :bodyclass, "landing" %>
 
-<%= render partial: "/application/user_bar" %>
+<%#= render partial: "/application/user_bar" %>
 
 <script>
 
@@ -50,7 +50,7 @@
 -->
 
 <a href="/auth/facebook">
-  <div class="container-fluid" style="position: relative;">   
+  <div class="container-fluid" style="position: relative; margin-top: -50px;">   
     <div class="row no-pad">      
       <div class="col-xs-12 text-center no-pad">
 
@@ -113,29 +113,29 @@
   </div>
 </a>
 
-<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation" style="background-color: #FFF;">
+<nav class="navbar navbar-default navbar-fixed-bottom hidden-xs" role="navigation" style="background-color: #FFF;">
   <div class="container">
-
     <div class="row hidden-xs" style="background-color: #FFF; padding-top: 10px;">
       <div class="col-xs-12 text-center">
         <p style="font-size: 11px; color: #5C5C5C; line-height: 30px;">Copyright 2014 - Nestlé Italiana S.p.A. - Partita IVA 00777280157  | <a target="_blank" href="/rule/maxibon_the_pool_rule.pdf">Regolamento</a></p>
       </div>
     </div>
- 
-    <div class="row visible-xs" style="background-color: #FFF; padding-top: 10px;">
-      <div class="col-xs-12 text-center">
-        <p style="font-size: 11px; color: #5C5C5C;">Copyright 2014</p>
-      </div>
-       <div class="col-xs-12 text-center">
-        <p style="font-size: 11px; color: #5C5C5C;">Nestlé Italiana S.p.A.</p>
-      </div>
-       <div class="col-xs-12 text-center">
-        <p style="font-size: 11px; color: #5C5C5C;">Partita IVA 00777280157</p>
-      </div>
-       <div class="col-xs-12 text-center">
-        <p style="font-size: 11px; color: #5C5C5C;"><a target="_blank" href="/rule/maxibon_the_pool_rule.pdf">Regolamento</a></p>
-      </div>
-    </div>
-
   </div>
 </nav>
+
+<div class="container">
+  <div class="row visible-xs" style="background-color: #FFF; padding-top: 10px;">
+    <div class="col-xs-12 text-center">
+      <p style="font-size: 11px; color: #5C5C5C;">Copyright 2014</p>
+    </div>
+     <div class="col-xs-12 text-center">
+      <p style="font-size: 11px; color: #5C5C5C;">Nestlé Italiana S.p.A.</p>
+    </div>
+     <div class="col-xs-12 text-center">
+      <p style="font-size: 11px; color: #5C5C5C;">Partita IVA 00777280157</p>
+    </div>
+     <div class="col-xs-12 text-center">
+      <p style="font-size: 11px; color: #5C5C5C;"><a target="_blank" href="/rule/maxibon_the_pool_rule.pdf">Regolamento</a></p>
+    </div>
+  </div>
+</div>
