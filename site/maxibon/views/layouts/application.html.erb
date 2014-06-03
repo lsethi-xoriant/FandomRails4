@@ -18,6 +18,19 @@
 </head>
 <body class="<%= yield (:bodyclass) %>">
 
+  <script src="//connect.facebook.net/en_US/all.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    window.fbAsyncInit = function() {
+        FB.init({ appId: '<%= ENV["FACEBOOK_APP_ID"] %>', 
+        status: true, 
+        cookie: true,
+        xfbml: true,
+        oauth: true});
+
+        FB.Canvas.setAutoGrow();
+    }
+  </script>
+
   <%= render partial: "/application/instant_win_modal" %>
 
   <!-- REGISTRATION MODAL -->
