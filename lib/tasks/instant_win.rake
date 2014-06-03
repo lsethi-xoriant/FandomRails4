@@ -21,7 +21,7 @@ namespace :instant_win do
     if Property.count == 0
       Property.create(:name => "Maxibon", :activated_at => "29/05/2014")
     end
-    contest = Contest.create(:title => "Maxibon Acquafan", :start_date => "03/06/2014 11:00:00 Rome", :end_date => "01/08/2014 23:59:59 Rome", :property_id => Property.first.id)
+    contest = Contest.create(:title => "Maxibon Acquafan", :start_date => Time.parse("03/06/2014 11:00:00 Rome"), :end_date => Time.parse("01/08/2014 23:59:59 Rome"), :property_id => Property.first.id)
     periodicity_type_daily = PeriodicityType.create(:name => "Giornaliera", :period => 1)
     periodicity_type_maxibon_custom = PeriodicityType.create(:name => "60gg", :period => 60) 
     contest_periodicity_1 = ContestPeriodicity.create(:title => "Ingresso gratuito giornaliero all'Aquafan", :periodicity_type_id => periodicity_type_daily.id, :contest_id => contest.id)
