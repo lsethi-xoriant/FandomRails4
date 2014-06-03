@@ -257,7 +257,7 @@ class CalltoactionController < ApplicationController
           calltoaction_correct_answer = i.resource.answers.find_by_correct(true)
           if calltoaction_correct_answer.calltoaction
             if mobile_device?
-              render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_undervideo_instant_win", 
+              render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
                 locals: { }, layout: false, formats: :html)
             else
               render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
