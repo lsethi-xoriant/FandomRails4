@@ -9,13 +9,13 @@
           <div id="instant-win-title" class="instant-win-result" style="margin-bottom: 15px;"><h2>GIOCA SUBITO</h2></div>
           <div id="instant-win-win" class="instant-win-result hidden" style="margin-bottom: 15px; background-color: #329d3d; padding: 10px 0; color: #FFF;"><h2>HAI VINTO</h2></div>
           <div id="instant-win-lost" class="instant-win-result hidden" style="margin-bottom: 15px; background-color: #d9534f; padding: 10px 0; color: #FFF;"><h2>PECCATO! NON HAI VINTO</h2></div>
-          <div id="instant-win-end" class="instant-win-result hidden" style="margin-bottom: 15px; background-color: #d9534f; padding: 10px 0; color: #FFF;"><h2>HAI FINITO I BIGLIETTI</h2></div>
+          <div id="instant-win-end" class="instant-win-result hidden" style="margin-bottom: 15px; background-color: #d9534f; padding: 10px 0; color: #FFF;"><h2>HAI FINITO I GRATTA&VINCI</h2></div>
           <div id="instant-win-already-won" class="instant-win-result hidden" style="margin-bottom: 15px; background-color: #329d3d; padding: 10px 0; color: #FFF;"><h2>HAI GIA' VINTO UN PREMIO</h2><p>Ti ricordiamo che da regolamento i premi non sono cumulabili.<br />Controlla la tua email per verificare la vincita.</p></div>
 		  
-          <h4>Hai <button class="btn yellow-point btn-lg current_user_points"><% c = Contest.first %><%= c && ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> biglietti</h4>
+          <h4>Hai <button class="btn yellow-point btn-lg current_user_points"><% c = Contest.first %><%= c && ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).count > 0 ? ContestPoint.where("user_id = ? AND contest_id = ?",current_user.id, c.id).first.points/c.conversion_rate : 0 %> </button> gratta&vinci</h4>
           <div id="instant-win-loader" class="hidden text-center" style="padding: 10px 0;"><img src="/assets/maxibon/win-loader.gif" /></div>
           <div id="instant-win-play" style="margin-bottom: 15px;">
-            <button class="btn btn-danger btn-lg" onclick="playTicket()">GIOCA SUBITO UN BIGLIETTO</button>
+            <button class="btn btn-danger btn-lg" onclick="playTicket()">GIOCA SUBITO UN GRATTA&VINCI</button>
           </div>
 
           <div id="instant-win-prize-overview" class="row" style="background: #E6E6E6; padding-bottom: 20px; margin-bottom: 0;">

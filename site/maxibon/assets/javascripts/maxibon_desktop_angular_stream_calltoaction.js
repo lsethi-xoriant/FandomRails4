@@ -67,6 +67,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $scope.calltoaction_id = calltoaction_id;
           $scope.calltoaction_video_code = calltoaction_video_code;
 
+          $("#yt-hidden").css("display", "none");
           $("#home-video").attr("iid", "calltoaction-active-" + calltoaction_id);
 
           $("#share-footer").html(data.share_content);
@@ -134,6 +135,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
                 $("#calltoaction-item-carousel-" + $scope.calltoaction_id).removeClass("hidden");
               }
 
+              $("#yt-hidden").css("display", "block");
               $("#home-overvideo-title").html(""); // REMOVE TITLE LAYER.        
             }).error(function() {
               // ERROR.
