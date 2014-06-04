@@ -69,6 +69,8 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
 
         $("#append-other button").attr('disabled', false);
       });
+    } else {
+      $("#append-other").remove();
     }
   };
 
