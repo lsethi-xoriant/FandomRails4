@@ -44,6 +44,66 @@
 
     </div> <!-- /.row -->
 
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary">
+            <div class="details">
+              <span class="content">REGISTRATI TOTALI</span>
+              <span class="value"><%= User.count %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary">
+            <div class="details">
+              <span class="content">UTENTI REGISTRATI CON SOCIAL</span>
+              <span class="value"><%= User.includes(:authentications).where("authentications.user_id IS NOT NULL").count %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat tertiary">
+            <div class="details">
+              <span class="content">UTENTI CON PROFILO COMPLETO</span>
+
+              <span class="value"><%= User.where("rule=true").count %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat secondary">
+            <div class="details">
+              <span class="content">SHARE EMAIL</span>
+
+              <span class="value"><%= Share.where("share_type='email'").joins(interaction: :userinteractions).sum("userinteractions.counter") %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <!--
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat secondary">
+            <div class="details">
+              <span class="content">SHARE TWITTER</span>
+
+              <span class="value"><%= Share.where("share_type='twitter'").joins(interaction: :userinteractions).sum("userinteractions.counter") %></span>
+            </div>
+          </div>
+      </div>
+      -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat secondary">
+            <div class="details">
+              <span class="content">SHARE FACEBOOK</span>
+
+              <span class="value"><%= Share.where("share_type='facebook'").joins(interaction: :userinteractions).sum("userinteractions.counter") %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div>
+
   </div>
 </div>
 
@@ -53,6 +113,8 @@
   $(document).ready(function() {
     buildDonut();
     buildLine();
+    $(window).resize(App.debounce(buildDonut, 325));
+    $(window).resize(App.debounce(buildLine, 325));
   });
 
   function buildDonut() {
@@ -62,8 +124,8 @@
       Morris.Donut({
             element: 'fb-reg-donut-chart',
             data: [
-                { label: 'Registrazioni semplici', value: ((user_without_provider * 100)/user_counter) },
-                { label: 'Registrazioni con provider', value: (((user_counter - user_without_provider) * 100)/user_counter) }
+                { label: 'Registrazioni via email', value: Math.round(((user_without_provider * 100)/user_counter)) },
+                { label: 'Registrazioni con social', value: Math.round((((user_counter - user_without_provider) * 100)/user_counter)) }
             ],
             hideHover: true,
             colors: ["#f18c09", "#0b62a4"],
@@ -107,7 +169,7 @@
         xLabelFormat: function (x) { return (x.getMonth() + 1) + "/" + x.getFullYear(); },
         xkey: 'time',
         ykeys: ['tot', 'provider', 'simple'],
-        labels: ['Registrati totali', 'Registrati provider', 'Registrati semplici'],
+        labels: ['Registrati totali', 'Registrati via social', 'Registrati via email'],
         lineColors: ["black", "#0b62a4", "#f18c09"]
       });
 

@@ -39,10 +39,12 @@ $navbar-inverse-toggle-border-color:        #42C5ED !default;
 }
 
 body {
+  background-image: url(/assets/maxibon/bg-repeat.jpg);
   background-image: url(/assets/maxibon/bg.jpg);
   background-position: top center;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  //background-repeat:repeat-x;
   background-attachment: fixed;
   background-color: #5cc8ff;
 }
@@ -87,7 +89,7 @@ button, h1, h2, h3, h4, h5, h6, li, .oswald-font {
 
 .jcarousel li {
     cursor: pointer;
-    .panel:hover {
+    .panel.active:hover {
         border-color: #DDDDDD;
         background-color: #FFFFFF;
         color: #000000;

@@ -47,24 +47,43 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>Capitolo</th>
+							<th class="hidden-xs hidden-sm">Capitolo</th>
 							<th>Titolo</th>
-							<th>Data attivazione</th>
+							<th class="hidden-xs hidden-sm">Data attivazione</th>
 							<th>Immagine</th>
 							<th>Azioni</th>
 						</tr>
 					</thead>
 					<% @cta_list.each do |c| %>
 						<tr>
-							<td><%= c.property.name %></td>
+							<td class="hidden-xs hidden-sm"><%= c.property.name %></td>
 							<td><%= c.title %></td>
-							<td><%= c.activated_at.strftime("%d/%m/%Y %H:%M") if c.activated_at %></td>
-							<td><img src="<%= c.image.url %>" class="img-responsive" style="max-width: 200px;"></td>
+							<td class="hidden-xs hidden-sm"><%= c.activated_at.strftime("%d/%m/%Y %H:%M") if c.activated_at %></td>
 							<td>
-								<a href="/easyadmin/cta/show/<%= c.id %>"><i class="fa fa-info" style="color: red"></i></a>&nbsp;&nbsp;
-								<a href="/easyadmin/cta/edit/<%= c.id %>/<%= c.property_id %>"><i class="fa fa-gears" style="color: red"></i></a>&nbsp;&nbsp;
-								<a href="/easyadmin/cta/tag/<%= c.id %>"><i class="fa fa-tag" style="color: red"></i></a>&nbsp;&nbsp;
-								<a href="javascript: void(0)" onclick="hideCalltoaction('<%= c.id %>')"><i class="fa fa-eye" style="color: <%= c.activated_at.blank? ? "gray" : "red" %>" id="eye-<%= c.id %>"></i></a>
+								<% if c.image.present? %>
+									<img src="<%= c.image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+								<% end %>
+							</td>
+							<td>
+								<div class="row">
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/cta/show/<%= c.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+									</div>
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/cta/edit/<%= c.id %>/<%= c.property_id %>"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
+									</div>
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/cta/tag/<%= c.id %>"><i class="fa fa-tag" style="color: red"></i></a>
+									</div>
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="javascript: void(0)" onclick="hideCalltoaction('<%= c.id %>')"><i class="fa fa-eye" style="color: <%= c.activated_at.blank? ? "gray" : "red" %>" id="eye-<%= c.id %>"></i></a>
+									</div>
+
+								</div>
 							</td>
 						</tr>
 					<% end %>

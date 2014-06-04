@@ -1,21 +1,13 @@
 <div id="sidebar-wrapper" class="collapse sidebar-collapse">
 	<nav id="sidebar">       
 	  <ul id="main-nav" class="open-active">      
-	    <li class="dropdown <%= "active opened" if page == "dashboard" %>"><a href="javascript:void(0);">  
-	    <i class="fa fa-dashboard"></i>Dashboard<span class="caret"></span></a>   
-	      <ul class="sub-nav">
-	        <li>
-	          <a href="/easyadmin/dashboard">
-	            <i class="fa fa-group"></i>Dati utenti
-	          </a>
-	      	</li>
-	      	<li>
-	          <a href="/easyadmin/published">
-	            <i class="fa fa-calendar"></i>Pubblicazioni
-	          </a>
-	      	</li>
-	      </ul>      
+	    
+	  	<li class="<%= "active" if page == "dashboard" %>"><a href="/easyadmin/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a>
 	    </li>
+
+	    <li class="<%= "active" if page == "pubblished" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>
+	    </li>
+
 	    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-dribbble"></i>Calltoaction<span class="caret"></span></a>
 	      <ul class="sub-nav">
 	        <li>
@@ -67,25 +59,6 @@
 	      </ul>
 	    </li>
 
-	    <li class="dropdown <%= "active opened" if page == "contest" %>"><a href="javascript:void(0);"><i class="fa fa-trophy"></i>[TODO] Contest<span class="caret"></span></a>
-	      <ul class="sub-nav">
-	        <li>
-	          <a href="/easyadmin/contest">
-	            <i class="fa fa-th-list"></i>Lista Contest
-	          </a>
-	        </li>
-	        <li>
-	          <a href="/easyadmin/periodicity">
-	            <i class="fa fa-th-list"></i>Lista Periodicità
-	          </a>
-	        </li>
-	        <li>
-	          <a href="/easyadmin/prize">
-	            <i class="fa fa-th-list"></i>Lista Premi
-	          </a>
-	        </li>
-	      </ul>
-	    </li>
 	  </ul>
 	</nav> <!-- #sidebar -->
 </div> <!-- /#sidebar-wrapper -->
