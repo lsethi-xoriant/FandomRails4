@@ -5,16 +5,21 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
 
   layout "admin"
     
+  FIELD_DESCS = { 
+    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "userinteraction", :column_name => "updated_at"}),
+    :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email"}),
+    :interaction => FieldDesc.new({ :name => "Interazione", :id => "interaction", :model => "interaction", :column_name => "resource_type" })
+  }
+  
+  FIELD_DESCS_JSON = (FIELD_DESCS.map { |id, obj| [id, obj.attributes] }).to_json
+  
   def get_fields
-    { 
-      :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "userinteraction", :column_name => "updated_at"}),
-      :user => FieldDesc.new({ :name => "Utente", :field => "email", :model => "user", :column_name => "email"}),
-      :interaction => FieldDesc.new({ :name => "Interazione", :field => "interaction", :model => "interaction", :column_name => "resource_type" })
-    }
+    FIELD_DESCS
   end
   
   def index
     @interaction_type_options = Interaction.uniq.pluck(:resource_type)
+    @fields = FIELD_DESCS_JSON
   end
   
   def get_results(offset, limit)
@@ -34,7 +39,12 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
       field_id = filter['field'].to_sym
       operator = filter['operand']
       operand = filter['value']
-      query = query.where( get_active_record_expression(fields[field_id]['column_name'], operator, fields[field_id]['model']), operand )
+      if operator == FILTER_OPERATOR_CONTAINS
+        query = query.where( get_active_record_expression(fields[field_id]['column_name'], operator, fields[field_id]['model']), "%"+operand.to_s+"%" )
+      else
+        query = query.where( get_active_record_expression(fields[field_id]['column_name'], operator, fields[field_id]['model']), operand )
+      end
+      
     end
     return query  
   end
