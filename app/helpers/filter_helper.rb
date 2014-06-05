@@ -1,10 +1,10 @@
 module FilterHelper
 	
-	# Get correct where condition starting from filter name
+	# Get correct "where" condition starting from filter name
 	#
-	# name - name of column filter name
-	# operator - string of mathing operator selected by user
-	# model - Activerecord model to which the field belongs to
+	# name     - name of column filter name
+	# operator - string of matching operator selected by user
+	# model    - ActiveRecord model to which the field belongs to
 	#
 	def get_active_record_expression(name, operator, model)
     tablename = get_model_from_name(model).table_name

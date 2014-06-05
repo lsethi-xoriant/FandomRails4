@@ -115,7 +115,7 @@ Fandom::Application.routes.draw do
     match "dashboard/update_activated_at", :to => "easyadmin#update_activated_at", defaults: { format: 'json' }
     
     match "events", :to => "easyadmin_event_console#index"
-    match "events/filter", :to => "easyadmin_event_console#filter_event", defaults: { format: 'json' }
+    match "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }
   end
 
   devise_for :users, :controllers => { :registrations => "registrations", :sessions => "sessions", :passwords => "passwords" }
