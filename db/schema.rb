@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140529075725) do
+ActiveRecord::Schema.define(:version => 20140603151408) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -85,8 +85,10 @@ ActiveRecord::Schema.define(:version => 20140529075725) do
     t.string   "slug"
     t.string   "secondary_id"
     t.text     "description"
+    t.integer  "parent"
   end
 
+  add_index "calltoactions", ["parent"], :name => "index_calltoactions_on_parent"
   add_index "calltoactions", ["slug"], :name => "index_calltoactions_on_slug"
 
   create_table "checks", :force => true do |t|
@@ -346,6 +348,7 @@ ActiveRecord::Schema.define(:version => 20140529075725) do
     t.string   "picture_content_type"
     t.integer  "picture_file_size"
     t.datetime "picture_updated_at"
+    t.string   "link"
   end
 
   create_table "tags", :force => true do |t|

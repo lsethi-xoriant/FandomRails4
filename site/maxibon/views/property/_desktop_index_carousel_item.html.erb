@@ -1,4 +1,4 @@
-<li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>" style="<%= "opacity: 0.6;" unless active  %>">
+<li id="home-carousel-li-<%= calltoaction.id %>" class="home-carousel-li <%= "active" if calltoaction.id == @calltoactions.first.id %>" style="<%= "opacity: 0.75;" unless active  %>">
 
   <div style="position: relative;">
     <div class="home-carousel-circle">
@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= calltoaction.id == @calltoactions.first.id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
+      <div id="panel-carousel-<%= calltoaction.id %>" class="panel <%= "active" if active %> <%= calltoaction.id == @calltoactions.first.id ? 'panel-default' : 'panel-inactive' %> panel-carousel" style="width: 100%;">
           <div class="panel-body">
               <div class="row">
                   <div class="col-sm-4 text-left">

@@ -1,6 +1,6 @@
 <% content_for :bodyclass, "landing" %>
 
-<%= render partial: "/application/user_bar" %>
+<%#= render partial: "/application/user_bar" %>
 
 <script>
 
@@ -16,6 +16,7 @@
       $('#modalvideo iframe').removeAttr('src');
     });
 
+    /*
     $(".open-video").click( function ( e ) {
       if ( this === e.target ) {
         var src = '//www.youtube.com/embed/2DikYYmgWcY';
@@ -23,6 +24,7 @@
         $('#modalvideo iframe').attr('src', src);
       }
     });
+    */
 
   });
 
@@ -36,13 +38,18 @@
       	<iframe width="560" height="315" src="//www.youtube.com/embed/-TuSo-vrwdA" frameborder="0" allowfullscreen></iframe>
       </div>
       
-		<button type="button" class="btn btn-default" data-dismiss="modal" style="float: right; margin: 0 20px 10px 0;">Close</button>
+		<button type="button" class="btn btn-default" data-dismiss="modal" style="float: right; margin: 0 20px 10px 0;">CHIUDI</button>
 	  
     </div>
   </div>
 </div>
 
-<div class="container-fluid" style="position: relative;">   
+<!--
+<div style="position: relative;"></div>
+<div style="position: absolute; width: 100%; background-color: red; height: 90%; z-index: 10;"></div>
+-->
+
+<div class="container-fluid" style="position: relative; margin-top: -50px;">   
   <div class="row no-pad">      
     <div class="col-xs-12 text-center no-pad">
 
@@ -104,29 +111,29 @@
 
 </div>
 
-<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation" style="background-color: #FFF;">
+<nav class="navbar navbar-default navbar-fixed-bottom hidden-xs" role="navigation" style="background-color: #FFF;">
   <div class="container">
-
     <div class="row hidden-xs" style="background-color: #FFF; padding-top: 10px;">
       <div class="col-xs-12 text-center">
-        <p style="font-size: 11px; color: #5C5C5C; line-height: 30px;">Copyright 2014 - Nestlé Italiana S.p.A. - Partita IVA 00777280157  | <a target="_blank" href="/rule/maxibon_the_pool_rule.pdf">Regolamento</a></p>
+        <p style="font-size: 11px; color: #5C5C5C; line-height: 30px;">Copyright 2014 - Nestlé Italiana S.p.A. - Partita IVA 00777280157 | <a target="_blank" href="/rule/maxibon_the_pool_rule.pdf">Regolamento</a></p>
       </div>
     </div>
- 
-    <div class="row visible-xs" style="background-color: #FFF; padding-top: 10px;">
-      <div class="col-xs-12 text-center">
-        <p style="font-size: 11px; color: #5C5C5C;">Copyright 2014</p>
-      </div>
-       <div class="col-xs-12 text-center">
-        <p style="font-size: 11px; color: #5C5C5C;">Nestlé Italiana S.p.A.</p>
-      </div>
-       <div class="col-xs-12 text-center">
-        <p style="font-size: 11px; color: #5C5C5C;">Partita IVA 00777280157</p>
-      </div>
-       <div class="col-xs-12 text-center">
-        <p style="font-size: 11px; color: #5C5C5C;"><a target="_blank" href="/rule/maxibon_the_pool_rule.pdf">Regolamento</a></p>
-      </div>
-    </div>
-
   </div>
 </nav>
+
+<div class="container">
+  <div class="row visible-xs" style="background-color: #FFF; padding-top: 10px;">
+    <div class="col-xs-12 text-center">
+      <p style="font-size: 11px; color: #5C5C5C;">Copyright 2014</p>
+    </div>
+     <div class="col-xs-12 text-center">
+      <p style="font-size: 11px; color: #5C5C5C;">Nestlé Italiana S.p.A.</p>
+    </div>
+     <div class="col-xs-12 text-center">
+      <p style="font-size: 11px; color: #5C5C5C;">Partita IVA 00777280157</p>
+    </div>
+     <div class="col-xs-12 text-center">
+      <p style="font-size: 11px; color: #5C5C5C;"><a target="_blank" href="/rule/maxibon_the_pool_rule.pdf">Regolamento</a></p>
+    </div>
+  </div>
+</div>

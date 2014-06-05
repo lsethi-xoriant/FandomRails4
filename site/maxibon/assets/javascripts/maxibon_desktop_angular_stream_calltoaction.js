@@ -41,7 +41,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
       ytplayer_hash[key] = new YT.Player(key, {
         playerVars: { controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 },
         width: "100%",
-        allowfullscreen: false,
         videoId: calltoaction_video_code,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
       });
@@ -67,6 +66,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $scope.calltoaction_id = calltoaction_id;
           $scope.calltoaction_video_code = calltoaction_video_code;
 
+          $("#yt-hidden").css("display", "none");
           $("#home-video").attr("iid", "calltoaction-active-" + calltoaction_id);
 
           $("#share-footer").html(data.share_content);
@@ -134,6 +134,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
                 $("#calltoaction-item-carousel-" + $scope.calltoaction_id).removeClass("hidden");
               }
 
+              $("#yt-hidden").css("display", "block");
               $("#home-overvideo-title").html(""); // REMOVE TITLE LAYER.        
             }).error(function() {
               // ERROR.
