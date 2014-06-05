@@ -59,6 +59,12 @@ cp etc/nginx-default /etc/nginx/sites-available/default
 service nginx restart
 
 #
+# Setup logrotate
+# 
+
+cp etc/logrotate-rails /etc/logrotate.d/rails
+
+#
 # Setup rails init script
 #
 
