@@ -12,7 +12,8 @@
 
     	<div id="content-container"
     		ng-app="EventApp" 
-	 		ng-controller="FilterCtrl">
+	 		ng-controller="FilterCtrl"
+	 		ng-init="init(<%= @fields.to_json %>)">
 
     	<% if flash[:notice] %>
 	    	<div class="row">
@@ -169,7 +170,7 @@
 			case 'date':
 				$(".filter-date").show();
 				break;
-			case 'user':
+			case 'email':
 				$(".filter-user").show();
 				break;
 			case 'interaction':

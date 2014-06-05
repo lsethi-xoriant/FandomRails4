@@ -111,7 +111,7 @@ Fandom::Application.routes.draw do
     match "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
     match "dashboard/update_activated_at", :to => "easyadmin#update_activated_at", defaults: { format: 'json' }
     
-    match "events", :to => "easyadmin_event_console#index_event"
+    match "events", :to => "easyadmin_event_console#index"
     match "events/filter", :to => "easyadmin_event_console#filter_event", defaults: { format: 'json' }
   end
 
