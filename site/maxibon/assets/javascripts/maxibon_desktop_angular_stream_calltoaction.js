@@ -41,7 +41,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
       ytplayer_hash[key] = new YT.Player(key, {
         playerVars: { controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 },
         width: "100%",
-        allowfullscreen: false,
         videoId: calltoaction_video_code,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
       });

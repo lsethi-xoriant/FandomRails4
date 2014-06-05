@@ -8,6 +8,9 @@
 	    <li class="<%= "active" if page == "pubblished" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>
 	    </li>
 
+	    <li class="<%= "active" if page == "winner" %>"><a href="/easyadmin/winner"><i class="fa fa-ticket"></i>Vincitori concorso</a>
+	    </li>
+
 	    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-dribbble"></i>Calltoaction<span class="caret"></span></a>
 	      <ul class="sub-nav">
 	        <li>
@@ -24,8 +27,10 @@
 	        <% end %>
 	      </ul>
 	    </li>
+
 	    <li class="<%= "active" if page == "promocode" %>"><a href="/easyadmin/promocode"><i class="fa fa-ticket"></i>Promocode</a>
 	    </li>
+
 	    <li class="dropdown <%= "active opened" if page == "property" %>"><a href="javascript:void(0);"><i class="fa fa-globe"></i>Property<span class="caret"></span></a>
 	      <ul class="sub-nav">
 	        <li>

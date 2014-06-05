@@ -19,6 +19,28 @@ class Easyadmin::EasyadminController < ApplicationController
       end
   end
 
+  def index_winner
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 30
+
+    @playticket_events = PlayticketEvent.where("winner=true").page(page).per(per_page).order("created_at ASC")
+
+    @page_size = @playticket_events.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+  end
+
+  def send_email_to_winner
+    playticket_event = PlayticketEvent.find(params[:playticket_event_id])
+
+    SystemMailer.win_mail(playticket_event.user, playticket_event.instantwin.contest_periodicity.instant_win_prizes.first, playticket_event.instantwin).deliver
+    SystemMailer.win_admin_notice_mail(playticket_event.user, playticket_event.instantwin.contest_periodicity.instant_win_prizes.first, playticket_event.instantwin).deliver
+
+    respond_to do |format|
+      format.json { render :json => playticket_event.to_json }
+    end
+  end
+
   def index_promocode
   end
 

@@ -43,6 +43,9 @@ Fandom::Application.routes.draw do
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
+    match "winner", :to => "easyadmin#index_winner"
+    match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
+
     match "cta", :to => "easyadmin#index_cta"
     match "cta/filter/:filter", :to => "easyadmin#filter_cta"
     match "cta/filter/:filter/:property", :to => "easyadmin#filter_cta"
