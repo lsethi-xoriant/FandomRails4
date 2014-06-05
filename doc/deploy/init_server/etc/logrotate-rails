@@ -1,0 +1,9 @@
+/home/app/railsapps/Fandom/shared/log/*.log {
+    size=50M
+    missingok
+    rotate 52
+    compress
+    delaycompress
+    notifempty
+    copytruncate
+}

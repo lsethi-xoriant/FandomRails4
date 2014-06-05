@@ -12,14 +12,26 @@ filterApp.controller('FilterCtrl', FilterCtrl);
 function FilterCtrl($scope, $window, $timeout, $resource, ngTableParams) {
 
 	var Api = $resource('/easyadmin/events/filter');
-
+	var columns = [];
+	
+	$scope.init = function(fields) {
+		
+		$.each(fields, function(key,value){
+			column = {title: value.name, field: value.field, visible: true };
+			columns.push(column);
+		});
+		console.log(columns);
+	};
+	
+	$scope.columns = columns;
+	/*
 	$scope.columns = [
         { title: 'Date', field: 'date', visible: true },
         { title: 'User', field: 'user', visible: true },
         { title: 'Interaction', field: 'interaction', visible: true },
         { title: 'Answer', field: 'answer_correct', visible: true }
     ];
-	
+	*/
 	$scope.tableFilters = [];
 	
 	$scope.updateFilter = function(){
