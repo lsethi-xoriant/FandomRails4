@@ -421,7 +421,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 	  	if(player_state == 1) { // Lo stato 1 corrisponde al video in riproduzione.
 			// Identifico il play del video in modo da poter tracciare l'evento.  		    
 	    	if(!play_pressed) {
-    			$http.post("/" + $scope.property_id + "/" + $scope.calltoaction_id + "/update_play_interaction.json")
+    			$http.post("/update_play_interaction.json", { calltoaction_id: $scope.calltoaction_id })
     				.success(function(data) {
     					// Mostro i punti guadagnati ed evenuali livelli raggiunti.
     					check_level_and_badge_up();  						

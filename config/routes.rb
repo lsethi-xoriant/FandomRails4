@@ -43,6 +43,9 @@ Fandom::Application.routes.draw do
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
+    match "winner", :to => "easyadmin#index_winner"
+    match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
+
     match "cta", :to => "easyadmin#index_cta"
     match "cta/filter/:filter", :to => "easyadmin#filter_cta"
     match "cta/filter/:filter/:property", :to => "easyadmin#filter_cta"
@@ -111,7 +114,7 @@ Fandom::Application.routes.draw do
     match "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
     match "dashboard/update_activated_at", :to => "easyadmin#update_activated_at", defaults: { format: 'json' }
     
-    match "events", :to => "easyadmin_event_console#index_event"
+    match "events", :to => "easyadmin_event_console#index"
     match "events/filter", :to => "easyadmin_event_console#filter_event", defaults: { format: 'json' }
   end
 

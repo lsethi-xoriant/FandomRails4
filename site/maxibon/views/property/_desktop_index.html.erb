@@ -23,6 +23,13 @@
                     <% if @calltoactions.first.media_type == "VIDEO" %>
                         <div class="video flex-video widescreen" style="margin: 0;">
                           <div id="home-video" iid="calltoaction-active-<%= @calltoactions.first.id %>"></div>
+                          
+                          <!--
+                          <div id="yt-hidden" class="hidden-xs" style="position: relative; width: 100%; height: 100%; display: none;">
+                            <div style="position: absolute: width: 100%; height: 100%; padding-top: 100%;"></div>
+                          </div>
+                          -->
+
                           <!-- OVERVIDEO AREA HERE FOR ANSWER -->
                           <div id="home-overvideo"></div>
 

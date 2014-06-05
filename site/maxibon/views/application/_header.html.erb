@@ -7,14 +7,14 @@
   <% if current_user %>
     <div class="col-sm-3 hidden-xs text-left" style="padding: 10px; 15px 0 0; margin-left: -15px;">
       <div style="position: relative;">
-        <div style="position: absolute; left: 120px;">
+        <div style="position: absolute; left: 125px;">
           <a href="/profile/edit"><img class="img-circle" src="<%= current_avatar %>" style="width: 50px; border: 3px solid #fff;"></a>
         </div>
       </div>
 
       <div style="position: relative;">
-        <div style="position: absolute; left: 30px; top: 25px;">
-          <h5 style="text-transform: uppercase; font-size: 11px; padding-left: 0; text-align: left;">i tuoi biglietti</h5>
+        <div style="position: absolute; left: 27px; top: 25px;">
+          <h5 style="text-transform: uppercase; font-size: 11px; padding-left: 0; text-align: left;">i tuoi gratta&vinci</h5>
           <button class="btn yellow-point current_user_points" style="margin-right: 5px;"><%= current_user ? (get_current_contest_points current_user.id) : 0 %></button><button class="btn btn-danger" onclick="openInstantWinModal()">VINCI</button>
         </div>
       </div>

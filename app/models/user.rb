@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
   has_many :rewarding_users, dependent: :destroy
   has_many :userinteractions
   has_many :user_comments
+  has_many :playticket_event
 
   after_save :append_rewarding_user # With invitation is enable: if: Proc.new { |u| u.invitation_token.blank? }
   before_save :set_date_of_birth
