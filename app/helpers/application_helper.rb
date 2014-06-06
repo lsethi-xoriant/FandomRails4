@@ -15,7 +15,7 @@ module ApplicationHelper
 	  done = true
 	  if current_user
 	  		# TODO: when_show_interaction!='MAI_VISIBILE'
-	  		calltoactions_except_share = cache_short do
+	  		calltoactions_except_share = cache_short("calltoactions_except_share_#{calltoaction.id}") do
 	  		  calltoaction.interactions.where("points>0 AND resource_type<>'Share'").to_a
 	  		end
 	  		
@@ -23,7 +23,7 @@ module ApplicationHelper
 		      done = false if Userinteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
 		    end
 
-		    calltoactions_just_share = cache_short do
+		    calltoactions_just_share = cache_short("calltoactions_just_share_#{calltoaction.id}") do
 		      calltoaction.interactions.where("points>0 AND resource_type='Share'").to_a
 		    end
 		    

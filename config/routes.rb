@@ -8,38 +8,6 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
-  constraints(SiteMatcher.new('maxibon')) do
-    constraints(MaxibonUtils::Matcher.new) do
-      match '', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
-      match '*path', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
-    end
-  end
-
-  post "/", to: "property#index"
-
-  # Captcha.
-  match "/captcha", :to => "calltoaction#code_image"
-
-  # Instagram subscribe. 
-  match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
-
-  match "/how_to", :to => "application#how_to"
-  match "/landing", :to => "landing#index"
-
-  match "profile", :to => "profile#index"
-  match "profile/levels", :to => "profile#levels"
-  match "profile/badges", :to => "profile#badges"
-  match "profile/rankings", :to => "profile#rankings"
-  match "profile/remove-provider/:provider", :to => "profile#remove_provider"
-  match "profile/complete_for_contest", :to => "profile#complete_for_contest"
-
-  match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
-  match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
-  match "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
-  
-  match "/playticket", :to => "instantwin#play_ticket_mb"
-  match "/winners", :to => "instantwin#show_winners"
-
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
@@ -117,6 +85,38 @@ Fandom::Application.routes.draw do
     match "events", :to => "easyadmin_event_console#index"
     match "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }
   end
+
+  constraints(SiteMatcher.new('maxibon')) do
+    constraints(MaxibonUtils::Matcher.new) do
+      match '', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
+      match '*path', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
+    end
+  end
+
+  post "/", to: "property#index"
+
+  # Captcha.
+  match "/captcha", :to => "calltoaction#code_image"
+
+  # Instagram subscribe. 
+  match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
+
+  match "/how_to", :to => "application#how_to"
+  match "/landing", :to => "landing#index"
+
+  match "profile", :to => "profile#index"
+  match "profile/levels", :to => "profile#levels"
+  match "profile/badges", :to => "profile#badges"
+  match "profile/rankings", :to => "profile#rankings"
+  match "profile/remove-provider/:provider", :to => "profile#remove_provider"
+  match "profile/complete_for_contest", :to => "profile#complete_for_contest"
+
+  match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
+  match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
+  match "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
+  
+  match "/playticket", :to => "instantwin#play_ticket_mb"
+  match "/winners", :to => "instantwin#show_winners"
 
   devise_for :users, :controllers => { :registrations => "registrations", :sessions => "sessions", :passwords => "passwords" }
 
