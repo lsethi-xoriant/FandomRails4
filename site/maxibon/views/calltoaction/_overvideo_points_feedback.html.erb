@@ -6,11 +6,11 @@
                 <div class="col-md-12 text-center" style="margin-top: 40px; margin-bottom: 20px; background: #003466;">
                     <h4 style="color: #fff;">
                       <% if correct.present? && correct %>
-                        <span style="margin-right: 15px;">Scelta corretta! Hai ottenuto <%= points %> gratta&vinci</span>
+                        <span style="margin-right: 15px;">Scelta corretta! Hai ottenuto <%= points %> Gratta&Vinci</span>
                       <% elsif correct.present? && !correct %>
-                        <span style="margin-right: 15px;">Scelta errata! Hai ottenuto <%= points %> gratta&vinci</span>
+                        <span style="margin-right: 15px;">Scelta errata! Hai ottenuto <%= points %> Gratta&Vinci</span>
                       <% else %>
-                        <span style="margin-right: 15px;">Hai ottenuto <%= points %> gratta&vinci</span>
+                        <span style="margin-right: 15px;">Hai ottenuto <%= points %> Gratta&Vinci</span>
                       <% end %>
                       <% points.times do |i| %>
                         <img class="img-ticket" src="/assets/maxibon/small-ticket.png">

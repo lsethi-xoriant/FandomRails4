@@ -57,7 +57,7 @@
           </div>
         </div>
 
-        <img src="/assets/maxibon/landing/landing.jpg" class="img-responsive hidden-xs open-video" style="width: 100%;">
+        <%= image_tag asset_path("maxibon/landing/landing.jpg"), class: "img-responsive hidden-xs open-video", style: "width: 100%;" %>
       </div>
 
     </div>
@@ -67,8 +67,8 @@
 <div class="container-fluid visible-xs" style="margin-top: -50px;">   
   <div class="row no-pad">      
     <div class="col-xs-12 text-center no-pad">
-   
-      <img src="/assets/maxibon/landing/landing-mobile.jpg" class="img-responsive open-video" style="width: 100%;">
+
+      <%= image_tag asset_path("maxibon/landing/landing-mobile.jpg"), class: "img-responsive open-video", style: "width: 100%;" %>
 
     </div>
   </div>
@@ -84,9 +84,9 @@
   </div>
 </nav>
 
-<nav class="navbar navbar-default navbar-fixed-bottom visible-xs" role="navigation" style="background-color: #FFF;">
+<nav class="navbar navbar-default navbar-fixed-bottom visible-xs" role="navigation" style="background-color: rgba(255, 255, 255, 0.5);">
   <div class="container">
-    <div class="row" style="background-color: #FFF; padding-top: 10px;">
+    <div class="row" style="background-color: rgba(255, 255, 255, 0.5); padding-top: 10px;">
       <div class="col-xs-12 text-center">
         <a href="/auth/facebook"><div class="landing-button" style="margin-left: auto; margin-right: auto;"></div></a>
         <p style="font-size: 10px; color: #000; margin-top: 5px;">Se non sei ancora utente facebook <a href="/users/sign_up" style="color: #000; text-decoration: underline;">clicca qui</a></p>

@@ -20,7 +20,7 @@ class InstantwinController < ApplicationController
     
     wins.each do |win_event|
       winner = Hash.new
-      winner['avatar'] = win_event.user.avatar.url(:thumb)
+      winner['avatar'] = user_avatar(win_event.user)
       winner['name'] = "#{win_event.user.first_name} #{win_event.user.last_name}"
       winner['prize'] = "#{win_event.contest_periodicity.instant_win_prizes.first.title}"
       @winners.push(winner)
