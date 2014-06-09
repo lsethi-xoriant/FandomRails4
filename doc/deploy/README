@@ -9,7 +9,9 @@ To initialize a new server
 WARNING: this script applies several changes to the system as root, it should be checked with care.
 When prompted for the password of the app user, set it as per company policy.
 
-3) When finished, edit the system configuration appropriately: 
+3) Set the SSH keys of the app user (just copy them from the same user in another server)
+
+4) When finished, edit the system configuration appropriately: 
 - edit /etc/nginx/sites-available/default to change the site virtual host
 - if there are locale issues, try setting: 
 
@@ -17,13 +19,13 @@ When prompted for the password of the app user, set it as per company policy.
 
 in /etc/environment and rebooting.
 
-4) Create the files that are not versioned; the list can be found in config/deploy.rb (linked_files)
+5) Create the files that are not versioned; the list can be found in config/deploy.rb (linked_files)
 
-5) Once Fandom has been deployed, manually create the schemas needed for the different tenant: 
+6) Once Fandom has been deployed, manually create the schemas needed for the different tenant: 
 
   rake apartment:create
 
-6) in case of AWS installation, put the automatic update command in /etc/rc.local:
+7) in case of AWS installation, put the automatic update command in /etc/rc.local:
 
   sudo -u app -i bash /home/app/bin/aws_remote_update.sh
 
