@@ -31,6 +31,17 @@
         });
         FB.Canvas.setAutoGrow();
     }
+
+    function FBscrollTo(y){
+      FB.Canvas.getPageInfo(function(pageInfo){
+              $({y: pageInfo.scrollTop}).animate(
+                  {y: y},
+                  {duration: 800, step: function(offset){
+                      FB.Canvas.scrollTo(0, offset);
+                  }
+              });
+      });
+    }
   </script>
 
   <!--[if lt IE 9]>

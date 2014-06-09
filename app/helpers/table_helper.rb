@@ -4,7 +4,7 @@ module TableHelper
   include FandomUtils
   include FilterHelper
 
-
+  # A class that rappresent a filter field and its relation to ActiveRecord model
   class FieldDesc
     include ActiveAttr::TypecastedAttributes
     include ActiveAttr::MassAssignment
@@ -24,6 +24,7 @@ module TableHelper
     raise NotImplementedError.new
   end
   
+  # Returns a json response to the page that request some data filter request
   def apply_filter
     offset = (params[:page].to_i - 1) * params[:perpage].to_i
     limit = params[:perpage]

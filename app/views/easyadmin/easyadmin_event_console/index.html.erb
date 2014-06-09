@@ -13,7 +13,7 @@
     	<div id="content-container"
     		ng-app="EventApp" 
 	 		ng-controller="FilterCtrl"
-	 		ng-init="init(<%= @fields.to_json %>)">
+	 		ng-init="init(<%= @fields %>)">
 
     	<% if flash[:notice] %>
 	    	<div class="row">
@@ -128,7 +128,7 @@
 					    </label>
 				    </div>
 			    </div>
-			    
+			    <div class="col-md-10">
 				<table class="table table-striped" ng-table="tableParams">
 					<thead>
 			        <tr>
@@ -144,13 +144,13 @@
 			        </thead>
 					<tbody>
 			          <tr ng-repeat="row in $data">
-			            <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.field">
+			            <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.id">
 			                {{row[column.field]}}
 			            </td>
 			          </tr>
 			        </tbody>
 				</table>
-
+				</div>
 		</div>
 
 	</div>
@@ -170,7 +170,7 @@
 			case 'date':
 				$(".filter-date").show();
 				break;
-			case 'email':
+			case 'user':
 				$(".filter-user").show();
 				break;
 			case 'interaction':
