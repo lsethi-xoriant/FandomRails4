@@ -10,6 +10,14 @@ module ApplicationHelper
 		return request.user_agent =~ /iPad/ 
 	end
 
+	def calltoaction_active_with_tag(tag, order)
+		return Calltoaction.includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NOT NULL AND tags.text='#{tag}')", Time.now).order("activated_at #{order}")
+	end
+
+	def calltoaction_coming_soon_with_tag(tag, order)
+		return Calltoaction.includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NOT NULL AND tags.text='#{tag}')", Time.now).order("activated_at #{order}")
+	end 
+
 	def calltoaction_done? calltoaction
 		# Check if user completed calltoaction.
 	  done = true
@@ -125,7 +133,7 @@ module ApplicationHelper
   	end
 
   def calltoactions_totalpoints(calltoaction)
-    cache_short do
+    cache_short("calltoactions_totalpoints_#{calltoaction.id}") do
       totalpoints = calltoaction.interactions.where("resource_type<>'Share'").sum("points")
       totalpoints = totalpoints + calltoaction.interactions.where("resource_type<>'Share'").sum("added_points")
     

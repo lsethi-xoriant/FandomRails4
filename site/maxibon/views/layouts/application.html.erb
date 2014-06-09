@@ -21,6 +21,7 @@
   <!-- Fix Facebook tab height without scroll. -->
   <script src="//connect.facebook.net/en_US/all.js"></script>
   <script type="text/javascript" charset="utf-8">
+
     window.fbAsyncInit = function() {
         FB.init({ 
           appId: '<%= ENV["FACEBOOK_APP_ID"] %>', 
@@ -42,6 +43,7 @@
               });
       });
     }
+    
   </script>
 
   <!--[if lt IE 9]>

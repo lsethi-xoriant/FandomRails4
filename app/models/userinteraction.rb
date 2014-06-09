@@ -56,7 +56,7 @@ class Userinteraction < ActiveRecord::Base
 
   def init_ui_points
     if interaction.resource_type == "Share"
-      self.points = check_already_share_cta? ? 0 : interaction.points
+      self.points = self.user && check_already_share_cta? ? 0 : interaction.points
     else
       self.points = interaction.points
       if interaction.resource_type == "Quiz" && interaction.resource.quiz_type == "TRIVIA" && self.answer.correct

@@ -38,9 +38,15 @@ module FandomUtils
     if site.force_ssl
       force_ssl()
     end
-    if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController))
+
+    may_redirect_to_landing
+
+  end
+
+  def may_redirect_to_landing
+    if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController)|| (self.is_a? YoutubeWidgetController) || request.site.public_pages.include?("#{params[:controller]}##{params[:action]}"))
       redirect_to "/landing"
-    end 
+    end
   end
 
   def configure_environment_for_site(site)
