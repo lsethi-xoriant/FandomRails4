@@ -11,6 +11,11 @@ When prompted for the password of the app user, set it as per company policy.
 
 3) When finished, edit the system configuration appropriately: 
 - edit /etc/nginx/sites-available/default to change the site virtual host
+- if there are locale issues, try setting: 
+
+  LC_ALL="en_US.utf8"
+
+in /etc/environment and rebooting.
 
 4) Create the files that are not versioned; the list can be found in config/deploy.rb (linked_files)
 

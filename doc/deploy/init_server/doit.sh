@@ -12,6 +12,13 @@ POSTGRESQL_VERSION=9.3
 RUBY_VERSION=1.9.1
 
 #
+# Timezone
+#
+
+echo "Europe/Rome" > /etc/timezone
+dpkg-reconfigure --frontend noninteractive tzdata
+
+#
 # System update
 #
 
