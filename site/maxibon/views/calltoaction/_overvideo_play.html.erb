@@ -4,12 +4,17 @@
         <div class="overvideo-content">
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1 text-center" style="background: #003466; border-radius: 10px;">
-                    <h1><%= "##{ calltoaction_index } - " if calltoaction_index > 0 %><%= calltoaction.title %></h1>
-                    <h5 style="color: #fff;"><span style="margin-right: 15px;">Guarda il video e ottieni fino a <%= calltoactions_totalpoints(calltoaction) %> Gratta&Vinci</span>
-                      <% calltoactions_totalpoints(calltoaction).times do |i| %>
-                        <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
-                      <% end %>
-                    </h5>                  
+                    <% if calltoactions_totalpoints(calltoaction) && calltoactions_totalpoints(calltoaction) > 0 %>
+                        <h1><%= "##{ calltoaction_index } - " if calltoaction_index > 0 %><%= calltoaction.title %></h1>
+                        <h5 style="color: #fff;"><span style="margin-right: 15px;">
+                            Guarda il video e ottieni fino a <%= calltoactions_totalpoints(calltoaction) %> Gratta&Vinci</span>
+                          <% calltoactions_totalpoints(calltoaction).times do |i| %>
+                            <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
+                          <% end %>
+                        </h5>  
+                    <% else %>
+                        <h1 style="margin-bottom: 20px;"><%= "##{ calltoaction_index } - " if calltoaction_index > 0 %><%= calltoaction.title %></h1>
+                    <% end %>                
                 </div>
             </div>
         </div>

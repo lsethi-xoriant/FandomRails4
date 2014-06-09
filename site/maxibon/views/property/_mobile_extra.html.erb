@@ -1,6 +1,6 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container-fluid" ng-app="MobileStreamCalltoactionApp" ng-controller="MobileStreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= Calltoaction.active_extra.count %>')">   
+<div class="container-fluid" ng-app="MobileStreamCalltoactionApp" ng-controller="MobileStreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= calltoaction_active_with_tag('extra', 'DESC').count %>')">   
 
   <%= render partial: "/application/header" %>
 

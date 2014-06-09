@@ -6,11 +6,11 @@
             <ul>
               <% i = 1 %>
               <% calltoactions.each do |calltoaction| %>
-                <%= render partial: "/property/desktop_index_carousel_item.html", locals: { calltoaction: calltoaction, active: true, i: i } %>
+                <%= render partial: "/property/desktop_index_carousel_item.html", locals: { calltoaction: calltoaction, active: true, i: i, type: type } %>
                 <% i = i + 1 %>
               <% end %>
               <% calltoactions_comingsoon.each do |calltoaction| %>
-                <%= render partial: "/property/desktop_index_carousel_item.html", locals: { calltoaction: calltoaction, active: false, i: i } %>
+                <%= render partial: "/property/desktop_index_carousel_item.html", locals: { calltoaction: calltoaction, active: false, i: i, type: type } %>
                 <% i = i + 1 %>
               <% end %>
             </ul>

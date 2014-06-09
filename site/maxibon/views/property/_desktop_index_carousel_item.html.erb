@@ -6,7 +6,12 @@
     </div>
   </div>
 
-  <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>, null, <%= active %>)">
+  <% if type %>
+    <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>, '<%= type %>', <%= active %>)">
+  <% else %>
+    <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>, null, <%= active %>)">
+  <% end %>
+
     <div class="col-sm-12" style="padding: 0 40px;">
       <img src="<%= calltoaction.image %>" style="width: 100%;">
     </div>

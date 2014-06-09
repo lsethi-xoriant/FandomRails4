@@ -32,6 +32,7 @@ module ConfigUtils
     # if the site is reached through HTTP redirects to HTTPS, and every other redirect will be set to HTTPS as well
     attribute :force_ssl, :default => false
     attribute :force_facebook_tab, type: String
+    attribute :public_pages, :default => Set.new([])
 
     def unbranded?
       self.id == 'fandom'

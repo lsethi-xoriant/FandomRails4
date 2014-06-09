@@ -218,16 +218,23 @@ class CalltoactionController < ApplicationController
 
   def update_calltoaction_content
     response = Hash.new
-    if params[:type] == "extra"
-      calltoaction = Calltoaction.active_extra.find(params[:id])
+    if params[:type]
+      calltoaction = calltoaction_active_with_tag(params[:type], "DESC").find(params[:id])
     else
       calltoaction = Calltoaction.active.find(params[:id])
     end
 
-    response = {
-      "share_content" => (render_to_string "/calltoaction/_share_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
-      "overvideo_title" => (render_to_string "/calltoaction/_overvideo_play", locals: { calltoaction: calltoaction, calltoaction_index: params[:index] }, layout: false, formats: :html)
-    }
+    if params[:type] == "youtube"
+      response = {
+        "share_content" => (render_to_string "/calltoaction/_share_free_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
+        "overvideo_title" => (render_to_string "/calltoaction/_overvideo_play", locals: { calltoaction: calltoaction, calltoaction_index: params[:index] }, layout: false, formats: :html)
+      }
+    else
+      response = {
+        "share_content" => (render_to_string "/calltoaction/_share_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
+        "overvideo_title" => (render_to_string "/calltoaction/_overvideo_play", locals: { calltoaction: calltoaction, calltoaction_index: params[:index] }, layout: false, formats: :html)
+      }
+    end
 
     respond_to do |format|
       format.json { render json: response.to_json }
@@ -414,6 +421,25 @@ class CalltoactionController < ApplicationController
     respond_to do |format|
       format.json { render :json => risp.to_json }
     end
+  end
+
+  def share_free
+    risp = Hash.new
+
+    user_id = current_user ? current_user.id : -1 
+
+    i = Interaction.find(params[:interaction_id].to_i)
+    ui = Userinteraction.find_by_user_id_and_interaction_id(user_id, i.id)
+
+    if ui
+      ui.update_attribute(:counter, ui.counter + 1)
+    else
+      ui = Userinteraction.create(user_id: user_id, interaction_id: params[:interaction_id].to_i)
+    end
+
+    respond_to do |format|
+      format.json { render :json => risp.to_json }
+    end 
   end
 
   def share

@@ -1,16 +1,13 @@
-<%= render partial: "/application/user_bar" %>
-
-<script type="text/javascript" src="/assets/jquery.jcarousel.js"></script>
-<script type="text/javascript" src="/assets/jcarousel.responsive.js"></script>
+<script type="text/javascript" src="<%= asset_path('jquery.jcarousel.js') %>"></script>
+<script type="text/javascript" src="<%= asset_path('jcarousel.responsive.js') %>"></script>
 
 <% if @calltoactions.any? %>
 
-  <div class="container" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, '<%= @calltoactions.first.video_url %>', '<%= @calltoactions.first.id %>')">   
+  <div class="container" ng-app="StreamCalltoactionYoutubeApp" ng-controller="StreamCalltoactionYoutubeCtrl" ng-init="init('<%= @calltoactions.first.video_url %>', '<%= @calltoactions.first.id %>')">   
 
       <div class="row" style="margin: 15px 0;">
-        <%= render partial: "/application/header" %>
 
-        <%= render partial: "/property/desktop_index_carousel", locals: { calltoactions: @calltoactions, calltoactions_comingsoon: @calltoactions_comingsoon, type: nil } %>
+        <%= render partial: "/property/desktop_index_carousel", locals: { calltoactions: @calltoactions, calltoactions_comingsoon: @calltoactions_comingsoon, type: "youtube" } %>
 
         <div class="row">      
           <div class="col-md-12 col-md-offset-0">
@@ -23,21 +20,8 @@
                     <% if @calltoactions.first.media_type == "VIDEO" %>
                         <div class="video flex-video widescreen" style="margin: 0;">
                           <div id="home-video" iid="calltoaction-active-<%= @calltoactions.first.id %>"></div>
-                          
-                          <!--
-                          <div id="yt-hidden" class="hidden-xs" style="position: relative; width: 100%; height: 100%; display: none;">
-                            <div style="position: absolute: width: 100%; height: 100%; padding-top: 100%;"></div>
-                          </div>
-                          -->
-
-                          <!-- OVERVIDEO AREA HERE FOR ANSWER -->
-                          <div id="home-overvideo"></div>
-
                           <!-- OVERVIDEO AREA HERE FOR TITLE -->
                           <div id="home-overvideo-title"><%= render partial: "/calltoaction/overvideo_play", locals: { calltoaction: @calltoactions.first, calltoaction_index: 1 } %></div>
-
-                          <!-- OVERVIDEO AREA HERE FOR FEEDBACK POINTS -->
-                          <div id="home-overvideo-feedback-points"></div>
                         </div>
                     <% else %>
                       <!-- NOT WORK CAROUSEL WITH IMAGE -->
@@ -49,10 +33,11 @@
               </div>         
             </div>        
           </div>
-        </div>
 
-        <div class="col-md-12" id="share-footer">
-          <%= render partial: "/calltoaction/share_footer", locals: { calltoaction: @calltoactions.first } %>
+          <div class="col-md-12" id="share-footer">
+            <%= render partial: "/calltoaction/share_free_footer", locals: { calltoaction: @calltoactions.first } %>
+          </div>
+
         </div>
 
       </div>

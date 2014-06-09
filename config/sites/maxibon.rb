@@ -8,7 +8,8 @@ module Fandom
         'EMAIL_ADDRESS' => 'noreply@maxibon.it', 
       },
       enable_x_frame_options_header: false,
-      force_facebook_tab: 'https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732' 
+      force_facebook_tab: 'https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732',
+      public_pages: Set.new(["calltoaction#share_free", "calltoaction#update_play_interaction"])
     )
   end
 end
