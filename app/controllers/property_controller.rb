@@ -7,7 +7,7 @@ class PropertyController < ApplicationController
   def index
 
     debugger
-    if request.site.force_facebook_tab && !request_is_from_mobile_device?(request) && request.referrer.include?("facebook.com")
+    if request.site.force_facebook_tab && !request_is_from_mobile_device?(request) && request.referrer.include?("https://www.facebook.com")
       redirect_to request.site.force_facebook_tab
     else
 
