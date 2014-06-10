@@ -5,12 +5,21 @@ class PropertyController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :index
   
   def index
-    if mobile_device?
-      @calltoactions = cache_short { Calltoaction.active.limit(3).to_a }
+
+    debugger
+    if request.site.force_facebook_tab && !request_is_from_mobile_device?(request) && request.referrer.include?("facebook.com")
+      redirect_to request.site.force_facebook_tab
     else
-      @calltoactions = cache_short { Calltoaction.active_no_order.order("activated_at ASC").to_a }
-      @calltoactions_comingsoon = cache_short() { Calltoaction.future_no_order.order("activated_at ASC").to_a }
+
+      if mobile_device?
+        @calltoactions = cache_short { Calltoaction.active.limit(3).to_a }
+      else
+        @calltoactions = cache_short { Calltoaction.active_no_order.order("activated_at ASC").to_a }
+        @calltoactions_comingsoon = cache_short() { Calltoaction.future_no_order.order("activated_at ASC").to_a }
+      end
+
     end
+
   end
 
   def extra
