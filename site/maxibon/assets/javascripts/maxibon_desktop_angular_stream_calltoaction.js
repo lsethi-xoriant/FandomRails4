@@ -99,12 +99,39 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
     }
   };
 
+  $window.restartYTVideo = function() {          
+    key = 'home-video';
+
+    $("#home-video").attr("iid", "calltoaction-active-" + $scope.calltoaction_id );
+    $("#home-overvideo").html("");
+
+    flushTimeoutFeedback(); // When I change video and a Timout is running.
+
+    correctytplayer_hash[key] = false;
+    playpressed_hash[key] = false;
+
+    ytplayer_hash[key].loadVideoById($scope.calltoaction_video_code );
+  }
+
   $window.onYouTubePlayerReady = function(event) {
   }; // onYouTubePlayerReady
 
   $window.flushTimeoutFeedback = function() {
-    $timeout.cancel(overvideo_feedback_timeout);//HERE
+    $timeout.cancel(overvideo_feedback_timeout);
     $("#home-overvideo-feedback-points").html("");
+  }; // onYouTubePlayerReady
+
+  
+  $window.showFeedbackPoints = function(feedback) {
+    $("#home-overvideo-feedback-points").hide();
+    $("#home-overvideo-feedback-points").html(feedback);
+
+    $("#home-overvideo-feedback-points").show('slide', { direction: 'left' }, 1000);
+    overvideo_feedback_timeout = $timeout(function() {
+      $("#home-overvideo-feedback-points").hide('slide', { direction: 'left' }, 1000, function() {
+        $("#home-overvideo-feedback-points").html("");
+      });
+    }, 4000);  
   }; // onYouTubePlayerReady
 
   // Callback chiamata quando lo stato del video viene modificato.
@@ -123,10 +150,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
               // OVERVIDEO FEEDBACK POINTS.
               if(data.overvideo_feedback) {
                 $(".current_user_points").html(data.points_updated);
-                $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
-                overvideo_feedback_timeout = $timeout(function() {
-                  $("#home-overvideo-feedback-points").html("");
-                }, 3000);  
+
+                showFeedbackPoints(data.overvideo_feedback);
               } 
 
               // UPDATE CAROUSEL BADGE.
@@ -145,6 +170,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
         playpressed_hash[key] = false;
         $http.post("/calltoaction_overvideo_end", { id: $scope.calltoaction_id, end: correctytplayer_hash[key], type: $("#" + key).attr("type") })
           .success(function(data) {
+            if(!correctytplayer_hash[key]) {
+              $("#quiz-waiting-audio").jPlayer("play");
+            }
             $("#home-overvideo").html(data);
           });
       }
@@ -164,6 +192,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
         $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI CON " + provider.toUpperCase());
 
         $("#share-modal-" + calltoaction_id).modal("hide");
+
+        $(".share-footer-feedback").removeClass("hidden").addClass("hidden");
+        $("#share-footer-feedback-done").removeClass("hidden");
+
+        if(data.points_for_user) {
+          $("#share-footer-label").html("Hai guadagnato +" + data.points_for_user + " Gratta&Vinci");
+        }
 
         if(provider == "email") {
           $("#share-email-address-" + interaction_id).val("");
@@ -192,6 +227,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
 
   $window.updateTriviaAnswer = function(interaction_id, answer_id) {
     $(".button-inter-" + interaction_id).attr('disabled', true);
+    
+    $("#quiz-waiting-audio").jPlayer("stop");
+    $("#quiz-answer-selected-audio").jPlayer("play");
+
     if($scope.current_user) {
       $http.post("/user_event/update_answer.json", { interaction_id: interaction_id, answer_id: answer_id })
           .success(function(data) {
@@ -208,10 +247,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
             // OVERVIDEO FEEDBACK POINTS
             if(data.overvideo_feedback) {
               $(".current_user_points").html(data.points_updated);
-              $("#home-overvideo-feedback-points").html(data.overvideo_feedback);
-              overvideo_feedback_timeout = $timeout(function() {
-                $("#home-overvideo-feedback-points").html("");
-              }, 3000);  
+              showFeedbackPoints(data.overvideo_feedback);
             } 
 
             if(data.calltoaction_complete) {

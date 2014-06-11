@@ -18,14 +18,31 @@ module ApplicationHelper
 		return Calltoaction.includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NOT NULL AND tags.text='#{tag}')", Time.now).order("activated_at #{order}")
 	end 
 
-	def calltoaction_done? calltoaction
+	def calltoactions_except_share(calltoaction)
+		calltoactions_except_share = cache_short("calltoactions_except_share_#{calltoaction.id}") do
+		  calltoaction.interactions.where("points>0 AND resource_type<>'Share'").to_a
+		end
+	end
+
+	def calltoaction_interaction_share_done(calltoaction)
+	  done = true
+	  if current_user
+	    calltoactions_just_share = cache_short("calltoactions_just_share_#{calltoaction.id}") do
+	      calltoaction.interactions.where("points>0 AND resource_type='Share'").to_a
+	    end	    
+	    done = false if current_user.userinteractions.where("interaction_id in (?)", calltoactions_just_share.map.collect { |u| u["id"] }).blank?
+		else
+			done = false
+		end 
+	  return done
+	end
+
+	def calltoaction_done?(calltoaction)
 		# Check if user completed calltoaction.
 	  done = true
 	  if current_user
 	  		# TODO: when_show_interaction!='MAI_VISIBILE'
-	  		calltoactions_except_share = cache_short("calltoactions_except_share_#{calltoaction.id}") do
-	  		  calltoaction.interactions.where("points>0 AND resource_type<>'Share'").to_a
-	  		end
+	  		calltoactions_except_share = calltoactions_except_share(calltoaction)
 	  		
 		    calltoactions_except_share.each do |i|
 		      done = false if Userinteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
@@ -36,6 +53,28 @@ module ApplicationHelper
 		    end
 		    
 		    done = false if current_user.userinteractions.where("interaction_id in (?)", calltoactions_just_share.map.collect { |u| u["id"] }).blank?
+		else
+			done = false
+		end 
+	   return done
+	end
+
+	def user_points_except_share_for(calltoaction)
+		calltoactions_except_share_with_userinteractions = calltoaction.interactions.includes(:userinteractions).where("interactions.points>0 AND interactions.resource_type<>'Share'")
+		user_points = calltoactions_except_share_with_userinteractions.where("userinteractions.user_id=?", current_user).sum("userinteractions.points")
+		user_points = user_points + calltoactions_except_share_with_userinteractions.where("userinteractions.user_id=?", current_user).sum("userinteractions.added_points")
+	end
+
+	def calltoaction_except_share_done? calltoaction
+		# Check if user completed calltoaction.
+	  done = true
+	  if current_user
+	  		# TODO: when_show_interaction!='MAI_VISIBILE'
+	  		calltoactions_except_share = calltoactions_except_share(calltoaction)
+	  		
+		    calltoactions_except_share.each do |i|
+		      done = false if Userinteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
+		    end
 		else
 			done = false
 		end 
@@ -65,39 +104,40 @@ module ApplicationHelper
 	end
 
 	def disqus_sso
-  		if current_user && ENV['DISQUS_SECRET_KEY'] && ENV['DISQUS_PUBLIC_KEY']
-	  		user = current_user
-		    data = {
-		      	'id' => user.id,
-		      	'username' => "#{ user.first_name } #{ user.last_name }",
-		      	'email' => user.email,
-		     	'avatar' =>  current_avatar
-		        # 'url' => user.url
-		    }.to_json
-		 
-		    message = Base64.encode64(data).gsub("\n", "") # Encode the data to base64.    
-		    timestamp = Time.now.to_i # Generate a timestamp for signing the message.
-		    sig = OpenSSL::HMAC.hexdigest('sha1', ENV['DISQUS_SECRET_KEY'], '%s %s' % [message, timestamp]) # Generate our HMAC signature
-		 
-		 	x = "<script type=\"text/javascript\">" +
-				"var disqus_config = function() {" +
-				"this.page.remote_auth_s3 = \"#{ message } #{ sig } #{ timestamp }\";" +
-				"this.page.api_key = \"#{ ENV['DISQUS_PUBLIC_KEY'] }\";" +
-				"this.sso = {" +
-			          "name:   \"SampleNews\"," +
-			          "button:  \"http://placehold.it/50x50\"," +
-			          "icon:     \"http://placehold.it/50x50\"," +
-			          "url:        \"http://example.com/login/\"," +
-			          "logout:  \"http://example.com/logout/\"," +
-			          "width:   \"800\"," +
-			          "height:  \"400\"" +
-			    "};" +
-				"}" +
-		        "</script>"
+		if current_user && ENV['DISQUS_SECRET_KEY'] && ENV['DISQUS_PUBLIC_KEY']
+  		user = current_user
+	    data = {
+	      	'id' => user.id,
+	      	'username' => "#{ user.first_name } #{ user.last_name }",
+	      	'email' => user.email,
+	     	'avatar' =>  current_avatar
+	        # 'url' => user.url
+	    }.to_json
+	 
+	    message = Base64.encode64(data).gsub("\n", "") # Encode the data to base64.    
+	    timestamp = Time.now.to_i # Generate a timestamp for signing the message.
+	    sig = OpenSSL::HMAC.hexdigest('sha1', ENV['DISQUS_SECRET_KEY'], '%s %s' % [message, timestamp]) # Generate our HMAC signature
+	 
+		 	x = 
+		 		"<script type=\"text/javascript\">" +
+					"var disqus_config = function() {" +
+					"this.page.remote_auth_s3 = \"#{ message } #{ sig } #{ timestamp }\";" +
+					"this.page.api_key = \"#{ ENV['DISQUS_PUBLIC_KEY'] }\";" +
+					"this.sso = {" +
+				          "name:   \"SampleNews\"," +
+				          "button:  \"http://placehold.it/50x50\"," +
+				          "icon:     \"http://placehold.it/50x50\"," +
+				          "url:        \"http://example.com/login/\"," +
+				          "logout:  \"http://example.com/logout/\"," +
+				          "width:   \"800\"," +
+				          "height:  \"400\"" +
+				    "};" +
+					"}" +
+		    "</script>"
 	    
 			return x
 		else
-			return "DISQUS debugger: utente non loggato o chiavi DISQUS non salvate correttamente"
+			return "DISQUS debugger: user not logged or wrong keys."
 		end
    	end
 
@@ -137,13 +177,21 @@ module ApplicationHelper
       totalpoints = calltoaction.interactions.where("resource_type<>'Share'").sum("points")
       totalpoints = totalpoints + calltoaction.interactions.where("resource_type<>'Share'").sum("added_points")
     
-      inter_share = calltoaction.interactions.where("resource_type='Share'")
-      totalpoints = totalpoints + inter_share.maximum("points") if inter_share.count > 0
+    	# Not include share interactions points.
+      # inter_share = calltoaction.interactions.where("resource_type='Share'")
+      # totalpoints = totalpoints + inter_share.maximum("points") if inter_share.count > 0
     end
   end
 
+  def calltoactions_share_points(calltoaction)
+  	cache_short("calltoactions_share_points_#{calltoaction.id}") do
+  		inter_share = calltoaction.interactions.where("resource_type='Share'")
+  		share_points = (inter_share.any? ? inter_share.maximum("points") : 0)
+  	end
+  end
+
   def all_share_interactions(calltoaction)
-    cache_short do 
+    cache_short("all_share_interactions_#{calltoaction.id}") do
       calltoaction.interactions.where("resource_type='Share'").to_a
     end
   end

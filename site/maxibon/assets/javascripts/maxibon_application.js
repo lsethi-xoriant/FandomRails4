@@ -11,3 +11,5 @@
 //= require maxibon_desktop_angular_stream_calltoaction
 //= require maxibon_mobile_angular_stream_calltoaction
 //= require maxibon_desktop_youtube_angular_stream_calltoaction
+//= require jquery-ui-1.10.4.custom
+//= require jquery.jplayer

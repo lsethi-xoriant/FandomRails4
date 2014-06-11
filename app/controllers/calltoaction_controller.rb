@@ -175,9 +175,9 @@ class CalltoactionController < ApplicationController
       risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
       if (ui.points + ui.added_points) > 0
         if mobile_device?
-          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
         else
-          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
         end
       end
     end
@@ -275,7 +275,12 @@ class CalltoactionController < ApplicationController
           calltoaction_question = i.resource.question
 
           calltoaction_answers = Hash.new
-          calltoaction_user_answer = ui ? ui.answer_id : -1
+          if ui 
+            calltoaction_user_answer = ui.answer_id
+            user_interaction_points = ui.points + ui.added_points
+          else
+            calltoaction_user_answer = -1 
+          end
 
           calltoaction_answers = Array.new
           i.resource.answers.each do |a|
@@ -286,10 +291,10 @@ class CalltoactionController < ApplicationController
 
           if mobile_device?
             render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", #_undervideo_trivia
-              locals: { interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+              locals: { user_interaction_points: user_interaction_points, interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
           else
             render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", 
-              locals: { interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
+              locals: { user_interaction_points: user_interaction_points, interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
           end
 
         end
@@ -388,9 +393,9 @@ class CalltoactionController < ApplicationController
       ui = Userinteraction.create(answer_id: params[:answer_id], user_id: current_user.id, interaction_id: params[:interaction_id]) 
       if (ui.points + ui.added_points) > 0
         if mobile_device?
-          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
         else
-          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
         end
       end
     end
@@ -455,6 +460,7 @@ class CalltoactionController < ApplicationController
       if mobile_device?
         risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
       end
+      risp["points_for_user"] = ui.points
     end
 
     risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
@@ -463,6 +469,7 @@ class CalltoactionController < ApplicationController
       if Rails.env.production?
         current_user.facebook.put_wall_post(" ", { name: i.resource.message, description: i.resource.description, link: "#{ i.resource.link.blank? ? request.referer : i.resource.link }", picture: "#{ root_url }#{i.resource.picture.url}" })
       else
+        current_user.facebook.put_wall_post(" ", { name: i.resource.message, description: i.resource.description, link: "#{ i.resource.link.blank? ? request.referer : i.resource.link }", picture: "#{ root_url }#{i.resource.picture.url}" })
         #current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
       end
       risp['points_updated'] = (get_current_contest_points current_user.id) if current_user

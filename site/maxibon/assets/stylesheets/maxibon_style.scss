@@ -49,6 +49,14 @@ body {
   background-color: #5cc8ff;
 }
 
+.done-overvideo-circle-inline {
+    width: 40px; 
+    height: 40px; 
+    background-color: #3EDE56; 
+    border-radius: 50%; 
+    color: #fff;
+}
+
 .profile {
     .avatar.active {
         background-color: #e4e4e4;
@@ -85,6 +93,10 @@ body {
 
 button, h1, h2, h3, h4, h5, h6, li, .oswald-font {
   font-family: 'Oswald-Bold', helvetica, arial, sans-serif;
+}
+
+.default-font {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .jcarousel li {

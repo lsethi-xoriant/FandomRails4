@@ -86,7 +86,41 @@
     </div>
   </div>
 
+  <div id="quiz-waiting-audio"></div>
+  <div id="quiz-answer-selected-audio"></div>
+
   <%= yield %>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      
+      $("#quiz-waiting-audio").jPlayer({
+        ready: function (event) {
+          $(this).jPlayer("setMedia", {
+            wav: "<%= asset_path('quiz-waiting-audio.wav') %>"
+          });
+        },
+        ended: function() {
+          $(this).jPlayer("play"); // Repeat the media.
+        },
+        supplied: "wav",
+        smoothPlayBar: false,
+        keyEnabled: false
+      });
+
+      $("#quiz-answer-selected-audio").jPlayer({
+        ready: function (event) {
+          $(this).jPlayer("setMedia", {
+            wav: "<%= asset_path('quiz-answer-selected-audio.wav') %>"
+          });
+        },
+        supplied: "wav",
+        smoothPlayBar: false,
+        keyEnabled: false
+      });
+
+    });
+  </script>
 
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

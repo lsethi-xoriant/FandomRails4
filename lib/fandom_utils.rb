@@ -131,11 +131,12 @@ module FandomUtils
   # Returns true if the request comes from a mobile device.
   def request_is_from_mobile_device?(request)
     iphone = request.user_agent =~ /iPhone/ 
+    ipad = request.user_agent =~ /iPad/ 
     mobile = request.user_agent =~ /Mobile/
     android = request.user_agent =~ /Android/  
 
     # Mobile and Android identifica il MOBILE di tipo Android, altrimenti con solo Android abbiamo il TABLET.
-    return (iphone || (mobile && android))
+    return ((iphone && !ipad) || (mobile && android))
   end
   
 end
