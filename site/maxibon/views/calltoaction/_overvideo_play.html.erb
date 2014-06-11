@@ -29,6 +29,9 @@
                                     <% user_points_except_share_for(calltoaction).times do %>
                                         <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
                                     <% end %>
+                                    <% (calltoactions_totalpoints(calltoaction) - user_points_except_share_for(calltoaction)).times do %>
+                                        <img class="img-ticket" src="/assets/maxibon/small-ticket-gray.png">
+                                    <% end %>
                                 </div>
                             </div>                     
                         <% else %>
