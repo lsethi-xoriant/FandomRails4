@@ -93,17 +93,18 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
-      
+
       $("#quiz-waiting-audio").jPlayer({
         ready: function (event) {
           $(this).jPlayer("setMedia", {
-            wav: "<%= asset_path('quiz-waiting-audio.wav') %>"
+            wav: "<%= asset_path('maxibon/quiz-waiting-audio.wav') %>"
           });
         },
         ended: function() {
           $(this).jPlayer("play"); // Repeat the media.
         },
         supplied: "wav",
+        volume: 0.4,
         smoothPlayBar: false,
         keyEnabled: false
       });
@@ -111,10 +112,11 @@
       $("#quiz-answer-selected-audio").jPlayer({
         ready: function (event) {
           $(this).jPlayer("setMedia", {
-            wav: "<%= asset_path('quiz-answer-selected-audio.wav') %>"
+            wav: "<%= asset_path('maxibon/quiz-answer-selected-audio.wav') %>"
           });
         },
         supplied: "wav",
+        volume: 1,
         smoothPlayBar: false,
         keyEnabled: false
       });

@@ -33,9 +33,9 @@
                             </div>                     
                         <% else %>
                             <h5 class="default-font" style="color: #fff;"><span style="margin-right: 15px;">
-                                Guarda il video e ottieni fino a <%= calltoactions_totalpoints(calltoaction) %> Gratta&Vinci</span>
+                                Guarda il video e ottieni fino a +<%= calltoactions_totalpoints(calltoaction) %> Gratta&Vinci</span>
                               <% calltoactions_totalpoints(calltoaction).times do |i| %>
-                                <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
+                                <img class="img-ticket" src="/assets/maxibon/small-ticket-gray.png">
                               <% end %>
                             </h5>  
                         <% end %>
