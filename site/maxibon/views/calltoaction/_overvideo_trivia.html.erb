@@ -8,34 +8,61 @@
                 </div>
                 <div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1 text-center" style="margin-top: 15px;">
                     <div class="row">
-
+                        <!-- ANSWER STREAM AS CIRCLE -->
                         <% calltoaction_answers.each do |answer|%>
 
-                          <div class="col-xs-4 text-center hidden-xs" style="padding-left: 15px; padding-right: 15px;">
                             <!-- DESKTOP VIEW -->
-                            <a href="javascript: void(0)" onclick="updateTriviaAnswer(<%= interaction_overvideo_end_id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" class="img-circle img-responsive img-circle-overvideo <%= (answer.correct ? "right" : "wrong") if calltoaction_user_answer == answer.id %>"></a>
-                            <h5 class="hidden-xs" style="color: #fff;"><%= answer.text %></h5>
-                          </div>
+                            <div class="col-xs-4 text-center hidden-xs" style="padding-left: 15px; padding-right: 15px;">
+                                <a href="javascript: void(0)" onclick="updateTriviaAnswer(<%= interaction_overvideo_end_id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" class="img-circle img-responsive img-circle-overvideo <%= (answer.correct ? "right" : "wrong") if calltoaction_user_answer == answer.id %>"></a>
+                                <h5 class="hidden-xs" style="color: #fff;"><%= answer.text %></h5>
+                            </div>
 
-                          <div class="col-xs-4 text-center hidden-sm hidden-md hidden-lg">
                             <!-- MOBILE VIEW -->
-                            <a href="javascript: void(0)" onclick="updateTriviaAnswer(<%= calltoaction_parent_id %>, <%= interaction_overvideo_end_id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" class="img-circle img-responsive img-circle-overvideo <%= (answer.correct ? "right" : "wrong") if calltoaction_user_answer == answer.id %>" ></a>
-                            <h5 class="" style="color: #fff; font-size: 9px;"><%= answer.text %></h5>
-                          </div>
+                            <div class="col-xs-4 text-center hidden-sm hidden-md hidden-lg">
+                                <a href="javascript: void(0)" onclick="updateTriviaAnswer(<%= calltoaction_parent_id %>, <%= interaction_overvideo_end_id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" class="img-circle img-responsive img-circle-overvideo <%= (answer.correct ? "right" : "wrong") if calltoaction_user_answer == answer.id %>" ></a>
+                                <h5 class="" style="color: #fff; font-size: 9px;"><%= answer.text %></h5>
+                            </div>
 
                         <% end %>
                     </div>
                 </div>
-                <div class="hidden-xs col-xs-12 text-center" style="margin-top: 15px;">
-                    <h4 style="color: #fff;"><span style="margin-right: 15px;">Rispondi per ottenere 1 Gratta&Vinci <%#= interaction_points %></span>
-                        <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
-                        <!--
-                        <% interaction_points.times do |i| %>
-                            <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
-                        <% end %>
-                        -->
-                    </h4>
-                </div>
+
+                <% if calltoaction_user_answer < 0 %>
+                    <!-- NOT RESPONSE BEFORE -->
+                    <div class="hidden-xs col-xs-12 text-center" style="margin-top: 15px;">
+                        <h4 style="color: #fff;">
+                            <span class="default-font" style="margin-right: 15px;">Guadagna fino a +<%= interaction_points %> Gratta&Vinci</span>
+                            <% interaction_points.times do |i| %>
+                                <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
+                            <% end %>
+                        </h4>
+                    </div>
+                <% else %>
+                    <!-- ALREADY RESPONSE -->
+                    <div class="hidden-xs col-xs-12 text-center" style="margin-top: 15px;">
+                        <h4 style="color: #fff;">                        
+                            <!-- CHECK CIRCLE -->
+
+                            <div class="text-center" style="display: inline-block;">
+                                <div class="done-overvideo-circle-inline">
+                                  <span style="font-size: 25px; top: 7px;" class="glyphicon glyphicon-ok"></span>
+                              </div>
+                            </div>
+
+                            <!-- TEXT AND TICKET -->
+                            <span class="default-font" style="margin-right: 15px; margin-left: 15px;">
+                                Hai guadagnato +<%= user_interaction_points %> Gratta&Vinci
+                            </span>
+                            <% user_interaction_points.times do |i| %>
+                                <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
+                            <% end %>
+                            <% (interaction_points - user_interaction_points).times do |i| %>
+                                <img class="img-ticket" src="/assets/maxibon/small-ticket-gray.png">
+                            <% end %>
+                        </h4>
+                    </div>
+                <% end %>
+
             </div>
         </div>
     </div>
