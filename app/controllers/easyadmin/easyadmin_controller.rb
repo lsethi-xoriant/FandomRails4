@@ -19,6 +19,10 @@ class Easyadmin::EasyadminController < ApplicationController
       end
   end
 
+  def show_user
+    @user = User.find(params[:id])
+  end
+
   def index_winner
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 30
@@ -266,9 +270,9 @@ class Easyadmin::EasyadminController < ApplicationController
 
     @current_prop = params[:property] unless params[:property].blank?
     unless @current_prop
-      @cta_list = Calltoaction.page(page).per(per_page).order("activated_at DESC")
+      @cta_list = Calltoaction.page(page).per(per_page).order("activated_at DESC NULLS LAST")
     else
-      @cta_list = Calltoaction.where("property_id=?", params[:property]).page(page).per(per_page).order("activated_at DESC")
+      @cta_list = Calltoaction.where("property_id=?", params[:property]).page(page).per(per_page).order("activated_at DESC NULLS LAST")
     end
 
     @page_size = @cta_list.num_pages

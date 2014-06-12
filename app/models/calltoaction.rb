@@ -17,7 +17,7 @@ class Calltoaction < ActiveRecord::Base
   
   has_many :interactions, dependent: :destroy
   has_many :calltoaction_tags, dependent: :destroy
-  has_many :answer
+  has_many :answers
 
   belongs_to :property
 

@@ -4,8 +4,6 @@ $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
 
-$grid-float-breakpoint: 3600px !default;
-
 // Inverted navbar
 // Reset inverted navbar basics
 $navbar-inverse-color:                      #42C5ED !default;
@@ -36,6 +34,10 @@ $navbar-inverse-toggle-border-color:        #42C5ED !default;
 @font-face {
     font-family: 'Oswald-Bold';
     src: url('/assets/maxibon/Oswald-Bold.ttf');
+}
+
+html {
+    background-color: #fff;
 }
 
 body {
