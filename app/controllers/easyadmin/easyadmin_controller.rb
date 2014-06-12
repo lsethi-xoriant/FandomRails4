@@ -9,7 +9,7 @@ class Easyadmin::EasyadminController < ApplicationController
   INTERACTION_TYPE = ["TRIVIA", "VERSUS", "LIKE", "CHECK", "SHARE", "PLAY", "DOWNLOAD"]
 
   def authorize_user
-    authorize! :manage, :all
+    authorize! :access, :easyadmin
   end
 
   def update_pagination_param
