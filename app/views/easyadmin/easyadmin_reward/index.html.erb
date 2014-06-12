@@ -1,0 +1,78 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "prize" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1>Elenco PREMI</h1>
+    </div> <!-- #content-header --> 
+
+    	<div id="content-container">
+
+    	<% if flash[:notice] %>
+	    	<div class="row">
+		      <div class="col-md-12">         
+		          <div class="row">
+		            <div class="col-lg-12">
+		              <div class="alert alert-success"><%= flash[:notice] %></div>
+		            </div>
+		          </div>
+		        
+		      </div>
+		    </div>
+	    <% end %>
+
+	    
+	    <div class="row text-right">
+	    	<div class="col-md-12">
+	    		<a href="/easyadmin/reward/new"><button type="button" class="btn btn-primary">NUOVO</button></a>
+	    	</div>
+	    </div>
+
+		<div class="row reward-to-show">
+			<div class="col-md-12"> 
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Titolo</th>
+							<th>Costo</th>
+							<th>Immagine</th>
+							<th>Spendibile</th>
+							<th>Cumulabile</th>
+							<th>Azioni</th>
+						</tr>
+					</thead>
+					<% @reward_list.each do |p| %>
+						<tr>
+							<td><%= p.title %></td>
+							<td><%= p.cost %></td>
+							<td>
+								<% if p.preview_image.present? %>
+									<img src="<%= p.preview_image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+								<% end %>
+							</td>
+							<td>
+								<%= p.spendable? ? '<i class="fa fa-check"></i>'.html_safe : '<i class="fa fa-times"></i>'.html_safe %>
+							</td>
+							<td>
+								<%= p.countable? ? '<i class="fa fa-check"></i>'.html_safe : '<i class="fa fa-times"></i>'.html_safe %>
+							</td>
+							<td>
+								<div class="row">
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/reward/show/<%= p.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+									</div>
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/reward/edit/<%= p.id %>"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
+									</div>
+
+								</div>
+							</td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

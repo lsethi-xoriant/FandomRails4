@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140603151408) do
+ActiveRecord::Schema.define(:version => 20140611125838) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -85,10 +85,8 @@ ActiveRecord::Schema.define(:version => 20140603151408) do
     t.string   "slug"
     t.string   "secondary_id"
     t.text     "description"
-    t.integer  "parent"
   end
 
-  add_index "calltoactions", ["parent"], :name => "index_calltoactions_on_parent"
   add_index "calltoactions", ["slug"], :name => "index_calltoactions_on_slug"
 
   create_table "checks", :force => true do |t|
@@ -322,6 +320,13 @@ ActiveRecord::Schema.define(:version => 20140603151408) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "reward_tags", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "reward_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "rewarding_users", :force => true do |t|
     t.integer  "points",                    :default => 0
     t.integer  "credits",                   :default => 0
@@ -336,6 +341,40 @@ ActiveRecord::Schema.define(:version => 20140603151408) do
     t.integer  "user_id"
     t.datetime "created_at",                               :null => false
     t.datetime "updated_at",                               :null => false
+  end
+
+  create_table "rewards", :force => true do |t|
+    t.string   "title"
+    t.text     "short_description"
+    t.text     "long_description"
+    t.string   "button_label"
+    t.integer  "cost"
+    t.datetime "valid_from"
+    t.datetime "valid_to"
+    t.string   "video_url"
+    t.string   "media_type"
+    t.integer  "currency_id"
+    t.boolean  "spendable"
+    t.boolean  "countable"
+    t.boolean  "numeric_display"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.string   "preview_image_file_name"
+    t.string   "preview_image_content_type"
+    t.integer  "preview_image_file_size"
+    t.datetime "preview_image_updated_at"
+    t.string   "main_image_file_name"
+    t.string   "main_image_content_type"
+    t.integer  "main_image_file_size"
+    t.datetime "main_image_updated_at"
+    t.string   "media_file_file_name"
+    t.string   "media_file_content_type"
+    t.integer  "media_file_file_size"
+    t.datetime "media_file_updated_at"
+    t.string   "not_awarded_image_file_name"
+    t.string   "not_awarded_image_content_type"
+    t.integer  "not_awarded_image_file_size"
+    t.datetime "not_awarded_image_updated_at"
   end
 
   create_table "shares", :force => true do |t|
@@ -379,6 +418,15 @@ ActiveRecord::Schema.define(:version => 20140603151408) do
     t.integer  "rewarding_user_id"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
+  end
+
+  create_table "user_rewards", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "reward_id"
+    t.boolean  "available"
+    t.integer  "rewarded_count", :default => 0
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "userinteractions", :force => true do |t|

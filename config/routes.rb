@@ -34,37 +34,37 @@ Fandom::Application.routes.draw do
     match "promocode", :to => "easyadmin#index_promocode"
     match "promocode/new_promocode", :to => "easyadmin#new_promocode"
     match "promocode/create_promocode", :to => "easyadmin#create_promocode"
-
+    
+    # PRIZE
+    match "reward", :to => "easyadmin_reward#index"
+    match "reward/show/:id", :to => "easyadmin_reward#show"
+    match "reward/edit/:id", :to => "easyadmin_reward#edit"
+    match "reward/new", :to => "easyadmin_reward#new"
+    match "reward/save", :to => "easyadmin_reward#save"
+    match "reward/update", :to => "easyadmin_reward#update"
+    
     # INSTANT WIN
-    match "/contest", :to => "easyadmin#index_contest"
-    match "/contest/new", :to => "easyadmin#new_contest"
-    match "/contest/edit", :to => "easyadmin#edit_contest"
-    match "/contest/save", :to => "easyadmin#save_contest"
-    match "/periodicity/new", :to => "easyadmin#new_periodicity"
-    match "/periodicity/save", :to => "easyadmin#save_periodicity"
-    match "/periodicity", :to => "easyadmin#index_periodicity"
-    match "/instantwin/generate/:id", :to => "instantwin#create_wins"
-    match "/prize", :to => "easyadmin#index_prize"
-    match "/prize/new", :to => "easyadmin#new_prize"
-    match "/prize/edit/:id", :to => "easyadmin#edit_prize"
-    match "/prize/save", :to => "easyadmin#save_prize"
-    match "/prize/update", :to => "easyadmin#update_prize"
+    match "contest", :to => "easyadmin#index_contest"
+    match "contest/new", :to => "easyadmin#new_contest"
+    match "contest/edit", :to => "easyadmin#edit_contest"
+    match "contest/save", :to => "easyadmin#save_contest"
+    match "periodicity/new", :to => "easyadmin#new_periodicity"
+    match "periodicity/save", :to => "easyadmin#save_periodicity"
+    match "periodicity", :to => "easyadmin#index_periodicity"
+    match "instantwin/generate/:id", :to => "instantwin#create_wins"
+    match "instantwin_prize", :to => "easyadmin#index_prize"
+    match "instantwin_prize/new", :to => "easyadmin#new_prize"
+    match "instantwin_prize/edit/:id", :to => "easyadmin#edit_prize"
+    match "instantwin_prize/save", :to => "easyadmin#save_prize"
+    match "instantwin_prize/update", :to => "easyadmin#update_prize"
 
+    # PROPERTY
     match "property", :to => "easyadmin#index_property"
     match "property/new", :to => "easyadmin#new_property"
     match "property/save", :to => "easyadmin#save_property"
     match "property/update", :to => "easyadmin#update_property"
     match "property/edit/:id", :to => "easyadmin#edit_property"
     match "property/show/:id", :to => "easyadmin#show_property"
-    
-    match "comment/approved", :to => "easyadmin#index_comment_approved"
-    match "comment/toapproved", :to => "easyadmin#index_comment_to_be_approved"
-    match "comment/notapproved", :to => "easyadmin#index_comment_not_approved"
-    match "comment/notapproved/:property", :to => "easyadmin#index_comment_not_approved"
-    match "comment/approved/:property", :to => "easyadmin#index_comment_approved"
-    match "comment/toapproved/:property", :to => "easyadmin#index_comment_to_be_approved"
-    match "comment/:property/update", :to => "easyadmin#update_comment_pubblished"
-
     match "property/show/:id/save_level", :to => "easyadmin#save_level"
     match "property/show/:id/save_badge", :to => "easyadmin#save_badge"
     match "property/show/:id/new_level", :to => "easyadmin#new_level"
@@ -73,6 +73,16 @@ Fandom::Application.routes.draw do
     match "property/show/:id/edit_badge/:badge_id", :to => "easyadmin#edit_badge"
     match "property/show/:id/edit_level/:level_id/update", :to => "easyadmin#update_level"
     match "property/show/:id/edit_badge/:badge_id/update", :to => "easyadmin#update_badge"
+
+    
+    # COMMENT
+    match "comment/approved", :to => "easyadmin#index_comment_approved"
+    match "comment/toapproved", :to => "easyadmin#index_comment_to_be_approved"
+    match "comment/notapproved", :to => "easyadmin#index_comment_not_approved"
+    match "comment/notapproved/:property", :to => "easyadmin#index_comment_not_approved"
+    match "comment/approved/:property", :to => "easyadmin#index_comment_approved"
+    match "comment/toapproved/:property", :to => "easyadmin#index_comment_to_be_approved"
+    match "comment/:property/update", :to => "easyadmin#update_comment_pubblished"
 
     match "destroy_badge", :to => "easyadmin#destroy_badge"
     match "destroy_level", :to => "easyadmin#destroy_level"
@@ -94,7 +104,12 @@ Fandom::Application.routes.draw do
   end
 
   post "/", to: "property#index"
-
+  
+  #reward
+  match "/reward/catalogue", :to => "reward#index"
+  match "/reward/show/:reward_id", :to => "reward#show"
+  match "/reward/buy/:reward_id", :to => "reward#buy"
+  
   # Captcha.
   match "/captcha", :to => "calltoaction#code_image"
 

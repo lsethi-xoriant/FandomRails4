@@ -1,0 +1,61 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "prize" } %>
+
+<div id="content">   
+
+  <div id="content-header">
+    <h1>PREMIO INFO</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <% if flash[:notice] %>
+      <div class="row">
+        <div class="col-md-12"> 
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <h3>Dati generali</h3>
+    <hr/>
+    
+    <div class="row">
+      <div class="col-sm-5">
+          <dl class="dl-horizontal">
+            <dt>Titolo</dt><dd><p><%= @current_reward.title %></p></dd>
+            <dt>Descrizione breve</dt><dd><p><%= @current_reward.short_description %></p></dd>
+            <dt>Descrizione lunga</dt><dd><p><%= @current_reward.long_description %></p></dd>
+            <dt>Costo premio</dt><dd><p><%= @current_reward.cost %></p></dd>
+            <dt>Currency premio</dt><dd><p><%= @current_reward.cost_currency.title if @current_reward.cost_currency %></p></dd>
+            <dt>Tipologia premio</dt><dd><p><%= @current_reward.media_type %></p></dd>
+            
+            <% unless @current_reward.valid_from.nil? %>
+            	<dt>Attivo dal</dt><dd><p><%= @current_reward.valid_from.strftime("%d/%m/%Y %H:%m") %></p></dd>
+            <% end %>
+            
+            <% unless @current_reward.valid_to.nil? %>
+            	<dt>Scadenza premio</dt><dd><p><%= @current_reward.valid_to.strftime("%d/%m/%Y %H:%m") %></p></dd>
+            <% end %>
+
+            <% unless @current_reward.video_url.blank? %>
+            	<dt>Video</dt><dd><p><%= @current_reward.video_url %></p></dd>
+            <% end %>
+
+            <% unless @tag_list.blank? %>
+            	<dt>Tag</dt><dd><p><%= @tag_list %></p></dd>
+            <% end %>
+
+          </dl>
+      </div>
+      <div class="col-sm-3">
+      	<img class="img-responsive" src="<%= @current_reward.main_image.url %>" style="border: 1px solid black; border-radius: 10px;">
+      </div>
+    </div> 
+
+  </div>
+
+</div>
