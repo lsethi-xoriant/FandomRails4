@@ -4,8 +4,6 @@ $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
 
-$grid-float-breakpoint: 3600px !default;
-
 // Inverted navbar
 // Reset inverted navbar basics
 $navbar-inverse-color:                      #42C5ED !default;
@@ -38,6 +36,10 @@ $navbar-inverse-toggle-border-color:        #42C5ED !default;
     src: url('/assets/maxibon/Oswald-Bold.ttf');
 }
 
+html {
+    background-color: #fff;
+}
+
 body {
   //background-image: url(/assets/maxibon/bg-repeat.jpg);
   background-image: url(/assets/maxibon/bg.jpg);
@@ -47,6 +49,14 @@ body {
   //background-repeat:repeat-x;
   //background-attachment: fixed;
   background-color: #5cc8ff;
+}
+
+.done-overvideo-circle-inline {
+    width: 40px; 
+    height: 40px; 
+    background-color: #3EDE56; 
+    border-radius: 50%; 
+    color: #fff;
 }
 
 .profile {
@@ -85,6 +95,10 @@ body {
 
 button, h1, h2, h3, h4, h5, h6, li, .oswald-font {
   font-family: 'Oswald-Bold', helvetica, arial, sans-serif;
+}
+
+.default-font {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .jcarousel li {
@@ -150,7 +164,7 @@ button, h1, h2, h3, h4, h5, h6, li, .oswald-font {
 }
 
 .overvideo-trivia, .overvideo-instant-win {
-    padding-top: 8%; 
+    padding-top: 5%; 
     padding-bottom: 50%; 
     position: relative;
     background-color: rgba(0, 0, 0, 0.7);
@@ -173,6 +187,10 @@ button, h1, h2, h3, h4, h5, h6, li, .oswald-font {
 
 .img-circle-overvideo.wrong {
     border-color: #ff0000;
+}
+
+.img-circle-overvideo:hover, .img-circle-overvideo:focus {
+    border-color: #eab83e;
 }
 
 .home-carousel-li.active { color: #000; }

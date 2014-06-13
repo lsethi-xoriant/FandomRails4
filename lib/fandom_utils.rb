@@ -38,9 +38,15 @@ module FandomUtils
     if site.force_ssl
       force_ssl()
     end
-    if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController))
+
+    may_redirect_to_landing
+
+  end
+
+  def may_redirect_to_landing
+    if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController)|| (self.is_a? YoutubeWidgetController) || request.site.public_pages.include?("#{params[:controller]}##{params[:action]}"))
       redirect_to "/landing"
-    end 
+    end
   end
 
   def configure_environment_for_site(site)
@@ -125,11 +131,12 @@ module FandomUtils
   # Returns true if the request comes from a mobile device.
   def request_is_from_mobile_device?(request)
     iphone = request.user_agent =~ /iPhone/ 
+    ipad = request.user_agent =~ /iPad/ 
     mobile = request.user_agent =~ /Mobile/
     android = request.user_agent =~ /Android/  
 
     # Mobile and Android identifica il MOBILE di tipo Android, altrimenti con solo Android abbiamo il TABLET.
-    return (iphone || (mobile && android))
+    return ((iphone && !ipad) || (mobile && android))
   end
   
 end

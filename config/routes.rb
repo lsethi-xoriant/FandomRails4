@@ -8,11 +8,16 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
+  # TODO: Maxibon youtube widget url
+  match "/youtube", :to => "youtube_widget#index"
+
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
     match "winner", :to => "easyadmin#index_winner"
     match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
+
+    match "user/show/:id", :to => "easyadmin#show_user"
 
     match "cta", :to => "easyadmin#index_cta"
     match "cta/filter/:filter", :to => "easyadmin#filter_cta"
@@ -148,6 +153,7 @@ Fandom::Application.routes.draw do
   match "/user_event/update_like", :to => "calltoaction#update_like", defaults: { format: 'json' }
   match "/user_event/update_check", :to => "calltoaction#update_check", defaults: { format: 'json' }
   match "/user_event/share/:provider", :to => "calltoaction#share", defaults: { format: 'json' }
+  match "/user_event/share_free/:provider", :to => "calltoaction#share_free", defaults: { format: 'json' }
 
   namespace :api do
     namespace :v1 do

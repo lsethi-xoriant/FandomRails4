@@ -1,75 +1,96 @@
-<div class="row">
-  <div class="col-sm-12 text-center">
+<div class="row" style="margin-top: -15px;">
+  <div class="col-sm-12 text-center no-pad">
+    <h5 class="default-font">
+      <span id="share-footer-label" style="margin-right: 15px; font-weight: bold; color: #013368;">
+        <% if calltoaction_interaction_share_done(calltoaction) %>
+          Hai guadagnato +<%= calltoactions_share_points(calltoaction) %> Gratta&Vinci
+        <% else %>
+          Guadagna +<%= calltoactions_share_points(calltoaction) %> Gratta&Vinci
+        <% end %>
+      </span>
 
-    <% if all_share_interactions(calltoaction).any? %>  
-      <% all_share_interactions(calltoaction).each do |s| %>
-        <% if s.resource.share_type == "email" && current_user %>
+      <% if all_share_interactions(calltoaction).any? %>  
+        <% all_share_interactions(calltoaction).each do |s| %>
+          <% if s.resource.share_type == "email" && current_user %>
 
-          <!-- INVALID EMAIL MODAL -->
-          <div class="modal fade" id="invalid-email-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="text-center">EMAIL NON VALIDA</h4>
-                </div>
-                <div class="modal-body">
-                  <h4>Inserisci un'email valida per ottenere punti.</h4>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SHARE MODAL -->
-          <div class="modal fade share-modal" id="share-modal-<%= calltoaction.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4>Condividi con un amico questo contenuto</h4>
-                </div>
-                <div class="modal-body">
-                  <div class="row" style="margin-bottom: 10px;">
-                    <div class="col-sm-8">
-                      <%= text_field_tag :email_to_share, nil, class: "form-control", id: "share-email-address-#{ s.id }", placeholder: "example@example.com" %>
-                    </div>
-                    <div class="col-sm-4">
-                      <button id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="btn btn-primary btn-block" onclick="shareWith('<%= s.resource.share_type %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI</button>
-                    </div>
+            <!-- INVALID EMAIL MODAL -->
+            <div class="modal fade" id="invalid-email-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="text-center">EMAIL NON VALIDA</h4>
+                  </div>
+                  <div class="modal-body">
+                    <h4>Inserisci un'email valida per ottenere punti.</h4>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
                   </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+              </div>
+            </div>
+
+            <!-- SHARE MODAL -->
+            <div class="modal fade share-modal" id="share-modal-<%= calltoaction.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Condividi con un amico questo contenuto</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-sm-8">
+                        <%= text_field_tag :email_to_share, nil, class: "form-control", id: "share-email-address-#{ s.id }", placeholder: "example@example.com" %>
+                      </div>
+                      <div class="col-sm-4">
+                        <button id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="btn btn-primary btn-block" onclick="shareWith('<%= s.resource.share_type %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <button type="button" class="btn btn-default" onclick="FBscrollTo(0); $('#share-modal-<%= calltoaction.id %>').modal('show');">CONDIVIDI VIA EMAIL</button>
+            <button type="button" class="btn btn-default" onclick="FBscrollTo(0); $('#share-modal-<%= calltoaction.id %>').modal('show');">CONDIVIDI VIA EMAIL</button>
 
-        <% end %>
-      <% end %>
-    <% end %>
-
-    <% if all_share_interactions(calltoaction).any? %>
-      <% all_share_interactions(calltoaction).each do |s| %>
-        <% if s.resource.share_type == "facebook" %>
-          <% if current_user && (auth = current_user.authentications.find_by_provider(s.resource.share_type.downcase)) %>
-            <button id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="btn btn-fb" onclick="shareWith('<%= s.resource.share_type.downcase %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI CON FACEBOOK</button><img class="img-ticket" style="padding-left: 15px;" src="/assets/maxibon/small-ticket.png">
-          <% else %>
-            <a href="/sign_in_fb_from_page"><button type="button" class="btn btn-fb">ENTRA CON FACEBOOK</button></a><img class="img-ticket" style="padding-left: 15px;" src="/assets/maxibon/small-ticket.png">
           <% end %>
         <% end %>
       <% end %>
-    <% end %>
 
-  </div>
+      <% if all_share_interactions(calltoaction).any? %>
+        <% all_share_interactions(calltoaction).each do |s| %>
+          <% if s.resource.share_type == "facebook" %>
+            <% if current_user && (auth = current_user.authentications.find_by_provider(s.resource.share_type.downcase)) %>
+              <button style="width: 170px;" id="share-<%= s.resource.share_type %>-<%= s.id %>" type="button" class="btn btn-fb" onclick="shareWith('<%= s.resource.share_type.downcase %>', <%= s.id %>, <%= calltoaction.id %>)">CONDIVIDI CON FACEBOOK</button>
+            <% else %>
+              <a href="/sign_in_fb_from_page"><button type="button" class="btn btn-fb">ENTRA CON FACEBOOK</button></a>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
 
-  <div class="col-sm-12 text-center">
-    <h5 class="white-text-with-shadow">Condividi il video e ottieni un Gratta&Vinci</h5>
+      <div style="display: inline-block;" id="share-footer-feedback-done" class="share-footer-feedback <%= "hidden" unless calltoaction_interaction_share_done(calltoaction) %>">
+        <!-- TICKET YELLOW -->
+        <img class="img-ticket" style="padding-left: 15px;" src="/assets/maxibon/small-ticket.png">
+        <!-- CHECK CIRCLE -->
+        <div class="text-center" style="display: inline-block;">
+          <div style="margin-left: 15px;" class="done-overvideo-circle-inline">
+              <span style="font-size: 25px; top: 7px;" class="glyphicon glyphicon-ok"></span>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display: inline-block;" id="share-footer-feedback-not-done" class="share-footer-feedback <%= "hidden" if calltoaction_interaction_share_done(calltoaction) %>">
+        <!-- TICKET GRAY -->
+        <img class="img-ticket" style="padding-left: 15px;" src="/assets/maxibon/small-ticket-gray.png">
+      </div>
+
+    </h5>
   </div>
 </div>
 

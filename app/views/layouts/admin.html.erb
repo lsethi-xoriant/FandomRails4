@@ -56,9 +56,10 @@
       $('#calltoaction_activation_time').timepicker({ 
         showMeridian: false
       });
-      $("#calltoaction_activation_date_div").datepicker();
-      $("#calltoaction_start_date_div").datepicker();
-      $("#calltoaction_end_date_div").datepicker();
+      $("#calltoaction_activation_date").datepicker({ format: "yyyy-mm-dd" });
+      
+      //$("#calltoaction_start_date_div").datepicker();
+      //$("#calltoaction_end_date_div").datepicker();
 
       $('#property_activation_time').timepicker({ 
         showMeridian: false

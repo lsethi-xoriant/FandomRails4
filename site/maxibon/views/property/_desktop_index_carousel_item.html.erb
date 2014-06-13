@@ -6,13 +6,17 @@
     </div>
   </div>
 
-  <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>, null, <%= active %>)">
+  <% if type %>
+    <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>, '<%= type %>', <%= active %>)">
+  <% else %>
+    <div class="row" onclick="updateYTIframe('<%= calltoaction.video_url %>', <%= calltoaction.id %>, <%= i %>, null, <%= active %>)">
+  <% end %>
+
     <div class="col-sm-12" style="padding: 0 40px;">
       <img src="<%= calltoaction.image %>" style="width: 100%;">
     </div>
     <div class="col-sm-12" style="padding: 0 40px;">
-
-      
+    
       <div id="calltoaction-item-carousel-<%= calltoaction.id %>" style="position: relative;" class="<%= "hidden" unless calltoaction_done? calltoaction %>">
         <div class="done-carousel-circle">
           <div class="done-carousel-circle-children">

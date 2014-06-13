@@ -244,8 +244,8 @@
         <div class="col-lg-6">
           <div class="form-group">
             <label class="text-input">Giorno</label>
-            <div id="calltoaction_activation_date_div" class="input-group date" data-auto-close="true" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
-              <%= f.text_field :activation_date, :class => "form-control" %>
+            <div id="calltoaction_activation_date_div" class="input-group date" data-auto-close="true" data-date-autoclose="true" data-date-format="yyyy-mm-dd" data-date="<%=  @cta.activated_at.strftime("%Y-%m-%d") if @cta && @cta.activated_at %>">
+              <%= f.text_field :activation_date, :class => "form-control", value: @cta && @cta.activated_at ? @cta.activated_at.in_time_zone("Rome").strftime("%Y-%m-%d") : "" %>
               <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
           </div>
@@ -254,7 +254,7 @@
           <div class="form-group">
             <label class="text-input">Ora</label>
             <div id="dp-ex-3" class="input-group bootstrap-timepicker">
-              <%= f.text_field :activation_time, :class => "form-control" %>
+              <%= f.text_field :activation_time, :class => "form-control", value: @cta && @cta.activated_at ? @cta.activated_at.in_time_zone("Rome").strftime("%H:%M") : DateTime.now.in_time_zone("Rome").strftime("%H:%M") %>
               <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
             </div>
           </div>

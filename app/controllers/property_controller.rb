@@ -5,19 +5,27 @@ class PropertyController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :index
   
   def index
-    if mobile_device?
-      @calltoactions = cache_short { Calltoaction.active.limit(3).to_a }
+
+    if request.site.force_facebook_tab && !request_is_from_mobile_device?(request) && request.referrer && request.referrer.include?("https://www.facebook.com")
+      redirect_to request.site.force_facebook_tab
     else
-      @calltoactions = cache_short { Calltoaction.active_no_order.order("activated_at ASC").to_a }
-      @calltoactions_comingsoon = cache_short() { Calltoaction.future_no_order.order("activated_at ASC").to_a }
+
+      if mobile_device?
+        @calltoactions = cache_short { Calltoaction.active.limit(3).to_a }
+      else
+        @calltoactions = cache_short { Calltoaction.active_no_order.order("activated_at ASC").to_a }
+        @calltoactions_comingsoon = cache_short() { Calltoaction.future_no_order.order("activated_at ASC").to_a }
+      end
+
     end
+
   end
 
   def extra
     if mobile_device?
-      @calltoactions = cache_short { Calltoaction.active_extra.limit(3).to_a }
+      @calltoactions = cache_short { calltoaction_active_with_tag("extra", "DESC").limit(3).to_a }
     else
-      @calltoactions = cache_short { Calltoaction.active_extra_no_order.order("activated_at ASC").to_a }
+      @calltoactions = cache_short { calltoaction_active_with_tag("extra", "ASC").to_a }
     end
   end
 
@@ -28,9 +36,9 @@ class PropertyController < ApplicationController
     streamcalltoactiontorender = Calltoaction.active.offset(params[:offset]).limit(3)
 
     if params[:type] == "extra"
-      streamcalltoactiontorender = Calltoaction.active_extra.offset(params[:offset]).limit(3)
+      streamcalltoactiontorender = calltoaction_active_with_tag("extra", "DESC").offset(params[:offset]).limit(3)
     else
-      streamcalltoactiontorender = Calltoaction.active.offset(params[:offset]).limit(3)
+      streamcalltoactiontorender = calltoaction_active_with_tag("extra", "DESC").offset(params[:offset]).limit(3)
     end
     
     streamcalltoactiontorender.each do |c|

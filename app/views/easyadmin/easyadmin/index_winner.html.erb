@@ -41,7 +41,16 @@
               <td><%= playticket_event.user.email %></td>
               <td><%= playticket_event.contest_periodicity.title %></td>
               <td><%= playticket_event.instantwin.time_to_win_start.strftime("%d/%m/%Y") %></td>
-              <td><button class="btn btn-xs btn-primary" id="playticket-event-<%= playticket_event.id %>" onclick="send_email_to_winner(<%= playticket_event.id %>)">AVVISA</button></td>
+              <td>
+                <div class="col-sm-1" style="margin: 0;">
+                  <a href="/easyadmin/user/show/<%= playticket_event.user.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+                </div>
+
+                <div class="col-sm-2" style="margin: 0;">
+                  <a onclick="send_email_to_winner(<%= playticket_event.id %>)" href="javascript: void(0)" id="playticket-event-<%= playticket_event.id %>"><i class="fa fa-envelope" style="color: red"></i></a>
+                </div>
+                
+              </td>
             </tr>
           <% end %>
         </table>
@@ -59,8 +68,7 @@
 
 <script type="text/javascript">
   function send_email_to_winner(playticket_event_id) {
-    $("#playticket-event-" + playticket_event_id).attr('disabled', true);
-    $("#playticket-event-" + playticket_event_id).html('...');
+    $("#playticket-event-" + playticket_event_id + " i").css('color', "gray");
     $.ajax({
           type: "POST",
           url: "/easyadmin/winner/send_email_to_winner",
@@ -69,8 +77,7 @@
             jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
           },
           success: function(data) {
-            $("#playticket-event-" + playticket_event_id).attr('disabled', false);
-            $("#playticket-event-" + playticket_event_id).html('AVVISA');
+            $("#playticket-event-" + playticket_event_id + " i").css('color', 'red');
           } // success AJAX
       });
   }
