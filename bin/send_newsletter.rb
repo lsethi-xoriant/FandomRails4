@@ -25,19 +25,28 @@ def get_users(rows, keys)
 end
 
 def send_newsletter_to_user(user, html, ses, from_email, subject)
-  email = user["email"]
-  user.each do |k, v|
-    html.gsub!("$" + k, v)
+  begin
+    email = user["email"]
+    user.each do |k, v|
+      html.gsub!("$" + k, v)
+    end
+    puts_no_newline "sending the newsletter to email #{email}... "
+    ses.send_email(
+     :to        => [email],
+     :source    => from_email,
+     :subject   => subject,
+     :html_body => html
+    )
+    puts "done."
+  rescue Exception => e
+    puts "error: #{e}"
   end
-  puts "sending the newsletter to email #{email}..."
-  ses.send_email(
-   :to        => [email],
-   :source    => from_email,
-   :subject   => subject,
-   :html_body => html
-  )
 end
 
+def puts_no_newline(msg)
+  print msg
+  $stdout.flush
+end
 
 # Script entry point.
 def main
