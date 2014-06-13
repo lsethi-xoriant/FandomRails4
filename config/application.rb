@@ -11,6 +11,7 @@ end
 
 module Fandom
   class Application < Rails::Application
+    require_relative '../lib/raw_cookie_middleware'
     require_relative '../lib/config_utils'
     include ConfigUtils
     
@@ -87,7 +88,8 @@ module Fandom
       # that case the first process to find an expired cache entry will bump the cache
       # expiration time by the value set in this property
       :race_condition_ttl => 120,
-      :compress => true
+      :compress => true,
+      #:serializer => Oj # this serializer can be enabled to share the cache with other technologies using the JSON format
     }
 
     config.sites = []
@@ -96,5 +98,11 @@ module Fandom
     
     enabled_sites = config.deploy_settings['enabled_sites'].split(',').map { |s| s.strip }
     load_site_configs(enabled_sites)
+    
+    config.fandom_play_enabled = config.deploy_settings.key? 'fandom_play'
+    if config.fandom_play_enabled
+      config.middleware.insert_before "Rack::Cache", SetRawCookieMiddleware
+    end
+
   end
 end
