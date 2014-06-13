@@ -31,7 +31,7 @@ class Reward < ActiveRecord::Base
   
   has_many :reward_tags
   has_many :user_rewards
-  has_one :cost_currency, :class_name => "Reward", :foreign_key => :currency_id
+  belongs_to :currency, :class_name => "Reward", :foreign_key => 'currency_id'
   
   before_save :set_active_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
   before_save :set_expire_at # Costruisco la data di disattivazione se arrivo dall'easyadmin.

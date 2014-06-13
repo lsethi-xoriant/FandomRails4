@@ -30,7 +30,7 @@
             <dt>Descrizione breve</dt><dd><p><%= @current_reward.short_description %></p></dd>
             <dt>Descrizione lunga</dt><dd><p><%= @current_reward.long_description %></p></dd>
             <dt>Costo premio</dt><dd><p><%= @current_reward.cost %></p></dd>
-            <dt>Currency premio</dt><dd><p><%= @current_reward.cost_currency.title if @current_reward.cost_currency %></p></dd>
+            <dt>Currency premio</dt><dd><p><%= @current_reward.currency.title if @current_reward.currency %></p></dd>
             <dt>Tipologia premio</dt><dd><p><%= @current_reward.media_type %></p></dd>
             
             <% unless @current_reward.valid_from.nil? %>

@@ -28,7 +28,7 @@
 	          	<dl class="dl-horizontal">
 		            
 		            <dt>Costo premio</dt><dd><p><%= @reward.cost %></p></dd>
-		            <dt>Currency premio</dt><dd><p><%= @reward.cost_currency.title if @reward.cost_currency %></p></dd>
+		            <dt>Currency premio</dt><dd><p><%= @reward.currency.title if @reward.currency %></p></dd>
 		            <dt>Descrizione lunga</dt><dd><p><%= @reward.long_description %></p></dd>
 		            <% unless @reward.valid_from.nil? %>
 		            	<dt>Attivo dal</dt><dd><p><%= @reward.valid_from.strftime("%d/%m/%Y %H:%m") %></p></dd>
@@ -37,9 +37,13 @@
 		            <% unless @reward.valid_to.nil? %>
 		            	<dt>Scadenza premio</dt><dd><p><%= @reward.valid_to.strftime("%d/%m/%Y %H:%m") %></p></dd>
 		            <% end %>
-					
-					<dt>Premio già acquistato</dt><dd><p><%= @user_got_reward ? '<i class="fa fa-check"></i>'.html_safe : '<i class="fa fa-times"></i>'.html_safe %></p></dd>
 	          </dl>
+	          <% if @user_got_reward %>
+	          	<p>Hai già acquistato questo premio</p>
+	          <% end %>
+	          <% if !@user_can_buy_reward && @reward.currency %>
+	          	<p>Ti mancano ancora <%= @currency_to_buy_reward %> <%= @reward.currency.title %> per acquistare questo premio.</p>
+	          <% end %>
           	</div>
           </div>
           

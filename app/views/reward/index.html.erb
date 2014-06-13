@@ -1,57 +1,54 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container">   
-  <div class="row">      
-    <div class="col-md-12 col-md-offset-0">
+
+<div class="container">
+	<% if @top_rewards.count > 0 %>
       <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-          <h1>I TUOI PREMI</h1>
-          <div class="row">
-          	<div class="col-md-12">
-          		<% if @user_rewards.count > 0 %>
-          		<ul>
-          			<% @user_rewards.each do |r| %>
-          			<li><a href="/reward/show/<%= r.id %>"><%= r.title %></a></li>
-          			<% end %>
-          		</ul>
-          		<% else %>
-          		<p>Non hai nessun premio</p>
-          		<% end %>
-          	</div>
+        <div class="col-xs-12">
+          <div class="page-header">
+            <h3>Premi in evidenza <small>Subtext for header</small></h3>
           </div>
-          
-          <h1>I PREMI CHE PUOI OTTENRE</h1>
-          <div class="row">
-          	<div class="col-md-12">
-          		<% if @user_available_rewards.count > 0 %>
-          		<ul>
-          			<% @user_available_rewards.each do |r| %>
-          			<li><a href="/reward/show/<%= r.id %>"><%= r.title %></a></li>
-          			<% end %>
-          		</ul>
-          		<% else %>
-          		<p>Non hai nessun premio</p>
-          		<% end %>
-          	</div>
-          </div>
-          
-          <h1>ALTRI PREMI</h1>
-          <div class="row">
-          	<div class="col-md-12">
-          		<% if @user_available_rewards.count > 0 %>
-          		<ul>
-          			<% @user_available_rewards.each do |r| %>
-          			<li><a href="/reward/show/<%= r.id %>"><%= r.title %></a></li>
-          			<% end %>
-          		</ul>
-          		<% else %>
-          		<p>Non hai nessun premio</p>
-          		<% end %>
-          	</div>
-          </div>
-          
         </div>
-      </div>      
-    </div>
-  </div>
+      </div>
+      <div class="row brws-item">
+      	<% @top_rewards.each do |r| %>
+        <div class="col-md-6">
+          <a href="/reward/show/<%= r.id %>">
+            <img class="img-responsive" src="<%= r.main_image.url %>" alt="...">
+          </a>
+          <div class="row">
+            <div class="col-xs-8">
+              <h6><%= r.title %></h6>
+              <p><a href="/reward/show/<%= r.id %>" class="btn btn-primary btn-sm" role="button">Vedi</a></p>
+            </div>
+            <div class="col-xs-4 text-right">
+              <h5><span class="label label-warning"><%= r.cost %> <span class="glyphicon glyphicon-star"></span></span></h5>
+            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+	<% end %>
+	
+	<% if @user_available_rewards.count > 0 %>
+	 <div class="row">
+        <div class="col-xs-12">
+          <div class="page-header">
+            <h3>Premi che puoi permetterti <small>Subtext for header</small></h3>
+          </div>
+        </div>
+      </div>
+      <div class="row brws-item">
+      	<% @user_available_rewards.each do |r| %>
+        <div class="col-xs-6 col-md-3 text-center">
+          <a href="/reward/show/<%= r.id %>">
+            <img class="img-responsive" src="<%= r.preview_image.url %>" alt="...">
+          </a>
+          <h5><span class="label label-warning"><%= r.cost %> <span class="glyphicon glyphicon-star"></span></span></h5>
+          <p><small><%= r.title %></small></p>
+          <h5><a href="/reward/show/<%= r.id %>" class="btn btn-primary btn-xs" role="button">Vedi</a></h5>        
+        </div>
+        <% end %>
+      </div>
+	  <% end %>    
 </div>
