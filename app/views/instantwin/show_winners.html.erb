@@ -5,58 +5,61 @@
 
     <%= render partial: "/application/header" %>
 
-	  <h1 class="text-center white-text-with-shadow">I VINCITORI</h1>
-	
-    <div class="col-sm-12 hidden-xs" style="min-height: 300px;">
-    <% if @winners.any? %>
-		  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-  		  <!-- Wrapper for slides -->
-  		  <div class="carousel-inner">
-  		    <div class="item active">
-  		    	<% i = 1 %>
-  		      <% @winners.each do |winner| %>                         
-              <div class="col-sm-3">
-              	<div class="text-center">
-              		<img class="img-circle img-responsive" src="<%= winner['avatar'] %>" />
-              	</div>
-              	<div class="text-center">
-              		<p class="winner-p"><%= winner['name'].upcase %></p>
-              	</div>
-              </div>
-                  
-              <% if i % @winner_per_page == 0 && i != @winners.count %>
-                </div><div class="item">
+	  <h1 class="text-center white-text-with-shadow" style="margin-bottom: 15px;">I VINCITORI</h1>
+
+    <div class="row">
+      <div class="col-sm-12 hidden-xs" style="min-height: 300px;">
+      <% if @winners.any? %>
+  		  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+    		  <!-- Wrapper for slides -->
+    		  <div class="carousel-inner">
+    		    <div class="item active">
+    		    	<% i = 1 %>
+    		      <% @winners.each do |winner| %>       
+                <% 40.times do %>                  
+                <div class="col-sm-4" style="height: 165px;">
+                	<div class="text-center">
+                		<img class="img-circle img-responsive" src="<%= winner['avatar'] %>" />
+                	</div>
+                	<div class="text-center">
+                		<p class="winner-p"><%= winner['name'].upcase %></p>
+                	</div>
+                </div>
+                    
+                <% if i % @winner_per_page == 0 && i != @winners.count %>
+                  </div><div class="item">
+                <% end %>
+    				    <% i = i + 1 %>
               <% end %>
-  				    <% i = i + 1 %>
-            <% end %>
-  		    </div>
-  		  </div>
-  		
-  		  <!-- Controls -->
-  		  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-  		    <span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span>
-  		  </a>
-  		  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-  		    <span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span>
-  		  </a>
-  		  </div>
-      </div>
-        
-      <div class="row visible-xs">
-      	<% @winners.each do |winner| %>                     
-          <div class="col-xs-4">
-          	<div class="text-center">
-          		<img class="img-circle img-responsive" src="<%= winner['avatar'] %>" />
-          	</div>
-          	<div class="text-center">
-          		<p style="color:#fff; font-family: 'Oswald-Bold', helvetica, arial, sans-serif; text-shadow: 2px 2px 2px rgba(40, 40, 40, 1); letter-spacing: 1px;"><%= winner['name'] %></p>
-          	</div>
-          </div>          
-        <% end %>
-      </div>
+              <% end %>
+    		    </div>
+    		  </div>
+    		
+    		  <!-- Controls -->
+    		  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+    		    <span style="font-size: 16px;" class="glyphicon glyphicon-chevron-left"></span>
+    		  </a>
+    		  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+    		    <span style="font-size: 16px;" class="glyphicon glyphicon-chevron-right"></span>
+    		  </a>
+    		  </div>
+        </div>
+          
+        <div class="row visible-xs">
+        	<% @winners.each do |winner| %>                     
+            <div class="col-xs-4">
+            	<div class="text-center">
+            		<img class="img-circle img-responsive" src="<%= winner['avatar'] %>" />
+            	</div>
+            	<div class="text-center">
+            		<p style="color:#fff; font-family: 'Oswald-Bold', helvetica, arial, sans-serif; text-shadow: 2px 2px 2px rgba(40, 40, 40, 1); letter-spacing: 1px;"><%= winner['name'] %></p>
+            	</div>
+            </div>          
+          <% end %>
+        </div>
 
-    <% end %>
-
+      <% end %>
+    </div>  
   </div>
 </div>
 

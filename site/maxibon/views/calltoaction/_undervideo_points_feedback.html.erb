@@ -1,18 +1,16 @@
-<!--
-<div class="row">
-    <div class="col-md-12 text-center" style="background: #003466;">
-        <h5 style="color: #fff; font-size: 14px; padding: 5px;">
-          <% if correct.present? && correct %>
-            <span style="margin-right: 10px;">Scelta corretta! Hai ottenuto <%= points %> Gratta&Vinci</span>
-          <% elsif correct.present? && !correct %>
-            <span style="margin-right: 10px;">Scelta errata! Hai ottenuto <%= points %> Gratta&Vinci</span>
-          <% else %>
-            <span style="margin-right: 10px;">Hai ottenuto <%= points %> Gratta&Vinci</span>
-          <% end %>
-          <% points.times do |i| %>
-            <img class="img-ticket" src="/assets/maxibon/small-ticket.png" style="width: 40px;">
-          <% end %>
-        </h5>    
-    </div>
-</div>
--->
+<h6 class="default-font">
+
+  <% if calltoaction_except_share_done?(calltoaction) %>
+    <span style="margin-right: 5px;">Fatto! +<%= user_points_except_share_for(calltoaction) %> Gratta&Vinci</span>
+  <% else %>
+    <span style="margin-right: 5px;">Ottieni +<%= calltoactions_totalpoints(calltoaction) %> Gratta&Vinci</span>
+  <% end %>
+  
+  <% user_points_except_share_for(calltoaction).times do %>
+    <img class="img-ticket" src="/assets/maxibon/small-ticket.png" style="width: 40px; margin-bottom: 5px;">
+  <% end %>
+  <% (calltoactions_totalpoints(calltoaction) - user_points_except_share_for(calltoaction)).times do %>
+      <img class="img-ticket" src="/assets/maxibon/small-ticket-gray.png" style="width: 40px; margin-bottom: 5px;">
+  <% end %>
+
+</h6>          

@@ -11,6 +11,8 @@ Fandom::Application.routes.draw do
   # TODO: Maxibon youtube widget url
   match "/youtube", :to => "youtube_widget#index"
 
+  match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
+
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
@@ -93,8 +95,8 @@ Fandom::Application.routes.draw do
 
   constraints(SiteMatcher.new('maxibon')) do
     constraints(MaxibonUtils::Matcher.new) do
-      match '', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
-      match '*path', to: redirect("https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732")
+      match '', to: redirect("https://apps.facebook.com/shadostage")
+      match '*path', to: redirect("https://apps.facebook.com/shadostage")
     end
   end
 
@@ -107,7 +109,8 @@ Fandom::Application.routes.draw do
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
 
   match "/how_to", :to => "application#how_to"
-  match "/landing", :to => "landing#index"
+  match "/landing", :to => "landing#landing_app"
+  match "/landing_tab", :to => "landing#landing_tab"
 
   match "profile", :to => "profile#index"
   match "profile/levels", :to => "profile#levels"

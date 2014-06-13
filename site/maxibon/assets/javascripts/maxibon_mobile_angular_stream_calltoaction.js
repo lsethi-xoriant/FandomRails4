@@ -102,11 +102,15 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           calltoaction_id = calltoactionactive.replace("calltoaction-active-", "");
           $http.post("/update_play_interaction.json", { calltoaction_id: calltoaction_id })
             .success(function(data) {
-              // Event saved. 
+
               if(data.undervideo_feedback) {
                 $(".current_user_points").html(data.points_updated);
-                $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
-              }            
+                $("#home-undervideo-" + calltoaction_id).html(data.undervideo_feedback);
+              }   
+
+              if(data.calltoaction_complete) {
+                $("#circle-calltoaction-done-" + calltoaction_id).removeClass("hidden");
+              }         
           }).error(function() {
               // ERROR.
             });
@@ -152,8 +156,12 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
           $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
         }
 
-        if(data.undervideo_feedback) {
-          $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
+        if(data.calltoaction_complete) {
+          $("#circle-calltoaction-done-" + calltoaction_id).removeClass("hidden");
+        }
+
+        if(data.undervideo_share_feedback) {
+          $("#share-mobile-feedback-" + calltoaction_id).html(data.undervideo_share_feedback);
         } 
 
       }).error(function() {
@@ -179,8 +187,12 @@ function MobileStreamCalltoactionCtrl($scope, $window, $http, $timeout) {
 
             if(data.undervideo_feedback) {
               $(".current_user_points").html(data.points_updated);
-              $("#home-undervideo-" + calltoaction_id).prepend(data.undervideo_feedback);
+              $("#home-undervideo-" + calltoaction_id).html(data.undervideo_feedback);
             } 
+
+            if(data.calltoaction_complete) {
+              $("#circle-calltoaction-done-" + calltoaction_id).removeClass("hidden");
+            }
 
             if(data.current_correct_answer == answer_id) {
               correctytplayer_hash[key] = true;

@@ -2,7 +2,7 @@
   <div class="col-sm-12 text-center no-pad">
     <h5 class="default-font">
       <span id="share-footer-label" style="margin-right: 15px; font-weight: bold; color: #013368;">
-        <% if calltoaction_interaction_share_done(calltoaction) %>
+        <% if calltoaction_interaction_share_done?(calltoaction) %>
           Hai guadagnato +<%= calltoactions_share_points(calltoaction) %> Gratta&Vinci
         <% else %>
           Guadagna +<%= calltoactions_share_points(calltoaction) %> Gratta&Vinci
@@ -74,7 +74,7 @@
         <% end %>
       <% end %>
 
-      <div style="display: inline-block;" id="share-footer-feedback-done" class="share-footer-feedback <%= "hidden" unless calltoaction_interaction_share_done(calltoaction) %>">
+      <div style="display: inline-block;" id="share-footer-feedback-done" class="share-footer-feedback <%= "hidden" unless calltoaction_interaction_share_done?(calltoaction) %>">
         <!-- TICKET YELLOW -->
         <img class="img-ticket" style="padding-left: 15px;" src="/assets/maxibon/small-ticket.png">
         <!-- CHECK CIRCLE -->
@@ -85,7 +85,7 @@
         </div>
       </div>
       
-      <div style="display: inline-block;" id="share-footer-feedback-not-done" class="share-footer-feedback <%= "hidden" if calltoaction_interaction_share_done(calltoaction) %>">
+      <div style="display: inline-block;" id="share-footer-feedback-not-done" class="share-footer-feedback <%= "hidden" if calltoaction_interaction_share_done?(calltoaction) %>">
         <!-- TICKET GRAY -->
         <img class="img-ticket" style="padding-left: 15px;" src="/assets/maxibon/small-ticket-gray.png">
       </div>

@@ -24,7 +24,7 @@ module ApplicationHelper
 		end
 	end
 
-	def calltoaction_interaction_share_done(calltoaction)
+	def calltoaction_interaction_share_done?(calltoaction)
 	  done = true
 	  if current_user
 	    calltoactions_just_share = cache_short("calltoactions_just_share_#{calltoaction.id}") do
@@ -65,7 +65,7 @@ module ApplicationHelper
 		user_points = user_points + calltoactions_except_share_with_userinteractions.where("userinteractions.user_id=?", current_user).sum("userinteractions.added_points")
 	end
 
-	def calltoaction_except_share_done? calltoaction
+	def calltoaction_except_share_done?(calltoaction)
 		# Check if user completed calltoaction.
 	  done = true
 	  if current_user
