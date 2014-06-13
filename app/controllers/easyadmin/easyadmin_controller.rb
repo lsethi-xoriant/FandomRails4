@@ -9,7 +9,7 @@ class Easyadmin::EasyadminController < ApplicationController
   INTERACTION_TYPE = ["TRIVIA", "VERSUS", "LIKE", "CHECK", "SHARE", "PLAY", "DOWNLOAD"]
 
   def authorize_user
-    authorize! :manage, :all
+    authorize! :access, :easyadmin
   end
 
   def update_pagination_param
@@ -17,6 +17,10 @@ class Easyadmin::EasyadminController < ApplicationController
       params.except(:controller, :action, :page).each do |key, value| 
         @param_list = @param_list + "&#{key}=#{value}"
       end
+  end
+
+  def show_user
+    @user = User.find(params[:id])
   end
 
   def index_winner
@@ -266,9 +270,9 @@ class Easyadmin::EasyadminController < ApplicationController
 
     @current_prop = params[:property] unless params[:property].blank?
     unless @current_prop
-      @cta_list = Calltoaction.page(page).per(per_page).order("activated_at DESC")
+      @cta_list = Calltoaction.page(page).per(per_page).order("activated_at DESC NULLS LAST")
     else
-      @cta_list = Calltoaction.where("property_id=?", params[:property]).page(page).per(per_page).order("activated_at DESC")
+      @cta_list = Calltoaction.where("property_id=?", params[:property]).page(page).per(per_page).order("activated_at DESC NULLS LAST")
     end
 
     @page_size = @cta_list.num_pages

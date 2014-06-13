@@ -50,6 +50,8 @@
 							<th class="hidden-xs hidden-sm">Capitolo</th>
 							<th>Titolo</th>
 							<th class="hidden-xs hidden-sm">Data attivazione</th>
+							<th>TAG</th>
+							<th>Padre</th>
 							<th>Immagine</th>
 							<th>Azioni</th>
 						</tr>
@@ -59,6 +61,14 @@
 							<td class="hidden-xs hidden-sm"><%= c.property.name %></td>
 							<td><%= c.title %></td>
 							<td class="hidden-xs hidden-sm"><%= c.activated_at.strftime("%d/%m/%Y %H:%M") if c.activated_at %></td>
+
+
+							<td><%= (c.calltoaction_tags.map { |calltoaction_tag| calltoaction_tag.tag.text }).join(", ") %></td>
+
+
+							<td><%= (c.answers.map { |answer| answer.quiz.interaction.calltoaction.title }).join(", ") %></td>
+
+
 							<td>
 								<% if c.image.present? %>
 									<img src="<%= c.image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">

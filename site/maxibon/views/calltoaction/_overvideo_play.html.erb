@@ -22,20 +22,23 @@
                                         FATTO
                                     </h1>
                                 </div>
-                                <div class="col-sm-4 text-center">
+                                <div class="col-sm-4 text-center" style="margin: 0 -10px;">
                                     <h4 class="default-font" style="margin: 0; color: #fff;">Hai guadagnato<br>+<%= user_points_except_share_for(calltoaction) %> Gratta&Vinci</h4>
                                 </div>
                                 <div class="col-sm-4 text-left no-pad">
                                     <% user_points_except_share_for(calltoaction).times do %>
                                         <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
                                     <% end %>
+                                    <% (calltoactions_totalpoints(calltoaction) - user_points_except_share_for(calltoaction)).times do %>
+                                        <img class="img-ticket" src="/assets/maxibon/small-ticket-gray.png">
+                                    <% end %>
                                 </div>
                             </div>                     
                         <% else %>
                             <h5 class="default-font" style="color: #fff;"><span style="margin-right: 15px;">
-                                Guarda il video e ottieni fino a <%= calltoactions_totalpoints(calltoaction) %> Gratta&Vinci</span>
+                                Guarda il video e ottieni fino a +<%= calltoactions_totalpoints(calltoaction) %> Gratta&Vinci</span>
                               <% calltoactions_totalpoints(calltoaction).times do |i| %>
-                                <img class="img-ticket" src="/assets/maxibon/small-ticket.png">
+                                <img class="img-ticket" src="/assets/maxibon/small-ticket-gray.png">
                               <% end %>
                             </h5>  
                         <% end %>

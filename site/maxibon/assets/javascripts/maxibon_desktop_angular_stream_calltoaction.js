@@ -117,6 +117,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout) {
   }; // onYouTubePlayerReady
 
   $window.flushTimeoutFeedback = function() {
+
+    $("#quiz-waiting-audio").jPlayer("stop");
+    
     $timeout.cancel(overvideo_feedback_timeout);
     $("#home-overvideo-feedback-points").html("");
   }; // onYouTubePlayerReady

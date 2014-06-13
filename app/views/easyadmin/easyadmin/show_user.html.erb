@@ -1,0 +1,67 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "winner" } %>
+
+<div id="content">   
+
+  <div id="content-header">
+    <h1>UTENTE INFO</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <% if flash[:notice] %>
+      <div class="row">
+        <div class="col-md-12"> 
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <h3>Dati utente</h3>
+    <hr>
+    
+    <div class="row">
+      <div class="col-lg-4">
+          <dl class="dl-horizontal">
+            <dt>Nome</dt><dd><p><%= @user.first_name %></p></dd>
+            <dt>Cognome</dt><dd><p><%= @user.last_name %></p></dd>
+            <dt>Email</dt><dd><p><%= @user.email %></p></dd>
+            <dt>Giorno di nascita</dt><dd><p><%= @user.birth_date %></p></dd>
+            <dt>Provider collegati</dt><dd><p><%= @user.authentications.map{ |p| p.provider }.join(" ") %></p></dd>
+          </dl>
+      </div>
+
+      <div class="col-lg-4">
+          <dl class="dl-horizontal">
+            <dt>Via</dt><dd><p><%= @user.address %></p></dd>
+            <dt>Numero</dt><dd><p><%= @user.number %></p></dd>
+            <dt>Provincia</dt><dd><p><%= @user.province %></p></dd>
+            <dt>CAP</dt><dd><p><%= @user.cap %></p></dd>
+            <dt>Telefono</dt><dd><p><%= @user.phone %></p></dd>
+          </dl>
+      </div>
+
+    </div>
+
+    <h3>Dati vincita</h3>
+    <hr>
+    
+    <div class="row">
+      <div class="col-lg-4">
+          <dl class="dl-horizontal">
+            <% playticket_event = @user.playticket_event.find_by_winner("true") %>
+            <% if playticket_event %>
+              <dt>Premio</dt><dd><p><%= playticket_event.contest_periodicity.title %></p></dd>
+              <dt>Data di vincita</dt><dd><p><%= playticket_event.instantwin.time_to_win_start.strftime("%d/%m/%Y") %></p></dd>
+              <dt>Codice</dt><dd><p><%= playticket_event.instantwin.unique_id %></p></dd>
+            <% end %>
+          </dl>
+      </div>
+    </div>
+
+
+  </div>
+</div>

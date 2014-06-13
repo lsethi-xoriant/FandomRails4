@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-12 text-center">
-    <% if all_share_interactions(@calltoactions.first).any? %>
-      <% all_share_interactions(@calltoactions.first).each do |s| %>
+    <% if all_share_interactions(calltoaction).any? %>
+      <% all_share_interactions(calltoaction).each do |s| %>
         <% if s.resource.share_type == "facebook" %>
           <button type="button" class="btn btn-fb" onclick="shareWithFB('<%= s.resource.link %>', <%= s.id %>)">CONDIVIDI CON FACEBOOK</button>
         <% end %>

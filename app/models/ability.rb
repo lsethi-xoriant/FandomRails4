@@ -10,6 +10,8 @@ class Ability
       can :dashboard
     elsif user && user.role == "editor"
       can :access, :easyadmin 
+    elsif user && user.role == "viewer"
+      can :access, :easyadmin 
     end
 
     if user && user.rule

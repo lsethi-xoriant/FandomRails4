@@ -9,7 +9,9 @@
         <span class="icon-bar"></span>
       </button>
 
-       <a href="javascript: void(0)" data-toggle="collapse" data-target=".bs-navbar-collapse" class="navbar-brand hidden-xs oswald-font hidden-xs">MENU</a>
+      <!--
+      <a href="javascript: void(0)" data-toggle="collapse" data-target=".bs-navbar-collapse" class="navbar-brand hidden-xs oswald-font hidden-xs">MENU</a>
+      -->
       <% if current_user %>
 
         <!--
@@ -29,7 +31,7 @@
       <ul class="nav navbar-nav text-center">
         <% if current_user %>
           <li><a href="/">HOME</a></li> 
-          <li><a href="/profile/edit">PROFILO</a></li>
+          <li class="visible-xs"><a href="/profile/edit">PROFILO</a></li>
           <!--<li><a href="/extra">VIDEO EXTRA</a></li>-->
           <li><a href="/how_to">SCOPRI COME PARTECIPARE</a></li>
           <li><a href="/winners">VINCITORI</a></li>
@@ -41,12 +43,21 @@
             <li><a href="/admin">ADMIN</a></li>
           <% end %>
 
-          <li><a href="/users/sign_out">ESCI</a></li>
+          <li class="visible-xs"><a href="/users/sign_out">ESCI</a></li>
 
         <% else %>
           <li><a href="/users/sign_up">LOGIN</a></li>
         <% end %>
       </ul>
+    
+
+      <ul class="nav navbar-nav navbar-right hidden-xs">
+        <% if current_user %>
+          <li><a href="/profile/edit"><%= current_user.first_name.upcase %></a></li>
+          <li><a style="font-size: 10px;" href="/users/sign_out">ESCI</a></li>
+        <% end %>
+      </ul>
     </nav>
+
   </div>
 </header>

@@ -5,64 +5,78 @@
 	  	<li class="<%= "active" if page == "dashboard" %>"><a href="/easyadmin/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a>
 	    </li>
 
-	    <li class="<%= "active" if page == "pubblished" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>
-	    </li>
+	    <% if can? :manage, :all %>
+		    <li class="<%= "active" if page == "pubblished" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>
+		    </li>
+	    <% end %>
 
 	    <li class="<%= "active" if page == "winner" %>"><a href="/easyadmin/winner"><i class="fa fa-ticket"></i>Vincitori concorso</a>
 	    </li>
 
-	    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-dribbble"></i>Calltoaction<span class="caret"></span></a>
-	      <ul class="sub-nav">
-	        <li>
-	          <a href="/easyadmin/cta">
-	            <i class="fa fa-th-list"></i>TUTTI
-	          </a>
-	        </li>
-	        <% Property.all.each do |p| %>
-		       	<li>
-		          <a href="/easyadmin/cta/<%= p.id %>">
-		            <i class="fa fa-circle" style="color: <%= p.color_code %>"></i><%= p.name %>
+	    <% if can? :manage, :all %>
+		    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-dribbble"></i>Calltoaction<span class="caret"></span></a>
+		      <ul class="sub-nav">
+		        <li>
+		          <a href="/easyadmin/cta">
+		            <i class="fa fa-th-list"></i>TUTTI
 		          </a>
 		        </li>
-	        <% end %>
-	      </ul>
-	    </li>
+		        <% Property.all.each do |p| %>
+			       	<li>
+			          <a href="/easyadmin/cta/<%= p.id %>">
+			            <i class="fa fa-circle" style="color: <%= p.color_code %>"></i><%= p.name %>
+			          </a>
+			        </li>
+		        <% end %>
+		      </ul>
+		    </li>
+	    <% end %>
 
-	    <li class="<%= "active" if page == "promocode" %>"><a href="/easyadmin/promocode"><i class="fa fa-ticket"></i>Promocode</a>
-	    </li>
+	    <% if can? :manage, :all %>
+	    	<li class="<%= "active" if page == "promocode" %>"><a href="/easyadmin/promocode"><i class="fa fa-ticket"></i>Promocode</a>
+	    	</li>
+	    <% end %>
 
-	    <li class="dropdown <%= "active opened" if page == "property" %>"><a href="javascript:void(0);"><i class="fa fa-globe"></i>Property<span class="caret"></span></a>
-	      <ul class="sub-nav">
-	        <li>
-	          <a href="/easyadmin/property">
-	            <i class="fa fa-th-list"></i>Lista
-	          </a>
-	        </li>
-	        <li>
-	          <a href="/easyadmin/property/new">
-	            <i class="fa fa-save"></i>Nuova
-	          </a>
-	        </li>
-	      </ul>
-	    </li>
-	    <li class="<%= "active" if page == "tag" %>"><a href="/easyadmin/tag"><i class="fa fa-tags"></i>Tag</a>
-	    </li>
-	    <li class="dropdown <%= "active opened" if page == "comment" %>"><a href="javascript:void(0);"><i class="fa fa-comment"></i>Comment<span class="caret"></span></a>
-	      <ul class="sub-nav">
-	        <li>
-	          <a href="/easyadmin/comment/approved">
-	            <i class="fa fa-th-list"></i>TUTTI
-	          </a>
-	        </li>
-	        <% Property.all.each do |p| %>
-		       	<li>
-		          <a href="/easyadmin/comment/approved/<%= p.id %>">
-		            <i class="fa fa-circle" style="color: <%= p.color_code %>"></i><%= p.name %>
+	    <% if can? :manage, :all %>
+		    <li class="dropdown <%= "active opened" if page == "property" %>"><a href="javascript:void(0);"><i class="fa fa-globe"></i>Property<span class="caret"></span></a>
+		      <ul class="sub-nav">
+		        <li>
+		          <a href="/easyadmin/property">
+		            <i class="fa fa-th-list"></i>Lista
 		          </a>
 		        </li>
-	        <% end %>
-	      </ul>
-	    </li>
+		        <li>
+		          <a href="/easyadmin/property/new">
+		            <i class="fa fa-save"></i>Nuova
+		          </a>
+		        </li>
+		      </ul>
+		    </li>
+	    <% end %>
+
+	    <% if can? :manage, :all %>
+		    <li class="<%= "active" if page == "tag" %>"><a href="/easyadmin/tag"><i class="fa fa-tags"></i>Tag</a>
+		    </li>
+	    <% end %>
+
+	    <% if can? :manage, :all %>
+		    <li class="dropdown <%= "active opened" if page == "comment" %>"><a href="javascript:void(0);"><i class="fa fa-comment"></i>Comment<span class="caret"></span></a>
+		      <ul class="sub-nav">
+		        <li>
+		          <a href="/easyadmin/comment/approved">
+		            <i class="fa fa-th-list"></i>TUTTI
+		          </a>
+		        </li>
+		        <% Property.all.each do |p| %>
+			       	<li>
+			          <a href="/easyadmin/comment/approved/<%= p.id %>">
+			            <i class="fa fa-circle" style="color: <%= p.color_code %>"></i><%= p.name %>
+			          </a>
+			        </li>
+		        <% end %>
+		      </ul>
+		    </li>
+	    <% end %>
 
 	  </ul>
 	</nav> <!-- #sidebar -->
