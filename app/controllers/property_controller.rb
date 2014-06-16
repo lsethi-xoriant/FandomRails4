@@ -5,7 +5,7 @@ class PropertyController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :index
   
   def index
-
+    
     if request.site.force_facebook_tab && !request_is_from_mobile_device?(request) && request.referrer && request.referrer.include?("https://www.facebook.com")
       redirect_to request.site.force_facebook_tab
     else
@@ -38,7 +38,7 @@ class PropertyController < ApplicationController
     if params[:type] == "extra"
       streamcalltoactiontorender = calltoaction_active_with_tag("extra", "DESC").offset(params[:offset]).limit(3)
     else
-      streamcalltoactiontorender = calltoaction_active_with_tag("extra", "DESC").offset(params[:offset]).limit(3)
+      streamcalltoactiontorender = Calltoaction.active.offset(params[:offset]).limit(3)
     end
     
     streamcalltoactiontorender.each do |c|

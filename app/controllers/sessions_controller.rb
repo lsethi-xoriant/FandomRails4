@@ -23,59 +23,124 @@ class SessionsController < Devise::SessionsController
     redirect_to "/users/sign_up"
   end
 
-   def create
-    # Controllo se la creazione della sessione viene o meno da un provider per gli utenti.
-    if env["omniauth.auth"].nil?
-      if !(params['user'].blank?) && !(params['user']['password'].blank?)
-        user = User.find_by_email(params['user']['email'])
-        if user.nil? || !user.valid_password?(params['user']['password'])
-          flash[:error] = "Dati non validi"
-          redirect_to "/users/sign_up"
-        else
-          self.resource = warden.authenticate!(auth_options)
-          set_flash_message(:notice, :signed_in) if is_navigational_format?
-          sign_in(resource_name, resource)
-       
-          unless cookies[:connect_from_page].blank?
-            connect_from_page = cookies[:connect_from_page]
-            cookies.delete(:connect_from_page)
-            redirect_to connect_from_page
-          else
-            redirect_to "/"
-          end
+  # Calls a FandomPlay service to automatically log the user there as well. 
+  # Sets the cookie to be sent to the client. 
+  def fandom_play_login(user)
+    if Rails.configuration.fandom_play_enabled
+      token = Digest::MD5.hexdigest(user.email + Rails.configuration.secret_token)
+      host, port = Rails.configuration.deploy_settings['fandom_play']['server'].split(':')
+      url = "http://#{host}:#{port}/login/#{URI.encode(user.email)}/#{token}"
+      logger.info("FandomPlay single sign on: #{url}...")
+      post_result = HTTParty.post(url)
+      logger.info("FandomPlay response: #{post_result}")
+      set_play_cookie(post_result)
+    else
+      logger.info("no FandomPlay configuration, skipping login syncronization")
+    end
+  end
+  
+  def set_play_cookie(post_result)
+    if post_result.body == 'authorized'
+      cookie_header = post_result.headers['Set-Cookie']
+      logger.info("Setting FandomPlay cookie: #{cookie_header}")
+      # this header is merged into 'set-cookie' by a middleware; 
+      # it's a workaround to avoid rails encoding on cookies
+      response.headers["raw-set-cookie"] = cookie_header
+    end
+  end
+  
+  # Calls a FandomPlay service to automatically log out the user there as well. 
+  # Sets the cookie to be sent to the client accordingly. 
+  def fandom_play_logout
+    if Rails.configuration.fandom_play_enabled
+      session_cookie_name = Rails.configuration.deploy_settings['fandom_play']['session_cookie_name']
+      cookies[session_cookie_name] = {
+        value: "",
+        path: '/',
+        httponly: true,
+        expires: (Time.now - 1.day) 
+      }      
+    else
+      logger.info("no FandomPlay configuration, skipping logout syncronization")
+    end    
+  end
 
-        end
-      else
-        flash[:notice] = "Dati non validi"
+  # Authenticates and log in the user from the standard application form.
+  def create_from_form
+    if !(params['user'].blank?) && !(params['user']['password'].blank?)
+      user = User.find_by_email(params['user']['email'])
+      if valid_credentials?(user)
+        flash[:error] = "Dati non validi"
         redirect_to "/users/sign_up"
-      end
-    else 
-      user, from_registration = User.not_logged_from_omniauth env["omniauth.auth"], params[:provider]
-      unless user.errors.any?
-        sign_in(user)
-        flash[:notice] = "from_registration" if from_registration
-
-        if request.site.force_facebook_tab && !request_is_from_mobile_device?(request)
-          redirect_to request.site.force_facebook_tab
-        else
-          unless cookies[:connect_from_page].blank?
-            connect_from_page = cookies[:connect_from_page]
-            cookies.delete(:connect_from_page)
-            redirect_to connect_from_page
-          else
-            redirect_to "/"
-          end
-        end
-
       else
+        self.resource = warden.authenticate!(auth_options)
+        set_flash_message(:notice, :signed_in) if is_navigational_format?
+        sign_in(resource_name, resource)
+        fandom_play_login(user)
+        
+        redirect_after_successful_login()
+      end
+    else
+      flash[:notice] = "Dati non validi"
+      redirect_to "/users/sign_up"
+    end
+  end
+  
+  def valid_credentials?(user)
+    user.nil? || !user.valid_password?(params['user']['password'])
+  end
 
-        session["oauth"] ||= {}
-        session["oauth"]["params"] = env["omniauth.auth"].except("extra") # Rimuovo extra per prevenire cookie overflow
-        session["oauth"]["params"]["provider"] = params[:provider]
-        render template: "/devise/registrations/new", :locals => { resource: user }   
-      end # user.errors.any?
-    end # env["omniauth.auth"].nil?
-  end # create
+  # Authenticates and log in the user from the an OAuth service
+  def create_from_oauth
+    user, from_registration = User.not_logged_from_omniauth env["omniauth.auth"], params[:provider]
+    if user.errors.any?
+      redirect_to_registration_page
+    else
+      sign_in(user)
+      fandom_play_login(user)
+    
+      flash[:notice] = "from_registration" if from_registration
+    
+      if request.site.force_facebook_tab && !request_is_from_mobile_device?(request)
+        redirect_to request.site.force_facebook_tab
+      else
+        redirect_after_successful_login()
+      end
+    end
+  end
+  
+  def redirect_after_successful_login
+    if cookies[:connect_from_page].blank?
+      redirect_to "/"
+    else
+      redirect_to_original_page()
+    end
+  end
+  
+  def redirect_to_original_page
+    connect_from_page = cookies[:connect_from_page]
+    cookies.delete(:connect_from_page)
+    redirect_to connect_from_page()
+  end
+  
+  def redirect_to_registration_page
+    session["oauth"] ||= {}
+    session["oauth"]["params"] = env["omniauth.auth"].except("extra") # "extra" is removed to prevent cookie overflow
+    session["oauth"]["params"]["provider"] = params[:provider]
+    render template: "/devise/registrations/new", :locals => { resource: user }   
+  end
 
+  def create
+    if env["omniauth.auth"].nil?
+      create_from_form()
+    else
+      create_from_oauth()
+    end
+  end
+
+  def destroy
+    fandom_play_logout()
+    super
+  end
 end
 

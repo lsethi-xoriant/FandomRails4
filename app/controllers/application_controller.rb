@@ -33,7 +33,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def landing
+  def redirect_into_iframe_path
+    session[:redirect_path] = params[:path]
+    redirect_to request.site.force_facebook_tab
   end
 
   def sign_in_fb_from_page

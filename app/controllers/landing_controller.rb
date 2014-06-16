@@ -4,6 +4,11 @@
 require 'fandom_utils'
 
 class LandingController < ApplicationController
-  def index
+  skip_before_filter :verify_authenticity_token
+
+  def landing_app
+  end
+
+  def landing_tab
   end
 end

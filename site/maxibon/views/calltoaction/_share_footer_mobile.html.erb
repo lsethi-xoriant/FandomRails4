@@ -1,4 +1,5 @@
-<div class="row text-center" style="margin-left: 5px; margin-right: 5px;">
+<div class="panel-footer no-pad" style="padding-top: 15px;">
+  <div class="row text-center" style="margin-left: 5px; margin-right: 5px;">
     <% if share_inter = calltoaction.interactions.where("resource_type='Share'") %>
       <% share_inter.each do |s| %>
         <% if s.resource.share_type == "email" && current_user %>
@@ -71,10 +72,11 @@
       <% end %>
     <% end %>
 
-    <div class="col-xs-12">
-      <h5 style="font-size: 10px;">Condividi il video e ottieni un Gratta&Vinci<img class="img-ticket" style="padding-left: 10px; margin-bottom: 5px; width: 40px;" src="/assets/maxibon/small-ticket.png"></h5>
+    <div class="col-xs-12" id="share-mobile-feedback-<%= calltoaction.id %>">
+      <%= render partial: "/calltoaction/share_mobile_feedback", locals: { calltoaction: calltoaction } %>
     </div>
 
+  </div>
 </div>
 
 

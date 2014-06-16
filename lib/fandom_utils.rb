@@ -39,12 +39,18 @@ module FandomUtils
       force_ssl()
     end
 
-    may_redirect_to_landing
+    if session[:redirect_path]
+      session_redirect_path = session[:redirect_path]
+      session.delete(:redirect_path)
+      redirect_to session_redirect_path
+    else
+      may_redirect_to_landing
+    end
 
   end
 
   def may_redirect_to_landing
-    if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController)|| (self.is_a? YoutubeWidgetController) || request.site.public_pages.include?("#{params[:controller]}##{params[:action]}"))
+    if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController) || (self.is_a? YoutubeWidgetController) || ("application#redirect_into_iframe_path").include?("#{params[:controller]}##{params[:action]}") || request.site.public_pages.include?("#{params[:controller]}##{params[:action]}"))
       redirect_to "/landing"
     end
   end
