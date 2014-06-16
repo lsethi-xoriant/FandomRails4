@@ -7,26 +7,40 @@ class RewardController < ApplicationController
   
   def index
     @user_rewards = get_user_rewards(current_user.id)
-    @top_rewards = get_top_rewards()
+    @top_rewards = get_top_rewards(current_user.id)
     @user_available_rewards = get_user_available_rewards(current_user.id)
-    @user_all_rewards = get_all_rewards()
+    @user_all_rewards = get_all_rewards(current_user.id)
   end
   
   def get_user_rewards(user_id)
     Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.rewarded_count > 0 AND user_rewards.user_id = ?", user_id)
   end
   
-  def get_top_rewards
-    Reward.includes(:reward_tags => :tag).where("tags.text = 'top'")
+  def get_top_rewards(user_id)
+    rewards_result_set = Reward.includes(:reward_tags => :tag).where("tags.text = 'top'")
+    rewards_list = create_reward_list(rewards_result_set, user_id)
   end
   
   def get_user_available_rewards(user_id)
     Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.rewarded_count = 0 AND user_rewards.user_id = ?", user_id)
   end
   
-  def get_all_rewards()
+  def get_all_rewards(user_id)
     reward_system_tag = ["basic"]
-    Reward.includes(:reward_tags => :tag).where("tags.text not in (?)", reward_system_tag)
+    excluded_reward_ids = RewardTag.includes(:tag).where("tags.text in (?) AND reward_id IS NOT NULL", reward_system_tag).map{ |row| row.reward_id }
+    rewards_result_set = Reward.where("id not in (?)", excluded_reward_ids)
+    rewards_list = create_reward_list(rewards_result_set, user_id)
+  end
+  
+  def create_reward_list(rewards, user_id)
+    rewards_list = Array.new
+    rewards.each do |r|
+      reward_element = Hash.new
+      reward_element['reward'] = r
+      reward_element['user_already_bought'] = UserReward.where("user_id = ? AND reward_id = ? AND rewarded_count > 0", user_id, r.id).count > 0
+      rewards_list.push(reward_element)
+    end
+    rewards_list
   end
   
   def show

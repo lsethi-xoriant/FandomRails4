@@ -13,16 +13,20 @@
       <div class="row brws-item">
       	<% @top_rewards.each do |r| %>
         <div class="col-md-6">
-          <a href="/reward/show/<%= r.id %>">
-            <img class="img-responsive" src="<%= r.main_image.url %>" alt="...">
+          <a href="/reward/show/<%= r['reward'].id %>">
+            <img class="img-responsive" src="<%= r['reward'].main_image.url %>" alt="...">
           </a>
           <div class="row">
             <div class="col-xs-8">
-              <h6><%= r.title %></h6>
-              <p><a href="/reward/show/<%= r.id %>" class="btn btn-primary btn-sm" role="button">Vedi</a></p>
+              <h6><%= r['reward'].title %></h6>
+              <p><a href="/reward/show/<%= r['reward'].id %>" class="btn btn-primary btn-sm" role="button">Vedi</a></p>
             </div>
             <div class="col-xs-4 text-right">
-              <h5><span class="label label-warning"><%= r.cost %> <span class="glyphicon glyphicon-star"></span></span></h5>
+              <% if r['user_already_bought'] %>
+              	<h5><span class="label label-success">tuo <span class="glyphicon glyphicon-ok"></span></span></h5>
+              <% else %>
+              	<h5><span class="label label-warning"><%= r['reward'].cost %> <span class="glyphicon glyphicon-star"></span></span></h5>
+              <% end %>
             </div>
           </div>
         </div>
@@ -50,5 +54,30 @@
         </div>
         <% end %>
       </div>
-	  <% end %>    
+	<% end %>
+	
+	<% if @user_all_rewards.count > 0 %>
+	<div class="row">
+	    <div class="col-xs-12">
+	      <div class="page-header">
+	        <h3>Tutti <small>Subtext for header</small></h3>
+	      </div>
+	    </div>
+	  </div>
+	  <% @user_all_rewards.each do |r| %>
+	  <div class="row brws-item">
+	    <div class="col-xs-6 col-sm-4 col-md-2">
+	      <a href="/reward/show/<%= r['reward'].id %>">
+	        <img class="img-responsive" src="<%= r['reward'].preview_image.url %>" alt="...">
+	      </a>
+	      <% if r['user_already_bought'] %>
+          	<h5><span class="label label-success">tuo <span class="glyphicon glyphicon-ok"></span></span></h5>
+          <% else %>
+          	<h5><span class="label label-warning"><%= r['reward'].cost %> <span class="glyphicon glyphicon-star"></span></span></h5>
+          <% end %>
+	    </div>
+	    <% end %>
+	  </div>
+	  <% end %>
+	      
 </div>
