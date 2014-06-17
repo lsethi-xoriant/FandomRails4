@@ -1,6 +1,9 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require_relative '../lib/raw_cookie_middleware'
+require_relative '../lib/config_utils'
+include ConfigUtils
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
@@ -11,9 +14,6 @@ end
 
 module Fandom
   class Application < Rails::Application
-    require_relative '../lib/raw_cookie_middleware'
-    require_relative '../lib/config_utils'
-    include ConfigUtils
     
     VERSION = '0.1'
     
@@ -92,6 +92,10 @@ module Fandom
       #:serializer => Oj # this serializer can be enabled to share the cache with other technologies using the JSON format
     }
 
+    # TODO: this is needed to suppress a deprecation warning, but it should be further investigated
+    config.i18n.enforce_available_locales = true
+    I18n.config.enforce_available_locales = true
+
     config.sites = []
     config.domain_by_site = {}
     config.domain_by_site_id = {}
@@ -101,7 +105,7 @@ module Fandom
     
     config.fandom_play_enabled = config.deploy_settings.key? 'fandom_play'
     if config.fandom_play_enabled
-      config.middleware.insert_before "Rack::Cache", SetRawCookieMiddleware
+      config.middleware.insert_before "ActionDispatch::Static", SetRawCookieMiddleware
     end
 
   end

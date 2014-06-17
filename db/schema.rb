@@ -281,6 +281,8 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.integer  "instantwin_id"
   end
 
+  add_index "playticket_events", ["instantwin_id"], :name => "instantwin_id_key"
+
   create_table "promocodes", :force => true do |t|
     t.string   "title"
     t.string   "code"
