@@ -91,32 +91,7 @@ RailsAdmin.config do |config|
 
   # All fields marked as 'hidden' won't be shown anywhere in the rails_admin unless you mark them as visible. (visible(true))
 
-  config.model RewardingUser do
-    list do
-      field :id
-      field :user
-      field :property
-    end
-    show do
-      field :id
-      field :points
-      field :credits
-      field :trivia_wrong_counter
-      field :trivia_right_counter
-      field :versus_counter
-      field :play_counter
-      field :like_counter
-      field :check_counter
-      field :user
-      field :property
-    end
-    edit do
-      field :user
-      field :property
-    end
-  end
-
-  config.model Calltoaction do
+  config.model CallToAction do
     edit do
       configure :interactions do
           hide

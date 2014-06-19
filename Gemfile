@@ -13,7 +13,6 @@ gem 'omniauth-facebook'
 gem 'koala'
 gem 'twitter'
 gem 'hirb'
-gem 'minitest', '~> 4.0'
 gem 'httparty'
 
 gem 'doorkeeper'
@@ -53,12 +52,6 @@ group :development do
   gem 'colorize'
 end
 
-group :development, :test do
-  gem 'rspec-rails', '>= 2.12.2'
-  gem 'faker'
-  gem 'spring'
-end
-
 group :production do
   gem 'dalli-elasticache'
   gem 'unicorn' # high performance web server
@@ -88,7 +81,6 @@ gem 'nokogiri'
 gem 'aws-sdk', '~> 1.0'
 
 gem 'figaro'
-gem 'eb_fast_deploy', git: 'git@github.com:hackatron/eb_fast_deploy.git'
 gem 'execjs'
 gem 'therubyracer'
 
@@ -99,3 +91,5 @@ gem 'apartment'
 
 # cache store
 gem 'dalli'
+
+gem 'spring'

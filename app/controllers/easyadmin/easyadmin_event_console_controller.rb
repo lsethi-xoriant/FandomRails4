@@ -6,7 +6,7 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   
   # Constant that describe the filter available
   FIELD_DESCS = { 
-    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "userinteraction", :column_name => "updated_at"}),
+    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "user_interaction", :column_name => "updated_at"}),
     :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email"}),
     :interaction => FieldDesc.new({ :name => "Interazione", :id => "interaction", :model => "interaction", :column_name => "resource_type" })
   }
@@ -31,10 +31,10 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   # limit  - number of results per page
   def get_results(offset, limit)
     if params[:conditions].blank?
-      events = Userinteraction.limit(limit).offset(offset).order("updated_at ASC")
+      events = UserInteraction.limit(limit).offset(offset).order("updated_at ASC")
     else
       conditions = JSON.parse(params[:conditions])
-      events = build_query(conditions).limit(limit).offset(offset).order("userinteractions.updated_at ASC")
+      events = build_query(conditions).limit(limit).offset(offset).order("user_interactions.updated_at ASC")
     end
     return events
   end
@@ -43,7 +43,7 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   #
   # params - array of filter conidtions
   def build_query(params)
-    query = Userinteraction.includes(:user).includes(:interaction).includes(:answer)
+    query = UserInteraction.includes(:user).includes(:interaction).includes(:answer)
     fields = get_fields()
     params.each do |filter|
       field_id = filter['field'].to_sym

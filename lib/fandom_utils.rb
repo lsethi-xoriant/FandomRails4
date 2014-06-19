@@ -44,7 +44,8 @@ module FandomUtils
       session.delete(:redirect_path)
       redirect_to session_redirect_path
     else
-      may_redirect_to_landing
+      # TODO: may redirect to landing if this feature is indicated in site configuration.
+      # may_redirect_to_landing
     end
 
   end

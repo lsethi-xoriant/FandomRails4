@@ -21,13 +21,11 @@
 		    </div>
 	    <% end %>
 
-	    <% if @current_prop %>
-		    <div class="row text-right">
-		    	<div class="col-md-12">
-		    		<a href="/easyadmin/cta/new/<%= @current_prop %>"><button type="button" class="btn btn-primary">NUOVA</button></a>
-		    	</div>
-		    </div>
-	    <% end %>
+	    <div class="row text-right">
+	    	<div class="col-md-12">
+	    		<a href="/easyadmin/cta/new %>"><button type="button" class="btn btn-primary">NUOVA</button></a>
+	    	</div>
+	    </div>
 
 	    <div class="row">
 	    	<div class="col-md-3">
@@ -47,7 +45,6 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th class="hidden-xs hidden-sm">Capitolo</th>
 							<th>Titolo</th>
 							<th class="hidden-xs hidden-sm">Data attivazione</th>
 							<th>TAG</th>
@@ -58,15 +55,14 @@
 					</thead>
 					<% @cta_list.each do |c| %>
 						<tr>
-							<td class="hidden-xs hidden-sm"><%= c.property.name %></td>
 							<td><%= c.title %></td>
 							<td class="hidden-xs hidden-sm"><%= c.activated_at.strftime("%d/%m/%Y %H:%M") if c.activated_at %></td>
 
 
-							<td><%= (c.calltoaction_tags.map { |calltoaction_tag| calltoaction_tag.tag.text }).join(", ") %></td>
+							<td><%= (c.call_to_action_tags.map { |call_to_action_tag| call_to_action_tag.tag.text }).join(", ") %></td>
 
 
-							<td><%= (c.answers.map { |answer| answer.quiz.interaction.calltoaction.title }).join(", ") %></td>
+							<td><%= (c.answers.map { |answer| answer.quiz.interaction.call_to_action.title }).join(", ") %></td>
 
 
 							<td>
@@ -82,7 +78,7 @@
 									</div>
 
 									<div class="col-sm-1" style="margin: 0;">
-										<a href="/easyadmin/cta/edit/<%= c.id %>/<%= c.property_id %>"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
+										<a href="/easyadmin/cta/edit/<%= c.id %>"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
 									</div>
 
 									<div class="col-sm-1" style="margin: 0;">

@@ -11,16 +11,16 @@ module ApplicationHelper
 	end
 
 	def calltoaction_active_with_tag(tag, order)
-		return Calltoaction.includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NOT NULL AND tags.text='#{tag}')", Time.now).order("activated_at #{order}")
+		return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.text='#{tag}')", Time.now).order("activated_at #{order}")
 	end
 
 	def calltoaction_coming_soon_with_tag(tag, order)
-		return Calltoaction.includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (calltoaction_tags.id IS NOT NULL AND tags.text='#{tag}')", Time.now).order("activated_at #{order}")
+		return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.text='#{tag}')", Time.now).order("activated_at #{order}")
 	end 
 
 	def calltoactions_except_share(calltoaction)
 		calltoactions_except_share = cache_short("calltoactions_except_share_#{calltoaction.id}") do
-		  calltoaction.interactions.where("points>0 AND resource_type<>'Share'").to_a
+		  calltoaction.interactions.where("resource_type<>'Share'").to_a
 		end
 	end
 
@@ -28,9 +28,9 @@ module ApplicationHelper
 	  done = true
 	  if current_user
 	    calltoactions_just_share = cache_short("calltoactions_just_share_#{calltoaction.id}") do
-	      calltoaction.interactions.where("points>0 AND resource_type='Share'").to_a
+	      calltoaction.interactions.where("resource_type='Share'").to_a
 	    end	    
-	    done = false if current_user.userinteractions.where("interaction_id in (?)", calltoactions_just_share.map.collect { |u| u["id"] }).blank?
+	    done = false if current_user.user_interactions.where("interaction_id in (?)", calltoactions_just_share.map.collect { |u| u["id"] }).blank?
 		else
 			done = false
 		end 
@@ -45,14 +45,14 @@ module ApplicationHelper
 	  		calltoactions_except_share = calltoactions_except_share(calltoaction)
 	  		
 		    calltoactions_except_share.each do |i|
-		      done = false if Userinteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
+		      done = false if UserInteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
 		    end
 
 		    calltoactions_just_share = cache_short("calltoactions_just_share_#{calltoaction.id}") do
-		      calltoaction.interactions.where("points>0 AND resource_type='Share'").to_a
+		      calltoaction.interactions.where("resource_type='Share'").to_a
 		    end
 		    
-		    done = false if current_user.userinteractions.where("interaction_id in (?)", calltoactions_just_share.map.collect { |u| u["id"] }).blank?
+		    done = false if current_user.user_interactions.where("interaction_id in (?)", calltoactions_just_share.map.collect { |u| u["id"] }).blank?
 		else
 			done = false
 		end 
@@ -60,9 +60,11 @@ module ApplicationHelper
 	end
 
 	def user_points_except_share_for(calltoaction)
-		calltoactions_except_share_with_userinteractions = calltoaction.interactions.includes(:userinteractions).where("interactions.points>0 AND interactions.resource_type<>'Share'")
-		user_points = calltoactions_except_share_with_userinteractions.where("userinteractions.user_id=?", current_user).sum("userinteractions.points")
-		user_points = user_points + calltoactions_except_share_with_userinteractions.where("userinteractions.user_id=?", current_user).sum("userinteractions.added_points")
+		calltoactions_except_share_with_user_interactions = calltoaction.interactions.includes(:user_interactions).where("interactions.resource_type<>'Share'")
+		# TODO: update with new reward system
+		#user_points = calltoactions_except_share_with_user_interactions.where("user_interactions.user_id=?", current_user).sum("user_interactions.points")
+		#user_points = user_points + calltoactions_except_share_with_user_interactions.where("user_interactions.user_id=?", current_user).sum("user_interactions.added_points")
+		0
 	end
 
 	def calltoaction_except_share_done?(calltoaction)
@@ -73,7 +75,7 @@ module ApplicationHelper
 	  		calltoactions_except_share = calltoactions_except_share(calltoaction)
 	  		
 		    calltoactions_except_share.each do |i|
-		      done = false if Userinteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
+		      done = false if UserInteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
 		    end
 		else
 			done = false
@@ -174,9 +176,11 @@ module ApplicationHelper
 
   def calltoactions_totalpoints(calltoaction)
     cache_short("calltoactions_totalpoints_#{calltoaction.id}") do
-      totalpoints = calltoaction.interactions.where("resource_type<>'Share'").sum("points")
-      totalpoints = totalpoints + calltoaction.interactions.where("resource_type<>'Share'").sum("added_points")
-    
+      # TODO: update with new reward system
+      #totalpoints = calltoaction.interactions.where("resource_type<>'Share'").sum("points")
+      #totalpoints = totalpoints + calltoaction.interactions.where("resource_type<>'Share'").sum("added_points")
+    	0
+
     	# Not include share interactions points.
       # inter_share = calltoaction.interactions.where("resource_type='Share'")
       # totalpoints = totalpoints + inter_share.maximum("points") if inter_share.count > 0
@@ -185,8 +189,10 @@ module ApplicationHelper
 
   def calltoactions_share_points(calltoaction)
   	cache_short("calltoactions_share_points_#{calltoaction.id}") do
-  		inter_share = calltoaction.interactions.where("resource_type='Share'")
-  		share_points = (inter_share.any? ? inter_share.maximum("points") : 0)
+  		# TODO: update with new reward system
+  		#inter_share = calltoaction.interactions.where("resource_type='Share'")
+  		#share_points = (inter_share.any? ? inter_share.maximum("points") : 0)
+  		return 0
   	end
   end
 

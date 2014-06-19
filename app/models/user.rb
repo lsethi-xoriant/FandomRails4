@@ -14,15 +14,11 @@ class User < ActiveRecord::Base
   attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :enable_contest
 
   has_many :authentications, dependent: :destroy
-  has_many :rewarding_users, dependent: :destroy
-  has_many :userinteractions
+  has_many :user_interactions
   has_many :user_comments
   has_many :playticket_event
 
-  after_save :append_rewarding_user # With invitation is enable: if: Proc.new { |u| u.invitation_token.blank? }
   before_save :set_date_of_birth
-
-  has_one :general_rewarding_user
 
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/anon.png"
 
@@ -54,18 +50,6 @@ class User < ActiveRecord::Base
       year_of_birth = nil
       month_of_birth = nil
       day_of_birth = nil
-    end
-  end
-
-  def append_rewarding_user
-    Property.active.each do |p|
-      registration_calltoaction = p.calltoactions.includes(:interactions).where("interactions.resource_type='Registration'").first
-      if registration_calltoaction
-        registration_intr = registration_calltoaction.interactions.find_by_resource_type("Registration")
-        unless Userinteraction.find_by_user_id_and_interaction_id(self.id, registration_intr.id)
-          Userinteraction.create(user_id: self.id, interaction_id: registration_intr.id, points: registration_intr.points)
-        end
-      end
     end
   end
 

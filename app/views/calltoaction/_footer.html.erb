@@ -3,7 +3,7 @@
       <div class="row text-center">
         
         <% if @inter_like %>
-        	<% ui = Userinteraction.find_by_user_id_and_interaction_id(current_user ? current_user.id : -1, @inter_like.id) %>
+        	<% ui = UserInteraction.find_by_user_id_and_interaction_id(current_user ? current_user.id : -1, @inter_like.id) %>
             <div class="col-md-3 col-xs-6">
               <button id="button-like-inter-<%= @inter_like.id %>" type="button" class="btn <%= ui && ui.counter > 0 ? "btn-primary" : "btn-default" %> btn-md btn-block" onclick="updateLike(<%= @inter_like.id %>)"><span class="glyphicon glyphicon-thumbs-up"> Like</button>
             </div>
@@ -22,7 +22,7 @@
         <% end %>
 
         <% if @inter_download %>
-  			<% ui = Userinteraction.find_by_user_id_and_interaction_id(current_user ? current_user.id : -1, @inter_download.id) %>
+  			<% ui = UserInteraction.find_by_user_id_and_interaction_id(current_user ? current_user.id : -1, @inter_download.id) %>
 	        <div class="col-md-3 col-xs-6">
 	          <button id="button-download-inter-<%= @inter_download.id %>" type="button" class="btn <%= ui && ui.counter > 0 ? "btn-primary" : "btn-default" %> btn-md btn-block" onclick="updateDownload(<%= @inter_download.id %>, '<%= @inter_download.resource.attachment.url %>')"><span class="glyphicon glyphicon-download"> DOWNLOAD</button>
 	        </div>	

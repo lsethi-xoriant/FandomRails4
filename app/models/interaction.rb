@@ -9,7 +9,7 @@ class Interaction < ActiveRecord::Base
   belongs_to :calltoaction
   belongs_to :property_default_point
 
-  has_many :userinteractions, dependent: :destroy
+  has_many :user_interactions, dependent: :destroy
 
   before_create :check_name
 

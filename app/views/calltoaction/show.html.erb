@@ -65,7 +65,7 @@
 			        	<div class="col-md-4 col-md-offset-4 col-xs-12 text-center">
                     <% if current_user %>
   			          		<button type="button" class="btn btn-primary" onclick="openShareWith(<%= @current_cta.property.id %>, <%= @current_cta.id %>)">PEDALA!</button>
-                      <% if current_user && Userinteraction.includes(:interaction).where("interactions.resource_type='Share' AND user_id=? AND interactions.calltoaction_id=?", current_user.id, @current_cta.id).any? %>
+                      <% if current_user && UserInteraction.includes(:interaction).where("interactions.resource_type='Share' AND user_id=? AND interactions.calltoaction_id=?", current_user.id, @current_cta.id).any? %>
   			                <div class="yellow-point btn-success" id="share-<%= @current_cta.id %>"><span class="glyphicon glyphicon-ok"></span></div>
                       <% else %>
                         <div class="yellow-point" id="share-<%= @current_cta.id %>">+<%= @current_cta.interactions.find_by_resource_type("Share").points %></div>

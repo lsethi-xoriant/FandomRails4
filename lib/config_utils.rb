@@ -1,3 +1,5 @@
+require 'active_attr'
+
 module ConfigUtils
 
   # Get a deploy setting.

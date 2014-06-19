@@ -1,26 +1,26 @@
 <%= render partial: "/application/user_bar" %>
         
 <div class="container">
-  <% Property.active.each do |p| %>
+  <% Reward.where("countable=true").each do |reward| %>
     <div class="row">
     <div class="col-md-12">
       <div class="page-header">
-        <h2><%= p.name.upcase %> - Classifica</h2>
+        <h2><%= reward.title.upcase %> - Classifica</h2>
       </div>
 
-      <% current_triclassifica = @triclassifica_all_prop[p.slug] %>
-      <% if current_user && current_triclassifica %>
+      <% users_before_and_after = users_before_and_after(reward) %>
+      <% if current_user && users_before_and_after %>
         <div class="row">
           <div class="col-sm-6">
             <h4>La tua posizione in classifica</h4>
             <ul class="list-group">
-              <% current_triclassifica.each do |tu| %>
-                <li class="list-group-item <%= "list-group-item-warning" if tu.last["id"] == current_user.id %>">
+              <% users_before_and_after.each do |user| %>
+                <li class="list-group-item <%= "list-group-item-warning" if user[:id] == current_user.id %>">
                   <div class="row">
-                    <div class="col-sm-2 col-xs-2 text-right"><h5 class="no-margin"><%= tu.last["position"] %></h5></div>
-                    <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar User.find(tu.last["id"]) %>" class="img-circle img-responsive"></div>
-                    <div class="col-sm-5 col-xs-7"><h5><%= tu.last["first_name"] %> <%= tu.last["last_name"] %></h5></div>
-                    <div class="col-sm-3 col-xs-3 text-right"><h5 class="no-margin"><%= tu.last["points"] %></h5></div>
+                    <div class="col-sm-2 col-xs-2 text-right"><h5 class="no-margin"><%= user[:position] %></h5></div>
+                    <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar User.find(user[:id]) %>" class="img-circle img-responsive"></div>
+                    <div class="col-sm-5 col-xs-7"><h5><%= "#{user[:first_name]} #{user[:last_name]}" %></h5></div>
+                    <div class="col-sm-3 col-xs-3 text-right"><h5 class="no-margin"><%= user[:points] %></h5></div>
                   </div>
                 </li>
               <% end %>
@@ -28,49 +28,21 @@
           </div>
           <div class="col-sm-6">
             <h4>La tua posizione fra i tuoi amici FB</h4>
-            <% current_fb_triclassifica = @triclassifica_fb_all_prop[p.slug] %>
-            <% if current_fb_triclassifica %>
+            <% users_fb_before_and_after = users_fb_before_and_after(reward) %>
+            <% if users_fb_before_and_after %>
               <ul class="list-group">
-                <% current_fb_triclassifica.each do |tu| %>
-                  <li class="list-group-item <%= "list-group-item-warning" if tu.last["id"] == current_user.id %>">
+                <% users_fb_before_and_after.each do |user| %>
+                  <li class="list-group-item <%= "list-group-item-warning" if user[:id] == current_user.id %>">
                     <div class="row">
-                      <div class="col-sm-2 col-xs-2 text-right"><h5 class="no-margin"><%= tu.last["position"] %></h5></div>
-                      <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar User.find(tu.last["id"]) %>" class="img-circle img-responsive"></div>
-                      <div class="col-sm-5 col-xs-7"><h5><%= tu.last["first_name"] %> <%= tu.last["last_name"] %></h5></div>
-                      <div class="col-sm-3 col-xs-3 text-right"><h5 class="no-margin"><%= tu.last["points"] %></h5></div>
+                      <div class="col-sm-2 col-xs-2 text-right"><h5 class="no-margin"><%= user[:position] %></h5></div>
+                      <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar User.find(user[:id]) %>" class="img-circle img-responsive"></div>
+                      <div class="col-sm-5 col-xs-7"><h5><%= "#{user[:first_name]} #{user[:last_name]}" %></h5></div>
+                      <div class="col-sm-3 col-xs-3 text-right"><h5 class="no-margin"><%= user[:points] %></h5></div>
                     </div>
                   </li>
                 <% end %>
               </ul>
             <% end %>
-            <!--
-            <ul class="list-group">
-              <li class="list-group-item">
-                <div class="row">
-                  <div class="col-sm-2 col-xs-2 text-right"><h5 class="no-margin">8</h5></div>
-                  <div class="col-sm-2 hidden-xs"><img src="http://placehold.it/50x50" class="img-circle img-responsive"></div>
-                  <div class="col-sm-5 col-xs-7"><h5>Nome Utente</h5></div>
-                  <div class="col-sm-3 col-xs-3 text-right"><h5 class="no-margin">13300</h5></div>
-                </div>
-              </li>
-              <li class="list-group-item list-group-item-warning">
-                <div class="row">
-                  <div class="col-sm-2 col-xs-2 text-right"><h5 class="no-margin">9</h5></div>
-                  <div class="col-sm-2 hidden-xs"><img src="http://placehold.it/50x50" class="img-circle img-responsive"></div>
-                  <div class="col-sm-5 col-xs-7"><h5>Nome Utente</h5></div>
-                  <div class="col-sm-3 col-xs-3 text-right"><h5 class="no-margin">13400</h5></div>
-                </div>
-              </li>
-              <li class="list-group-item">
-                <div class="row">
-                  <div class="col-sm-2 col-xs-2 text-right"><h5 class="no-margin">10</h5></div>
-                  <div class="col-sm-2 hidden-xs"><img src="http://placehold.it/50x50" class="img-circle img-responsive"></div>
-                  <div class="col-sm-5 col-xs-7"><h5>Nome Utente</h5></div>
-                  <div class="col-sm-3 col-xs-3 text-right"><h5 class="no-margin">13500</h5></div>
-                </div>
-              </li>
-            </ul>
-            -->
           </div>
         </div>
       <% end %>
@@ -78,13 +50,13 @@
       <h4>Leaderboard TOP 10</h4>
       <ul class="list-group">
         <% i = 1 %>
-        <% p.rewarding_users.order("points DESC, updated_at DESC").limit(10).each do |ru| %>
-          <li class="list-group-item <%= "list-group-item-warning" if current_user && ru.user.id == current_user.id %>">
+        <% users_ranking(reward).each do |user_reward| %>
+          <li class="list-group-item <%= "list-group-item-warning" if current_user && user_reward.user.id == current_user.id %>">
             <div class="row">
               <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin"><%= i %></h4></div>
-              <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar ru.user %>" class="img-circle img-responsive"></div>
-              <div class="col-sm-5 col-xs-7"><h4><%= ru.user.first_name %> <%= ru.user.last_name %></h4></div>
-              <div class="col-sm-3 col-xs-3 text-right"><h4 class="no-margin"><%= ru.points %></h4></div>
+              <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar user_reward.user %>" class="img-circle img-responsive"></div>
+              <div class="col-sm-5 col-xs-7"><h4><%= "#{user_reward.user.first_name} #{user_reward.user.last_name}" %></h4></div>
+              <div class="col-sm-3 col-xs-3 text-right"><h4 class="no-margin"><%= user_reward.counter %></h4></div>
             </div>
           </li>
           <% i = i + 1 %>

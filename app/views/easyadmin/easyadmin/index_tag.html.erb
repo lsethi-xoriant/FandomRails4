@@ -34,7 +34,7 @@
 					<% @tag_list.each do |t| %>
 						<tr>
 							<td><%= t.text %></td>
-							<td><%= t.calltoaction_tags ? t.calltoaction_tags.count : 0 %></td>
+							<td><%= t.call_to_action_tags ? t.call_to_action_tags.count : 0 %></td>
 							<td>
 								<a href="/easyadmin/tag/edit/<%= t.id %>"><i class="fa fa-gears" style="color: red"></i></a>
 								&nbsp;&nbsp;
