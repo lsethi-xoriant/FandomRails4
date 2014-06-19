@@ -1,4 +1,4 @@
-class Easyadmin::EasyadminEventConsoleController < ApplicationController
+class Easyadmin::EasyadminNoticeController < ApplicationController
   include EasyadminHelper
   include TableHelper
 
@@ -6,9 +6,10 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   
   # Constant that describe the filter available
   FIELD_DESCS = { 
-    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "userinteraction", :column_name => "updated_at"}),
     :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email"}),
-    :interaction => FieldDesc.new({ :name => "Interazione", :id => "interaction", :model => "interaction", :column_name => "resource_type" })
+    :notice => FieldDesc.new({ :name => "Notifica", :id => "notice", :model => "notice", :column_name => "html_notice"}),
+    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "notice", :column_name => "created_at"}),
+    :sent => FieldDesc.new({ :name => "Inviata", :id => "sent", :model => "notice", :column_name => "last_sent"})
   }
   
   # json version of fields description
@@ -19,10 +20,25 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
     FIELD_DESCS
   end
   
-  # Called at first load initialize the filter interaction with the interaction type active
   def index
-    @interaction_type_options = Interaction.uniq.pluck(:resource_type)
+    @notices = Notice.all
     @fields = FIELD_DESCS_JSON
+  end
+
+  def send(user_id, notice)
+    
+  end
+
+  def mark_as_viewed
+    
+  end
+  
+  def mark_as_read
+    
+  end
+  
+  def show
+    @current_notice = Notice.find(params[:id])
   end
   
   # Give back the events query result depending on conditions passes as parameter
@@ -31,10 +47,10 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   # limit  - number of results per page
   def get_results(offset, limit)
     if params[:conditions].blank?
-      events = Userinteraction.limit(limit).offset(offset).order("updated_at ASC")
+      notices = Notice.limit(limit).offset(offset).order("updated_at DESC")
     else
       conditions = JSON.parse(params[:conditions])
-      events = build_query(conditions).limit(limit).offset(offset).order("userinteractions.updated_at ASC")
+      notices = build_query(conditions).limit(limit).offset(offset).order("notices.updated_at DESC")
     end
     return events
   end
@@ -43,7 +59,7 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   #
   # params - array of filter conidtions
   def build_query(params)
-    query = Userinteraction.includes(:user).includes(:interaction).includes(:answer)
+    query = Notice.includes(:user)
     fields = get_fields()
     params.each do |filter|
       field_id = filter['field'].to_sym
@@ -63,9 +79,10 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   # e - resultset element
   def element_to_result(e)
     result = Hash.new
-    result['date'] = e.updated_at.strftime("%d-%m-%Y %H:%M")
     result['user'] = e.user.email
-    result['interaction'] = e.interaction.resource_type
+    result['notice'] = e.html_notice
+    result['date'] = e.created_at.strftime("%d-%m-%Y")
+    result['sent'] = e.last_sent.strftime("%d-%m-%Y %H:%M")
     result
   end
   

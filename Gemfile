@@ -99,5 +99,3 @@ gem 'apartment'
 
 # cache store
 gem 'dalli'
-
-gem 'httparty'

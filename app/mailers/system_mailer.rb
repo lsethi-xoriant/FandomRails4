@@ -29,5 +29,10 @@ class SystemMailer < ActionMailer::Base
   	
   	mail(to: [ "", "maxibon@shado.tv" ], subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – Un utente ha vinto #{ @price.title }")
   end
+  
+  def notification_mail(email, html_message, subject)
+    @body = html_message
+    mail(to: email, subject: subject)
+  end
 
 end

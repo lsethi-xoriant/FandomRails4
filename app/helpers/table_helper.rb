@@ -54,7 +54,6 @@ module TableHelper
     results
   end
 
-
   # Perform the query applying the filters
   def get_results
       raise NotImplementedError.new
