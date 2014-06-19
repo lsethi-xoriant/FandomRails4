@@ -157,6 +157,7 @@ class CallToActionController < ApplicationController
   def update_play_interaction
     # L'evento play viene salvato anche per i non loggati.
     user_id = current_user ? current_user.id : (-1)
+
     i = Interaction.find_by_call_to_action_id_and_resource_type(params[:calltoaction_id].to_i, "Play")
     ui = UserInteraction.find_by_user_id_and_interaction_id(user_id, i.id)
 
@@ -167,16 +168,14 @@ class CallToActionController < ApplicationController
     else
       ui = UserInteraction.create(user_id: user_id, interaction_id: i.id)
       risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
-      if (ui.points + ui.added_points) > 0
-        if mobile_device?
-          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { calltoaction: i.call_to_action, interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
-        else
-          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
-        end
+      if mobile_device?
+        risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { calltoaction: i.call_to_action, interaction_max_points: 0, points: 0, correct: nil }, layout: false, formats: :html 
+      else
+        risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: 0, points: 0, correct: nil }, layout: false, formats: :html 
       end
     end
 
-    risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
+    #risp["calltoaction_complete"] = calltoaction_done? i.call_to_action
 
     risp["interaction_save"] = !ui.errors.any? # Ritorno lo stato del salvataggio.
     respond_to do |format|
