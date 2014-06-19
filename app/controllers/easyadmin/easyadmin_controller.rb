@@ -6,8 +6,6 @@ class Easyadmin::EasyadminController < ApplicationController
   before_filter :authorize_user
   before_filter :update_pagination_param, only: :index_cta
 
-  INTERACTION_TYPE = ["TRIVIA", "VERSUS", "LIKE", "CHECK", "SHARE", "PLAY", "DOWNLOAD"]
-
   def authorize_user
     authorize! :access, :easyadmin
   end
@@ -90,22 +88,22 @@ class Easyadmin::EasyadminController < ApplicationController
 
   def tag_cta
     @tag_list_arr = Array.new
-    Calltoaction.find(params[:id]).calltoaction_tags.each { |t| @tag_list_arr << t.tag.text }
+    CallToAction.find(params[:id]).call_to_action_tags.each { |t| @tag_list_arr << t.tag.text }
     @tag_list = @tag_list_arr.join(",")
   end
 
   def tag_cta_update
-    calltoaction = Calltoaction.find(params[:id])
+    calltoaction = CallToAction.find(params[:id])
     tag_list = params[:tag_list].split(",")
 
-    calltoaction.calltoaction_tags.delete_all
+    calltoaction.call_to_action_tags.delete_all
 
     tag_list.each do |t|
       tag = Tag.find_by_text(t)
       tag = Tag.create(text: t) unless tag
-      CalltoactionTag.create(tag_id: tag.id, calltoaction_id: calltoaction.id)
+      CallToActionTag.create(tag_id: tag.id, calltoaction_id: calltoaction.id)
     end
-    flash[:notice] = "Calltoaction taggata"
+    flash[:notice] = "CallToAction taggata"
     redirect_to "/easyadmin/cta/tag/#{ calltoaction.id }"
   end
 
@@ -126,24 +124,11 @@ class Easyadmin::EasyadminController < ApplicationController
   def published
   end
 
-  def show_property
-    @current_prop = Property.find(params[:id])
-
-    @user_week_list = Hash.new
-    unless @current_prop.rewarding_users.blank?
-      time =  @current_prop.rewarding_users.order("created_at ASC").limit(1).first.created_at.strftime("%Y-%m-%d")
-      while time.to_date < Time.now.to_date do
-        @user_week_list["#{ time.to_date.strftime("%Y-%m-%d") }"] = @current_prop.rewarding_users.where("created_at<=?", time).count
-        time = time.to_date + 1.week
-      end
-    end
-  end
-
   def show_cta
-    @current_cta = Calltoaction.find(params[:id])
+    @current_cta = CallToAction.find(params[:id])
 
     tag_list_arr = Array.new
-    @current_cta.calltoaction_tags.each { |t| tag_list_arr << t.tag.text }
+    @current_cta.call_to_action_tags.each { |t| tag_list_arr << t.tag.text }
     @tag_list = tag_list_arr.join(", ")
 
     @trivia_answer = Hash.new
@@ -157,11 +142,11 @@ class Easyadmin::EasyadminController < ApplicationController
       elsif q.resource.quiz_type == "VERSUS"
         @versus_answer["#{ q.id }"] = Hash.new
         sum = 0
-        q.resource.answers.each { |a| sum = sum + a.userinteractions.count }
+        q.resource.answers.each { |a| sum = sum + a.user_interactions.count }
         q.resource.answers.each do |v|
           @versus_answer["#{ q.id }"]["#{ v.id }"] = {
             "answer" => v.text,
-            "perc" => ((v.userinteractions.count.to_f/sum.to_f*100))
+            "perc" => ((v.user_interactions.count.to_f/sum.to_f*100))
           }
         end
       end
@@ -169,95 +154,15 @@ class Easyadmin::EasyadminController < ApplicationController
 
   end
 
-  def new_badge
-    @current_prop = Property.find(params[:id])
-    @badge = Badge.new
-  end
-
-  def new_level
-    @current_prop = Property.find(params[:id])
-    @level = Level.new
-  end
-
-  def edit_badge
-    @current_prop = Property.find(params[:id])
-    @badge = Badge.find(params[:badge_id])
-  end
-
-  def edit_level
-    @current_prop = Property.find(params[:id])
-    @level = Level.find(params[:level_id])
-  end
-
-  def save_level
-    @level = Level.create(params[:level])
-    if @level.errors.any?
-      @current_prop = Property.find(@level.property_id)
-      render template: "/easyadmin/easyadmin/new_level"     
-    else
-      flash[:notice] = "Livello aggiunto correttamente"
-      redirect_to "/easyadmin/property/show/#{ @level.property_id }"
-    end
-  end
-
-  def save_badge
-    @badge = Badge.create(params[:badge])
-    if @badge.errors.any?
-      @current_prop = Property.find(@badge.property_id)
-      render template: "/easyadmin/easyadmin/new_badge"     
-    else
-      flash[:notice] = "Badge aggiunto correttamente"
-      redirect_to "/easyadmin/property/show/#{ @badge.property_id }"
-    end
-  end
-
-  def update_badge
-    @badge = Badge.find(params[:badge_id])
-    unless @badge.update_attributes(params[:badge])  
-      render template: "/easyadmin/easyadmin/edit_badge"     
-    else
-      flash[:notice] = "Badge aggiornato correttamente"
-      redirect_to "/easyadmin/property/show/#{ @badge.property_id }"
-    end
-  end
-
-  def update_level
-    @level = Level.find(params[:level_id])
-    unless @level.update_attributes(params[:level])  
-      render template: "/easyadmin/easyadmin/edit_level"     
-    else
-      flash[:notice] = "Livello aggiornato correttamente"
-      redirect_to "/easyadmin/property/show/#{ @level.property_id }"
-    end
-  end
-
-  def destroy_badge
-    badge = Badge.find(params[:id])
-    badge.destroy
-
-    respond_to do |format|
-      format.json { render :json => badge.to_json }
-    end
-  end
-
-  def destroy_level
-    level = Level.find(params[:id])
-    level.destroy
-
-    respond_to do |format|
-      format.json { render :json => level.to_json }
-    end
-  end
-
   def get_current_month_event
-    month_calltoaction_list = Calltoaction.select("activated_at, id, title").where("activated_at<? AND activated_at>=?", (Time.parse(params["time"]).to_date + 2.month).change(day: 1).strftime("%Y/%m/%d"), (Time.parse(params["time"]).to_date - 1.month).change(day: 1).strftime("%Y/%m/%d"))
+    month_calltoaction_list = CallToAction.select("activated_at, id, title").where("activated_at<? AND activated_at>=?", (Time.parse(params["time"]).to_date + 2.month).change(day: 1).strftime("%Y/%m/%d"), (Time.parse(params["time"]).to_date - 1.month).change(day: 1).strftime("%Y/%m/%d"))
     respond_to do |format|
       format.json { render :json => month_calltoaction_list.to_json }
     end
   end
 
   def update_activated_at
-    cta = Calltoaction.find(params[:id])
+    cta = CallToAction.find(params[:id])
     cta.update_attribute(:activated_at, Time.parse(params["time"]).to_date)
     respond_to do |format|
       format.json { render :json => "calltoaction-update".to_json }
@@ -268,12 +173,7 @@ class Easyadmin::EasyadminController < ApplicationController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    @current_prop = params[:property] unless params[:property].blank?
-    unless @current_prop
-      @cta_list = Calltoaction.page(page).per(per_page).order("activated_at DESC NULLS LAST")
-    else
-      @cta_list = Calltoaction.where("property_id=?", params[:property]).page(page).per(per_page).order("activated_at DESC NULLS LAST")
-    end
+    @cta_list = CallToAction.page(page).per(per_page).order("activated_at DESC NULLS LAST")
 
     @page_size = @cta_list.num_pages
     @page_current = page
@@ -281,16 +181,11 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def filter_cta
-    if params[:property].blank?
-      cta_filter_list = Calltoaction.where("title LIKE ?", "%#{ params[:filter] }%").order("activated_at DESC").limit(5)
-    else
-      cta_filter_list = Calltoaction.where("title LIKE ? AND property_id=?", "%#{ params[:filter] }%", params[:property]).order("activated_at DESC").limit(5)
-    end
+    cta_filter_list = CallToAction.where("title LIKE ?", "%#{ params[:filter] }%").order("activated_at DESC").limit(5)
 
     risp = Hash.new
     cta_filter_list.each do |cta|
       risp["#{cta.id}"] = {
-          "propertyname" => cta.property.name,
           "title" => cta.title,
           "activated_at" => cta.activated_at,
           "image" => cta.image.url
@@ -302,40 +197,20 @@ class Easyadmin::EasyadminController < ApplicationController
     end
   end
 
-  def index_property
-    @property_list = Property.order("created_at DESC")
-  end
-
   def new_cta
-    @current_prop = Property.find(params[:property])
-    @cta = Calltoaction.new(property_id: @current_prop.id)
-  end
-
-  def new_property
-    @property = Property.new
-    INTERACTION_TYPE.each do |i|
-      @property.default_interaction_points.build(interaction_type: i)
-    end
+    @cta = CallToAction.new
   end
 
   def edit_cta
-    @cta = Calltoaction.find(params[:id])
-    @current_prop = Property.find(@cta.property_id)
+    @cta = CallToAction.find(params[:id])
 
     @tag_list_arr = Array.new
-    @cta.calltoaction_tags.each { |t| @tag_list_arr << t.tag.text }
+    @cta.call_to_action_tags.each { |t| @tag_list_arr << t.tag.text }
     @tag_list = @tag_list_arr.join(",")
   end
 
-  def edit_property
-    @property = Property.find(params[:id])
-    INTERACTION_TYPE.each do |i|
-      @property.default_interaction_points.build(interaction_type: i) unless @property.default_interaction_points.find_by_interaction_type(i)
-    end
-  end
-
   def hide_cta
-    cta = Calltoaction.find(params[:id])
+    cta = CallToAction.find(params[:id])
     if cta.activated_at.blank?
       risp = "active"
       cta.update_attribute("activated_at", DateTime.now.change(hour: 0))
@@ -350,68 +225,44 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def save_cta
-    @cta = Calltoaction.create(params[:calltoaction])
+    @cta = CallToAction.create(params[:call_to_action])
     if @cta.errors.any?
       @tag_list = params[:tag_list].split(",")
-      @current_prop = Property.find(@cta.property_id)
-      params[:property] = @current_prop.id
 
       render template: "/easyadmin/easyadmin/new_cta"     
     else
 
       tag_list = params[:tag_list].split(",")
-      @cta.calltoaction_tags.delete_all
+      @cta.call_to_action_tags.delete_all
       tag_list.each do |t|
         tag = Tag.find_by_text(t)
         tag = Tag.create(text: t) unless tag
-        CalltoactionTag.create(tag_id: tag.id, calltoaction_id: @cta.id)
+        CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
       end
 
-      flash[:notice] = "Calltoaction generata correttamente"
+      flash[:notice] = "CallToAction generata correttamente"
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
-    end
-  end
-
-  def save_property
-    @property = Property.create(params[:property])
-    if @property.errors.any?
-      render template: "/easyadmin/easyadmin/new_property"     
-    else
-      flash[:notice] = "Property generata correttamente"
-      redirect_to "/easyadmin/property"
     end
   end
 
   def update_cta
-    @cta = Calltoaction.find(params[:id])
-    unless @cta.update_attributes(params[:calltoaction])
+    @cta = CallToAction.find(params[:id])
+    unless @cta.update_attributes(params[:call_to_action])
       @tag_list = params[:tag_list].split(",")
-      @current_prop = Property.find(@cta.property_id)  
-      params[:property] = @current_prop.id
-
+    
       render template: "/easyadmin/easyadmin/edit_cta"   
     else
 
       tag_list = params[:tag_list].split(",")
-      @cta.calltoaction_tags.delete_all
+      @cta.call_to_action_tags.delete_all
       tag_list.each do |t|
         tag = Tag.find_by_text(t)
         tag = Tag.create(text: t) unless tag
-        CalltoactionTag.create(tag_id: tag.id, calltoaction_id: @cta.id)
+        CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
       end
 
-      flash[:notice] = "Calltoaction aggiornata correttamente"
+      flash[:notice] = "CallToAction aggiornata correttamente"
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
-    end
-  end
-
-  def update_property
-    @property = Property.find(params[:id])
-    unless @property.update_attributes(params[:property])
-      render template: "/easyadmin/easyadmin/edit_property"     
-    else
-      flash[:notice] = "Property aggiornata correttamente"
-      redirect_to "/easyadmin/property"
     end
   end
 
@@ -484,6 +335,7 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def update_comment_pubblished
+    # TODO: adjust without property.
     comm = UserComment.find(params[:property].to_i)
     comm.update_attributes(published_at: DateTime.now, deleted: params[:pub_or_hide] == "hide")
 
@@ -496,12 +348,7 @@ class Easyadmin::EasyadminController < ApplicationController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    unless params[:property].blank?
-      @current_prop = Property.find(params[:property].to_i)
-      @comment_not_approved = UserComment.includes(:comment => { :interaction => :calltoaction }).where("calltoactions.property_id=? AND user_comments.deleted=true", params[:property]).page(page).per(per_page).order("user_comments.created_at ASC")
-    else
-      @comment_not_approved = UserComment.where("deleted=true", params[:id]).page(page).per(per_page).order("created_at ASC")
-    end
+    @comment_not_approved = UserComment.where("deleted=true", params[:id]).page(page).per(per_page).order("created_at ASC")
 
     @page_size = @comment_not_approved.num_pages
     @page_current = page
@@ -512,12 +359,7 @@ class Easyadmin::EasyadminController < ApplicationController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    unless params[:property].blank?
-      @current_prop = Property.find(params[:property].to_i)
-      @comment_to_be_approved = UserComment.includes(:comment => { :interaction => :calltoaction }).where("calltoactions.property_id=? AND user_comments.published_at IS NULL", params[:property]).page(page).per(per_page).order("user_comments.created_at ASC")
-    else
-      @comment_to_be_approved = UserComment.where("published_at IS NULL", params[:id]).page(page).per(per_page).order("created_at ASC")
-    end
+    @comment_to_be_approved = UserComment.where("published_at IS NULL", params[:id]).page(page).per(per_page).order("created_at ASC")
 
     @page_size = @comment_to_be_approved.num_pages
     @page_current = page
@@ -528,12 +370,7 @@ class Easyadmin::EasyadminController < ApplicationController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    unless params[:property].blank?
-      @current_prop = Property.find(params[:property].to_i)
-      @comment_approved = UserComment.includes(:comment => { :interaction => :calltoaction }).where("calltoactions.property_id=? AND user_comments.published_at IS NOT NULL AND user_comments.deleted=false", params[:property]).page(page).per(per_page).order("user_comments.created_at ASC")
-    else
-      @comment_approved = UserComment.where("published_at IS NOT NULL AND deleted=false", params[:id]).page(page).per(per_page).order("created_at ASC")
-    end
+    @comment_approved = UserComment.where("published_at IS NOT NULL AND deleted=false", params[:id]).page(page).per(per_page).order("created_at ASC")
 
     @page_size = @comment_approved.num_pages
     @page_current = page

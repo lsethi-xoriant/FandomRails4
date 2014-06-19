@@ -18,7 +18,7 @@
     		calltoaction_json[:calltoaction][:interactions][:resource] = i.resource
     		calltoaction_json[:calltoaction][:interactions][:resource][:asnwers] = i.resource.answers if i.resource_type == "Quiz" 
     		if doorkeeper_token
-    			calltoaction_json[:calltoaction][:interactions][:resource][:user_info] = i.userinteractions.where(user_id: doorkeeper_token.resource_owner_id)
+    			calltoaction_json[:calltoaction][:interactions][:resource][:user_info] = i.user_interactions.where(user_id: doorkeeper_token.resource_owner_id)
     		end
     	end
     	calltoaction_json[:calltoaction][:info] = calltoaction #,{ points: "AAABBB" }

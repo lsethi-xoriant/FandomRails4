@@ -16,6 +16,10 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
+  def index
+    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
+  end
+
   #before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" }
 
   def authenticate_admin
@@ -73,12 +77,12 @@ class ApplicationController < ActionController::Base
           user = JSON.parse(open("https://api.instagram.com/v1/users/search?q=#{ iu.nickname }&client_id=f77c4dfff5e048b198504cb97a4c6194&count=1").read)
           instagram = JSON.parse(open("https://api.instagram.com/v1/users/#{ user["data"][0]["id"] }/media/recent/?client_id=#{ ENV["INSTAGRAM_APP_ID"] }&count=5").read)   
           instagram_media = instagram["data"].each do |m|
-            if Calltoaction.find_by_secondary_id(m["id"]).blank? && m["tags"].include?("NOMETAG")
+            if CallToAction.find_by_secondary_id(m["id"]).blank? && m["tags"].include?("NOMETAG")
               img = open(m["images"]["standard_resolution"]["url"])
 
               # Customize the calltoaction created.
-              calltoaction = Calltoaction.new(
-                title: m["caption"]["text"], image: img, property_id: Property.first.id, 
+              calltoaction = CallToAction.new(
+                title: m["caption"]["text"], image: img, 
                 activated_at: Time.at(m["created_time"].to_i - 1.hour), secondary_id: m["id"], media_type: "IMAGE", 
                 enable_disqus: true, category_id: (category ? category.id : nil)
               )

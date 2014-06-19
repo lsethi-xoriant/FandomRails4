@@ -4,7 +4,7 @@ class CreateUserRewardsTable < ActiveRecord::Migration
       t.references :user
       t.references :reward
       t.boolean :available
-      t.integer :rewarded_count, :default => 0
+      t.integer :counter, :default => 0
       t.timestamps
     end
   end

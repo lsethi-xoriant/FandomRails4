@@ -22,8 +22,8 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 	var timeout_overvideo_show, timeout_unlock_interaction; // Per la gestione del timeout.
 
 	// Inizializzazione dello scope.
-	$scope.init = function(vcode, calltoaction_id, property_id, overvideo_during_interaction_list, current_user, comment_published_count, comment_must_be_approved) {
-  	$scope.vcode = vcode; $scope.calltoaction_id = calltoaction_id; $scope.property_id = property_id; $scope.current_user = current_user;
+	$scope.init = function(vcode, calltoaction_id, overvideo_during_interaction_list, current_user, comment_published_count, comment_must_be_approved) {
+  	$scope.vcode = vcode; $scope.calltoaction_id = calltoaction_id; $scope.current_user = current_user;
   	$scope.overvideo_during_interaction_list = overvideo_during_interaction_list;
   	$window.comment_published_count = comment_published_count;
   	$window.closed_comment_published_count = comment_published_count - 5;
@@ -54,7 +54,8 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 	}; // buildCommentHtml
 
 	$window.updateCommentViewPolling = function() {
-		$http.post("/" + $scope.property_id + "/" + $scope.calltoaction_id + "/get_comment_published" , { offset: $window.comment_published_count })
+		// TODO: adjust routing (AT).
+		$http.post("/" + $scope.calltoaction_id + "/get_comment_published" , { offset: $window.comment_published_count })
 			.success(function(data) {
 				$window.comment_published_count += Object.keys(data).length;
 				angular.forEach(data, function(c, k) {
@@ -67,7 +68,8 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 	}; // updateCommentViewPolling
 
 	$window.updateCommentViewOneTime = function() {
-		$http.post("/" + $scope.property_id + "/" + $scope.calltoaction_id + "/get_comment_published" , { offset: $window.comment_published_count })
+		// TODO: adjust routing (AT).
+		$http.post("/" + $scope.calltoaction_id + "/get_comment_published" , { offset: $window.comment_published_count })
 			.success(function(data) {
 				$window.comment_published_count += Object.keys(data).length;
 				angular.forEach(data, function(c, k) {
@@ -80,7 +82,8 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 
 	$window.updateClosedCommentView = function() {
 		if($window.closed_comment_published_count > 0) {
-			$http.post("/" + $scope.property_id + "/" + $scope.calltoaction_id + "/get_closed_comment_published" , { offset: $window.closed_comment_published_count })
+			// TODO: adjust routing (AT).
+			$http.post("/" + $scope.calltoaction_id + "/get_closed_comment_published" , { offset: $window.closed_comment_published_count })
 				.success(function(data) {
 					$window.closed_comment_published_count -= 10;
 					$("#comment-append-counter").html(Math.max($window.closed_comment_published_count, 0));
@@ -96,7 +99,7 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 	};
 
 	$window.updateDisqusCommentView = function() {
-		$http.post("/" + $scope.property_id + "/" + $scope.calltoaction_id + "/next_disqus_page" , 
+		$http.post("/" + $scope.calltoaction_id + "/next_disqus_page" , 
 				{ disquscursor: $("#comment-append-counter").attr("disqus-next"), disqusurl: $("#comment-append-counter").attr("disqus-url") })
 			.success(function(data) {
 				$("#comment-append-counter").html();
@@ -199,7 +202,8 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 
 	function check_level_and_badge_up() {
 		if($scope.current_user) {
-			$http.post("/" + $scope.property_id + "/check_level_and_badge_up")
+			// TODO: adjust routing (AT).
+			$http.post("/check_level_and_badge_up")
 				.success(function(data) {
 					if(data.level_up_to_show != null)
     					appendLevelUpToView(data.level_up_to_show);
@@ -649,7 +653,8 @@ function CalltoactionCtrl($scope, $window, $http, $timeout) {
 				if(s == interaction.seconds) {
 					lock_interaction = true; 
 					ytplayer.pauseVideo();
-	    			$http.post("/" + $scope.property_id + "/" + $scope.calltoaction_id + "/get_overvideo_interaction.json", { interaction_id: i_key })
+						// TODO: adjust routing (AT).
+	    			$http.post("/" + $scope.calltoaction_id + "/get_overvideo_interaction.json", { interaction_id: i_key })
 	    				.success(function(data) {    								    					
 	    					if(interaction.quiz_type == "VERSUS") {
 	    						$("#overvideo-versus").show();

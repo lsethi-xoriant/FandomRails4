@@ -16,7 +16,7 @@
             	<div class="col-md-5 col-xs-6">
 		            <% inter_quiz.resource.answers.each do |a| %>
 		            	<%# ui_c contiene il numero di risposte del tipo a date all'interaction. %>
-		            	<% ui_c = Userinteraction.where("interaction_id=? AND answer_id=?", inter_quiz.id, a.id).count %>
+		            	<% ui_c = UserInteraction.where("interaction_id=? AND answer_id=?", inter_quiz.id, a.id).count %>
 		            	
 		            	<% if answer_length == i %>
 		            		</div>
@@ -29,7 +29,7 @@
 		                      	<div class="row">
 			                        <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4 choice choosen">
 			                        	<div class="status">
-			                            	<h4 id="data-answ-<%= a.id %>"><%= "#{ (ui_c.to_f/inter_quiz.userinteractions.count.to_f*100).round }%" %></h4>
+			                            	<h4 id="data-answ-<%= a.id %>"><%= "#{ (ui_c.to_f/inter_quiz.user_interactions.count.to_f*100).round }%" %></h4>
 			                          	</div>
 			                          	<a href="#" class="thumbnail"><img src="<%= a.image.url %>" alt="..."></a>
 			                        </div>
@@ -37,7 +37,7 @@
 		                        <div class="row">
 		                            <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4">
 		                              	<div class="vs-level-container">
-		                                	<div id="bar-answ-<%= a.id %>" class="vs-level-inner-sx" style="width: <%= (ui_c.to_f/inter_quiz.userinteractions.count.to_f*100).round %>%"></div>
+		                                	<div id="bar-answ-<%= a.id %>" class="vs-level-inner-sx" style="width: <%= (ui_c.to_f/inter_quiz.user_interactions.count.to_f*100).round %>%"></div>
 		                              	</div>
 		                            </div>
 		                        </div>
@@ -72,7 +72,7 @@
 		                    	<div class="row">
 		                            <div class="col-md-8 col-sm-8 choice not-choosen">
 		                            	<div class="status">
-		                                	<h4 id="data-answ-<%= a.id %>"><%= "#{ (ui_c.to_f/inter_quiz.userinteractions.count.to_f*100).round }%" %></h4>
+		                                	<h4 id="data-answ-<%= a.id %>"><%= "#{ (ui_c.to_f/inter_quiz.user_interactions.count.to_f*100).round }%" %></h4>
 		                              	</div>
 		                              	<a href="#" class="thumbnail disabled"><img src="<%= a.image.url %>" alt="..."></a>
 		                            </div>                                    
@@ -80,7 +80,7 @@
 		                        <div class="row">
 		                            <div class="col-md-8 col-sm-8">
 		                            	<div class="vs-level-container">
-		                                	<div id="bar-answ-<%= a.id %>" class="vs-level-inner-dx" style="width: <%= (ui_c.to_f/inter_quiz.userinteractions.count.to_f*100).round %>%">
+		                                	<div id="bar-answ-<%= a.id %>" class="vs-level-inner-dx" style="width: <%= (ui_c.to_f/inter_quiz.user_interactions.count.to_f*100).round %>%">
 		                                	</div>
 		                              	</div>
 		                            </div>

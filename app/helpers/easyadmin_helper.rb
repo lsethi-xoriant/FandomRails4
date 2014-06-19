@@ -2,10 +2,6 @@ module EasyadminHelper
 
   def link_to_add_check_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("CHECK"))
-      new_object.points = i.points
-    end
     new_object.resource = Check.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/check-form", f: builder)
@@ -15,10 +11,6 @@ module EasyadminHelper
 
   def link_to_add_comment_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("COMMENT"))
-      new_object.points = i.points
-    end
     new_object.resource = Comment.new(title: "#COMMENT#{ DateTime.now.strftime("%Y%m%d") }")
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/comment-form", f: builder)
@@ -28,10 +20,6 @@ module EasyadminHelper
 
   def link_to_add_download_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("DOWNLOAD"))
-      new_object.points = i.points
-    end
     new_object.resource = Download.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/download-form", f: builder)
@@ -41,10 +29,6 @@ module EasyadminHelper
 
   def link_to_add_play_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("PLAY"))
-      new_object.points = i.points
-    end
     new_object.resource = Play.new(title: "#PLAY#{ DateTime.now.strftime("%Y%m%d") }")
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/play-form", f: builder)
@@ -54,10 +38,6 @@ module EasyadminHelper
 
   def link_to_add_share_fb_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("SHARE"))
-      new_object.points = i.points
-    end
     new_object.resource = Share.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/share-fb-form", f: builder)
@@ -67,10 +47,6 @@ module EasyadminHelper
 
   def link_to_add_share_tt_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("SHARE"))
-      new_object.points = i.points
-    end
     new_object.resource = Share.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/share-tt-form", f: builder)
@@ -80,10 +56,6 @@ module EasyadminHelper
 
   def link_to_add_share_email_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("SHARE"))
-      new_object.points = i.points
-    end
     new_object.resource = Share.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/share-email-form", f: builder)
@@ -93,10 +65,6 @@ module EasyadminHelper
 
   def link_to_add_like_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("LIKE"))
-      new_object.points = i.points
-    end
     new_object.resource = Like.new(title: "#LIKE#{ DateTime.now.strftime("%Y%m%d") }")
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/like-form", f: builder)
@@ -106,11 +74,6 @@ module EasyadminHelper
 
   def link_to_add_quiz_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("TRIVIA"))
-      new_object.points = i.points
-      new_object.added_points = i.added_points
-    end
     new_object.resource = Quiz.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/quiz-form", f: builder)
@@ -120,10 +83,6 @@ module EasyadminHelper
 
   def link_to_add_versus_fields(name, f, association)
     new_object = Interaction.new
-    p = Property.find(params[:property])
-    if p.default_interaction_points && (i = p.default_interaction_points.find_by_interaction_type("VERSUS"))
-      new_object.points = i.points
-    end
     new_object.resource = Quiz.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/easyadmin/versus-form", f: builder)
