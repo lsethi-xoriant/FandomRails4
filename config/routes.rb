@@ -98,7 +98,7 @@ Fandom::Application.routes.draw do
   match "/reward/buy/:reward_id", :to => "reward#buy"
   
   # Captcha.
-  match "/captcha", :to => "calltoaction#code_image"
+  match "/captcha", :to => "call_to_action#code_image"
 
   # Instagram subscribe. 
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
@@ -131,12 +131,12 @@ Fandom::Application.routes.draw do
     match '/profile/edit', :to => 'registrations#edit'
   end
 
-  match "/user_event/update_answer", :to => "calltoaction#update_answer", defaults: { format: 'json' }
-  match "/user_event/update_download", :to => "calltoaction#update_download", defaults: { format: 'json' }
-  match "/user_event/update_like", :to => "calltoaction#update_like", defaults: { format: 'json' }
-  match "/user_event/update_check", :to => "calltoaction#update_check", defaults: { format: 'json' }
-  match "/user_event/share/:provider", :to => "calltoaction#share", defaults: { format: 'json' }
-  match "/user_event/share_free/:provider", :to => "calltoaction#share_free", defaults: { format: 'json' }
+  match "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }
+  match "/user_event/update_download", :to => "call_to_action#update_download", defaults: { format: 'json' }
+  match "/user_event/update_like", :to => "call_to_action#update_like", defaults: { format: 'json' }
+  match "/user_event/update_check", :to => "call_to_action#update_check", defaults: { format: 'json' }
+  match "/user_event/share/:provider", :to => "call_to_action#share", defaults: { format: 'json' }
+  match "/user_event/share_free/:provider", :to => "call_to_action#share_free", defaults: { format: 'json' }
 
   namespace :api do
     namespace :v1 do
@@ -145,15 +145,14 @@ Fandom::Application.routes.draw do
         post 'passwords' => 'passwords#create'
       end
       get "user/me" => "users#me", defaults: { format: 'json' }
-      get "calltoaction/index" => "calltoactions#index", defaults: { format: 'json' }
-      get "calltoaction/show" => "calltoactions#show", defaults: { format: 'json' }
+      get "calltoaction/index" => "call_to_actions#index", defaults: { format: 'json' }
+      get "calltoaction/show" => "call_to_actions#show", defaults: { format: 'json' }
     end
   end
 
-  match "/update_calltoaction_content", :to => "calltoaction#update_calltoaction_content", defaults: { format: 'json' }
-  match "/append_calltoaction", :to => "property#append_calltoaction", defaults: { format: 'json' }
-  match "/calltoaction_overvideo_end", :to => "calltoaction#calltoaction_overvideo_end", defaults: { format: 'json' }
-  match "/update_play_interaction", :to => "calltoaction#update_play_interaction", defaults: { format: 'json' }
+  match "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
+  match "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }
+  match "/update_play_interaction", :to => "call_to_action#update_play_interaction", defaults: { format: 'json' }
 
   # error handling
   match "/404", :to => "http_error#not_found_404"
@@ -166,13 +165,13 @@ Fandom::Application.routes.draw do
 
   match "profile", :to => "profile#show"
   match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
-  match "check_level_and_badge_up", :to => "calltoaction#check_level_and_badge_up", defaults: { format: 'json' }
+  match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
   resources :calltoaction do
-    match "/add_comment", :to => "calltoaction#add_comment"
-    match "/get_comment_published", :to => "calltoaction#get_comment_published", defaults: { format: 'json' }
-    match "/get_closed_comment_published", :to => "calltoaction#get_closed_comment_published", defaults: { format: 'json' }
-    match "/next_disqus_page", :to => "calltoaction#next_disqus_page", defaults: { format: 'json' }
-    match "/get_overvideo_interaction", :to => "calltoaction#get_overvideo_interaction"
+    match "/add_comment", :to => "call_to_action#add_comment"
+    match "/get_comment_published", :to => "call_to_action#get_comment_published", defaults: { format: 'json' }
+    match "/get_closed_comment_published", :to => "call_to_action#get_closed_comment_published", defaults: { format: 'json' }
+    match "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }
+    match "/get_overvideo_interaction", :to => "call_to_action#get_overvideo_interaction"
   end
 
   root :to => "application#index"
