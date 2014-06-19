@@ -140,8 +140,7 @@ module RewardingSystemHelper
       interaction: interaction,
       user: user,
       user_rewards: user_rewards,
-      # TODO: check this relation
-      cta: user_interaction.interaction.cta,
+      cta: user_interaction.interaction.calltoaction,
       correct_answer: get_correct_answer(user_interaction),
       counters: get_counters(user),
       user_reward_names: Set.new(user_rewards.keys),
@@ -240,10 +239,10 @@ module RewardingSystemHelper
       log_event("reward event: #{outcome.to_json}")
       user = user_interaction.user
       outcome.rewards.each do |reward|
-        assign_reward(user, reward.name, reward.counter)
+        UserReward.assign_reward(user, reward.name, reward.counter)
       end          
       outcome.unlocks.each do |reward|
-        unlock_reward(user, reward.name)
+        UserReward.unlock_reward(user, reward.name)
       end          
     end
   end
