@@ -14,20 +14,16 @@
 	    </li>
 
 	    <% if can? :manage, :all %>
-		    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-dribbble"></i>Calltoaction<span class="caret"></span></a>
+		    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-dribbble"></i>CallToAction<span class="caret"></span></a>
 		      <ul class="sub-nav">
 		        <li>
 		          <a href="/easyadmin/cta">
 		            <i class="fa fa-th-list"></i>TUTTI
 		          </a>
+		          <a href="/easyadmin/cta/new">
+		            <i class="fa fa-th-list"></i>NUOVA
+		          </a>
 		        </li>
-		        <% Property.all.each do |p| %>
-			       	<li>
-			          <a href="/easyadmin/cta/<%= p.id %>">
-			            <i class="fa fa-circle" style="color: <%= p.color_code %>"></i><%= p.name %>
-			          </a>
-			        </li>
-		        <% end %>
 		      </ul>
 		    </li>
 	    <% end %>
@@ -53,23 +49,6 @@
 	    </li>
 		<% end %>
 	    <% if can? :manage, :all %>
-		    <li class="dropdown <%= "active opened" if page == "property" %>"><a href="javascript:void(0);"><i class="fa fa-globe"></i>Property<span class="caret"></span></a>
-		      <ul class="sub-nav">
-		        <li>
-		          <a href="/easyadmin/property">
-		            <i class="fa fa-th-list"></i>Lista
-		          </a>
-		        </li>
-		        <li>
-		          <a href="/easyadmin/property/new">
-		            <i class="fa fa-save"></i>Nuova
-		          </a>
-		        </li>
-		      </ul>
-		    </li>
-	    <% end %>
-
-	    <% if can? :manage, :all %>
 		    <li class="<%= "active" if page == "tag" %>"><a href="/easyadmin/tag"><i class="fa fa-tags"></i>Tag</a>
 		    </li>
 	    <% end %>
@@ -82,13 +61,6 @@
 		            <i class="fa fa-th-list"></i>TUTTI
 		          </a>
 		        </li>
-		        <% Property.all.each do |p| %>
-			       	<li>
-			          <a href="/easyadmin/comment/approved/<%= p.id %>">
-			            <i class="fa fa-circle" style="color: <%= p.color_code %>"></i><%= p.name %>
-			          </a>
-			        </li>
-		        <% end %>
 		      </ul>
 		    </li>
 	    <% end %>

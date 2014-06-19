@@ -23,14 +23,14 @@ Fandom::Application.routes.draw do
 
     match "cta", :to => "easyadmin#index_cta"
     match "cta/filter/:filter", :to => "easyadmin#filter_cta"
-    match "cta/filter/:filter/:property", :to => "easyadmin#filter_cta"
-    match "cta/new/:property", :to => "easyadmin#new_cta"
+    match "cta/filter/:filter/", :to => "easyadmin#filter_cta"
+    match "cta/new/", :to => "easyadmin#new_cta"
     match "cta/show/:id", :to => "easyadmin#show_cta"
-    match "cta/edit/:id/:property", :to => "easyadmin#edit_cta"
+    match "cta/edit/:id/", :to => "easyadmin#edit_cta"
     match "cta/save", :to => "easyadmin#save_cta"
     match "cta/update", :to => "easyadmin#update_cta"
     match "cta/hide/:id", :to => "easyadmin#hide_cta"
-    match "cta/:property", :to => "easyadmin#index_cta"
+    match "cta/", :to => "easyadmin#index_cta"
 
     match "tag", :to => "easyadmin#index_tag"
     match "tag/edit/:id", :to => "easyadmin#edit_tag"
@@ -64,23 +64,6 @@ Fandom::Application.routes.draw do
     match "instantwin_prize/edit/:id", :to => "easyadmin#edit_prize"
     match "instantwin_prize/save", :to => "easyadmin#save_prize"
     match "instantwin_prize/update", :to => "easyadmin#update_prize"
-
-    # PROPERTY
-    match "property", :to => "easyadmin#index_property"
-    match "property/new", :to => "easyadmin#new_property"
-    match "property/save", :to => "easyadmin#save_property"
-    match "property/update", :to => "easyadmin#update_property"
-    match "property/edit/:id", :to => "easyadmin#edit_property"
-    match "property/show/:id", :to => "easyadmin#show_property"
-    match "property/show/:id/save_level", :to => "easyadmin#save_level"
-    match "property/show/:id/save_badge", :to => "easyadmin#save_badge"
-    match "property/show/:id/new_level", :to => "easyadmin#new_level"
-    match "property/show/:id/new_badge", :to => "easyadmin#new_badge"
-    match "property/show/:id/edit_level/:level_id", :to => "easyadmin#edit_level"
-    match "property/show/:id/edit_badge/:badge_id", :to => "easyadmin#edit_badge"
-    match "property/show/:id/edit_level/:level_id/update", :to => "easyadmin#update_level"
-    match "property/show/:id/edit_badge/:badge_id/update", :to => "easyadmin#update_badge"
-
     
     # COMMENT
     match "comment/approved", :to => "easyadmin#index_comment_approved"
@@ -90,9 +73,6 @@ Fandom::Application.routes.draw do
     match "comment/approved/:property", :to => "easyadmin#index_comment_approved"
     match "comment/toapproved/:property", :to => "easyadmin#index_comment_to_be_approved"
     match "comment/:property/update", :to => "easyadmin#update_comment_pubblished"
-
-    match "destroy_badge", :to => "easyadmin#destroy_badge"
-    match "destroy_level", :to => "easyadmin#destroy_level"
 
     match "dashboard", :to => "easyadmin#dashboard"
     match "published", :to => "easyadmin#published"
@@ -184,17 +164,15 @@ Fandom::Application.routes.draw do
 
   match "/extra", :to => "property#extra"
 
-  resources :property, path: "" do
-    match "profile", :to => "profile#show"
-    match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
-    match "check_level_and_badge_up", :to => "calltoaction#check_level_and_badge_up", defaults: { format: 'json' }
-    resources :calltoaction, path: "" do
-      match "/add_comment", :to => "calltoaction#add_comment"
-      match "/get_comment_published", :to => "calltoaction#get_comment_published", defaults: { format: 'json' }
-      match "/get_closed_comment_published", :to => "calltoaction#get_closed_comment_published", defaults: { format: 'json' }
-      match "/next_disqus_page", :to => "calltoaction#next_disqus_page", defaults: { format: 'json' }
-      match "/get_overvideo_interaction", :to => "calltoaction#get_overvideo_interaction"
-    end
+  match "profile", :to => "profile#show"
+  match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
+  match "check_level_and_badge_up", :to => "calltoaction#check_level_and_badge_up", defaults: { format: 'json' }
+  resources :calltoaction do
+    match "/add_comment", :to => "calltoaction#add_comment"
+    match "/get_comment_published", :to => "calltoaction#get_comment_published", defaults: { format: 'json' }
+    match "/get_closed_comment_published", :to => "calltoaction#get_closed_comment_published", defaults: { format: 'json' }
+    match "/next_disqus_page", :to => "calltoaction#next_disqus_page", defaults: { format: 'json' }
+    match "/get_overvideo_interaction", :to => "calltoaction#get_overvideo_interaction"
   end
 
   root :to => "application#index"

@@ -1,13 +1,11 @@
 #!/bin/env ruby
 # encoding: utf-8
 
-class CalltoactionController < ApplicationController
+class CallToActionController < ApplicationController
   # Libreria per la gestione del captcha, si occupa solamente di disegnarlo.
   require "noisy_image.rb"
 
   include ActionView::Helpers::SanitizeHelper
-
-  BADGE_ROLE_ACTIVE = ["VERSUS", "TRIVIA_RIGHT", "PLAY_UNICI", "LIKE"]
 
   # Per la gestione del captcha, genera un'immagine appoggiandosi alla libreria noisy_image e appoggiando
   # il valore in sessione.
@@ -19,20 +17,18 @@ class CalltoactionController < ApplicationController
   end
 
   def show
-    # All'indirizzo "/property_id(slug)/calltoaction_id(slug)"
-    @current_prop = Property.find(params[:property_id])
-    @current_cta = Calltoaction.find(params[:id])
+    @current_cta = CallToAction.find(params[:id])
 
     tag_list_arr = Array.new
-    @current_cta.calltoaction_tags.each { |t| tag_list_arr << t.tag.text }
+    @current_cta.call_to_action_tags.each { |t| tag_list_arr << t.tag.text }
     @tag_list = tag_list_arr.join(",")
 
     if current_user
       subquery = Array.new
-      current_user.userinteractions.includes(:interaction).select("interactions.calltoaction_id").where("user_id=?", current_user.id).each { |i| subquery.push(i.interaction.calltoaction_id) }
-      @current_cta_related_list = Calltoaction.where("id<>? AND property_id=? AND id NOT IN (?)", @current_cta.id, @current_prop.id, (!subquery.blank? ? subquery.join(",") : -1)).limit(4)
+      current_user.user_interactions.includes(:interaction).select("interactions.call_to_action_id").where("user_id=?", current_user.id).each { |i| subquery.push(i.interaction.call_to_action_id) }
+      @current_cta_related_list = CallToAction.where("id<>? AND id NOT IN (?)", @current_cta.id, (!subquery.blank? ? subquery.join(",") : -1)).limit(4)
     else
-      @current_cta_related_list = Calltoaction.where("id<>? AND property_id=?", @current_cta.id, @current_prop.id).limit(4)
+      @current_cta_related_list = CallToAction.where("id<>?", @current_cta.id).limit(4)
     end
 
     # Ho una sola iterazione di tipo commento per calltoaction.
@@ -97,7 +93,7 @@ class CalltoactionController < ApplicationController
   end
 
   def get_closed_comment_published
-    i = Interaction.find_by_calltoaction_id_and_resource_type(params[:calltoaction_id].to_i, "Comment")
+    i = Interaction.find_by_call_to_action_id_and_resource_type(params[:calltoaction_id].to_i, "Comment")
     offset = params[:offset] - 10 > 0 ? (params[:offset] - 10) : 0
     risp = Hash.new
     i.resource.user_comments.publish.order("created_at ASC").offset(offset).limit(10).each do |uc|
@@ -115,8 +111,6 @@ class CalltoactionController < ApplicationController
   end
 
   def index
-    # All'indirizzo "/property_id(slug)/"
-    @current_prop = Property.find(params[:property_id])
   end
 
   def add_comment
@@ -142,7 +136,7 @@ class CalltoactionController < ApplicationController
   end
 
   def get_comment_published
-    i = Interaction.find_by_calltoaction_id_and_resource_type(params[:calltoaction_id].to_i, "Comment")
+    i = Interaction.find_by_call_to_action_id_and_resource_type(params[:calltoaction_id].to_i, "Comment")
     risp = Hash.new
     i.resource.user_comments.publish.order("created_at ASC").offset(params[:offset]).each do |uc|
       risp["#{ uc.id }"] = {
@@ -163,19 +157,19 @@ class CalltoactionController < ApplicationController
   def update_play_interaction
     # L'evento play viene salvato anche per i non loggati.
     user_id = current_user ? current_user.id : (-1)
-    i = Interaction.find_by_calltoaction_id_and_resource_type(params[:calltoaction_id].to_i, "Play")
-    ui = Userinteraction.find_by_user_id_and_interaction_id(user_id, i.id)
+    i = Interaction.find_by_call_to_action_id_and_resource_type(params[:calltoaction_id].to_i, "Play")
+    ui = UserInteraction.find_by_user_id_and_interaction_id(user_id, i.id)
 
     risp = Hash.new
 
     if ui
       ui.update_attribute(:counter, ui.counter + 1)
     else
-      ui = Userinteraction.create(user_id: user_id, interaction_id: i.id)
+      ui = UserInteraction.create(user_id: user_id, interaction_id: i.id)
       risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
       if (ui.points + ui.added_points) > 0
         if mobile_device?
-          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { calltoaction: i.calltoaction, interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { calltoaction: i.call_to_action, interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
         else
           risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: nil }, layout: false, formats: :html 
         end
@@ -192,23 +186,19 @@ class CalltoactionController < ApplicationController
 
   def update_like
     i = Interaction.find(params[:interaction_id].to_i)
-    ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
+    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
 
     risp = Hash.new
 
     if ui   
       if ui.counter < 1
         ui = ui.update_attributes(user_id: current_user.id, interaction_id: i.id, counter: 1)
-        risp["level_up_to_show"] = check_level_to_add i.calltoaction.property_id # Potrei avere superato il livello.
-        risp["interaction_save"] = true
       else
         ui.update_attribute(:counter, 0)
         risp["interaction_save"] = false
       end
     else
-      ui = Userinteraction.create(user_id: current_user.id, interaction_id: i.id)
-      risp["level_up_to_show"] = check_level_to_add i.calltoaction.property_id # Potrei avere superato il livello.
-      risp["interaction_save"] = true
+      ui = UserInteraction.create(user_id: current_user.id, interaction_id: i.id)
     end
 
     respond_to do |format|
@@ -221,7 +211,7 @@ class CalltoactionController < ApplicationController
     if params[:type]
       calltoaction = calltoaction_active_with_tag(params[:type], "DESC").find(params[:id])
     else
-      calltoaction = Calltoaction.active.find(params[:id])
+      calltoaction = CallToAction.active.find(params[:id])
     end
 
     if params[:type] == "youtube"
@@ -252,12 +242,12 @@ class CalltoactionController < ApplicationController
           locals: { }, layout: false, formats: :html)
       end     
     else
-      calltoaction = Calltoaction.active.find(params[:id])
+      calltoaction = CallToAction.active.find(params[:id])
 
       i = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
 
       if i.resource_type == "Quiz" && i.resource.quiz_type
-        ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
+        ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
 
         render_calltoaction_overvideo_end_str = String.new
         if params[:end]
@@ -312,7 +302,7 @@ class CalltoactionController < ApplicationController
 
     if i.resource_type == "Quiz"
       # Traccio se ho risposto o meno in precedenza al quiz.
-      ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
+      ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
 
       risp = Hash.new
       risp["done"] = ui ? true : false
@@ -324,10 +314,10 @@ class CalltoactionController < ApplicationController
         risp["answers"] = Hash.new
         risp["user_answer"] = ui.answer_id if ui
         i.resource.answers.each do |a|
-          ui_c = Userinteraction.where("interaction_id=? AND answer_id=?", i.id, a.id).count
+          ui_c = UserInteraction.where("interaction_id=? AND answer_id=?", i.id, a.id).count
 
           risp["answers"]["#{a.id}"] = { 
-              "info" => ui ? (ui_c.to_f/i.userinteractions.count.to_f*100).round : "0",
+              "info" => ui ? (ui_c.to_f/i.user_interactions.count.to_f*100).round : "0",
               "text" => a.text,
               "image" => a.image.url
           }
@@ -346,7 +336,7 @@ class CalltoactionController < ApplicationController
       end # i.resource.quiz_type == "VERSUS"/"TRIVIA"
     elsif i.resource_type == "Check"
       # Traccio se ho risposto o meno in precedenza al quiz.
-      ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
+      ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
 
       risp = Hash.new
       risp["done"] = ui ? true : false
@@ -361,8 +351,8 @@ class CalltoactionController < ApplicationController
 
   def update_check
     i = Interaction.find(params[:interaction_id].to_i)
-    ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)  
-      Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i) unless ui
+    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)  
+      UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i) unless ui
     respond_to do |format|
       format.json { render :json => "update-check".to_json }
     end  
@@ -370,9 +360,9 @@ class CalltoactionController < ApplicationController
 
   def update_download
     i = Interaction.find(params[:interaction_id].to_i)
-    ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)  
+    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)  
     
-    ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
+    ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
 
     respond_to do |format|
       format.json { render :json => "update-download".to_json }
@@ -382,18 +372,18 @@ class CalltoactionController < ApplicationController
   # Update user answer.
   def update_answer
     i = Interaction.find(params[:interaction_id].to_i)
-    ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)
+    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)
     
     ans = Answer.find(params[:answer_id])
 
     risp = Hash.new
-    if ui && (i.resource.quiz_type == "VERSUS" || ans.calltoaction)
+    if ui && (i.resource.quiz_type == "VERSUS" || ans.call_to_action)
       ui.update_attributes(answer_id: params[:answer_id], counter: (ui.counter + 1))
     elsif ui.blank?
-      ui = Userinteraction.create(answer_id: params[:answer_id], user_id: current_user.id, interaction_id: params[:interaction_id]) 
+      ui = UserInteraction.create(answer_id: params[:answer_id], user_id: current_user.id, interaction_id: params[:interaction_id]) 
       if (ui.points + ui.added_points) > 0
         if mobile_device?
-          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { calltoaction: i.calltoaction, interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
+          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { calltoaction: i.call_to_action, interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
         else
           risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
         end
@@ -402,15 +392,15 @@ class CalltoactionController < ApplicationController
 
     if i.resource.quiz_type == "VERSUS"
       i.resource.answers.each do |a|
-        ui_c = Userinteraction.where("interaction_id=? AND answer_id=?", i.id, a.id).count
-        risp["#{a.id}"] = (ui_c.to_f/i.userinteractions.count.to_f*100).round
+        ui_c = UserInteraction.where("interaction_id=? AND answer_id=?", i.id, a.id).count
+        risp["#{a.id}"] = (ui_c.to_f/i.user_interactions.count.to_f*100).round
       end
     elsif i.resource.quiz_type == "TRIVIA"
       risp["current_correct_answer"] = i.resource.answers.find_by_correct(true).id
-      risp["next_calltoaction"] = ans.calltoaction if ans.calltoaction
+      risp["next_calltoaction"] = ans.call_to_action if ans.call_to_action
     end
 
-    risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
+    risp["calltoaction_complete"] = calltoaction_done? i.call_to_action
     risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
 
     respond_to do |format|
@@ -420,8 +410,6 @@ class CalltoactionController < ApplicationController
 
   def check_level_and_badge_up
     risp = Hash.new
-    risp["level_up_to_show"] = check_level_to_add params[:property_id]  
-    risp["badge_up_to_show"] = check_badge_to_add params[:property_id]   
 
     respond_to do |format|
       format.json { render :json => risp.to_json }
@@ -434,12 +422,12 @@ class CalltoactionController < ApplicationController
     user_id = current_user ? current_user.id : -1 
 
     i = Interaction.find(params[:interaction_id].to_i)
-    ui = Userinteraction.find_by_user_id_and_interaction_id(user_id, i.id)
+    ui = UserInteraction.find_by_user_id_and_interaction_id(user_id, i.id)
 
     if ui
       ui.update_attribute(:counter, ui.counter + 1)
     else
-      ui = Userinteraction.create(user_id: user_id, interaction_id: params[:interaction_id].to_i)
+      ui = UserInteraction.create(user_id: user_id, interaction_id: params[:interaction_id].to_i)
     end
 
     respond_to do |format|
@@ -451,19 +439,19 @@ class CalltoactionController < ApplicationController
     risp = Hash.new
 
     i = Interaction.find(params[:interaction_id].to_i)
-    ui = Userinteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
+    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
 
     if ui
       ui.update_attribute(:counter, ui.counter + 1)
     else
-      ui = Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i)
+      ui = UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i)
       if mobile_device?
-        risp["undervideo_share_feedback"] = render_to_string "/calltoaction/_share_mobile_feedback", locals: { calltoaction: i.calltoaction }, layout: false, formats: :html 
+        risp["undervideo_share_feedback"] = render_to_string "/calltoaction/_share_mobile_feedback", locals: { calltoaction: i.call_to_action }, layout: false, formats: :html 
       end
       risp["points_for_user"] = ui.points
     end
 
-    risp["calltoaction_complete"] = calltoaction_done? i.calltoaction
+    risp["calltoaction_complete"] = calltoaction_done? i.call_to_action
 
     if params[:provider] == "facebook" && current_user && current_user.facebook
       if Rails.env.production?
@@ -481,9 +469,9 @@ class CalltoactionController < ApplicationController
     elsif params[:provider] == "email" && current_user
       if params[:share_email_address] =~ Devise.email_regexp
 
-        SystemMailer.share_content_email(current_user, params[:share_email_address], i.calltoaction).deliver
+        SystemMailer.share_content_email(current_user, params[:share_email_address], i.call_to_action).deliver
 
-        ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (Userinteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
+        ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
         risp["email_correct"] = true
         risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
 
@@ -502,60 +490,5 @@ class CalltoactionController < ApplicationController
       end
     end
   end
-
-  private
-
-  # Verifica se l'utente ha ragiunto nuovi livelli e li salva eventualmente nel rewarding_user della property corretta.
-  def check_level_to_add property_id
-    current_rewarding_user = current_user.rewarding_users.find_by_property_id(property_id)
-    current_level_list_property = Property.find(property_id).levels
-    if current_rewarding_user && current_level_list_property.any?
-      # Recupero tutti i livelli in cui rientro nei valori.
-      level_list = current_level_list_property.where("points<=?", current_rewarding_user.points).order("points ASC") 
-      level_to_add = Hash.new
-      level_list.each do |l|
-        if current_rewarding_user.user_levels.where("level_id=?", l.id).blank?
-          UserLevel.create(rewarding_user_id: current_rewarding_user.id, level_id: l.id)
-          level_to_add["#{ l.id }"] = l.name
-        end
-      end
-
-    end
-    return level_to_add
-  end
-
-  def check_badge_to_add property_id
-    badge_to_add = Hash.new
-    BADGE_ROLE_ACTIVE.each do |role|
-      current_rewarding_user = current_user.rewarding_users.find_by_property_id(property_id)
-      current_badge_list_property = Property.find(property_id).badges.where("role=?", role)
-
-      if current_rewarding_user && current_badge_list_property.any?
-        # Recupero tutti i badge in cui rientro nei valori.
-        case role
-        when "TRIVIA_RIGHT"
-          cr = current_rewarding_user.trivia_right_counter
-        when "VERSUS"
-          cr = current_rewarding_user.versus_counter
-        when "PLAY_UNICI"
-          cr = current_rewarding_user.play_counter
-        when "LIKE"
-          cr = current_rewarding_user.like_counter
-        when "CHECK"
-          cr = current_rewarding_user.check_counter
-        end
-
-        badge_list = current_badge_list_property.where("role_value<=?", cr).order("role_value ASC") 
-        badge_list.each do |b|
-          if current_rewarding_user.user_badges.where("badge_id=?", b.id).blank?
-            UserBadge.create(rewarding_user_id: current_rewarding_user.id, badge_id: b.id)
-            badge_to_add["#{ b.id }"] = b.name
-          end
-        end
-      end # current_rewarding_user && current_badge_list_property.any?
-    end
-    return badge_to_add
-  end
-
 
 end

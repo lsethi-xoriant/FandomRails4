@@ -48,15 +48,6 @@
 		              <label class="text-input">Titolo del contenitore</label>
 		              <%= builder.text_field :title, :class => "form-control" %>
 		          </div>
-              <div class="form-group">
-                  <label class="text-input">Punti</label>
-                  <%= f.text_field :points, :class => "form-control" %>
-              </div>
-		          <div class="form-group">	
-		          		<label class="text-input">Property</label>					
-				        <% date_array = Property.all.map { |p| [ "#{ p.name }", p.id] } %>
-			    		<%= builder.select(:property_id, options_for_select(date_array), {}, :class => "form-control") %>
-			      	</div>
 		        </div>
 	        </div>
 

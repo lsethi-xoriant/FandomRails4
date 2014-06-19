@@ -23,9 +23,9 @@
         </span>
       </div>
       <div class="form-group" style="margin-top: 15px;">
-        <% date_array = Calltoaction.includes(:calltoaction_tags, calltoaction_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND tags.text='step'", Time.now.utc).order("activated_at DESC").map { |c| [ "#{ c.title }", c.id] } %>
+        <% date_array = CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND tags.text='step'", Time.now.utc).order("activated_at DESC").map { |c| [ "#{ c.title }", c.id] } %>
         <% date_array.unshift ["", ""] %>
-        <%= f.select :calltoaction_id, date_array, {}, :class => "form-control" %>
+        <%= f.select :call_to_action_id, date_array, {}, :class => "form-control" %>
       </div>       
     </div>
   </div>

@@ -13,7 +13,7 @@ class RewardController < ApplicationController
   end
   
   def get_user_rewards(user_id)
-    Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.rewarded_count > 0 AND user_rewards.user_id = ?", user_id)
+    Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.counter > 0 AND user_rewards.user_id = ?", user_id)
   end
   
   def get_top_rewards(user_id)
@@ -22,7 +22,7 @@ class RewardController < ApplicationController
   end
   
   def get_user_available_rewards(user_id)
-    Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.rewarded_count = 0 AND user_rewards.user_id = ?", user_id)
+    Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.counter = 0 AND user_rewards.user_id = ?", user_id)
   end
   
   def get_all_rewards(user_id)
@@ -37,7 +37,7 @@ class RewardController < ApplicationController
     rewards.each do |r|
       reward_element = Hash.new
       reward_element['reward'] = r
-      reward_element['user_already_bought'] = UserReward.where("user_id = ? AND reward_id = ? AND rewarded_count > 0", user_id, r.id).count > 0
+      reward_element['user_already_bought'] = UserReward.where("user_id = ? AND reward_id = ? AND counter > 0", user_id, r.id).count > 0
       rewards_list.push(reward_element)
     end
     rewards_list
@@ -50,15 +50,15 @@ class RewardController < ApplicationController
       @user_got_reward = false
       @user_can_buy_reward = false
     else
-      @user_got_reward = user_reward.rewarded_count > 0
-      @user_can_buy_reward = user_reward.rewarded_count > @reward.cost && !@user_got_reward
-      @currency_to_buy_reward = @user_can_buy_reward ? 0 : (@reward.cost - user_reward.rewarded_count)
+      @user_got_reward = user_reward.counter > 0
+      @user_can_buy_reward = user_reward.counter > @reward.cost && !@user_got_reward
+      @currency_to_buy_reward = @user_can_buy_reward ? 0 : (@reward.cost - user_reward.counter)
      end
   end
   
   def get_user_currency_amount(user_id, currency_id)
-    user_reward_for_currency = UserReward.select("rewarded_count").where("user_id = ? AND reward_id = ?", user_id, currency_id).first 
-    return user_reward_for_currency.rewarded_count
+    user_reward_for_currency = UserReward.select("counter").where("user_id = ? AND reward_id = ?", user_id, currency_id).first 
+    return user_reward_for_currency.counter
   end
   
   def want_buy_reward
@@ -73,10 +73,10 @@ class RewardController < ApplicationController
   end
   
   def can_buy_reward(user_reward, reward)
-    user_already_bought_reward = user_reward.rewarded_count > 0
+    user_already_bought_reward = user_reward.counter > 0
     cost = reward.cost
     currency = UserReward.where("user_id = ? AND reward_id = ?", current_user.id, reward.currency_id).first
-    available = currency.rewarded_count
+    available = currency.counter
     if available >= cost && !user_already_bought_reward
        buy_reward(user_reward, currency, reward)
     elsif available < cost
@@ -87,8 +87,8 @@ class RewardController < ApplicationController
   end
   
   def buy_reward(user_reward, currency, reward)
-    user_reward.update_attribute(:rewarded_count,1)
-    currency.update_attribute(:rewarded_count,currency.rewarded_count - reward.cost)
+    user_reward.update_attribute(:counter,1)
+    currency.update_attribute(:counter,currency.counter - reward.cost)
     flash[:notice] = "Complimenti il premio è tuo!";
   end
   

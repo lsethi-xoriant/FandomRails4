@@ -5,6 +5,7 @@
 //= require angular-route
 //= require ng-table
 //= require angular_calltoaction
+//= require angular_stream_calltoaction
 //= require bootstrap
 //= require bootstrap-notify
 //= require bootstrap-fileupload

@@ -27,7 +27,6 @@
       <div class="col-sm-5">
           <dl class="dl-horizontal">
             <dt>Nome</dt><dd><p><%= @current_cta.title %></p></dd>
-            <dt>Property</dt><dd><p><%= @current_cta.property.name %></p></dd>
 
             <dt>Disqus</dt><dd><p><%= @current_cta.enable_disqus ? "abilitato" : "non abilitato" %></p></dd>
 
@@ -91,8 +90,6 @@
 		      <div class="col-lg-4">
 		          <dl class="dl-horizontal">
 		            <dt>Domanda</dt><dd><p><%= q.resource.question %></p></dd>
-		            <dt>Punti</dt><dd><p><%= q.points %></p></dd>
-		            <dt>Punti risposta corretta</dt><dd><p><%= q.added_points %></p></dd>
 		            <dt>Tipologia</dt><dd><p><%= q.when_show_interaction %></p></dd>
 		            <dt>Secondo di apparizione</dt><dd><p><%= q.seconds %></p></dd>
 		            <dt>Risposte corrette</dt><dd><p><%= q.resource.cache_correct_answer %></p></dd>
@@ -102,7 +99,7 @@
 		      <div class="col-lg-4">
 		      	<dl class="dl-horizontal">
 		      		<% q.resource.answers.each do |a| %>
-			            <dt>Risposta</dt><dd><p><%= a.text %> (<%= a.userinteractions.count %>) <%= "<i class=\"fa fa-check\"></i>".html_safe if a.correct %></p></dd>		        
+			            <dt>Risposta</dt><dd><p><%= a.text %> (<%= a.user_interactions.count %>) <%= "<i class=\"fa fa-check\"></i>".html_safe if a.correct %></p></dd>		        
 		        	<% end %> 
 		        </dl>
 		      </div>
@@ -133,7 +130,6 @@
 		      <div class="col-lg-4">
 		          <dl class="dl-horizontal">
 		            <dt>Domanda</dt><dd><p><%= q.resource.question %></p></dd>
-		            <dt>Punti</dt><dd><p><%= q.points %></p></dd>
 		            <dt>Tipologia</dt><dd><p><%= q.when_show_interaction %></p></dd>
 		            <dt>Secondo di apparizione</dt><dd><p><%= q.seconds %></p></dd>
 		          </dl>
@@ -143,7 +139,7 @@
 		      		<% q.resource.answers.each do |a| %>
 			            <dt>Risposta</dt>
 			            	<dd>
-			            		<p><%= a.text %> (<%= a.userinteractions.count %>)</p>
+			            		<p><%= a.text %> (<%= a.user_interactions.count %>)</p>
 			            		<p><img src="<%= a.image.url %>" style="width: 100px; border: 1px solid black; border-radius: 10px;"></p>
 			            	</dd>		        
 		        	<% end %> 

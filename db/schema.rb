@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140611125838) do
+ActiveRecord::Schema.define(:version => 20140619082008) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -24,10 +24,10 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-    t.integer  "calltoaction_id"
+    t.integer  "call_to_action_id"
   end
 
-  add_index "answers", ["calltoaction_id"], :name => "index_answers_on_calltoaction_id"
+  add_index "answers", ["call_to_action_id"], :name => "index_answers_on_call_to_action_id"
   add_index "answers", ["quiz_id"], :name => "index_answers_on_quiz_id"
 
   create_table "authentications", :force => true do |t|
@@ -46,36 +46,22 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
 
-  create_table "badges", :force => true do |t|
-    t.string   "name"
-    t.string   "description"
-    t.string   "role"
-    t.integer  "role_value"
-    t.integer  "property_id"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-  end
-
-  create_table "calltoaction_tags", :force => true do |t|
-    t.integer  "calltoaction_id"
+  create_table "call_to_action_tags", :force => true do |t|
+    t.integer  "call_to_action_id"
     t.integer  "tag_id"
-    t.integer  "property_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
-  create_table "calltoactions", :force => true do |t|
-    t.string   "title",                                 :null => false
+  create_table "call_to_actions", :force => true do |t|
+    t.string   "name"
+    t.string   "title"
+    t.text     "description"
     t.string   "video_url"
     t.string   "media_type"
     t.boolean  "enable_disqus",      :default => false
     t.datetime "activated_at"
-    t.string   "cta_template_type"
-    t.integer  "property_id"
+    t.string   "secondary_id"
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
     t.string   "image_file_name"
@@ -83,11 +69,10 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "slug"
-    t.string   "secondary_id"
-    t.text     "description"
   end
 
-  add_index "calltoactions", ["slug"], :name => "index_calltoactions_on_slug"
+  add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
+  add_index "call_to_actions", ["slug"], :name => "index_call_to_actions_on_slug"
 
   create_table "checks", :force => true do |t|
     t.string   "title"
@@ -139,15 +124,6 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.integer  "conversion_rate", :default => 1
   end
 
-  create_table "default_interaction_points", :force => true do |t|
-    t.integer  "points",           :default => 0
-    t.integer  "added_points",     :default => 0
-    t.string   "interaction_type"
-    t.integer  "property_id"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
   create_table "downloads", :force => true do |t|
     t.string   "title",                   :null => false
     t.datetime "created_at",              :null => false
@@ -156,13 +132,6 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.string   "attachment_content_type"
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
-  end
-
-  create_table "general_rewarding_users", :force => true do |t|
-    t.integer  "points",     :default => 0
-    t.integer  "user_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
   end
 
   create_table "instant_win_prizes", :force => true do |t|
@@ -190,26 +159,11 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
   create_table "interactions", :force => true do |t|
     t.string  "name"
     t.integer "seconds",               :default => 0
-    t.integer "points",                :default => 0
-    t.integer "added_points",          :default => 0
     t.integer "cache_counter",         :default => 0
     t.string  "when_show_interaction"
     t.integer "resource_id"
     t.string  "resource_type"
-    t.integer "calltoaction_id"
-  end
-
-  create_table "levels", :force => true do |t|
-    t.string   "name"
-    t.string   "description"
-    t.integer  "points"
-    t.integer  "property_id"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
+    t.integer "call_to_action_id"
   end
 
   create_table "likes", :force => true do |t|
@@ -291,22 +245,6 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "properties", :force => true do |t|
-    t.text     "description"
-    t.datetime "activated_at"
-    t.string   "color_code"
-    t.string   "name"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
-    t.string   "slug"
-    t.string   "background_file_name"
-    t.string   "background_content_type"
-    t.integer  "background_file_size"
-    t.datetime "background_updated_at"
-  end
-
-  add_index "properties", ["slug"], :name => "index_properties_on_slug"
-
   create_table "quizzes", :force => true do |t|
     t.string   "question",                            :null => false
     t.integer  "cache_correct_answer", :default => 0
@@ -327,22 +265,6 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.integer  "reward_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "rewarding_users", :force => true do |t|
-    t.integer  "points",                    :default => 0
-    t.integer  "credits",                   :default => 0
-    t.integer  "trivia_wrong_counter",      :default => 0
-    t.integer  "trivia_right_counter",      :default => 0
-    t.integer  "versus_counter",            :default => 0
-    t.integer  "play_counter",              :default => 0
-    t.integer  "like_counter",              :default => 0
-    t.integer  "check_counter",             :default => 0
-    t.integer  "general_rewarding_user_id"
-    t.integer  "property_id"
-    t.integer  "user_id"
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
   end
 
   create_table "rewards", :force => true do |t|
@@ -379,6 +301,13 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.datetime "not_awarded_image_updated_at"
   end
 
+  create_table "settings", :force => true do |t|
+    t.string   "key"
+    t.text     "value"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "shares", :force => true do |t|
     t.text     "description"
     t.string   "message"
@@ -398,13 +327,6 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "user_badges", :force => true do |t|
-    t.integer  "badge_id"
-    t.integer  "rewarding_user_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
   create_table "user_comments", :force => true do |t|
     t.integer  "user_id"
     t.integer  "comment_id"
@@ -415,36 +337,23 @@ ActiveRecord::Schema.define(:version => 20140611125838) do
     t.datetime "updated_at",                      :null => false
   end
 
-  create_table "user_levels", :force => true do |t|
-    t.integer  "level_id"
-    t.integer  "rewarding_user_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+  create_table "user_interactions", :force => true do |t|
+    t.integer  "user_id",                       :null => false
+    t.integer  "interaction_id",                :null => false
+    t.integer  "answer_id"
+    t.integer  "counter",        :default => 0
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "user_rewards", :force => true do |t|
     t.integer  "user_id"
     t.integer  "reward_id"
     t.boolean  "available"
-    t.integer  "rewarded_count", :default => 0
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.integer  "counter",    :default => 0
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
-
-  create_table "userinteractions", :force => true do |t|
-    t.integer  "user_id",                       :null => false
-    t.integer  "interaction_id",                :null => false
-    t.integer  "answer_id"
-    t.integer  "counter",        :default => 1
-    t.integer  "points",         :default => 0
-    t.integer  "added_points",   :default => 0
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
-  end
-
-  add_index "userinteractions", ["answer_id"], :name => "index_userinteractions_on_answer_id"
-  add_index "userinteractions", ["interaction_id"], :name => "index_userinteractions_on_interaction_id"
-  add_index "userinteractions", ["user_id"], :name => "index_userinteractions_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "",       :null => false

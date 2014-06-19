@@ -1,0 +1,11 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container"
+     ng-app="StreamCalltoactionApp" 
+     ng-controller="StreamCalltoactionCtrl" 
+     ng-init="init(<%= current_user.present? %>, <%= @calltoactions.to_json %>, <%= CallToAction.active.count %>)">    
+  <div class="row">
+    <div class="col-md-12">
+      <%= render partial: "/calltoaction/stream_calltoaction" %>
+  </div>
+</div>

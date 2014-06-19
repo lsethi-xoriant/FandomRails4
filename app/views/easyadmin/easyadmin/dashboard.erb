@@ -72,37 +72,39 @@
       </div> <!-- /.col-md-3 -->
     </div>
 
-    <div class="row">
-      <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat secondary">
-            <div class="details">
-              <span class="content">SHARE EMAIL</span>
+    <% if Share.any? %>
+      <div class="row">
+        <div class="col-md-3 col-sm-6">
+            <div class="dashboard-stat secondary">
+              <div class="details">
+                <span class="content">SHARE EMAIL</span>
 
-              <span class="value"><%= Share.where("share_type='email'").joins(interaction: :userinteractions).sum("userinteractions.counter") %></span>
-            </div> <!-- /.details -->
-          </div> <!-- /.dashboard-stat -->
-      </div> <!-- /.col-md-3 -->
-      <!--
-      <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat secondary">
-            <div class="details">
-              <span class="content">SHARE TWITTER</span>
+                <span class="value"><%= Share.where("share_type='email'").joins(interaction: :user_interactions).sum("user_interactions.counter") %></span>
+              </div> <!-- /.details -->
+            </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+        <!--
+        <div class="col-md-3 col-sm-6">
+            <div class="dashboard-stat secondary">
+              <div class="details">
+                <span class="content">SHARE TWITTER</span>
 
-              <span class="value"><%= Share.where("share_type='twitter'").joins(interaction: :userinteractions).sum("userinteractions.counter") %></span>
+                <span class="value"><%= Share.where("share_type='twitter'").joins(interaction: :user_interactions).sum("user_interactions.counter") %></span>
+              </div>
             </div>
-          </div>
-      </div>
-      -->
-      <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat secondary">
-            <div class="details">
-              <span class="content">SHARE FACEBOOK</span>
+        </div>
+        -->
+        <div class="col-md-3 col-sm-6">
+            <div class="dashboard-stat secondary">
+              <div class="details">
+                <span class="content">SHARE FACEBOOK</span>
 
-              <span class="value"><%= Share.where("share_type='facebook'").joins(interaction: :userinteractions).sum("userinteractions.counter") %></span>
-            </div> <!-- /.details -->
-          </div> <!-- /.dashboard-stat -->
-      </div> <!-- /.col-md-3 -->
-    </div>
+                <span class="value"><%= Share.where("share_type='facebook'").joins(interaction: :user_interactions).sum("user_interactions.counter") %></span>
+              </div> <!-- /.details -->
+            </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+      </div>
+    <% end %>
 
   </div>
 </div>
