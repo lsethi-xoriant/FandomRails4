@@ -4,7 +4,6 @@ require_relative "event_handler_helper"
 
 module RewardingSystemHelper
   include EventHandlerHelper
-  include UserRewardHelper
 
   # The Abstract Syntax of a rule
   class Rule
