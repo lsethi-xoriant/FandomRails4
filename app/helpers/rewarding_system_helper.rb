@@ -25,14 +25,14 @@ module RewardingSystemHelper
     include ActiveAttr::AttributeDefaults
     
     attribute :matching_rules #, type: Array
-    attribute :rewards #, type: Hash
-    attribute :unlocks #, type: Hash
+    attribute :reward_name_by_counter #, type: Hash[String, Int]
+    attribute :unlocks #, type: Set
     attribute :errors #, type: Hash
     
     def initialize
       self.matching_rules = []
-      self.rewards = {}
-      self.unlocks = {}
+      self.reward_name_by_counter = {}
+      self.unlocks = Set.new
       self.errors = []
       self.rewards.default = 0
       self.unlocks.default = 0
@@ -90,8 +90,8 @@ module RewardingSystemHelper
       begin
         if rule.condition.call
           outcome.matching_rules << rule.name
-          merge_rewards(outcome.rewards, rule_rewards)          
-          merge_rewards(outcome.unlocks, rule_unlocks)          
+          merge_rewards(outcome.reward_name_by_counter, rule_rewards)          
+          outcome.unlocks += rule_unlocks          
         end
       rescue Exception => ex
         outcome.errors << "rule #{rule.name}: #{ex}\n#{ex.backtrace.join("\n")}" 
@@ -237,11 +237,11 @@ module RewardingSystemHelper
     if outcome.rewards.any? || outcome.unlocks.any?
       log_event("reward event: #{outcome.to_json}")
       user = user_interaction.user
-      outcome.rewards.each do |reward|
-        UserReward.assign_reward(user, reward.name, reward.counter)
+      outcome.reward_name_by_counter.each do |reward_name, reward_counter|
+        UserReward.assign_reward(user, reward_name, reward_counter)
       end          
-      outcome.unlocks.each do |reward|
-        UserReward.unlock_reward(user, reward.name)
+      outcome.unlocks.each do |reward_name|
+        UserReward.unlock_reward(user, reward_name)
       end          
     end
   end
