@@ -161,6 +161,9 @@ class CallToActionController < ApplicationController
     else
       UserCounter.update_counters(user_interaction)
       outcome = compute_and_save_outcome(user_interaction)
+      if outcome.errors.any?
+        # TODO: handle errors on rules through some notification
+      end
       response['outcome'] = outcome
     end
     
