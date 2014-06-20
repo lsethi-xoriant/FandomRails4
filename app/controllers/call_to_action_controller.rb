@@ -157,11 +157,11 @@ class CallToActionController < ApplicationController
     user_interaction = UserInteraction.create_or_update_interaction(current_user.id, interaction.id)
     
     if current_user.anonymous?
+      response['outcome'] = nil
+    else
       UserCounter.update_counters(user_interaction)
       outcome = compute_and_save_outcome(user_interaction)
       response['outcome'] = outcome
-    else
-      response['outcome'] = nil
     end
     
     response["feedback"] = nil # TODO: render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: 0, points: 0, correct: nil }, layout: false, formats: :html 
