@@ -98,4 +98,36 @@ module ConfigUtils
     filename.end_with?('.rb') && (enabled_site_set.empty? || enabled_site_set.include?(filename[0..-4]))
   end
   
+  
+  STRING_TO_BOOL = {
+    'true' => true,
+    true => true,
+    'y' => true,
+    'yes' => true,
+    '1' => true,
+    1 => true,
+    'false' => false,
+    false => false,
+    'n' => false,
+    'no' => false,
+    '0' => false,
+    0 => false
+  }
+  # get a boolean from a hash obtained by parsing a YAML file.
+  def get_boolean(deploy_settings, path, default = false)
+    begin
+      result = deploy_settings
+      path.split("/").each do |x|
+        result = result[x]  
+      end
+      result = STRING_TO_BOOL[result]
+      if result.nil?
+        throw Exception.new("boolean expected in configuration file, got: #{result}")
+      end
+      result
+    rescue
+      default
+    end
+  end
+  
 end
