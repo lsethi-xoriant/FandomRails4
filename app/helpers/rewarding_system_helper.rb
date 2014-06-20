@@ -163,7 +163,7 @@ module RewardingSystemHelper
   
   # TODO: to be implemented
   def get_correct_answer(user_interaction)
-    false
+    user_interaction.is_answer_correct?
   end  
 
   # TODO: to be implemented
@@ -244,6 +244,10 @@ module RewardingSystemHelper
         UserReward.unlock_reward(user, reward.name)
       end          
     end
+  end
+
+  def predict_outcome(interaction, user)
+    # TODO: to be implemented
   end
 
 end

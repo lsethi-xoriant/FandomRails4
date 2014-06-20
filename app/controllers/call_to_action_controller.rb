@@ -152,34 +152,22 @@ class CallToActionController < ApplicationController
     end
   end
 
-  # Aggiorno/creo un userinteraction di tipo play associato alla calltoaction attiva, tenendo conto che
-  # una calltoaction può avere solamente un evento di tipo play.
-  def update_play_interaction
-    # L'evento play viene salvato anche per i non loggati.
-    user_id = current_user ? current_user.id : (-1)
-
-    i = Interaction.find_by_call_to_action_id_and_resource_type(params[:calltoaction_id].to_i, "Play")
-    ui = UserInteraction.find_by_user_id_and_interaction_id(user_id, i.id)
-
-    risp = Hash.new
-
-    if ui
-      ui.update_attribute(:counter, ui.counter + 1)
+  def update_interaction
+    interaction = Interaction.find(params[:id])
+    user_interaction = UserInteraction.create_or_update_interaction(current_user.id, interaction.id)
+    
+    if current_user.anonymous?
+      UserCounter.update_counters(user_interaction)
+      outcome = compute_and_save_outcome(user_interaction)
+      response['outcome'] = outcome
     else
-      ui = UserInteraction.create(user_id: user_id, interaction_id: i.id)
-      risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
-      if mobile_device?
-        risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { calltoaction: i.call_to_action, interaction_max_points: 0, points: 0, correct: nil }, layout: false, formats: :html 
-      else
-        risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: 0, points: 0, correct: nil }, layout: false, formats: :html 
-      end
+      response['outcome'] = nil
     end
-
-    #risp["calltoaction_complete"] = calltoaction_done? i.call_to_action
-
-    risp["interaction_save"] = !ui.errors.any? # Ritorno lo stato del salvataggio.
+    
+    response["feedback"] = nil # TODO: render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: 0, points: 0, correct: nil }, layout: false, formats: :html 
+    response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, useruser)
     respond_to do |format|
-      format.json { render :json => risp.to_json }
+      format.json { render :json => response.to_json }
     end
   end
 

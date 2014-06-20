@@ -20,6 +20,7 @@ class UserInteraction < ActiveRecord::Base
   #   errors.add(:limit_exceeded, "hai raggiunto il limite giornaliero di inviti") if uicount > 4
   # end
 
+  # TODO: this should be reimplemented as a query (1 per answer or, better, just 1 group-by query), and cached
   def update_interaction_counter
     case interaction.resource_type
     when "Like"
@@ -68,12 +69,28 @@ class UserInteraction < ActiveRecord::Base
     end
   end
 
+  def create_or_update_interaction(user_id, interaction_id)
+    user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user_id, interaction_id)
+    if user_interaction.nil?
+      UserInteraction.create(user_id: user_id, interaction_id: interaction_id)
+    else
+      user_interaction.update_attribute(:counter, user_interaction.counter + 1)
+      user_interaction
+    end
+  end
+
   private
 
   # Return true if the current calltoaction is already shared.
-  def check_already_share_cta?
+  def check_call_to_action_already_shared
     share_inter = self.interaction.calltoaction.interactions.where("resource_type='Share'")
     return !self.user.user_interactions.where("interaction_id in (?)", share_inter.map.collect { |u| u["id"] }).blank?
   end  
+
+  # This might need some caching
+  def is_answer_correct?
+    answer.correct
+  end
+
 end
 
