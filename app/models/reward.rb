@@ -52,4 +52,8 @@ class Reward < ActiveRecord::Base
     end
   end
 
+  def self.get_all_names
+    Reward.all.select("name")
+  end
+
 end

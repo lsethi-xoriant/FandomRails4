@@ -10,6 +10,16 @@ class UserReward < ActiveRecord::Base
     UserReward.includes(:reward).where("user_id = ? and rewards.name = ?", user.id, reward_name).first
   end
 
+  def self.get_rewards_names_to_counters(user)
+    name_counter_pairs = UserReward.includes(:reward).select("rewards.name, counter").where("user_id = ?", user.id)
+    result = {}
+    name_counter_pairs.each do |pair|
+      name, counter = pair
+      result[name] = counter
+    end
+    result
+  end
+  
   def self.assign_reward(user, reward_name, counter)
     user_reward = get_user_reward(user, reward_name) 
     if user_reward.nil?
@@ -31,5 +41,5 @@ class UserReward < ActiveRecord::Base
       return user_reward
     end
   end
-  
+
 end
