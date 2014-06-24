@@ -1,52 +1,50 @@
-<div class="panel panel-default tpl-l-img">
-	<div class="panel-body background-image">
-	  <div class="row" style="position:relative">
-	    <div class="points">
-	      <h3><span class="label label-warning"><%= calltoactions_totalpoints(calltoaction) + calltoactions_share_points(calltoaction) %>
-	    </div>
-	    
-	    <div class="col-md-5">
-		    <% if calltoaction.media_type == "VIDEO" %>
-	        <div class="video flex-video widescreen">
-	          <div id="home-stream-video-<%= calltoaction.id %>" iid="calltoaction-active-<%= calltoaction.id %>"></div>
-	          <!-- OVERVIDEO AREA -->
-	          <div id="home-overvideo-<%= calltoaction.id %>"></div>
-	        </div>
-		    <% else %>
-		      <img src="<%= calltoaction.image %>" style="width: 100%; margin-bottom: 15px;">
-		    <% end %>
-	    </div>
+<div class="row">      
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="panel panel-default no-pad">
+      <div class="panel-body no-pad">
+        <!-- MEDIA -->
+        <div class="row">
+          <div class="col-md-12">
+            <% if calltoaction.media_type == "VIDEO" %>
+                <div class="video flex-video widescreen" style="background:#222;">
+                  
+                	<!-- IFRAME VIDEO -->
+                  <div id="home-stream-video-<%= calltoaction.id %>" type="<%= type %>" main-calltoaction-id="<%= calltoaction.id %>" secondary-calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= interaction_play_for_calltoaction(calltoaction).id %>"></div>
 
-	    <div class="col-md-7">
-	      <div class="panel panel-default cta-content">
-	        <!-- Default panel contents -->
-	        <div class="panel-heading visible-lg visible-md">
-	          <h5 class="text-muted visible-md visible-lg"><span class=""></span>&nbsp;&nbsp;</h5>
-	        </div>
-	        <div class="panel-body">
-	          <h3><%= calltoaction.title %></h3>
-	          
-	          <div class="row">
-	            <div class="col-md-5">
-	              <p><a href="/calltoaction/<%= calltoaction.slug %>" class="btn btn-lg btn-block <%= calltoaction_done?(calltoaction) ? "btn-success" : "btn-primary" %>" role="button">Gioca</a></p>
-	            </div>
+                  <!-- OVERVIDEO AREA -->
+                  <div id="home-overvideo-<%= calltoaction.id %>"></div>
+                  
+                  <!-- OVERVIDEO TITLE -->
+                  <div id="home-overvideo-title-<%= calltoaction.id %>"><%= render partial: "/calltoaction/overvideo_play", locals: { calltoaction: calltoaction } %></div>
+
+                </div>
+            <% else %>
+            	<!-- IMAGE -->
+              <img src="<%= calltoaction.image %>" style="width: 100%; margin-bottom: 15px;">
+            <% end %>
+          </div>
+        </div>
+
+        <!-- UNDERVIDEO AREA -->
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <h3 style="margin: 0 0 15px 0;"><%= calltoaction.title %></h3>
+          </div>
+          <% if calltoaction.description %>
+	          <div class="col-md-12 text-left">
+	            <h3 style="margin: 0 0 15px 0;"><%= calltoaction.description %></h3>
 	          </div>
-	        </div>
-	        <!-- List group -->
-	        <div class="panel-footer text-muted">
-	          <div class="row">
-	            <div class="col-md-6 col-xs-6">
-	              <span><%= calltoaction.activated_at %></span>
-	            </div>
-	            <div class="col-md-6 col-xs-6 text-right">
-	              
-	                <!--<span class="glyphicon glyphicon-comment"></span> 10 &nbsp;&nbsp;--> <span class="glyphicon glyphicon-thumbs-up"></span> N
-	              
-	            </div>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+          <% end %>
+          <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">
+            <!-- UNDERVIDEO FEEDBACK -->               
+          </div>
+
+          <div class="col-md-12" id="share-footer">
+            <!-- SHARE FOOTER -->
+          </div>
+        </div>
+
+      </div>         
+    </div>        
+  </div>
 </div>

@@ -4,7 +4,7 @@ class CreateUserInteractionsTable < ActiveRecord::Migration
       t.references :user, :null => false
       t.references :interaction, :null => false
       t.references :answer
-      t.integer :counter, default: 0
+      t.integer :counter, default: 1
       t.timestamps
     end
   end

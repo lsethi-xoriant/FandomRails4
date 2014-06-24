@@ -6,6 +6,8 @@ class CallToActionController < ApplicationController
   require "noisy_image.rb"
 
   include ActionView::Helpers::SanitizeHelper
+  include RewardingSystemHelper
+  include CallToActionHelper
 
   # Per la gestione del captcha, genera un'immagine appoggiandosi alla libreria noisy_image e appoggiando
   # il valore in sessione.
@@ -153,46 +155,75 @@ class CallToActionController < ApplicationController
   end
 
   def update_interaction
-    interaction = Interaction.find(params[:id])
-    user_interaction = UserInteraction.create_or_update_interaction(current_user.id, interaction.id)
-    
-    if current_user.anonymous?
-      response['outcome'] = nil
-    else
-      UserCounter.update_counters(user_interaction)
-      outcome = compute_and_save_outcome(user_interaction)
-      if outcome.errors.any?
-        # TODO: handle errors on rules through some notification
+    interaction = Interaction.find(params[:interaction_id])
+
+    response = Hash.new
+
+    if interaction.resource_type.downcase.to_sym == :quiz
+      
+      answer = Answer.find(params[:answer_id])
+      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user_id, interaction.id, answer.id)
+
+      response["right_answer_response"] = user_interaction.answer.correct
+
+      if answer.call_to_action
+        response["next_call_to_action"] = {
+          call_to_action_id: answer.call_to_action_id,
+          video_url: answer.call_to_action.video_url,
+          interaction_play_id: answer.call_to_action.interactions.find_by_resource_type("Play").id
+        }
       end
-      response['outcome'] = outcome
+
+    else
+      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user_id, interaction.id)
+    end
+
+    if current_user
+      UserCounter.update_counters(user_interaction, current_user)
+      # TODO: outcome = compute_and_save_outcome(user_interaction)
+      # if outcome.errors.any?
+        # TODO: handle errors on rules through some notification
+      # end
+      # TODO: response['outcome'] = outcome
+      response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, current_user)
+    else
+      response['outcome'] = nil
     end
     
     response["feedback"] = nil # TODO: render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: 0, points: 0, correct: nil }, layout: false, formats: :html 
-    response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, useruser)
+
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
-  end
+  end 
 
-  def update_like
-    i = Interaction.find(params[:interaction_id].to_i)
-    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
+  def calltoaction_overvideo_end
+    calltoaction = CallToAction.find(params[:calltoaction_id])
+    interaction = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
 
-    risp = Hash.new
+    render_calltoaction_overvideo_end_str = String.new
 
-    if ui   
-      if ui.counter < 1
-        ui = ui.update_attributes(user_id: current_user.id, interaction_id: i.id, counter: 1)
-      else
-        ui.update_attribute(:counter, 0)
-        risp["interaction_save"] = false
+    if interaction && (!interaction_for_next_calltoaction?(interaction) || (interaction_for_next_calltoaction?(interaction) && params[:right_answer_response].blank?))
+   
+      if current_user
+        user_interaction = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
       end
-    else
-      ui = UserInteraction.create(user_id: current_user.id, interaction_id: i.id)
+
+      render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_interaction", 
+                locals: { interaction: interaction, user_interaction: user_interaction }, layout: false, formats: :html)
+
     end
 
     respond_to do |format|
-      format.json { render :json => risp.to_json }
+      format.json { render json: render_calltoaction_overvideo_end_str }
+    end
+  end
+ 
+  def interaction_for_next_calltoaction?(interaction)
+    if interaction.resource_type.downcase.to_sym == :quiz
+      interaction.resource.answers.where("call_to_action_id IS NOT NULL").any?
+    else
+      false
     end
   end
 
@@ -221,122 +252,25 @@ class CallToActionController < ApplicationController
     end
   end
 
-  def calltoaction_overvideo_end
+  def get_overvideo_during_interaction
+    interaction = Interaction.find(params[:interaction_id])
 
-    if params[:type] == "extra"
-      if mobile_device?
-        render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
-          locals: { }, layout: false, formats: :html)
-      else
-        render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
-          locals: { }, layout: false, formats: :html)
-      end     
-    else
-      calltoaction = CallToAction.active.find(params[:id])
+    response = Hash.new
+    render_calltoaction_overvideo_end_str = String.new
 
-      i = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
-
-      if i.resource_type == "Quiz" && i.resource.quiz_type
-        ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
-
-        render_calltoaction_overvideo_end_str = String.new
-        if params[:end]
-          calltoaction_correct_answer = i.resource.answers.find_by_correct(true)
-          if calltoaction_correct_answer.calltoaction
-            if mobile_device?
-              render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
-                locals: { }, layout: false, formats: :html)
-            else
-              render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_instant_win", 
-                locals: { }, layout: false, formats: :html)
-            end
-          end
-        else
-          calltoaction_question = i.resource.question
-
-          calltoaction_answers = Hash.new
-          if ui 
-            calltoaction_user_answer = ui.answer_id
-            user_interaction_points = ui.points + ui.added_points
-          else
-            calltoaction_user_answer = -1 
-          end
-
-          calltoaction_answers = Array.new
-          i.resource.answers.each do |a|
-            calltoaction_answers << a
-          end
-
-          interaction_points = i.points + i.added_points
-
-          if mobile_device?
-            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", #_undervideo_trivia
-              locals: { user_interaction_points: user_interaction_points, interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
-          else
-            render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_trivia", 
-              locals: { user_interaction_points: user_interaction_points, interaction_points: interaction_points, calltoaction_parent_id: calltoaction.id, calltoaction_question: calltoaction_question, calltoaction_answers: calltoaction_answers, calltoaction_user_answer: calltoaction_user_answer, interaction_overvideo_end_id: i.id }, layout: false, formats: :html)
-          end
-
-        end
-      end
+    if current_user
+      user_interaction = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
     end
+
+    render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_interaction", 
+              locals: { interaction: interaction, user_interaction: user_interaction }, layout: false, formats: :html)
+
+    response[:overvideo] = render_calltoaction_overvideo_end_str
+    response[:interaction_done_before] = user_interaction.present?
 
     respond_to do |format|
-      format.json { render json: render_calltoaction_overvideo_end_str }
-    end
-  end
-
-  # Return interaction data for generate quiz.
-  def get_overvideo_interaction
-    i = Interaction.find(params[:interaction_id].to_i)
-
-    if i.resource_type == "Quiz"
-      # Traccio se ho risposto o meno in precedenza al quiz.
-      ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
-
-      risp = Hash.new
-      risp["done"] = ui ? true : false
-      risp['question'] = i.resource.question
-
-      if i.resource.quiz_type == "VERSUS"
-        # Il VERSUS contiene l'elenco delle risposte con relativo id, in aggiunta se ho risposto ho l'id della mia risposta
-        # e le percentuali di risposta.
-        risp["answers"] = Hash.new
-        risp["user_answer"] = ui.answer_id if ui
-        i.resource.answers.each do |a|
-          ui_c = UserInteraction.where("interaction_id=? AND answer_id=?", i.id, a.id).count
-
-          risp["answers"]["#{a.id}"] = { 
-              "info" => ui ? (ui_c.to_f/i.user_interactions.count.to_f*100).round : "0",
-              "text" => a.text,
-              "image" => a.image.url
-          }
-        end
-      elsif i.resource.quiz_type == "TRIVIA"
-        # Il TRIVIA contiene l'elenco delle risposte con relativo id, in aggiunta se ho risposto ho l'id della mia risposta
-        # e l'id della risposta corretta.
-        risp["answers"] = Hash.new
-        if ui
-          risp["user_answer"] = ui.answer_id
-          risp["correct_answer"] = i.resource.answers.find_by_correct(true).id # Attenzione a non passare la risposta corretta.
-        end
-        i.resource.answers.each do |a|
-          risp['answers']["#{a.id}"] = a.text
-        end
-      end # i.resource.quiz_type == "VERSUS"/"TRIVIA"
-    elsif i.resource_type == "Check"
-      # Traccio se ho risposto o meno in precedenza al quiz.
-      ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id) if current_user
-
-      risp = Hash.new
-      risp["done"] = ui ? true : false
-      risp['question'] = i.resource.description
-      risp['check'] = i.resource.title
-    end
-
-    respond_to do |format|
-      format.json { render :json => risp.to_json }
-    end
+      format.json { render json: response.to_json }
+    end  
   end
 
   def update_check
@@ -358,45 +292,6 @@ class CallToActionController < ApplicationController
       format.json { render :json => "update-download".to_json }
     end  
   end
-
-  # Update user answer.
-  def update_answer
-    i = Interaction.find(params[:interaction_id].to_i)
-    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)
-    
-    ans = Answer.find(params[:answer_id])
-
-    risp = Hash.new
-    if ui && (i.resource.quiz_type == "VERSUS" || ans.call_to_action)
-      ui.update_attributes(answer_id: params[:answer_id], counter: (ui.counter + 1))
-    elsif ui.blank?
-      ui = UserInteraction.create(answer_id: params[:answer_id], user_id: current_user.id, interaction_id: params[:interaction_id]) 
-      if (ui.points + ui.added_points) > 0
-        if mobile_device?
-          risp["undervideo_feedback"] = render_to_string "/calltoaction/_undervideo_points_feedback", locals: { calltoaction: i.call_to_action, interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
-        else
-          risp["overvideo_feedback"] = render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: (i.points + i.added_points), points: (ui.points + ui.added_points), correct: ui.answer.correct? }, layout: false, formats: :html 
-        end
-      end
-    end
-
-    if i.resource.quiz_type == "VERSUS"
-      i.resource.answers.each do |a|
-        ui_c = UserInteraction.where("interaction_id=? AND answer_id=?", i.id, a.id).count
-        risp["#{a.id}"] = (ui_c.to_f/i.user_interactions.count.to_f*100).round
-      end
-    elsif i.resource.quiz_type == "TRIVIA"
-      risp["current_correct_answer"] = i.resource.answers.find_by_correct(true).id
-      risp["next_calltoaction"] = ans.call_to_action if ans.call_to_action
-    end
-
-    risp["calltoaction_complete"] = calltoaction_done? i.call_to_action
-    risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
-
-    respond_to do |format|
-      format.json { render :json => risp.to_json }
-    end  
-  end  
 
   def check_level_and_badge_up
     risp = Hash.new

@@ -39,12 +39,32 @@ button, h1, h2, h3, h4, h5, h6, li {
 
 // CONFIGURE YOUR BIKE PAGE
 
-#bike-iframe {
-    min-height: 615px;
-    min-width: 1060px;
-    width: 100%
+.overvideo-fluid {
+    width: 100%;
+    top: 0;
+    padding-top: 5%; 
+    padding-bottom: 50%; 
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
+.img-circle-overvideo {
+    margin: 0 auto; 
+    width: 100%; 
+    border: 6px solid #fff;
+}
+
+.img-circle-overvideo.right {
+    border-color: #43b34b;
+}
+
+.img-circle-overvideo.wrong {
+    border-color: #ff0000;
+}
+
+.img-circle-overvideo.enable:hover, .img-circle-overvideo.enable:focus {
+    border-color: #eab83e;
+}
 .yellow-point {
     @extend .btn;
     @extend .disabled;

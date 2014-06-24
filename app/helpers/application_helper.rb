@@ -1,6 +1,16 @@
 require 'fandom_utils'
 
 module ApplicationHelper
+
+	def calculate_user_answer_class(answer, user_answer_id)
+		if user_answer_id == answer.id
+			answer.correct ? "right" : "wrong"
+		end
+	end
+
+	def current_user_or_anonymous_user_id
+		current_user.present? ? current_user.id : User.find_by_email("anonymous@shado.tv").id
+	end
 	
 	def mobile_device?()
 	  FandomUtils::request_is_from_mobile_device?(request)
@@ -8,6 +18,10 @@ module ApplicationHelper
 
 	def ipad?
 		return request.user_agent =~ /iPad/ 
+	end
+
+	def interaction_play_for_calltoaction(calltoaction)
+		calltoaction.interactions.find_by_resource_type('Play')
 	end
 
 	def calltoaction_active_with_tag(tag, order)
