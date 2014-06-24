@@ -24,18 +24,6 @@ class Easyadmin::EasyadminNoticeController < ApplicationController
     @notices = Notice.all
     @fields = FIELD_DESCS_JSON
   end
-
-  def send(user_id, notice)
-    
-  end
-
-  def mark_as_viewed
-    
-  end
-  
-  def mark_as_read
-    
-  end
   
   def show
     @current_notice = Notice.find(params[:id])
@@ -46,13 +34,19 @@ class Easyadmin::EasyadminNoticeController < ApplicationController
   # offset - current page results to load
   # limit  - number of results per page
   def get_results(offset, limit)
+    result = Hash.new
+    total = 0
     if params[:conditions].blank?
+      total = Notice.count      
       notices = Notice.limit(limit).offset(offset).order("updated_at DESC")
     else
       conditions = JSON.parse(params[:conditions])
+      total = build_query(conditions).count
       notices = build_query(conditions).limit(limit).offset(offset).order("notices.updated_at DESC")
     end
-    return events
+    result['total'] = total
+    result['elements'] = notices
+    return result
   end
   
   # construct the query to retrive events depending on filter params passed as parameter
@@ -82,7 +76,7 @@ class Easyadmin::EasyadminNoticeController < ApplicationController
     result['user'] = e.user.email
     result['notice'] = e.html_notice
     result['date'] = e.created_at.strftime("%d-%m-%Y")
-    result['sent'] = e.last_sent.strftime("%d-%m-%Y %H:%M")
+    result['sent'] = e.last_sent.nil? ? "" : e.last_sent.strftime("%d-%m-%Y %H:%M")
     result
   end
   

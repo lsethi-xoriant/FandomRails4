@@ -1,0 +1,82 @@
+<div id="fb-root"></div>
+
+<%= render partial: "/application/user_bar" %>
+
+<div class="container">
+  
+  <div class="row" style="margin-top: 1.5em;">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading profile-heading">
+          <%= render partial: "profile/profile_header" %>
+        </div>
+        <div class="panel-body profile-body">
+          <%= render partial: "profile/profile_navbar", locals: { page: "notices" } %>
+          
+          <div class="row">
+                    <div class="col-md-12">
+                      <div class="page-header">
+                        <h2>Notifiche</h2>
+                      </div>
+                      <% @notices_list.each do |date, nl| %>
+                      <h6><%= date %></h6>
+                      <ul class="list-group">
+                      	<% nl.each do |n| %>
+                        <li id="<%= n.id %>" class="list-group-item <%= "list-group-item-warning" if !n.read %>">
+                          <div class="row">
+                          	<div class="col-md-11">
+                          		<div class="row">
+                          			<%= n.html_notice.html_safe %>
+                          		</div>
+                          	</div>
+                          	<div class="col-md-1">
+                          			<% if n.read %>
+                          				<i class="fa fa-circle" style="float: right;"></i>
+                          			<% else %>
+                          			<a href="javascript:void(0)" onclick="mark_as_read(<%= n.id %>);" style="float: right; color: black;">
+                          				<i class="fa fa-circle-o"></i>
+                          			</a>
+                          			<% end %>
+                          	</div>
+                          </div>
+                        </li>
+                        <% end %>
+                      </ul>
+                      <% end %>
+                    </div>
+                  </div>
+            
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer class="bs-footer" role="contentinfo" style="padding-bottom: 1.5em;">
+  <div class="jumbotron bkg-topbar" style="margin-bottom: 0">
+    <div class="container">
+        <p>Copyright </p>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript">
+	function mark_as_read(id){
+		$.ajax({
+	      type: "POST",
+	      url: "/profile/notices/mark_as_read",
+	      data: { notice_id: id },
+	      beforeSend: function(jqXHR, settings) {
+	        jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+	      },
+	      success: function(data) {
+	        if(data.success){
+	        	$("li#"+id).removeClass("list-group-item-warning");
+	        	$("li#"+id+" i.fa").removeClass("fa-circle-o").addClass("fa-circle");
+	        }else{
+	        	alert(data.message);
+	        }
+	      } // success AJAX
+      	});
+	}
+</script>
+        

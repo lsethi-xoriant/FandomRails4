@@ -1,17 +1,33 @@
 // Applicazione definita in ng-app="CalltoactionApp" all'interno di un nodo padre.
-var noticeApp = angular.module('NoticeApp', ['ngRoute', 'ngTable', 'ngResource']);
+var noticeModule = angular.module('NoticeModule', ['ngRoute', 'ngTable', 'ngResource']);
 
 // Gestione del csrf-token nelle chiamate ajax.
-noticeApp.config(["$httpProvider", function(provider) {
+noticeModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
-NoticeCtrl.$inject = ['$scope', '$window', '$timeout', '$resource','ngTableParams'];
-noticeApp.controller('NoticeCtrl', NoticeCtrl);
+NoticeCtrl.$inject = ['$scope', '$window', '$timeout', '$resource','ngTableParams', '$sce'];
+NoticeBarCtrl.$inject = ['$scope', '$resource', '$sce'];
+noticeModule.controller('NoticeCtrl', NoticeCtrl);
+noticeModule.controller('NoticeBarCtrl', NoticeBarCtrl);
 
-function NoticeCtrl($scope, $window, $timeout, $resource, ngTableParams) {
+noticeModule.service("LatestNoticeService", function($scope, $resource){
+	this.get_notices = function(){
+		var Api = $resource("/profile/notices/get_recent_notice");
+		
+		Api.get({}, function(data) {
+			console.log(data);
+		    angular.forEach(data.result, function(value, key) {
+		       value.html_notice = $sce.trustAsHtml(value.html_notice);
+		    });
+		    $scope.notices = data.result;
+	});
+	};
+});
 
-	var Api = $resource('/easyadmin/notice/filter');
+function NoticeCtrl($scope, $window, $timeout, $resource, ngTableParams, $sce) {
+
+	var Api = $resource('/easyadmin/notices/filter');
 	var columns = [];
 	
 	$scope.init = function(fields) {
@@ -44,12 +60,12 @@ function NoticeCtrl($scope, $window, $timeout, $resource, ngTableParams) {
 	    count: 2,
 	}, 
 	{
-		groupBy: 'date',
 	    total: 0,
 	    getData: function($defer, params) {
-		    console.log($scope.tableFilters);
-		    
 		    Api.get({ page: params.page(), perpage: params.count(), conditions: JSON.stringify($scope.tableFilters) }, function(data) {
+			    angular.forEach(data.result, function(value, key) {
+			       value.notice = $sce.trustAsHtml(value.notice);
+			     });
 			    params.total(data.total);
 			    $defer.resolve(data.result);
 		    });
@@ -58,3 +74,16 @@ function NoticeCtrl($scope, $window, $timeout, $resource, ngTableParams) {
 	
 }
 
+function NoticeBarCtrl($scope, $resource, $sce) {
+	console.log("-------DENTRO BARCTRL");
+	//LatestNoticeService.get_notices();
+	var Api = $resource('/profile/notices/get_recent_notice');
+		
+	Api.get({}, function(data) {
+		console.log(data);
+	    angular.forEach(data.result, function(value, key) {
+	       value.html_notice = $sce.trustAsHtml(value.html_notice);
+	     });
+	     $scope.notices = data.result;
+	});
+}

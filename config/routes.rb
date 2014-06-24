@@ -114,6 +114,12 @@ Fandom::Application.routes.draw do
   match "profile/levels", :to => "profile#levels"
   match "profile/badges", :to => "profile#badges"
   match "profile/rankings", :to => "profile#rankings"
+  match "profile/notices", :to => "profile#notices"
+  match "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
+  match "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
+  match "profile/notices/mark_as_viewed", :to => "notice#mark_as_viewed", defaults: { format: 'json' }
+  match "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
+  match "profile/notices/get_recent_notice", :to => "notice#get_user_latest_notices", defaults: { format: 'json' }
   match "profile/remove-provider/:provider", :to => "profile#remove_provider"
   match "profile/complete_for_contest", :to => "profile#complete_for_contest"
 

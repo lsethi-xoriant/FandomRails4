@@ -64,6 +64,12 @@
 		      </ul>
 		    </li>
 	    <% end %>
+	    
+	    <% if can? :manage, :all %>
+		    <li>
+		    	<a href="/easyadmin/notices"><i class="fa fa-envelope"></i>Notifiche</a>
+		    </li>
+	    <% end %>
 
 	  </ul>
 	</nav> <!-- #sidebar -->

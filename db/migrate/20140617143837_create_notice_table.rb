@@ -4,8 +4,8 @@ class CreateNoticeTable < ActiveRecord::Migration
       t.references :user
       t.text :html_notice
       t.datetime :last_sent
-      t.boolean :viewd
-      t.boolean :read
+      t.boolean :viewed, :default => false
+      t.boolean :read, :default => false
       t.timestamps
     end
   end

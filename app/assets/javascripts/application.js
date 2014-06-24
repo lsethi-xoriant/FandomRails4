@@ -4,6 +4,8 @@
 //= require angular-resource
 //= require angular-route
 //= require ng-table
+//= require angular_fandom
+//= require angular_notice
 //= require angular_calltoaction
 //= require angular_stream_calltoaction
 //= require bootstrap
