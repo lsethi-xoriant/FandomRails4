@@ -180,11 +180,14 @@ class CallToActionController < ApplicationController
 
     if current_user
       UserCounter.update_counters(user_interaction, current_user)
-      # TODO: outcome = compute_and_save_outcome(user_interaction)
-      # if outcome.errors.any?
-        # TODO: handle errors on rules through some notification
-      # end
-      # TODO: response['outcome'] = outcome
+      # TODO: 
+      outcome = compute_and_save_outcome(user_interaction)
+      logger.info(outcome.inspect)
+      if outcome.errors.any?
+        logger.error(outcome.errors.inspect)
+      end
+      # TODO: 
+      response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, current_user)
     else
       response['outcome'] = nil
