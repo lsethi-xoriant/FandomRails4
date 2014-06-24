@@ -28,4 +28,11 @@
     end
   end
 
+  def self.get_by_user(user)
+    result = {}
+    user.user_counters.map do |counter|
+      result[counter.name] = counter
+    end
+    result
+  end
 end

@@ -1,5 +1,6 @@
 class Reward < ActiveRecord::Base
-  attr_accessible :title, 
+  attr_accessible :name,
+    :title, 
     :short_description, 
     :long_description, 
     :preview_image, 
@@ -53,7 +54,8 @@ class Reward < ActiveRecord::Base
   end
 
   def self.get_all_names
-    Reward.all.select("name")
+    x = Reward.select("name")
+    x.all
   end
 
 end

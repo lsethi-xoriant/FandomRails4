@@ -30,8 +30,6 @@ module RewardingSystemHelper
       self.reward_name_to_counter = {}
       self.unlocks = Set.new
       self.errors = []
-      self.rewards.default = 0
-      self.unlocks.default = 0
     end
   end
 
@@ -56,6 +54,8 @@ module RewardingSystemHelper
     # these attributes are set by side-effect when evaluating each rule
     attribute :rule_rewards #, type: Array
     attribute :rule_unlocks #, type: Array
+    
+    ALL = "ALL INTERACTIONS"
     
     def first_time
       user_interaction.counter == 1
@@ -118,7 +118,7 @@ module RewardingSystemHelper
 
     def interaction_matches?(user_interaction, options, just_rules_applying_to_interaction)
       if options.key?(:interations)
-        return (
+        return options[:interactions].equals?(ALL) || (
           interaction_is_included_in_options?(options, :names, interaction.name) &&
           interaction_is_included_in_options?(options, :ctas, interaction.cta.name) &&
           interaction_is_included_in_options?(options, :types, interaction.type) &&
@@ -160,7 +160,7 @@ module RewardingSystemHelper
       rule = Rule.new({ 
         name: name,
         options: options,
-        condition: proc(&block) })
+        condition: block.nil? ? nil : proc(&block) })
       rules << rule 
     end
   end
@@ -168,40 +168,45 @@ module RewardingSystemHelper
   def new_context(user_interaction)
     user = user_interaction.user
     interaction = user_interaction.interaction
-    user_rewards = get_user_rewards(user_interaction.user)
+    user_reward_info = UserReward.get_rewards_info(user_interaction.user)
+    user_rewards, user_unlocked_names = get_user_reward_data(user_reward_info)
     Context.new(
       user: user,
       user_rewards: user_rewards,
-      cta: interaction.calltoaction,
+      cta: interaction.call_to_action,
       correct_answer: get_correct_answer(user_interaction),
       counters: get_counters(user),
       user_reward_names: Set.new(user_rewards.keys),
-      user_unlocked_names: Set.new(user_rewards.select { |k, v| v.unlocked }.keys),
+      user_unlocked_names: user_unlocked_names,
       rules: []
     )
   end
   
-  def get_user_rewards(user)
-    result = UserReward.get_rewards_names_to_counters(user)
-    rewards = Reward.get_all_reward_names
+  def get_user_reward_data(user_reward_info)
+    user_rewards = {}
+    user_unlocked_names = Set.new()
+    user_reward_info.each do |tuple|
+      name, available, counter = tuple
+      user_rewards[name] = counter
+      if available
+        user_unlocked_names << name
+      end 
+    end
+    rewards = Reward.get_all_names
     rewards.each do |name|
-      unless user_reward_names_to_counters.key?(name)
-        result[name] = 0
+      unless user_rewards.key?(name)
+        user_rewards[name] = 0
       end
     end
-    result
+    [user_rewards, user_unlocked_names]
   end
   
   def get_correct_answer(user_interaction)
     user_interaction.is_answer_correct?
   end  
 
-  # TODO: to be implemented
   def get_counters(user)
-    { 
-      'DAILY' => Counter.new,
-      'TOTAL' => Counter.new
-    }
+    UserCounter.get_by_user(user)
   end
 
   # Returns a list of strings describing errors in rules, or the empty list if there are no errors
@@ -257,7 +262,7 @@ module RewardingSystemHelper
   # Returns an instance of the class Outcome
   def compute_outcome(user_interaction, rules_buffer = nil)
     context = prepare_rules_and_context(user_interaction, rules_buffer)    
-    context.compute_outcome()
+    context.compute_outcome(user_interaction)
   end
 
   def prepare_rules_and_context(user_interaction, rules_buffer = nil)
@@ -272,13 +277,13 @@ module RewardingSystemHelper
   def get_rules_buffer()
     # TODO: cache should be invalidated on save of settings
     cache_short('rewarding_rules') do 
-      Setting.find_by_key('rewarding.rules')
+      Setting.find_by_key('rewarding.rules').value
     end
   end
   
   def compute_and_save_outcome(user_interaction, rules_buffer = nil)
     outcome = compute_outcome(user_interaction, rules_buffer)
-    if outcome.rewards.any? || outcome.unlocks.any?
+    if outcome.reward_name_to_counter.any? || outcome.unlocks.any?
       log_event("reward event: #{outcome.to_json}")
       user = user_interaction.user
       outcome.reward_name_to_counter.each do |reward_name, reward_counter|
@@ -288,11 +293,12 @@ module RewardingSystemHelper
         UserReward.unlock_reward(user, reward_name)
       end          
     end
+    outcome
   end
 
   def predict_outcome(interaction, user)
     context = prepare_rules_and_context(user_interaction, rules_buffer)    
-    context.predict_outcome()
+    context.predict_outcome(user_interaction)
   end
 
 end

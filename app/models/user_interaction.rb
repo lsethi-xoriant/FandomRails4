@@ -34,7 +34,7 @@ class UserInteraction < ActiveRecord::Base
 
   # This might need some caching
   def is_answer_correct?
-    answer.correct
+    answer.nil? || answer.correct
   end
 
   private
