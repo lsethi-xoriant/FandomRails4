@@ -30,13 +30,18 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   # offset - current page results to load
   # limit  - number of results per page
   def get_results(offset, limit)
+    result = Hash.new
     if params[:conditions].blank?
+      total = UserInteraction.count
       events = UserInteraction.limit(limit).offset(offset).order("updated_at ASC")
     else
       conditions = JSON.parse(params[:conditions])
+      total = build_query(conditions).count
       events = build_query(conditions).limit(limit).offset(offset).order("user_interactions.updated_at ASC")
     end
-    return events
+    result['total'] = total
+    result['elements'] = events
+    return result
   end
   
   # construct the query to retrive events depending on filter params passed as parameter
