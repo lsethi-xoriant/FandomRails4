@@ -18,6 +18,16 @@ class ApplicationController < ActionController::Base
 
   def index
     @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
+    @calltoactions_during_video_interactions_second = Hash.new
+    @calltoactions.each do |calltoaction|
+      interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")
+      if(interactions_overvideo_during.any?)
+        @calltoactions_during_video_interactions_second[calltoaction.id] = Hash.new
+        interactions_overvideo_during.each do |interaction|
+          @calltoactions_during_video_interactions_second[calltoaction.id][interaction.id] = interaction.seconds
+        end
+      end
+    end
   end
 
   #before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" }

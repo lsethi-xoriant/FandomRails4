@@ -10,8 +10,6 @@ class UserInteraction < ActiveRecord::Base
   belongs_to :answer
   belongs_to :promocode
 
-  before_save :update_interaction_counter
-  after_destroy :update_interaction_counter_down
 
   # Move in controller.
   # def check_interaction_limit_daily
@@ -22,61 +20,21 @@ class UserInteraction < ActiveRecord::Base
 
   # TODO: this should be reimplemented as a query (1 per answer or, better, just 1 group-by query), and cached
   def update_interaction_counter
-    case interaction.resource_type
-    when "Like"
-      if counter > 0
-        interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-      elsif counter < 1
-        interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-      end
-    when "Quiz"
-      if interaction.resource.quiz_type == "VERSUS"
-        interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-      elsif interaction.resource.quiz_type == "TRIVIA"
-        interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-        if answer && answer.correct
-          interaction.resource.update_attribute(:cache_correct_answer, interaction.resource.cache_correct_answer + 1)
-        elsif answer && answer.correct.blank?
-          interaction.resource.update_attribute(:cache_wrong_answer, interaction.resource.cache_correct_answer + 1)
-        end
-      end
-    else
-      interaction.update_attribute(:cache_counter, interaction.cache_counter + 1)
-    end
   end
 
-  def update_interaction_counter_down
-    case interaction.resource_type
-    when "Like"
-      if counter > 0
-        interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-      end
-    when "Play"
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - counter)
-    when "Quiz"
-      if interaction.resource.quiz_type == "VERSUS"
-        interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-      elsif interaction.resource.quiz_type == "TRIVIA"
-        interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-        if answer && answer.correct
-          interaction.resource.update_attribute(:cache_correct_answer, interaction.resource.cache_correct_answer - 1)
-        elsif answer && answer.correct.blank?
-          interaction.resource.update_attribute(:cache_wrong_answer, interaction.resource.cache_correct_answer - 1)
-        end
-      end
-    else
-      interaction.update_attribute(:cache_counter, interaction.cache_counter - 1)
-    end
-  end
-
-  def create_or_update_interaction(user_id, interaction_id)
-    user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user_id, interaction_id)
+  def self.create_or_update_interaction(user_id, interaction_id, answer_id = nil)
+    user_interaction = find_by_user_id_and_interaction_id(user_id, interaction_id)
     if user_interaction.nil?
-      UserInteraction.create(user_id: user_id, interaction_id: interaction_id)
+      create(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id)
     else
-      user_interaction.update_attribute(:counter, user_interaction.counter + 1)
+      user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id)
       user_interaction
     end
+  end
+
+  # This might need some caching
+  def is_answer_correct?
+    answer.correct
   end
 
   private
@@ -86,11 +44,6 @@ class UserInteraction < ActiveRecord::Base
     share_inter = self.interaction.calltoaction.interactions.where("resource_type='Share'")
     return !self.user.user_interactions.where("interaction_id in (?)", share_inter.map.collect { |u| u["id"] }).blank?
   end  
-
-  # This might need some caching
-  def is_answer_correct?
-    answer.correct
-  end
 
 end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140619082008) do
+ActiveRecord::Schema.define(:version => 20140620093048) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -159,8 +159,8 @@ ActiveRecord::Schema.define(:version => 20140619082008) do
   create_table "interactions", :force => true do |t|
     t.string  "name"
     t.integer "seconds",               :default => 0
-    t.integer "cache_counter",         :default => 0
     t.string  "when_show_interaction"
+    t.boolean "required_to_complete"
     t.integer "resource_id"
     t.string  "resource_type"
     t.integer "call_to_action_id"
@@ -345,11 +345,20 @@ ActiveRecord::Schema.define(:version => 20140619082008) do
     t.datetime "updated_at",                      :null => false
   end
 
+  create_table "user_counters", :force => true do |t|
+    t.string   "name"
+    t.integer  "correct_answer", :default => 0
+    t.integer  "play",           :default => 0
+    t.integer  "user_id"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
   create_table "user_interactions", :force => true do |t|
     t.integer  "user_id",                       :null => false
     t.integer  "interaction_id",                :null => false
     t.integer  "answer_id"
-    t.integer  "counter",        :default => 0
+    t.integer  "counter",        :default => 1
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
   end
