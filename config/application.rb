@@ -97,8 +97,8 @@ module Fandom
     I18n.config.enforce_available_locales = true
 
     config.sites = []
-    config.domain_by_site = {}
-    config.domain_by_site_id = {}
+    config.domain_to_site = {}
+    config.domain_to_site_id = {}
     
     enabled_sites = config.deploy_settings['enabled_sites'].split(',').map { |s| s.strip }
     load_site_configs(enabled_sites)

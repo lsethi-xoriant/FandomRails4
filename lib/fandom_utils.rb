@@ -3,7 +3,7 @@ module FandomUtils
   # Returns the Site class defined for the requested domain. 
   # The request variable is taken by dynamic scoping, and the Site is set in the request itself.
   def get_site_from_request!
-    site = Rails.configuration.domain_by_site[request.host]
+    site = Rails.configuration.domain_to_site[request.host]
     def request.site=(site)
       @site = site
     end
@@ -16,7 +16,7 @@ module FandomUtils
 
   # Returns the Site class defined for the requested domain.
   def get_site_from_request(request)
-    Rails.configuration.domain_by_site[request.host]
+    Rails.configuration.domain_to_site[request.host]
   end
   
   # A filter that shall be included in all top-level controllers; it handles the uri hostname to site mapping,

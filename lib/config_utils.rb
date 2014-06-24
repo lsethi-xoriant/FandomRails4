@@ -49,8 +49,8 @@ module ConfigUtils
     site = FandomSite.new(params)
     site.domains.each do |domain|
       config.sites << site
-      config.domain_by_site[domain] = site
-      config.domain_by_site_id[domain] = site.id
+      config.domain_to_site[domain] = site
+      config.domain_to_site_id[domain] = site.id
     end
     if site.unbranded?
       config.unbranded_site = site

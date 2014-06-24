@@ -40,7 +40,7 @@ end
 module Fandom
   class Application < Rails::Application    
     config.middleware.use 'Apartment::Elevators::Generic', Proc.new { |request| 
-      config.domain_by_site_id.fetch(request.host, config.unbranded_site.id)
+      config.domain_to_site_id.fetch(request.host, config.unbranded_site.id)
     }
   end
 end
