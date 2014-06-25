@@ -183,7 +183,7 @@ class CallToActionController < ApplicationController
       # TODO: 
       outcome = compute_and_save_outcome(user_interaction)
       logger.info("rewards: #{outcome.reward_name_to_counter.inspect}")
-      logger.info("unlocks: #{outcome.unlocks}")
+      logger.info("unlocks: #{outcome.unlocks.inspect}")
       if outcome.errors.any?
         logger.error("errors in the rewarding system:")
         outcome.errors.each do |error|

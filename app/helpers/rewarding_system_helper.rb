@@ -101,7 +101,7 @@ module RewardingSystemHelper
     def rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction)
       repeatable = rule.options.fetch(:repeatable, false)
       
-      if interaction_matches?(user_interaction, rule.options, just_rules_applying_to_interaction)
+      if !interaction_matches?(user_interaction, rule.options, just_rules_applying_to_interaction)
         Rails.logger.info("rule #{rule.name} not applied because interaction doesn't match") 
         return false
       end

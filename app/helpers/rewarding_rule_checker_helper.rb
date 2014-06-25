@@ -64,7 +64,6 @@ module RewardingRuleCheckerHelper
   end
 
   def check_names(names, all_names, rule, errors)
-    debugger
     names.each do |name|
       unless all_names.include?(name)
         errors << "rule #{rule.name}: undefined name #{name}"          
