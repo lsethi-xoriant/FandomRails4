@@ -218,6 +218,21 @@ module RewardingSystemHelper
     )
   end
   
+  # Mocks a user reward, to be used in rules.
+  class MockedUserReward
+    def initialize(counter)
+      @counter = counter
+    end
+    
+    def counter
+      @counter
+    end
+    
+    def counter=(num)
+      @counter = num
+    end
+  end
+  
   def get_user_reward_data(user_reward_info)
     user_rewards = {}
     user_unlocked_names = Set.new()
@@ -227,7 +242,7 @@ module RewardingSystemHelper
       available = info.available
       countable = info.reward.countable
       counter = info.counter
-      user_rewards[name] = counter
+      user_rewards[name] = MockedUserReward.new(counter)
       if !countable
         if available
           user_unlocked_names << name
@@ -239,7 +254,7 @@ module RewardingSystemHelper
     rewards.each do |pair|
       name, countable = pair
       unless user_rewards.key?(name)
-        user_rewards[name] = 0
+        user_rewards[name] = MockedUserReward.new(0)
       end
       if countable
         uncountable_user_reward_names.delete(name)
@@ -304,6 +319,8 @@ module RewardingSystemHelper
     outcome
   end
 
+  # Simulate an user interaction where the correctness of an answer/interaction can be set in advance.
+  # It is used to predict the outcome of an interaction.
   class MockedUserInteraction
     def initialize(interaction, user, interaction_is_correct)
       @interaction = interaction
