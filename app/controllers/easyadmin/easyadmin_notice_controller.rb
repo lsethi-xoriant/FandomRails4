@@ -5,11 +5,11 @@ class Easyadmin::EasyadminNoticeController < ApplicationController
   layout "admin"
   
   # Constant that describe the filter available
-  FIELD_DESCS = { 
-    :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email"}),
-    :notice => FieldDesc.new({ :name => "Notifica", :id => "notice", :model => "notice", :column_name => "html_notice"}),
-    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "notice", :column_name => "created_at"}),
-    :sent => FieldDesc.new({ :name => "Inviata", :id => "sent", :model => "notice", :column_name => "last_sent"})
+  FIELD_DESCS = {
+    :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email", :visible => true}),
+    :notice => FieldDesc.new({ :name => "Notifica", :id => "notice", :model => "notice", :column_name => "html_notice", :visible => true}),
+    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "notice", :column_name => "created_at", :visible => true}),
+    :sent => FieldDesc.new({ :name => "Inviata", :id => "sent", :model => "notice", :column_name => "last_sent", :visible => true})
   }
   
   # json version of fields description
@@ -29,7 +29,34 @@ class Easyadmin::EasyadminNoticeController < ApplicationController
     @current_notice = Notice.find(params[:id])
   end
   
-  # Give back the events query result depending on conditions passes as parameter
+  def new
+  end
+  
+  def create
+    if params[:users].blank? || params[:notice].blank?
+      notice[:error] = "ERRORE: Devi inserire sia mail utenti che l'html della notifica."
+    else
+      params[:users].split(",").each do |u|
+        user = User.find_by_email(u)
+        if user
+          notice = Notice.create(:user_id => user.id, :html_notice => params[:notice], :viewed => false, :read => false)
+          notice.send_to_user(request)
+        end
+      end
+      flash[:notice] = "Notifiche inviate correttamente"
+    end 
+    render template: "/easyadmin/easyadmin_notice/new"
+  end
+  
+  def resend_notice
+    Notice.send_to_user(request)
+    respond_to do |format|
+      format.json { render :json => "OK".to_json }
+    end
+  end
+  
+  # Give back the events query result depending on conditions passes as parameter and the count of total elements
+  # that match the conditions
   #
   # offset - current page results to load
   # limit  - number of results per page
@@ -73,6 +100,7 @@ class Easyadmin::EasyadminNoticeController < ApplicationController
   # e - resultset element
   def element_to_result(e)
     result = Hash.new
+    result['notice_id'] = e.id
     result['user'] = e.user.email
     result['notice'] = e.html_notice
     result['date'] = e.created_at.strftime("%d-%m-%Y")

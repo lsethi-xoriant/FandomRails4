@@ -1,4 +1,4 @@
-<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "events" } %>
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "notice" } %>
  <style>
  	.row-filter {
  		display: none;
@@ -121,7 +121,7 @@
 				            	{{row['sent']}}
 				            </td>
 				            <td data-title="'Reinvia'">
-				            	<button class="btn btn-sm">REINVIA</button>
+				            	<button class="btn btn-sm" ng-click="resend_notice(row.notice_id)">REINVIA</button>
 				            </td>
 				          </tr>
 				        </tbody>

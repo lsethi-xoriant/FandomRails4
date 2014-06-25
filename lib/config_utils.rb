@@ -25,6 +25,7 @@ module ConfigUtils
     include ActiveAttr::AttributeDefaults
 
     attribute :id, type: String
+    attribute :title, type: String
     attribute :domains
     attribute :twitter_integration, type: Boolean, :default => false
     attribute :assets_precompile, :default => []

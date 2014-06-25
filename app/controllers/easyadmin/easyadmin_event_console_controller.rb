@@ -6,9 +6,9 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   
   # Constant that describe the filter available
   FIELD_DESCS = { 
-    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "user_interaction", :column_name => "updated_at"}),
-    :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email"}),
-    :interaction => FieldDesc.new({ :name => "Interazione", :id => "interaction", :model => "interaction", :column_name => "resource_type" })
+    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "user_interaction", :column_name => "updated_at", :visible => true }),
+    :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email", :visible => true }),
+    :interaction => FieldDesc.new({ :name => "Interazione", :id => "interaction", :model => "interaction", :column_name => "resource_type", :visible => true })
   }
   
   # json version of fields description

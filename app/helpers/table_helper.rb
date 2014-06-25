@@ -16,6 +16,7 @@ module TableHelper
     attribute :id, type: String
     attribute :model, type: String
     attribute :column_name, type: String
+    attribute :visible, type: Boolean
     
   end
 

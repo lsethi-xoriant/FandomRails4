@@ -31,14 +31,9 @@ class Notice < ActiveRecord::Base
     end
   end
   
-  def self.send_to_user(notice_id)
-    notice = find(notice_id)
-    SystemMailer.notification_mail(notice.user.email, notice.html_notice, "Oggetto").deliver
-  end
-  
-  def self.send_to_user(user, notice_id)
-    notice = find(notice_id)
-    SystemMailer.notification_mail(user.email, notice.html_notice, "Oggetto").deliver
+  def send_to_user(request)
+    SystemMailer.notification_mail(user.email, html_notice, "Hai ricevuto una notifica su #{request.site.title}").deliver
+    update_attributes(:last_sent => Time.now, :viwes => false, :read => false)
   end
   
   def self.get_user_latest_notice(user, number_of_notice)
