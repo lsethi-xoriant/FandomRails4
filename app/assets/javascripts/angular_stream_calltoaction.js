@@ -257,7 +257,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
-  $window.updateTriviaAnswer = function(calltoaction_id, interaction_id, answer_id, overvideo_during = false) {
+  $window.updateTriviaAnswer = function(calltoaction_id, interaction_id, answer_id, overvideo_during) {
     if($scope.current_user) {
       $(".button-inter-" + interaction_id).attr('disabled', true);
       $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id })
