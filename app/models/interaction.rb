@@ -6,7 +6,7 @@ class Interaction < ActiveRecord::Base
     :points, :added_points, :when_show_interaction, :points_type, :property_default_point_id
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
-  belongs_to :calltoaction
+  belongs_to :call_to_action
   belongs_to :property_default_point
 
   has_many :user_interactions, dependent: :destroy
@@ -32,12 +32,12 @@ class Interaction < ActiveRecord::Base
   # Ogni calltoaction (per il momento formata da un solo media), può avere una sola interaction di tipo Play. Un'interaction
   # di tipo Play può essere utilizzata per assegnare punti o semplicemente per tracciare le view.
   def check_max_one_play_resource
-    errors.add("calltoaction_id", "ogni interaction può avere al massimo un interaction di tipo Play") if id.blank? && calltoaction && resource_type == "Play" && calltoaction.interactions.find_by_resource_type("Play")
+    errors.add("calltoaction_id", "ogni interaction può avere al massimo un interaction di tipo Play") if id.blank? && call_to_action && resource_type == "Play" && call_to_action.interactions.find_by_resource_type("Play")
   end
 
   # Ogni calltoaction può contenere una solo interazione di tipo Comment.
   def check_max_one_comment_resource
-    errors.add("calltoaction_id", "ogni interaction può avere al massimo un interaction di tipo Comment") if id.blank? && calltoaction && resource_type == "Comment" && calltoaction.interactions.find_by_resource_type("Comment")
+    errors.add("calltoaction_id", "ogni interaction può avere al massimo un interaction di tipo Comment") if id.blank? && call_to_action && resource_type == "Comment" && call_to_action.interactions.find_by_resource_type("Comment")
   end
 
   # Validazione per gestire gli errori nel accepts_nested_attributes_for con polimorfismo.
@@ -65,6 +65,12 @@ class Interaction < ActiveRecord::Base
     else
       self.resource = eval(resource_type).find(attributes[:id])
       self.resource.update_attributes(attributes.except(:id)) 
+    end
+  end
+
+  def get_all_names
+    cache_short do
+      select("name")
     end
   end
 

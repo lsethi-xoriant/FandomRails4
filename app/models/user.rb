@@ -9,14 +9,15 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
-    :day_of_birth, :month_of_birth, :year_of_birth, :enable_contest
+    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :enable_contest
 
   attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :enable_contest
 
   has_many :authentications, dependent: :destroy
   has_many :user_interactions
   has_many :user_comments
-  has_many :playticket_event
+
+  has_many :user_counters
 
   before_save :set_date_of_birth
 

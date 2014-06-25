@@ -12,12 +12,11 @@ Fandom::Application.configure do
   # Show full error reports
   config.consider_all_requests_local       = true
   # Caching is disabled by default in development, unless otherwise specified in the deploy settings
-  begin
-    config.action_controller.perform_caching = config.deploy_settings['development']['perform_caching']
+  config.action_controller.perform_caching = get_boolean(config.deploy_settings, 'development/perform_caching')
+  if config.action_controller.perform_caching
     puts 'caching enabled'
-  rescue
-    config.action_controller.perform_caching = false
   end
+  config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = false

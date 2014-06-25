@@ -164,7 +164,7 @@ Fandom::Application.routes.draw do
 
   match "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
   match "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }
-  match "/update_play_interaction", :to => "call_to_action#update_play_interaction", defaults: { format: 'json' }
+  match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
   # error handling
   match "/404", :to => "http_error#not_found_404"
@@ -178,12 +178,12 @@ Fandom::Application.routes.draw do
   match "profile", :to => "profile#show"
   match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
+  match "get_overvideo_during_interaction", :to => "call_to_action#get_overvideo_during_interaction", defaults: { format: 'json' }
   resources :call_to_action do
     match "/add_comment", :to => "call_to_action#add_comment"
     match "/get_comment_published", :to => "call_to_action#get_comment_published", defaults: { format: 'json' }
     match "/get_closed_comment_published", :to => "call_to_action#get_closed_comment_published", defaults: { format: 'json' }
     match "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }
-    match "/get_overvideo_interaction", :to => "call_to_action#get_overvideo_interaction"
   end
 
   root :to => "application#index"

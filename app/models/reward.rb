@@ -1,5 +1,6 @@
 class Reward < ActiveRecord::Base
-  attr_accessible :title, 
+  attr_accessible :name,
+    :title, 
     :short_description, 
     :long_description, 
     :preview_image, 
@@ -49,6 +50,16 @@ class Reward < ActiveRecord::Base
       write_attribute :publish_time_end, Time.parse("#{valid_to_date} #{valid_to_time} Rome")
       valid_to_date = nil
       valid_to_time = nil
+    end
+  end
+
+  def self.get_names_and_countable_pairs
+    Reward.select("name, countable").all
+  end
+
+  def get_all_names
+    cache_short do
+      select("name")
     end
   end
 
