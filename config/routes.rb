@@ -175,6 +175,8 @@ Fandom::Application.routes.draw do
 
   match "/extra", :to => "property#extra"
 
+  match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+
   match "profile", :to => "profile#show"
   match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }

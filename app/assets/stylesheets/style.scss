@@ -46,6 +46,11 @@ button, h1, h2, h3, h4, h5, h6, li {
     background-color: rgba(0, 0, 0, 0.7);
 }
 
+.overvideo-feedback {
+    padding-top: 38%; 
+    //position: relative;
+}
+
 .img-circle-overvideo {
     margin: 0 auto; 
     width: 100%; 
@@ -589,7 +594,7 @@ span.notify {
             }
 
         }
-        .panel-body.cta-versus {
+        .panel-body.cta-panel {
             .vs-ixd {
                 // DESKTOP
                 .hidden-xs.hidden-sm {
@@ -661,23 +666,6 @@ span.notify {
         }
     }
     .overvideo {
-        position:absolute; 
-        width:100%; 
-        top:0;
-        .overvideo-canvas {
-            position:relative;
-            .overvideo-content {
-                display: inline-table; 
-                width: 100%; 
-                overflow: auto; 
-                margin: auto; 
-                position: absolute; 
-                top: 0; 
-                left: 0; 
-                bottom: 0; 
-                right: 0;
-            }
-        }
         h4, h5 { color: #fff; }
     }
 } 

@@ -16,7 +16,6 @@ noticeModule.service("LatestNoticeService", function($scope, $resource){
 		var Api = $resource("/profile/notices/get_recent_notice");
 		
 		Api.get({}, function(data) {
-			console.log(data);
 		    angular.forEach(data.result, function(value, key) {
 		       value.html_notice = $sce.trustAsHtml(value.html_notice);
 		    });
@@ -72,7 +71,6 @@ function NoticeCtrl($scope, $window, $timeout, $resource, ngTableParams, $sce) {
 		    Api.get({ page: params.page(), perpage: params.count(), conditions: JSON.stringify($scope.tableFilters) }, function(data) {
 			    angular.forEach(data.result, function(value, key) {
 			       value.notice = $sce.trustAsHtml(value.notice);
-			       console.log(value);
 			     });
 			    params.total(data.total);
 			    $defer.resolve(data.result);
@@ -87,7 +85,6 @@ function NoticeBarCtrl($scope, $resource, $sce) {
 	var Api = $resource('/profile/notices/get_recent_notice');
 		
 	Api.get({}, function(data) {
-		console.log(data);
 	    angular.forEach(data.result, function(value, key) {
 	       value.html_notice = $sce.trustAsHtml(value.html_notice);
 	     });

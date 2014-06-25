@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140624132156) do
+ActiveRecord::Schema.define(:version => 20140620093048) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -308,7 +308,6 @@ ActiveRecord::Schema.define(:version => 20140624132156) do
     t.string   "not_awarded_image_content_type"
     t.integer  "not_awarded_image_file_size"
     t.datetime "not_awarded_image_updated_at"
-    t.string   "name"
   end
 
   add_index "rewards", ["name"], :name => "index_rewards_on_name", :unique => true
