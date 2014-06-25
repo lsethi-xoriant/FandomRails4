@@ -41,7 +41,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     angular.forEach($scope.calltoactions, function(sc) {
       appendYTIframe(sc);
     });
-  }; // onYouTubeIframeAPIReady
+  };
 
   $window.appendYTIframe = function(calltoaction) {
     if(calltoaction.media_type == "VIDEO" && $scope.youtube_api_ready) {
@@ -57,10 +57,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     }
   };
 
-  $window.appendCalltoaction = function(type) {
+  $window.showFeedback = function(feedback, calltoaction_id) {
+    $("#home-overvideo-feedback-" + calltoaction_id)
+      .hide().html(feedback).show('slide', { direction: 'left' }, 2000);
+
+    overvideo_feedback_timeout = $timeout(function() {
+      $("#home-overvideo-feedback-" + calltoaction_id).hide('slide', { direction: 'left' }, 2000, function() {
+        $("#home-overvideo-feedback-" + calltoaction_id).html("");
+      });
+    }, 4000);  
+  };
+
+  $window.appendCallToAction = function() {
     if($scope.calltoactions_count > $scope.calltoaction_offset) {
       $("#append-other button").attr('disabled', true);
-      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset, type: type })
+      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset })
       .success(function(data) {
         $scope.calltoaction_offset = $scope.calltoaction_offset + data.calltoactions.length
         $scope.calltoactions.push(data.calltoactions);
@@ -69,8 +80,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         if(!($scope.calltoactions_count > $scope.calltoaction_offset))
           $("#append-other").remove();
 
-        angular.forEach(data.calltoactions, function(sc) {
-          appendYTIframe(sc);
+        angular.forEach(data.calltoactions, function(calltoaction) {
+          appendYTIframe(calltoaction);
         });
 
         $("#append-other button").attr('disabled', false);
@@ -175,7 +186,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
               $timeout(function() { 
                 current_video_player.playVideo(); 
                 $("#home-overvideo-" + calltoaction_id).html("");
-              }, 3000);  
+              }, 5000);  
             } else {
               // Waiting for current user response.
             }                           
@@ -203,7 +214,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       $http.post("/update_interaction", { interaction_id: interaction_id })
         .success(function(data) {
-          // TODO: interaction feedback.
+          interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
+          if(interaction_point) {
+            showFeedback(data.feedback, calltoaction_id);
+          }
         }).error(function() {
           // ERROR.
         });
@@ -257,7 +271,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
-  $window.updateTriviaAnswer = function(calltoaction_id, interaction_id, answer_id, overvideo_during) {
+  $window.updateAnswer = function(calltoaction_id, interaction_id, answer_id, overvideo_during) {
     if($scope.current_user) {
       $(".button-inter-" + interaction_id).attr('disabled', true);
       $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id })
@@ -268,8 +282,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
             if(data.next_call_to_action) {
               updateNextCallToAction(data.next_call_to_action, calltoaction_id)
-            } else {
-              // Simple calltoaction without next calltoaction.
+            }
+
+            interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
+            if(interaction_point) {
+              showFeedback(data.feedback, calltoaction_id);
             }
 
             user_response_right[key] = data.right_answer_response;

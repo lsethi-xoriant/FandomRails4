@@ -20,7 +20,7 @@
 						<button class="btn-block button-inter-<%= inter_quiz.id %> btn <%= "active" if user_inter_quiz && user_inter_quiz.answer_id == a.id %> <%= a.correct ? "btn-success" : "btn-danger" %>" href="javascript: void(0)"><%= a.text %>
 						</button> 
 					<% else %>
-						<button id="button-answ-<%= a.id %>" class="btn-block button-inter-<%= inter_quiz.id %> btn btn-info" href="javascript: void(0)" onclick="updateTriviaAnswer(<%= inter_quiz.id %>, <%= a.id %>)"><%= a.text %>
+						<button id="button-answ-<%= a.id %>" class="btn-block button-inter-<%= inter_quiz.id %> btn btn-info" href="javascript: void(0)" onclick="updateAnswer(<%= inter_quiz.id %>, <%= a.id %>)"><%= a.text %>
 							<span class="span-inter-<%= inter_quiz.id %>" id="span-answ-<%= a.id %>"></span>
 						</button> 
 					<% end %>
