@@ -12,14 +12,13 @@ class UserReward < ActiveRecord::Base
 
   # Returns a list of triples: name, available, counter
   def self.get_rewards_info(user)
-    UserReward.includes(:reward).select("rewards.name, available, counter").where("user_id = ?", user.id)
+    UserReward.includes(:reward).select("rewards.name, rewards.countable, available, counter").where("user_id = ?", user.id)
   end
   
   def self.assign_reward(user, reward_name, counter)
     user_reward = get_user_reward(user, reward_name) 
     if user_reward.nil?
       reward = Reward.find_by_name(reward_name)
-      debugger
       return create(:user_id => user.id, :reward_id => reward.id, :available => true, :counter => counter)
     else
       user_reward.update_attributes(:counter => user_reward.counter + counter, :available => true)

@@ -68,7 +68,6 @@ module ConfigUtils
   def register_omniauth_for_site(site)
     Rails.application.config.middleware.use OmniAuth::Builder do
       config =  Rails.configuration
-      debugger
       begin
         provider "twitter_#{site.id}".to_sym, config.deploy_settings["sites"]["#{site.id}"]["twitter"]["app_id"], config.deploy_settings["sites"]["#{site.id}"]["twitter"]["app_secret"]
       rescue Exception => e

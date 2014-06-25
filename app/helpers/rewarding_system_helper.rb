@@ -53,6 +53,7 @@ module RewardingSystemHelper
     attribute :counters #, type: Hash
     attribute :uncountable_user_reward_names #, type: Array # of String
     attribute :user_unlocked_names #, type: Array # of String
+    attribute :user_rewards #, type: Hash
     
     # this list is populated by side-effects by evaluating the rules buffer 
     attribute :rules #, type: Array
@@ -111,7 +112,7 @@ module RewardingSystemHelper
         return false
       end
 
-      if !repeatable && user_interaction.counter > 1
+      if rule.options.key?(:interactions) && !repeatable && user_interaction.counter > 1
         Rails.logger.info("rule #{rule.name} not applied because user the user already done it") 
         return false
       end
@@ -136,12 +137,13 @@ module RewardingSystemHelper
     end
 
     def interaction_matches?(user_interaction, options, just_rules_applying_to_interaction)
-      if options.key?(:interations)
-        return options[:interactions].equals?(ALL) || (
+      interaction = user_interaction.interaction
+      if options.key?(:interactions)
+        return ALL.equal?(options[:interactions]) || (
           interaction_is_included_in_options?(options, :names, interaction.name) &&
-          interaction_is_included_in_options?(options, :ctas, interaction.cta.name) &&
-          interaction_is_included_in_options?(options, :types, interaction.type) &&
-          options[:interactions].key?(:tags) && interaction.cta.tags.intersect?(options[:interactions][:tags])
+          interaction_is_included_in_options?(options, :ctas, interaction.call_to_action.name) &&
+          interaction_is_included_in_options?(options, :types, interaction.resource_type) &&
+          (!options[:interactions].key?(:tags) || interaction.cta.tags.intersect?(options[:interactions][:tags]))
         )
       else
         !just_rules_applying_to_interaction
@@ -149,7 +151,7 @@ module RewardingSystemHelper
     end
     
     def interaction_is_included_in_options?(options, label, element)
-      options[:interactions].key?(label) && options[:interactions][label].includes?(element) 
+      !options[:interactions].key?(label) || options[:interactions][label].include?(element) 
     end
     
     # Merges the rewards won with a single rule with those already won
@@ -211,6 +213,7 @@ module RewardingSystemHelper
       counters: get_counters(user),
       uncountable_user_reward_names: uncountable_user_reward_names,
       user_unlocked_names: user_unlocked_names,
+      user_rewards: user_rewards,
       rules: []
     )
   end
@@ -219,13 +222,18 @@ module RewardingSystemHelper
     user_rewards = {}
     user_unlocked_names = Set.new()
     uncountable_user_reward_names = Set.new()
-    user_reward_info.each do |tuple|
-      name, available, counter = tuple
+    user_reward_info.each do |info|
+      name = info.reward.name
+      available = info.available
+      countable = info.reward.countable
+      counter = info.counter
       user_rewards[name] = counter
-      if available
-        user_unlocked_names << name
-      end
-      uncountable_user_reward_names << name 
+      if !countable
+        if available
+          user_unlocked_names << name
+        end
+        uncountable_user_reward_names << name
+      end 
     end
     rewards = Reward.get_names_and_countable_pairs
     rewards.each do |pair|
@@ -296,11 +304,30 @@ module RewardingSystemHelper
     outcome
   end
 
-  def predict_outcome(interaction, user)
-    context = prepare_rules_and_context(user_interaction, rules_buffer)    
-    context.compute_outcome_just_interaction(user_interaction)
+  class MockedUserInteraction
+    def initialize(interaction, user, interaction_is_correct)
+      @interaction = interaction
+      @user = user
+      @interaction_is_correct = interaction_is_correct
+    end
+    
+    def interaction
+      @interaction
+    end
+    
+    def user
+      @user
+    end
+    
+    def is_answer_correct?
+      @interaction_is_correct
+    end
+  end
+
+  def predict_outcome(interaction, user, interaction_is_correct)
+    user_interaction = MockedUserInteraction.new(interaction, user, interaction_is_correct)
+    context = prepare_rules_and_context(user_interaction, nil)    
+    context.compute_outcome_just_for_interaction(user_interaction)
   end
 
 end
-
-
