@@ -53,9 +53,14 @@ class Reward < ActiveRecord::Base
     end
   end
 
-  def self.get_all_names
-    x = Reward.select("name")
-    x.all
+  def self.get_names_and_countable_pairs
+    Reward.select("name, countable").all
+  end
+
+  def get_all_names
+    cache_short do
+      select("name")
+    end
   end
 
 end

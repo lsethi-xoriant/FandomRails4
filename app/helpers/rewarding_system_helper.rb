@@ -8,10 +8,13 @@ module RewardingSystemHelper
     include ActiveAttr::AttributeDefaults
     
     ALLOWED_OPTIONS = [:interactions, :rewards, :unlocks, :repeatable, :draft, :validity_start, :validity_end]
+    ALLOWED_INTERACTIONS = [:names, :tags, :ctas, :types]
     
     attribute :name, type: String
     attribute :options #, type: Hash
     attribute :condition #, type: Proc
+    attribute :normalized_rewards #, type: Hash
+    attribute :unlocks #, type: Hash
   end
 
   # The outcome of a matching process
@@ -45,15 +48,11 @@ module RewardingSystemHelper
     attribute :cta #, type: CallToAction
     attribute :correct_answer, type: Boolean
     attribute :counters #, type: Hash
-    attribute :user_reward_names #, type: Array # of String
+    attribute :uncountable_user_reward_names #, type: Array # of String
     attribute :user_unlocked_names #, type: Array # of String
     
     # this list is populated by side-effects by evaluating the rules buffer 
     attribute :rules #, type: Array
-    
-    # these attributes are set by side-effect when evaluating each rule
-    attribute :rule_rewards #, type: Array
-    attribute :rule_unlocks #, type: Array
     
     ALL = "ALL INTERACTIONS"
     
@@ -80,15 +79,15 @@ module RewardingSystemHelper
     end
     
     def evaluate_rule(rule, outcome, user_interaction, just_rules_applying_to_interaction)
-      self.rule_rewards = Set.new(rule.options[:rewards])
-      self.rule_unlocks = Set.new(rule.options[:unlocks])
-
       if rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction)
         begin
           if rule.condition.nil? || rule.condition.call
+            Rails.logger.info("rule #{rule.name} evaluate to true") 
             outcome.matching_rules << rule.name
-            merge_rewards(outcome.reward_name_to_counter, rule_rewards)          
-            outcome.unlocks += rule_unlocks          
+            merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
+            outcome.unlocks += rule.unlocks
+          else
+            Rails.logger.info("rule #{rule.name} evaluate to false") 
           end
         rescue Exception => ex
           outcome.errors << "rule #{rule.name}: #{ex}\n#{ex.backtrace.join("\n")}" 
@@ -98,16 +97,33 @@ module RewardingSystemHelper
     
     def rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction)
       repeatable = rule.options.fetch(:repeatable, false)
-      return (
-        !user_already_own_rewards?(rule_rewards, rule_unlocks) &&
-        (repeatable || user_interaction.counter <= 1) &&
-        current_datetime_is_valid?(rule.options) &&
-        interaction_matches?(user_interaction, rules.options, just_rules_applying_to_interaction) 
-      )
+      
+      if interaction_matches?(user_interaction, rule.options, just_rules_applying_to_interaction)
+        Rails.logger.info("rule #{rule.name} not applied because interaction doesn't match") 
+        return false
+      end
+      
+      if user_already_own_rewards?(rule.normalized_rewards, rule.unlocks)
+        Rails.logger.info("rule #{rule.name} not applied because user already own the rewards") 
+        return false
+      end
+
+      if !repeatable && user_interaction.counter > 1
+        Rails.logger.info("rule #{rule.name} not applied because user the user already done it") 
+        return false
+      end
+      
+      if !current_datetime_is_valid?(rule.options)
+        Rails.logger.info("rule #{rule.name} because date/time is not valid") 
+        return false
+      end
+      
+      Rails.logger.info("rule #{rule.name} will be evaluated") 
+      return true
     end
     
-    def user_already_own_rewards?(rule_rewards, rule_unlocks)
-      rule_rewards.subset?(user_reward_names) and rule_unlocks.subset?(user_unlocked_names)
+    def user_already_own_rewards?(normalized_rewards, unlocks)
+      Set.new(normalized_rewards.keys).subset?(uncountable_user_reward_names) and unlocks.subset?(user_unlocked_names)
     end
     
     def current_datetime_is_valid?(options)
@@ -133,16 +149,10 @@ module RewardingSystemHelper
       options[:interactions].key?(label) && options[:interactions][label].includes?(element) 
     end
     
-    # A rule reward is either a simple String (i.e. just one of the mentioned reward) or an array matching reward names with a quantity
-    def merge_rewards(rewards, rule_rewards)
-      rule_rewards.each do |reward|
-        if reward.is_a? String
-          rewards[reward] = 1 
-        else
-          reward.each do |k, v|
-            rewards[k] += v
-          end
-        end
+    # Merges the rewards won with a single rule with those already won
+    def merge_rewards(reward_name_to_counter, normalized_rule_rewards)
+      normalized_rule_rewards.each do |k, v|
+        reward_name_to_counter[k] += v
       end
     end
     
@@ -160,23 +170,43 @@ module RewardingSystemHelper
       rule = Rule.new({ 
         name: name,
         options: options,
-        condition: block.nil? ? nil : proc(&block) })
+        condition: block.nil? ? nil : proc(&block), 
+        normalized_rewards: normalize_rewards(options),
+        unlocks: Set.new(options.fetch(:unlocks, []))
+        })
       rules << rule 
     end
+
+    # Convert the "rewards" clause, that is an Array of Hash or String, into an Hash 
+    def normalize_rewards(options)
+      result = {}
+      result.default = 0    
+      options.fetch(:rewards, []).each do |r|
+        if r.is_a? String
+          result[r] = 1 
+        else
+          r.each do |k, v|
+            result[k] += v
+          end
+        end
+      end
+      result
+    end
+
   end
-    
+  
   def new_context(user_interaction)
     user = user_interaction.user
     interaction = user_interaction.interaction
     user_reward_info = UserReward.get_rewards_info(user_interaction.user)
-    user_rewards, user_unlocked_names = get_user_reward_data(user_reward_info)
+    user_rewards, uncountable_user_reward_names, user_unlocked_names = get_user_reward_data(user_reward_info)
     Context.new(
       user: user,
       user_rewards: user_rewards,
       cta: interaction.call_to_action,
       correct_answer: get_correct_answer(user_interaction),
       counters: get_counters(user),
-      user_reward_names: Set.new(user_rewards.keys),
+      uncountable_user_reward_names: uncountable_user_reward_names,
       user_unlocked_names: user_unlocked_names,
       rules: []
     )
@@ -185,20 +215,26 @@ module RewardingSystemHelper
   def get_user_reward_data(user_reward_info)
     user_rewards = {}
     user_unlocked_names = Set.new()
+    uncountable_user_reward_names = Set.new()
     user_reward_info.each do |tuple|
       name, available, counter = tuple
       user_rewards[name] = counter
       if available
         user_unlocked_names << name
-      end 
+      end
+      uncountable_user_reward_names << name 
     end
-    rewards = Reward.get_all_names
-    rewards.each do |name|
+    rewards = Reward.get_names_and_countable_pairs
+    rewards.each do |pair|
+      name, countable = pair
       unless user_rewards.key?(name)
         user_rewards[name] = 0
       end
+      if countable
+        uncountable_user_reward_names.delete(name)
+      end
     end
-    [user_rewards, user_unlocked_names]
+    [user_rewards, uncountable_user_reward_names, user_unlocked_names]
   end
   
   def get_correct_answer(user_interaction)
@@ -251,12 +287,22 @@ module RewardingSystemHelper
         rescue
           errors << "rule #{rule.name}: date/time parse error on #{k}"
         end
+      elsif k == :interactions
+        check_rule_interactions_clause(rule, errors)
+      elsif k == :rewards
+        #check_names(get_reward_names(v), Reward.get_all_names)
       end
     end
     if !options.key? :rewards and !options.key? :unlocks
         errors << "rule #{rule.name}: rewards and unlocks are both missing"          
     end          
   end
+
+  def check_rule_interactions_clause(rule, errors)
+    
+  end
+
+
   
   # Evaluates a rules_buffer in the context of an user interaction.
   # Returns an instance of the class Outcome
