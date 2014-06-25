@@ -5,6 +5,8 @@
 //= require angular-route
 //= require ng-table
 //= require angular_eventfilter
+//= require angular_fandom
+//= require angular_notice
 //= require bootstrap
 //= require bootstrap-notify
 //= require easyadmin/jquery-ui-1.9.2.custom.min

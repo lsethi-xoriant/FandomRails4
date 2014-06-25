@@ -2,6 +2,7 @@ module Fandom
   class Application < Rails::Application
     register_fandom_site(
       id: 'maxibon', 
+      title: 'Maxibon The Pool',
       domains: ['maxibon.fandom.localdomain', 'maxibon.shado.tv', 'maxibon.stage.fandomlab.com', 'maxibon.live.fandomlab.com', 'www.maxibon.it', 'maxibon.it', '10.1.30.104'],
       assets_precompile: ['maxibon_application.css', 'maxibon_application.js'],
       environment: { 

@@ -6,9 +6,9 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   
   # Constant that describe the filter available
   FIELD_DESCS = { 
-    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "user_interaction", :column_name => "updated_at"}),
-    :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email"}),
-    :interaction => FieldDesc.new({ :name => "Interazione", :id => "interaction", :model => "interaction", :column_name => "resource_type" })
+    :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "user_interaction", :column_name => "updated_at", :visible => true }),
+    :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email", :visible => true }),
+    :interaction => FieldDesc.new({ :name => "Interazione", :id => "interaction", :model => "interaction", :column_name => "resource_type", :visible => true })
   }
   
   # json version of fields description
@@ -30,13 +30,18 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   # offset - current page results to load
   # limit  - number of results per page
   def get_results(offset, limit)
+    result = Hash.new
     if params[:conditions].blank?
+      total = UserInteraction.count
       events = UserInteraction.limit(limit).offset(offset).order("updated_at ASC")
     else
       conditions = JSON.parse(params[:conditions])
+      total = build_query(conditions).count
       events = build_query(conditions).limit(limit).offset(offset).order("user_interactions.updated_at ASC")
     end
-    return events
+    result['total'] = total
+    result['elements'] = events
+    return result
   end
   
   # construct the query to retrive events depending on filter params passed as parameter

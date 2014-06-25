@@ -14,7 +14,9 @@ class CreateRewardTable < ActiveRecord::Migration
       t.boolean :spendable
       t.boolean :countable
       t.boolean :numeric_display
+      t.string :name
       t.timestamps
-    end
+    end    
+    add_index :rewards, :name, :unique => true
   end
 end

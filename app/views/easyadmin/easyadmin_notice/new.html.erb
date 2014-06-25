@@ -1,0 +1,50 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "notice" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>NUOVA NOTIFICA MANUALE</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if flash[:error] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p><%= flas[:error] %></p>
+              </div>
+            </div>
+          </div>
+        <% elsif flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <h3>Dati</h3>
+    <hr/>
+    
+	<%= form_tag("/easyadmin/notices/create", method: "post") do %>
+        <div class="row form-group">
+            <div class="col-lg-4"><%= label_tag(:users, "Mail utenti (se piu di una separare con \",\"):") %></div>
+            <div class="col-lg-6"><%= text_field_tag :users, "", :class => "form-control" %> </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-4"><%= label_tag(:notice, "HTML notifica:") %></div>
+            <div class="col-lg-6"><%= text_area_tag(:notice, "", :class => "form-control", size: "24x6") %> </div>
+        </div>
+        <div class="row">
+          <div class="col-sm12 text-center">
+              <button type="submit" class="btn btn-primary">INVIA NOTIFICA</button>
+          </div>
+        </div>
+    <% end %>
+  </div>
+</div>

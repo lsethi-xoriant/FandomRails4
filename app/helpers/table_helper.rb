@@ -16,6 +16,7 @@ module TableHelper
     attribute :id, type: String
     attribute :model, type: String
     attribute :column_name, type: String
+    attribute :visible, type: Boolean
     
   end
 
@@ -29,12 +30,12 @@ module TableHelper
     offset = (params[:page].to_i - 1) * params[:perpage].to_i
     limit = params[:perpage]
 
-    elements = get_results(offset, limit)
-    results = get_fields_to_show(elements)
+    results = get_results(offset, limit)
+    result_list = get_fields_to_show(results['elements'])
     
     data = Hash.new
-    data['total'] = results.count
-    data['result'] = results
+    data['total'] = results['total']
+    data['result'] = result_list
     respond_to do |format|
       format.json { render :json => data.to_json }
     end

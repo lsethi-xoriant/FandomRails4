@@ -176,10 +176,10 @@ ActiveRecord::Schema.define(:version => 20140624132156) do
     t.integer  "user_id"
     t.text     "html_notice"
     t.datetime "last_sent"
-    t.boolean  "viewd"
-    t.boolean  "read"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.boolean  "viewed",      :default => false
+    t.boolean  "read",        :default => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   create_table "oauth_access_grants", :force => true do |t|
@@ -289,6 +289,7 @@ ActiveRecord::Schema.define(:version => 20140624132156) do
     t.boolean  "spendable"
     t.boolean  "countable"
     t.boolean  "numeric_display"
+    t.string   "name"
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
     t.string   "preview_image_file_name"

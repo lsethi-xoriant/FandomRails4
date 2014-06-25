@@ -64,6 +64,23 @@
 		      </ul>
 		    </li>
 	    <% end %>
+	    
+	    <% if can? :manage, :all %>
+	    	<li class="dropdown <%= "active opened" if page == "notice" %>"><a href="javascript:void(0);"><i class="fa fa-envelope"></i>Notifiche<span class="caret"></span></a>
+		      <ul class="sub-nav">
+		        <li>
+		          <a href="/easyadmin/notices">
+		            <i class="fa fa-th-list"></i>Lista
+		          </a>
+		        </li>
+		        <li>
+		          <a href="/easyadmin/notices/new">
+		            <i class="fa fa-save"></i>Nuovo
+		          </a>
+		        </li>
+		      </ul>
+		    </li>
+	    <% end %>
 
 	  </ul>
 	</nav> <!-- #sidebar -->

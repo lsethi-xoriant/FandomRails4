@@ -83,7 +83,10 @@ Fandom::Application.routes.draw do
     match "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }
     
     match "notices", :to => "easyadmin_notice#index"
+    match "notices/new", :to => "easyadmin_notice#new"
+    match "notices/create", :to => "easyadmin_notice#create"
     match "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }
+    match "notices/sendnotice", :to => "easyadmin_notice#resend_notice", defaults: { format: 'json' }
   end
 
   constraints(SiteMatcher.new('maxibon')) do
@@ -114,6 +117,12 @@ Fandom::Application.routes.draw do
   match "profile/levels", :to => "profile#levels"
   match "profile/badges", :to => "profile#badges"
   match "profile/rankings", :to => "profile#rankings"
+  match "profile/notices", :to => "profile#notices"
+  match "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
+  match "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
+  match "profile/notices/mark_as_viewed", :to => "notice#mark_as_viewed", defaults: { format: 'json' }
+  match "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
+  match "profile/notices/get_recent_notice", :to => "notice#get_user_latest_notices", defaults: { format: 'json' }
   match "profile/remove-provider/:provider", :to => "profile#remove_provider"
   match "profile/complete_for_contest", :to => "profile#complete_for_contest"
 

@@ -130,21 +130,9 @@
 			    </div>
 			    <div class="col-md-10">
 				<table class="table table-striped" ng-table="tableParams">
-					<thead>
-			        <tr>
-			            <th ng-repeat="column in columns" ng-show="column.visible"
-			                class="text-center sortable" ng-class="{
-			                    'sort-asc': tableParams.isSortBy(column.field, 'asc'),
-			                    'sort-desc': tableParams.isSortBy(column.field, 'desc')
-			                  }"
-			                ng-click="tableParams.sorting(column.field, tableParams.isSortBy(column.field, 'asc') ? 'desc' : 'asc')">
-			                {{column.title}}
-			            </th>
-			        </tr>
-			        </thead>
 					<tbody>
 			          <tr ng-repeat="row in $data">
-			            <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.id">
+			            <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.id" data-title="column.title">
 			                {{row[column.field]}}
 			            </td>
 			          </tr>
