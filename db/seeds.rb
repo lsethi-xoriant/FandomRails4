@@ -9,3 +9,5 @@ User.create(email: "ddainese@shado.tv", first_name: "Diego", last_name: "Dainese
 
 User.create(email: "anonymous@shado.tv", first_name: "Anonymous", last_name: "Anonymous", 
 						privacy: true, password: "shado00", password_confirmation: "shado00")
+						
+Setting.create(key: "rewarding.rules", value: "")

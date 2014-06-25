@@ -1,8 +1,8 @@
 module EventHandlerHelper
 
   # TODO: to be implemented
-  def log_event(msg)
-    logger.info("event: #{msg}")
+  def log_event(msg, data)
+    logger.info("event: #{msg}; data: #{data}")
   end
 
   def log_system_event()

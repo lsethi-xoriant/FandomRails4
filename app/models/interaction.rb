@@ -68,10 +68,4 @@ class Interaction < ActiveRecord::Base
     end
   end
 
-  def get_all_names
-    cache_short do
-      select("name")
-    end
-  end
-
 end
