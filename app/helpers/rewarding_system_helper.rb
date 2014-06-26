@@ -89,7 +89,10 @@ module RewardingSystemHelper
             Rails.logger.info("rule #{rule.name} evaluate to true") 
             outcome.matching_rules << rule.name
             merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
+            merge_user_rewards(self.user_rewards, rule.normalized_rewards)
             outcome.unlocks += rule.unlocks
+            self.user_unlocked_names += rule.unlocks
+            # TODO: self.uncountable_user_reward_names should be updated as well 
           else
             Rails.logger.info("rule #{rule.name} evaluate to false") 
           end
@@ -154,10 +157,17 @@ module RewardingSystemHelper
       !options[:interactions].key?(label) || options[:interactions][label].include?(element) 
     end
     
-    # Merges the rewards won with a single rule with those already won
+    # Merges the rewards won with a single rule with those already won.
     def merge_rewards(reward_name_to_counter, normalized_rule_rewards)
       normalized_rule_rewards.each do |k, v|
         reward_name_to_counter[k] += v
+      end
+    end
+
+    # Similar to merge_rewards, but the value of the map is a MockedUserReward
+    def merge_user_rewards(user_rewards, normalized_rule_rewards)
+      normalized_rule_rewards.each do |k, v|
+        user_rewards[k].counter += v
       end
     end
     
@@ -250,14 +260,9 @@ module RewardingSystemHelper
         uncountable_user_reward_names << name
       end 
     end
-    rewards = Reward.get_names_and_countable_pairs
-    rewards.each do |pair|
-      name, countable = pair
+    get_all_reward_names().each do |name|
       unless user_rewards.key?(name)
         user_rewards[name] = MockedUserReward.new(0)
-      end
-      if countable
-        uncountable_user_reward_names.delete(name)
       end
     end
     [user_rewards, uncountable_user_reward_names, user_unlocked_names]
@@ -288,9 +293,9 @@ module RewardingSystemHelper
   end
   
   def get_rules_buffer()
-    # TODO: cache should be invalidated on save of settings
+    # TODO: cache should be invalidated and rules should be checked on save
 #    cache_short('rewarding_rules') do 
-    result = Setting.find_by_key('rewarding.rules').value
+    result = Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
     init(Context.new(rules: []), Rule::ALLOWED_OPTIONS, Rule::ALLOWED_INTERACTIONS)
     errors = check_rules(result)
     if errors.any?
@@ -319,13 +324,28 @@ module RewardingSystemHelper
     outcome
   end
 
+
+  def get_mocked_user_interaction(interaction, user, interaction_is_correct)
+    if current_user.nil?
+      MockedUserInteraction.new(interaction, user, 1, interaction_is_correct)
+    else
+      user_interaction = find_by_user_id_and_interaction_id(user_id, interaction_id)
+      MockedUserInteraction.new(interaction, user, user_interaction.counter, interaction_is_correct)  
+    end
+  end
+
   # Simulate an user interaction where the correctness of an answer/interaction can be set in advance.
   # It is used to predict the outcome of an interaction.
   class MockedUserInteraction
-    def initialize(interaction, user, interaction_is_correct)
+    def initialize(interaction, user, counter, interaction_is_correct)
       @interaction = interaction
       @user = user
+      @counter = counter
       @interaction_is_correct = interaction_is_correct
+    end
+    
+    def counter
+      @counter
     end
     
     def interaction
@@ -342,7 +362,7 @@ module RewardingSystemHelper
   end
 
   def predict_outcome(interaction, user, interaction_is_correct)
-    user_interaction = MockedUserInteraction.new(interaction, user, interaction_is_correct)
+    user_interaction = get_mocked_user_interaction(interaction, user, interaction_is_correct)
     context = prepare_rules_and_context(user_interaction, nil)    
     context.compute_outcome_just_for_interaction(user_interaction)
   end

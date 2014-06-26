@@ -16,3 +16,5 @@ MAXIBON_PARTY_GUETTA = 2
 MAXIBON_PARTY_NIGHT = 3
 
 INTERACTION_TYPES = Set.new(['Quiz', 'Check', 'Comment', 'Like', 'Play', 'Share'])
+
+REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
