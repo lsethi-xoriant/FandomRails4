@@ -18,10 +18,6 @@ class UserInteraction < ActiveRecord::Base
   #   errors.add(:limit_exceeded, "hai raggiunto il limite giornaliero di inviti") if uicount > 4
   # end
 
-  # TODO: this should be reimplemented as a query (1 per answer or, better, just 1 group-by query), and cached
-  def update_interaction_counter
-  end
-
   def self.create_or_update_interaction(user_id, interaction_id, answer_id = nil)
     user_interaction = find_by_user_id_and_interaction_id(user_id, interaction_id)
     if user_interaction.nil?

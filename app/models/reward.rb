@@ -53,8 +53,4 @@ class Reward < ActiveRecord::Base
     end
   end
 
-  def self.get_names_and_countable_pairs
-    Reward.select("name, countable").all
-  end
-
 end
