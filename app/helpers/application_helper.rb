@@ -2,10 +2,10 @@ require 'fandom_utils'
 
 module ApplicationHelper
 
-	def calculate_user_answer_class(answer, user_answer_id)
-		if user_answer_id == answer.id
-			answer.correct ? "right" : "wrong"
-		end
+	def interaction_answer_percentage(interaction, answer)
+		interaction_answers_count = interaction.user_interactions.count
+		interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
+		return (interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100
 	end
 
 	def current_user_or_anonymous_user_id

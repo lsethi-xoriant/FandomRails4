@@ -57,10 +57,4 @@ class Reward < ActiveRecord::Base
     Reward.select("name, countable").all
   end
 
-  def get_all_names
-    cache_short do
-      select("name")
-    end
-  end
-
 end

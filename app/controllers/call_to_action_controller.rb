@@ -18,6 +18,29 @@ class CallToActionController < ApplicationController
       send_data image, type: 'image/jpeg', disposition: 'inline'
   end
 
+  def append_calltoaction
+    render_call_to_action_str = String.new
+    stream_call_to_action = Array.new
+
+    stream_call_to_action_to_render = Calltoaction.active.offset(params[:offset]).limit(3)
+    
+    stream_call_to_action_to_render.each do |calltoaction|
+      stream_call_to_action << calltoaction
+      render_call_to_action_str = render_call_to_action_str + (render_to_string "/calltoaction/_stream_single_calltoaction", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
+    end
+
+    response = Hash.new
+    response = {
+      calltoactions: stream_call_to_action,
+      html_to_append: render_call_to_action_str
+    }
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+    
+  end
+
   def show
     @current_cta = CallToAction.find(params[:id])
 
@@ -182,9 +205,13 @@ class CallToActionController < ApplicationController
       UserCounter.update_counters(user_interaction, current_user)
       # TODO: 
       outcome = compute_and_save_outcome(user_interaction)
-      logger.info(outcome.inspect)
+      logger.info("rewards: #{outcome.reward_name_to_counter.inspect}")
+      logger.info("unlocks: #{outcome.unlocks.inspect}")
       if outcome.errors.any?
-        logger.error(outcome.errors.inspect)
+        logger.error("errors in the rewarding system:")
+        outcome.errors.each do |error|
+          logger.error(error)
+        end
       end
       # TODO: 
       response['outcome'] = outcome
@@ -193,7 +220,7 @@ class CallToActionController < ApplicationController
       response['outcome'] = nil
     end
     
-    response["feedback"] = nil # TODO: render_to_string "/calltoaction/_overvideo_points_feedback", locals: { interaction_max_points: 0, points: 0, correct: nil }, layout: false, formats: :html 
+    response["feedback"] = render_to_string "/calltoaction/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
 
     respond_to do |format|
       format.json { render :json => response.to_json }

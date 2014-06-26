@@ -1,0 +1,33 @@
+<div class="col-md-6 col-xs-6">
+
+  <!-- IMAGE SECTION -->
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 choice choosen">
+      <% if user_interaction %>
+        <div class="status">
+          <h4><%= interaction_answer_percentage(interaction, answer) %>%</h4>
+        </div>
+      <% end %>
+      <a href="#" class="thumbnail"><img src="<%= answer.image(:medium) %>" alt="..."></a>
+    </div>
+  </div>
+
+  <!-- VOTE BAR SECTION -->
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+      <div class="vs-level-container">
+        <% if user_interaction %>
+          <div class="vs-level-inner-sx" style="width: <%= interaction_answer_percentage(interaction, answer) %>%;"></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <!-- BUTTON SECTION -->
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+      <button type="button" class="btn btn-info btn-block <%= "active" if user_interaction %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, <%= interaction.when_show_interaction == "OVERVIDEO_DURING" %>)"><%= answer.text %></button>
+    </div>
+  </div>
+
+</div>
