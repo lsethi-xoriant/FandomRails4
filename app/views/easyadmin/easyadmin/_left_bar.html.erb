@@ -81,6 +81,10 @@
 		      </ul>
 		    </li>
 	    <% end %>
+	    
+	    <% if can? :manage, :all %>
+		    <li class="<%= "active" if page == "rules" %>"><a href="/easyadmin/rules"><i class="fa fa-comment"></i>Regole Reward</a></li>
+	    <% end %>
 
 	  </ul>
 	</nav> <!-- #sidebar -->

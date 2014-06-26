@@ -301,7 +301,7 @@ module RewardingSystemHelper
   
   def check_rules(buffer)
     init_check_rules_aux(Context.new(rules: []), Rule::ALLOWED_OPTIONS, Rule::ALLOWED_INTERACTIONS)
-    check_rules_aux(result)
+    check_rules_aux(buffer)
   end
   
   def get_rules_buffer()

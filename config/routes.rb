@@ -87,6 +87,9 @@ Fandom::Application.routes.draw do
     match "notices/create", :to => "easyadmin_notice#create"
     match "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }
     match "notices/sendnotice", :to => "easyadmin_notice#resend_notice", defaults: { format: 'json' }
+    
+    match "rules", :to => "easyadmin_rewarding_rules#index"
+    match "rules/save", :to => "easyadmin_rewarding_rules#save"
   end
 
   constraints(SiteMatcher.new('maxibon')) do

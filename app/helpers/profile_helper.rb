@@ -15,7 +15,7 @@ module ProfileHelper
 
   def users_before_and_after(reward = nil)
     unless reward
-      reward = Tag.find_by_text("MAIN_REWARD").reward_tags.first.reward
+      reward = Tag.find_by_name("MAIN_REWARD").reward_tags.first.reward
     end
 
     current_user_reward = reward.user_rewards.find_by_user_id(current_user.id)
@@ -38,7 +38,7 @@ module ProfileHelper
     if current_user.facebook
 
       unless reward
-        reward = Tag.find_by_text("MAIN_REWARD").reward_tags.first.reward
+        reward = Tag.find_by_name("MAIN_REWARD").reward_tags.first.reward
       end
 
       current_user_reward = reward.user_rewards.find_by_user_id(current_user.id)
