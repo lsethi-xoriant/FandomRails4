@@ -16,6 +16,8 @@ Fandom::Application.routes.draw do
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
+    resources :home_launchers
+
     match "winner", :to => "easyadmin#index_winner"
     match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
 

@@ -1,0 +1,76 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "carousel" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1>CAROSELLO</h1>
+    </div> <!-- #content-header --> 
+
+    <div id="content-container">
+
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col-md-12">         
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-success"><%= flash[:notice] %></div>
+                </div>
+              </div>
+            
+          </div>
+        </div>
+      <% end %>
+
+      <div class="row text-right">
+        <div class="col-md-12">
+          <a href="/easyadmin/home_launchers/new"><button type="button" class="btn btn-primary">NUOVO ITEM</button></a>
+        </div>
+      </div>
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <table class="table table-striped">
+          <tr>
+            <th>Descrizione</th>
+            <th>URL</th>
+            <th>Bottone</th>
+            <th>Immagine</th>
+            <th>Azioni</th>
+          </tr>
+          <% @home_launchers.each do |home_launcher| %>
+            <tr>
+              <td><%= home_launcher.description %></td>
+              <td><%= home_launcher.url %></td>
+              <td><%= home_launcher.button %></td>
+              <td><img src="<%= home_launcher.image.url %>" class="img-responsive" style="max-width: 200px; width: 100%"></td>
+              <td>             
+                <a href="<%= edit_easyadmin_home_launcher_path(home_launcher.id) %>"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
+                &nbsp;&nbsp;
+                <a href="javascript: void(0)" onclick="hideCarouselItem('<%= home_launcher.id %>')"><i class="fa fa-eye" style="color: <%= home_launcher.enable ? "red" : "gray" %>" id="eye-<%= home_launcher.id %>"></i></a>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  function hideCarouselItem(id){
+    $.ajax({
+            type: "POST",
+            url: "/easyadmin/carousel/hide/" + id,
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+              if(data == "active") 
+                $("#eye-" + id).css("color", "red");
+              else
+                $("#eye-" + id).css("color", "gray");
+            }
+        });
+  }
+</script>
