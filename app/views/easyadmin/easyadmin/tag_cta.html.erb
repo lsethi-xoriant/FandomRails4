@@ -40,7 +40,7 @@
 </div>
 
 <script type="text/javascript">
-  tl = <%= raw(Tag.select("text").map(&:text).to_json) %>;
+  tl = <%= raw(Tag.select("name").map(&:name).to_json) %>;
   $(document).ready(function() {
     $('#s2_tokenization').select2({
       placeholder: "",

@@ -17,7 +17,7 @@ class RewardController < ApplicationController
   end
   
   def get_top_rewards(user_id)
-    rewards_result_set = Reward.includes(:reward_tags => :tag).where("tags.text = 'top'")
+    rewards_result_set = Reward.includes(:reward_tags => :tag).where("tags.name = 'top'")
     rewards_list = create_reward_list(rewards_result_set, user_id)
   end
   
@@ -27,7 +27,7 @@ class RewardController < ApplicationController
   
   def get_all_rewards(user_id)
     reward_system_tag = ["basic"]
-    excluded_reward_ids = RewardTag.includes(:tag).where("tags.text in (?) AND reward_id IS NOT NULL", reward_system_tag).map{ |row| row.reward_id }
+    excluded_reward_ids = RewardTag.includes(:tag).where("tags.name in (?) AND reward_id IS NOT NULL", reward_system_tag).map{ |row| row.reward_id }
     rewards_result_set = Reward.where("id not in (?)", excluded_reward_ids)
     rewards_list = create_reward_list(rewards_result_set, user_id)
   end

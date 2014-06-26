@@ -55,7 +55,7 @@ class Easyadmin::EasyadminRewardController < ApplicationController
   
   def get_reward_tag_list(reward)
     tag_list_arr = Array.new
-    reward.reward_tags.each { |t| tag_list_arr << t.tag.text }
+    reward.reward_tags.each { |t| tag_list_arr << t.tag.name }
     return tag_list = tag_list_arr.join(",")
   end
   
