@@ -47,6 +47,10 @@
               <%= f.text_field :title, :class => "form-control" %>
           </div>
           <div class="form-group">
+              <label class="text-input">Descrizione</label>
+              <%= f.text_area :description, :class => "form-control", rows: 3 %>
+          </div>
+          <div class="form-group">
             <label class="text-input">Commenti Disqus</label>
               <%= f.select(:enable_disqus, [["NON ABILITATI", false], ["ABILITATI", true]], {}, { :class => "form-control" }) %>
           </div>
@@ -61,15 +65,9 @@
           <div class="col-lg-12">
             <label>PLAY</label>
             <p style="float: right;">
-              <a data-toggle="collapse" data-parent="#accordion" href="#info-play" class="btn btn-secondary btn-xs">INFO</a>
               <%= link_to_add_play_fields "AGGIUNGI PLAY", f, :interactions if f.object.interactions.where("resource_type='Play'").blank? %>
             </p>             
             <hr style="margin-top: 10px; margin-bottom: 10px;" />
-
-            <div id="info-play" class="panel-collapse collapse" style="padding-top: 0px !important;">            
-              <p>L'interazione di tipo PLAY permette di tracciare il numero di visualizzazioni e di associare
-              l'evento ad uno specifico utente o all'utente anonimo.</p>             
-            </div>
 
             <div id="tmp-play-add"></div>
 
