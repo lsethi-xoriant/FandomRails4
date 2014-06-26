@@ -1,7 +1,7 @@
 class CallToAction < ActiveRecord::Base
   attr_accessible :title, :video_url, :image, :activated_at, :mobile_url, :interactions_attributes,
   					:activation_date, :activation_time, :cta_template_type, :slug, :enable_disqus, :media_type,
-            :secondary_id, :description
+            :secondary_id, :description, :iframe
 
   extend FriendlyId
   friendly_id :title, use: :slugged
@@ -34,7 +34,7 @@ class CallToAction < ActiveRecord::Base
   end
 
   def media_type_enum
-    ["IMAGE", "VIDEO", "VOID"]
+    ["IMAGE", "VIDEO", "IFRAME", "VOID"]
   end
 
   def check_video_interaction
