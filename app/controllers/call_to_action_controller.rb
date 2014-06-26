@@ -22,7 +22,7 @@ class CallToActionController < ApplicationController
     @current_cta = CallToAction.find(params[:id])
 
     tag_list_arr = Array.new
-    @current_cta.call_to_action_tags.each { |t| tag_list_arr << t.tag.text }
+    @current_cta.call_to_action_tags.each { |t| tag_list_arr << t.tag.name }
     @tag_list = tag_list_arr.join(",")
 
     if current_user

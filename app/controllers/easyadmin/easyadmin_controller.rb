@@ -88,7 +88,7 @@ class Easyadmin::EasyadminController < ApplicationController
 
   def tag_cta
     @tag_list_arr = Array.new
-    CallToAction.find(params[:id]).call_to_action_tags.each { |t| @tag_list_arr << t.tag.text }
+    CallToAction.find(params[:id]).call_to_action_tags.each { |t| @tag_list_arr << t.tag.name }
     @tag_list = @tag_list_arr.join(",")
   end
 
@@ -128,7 +128,7 @@ class Easyadmin::EasyadminController < ApplicationController
     @current_cta = CallToAction.find(params[:id])
 
     tag_list_arr = Array.new
-    @current_cta.call_to_action_tags.each { |t| tag_list_arr << t.tag.text }
+    @current_cta.call_to_action_tags.each { |t| tag_list_arr << t.tag.name }
     @tag_list = tag_list_arr.join(", ")
 
     @trivia_answer = Hash.new
@@ -205,7 +205,7 @@ class Easyadmin::EasyadminController < ApplicationController
     @cta = CallToAction.find(params[:id])
 
     @tag_list_arr = Array.new
-    @cta.call_to_action_tags.each { |t| @tag_list_arr << t.tag.text }
+    @cta.call_to_action_tags.each { |t| @tag_list_arr << t.tag.name }
     @tag_list = @tag_list_arr.join(",")
   end
 
