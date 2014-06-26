@@ -185,7 +185,7 @@ class CallToActionController < ApplicationController
     if interaction.resource_type.downcase.to_sym == :quiz
       
       answer = Answer.find(params[:answer_id])
-      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user_id, interaction.id, answer.id)
+      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id, answer.id)
 
       response["right_answer_response"] = user_interaction.answer.correct
 
@@ -198,7 +198,7 @@ class CallToActionController < ApplicationController
       end
 
     else
-      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user_id, interaction.id)
+      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id)
     end
 
     if current_user
@@ -219,6 +219,8 @@ class CallToActionController < ApplicationController
     else
       response['outcome'] = nil
     end
+
+    response["main_reward_counter"] = counter_about_user_reward(params[:main_reward_name])
     
     response["feedback"] = render_to_string "/calltoaction/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
 

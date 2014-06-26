@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   has_many :authentications, dependent: :destroy
   has_many :user_interactions
   has_many :user_comments
-
+  has_many :user_rewards
   has_many :user_counters
 
   before_save :set_date_of_birth

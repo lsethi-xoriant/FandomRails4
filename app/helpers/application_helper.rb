@@ -2,14 +2,19 @@ require 'fandom_utils'
 
 module ApplicationHelper
 
+	def counter_about_user_reward(reward)
+		user_reward = current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name='#{reward}'").first
+		user_reward ? user_reward.counter : 0
+	end
+
 	def interaction_answer_percentage(interaction, answer)
 		interaction_answers_count = interaction.user_interactions.count
 		interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
 		return (interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100
 	end
 
-	def current_user_or_anonymous_user_id
-		current_user.present? ? current_user.id : User.find_by_email("anonymous@shado.tv").id
+	def current_user_or_anonymous_user
+		current_user.present? ? current_user : User.find_by_email("anonymous@shado.tv")
 	end
 	
 	def mobile_device?()
