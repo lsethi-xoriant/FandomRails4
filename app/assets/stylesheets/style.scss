@@ -68,11 +68,17 @@ button, h1, h2, h3, h4, h5, h6, li {
 .img-circle-overvideo.enable:hover, .img-circle-overvideo.enable:focus {
     border-color: #eab83e;
 }
-.yellow-point {
+.yellow-marker {
     @extend .btn;
     @extend .disabled;
     opacity: 1;
     background: #FFC629; 
+    box-shadow: none !important;
+}
+
+.yellow-marker.active {
+    background: #06C733;
+    color: #fff;
 }
 
 .bike-configurator-paragraph-number {

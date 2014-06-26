@@ -66,20 +66,28 @@
         -->
 
 		<% if current_user %>
+
+      <li class="play-2">
+        <a class="user-reward-counter" href="javascript: void(0)">+<%= counter_about_user_reward("POINT") %> PUNTI</a>
+      </li>
+
+      <!--
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= Notice.get_unread_notifications_count(current_user.id) %></span></a>
 				<ul class="dropdown-menu" ng-controller="NoticeBarCtrl">
-                    <li role="presentation" class="dropdown-header">Notifiche</li>
-                    <li role="presentation" class="divider"></li>
-                    <li class="container-fluid" ng-repeat="notice in notices">
-                      <div class="row" style="width: 300px" ng-bind-html='notice.html_notice'>
-                        
-                      </div>
-                    </li>
-                    <li role="presentation" class="divider"></li>
-                    <li><a href="#" class="text-center">Vai alle notifiche</a></li>
-                  </ul>
+          <li role="presentation" class="dropdown-header">Notifiche</li>
+          <li role="presentation" class="divider"></li>
+          <li class="container-fluid" ng-repeat="notice in notices">
+            <div class="row" style="width: 300px" ng-bind-html='notice.html_notice'>
+              
+            </div>
+          </li>
+          <li role="presentation" class="divider"></li>
+          <li><a href="#" class="text-center">Vai alle notifiche</a></li>
+        </ul>
 			</li>
+      -->
+
 	        <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <%= current_user.first_name %> <b class="caret"></b></a>
 	          <ul class="dropdown-menu">
@@ -89,18 +97,6 @@
               <li><a href="/profile/badges">Badge</a></li>
 	            <li class="divider"></li>
               <li><a href="/profile/rankings">Classifica</a></li>
-	            <!--
-	            <li class="divider"></li>
-	            <li><a href="profile-premi.html">Miei premi (modal normale)</a></li>
-	            <li><a href="profile-premi-boxato.html">Miei premi boxato</a></li>
-	            <li><a href="profile-premi-vinto.html">Miei premi (modal vinto)</a></li>
-	            <li><a href="profile-premi-novinto.html">Miei premi (modal no vinto)</a></li>
-	            <li class="divider"></li>
-	            <li><a href="profile-classifica.html">Classifica</a></li>
-	            <li><a href="profile-classifica-punteggio.html">Classifica (punteggio)</a></li>
-	            <li class="divider"></li>
-	            <li><a href="profile-notifiche.html">Notifiche</a></li>
-	            -->
 	            <li class="divider"></li>
 	            <li><a href="/profile/notices">Notifiche <span class="badge pull-right"><%= Notice.get_unread_notifications_count(current_user.id) %></span></a></li>
 	            <li class="divider"></li>

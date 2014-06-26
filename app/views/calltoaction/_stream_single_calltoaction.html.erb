@@ -12,7 +12,7 @@
                   <!-- OVERVIDEO AREA -->
                   <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
                   <!-- OVERVIDEO TITLE -->
-                  <div id="home-overvideo-title-<%= calltoaction.id %>"><%= render partial: "/calltoaction/overvideo_play", locals: { calltoaction: calltoaction } %></div>
+                  <div id="home-overvideo-title-<%= calltoaction.id %>"><%= render partial: "/calltoaction/overvideo_video_home", locals: { calltoaction: calltoaction } %></div>
                   <!-- OVERVIDEO FEEDBACK -->
                   <div id="home-overvideo-feedback-<%= calltoaction.id %>"></div>
                 </div>
@@ -25,19 +25,22 @@
 
         <!-- UNDERVIDEO AREA -->
         <div class="row">
-          <div class="col-md-12 text-center">
-            <h3 style="margin: 0 0 15px 0;"><%= calltoaction.title %></h3>
-          </div>
+
           <% if calltoaction.description %>
-	          <div class="col-md-12 text-left">
-	            <h3 style="margin: 0 0 15px 0;"><%= calltoaction.description %></h3>
+	          <div class="col-md-12 text-left" style="padding: 0 30px 0 30px;">
+	            <h4><%= calltoaction.description %></h4>
 	          </div>
           <% end %>
+
+          <div class="col-xs-12">
+            <%= render partial: "/calltoaction/undervideo_interactions", locals: { calltoaction: calltoaction } %>
+          </div>
+
           <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">
             <!-- UNDERVIDEO FEEDBACK -->               
           </div>
 
-          <div class="col-md-12" id="share-footer">
+          <div class="col-md-12" id="share-footer-<%= calltoaction.id %>">
             <!-- SHARE FOOTER -->
           </div>
         </div>
