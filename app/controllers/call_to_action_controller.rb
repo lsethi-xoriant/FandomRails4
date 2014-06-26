@@ -19,20 +19,32 @@ class CallToActionController < ApplicationController
   end
 
   def append_calltoaction
-    render_call_to_action_str = String.new
-    stream_call_to_action = Array.new
+    render_calltoactions_str = String.new
+    calltoactions = Array.new
 
     stream_call_to_action_to_render = CallToAction.active.offset(params[:offset]).limit(3)
     
     stream_call_to_action_to_render.each do |calltoaction|
-      stream_call_to_action << calltoaction
-      render_call_to_action_str = render_call_to_action_str + (render_to_string "/calltoaction/_stream_single_calltoaction", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
+      calltoactions << calltoaction
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/calltoaction/_stream_single_calltoaction", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
+    end
+
+    calltoactions_during_video_interactions_second = Hash.new
+    calltoactions.each do |calltoaction|
+      interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")
+      if(interactions_overvideo_during.any?)
+        calltoactions_during_video_interactions_second[calltoaction.id] = Hash.new
+        interactions_overvideo_during.each do |interaction|
+          calltoactions_during_video_interactions_second[calltoaction.id][interaction.id] = interaction.seconds
+        end
+      end
     end
 
     response = Hash.new
     response = {
-      calltoactions: stream_call_to_action,
-      html_to_append: render_call_to_action_str
+      calltoactions_during_video_interactions_second: calltoactions_during_video_interactions_second,
+      calltoactions: calltoactions,
+      html_to_append: render_calltoactions_str
     }
     
     respond_to do |format|
@@ -221,8 +233,12 @@ class CallToActionController < ApplicationController
     end
 
     response["main_reward_counter"] = counter_about_user_reward(params[:main_reward_name])
-    
-    response["feedback"] = render_to_string "/calltoaction/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
+
+    if interaction.when_show_interaction == "SEMPRE_VISIBILE"
+      response["feedback"] = render_to_string "/calltoaction/_undervideo_interaction", locals: { interaction: interaction }, layout: false, formats: :html 
+    else
+      response["feedback"] = render_to_string "/calltoaction/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
+    end
 
     respond_to do |format|
       format.json { render :json => response.to_json }

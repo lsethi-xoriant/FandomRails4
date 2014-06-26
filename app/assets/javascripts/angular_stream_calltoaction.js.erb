@@ -93,7 +93,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset })
       .success(function(data) {
         $scope.calltoaction_offset = $scope.calltoaction_offset + data.calltoactions.length
+
+        hash_to_append = data.calltoactions_during_video_interactions_second;
+        hash_main = $scope.calltoactions_during_video_interactions_second;
+        for(var name in hash_to_append) { hash_to_append[name] = hash_to_append[name]; }
+        $scope.calltoactions_during_video_interactions_second = hash_to_append;
+
         $scope.calltoactions.push(data.calltoactions);
+
         $("#calltoaction-stream").append(data.html_to_append);
 
         if(!($scope.calltoactions_count > $scope.calltoaction_offset))
@@ -321,7 +328,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             //$(".button-inter-" + interaction_id).attr('disabled', false);
             //$(".button-inter-" + interaction_id).removeAttr('onclick');
             
-            if(when_show_interaction != "SEMPRE_VISIBILE") {
+            if(when_show_interaction == "SEMPRE_VISIBILE") {
+
+              activeMarker(interaction_id);
+              updateUserRewardInView(data.main_reward_counter);
+
+              $("#home-undervideo-interaction-" + interaction_id).html(data.feedback); 
+
+            } else {
 
               if(data.next_call_to_action) {
                 updateNextCallToAction(data.next_call_to_action, calltoaction_id)
@@ -340,9 +354,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
                 $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
               }
 
-            } else {
-              activeMarker(interaction_id);
-              updateUserRewardInView(data.main_reward_counter);
             }
 
           }).error(function() {

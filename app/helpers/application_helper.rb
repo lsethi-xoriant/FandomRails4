@@ -2,6 +2,10 @@ require 'fandom_utils'
 
 module ApplicationHelper
 
+	def get_user_interaction_from_interaction(interaction, user)
+		user.user_interactions.find_by_interaction_id(interaction.id)
+	end
+
 	def get_max_call_to_action_reward(reward_name, calltoaction)
 		counter = predict_max_cta_outcome(calltoaction, current_user_or_anonymous_user).reward_name_to_counter[reward_name]
 		counter.nil? ? 0 : counter   

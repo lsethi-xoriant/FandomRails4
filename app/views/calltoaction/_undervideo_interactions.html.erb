@@ -1,3 +1,5 @@
 <% calltoaction.interactions.find_all_by_when_show_interaction("SEMPRE_VISIBILE").each do |interaction| %>
-  <%= render partial: "/calltoaction/undervideo_interaction", locals: { interaction: interaction } %>
+  <div id="home-undervideo-interaction-<%= interaction.id %>">
+    <%= render partial: "/calltoaction/undervideo_interaction", locals: { interaction: interaction } %>
+  </div>
 <% end %>
