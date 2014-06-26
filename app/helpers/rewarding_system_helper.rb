@@ -31,11 +31,18 @@ module RewardingSystemHelper
     attribute :errors #, type: Hash
     
     def initialize
-      self.matching_rules = []
+      self.matching_rules = Set.new
       self.reward_name_to_counter = {}
       self.reward_name_to_counter.default = 0
       self.unlocks = Set.new
       self.errors = []
+    end
+    
+    def merge!(other)
+      merge_rewards(self.reward_name_to_counter, other.reward_name_to_counter)          
+      self.matching_rules += other.matching_rules 
+      self.unlocks += other.unlocks 
+      self.errors += other.errors 
     end
   end
 
@@ -360,6 +367,26 @@ module RewardingSystemHelper
     user_interaction = get_mocked_user_interaction(interaction, user, interaction_is_correct)
     context = prepare_rules_and_context(user_interaction, nil)    
     context.compute_outcome_just_for_interaction(user_interaction)
+  end
+
+  def predict_max_cta_outcome(cta)
+    if cta.interactions.count == 0
+      Outcome.new
+    else
+      first_interaction = cta.interactions[0]
+      other_interactions = cta.interactions[1 .. -1]
+  
+      user_interaction = get_mocked_user_interaction(first_interaction, user, true)
+      context = prepare_rules_and_context(user_interaction, nil)    
+      outcome = context.compute_outcome_just_for_interaction(user_interaction)
+  
+      cta.other_interactions.each do |interaction|
+        new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+        outcome.merge!(new_outcome)
+      end
+      
+      outcome
+    end
   end
 
 end
