@@ -2,8 +2,13 @@ require 'fandom_utils'
 
 module ApplicationHelper
 
-	def counter_about_user_reward(reward)
-		user_reward = current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name='#{reward}'").first
+	def get_max_call_to_action_reward(reward_name, calltoaction)
+		counter = predict_max_cta_outcome(calltoaction, current_user_or_anonymous_user).reward_name_to_counter[reward_name]
+		counter.nil? ? 0 : counter   
+	end
+
+	def counter_about_user_reward(reward_name)
+		user_reward = current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name='#{reward_name}'").first
 		user_reward ? user_reward.counter : 0
 	end
 

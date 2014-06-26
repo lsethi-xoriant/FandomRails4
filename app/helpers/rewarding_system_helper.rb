@@ -29,6 +29,13 @@ module RewardingSystemHelper
     attribute :reward_name_to_counter #, type: Hash[String, Int]
     attribute :unlocks #, type: Set
     attribute :errors #, type: Hash
+
+    # Merges the rewards won with a single rule with those already won.
+    def self.merge_rewards(reward_name_to_counter, normalized_rule_rewards)
+      normalized_rule_rewards.each do |k, v|
+        reward_name_to_counter[k] += v
+      end
+    end
     
     def initialize
       self.matching_rules = Set.new
@@ -39,7 +46,7 @@ module RewardingSystemHelper
     end
     
     def merge!(other)
-      merge_rewards(self.reward_name_to_counter, other.reward_name_to_counter)          
+      Outcome.merge_rewards(self.reward_name_to_counter, other.reward_name_to_counter)          
       self.matching_rules += other.matching_rules 
       self.unlocks += other.unlocks 
       self.errors += other.errors 
@@ -95,7 +102,7 @@ module RewardingSystemHelper
           if rule.condition.nil? || rule.condition.call
             Rails.logger.info("rule #{rule.name} evaluate to true") 
             outcome.matching_rules << rule.name
-            merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
+            Outcome.merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
             merge_user_rewards(self.user_rewards, rule.normalized_rewards)
             outcome.unlocks += rule.unlocks
             self.user_unlocked_names += rule.unlocks
@@ -162,13 +169,6 @@ module RewardingSystemHelper
     
     def interaction_is_included_in_options?(options, label, element)
       !options[:interactions].key?(label) || options[:interactions][label].include?(element) 
-    end
-    
-    # Merges the rewards won with a single rule with those already won.
-    def merge_rewards(reward_name_to_counter, normalized_rule_rewards)
-      normalized_rule_rewards.each do |k, v|
-        reward_name_to_counter[k] += v
-      end
     end
 
     # Similar to merge_rewards, but the value of the map is a MockedUserReward
@@ -331,8 +331,8 @@ module RewardingSystemHelper
     if current_user.nil?
       MockedUserInteraction.new(interaction, user, 1, interaction_is_correct)
     else
-      user_interaction = find_by_user_id_and_interaction_id(user_id, interaction_id)
-      MockedUserInteraction.new(interaction, user, user_interaction.counter, interaction_is_correct)  
+      user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user.id, interaction.id)
+      MockedUserInteraction.new(interaction, user, (user_interaction.nil? ? 1 : user_interaction.counter), interaction_is_correct)  
     end
   end
 
@@ -369,7 +369,7 @@ module RewardingSystemHelper
     context.compute_outcome_just_for_interaction(user_interaction)
   end
 
-  def predict_max_cta_outcome(cta)
+  def predict_max_cta_outcome(cta, user)
     if cta.interactions.count == 0
       Outcome.new
     else
@@ -380,7 +380,7 @@ module RewardingSystemHelper
       context = prepare_rules_and_context(user_interaction, nil)    
       outcome = context.compute_outcome_just_for_interaction(user_interaction)
   
-      cta.other_interactions.each do |interaction|
+      other_interactions.each do |interaction|
         new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
         outcome.merge!(new_outcome)
       end

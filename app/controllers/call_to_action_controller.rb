@@ -22,7 +22,7 @@ class CallToActionController < ApplicationController
     render_call_to_action_str = String.new
     stream_call_to_action = Array.new
 
-    stream_call_to_action_to_render = Calltoaction.active.offset(params[:offset]).limit(3)
+    stream_call_to_action_to_render = CallToAction.active.offset(params[:offset]).limit(3)
     
     stream_call_to_action_to_render.each do |calltoaction|
       stream_call_to_action << calltoaction
