@@ -1,7 +1,8 @@
 module RewardingRuleCheckerHelper
   include ModelHelper
 
-  def init(context, allowed_options, allowed_interactions)
+  # This method is needed just to overcome scoping issues with helpers. It should be invoked before check_rules_aux.
+  def init_check_rules_aux(context, allowed_options, allowed_interactions)
     @context = context
     @allowed_options = allowed_options
     @allowed_interactions = allowed_interactions
@@ -12,7 +13,7 @@ module RewardingRuleCheckerHelper
   #@all_cta_names = get_all_cta_names()
 
   # Returns a list of strings describing errors in rules, or the empty list if there are no errors
-  def check_rules(rules_buffer)
+  def check_rules_aux(rules_buffer)
     begin
       @context.instance_eval(rules_buffer)
     rescue Exception => e

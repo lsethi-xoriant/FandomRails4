@@ -292,21 +292,16 @@ module RewardingSystemHelper
     context        
   end
   
+  def check_rules(buffer)
+    init_check_rules_aux(Context.new(rules: []), Rule::ALLOWED_OPTIONS, Rule::ALLOWED_INTERACTIONS)
+    check_rules_aux(result)
+  end
+  
   def get_rules_buffer()
-    # TODO: cache should be invalidated and rules should be checked on save
+    # TODO: cache should be invalidated on save
 #    cache_short('rewarding_rules') do 
-    result = Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
-    init(Context.new(rules: []), Rule::ALLOWED_OPTIONS, Rule::ALLOWED_INTERACTIONS)
-    errors = check_rules(result)
-    if errors.any?
-      logger.error("rule errors:")
-      errors.each do |error|
-        logger.error(error)
-      end
-    end
-    result
+    Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
 #   end
-    
   end
   
   def compute_and_save_outcome(user_interaction, rules_buffer = nil)
