@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140625155307) do
+ActiveRecord::Schema.define(:version => 20140626133513) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20140625155307) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "slug"
+    t.text     "iframe"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"

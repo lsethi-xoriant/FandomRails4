@@ -16,9 +16,13 @@
                   <!-- OVERVIDEO FEEDBACK -->
                   <div id="home-overvideo-feedback-<%= calltoaction.id %>"></div>
                 </div>
-            <% else %>
+            <% elsif calltoaction.media_type == "IMAGE" %>
             	<!-- IMAGE -->
               <img src="<%= calltoaction.image %>" style="width: 100%; margin-bottom: 15px;">
+            <% elsif calltoaction.media_type == "IFRAME" %>
+              <div class="video flex-video widescreen" style="background:#222;">  
+                <%= calltoaction.iframe.html_safe %>
+              </div>
             <% end %>
           </div>
         </div>
