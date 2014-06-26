@@ -24,10 +24,10 @@ class CallToAction < ActiveRecord::Base
 
   accepts_nested_attributes_for :interactions
 
-  scope :active, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR (tags.text<>'step' AND tags.text<>'extra' AND tags.text<>'youtube'))", Time.now).order("activated_at DESC") }
-  scope :active_no_order, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR (tags.text<>'step' AND tags.text<>'extra' AND tags.text<>'youtube'))", Time.now) }
+  scope :active, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR (tags.name<>'step' AND tags.name<>'extra' AND tags.name<>'youtube'))", Time.now).order("activated_at DESC") }
+  scope :active_no_order, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR (tags.name<>'step' AND tags.name<>'extra' AND tags.name<>'youtube'))", Time.now) }
 
-  scope :future_no_order, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR (tags.text<>'step' AND tags.text<>'extra' AND tags.text<>'youtube'))", Time.now) }
+  scope :future_no_order, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR (tags.name<>'step' AND tags.name<>'extra' AND tags.name<>'youtube'))", Time.now) }
 
   def image_url
     image.url
