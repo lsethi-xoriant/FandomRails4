@@ -4,11 +4,11 @@
 //= require angular
 //= require angular-resource
 //= require angular-route
-//= require ng-table
-//= require angular_fandom
-//= require angular_notice
-//= require angular_calltoaction
-//= require angular_stream_calltoaction
+//= require angularjs/ng-table
+//= require angularjs/fandom
+//= require angularjs/notice
+//= require angularjs/calltoaction
+//= require angularjs/stream_calltoaction
 //= require bootstrap
 //= require bootstrap-notify
 //= require bootstrap-fileupload
