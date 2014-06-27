@@ -16,6 +16,8 @@ Fandom::Application.routes.draw do
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
+    resources :home_launchers
+
     match "winner", :to => "easyadmin#index_winner"
     match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
 
@@ -164,6 +166,8 @@ Fandom::Application.routes.draw do
       get "calltoaction/show" => "call_to_actions#show", defaults: { format: 'json' }
     end
   end
+
+  match "/update_call_to_action_in_page_with_tag", :to => "application#update_call_to_action_in_page_with_tag", defaults: { format: 'json' }
 
   match "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
   match "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }

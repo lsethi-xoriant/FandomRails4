@@ -13,9 +13,8 @@ button, h1, h2, h3, h4, h5, h6, li {
 
 .bg-fluid {
     background-image: url(/assets/bg.jpg);
-    background-size: 100% auto; 
     background-repeat: no-repeat; 
-    background-color: #010437;
+    background-attachment: fixed;
 }
 
 .bg-small {
@@ -51,6 +50,19 @@ button, h1, h2, h3, h4, h5, h6, li {
     //position: relative;
 }
 
+.undervideo {
+    margin-bottom: 30px;
+    h2 {
+        color: #000;
+    }
+}
+
+.overvideo {
+    h2 {
+        color: #fff;
+    }
+}
+
 .img-circle-overvideo {
     margin: 0 auto; 
     width: 100%; 
@@ -68,6 +80,7 @@ button, h1, h2, h3, h4, h5, h6, li {
 .img-circle-overvideo.enable:hover, .img-circle-overvideo.enable:focus {
     border-color: #eab83e;
 }
+
 .yellow-marker {
     @extend .btn;
     @extend .disabled;
@@ -629,7 +642,7 @@ span.notify {
                 }
                 //CHOISE 
                 .choice {
-                    .thumbnail { background-color: #000; margin-bottom:0;}
+                    .thumbnail { /*background-color: #000;*/ margin-bottom:0;}
                     a.thumbnail:hover { 
                         img { opacity: 0.5; } 
                     }
@@ -711,7 +724,7 @@ span.notify {
     padding-top: 25px;
     padding-bottom: 67.5%;
     height: 0;
-    margin-bottom: 16px;
+    /*margin-bottom: 16px;*/
     overflow: hidden;
 }
  

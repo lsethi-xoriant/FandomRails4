@@ -13,6 +13,21 @@
 	    <li class="<%= "active" if page == "winner" %>"><a href="/easyadmin/winner"><i class="fa fa-ticket"></i>Vincitori concorso</a>
 	    </li>
 
+	    <li class="dropdown <%= "active opened" if page == "carousel" %>"><a href="javascript:void(0);"><i class="fa fa-caret-square-o-right"></i>Carosello<span class="caret"></span></a>
+	      <ul class="sub-nav">
+	        <li>
+	          <a href="/easyadmin/home_launchers">
+	            <i class="fa fa-th-list"></i>Lista item
+	          </a>
+	        </li>
+	        <li>
+	          <a href="/easyadmin/home_launchers/new">
+	            <i class="fa fa-save"></i>Nuovo item
+	          </a>
+	        </li>
+	      </ul>
+	    </li>
+
 	    <% if can? :manage, :all %>
 		    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-dribbble"></i>CallToAction<span class="caret"></span></a>
 		      <ul class="sub-nav">

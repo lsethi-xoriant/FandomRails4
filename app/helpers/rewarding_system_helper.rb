@@ -305,25 +305,27 @@ module RewardingSystemHelper
   end
   
   def get_rules_buffer()
-    # TODO: cache should be invalidated on save
-#    cache_short('rewarding_rules') do 
-    Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
-#   end
+    # TODO: caching
+    #cache_short('rewarding_rules') do 
+      Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
+    #end
   end
   
   def compute_and_save_outcome(user_interaction, rules_buffer = nil)
-    outcome = compute_outcome(user_interaction, rules_buffer)
-    if outcome.reward_name_to_counter.any? || outcome.unlocks.any?
-      log_event("reward event", "#{outcome.to_json}")
-      user = user_interaction.user
-      outcome.reward_name_to_counter.each do |reward_name, reward_counter|
-        UserReward.assign_reward(user, reward_name, reward_counter)
-      end          
-      outcome.unlocks.each do |reward_name|
-        UserReward.unlock_reward(user, reward_name)
-      end          
+    benchmark("Compute and save outcome") do
+      outcome = compute_outcome(user_interaction, rules_buffer)
+      if outcome.reward_name_to_counter.any? || outcome.unlocks.any?
+        log_event("reward event", "#{outcome.to_json}")
+        user = user_interaction.user
+        outcome.reward_name_to_counter.each do |reward_name, reward_counter|
+          UserReward.assign_reward(user, reward_name, reward_counter)
+        end          
+        outcome.unlocks.each do |reward_name|
+          UserReward.unlock_reward(user, reward_name)
+        end          
+      end
+      outcome
     end
-    outcome
   end
 
 
@@ -364,28 +366,32 @@ module RewardingSystemHelper
   end
 
   def predict_outcome(interaction, user, interaction_is_correct)
-    user_interaction = get_mocked_user_interaction(interaction, user, interaction_is_correct)
-    context = prepare_rules_and_context(user_interaction, nil)    
-    context.compute_outcome_just_for_interaction(user_interaction)
+    benchmark("Predict outcome") do
+      user_interaction = get_mocked_user_interaction(interaction, user, interaction_is_correct)
+      context = prepare_rules_and_context(user_interaction, nil)    
+      context.compute_outcome_just_for_interaction(user_interaction)
+    end
   end
 
   def predict_max_cta_outcome(cta, user)
-    if cta.interactions.count == 0
-      Outcome.new
-    else
-      first_interaction = cta.interactions[0]
-      other_interactions = cta.interactions[1 .. -1]
-  
-      user_interaction = get_mocked_user_interaction(first_interaction, user, true)
-      context = prepare_rules_and_context(user_interaction, nil)    
-      outcome = context.compute_outcome_just_for_interaction(user_interaction)
-  
-      other_interactions.each do |interaction|
-        new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
-        outcome.merge!(new_outcome)
+    benchmark("Predict max CTA outcome") do
+      if cta.interactions.count == 0
+        Outcome.new
+      else
+        first_interaction = cta.interactions[0]
+        other_interactions = cta.interactions[1 .. -1]
+    
+        user_interaction = get_mocked_user_interaction(first_interaction, user, true)
+        context = prepare_rules_and_context(user_interaction, nil)    
+        outcome = context.compute_outcome_just_for_interaction(user_interaction)
+    
+        other_interactions.each do |interaction|
+          new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+          outcome.merge!(new_outcome)
+        end
+        
+        outcome
       end
-      
-      outcome
     end
   end
 

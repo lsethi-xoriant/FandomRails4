@@ -1,7 +1,7 @@
 class CallToAction < ActiveRecord::Base
   attr_accessible :title, :video_url, :image, :activated_at, :mobile_url, :interactions_attributes,
   					:activation_date, :activation_time, :cta_template_type, :slug, :enable_disqus, :media_type,
-            :secondary_id, :description
+            :secondary_id, :description, :iframe
 
   extend FriendlyId
   friendly_id :title, use: :slugged
@@ -24,7 +24,7 @@ class CallToAction < ActiveRecord::Base
 
   accepts_nested_attributes_for :interactions
 
-  scope :active, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR (tags.name<>'step' AND tags.name<>'extra' AND tags.name<>'youtube'))", Time.now).order("activated_at DESC") }
+  scope :active, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR tags.name NOT IN (?))", Time.now, ["step"]).order("activated_at DESC") }
   scope :active_no_order, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR (tags.name<>'step' AND tags.name<>'extra' AND tags.name<>'youtube'))", Time.now) }
 
   scope :future_no_order, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR (tags.name<>'step' AND tags.name<>'extra' AND tags.name<>'youtube'))", Time.now) }
@@ -34,7 +34,7 @@ class CallToAction < ActiveRecord::Base
   end
 
   def media_type_enum
-    ["IMAGE", "VIDEO", "VOID"]
+    ["IMAGE", "VIDEO", "IFRAME", "VOID"]
   end
 
   def check_video_interaction

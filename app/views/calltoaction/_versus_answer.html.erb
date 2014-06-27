@@ -8,7 +8,7 @@
           <h4><%= interaction_answer_percentage(interaction, answer) %>%</h4>
         </div>
       <% end %>
-      <a href="#" class="thumbnail"><img src="<%= answer.image(:medium) %>" alt="..."></a>
+      <a href="javascript: void(0)" class="thumbnail"><img src="<%= answer.image(:medium) %>" alt="..."></a>
     </div>
   </div>
 
@@ -26,7 +26,7 @@
   <!-- BUTTON SECTION -->
   <div class="row">
     <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-      <button type="button" class="btn btn-info btn-block <%= "active" if user_interaction %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
+      <button type="button" class="btn btn-info btn-block <%= "active" if user_interaction && answer.id == user_interaction.answer_id %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
     </div>
   </div>
 

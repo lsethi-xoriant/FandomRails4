@@ -1,6 +1,8 @@
 <%= render partial: "/application/user_bar" %>
 
-<script type="text/javascript" src="/assets/jquery.jcarousel.js"></script>
+<%= render partial: "/application/home_launchers" %>
+
+
 
 <div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= CallToAction.active.count %>', <%= @calltoactions_during_video_interactions_second.to_json %>)">   
 
@@ -8,10 +10,14 @@
   <%#= render partial: "/application/header" %>
 
   <div class="row">
+    <div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
+      <%= render partial: "/application/home_filters" %>
+    </div>
+  </div>
+
+  <div class="row">
     <div id="calltoaction-stream" class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-      <% @calltoactions.each do |calltoaction| %>
-        <%= render partial: "/calltoaction/stream_single_calltoaction", locals: { calltoaction: calltoaction, type: "" } %>
-      <% end %>
+      <%= render partial: "/calltoaction/stream_calltoactions", locals: { calltoactions: @calltoactions } %>
     </div>
   </div>
 

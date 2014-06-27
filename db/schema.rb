@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140625155307) do
+ActiveRecord::Schema.define(:version => 20140626142603) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20140625155307) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "slug"
+    t.text     "iframe"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
@@ -134,6 +135,19 @@ ActiveRecord::Schema.define(:version => 20140625155307) do
     t.datetime "attachment_updated_at"
   end
 
+  create_table "home_launchers", :force => true do |t|
+    t.text     "description"
+    t.string   "button"
+    t.string   "url"
+    t.boolean  "enable",             :default => true
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
   create_table "instant_win_prizes", :force => true do |t|
     t.string   "title",                  :null => false
     t.text     "description"
@@ -176,10 +190,11 @@ ActiveRecord::Schema.define(:version => 20140625155307) do
     t.integer  "user_id"
     t.text     "html_notice"
     t.datetime "last_sent"
-    t.boolean  "viewed",      :default => false
-    t.boolean  "read",        :default => false
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.boolean  "viewd"
+    t.boolean  "read"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.boolean  "viewed"
   end
 
   create_table "oauth_access_grants", :force => true do |t|
@@ -289,7 +304,6 @@ ActiveRecord::Schema.define(:version => 20140625155307) do
     t.boolean  "spendable"
     t.boolean  "countable"
     t.boolean  "numeric_display"
-    t.string   "name"
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
     t.string   "preview_image_file_name"
@@ -308,6 +322,7 @@ ActiveRecord::Schema.define(:version => 20140625155307) do
     t.string   "not_awarded_image_content_type"
     t.integer  "not_awarded_image_file_size"
     t.datetime "not_awarded_image_updated_at"
+    t.string   "name"
   end
 
   add_index "rewards", ["name"], :name => "index_rewards_on_name", :unique => true
