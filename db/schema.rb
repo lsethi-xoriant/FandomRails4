@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140626142603) do
+ActiveRecord::Schema.define(:version => 20140627105239) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -173,8 +173,8 @@ ActiveRecord::Schema.define(:version => 20140626142603) do
   create_table "interactions", :force => true do |t|
     t.string  "name"
     t.integer "seconds",               :default => 0
-    t.integer "cache_counter",         :default => 0
     t.string  "when_show_interaction"
+    t.boolean "required_to_complete"
     t.integer "resource_id"
     t.string  "resource_type"
     t.integer "call_to_action_id"
@@ -355,16 +355,23 @@ ActiveRecord::Schema.define(:version => 20140626142603) do
 
   create_table "tags", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.text     "description"
+    t.boolean  "locked"
   end
 
   add_index "tags", ["name"], :name => "index_tags_on_name", :unique => true
 
   create_table "tags_tags", :force => true do |t|
-    t.integer "tag_id"
-    t.integer "belongs_tag_id"
+    t.integer  "tag_id"
+    t.integer  "belongs_tag_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
+
+  add_index "tags_tags", ["belongs_tag_id"], :name => "index_tags_tags_on_belongs_tag_id"
+  add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
 
   create_table "user_comments", :force => true do |t|
     t.integer  "user_id"
@@ -389,7 +396,7 @@ ActiveRecord::Schema.define(:version => 20140626142603) do
     t.integer  "user_id",                       :null => false
     t.integer  "interaction_id",                :null => false
     t.integer  "answer_id"
-    t.integer  "counter",        :default => 0
+    t.integer  "counter",        :default => 1
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
   end

@@ -1,4 +1,4 @@
-class TagTag < ActiveRecord::Base
+class TagsTag < ActiveRecord::Base
 
   attr_accessible :tag_id, :belongs_tag_id
 
