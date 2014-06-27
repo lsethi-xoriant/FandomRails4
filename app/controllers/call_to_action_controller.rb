@@ -22,7 +22,11 @@ class CallToActionController < ApplicationController
     render_calltoactions_str = String.new
     calltoactions = Array.new
 
-    stream_call_to_action_to_render = CallToAction.active.offset(params[:offset]).limit(3)
+    if params[:tag_id].present?
+      stream_call_to_action_to_render = CallToAction.active.where("call_to_action_tags.tag_id=?", params[:tag_id]).offset(params[:offset]).limit(3)
+    else
+      stream_call_to_action_to_render = CallToAction.active.offset(params[:offset]).limit(3)
+    end
     
     stream_call_to_action_to_render.each do |calltoaction|
       calltoactions << calltoaction

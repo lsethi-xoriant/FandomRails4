@@ -167,6 +167,8 @@ Fandom::Application.routes.draw do
     end
   end
 
+  match "/update_call_to_action_in_page_with_tag", :to => "application#update_call_to_action_in_page_with_tag", defaults: { format: 'json' }
+
   match "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
   match "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }
   match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }

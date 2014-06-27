@@ -37,6 +37,45 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     initQuizWaitingAudio();
 
+    $("#append-other button").attr('disabled', false);
+    if($scope.calltoaction_offset >= $scope.calltoactions_count) {
+      $("#append-other button").hide();
+    } else {
+      $("#append-other button").show();
+    }
+
+  };
+
+  $window.updatePageWithTag = function(tag_id) {
+
+    $http.post("/update_call_to_action_in_page_with_tag", { tag_id: tag_id })
+      .success(function(data) {
+        
+        $scope.current_tag_id = tag_id; 
+
+        $scope.calltoactions = data.calltoactions;
+
+        $scope.calltoaction_offset = data.calltoactions.length;
+        $scope.calltoactions_count = data.calltoactions_count;
+
+        $scope.calltoactions_during_video_interactions_second = data.calltoactions_during_video_interactions_second;
+    
+        $("#calltoaction-stream").html(data.calltoactions_render);
+
+        angular.forEach($scope.calltoactions, function(sc) {
+          appendYTIframe(sc);
+        });
+
+        $("#append-other button").attr('disabled', false);
+        if($scope.calltoaction_offset >= $scope.calltoactions_count) {
+          $("#append-other button").hide();
+        } else {
+          $("#append-other button").show();
+        }
+
+      }).error(function() {
+        // ERROR.
+      });
   };
 
   $window.initQuizWaitingAudio = function() {
@@ -89,8 +128,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.appendCallToAction = function() {
     if($scope.calltoactions_count > $scope.calltoaction_offset) {
+
       $("#append-other button").attr('disabled', true);
-      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset })
+
+      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset, tag_id: $scope.current_tag_id })
       .success(function(data) {
         $scope.calltoaction_offset = $scope.calltoaction_offset + data.calltoactions.length
 
@@ -104,7 +145,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         $("#calltoaction-stream").append(data.html_to_append);
 
         if(!($scope.calltoactions_count > $scope.calltoaction_offset))
-          $("#append-other").remove();
+          $("#append-other button").hide();
 
         angular.forEach(data.calltoactions, function(calltoaction) {
           appendYTIframe(calltoaction);
