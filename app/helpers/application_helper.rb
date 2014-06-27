@@ -3,7 +3,7 @@ require 'fandom_utils'
 module ApplicationHelper
 
 	def get_tags_with_tag(tag_name)
-		Tag.includes(tags_tags: :belongs_tag).where("belongs_tags_tags_tags.name = ?", tag_name)
+		Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ?", tag_name)
 	end
 
 	def get_user_interaction_from_interaction(interaction, user)
