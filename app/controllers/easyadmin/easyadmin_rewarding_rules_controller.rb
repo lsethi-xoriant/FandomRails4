@@ -5,12 +5,10 @@ class Easyadmin::EasyadminRewardingRulesController < ApplicationController
   layout "admin"
 
   def index
-    #@rules = Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY)
+    @rules = Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY)
     @saved = true
-    rules = Setting.find_by_key("regole")
     if !rules
-      rules = Setting.create(:key => "regole", :value => "")
-      #@rules = Setting.create(:key => REWARDING_RULE_SETTINGS_KEY, :value => "")
+      @rules = Setting.create(:key => REWARDING_RULE_SETTINGS_KEY, :value => "")
     end
     @rules_value = rules.value
   end
