@@ -6,6 +6,7 @@ class Tag < ActiveRecord::Base
   has_many :call_to_action_tags
   has_many :reward_tags
   has_many :tags_tags
-  belongs_to :parent, :class_name => "Tag", :foreign_key => 'parent_id'
+  
+  accepts_nested_attributes_for :tags_tags
   
 end

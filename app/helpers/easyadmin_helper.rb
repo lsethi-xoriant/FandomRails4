@@ -113,6 +113,14 @@ module EasyadminHelper
     end
     link_to_function(name, "add_contest_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
   end
+  
+  def link_to_add_tag_fields(name, f, association)
+    new_object = TagField.new
+    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
+      render("/easyadmin/easyadmin/share-email-form", f: builder)
+    end
+    link_to_function(name, "add_share_email_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
+  end
 
   def link_to_remove_check_fields(name)
     link_to_function(name, "remove_check_fields(this)", class: "btn btn-warning btn-xs")
@@ -164,6 +172,10 @@ module EasyadminHelper
 
   def link_to_remove_contest_fields(name)
     link_to_function(name, "remove_contest_fields(this)", class: "btn btn-warning btn-xs")
+  end
+  
+  def link_to_remove_tag_fields(name)
+    link_to_function(name, "remove_tag_fields(this)", class: "btn btn-warning btn-xs")
   end
 
 end

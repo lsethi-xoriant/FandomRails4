@@ -1,0 +1,104 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "tags" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>Nuovo TAG</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if @tag.errors.any? %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p>Errori nel salvataggio del tag:</p>
+                <p>
+                  <ul>
+                    <% @cta.errors.full_messages.each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% elsif flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <h3>Dati generali</h3>
+    <hr/>
+    
+    <%= form_for @tag, url: { action: "save" }, multipart: true do |f| %>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+              <label class="text-input">Titolo</label>
+              <%= f.text_field :name, :class => "form-control" %>
+          </div>
+          <div class="form-group">
+              <label class="text-input">Descrizione</label>
+              <%= f.text_area :description, :class => "form-control", rows: 3 %>
+          </div>
+          
+          <div class="col-sm-6">
+        	<label class="text-input">Tags padre</label>
+            <%= text_field_tag :tag_list, @tag_list, { id: "s2_tokenization", class: "form-control" } %>
+            <span class="help-block">Per separare i TAG digita virgola</span>
+          </div>
+          
+          <div class="col-lg-12">
+            <label>METADATI</label>
+            <p style="float: right;">
+              <%= link_to_add_tag_fields "AGGIUNGI METADATO", f, :tag_field %>
+            </p>             
+            <hr style="margin-top: 10px; margin-bottom: 10px;" />
+
+            <div id="tmp-tagfield-add"></div>
+
+            <%= f.fields_for :tag_fields do |builder| %>
+              <% if builder.object.resource_type == "Play" %>
+                <%= render 'tag-field-form', :f => builder %>
+              <% end %>
+            <% end %>
+          </div>
+
+        </div>
+
+      </div>
+      
+    </div>
+    
+</div>
+
+<script type="text/javascript">
+
+  tl = <%= raw(Tag.select("name").map(&:name).to_json) %>;
+  $(document).ready(function() {
+    $('#s2_tokenization').select2({
+      placeholder: "",
+      tags: tl,
+      tokenSeparators: [","]
+    })
+  });
+
+  function add_tag_fields(link, association, content) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $(link).parent().parent().parent().find(".panel-body").prepend(content.replace(regexp, new_id));
+  }
+
+  function remove_tag_fields(link) {
+    $(link).parent().parent().parent().remove();
+  }
+
+</script>
