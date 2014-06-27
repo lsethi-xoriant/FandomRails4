@@ -18,13 +18,43 @@ class ApplicationController < ActionController::Base
 
   def index
     @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
-    @calltoactions_during_video_interactions_second = Hash.new
-    @calltoactions.each do |calltoaction|
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+  end
+
+  def update_call_to_action_in_page_with_tag
+
+    if params[:tag_id].present?
+      calltoactions_count = CallToAction.active.where("call_to_action_tags.tag_id=?", params[:tag_id]).count
+      calltoactions = CallToAction.active.where("call_to_action_tags.tag_id=?", params[:tag_id]).limit(3)
+    else
+      calltoactions_count = CallToAction.active.count
+      calltoactions = CallToAction.active.limit(3)
+    end
+
+    render_calltoactions_str = (render_to_string "/calltoaction/_stream_calltoactions", locals: { calltoactions: calltoactions }, layout: false, formats: :html)
+
+    response = Hash.new
+    response = {
+      calltoactions_render: render_calltoactions_str,
+      calltoactions: calltoactions,
+      calltoactions_count: calltoactions_count,
+      calltoactions_during_video_interactions_second: initCallToActionsDuringVideoInteractionsSecond(calltoactions)
+
+    }
+  
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+  end
+
+  def initCallToActionsDuringVideoInteractionsSecond(calltoactions)
+    calltoactions_during_video_interactions_second = Hash.new
+    calltoactions.each do |calltoaction|
       interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")
       if(interactions_overvideo_during.any?)
-        @calltoactions_during_video_interactions_second[calltoaction.id] = Hash.new
+        calltoactions_during_video_interactions_second[calltoaction.id] = Hash.new
         interactions_overvideo_during.each do |interaction|
-          @calltoactions_during_video_interactions_second[calltoaction.id][interaction.id] = interaction.seconds
+          calltoactions_during_video_interactions_second[calltoaction.id][interaction.id] = interaction.seconds
         end
       end
     end

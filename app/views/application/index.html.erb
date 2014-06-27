@@ -1,35 +1,8 @@
 <%= render partial: "/application/user_bar" %>
 
-<% if HomeLauncher.active.any? %>
-  <div id="home-carousel" class="carousel slide" data-ride="carousel">
-    <!-- Indicators -->
-    <ol class="carousel-indicators">
-      <% i = 0 %>
-      <% HomeLauncher.active.each do |home_launcher| %>
-        <li data-target="#home-carousel" data-slide-to="0" class="<%= "active" if i == 0 %>"></li>
-        <% i = i + 1 %>
-      <% end %>
-    </ol>
-    <div class="carousel-inner">
-      <% i = 0 %>
-      <% HomeLauncher.active.each do |home_launcher| %>
-        <div class="item <%= "active" if i == 0 %>" style="background: url('<%= home_launcher.image %>') no-repeat center top; background-size: cover;">
-          <!--<img src="http://placehold.it/1000x500">-->
-          <div class="container">
-            <div class="carousel-caption">
-              <!--<h1>Example headline.</h1>-->
-              <p><%= home_launcher.description %></p>
-              <h3><a class="btn btn-lg btn-primary" href="<%= home_launcher.url %>" role="button"><%= home_launcher.button %></a></h3>                
-            </div>
-          </div>
-        </div>
-        <% i = i + 1 %>
-      <% end %>
-    </div>
-    <a class="left carousel-control" href="#home-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-    <a class="right carousel-control" href="#home-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
-  </div>
-<% end %>
+<%= render partial: "/application/home_launchers" %>
+
+
 
 <div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= CallToAction.active.count %>', <%= @calltoactions_during_video_interactions_second.to_json %>)">   
 
@@ -37,10 +10,14 @@
   <%#= render partial: "/application/header" %>
 
   <div class="row">
+    <div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
+      <%= render partial: "/application/home_filters" %>
+    </div>
+  </div>
+
+  <div class="row">
     <div id="calltoaction-stream" class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-      <% @calltoactions.each do |calltoaction| %>
-        <%= render partial: "/calltoaction/stream_single_calltoaction", locals: { calltoaction: calltoaction, type: "" } %>
-      <% end %>
+      <%= render partial: "/calltoaction/stream_calltoactions", locals: { calltoactions: @calltoactions } %>
     </div>
   </div>
 

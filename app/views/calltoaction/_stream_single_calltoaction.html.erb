@@ -30,7 +30,11 @@
         <!-- UNDERVIDEO AREA -->
         <div class="row">
 
-          <% if calltoaction.description %>
+          <div class="col-md-12 text-center" style="padding: 0 30px 0 30px;">
+            <h2><%= calltoaction.title %></h2>
+          </div>
+
+          <% if calltoaction.description.present? %>
 	          <div class="col-md-12 text-left" style="padding: 0 30px 0 30px;">
 	            <h4><%= calltoaction.description %></h4>
 	          </div>

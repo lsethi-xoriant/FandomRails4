@@ -65,7 +65,7 @@ class Easyadmin::EasyadminController < ApplicationController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 30
 
-    @tag_list = Tag.page(page).per(per_page).order("text ASC")
+    @tag_list = Tag.page(page).per(per_page).order("name ASC")
 
     @page_size = @tag_list.num_pages
     @page_current = page
