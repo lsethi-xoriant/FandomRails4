@@ -364,9 +364,14 @@ ActiveRecord::Schema.define(:version => 20140627105239) do
   add_index "tags", ["name"], :name => "index_tags_on_name", :unique => true
 
   create_table "tags_tags", :force => true do |t|
-    t.integer "tag_id"
-    t.integer "belongs_tag_id"
+    t.integer  "tag_id"
+    t.integer  "other_tag_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
+
+  add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
+  add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
 
   create_table "user_comments", :force => true do |t|
     t.integer  "user_id"
