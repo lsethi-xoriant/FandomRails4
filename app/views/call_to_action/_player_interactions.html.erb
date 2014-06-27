@@ -1,0 +1,93 @@
+
+<div class="row">
+    <div class="video-player-wrapper col-xs-12 col-sm-10 col-sm-offset-1">
+      <div id="video-player">
+        <div id="video-content">
+          <div id="cta-video" class="cta-video video-wrapper"></div>
+        </div>
+        <div id="video-share" class="row">
+          <div id="social-networks" class="clearfix">
+            <p class="col-xs-4 text">Condividi</p>
+            <p id="links" class="col-xs-4"><!-- placeholder social share --></p>
+            <p class="col-xs-4 guadagna">Guadagna <span class="text-red">+1</span></p>
+          </div>
+          <div id="download" class="clearfix">
+            <p class="col-xs-4 text">Scarica la ricetta</p>
+            <p id="ricetta" class="col-xs-3"><!-- placeholder download --></p>
+            <div class="col-xs-5 hidden-xs"><p style="display: inline;">Seguici su</p>
+              <div class="fb-like" style="float: right; margin: 0 20px 0 0; padding: 0;" data-href="https://www.facebook.com/AmadoriPeopoll" data-width="125" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="sharemail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Share via mail</h4>
+          </div>
+          <div class="modal-body">
+          
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Inserisci email">
+              <input type="hidden" id="url" name="url" value="<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}/#{@current_cta.id}" %>">
+            </div>
+            <button onclick="shareMail();" class="btn btn-default">Condividi</button>
+          
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">chiudi</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>
+
+<% interactions = @current_cta.interactions.where("resource_type='Quiz'").sort_by{|e| e[:seconds]} %>
+
+<script type="text/javascript">
+	
+	//inizializzazione variabili globali per gestione interazioni
+
+	//lista interazioni provenienti dal controller
+	interactions = <%= raw(interactions.to_json) %>;
+
+	//id della cta attiva
+	ctaid = <%= @current_cta.id %>;
+
+	//titolo della cta
+	ctatitle = "<%= @current_cta.title %>";
+
+	//url video della cta
+	ctaurl = "<%= @current_cta.video_url %>"
+
+	//data fine concorso
+	concorso_end = new Date("<%= ENV['JS_END_DATE'] %>");
+	
+	viewd_inter = new Array();
+	player_state = -1;
+    already_anser = new Array;
+    cta_completed = false;
+    play_pressed = false;
+
+</script>
+
+
+<% if @current_cta.media_type.name == "Youtube" %>
+	<script type="text/javascript" src="/assets/youtube_videoplayer.js"></script>
+<% elsif @current_cta.media_type.name == "Ooyala" %>
+	<script src='http://player.ooyala.com/v3/<%= ENV["OOYALA_PLAYER_ID"] %>'></script>
+	<script type="text/javascript" src="/assets/ooyala_videoplayer.js"></script>
+<% end %>
+	
+<% if current_user %>
+     <script type="text/javascript" src="/assets/interaction_logged_library.js"></script>
+<% else %>
+	<script type="text/javascript" src="/assets/interaction_notlogged_library.js"></script>
+<% end %>

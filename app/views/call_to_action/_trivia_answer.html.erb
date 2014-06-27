@@ -1,0 +1,15 @@
+<!-- ANSWER WITHOUT NEXT CALLTOACTION -->
+<% if user_interaction %>
+  <!-- CURRENT USER HAS ALREADY RESPONDED -->
+  <div class="col-xs-6 text-center" style="margin-bottom: 15px;">
+    <button class="btn btn-block <%= answer.correct ? "btn-success" : "btn-danger" %> <%=  user_interaction.answer_id == answer.id ? "active" : "disabled" %>"><%= answer.text %></button>
+  </div>
+
+<% else %>
+  <!-- CURRENT USER HAS NOT RESPONDED -->
+  <div class="col-xs-6 text-center" style="margin-bottom: 15px;">
+    <button class="btn btn-block btn-primary" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
+  </div>
+<% end %>
+                                      
+          

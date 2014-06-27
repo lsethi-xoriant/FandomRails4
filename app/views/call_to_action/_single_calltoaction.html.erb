@@ -1,0 +1,64 @@
+<div class="row cta">      
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="panel panel-default cta-page no-pad">
+      <div class="panel-body cta-panel no-pad">
+        <!-- MEDIA -->
+        <div class="row">
+          <div class="col-md-12">
+            <% if calltoaction.media_type == "VIDEO" %>
+                <div class="video flex-video widescreen" style="background:#222;">             
+                  <!-- IFRAME VIDEO -->
+                  <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-id="<%= calltoaction.id %>" secondary-calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= interaction_play_for_calltoaction(calltoaction).id %>"></div>
+                  <!-- OVERVIDEO AREA -->
+                  <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
+                  <!-- OVERVIDEO TITLE -->
+                  <div id="home-overvideo-title-<%= calltoaction.id %>"><%= render partial: "/call_to_action/overvideo_video_home", locals: { calltoaction: calltoaction } %></div>
+                  <!-- OVERVIDEO FEEDBACK -->
+                  <div id="home-overvideo-feedback-<%= calltoaction.id %>"></div>
+                </div>
+            <% elsif calltoaction.media_type == "IMAGE" %>
+              <!-- IMAGE -->
+              <img src="<%= calltoaction.image %>" style="width: 100%; margin-bottom: 15px;">
+            <% elsif calltoaction.media_type == "IFRAME" %>
+              <div class="video flex-video widescreen" style="background:#222;">  
+                <%= calltoaction.iframe.html_safe %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- UNDERVIDEO AREA -->
+        <div class="row">
+
+          <div class="col-md-12 text-center" style="padding: 0 30px 0 30px;">
+            <h2><%= calltoaction.title %></h2>
+          </div>
+
+          <% if calltoaction.description.present? %>
+            <div class="col-md-12 text-left" style="padding: 0 30px 0 30px;">
+              <h4><%= calltoaction.description %></h4>
+            </div>
+          <% end %>
+
+          <div class="col-xs-12">
+            <%= render partial: "/call_to_action/undervideo_interactions", locals: { calltoaction: calltoaction } %>
+          </div>
+
+          <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">
+            <!-- UNDERVIDEO FEEDBACK -->               
+          </div>
+
+          <div class="col-md-12" id="share-footer-<%= calltoaction.id %>">
+            <!-- SHARE FOOTER -->
+          </div>
+        </div>
+      </div>         
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-xs-12 text-center">
+          </div>
+        </div>
+      </div>
+    </div>        
+  </div>
+</div>
