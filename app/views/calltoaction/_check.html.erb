@@ -1,7 +1,7 @@
 <hr>
 <div class="row" style="margin-bottom: 15px;">
   <div class="col-xs-12" style="padding: 0 30px;">
-    <p><%= interaction.resource.description %></p>
+    <p><%= interaction.resource.description.html_safe %></p>
   </div>
 
   <% if current_user && current_user.user_interactions.find_by_interaction_id(interaction.id) %>

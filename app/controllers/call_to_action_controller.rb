@@ -236,7 +236,7 @@ class CallToActionController < ApplicationController
       response['outcome'] = nil
     end
 
-    response["main_reward_counter"] = counter_about_user_reward(params[:main_reward_name])
+    response["main_reward_counter"] = get_counter_about_user_reward(params[:main_reward_name])
 
     if interaction.when_show_interaction == "SEMPRE_VISIBILE"
       response["feedback"] = render_to_string "/calltoaction/_undervideo_interaction", locals: { interaction: interaction }, layout: false, formats: :html 

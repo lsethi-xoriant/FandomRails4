@@ -18,7 +18,7 @@
                 </a>
                 <h6>Nessuno</h6>
               </div>
-              <% Tag.all.each do |tag| %>
+              <% get_tags_with_tag("miniformat").each do |tag| %>
                 <div class="col-xs-4 col-sm-2 col-md-3 text-center">
                   <a href="javascript: void(0)" class="thumbnail" onclick="updatePageWithTag(<%= tag.id %>)">
                     <img src="http://placehold.it/320x260" alt="...">

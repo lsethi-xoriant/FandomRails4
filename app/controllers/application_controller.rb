@@ -39,7 +39,6 @@ class ApplicationController < ActionController::Base
       calltoactions: calltoactions,
       calltoactions_count: calltoactions_count,
       calltoactions_during_video_interactions_second: initCallToActionsDuringVideoInteractionsSecond(calltoactions)
-
     }
   
     respond_to do |format|

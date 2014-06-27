@@ -2,6 +2,10 @@ require 'fandom_utils'
 
 module ApplicationHelper
 
+	def get_tags_with_tag(tag_name)
+		Tag.includes(tags_tags: :belongs_tag).where("belongs_tags_tags_tags.name = ?", tag_name)
+	end
+
 	def get_user_interaction_from_interaction(interaction, user)
 		user.user_interactions.find_by_interaction_id(interaction.id)
 	end
@@ -11,8 +15,8 @@ module ApplicationHelper
 		counter.nil? ? 0 : counter   
 	end
 
-	def counter_about_user_reward(reward_name)
-		user_reward = current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name='#{reward_name}'").first
+	def get_counter_about_user_reward(reward_name)
+		user_reward = current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").first
 		user_reward ? user_reward.counter : 0
 	end
 
