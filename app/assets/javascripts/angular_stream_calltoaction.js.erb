@@ -145,7 +145,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         $("#calltoaction-stream").append(data.html_to_append);
 
         if(!($scope.calltoactions_count > $scope.calltoaction_offset))
-          $("#append-other").remove();
+          $("#append-other button").hide();
 
         angular.forEach(data.calltoactions, function(calltoaction) {
           appendYTIframe(calltoaction);
