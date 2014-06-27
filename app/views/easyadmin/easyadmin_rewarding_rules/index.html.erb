@@ -40,7 +40,7 @@
     <h3>Editor regole</h3>
     <hr/>
     <%= form_tag("/easyadmin/rules/save", method: "post") do %>
-    	<%= hidden_field_tag :key, "regole" %>
+    	<%= hidden_field_tag :key, REWARDING_RULE_SETTINGS_KEY %>
         <div class="row form-group">
             <div class="col-lg-3"><%= label_tag(:rules, "Elenco regole:") %></div>
             <div class="col-lg-8"><%= text_area_tag(:rules, @rules_value, :class => "form-control", size: "60x10") %> </div>
