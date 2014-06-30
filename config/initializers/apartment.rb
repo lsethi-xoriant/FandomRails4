@@ -31,7 +31,7 @@ Apartment.configure do |config|
   config.append_environment = false
 
   # supply list of database names for migrations to run on
-  config.tenant_names = Rails.application.config.sites.map { |site| site.id }.uniq
+  config.tenant_names = Rails.application.config.sites.select { |site| site.share_db.nil? }.map { |site| site.id }.uniq
 end
 
 ##
@@ -40,7 +40,12 @@ end
 module Fandom
   class Application < Rails::Application    
     config.middleware.use 'Apartment::Elevators::Generic', Proc.new { |request| 
-      config.domain_to_site_id.fetch(request.host, config.unbranded_site.id)
+      site = config.domain_to_site.fetch(request.host, config.unbranded_site)
+      if site.share_db.nil?
+        site.id
+      else
+        site.share_db
+      end
     }
   end
 end

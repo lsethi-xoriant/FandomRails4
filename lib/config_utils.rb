@@ -27,6 +27,7 @@ module ConfigUtils
     attribute :id, type: String
     attribute :title, type: String
     attribute :domains
+    attribute :share_db, type: String, :default => nil
     attribute :twitter_integration, type: Boolean, :default => false
     attribute :assets_precompile, :default => []
     attribute :environment, :default => {}
