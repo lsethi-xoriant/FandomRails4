@@ -349,7 +349,7 @@ ActiveRecord::Schema.define(:version => 20140627105239) do
   create_table "tag_fields", :force => true do |t|
     t.integer "tag_id"
     t.string  "name"
-    t.string  "type"
+    t.string  "field_type"
     t.text    "value"
   end
 
