@@ -20,16 +20,20 @@ module ProfileHelper
 
     current_user_reward = reward.user_rewards.find_by_user_id(current_user.id)
 
-    current_user_position_in_reward = reward.user_rewards.where("counter>=#{current_user_reward.counter}").order("counter ASC").count
-    users_in_reward = reward.user_rewards
+    if current_user_reward
 
-    if current_user_position_in_reward == 1  
-      user_before_and_after_in_reward = current_user_in_first_position(current_user_position_in_reward, current_user_reward, users_in_reward)
-    elsif current_user_position_in_reward == users_in_reward.count
-      user_before_and_after_in_reward = current_user_in_last_position(current_user_position_in_reward, current_user_reward, users_in_reward)
-    else  
-      user_before_and_after_in_reward = current_user_in_middle_position(current_user_position_in_reward, current_user_reward, users_in_reward)
-    end 
+      current_user_position_in_reward = reward.user_rewards.where("counter>=#{current_user_reward.counter}").order("counter ASC").count
+      users_in_reward = reward.user_rewards
+
+      if current_user_position_in_reward == 1  
+        user_before_and_after_in_reward = current_user_in_first_position(current_user_position_in_reward, current_user_reward, users_in_reward)
+      elsif current_user_position_in_reward == users_in_reward.count
+        user_before_and_after_in_reward = current_user_in_last_position(current_user_position_in_reward, current_user_reward, users_in_reward)
+      else  
+        user_before_and_after_in_reward = current_user_in_middle_position(current_user_position_in_reward, current_user_reward, users_in_reward)
+      end 
+
+    end
 
     return user_before_and_after_in_reward
   end
@@ -42,18 +46,24 @@ module ProfileHelper
       end
 
       current_user_reward = reward.user_rewards.find_by_user_id(current_user.id)
-      current_user_fb_friends = current_user.facebook.get_connections("me", "friends").collect { |f| f["id"] }
+      
+      if current_user_reward
 
-      current_user_position_in_reward = reward.user_rewards.where("counter>=#{current_user_reward.counter} AND user_id IN (?)", current_user_fb_friends.map.collect { |u| u["id"] }).order("counter ASC").count
-      users_in_reward = reward.user_rewards("user_id IN (?)", current_user_fb_friends.map.collect { |u| u["id"] })
+        current_user_fb_friends = current_user.facebook.get_connections("me", "friends").collect { |f| f["id"] }
 
-      if current_user_position_in_reward == 1     
-        user_before_and_after_in_reward = current_user_in_first_position(current_user_position_in_reward, current_user_reward, users_in_reward)
-      elsif current_user_position_in_reward == users_in_reward.count
-        user_before_and_after_in_reward = current_user_in_last_position(current_user_position_in_reward, current_user_reward, users_in_reward)
-      else  
-        user_before_and_after_in_reward = current_user_in_middle_position(current_user_position_in_reward, current_user_reward, users_in_reward)
-      end 
+        current_user_position_in_reward = reward.user_rewards.where("counter>=#{current_user_reward.counter} AND user_id IN (?)", current_user_fb_friends.map.collect { |u| u["id"] }).order("counter ASC").count
+        users_in_reward = reward.user_rewards("user_id IN (?)", current_user_fb_friends.map.collect { |u| u["id"] })
+
+        if current_user_position_in_reward == 1     
+          user_before_and_after_in_reward = current_user_in_first_position(current_user_position_in_reward, current_user_reward, users_in_reward)
+        elsif current_user_position_in_reward == users_in_reward.count
+          user_before_and_after_in_reward = current_user_in_last_position(current_user_position_in_reward, current_user_reward, users_in_reward)
+        else  
+          user_before_and_after_in_reward = current_user_in_middle_position(current_user_position_in_reward, current_user_reward, users_in_reward)
+        end 
+
+      end
+
     end
     return user_before_and_after_in_reward
   end

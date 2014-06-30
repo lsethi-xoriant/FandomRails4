@@ -38,8 +38,8 @@ module ApplicationHelper
 		return request.user_agent =~ /iPad/ 
 	end
 
-	def interaction_play_for_calltoaction(calltoaction)
-		calltoaction.interactions.find_by_resource_type('Play')
+	def find_interaction_for_calltoaction_by_resource_type(calltoaction, resource_type)
+		calltoaction.interactions.find_by_resource_type(resource_type)
 	end
 
 	def calltoaction_active_with_tag(tag, order)
