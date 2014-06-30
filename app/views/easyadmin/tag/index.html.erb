@@ -1,0 +1,78 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "tags" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1>Elenco TAG</h1>
+    </div> <!-- #content-header --> 
+
+    	<div id="content-container">
+
+    	<% if flash[:notice] %>
+	    	<div class="row">
+		      <div class="col-md-12">         
+		          <div class="row">
+		            <div class="col-lg-12">
+		              <div class="alert alert-success"><%= flash[:notice] %></div>
+		            </div>
+		          </div>
+		        
+		      </div>
+		    </div>
+	    <% end %>
+
+	    
+	    <div class="row text-right">
+	    	<div class="col-md-12">
+	    		<a href="/easyadmin/tag/new"><button type="button" class="btn btn-primary">NUOVO</button></a>
+	    	</div>
+	    </div>
+
+		<div class="row reward-to-show">
+			<div class="col-md-12"> 
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Descrizione</th>
+							<th>Locked</th>
+							<th>Metadati</th>
+							<th>Azioni</th>
+						</tr>
+					</thead>
+					<% @tags.each do |t| %>
+						<tr>
+							<td><%= t.name %></td>
+							<td><%= t.description %></td>
+							<td>
+								<% if t.locked %>
+									<i class="fa fa-check fa-2"></i>
+								<% end %>
+							</td>
+							<td>
+								<% if t.tags_tags.any? %>
+									Si
+								<% else %>
+									No
+								<% end %>
+							</td>
+							<td>
+								<div class="row">
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/tag/<%= t.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+									</div>
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/tag/<%= t.id %>/edit"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
+									</div>
+
+								</div>
+							</td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

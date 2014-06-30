@@ -1,0 +1,59 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "tags" } %>
+
+<div id="content">   
+
+  <div id="content-header">
+    <h1>TAG: <%= @tag.name %></h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <% if flash[:notice] %>
+      <div class="row">
+        <div class="col-md-12"> 
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <h3>Dati generali</h3>
+    <hr/>
+    
+    <div class="row">
+      <div class="col-sm-5">
+          <dl class="dl-horizontal">
+            <dt>Nome</dt><dd><p><%= @tag.name %></p></dd>
+            <dt>Descrizione</dt><dd><p><%= @tag.description %></p></dd>
+            <dt>Locked</dt><dd><p><%= @tag.locked? ? "Si" : "No" %></p></dd>
+            <% if @tag.tags_tags.any? %>
+            	<dt>Tag correlati</dt>
+            	<dd>
+            		<p>
+            			<%= @tag.tags_tags.map { |t| t.other_tag.name}.join(",") %>
+            		</p>
+            	</dd>
+            <% end %>
+          </dl>
+      </div>
+    </div> 
+	
+	<% if @tag.tag_fields.count > 0 %>
+		<h3>Metadati</h3>
+	    <hr/>
+		<div class="row">
+			<div class="col-sm-5">
+	          <dl class="dl-horizontal">
+	          	<% @tag.tag_fields.each do |tf| %>
+	          		<dt><%= tf.name %></dt><dd><p><%= tf.value %></p></dd>
+	            <% end %>
+	          </dl>
+	      </div>
+		</div>
+	<% end %>
+  </div>
+
+</div>

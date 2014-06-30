@@ -38,7 +38,7 @@
     <h3>Dati generali</h3>
     <hr/>
     
-    <%= form_for @tag, url: "/easyadmin/tag", multipart: true do |f| %>
+    <%= form_for @tag, url: "/easyadmin/tag/#{@tag.id}", multipart: true do |f| %>
       <div class="row">
         <div class="col-lg-6">
           <div class="form-group">
@@ -56,10 +56,6 @@
 	    	<label class="text-input">Tags correlati</label>
 	        <%= text_field_tag :tag_list, @tag_list, { id: "s2_tokenization", class: "form-control" } %>
 	        <span class="help-block">Per separare i TAG digita virgola</span>
-	        <br />
-			<div class="form-group">								
-		  		<%= f.check_box :locked %> Locked
-			</div>
 	    </div>
 
       </div>
@@ -74,16 +70,23 @@
 
             <div id="tmp-tagfield-add"></div>
 
-            <%= f.fields_for :tag_field do |builder| %>
+            <%= f.fields_for :tag_fields do |builder| %>
             	<% if @tag.tags_tags.count > 0 %>
             		<%= render 'tag-field-form', :f => builder %>
             	<% end %>
             <% end %>
           </div>
       </div>
+      <div class="row">
+		<div class="col-lg-12">
+			<div class="form-group">								
+		  		<%= f.check_box :locked %> Locked
+			</div>
+		</div>
+      </div>
       <div class="row text-center">
         <div class="col-sm12">
-          <button type="submit" class="btn btn-primary btn-lg">GENERA</button>
+          <button type="submit" class="btn btn-primary btn-lg">SALVA</button>
         </div>
       </div>     
     <% end %>

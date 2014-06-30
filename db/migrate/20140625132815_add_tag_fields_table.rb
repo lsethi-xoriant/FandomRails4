@@ -3,7 +3,7 @@ class AddTagFieldsTable < ActiveRecord::Migration
     create_table :tag_fields do |t|
       t.references :tag
       t.string :name
-      t.string :type
+      t.string :field_type
       t.text :value
     end
   end

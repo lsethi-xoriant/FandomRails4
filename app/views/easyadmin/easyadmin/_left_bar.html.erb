@@ -64,7 +64,19 @@
 	    </li>
 		<% end %>
 	    <% if can? :manage, :all %>
-		    <li class="<%= "active" if page == "tag" %>"><a href="/easyadmin/tag"><i class="fa fa-tags"></i>Tag</a>
+		    <li class="dropdown <%= "active opened" if page == "tags" %>"><a href="javascript:void(0);"><i class="fa fa-tags"></i>Tag<span class="caret"></span></a>
+		      <ul class="sub-nav">
+		        <li>
+		          <a href="/easyadmin/tag">
+		            <i class="fa fa-th-list"></i>Lista
+		          </a>
+		        </li>
+		        <li>
+		          <a href="/easyadmin/tag/new">
+		            <i class="fa fa-save"></i>Nuovo
+		          </a>
+		        </li>
+		      </ul>
 		    </li>
 	    <% end %>
 

@@ -17,7 +17,9 @@ Fandom::Application.routes.draw do
     match "/", :to => "easyadmin#dashboard"
 
     resources :home_launchers
-
+    
+    resources :tag
+    
     match "winner", :to => "easyadmin#index_winner"
     match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
 
@@ -34,9 +36,6 @@ Fandom::Application.routes.draw do
     match "cta/hide/:id", :to => "easyadmin#hide_cta"
     match "cta/", :to => "easyadmin#index_cta"
 
-    match "tag", :to => "easyadmin#index_tag"
-    match "tag/edit/:id", :to => "easyadmin#edit_tag"
-    match "tag/edit/:id/update", :to => "easyadmin#update_tag"
     match "cta/tag/:id", :to => "easyadmin#tag_cta"
     match "cta/tag/:id/update", :to => "easyadmin#tag_cta_update"
 
