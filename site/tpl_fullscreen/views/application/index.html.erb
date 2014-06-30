@@ -1,6 +1,5 @@
 <%= render partial: "/application/user_bar" %>
 
-<%= render partial: "/application/home_launchers" %>
 
 <div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= CallToAction.active.count %>', <%= @calltoactions_during_video_interactions_second.to_json %>)">   
 
@@ -9,6 +8,7 @@
 
   <div class="row">
     <div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
+      <h1>Ciao</h1>
       <%= render partial: "/application/home_filters" %>
     </div>
   </div>

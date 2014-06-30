@@ -30,7 +30,7 @@ class CallToActionController < ApplicationController
     
     stream_call_to_action_to_render.each do |calltoaction|
       calltoactions << calltoaction
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/calltoaction/_stream_single_calltoaction", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
     end
 
     calltoactions_during_video_interactions_second = Hash.new
@@ -58,52 +58,11 @@ class CallToActionController < ApplicationController
   end
 
   def show
-    @current_cta = CallToAction.find(params[:id])
+    @calltoaction = CallToAction.find(params[:id])
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([@calltoaction])
 
-    tag_list_arr = Array.new
-    @current_cta.call_to_action_tags.each { |t| tag_list_arr << t.tag.name }
-    @tag_list = tag_list_arr.join(",")
-
-    if current_user
-      subquery = Array.new
-      current_user.user_interactions.includes(:interaction).select("interactions.call_to_action_id").where("user_id=?", current_user.id).each { |i| subquery.push(i.interaction.call_to_action_id) }
-      @current_cta_related_list = CallToAction.where("id<>? AND id NOT IN (?)", @current_cta.id, (!subquery.blank? ? subquery.join(",") : -1)).limit(4)
-    else
-      @current_cta_related_list = CallToAction.where("id<>?", @current_cta.id).limit(4)
-    end
-
-    # Ho una sola iterazione di tipo commento per calltoaction.
-    @inter_comment = @current_cta.interactions.where("resource_type='Comment'").first
-    if @inter_comment
-      @comment_must_be_approved =  @inter_comment.resource.must_be_approved?
-      @user_comment = UserComment.new(comment_id: @inter_comment.resource.id)
-      # Visualizzo il numero di commenti pubblicati e mostro solo gli ultimi 5.
-      @comment_published_count = @inter_comment.resource.user_comments.publish.count
-    else 
-      @comment_published_count = -1
-    end
-
-    @inter_like = @current_cta.interactions.find_by_resource_type("Like") # TODO sempre visibile.
-    @inter_share = @current_cta.interactions.where("resource_type='Share'") # TODO sempre visibile.
-    @inter_download = @current_cta.interactions.find_by_resource_type("Download") # TODO sempre visibile.
-
-    # Se ho delle interaction overvideo memorizzo delle informazioni base per poter successivamente 
-    # far partire delle chiamate ajax e costruire la domanda.
-    @overvideo_during_interaction_list = Hash.new
-    @current_cta.interactions.where("when_show_interaction='OVERVIDEO_DURING'").order("seconds DESC").each do |i|
-      @overvideo_during_interaction_list["#{i.id}"] = Hash.new
-      
-      # Traccio la tipologia di quiz e il secondo di apparizione, a seconda della tipologia ho un diverso template.
-      if i.resource_type == "Check"
-        @overvideo_during_interaction_list["#{i.id}"]["quiz_type"] = "CHECK"
-      else
-        quiz_type = i.resource_type == "Quiz" ? i.resource.quiz_type : "noquiz"
-        @overvideo_during_interaction_list["#{i.id}"]["quiz_type"] = quiz_type
-      end
-      @overvideo_during_interaction_list["#{i.id}"]["seconds"] = i.seconds
-    end
-
-    if @current_cta.enable_disqus
+=begin
+    if @calltoaction.enable_disqus
       @disqus_requesturl = request.url
       comment_disqus = JSON.parse(open("https://disqus.com/api/3.0/posts/list.json?api_key=#{ ENV['DISQUS_PUBLIC_KEY'] }&forum=#{ ENV['DISQUS_SHORTNAME'] }&thread:link=#{ @disqus_requesturl }&limit=2").read)
       @disqus_cursor = comment_disqus["cursor"]
@@ -115,6 +74,7 @@ class CallToActionController < ApplicationController
                                                  created_at: comm["createdAt"] }
       end
     end
+=end
   end
 
   def next_disqus_page
@@ -239,9 +199,9 @@ class CallToActionController < ApplicationController
     response["main_reward_counter"] = get_counter_about_user_reward(params[:main_reward_name])
 
     if interaction.when_show_interaction == "SEMPRE_VISIBILE"
-      response["feedback"] = render_to_string "/calltoaction/_undervideo_interaction", locals: { interaction: interaction }, layout: false, formats: :html 
+      response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction }, layout: false, formats: :html 
     else
-      response["feedback"] = render_to_string "/calltoaction/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
+      response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
     end
 
     respond_to do |format|
@@ -261,7 +221,7 @@ class CallToActionController < ApplicationController
         user_interaction = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
       end
 
-      render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_interaction", 
+      render_calltoaction_overvideo_end_str = (render_to_string "/call_to_action/_overvideo_interaction", 
                 locals: { interaction: interaction, user_interaction: user_interaction }, layout: false, formats: :html)
 
     end
@@ -289,13 +249,13 @@ class CallToActionController < ApplicationController
 
     if params[:type] == "youtube"
       response = {
-        "share_content" => (render_to_string "/calltoaction/_share_free_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
-        "overvideo_title" => (render_to_string "/calltoaction/_overvideo_play", locals: { calltoaction: calltoaction, calltoaction_index: params[:index] }, layout: false, formats: :html)
+        "share_content" => (render_to_string "/call_to_action/_share_free_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
+        "overvideo_title" => (render_to_string "/call_to_action/_overvideo_play", locals: { calltoaction: calltoaction, calltoaction_index: params[:index] }, layout: false, formats: :html)
       }
     else
       response = {
-        "share_content" => (render_to_string "/calltoaction/_share_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
-        "overvideo_title" => (render_to_string "/calltoaction/_overvideo_play", locals: { calltoaction: calltoaction, calltoaction_index: params[:index] }, layout: false, formats: :html)
+        "share_content" => (render_to_string "/call_to_action/_share_footer", locals: { calltoaction: calltoaction }, layout: false, formats: :html),
+        "overvideo_title" => (render_to_string "/call_to_action/_overvideo_play", locals: { calltoaction: calltoaction, calltoaction_index: params[:index] }, layout: false, formats: :html)
       }
     end
 
@@ -314,7 +274,7 @@ class CallToActionController < ApplicationController
       user_interaction = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
     end
 
-    render_calltoaction_overvideo_end_str = (render_to_string "/calltoaction/_overvideo_interaction", 
+    render_calltoaction_overvideo_end_str = (render_to_string "/call_to_action/_overvideo_interaction", 
               locals: { interaction: interaction, user_interaction: user_interaction }, layout: false, formats: :html)
 
     response[:overvideo] = render_calltoaction_overvideo_end_str
@@ -383,7 +343,7 @@ class CallToActionController < ApplicationController
     else
       ui = UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i)
       if mobile_device?
-        risp["undervideo_share_feedback"] = render_to_string "/calltoaction/_share_mobile_feedback", locals: { calltoaction: i.call_to_action }, layout: false, formats: :html 
+        risp["undervideo_share_feedback"] = render_to_string "/call_to_action/_share_mobile_feedback", locals: { calltoaction: i.call_to_action }, layout: false, formats: :html 
       end
       risp["points_for_user"] = ui.points
     end

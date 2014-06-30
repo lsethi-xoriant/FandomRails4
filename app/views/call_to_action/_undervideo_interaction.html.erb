@@ -1,0 +1,14 @@
+<% if interaction.resource_type.downcase.to_sym == :check %>
+
+  <%= render partial: "/call_to_action/check", locals: { interaction: interaction } %>
+
+<% elsif interaction.resource_type.downcase.to_sym == :quiz %>
+  
+  <div class="row undervideo">
+    <div class="col-md-12">
+      <hr>
+      <%= render partial: "/call_to_action/#{interaction.resource.quiz_type.downcase.to_sym}_interaction", locals: { interaction: interaction, user_interaction: get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user) } %>
+    </div>
+  </div>
+
+<% end %>

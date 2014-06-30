@@ -1,0 +1,11 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= [@calltoaction].to_json %>, 1, <%= @calltoactions_during_video_interactions_second.to_json %>)">   
+
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
+      <%= render partial: "/call_to_action/single_calltoaction", locals: { calltoaction: @calltoaction } %>
+    </div>
+  </div>
+
+</div>
