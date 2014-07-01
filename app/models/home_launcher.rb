@@ -1,5 +1,5 @@
 class HomeLauncher < ActiveRecord::Base
-  attr_accessible :description, :button, :url, :enable, :image
+  attr_accessible :description, :button, :url, :enable, :image, :anchor
   has_attached_file :image
 
   validates_presence_of :description

@@ -16,8 +16,14 @@
           <div class="container">
             <div class="carousel-caption">
               <!--<h1>Example headline.</h1>-->
-              <p><%= home_launcher.description %></p>
-              <h3><a class="btn btn-lg btn-primary" href="<%= home_launcher.url %>" role="button"><%= home_launcher.button %></a></h3>                
+              <h1><%= home_launcher.description %></h1>
+              <h3>
+              	<% if home_launcher.anchor? %>
+              		<a class="btn btn-lg btn-primary" href="javascript:scrollToAnchor('<%= home_launcher.url %>')" role="button"><%= home_launcher.button %></a>
+              	<% else %>
+              		<a class="btn btn-lg btn-primary" href="<%= home_launcher.url %>" role="button"><%= home_launcher.button %></a>
+              	<% end %>
+              </h3>                
             </div>
           </div>
         </div>
@@ -28,3 +34,9 @@
     <a class="right carousel-control" href="#home-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
   </div>
 <% end %>
+<script type="text/javascript">
+function scrollToAnchor(id){
+    var tag = $("#"+ id);
+    $('html,body').animate({scrollTop: tag.offset().top-52},'slow');
+}
+</script>
