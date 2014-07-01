@@ -23,7 +23,7 @@ module ApplicationHelper
 	def interaction_answer_percentage(interaction, answer)
 		interaction_answers_count = interaction.user_interactions.count
 		interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
-		return (interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100
+		return ((interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100).round
 	end
 
 	def current_user_or_anonymous_user
@@ -38,8 +38,8 @@ module ApplicationHelper
 		return request.user_agent =~ /iPad/ 
 	end
 
-	def interaction_play_for_calltoaction(calltoaction)
-		calltoaction.interactions.find_by_resource_type('Play')
+	def find_interaction_for_calltoaction_by_resource_type(calltoaction, resource_type)
+		calltoaction.interactions.find_by_resource_type(resource_type)
 	end
 
 	def calltoaction_active_with_tag(tag, order)

@@ -1,35 +1,17 @@
-<div class="row">      
-  <div class="col-sm-6 col-sm-offset-3">
-              <div class="panel-group th-filter" id="accordion">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title text-center">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-              Filtra contenuto
-            </a>
-          </h4>
-        </div>
-        <div id="collapseTwo" class="panel-collapse collapse in">
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-xs-4 col-sm-2 col-md-3 text-center">
-                <a href="javascript: void(0)" class="thumbnail" onclick="updatePageWithTag(null)">
-                  <img src="http://placehold.it/320x260" alt="...">
-                </a>
-                <h6>Nessuno</h6>
-              </div>
-              <% get_tags_with_tag("miniformat").each do |tag| %>
-                <div class="col-xs-4 col-sm-2 col-md-3 text-center">
-                  <a href="javascript: void(0)" class="thumbnail" onclick="updatePageWithTag(<%= tag.id %>)">
-                    <img src="http://placehold.it/320x260" alt="...">
-                  </a>
-                  <h6><%= tag.name %></h6>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="col-sm-6 col-sm-offset-3" style="margin-top: 15px;">
+  <ul class="nav nav-pills nav-justified fandom-nav">
+    <li id="home-filter-all" class="active home-filter">
+      <a href="javascript: void(0)" onclick="updatePageWithTag(null)">
+        <span class="glyphicon-class">Stream</span>
+      </a>
+    </li>
+    <% get_tags_with_tag("miniformat").each do |tag| %>
+      <li id="home-filter-<%= tag.id %>" class="home-filter">
+        <a href="javascript: void(0)" onclick="updatePageWithTag(<%= tag.id %>)">
+          <span class="glyphicon-class"><%= tag.name %></span>
+        </a>
+      </li>
+    <% end %>
+  </ul>
 </div>
+          

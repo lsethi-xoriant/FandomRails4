@@ -8,7 +8,7 @@
           <h4><%= interaction_answer_percentage(interaction, answer) %>%</h4>
         </div>
       <% end %>
-      <a href="javascript: void(0)" class="thumbnail"><img src="<%= answer.image(:medium) %>" alt="..."></a>
+      <a href="javascript: void(0)" class="thumbnail" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><img src="<%= answer.image(:medium) %>" alt="..."></a>
     </div>
   </div>
 

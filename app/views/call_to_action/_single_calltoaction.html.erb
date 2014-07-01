@@ -8,7 +8,7 @@
             <% if calltoaction.media_type == "VIDEO" %>
                 <div class="video flex-video widescreen" style="background:#222;">             
                   <!-- IFRAME VIDEO -->
-                  <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-id="<%= calltoaction.id %>" secondary-calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= interaction_play_for_calltoaction(calltoaction).id %>"></div>
+                  <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-id="<%= calltoaction.id %>" secondary-calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").id %>"></div>
                   <!-- OVERVIDEO AREA -->
                   <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
                   <!-- OVERVIDEO TITLE -->
@@ -56,6 +56,9 @@
       <div class="panel-footer">
         <div class="row">
           <div class="col-xs-12 text-center">
+            <% if calltoaction_comment_interaction %>
+              <%= render partial: "/call_to_action/stream_comment", locals: { interaction_comment: calltoaction_comment_interaction, user_comment: user_comment } %>
+            <% end %>
           </div>
         </div>
       </div>

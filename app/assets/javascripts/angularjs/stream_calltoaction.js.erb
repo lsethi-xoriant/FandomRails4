@@ -73,6 +73,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           $("#append-other button").show();
         }
 
+        $(".home-filter").removeClass("active");
+        if(tag_id) {
+          $("#home-filter-" + tag_id).addClass("active");
+        } else {
+          $("#home-filter-all").addClass("active");
+        }
+
       }).error(function() {
         // ERROR.
       });
@@ -382,11 +389,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
                 updateNextCallToAction(data.next_call_to_action, calltoaction_id)
               }
 
-              interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
-              if(interaction_point) {
-                showFeedback(data.feedback, calltoaction_id);
-              }
-
               user_response_right[key] = data.right_answer_response;
 
               if(when_show_interaction == "OVERVIDEO_DURING") {
@@ -395,6 +397,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
                 $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
               }
 
+            }
+
+            interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
+            if(interaction_point) {
+              showFeedback(data.feedback, calltoaction_id);
             }
 
           }).error(function() {

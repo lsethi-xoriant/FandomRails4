@@ -61,6 +61,11 @@ class CallToActionController < ApplicationController
     @calltoaction = CallToAction.find(params[:id])
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([@calltoaction])
 
+    @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(@calltoaction, "Comment")
+    if @calltoaction_comment_interaction
+      @user_comment = UserComment.new
+    end
+
 =begin
     if @calltoaction.enable_disqus
       @disqus_requesturl = request.url
@@ -115,25 +120,26 @@ class CallToActionController < ApplicationController
   end
 
   def add_comment
-    params[:user_comment] = params[:user_comment].merge(published_at: DateTime.now) unless Comment.find(params[:user_comment][:comment_id]).must_be_approved?
+    comment_resource = Comment.find(params[:user_comment][:comment_id])
+
+    unless comment_resource.must_be_approved
+      params[:user_comment] = params[:user_comment].merge(published_at: DateTime.now)
+    end
+
     params[:user_comment][:text] = sanitize(params[:user_comment][:text])
     
-    unless params[:user_comment][:text].blank?
-      if current_user
-        @user_comment = UserComment.create(params[:user_comment].merge(user_id: current_user.id))
-      elsif 
-        # Verifico la correttezza del captcha inserito e salvato nella sessione.
-        code = (JSON.parse session[:code]).join
-        if code == params[:code]
-          @user_comment = UserComment.create(params[:user_comment].merge(user_id: -1))
-          @user_comment_captcha = true
-        else
-          @user_comment_captcha = false
-        end
+    if current_user
+      @user_comment = UserComment.create(params[:user_comment].merge(user_id: current_user.id))
+    elsif 
+      code = JSON.parse(session[:code]).join
+      @user_comment_captcha = code == params[:code]
+      if @user_comment_captcha
+        @user_comment = UserComment.create(params[:user_comment].merge(user_id: current_user_or_anonymous_user.id))
+      else
+        @user_comment_captcha = false
       end
-    else
-      @user_comment = UserComment.new
     end
+
   end
 
   def get_comment_published
@@ -303,14 +309,6 @@ class CallToActionController < ApplicationController
     respond_to do |format|
       format.json { render :json => "update-download".to_json }
     end  
-  end
-
-  def check_level_and_badge_up
-    risp = Hash.new
-
-    respond_to do |format|
-      format.json { render :json => risp.to_json }
-    end
   end
 
   def share_free

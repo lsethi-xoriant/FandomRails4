@@ -183,13 +183,13 @@ Fandom::Application.routes.draw do
   match "/extra", :to => "property#extra"
 
   match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+  match "/add_comment", :to => "call_to_action#add_comment"
 
   match "profile", :to => "profile#show"
   match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
   match "get_overvideo_during_interaction", :to => "call_to_action#get_overvideo_during_interaction", defaults: { format: 'json' }
   resources :call_to_action do
-    match "/add_comment", :to => "call_to_action#add_comment"
     match "/get_comment_published", :to => "call_to_action#get_comment_published", defaults: { format: 'json' }
     match "/get_closed_comment_published", :to => "call_to_action#get_closed_comment_published", defaults: { format: 'json' }
     match "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }

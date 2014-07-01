@@ -1,14 +1,21 @@
 <div class="row cta">      
-  <div class="col-sm-6 col-sm-offset-3">
+  <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1">
     <div class="panel panel-default cta-page no-pad">
       <div class="panel-body cta-panel no-pad">
+
+      <div class="row">
+        <div class="col-md-12 text-center" style="padding: 0 30px 0 30px;">
+          <h2><%= calltoaction.title %></h2>
+        </div>
+      </div>
+
         <!-- MEDIA -->
         <div class="row">
           <div class="col-md-12">
             <% if calltoaction.media_type == "VIDEO" %>
                 <div class="video flex-video widescreen" style="background:#222;">             
                 	<!-- IFRAME VIDEO -->
-                  <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-id="<%= calltoaction.id %>" secondary-calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= interaction_play_for_calltoaction(calltoaction).id %>"></div>
+                  <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-id="<%= calltoaction.id %>" secondary-calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").id %>"></div>
                   <!-- OVERVIDEO AREA -->
                   <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
                   <!-- OVERVIDEO TITLE -->
@@ -29,10 +36,6 @@
 
         <!-- UNDERVIDEO AREA -->
         <div class="row">
-
-          <div class="col-md-12 text-center" style="padding: 0 30px 0 30px;">
-            <h2><%= calltoaction.title %></h2>
-          </div>
 
           <% if calltoaction.description.present? %>
 	          <div class="col-md-12 text-left" style="padding: 0 30px 0 30px;">
@@ -56,7 +59,7 @@
       <div class="panel-footer">
         <div class="row">
           <div class="col-xs-12 text-center">
-            <a class="btn btn-default" href="/call_to_action/<%= calltoaction.id %>">ENTRA</a>
+            <!--<a class="btn btn-default" href="/call_to_action/<%= calltoaction.id %>">ENTRA</a>-->
           </div>
         </div>
       </div>
