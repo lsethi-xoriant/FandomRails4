@@ -33,7 +33,37 @@
 							</div>
 						</div>
 					</div>
-					
-				</div>
+					<div class="row">
+						<div class="col-lg-6 text-center">
+				          
+				          <% if f.object.id && f.object.upload %>
+				          <div class="form-group">
+				              <label class="text-input">Upload</label>
+				              <div class="fileupload fileupload-new" data-provides="fileupload">
+				                <div class="fileupload-preview thumbnail" style="width: 400px; height: 300px; line-height: 20px;">
+				                	<img src="<%= f.object.upload.url %>">
+				                </div>
+				                <div>
+				                  <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
+				                  <span class="fileupload-exists">Change</span><%= f.file_field :upload  %></span>
+				                  <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+				                </div>
+				              </div>
+				          </div>
+				          <% else %>
+				          <div class="form-group">
+				              <label class="text-input">Upload</label>
+				              <div class="fileupload fileupload-new" data-provides="fileupload">
+				                <div class="fileupload-preview thumbnail" style="width: 400px; height: 300px; line-height: 20px;"></div>
+				                <div>
+				                  <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
+				                  <span class="fileupload-exists">Change</span><%= f.file_field :upload  %></span>
+				                  <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+				                </div>
+				              </div>
+				          </div>
+				          <% end %>
+						</div>
+					</div>
 			</div>
   	</div>

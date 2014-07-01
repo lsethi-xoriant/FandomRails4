@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140627105239) do
+ActiveRecord::Schema.define(:version => 20140701080832) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                               :null => false
@@ -347,10 +347,14 @@ ActiveRecord::Schema.define(:version => 20140627105239) do
   end
 
   create_table "tag_fields", :force => true do |t|
-    t.integer "tag_id"
-    t.string  "name"
-    t.string  "field_type"
-    t.text    "value"
+    t.integer  "tag_id"
+    t.string   "name"
+    t.string   "field_type"
+    t.text     "value"
+    t.string   "upload_file_name"
+    t.string   "upload_content_type"
+    t.integer  "upload_file_size"
+    t.datetime "upload_updated_at"
   end
 
   create_table "tags", :force => true do |t|
