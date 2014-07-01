@@ -11,48 +11,163 @@
         <div class="panel-body profile-body">
           <%= render partial: "profile/profile_navbar", locals: { page: "levels" } %>
           <div class="row">
-            <div class="col-md-12">
-                
-                <% Property.active.each do |p| %>
-	                <div>
-	                	<div class="page-header">
-	                		<% ru = current_user.rewarding_users.find_by_property_id(p.id) %>
-	                  		<h2><%= p.name.upcase %> - Livelli <small><%= "#{ ru ? ru.user_levels.count : 0 }/#{ p.levels.count } " %></small></h2>
-	                	</div>
-	              	</div>
-	                
-	                <div class="row livelli">
-	                  <% pl = nil %>
-	                  <% p.levels.each do |l| %>
-		                  <div class="col-xs-6 col-sm-4 col-md-3 text-center">
-		                    <div class="thumbnail text-center">
-		                      <img class="img-circle img-responsive adjust-cyrcle" src="<%= l.image(:thumb) %>" width="60%" alt="<%= l.name %> img">
-		                      <div class="caption">
-		                        <h4><%= l.name %></h4>
-		                        <p><small><%= l.description %></small></p>
-		                      </div>
-		                      <div class="progress">
-		                      	<% if ru && ru.user_levels.find_by_level_id(l.id) %>
-			                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-			                          <span class="sr-only">100% Complete (success)</span>
-			                        </div>
-			                        <% pl = l %>
-			                    <% else %>
-			                    	<% progress = ru && pl ? (user_progress ru, l, pl) : 1 %>
-			                    	<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: <%= progress %>%">
-			                          <span class="sr-only"><%= progress %>% Complete</span>
-			                        </div>
-			                        <% pl = nil %>
-			                    <% end %>
-		                      </div>
-		                    </div>
-		                  </div>
-	                  <% end %>
-	                </div>
-                <% end %>
-
-            </div>
-          </div>
+                    <div class="col-md-12">
+                      <div id="livelli">
+                        <div class="page-header">
+                          <h2>Livelli <small>1/10</small></h2>
+                        </div>
+                      </div>
+                        <div class="row livelli">
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box">
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=1" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                  <span class="sr-only">100% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box">       
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=2" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                  <span class="sr-only">40% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box"> 
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=3" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                  <span class="sr-only">0% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box"> 
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=4" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                  <span class="sr-only">0% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box"> 
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=5" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                  <span class="sr-only">0% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box"> 
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=6" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                  <span class="sr-only">0% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box"> 
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=7" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                  <span class="sr-only">0% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box"> 
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=8" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                  <span class="sr-only">0% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box"> 
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=9" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                  <span class="sr-only">0% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                            <div class="no-box"> 
+                              <img class="img-circle img-responsive" src="http://placehold.it/300x300&text=10" width="60%" alt="...">
+                              <div class="caption">
+                                <h4>livello #</h4>
+                                <p><small>Lorem ipsum dolor sit amet</small></p>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                  <span class="sr-only">0% Complete (success)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      <!--
+                      <ul class="nav nav-tabs">
+                        <li class="active"><a href="#">Livelli</a></li>
+                        <li><a href="#">Badges</a></li>
+                        <li><a href="#">Premi <span class="badge">2</span></a></li>
+                        <li><a href="#">Classifica</a></li>
+                      </ul>-->
+                    </div>
+                  </div>
         </div>
       </div>
     </div>
