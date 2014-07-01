@@ -406,7 +406,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
             if(data.call_to_action_completed) {
               $("#head-feedback-calltoaction-" + calltoaction_id)
-                .html("<span class=\"glyphicon glyphicon-ok\"></span>")
+                .html("FATTO <span class=\"glyphicon glyphicon-ok\"></span>")
                 .removeClass("label-warning").addClass("label-success");
             }
 

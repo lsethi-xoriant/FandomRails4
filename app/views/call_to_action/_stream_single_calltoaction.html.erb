@@ -17,7 +17,7 @@
             <h4>
               <% if call_to_action_completed?(calltoaction, current_user_or_anonymous_user) %>
                 <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 7px;">
-                  <span class="glyphicon glyphicon-ok"></span>
+                  FATTO <span class="glyphicon glyphicon-ok"></span>
                 </span>
               <% else %>
                 <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 7px;">+<%= predict_max_cta_outcome(calltoaction, anonymous_user).reward_name_to_counter["POINT"] %>

@@ -3,6 +3,10 @@ $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
 $navbar-default-link-hover-bg: #eee;
 
+// Inverted navbar
+// Reset inverted navbar basics
+$navbar-default-bg:                         #fff !default;
+
 @import "bootstrap/bootstrap";
 
 p.oblique { font-style:oblique } 
@@ -378,7 +382,7 @@ span.notify {
     background: darken(#d9534f, 20%);
 }
 .navbar-nav > li.play-2 > a {
-    background: #6293ce;
+    background: #f0ad4e;
     color: #fff;
     text-transform: uppercase;
 }
@@ -625,7 +629,7 @@ span.notify {
                             position:absolute;  
                             width: 100%; 
                             bottom:0; 
-                            background:#ff55cc;
+                            background:#428bca;
                         }
                     }
                 }        
@@ -637,7 +641,7 @@ span.notify {
                         position:absolute; 
                         width: 100%; 
                         bottom:0; 
-                        background:#ff55cc;
+                        background:#428bca;
                     }
                 }
                 //CHOISE 
@@ -669,13 +673,13 @@ span.notify {
                         position:absolute; 
                         height: 10px; 
                         right:0; 
-                        background:#ff55cc;
+                        background:#428bca;
                     }
                     .vs-level-inner-dx {
                         position:absolute; 
                         height: 10px; 
                         left:0; 
-                        background:#ff55cc;
+                        background:#428bca;
                     }
                 }     
             }
