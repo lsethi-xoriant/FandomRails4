@@ -4,11 +4,38 @@
 
 <% elsif interaction.resource_type.downcase.to_sym == :quiz %>
   
-  <div class="row undervideo">
+  <div id="undervideo-<%= interaction.id %>" class="row undervideo">
     <div class="col-md-12">
       <!--<hr>-->
       <%= render partial: "/call_to_action/#{interaction.resource.quiz_type.downcase.to_sym}_interaction", locals: { interaction: interaction, user_interaction: get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user) } %>
     </div>
+
+    <% if current_user %>
+      <% if outcome && outcome.reward_name_to_counter["POINT"] && outcome.reward_name_to_counter["POINT"] > 0 %>       
+        <% if interaction.resource.quiz_type.downcase.to_sym == :versus %>
+          <div class="col-md-10 col-md-offset-1">
+            <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+            <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter["POINT"] %> punti.
+            </div>
+          </div> 
+        <% elsif interaction.resource.quiz_type.downcase.to_sym == :trivia %>
+          <% if get_user_interaction_from_interaction(interaction, current_user).answer.correct %>
+            <div class="col-md-10 col-md-offset-1">
+              <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+              <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter["POINT"] %> punti.
+              </div>
+            </div> 
+          <% else %>
+            <div class="col-md-10 col-md-offset-1">
+              <div class="alert alert-danger" style="margin-bottom: 0; margin-top: 15px;">
+              <strong>Risposta errata!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter["POINT"] %> punti.
+              </div>
+            </div> 
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
   </div>
 
 <% end %>

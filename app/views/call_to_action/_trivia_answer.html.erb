@@ -4,7 +4,6 @@
   <div class="col-xs-6 text-center" style="margin-bottom: 15px;">
     <button class="btn btn-block <%= answer.correct ? "btn-success" : "btn-danger" %> <%=  user_interaction.answer_id == answer.id ? "active" : "disabled" %>"><%= answer.text %></button>
   </div>
-
 <% else %>
   <!-- CURRENT USER HAS NOT RESPONDED -->
   <div class="col-xs-6 text-center" style="margin-bottom: 15px;">

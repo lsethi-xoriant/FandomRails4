@@ -2,6 +2,10 @@ require 'fandom_utils'
 
 module ApplicationHelper
 
+	def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
+		Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id)
+	end
+
 	def get_tags_with_tag(tag_name)
 		Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ?", tag_name)
 	end
@@ -24,6 +28,10 @@ module ApplicationHelper
 		interaction_answers_count = interaction.user_interactions.count
 		interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
 		return ((interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100).round
+	end
+
+	def anonymous_user
+		User.find_by_email("anonymous@shado.tv")
 	end
 
 	def current_user_or_anonymous_user
@@ -67,28 +75,6 @@ module ApplicationHelper
 			done = false
 		end 
 	  return done
-	end
-
-	def calltoaction_done?(calltoaction)
-		# Check if user completed calltoaction.
-	  done = true
-	  if current_user
-	  		# TODO: when_show_interaction!='MAI_VISIBILE'
-	  		calltoactions_except_share = calltoactions_except_share(calltoaction)
-	  		
-		    calltoactions_except_share.each do |i|
-		      done = false if UserInteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
-		    end
-
-		    calltoactions_just_share = cache_short("calltoactions_just_share_#{calltoaction.id}") do
-		      calltoaction.interactions.where("resource_type='Share'").to_a
-		    end
-		    
-		    done = false if current_user.user_interactions.where("interaction_id in (?)", calltoactions_just_share.map.collect { |u| u["id"] }).blank?
-		else
-			done = false
-		end 
-	   return done
 	end
 
 	def user_points_except_share_for(calltoaction)
