@@ -37,20 +37,19 @@
 <script type="text/javascript">
 function scrollToAnchor(id){
 	
-	console.log(top == self);
+	/*
 	if(self === top){
 		
 		var tag = $("#"+ id);
 	    $('html,body').animate({scrollTop: tag.offset().top-52},'slow');
 	
-	}else{
+	}else{*/
 		
 		slice = id.split("-");
 		ctaid = slice[slice.length - 1];
-		//self.location = "http://demo.fandomlab.com/call_to_action/"+ctaid;
-		self.location = "http://fandom.localdomain:3000/call_to_action/"+ctaid;
+		self.location = "/call_to_action/"+ctaid;
 	
 	    
-   }
+   //}
 }
 </script>
