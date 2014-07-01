@@ -17,7 +17,7 @@
         <a href="javascript: void(0)" onclick="updatePageWithTag(<%= tag.id %>)">
           <div class="row">
             <div class="col-md-12">
-              <span class="<%= tag.tag_fields.find_by_name("icon").try(:name) %>"></span>
+              <span class="<%= tag.tag_fields.find_by_name("icon").try(:value) %>"></span>
             </div>
             <div class="col-md-12">
               <span class="glyphicon-class"><%= tag.name %></span>
