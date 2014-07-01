@@ -1,7 +1,14 @@
 <div class="row cta">      
-  <div class="col-sm-6 col-sm-offset-3">
+  <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1">
     <div class="panel panel-default cta-page no-pad">
       <div class="panel-body cta-panel no-pad">
+
+      <div class="row">
+        <div class="col-md-12 text-center" style="padding: 0 30px 0 30px;">
+          <h2><%= calltoaction.title %></h2>
+        </div>
+      </div>
+
         <!-- MEDIA -->
         <div class="row">
           <div class="col-md-12">
@@ -30,10 +37,6 @@
         <!-- UNDERVIDEO AREA -->
         <div class="row">
 
-          <div class="col-md-12 text-center" style="padding: 0 30px 0 30px;">
-            <h2><%= calltoaction.title %></h2>
-          </div>
-
           <% if calltoaction.description.present? %>
 	          <div class="col-md-12 text-left" style="padding: 0 30px 0 30px;">
 	            <h4><%= calltoaction.description %></h4>
@@ -56,7 +59,7 @@
       <div class="panel-footer">
         <div class="row">
           <div class="col-xs-12 text-center">
-            <a class="btn btn-default" href="/call_to_action/<%= calltoaction.id %>">ENTRA</a>
+            <!--<a class="btn btn-default" href="/call_to_action/<%= calltoaction.id %>">ENTRA</a>-->
           </div>
         </div>
       </div>

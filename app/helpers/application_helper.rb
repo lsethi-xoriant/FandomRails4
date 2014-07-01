@@ -23,7 +23,7 @@ module ApplicationHelper
 	def interaction_answer_percentage(interaction, answer)
 		interaction_answers_count = interaction.user_interactions.count
 		interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
-		return (interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100
+		return ((interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100).round
 	end
 
 	def current_user_or_anonymous_user
