@@ -43,7 +43,7 @@
       <div class="row">
         <div class="col-lg-6">
           <div class="form-group">
-              <label class="text-input">Descrizione</label>
+              <label class="text-input">Titolo</label>
               <%= f.text_field :description, :class => "form-control" %>
           </div>
           <div class="form-group">
@@ -53,6 +53,10 @@
           <div class="form-group">
               <label class="text-input">Bottone</label>
               <%= f.text_field :button, :class => "form-control" %>
+          </div>
+          <div class="form-group">
+              <label class="text-input">Ancora</label>
+              <%= f.check_box :anchor %>
           </div>
         </div>
         <div class="col-lg-6">

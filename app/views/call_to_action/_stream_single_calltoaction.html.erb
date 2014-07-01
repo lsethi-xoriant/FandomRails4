@@ -3,7 +3,7 @@
     <div class="panel panel-default cta-page">
 
       <div class="panel-heading" style="background: none">
-        <div class="row">
+        <div class="row"  id="cta-id-<%= calltoaction.id %>">
           <div class="col-md-8 col-xs-8">
             <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
             <% if tags_with_miniformat_in_calltoaction.any? %>

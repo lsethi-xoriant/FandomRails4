@@ -25,6 +25,10 @@ class ProfileController < ApplicationController
     # TODO: adjust.
   end
   
+  def prizes
+    # TODO: adjust.
+  end
+  
   def notices
     Notice.mark_all_as_viewed()
     notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC")
