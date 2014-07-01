@@ -8,6 +8,7 @@ class CallToActionController < ApplicationController
   include ActionView::Helpers::SanitizeHelper
   include RewardingSystemHelper
   include CallToActionHelper
+  include ApplicationHelper
 
   # Per la gestione del captcha, genera un'immagine appoggiandosi alla libreria noisy_image e appoggiando
   # il valore in sessione.
@@ -65,6 +66,8 @@ class CallToActionController < ApplicationController
     if @calltoaction_comment_interaction
       @user_comment = UserComment.new
     end
+    
+    @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
 =begin
     if @calltoaction.enable_disqus
@@ -80,6 +83,16 @@ class CallToActionController < ApplicationController
       end
     end
 =end
+  end
+  
+  def get_correlated_cta(calltoaction)
+    tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat")
+    if tags_with_miniformat_in_calltoaction.any?
+      tag_id = tags_with_miniformat_in_calltoaction.first.id
+      calltoactions = CallToAction.active.where("call_to_action_tags.tag_id=? and call_to_actions.id <> ?", tag_id, calltoaction.id).limit(3)
+    else
+       calltoactions = Array.new
+    end
   end
 
   def next_disqus_page

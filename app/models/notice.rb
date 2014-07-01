@@ -33,7 +33,7 @@ class Notice < ActiveRecord::Base
   
   def send_to_user(request)
     SystemMailer.notification_mail(user.email, html_notice, "Hai ricevuto una notifica su #{request.site.title}").deliver
-    update_attributes(:last_sent => Time.now, :viwes => false, :read => false)
+    update_attributes(:last_sent => Time.now, :viewed => false, :read => false)
   end
   
   def self.get_user_latest_notice(user, number_of_notice)

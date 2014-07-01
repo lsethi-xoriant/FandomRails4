@@ -37,19 +37,17 @@
 <script type="text/javascript">
 function scrollToAnchor(id){
 	
-	/*
-	if(self === top){
+	
+	if(self === top && $("#"+id).length) {
 		
 		var tag = $("#"+ id);
 	    $('html,body').animate({scrollTop: tag.offset().top-52},'slow');
 	
-	}else{*/
+	}else{
 		
 		slice = id.split("-");
 		ctaid = slice[slice.length - 1];
 		self.location = "/call_to_action/"+ctaid;
-	
-	    
-   //}
+   }
 }
 </script>
