@@ -54,7 +54,7 @@
             	<!-- IMAGE -->
               <img src="<%= calltoaction.image %>" style="width: 100%; margin-bottom: 15px;">
             <% elsif calltoaction.media_type == "IFRAME" %>
-              <div class="video flex-video widescreen" style="background:#222; margin-bottom: 15px;">  
+              <div class="<%= "iframe-iphone" if request_is_from_iphone_device?(request) %> video flex-video widescreen text-center" style="background:#222; margin-bottom: 15px;">  
                 <%= calltoaction.iframe.html_safe %>
               </div>
             <% end %>
@@ -80,7 +80,7 @@
         <div class="row">
           <div class="col-xs-12 text-center">
           	<div class="row">
-          		<!--
+          		  <!--
                 <div class="col-xs-3 col-xs-offset-3">
                   <button type="button" class="btn btn-default btn-xs btn-block" data-toggle="modal" data-target="#facebook-like-modal"><span class="glyphicon glyphicon-thumbs-up"> <span class="hidden-xs">Like</span></span></button>
                 </div>
@@ -97,3 +97,18 @@
     </div>        
   </div>
 </div>
+
+<% if request_is_from_iphone_device?(request) %>
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      iframe_height = $(".iframe-iphone").innerHeight();
+      iframe_width = $(".iframe-iphone").innerWidth();
+      $(".iframe-iphone iframe").css("height", iframe_height);
+      $(".iframe-iphone iframe").css("width", iframe_width);
+    });
+
+  </script>
+
+<% end %>
