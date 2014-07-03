@@ -1,10 +1,10 @@
-var streamCalltoactionApp = angular.module('StreamCalltoactionApp', ['ngRoute']);
+var streamCalltoactionModule = angular.module('StreamCalltoactionModule', ['ngRoute']);
 
 StreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval'];
-streamCalltoactionApp.controller('StreamCalltoactionCtrl', StreamCalltoactionCtrl);
+streamCalltoactionModule.controller('StreamCalltoactionCtrl', StreamCalltoactionCtrl);
 
 // Gestione del csrf-token nelle chiamate ajax.
-streamCalltoactionApp.config(["$httpProvider", function(provider) {
+streamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
