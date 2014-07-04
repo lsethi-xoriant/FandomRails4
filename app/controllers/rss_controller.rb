@@ -1,6 +1,6 @@
 class RssController < ApplicationController
   def rss
-    @calltoactions = CallToAction.active.order("activated_at DESC").limit(10)
+    @calltoactions = CallToAction.active.limit(10)
     respond_to do |format|
       format.rss { render :layout => false }
     end

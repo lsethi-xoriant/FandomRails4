@@ -14,7 +14,7 @@ class CallToActionController < ApplicationController
   # il valore in sessione.
   def code_image
       noisy_image = NoisyImage.new(8)
-      session[:code] = noisy_image.code
+      session["cpt#{params[:interaction_id]}".to_sym] = noisy_image.code
       image = noisy_image.code_image
       send_data image, type: 'image/jpeg', disposition: 'inline'
   end
@@ -63,9 +63,6 @@ class CallToActionController < ApplicationController
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([@calltoaction])
 
     @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(@calltoaction, "Comment")
-    if @calltoaction_comment_interaction
-      @user_comment = UserComment.new
-    end
     
     @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
@@ -111,64 +108,69 @@ class CallToActionController < ApplicationController
     end
   end
 
-  def get_closed_comment_published
-    i = Interaction.find_by_call_to_action_id_and_resource_type(params[:calltoaction_id].to_i, "Comment")
-    offset = params[:offset] - 10 > 0 ? (params[:offset] - 10) : 0
-    risp = Hash.new
-    i.resource.user_comments.publish.order("created_at ASC").offset(offset).limit(10).each do |uc|
-      risp["#{ uc.id }"] = {
-        "name" => (uc.user ? "#{ uc.user.first_name } #{ uc.user.last_name }" : "Anonimo"),
-        "created_at" => uc.created_at,
-        "text" => uc.text,
-        "image" => (uc.user ? user_avatar(uc.user) : "")
-      }
-    end
-
-    respond_to do |format|
-      format.json { render :json => risp.to_json }
-    end
-  end
-
-  def index
-  end
-
   def add_comment
-    comment_resource = Comment.find(params[:user_comment][:comment_id])
+    comment_resource = Interaction.find(params[:interaction_id]).resource
 
-    unless comment_resource.must_be_approved
-      params[:user_comment] = params[:user_comment].merge(published_at: DateTime.now)
-    end
-
-    params[:user_comment][:text] = sanitize(params[:user_comment][:text])
+    published_at = comment_resource.must_be_approved ? nil : DateTime.now     
+    user_text = sanitize(params[:comment])
     
+    response = Hash.new
+
     if current_user
-      @user_comment = UserComment.create(params[:user_comment].merge(user_id: current_user.id))
+      user_comment = UserComment.create(user_id: current_user.id, published_at: published_at, text: user_text, comment_id: comment_resource.id)
+      response[:error] = user_comment.errors
     elsif 
-      code = JSON.parse(session[:code]).join
-      @user_comment_captcha = code == params[:code]
-      if @user_comment_captcha
-        @user_comment = UserComment.create(params[:user_comment].merge(user_id: current_user_or_anonymous_user.id))
-      else
-        @user_comment_captcha = false
+      response[:captcha_result] = params[:captcha] == JSON.parse(session["cpt#{params[:interaction_id]}".to_sym]).join
+      if response[:captcha_result]
+        user_comment = UserComment.create(user_id: current_user_or_anonymous_user.id, published_at: published_at, text: user_text, comment_id: comment_resource.id)
       end
     end
 
-  end
-
-  def get_comment_published
-    i = Interaction.find_by_call_to_action_id_and_resource_type(params[:calltoaction_id].to_i, "Comment")
-    risp = Hash.new
-    i.resource.user_comments.publish.order("created_at ASC").offset(params[:offset]).each do |uc|
-      risp["#{ uc.id }"] = {
-        "name" => (uc.user ? "#{ uc.user.first_name } #{ uc.user.last_name }" : "Anonimo"),
-        "created_at" => uc.created_at,
-        "text" => uc.text,
-        "image" => (uc.user ? user_avatar(uc.user) : "")
-      }
+    respond_to do |format|
+      format.json { render :json => response.to_json }
     end
 
+  end
+
+  def new_comments_polling
+    interaction = Interaction.find(params[:interaction_id])
+
+    response = Hash.new
+    render_calltoactions_str = String.new
+
+    comments_to_show = interaction.resource.user_comments.publish.where("published_at > ?", params[:first_comment_show_date]).order("published_at DESC")
+    response[:first_comment_show_date] = comments_to_show.any? ? comments_to_show.first.published_at : nil
+
+    comments_to_show.each do |user_comment|
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_comment", locals: { user_comment: user_comment, new_comment_class: true }, layout: false, formats: :html)
+    end
+
+    response[:comments_to_append] = render_calltoactions_str
+
     respond_to do |format|
-      format.json { render :json => risp.to_json }
+      format.json { render :json => response.to_json }
+    end
+  end
+
+  def append_comments
+    interaction = Interaction.find(params[:interaction_id])
+
+    response = Hash.new
+    render_calltoactions_str = String.new
+
+    comments_to_show = interaction.resource.user_comments.publish.where("published_at < ?", params[:last_comment_show_date]).order("published_at DESC").limit(10)
+    response[:last_comment_show_date] = comments_to_show.any? ? comments_to_show.last.published_at : nil
+
+    comments_to_show.each do |user_comment|
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_comment", locals: { user_comment: user_comment, new_comment_class: true }, layout: false, formats: :html)
+    end
+
+    response[:comments_to_append] = render_calltoactions_str
+
+    response[:comments_to_append_counter] = comments_to_show.count
+
+    respond_to do |format|
+      format.json { render :json => response.to_json }
     end
   end
 

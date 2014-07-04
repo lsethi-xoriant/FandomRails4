@@ -1,63 +1,46 @@
 <div class="row cta">      
-  <div class="col-sm-6 col-sm-offset-3">
-    <div class="panel panel-default cta-page no-pad">
-      <div class="panel-body cta-panel no-pad">
-        <!-- MEDIA -->
-        <div class="row">
-          <div class="col-md-12">
-            <% if calltoaction.media_type == "VIDEO" %>
-                <div class="video flex-video widescreen" style="background:#222;">             
-                  <!-- IFRAME VIDEO -->
-                  <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-id="<%= calltoaction.id %>" secondary-calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").id %>"></div>
-                  <!-- OVERVIDEO AREA -->
-                  <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
-                  <!-- OVERVIDEO TITLE -->
-                  <div id="home-overvideo-title-<%= calltoaction.id %>"><%= render partial: "/call_to_action/overvideo_video_home", locals: { calltoaction: calltoaction } %></div>
-                  <!-- OVERVIDEO FEEDBACK -->
-                  <div id="home-overvideo-feedback-<%= calltoaction.id %>"></div>
-                </div>
-            <% elsif calltoaction.media_type == "IMAGE" %>
-              <!-- IMAGE -->
-              <img src="<%= calltoaction.image %>" style="width: 100%; margin-bottom: 15px;">
-            <% elsif calltoaction.media_type == "IFRAME" %>
-              <div class="video flex-video widescreen" style="background:#222;">  
-                <%= calltoaction.iframe.html_safe %>
-              </div>
+  <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1">
+    <div class="panel panel-default cta-page">
+
+      <div class="panel-heading" style="background: none">
+        <div class="row" id="cta-id-<%= calltoaction.id %>">
+          <div class="col-md-8 col-xs-8">
+            <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
+            <% if tags_with_miniformat_in_calltoaction.any? %>
+              <h5 class="text-muted">
+                <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
+                <%= tags_with_miniformat_in_calltoaction.first.name %>
+              </h5>
             <% end %>
           </div>
+          <div class="col-md-4 col-xs-4 text-right">
+            <h4>
+              <% if call_to_action_completed?(calltoaction, current_user_or_anonymous_user) %>
+                <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 7px;">
+                  FATTO <span class="glyphicon glyphicon-ok"></span>
+                </span>
+              <% else %>
+                <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 7px;">+<%= predict_max_cta_outcome(calltoaction, anonymous_user).reward_name_to_counter["POINT"] %>
+                  <span class="glyphicon glyphicon-star"></span>
+                </span>
+              <% end %>
+            </h4>
+          </div>
         </div>
-
-        <!-- UNDERVIDEO AREA -->
         <div class="row">
-
-          <div class="col-md-12 text-center" style="padding: 0 30px 0 30px;">
+          <div class="col-md-12 text-left">
             <h2><%= calltoaction.title %></h2>
           </div>
-
-          <% if calltoaction.description.present? %>
-            <div class="col-md-12 text-left" style="padding: 0 30px 0 30px;">
-              <h4><%= calltoaction.description %></h4>
-            </div>
-          <% end %>
-
-          <div class="col-xs-12">
-            <%= render partial: "/call_to_action/undervideo_interactions", locals: { calltoaction: calltoaction } %>
-          </div>
-
-          <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">
-            <!-- UNDERVIDEO FEEDBACK -->               
-          </div>
-
-          <div class="col-md-12" id="share-footer-<%= calltoaction.id %>">
-            <!-- SHARE FOOTER -->
-          </div>
         </div>
-      </div>         
+      </div>
+
+      <%= render partial: "/call_to_action/single_calltoaction_panel_body", locals: { calltoaction: calltoaction } %>
+
       <div class="panel-footer">
         <div class="row">
           <div class="col-xs-12 text-center">
             <% if calltoaction_comment_interaction %>
-              <%= render partial: "/call_to_action/stream_comment", locals: { interaction_comment: calltoaction_comment_interaction, user_comment: user_comment } %>
+              <%= render partial: "/call_to_action/stream_comment", locals: { interaction_comment: calltoaction_comment_interaction } %>
             <% end %>
           </div>
         </div>
