@@ -3,7 +3,7 @@
 <div id="content">    
 
   <div id="content-header">
-    <h1>Nuovo TAG</h1>
+    <h1>Modifica TAG</h1>
   </div> <!-- #content-header --> 
 
   <div id="content-container">
@@ -77,10 +77,11 @@
             <div id="tmp-tagfield-add"></div>
 
             <%= f.fields_for :tag_fields do |builder| %>
-            	<% if @tag.tags_tags.count > 0 %>
+            	<% if @tag.tag_fields.count > 0 %>
             		<%= render 'tag-field-form', :f => builder %>
             	<% end %>
             <% end %>
+            
           </div>
       </div>
       <div class="row">
@@ -108,7 +109,12 @@
       placeholder: "",
       tags: tl,
       tokenSeparators: [","]
-    })
+    });
+    
+    <% if @cloning %>
+    	$("#tag_name").focus();
+    <% end %>
+    
   });
 
   function add_tag_fields(link, association, content) {

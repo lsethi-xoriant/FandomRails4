@@ -6,8 +6,8 @@ class Tag < ActiveRecord::Base
   
   has_many :call_to_action_tags
   has_many :reward_tags
-  has_many :tags_tags
-  has_many :tag_fields
+  has_many :tags_tags, dependent: :destroy
+  has_many :tag_fields, dependent: :destroy
   
   accepts_nested_attributes_for :tag_fields
   
