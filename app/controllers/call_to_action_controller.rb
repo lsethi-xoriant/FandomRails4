@@ -2,22 +2,12 @@
 # encoding: utf-8
 
 class CallToActionController < ApplicationController
-  # Libreria per la gestione del captcha, si occupa solamente di disegnarlo.
-  require "noisy_image.rb"
-
+  
   include ActionView::Helpers::SanitizeHelper
   include RewardingSystemHelper
   include CallToActionHelper
   include ApplicationHelper
-
-  # Per la gestione del captcha, genera un'immagine appoggiandosi alla libreria noisy_image e appoggiando
-  # il valore in sessione.
-  def code_image
-      noisy_image = NoisyImage.new(8)
-      session["cpt#{params[:interaction_id]}".to_sym] = noisy_image.code
-      image = noisy_image.code_image
-      send_data image, type: 'image/jpeg', disposition: 'inline'
-  end
+  include CaptchaHelper
 
   def append_calltoaction
     render_calltoactions_str = String.new
@@ -66,6 +56,10 @@ class CallToActionController < ApplicationController
     
     @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
+    if page_require_captcha?(@calltoaction_comment_interaction)
+      @captcha_data = generate_captcha_response
+    end
+
 =begin
     if @calltoaction.enable_disqus
       @disqus_requesturl = request.url
@@ -80,6 +74,10 @@ class CallToActionController < ApplicationController
       end
     end
 =end
+  end
+
+  def page_require_captcha?(calltoaction_comment_interaction)
+    return !current_user && calltoaction_comment_interaction
   end
   
   def get_correlated_cta(calltoaction)
@@ -112,7 +110,7 @@ class CallToActionController < ApplicationController
     comment_resource = Interaction.find(params[:interaction_id]).resource
 
     published_at = comment_resource.must_be_approved ? nil : DateTime.now     
-    user_text = sanitize(params[:comment])
+    user_text = params[:comment] # sanitize(params[:comment])
     
     response = Hash.new
 
@@ -120,8 +118,8 @@ class CallToActionController < ApplicationController
       user_comment = UserComment.create(user_id: current_user.id, published_at: published_at, text: user_text, comment_id: comment_resource.id)
       response[:error] = user_comment.errors
     elsif 
-      response[:captcha_result] = params[:captcha] == JSON.parse(session["cpt#{params[:interaction_id]}".to_sym]).join
-      if response[:captcha_result]
+      response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
+      if response[:captcha_check]
         user_comment = UserComment.create(user_id: current_user_or_anonymous_user.id, published_at: published_at, text: user_text, comment_id: comment_resource.id)
       end
     end
@@ -132,14 +130,13 @@ class CallToActionController < ApplicationController
 
   end
 
-  def new_comments_polling
-    interaction = Interaction.find(params[:interaction_id])
+  def append_or_update_comments(interaction_id, &query_block)
+    interaction = Interaction.find(interaction_id)
 
     response = Hash.new
     render_calltoactions_str = String.new
 
-    comments_to_show = interaction.resource.user_comments.publish.where("published_at > ?", params[:first_comment_show_date]).order("published_at DESC")
-    response[:first_comment_show_date] = comments_to_show.any? ? comments_to_show.first.published_at : nil
+    comments_to_show = query_block.call(interaction, response)
 
     comments_to_show.each do |user_comment|
       render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_comment", locals: { user_comment: user_comment, new_comment_class: true }, layout: false, formats: :html)
@@ -152,26 +149,21 @@ class CallToActionController < ApplicationController
     end
   end
 
+  def new_comments_polling
+    append_or_update_comments(params[:interaction_id]) do |interaction, response|
+      comments_to_show = interaction.resource.user_comments.publish.where("published_at > ?", params[:first_comment_shown_date]).order("published_at DESC")
+      response[:first_comment_shown_date] = comments_to_show.any? ? comments_to_show.first.published_at : nil
+      comments_to_show
+    end
+  end
+
   def append_comments
-    interaction = Interaction.find(params[:interaction_id])
-
-    response = Hash.new
-    render_calltoactions_str = String.new
-
-    comments_to_show = interaction.resource.user_comments.publish.where("published_at < ?", params[:last_comment_show_date]).order("published_at DESC").limit(10)
-    response[:last_comment_show_date] = comments_to_show.any? ? comments_to_show.last.published_at : nil
-
-    comments_to_show.each do |user_comment|
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_comment", locals: { user_comment: user_comment, new_comment_class: true }, layout: false, formats: :html)
-    end
-
-    response[:comments_to_append] = render_calltoactions_str
-
-    response[:comments_to_append_counter] = comments_to_show.count
-
-    respond_to do |format|
-      format.json { render :json => response.to_json }
-    end
+    append_or_update_comments(params[:interaction_id]) do |interaction, response|
+      comments_to_show = interaction.resource.user_comments.publish.where("published_at < ?", params[:last_comment_shown_date]).order("published_at DESC").limit(10)
+      response[:last_comment_shown_date] = comments_to_show.any? ? comments_to_show.last.published_at : nil
+      response[:comments_to_append_counter] = comments_to_show.count
+      comments_to_show
+    end    
   end
 
   def update_interaction

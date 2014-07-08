@@ -1,4 +1,4 @@
-<div ng-controller="CommentCtrl" ng-init="init(<%= !current_user.blank? %>, <%= interaction_comment.id %>, <%= interaction_comment.resource.must_be_approved %>, '<%= get_last_comments_to_view_date(interaction_comment) %>', '<%= get_first_comments_to_view_date(interaction_comment) %>', <%= get_comments_append_counter(interaction_comment) %>)">   
+<div ng-controller="CommentCtrl" ng-init="init(<%= !current_user.blank? %>, <%= interaction_comment.id %>, <%= interaction_comment.resource.must_be_approved %>, '<%= get_last_comments_to_view_date(interaction_comment) %>', '<%= get_first_comments_to_view_date(interaction_comment) %>', <%= get_comments_append_counter(interaction_comment) %>, <%= captcha_data.to_json %>)">   
 
   <div id="to-comments" class="comment-canvas">
     <div class="row">
@@ -25,8 +25,7 @@
                   <% unless current_user %>
                     <div class="row">               
                       <div class="col-md-6">
-                        <!--<img class="img-responsive" src="http://placehold.it/200x40">-->
-                        <iframe src="/captcha/<%= interaction_comment.id %>" width="180" height="40" id="captcha" marginheight="0" marginwidth="0" scrolling="no" frameBorder="0"></iframe>
+                        <img src="" id="captcha-img-<%= interaction_comment.id %>" style="width: 180px; height: 40px;">
                       </div>              
                       <div class="col-md-6">
                         <%= text_field_tag :code, "", id: "user-captcha-#{interaction_comment.id}" ,placeholder: "captcha", class: "form-control" %>
@@ -35,7 +34,7 @@
                   <% end %>              
                 </div>
                 <div class="col-sm-4">
-                  <button class="btn btn-info btn-md pull-right" onclick="submitComment()">commenta</button>
+                  <button id="comment-button-<%= interaction_comment.id %>" class="btn btn-info btn-md pull-right" onclick="submitComment()">commenta</button>
                 </div>   
               </div>  
             </div>
@@ -61,6 +60,5 @@
   </div>
 
 </div>
-
 
 
