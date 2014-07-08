@@ -84,6 +84,10 @@
 									<div class="col-sm-1" style="margin: 0;">
 										<a href="/easyadmin/cta/tag/<%= c.id %>"><i class="fa fa-tag" style="color: red"></i></a>
 									</div>
+									
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/cta/clone/<%= c.id %>"><i class="fa fa-copy" style="color: red"></i></a>
+									</div>
 
 									<div class="col-sm-1" style="margin: 0;">
 										<a href="javascript: void(0)" onclick="hideCalltoaction('<%= c.id %>')"><i class="fa fa-eye" style="color: <%= c.activated_at.blank? ? "gray" : "red" %>" id="eye-<%= c.id %>"></i></a>

@@ -57,6 +57,7 @@ class ApplicationController < ActionController::Base
         end
       end
     end
+    calltoactions_during_video_interactions_second
   end
 
   before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" }
