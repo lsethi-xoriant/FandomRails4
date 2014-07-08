@@ -109,7 +109,7 @@ Fandom::Application.routes.draw do
   match "/reward/buy/:reward_id", :to => "reward#buy"
   
   # Captcha.
-  match "/captcha/:interaction_id", :to => "call_to_action#code_image"
+  match "/captcha", :to => "captcha#generate_captcha", defaults: { format: 'json' }
 
   # Instagram subscribe. 
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
