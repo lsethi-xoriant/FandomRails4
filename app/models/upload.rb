@@ -3,5 +3,4 @@ class Upload < ActiveRecord::Base
   
   has_one :interaction, as: :resource
 
-  validates_presence_of :releasing_document
 end
