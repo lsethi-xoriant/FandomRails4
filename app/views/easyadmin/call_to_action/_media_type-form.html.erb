@@ -1,0 +1,25 @@
+<div class="form-group">
+  <label class="text-input">Tipologia di contenuto</label>
+    <% date_array = f.object.media_type_enum.map { |media_type| [ media_type, media_type] } %>
+    <%= f.select(:media_type, date_array, {}, { :class => "form-control", :onchange => "updateMedia()" }) %>
+</div>
+<div class="form-group" id="media_data-form-group">
+    <label class="text-input" id="media-data-label">MEDIA DATA</label>
+    <%= f.text_area :media_data, :class => "form-control", rows: 2 %>
+</div>
+
+<%= render partial: "play_interaction", locals: { f: f } %>
+
+<div class="form-group" id="media-image-form-group">
+  <label class="text-input">Immagine copertina</label>
+  <div class="fileupload fileupload-new" data-provides="fileupload">
+    <div class="fileupload-preview thumbnail" style="width: 100%; height: 200px; line-height: 20px;">
+      <img src="<%= f.object.media_image.url %>">
+    </div>
+    <div>
+      <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
+      <span class="fileupload-exists">Change</span><%= f.file_field :media_image  %></span>
+      <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+    </div>
+  </div>
+</div>

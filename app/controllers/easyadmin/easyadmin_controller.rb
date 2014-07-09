@@ -339,6 +339,10 @@ class Easyadmin::EasyadminController < ApplicationController
     comm = UserComment.find(params[:property].to_i)
     comm.update_attributes(published_at: DateTime.now, deleted: params[:pub_or_hide] == "hide")
 
+    if !comm.deleted
+      Notice.create(:user_id => comm.user_id, :html_notice => comm.text, :viewed => false, :read => false)
+    end
+
     respond_to do |format|
       format.json { render :json => comm.to_json }
     end

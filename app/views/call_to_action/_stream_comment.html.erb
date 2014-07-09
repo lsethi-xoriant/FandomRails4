@@ -1,65 +1,64 @@
-<div id="to-comments" class="comment-canvas">
-  <div class="row">
-    <div class="col-md-12">
-      <h4>Lascia un Commento</h4>
-      <hr>
-    </div>
-    <div class="col-xs-2">
-      <img src="<%= current_avatar %>" class="img-circle img-responsive img-profile">
-    </div>
+<div ng-controller="CommentCtrl" ng-init="init(<%= !current_user.blank? %>, <%= interaction_comment.id %>, <%= interaction_comment.resource.must_be_approved %>, '<%= get_last_comments_to_view_date(interaction_comment) %>', '<%= get_first_comments_to_view_date(interaction_comment) %>', <%= get_comments_append_counter(interaction_comment) %>, <%= captcha_data.to_json %>)">   
 
-    <div class="col-xs-10">
+  <div id="to-comments" class="comment-canvas">
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Lascia un Commento</h4>
+        <hr>
+      </div>
+      <div class="col-xs-2">
+        <img src="<%= current_avatar %>" class="img-circle img-responsive img-profile">
+      </div>
 
-      <%= form_for user_comment, url: "/add_comment", remote: true do |f| %>
-        <!-- PANEL FOR INPUT COMMENT -->
-        <div class="panel panel-default insert-comment">
-          <!-- PANEL BODY FOR INPUT COMMENT -->
-          <div class="panel-body">
-            <%= f.hidden_field :comment_id, value: "#{ interaction_comment.resource.id }" %> 
-            <%= f.text_area :text, rows: 3, class: "form-control", style: "resize: none;" %>
-          </div>
-          <!-- PANEL FOOTER FOR INPUT COMMENT -->
-          <div class="panel-footer">
-            <div class="row">
-              <div class="col-sm-8">
-                <% unless current_user %>
-                  <div class="row">               
-                    <div class="col-md-6">
-                      <!--<img class="img-responsive" src="http://placehold.it/200x40">-->
-                      <iframe src="/captcha" width="180" height="40" id="captcha" marginheight="0" marginwidth="0" scrolling="no" frameBorder="0"></iframe>
-                    </div>              
-                    <div class="col-md-6">
-                      <%= text_field_tag :code, "", placeholder: "captcha", class: "form-control" %>
+      <div class="col-xs-10">
+
+          <!-- PANEL FOR INPUT COMMENT -->
+          <div class="panel panel-default insert-comment">
+            <!-- PANEL BODY FOR INPUT COMMENT -->
+            <div class="panel-body">
+              <%= text_area_tag :text, nil, rows: 3, id: "user-comment-#{interaction_comment.id}", class: "form-control", style: "resize: none;" %>
+            </div>
+            <!-- PANEL FOOTER FOR INPUT COMMENT -->
+            <div class="panel-footer">
+              <div class="row">
+                <div class="col-sm-8">
+                  <% unless current_user %>
+                    <div class="row">               
+                      <div class="col-md-6">
+                        <img src="" id="captcha-img-<%= interaction_comment.id %>" style="width: 180px; height: 40px;">
+                      </div>              
+                      <div class="col-md-6">
+                        <%= text_field_tag :code, "", id: "user-captcha-#{interaction_comment.id}" ,placeholder: "captcha", class: "form-control" %>
+                      </div>
                     </div>
-                  </div>
-                <% end %>              
-              </div>
-              <div class="col-sm-4">
-                <button type="submit" class="btn btn-info btn-md pull-right">commenta</button>
-              </div>   
-            </div>  
+                  <% end %>              
+                </div>
+                <div class="col-sm-4">
+                  <button id="comment-button-<%= interaction_comment.id %>" class="btn btn-info btn-md pull-right" onclick="submitComment()">commenta</button>
+                </div>   
+              </div>  
+            </div>
           </div>
-        </div>
+
+      </div>
+
+    </div>
+
+
+    <div id="comments-<%= interaction_comment.id %>">
+      <% get_last_comments_to_view(interaction_comment).each do |user_comment| %>
+        <%= render partial: "/call_to_action/comment", locals: { user_comment: user_comment, new_comment_class: false } %>
       <% end %>
-
     </div>
 
-  </div>
-
-
-  <div id="div-comment">
-    <% interaction_comment.resource.user_comments.publish.order("created_at DESC").limit(5).each do |user_comment| %>
-      <%= render partial: "/call_to_action/comment", locals: { user_comment: user_comment } %>
-    <% end %>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12 text-center">
-        <p>COMMENTI APPESI: <a id="comment-append-counter" href="javascript: void(0)" onclick="updateClosedCommentView()"><%= interaction_comment.resource.user_comments.publish.count %></a></p>
+    <div class="row">
+      <div class="col-md-12 text-center">
+          <p>COMMENTI APPESI: <a id="comment-append-counter-<%= interaction_comment.id %>" href="javascript: void(0)" onclick="appendComments()"></a></p>
+      </div>
     </div>
+
   </div>
 
 </div>
-
 
 

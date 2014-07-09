@@ -66,8 +66,8 @@
 
 
 							<td>
-								<% if c.image.present? %>
-									<img src="<%= c.image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+								<% if c.media_image.present? %>
+									<img src="<%= c.media_image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
 								<% end %>
 							</td>
 							<td>
@@ -83,6 +83,10 @@
 
 									<div class="col-sm-1" style="margin: 0;">
 										<a href="/easyadmin/cta/tag/<%= c.id %>"><i class="fa fa-tag" style="color: red"></i></a>
+									</div>
+									
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/cta/clone/<%= c.id %>"><i class="fa fa-copy" style="color: red"></i></a>
 									</div>
 
 									<div class="col-sm-1" style="margin: 0;">

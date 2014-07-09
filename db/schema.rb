@@ -11,20 +11,26 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140701095215) do
+ActiveRecord::Schema.define(:version => 20140709123320) do
 
   create_table "answers", :force => true do |t|
-    t.integer  "quiz_id",                               :null => false
-    t.string   "text",                                  :null => false
+    t.integer  "quiz_id",                                     :null => false
+    t.string   "text",                                        :null => false
     t.boolean  "correct"
-    t.boolean  "remove_answer",      :default => false
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.boolean  "remove_answer",            :default => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.string   "image_file_name"
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "call_to_action_id"
+    t.string   "media_image_file_name"
+    t.string   "media_image_content_type"
+    t.integer  "media_image_file_size"
+    t.datetime "media_image_updated_at"
+    t.text     "media_data"
+    t.string   "media_type"
   end
 
   add_index "answers", ["call_to_action_id"], :name => "index_answers_on_call_to_action_id"
@@ -57,19 +63,20 @@ ActiveRecord::Schema.define(:version => 20140701095215) do
     t.string   "name"
     t.string   "title"
     t.text     "description"
-    t.string   "video_url"
     t.string   "media_type"
-    t.boolean  "enable_disqus",      :default => false
+    t.boolean  "enable_disqus",            :default => false
     t.datetime "activated_at"
     t.string   "secondary_id"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.string   "slug"
-    t.text     "iframe"
+    t.integer  "user_id"
+    t.boolean  "user_generated"
+    t.string   "media_image_file_name"
+    t.string   "media_image_content_type"
+    t.integer  "media_image_file_size"
+    t.datetime "media_image_updated_at"
+    t.text     "media_data"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
@@ -350,7 +357,7 @@ ActiveRecord::Schema.define(:version => 20140701095215) do
   create_table "tag_fields", :force => true do |t|
     t.integer  "tag_id"
     t.string   "name"
-    t.string   "field_type"
+    t.string   "type"
     t.text     "value"
     t.string   "upload_file_name"
     t.string   "upload_content_type"
@@ -369,14 +376,26 @@ ActiveRecord::Schema.define(:version => 20140701095215) do
   add_index "tags", ["name"], :name => "index_tags_on_name", :unique => true
 
   create_table "tags_tags", :force => true do |t|
-    t.integer  "tag_id"
-    t.integer  "other_tag_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.integer "tag_id"
+    t.integer "belongs_tag_id"
   end
 
   add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
   add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
+
+  create_table "uploads", :force => true do |t|
+    t.integer  "call_to_action_id",               :null => false
+    t.boolean  "releasing"
+    t.text     "releasing_description"
+    t.boolean  "privacy"
+    t.text     "privacy_description"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.string   "releasing_document_file_name"
+    t.string   "releasing_document_content_type"
+    t.integer  "releasing_document_file_size"
+    t.datetime "releasing_document_updated_at"
+  end
 
   create_table "user_comments", :force => true do |t|
     t.integer  "user_id"
@@ -404,6 +423,7 @@ ActiveRecord::Schema.define(:version => 20140701095215) do
     t.integer  "counter",        :default => 1
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+    t.boolean  "like"
   end
 
   create_table "user_rewards", :force => true do |t|

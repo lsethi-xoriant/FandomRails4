@@ -22,6 +22,8 @@ gem 'angularjs-rails'
 gem "paperclip", "3.4.2"
 gem "simple_form"
 
+gem "hamster"
+
 group :assets do
   gem 'turbo-sprockets-rails3'
   gem 'sprockets'

@@ -3,7 +3,7 @@ include InstantwinHelper
 include FandomUtils
 
 class UserInteraction < ActiveRecord::Base
-  attr_accessible :user_id, :interaction_id, :answer_id, :promocode_id, :counter
+  attr_accessible :user_id, :interaction_id, :answer_id, :promocode_id, :counter, :like
 
   belongs_to :user
   belongs_to :interaction
@@ -18,12 +18,12 @@ class UserInteraction < ActiveRecord::Base
   #   errors.add(:limit_exceeded, "hai raggiunto il limite giornaliero di inviti") if uicount > 4
   # end
 
-  def self.create_or_update_interaction(user_id, interaction_id, answer_id = nil)
+  def self.create_or_update_interaction(user_id, interaction_id, answer_id = nil, like = nil)
     user_interaction = find_by_user_id_and_interaction_id(user_id, interaction_id)
     if user_interaction.nil?
-      create(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id)
+      create(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like)
     else
-      user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id)
+      user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like)
       user_interaction
     end
   end
@@ -35,7 +35,6 @@ class UserInteraction < ActiveRecord::Base
 
   private
 
-  # Return true if the current calltoaction is already shared.
   def check_call_to_action_already_shared
     share_inter = self.interaction.calltoaction.interactions.where("resource_type='Share'")
     return !self.user.user_interactions.where("interaction_id in (?)", share_inter.map.collect { |u| u["id"] }).blank?

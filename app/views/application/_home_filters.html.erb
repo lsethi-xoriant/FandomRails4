@@ -1,9 +1,9 @@
-<div class="col-sm-6 col-sm-offset-3" style="margin-top: 15px;">
+<div class="col-sm-6 col-sm-offset-3" style="margin-top: 15px; font-size: 16px;">
   <ul class="nav nav-pills nav-justified fandom-nav">
     <li id="home-filter-all" class="active home-filter">
       <a href="javascript: void(0)" onclick="updatePageWithTag(null)">
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-12" style="font-size: 24px;">
             <span class="glyphicon glyphicon-th"></span>
           </div>
           <div class="col-md-12">
@@ -16,7 +16,7 @@
       <li id="home-filter-<%= tag.id %>" class="home-filter">
         <a href="javascript: void(0)" onclick="updatePageWithTag(<%= tag.id %>)">
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" style="font-size: 24px;">
               <span class="<%= tag.tag_fields.find_by_name("icon").try(:value) %>"></span>
             </div>
             <div class="col-md-12">

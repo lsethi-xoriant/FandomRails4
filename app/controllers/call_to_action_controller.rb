@@ -2,21 +2,12 @@
 # encoding: utf-8
 
 class CallToActionController < ApplicationController
-  # Libreria per la gestione del captcha, si occupa solamente di disegnarlo.
-  require "noisy_image.rb"
-
+  
   include ActionView::Helpers::SanitizeHelper
   include RewardingSystemHelper
   include CallToActionHelper
-
-  # Per la gestione del captcha, genera un'immagine appoggiandosi alla libreria noisy_image e appoggiando
-  # il valore in sessione.
-  def code_image
-      noisy_image = NoisyImage.new(8)
-      session[:code] = noisy_image.code
-      image = noisy_image.code_image
-      send_data image, type: 'image/jpeg', disposition: 'inline'
-  end
+  include ApplicationHelper
+  include CaptchaHelper
 
   def append_calltoaction
     render_calltoactions_str = String.new
@@ -62,8 +53,12 @@ class CallToActionController < ApplicationController
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([@calltoaction])
 
     @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(@calltoaction, "Comment")
-    if @calltoaction_comment_interaction
-      @user_comment = UserComment.new
+    @calltoaction_like_interaction = find_interaction_for_calltoaction_by_resource_type(@calltoaction, "Comment")
+
+    @calltoactions_correlated = get_correlated_cta(@calltoaction)
+
+    if page_require_captcha?(@calltoaction_comment_interaction)
+      @captcha_data = generate_captcha_response
     end
 
 =begin
@@ -82,6 +77,20 @@ class CallToActionController < ApplicationController
 =end
   end
 
+  def page_require_captcha?(calltoaction_comment_interaction)
+    return !current_user && calltoaction_comment_interaction
+  end
+  
+  def get_correlated_cta(calltoaction)
+    tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat")
+    if tags_with_miniformat_in_calltoaction.any?
+      tag_id = tags_with_miniformat_in_calltoaction.first.id
+      calltoactions = CallToAction.active.where("call_to_action_tags.tag_id=? and call_to_actions.id <> ?", tag_id, calltoaction.id).limit(3)
+    else
+       calltoactions = Array.new
+    end
+  end
+
   def next_disqus_page
     comment_disqus = JSON.parse(open("https://disqus.com/api/3.0/posts/list.json?api_key=#{ ENV['DISQUS_PUBLIC_KEY'] }&forum=#{ ENV['DISQUS_SHORTNAME'] }&thread:link=#{ params[:disqusurl] }&limit=2&cursor=#{ params[:disquscursor]}").read)
     disqus_cursor = comment_disqus["cursor"]
@@ -98,65 +107,64 @@ class CallToActionController < ApplicationController
     end
   end
 
-  def get_closed_comment_published
-    i = Interaction.find_by_call_to_action_id_and_resource_type(params[:calltoaction_id].to_i, "Comment")
-    offset = params[:offset] - 10 > 0 ? (params[:offset] - 10) : 0
-    risp = Hash.new
-    i.resource.user_comments.publish.order("created_at ASC").offset(offset).limit(10).each do |uc|
-      risp["#{ uc.id }"] = {
-        "name" => (uc.user ? "#{ uc.user.first_name } #{ uc.user.last_name }" : "Anonimo"),
-        "created_at" => uc.created_at,
-        "text" => uc.text,
-        "image" => (uc.user ? user_avatar(uc.user) : "")
-      }
-    end
-
-    respond_to do |format|
-      format.json { render :json => risp.to_json }
-    end
-  end
-
-  def index
-  end
-
   def add_comment
-    comment_resource = Comment.find(params[:user_comment][:comment_id])
+    comment_resource = Interaction.find(params[:interaction_id]).resource
 
-    unless comment_resource.must_be_approved
-      params[:user_comment] = params[:user_comment].merge(published_at: DateTime.now)
-    end
-
-    params[:user_comment][:text] = sanitize(params[:user_comment][:text])
+    published_at = comment_resource.must_be_approved ? nil : DateTime.now     
+    user_text = params[:comment] # sanitize(params[:comment])
     
+    response = Hash.new
+
     if current_user
-      @user_comment = UserComment.create(params[:user_comment].merge(user_id: current_user.id))
+      user_comment = UserComment.create(user_id: current_user.id, published_at: published_at, text: user_text, comment_id: comment_resource.id)
+      response[:error] = user_comment.errors
     elsif 
-      code = JSON.parse(session[:code]).join
-      @user_comment_captcha = code == params[:code]
-      if @user_comment_captcha
-        @user_comment = UserComment.create(params[:user_comment].merge(user_id: current_user_or_anonymous_user.id))
-      else
-        @user_comment_captcha = false
+      response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
+      if response[:captcha_check]
+        user_comment = UserComment.create(user_id: current_user_or_anonymous_user.id, published_at: published_at, text: user_text, comment_id: comment_resource.id)
       end
     end
 
+    respond_to do |format|
+      format.json { render :json => response.to_json }
+    end
+
   end
 
-  def get_comment_published
-    i = Interaction.find_by_call_to_action_id_and_resource_type(params[:calltoaction_id].to_i, "Comment")
-    risp = Hash.new
-    i.resource.user_comments.publish.order("created_at ASC").offset(params[:offset]).each do |uc|
-      risp["#{ uc.id }"] = {
-        "name" => (uc.user ? "#{ uc.user.first_name } #{ uc.user.last_name }" : "Anonimo"),
-        "created_at" => uc.created_at,
-        "text" => uc.text,
-        "image" => (uc.user ? user_avatar(uc.user) : "")
-      }
+  def append_or_update_comments(interaction_id, &query_block)
+    interaction = Interaction.find(interaction_id)
+
+    response = Hash.new
+    render_calltoactions_str = String.new
+
+    comments_to_show = query_block.call(interaction, response)
+
+    comments_to_show.each do |user_comment|
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_comment", locals: { user_comment: user_comment, new_comment_class: true }, layout: false, formats: :html)
     end
 
+    response[:comments_to_append] = render_calltoactions_str
+
     respond_to do |format|
-      format.json { render :json => risp.to_json }
+      format.json { render :json => response.to_json }
     end
+  end
+
+  def new_comments_polling
+    append_or_update_comments(params[:interaction_id]) do |interaction, response|
+      comments_to_show = interaction.resource.user_comments.publish.where("published_at > ?", params[:first_comment_shown_date]).order("published_at DESC")
+      response[:first_comment_shown_date] = comments_to_show.any? ? comments_to_show.first.published_at : nil
+      comments_to_show
+    end
+  end
+
+  def append_comments
+    append_or_update_comments(params[:interaction_id]) do |interaction, response|
+      comments_to_show = interaction.resource.user_comments.publish.where("published_at < ?", params[:last_comment_shown_date]).order("published_at DESC").limit(10)
+      response[:last_comment_shown_date] = comments_to_show.any? ? comments_to_show.last.published_at : nil
+      response[:comments_to_append_counter] = comments_to_show.count
+      comments_to_show
+    end    
   end
 
   def update_interaction
@@ -174,10 +182,17 @@ class CallToActionController < ApplicationController
       if answer.call_to_action
         response["next_call_to_action"] = {
           call_to_action_id: answer.call_to_action_id,
-          video_url: answer.call_to_action.video_url,
+          media_data: answer.call_to_action.media_data,
           interaction_play_id: answer.call_to_action.interactions.find_by_resource_type("Play").id
         }
       end
+
+    elsif interaction.resource_type.downcase.to_sym == :like
+
+      user_interaction = get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user)
+      like = user_interaction ? !user_interaction.like : true
+
+      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id, nil, like)
 
     else
       user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id)
@@ -185,17 +200,19 @@ class CallToActionController < ApplicationController
 
     if current_user
       UserCounter.update_counters(user_interaction, current_user)
-      # TODO: 
       outcome = compute_and_save_outcome(user_interaction)
+
       logger.info("rewards: #{outcome.reward_name_to_counter.inspect}")
       logger.info("unlocks: #{outcome.unlocks.inspect}")
+
       if outcome.errors.any?
+
         logger.error("errors in the rewarding system:")
+
         outcome.errors.each do |error|
           logger.error(error)
         end
       end
-      # TODO: 
       response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, current_user)
     else

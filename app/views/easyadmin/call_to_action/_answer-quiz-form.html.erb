@@ -1,0 +1,129 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+
+    <div class="row text-right">
+      <div class="col-lg-12 remove-answer">
+        <% if f.object.id %>
+            <%= f.hidden_field :remove_answer %>
+            <a class="btn btn-secondary btn-xs " href="javascript: void(0)" onclick="updateDeleteHiddenField(this)">sgancia</a>
+        <% else %>
+          <%= link_to_remove_answer_quiz_fields "rimuovi" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row text-left" style="padding-bottom: 0px;">
+
+
+      <div class="col-lg-6">
+
+        <div class="form-group">
+          <label class="text-input">Risposta</label>
+          <div class="input-group">        
+            <%= f.text_field :text, :class => "form-control" %>
+            <span class="input-group-addon">
+              <%= f.check_box :correct %>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group text-center">
+          <label class="text-input">Immagine risposta</label>
+          <div class="fileupload fileupload-new" data-provides="fileupload">
+            <div class="fileupload-preview thumbnail" style="width: 100%; height: 100px; line-height: 20px;">
+                <% unless f.object.image.blank? %><img src="<%= f.object.image.url %>"><% end %>
+            </div>
+            <div>
+              <span class="btn btn-default btn-file"><span class="fileupload-new"><i class="fa fa-picture-o"></i></span>
+              <span class="fileupload-exists"><i class="fa fa-pencil"></i></span><%= f.file_field :image  %></span>
+              <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload"><i class="fa fa-times-circle"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="text-input">CallToAction</label>
+          <% date_array = CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND tags.name='step'", Time.now.utc).order("activated_at DESC").map { |c| [ "#{ c.title }", c.id] } %>
+          <% date_array.unshift ["", ""] %>
+          <%= f.select :call_to_action_id, date_array, {}, :class => "form-control" %>
+        </div> 
+      
+      </div>
+
+      <div class="col-lg-6">
+
+        <div class="form-group">
+          <label class="text-input">Media associato</label>
+          <% date_array = f.object.media_type_enum.map { |media_type| [ media_type, media_type] } %>
+          <%= f.select(:media_type, date_array, {}, { :class => "form-control", :onchange => "updateMedia(this)" }) %>
+        </div>
+        <div class="form-group media_data-form-group">
+          <label class="text-input media-data-label">MEDIA DATA</label>
+          <%= f.text_area :media_data, :class => "form-control", rows: 2 %>
+        </div>
+
+        <div class="form-group media-image-form-group text-center">
+          <label class="text-input">Immagine media</label>
+          <div class="fileupload fileupload-new" data-provides="fileupload">
+            <div class="fileupload-preview thumbnail" style="width: 100%; height: 100px; line-height: 20px;">
+              <img src="<%= f.object.media_image.url %>">
+            </div>
+            <div>
+              <span class="btn btn-default btn-file"><span class="fileupload-new"><i class="fa fa-picture-o"></i></span>
+              <span class="fileupload-exists">Change</span><%= f.file_field :media_image  %></span>
+              <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload"><i class="fa fa-times-circle"></i></a>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+
+  function updateMedia(element) {
+    media_type = $(element).val();
+    container = $(element).parent().parent();
+    switch(media_type) {
+      case "YOUTUBE":
+        container.find($(".media-data-label")).html("V CODE");
+        container.find($(".media_data-form-group")).show();
+        container.find($(".play-interaction")).show();
+        container.find($(".media-image-form-group")).hide();
+        break;
+      case "IFRAME":
+        container.find($(".media-data-label")).html("IFRAME");
+        container.find($(".media_data-form-group")).show();
+        container.find($(".play-interaction")).hide();
+        container.find($(".media-image-form-group")).hide();
+        break;
+      case "IMAGE":
+        container.find($(".media_data-form-group")).hide();
+        container.find($(".play-interaction")).hide();
+        container.find($(".media-image-form-group")).show();
+        break;
+      default:
+        container.find($(".media_data-form-group")).hide();
+        container.find($(".media-image-form-group")).hide();
+        container.find($(".play-interaction")).hide();
+    }
+  }
+
+  function updateDeleteHiddenField(element) {
+    if($(element).html() == "sgancia") {
+      $(element).parent().parent().find("input:hidden").val("1");
+      $(element).removeClass("btn-secondary").addClass("btn-tertiary");
+      $(element).html("aggancia");
+    } else {
+      $(element).parent().parent().find("input:hidden").val("0");
+      $(element).removeClass("btn-tertiary").addClass("btn-secondary");
+      $(element).html("sgancia");
+    }
+  }
+
+</script>
+

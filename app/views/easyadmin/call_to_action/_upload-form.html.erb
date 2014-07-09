@@ -1,0 +1,50 @@
+
+<div class="panel panel-default">
+		<% if f.object.id %>
+			<div class="panel-heading">UPLOAD</div>
+		<% else %>
+			<div class="panel-heading">UPLOAD 
+				<p style="float: right"><%= link_to_remove_quiz_fields "rimuovi" %></p>
+			</div>
+		<% end %>
+		<div class="panel-body">
+
+			<%= f.hidden_field :resource_type, :class => "form-control" %>
+
+			<%= f.fields_for :resource do |uploadform| %>
+
+				<div class="col-lg-6">
+					<div class="row" style="margin-bottom: 0px;">
+						
+						<div class="form-group">
+						  <label class="text-input">Call to action template</label>
+						   <%= f.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
+						</div>
+						<div class="form-group">
+							<label class="text-input">Privacy necessaria</label>
+					  		<%= f.check_box :privacy %>
+						</div>
+						<div class="form-group">
+						  <label class="text-input">Liberatoria necessaria</label>
+						   <%= f.check_box :releasing %>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="col-lg-6">
+					<div class="row" style="margin-bottom: 0px;">
+						<div class="form-group">
+						  <label class="text-input">Call to action template</label>
+						   <%= f.text_area :privacy_description, :class => "form-control", rows: 6 %>
+						</div>
+						<div class="form-group">
+						  <label class="text-input">Call to action template</label>
+						   <%= f.text_area :releasing_description, :class => "form-control", rows: 6 %>
+						</div>
+					</div>
+				</div>
+
+			<% end %>
+  	</div>
+</div>

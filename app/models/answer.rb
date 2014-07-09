@@ -2,10 +2,10 @@
 # encoding: utf-8
 
 class Answer < ActiveRecord::Base
-  attr_accessible :text, :correct, :quiz_id, :image, :remove_answer, :call_to_action_id
-  # Non utilizzato come accessor in quanto se veniva modificato solamente quell'elemento non passava per after_update.
-  # attr_accessor :remove_answer
+  attr_accessible :text, :correct, :quiz_id, :image, :remove_answer, :call_to_action_id,
+    :media_data, :media_image, :media_type
 
+  has_attached_file :media_image, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }
   has_attached_file :image, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }
   
   belongs_to :quiz
@@ -19,6 +19,10 @@ class Answer < ActiveRecord::Base
 
   def image_url
     image.url
+  end
+
+  def media_type_enum
+    ["IMAGE", "YOUTUBE", "IFRAME", "VOID"]
   end
 
   def check_remove_answer

@@ -28,7 +28,7 @@ class Easyadmin::HomeLaunchersController < ApplicationController
   def update
     @home_launcher = HomeLauncher.find(params[:id])
     unless @home_launcher.update_attributes(params[:home_launcher])
-      render template: "/easyadmin/home_launchers/#{@home_launcher.id}/edit"     
+      render "edit"   
     else
       flash[:notice] = "Item aggiornato correttamente"
       redirect_to "/easyadmin/home_launchers"

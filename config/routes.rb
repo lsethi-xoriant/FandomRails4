@@ -20,21 +20,22 @@ Fandom::Application.routes.draw do
     
     resources :tag
     
+    match "tag/clone/:id", :to => "tag#clone"
+    
     match "winner", :to => "easyadmin#index_winner"
     match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
 
     match "user/show/:id", :to => "easyadmin#show_user"
 
-    match "cta", :to => "easyadmin#index_cta"
-    match "cta/filter/:filter", :to => "easyadmin#filter_cta"
-    match "cta/filter/:filter/", :to => "easyadmin#filter_cta"
-    match "cta/new/", :to => "easyadmin#new_cta"
-    match "cta/show/:id", :to => "easyadmin#show_cta"
-    match "cta/edit/:id/", :to => "easyadmin#edit_cta"
-    match "cta/save", :to => "easyadmin#save_cta"
-    match "cta/update", :to => "easyadmin#update_cta"
-    match "cta/hide/:id", :to => "easyadmin#hide_cta"
-    match "cta/", :to => "easyadmin#index_cta"
+    match "cta", :to => "call_to_action#index_cta"
+    match "cta/filter/:filter", :to => "call_to_action#filter_cta"
+    match "cta/new/", :to => "call_to_action#new_cta"
+    match "cta/show/:id", :to => "call_to_action#show_cta"
+    match "cta/edit/:id/", :to => "call_to_action#edit_cta"
+    match "cta/save", :to => "call_to_action#save_cta"
+    match "cta/update", :to => "call_to_action#update_cta"
+    match "cta/hide/:id", :to => "call_to_action#hide_cta"
+    match "cta/clone/:id", to: "call_to_action#clone"
 
     match "cta/tag/:id", :to => "easyadmin#tag_cta"
     match "cta/tag/:id/update", :to => "easyadmin#tag_cta_update"
@@ -108,7 +109,7 @@ Fandom::Application.routes.draw do
   match "/reward/buy/:reward_id", :to => "reward#buy"
   
   # Captcha.
-  match "/captcha", :to => "call_to_action#code_image"
+  match "/captcha", :to => "captcha#generate_captcha", defaults: { format: 'json' }
 
   # Instagram subscribe. 
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
@@ -178,20 +179,19 @@ Fandom::Application.routes.draw do
   match "/500", :to => "http_error#internal_error_500"
   match "/422", :to => "http_error#unprocessable_entity_422"
 
-  match "rss", :to => "rss#global_rss", defaults: { format: 'rss' }
-
-  match "/extra", :to => "property#extra"
+  match "rss", :to => "rss#rss", defaults: { format: 'rss' }
 
   match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
-  match "/add_comment", :to => "call_to_action#add_comment"
+  
+  match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+  match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
+  match "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
 
   match "profile", :to => "profile#show"
   match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
   match "get_overvideo_during_interaction", :to => "call_to_action#get_overvideo_during_interaction", defaults: { format: 'json' }
   resources :call_to_action do
-    match "/get_comment_published", :to => "call_to_action#get_comment_published", defaults: { format: 'json' }
-    match "/get_closed_comment_published", :to => "call_to_action#get_closed_comment_published", defaults: { format: 'json' }
     match "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }
   end
 

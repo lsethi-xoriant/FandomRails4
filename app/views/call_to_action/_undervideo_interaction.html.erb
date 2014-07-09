@@ -1,11 +1,10 @@
 <div id="undervideo-<%= interaction.id %>" class="row undervideo" style="padding: 0 15px 0 15px;" >
 
-  <% if interaction.resource_type.downcase.to_sym == :check %>
+  <% if interaction.resource_type.downcase.to_sym == :check || interaction.resource_type.downcase.to_sym == :like %>
 
-    <%= render partial: "/call_to_action/check", locals: { interaction: interaction, outcome: outcome } %>
+    <%= render partial: "/call_to_action/#{interaction.resource_type.downcase}_interaction", locals: { interaction: interaction, outcome: outcome } %>
 
   <% elsif interaction.resource_type.downcase.to_sym == :quiz %>
-    
       <div class="col-md-12">
         <!--<hr>-->
         <%= render partial: "/call_to_action/#{interaction.resource.quiz_type.downcase.to_sym}_interaction", locals: { interaction: interaction, user_interaction: get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user) } %>

@@ -5,7 +5,7 @@ xml.rss :version => "2.0" do
     xml.description "RSS"
     xml.link "TODOTODOTODO"
 
-    for calltoaction in @calltoaction_list
+    for calltoaction in @calltoactions
       xml.item do
 
         xml.title "#{ calltoaction.title }"

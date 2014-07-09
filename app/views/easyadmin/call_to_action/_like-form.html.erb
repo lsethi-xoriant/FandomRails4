@@ -1,0 +1,25 @@
+<div class="panel panel-default">
+	<% if f.object.id %>
+		<div class="panel-heading">&nbsp;</div>
+	<% else %>
+		<div class="panel-heading">&nbsp; 
+			<p style="float: right"><%= link_to_remove_like_fields "rimuovi" %></p>
+		</div>
+	<% end %>
+	<div class="panel-body" style="padding-bottom: 0px;">
+		<%= f.hidden_field :resource_type, :class => "form-control" %>
+
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="form-group">
+				  <label class="text-input">Visibile</label>
+				   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["MAI_VISIBILE", "MAI_VISIBILE"]], {}, { :class => "form-control" }) %>
+				</div>
+			</div>
+		</div>
+
+		<%= f.fields_for :resource do |likeform| %>
+			 <%= likeform.hidden_field :title, :class => "form-control" %>
+		<% end %>
+  	</div>
+</div>

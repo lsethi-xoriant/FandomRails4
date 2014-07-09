@@ -1,0 +1,422 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "calltoaction" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>Modifica CALLTOACTION</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if @cta.errors.any? %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p>Errori nel salvataggio dell'utente:</p>
+                <p>
+                  <ul>
+                    <% @cta.errors.full_messages.each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% elsif flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <h3>Dati generali</h3>
+    <hr/>
+    
+    <%= form_for @cta, url: { action: "update_cta" }, multipart: true do |f| %>
+      <%= hidden_field_tag :id, @cta.id %>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+              <label class="text-input">Titolo</label>
+              <%= f.text_field :title, :class => "form-control" %>
+          </div>
+          <div class="form-group">
+              <label class="text-input">Descrizione</label>
+              <%= f.text_area :description, :class => "form-control", rows: 3 %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Commenti Disqus</label>
+              <%= f.select(:enable_disqus, [["NON ABILITATI", false], ["ABILITATI", true]], {}, { :class => "form-control" }) %>
+          </div>
+        </div>
+
+        <div class="col-lg-6 text-center">
+          <%= render partial: "media_type-form", locals: { f: f } %>
+        </div>
+      </div>
+
+      <h3>TRIVIA <p style="float: right;"><%= link_to_add_quiz_fields "AGGIUNGI TRIVIA", f, :interactions %></p></h3>
+      <hr/>
+              
+      <div id="tmp-quiz-add"></div>
+
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == 'Quiz' && builder.object.resource.quiz_type == "TRIVIA" %>
+          <%= render 'quiz-form', :f => builder %>
+        <% end %>
+      <% end %>
+
+      <h3>VERSUS <p style="float: right;"><%= link_to_add_versus_fields "AGGIUNGI VERSUS", f, :interactions %></p></h3>
+      <hr/>
+
+      <div id="tmp-versus-add"></div>
+
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == 'Quiz' && builder.object.resource.quiz_type == "VERSUS" %>
+          <%= render 'versus-form', :f => builder %>
+        <% end %>
+      <% end %>
+
+      <h3>CHECK <p style="float: right;"><%= link_to_add_check_fields "AGGIUNGI CHECK", f, :interactions %></p></h3>
+      <hr/>
+
+      <div id="tmp-check-add"></div>
+
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Check" %>
+          <%= render 'check-form', :f => builder %>
+        <% end %>
+      <% end %>
+
+      <h3>LIKE <p style="float: right;"><%= link_to_add_like_fields "AGGIUNGI LIKE", f, :interactions if f.object.interactions.where("resource_type='Like'").blank? %></p></h3>
+      <hr/>
+
+      <div id="tmp-like-add"></div>
+      
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Like" %>
+          <%= render 'like-form', :f => builder %>
+        <% end %>
+      <% end %>
+
+      <h3>DOWNLOAD <p style="float: right;"><%= link_to_add_download_fields "AGGIUNGI DOWNLOAD", f, :interactions %></p></h3>
+      <hr/>
+
+      <div id="tmp-download-add"></div>
+      
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Download" %>
+          <%= render 'download-form', :f => builder %>
+        <% end %>
+      <% end %>
+
+      <h3>COMMENTI <p style="float: right;"><%= link_to_add_comment_fields "AGGIUNGI COMMENTI", f, :interactions %></p></h3>
+      <hr/>
+
+      <div id="tmp-comment-add"></div>
+      
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Comment" %>
+          <%= render 'comment-form', :f => builder %>
+        <% end %>
+      <% end %>
+
+      <h3>SHARE EMAIL</h3>
+      <hr/>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="panel panel-default">
+            <% e = false %>
+            <% f.object.interactions.where("resource_type='Share'").each { |r| e = true if r.resource.share_type == "email" } %>
+            <div class="panel-heading">EMAIL <p style="float: right;"><%= link_to_add_share_email_fields "AGGIUNGI EMAIL", f, :interactions unless e %></p></div>
+            
+            <div class="panel-body" style="padding-bottom: 0px;"> 
+              <div id="tmp-share-email-add"></div>
+
+              <%= f.fields_for :interactions do |builder| %>
+                <% if builder.object.resource_type == "Share" && builder.object.resource.share_type == "email" %>
+                  <%= render 'share-email-form', :f => builder %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>SHARE PROVIDER</h3>
+      <hr/>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="panel panel-default">
+            <% fb = false %>
+            <% f.object.interactions.where("resource_type='Share'").each { |r| fb = true if r.resource.share_type == "facebook" } %>
+            <div class="panel-heading">FACEBOOK <p style="float: right;"><%= link_to_add_share_fb_fields "AGGIUNGI FACEBOOK", f, :interactions unless fb %></p></div>
+            
+            <div class="panel-body" style="padding-bottom: 0px;"> 
+              <div id="tmp-share-fb-add"></div>
+
+              <%= f.fields_for :interactions do |builder| %>
+                <% if builder.object.resource_type == "Share" && builder.object.resource.share_type == "facebook" %>
+                  <%= render 'share-fb-form', :f => builder %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="panel panel-default">
+            <% tw = false %>
+            <% f.object.interactions.where("resource_type='Share'").each { |r| tw = true if r.resource.share_type == "twitter" } %>
+            <div class="panel-heading">TWITTER <p style="float: right;"><%= link_to_add_share_tt_fields "AGGIUNGI TWITTER", f, :interactions unless tw %></p></div>
+            
+            <div class="panel-body" style="padding-bottom: 0px;"> 
+              <div id="tmp-share-tt-add"></div>
+
+              <%= f.fields_for :interactions do |builder| %>
+                <% if builder.object.resource_type == "Share" && builder.object.resource.share_type == "twitter" %>
+                  <%= render 'share-tt-form', :f => builder %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>TAGGING</h3>
+      <hr/>
+
+      <div class="row">
+        <div class="col-sm-6">
+            <%= text_field_tag :tag_list, @tag_list, { id: "s2_tokenization", class: "form-control" } %>
+            <span class="help-block">Per separare i TAG digita virgola</span>
+        </div>
+      </div>
+
+      <h3>Data di attivazione</h3>
+      <hr/>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="text-input">Giorno</label>
+            <div id="calltoaction_activation_date_div" class="input-group date" data-auto-close="true" data-date-autoclose="true" data-date-format="yyyy-mm-dd" data-date="<%=  @cta.activated_at.strftime("%Y-%m-%d") if @cta && @cta.activated_at %>">
+              <%= f.text_field :activation_date, :class => "form-control", value: @cta && @cta.activated_at ? @cta.activated_at.in_time_zone("Rome").strftime("%Y-%m-%d") : "" %>
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="text-input">Ora</label>
+            <div id="dp-ex-3" class="input-group bootstrap-timepicker">
+              <%= f.text_field :activation_time, :class => "form-control", value: @cta && @cta.activated_at ? @cta.activated_at.in_time_zone("Rome").strftime("%H:%M") : DateTime.now.in_time_zone("Rome").strftime("%H:%M") %>
+              <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row text-center">
+        <div class="col-sm12">
+          <button type="submit" class="btn btn-primary btn-lg">AGGIORNA</button>
+        </div>
+      </div>     
+    <% end %>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  tl = <%= raw(Tag.select("name").map(&:name).to_json) %>;
+  $(document).ready(function() {
+    updateMedia();
+
+    $('#s2_tokenization').select2({
+      placeholder: "",
+      tags: tl,
+      tokenSeparators: [","]
+    })
+  })
+
+  function updateMedia() {
+    media_type = $("#call_to_action_media_type").val();
+    switch(media_type) {
+      case "YOUTUBE":
+        $("#media-data-label").html("V CODE");
+        $("#media_data-form-group").show();
+        $("#play-interaction").show();
+        $("#media-image-form-group").hide();
+        break;
+      case "IFRAME":
+        $("#media-data-label").html("IFRAME");
+        $("#media_data-form-group").show();
+        $("#play-interaction").hide();
+        $("#media-image-form-group").hide();
+        break;
+      case "IMAGE":
+        $("#media_data-form-group").hide();
+        $("#play-interaction").hide();
+        $("#media-image-form-group").show();
+        break;
+      default:
+        $("#media_data-form-group").hide();
+        $("#media-image-form-group").hide();
+        $("#play-interaction").hide();
+    }
+  }
+
+  var like_counter = false; 
+  function add_like_fields(link, association, content) {
+    if(!like_counter) {
+      var new_id = new Date().getTime();
+      var regexp = new RegExp("new_" + association, "g");
+      $("#tmp-like-add").prepend(content.replace(regexp, new_id));
+      like_counter = true;
+    }
+  }
+
+  var play_counter = false; 
+  function add_play_fields(link, association, content) {
+    if(!play_counter) {
+      var new_id = new Date().getTime();
+      var regexp = new RegExp("new_" + association, "g");
+      $("#tmp-play-add").prepend(content.replace(regexp, new_id));
+      play_counter = true;
+    }
+  }
+
+  function add_versus_fields(link, association, content) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-versus-add").prepend(content.replace(regexp, new_id));
+  }
+
+  function add_quiz_fields(link, association, content) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-quiz-add").prepend(content.replace(regexp, new_id));
+  }
+
+  function add_answer_fields(link, association, content) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $(link).parent().parent().parent().find(".panel-body").prepend(content.replace(regexp, new_id));
+
+    updateMedia();
+  }
+
+  var share_fb_counter = false; 
+  function add_share_fb_fields(link, association, content) {
+    if(!share_fb_counter) {
+      var new_id = new Date().getTime();
+      var regexp = new RegExp("new_" + association, "g");
+      $("#tmp-share-fb-add").prepend(content.replace(regexp, new_id));
+      share_fb_counter = true;
+    }
+  }
+
+  var share_tt_counter = false; 
+  function add_share_tt_fields(link, association, content) {
+    if(!share_tt_counter) {
+      var new_id = new Date().getTime();
+      var regexp = new RegExp("new_" + association, "g");
+      $("#tmp-share-tt-add").prepend(content.replace(regexp, new_id));
+      share_tt_counter = true;
+    }
+  }
+
+  var share_email_counter = false; 
+  function add_share_email_fields(link, association, content) {
+    if(!share_email_counter) {
+      var new_id = new Date().getTime();
+      var regexp = new RegExp("new_" + association, "g");
+      $("#tmp-share-email-add").prepend(content.replace(regexp, new_id));
+      share_email_counter = true;
+    }
+  }
+
+  function add_check_fields(link, association, content) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-check-add").prepend(content.replace(regexp, new_id));
+  }
+
+  function add_download_fields(link, association, content) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-download-add").prepend(content.replace(regexp, new_id));
+  }
+
+  var comment_counter = false; 
+  function add_comment_fields(link, association, content) {
+    if(!comment_counter) {
+      var new_id = new Date().getTime();
+      var regexp = new RegExp("new_" + association, "g");
+      $("#tmp-comment-add").prepend(content.replace(regexp, new_id));
+      comment_counter = true;
+    }
+  }
+
+  function remove_comment_fields(link) {
+    $(link).parent().parent().parent().remove();
+    comment_counter = false;
+  }
+
+  function remove_download_fields(link) {
+    $(link).parent().parent().parent().remove();
+  }
+
+  function remove_versus_fields(link) {
+    $(link).parent().parent().parent().remove();
+  }
+
+  function remove_quiz_fields(link) {
+    $(link).parent().parent().parent().remove();
+  }
+
+  function remove_answer_versus_fields(link) {
+    $(link).parent().parent().parent().parent().parent().remove();
+  }
+
+  function remove_answer_quiz_fields(link) {
+    $(link).parent().parent().parent().remove();
+  }
+
+  function remove_like_fields(link) {
+    $(link).parent().parent().parent().remove();
+    like_counter = false;
+  }
+
+  function remove_play_fields(link) {
+    $(link).parent().parent().parent().remove();
+    play_counter = false;
+  }
+
+  function remove_share_fb_fields(link) {
+    $(link).parent().parent().parent().remove();
+    share_fb_counter = false;
+  }
+
+  function remove_share_tt_fields(link) {
+    $(link).parent().parent().parent().remove();
+    share_tt_counter = false;
+  }
+
+  function remove_share_email_fields(link) {
+    $(link).parent().parent().parent().remove();
+    share_email_counter = false;
+  }
+
+  function remove_check_fields(link) {
+    $(link).parent().parent().parent().remove();
+  }
+
+</script>

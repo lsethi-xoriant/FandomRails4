@@ -4,8 +4,72 @@
 
   <div class="row">
     <div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-      <%= render partial: "/call_to_action/single_calltoaction", locals: { calltoaction: @calltoaction, calltoaction_comment_interaction: @calltoaction_comment_interaction, user_comment: @user_comment } %>
+      <%= render partial: "/call_to_action/single_calltoaction", locals: { calltoaction: @calltoaction, calltoaction_comment_interaction: @calltoaction_comment_interaction, calltoaction_like_interaction: @calltoaction_like_interaction, outcome: nil, captcha_data: @captcha_data } %>
+      <%#= render partial: "/call_to_action/stream_single_calltoaction", locals: { calltoaction: @calltoaction, outcome: nil } %>
     </div>
+  </div>
+  
+  <div class="row">
+  	<div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
+  		<div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1">
+  		  <h2 class="text-center">Guarda anche</h2>
+  		  <hr />
+  		  <% @calltoactions_correlated.each do |c| %>
+  		    <div class="panel panel-default tpl-l-img">
+            <div class="panel-body">
+              <div class="row">
+                <div class="points">
+                  <h3>
+                    <% if call_to_action_completed?(c, current_user_or_anonymous_user) %>
+			                <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-success" style="padding-top: 7px;">FATTO <span class="glyphicon glyphicon-ok"></span>
+			                </span>
+			              <% else %>
+			                <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-warning" style="padding-top: 7px;">+<%= predict_max_cta_outcome(c, anonymous_user).reward_name_to_counter["POINT"] %>
+			                  <span class="glyphicon glyphicon-star"></span>
+			                </span>
+			              <% end %>
+                  </h3>
+                </div>
+                <div class="col-sm-5 cta-img" style="background: url('<%= c.image %>') no-repeat;">
+                  <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(c, "miniformat") %>
+			            <% if tags_with_miniformat_in_calltoaction.any? %>
+			              <h5 class="visible-xs"><span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
+			                <%= tags_with_miniformat_in_calltoaction.first.name %>
+                    </h5>
+			            <% end %>
+                </div>
+                <div class="col-sm-7">
+                  <div class="panel panel-default cta-content">
+                    <div class="panel-heading visible-lg visible-md visible-sm">
+                      <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(c, "miniformat") %>
+				              <% if tags_with_miniformat_in_calltoaction.any? %>
+				                <h5 class="text-muted visible-sm visible-md visible-lg"><span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
+				                  <%= tags_with_miniformat_in_calltoaction.first.name %>
+                        </h5>
+				              <% end %>
+                    </div>
+                    <div class="panel-body">
+                      <h3><%= c.title %> </h3>    
+                        <div class="row">
+                          <div class="col-sm-5">
+                            <p><a href="/call_to_action/<%= c.id %>" class="btn btn-primary btn-lg btn-block" role="button">VAI</a></p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel-footer text-muted">
+                        <div class="row">
+                          <div class="col-md-6 col-xs-6"></div>
+                          <div class="col-md-6 col-xs-6 text-right"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+  	</div>
   </div>
 
 </div>
