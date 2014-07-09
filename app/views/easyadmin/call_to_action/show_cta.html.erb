@@ -30,8 +30,8 @@
 
             <dt>Disqus</dt><dd><p><%= @current_cta.enable_disqus ? "abilitato" : "non abilitato" %></p></dd>
 
-            <% unless @current_cta.video_url.blank? %>
-            	<dt>Video</dt><dd><p><%= @current_cta.video_url %></p></dd>
+            <% unless @current_cta.media_data.blank? %>
+            	<dt>Video</dt><dd><p><%= @current_cta.media_data %></p></dd>
             <% end %>
 
             <% unless @tag_list.blank? %>
@@ -41,7 +41,7 @@
           </dl>
       </div>
       <div class="col-sm-3">
-      	<img class="img-responsive" src="<%= @current_cta.image.url %>" style="border: 1px solid black; border-radius: 10px;">
+      	<img class="img-responsive" src="<%= @current_cta.media_image.url %>" style="border: 1px solid black; border-radius: 10px;">
       </div>
     </div> 
 

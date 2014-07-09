@@ -54,49 +54,10 @@
             <label class="text-input">Commenti Disqus</label>
               <%= f.select(:enable_disqus, [["NON ABILITATI", false], ["ABILITATI", true]], {}, { :class => "form-control" }) %>
           </div>
-          <div class="form-group">
-            <label class="text-input">Tipologia di contenuto</label>
-              <%= f.select(:media_type, [["VIDEO", "VIDEO"], ["IMAGE", "IMAGE"], ["IFRAME", "IFRAME"]], {}, { :class => "form-control" }) %>
-          </div>
-          <div class="form-group">
-              <label class="text-input">IFRAME</label>
-              <%= f.text_area :iframe, :class => "form-control", rows: 3 %>
-          </div>
-          <div class="form-group">
-              <label class="text-input">Video URL</label>
-              <%= f.text_field :video_url, :class => "form-control" %>
-          </div>
-          <div class="col-lg-12">
-            <label>PLAY</label>
-            <p style="float: right;">
-              <%= link_to_add_play_fields "AGGIUNGI PLAY", f, :interactions if f.object.interactions.where("resource_type='Play'").blank? %>
-            </p>             
-            <hr style="margin-top: 10px; margin-bottom: 10px;" />
-
-            <div id="tmp-play-add"></div>
-
-            <%= f.fields_for :interactions do |builder| %>
-              <% if builder.object.resource_type == "Play" %>
-                <%= render 'play-form', :f => builder %>
-              <% end %>
-            <% end %>
-          </div>
-
         </div>
+
         <div class="col-lg-6 text-center">
-          <div class="form-group">
-              <label class="text-input">Immagine copertina</label>
-              <div class="fileupload fileupload-new" data-provides="fileupload">
-                <div class="fileupload-preview thumbnail" style="width: 400px; height: 300px; line-height: 20px;">
-                  <img src="<%= @cta.image.url %>">
-                </div>
-                <div>
-                  <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
-                  <span class="fileupload-exists">Change</span><%= f.file_field :image  %></span>
-                  <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
-                </div>
-              </div>
-          </div>
+          <%= render partial: "media_type-form", locals: { f: f, cta: @cta } %>
         </div>
       </div>
 
@@ -276,12 +237,41 @@
 
   tl = <%= raw(Tag.select("name").map(&:name).to_json) %>;
   $(document).ready(function() {
+    updateMedia();
+
     $('#s2_tokenization').select2({
       placeholder: "",
       tags: tl,
       tokenSeparators: [","]
     })
   })
+
+  function updateMedia() {
+    media_type = $("#call_to_action_media_type").val();
+    switch(media_type) {
+      case "YOUTUBE":
+        $("#media-data-label").html("V CODE");
+        $("#media_data-form-group").show();
+        $("#play-interaction").show();
+        $("#media-image-form-group").hide();
+        break;
+      case "IFRAME":
+        $("#media-data-label").html("IFRAME");
+        $("#media_data-form-group").show();
+        $("#play-interaction").hide();
+        $("#media-image-form-group").hide();
+        break;
+      case "IMAGE":
+        $("#media_data-form-group").hide();
+        $("#play-interaction").hide();
+        $("#media-image-form-group").show();
+        break;
+      default:
+        $("#media_data-form-group").hide();
+        $("#media-image-form-group").hide();
+        $("#play-interaction").hide();
+    }
+  }
 
   var like_counter = false; 
   function add_like_fields(link, association, content) {

@@ -33,7 +33,7 @@ module EasyadminHelper
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/call_to_action/play-form", f: builder)
     end
-    link_to_function(name, "add_play_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
+    link_to_function(name, "add_play_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs btn-block")
   end
 
   def link_to_add_share_fb_fields(name, f, association)

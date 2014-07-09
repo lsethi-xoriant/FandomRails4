@@ -110,11 +110,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.appendYTIframe = function(calltoaction) {
-    if(calltoaction.media_type == "VIDEO" && $scope.youtube_api_ready) {
+    if(calltoaction.media_type == "YOUTUBE" && $scope.youtube_api_ready) {
       video_player[calltoaction.id] = new YT.Player(('home-stream-video-' + calltoaction.id), {
         playerVars: { controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 },
         height: "100%", width: "100%",
-        videoId: calltoaction.video_url,
+        videoId: calltoaction.media_data,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
       });
       play_event_tracked[calltoaction.id] = false;
@@ -372,9 +372,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id, main_reward_name: "POINT" })
           .success(function(data) {
-
-            //$(".button-inter-" + interaction_id).attr('disabled', false);
-            //$(".button-inter-" + interaction_id).removeAttr('onclick');
             
             if(when_show_interaction == "SEMPRE_VISIBILE") {
 
@@ -389,7 +386,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
                 updateNextCallToAction(data.next_call_to_action, calltoaction_id)
               }
 
-              user_response_right[key] = data.right_answer_response;
+              user_response_right[calltoaction_id] = data.right_answer_response;
 
               if(when_show_interaction == "OVERVIDEO_DURING") {
                 getVideoPlayerFromCallToAction(calltoaction_id).playVideo(); 
@@ -433,7 +430,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     key = 'home-stream-video-' + calltoaction_id;
 
     updateHtmlYoutubePlayerInfo($("#" + key), next_call_to_action.call_to_action_id, next_call_to_action.interaction_play_id);
-    updateYTIframe(next_call_to_action.video_url, calltoaction_id, true);
+    updateYTIframe(next_call_to_action.media_data, calltoaction_id, true);
 
     $("#home-overvideo-" + calltoaction_id).html("");
   }

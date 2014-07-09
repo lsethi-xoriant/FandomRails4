@@ -134,7 +134,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
     $http.post("/add_comment", { comment: comment, interaction_id: $scope.comment.interaction_id, user_filled_captcha: user_filled_captcha, stored_captcha: stored_captcha })
       .success(function(data) {
         if(data.errors) {
-          console.log("ERROR IN COMMENT SUBMIT");
+          // TODO: show errors in a modal.
         } else {
 
           if(!$scope.comment.current_user) {

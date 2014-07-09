@@ -53,7 +53,8 @@ class CallToActionController < ApplicationController
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([@calltoaction])
 
     @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(@calltoaction, "Comment")
-    
+    @calltoaction_like_interaction = find_interaction_for_calltoaction_by_resource_type(@calltoaction, "Comment")
+
     @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
     if page_require_captcha?(@calltoaction_comment_interaction)
@@ -181,10 +182,17 @@ class CallToActionController < ApplicationController
       if answer.call_to_action
         response["next_call_to_action"] = {
           call_to_action_id: answer.call_to_action_id,
-          video_url: answer.call_to_action.video_url,
+          media_data: answer.call_to_action.media_data,
           interaction_play_id: answer.call_to_action.interactions.find_by_resource_type("Play").id
         }
       end
+
+    elsif interaction.resource_type.downcase.to_sym == :like
+
+      user_interaction = get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user)
+      like = user_interaction ? !user_interaction.like : true
+
+      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id, nil, like)
 
     else
       user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id)
@@ -192,17 +200,19 @@ class CallToActionController < ApplicationController
 
     if current_user
       UserCounter.update_counters(user_interaction, current_user)
-      # TODO: 
       outcome = compute_and_save_outcome(user_interaction)
+
       logger.info("rewards: #{outcome.reward_name_to_counter.inspect}")
       logger.info("unlocks: #{outcome.unlocks.inspect}")
+
       if outcome.errors.any?
+
         logger.error("errors in the rewarding system:")
+
         outcome.errors.each do |error|
           logger.error(error)
         end
       end
-      # TODO: 
       response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, current_user)
     else
