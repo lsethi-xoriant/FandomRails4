@@ -1,0 +1,35 @@
+<div class="row" style="margin-bottom: 15px; margin-top: 15px;">
+  <div class="col-sm-10 col-sm-offset-1" style="padding: 0 30px;">
+    <p style="font-size: 16px;"><%= interaction.resource.description.html_safe %></p>
+  </div>
+
+  <% if current_user && current_user.user_interactions.find_by_interaction_id(interaction.id) %>
+    <!-- CURRENT USER HAS ALREADY RESPONDED -->
+    <div class="col-xs-6 col-xs-offset-3 text-center">
+      <button class="btn btn-primary btn-lg disabled"><%= interaction.resource.title %></button>
+      <!--
+      <div id="marker-<%= interaction.id %>" class="yellow-marker active"><span class="glyphicon glyphicon-ok"></span></div>
+      -->
+    </div>
+  <% else %>
+    <!-- CURRENT USER HAS NOT RESPONDED -->
+    <div class="col-xs-6 col-xs-offset-3 text-center">
+      <button class="button-inter-<%= interaction.id %> btn btn-lg btn-primary" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, null, '<%= interaction.when_show_interaction %>')"><%= interaction.resource.title %></button>
+      <!--
+      <div id="marker-<%= interaction.id %>" class="yellow-marker">+<%= predict_outcome(interaction, current_user_or_anonymous_user, true).reward_name_to_counter["POINT"] %></div>
+      -->
+    </div>
+  <% end %>
+</div>
+
+<div class="row">
+  <% if current_user %>
+    <% if outcome && outcome.reward_name_to_counter["POINT"] && outcome.reward_name_to_counter["POINT"] > 0 %>       
+      <div class="col-sm-10 col-sm-offset-1 text-center">
+        <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+        <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter["POINT"] %> punti.
+        </div>
+      </div> 
+    <% end %>
+  <% end %>
+</div>
