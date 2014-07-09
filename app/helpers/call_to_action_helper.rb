@@ -8,4 +8,8 @@ module CallToActionHelper
     all_interactions.any? && (all_interactions.count == interactions_done.count)
   end
   
+  def get_cta_template_option_list
+    CallToAction.includes({:call_to_action_tags => :tag}).where("tags.name ILIKE 'template'").map{|cta| [cta.id, cta.title]}
+  end
+  
 end
