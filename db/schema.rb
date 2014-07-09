@@ -70,6 +70,8 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
     t.string   "slug"
+    t.integer  "user_id"
+    t.boolean  "user_generated"
     t.string   "media_image_file_name"
     t.string   "media_image_content_type"
     t.integer  "media_image_file_size"
@@ -376,6 +378,23 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
   create_table "tags_tags", :force => true do |t|
     t.integer "tag_id"
     t.integer "belongs_tag_id"
+  end
+
+  add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
+  add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
+
+  create_table "uploads", :force => true do |t|
+    t.integer  "call_to_action_id",               :null => false
+    t.boolean  "releasing"
+    t.text     "releasing_description"
+    t.boolean  "privacy"
+    t.text     "privacy_description"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.string   "releasing_document_file_name"
+    t.string   "releasing_document_content_type"
+    t.integer  "releasing_document_file_size"
+    t.datetime "releasing_document_updated_at"
   end
 
   create_table "user_comments", :force => true do |t|
