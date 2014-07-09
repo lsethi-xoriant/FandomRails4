@@ -57,7 +57,7 @@
         </div>
 
         <div class="col-lg-6 text-center">
-          <%= render partial: "media_type-form", locals: { f: f, cta: @cta } %>
+          <%= render partial: "media_type-form", locals: { f: f } %>
         </div>
       </div>
 
@@ -309,6 +309,8 @@
     var new_id = new Date().getTime();
     var regexp = new RegExp("new_" + association, "g");
     $(link).parent().parent().parent().find(".panel-body").prepend(content.replace(regexp, new_id));
+
+    updateMedia();
   }
 
   var share_fb_counter = false; 

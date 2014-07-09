@@ -11,20 +11,26 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140709091422) do
+ActiveRecord::Schema.define(:version => 20140709123320) do
 
   create_table "answers", :force => true do |t|
-    t.integer  "quiz_id",                               :null => false
-    t.string   "text",                                  :null => false
+    t.integer  "quiz_id",                                     :null => false
+    t.string   "text",                                        :null => false
     t.boolean  "correct"
-    t.boolean  "remove_answer",      :default => false
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.boolean  "remove_answer",            :default => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.string   "image_file_name"
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "call_to_action_id"
+    t.string   "media_image_file_name"
+    t.string   "media_image_content_type"
+    t.integer  "media_image_file_size"
+    t.datetime "media_image_updated_at"
+    t.text     "media_data"
+    t.string   "media_type"
   end
 
   add_index "answers", ["call_to_action_id"], :name => "index_answers_on_call_to_action_id"

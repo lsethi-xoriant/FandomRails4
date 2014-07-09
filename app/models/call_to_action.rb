@@ -30,7 +30,7 @@ class CallToAction < ActiveRecord::Base
   end
 
   def media_type_enum
-    ["IMAGE", "YOUTUBE", "IFRAME", "VOID"]
+    ["VOID", "IMAGE", "YOUTUBE", "IFRAME"]
   end
 
   def check_video_interaction
