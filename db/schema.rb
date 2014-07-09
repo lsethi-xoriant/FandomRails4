@@ -374,7 +374,6 @@ ActiveRecord::Schema.define(:version => 20140709091422) do
     t.integer "belongs_tag_id"
   end
 
-<<<<<<< HEAD
   add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
   add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
 
@@ -392,8 +391,6 @@ ActiveRecord::Schema.define(:version => 20140709091422) do
     t.datetime "releasing_document_updated_at"
   end
 
-=======
->>>>>>> 43874853a235bcb128c21dd0640b6890fec98972
   create_table "user_comments", :force => true do |t|
     t.integer  "user_id"
     t.integer  "comment_id"
