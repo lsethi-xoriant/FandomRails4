@@ -1,0 +1,4 @@
+
+<div ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= [@calltoaction].to_json %>, 1, <%= @calltoactions_during_video_interactions_second.to_json %>)">
+  <%= render partial: "/call_to_action/single_calltoaction", locals: { calltoaction: @calltoaction, calltoaction_comment_interaction: @calltoaction_comment_interaction, outcome: nil, captcha_data: @captcha_data } %>
+</div>
