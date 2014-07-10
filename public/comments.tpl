@@ -1,7 +1,8 @@
 <div class="comment-canvas">
   <div class="row">
     <div class="col-md-12">
-      <h4>Lascia un Commento</h4>
+      <h4 class="lead">Lascia un Commento</h4>
+      <hr>
     </div>
     <div class="col-xs-2">
       <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/5c/5cbeba066f7bbea03829ac810f96f82cff996006_full.jpg" alt="..." class="img-circle img-responsive img-profile">
@@ -38,8 +39,7 @@
     </div>
     <div class="col-xs-10">
       <h5>Nome Utente <small>&bull; few seconds ago</small></h5>
-      <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p class="text-muted">No doubt we're all very impressed that you know big words, and that you can intellectualize concepts like "episodes" into the verbosity of "hours of era-shuffling procedure."  But, seeing as this a recap for a TV show, maybe you could experiment with writing sentences that people can understand on their first try. </p>
       <span><small>some controls here</small></span> | <span><small>and here</small></span>
       <hr>
       <div class="row reply">
@@ -48,8 +48,7 @@
         </div>
         <div class="col-xs-10">
           <h5>Nome Utente <small>&bull; few seconds ago</small></h5>
-          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p class="text-muted">Weird that somebody who uses terms like "intellectualizing concepts ... into the verbosity of..." would need his reading material dumbed down a bit. If you can't find a writer who meets your very specific needs, you should probably pen your own articles, and hope that your readers are more or less okay with the amount of pretentiousness used.</p>
           <span><small>some controls here</small></span> | <span><small>and here</small></span>
           <hr>
         </div>
@@ -60,8 +59,7 @@
         </div>
         <div class="col-xs-10">
           <h5>Nome Utente <small>&bull; few seconds ago</small></h5>
-          <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p class="text-muted">Yep, that was a stupid comment I left.  I think my idea was some sort of mockery by imitation.  You were right to call me out.  My bad.</p>
           <span><small>some controls here</small></span> | <span><small>and here</small></span>
           <hr>
         </div>
@@ -74,11 +72,7 @@
     </div>
     <div class="col-xs-10">
       <h5>Nome Utente <small>&bull; few seconds ago</small></h5>
-      <p class="text-muted">Ut enim ad minim veniam,
-      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-      cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-      proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <p class="text-muted">Man, McConaughey is good. He and Woody are a couple of the most watchable TV detectives to come around in a while. And I'm into the semi-philosophical writing, particularly the way McConaughey delivers his lines. Strong start to what I hope is an interesting crime drama and not just another series about sick men who torture lost women.</p>
       <span><small>some controls here</small></span> | <span><small>and here</small></span>
       <hr>
     </div>

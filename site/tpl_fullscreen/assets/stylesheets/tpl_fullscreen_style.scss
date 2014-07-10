@@ -267,7 +267,18 @@ body {
 }
 
 /* STREAM */
-
+.cta-nav {
+    li{
+        a {
+            color: $gray-light;
+            &:hover { 
+                color: #fff;
+                background: transparent; 
+            }
+        }
+    }
+    
+}
 .cta-stream {
     h4, h6 {
         text-transform: uppercase;
@@ -288,7 +299,9 @@ body {
         }
     }
 }
-
+.cta-description {
+    font-size: 1.1em;
+}
 // Browse
 .brws-item {
     > div { padding-bottom: 1.5em; }
@@ -468,7 +481,14 @@ span.notify {
 }
 
 // PROFILE
+.panel-default {
+    border: none;
+    .profile-heading {
+        background: none;
+    }
+}
 .profile-heading {
+    background: none;
     .nav { padding: 0;}
     .progress {
         height: 15px;
