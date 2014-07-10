@@ -1,0 +1,29 @@
+<div class="container stripes" style="">
+          
+  <div class="row stripe cta" style="background: url('<%= calltoaction.media_image %>') no-repeat center center; background-size: cover; min-height: 280px; margin-bottom: 15px;">
+    <div class="col-sm-10 col-sm-offset-1 text-left">
+      <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
+      <% if tags_with_miniformat_in_calltoaction.any? %>
+        <h5 class="text-muted">
+          <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
+          <%= tags_with_miniformat_in_calltoaction.first.name %>
+        </h5>
+      <% end %>
+      <h3 class="lead" style="">
+        <%= calltoaction.title %> 
+      </h3>
+      <h4><a class="btn btn-default btn-md" href="/call_to_action/<%= calltoaction.id %>">Call To Action</a>&nbsp;
+        <% if call_to_action_completed?(calltoaction, current_user_or_anonymous_user) %>
+          &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success">
+            FATTO <span class="glyphicon glyphicon-ok"></span>
+          </span>
+        <% else %>
+          &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning">+<%= predict_max_cta_outcome(calltoaction, anonymous_user).reward_name_to_counter["POINT"] %>
+            <span class="glyphicon glyphicon-star"></span>
+          </span>
+        <% end %>
+      </h4>
+    </div>
+  </div>
+
+</div>
