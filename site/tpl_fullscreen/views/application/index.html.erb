@@ -1,0 +1,57 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="fullscreen-canvas ctas">
+  <div id="carousel-example-generic" class="carousel slide fullscreen" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+      <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+
+      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions } %>
+
+    </div>
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+  </div>
+</div>
+
+<div  class="fullscreen-canvas description">
+  <div class="overvideo">
+    <div class="overvideo-canvas">
+      <div class="overvideo-content desc-comments" id="desc">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12" id="desc">
+              <h4 class="lead">Fight for Your Rite. </h4>
+              <p class="cta-description">There’s great detail in <i>True Detective</i>. Just listen to those ice cubes clank against the sides of the glass Louisiana criminal investigator Martin Hart (Woody Harrelson) holds as he observes his restful daughter after returning home from a horrific psychosexual murder scene. He’s a fairly collected guy at first blush, but the tension and rage are there, inside that tumbler of what one presumes is whiskey.</p>
+              <p class="cta-description">His new partner in crime-solving, Rustin “Rust” Cohle (Matthew McConaughey), embodies minutiae, right down to a ledger-full of case notes that have quickly earned him a derogatory precinct nickname: the Taxman.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="overvideo-content desc-comments" id="comm">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              <div id="comments"></div>
+              <script type="text/javascript">
+                $('#comments').load('comments.tpl');
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

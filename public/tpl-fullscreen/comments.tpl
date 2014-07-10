@@ -5,7 +5,7 @@
       <hr>
     </div>
     <div class="col-xs-2">
-      <img src="http://www.standard.co.uk/panewsfeeds/article8640978.ece/ALTERNATES/w460/Police+said+a+man+has+admitted+making+threats+to+kill+Prince+Harry.jpg" alt="..." class="img-circle img-responsive img-profile">
+      <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/5c/5cbeba066f7bbea03829ac810f96f82cff996006_full.jpg" alt="..." class="img-circle img-responsive img-profile">
     </div>
     <div class="col-xs-10">
       <div class="panel panel-default insert-comment">

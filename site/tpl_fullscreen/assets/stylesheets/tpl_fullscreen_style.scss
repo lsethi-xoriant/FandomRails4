@@ -1,5 +1,14 @@
 // Variable here
 
+$grid-gutter-width: 30px;
+$container-tablet: ((720px + $grid-gutter-width));
+$container-sm: $container-tablet;
+$container-desktop : ((760px + $grid-gutter-width));
+$container-md: $container-desktop;
+$container-large-desktop: ((760px + $grid-gutter-width));
+$container-lg: $container-large-desktop;
+
+
 @import "bootstrap/bootstrap";
 
 
