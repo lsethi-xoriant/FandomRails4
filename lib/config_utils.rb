@@ -49,8 +49,8 @@ module ConfigUtils
   # domains - The list of domains handled by the site.
   def register_fandom_site(params)
     site = FandomSite.new(params)
+    config.sites << site
     site.domains.each do |domain|
-      config.sites << site
       config.domain_to_site[domain] = site
       config.domain_to_site_id[domain] = site.id
     end
