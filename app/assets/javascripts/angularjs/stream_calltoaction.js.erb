@@ -16,11 +16,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   var secondary_video_players = {};
 
   var play_event_tracked = {};
-  var user_response_right = {};
+  var current_user_answer_response_correct = {};
 
   var polling = false;
 
-  // Inizializzazione dello scope.
   $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second) {
 
     $scope.current_user = current_user;
@@ -51,14 +50,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   };
 
+  //////////////////////// UPDATING AND ADDING PLAYERS AND CALLTOACTIONS METHODS ////////////////////////
+
   $window.updateSecondaryVideoPlayers = function(calltoactions) {
     angular.forEach(calltoactions, function(calltoaction) {
       secondary_video_players[calltoaction.id] = new Object();
     });
-  };
-
-  $window.getVideoPlayerFromCallToAction = function(calltoaction_id) {
-    return video_players[calltoaction_id];
   };
 
   $window.updatePageWithTag = function(tag_id) {
@@ -102,30 +99,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
-  $window.initQuizWaitingAudio = function() {
-    $("#quiz-waiting-audio").jPlayer({
-      ready: function (event) {
-        $(this).jPlayer("setMedia", {
-          wav: "<%= asset_path('quiz-waiting-audio.wav') %>"
-        });
-      },
-      ended: function() {
-        $(this).jPlayer("play"); // Repeat the media.
-      },
-      supplied: "wav",
-      volume: 0.4,
-      smoothPlayBar: false,
-      keyEnabled: false
-    });
-  };
-
-  $window.onYouTubeIframeAPIReady = function() {
-    $scope.youtube_api_ready = true;
-    angular.forEach($scope.calltoactions, function(sc) {
-      appendYTIframe(sc);
-    });
-  };
-
   $window.appendYTIframe = function(calltoaction) {
     if(calltoaction.media_type == "YOUTUBE" && $scope.youtube_api_ready) {
       video_players[calltoaction.id] = new YT.Player(('home-stream-video-' + calltoaction.id), {
@@ -135,7 +108,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
       });
       play_event_tracked[calltoaction.id] = false;
-      user_response_right[calltoaction.id] = false;
+      current_user_answer_response_correct[calltoaction.id] = false;
     }
   };
 
@@ -159,17 +132,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
       });
   }
-
-  $window.showFeedback = function(feedback, calltoaction_id) {
-    $(".home-overvideo-feedback-" + calltoaction_id)
-      .hide().html(feedback).show('slide', { direction: 'left' }, 2000);
-
-    overvideo_feedback_timeout = $timeout(function() {
-      $(".home-overvideo-feedback-" + calltoaction_id).hide('slide', { direction: 'left' }, 2000, function() {
-        // TODO: after animation $(".home-overvideo-feedback-" + calltoaction_id).html("");
-      });
-    }, 4000);  
-  };
 
   $window.appendCallToAction = function() {
     if($scope.calltoactions_count > $scope.calltoaction_offset) {
@@ -206,7 +168,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, autoplay) {
-    current_video_player = getVideoPlayerFromCallToAction(calltoaction_id);
+    current_video_player = video_players[calltoaction_id];
     if($scope.youtube_api_ready && current_video_player) {
       play_event_tracked[calltoaction_id] = false;
       if(autoplay) {
@@ -216,6 +178,52 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       }
     }
   }
+
+  //////////////////////// SHOWING AND GETTING INTERACTION METHODS ////////////////////////
+
+  $window.executeInteraction = function(calltoaction_id, second, calltoaction_interacations) { 
+    angular.forEach(calltoaction_interacations, function(interaction_second, interaction_id) {
+      if(second == interaction_second) {
+        video_player_during_video_interaction_locked[calltoaction_id] = true;
+        current_video_player = video_players[calltoaction_id];
+        current_video_player.pauseVideo();
+        getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player);
+      }
+    });
+  };
+
+  $window.getOvervideoInteraction = function(calltoaction_id, interaction_id, current_video_player) { 
+    $http.post("/get_overvideo_during_interaction", { interaction_id: interaction_id })
+      .success(function(data) {  
+        $("#home-overvideo-" + calltoaction_id).html(data.overvideo);
+
+        enableWaitingAudio("play");
+
+        if(data.interaction_done_before && data.interaction_one_shot) {
+          $timeout(function() { 
+
+            current_video_player.playVideo(); 
+            $("#home-overvideo-" + calltoaction_id).html("");
+
+            enableWaitingAudio("stop");
+
+          }, 5000);  
+        } else {
+          // Waiting for current user response.
+        }                           
+      }).error(function() {
+        // ERROR.
+      });
+  };
+
+  //////////////////////// YOUTUBE CALLBACK ////////////////////////
+
+  $window.onYouTubeIframeAPIReady = function() {
+    $scope.youtube_api_ready = true;
+    angular.forEach($scope.calltoactions, function(sc) {
+      appendYTIframe(sc);
+    });
+  };
 
   $window.onYouTubePlayerReady = function(event) {
   };
@@ -228,7 +236,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     if(main_calltoaction_media) {
 
-      current_video_player = getVideoPlayerFromCallToAction(calltoaction_id);
+      current_video_player = video_players[calltoaction_id];
       current_video_player_state = current_video_player.getPlayerState();
 
       if(current_video_player_state == 1) {
@@ -257,91 +265,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     }
   }; 
 
-  $window.mayStartPooling = function(calltoaction_id) {
-    if(!polling && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
-      polling = $interval(videoPolling, 800);
-    }
-  };
-
-  $window.mayStopPolling = function() { 
-    if(polling) {
-      
-      video_with_polling_counter = false;
-      
-      angular.forEach(play_event_tracked, function(video_started, calltoaction_id) {
-        if(video_started && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
-          video_with_polling_counter = true;
-        } else {
-          // This video has not polling.
-        }
-      });
-
-      if(!video_with_polling_counter) {
-        $interval.cancel(polling);
-        polling = false;
-      } else {
-        // There is almost one video with polling.
-      }
-
-    }
-  };
-
-  $window.videoPolling = function() {
-    angular.forEach(play_event_tracked, function(video_started, calltoaction_id) {
-      if(video_started && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
-        current_video_player = getVideoPlayerFromCallToAction(calltoaction_id);
-        current_video_player_time = current_video_player.getCurrentTime(); 
-        current_video_player_second = Math.floor(current_video_player_time);
-        if(!video_player_during_video_interaction_locked[calltoaction_id]) {
-          executeInteraction(calltoaction_id, current_video_player_second, $scope.calltoactions_during_video_interactions_second[calltoaction_id]);
-        }
-      }
-    });
-  };
-
-  $window.executeInteraction = function(calltoaction_id, second, calltoaction_interacations) { 
-    angular.forEach(calltoaction_interacations, function(interaction_second, interaction_id) {
-      if(second == interaction_second) {
-        video_player_during_video_interaction_locked[calltoaction_id] = true;
-        current_video_player = getVideoPlayerFromCallToAction(calltoaction_id);
-        current_video_player.pauseVideo();
-        getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player);
-      }
-    });
-  }; // launchInteraction
-
-  $window.getOvervideoInteraction = function(calltoaction_id, interaction_id, current_video_player) { 
-  $http.post("/get_overvideo_during_interaction", { interaction_id: interaction_id })
-    .success(function(data) {  
-      $("#home-overvideo-" + calltoaction_id).html(data.overvideo);
-
-      $("#quiz-waiting-audio").jPlayer("play");
-
-      if(data.interaction_done_before && data.interaction_one_shot) {
-        $timeout(function() { 
-
-          current_video_player.playVideo(); 
-          $("#home-overvideo-" + calltoaction_id).html("");
-
-          $("#quiz-waiting-audio").jPlayer("stop");
-
-        }, 5000);  
-      } else {
-        // Waiting for current user response.
-      }                           
-    }).error(function() {
-    });
-  }
+  //////////////////////// METHODS FOR SETTINGS INTERACTIONS BEFORE AND END IN VIDEO ////////////////////////
 
   $window.updateEndVideoInteraction = function(calltoaction_id) {
     play_event_tracked[calltoaction_id] = false;
-    $http.post("/calltoaction_overvideo_end", { calltoaction_id: calltoaction_id, right_answer_response: user_response_right[key] })
+    $http.post("/calltoaction_overvideo_end", { calltoaction_id: calltoaction_id, right_answer_response: current_user_answer_response_correct[key] })
       .success(function(data) {
         $("#home-overvideo-" + calltoaction_id).html(data.overvideo);
       }).error(function() {
         // ERROR.
       });
-  }
+  };
 
   $window.updateStartVideoInteraction = function(calltoaction_id, interaction_id) {
     if(!play_event_tracked[calltoaction_id]) {
@@ -352,7 +286,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         .success(function(data) {
           interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
           if(interaction_point) {
-            showFeedback(data.feedback, calltoaction_id);
+            showAnimateFeedback(data.feedback, calltoaction_id);
             updateUserRewardInView(data.main_reward_counter);
           }
         }).error(function() {
@@ -364,6 +298,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     }
   }
 
+  //////////////////////// USER EVENTS METHODS ////////////////////////
+
+  // TODO TODO TODO TODO TODO TODO
   $window.shareWith = function(provider, interaction_id, calltoaction_id) {
 
     $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
@@ -408,85 +345,67 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
-  $window.activeMarker = function(interaction_id) {
-    $("#marker-" + interaction_id)
-      .addClass("active")
-      .html("<span class=\"glyphicon glyphicon-ok\"></span>");
-  }
-
-  $window.updateUserRewardInView = function(counter) {
-    $(".user-reward-counter").html("+" + counter + " PUNTI");
-  }
-
   $window.updateAnswer = function(calltoaction_id, interaction_id, answer_id, when_show_interaction) {
     if($scope.current_user) {
 
       $(".button-inter-" + interaction_id).attr('disabled', true);
       $(".button-inter-" + interaction_id).attr('onclick', "");
 
-      $("#quiz-waiting-audio").jPlayer("stop");
+      enableWaitingAudio("stop");
 
       $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id, main_reward_name: "POINT" })
           .success(function(data) {
             
             if(when_show_interaction == "SEMPRE_VISIBILE") {
 
-              activeMarker(interaction_id);
-              updateUserRewardInView(data.main_reward_counter);
-
-              $("#home-undervideo-interaction-" + interaction_id).html(data.feedback); 
+              userAnswerInAlwaysVisibleInteraction(interaction_id, data);
 
             } else {
 
-              user_response_right[calltoaction_id] = data.answer.correct;
+              current_user_answer_response_correct[calltoaction_id] = data.answer.correct;
 
               if(data.have_answer_media) {
-
-                enableAnswerMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction)
-                $("#home-overvideo-" + calltoaction_id).html(""); 
-
+                userAnswerWithMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction);
               } else {
-
-                if(data.answer.blocking) {
-
-                  current_video_player = getVideoPlayerFromCallToAction(calltoaction_id);
-                  getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player);
-
-                } else {
-
-                  if(when_show_interaction == "OVERVIDEO_DURING") {
-                    getVideoPlayerFromCallToAction(calltoaction_id).playVideo(); 
-                    $("#home-overvideo-" + calltoaction_id).html(""); 
-                    $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
-                  }
-
-                }
-
+                userAnswerWithoutMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction);
               }
 
             }
 
             interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
             if(interaction_point) {
-              showFeedback(data.feedback, calltoaction_id);
+              showAnimateFeedback(data.feedback, calltoaction_id);
             }
 
             if(data.call_to_action_completed) {
-              $("#head-feedback-calltoaction-" + calltoaction_id)
-                .html("FATTO <span class=\"glyphicon glyphicon-ok\"></span>")
-                .removeClass("label-warning").addClass("label-success");
+              showCallToActionCompletedFeedback(calltoaction_id);
             }
 
           }).error(function() {
             // ERROR.
           });
     } else {
+
       $("#registrate-modal").modal('show');
       $(".button-inter-" + interaction_id).attr('disabled', false);
+
     }
   };
 
-  $window.enableAnswerMedia = function(answer, calltoaction_id, interaction_id, when_show_interaction) {
+  //////////////////////// UPDATING VIEW METHODS AFTER USER INTERACTION ////////////////////////
+
+  $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
+    showMarkerNearInteraction(interaction_id);
+    updateUserRewardInView(data.main_reward_counter);
+
+    $("#home-undervideo-interaction-" + interaction_id).html(data.feedback); 
+  };
+
+  $window.userAnswerWithMedia = function(answer, calltoaction_id, interaction_id, when_show_interaction) {
+    if(when_show_interaction == "OVERVIDEO_DURING") {
+      $("#home-overvideo-" + calltoaction_id).html(""); 
+    }
+
     if(answer.media_type == "YOUTUBE") {
       secondary_video_players[calltoaction_id]["answer_selected_blocking"] = answer.blocking;
       secondary_video_players[calltoaction_id]["interaction_shown_in"] = when_show_interaction;
@@ -495,7 +414,22 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       appendOrUpdateYTIframeSecondary(calltoaction_id, answer.media_data);
       hideCallToActionYTIframe(calltoaction_id);
     }
-  }
+  };
+
+  $window.userAnswerWithoutMedia = function(answer, calltoaction_id, interaction_id, when_show_interaction) {
+    if(answer.blocking) {
+      current_video_player = video_players[calltoaction_id];
+      getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player);
+    } else {
+      if(when_show_interaction == "OVERVIDEO_DURING") {
+        video_players[calltoaction_id].playVideo(); 
+        $("#home-overvideo-" + calltoaction_id).html(""); 
+        $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
+      }
+    }
+  };
+
+  //////////////////////// SWITCHING MAIN MEDIA WITH SECONDARY MEDIA METHODS ////////////////////////
 
   $window.hideCallToActionYTIframe = function(calltoaction_id) {
     $("#main-media-" + calltoaction_id).addClass("hidden");
@@ -513,15 +447,112 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       interaction_shown_in = secondary_video_players[calltoaction_id]["interaction_shown_in"];
 
       if(interaction_shown_in == "OVERVIDEO_DURING") {
-        getVideoPlayerFromCallToAction(calltoaction_id).playVideo();
+        video_players[calltoaction_id].playVideo();
       }
 
       $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
     } else {
       interaction_shown_id = secondary_video_players[calltoaction_id]["interaction_shown_id"];
-      current_video_player = getVideoPlayerFromCallToAction(calltoaction_id);
+      current_video_player = video_players[calltoaction_id];
       getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player);
     }
   }
+
+  //////////////////////// POLLING METHODS ////////////////////////
+
+  $window.mayStartPooling = function(calltoaction_id) {
+    if(!polling && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
+      polling = $interval(videoPolling, 800);
+    }
+  };
+
+  $window.mayStopPolling = function() { 
+    if(polling) {
+      
+      video_with_polling_counter = false;
+      
+      angular.forEach(play_event_tracked, function(video_started, calltoaction_id) {
+        if(video_started && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
+          video_with_polling_counter = true;
+        } else {
+          // This video has not polling.
+        }
+      });
+
+      if(!video_with_polling_counter) {
+        $interval.cancel(polling);
+        polling = false;
+      } else {
+        // There is almost one video with polling.
+      }
+
+    }
+  };
+
+  $window.videoPolling = function() {
+    angular.forEach(play_event_tracked, function(video_started, calltoaction_id) {
+      if(video_started && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
+        current_video_player = video_players[calltoaction_id];
+        current_video_player_time = current_video_player.getCurrentTime(); 
+        current_video_player_second = Math.floor(current_video_player_time);
+        if(!video_player_during_video_interaction_locked[calltoaction_id]) {
+          executeInteraction(calltoaction_id, current_video_player_second, $scope.calltoactions_during_video_interactions_second[calltoaction_id]);
+        }
+      }
+    });
+  };
+
+  //////////////////////// AUDIO EFFECTS METHODS ////////////////////////
+
+  $window.initQuizWaitingAudio = function() {
+    $("#quiz-waiting-audio").jPlayer({
+      ready: function (event) {
+        $(this).jPlayer("setMedia", {
+          wav: "<%= asset_path('quiz-waiting-audio.wav') %>"
+        });
+      },
+      ended: function() {
+        $(this).jPlayer("play"); // Repeat the media.
+      },
+      supplied: "wav",
+      volume: 0.4,
+      smoothPlayBar: false,
+      keyEnabled: false
+    });
+  };
+
+  $window.enableWaitingAudio = function(status) {
+    $("#quiz-waiting-audio").jPlayer(status);
+  };
+
+  //////////////////////// POINTS AND CHECKS FEEDBACK METHODS ////////////////////////
+
+  $window.showAnimateFeedback = function(feedback, calltoaction_id) {
+    $(".home-overvideo-feedback-" + calltoaction_id)
+      .hide().html(feedback).show('slide', { direction: 'left' }, 2000);
+
+    overvideo_feedback_timeout = $timeout(function() {
+      $(".home-overvideo-feedback-" + calltoaction_id).hide('slide', { direction: 'left' }, 2000, function() {
+        // TODO: after animation $(".home-overvideo-feedback-" + calltoaction_id).html("");
+      });
+    }, 4000);  
+  };
+
+  $window.showCallToActionCompletedFeedback = function(calltoaction_id) { 
+    $("#head-feedback-calltoaction-" + calltoaction_id)
+      .html("FATTO <span class=\"glyphicon glyphicon-ok\"></span>")
+      .removeClass("label-warning").addClass("label-success");
+  };
+
+  $window.showMarkerNearInteraction = function(interaction_id) {
+    $("#marker-" + interaction_id)
+      .addClass("active")
+      .html("<span class=\"glyphicon glyphicon-ok\"></span>");
+  };
+
+  $window.updateUserRewardInView = function(counter) {
+    $(".user-reward-counter").html("+" + counter + " PUNTI");
+  };
+
 
 }
