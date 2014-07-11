@@ -3,7 +3,7 @@ module Fandom
     register_fandom_site(
       id: 'tpl_fullscreen', 
       title: 'TPL Fullscreen',
-      domains: ['tpl_fullscreen.fandom.localdomain', 'tpl_fullscreen.shado.tv'],
+      domains: ['tpl-fullscreen.fandom.localdomain', 'tpl-fullscreen.shado.tv', 'tpl-fullscreen.stage.fandomlab.com'],
       share_db: 'fandom',
       assets_precompile: ['tpl_fullscreen_application.css', 'tpl_fullscreen_application.js'],
     )

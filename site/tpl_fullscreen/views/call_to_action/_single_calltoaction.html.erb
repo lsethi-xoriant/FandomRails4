@@ -1,0 +1,25 @@
+<div class="fullscreen-canvas">
+  <a href="/" class="close-cta"><span class="glyphicon glyphicon-remove"></span></a>
+  <% if calltoaction.media_type == "VIDEO" %>
+    <div class="video flex-video widescreen" style="background:#222;">             
+      <!-- IFRAME VIDEO -->
+      <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-id="<%= calltoaction.id %>" secondary-calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").id %>"></div>
+      <!-- OVERVIDEO AREA -->
+      <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
+      <!-- OVERVIDEO TITLE -->
+      <div id="home-overvideo-title-<%= calltoaction.id %>"><%= render partial: "/call_to_action/overvideo_video_home", locals: { calltoaction: calltoaction } %></div>
+      <!-- OVERVIDEO FEEDBACK -->
+      <div id="home-overvideo-feedback-<%= calltoaction.id %>"></div>
+    </div>
+  <% elsif calltoaction.media_type == "IMAGE" %>
+    <!-- IMAGE -->
+    <img src="<%= calltoaction.image %>" style="width: 100%; margin-bottom: 15px;">
+  <% elsif calltoaction.media_type == "IFRAME" %>
+    <div class="<%= "iframe-iphone" if request_is_from_iphone_device?(request) %> video flex-video widescreen text-center" style="background:#222; margin-bottom: 15px;">  
+      <%= calltoaction.iframe.html_safe %>
+    </div>
+  <% end %>
+  <!--<div class="flex-video">
+    <iframe width="853" height="480" src="//www.youtube.com/embed/J5iS3tULXMQ?rel=0&showinfo=0&autoplay=1" frameborder="0"allowfullscreen></iframe>
+  </div>-->
+</div>
