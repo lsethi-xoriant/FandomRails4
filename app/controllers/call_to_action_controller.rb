@@ -402,5 +402,45 @@ class CallToActionController < ApplicationController
       end
     end
   end
-
+  
+  def upload
+    upload_interaction = Interaction.find(params[:interaction_id]).resource
+    errors = check_valid_upload(upload_interaction)
+    if errors.any?
+      flash[:error] = errors
+      redirect_to "call_toaction/#{params[:cta_id]}"
+    else
+      # clone cta template with media uploaded from user and redirect to page confirmation
+      for i in(1..upload_interaction.upload_number) do
+        clone_and_create_cta(params, i)
+      end
+    end
+  end
+  
+  def check_valid_upload(upload_interaction)
+    errors = Array.new
+    if !check_privacy_accepted(upload_interaction) 
+      errors.add("Errore non hai accettato la privacy")
+    end
+    if !check_releasing_accepted(upload_interaction)
+      errors.add("Errore non hai caricato la liberatoria")
+    end
+    if !check_uploaded_file()
+      errors.add("Mancano dei file da caricare")
+    end
+    errors
+  end
+  
+  def check_privacy_accepted(upload_interaction)
+    return true
+  end
+  
+  def check_releasing_accepted(upload_interaction)
+    return true
+  end
+  
+  def check_uploaded_file()
+    return true
+  end
+  
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140709123320) do
+ActiveRecord::Schema.define(:version => 20140710103901) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -290,6 +290,16 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "releasing_files", :force => true do |t|
+    t.integer  "call_to_action_id", :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+  end
+
   create_table "reward_tags", :force => true do |t|
     t.integer  "tag_id"
     t.integer  "reward_id"
@@ -357,7 +367,7 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
   create_table "tag_fields", :force => true do |t|
     t.integer  "tag_id"
     t.string   "name"
-    t.string   "type"
+    t.string   "field_type"
     t.text     "value"
     t.string   "upload_file_name"
     t.string   "upload_content_type"
@@ -376,25 +386,24 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
   add_index "tags", ["name"], :name => "index_tags_on_name", :unique => true
 
   create_table "tags_tags", :force => true do |t|
-    t.integer "tag_id"
-    t.integer "belongs_tag_id"
+    t.integer  "tag_id"
+    t.integer  "other_tag_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
   add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
 
   create_table "uploads", :force => true do |t|
-    t.integer  "call_to_action_id",               :null => false
+    t.integer  "call_to_action_id",     :null => false
     t.boolean  "releasing"
     t.text     "releasing_description"
     t.boolean  "privacy"
     t.text     "privacy_description"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-    t.string   "releasing_document_file_name"
-    t.string   "releasing_document_content_type"
-    t.integer  "releasing_document_file_size"
-    t.datetime "releasing_document_updated_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+    t.integer  "upload_number"
   end
 
   create_table "user_comments", :force => true do |t|

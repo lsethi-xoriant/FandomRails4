@@ -12,7 +12,8 @@ Fandom::Application.routes.draw do
   match "/youtube", :to => "youtube_widget#index"
 
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
-
+  match "/cta/upload", :to => "call_to_action#upload"
+  
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 

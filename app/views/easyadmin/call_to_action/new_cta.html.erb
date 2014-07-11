@@ -67,7 +67,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "TRIVIA" %>
-          <%= render '/easyadmin/easyadmin/quiz-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/quiz-form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -78,7 +78,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "VERSUS" %>
-          <%= render '/easyadmin/easyadmin/versus-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/versus-form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -89,7 +89,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Check" %>
-          <%= render '/easyadmin/easyadmin/check-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/check-form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -100,7 +100,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Like" %>
-          <%= render '/easyadmin/easyadmin/like-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/like-form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -111,7 +111,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Download" %>
-          <%= render '/easyadmin/easyadmin/download-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/download-form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -122,9 +122,21 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Comment" %>
-          <%= render '/easyadmin/easyadmin/comment-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/comment-form', :f => builder %>
         <% end %>
       <% end %>
+      
+      <h3>UPLOAD <p style="float: right;"><%= link_to_add_upload_fields "AGGIUNGI UPLOAD", f, :interactions %></p></h3>
+      <hr/>
+
+      <div id="tmp-upload-add"></div>
+      
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Upload" %>
+          <%= render '/easyadmin/call_to_action/upload-form', :f => builder %>
+        <% end %>
+      <% end %>
+
 
       <h3>SHARE EMAIL</h3>
       <hr/>
@@ -141,7 +153,7 @@
 
               <%= f.fields_for :interactions do |builder| %>
                 <% if builder.object.resource_type == "Share" && builder.object.resource.share_type == "email" %>
-                  <%= render '/easyadmin/easyadmin/share-email-form', :f => builder %>
+                  <%= render '/easyadmin/call_to_action/share-email-form', :f => builder %>
                 <% end %>
               <% end %>
             </div>
@@ -164,7 +176,7 @@
 
               <%= f.fields_for :interactions do |builder| %>
                 <% if builder.object.resource_type == "Share" && builder.object.resource.share_type == "facebook" %>
-                  <%= render '/easyadmin/easyadmin/share-fb-form', :f => builder %>
+                  <%= render '/easyadmin/call_to_action/share-fb-form', :f => builder %>
                 <% end %>
               <% end %>
             </div>
@@ -181,7 +193,7 @@
 
               <%= f.fields_for :interactions do |builder| %>
                 <% if builder.object.resource_type == "Share" && builder.object.resource.share_type == "twitter" %>
-                  <%= render '/easyadmin/easyadmin/share-tt-form', :f => builder %>
+                  <%= render '/easyadmin/call_to_action/share-tt-form', :f => builder %>
                 <% end %>
               <% end %>
             </div>
@@ -315,6 +327,15 @@
     var regexp = new RegExp("new_" + association, "g");
     $("#tmp-quiz-add").prepend(content.replace(regexp, new_id));
   }
+  
+  var upload_counter = false;
+  function add_upload_fields(link, association, content) {
+  	if(!upload_counter){
+	    var new_id = new Date().getTime();
+	    var regexp = new RegExp("new_" + association, "g");
+	    $("#tmp-upload-add").prepend(content.replace(regexp, new_id));
+	}
+  }
 
   function add_answer_fields(link, association, content) {
     var new_id = new Date().getTime();
@@ -416,6 +437,11 @@
 
   function remove_check_fields(link) {
     $(link).parent().parent().parent().remove();
+  }
+  
+  function remove_upload_fields(link) {
+    $(link).parent().parent().parent().remove();
+    upload_counter = false;
   }
 
 </script>
