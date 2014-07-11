@@ -2,25 +2,39 @@
   <!-- MEDIA -->
   <div class="row">
     <div class="col-md-12">
-      <% if calltoaction.media_type == "YOUTUBE" %>
-          <div class="video flex-video widescreen" style="background:#222;">             
-            <!-- IFRAME VIDEO -->
-            <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-id="<%= calltoaction.id %>" secondary-calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").id %>"></div>
-            <!-- OVERVIDEO AREA -->
-            <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
-            <!-- OVERVIDEO TITLE -->
-            <div id="home-overvideo-title-<%= calltoaction.id %>"><%= render partial: "/call_to_action/overvideo_video_home", locals: { calltoaction: calltoaction } %></div>
-            <!-- OVERVIDEO FEEDBACK -->
-            <div id="home-overvideo-feedback-<%= calltoaction.id %>"></div>
-          </div>
-      <% elsif calltoaction.media_type == "IMAGE" %>
-        <!-- IMAGE -->
-        <img src="<%= calltoaction.media_image %>" style="width: 100%; margin-bottom: 15px;">
-      <% elsif calltoaction.media_type == "IFRAME" %>
-        <div class="<%= "iframe-iphone" if request_is_from_iphone_device?(request) %> video flex-video widescreen text-center" style="background:#222; margin-bottom: 15px;">  
-          <%= calltoaction.media_data.html_safe %>
+
+      <!-- SECONDARY MEDIA -->
+      <div id="secondary-media-<%= calltoaction.id %>" class="hidden">
+        <div class="video flex-video widescreen" style="background:#222;"> 
+          <div id="home-stream-video-secondary-<%= calltoaction.id %>" main-calltoaction-media="false" calltoaction-id="<%= calltoaction.id %>"></div>
+          <!-- OVERVIDEO AREA -->
+          <div class="home-overvideo-feedback-<%= calltoaction.id %>"></div> 
         </div>
-      <% end %>
+      </div>
+
+      <!-- MAIN MEDIA -->
+      <div id="main-media-<%= calltoaction.id %>">
+        <% if calltoaction.media_type == "YOUTUBE" %>
+            <div class="video flex-video widescreen" style="background:#222;">             
+              <!-- IFRAME VIDEO -->
+              <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-media=true calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").id %>"></div>
+              <!-- OVERVIDEO AREA -->
+              <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
+              <!-- OVERVIDEO TITLE -->
+              <div id="home-overvideo-title-<%= calltoaction.id %>"><%= render partial: "/call_to_action/overvideo_video_home", locals: { calltoaction: calltoaction } %></div>
+              <!-- OVERVIDEO FEEDBACK -->
+              <div class="home-overvideo-feedback-<%= calltoaction.id %>"></div>
+            </div>
+        <% elsif calltoaction.media_type == "IMAGE" %>
+          <!-- IMAGE -->
+          <img src="<%= calltoaction.media_image %>" style="width: 100%; margin-bottom: 15px;">
+        <% elsif calltoaction.media_type == "IFRAME" %>
+          <div class="<%= "iframe-iphone" if request_is_from_iphone_device?(request) %> video flex-video widescreen text-center" style="background:#222; margin-bottom: 15px;">  
+            <%= calltoaction.media_data.html_safe %>
+          </div>
+        <% end %>
+      </div>
+
     </div>
   </div>
 

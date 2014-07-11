@@ -18,3 +18,5 @@ MAXIBON_PARTY_NIGHT = 3
 INTERACTION_TYPES = Set.new(['Quiz', 'Check', 'Comment', 'Like', 'Play', 'Share'])
 
 REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
+
+MEDIA_TYPES = ["IMAGE", "YOUTUBE", "IFRAME", "VOID"]

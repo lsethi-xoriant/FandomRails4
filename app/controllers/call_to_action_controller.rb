@@ -177,15 +177,8 @@ class CallToActionController < ApplicationController
       answer = Answer.find(params[:answer_id])
       user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id, answer.id)
 
-      response["right_answer_response"] = user_interaction.answer.correct
-
-      if answer.call_to_action
-        response["next_call_to_action"] = {
-          call_to_action_id: answer.call_to_action_id,
-          media_data: answer.call_to_action.media_data,
-          interaction_play_id: answer.call_to_action.interactions.find_by_resource_type("Play").id
-        }
-      end
+      response["have_answer_media"] = answer.answer_with_media?
+      response["answer"] = answer
 
     elsif interaction.resource_type.downcase.to_sym == :like
 
@@ -236,22 +229,15 @@ class CallToActionController < ApplicationController
     calltoaction = CallToAction.find(params[:calltoaction_id])
     interaction = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
 
-    render_calltoaction_overvideo_end_str = String.new
-
-    if interaction && (!interaction_for_next_calltoaction?(interaction) || (interaction_for_next_calltoaction?(interaction) && params[:right_answer_response].blank?))
-   
-      if current_user
-        user_interaction = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
-      end
-
-      render_calltoaction_overvideo_end_str = (render_to_string "/call_to_action/_overvideo_interaction", 
-                locals: { interaction: interaction, user_interaction: user_interaction }, layout: false, formats: :html)
-
+    if params[:right_answer_response]
+      response = Hash.new
+    else
+      response = response_for_overvideo_interaction(interaction.id)
     end
 
     respond_to do |format|
-      format.json { render json: render_calltoaction_overvideo_end_str }
-    end
+      format.json { render json: response.to_json }
+    end  
   end
  
   def interaction_for_next_calltoaction?(interaction)
@@ -288,7 +274,15 @@ class CallToActionController < ApplicationController
   end
 
   def get_overvideo_during_interaction
-    interaction = Interaction.find(params[:interaction_id])
+    response = response_for_overvideo_interaction(params[:interaction_id])
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end  
+  end
+
+  def response_for_overvideo_interaction(interaction_id)
+    interaction = Interaction.find(interaction_id)
 
     response = Hash.new
     render_calltoaction_overvideo_end_str = String.new
@@ -303,29 +297,11 @@ class CallToActionController < ApplicationController
     response[:overvideo] = render_calltoaction_overvideo_end_str
     response[:interaction_done_before] = user_interaction.present?
 
-    respond_to do |format|
-      format.json { render json: response.to_json }
-    end  
-  end
+    if interaction.resource_type.downcase.to_sym == :quiz
+      response[:interaction_one_shot] = interaction.resource.one_shot
+    end
 
-  def update_check
-    i = Interaction.find(params[:interaction_id].to_i)
-    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)  
-      UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i) unless ui
-    respond_to do |format|
-      format.json { render :json => "update-check".to_json }
-    end  
-  end
-
-  def update_download
-    i = Interaction.find(params[:interaction_id].to_i)
-    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)  
-    
-    ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
-
-    respond_to do |format|
-      format.json { render :json => "update-download".to_json }
-    end  
+    response
   end
 
   def share_free

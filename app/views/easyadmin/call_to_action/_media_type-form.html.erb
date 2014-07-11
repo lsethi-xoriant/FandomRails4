@@ -1,16 +1,16 @@
 <div class="form-group">
   <label class="text-input">Tipologia di contenuto</label>
     <% date_array = f.object.media_type_enum.map { |media_type| [ media_type, media_type] } %>
-    <%= f.select(:media_type, date_array, {}, { :class => "form-control", :onchange => "updateMedia()" }) %>
+    <%= f.select(:media_type, date_array, {}, { :class => "form-control", :onchange => "updateMainMedia()" }) %>
 </div>
-<div class="form-group" id="media_data-form-group">
-    <label class="text-input" id="media-data-label">MEDIA DATA</label>
+<div class="form-group media_data-form-group">
+    <label class="text-input media-data-label">MEDIA DATA</label>
     <%= f.text_area :media_data, :class => "form-control", rows: 2 %>
 </div>
 
 <%= render partial: "play_interaction", locals: { f: f } %>
 
-<div class="form-group" id="media-image-form-group">
+<div class="form-group media-image-form-group">
   <label class="text-input">Immagine copertina</label>
   <div class="fileupload fileupload-new" data-provides="fileupload">
     <div class="fileupload-preview thumbnail" style="width: 100%; height: 200px; line-height: 20px;">

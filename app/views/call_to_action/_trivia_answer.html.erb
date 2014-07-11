@@ -1,9 +1,15 @@
 <!-- ANSWER WITHOUT NEXT CALLTOACTION -->
 <% if user_interaction %>
   <!-- CURRENT USER HAS ALREADY RESPONDED -->
-  <div class="col-sm-4 col-xs-12 text-center" style="margin-bottom: 15px;">
-    <button class="btn btn-block btn-lg <%= answer.correct ? "btn-success" : "btn-danger" %> <%=  user_interaction.answer_id == answer.id ? "active" : "disabled" %>"><%= answer.text %></button>
-  </div>
+  <% if interaction.resource.one_shot %>
+    <div class="col-sm-4 col-xs-12 text-center" style="margin-bottom: 15px;">
+      <button class="btn btn-block btn-lg <%= answer.correct ? "btn-success" : "btn-danger" %> <%=  user_interaction.answer_id == answer.id ? "active" : "disabled" %>"><%= answer.text %></button>
+    </div>
+  <% else %>
+    <div class="col-sm-4 col-xs-12 text-center" style="margin-bottom: 15px;">
+      <button class="btn btn-block btn-lg <%= user_interaction.answer_id == answer.id ? (answer.correct ? "active btn-success" : "active btn-danger") : "btn-primary" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
+    </div>
+  <% end %>
 <% else %>
   <!-- CURRENT USER HAS NOT RESPONDED -->
   <div class="col-sm-4 col-xs-12 text-center" style="margin-bottom: 15px;">

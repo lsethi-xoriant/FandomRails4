@@ -14,7 +14,6 @@
 
     <div class="row text-left" style="padding-bottom: 0px;">
 
-
       <div class="col-lg-6">
 
         <div class="form-group">
@@ -25,6 +24,11 @@
               <%= f.check_box :correct %>
             </span>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label class="text-input">Bloccante</label>
+            <%= f.select(:blocking, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
         </div>
 
         <div class="form-group text-center">
@@ -54,8 +58,8 @@
 
         <div class="form-group">
           <label class="text-input">Media associato</label>
-          <% date_array = f.object.media_type_enum.map { |media_type| [ media_type, media_type] } %>
-          <%= f.select(:media_type, date_array, {}, { :class => "form-control", :onchange => "updateMedia(this)" }) %>
+          <% date_array = f.object.media_type_enum.map { |media_type| [media_type, media_type] } %>
+          <%= f.select(:media_type, date_array, {}, { :class => "form-control answer-media-type", :onchange => "updateMedia(this)" }) %>
         </div>
         <div class="form-group media_data-form-group">
           <label class="text-input media-data-label">MEDIA DATA</label>
@@ -76,54 +80,9 @@
           </div>
         </div>
 
-
       </div>
     </div>
+
   </div>
-
 </div>
-
-<script type="text/javascript">
-
-  function updateMedia(element) {
-    media_type = $(element).val();
-    container = $(element).parent().parent();
-    switch(media_type) {
-      case "YOUTUBE":
-        container.find($(".media-data-label")).html("V CODE");
-        container.find($(".media_data-form-group")).show();
-        container.find($(".play-interaction")).show();
-        container.find($(".media-image-form-group")).hide();
-        break;
-      case "IFRAME":
-        container.find($(".media-data-label")).html("IFRAME");
-        container.find($(".media_data-form-group")).show();
-        container.find($(".play-interaction")).hide();
-        container.find($(".media-image-form-group")).hide();
-        break;
-      case "IMAGE":
-        container.find($(".media_data-form-group")).hide();
-        container.find($(".play-interaction")).hide();
-        container.find($(".media-image-form-group")).show();
-        break;
-      default:
-        container.find($(".media_data-form-group")).hide();
-        container.find($(".media-image-form-group")).hide();
-        container.find($(".play-interaction")).hide();
-    }
-  }
-
-  function updateDeleteHiddenField(element) {
-    if($(element).html() == "sgancia") {
-      $(element).parent().parent().find("input:hidden").val("1");
-      $(element).removeClass("btn-secondary").addClass("btn-tertiary");
-      $(element).html("aggancia");
-    } else {
-      $(element).parent().parent().find("input:hidden").val("0");
-      $(element).removeClass("btn-tertiary").addClass("btn-secondary");
-      $(element).html("sgancia");
-    }
-  }
-
-</script>
 
