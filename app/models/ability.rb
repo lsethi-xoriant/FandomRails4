@@ -12,10 +12,9 @@ class Ability
       can :access, :easyadmin 
     elsif user && user.role == "viewer"
       can :access, :easyadmin 
-    end
-
-    if user && user.rule
-      can :play, :contest
+    elsif user && user.role == "comment-moderator"
+      can :access, :easyadmin 
+      can :manage, :comments
     end
     
   end

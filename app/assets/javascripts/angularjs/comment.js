@@ -52,25 +52,24 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.newCommentsPolling = function() {
     if(!$scope.comment.ajax_polling_in_progress) {
-
       $scope.comment.ajax_polling_in_progress = true;
 
-      $http.post("/new_comments_polling", { interaction_id: $scope.comment.interaction_id, first_comment_shown_date: $scope.comment.first_comment_shown_date })
-        .success(function(data) {
+      try {
+        $http.post("/new_comments_polling", { interaction_id: $scope.comment.interaction_id, first_comment_shown_date: $scope.comment.first_comment_shown_date })
+          .success(function(data) {
 
-          if(haveNewCommentsToAppend(data)) {
-            $scope.comment.first_comment_shown_date = data.first_comment_shown_date;
-            $("#comments-" + $scope.comment.interaction_id).prepend(data.comments_to_append);
-            showNewCommentFeedback();   
-          }
-        
-          $scope.comment.ajax_polling_in_progress = false; 
+            if(haveNewCommentsToAppend(data)) {
+              $scope.comment.first_comment_shown_date = data.first_comment_shown_date;
+              $("#comments-" + $scope.comment.interaction_id).prepend(data.comments_to_append);
+              showNewCommentFeedback();   
+            }
 
-        }).error(function() {
+          }).error(function() {
+          });
+      } finally {
+        $scope.comment.ajax_polling_in_progress = false;
+      }
 
-          $scope.comment.ajax_polling_in_progress = false;
-
-        });
     }
   }
 
@@ -81,34 +80,38 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
   $window.appendComments = function() {
     if($scope.comment.not_shown_comments_counter > 0 && !$scope.comment.ajax_append_in_progress) {
       $scope.comment.ajax_append_in_progress = true;
-      $http.post("/append_comments", { interaction_id: $scope.comment.interaction_id, last_comment_shown_date: $scope.comment.last_comment_shown_date })
-        .success(function(data) {
 
-          $scope.comment.last_comment_shown_date = data.last_comment_shown_date;
-          $("#comments-" + $scope.comment.interaction_id).append(data.comments_to_append);
+      try {
+        $http.post("/append_comments", { interaction_id: $scope.comment.interaction_id, last_comment_shown_date: $scope.comment.last_comment_shown_date })
+          .success(function(data) {
 
-          $scope.comment.not_shown_comments_counter -= data.comments_to_append_counter;
-          $("#comment-append-counter-" + $scope.comment.interaction_id).html($scope.comment.not_shown_comments_counter);    
+            $scope.comment.last_comment_shown_date = data.last_comment_shown_date;
+            $("#comments-" + $scope.comment.interaction_id).append(data.comments_to_append);
 
-          showNewCommentFeedback();    
-          $scope.comment.ajax_append_in_progress = false;
-        }).error(function() {
-          $scope.comment.ajax_append_in_progress = false;
-        });
+            $scope.comment.not_shown_comments_counter -= data.comments_to_append_counter;
+            $("#comment-append-counter-" + $scope.comment.interaction_id).html($scope.comment.not_shown_comments_counter);    
+
+            showNewCommentFeedback();    
+            
+          }).error(function() {
+          });
+      } finally {
+        $scope.comment.ajax_append_in_progress = false;
+      }
+
     }
   }
 
   $window.userFeedbackAfterSubmitCommentWithCaptcha = function(data_from_submit_comment_ajax) {
 
-    if(data.captcha_check) {
+    if(data_from_submit_comment_ajax.captcha_check) {
+      $("#user-captcha-" + $scope.comment.interaction_id).val("");
       userFeedbackAfterSubmitComment(data_from_submit_comment_ajax);
     } else {
       $("#comment-captcha-error-feedback").modal("show");
     }
 
     initCaptcha();
-
-    $("#user-captcha-" + $scope.comment.interaction_id).val("");
 
   }
 
@@ -137,7 +140,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
           // TODO: show errors in a modal.
         } else {
 
-          if(!$scope.comment.current_user) {
+          if($scope.comment.current_user) {
             userFeedbackAfterSubmitComment(data);
           } else {
             userFeedbackAfterSubmitCommentWithCaptcha(data);

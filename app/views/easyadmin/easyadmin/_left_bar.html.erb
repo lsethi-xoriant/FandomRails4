@@ -2,31 +2,37 @@
 	<nav id="sidebar">       
 	  <ul id="main-nav" class="open-active">      
 	    
-	  	<li class="<%= "active" if page == "dashboard" %>"><a href="/easyadmin/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a>
-	    </li>
+	    <% if can? :manage, :all %>
+		  	<li class="<%= "active" if page == "dashboard" %>"><a href="/easyadmin/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a>
+		    </li>
+		   <% end %>
 
 	    <% if can? :manage, :all %>
 		    <li class="<%= "active" if page == "pubblished" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>
 		    </li>
 	    <% end %>
 
+	    <!--
 	    <li class="<%= "active" if page == "winner" %>"><a href="/easyadmin/winner"><i class="fa fa-ticket"></i>Vincitori concorso</a>
 	    </li>
+	    -->
 
-	    <li class="dropdown <%= "active opened" if page == "carousel" %>"><a href="javascript:void(0);"><i class="fa fa-caret-square-o-right"></i>Carosello<span class="caret"></span></a>
-	      <ul class="sub-nav">
-	        <li>
-	          <a href="/easyadmin/home_launchers">
-	            <i class="fa fa-th-list"></i>Lista item
-	          </a>
-	        </li>
-	        <li>
-	          <a href="/easyadmin/home_launchers/new">
-	            <i class="fa fa-save"></i>Nuovo item
-	          </a>
-	        </li>
-	      </ul>
-	    </li>
+	    <% if can? :manage, :all %>
+		    <li class="dropdown <%= "active opened" if page == "carousel" %>"><a href="javascript:void(0);"><i class="fa fa-caret-square-o-right"></i>Carosello<span class="caret"></span></a>
+		      <ul class="sub-nav">
+		        <li>
+		          <a href="/easyadmin/home_launchers">
+		            <i class="fa fa-th-list"></i>Lista item
+		          </a>
+		        </li>
+		        <li>
+		          <a href="/easyadmin/home_launchers/new">
+		            <i class="fa fa-save"></i>Nuovo item
+		          </a>
+		        </li>
+		      </ul>
+		    </li>
+	    <% end %>
 
 	    <% if can? :manage, :all %>
 		    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-dribbble"></i>CallToAction<span class="caret"></span></a>
@@ -80,11 +86,11 @@
 		    </li>
 	    <% end %>
 
-	    <% if can? :manage, :all %>
+	    <% if (can? :manage, :all) || (can? :manage, :comments) %>
 		    <li class="dropdown <%= "active opened" if page == "comment" %>"><a href="javascript:void(0);"><i class="fa fa-comment"></i>Comment<span class="caret"></span></a>
 		      <ul class="sub-nav">
 		        <li>
-		          <a href="/easyadmin/comment/approved">
+		          <a href="/easyadmin/comments/approved">
 		            <i class="fa fa-th-list"></i>TUTTI
 		          </a>
 		        </li>

@@ -10,12 +10,12 @@
     <div id="content-container">
 
 	<ul class="nav nav-tabs">
-	  <li><a href="/easyadmin/comment/toapproved/<%= "#{ @current_prop.id }" if @current_prop %>">Commenti da approvare</a></li>
-	  <li class="active"><a href="/easyadmin/comment/approved/<%= "#{ @current_prop.id }" if @current_prop %>">Commenti pubblicati</a></li>
-	  <li><a href="/easyadmin/comment/notapproved/<%= "#{ @current_prop.id }" if @current_prop %>">Commenti oscurati</a></li>
+	  <li class="active"><a href="/easyadmin/comments/to_approved">Commenti da approvare</a></li>
+	  <li ><a href="/easyadmin/comments/approved">Commenti pubblicati</a></li>
+	  <li><a href="/easyadmin/comments/not_approved">Commenti oscurati</a></li>
 	</ul>
 
-    <h3>Commenti approvati</h3>
+    <h3>Commenti da approvare</h3>
     <hr/>
 
     <div class="row">
@@ -29,12 +29,14 @@
 						<th>Azioni</th>
 					</tr>
 				</thead>
-				<% @comment_approved.each do |c| %>
+				<% @comment_to_be_approved.each do |c| %>
 					<tr>
 						<td><%= c.user ? c.user.id : "Anonimo" %></td>
 						<td><%= c.text %></td>
 						<td><%= c.created_at %></td>
 						<td id="comment-<%= c.id %>">
+							<button type="button" class="btn btn-default btn-xs" onclick="updateComment('pub', <%= c.id %>)">Pubblica</button>
+							&nbsp;&nbsp;
 							<button type="button" class="btn btn-warning btn-xs" onclick="updateComment('hide', <%= c.id %>)">Nascondi</button>							
 						</td>
 					</tr>
@@ -45,7 +47,7 @@
 
 	<div class="row cta-to-show">
 		<div class="col-md-12">
-			<%= render partial: "pagination" %>
+			<%= render partial: "/easyadmin/easyadmin/pagination" %>
 		</div>
 	</div>
 
@@ -56,7 +58,7 @@
 	function updateComment(pub_or_hide, comment_id) {
 		$.ajax({
             type: "POST",
-            url: "/easyadmin/comment/" + comment_id + "/update",
+            url: "/easyadmin/comments/" + comment_id + "/update_comment_status",
             data: { "pub_or_hide": pub_or_hide },
             beforeSend: function(jqXHR, settings) {
                 jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
