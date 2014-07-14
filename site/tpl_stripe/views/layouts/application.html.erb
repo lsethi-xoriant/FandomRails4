@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <title>Fandom - Stripe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="Fandom - Stripe" /> 
+  <meta property="og:description" content="Fandom - Stripe" />  
+  <meta property="og:image" content="" />
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+  <%= stylesheet_link_tag "tpl_stripe_application", :media => "all" %>
+  <%= javascript_include_tag "tpl_stripe_application" %>
+
+  <%= csrf_meta_tags %>
+
+</head>
+<body ng-app="FandomApp" class="bg-fluid">
+
+  <div id="quiz-waiting-audio"></div>
+
+  <!-- COMMENT FEEDBACK MODAL -->
+  <div class="modal fade" id="comment-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4>Commento inserito con successo</h4>
+        </div>
+        <div class="modal-body">
+          <p id="comment-must-be-approved">Il commento verrà pubblicato solo dopo l'approvazione.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPTCHA ERROR MODAL -->
+  <div class="modal fade" id="comment-captcha-error-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4>Errore nell'inserimento del commento</h4>
+        </div>
+        <div class="modal-body">
+          <p>Verifica di avere inserito correttamente il captcha.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="registrate-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4>Registrati per giocare</h4>
+        </div>
+        <div class="modal-body">
+          Per poter giocare devi <a href="/users/sign_up">loggarti o registrarti</a>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+          <a href="/users/sign_up"><button type="button" class="btn btn-primary">Entra</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="facebook-like-modal" tabindex="-1" role="dialog" aria-labelledby="facebookModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Like su Facebook</h4>
+        </div>
+        <div class="modal-body">
+         <p>Per effettuare il like devi essere collegato a Facebook</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="facebook-share-modal" tabindex="-1" role="dialog" aria-labelledby="facebookModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Share su Facebook</h4>
+        </div>
+        <div class="modal-body">
+         <p>Per effettuare la condivisione devi essere collegato a Facebook</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= yield %>
+
+</script>
+</body>
+</html>

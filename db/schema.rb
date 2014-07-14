@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140710103901) do
+ActiveRecord::Schema.define(:version => 20140710133905) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20140710103901) do
     t.datetime "media_image_updated_at"
     t.text     "media_data"
     t.string   "media_type"
+    t.boolean  "blocking",                 :default => false
   end
 
   add_index "answers", ["call_to_action_id"], :name => "index_answers_on_call_to_action_id"
@@ -70,13 +71,13 @@ ActiveRecord::Schema.define(:version => 20140710103901) do
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
     t.string   "slug"
-    t.integer  "user_id"
-    t.boolean  "user_generated"
     t.string   "media_image_file_name"
     t.string   "media_image_content_type"
     t.integer  "media_image_file_size"
     t.datetime "media_image_updated_at"
     t.text     "media_data"
+    t.integer  "user_id"
+    t.boolean  "user_generated"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
@@ -276,12 +277,13 @@ ActiveRecord::Schema.define(:version => 20140710103901) do
   end
 
   create_table "quizzes", :force => true do |t|
-    t.string   "question",                            :null => false
+    t.string   "question",                               :null => false
     t.integer  "cache_correct_answer", :default => 0
     t.integer  "cache_wrong_answer",   :default => 0
     t.string   "quiz_type"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.boolean  "one_shot",             :default => true
   end
 
   create_table "registrations", :force => true do |t|
@@ -391,9 +393,6 @@ ActiveRecord::Schema.define(:version => 20140710103901) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
-
-  add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
-  add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
 
   create_table "uploads", :force => true do |t|
     t.integer  "call_to_action_id",     :null => false

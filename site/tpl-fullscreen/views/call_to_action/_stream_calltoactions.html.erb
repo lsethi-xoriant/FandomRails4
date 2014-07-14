@@ -1,6 +1,0 @@
-<% i = 0 %>
-
-<% calltoactions.each do |calltoaction| %>
-  <%= render partial: "/call_to_action/stream_single_calltoaction", locals: { calltoaction: calltoaction, type: "", i: i } %>
-  <% i += 1 %>
-<% end %>

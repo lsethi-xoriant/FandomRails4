@@ -100,11 +100,9 @@ module Fandom
     config.domain_to_site = {}
     config.domain_to_site_id = {}
     
-    enabled_sites = config.deploy_settings['enabled_sites']
-    unless enabled_sites.nil?
-      enabled_sites = enabled_sites.split(',').map { |s| s.strip }
-      load_site_configs(enabled_sites)
-    end
+    enabled_sites = config.deploy_settings.fetch('enabled_sites', '')
+    enabled_sites = enabled_sites.split(',').map { |s| s.strip }
+    load_site_configs(enabled_sites)
     
     config.fandom_play_enabled = config.deploy_settings.key? 'fandom_play'
     if config.fandom_play_enabled

@@ -248,7 +248,12 @@
 
   tl = <%= raw(Tag.select("name").map(&:name).to_json) %>;
   $(document).ready(function() {
-    updateMedia();
+
+    $(".answer-media-type").each(function(i, obj) {
+      updateMedia(obj);
+    });
+
+    updateMainMedia();
 
     $('#s2_tokenization').select2({
       placeholder: "",
@@ -257,30 +262,35 @@
     })
   })
 
-  function updateMedia() {
-    media_type = $("#call_to_action_media_type").val();
+  function updateMainMedia() {
+    updateMedia($("#call_to_action_media_type"));
+  }
+
+  function updateMedia(element) {
+    media_type = $(element).val();
+    container = $(element).parent().parent();
     switch(media_type) {
       case "YOUTUBE":
-        $("#media-data-label").html("V CODE");
-        $("#media_data-form-group").show();
-        $("#play-interaction").show();
-        $("#media-image-form-group").hide();
+        container.find($(".media-data-label")).html("V CODE");
+        container.find($(".media_data-form-group")).show();
+        container.find($(".play-interaction")).show();
+        container.find($(".media-image-form-group")).hide();
         break;
       case "IFRAME":
-        $("#media-data-label").html("IFRAME");
-        $("#media_data-form-group").show();
-        $("#play-interaction").hide();
-        $("#media-image-form-group").hide();
+        container.find($(".media-data-label")).html("IFRAME");
+        container.find($(".media_data-form-group")).show();
+        container.find($(".play-interaction")).hide();
+        container.find($(".media-image-form-group")).hide();
         break;
       case "IMAGE":
-        $("#media_data-form-group").hide();
-        $("#play-interaction").hide();
-        $("#media-image-form-group").show();
+        container.find($(".media_data-form-group")).hide();
+        container.find($(".play-interaction")).hide();
+        container.find($(".media-image-form-group")).show();
         break;
       default:
-        $("#media_data-form-group").hide();
-        $("#media-image-form-group").hide();
-        $("#play-interaction").hide();
+        container.find($(".media_data-form-group")).hide();
+        container.find($(".media-image-form-group")).hide();
+        container.find($(".play-interaction")).hide();
     }
   }
 
@@ -328,9 +338,11 @@
   function add_answer_fields(link, association, content) {
     var new_id = new Date().getTime();
     var regexp = new RegExp("new_" + association, "g");
-    $(link).parent().parent().parent().find(".panel-body").prepend(content.replace(regexp, new_id));
+    $(link).parent().parent().parent().parent().find(".answers-container").prepend(content.replace(regexp, new_id));
 
-    updateMedia();
+    $(".answer-media-type").each(function(i, obj) {
+      updateMedia(obj);
+    });
   }
 
   var share_fb_counter = false; 
@@ -407,7 +419,7 @@
   }
 
   function remove_answer_quiz_fields(link) {
-    $(link).parent().parent().parent().remove();
+    $(link).parent().parent().parent().parent().remove();
   }
 
   function remove_like_fields(link) {
@@ -442,6 +454,18 @@
   function remove_upload_fields(link) {
     $(link).parent().parent().parent().remove();
     upload_counter = false;
+  }
+
+  function updateDeleteHiddenField(element) {
+    if($(element).html() == "sgancia") {
+      $(element).parent().parent().find("input:hidden").val("1");
+      $(element).removeClass("btn-secondary").addClass("btn-tertiary");
+      $(element).html("aggancia");
+    } else {
+      $(element).parent().parent().find("input:hidden").val("0");
+      $(element).removeClass("btn-tertiary").addClass("btn-secondary");
+      $(element).html("sgancia");
+    }
   }
 
 </script>
