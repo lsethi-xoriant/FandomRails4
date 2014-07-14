@@ -33,7 +33,7 @@
           <a href="#" data-toggle="dropdown" class="navbar-toggle" style="padding: 10px; margin-right: 0;">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            <span class="icon-bar"></span> 
           </a>
           <ul class="dropdown-menu">
             <% if current_user %>
@@ -104,7 +104,7 @@
         <a href="#" onclick="openInstantWinModal()"><%= current_user ? (get_current_contest_points current_user.id) : 0 %> <span class="glyphicon glyphicon-star"></span> <button onclick="openInstantWinModal()" class="btn btn-danger btn-xs">Gioca Subito</button></a>
       </li>
           <li class="dropdown">
-            <a data-toggle="dropdown" href="#"><%= current_user.first_name %></a>
+            <a data-toggle="dropdown" href="#"><img src="<%= current_user.avatar(:thumb) %>" alt="..." class="img-circle img-profile" width="22px"> <%= current_user.first_name %></a>
             <ul class="dropdown-menu">
               <li><a href="/profile/edit">Account</a></li>
               <li class="divider"></li>

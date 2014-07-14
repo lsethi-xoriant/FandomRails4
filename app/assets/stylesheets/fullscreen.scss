@@ -110,9 +110,16 @@
     height: auto;
     background: #f4f4f4;
     .overvideo-content.desc-comments {
-      padding: 3em 0;
+      padding: 5em 0;
       &#desc {
         background: #fff;
+      }
+      .insert-comment {
+        background: none;
+        box-shadow: none;
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+        input, textarea { border: 1px solid #ccc; }
       }
     }
   }

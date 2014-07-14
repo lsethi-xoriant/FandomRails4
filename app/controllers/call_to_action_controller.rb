@@ -180,6 +180,10 @@ class CallToActionController < ApplicationController
       response["have_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
 
+      if answer.media_type == "IMAGE" && answer.media_image
+        response["answer"]["media_image"] = answer.media_image
+      end
+
     elsif interaction.resource_type.downcase.to_sym == :like
 
       user_interaction = get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user)

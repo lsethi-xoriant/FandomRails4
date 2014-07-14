@@ -5,11 +5,12 @@
 
       <!-- SECONDARY MEDIA -->
       <div id="secondary-media-<%= calltoaction.id %>" class="hidden">
-        <div class="video flex-video widescreen" style="background:#222;"> 
+        <div id="secondary-media-video-<%= calltoaction.id %>" class="video flex-video widescreen secondary-media" style="background:#222;"> 
           <div id="home-stream-video-secondary-<%= calltoaction.id %>" main-calltoaction-media="false" calltoaction-id="<%= calltoaction.id %>"></div>
           <!-- OVERVIDEO AREA -->
           <div class="home-overvideo-feedback-<%= calltoaction.id %>"></div> 
         </div>
+        <img id="secondary-media-image-<%= calltoaction.id %>" class="secondary-media" src="<%= calltoaction.media_image %>" style="width: 100%;">
       </div>
 
       <!-- MAIN MEDIA -->
