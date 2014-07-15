@@ -5,14 +5,13 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :authentication_keys => [ :login ]
+         :recoverable, :rememberable, :trackable, :validatable
 
-  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
-    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :login
+    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id
 
-  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :login
+  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth
 
   has_many :authentications, dependent: :destroy
   has_many :user_interactions
@@ -30,20 +29,6 @@ class User < ActiveRecord::Base
   validates_presence_of :first_name
   validates_presence_of :last_name
   validates :privacy, :acceptance => { :accept => true }
-
-  validates :username,
-    :uniqueness => {
-      :case_sensitive => false
-    }
-
-  def self.find_for_database_authentication(warden_conditions)
-    conditions = warden_conditions.dup
-    if login = conditions.delete(:login)
-      where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
-    else
-      where(conditions).first
-    end
-  end
 
   def major
     if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present?
@@ -171,16 +156,6 @@ class User < ActiveRecord::Base
       params.delete(:password_confirmation) if params[:password_confirmation].blank? 
     end 
     update_attributes(params) 
-  end
-
-  def create_login
-    email = self.email.split(/@/)
-    login_taken = User.where(username: email[0]).first
-    unless login_taken
-      self.username = email[0]
-    else    
-      self.username = self.email
-    end        
   end
 
 end

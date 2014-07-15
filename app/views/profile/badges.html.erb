@@ -45,68 +45,23 @@
                 </div>
               </div>
             <div class="row badges text-center">
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive" src="https://playfoursquare.s3.amazonaws.com/badge/200/9to5.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive not-yours" src="https://playfoursquare.s3.amazonaws.com/badge/200/AEZQ4XA2JMKAE4D5.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive" src="https://playfoursquare.s3.amazonaws.com/badge/200/AEZQ4XA2JMKAE4D5.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive not-yours" src="https://playfoursquare.s3.amazonaws.com/badge/200/bookworm.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive" src="https://playfoursquare.s3.amazonaws.com/badge/200/AEZQ4XA2JMKAE4D5.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive" src="https://playfoursquare.s3.amazonaws.com/badge/200/coffee_2.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive not-yours" src="https://playfoursquare.s3.amazonaws.com/badge/200/AEZQ4XA2JMKAE4D5.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive" src="https://playfoursquare.s3.amazonaws.com/badge/200/BUOWPE3UDP0N05XS.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive not-yours" src="https://playfoursquare.s3.amazonaws.com/badge/200/coffee_2.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive" src="https://playfoursquare.s3.amazonaws.com/badge/200/BUOWPE3UDP0N05XS.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive" src="https://playfoursquare.s3.amazonaws.com/badge/200/BUOWPE3UDP0N05XS.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                      <img class="img-responsive not-yours" src="https://playfoursquare.s3.amazonaws.com/badge/200/BUOWPE3UDP0N05XS.png" alt="...">
-                      <p><small>Lorem ipsum dolor sit amet</small></p>
-                    </div>
+              <!-- not-yours -->
+              <% get_tags_with_tag("badge").each do |badge_tag| %>
+                <% badge_tag.reward_tags.each do |badge_reward_tag| %>
+                  <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
+                    <img class="img-responsive" src="<%= badge_reward_tag.reward.main_image %>" alt="...">
+                    <p><small><%= badge_reward_tag.reward.title %></small></p></p>
                   </div>
+                <% end %>
+              <% end %>
+            </div>
         </div>
       </div>
     </div>
   </div>
 
 </div>
-<footer class="bs-footer" role="contentinfo" style="padding-bottom: 1.5em;">
-  <div class="jumbotron bkg-topbar" style="margin-bottom: 0">
-    <div class="container">
-        
-    </div>
-  </div>
-</footer>
+
 
 <script type="text/javascript">
 	function updateModal(e) {
