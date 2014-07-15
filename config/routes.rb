@@ -70,13 +70,10 @@ Fandom::Application.routes.draw do
     match "instantwin_prize/update", :to => "easyadmin#update_prize"
     
     # COMMENT
-    match "comment/approved", :to => "easyadmin#index_comment_approved"
-    match "comment/toapproved", :to => "easyadmin#index_comment_to_be_approved"
-    match "comment/notapproved", :to => "easyadmin#index_comment_not_approved"
-    match "comment/notapproved/:property", :to => "easyadmin#index_comment_not_approved"
-    match "comment/approved/:property", :to => "easyadmin#index_comment_approved"
-    match "comment/toapproved/:property", :to => "easyadmin#index_comment_to_be_approved"
-    match "comment/:property/update", :to => "easyadmin#update_comment_pubblished"
+    match "comments/approved", :to => "comments#index_comment_approved"
+    match "comments/to_approved", :to => "comments#index_comment_to_be_approved"
+    match "comments/not_approved", :to => "comments#index_comment_not_approved"
+    match "comments/:comment_id/update_comment_status", :to => "comments#update_comment_status"
 
     match "dashboard", :to => "easyadmin#dashboard"
     match "published", :to => "easyadmin#published"

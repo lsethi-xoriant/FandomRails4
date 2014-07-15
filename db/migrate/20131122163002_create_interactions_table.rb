@@ -8,5 +8,6 @@ class CreateInteractionsTable < ActiveRecord::Migration
       t.references :resource, polymorphic: true
       t.references :call_to_action
     end
+    add_index :interactions, :name, :unique => true
   end
 end

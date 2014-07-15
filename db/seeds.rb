@@ -1,13 +1,13 @@
-User.create(email: "atolomio@shado.tv", first_name: "Alessandro", last_name: "Tolomio", 
+User.create(email: "atolomio@shado.tv", first_name: "Martino", last_name: "Russo", 
 						privacy: true, password: "shado00", password_confirmation: "shado00", role: "admin")
 
-User.create(email: "sbartolucci@shado.tv", first_name: "Stefano", last_name: "Bartolucci", 
+User.create(email: "sbartolucci@shado.tv", first_name: "Renzo", last_name: "Trentini", 
 						privacy: true, password: "shado00", password_confirmation: "shado00", role: "admin")
 
-User.create(email: "ddainese@shado.tv", first_name: "Diego", last_name: "Dainese", 
+User.create(email: "ddainese@shado.tv", first_name: "Costantino", last_name: "Cocci", 
 						privacy: true, password: "shado00", password_confirmation: "shado00", role: "admin")
 						
-User.create(email: "mpozzana@shado.tv", first_name: "Matteo", last_name: "Pozzana", 
+User.create(email: "mpozzana@shado.tv", first_name: "Gualtiero", last_name: "Fallaci", 
             privacy: true, password: "shado00", password_confirmation: "shado00", role: "admin")
 
 User.create(email: "anonymous@shado.tv", first_name: "Anonymous", last_name: "Anonymous", 

@@ -115,6 +115,7 @@
   $(document).ready(function() {
     buildDonut();
     buildLine();
+
     $(window).resize(App.debounce(buildDonut, 325));
     $(window).resize(App.debounce(buildLine, 325));
   });
@@ -137,6 +138,8 @@
   }
 
   function buildLine() {
+    $('#line-chart').empty();
+    
     if(user_counter > 0) {
 
       first_user_created_at = "<%= (User.order("created_at ASC").limit(1).first.created_at).strftime("%Y-%m-%d") if User.any? %>";
