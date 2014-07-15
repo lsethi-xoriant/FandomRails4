@@ -88,7 +88,18 @@ class Easyadmin::CallToActionController < ApplicationController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    @cta_list = CallToAction.page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    @cta_list = CallToAction.where("user_generated = FALSE OR user_generated IS NULL").page(page).per(per_page).order("activated_at DESC NULLS LAST")
+
+    @page_size = @cta_list.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+  end
+  
+  def index_user_generated_cta
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+
+    @cta_list = CallToAction.where("user_generated = TRUE").page(page).per(per_page).order("activated_at DESC NULLS LAST")
 
     @page_size = @cta_list.num_pages
     @page_current = page

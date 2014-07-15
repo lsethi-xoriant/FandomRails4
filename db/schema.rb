@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140710133905) do
+ActiveRecord::Schema.define(:version => 20140715155143) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -71,13 +71,14 @@ ActiveRecord::Schema.define(:version => 20140710133905) do
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
     t.string   "slug"
+    t.integer  "user_id"
+    t.boolean  "user_generated"
     t.string   "media_image_file_name"
     t.string   "media_image_content_type"
     t.integer  "media_image_file_size"
     t.datetime "media_image_updated_at"
     t.text     "media_data"
-    t.integer  "user_id"
-    t.boolean  "user_generated"
+    t.integer  "releasing_file_id"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
@@ -293,7 +294,6 @@ ActiveRecord::Schema.define(:version => 20140710133905) do
   end
 
   create_table "releasing_files", :force => true do |t|
-    t.integer  "call_to_action_id", :null => false
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.string   "file_file_name"
@@ -393,6 +393,9 @@ ActiveRecord::Schema.define(:version => 20140710133905) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
+
+  add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
+  add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
 
   create_table "uploads", :force => true do |t|
     t.integer  "call_to_action_id",     :null => false

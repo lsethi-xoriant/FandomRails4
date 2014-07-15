@@ -22,24 +22,20 @@ module CallToActionHelper
     old_cta.call_to_action_tags.each do |tag|
       duplicate_cta_tag(new_cta, tag)
     end
-    
-    # TODO: change the result to save cta and check saving ok and than redirect to cta page with successful message
-    @cta = new_cta
-    tag_array = Array.new
-    @cta.call_to_action_tags.each { |t| tag_array << t.tag.name }
-    @tag_list = tag_array.join(",")
-    render template: "/easyadmin/call_to_action/new_cta"
+    new_cta.save
+    new_cta
   end
   
   def duplicate_user_generated_cta(old_cta_id, params, upload_file_index)
     cta = CallToAction.find(old_cta_id)
-    cta.media_image = File.open(params["upload-#{upload_file_index}"])
     cta.user_generated = true
-    cta.uctivated_at = nil
+    cta.activated_at = nil
     cta.name = generate_unique_name()
     cta_attributes = cta.attributes
     cta_attributes.delete("id")
-    CallToAction.new(cta_attributes, :without_protection => true)
+    cta = CallToAction.new(cta_attributes, :without_protection => true)
+    cta.media_image = params["upload-#{upload_file_index}"]
+    cta
   end
   
   def generate_unique_name
