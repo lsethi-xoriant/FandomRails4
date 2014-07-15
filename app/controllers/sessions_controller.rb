@@ -2,11 +2,11 @@ require 'fandom_utils'
 include FandomUtils
 
 class SessionsController < Devise::SessionsController
-  prepend_before_filter :anchor_provider_to_current_user, only: :create, :if => proc {|c| current_user && !env["omniauth.auth"].nil? }
+  prepend_before_filter :anchor_provider_to_current_user, only: :create, :if => proc {|c| current_user && env["omniauth.auth"].present? }
   skip_before_filter :iur_authenticate
 
   def anchor_provider_to_current_user
-    # Aggancio il provider all'utente corrente se loggato.
+    # Assign the provier at the current user.
     current_user.logged_from_omniauth env["omniauth.auth"], params[:provider]
     flash[:notice] = "Agganciato #{ params[:provider] } all'utente"
 
@@ -67,23 +67,12 @@ class SessionsController < Devise::SessionsController
 
   # Authenticates and log in the user from the standard application form.
   def create_from_form
-    if !(params['user'].blank?) && !(params['user']['password'].blank?)
-      user = User.find_by_email(params['user']['email'])
-      if valid_credentials?(user)
-        flash[:error] = "Dati non validi"
-        redirect_to "/users/sign_up"
-      else
-        self.resource = warden.authenticate!(auth_options)
-        set_flash_message(:notice, :signed_in) if is_navigational_format?
-        sign_in(resource_name, resource)
-        fandom_play_login(user)
-        
-        redirect_after_successful_login()
-      end
-    else
-      flash[:notice] = "Dati non validi"
-      redirect_to "/users/sign_up"
-    end
+    self.resource = warden.authenticate!(auth_options)
+    set_flash_message(:notice, :signed_in) if is_navigational_format?
+    sign_in(resource_name, resource)
+    fandom_play_login(resource)
+    
+    redirect_after_successful_login()
   end
   
   def valid_credentials?(user)

@@ -5,13 +5,14 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable,
+         :authentication_keys => [ :login ]
 
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
+  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
-    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :enable_contest
+    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :login
 
-  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :enable_contest
+  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :login
 
   has_many :authentications, dependent: :destroy
   has_many :user_interactions
@@ -22,23 +23,27 @@ class User < ActiveRecord::Base
 
   before_save :set_date_of_birth
 
+  before_create :create_login
+
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/anon.png"
 
   validates_presence_of :first_name
   validates_presence_of :last_name
   validates :privacy, :acceptance => { :accept => true }
 
-  validate :major, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :day_of_birth, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :month_of_birth, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :year_of_birth, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :location, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :cap, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :address, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :number, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :province, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :phone, if: Proc.new { |c| c.enable_contest }
-  validates :rule, :acceptance => { :accept => true }, if: Proc.new { |c| c.enable_contest }
+  validates :username,
+    :uniqueness => {
+      :case_sensitive => false
+    }
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login)
+      where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
+    else
+      where(conditions).first
+    end
+  end
 
   def major
     if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present?
@@ -159,7 +164,7 @@ class User < ActiveRecord::Base
     return user, from_registration
   end
 
-  # Permette di aggiornare l'utente senza un nuovo inserimento della password.
+  # Update the user without ask the account password again.
   def update_with_password(params={}) 
     if params[:password].blank? 
       params.delete(:password) 
@@ -168,5 +173,14 @@ class User < ActiveRecord::Base
     update_attributes(params) 
   end
 
+  def create_login
+    email = self.email.split(/@/)
+    login_taken = User.where(username: email[0]).first
+    unless login_taken
+      self.username = email[0]
+    else    
+      self.username = self.email
+    end        
+  end
 
 end

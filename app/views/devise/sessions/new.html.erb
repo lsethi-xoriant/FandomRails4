@@ -36,10 +36,10 @@
               <%= form_for resource, :url => user_sign_in_path do |f| %>
                 <div class="col-md-12">
                   <h4 class="lead text-left">Login</h4>
-                  <p><%= flash[:error] %></p>
+                  <p><%= flash[:alert] %></p>
                   <div class="form-group text-left">
                     <!--<label for="exampleInputEmail1">Email address</label>-->
-                    <%= f.text_field :email, :class => "form-control", :placeholder => "Email" %>
+                    <%= f.text_field :login, :class => "form-control", :placeholder => "Username or email" %>
                   </div>
                   <div class="form-group text-left">
                     <!--<label for="exampleInputPassword1">Password</label>-->
