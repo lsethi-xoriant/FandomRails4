@@ -22,21 +22,6 @@ class ApplicationController < ActionController::Base
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
   end
   
-  def index_v2
-    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
-    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
-  end
-  
-  def index_v3
-    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
-    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
-  end
-  
-  def index_v4
-    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
-    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
-  end
-
   def update_call_to_action_in_page_with_tag
 
     if params[:tag_id].present?
