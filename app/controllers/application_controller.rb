@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
 
   include FandomUtils
   include ApplicationHelper
+  include EventHandlerHelper
 
   before_filter :fandom_before_filter
 
