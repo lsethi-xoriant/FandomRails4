@@ -14,6 +14,14 @@ Fandom::Application.routes.draw do
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
   match "/cta/upload", :to => "call_to_action#upload"
   
+  match "/browse", :to => "browse#index"
+  match "/browse/search", :to => "browse#search"
+  match "/browse/fullscreen", :to => "browse#index_fullscreen"
+  
+  match "/stream-v2", :to => "application#index_v2"
+  match "/stream-v3", :to => "application#index_v3"
+  match "/stream-v4", :to => "application#index_v4"
+  
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
