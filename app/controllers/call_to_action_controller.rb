@@ -397,7 +397,7 @@ class CallToActionController < ApplicationController
             flash[:error] = cloned_cta.errors
           else
             if upload_interaction.releasing?
-              cloned_cta.update_attribute(:releasing_id, releasing.id)
+              cloned_cta.update_attribute(:releasing_file_id, releasing.id)
             end
           end
         end

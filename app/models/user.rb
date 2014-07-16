@@ -22,8 +22,6 @@ class User < ActiveRecord::Base
 
   before_save :set_date_of_birth
 
-  before_create :create_login
-
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/anon.png"
 
   validates_presence_of :first_name

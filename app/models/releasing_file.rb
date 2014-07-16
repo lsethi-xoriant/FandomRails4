@@ -1,7 +1,8 @@
 class ReleasingFile < ActiveRecord::Base
+  attr_accessible :file
   
   has_attached_file :file
   
-  belongs_to :call_to_action
+  has_many :call_to_actions
   
 end
