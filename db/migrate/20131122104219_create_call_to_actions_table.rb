@@ -11,6 +11,6 @@ class CreateCallToActionsTable < ActiveRecord::Migration
       t.string :secondary_id
       t.timestamps
     end
-    add_index :call_to_actions, :name
+    add_index :call_to_actions, :name, :unique => true
   end
 end

@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
 
   include FandomUtils
   include ApplicationHelper
+  include EventHandlerHelper
 
   before_filter :fandom_before_filter
 
@@ -17,6 +18,21 @@ class ApplicationController < ActionController::Base
   end
 
   def index
+    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+  end
+  
+  def index_v2
+    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+  end
+  
+  def index_v3
+    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+  end
+  
+  def index_v4
     @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
   end

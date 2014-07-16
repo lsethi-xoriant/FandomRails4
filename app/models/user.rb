@@ -9,9 +9,9 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
-    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :enable_contest
+    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id
 
-  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :enable_contest
+  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth
 
   has_many :authentications, dependent: :destroy
   has_many :user_interactions
@@ -27,18 +27,6 @@ class User < ActiveRecord::Base
   validates_presence_of :first_name
   validates_presence_of :last_name
   validates :privacy, :acceptance => { :accept => true }
-
-  validate :major, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :day_of_birth, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :month_of_birth, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :year_of_birth, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :location, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :cap, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :address, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :number, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :province, if: Proc.new { |c| c.enable_contest }
-  validates_presence_of :phone, if: Proc.new { |c| c.enable_contest }
-  validates :rule, :acceptance => { :accept => true }, if: Proc.new { |c| c.enable_contest }
 
   def major
     if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present?
@@ -159,7 +147,7 @@ class User < ActiveRecord::Base
     return user, from_registration
   end
 
-  # Permette di aggiornare l'utente senza un nuovo inserimento della password.
+  # Update the user without ask the account password again.
   def update_with_password(params={}) 
     if params[:password].blank? 
       params.delete(:password) 
@@ -167,6 +155,5 @@ class User < ActiveRecord::Base
     end 
     update_attributes(params) 
   end
-
 
 end

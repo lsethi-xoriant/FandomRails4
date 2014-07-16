@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140709123320) do
+ActiveRecord::Schema.define(:version => 20140715155143) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
     t.datetime "media_image_updated_at"
     t.text     "media_data"
     t.string   "media_type"
+    t.boolean  "blocking",                 :default => false
   end
 
   add_index "answers", ["call_to_action_id"], :name => "index_answers_on_call_to_action_id"
@@ -77,6 +78,7 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
     t.integer  "media_image_file_size"
     t.datetime "media_image_updated_at"
     t.text     "media_data"
+    t.integer  "releasing_file_id"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
@@ -276,18 +278,28 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
   end
 
   create_table "quizzes", :force => true do |t|
-    t.string   "question",                            :null => false
+    t.string   "question",                               :null => false
     t.integer  "cache_correct_answer", :default => 0
     t.integer  "cache_wrong_answer",   :default => 0
     t.string   "quiz_type"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.boolean  "one_shot",             :default => true
   end
 
   create_table "registrations", :force => true do |t|
     t.string   "title"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "releasing_files", :force => true do |t|
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
   end
 
   create_table "reward_tags", :force => true do |t|
@@ -357,7 +369,7 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
   create_table "tag_fields", :force => true do |t|
     t.integer  "tag_id"
     t.string   "name"
-    t.string   "type"
+    t.string   "field_type"
     t.text     "value"
     t.string   "upload_file_name"
     t.string   "upload_content_type"
@@ -376,25 +388,24 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
   add_index "tags", ["name"], :name => "index_tags_on_name", :unique => true
 
   create_table "tags_tags", :force => true do |t|
-    t.integer "tag_id"
-    t.integer "belongs_tag_id"
+    t.integer  "tag_id"
+    t.integer  "other_tag_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
   add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
 
   create_table "uploads", :force => true do |t|
-    t.integer  "call_to_action_id",               :null => false
+    t.integer  "call_to_action_id",     :null => false
     t.boolean  "releasing"
     t.text     "releasing_description"
     t.boolean  "privacy"
     t.text     "privacy_description"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-    t.string   "releasing_document_file_name"
-    t.string   "releasing_document_content_type"
-    t.integer  "releasing_document_file_size"
-    t.datetime "releasing_document_updated_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+    t.integer  "upload_number"
   end
 
   create_table "user_comments", :force => true do |t|
@@ -471,11 +482,13 @@ ActiveRecord::Schema.define(:version => 20140709123320) do
     t.string   "number"
     t.boolean  "rule"
     t.date     "birth_date"
+    t.string   "username"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["username"], :name => "index_users_on_username", :unique => true
 
 end

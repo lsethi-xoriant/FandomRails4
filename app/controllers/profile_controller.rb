@@ -18,11 +18,9 @@ class ProfileController < ApplicationController
   end
 
   def levels
-    # TODO: adjust.
   end
 
   def badges
-    # TODO: adjust.
   end
   
   def prizes

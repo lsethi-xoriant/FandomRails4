@@ -1,4 +1,4 @@
-<div class="item <%= 'active' if i == 0 %> cta" id="cta_1" style="background: url('<%= calltoaction.media_image %>') no-repeat center center; background-size: auto 100%;">
+<div class="item <%= 'active' if i == 0 %> cta" id="cta_1" style="background: url('<%= calltoaction.media_image %>') no-repeat center center; background-size: cover;">
   <div class="overvideo">
     <div class="overvideo-canvas" style="position: relative;">
       <div class="overvideo-content" style="display: inline-table; width: 100%;
@@ -30,13 +30,13 @@ color: #fff">
           <div class="col-md-10 col-xs-10 text-left">
             <div class="row">
               <div class="col-md-12 ">
-                <h4><a class="btn btn-default btn-md" href="/call_to_action/<%= calltoaction.id %>">Call To Action</a>
+                <h4><a class="btn btn-default btn-md" href="/call_to_action/<%= calltoaction.id %>">Call To Action</a>&nbsp;
                   <% if call_to_action_completed?(calltoaction, current_user_or_anonymous_user) %>
-                    <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success">
+                    &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success">
                       FATTO <span class="glyphicon glyphicon-ok"></span>
                     </span>
                   <% else %>
-                    <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning">+<%= predict_max_cta_outcome(calltoaction, anonymous_user).reward_name_to_counter["POINT"] %>
+                    &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning">+<%= predict_max_cta_outcome(calltoaction, anonymous_user).reward_name_to_counter["POINT"] %>
                       <span class="glyphicon glyphicon-star"></span>
                     </span>
                   <% end %>
@@ -51,5 +51,20 @@ color: #fff">
   <div class="carousel-caption">
      
   </div>
+
+  <nav class="navbar navbar-fixed-bottom cta-nav" role="navigation">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav left-nav"> 
+        <li><a href="#desc" class="scroll"><span class="glyphicon glyphicon-file"> </span> Descrizione</a></li> 
+        <li><a href="#comm"><span class="glyphicon glyphicon-comment scroll"> </span> Commenti (78)</a></li>  
+      </ul>
+      <ul class="nav navbar-nav navbar-right"> 
+        <li><a href="#"><span class="glyphicon glyphicon-thumbs-up scroll"> </span> like</a></li> 
+        <li><a href="#"><span class="glyphicon glyphicon-share-alt scroll"> </span> Share</a></li>  
+      </ul>
+    </div>
+  </nav>
+
+
 </div>
 

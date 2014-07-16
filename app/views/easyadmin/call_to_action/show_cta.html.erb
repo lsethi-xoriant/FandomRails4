@@ -104,17 +104,17 @@
 		        </dl>
 		      </div>
 		      <div class="col-lg-3">
-			        <div class="portlet">
-			          <div class="portlet-header">
-			            <h3>
-			              <i class="fa fa-bar-chart-o"></i>
-			              RISPOSTE
-			            </h3>
-			          </div> <!-- /.portlet-header -->
-			          <div class="portlet-content">
-			            <div id="reg-donut-chart-<%= q.id %>" class="chart-holder"></div>             
-			          </div> <!-- /.portlet-content -->
-			        </div> <!-- /.portlet -->
+		        <div class="portlet">
+		          <div class="portlet-header">
+		            <h3>
+		              <i class="fa fa-bar-chart-o"></i>
+		              RISPOSTE
+		            </h3>
+		          </div> <!-- /.portlet-header -->
+		          <div class="portlet-content">
+		            <div id="reg-donut-chart-<%= q.id %>" class="chart-holder"></div>             
+		          </div> <!-- /.portlet-content -->
+		        </div> <!-- /.portlet -->
 		      </div>
 		    </div> 
 		    <hr/>
@@ -161,6 +161,25 @@
 		    </div> 
 		    <hr/>
 	    <% end %>
+    <% end %>
+    
+    <h3>UPLOAD</h3>
+    <hr/>
+
+    <% @current_cta.interactions.where("resource_type='Upload'").each do |u| %>
+    	
+	    <div class="row">
+	      <div class="col-lg-4">
+	          <dl class="dl-horizontal">
+	            <dt>Template cta</dt><dd><p><%= u.resource.call_to_action.title %></p></dd>
+	            <dt>Numero upload</dt><dd><p><%= u.resource.upload_number %></p></dd>
+	            <dt>Privacy</dt><dd><p><%= u.resource.privacy? ? "Si" : "No" %></p></dd>
+	            <dt>Liberatoria</dt><dd><p><%= u.resource.releasing? ? "Si" : "No" %></p></dd>
+	          </dl>
+	      </div>
+	    </div> 
+		<hr/>
+		
     <% end %>
 
   </div>

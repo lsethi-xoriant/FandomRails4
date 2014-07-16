@@ -177,14 +177,11 @@ class CallToActionController < ApplicationController
       answer = Answer.find(params[:answer_id])
       user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id, answer.id)
 
-      response["right_answer_response"] = user_interaction.answer.correct
+      response["have_answer_media"] = answer.answer_with_media?
+      response["answer"] = answer
 
-      if answer.call_to_action
-        response["next_call_to_action"] = {
-          call_to_action_id: answer.call_to_action_id,
-          media_data: answer.call_to_action.media_data,
-          interaction_play_id: answer.call_to_action.interactions.find_by_resource_type("Play").id
-        }
+      if answer.media_type == "IMAGE" && answer.media_image
+        response["answer"]["media_image"] = answer.media_image
       end
 
     elsif interaction.resource_type.downcase.to_sym == :like
@@ -236,22 +233,15 @@ class CallToActionController < ApplicationController
     calltoaction = CallToAction.find(params[:calltoaction_id])
     interaction = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
 
-    render_calltoaction_overvideo_end_str = String.new
-
-    if interaction && (!interaction_for_next_calltoaction?(interaction) || (interaction_for_next_calltoaction?(interaction) && params[:right_answer_response].blank?))
-   
-      if current_user
-        user_interaction = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
-      end
-
-      render_calltoaction_overvideo_end_str = (render_to_string "/call_to_action/_overvideo_interaction", 
-                locals: { interaction: interaction, user_interaction: user_interaction }, layout: false, formats: :html)
-
+    if params[:right_answer_response]
+      response = Hash.new
+    else
+      response = response_for_overvideo_interaction(interaction.id)
     end
 
     respond_to do |format|
-      format.json { render json: render_calltoaction_overvideo_end_str }
-    end
+      format.json { render json: response.to_json }
+    end  
   end
  
   def interaction_for_next_calltoaction?(interaction)
@@ -288,7 +278,15 @@ class CallToActionController < ApplicationController
   end
 
   def get_overvideo_during_interaction
-    interaction = Interaction.find(params[:interaction_id])
+    response = response_for_overvideo_interaction(params[:interaction_id])
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end  
+  end
+
+  def response_for_overvideo_interaction(interaction_id)
+    interaction = Interaction.find(interaction_id)
 
     response = Hash.new
     render_calltoaction_overvideo_end_str = String.new
@@ -303,29 +301,11 @@ class CallToActionController < ApplicationController
     response[:overvideo] = render_calltoaction_overvideo_end_str
     response[:interaction_done_before] = user_interaction.present?
 
-    respond_to do |format|
-      format.json { render json: response.to_json }
-    end  
-  end
+    if interaction.resource_type.downcase.to_sym == :quiz
+      response[:interaction_one_shot] = interaction.resource.one_shot
+    end
 
-  def update_check
-    i = Interaction.find(params[:interaction_id].to_i)
-    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)  
-      UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i) unless ui
-    respond_to do |format|
-      format.json { render :json => "update-check".to_json }
-    end  
-  end
-
-  def update_download
-    i = Interaction.find(params[:interaction_id].to_i)
-    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, params[:interaction_id].to_i)  
-    
-    ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
-
-    respond_to do |format|
-      format.json { render :json => "update-download".to_json }
-    end  
+    response
   end
 
   def share_free
@@ -402,5 +382,65 @@ class CallToActionController < ApplicationController
       end
     end
   end
-
+  
+  def upload
+    upload_interaction = Interaction.find(params[:interaction_id]).resource
+    errors = check_valid_upload(upload_interaction)
+    if errors.any?
+      flash[:error] = errors
+    else
+      releasing = ReleasingFile.create(file: params[:releasing]) if upload_interaction.releasing?
+      for i in(1..upload_interaction.upload_number) do
+        if params["upload-#{i}"]
+          cloned_cta = clone_and_create_cta(params, i)
+          if cloned_cta.errors.any?
+            flash[:error] = cloned_cta.errors
+          else
+            if upload_interaction.releasing?
+              cloned_cta.update_attribute(:releasing_file_id, releasing.id)
+            end
+          end
+        end
+      end
+      if flash[:error].blank?
+        flash[:notice] = "Upload interaction completata correttamente."
+      end
+    end
+    redirect_to "/call_to_action/#{params[:cta_id]}"
+  end
+  
+  def check_valid_upload(upload_interaction)
+    errors = Array.new
+    if !check_privacy_accepted(upload_interaction) 
+      errors << "Errore non hai accettato la privacy" 
+    end
+    if !check_releasing_accepted(upload_interaction)
+      errors << "Errore non hai caricato la liberatoria"
+    end
+    if !check_uploaded_file()
+      errors << "Mancano dei file da caricare"
+    end
+    errors
+  end
+  
+  def check_privacy_accepted(upload_interaction)
+    if upload_interaction.privacy? && params[:privacy].nil?
+      return false
+    else
+      return true
+    end
+  end
+  
+  def check_releasing_accepted(upload_interaction)
+    if upload_interaction.releasing? && params[:releasing].nil?
+      return false
+    else
+      return true
+    end
+  end
+  
+  def check_uploaded_file
+    return true
+  end
+  
 end

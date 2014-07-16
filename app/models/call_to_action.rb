@@ -16,6 +16,7 @@ class CallToAction < ActiveRecord::Base
   has_many :interactions, dependent: :destroy
   has_many :call_to_action_tags, dependent: :destroy
   has_many :answers
+  belongs_to :releasing_file
   belongs_to :user
 
   validates_associated :interactions
@@ -31,7 +32,7 @@ class CallToAction < ActiveRecord::Base
   end
 
   def media_type_enum
-    ["VOID", "IMAGE", "YOUTUBE", "IFRAME"]
+    MEDIA_TYPES
   end
 
   def check_video_interaction

@@ -24,6 +24,14 @@ module ApplicationHelper
 		user_reward ? user_reward.counter : 0
 	end
 
+	def user_has_reward(reward_name)
+		current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").any?
+	end
+
+	def get_user_reward_with_tag_counter(tag_name)
+		current_user_or_anonymous_user.user_rewards.includes(reward: { reward_tags: :tag }).where("tags.name=?", tag_name).count
+	end
+
 	def interaction_answer_percentage(interaction, answer)
 		interaction_answers_count = interaction.user_interactions.count
 		interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
