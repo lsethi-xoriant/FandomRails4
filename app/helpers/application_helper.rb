@@ -15,21 +15,21 @@ module ApplicationHelper
 	end
 
 	def get_max_call_to_action_reward(reward_name, calltoaction)
-		counter = predict_max_cta_outcome(calltoaction, current_user_or_anonymous_user).reward_name_to_counter[reward_name]
+		counter = predict_max_cta_outcome(calltoaction, current_or_anonymous_user).reward_name_to_counter[reward_name]
 		counter.nil? ? 0 : counter   
 	end
 
 	def get_counter_about_user_reward(reward_name)
-		user_reward = current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").first
+		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").first
 		user_reward ? user_reward.counter : 0
 	end
 
 	def user_has_reward(reward_name)
-		current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").any?
+		current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").any?
 	end
 
 	def get_user_reward_with_tag_counter(tag_name)
-		current_user_or_anonymous_user.user_rewards.includes(reward: { reward_tags: :tag }).where("tags.name=?", tag_name).count
+		current_or_anonymous_user.user_rewards.includes(reward: { reward_tags: :tag }).where("tags.name=?", tag_name).count
 	end
 
 	def interaction_answer_percentage(interaction, answer)
@@ -42,7 +42,7 @@ module ApplicationHelper
 		User.find_by_email("anonymous@shado.tv")
 	end
 
-	def current_user_or_anonymous_user
+	def current_or_anonymous_user
 		current_user.present? ? current_user : User.find_by_email("anonymous@shado.tv")
 	end
 	

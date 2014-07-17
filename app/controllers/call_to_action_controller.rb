@@ -121,7 +121,7 @@ class CallToActionController < ApplicationController
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
       if response[:captcha_check]
-        user_comment = UserComment.create(user_id: current_user_or_anonymous_user.id, text: user_text, comment_id: comment_resource.id)
+        user_comment = UserComment.create(user_id: current_or_anonymous_user.id, text: user_text, comment_id: comment_resource.id)
       end
     end
 
@@ -181,7 +181,7 @@ class CallToActionController < ApplicationController
     if interaction.resource_type.downcase.to_sym == :quiz
       
       answer = Answer.find(params[:answer_id])
-      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id, answer.id)
+      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id)
 
       response["have_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
@@ -192,13 +192,13 @@ class CallToActionController < ApplicationController
 
     elsif interaction.resource_type.downcase.to_sym == :like
 
-      user_interaction = get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user)
+      user_interaction = get_user_interaction_from_interaction(interaction, current_or_anonymous_user)
       like = user_interaction ? !user_interaction.like : true
 
-      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id, nil, like)
+      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, like)
 
     else
-      user_interaction = UserInteraction.create_or_update_interaction(current_user_or_anonymous_user.id, interaction.id)
+      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id)
     end
 
     if current_user
