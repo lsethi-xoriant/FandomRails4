@@ -111,5 +111,7 @@ module Fandom
       config.middleware.insert_before "ActionDispatch::Static", SetRawCookieMiddleware
     end
 
+    config.middleware.use "HttpRequestDebugger"
+
   end
 end
