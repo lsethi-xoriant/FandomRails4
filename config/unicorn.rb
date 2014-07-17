@@ -1,9 +1,9 @@
 # Set environment to development unless something else is specified
 env = ENV["RAILS_ENV"] || "development"
 
-worker_processes = 16
+worker_processes 16
 
-preload_app = true
+preload_app true
 
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
