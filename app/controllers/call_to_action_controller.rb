@@ -110,18 +110,18 @@ class CallToActionController < ApplicationController
   def add_comment
     comment_resource = Interaction.find(params[:interaction_id]).resource
 
-    published_at = comment_resource.must_be_approved ? nil : DateTime.now     
+    approved = comment_resource.must_be_approved ? nil : true
     user_text = params[:comment] # sanitize(params[:comment])
     
     response = Hash.new
 
     if current_user
-      user_comment = UserComment.create(user_id: current_user.id, published_at: published_at, text: user_text, comment_id: comment_resource.id)
+      user_comment = UserComment.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
       response[:error] = user_comment.errors
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
       if response[:captcha_check]
-        user_comment = UserComment.create(user_id: current_user_or_anonymous_user.id, published_at: published_at, text: user_text, comment_id: comment_resource.id)
+        user_comment = UserComment.create(user_id: current_user_or_anonymous_user.id, text: user_text, comment_id: comment_resource.id)
       end
     end
 
@@ -152,16 +152,22 @@ class CallToActionController < ApplicationController
 
   def new_comments_polling
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
-      comments_to_show = interaction.resource.user_comments.publish.where("published_at > ?", params[:first_comment_shown_date]).order("published_at DESC")
-      response[:first_comment_shown_date] = comments_to_show.any? ? comments_to_show.first.published_at : nil
+
+      if params[:first_comment_shown_date].present?
+        comments_to_show = interaction.resource.user_comments.approved.where("date_trunc('second', updated_at) > ?", params[:first_comment_shown_date]).order("updated_at DESC")
+      else
+        comments_to_show = interaction.resource.user_comments.approved.order("date_trunc('second', updated_at) DESC")
+      end
+
+      response[:first_comment_shown_date] = comments_to_show.any? ? comments_to_show.first.updated_at : nil
       comments_to_show
     end
   end
 
   def append_comments
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
-      comments_to_show = interaction.resource.user_comments.publish.where("published_at < ?", params[:last_comment_shown_date]).order("published_at DESC").limit(10)
-      response[:last_comment_shown_date] = comments_to_show.any? ? comments_to_show.last.published_at : nil
+      comments_to_show = interaction.resource.user_comments.approved.where("updated_at < ?", params[:last_comment_shown_date]).order("updated_at DESC").limit(10)
+      response[:last_comment_shown_date] = comments_to_show.any? ? comments_to_show.last.updated_at : nil
       response[:comments_to_append_counter] = comments_to_show.count
       comments_to_show
     end    
