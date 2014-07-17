@@ -382,5 +382,65 @@ class CallToActionController < ApplicationController
       end
     end
   end
-
+  
+  def upload
+    upload_interaction = Interaction.find(params[:interaction_id]).resource
+    errors = check_valid_upload(upload_interaction)
+    if errors.any?
+      flash[:error] = errors
+    else
+      releasing = ReleasingFile.create(file: params[:releasing]) if upload_interaction.releasing?
+      for i in(1..upload_interaction.upload_number) do
+        if params["upload-#{i}"]
+          cloned_cta = clone_and_create_cta(params, i)
+          if cloned_cta.errors.any?
+            flash[:error] = cloned_cta.errors
+          else
+            if upload_interaction.releasing?
+              cloned_cta.update_attribute(:releasing_file_id, releasing.id)
+            end
+          end
+        end
+      end
+      if flash[:error].blank?
+        flash[:notice] = "Upload interaction completata correttamente."
+      end
+    end
+    redirect_to "/call_to_action/#{params[:cta_id]}"
+  end
+  
+  def check_valid_upload(upload_interaction)
+    errors = Array.new
+    if !check_privacy_accepted(upload_interaction) 
+      errors << "Errore non hai accettato la privacy" 
+    end
+    if !check_releasing_accepted(upload_interaction)
+      errors << "Errore non hai caricato la liberatoria"
+    end
+    if !check_uploaded_file()
+      errors << "Mancano dei file da caricare"
+    end
+    errors
+  end
+  
+  def check_privacy_accepted(upload_interaction)
+    if upload_interaction.privacy? && params[:privacy].nil?
+      return false
+    else
+      return true
+    end
+  end
+  
+  def check_releasing_accepted(upload_interaction)
+    if upload_interaction.releasing? && params[:releasing].nil?
+      return false
+    else
+      return true
+    end
+  end
+  
+  def check_uploaded_file
+    return true
+  end
+  
 end

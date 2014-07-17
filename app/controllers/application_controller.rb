@@ -21,6 +21,21 @@ class ApplicationController < ActionController::Base
     @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
   end
+  
+  def index_v2
+    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+  end
+  
+  def index_v3
+    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+  end
+  
+  def index_v4
+    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+  end
 
   def update_call_to_action_in_page_with_tag
 
@@ -61,7 +76,7 @@ class ApplicationController < ActionController::Base
     calltoactions_during_video_interactions_second
   end
 
-  before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" }
+  before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" && Rails.configuration.deploy_settings.fetch('http_security', true) }
 
   def authenticate_admin
     authenticate_or_request_with_http_basic do |username, password|

@@ -12,7 +12,16 @@ Fandom::Application.routes.draw do
   match "/youtube", :to => "youtube_widget#index"
 
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
-
+  match "/cta/upload", :to => "call_to_action#upload"
+  
+  match "/browse", :to => "browse#index"
+  match "/browse/search", :to => "browse#search"
+  match "/browse/fullscreen", :to => "browse#index_fullscreen"
+  
+  match "/stream-v2", :to => "application#index_v2"
+  match "/stream-v3", :to => "application#index_v3"
+  match "/stream-v4", :to => "application#index_v4"
+  
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
@@ -28,6 +37,7 @@ Fandom::Application.routes.draw do
     match "user/show/:id", :to => "easyadmin#show_user"
 
     match "cta", :to => "call_to_action#index_cta"
+    match "cta_user", :to => "call_to_action#index_user_generated_cta"
     match "cta/filter/:filter", :to => "call_to_action#filter_cta"
     match "cta/new/", :to => "call_to_action#new_cta"
     match "cta/show/:id", :to => "call_to_action#show_cta"

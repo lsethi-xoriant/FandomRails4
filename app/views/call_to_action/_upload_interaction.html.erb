@@ -1,0 +1,41 @@
+<div class="col-sm-8 col-sm-offset-2 text-center">
+  <h3>
+    Upload
+  </h3>
+</div>
+<div class="col-sm-12 text-center" style="margin-top: 15px;">
+  <div class="row">
+  	<%= form_tag({controller: "call_to_action", action: "upload", method: "post"}, multipart: true) do %>
+  	<div class="col-sm-6">
+  		<% for i in (1..interaction.resource.upload_number) do %>
+  			<%= hidden_field_tag "template_cta_id", interaction.resource.call_to_action_id %>
+  			<%= hidden_field_tag "interaction_id", interaction.id %>
+  			<%= hidden_field_tag "cta_id", cta_id %>
+  			<%= hidden_field_tag "upload_number", interaction.resource.upload_number %> 
+  			<label>Upload <%= i %>:</label>
+  			<%= file_field_tag "upload-#{i}" %>
+  		<% end %>
+  	</div>
+  	<div class="col-sm-6">
+  		<div class="row form-group">
+	  		<% if interaction.resource.privacy? %>
+	  			<label>Accettazione privacy</label>
+	  			<%= check_box_tag "privacy" %>
+	  			<p class="small"><%= interaction.resource.privacy_description %></p>
+	  		<% end %>
+	  		
+	  		<% if interaction.resource.releasing? %>
+	  			<label>Liberatoria</label>
+	  			<%= file_field_tag 'releasing' %>
+	  			<p class="small"><%= interaction.resource.releasing_description %></p>
+	  		<% end %>
+  		</div>
+  	</div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 text-center">
+        <button type="submit" class="btn btn-primary">CARICA</button>
+    </div>
+  </div>
+  <% end %>
+</div>
