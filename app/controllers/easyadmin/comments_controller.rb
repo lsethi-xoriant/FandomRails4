@@ -1,8 +1,7 @@
-require 'fandom_utils'
-
 class Easyadmin::CommentsController < Easyadmin::EasyadminController
   include EasyadminHelper
   include FandomUtils
+  include RewardingSystemHelper
 
   layout "admin"
 
@@ -11,15 +10,25 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
   end
 
   def update_comment_status
-    comm = UserComment.find(params[:comment_id])
-    comm.update_attributes(approved: params[:approved])
+    current_comment = UserComment.find(params[:comment_id])
+    current_comment.update_attributes(approved: params[:approved])
 
-    if comm.approved
-      Notice.create(:user_id => comm.user_id, :html_notice => comm.text, :viewed => false, :read => false)
+    if current_comment.approved
+
+      if anonymous_user.id != current_comment.user_id
+        interaction = current_comment.comment.interaction
+        user_interaction = UserInteraction.create_or_update_interaction(current_comment.user_id, interaction.id)
+
+        Notice.create(:user_id => current_comment.user_id, :html_notice => current_comment.text, :viewed => false, :read => false)
+
+        outcome = compute_and_save_outcome(user_interaction)
+        # TODO: notify outcome
+      end    
+
     end
 
     respond_to do |format|
-      format.json { render :json => comm.to_json }
+      format.json { render :json => current_comment.to_json }
     end
   end
 
