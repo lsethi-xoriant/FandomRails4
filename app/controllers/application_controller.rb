@@ -16,6 +16,12 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
+  def delete_current_user_interactions
+    authorize! :manage, :all
+    current_user.user_interactions.destroy_all
+    redirect_to "/"
+  end
+
   def index
     @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)

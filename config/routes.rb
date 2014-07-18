@@ -18,9 +18,8 @@ Fandom::Application.routes.draw do
   match "/browse/search", :to => "browse#search"
   match "/browse/fullscreen", :to => "browse#index_fullscreen"
   
-  match "/stream-v2", :to => "application#index_v2"
-  match "/stream-v3", :to => "application#index_v3"
-  match "/stream-v4", :to => "application#index_v4"
+  match "/gallery", :to => "gallery#index"
+  match "/gallery/:id", :to => "gallery#show"
   
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
@@ -184,6 +183,8 @@ Fandom::Application.routes.draw do
   match "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
   match "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }
   match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+
+  match "/delete_current_user_interactions", :to => "application#delete_current_user_interactions"
 
   # error handling
   match "/404", :to => "http_error#not_found_404"

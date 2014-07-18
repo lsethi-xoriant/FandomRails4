@@ -1,17 +1,21 @@
 module EventHandlerHelper
 
-  def log_info_event(msg, data)
+  def log_event(msg, level, force_saving_in_db, data)
     caller_data = caller[0]
 
     timestamp = Time.new.utc.strftime("%Y-%m-%d %H:%M:%S.%L")
-    pid = Process.pid
-    file_name, line_number, method_name = parse_caller_data(caller_data)
 
-    case Rails.env
-    when "development"
-      Rails.logger.info(generate_log_string_for_development(msg, data, timestamp, pid, file_name, line_number, method_name))
+
+    case Rails.env  
     when "production"
-      Rails.logger.info(generate_log_string_for_production(msg, data, timestamp, pid, file_name, line_number, method_name))      
+      begin 
+        generate_log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
+      rescue Exception => e
+        file_name, line_number, method_name = parse_caller_data(caller_data)
+        Rails.logger.error("[EventHandlerError] Exception: #{e}")
+      end
+    when "development"
+      Rails.logger.info(generate_log_string_for_development(msg, data, caller_data, timestamp))
     else
       # Nothing to do
     end
@@ -23,30 +27,74 @@ module EventHandlerHelper
 
   private
 
-  def generate_log_string_for_development(msg, data, timestamp, pid, file_name, line_number, method_name)
-    if msg == "HttpRequestDebugger"
-      data.delete(:HTTP_REFERER)
-      data.delete(:REMOTE_IP)
-      data.delete(:SESSION_ID)
+  def generate_log_string_for_development(msg, data, caller_data, timestamp)
+    file_name, line_number, method_name = parse_caller_data(caller_data)
+
+    if data[:middleware]
+      data.delete(:http_referer)
+      data.delete(:remote_ip) 
+      data.delete(:session_id)
     end
 
     data_to_string = data.map { |key, value| "#{key}: #{value}" }
     data_to_string = data_to_string.join(", ")
 
-    logger_info_development = "EVENT: #{msg}, #{data_to_string}, LINE_NUMBER: #{line_number}, FILE_NAME: #{file_name}, METHOD_NAME: #{method_name}"
+    logger_development = "message: #{msg}, #{data_to_string}, line_number: #{line_number}, file_name: #{file_name}, method_name: #{method_name}"
   end
 
-  def generate_log_string_for_production(msg, data, timestamp, pid, file_name, line_number, method_name)
-    logger_info_production = Hash.new
-    logger_info_production = {
-      "EVENT" => msg,
-      "DATA" => data,
-      "LINE_NUMBER" => line_number,
-      "FILE_NAME" => file_name,
-      "METHOD_NAME" => method_name
+  def generate_log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
+    pid = Process.pid
+    file_name, line_number, method_name = parse_caller_data(caller_data)
+
+    if data[:middleware]
+      session_id = data[:session_id]
+      data.delete(:session_id)
+
+      params = data[:params] 
+      data.delete(:params)
+
+      request_uri = data[:request_uri]
+      data.delete(:request_uri)
+    else
+      params = request.params
+      request_uri = request.url
+      session_id = request.session["session_id"]
+    end
+
+    hash = Digest::MD5.hexdigest("#{msg}#{level}#{data}#{pid}#{session_id}#{params}#{request_uri}#{request_uri}#{line_number}#{file_name}#{method_name}#{timestamp}")[0..8]
+
+    logger_production = Hash.new
+    logger_production = {
+      "message" => msg,
+      "level" => level,
+      "data" => data,
+      "pid" => pid,
+      "session_id" => session_id,
+      "params" => params,
+      "request_uri" => request_uri,
+      "line_number" => line_number,
+      "file_name" => file_name,
+      "method_name" => method_name,
+      "timestamp" => timestamp,
+      "event_hash" => hash
     }
 
-    logger_info_development = logger_info_production.to_json
+    if force_saving_in_db
+      Event.create(session_id: session_id, pid: pid, message: msg, request_uri: request_uri, file_name: file_name, 
+        method_name: method_name, line_number: line_number, params: params.to_json, data: data.to_json, timestamp: timestamp, 
+        level: level, event_hash: hash)
+    end
+
+    log_file_name = "log/#{pid}.log"
+
+    if File.exist?(log_file_name) && File.size(log_file_name) > LOGGER_PROCESS_FILE_SIZE
+      File.rename(log_file_name, "log/#{pid}-#{Time.new.utc.strftime("%Y%m%d%H%M%S")}.log")
+    end
+
+    File.open(log_file_name, "a+") do |f|
+      f.write("#{logger_production.to_json}\n")
+    end
+
   end  
 
   def parse_caller_data(caller_data)
