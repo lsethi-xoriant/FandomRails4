@@ -47,7 +47,7 @@
               <div class="row">
                 <div class="points">
                   <h3>
-                    <% if call_to_action_completed?(c, current_user_or_anonymous_user) %>
+                    <% if call_to_action_completed?(c, current_or_anonymous_user) %>
 			                <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-success" style="padding-top: 7px;">FATTO <span class="glyphicon glyphicon-ok"></span>
 			                </span>
 			              <% else %>

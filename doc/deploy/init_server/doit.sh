@@ -38,6 +38,7 @@ apt-get install vim \
   nginx \
   curl \
   libmagickwand-dev \
+  whois \
   memcached
 apt-get build-dep ruby${RUBY_VERSION}
 

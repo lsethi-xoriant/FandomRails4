@@ -4,8 +4,7 @@
 require 'fandom_utils'
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery except: :instagram_verify_token_callback
-
+  protect_from_forgery except: :instagram_verify_token_callback, :if => proc {|c| Rails.configuration.deploy_settings.fetch('forgery_protection', true) }
   include FandomUtils
   include ApplicationHelper
   include EventHandlerHelper
@@ -61,7 +60,7 @@ class ApplicationController < ActionController::Base
     calltoactions_during_video_interactions_second
   end
 
-  before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" }
+  before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" && Rails.configuration.deploy_settings.fetch('http_security', true) }
 
   def authenticate_admin
     authenticate_or_request_with_http_basic do |username, password|

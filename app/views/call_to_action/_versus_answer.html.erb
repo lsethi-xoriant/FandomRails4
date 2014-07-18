@@ -27,7 +27,11 @@
   <% if user_interaction %>
     <div class="row">
       <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-        <button type="button" class="btn btn-block btn-lg <%= answer.id == user_interaction.answer_id ? "btn-primary active" : "btn-default" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
+        <% if interaction.resource.one_shot %>
+          <button type="button" class="btn btn-block btn-lg <%= answer.id == user_interaction.answer_id ? "btn-primary active" : "btn-default" %> disabled"><%= answer.text %></button>
+        <% else %>
+          <button type="button" class="btn btn-block btn-lg <%= answer.id == user_interaction.answer_id ? "btn-primary active" : "btn-default" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
+        <% end %>
       </div>
     </div>
   <% else %>
@@ -39,3 +43,4 @@
   <% end %>
 
 </div>
+                                      

@@ -1,7 +1,7 @@
 class UserComment < ActiveRecord::Base
-  attr_accessible :text, :published_at, :user_id, :comment_id, :deleted
+  attr_accessible :text, :approved, :user_id, :comment_id
   
-  scope :publish, where("published_at IS NOT NULL AND (deleted IS NULL OR deleted=false)")
+  scope :approved, where("approved=true")
 
   belongs_to :comment
   belongs_to :user

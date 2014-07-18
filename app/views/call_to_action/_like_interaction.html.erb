@@ -1,5 +1,5 @@
 <div class="col-md-4 col-md-offset-4">
-  <button class="btn <%= get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user) && get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user).like ? "btn-primary" : "btn-default" %> btn-xs btn-block" type="button" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, null, '<%= interaction.when_show_interaction %>')">
+  <button class="btn <%= get_user_interaction_from_interaction(interaction, current_or_anonymous_user) && get_user_interaction_from_interaction(interaction, current_or_anonymous_user).like ? "btn-primary" : "btn-default" %> btn-xs btn-block" type="button" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, null, '<%= interaction.when_show_interaction %>')">
     <span class="glyphicon glyphicon-thumbs-up">
       <span class="hidden-xs">Like</span>
     </span>
