@@ -106,4 +106,8 @@ module CallToActionHelper
     end
   end
   
+  def get_max_upload_size
+    MAX_UPLOAD_SIZE * BYTES_IN_MEGABYTE
+  end
+  
 end
