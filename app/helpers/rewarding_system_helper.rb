@@ -386,6 +386,7 @@ module RewardingSystemHelper
         outcome = context.compute_outcome_just_for_interaction(user_interaction)
     
         other_interactions.each do |interaction|
+          user_interaction = get_mocked_user_interaction(interaction, user, true)
           new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
           outcome.merge!(new_outcome)
         end
