@@ -1,6 +1,11 @@
+#!/bin/env ruby
+# encoding: utf-8
+
 require 'fandom_utils'
 
 module ApplicationHelper
+  
+  include RewardingSystemHelper
 
 	def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
 		Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id)
@@ -15,21 +20,21 @@ module ApplicationHelper
 	end
 
 	def get_max_call_to_action_reward(reward_name, calltoaction)
-		counter = predict_max_cta_outcome(calltoaction, current_user_or_anonymous_user).reward_name_to_counter[reward_name]
+		counter = predict_max_cta_outcome(calltoaction, current_or_anonymous_user).reward_name_to_counter[reward_name]
 		counter.nil? ? 0 : counter   
 	end
 
 	def get_counter_about_user_reward(reward_name)
-		user_reward = current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").first
+		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").first
 		user_reward ? user_reward.counter : 0
 	end
 
 	def user_has_reward(reward_name)
-		current_user_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").any?
+		current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").any?
 	end
 
 	def get_user_reward_with_tag_counter(tag_name)
-		current_user_or_anonymous_user.user_rewards.includes(reward: { reward_tags: :tag }).where("tags.name=?", tag_name).count
+		current_or_anonymous_user.user_rewards.includes(reward: { reward_tags: :tag }).where("tags.name=?", tag_name).count
 	end
 
 	def interaction_answer_percentage(interaction, answer)
@@ -42,7 +47,7 @@ module ApplicationHelper
 		User.find_by_email("anonymous@shado.tv")
 	end
 
-	def current_user_or_anonymous_user
+	def current_or_anonymous_user
 		current_user.present? ? current_user : User.find_by_email("anonymous@shado.tv")
 	end
 	
@@ -225,6 +230,16 @@ module ApplicationHelper
   def all_share_interactions(calltoaction)
     cache_short("all_share_interactions_#{calltoaction.id}") do
       calltoaction.interactions.where("resource_type='Share'").to_a
+    end
+  end
+  
+  def compute_save_and_notify_outcome(userinteraction, user_upload_interaction)
+    outcome = compute_and_save_outcome(userinteraction)
+    outcome.reward_name_to_counter.each do |r|
+      reward = Reward.find_by_name(r.first)
+      html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { icon: reward.preview_image, title: reward.title }, layout: false, formats: :html
+      notice = Notice.create(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+      notice.send_to_user(request)
     end
   end
 

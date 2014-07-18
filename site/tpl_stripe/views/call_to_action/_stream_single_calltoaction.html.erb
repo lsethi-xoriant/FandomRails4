@@ -15,7 +15,7 @@
             <%= calltoaction.title %> 
           </h3>
           <h4><a class="btn btn-default btn-md" href="/call_to_action/<%= calltoaction.id %>">Call To Action</a>&nbsp;
-            <% if call_to_action_completed?(calltoaction, current_user_or_anonymous_user) %>
+            <% if call_to_action_completed?(calltoaction, current_or_anonymous_user) %>
               &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success">
                 FATTO <span class="glyphicon glyphicon-ok"></span>
               </span>

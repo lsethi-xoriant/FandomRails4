@@ -7,7 +7,7 @@
   <% elsif interaction.resource_type.downcase.to_sym == :quiz %>
       <div class="col-md-12">
         <!--<hr>-->
-        <%= render partial: "/call_to_action/#{interaction.resource.quiz_type.downcase.to_sym}_interaction", locals: { interaction: interaction, user_interaction: get_user_interaction_from_interaction(interaction, current_user_or_anonymous_user) } %>
+        <%= render partial: "/call_to_action/#{interaction.resource.quiz_type.downcase.to_sym}_interaction", locals: { interaction: interaction, user_interaction: get_user_interaction_from_interaction(interaction, current_or_anonymous_user) } %>
       </div>
 
       <% if current_user %>

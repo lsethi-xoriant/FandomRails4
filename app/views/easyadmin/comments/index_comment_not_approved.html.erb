@@ -30,12 +30,12 @@
 					</tr>
 				</thead>
 				<% @comment_not_approved.each do |c| %>
-					<tr>
+					<tr id="comment-<%= c.id %>-tr">
 						<td><%= c.user ? c.user.id : "Anonimo" %></td>
 						<td><%= c.text %></td>
 						<td><%= c.created_at %></td>
 						<td id="comment-<%= c.id %>">
-							<button type="button" class="btn btn-default btn-xs" onclick="updateComment('pub', <%= c.id %>)">Pubblica</button>					
+							<button type="button" class="btn btn-default btn-xs" onclick="updateComment(true, <%= c.id %>)">Pubblica</button>					
 						</td>
 					</tr>
 				<% end %>
@@ -53,16 +53,16 @@
 </div>
 
 <script type="text/javascript">
-	function updateComment(pub_or_hide, comment_id) {
+	function updateComment(approved, comment_id) {
 		$.ajax({
             type: "POST",
             url: "/easyadmin/comments/" + comment_id + "/update_comment_status",
-            data: { "pub_or_hide": pub_or_hide },
+            data: { "approved": approved },
             beforeSend: function(jqXHR, settings) {
                 jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
             },
             success: function(data) {
-            	$("#comment-" + comment_id).html(pub_or_hide);
+            	$("#comment-" + comment_id + "-tr").remove();
             }
         });
 	}

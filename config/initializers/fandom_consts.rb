@@ -20,3 +20,6 @@ INTERACTION_TYPES = Set.new(['Quiz', 'Check', 'Comment', 'Like', 'Play', 'Share'
 REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
 
 MEDIA_TYPES = ["IMAGE", "YOUTUBE", "IFRAME", "VOID"]
+
+BYTES_IN_MEGABYTE = 1048576
+MAX_UPLOAD_SIZE = 3 #Megabyte (Mb)
