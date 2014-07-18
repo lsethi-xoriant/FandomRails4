@@ -1,8 +1,12 @@
+#!/bin/env ruby
+# encoding: utf-8
+
 require 'fandom_utils'
 
 class Easyadmin::CallToActionController < ApplicationController
   include EasyadminHelper
   include CallToActionHelper
+  include RewardingSystemHelper
 
   layout "admin"
 
@@ -105,6 +109,39 @@ class Easyadmin::CallToActionController < ApplicationController
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
   end
+  
+  def index_user_cta_to_be_approved
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+
+    @cta_to_be_approved = CallToAction.where("user_generated = TRUE and approved IS NULL").page(page).per(per_page).order("created_at DESC NULLS LAST")
+
+    @page_size = @cta_to_be_approved.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+  end
+  
+  def index_user_cta_approved
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+
+    @cta_approved = CallToAction.where("user_generated = TRUE and approved = TRUE").page(page).per(per_page).order("created_at DESC NULLS LAST")
+
+    @page_size = @cta_approved.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+  end
+  
+  def index_user_cta_not_approved
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+
+    @cta_not_approved = CallToAction.where("user_generated = TRUE and approved = FALSE").page(page).per(per_page).order("created_at DESC NULLS LAST")
+
+    @page_size = @cta_not_approved.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+  end
 
   def filter_cta
     cta_filter_list = CallToAction.where("title LIKE ?", "%#{ params[:filter] }%").order("activated_at DESC").limit(5)
@@ -154,7 +191,6 @@ class Easyadmin::CallToActionController < ApplicationController
     @cta = CallToAction.find(params[:id])
     unless @cta.update_attributes(params[:call_to_action])
       @tag_list = params[:tag_list].split(",")
-    
       render template: "/easyadmin/call_to_action/edit_cta"   
     else
 
@@ -168,6 +204,24 @@ class Easyadmin::CallToActionController < ApplicationController
 
       flash[:notice] = "CallToAction aggiornata correttamente"
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
+    end
+  end
+  
+  def update_cta_status
+    cta = CallToAction.find(params[:id])
+    cta.update_attributes(activated_at: DateTime.now, approved: params[:approved])
+
+    if cta.approved
+      html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { icon: nil, title: "Il tuo contenuto è stato approvato!" }, layout: false, formats: :html
+      user_upload_interaction = cta.user_upload_interaction
+      notice = Notice.create(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+      notice.send_to_user(request)
+      userinteraction = UserInteraction.create_or_update_interaction(user_upload_interaction.user_id, user_upload_interaction.upload_id)
+      compute_save_and_notify_outcome(userinteraction, user_upload_interaction)
+    end
+
+    respond_to do |format|
+      format.json { render :json => cta.to_json }
     end
   end
   

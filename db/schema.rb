@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140715155143) do
+ActiveRecord::Schema.define(:version => 20140717154512) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(:version => 20140715155143) do
     t.datetime "media_image_updated_at"
     t.text     "media_data"
     t.integer  "releasing_file_id"
+    t.boolean  "approved"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
@@ -444,6 +445,14 @@ ActiveRecord::Schema.define(:version => 20140715155143) do
     t.integer  "counter",    :default => 0
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
+  end
+
+  create_table "user_upload_interactions", :force => true do |t|
+    t.integer  "user_id",           :null => false
+    t.integer  "call_to_action_id", :null => false
+    t.integer  "upload_id",         :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "users", :force => true do |t|
