@@ -395,16 +395,22 @@ class CallToActionController < ApplicationController
     if errors.any?
       flash[:error] = errors
     else
-      releasing = ReleasingFile.create(file: params[:releasing]) if upload_interaction.releasing?
+      releasing = ReleasingFile.new(file: params[:releasing]) if upload_interaction.releasing?
       for i in(1..upload_interaction.upload_number) do
         if params["upload-#{i}"]
-          cloned_cta = clone_and_create_cta(params, i)
-          if cloned_cta.errors.any?
-            flash[:error] = cloned_cta.errors
-          else
-            if upload_interaction.releasing?
-              cloned_cta.update_attribute(:releasing_file_id, releasing.id)
+          if params["upload-#{i}"].size <= get_max_upload_size()
+            cloned_cta = clone_and_create_cta(params, i)
+            if cloned_cta.errors.any?
+              flash[:error] = cloned_cta.errors
+            else
+              UserUploadInteraction.create(user_id: current_user.id, call_to_action_id: cloned_cta.id, upload_id: upload_interaction.id)
+              if upload_interaction.releasing?
+                releasing.save if releasing.id.blank?
+                cloned_cta.update_attribute(:releasing_file_id, releasing.id)
+              end
             end
+          else
+            flash[:error] = ["I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"]
           end
         end
       end
@@ -424,7 +430,7 @@ class CallToActionController < ApplicationController
       errors << "Errore non hai caricato la liberatoria"
     end
     if !check_uploaded_file()
-      errors << "Mancano dei file da caricare"
+      errors << "I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"
     end
     errors
   end

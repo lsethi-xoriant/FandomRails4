@@ -1,6 +1,11 @@
+#!/bin/env ruby
+# encoding: utf-8
+
 require 'fandom_utils'
 
 module ApplicationHelper
+  
+  include RewardingSystemHelper
 
 	def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
 		Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id)
@@ -225,6 +230,16 @@ module ApplicationHelper
   def all_share_interactions(calltoaction)
     cache_short("all_share_interactions_#{calltoaction.id}") do
       calltoaction.interactions.where("resource_type='Share'").to_a
+    end
+  end
+  
+  def compute_save_and_notify_outcome(userinteraction, user_upload_interaction)
+    outcome = compute_and_save_outcome(userinteraction)
+    outcome.reward_name_to_counter.each do |r|
+      reward = Reward.find_by_name(r.first)
+      html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { icon: reward.preview_image, title: reward.title }, layout: false, formats: :html
+      notice = Notice.create(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+      notice.send_to_user(request)
     end
   end
 

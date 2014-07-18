@@ -3,5 +3,6 @@ class Upload < ActiveRecord::Base
   
   has_one :interaction, as: :resource
   belongs_to :call_to_action
+  has_many :user_upload_interactions
 
 end

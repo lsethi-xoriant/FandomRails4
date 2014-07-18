@@ -74,8 +74,8 @@ namespace :deploy do
       sleep 5
       puts "is unicorn running? Look at this ps!"
       execute "ps aux | grep unicorn"
-      #puts "making an archive of the current release (for AWS)"
-      #execute "cd #{deploy_to} ; tar chzf current.tgz releases/$(basename $(readlink current))"
+      puts "making an archive of the current release (for AWS)"
+      execute "cd #{deploy_to} ; tar chzf current.tgz releases/$(basename $(readlink current))"
     end
   end
 
