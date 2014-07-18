@@ -64,11 +64,11 @@ module ApplicationHelper
 	end
 
 	def calltoaction_active_with_tag(tag, order)
-		return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name='#{tag}')", Time.now).order("activated_at #{order}")
+		return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
 	end
 
 	def calltoaction_coming_soon_with_tag(tag, order)
-		return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name='#{tag}')", Time.now).order("activated_at #{order}")
+		return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
 	end 
 
 	def calltoactions_except_share(calltoaction)
