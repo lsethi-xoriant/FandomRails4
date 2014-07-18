@@ -1,0 +1,18 @@
+<div class="row cta">      
+  <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1">
+    <div class="panel panel-default cta-page" style="background-image: url(<%= calltoaction.media_image %>); background-size: 100% auto;">
+
+      <div class="panel-heading" style="background: none">
+        <div class="row">
+          <div class="col-md-6 text-left">
+            <h3 style="padding: 30px 15px"><%= calltoaction.description %></h3>
+          </div>
+          <div class="col-md-6 text-left">
+            <%= render partial: "/gallery/gallery_calltoaction_panel_body", locals: { calltoaction: calltoaction } %>
+          </div>
+        </div>
+      </div>
+
+    </div>        
+  </div>
+</div>

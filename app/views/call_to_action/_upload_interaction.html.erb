@@ -1,33 +1,32 @@
-<div class="col-sm-8 col-sm-offset-2 text-center">
-  <h3>
-    Upload
-  </h3>
-</div>
+<style>
+	hr{ border-color: #000; }
+</style>
 <div class="col-sm-12 text-center" style="margin-top: 15px;">
   <div class="row">
   	<%= form_tag({controller: "call_to_action", action: "upload", method: "post"}, multipart: true) do %>
-  	<div class="col-sm-6">
+  	<div class="col-sm-12">
   		<% for i in (1..interaction.resource.upload_number) do %>
   			<%= hidden_field_tag "template_cta_id", interaction.resource.call_to_action_id %>
   			<%= hidden_field_tag "interaction_id", interaction.id %>
   			<%= hidden_field_tag "cta_id", cta_id %>
   			<%= hidden_field_tag "upload_number", interaction.resource.upload_number %> 
-  			<label>Upload <%= i %>:</label>
+  			<label><%= i %>° Upload:</label>
   			<%= file_field_tag "upload-#{i}" %>
   		<% end %>
-  	</div>
-  	<div class="col-sm-6">
+		<hr />
   		<div class="row form-group">
 	  		<% if interaction.resource.privacy? %>
-	  			<label>Accettazione privacy</label>
 	  			<%= check_box_tag "privacy" %>
+	  			<label>Accettazione privacy</label>
 	  			<p class="small"><%= interaction.resource.privacy_description %></p>
+	  			<hr />
 	  		<% end %>
 	  		
 	  		<% if interaction.resource.releasing? %>
 	  			<label>Liberatoria</label>
-	  			<%= file_field_tag 'releasing' %>
 	  			<p class="small"><%= interaction.resource.releasing_description %></p>
+	  			<p class="text-center"><%= file_field_tag 'releasing' %></p>
+	  			<hr />
 	  		<% end %>
   		</div>
   	</div>

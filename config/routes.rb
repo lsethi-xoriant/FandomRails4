@@ -18,9 +18,8 @@ Fandom::Application.routes.draw do
   match "/browse/search", :to => "browse#search"
   match "/browse/fullscreen", :to => "browse#index_fullscreen"
   
-  match "/stream-v2", :to => "application#index_v2"
-  match "/stream-v3", :to => "application#index_v3"
-  match "/stream-v4", :to => "application#index_v4"
+  match "/gallery", :to => "gallery#index"
+  match "/gallery/:id", :to => "gallery#show"
   
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
