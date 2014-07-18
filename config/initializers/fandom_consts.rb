@@ -20,3 +20,7 @@ INTERACTION_TYPES = Set.new(['Quiz', 'Check', 'Comment', 'Like', 'Play', 'Share'
 REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
 
 MEDIA_TYPES = ["IMAGE", "YOUTUBE", "IFRAME", "VOID"]
+
+# LOGGING
+
+LOGGER_PROCESS_FILE_SIZE = 8000

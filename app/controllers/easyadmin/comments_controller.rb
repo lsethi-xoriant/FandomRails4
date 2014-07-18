@@ -27,6 +27,8 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
     end
 
+    log_event("Change comment status from backoffice", "audit", true, approved: current_comment.approved, comment_id: current_comment.id)
+
     respond_to do |format|
       format.json { render :json => current_comment.to_json }
     end

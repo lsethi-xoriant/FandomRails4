@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140717080150) do
+ActiveRecord::Schema.define(:version => 20140718080110) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -142,6 +142,21 @@ ActiveRecord::Schema.define(:version => 20140717080150) do
     t.string   "attachment_content_type"
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
+  end
+
+  create_table "events", :force => true do |t|
+    t.string  "session_id"
+    t.integer "pid"
+    t.string  "message"
+    t.string  "request_uri"
+    t.string  "file_name"
+    t.string  "method_name"
+    t.string  "line_number"
+    t.string  "params"
+    t.text    "data"
+    t.string  "timestamp"
+    t.string  "event_hash"
+    t.string  "level"
   end
 
   create_table "home_launchers", :force => true do |t|
