@@ -1,7 +1,7 @@
 # Set environment to development unless something else is specified
 env = ENV["RAILS_ENV"] || "development"
 
-worker_processes 16
+worker_processes 4
 
 preload_app true
 
