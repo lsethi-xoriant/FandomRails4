@@ -1,0 +1,33 @@
+<% if galleries.any? %>
+  <div id="home-carousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <% i = 0 %>
+      <% galleries.each do |g| %>
+        <li data-target="#home-carousel" data-slide-to="0" class="<%= "active" if i == 0 %>"></li>
+        <% i = i + 1 %>
+      <% end %>
+    </ol>
+    <div class="carousel-inner">
+      <% i = 0 %>
+      <% galleries.each do |g| %>
+      	<% gallery_tag = get_tag_with_tag_about_call_to_action(g, "Gallery").first %>
+        <div class="item <%= "active" if i == 0 %>" style="background: url('<%= gallery_tag.tag_fields.find_by_name("preview_image").upload %>') no-repeat center top; background-size: cover;">
+          <!--<img src="http://placehold.it/1000x500">-->
+          <div class="container">
+            <div class="carousel-caption">
+              <!--<h1>Example headline.</h1>-->
+              <h1><%= g.title %></h1>
+              <h3>
+              	<a class="btn btn-lg btn-primary" href="/gallery/<%= g.id %>" role="button">VAI ALLA GALLERY</a>
+              </h3>                
+            </div>
+          </div>
+        </div>
+        <% i = i + 1 %>
+      <% end %>
+    </div>
+    <a class="left carousel-control" href="#home-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a class="right carousel-control" href="#home-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+  </div>
+<% end %>
