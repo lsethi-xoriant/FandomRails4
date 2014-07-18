@@ -185,6 +185,8 @@ Fandom::Application.routes.draw do
   match "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }
   match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
+  match "/delete_current_user_interactions", :to => "application#delete_current_user_interactions"
+
   # error handling
   match "/404", :to => "http_error#not_found_404"
   match "/500", :to => "http_error#internal_error_500"
