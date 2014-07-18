@@ -5,6 +5,7 @@
   <div class="row">
   	<%= form_tag({controller: "call_to_action", action: "upload", method: "post"}, multipart: true) do %>
   	<div class="col-sm-12">
+  		<div class="row form-group">
   		<% for i in (1..interaction.resource.upload_number) do %>
   			<%= hidden_field_tag "template_cta_id", interaction.resource.call_to_action_id %>
   			<%= hidden_field_tag "interaction_id", interaction.id %>
@@ -14,6 +15,7 @@
   			<%= file_field_tag "upload-#{i}" %>
   		<% end %>
 		<hr />
+		</div>
   		<div class="row form-group">
 	  		<% if interaction.resource.privacy? %>
 	  			<%= check_box_tag "privacy" %>
