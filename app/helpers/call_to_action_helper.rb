@@ -110,4 +110,21 @@ module CallToActionHelper
     MAX_UPLOAD_SIZE * BYTES_IN_MEGABYTE
   end
   
+  def is_call_to_action_gallery(calltoaction)
+    return has_tag_recursive(calltoaction.call_to_action_tags.map{|c| c.tag}, "Gallery")
+  end
+  
+  def has_tag_recursive(tags, tag_name)
+    tags.each do |t|
+      if t.name == tag_name
+        return true
+      end
+      result = has_tag_recursive(t.tags_tags.map{ |parent_tag| parent_tag.other_tag}, tag_name)
+      if result
+        return result
+      end
+    end
+    return false
+  end
+  
 end
