@@ -38,9 +38,9 @@
           <ul class="dropdown-menu">
             <% if current_user %>
               <li class="visible-xs"><a href="/profile/edit">Profilo</a></li>
-              <li><a href="/extra">Video Extra</a></li>
-              <li><a href="/how_to">Scopri come Partecipare</a></li>
-              <li><a href="/winners">Vincitori</a></li>
+              <li><a href="/reward/catalogue">Scopri i premi</a></li>
+              <!--<li><a href="/how_to">Come Partecipare</a></li>-->
+              <!--<li><a href="/winners">Vincitori</a></li>-->
 
               <% if can? :access, :easyadmin %>
                 <li class="divider"></li>
@@ -58,7 +58,7 @@
           </ul>
         </li>
         
-        <li><a href="#">Sfoglia</a></li>
+        <li><a href="/browse">Sfoglia</a></li>
 
         <form class="navbar-form navbar-left" role="search">
           <div class="form-group">

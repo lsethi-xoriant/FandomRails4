@@ -17,48 +17,58 @@
 	    
   <div class="row">      
     <div class="col-md-12 col-md-offset-0">
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-          <h1><%= @reward.title %></h1>
-          <div class="row">
-          	<div class="col-md-6">
-          		<img class="img-responsive" src="<%= @reward.main_image.url %>" />
-          	</div>
-          	<div class="col-md-6">
-	          	<dl class="dl-horizontal">
-		            
-		            <dt>Costo premio</dt><dd><p><%= @reward.cost %></p></dd>
-		            <dt>Currency premio</dt><dd><p><%= @reward.currency.title if @reward.currency %></p></dd>
-		            <dt>Descrizione lunga</dt><dd><p><%= @reward.long_description %></p></dd>
-		            <% unless @reward.valid_from.nil? %>
-		            	<dt>Attivo dal</dt><dd><p><%= @reward.valid_from.strftime("%d/%m/%Y %H:%m") %></p></dd>
-		            <% end %>
-		            
-		            <% unless @reward.valid_to.nil? %>
-		            	<dt>Scadenza premio</dt><dd><p><%= @reward.valid_to.strftime("%d/%m/%Y %H:%m") %></p></dd>
-		            <% end %>
-	          </dl>
-	          <% if @user_got_reward %>
-	          	<p>Hai già acquistato questo premio</p>
-	          <% end %>
-	          <% if !@user_can_buy_reward && @reward.currency %>
-	          	<p>Ti mancano ancora <%= @currency_to_buy_reward %> <%= @reward.currency.title %> per acquistare questo premio.</p>
-	          <% end %>
-          	</div>
+      
+      <div class="page-header">
+        <div class="row">
+          <div class="col-sm-8">
+            <h2><%= @reward.title %></h2>
           </div>
-          
-          <div class="row text-center">
-          	<div class="col-md-12">
-          		<% if @user_can_buy_reward && !@user_got_reward %>
-          			<a href="/reward/buy/<%= @reward.id %>" class="btn btn-md btn-primary"><%= @reward.button_label %></a>
-          		<% else %>
-          			<button class="btn btn-md btn-primary" disabled="disabled"><%= @reward.button_label %></button>
-          		<% end %>
-          	</div>
+          <div class="col-sm-4 text-right">
+            <h2><small><a href="/reward/catalogue">vedi tutti i premi</a></small></h2>
           </div>
-          
         </div>
-      </div>      
+      </div>
+      <div class="row">
+      	<div class="col-sm-12">
+      		<img class="img-responsive" src="<%= @reward.main_image.url %>" />
+      	</div>
+      </div>
+      <hr>
+      <div class="row">
+      	<div class="col-sm-6 col-sm-offset-3">
+        	<dl class="dl-horizontal">
+            
+            <dt>Costo premio</dt><dd><p><%= @reward.cost %></p></dd>
+            <dt>Currency premio</dt><dd><p><%= @reward.currency.title if @reward.currency %></p></dd>
+            <dt>Descrizione lunga</dt><dd><p><%= @reward.long_description %></p></dd>
+            <% unless @reward.valid_from.nil? %>
+            	<dt>Attivo dal</dt><dd><p><%= @reward.valid_from.strftime("%d/%m/%Y %H:%m") %></p></dd>
+            <% end %>
+            
+            <% unless @reward.valid_to.nil? %>
+            	<dt>Scadenza premio</dt><dd><p><%= @reward.valid_to.strftime("%d/%m/%Y %H:%m") %></p></dd>
+            <% end %>
+        </dl>
+        <% if @user_got_reward %>
+        	<p>Hai già acquistato questo premio</p>
+        <% end %>
+        <% if !@user_can_buy_reward && @reward.currency %>
+        	<p>Ti mancano ancora <%= @currency_to_buy_reward %> <%= @reward.currency.title %> per acquistare questo premio.</p>
+        <% end %>
+      	</div>
+      </div>
+      <hr>
+      <div class="row text-center">
+      	<div class="col-md-12">
+      		<% if @user_can_buy_reward && !@user_got_reward %>
+      			<a href="/reward/buy/<%= @reward.id %>" class="btn btn-md btn-primary"><%= @reward.button_label %></a>
+      		<% else %>
+      			<button class="btn btn-md btn-primary" disabled="disabled"><%= @reward.button_label %></button>
+      		<% end %>
+      	</div>
+      </div>
+      
     </div>
+     
   </div>
 </div>

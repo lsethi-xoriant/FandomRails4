@@ -1,0 +1,75 @@
+<% get_tags_with_tag("badge").each do |badge_tag| %>
+  <% badge_tag.reward_tags.each do |badge_reward_tag| %>
+    <div class="modal fade" id="badge-modal-<%= badge_reward_tag.reward.id %>" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body profile-badge">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <div class="row">
+              <div class="col-xs-8 col-xs-offset-2 text-center">
+                <img src="<%= badge_reward_tag.reward.main_image %>">
+                <h4 class="text-center"><%= badge_reward_tag.reward.title %></h4>
+                <p><%= badge_reward_tag.reward.long_description %></p>
+              </div>
+            </div>
+          </div>
+          <!--
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-sm-8 col-sm-offset-2 text-center">
+                <a class="btn btn-default btn-md" href="#"><span class="glyphicon glyphicon-share"></span> Share</a>
+              </div>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<%= render partial: "/application/user_bar" %>
+
+<div class="">
+  
+  
+      <div class="panel panel-default">
+        <div class="panel-heading profile-heading">
+          <div class="container">
+            <div class="row" style="margin-top: 1.5em;">
+              <div class="col-md-12">
+                <%= render partial: "profile/profile_header" %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body profile-body">
+          <div class="container">
+            <%= render partial: "profile/profile_navbar", locals: { page: "badges" } %>
+              <% get_tags_with_tag("badge").each do |badge_tag| %>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div id="livelli">
+                      <div class="page-header">
+                        <h2><%= badge_tag.name %> <small><%= get_user_reward_with_tag_counter(badge_tag.name) %>/<%= badge_tag.reward_tags.count %></small></h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row badges text-center">
+                  <% badge_tag.reward_tags.each do |badge_reward_tag| %>
+                    <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
+                      <img class="img-responsive <%= "not-yours" if !user_has_reward(badge_reward_tag.reward.name) %>" src="<%= badge_reward_tag.reward.main_image %>" alt="...">
+                      <p><small><%= badge_reward_tag.reward.title %></small></p></p>
+                      <p><a href="#" class="btn btn-default btn-sm" data-toggle="modal" data-target="#badge-modal-<%= badge_reward_tag.reward.id %>">details</a></p>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+        
