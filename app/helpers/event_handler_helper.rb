@@ -7,14 +7,14 @@ module EventHandlerHelper
 
 
     case Rails.env  
-    when "production"
+    when "development"
       begin 
         generate_log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
       rescue Exception => e
         file_name, line_number, method_name = parse_caller_data(caller_data)
         Rails.logger.error("[EventHandlerError] Exception: #{e}")
       end
-    when "development"
+    when "development--"
       Rails.logger.info(generate_log_string_for_development(msg, data, caller_data, timestamp))
     else
       # Nothing to do
