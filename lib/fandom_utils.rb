@@ -153,7 +153,7 @@ module FandomUtils
   end
   
   # Returns the number of cores in the machine. It requires the command line utility nproc
-  def get_core_number
+  def self.get_number_of_cores
     begin
       stdin, stdout, stderr, wait_thr = Open3.popen3('nproc')
       exit_code = wait_thr.value.exitstatus
