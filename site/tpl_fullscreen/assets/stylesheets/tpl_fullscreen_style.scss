@@ -453,6 +453,18 @@ span.notify {
     }
 }
 
+// BROWSE
+.fullscreen-matrix {
+    padding-top: $navbar-height;
+    .matrix-title {
+        color: #fff;
+        position: absolute;
+        bottom: 15px;
+        padding-right: 30px;
+        width: 100%;
+    }
+}
+
 // MODAL
 .modal {
     .modal-title {
@@ -485,7 +497,7 @@ span.notify {
 .panel-default {
     border: none;
     .profile-heading {
-        background: none;
+        //background: none;
     }
 }
 .profile-heading {
