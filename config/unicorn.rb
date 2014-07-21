@@ -1,7 +1,10 @@
+require 'fandom_utils'
+
 # Set environment to development unless something else is specified
 env = ENV["RAILS_ENV"] || "development"
 
-worker_processes 4
+worker_number = FandomUtils::get_core_number() * 2
+worker_processes worker_number
 
 preload_app true
 
