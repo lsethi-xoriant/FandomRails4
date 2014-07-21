@@ -549,7 +549,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.showAnimateFeedback = function(feedback, calltoaction_id) {
     $(".home-overvideo-feedback-" + calltoaction_id)
-      .hide().html(feedback).show('slide', { direction: 'left' }, 200000);
+      .hide().html(feedback).show('slide', { direction: 'left' }, 2000);
 
     overvideo_feedback_timeout = $timeout(function() {
       $(".home-overvideo-feedback-" + calltoaction_id).hide('slide', { direction: 'left' }, 2000, function() {
