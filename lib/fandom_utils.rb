@@ -1,3 +1,5 @@
+require "open3"
+
 module FandomUtils
 
   # Returns the Site class defined for the requested domain. 
@@ -148,6 +150,21 @@ module FandomUtils
 
   def request_is_from_iphone_device?(request)
     iphone = request.user_agent =~ /iPhone/ 
+  end
+  
+  # Returns the number of cores in the machine. It requires the command line utility nproc
+  def self.get_number_of_cores
+    begin
+      stdin, stdout, stderr, wait_thr = Open3.popen3('nproc')
+      exit_code = wait_thr.value.exitstatus
+      if exit_code != 0
+        raise Exception.new("nproc exit code: #{exit_code}; stderr: #{stderr.gets(nil)}")
+      else
+        return stdout.gets(nil).to_i
+      end
+    rescue Exception => e
+      raise Exception.new("could not execute 'nproc', the number of the machine cores cannot be determined: #{e.inspect}")
+    end
   end
   
 end
