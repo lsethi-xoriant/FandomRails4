@@ -279,9 +279,9 @@ body {
 }
 .filter {
     margin: 1.5em 0; 
-}
+} 
 .first-level {
-    .nav-tabs {
+    .nav-tabs.filters-nav {
         border: none;
         li {
             a { color: $navbar-inverse-link-color; } 
@@ -443,6 +443,18 @@ span.notify {
     margin: 0;
 }
 
+// BROWSE
+.fullscreen-matrix {
+    padding-top: $navbar-height;
+    .matrix-title {
+        color: #fff;
+        position: absolute;
+        bottom: 15px;
+        padding-right: 30px;
+        width: 100%;
+    }
+}
+
 // NAV 
 .td {
     text-indent: -9000px;
@@ -459,7 +471,7 @@ span.notify {
     background: darken(#d9534f, 20%);
 }
 .navbar-nav > li.play-2 > a {
-    //background: #f0ad4e;
+    background: #f0ad4e;
     color: #fff;
     text-transform: uppercase;
 }
@@ -536,13 +548,17 @@ span.notify {
 // PROFILE
 .panel-default {
     border: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
     .profile-heading {
-        background: none;
+        //background: none;
+        padding-bottom: 0px;
     }
 }
 .profile-heading {
     background: none;
-    .nav { padding: 0;}
+    .nav { padding: 0; border: 0px; }
     .progress {
         height: 15px;
         margin-bottom: 4px;
@@ -639,6 +655,9 @@ span.notify {
 }
 
 /* CTA PAGE */
+.panel-default.stripe.cta-page {
+    margin: 0;
+}
 .pager-desktop {
     position: fixed; 
     width: 100%; 
@@ -791,7 +810,14 @@ span.notify {
     }
     &.stripe {
         min-height: 340px; 
-        padding-top: 2em;
+        padding-top: 3.5em;
+        position: relative;
+        .social-meta {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+        }
         h3.lead { 
             color: #fff;
             font-size: 2em; 

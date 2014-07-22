@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
+      <div class="row">
+      <div class="col-md-12"> 
+        <% if flash[:error] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p>Errori proceso di upload:</p>
+                <p>
+                  <ul>
+                    <% flash[:error].each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% elsif flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+<div ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= [@calltoaction].to_json %>, 1, <%= @calltoactions_during_video_interactions_second.to_json %>)">
+  <%= render partial: "/call_to_action/single_calltoaction", locals: { calltoaction: @calltoaction, calltoaction_comment_interaction: @calltoaction_comment_interaction, outcome: nil, captcha_data: @captcha_data } %>
+</div>
+
+<div class="container-fluid" style="background: #fff;">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12"><h4>Guarda Anche:</h4></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+        
+  <% @calltoactions_correlated.each do |c| %>
+
+      <div class="stripes" style="">
+    
+        <div class="container-fluid stripe cta" style="background: url('<%= c.media_image %>') no-repeat center center; background-size: cover;">
+          <div class="container">
+            
+
+            <div class="row">
+              <div class="col-sm-9 text-left">
+                <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(c, "miniformat") %>
+                <% if tags_with_miniformat_in_calltoaction.any? %>
+                  <h5 class="text-muted visible-sm visible-md visible-lg"><span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
+                    <%= tags_with_miniformat_in_calltoaction.first.name %>
+                  </h5>
+                <% end %>
+                <h3 class="lead" style="">
+                  <%= c.title %> 
+                </h3>
+                <h4><a class="btn btn-default btn-md" href="/call_to_action/<%= c.id %>">Call To Action</a>&nbsp;
+                  <% if call_to_action_completed?(c, current_or_anonymous_user) %>
+                    <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-success" style="padding-top: 7px;">FATTO <span class="glyphicon glyphicon-ok"></span>
+                    </span>
+                  <% else %>
+                    <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-warning" style="padding-top: 7px;">+<%= predict_max_cta_outcome(c, anonymous_user).reward_name_to_counter["POINT"] %>
+                      <span class="glyphicon glyphicon-star"></span>
+                    </span>
+                  <% end %>
+                </h4>
+              </div>
+            </div>
+
+            
+
+          </div>
+          <div class="container social-meta">
+            <div>
+            <div class="row" style="color: #fff; padding-top: 1em;">
+              <div class="col-xs-6 text-left">
+                <span><small>January 27, 2014</small></span>
+              </div>
+              <div class="col-xs-6 text-right">
+                  <span class="small glyphicon glyphicon-comment"></span> 10 &nbsp;&nbsp; <span class="small glyphicon glyphicon-thumbs-up"></span> 23   
+              </div>
+            </div>
+            </div>
+          </div>
+        </div><!-- fluid -->
+      </div>
+
+
+    <% end %>
+  </div>
