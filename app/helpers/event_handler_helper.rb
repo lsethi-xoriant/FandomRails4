@@ -5,20 +5,22 @@ module EventHandlerHelper
 
     timestamp = Time.new.utc.strftime("%Y-%m-%d %H:%M:%S.%L")
 
+    begin 
 
-    case Rails.env  
-    when "development"
-      begin 
-        generate_log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
-      rescue Exception => e
-        file_name, line_number, method_name = parse_caller_data(caller_data)
-        Rails.logger.error("[EventHandlerError] Exception: #{e}")
+      case Rails.env  
+      when "production"
+          generate_log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
+      when "development"
+        Rails.logger.info(generate_log_string_for_development(msg, data, caller_data, timestamp))
+      else
+        # Nothing to do
       end
-    when "development--"
-      Rails.logger.info(generate_log_string_for_development(msg, data, caller_data, timestamp))
-    else
-      # Nothing to do
+
+    rescue Exception => e
+      file_name, line_number, method_name = parse_caller_data(caller_data)
+      Rails.logger.error("[EventHandlerError] Exception: #{e}")
     end
+    
   end
 
   # TODO:
@@ -85,10 +87,15 @@ module EventHandlerHelper
         level: level, event_hash: hash)
     end
 
-    log_file_name = "log/#{pid}.log"
+    log_directory = "log/events"
+    log_file_name = "#{log_directory}/#{pid}.log"
+
+    if !File.directory?(log_directory)
+      FileUtils.mkdir_p(log_directory)
+    end
 
     if File.exist?(log_file_name) && File.size(log_file_name) > LOGGER_PROCESS_FILE_SIZE
-      File.rename(log_file_name, "log/#{pid}-#{Time.new.utc.strftime("%Y%m%d%H%M%S")}.log")
+      File.rename(log_file_name, "#{log_directory}/#{pid}-#{Time.new.utc.strftime("%Y%m%d%H%M%S")}.log")
     end
 
     File.open(log_file_name, "a+") do |f|
