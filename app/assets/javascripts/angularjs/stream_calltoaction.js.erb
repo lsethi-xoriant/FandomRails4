@@ -197,6 +197,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
         enableWaitingAudio("play");
 
+        $("#home-overvideo-" + calltoaction_id).html(data.overvideo);
+
         if(data.interaction_done_before && data.interaction_one_shot) {
           $timeout(function() { 
 
@@ -207,8 +209,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
           }, 5000);  
         } else {
-          // Waiting for current user response.
-          $("#home-overvideo-" + calltoaction_id).html(data.overvideo);
         }                           
 
         if(switch_to_main_video_after_ajax) {
