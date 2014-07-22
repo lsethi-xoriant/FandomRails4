@@ -48,7 +48,11 @@
 			<div class="col-sm-5">
 	          <dl class="dl-horizontal">
 	          	<% @tag.tag_fields.each do |tf| %>
-	          		<dt><%= tf.name %></dt><dd><p><%= tf.value %></p></dd>
+	          		<% if  tf.upload_content_type && tf.upload_content_type.split("/").first == "image" %>
+	          			<dt><%= tf.name %></dt><dd><p><img class="img-responsive" src="<%= tf.upload.url %>" /></p></dd>
+	          		<% else %>
+	          			<dt><%= tf.name %></dt><dd><p><%= tf.value %></p></dd>
+	          		<% end %>
 	            <% end %>
 	          </dl>
 	      </div>
