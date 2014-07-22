@@ -9,13 +9,15 @@
             <div class="row" style="margin-top: 1.5em;">
               <div class="col-md-12">
                 <%= render partial: "profile/profile_header" %>
+                <hr>
+                <%= render partial: "profile/profile_navbar", locals: { page: "prizes" } %>
               </div>
             </div>
           </div>
         </div>
         <div class="panel-body profile-body">
           <div class="container">
-            <%= render partial: "profile/profile_navbar", locals: { page: "prizes" } %>
+            
             <div class="row">
               <div class="col-md-12">
                 <div id="livelli">

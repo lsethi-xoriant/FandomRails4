@@ -113,6 +113,17 @@
 
   <%= yield %>
 
+  <% unless @home %>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 text-center text-muted">
+          <p>2014 Shado Srl. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
 </script>
 </body>
 </html>

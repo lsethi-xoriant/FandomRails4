@@ -39,13 +39,15 @@
             <div class="row" style="margin-top: 1.5em;">
               <div class="col-md-12">
                 <%= render partial: "profile/profile_header" %>
+                <hr>
+                <%= render partial: "profile/profile_navbar", locals: { page: "badges" } %>
               </div>
             </div>
           </div>
         </div>
         <div class="panel-body profile-body">
           <div class="container">
-            <%= render partial: "profile/profile_navbar", locals: { page: "badges" } %>
+            
               <% get_tags_with_tag("badge").each do |badge_tag| %>
                 <div class="row">
                   <div class="col-md-12">
