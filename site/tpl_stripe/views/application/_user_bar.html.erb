@@ -38,7 +38,7 @@
           <ul class="dropdown-menu">
             <% if current_user %>
               <li class="visible-xs"><a href="/profile/edit">Profilo</a></li>
-              <li><a href="/extra">Video Extra</a></li>
+              <li><button data-toggle="modal" data-target="#modal-grattaevinci">Modal 1</button></li>
               <li><a href="/how_to">Scopri come Partecipare</a></li>
               <li><a href="/winners">Vincitori</a></li>
 
@@ -116,5 +116,9 @@
         <% end %>
       </ul>
     </nav>
+  </div>
+  <div class="alert alert-warning alert-dismissable cookie-alert">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <strong>Cookies!</strong> Better check yourself, you're not looking too good.
   </div>
 </header>
