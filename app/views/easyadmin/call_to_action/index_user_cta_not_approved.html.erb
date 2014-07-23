@@ -36,6 +36,8 @@
 						<tr>
 							<th>Titolo</th>
 							<th class="hidden-xs hidden-sm">Data immissione</th>
+							<th>Utente</th>
+							<th>Tags</th>
 							<th>Immagine</th>
 							<th>Liberatoria</th>
 							<th>Azioni</th>
@@ -45,7 +47,12 @@
 						<tr id="cta-<%= c.id %>">
 							<td><%= c.title %></td>
 							<td class="hidden-xs hidden-sm"><%= c.created_at.strftime("%d/%m/%Y %H:%M") %></td>
-
+							<td><%= "#{c.user_upload_interaction.user.first_name} #{c.user_upload_interaction.user.last_name}" %></td>
+							<td>
+								<% c.call_to_action_tags.each do |ctatag| %>
+									<%= ctatag.tag.name %>
+								<% end	%>
+							</td>
 							<td>
 								<% if c.media_image.present? %>
 									<img src="<%= c.media_image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
