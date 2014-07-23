@@ -60,11 +60,11 @@ class Easyadmin::EasyadminRewardController < ApplicationController
   end
   
   def update_reward_tag(tag_list, reward)
-    reward.reward_tags.delete_all
+    reward.reward_tags.destroy_all
     tag_list.each do |t|
       tag = Tag.find_by_name(t)
       tag = Tag.create(name: t) unless tag
-      RewardTag.create(tag_id: tag.id, reward_id: @reward.id)
+      RewardTag.create(tag_id: tag.id, reward_id: reward.id)
     end
   end
 end
