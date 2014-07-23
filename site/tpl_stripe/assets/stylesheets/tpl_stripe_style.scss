@@ -1,6 +1,6 @@
 // Variable here
 
-$body-bg: #222;
+//$body-bg: #222;
 
 $grid-gutter-width: 30px;
 $container-tablet: ((720px + $grid-gutter-width));
@@ -220,7 +220,7 @@ body {
 
 /* Custom page footer */
 .footer {
-    background: #222;
+    //background: #222;
     padding: 3em 0;
     color: #777;
     border-top: 1px solid #333;
@@ -655,6 +655,10 @@ span.notify {
 }
 
 /* CTA PAGE */
+#desc, #comments{
+    padding-top: 3em;
+    padding-bottom: 3em;
+}
 .panel-default.stripe.cta-page {
     margin: 0;
 }

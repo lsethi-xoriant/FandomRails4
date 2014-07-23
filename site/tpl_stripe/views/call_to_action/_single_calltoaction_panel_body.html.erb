@@ -42,19 +42,23 @@
   </div>
 
   <!-- UNDERVIDEO AREA -->
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12">
-        <%= render partial: "/call_to_action/undervideo_interactions", locals: { calltoaction: calltoaction, outcome: nil } %>
-      </div>
+  
+  <div class="container-fluid" style="background: #fff">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <%= render partial: "/call_to_action/undervideo_interactions", locals: { calltoaction: calltoaction, outcome: nil } %>
+        </div>
 
-      <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">
-        <!-- UNDERVIDEO FEEDBACK -->               
-      </div>
+        <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">
+          <!-- UNDERVIDEO FEEDBACK -->               
+        </div>
 
-      <div class="col-md-12" id="share-footer-<%= calltoaction.id %>">
-        <!-- SHARE FOOTER -->
+        <div class="col-md-12" id="share-footer-<%= calltoaction.id %>">
+          <!-- SHARE FOOTER -->
+        </div>
       </div>
     </div>
   </div>
+
 </div>  
