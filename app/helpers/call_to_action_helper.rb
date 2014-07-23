@@ -13,9 +13,9 @@ module CallToActionHelper
     CallToAction.includes({:call_to_action_tags => :tag}).where("tags.name ILIKE 'template'").map{|cta| [cta.title, cta.id]}
   end
   
-  def clone_and_create_cta(params, upload_file_index)
+  def clone_and_create_cta(params, upload_file_index, watermark)
     old_cta = CallToAction.find(params[:template_cta_id])
-    new_cta = duplicate_user_generated_cta(old_cta.id, params, upload_file_index)
+    new_cta = duplicate_user_generated_cta(old_cta.id, params, upload_file_index, watermark)
     old_cta.interactions.each do |i|
       duplicate_interaction(new_cta,i)
     end
@@ -26,7 +26,7 @@ module CallToActionHelper
     new_cta
   end
   
-  def duplicate_user_generated_cta(old_cta_id, params, upload_file_index)
+  def duplicate_user_generated_cta(old_cta_id, params, upload_file_index, watermark)
     cta = CallToAction.find(old_cta_id)
     cta.user_generated = true
     cta.activated_at = nil
@@ -34,6 +34,15 @@ module CallToActionHelper
     cta_attributes = cta.attributes
     cta_attributes.delete("id")
     cta = CallToAction.new(cta_attributes, :without_protection => true)
+    if watermark.exists?
+      if watermark.url.start_with?("http")
+        cta.interaction_watermark_url = watermark.url(:normalized)
+      else
+        cta.interaction_watermark_url = watermark.path(:normalized)
+      end
+    else
+      cta.interaction_watermark_url = nil
+    end
     cta.media_image = params["upload-#{upload_file_index}"]
     cta
   end

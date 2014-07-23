@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140718080110) do
+ActiveRecord::Schema.define(:version => 20140722162759) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -415,14 +415,18 @@ ActiveRecord::Schema.define(:version => 20140718080110) do
   add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
 
   create_table "uploads", :force => true do |t|
-    t.integer  "call_to_action_id",     :null => false
+    t.integer  "call_to_action_id",      :null => false
     t.boolean  "releasing"
     t.text     "releasing_description"
     t.boolean  "privacy"
     t.text     "privacy_description"
-    t.datetime "created_at",            :null => false
-    t.datetime "updated_at",            :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.integer  "upload_number"
+    t.string   "watermark_file_name"
+    t.string   "watermark_content_type"
+    t.integer  "watermark_file_size"
+    t.datetime "watermark_updated_at"
   end
 
   create_table "user_comments", :force => true do |t|

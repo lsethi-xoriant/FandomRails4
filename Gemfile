@@ -24,6 +24,8 @@ gem "simple_form"
 
 gem "hamster"
 
+gem 'paperclip-watermark'
+
 group :assets do
   gem 'turbo-sprockets-rails3'
   gem 'sprockets'

@@ -413,7 +413,7 @@ class CallToActionController < ApplicationController
     for i in(1 .. upload_interaction.upload_number) do
       if params["upload-#{i}"]
         if params["upload-#{i}"].size <= get_max_upload_size()
-          cloned_cta = clone_and_create_cta(params, i)
+          cloned_cta = clone_and_create_cta(params, i,upload_interaction.watermark)
           if cloned_cta.errors.any?
             flash[:error] = cloned_cta.errors
           else
