@@ -111,7 +111,175 @@
     </div>
   </div>
 
+  <!-- Modal 1-->
+  <div class="modal fade" id="modal-grattaevinci" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          
+          <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 text-center" style="margin-top: 26px;">
+              
+              <h4 class="text-center">
+                <span style="display: block">Scopri se hai vinto!</span>
+                <div style="display: none" class="alert alert-danger alert-dismissable">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                  <strong>No hai vinto!</strong> Ritenta.
+                </div>
+                <div style="display: none" class="alert alert-success alert-dismissable">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                  <strong>Hai vinto!</strong> Scopri i dettagli qui sotto.
+                </div>
+              </h4>
+              <hr>
+              <h3 class="text-center">Hai <span class="label label-warning">7 <span class="glyphicon glyphicon-star"></span></span> Biglietti</h3>
+              <hr>
+              <button type="button" class="btn btn-danger btn-lg">Gioca subito!</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body" style="background-color: whitesmoke;">
+          <div class="row">
+            <div class="col-sm-6 text-center">
+              
+              <span class="glyphicon glyphicon-ok won-ok" style="display: none"></span>
+              <img class="" src="http://placehold.it/200x160">
+              <h4>Premio 1</h4>
+            </div>
+            <div class="col-sm-6 text-center">
+              
+              <span class="glyphicon glyphicon-ok " style="display: none"></span>
+              <img class="" src="http://placehold.it/200x160">
+              <h4>Premio 2</h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 text-center">
+              <p><small>Excepteur sint occaecat cupidatat non
+              proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</small></p>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+
+  <!-- Modal 2 (vinto) -->
+  <div class="modal fade" id="modal-vinto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                
+                <div class="row">
+                  <div class="col-sm-8 col-sm-offset-2 text-center" style="margin-top: 26px;">
+                    
+                    <h4 class="text-center">
+                      <span style="display: none">Scopri se hai vinto!</span>
+                      <div style="display: none" class="alert alert-danger alert-dismissable">
+                        <strong>No hai vinto!</strong> Ritenta.
+                      </div>
+                      <div style="display: block" class="alert alert-success alert-dismissable">
+                        <strong>Hai vinto!</strong> Scopri i dettagli qui sotto.
+                      </div>
+                    </h4>
+                    <hr>
+                    <h3 class="text-center">Hai <span class="label label-warning">7 <span class="glyphicon glyphicon-star"></span></span>  Biglietti</h3>
+                    <hr>
+                    <button type="button" class="btn btn-danger btn-lg">Gioca subito 1 biglietto!</button>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-body" style="background-color: whitesmoke;">
+                <div class="row">
+                  <div class="col-sm-6 text-center">
+                    
+                    <span class="glyphicon glyphicon-ok won-ok" style="display: block"></span>
+                    <img class="" src="http://placehold.it/200x160">
+                    <h4>Premio 1</h4>
+                  </div>
+                  <div class="col-sm-6 text-center not-won">
+                    
+                    <span class="glyphicon glyphicon-ok " style="display: none"></span>
+                    <img class="" src="http://placehold.it/200x160">
+                    <h4>Premio 2</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-8 col-sm-offset-2 text-center">
+                    <p><small>Excepteur sint occaecat cupidatat non
+                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</small></p>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div>
+
+    <!-- Modal 3 (non vinto) -->
+    <div class="modal fade" id="modal-novinto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                
+                <div class="row">
+                  <div class="col-sm-8 col-sm-offset-2 text-center" style="margin-top: 26px;">
+                    
+                    <h4 class="text-center">
+                      <span style="display: none">Scopri se hai vinto!</span>
+                      <div style="display: block" class="alert alert-danger alert-dismissable">
+                        <strong>No hai vinto!</strong> Ritenta.
+                      </div>
+                      <div style="display: none" class="alert alert-success alert-dismissable">
+                        <strong>Hai vinto!</strong> Scopri i dettagli qui sotto.
+                      </div>
+                    </h4>
+                    <hr>
+                    <h3 class="text-center">Hai <span class="label label-warning">7 <span class="glyphicon glyphicon-star"></span></span>  Biglietti</h3>
+                    <hr>
+                    <button type="button" class="btn btn-danger btn-lg">Gioca subito 1 biglietto!</button>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-body" style="background-color: whitesmoke;">
+                <div class="row">
+                  <div class="col-sm-6 text-center">
+                    
+                    <span class="glyphicon glyphicon-ok won-ok" style="display: none"></span>
+                    <img class="" src="http://placehold.it/200x160">
+                    <h4>Premio 1</h4>
+                  </div>
+                  <div class="col-sm-6 text-center">
+                    
+                    <span class="glyphicon glyphicon-ok " style="display: none"></span>
+                    <img class="" src="http://placehold.it/200x160">
+                    <h4>Premio 2</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-8 col-sm-offset-2 text-center">
+                    <p><small>Excepteur sint occaecat cupidatat non
+                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</small></p>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div>
+
   <%= yield %>
+
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 text-center text-muted">
+          <p>2014 Shado Srl. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </script>
 </body>

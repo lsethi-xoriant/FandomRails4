@@ -25,7 +25,7 @@
               <% if r['user_already_bought'] %>
               	<h5><span class="label label-success">tuo <span class="glyphicon glyphicon-ok"></span></span></h5>
               <% else %>
-              	<h5><span class="label label-warning"><%= r['reward'].cost %> <span class="glyphicon glyphicon-star"></span></span></h5>
+              	<h5><span class="label label-danger"><%= r['reward'].cost %> <span class="glyphicon glyphicon-certificate"></span></span></h5>
               <% end %>
             </div>
           </div>
@@ -48,7 +48,7 @@
           <a href="/reward/show/<%= r.id %>">
             <img class="img-responsive" src="<%= r.preview_image.url %>" alt="...">
           </a>
-          <h5><span class="label label-warning"><%= r.cost %> <span class="glyphicon glyphicon-star"></span></span></h5>
+          <h5><span class="label label-danger"><%= r.cost %> <span class="glyphicon glyphicon-certificate"></span></span></h5>
           <p><small><%= r.title %></small></p>
           <h5><a href="/reward/show/<%= r.id %>" class="btn btn-primary btn-xs" role="button">Vedi</a></h5>        
         </div>
@@ -66,15 +66,17 @@
 	  </div>
     <div class="row brws-item">
       <% @user_all_rewards.each do |r| %>
-  	    <div class="col-xs-6 col-sm-4 col-md-2">
+  	    <div class="col-xs-6 col-md-3 text-center">
   	      <a href="/reward/show/<%= r['reward'].id %>">
   	        <img class="img-responsive" src="<%= r['reward'].preview_image(:thumb) %>" alt="...">
   	      </a>
   	      <% if r['user_already_bought'] %>
-            	<h5><span class="label label-success">tuo <span class="glyphicon glyphicon-ok"></span></span></h5>
-            <% else %>
-            	<h5><span class="label label-warning"><%= r['reward'].cost %> <span class="glyphicon glyphicon-star"></span></span></h5>
-            <% end %>
+          	<h5><span class="label label-success">tuo <span class="glyphicon glyphicon-ok"></span></span></h5>
+          <% else %>
+          	<h5><span class="label label-danger"><%= r['reward'].cost %> <span class="glyphicon glyphicon-certificate"></span></span></h5>
+          <% end %>
+          <p><small><%= r['reward'].title %></small></p>
+          <h5><a href="/reward/show/<%= r['reward'].id %>" class="btn btn-primary btn-xs" role="button">Vedi</a></h5>
   	    </div>
       <% end %>
     </div>

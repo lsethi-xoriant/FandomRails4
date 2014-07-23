@@ -1,0 +1,71 @@
+<%= render partial: "/application/user_bar" %>
+
+<%= render partial: "/application/nav_calltoactions" %>
+
+<div class="container-fluid fullscreen-matrix">
+  <div class="row">
+
+    <% @calltoactions.each_with_index do |calltoaction, i | %>
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="panel panel-default tpl-l-img">
+          <div class="panel-body">
+            <div class="row">
+              <div class="points">
+                <h3>
+                  <% if call_to_action_completed?(calltoaction, current_or_anonymous_user) %>
+                    &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success">
+                      FATTO <span class="glyphicon glyphicon-ok"></span>
+                    </span>
+                  <% else %>
+                    &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning">+<%= predict_max_cta_outcome(calltoaction, anonymous_user).reward_name_to_counter["POINT"] %>
+                      <span class="glyphicon glyphicon-star"></span>
+                    </span>
+                  <% end %>
+                </h3>
+              </div>
+              <div class="col-md-12 cta-img only" style="background: url('<%= calltoaction.media_image %>') no-repeat;">
+                <div class="matrix-title">
+                  <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
+                    <% if tags_with_miniformat_in_calltoaction.any? %>
+                      <h5>
+                        <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
+                        <%= tags_with_miniformat_in_calltoaction.first.name %>  
+                      </h5>
+                    <% end %>
+                  <h4><%= calltoaction.title %></h4>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <p>
+                        <a class="btn btn-primary btn-md" href="/call_to_action/<%= calltoaction.id %>">Call To Action</a>
+                      </p>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                      <div class="col-md-12">
+                      <p><span class="glyphicon glyphicon-comment"></span> 10 &nbsp;&nbsp; <span class="glyphicon glyphicon-thumbs-up"></span> 23 </p></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+            
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <ul class="pagination">
+        <li><a href="#">&laquo;</a></li>
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#">&raquo;</a></li>
+      </ul>
+    </div>
+  </div>
+  
+</div>
