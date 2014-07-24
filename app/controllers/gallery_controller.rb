@@ -11,7 +11,7 @@ class GalleryController < ApplicationController
   def show
     @calltoaction = CallToAction.find(params[:id])
     @gallery_tag = get_tag_with_tag_about_call_to_action(@calltoaction, "Gallery").first
-    @gallery_calltoactions = calltoaction_active_with_tag(@gallery_tag.name, "DESC").where("user_generated = true AND approved = TRUE")
+    @gallery_calltoactions = calltoaction_active_with_tag(@gallery_tag.name, "DESC").where("user_generated = true AND approved = true")
   end
   
 end
