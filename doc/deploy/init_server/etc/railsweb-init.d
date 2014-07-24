@@ -48,13 +48,14 @@ case "$ACTION" in
             . $CONFIGPATH/$SITE.conf
             PID=`check_pidfile $RAILS_SERVER $RAILS_SERVER_PID`
             if [[ "$PID" = "0" ]]; then
-                echo -n "Starting $SITE ..."
+                echo -n "Starting $SITE... "
                 CMD="export rvm_trust_rvmrcs_flag=1; cd $RAILS_DIR && bundle exec $RAILS_SERVER $RAILS_SERVER_PARAMS"
                 if [ "$RAILS_USER" != "`whoami`" ]; then
                     su - $RAILS_USER -c "$CMD"
                 else
                     bash -l -c "$CMD"
                 fi
+                echo "done"
             else
                 echo "$SITE is already running (PID $PID)"
             fi
@@ -65,7 +66,7 @@ case "$ACTION" in
         for SITE in $SITES; do
             unset $CONFIG_VARS
             . $CONFIGPATH/$SITE.conf
-            echo -n "Stopping $SITE ..."
+            echo -n "Stopping $SITE... "
             PID=`check_pidfile $RAILS_SERVER $RAILS_SERVER_PID`
             if [[ "$PID" != "0" ]]; then
                 COUNT=0

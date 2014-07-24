@@ -413,9 +413,9 @@ class CallToActionController < ApplicationController
     for i in(1 .. upload_interaction.upload_number) do
       if params["upload-#{i}"]
         if params["upload-#{i}"].size <= get_max_upload_size()
-          cloned_cta = clone_and_create_cta(params, i)
+          cloned_cta = clone_and_create_cta(params, i, upload_interaction.watermark)
           if cloned_cta.errors.any?
-            flash[:error] = cloned_cta.errors
+            flash[:error] << cloned_cta.errors
           else
             UserUploadInteraction.create(user_id: current_user.id, call_to_action_id: cloned_cta.id, upload_id: upload_interaction.id)
             if upload_interaction.releasing?
@@ -424,6 +424,7 @@ class CallToActionController < ApplicationController
             end
           end
         else
+          # TODO insert log call for trace attack
           flash[:error] = ["I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"]
         end
       end

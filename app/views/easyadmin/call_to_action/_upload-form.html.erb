@@ -45,12 +45,27 @@
 						  <label class="text-input">Liberatoria necessaria</label>
 						   <%= uploadform.check_box :releasing %>
 						</div>
+						<div class="form-group">
+			              <label class="text-input">Immagine watermark</label>
+			              <div class="fileupload fileupload-new" data-provides="fileupload">
+			                <div class="fileupload-preview thumbnail" style="width: 200px; height: 112px; line-height: 20px;">
+								<% if uploadform.object.watermark.exists? %>
+			                		<img src="<%= uploadform.object.watermark.url %>">
+			                	<% end %>
+			                </div>
+			                <div>
+			                  <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
+			                  <span class="fileupload-exists">Change</span><%= uploadform.file_field :watermark  %></span>
+			                  <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+			                </div>
+			              </div>
+				        </div>
 					
 				</div>
 				<div class="col-lg-6">
 					
 						<div class="form-group">
-						  <label class="text-input">Testo provacy</label>
+						  <label class="text-input">Testo privacy</label>
 						   <%= uploadform.text_area :privacy_description, :class => "form-control", rows: 6 %>
 						</div>
 						<div class="form-group">

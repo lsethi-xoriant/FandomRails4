@@ -38,7 +38,7 @@
           <ul class="dropdown-menu">
             <% if current_user %>
               <li class="visible-xs"><a href="/profile/edit">Profilo</a></li>
-              <li><a href="/extra">Video Extra</a></li>
+              <li><button data-toggle="modal" data-target="#modal-grattaevinci">Modal 1</button></li>
               <li><a href="/how_to">Scopri come Partecipare</a></li>
               <li><a href="/winners">Vincitori</a></li>
 
@@ -104,7 +104,7 @@
             <a href="#" onclick="openInstantWinModal()"><%= current_user ? (get_current_contest_points current_user.id) : 0 %> <span class="glyphicon glyphicon-star"></span> <button onclick="openInstantWinModal()" class="btn btn-danger btn-xs">Gioca Subito</button></a>
           </li>
           <li class="dropdown">
-            <a data-toggle="dropdown" href="#"><%= current_user.first_name %></a>
+            <a data-toggle="dropdown" href="#"><img src="<%= current_user.avatar(:thumb) %>" alt="..." class="img-circle img-profile" width="22px"> <%= current_user.first_name %></a>
             <ul class="dropdown-menu">
               <li><a href="/profile/edit">Account</a></li>
               <li class="divider"></li>
@@ -116,5 +116,9 @@
         <% end %>
       </ul>
     </nav>
+  </div>
+  <div class="alert alert-warning alert-dismissable cookie-alert">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <strong>Cookies!</strong> Better check yourself, you're not looking too good.
   </div>
 </header>

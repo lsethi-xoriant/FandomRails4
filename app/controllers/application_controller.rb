@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
   def index
     @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+    @home = true
   end
   
   def update_call_to_action_in_page_with_tag

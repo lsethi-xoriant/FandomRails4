@@ -11,7 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(:version => 20140724080412) do
+=======
+ActiveRecord::Schema.define(:version => 20140722162759) do
+>>>>>>> 346cbc3192bf5c818ca2b66a22ec0b77e660f30f
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -431,6 +435,10 @@ ActiveRecord::Schema.define(:version => 20140724080412) do
     t.integer  "releasing_document_file_size"
     t.datetime "releasing_document_updated_at"
     t.integer  "upload_number"
+    t.string   "watermark_file_name"
+    t.string   "watermark_content_type"
+    t.integer  "watermark_file_size"
+    t.datetime "watermark_updated_at"
   end
 
   create_table "user_comments", :force => true do |t|

@@ -1,17 +1,28 @@
 class CallToAction < ActiveRecord::Base
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
-  					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, :approved
+  					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
+  					:approved, :user_generated, :interaction_watermark_url
 
   extend FriendlyId
   friendly_id :title, use: :slugged
 
-  attr_accessor :activation_date, :activation_time # Attributi di appoggio per l'easyadmin.
+  attr_accessor :activation_date, :activation_time, :interaction_watermark_url # Attributi di appoggio per l'easyadmin.
 
   validates_presence_of :title
 
   before_save :set_activated_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
 
-  has_attached_file :media_image, :styles => { :large => "600x600", extra: "260x150#", :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/video1.jpg"
+  has_attached_file :media_image,
+    :processors => [:watermark],
+    :styles => lambda { |cta| 
+      {
+      :large => { :geometry => "600x600>", :watermark_path => cta.instance.get_watermark }, 
+      :extra => "260x150#", 
+      :medium => "300x300#", 
+      :thumb => "100x100#"
+      } 
+    }, 
+    :default_url => "/assets/video1.jpg"
   
   has_many :interactions, dependent: :destroy
   has_many :call_to_action_tags, dependent: :destroy
@@ -60,6 +71,14 @@ class CallToAction < ActiveRecord::Base
   		activation_date = nil
   		activation_time = nil
   	end
+  end
+  
+  def get_watermark
+    if user_generated && interaction_watermark_url
+      interaction_watermark_url
+    else
+      nil
+    end
   end
 
 end
