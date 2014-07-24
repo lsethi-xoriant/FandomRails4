@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140718080110) do
+ActiveRecord::Schema.define(:version => 20140724080412) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -71,17 +71,18 @@ ActiveRecord::Schema.define(:version => 20140718080110) do
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
     t.string   "slug"
-    t.boolean  "user_generated"
     t.string   "media_image_file_name"
     t.string   "media_image_content_type"
     t.integer  "media_image_file_size"
     t.datetime "media_image_updated_at"
     t.text     "media_data"
+    t.integer  "user_id"
+    t.boolean  "user_generated"
     t.integer  "releasing_file_id"
     t.boolean  "approved"
   end
 
-  add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name", :unique => true
+  add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
   add_index "call_to_actions", ["slug"], :name => "index_call_to_actions_on_slug"
 
   create_table "checks", :force => true do |t|
@@ -152,11 +153,13 @@ ActiveRecord::Schema.define(:version => 20140718080110) do
     t.string  "file_name"
     t.string  "method_name"
     t.string  "line_number"
-    t.string  "params"
+    t.text    "params"
     t.text    "data"
     t.string  "timestamp"
     t.string  "event_hash"
     t.string  "level"
+    t.string  "tenant"
+    t.integer "user_id"
   end
 
   create_table "home_launchers", :force => true do |t|
@@ -204,8 +207,6 @@ ActiveRecord::Schema.define(:version => 20140718080110) do
     t.string  "resource_type"
     t.integer "call_to_action_id"
   end
-
-  add_index "interactions", ["name"], :name => "index_interactions_on_name", :unique => true
 
   create_table "likes", :force => true do |t|
     t.string   "title"
@@ -383,10 +384,18 @@ ActiveRecord::Schema.define(:version => 20140718080110) do
     t.string   "link"
   end
 
+  create_table "synced_log_files", :force => true do |t|
+    t.string   "pid"
+    t.string   "server_hostname"
+    t.datetime "timestamp"
+  end
+
+  add_index "synced_log_files", ["pid", "server_hostname", "timestamp"], :name => "index_synced_log_files_on_pid_and_server_hostname_and_timestamp", :unique => true
+
   create_table "tag_fields", :force => true do |t|
     t.integer  "tag_id"
     t.string   "name"
-    t.string   "field_type"
+    t.string   "type"
     t.text     "value"
     t.string   "upload_file_name"
     t.string   "upload_content_type"
@@ -405,23 +414,22 @@ ActiveRecord::Schema.define(:version => 20140718080110) do
   add_index "tags", ["name"], :name => "index_tags_on_name", :unique => true
 
   create_table "tags_tags", :force => true do |t|
-    t.integer  "tag_id"
-    t.integer  "other_tag_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.integer "tag_id"
+    t.integer "belongs_tag_id"
   end
 
-  add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
-  add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
-
   create_table "uploads", :force => true do |t|
-    t.integer  "call_to_action_id",     :null => false
+    t.integer  "call_to_action_id",               :null => false
     t.boolean  "releasing"
     t.text     "releasing_description"
     t.boolean  "privacy"
     t.text     "privacy_description"
-    t.datetime "created_at",            :null => false
-    t.datetime "updated_at",            :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.string   "releasing_document_file_name"
+    t.string   "releasing_document_content_type"
+    t.integer  "releasing_document_file_size"
+    t.datetime "releasing_document_updated_at"
     t.integer  "upload_number"
   end
 
