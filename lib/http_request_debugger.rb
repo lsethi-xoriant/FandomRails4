@@ -1,4 +1,5 @@
 include EventHandlerHelper
+include ApplicationHelper
 
 class HttpRequestDebugger
   def initialize(app)

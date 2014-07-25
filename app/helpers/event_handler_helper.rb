@@ -19,9 +19,13 @@ module EventHandlerHelper
 
   private
 
+  def calculate_event_timestamp()
+    Time.new.utc.strftime("%Y-%m-%d %H:%M:%S.%L")
+  end
+
   def log_event(msg, level, force_saving_in_db, data, caller_data)
     
-    timestamp = Time.new.utc.strftime("%Y-%m-%d %H:%M:%S.%L")
+    timestamp = calculate_event_timestamp()
 
     begin 
 
@@ -83,7 +87,7 @@ module EventHandlerHelper
         level: level, tenant: tenant, user_id: user_id)
     else
 
-      may_move_and_open_new_process_log_file(pid)
+      may_move_and_open_new_process_log_file(pid, timestamp)
       update_process_log_file(logger_production.to_json)
   
     end
@@ -127,9 +131,11 @@ module EventHandlerHelper
     @@process_file_descriptor.flush
   end
 
-  def may_move_and_open_new_process_log_file(pid)
+  def may_move_and_open_new_process_log_file(pid, timestamp)
+    log_file_timestamp = Time.parse(timestamp).utc.strftime("%Y%m%d%H%M%S")
+
     log_directory = "log/events"
-    log_file_name = "#{log_directory}/#{pid}.log"
+    log_file_name = "#{log_directory}/#{pid}-#{log_file_timestamp}-open.log"
 
     if !File.directory?(log_directory)
       FileUtils.mkdir_p(log_directory)
@@ -138,7 +144,8 @@ module EventHandlerHelper
     if File.exist?(log_file_name) && File.size(log_file_name) > LOGGER_PROCESS_FILE_SIZE
       
       for i in 0..9
-        destination_log_file_name = "#{log_directory}/#{pid}-#{Time.new.utc.strftime("%Y%m%d%H%M%S")}.log"
+        destination_log_file_timestamp = Time.new.utc.strftime("%Y%m%d%H%M%S")
+        destination_log_file_name = "#{log_directory}/#{pid}-#{destination_log_file_timestamp}-close.log"
         if !File.exist?(destination_log_file_name)
           File.rename(log_file_name, destination_log_file_name)
           break
