@@ -143,19 +143,29 @@ module EventHandlerHelper
 
     if File.exist?(log_file_name) && File.size(log_file_name) > LOGGER_PROCESS_FILE_SIZE
       
-      for i in 0..9
-        destination_log_file_timestamp = Time.new.utc.strftime("%Y%m%d%H%M%S")
-        destination_log_file_name = "#{log_directory}/#{pid}-#{destination_log_file_timestamp}-close.log"
-        if !File.exist?(destination_log_file_name)
-          File.rename(log_file_name, destination_log_file_name)
-          break
-        end
-      end
+      destination_log_file_name = "#{log_directory}/#{pid}-#{timestamp}-close.log"
+      File.rename(log_file_name, destination_log_file_name)
 
     end
 
     if @@process_file_descriptor.nil?
+      close_orphan_files_with_same_current_pid(pid)
       @@process_file_descriptor = File.open(log_file_name, "a+")    
+    end
+
+  end
+
+  def close_orphan_files_with_same_current_pid(pid)
+    # check if aready exists a file assigned to an old precess with the same pid of current process.
+    # In this case I must close it.
+    Dir["#{log_directory}/#{pid}-*-open.log"].each do |orphan_log_file_name|
+      begin
+        orphan_log_file_pid, orphan_log_file_timestamp = extract_pid_and_timestamp_from_path(orphan_log_file_name)
+        destination_log_file_name = "#{log_directory}/#{orphan_log_file_pid}-#{orphan_log_file_timestamp}-close.log"
+        File.rename(orphan_log_file_name, destination_log_file_name)
+      rescue Exception => exception
+        # it may be that backgrund daemon closed the same file at the same time.
+      end
     end
   end
 
@@ -167,6 +177,13 @@ module EventHandlerHelper
     method_name = caller_data_parsed[4]
 
     [file_name, line_number, method_name]
+  end
+
+  def extract_pid_and_timestamp_from_path(process_file_path)
+    process_file_name = process_file_path.sub(".log", "").split("/").last
+    pid, timestamp, status = process_file_name.split("-")
+
+    [pid, timestamp]
   end
 
 end
