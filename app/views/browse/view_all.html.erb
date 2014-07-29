@@ -1,0 +1,22 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="page-header">
+            <h3><%= @tag_name %></h3>
+          </div>
+        </div>
+      </div>
+      <div class="row brws-item">
+      	<% @contents.each do |c| %>
+      		<% if c.class.name == "CallToAction" %>
+      			<%= render partial: "/browse/cta_box_big", locals: { calltoaction: c } %>
+      		<% else %>
+      			<%= render partial: "/browse/tag_box_big", locals: { tag: c } %>
+      		<% end %>
+      	<% end %>
+      </div>
+</div>
+
+<%= render partial: "/application/footer" %>

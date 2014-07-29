@@ -15,6 +15,10 @@ module ApplicationHelper
 		Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ?", tag_name)
 	end
 
+  def get_ctas_with_tag(tag_name)
+    CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name)
+  end
+
 	def get_user_interaction_from_interaction(interaction, user)
 		user.user_interactions.find_by_interaction_id(interaction.id)
 	end
