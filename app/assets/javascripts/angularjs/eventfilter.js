@@ -1,13 +1,13 @@
 // Applicazione definita in ng-app="CalltoactionApp" all'interno di un nodo padre.
-var filterApp = angular.module('EventApp', ['ngRoute', 'ngTable', 'ngResource']);
+var filterModule = angular.module('FilterEventModule', ['ngRoute', 'ngTable', 'ngResource']);
 
 // Gestione del csrf-token nelle chiamate ajax.
-filterApp.config(["$httpProvider", function(provider) {
+filterModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
 FilterCtrl.$inject = ['$scope', '$window', '$timeout', '$resource','ngTableParams'];
-filterApp.controller('FilterCtrl', FilterCtrl);
+filterModule.controller('FilterCtrl', FilterCtrl);
 
 function FilterCtrl($scope, $window, $timeout, $resource, ngTableParams) {
 

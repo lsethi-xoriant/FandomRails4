@@ -3,6 +3,7 @@
 //= require angular
 //= require angular-resource
 //= require angular-route
+//= require angularjs/fandom
 //= require angularjs/ng-table
 //= require angularjs/eventfilter
 //= require angularjs/fandom
