@@ -10,8 +10,7 @@ class CreateEventTable < ActiveRecord::Migration
       t.string :line_number
       t.string :params
       t.text :data
-      t.string :timestamp
-      t.string :event_hash
+      t.datetime :timestamp
       t.string :level
     end
   end
