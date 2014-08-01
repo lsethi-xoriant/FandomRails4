@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'active_record'
-require 'pg'
 require 'yaml'
 require 'logger'
 
@@ -28,10 +27,10 @@ def main
 
   logger = Logger.new("#{app_root_path}/log/log_daemon.log")
 
-  close_orphan_files(event_logs_path, logger)
-
   loop do
+    # If directory does not exist perhaps rails as not been started yet. Waiting not it.
     if event_directory_exist
+      close_orphan_files(event_logs_path, logger)
 
       closed_event_log_files(event_logs_path).each do |process_file_path|
         
@@ -41,14 +40,12 @@ def main
         begin
           sql_query = generate_sql_insert_query(insert_values_for_event, pid, timestamp)
 
-          # if the file that contains log events is already saved, an exception RecordNotUnique is raised.
-          # In this case file will be deleted.
           base_db_connection.connection.execute(sql_query)        
 
           delete_process_file(process_file_path)
-        rescue ActiveRecord::RecordNotUnique => exception
-          
-          # file with log events is already saved in the past.
+        rescue ActiveRecord::RecordNotUnique => exception      
+          # if the file that contains log events has already been saved, an exception RecordNotUnique is raised.
+          # In this case the file will be deleted, because it means that it does  already saved in the past.
           delete_process_file(process_file_path)        
           logger.error exception
 
@@ -67,7 +64,7 @@ end
 
 def close_orphan_files(event_logs_path, logger)
   pipe = IO.popen("ps -ef")
-  active_pids = pipe.readlines.map{ |line| line.split(/\s+/)[2] }
+  active_pids = pipe.readlines.map { |line| line.split(/\s+/)[2] }
 
   opened_event_log_files(event_logs_path).each do |log_file_name|
     pid, timestamp = extract_pid_and_timestamp_from_path(log_file_name)
@@ -77,7 +74,7 @@ def close_orphan_files(event_logs_path, logger)
       begin
         File.rename(log_file_name, destination_log_file_name)
       rescue Exception => exception
-        # it may be that rails closed the same file at the same time.
+        # it may be that rails closed the same file at the same time. This error condition can safely be ignored.
         logger.error exception
       end
 

@@ -3,18 +3,27 @@ module EventHandlerHelper
   @@process_file_descriptor = nil
 
   def log_synced(msg, data) 
-    caller_data = caller[0]
-    log_event(msg, "audit", true, data, caller_data)
+    log_event(msg, "audit", true, data)
   end
 
   def log_audit(msg, data)
-    caller_data = caller[0]
-    log_event(msg, "audit", false, data, caller_data)
+    log_event(msg, "audit", false, data)
   end
 
   def log_info(msg, data)
-    caller_data = caller[0]
-    log_event(msg, "info", false, data, caller_data)
+    log_event(msg, "info", false, data)
+  end
+
+  def log_err(msg, data)
+    log_event(msg, "err", false, data)
+  end
+
+  def log_warn(msg, data)
+    log_event(msg, "warn", false, data)
+  end
+
+  def log_debug(msg, data)
+    log_event(msg, "debug", false, data)
   end
 
   private
@@ -23,7 +32,8 @@ module EventHandlerHelper
     Time.new.utc.strftime("%Y-%m-%d %H:%M:%S.%L")
   end
 
-  def log_event(msg, level, force_saving_in_db, data, caller_data)
+  def log_event(msg, level, force_saving_in_db, data)
+    caller_data = caller[1]
     
     timestamp = calculate_event_timestamp()
 
@@ -31,9 +41,11 @@ module EventHandlerHelper
 
       case Rails.env  
       when "production"
-          generate_log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
+        log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
       when "development"
-        Rails.logger.info(generate_log_string_for_development(msg, data, caller_data, timestamp))
+        log_string_for_development = generate_log_string_for_development(msg, data, caller_data, level, timestamp)
+        logger_method = level == "audit" ? "info" : level
+        Rails.logger.send(logger_method, log_string_for_development)
       else
         # Nothing to do
       end
@@ -44,7 +56,7 @@ module EventHandlerHelper
     
   end
 
-  def generate_log_string_for_development(msg, data, caller_data, timestamp)
+  def generate_log_string_for_development(msg, data, caller_data, level, timestamp)
     file_name, line_number, method_name = parse_caller_data(caller_data)
 
     if data[:middleware]
@@ -56,13 +68,13 @@ module EventHandlerHelper
     data_to_string = data.map { |key, value| "#{key}: #{value}" }
     data_to_string = data_to_string.join(", ")
 
-    logger_development = "message: #{msg}, #{data_to_string}, line_number: #{line_number}, file_name: #{file_name}, method_name: #{method_name}"
+    logger_development = "message: #{msg}, #{data_to_string}, line_number: #{line_number}, file_name: #{file_name}, method_name: #{method_name}, level: #{level}"
   end
 
-  def generate_log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
+  def log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
     pid = Process.pid
     file_name, line_number, method_name = parse_caller_data(caller_data)
-    params, request_uri, session_id, tenant, user_id = catch_main_attributes_from_data(data)
+    params, request_uri, session_id, tenant, user_id = catch_top_level_attributes_from_data(data)
 
     logger_production = Hash.new
     logger_production = {
@@ -94,7 +106,7 @@ module EventHandlerHelper
 
   end  
 
-  def catch_main_attributes_from_data(data)
+  def catch_top_level_attributes_from_data(data)
     if data[:middleware]
 
       session_id = data[:session_id]
@@ -156,8 +168,8 @@ module EventHandlerHelper
   end
 
   def close_orphan_files_with_same_current_pid(pid)
-    # check if aready exists a file assigned to an old precess with the same pid of current process.
-    # In this case I must close it.
+    # check if a file assigned to an old precess with the same pid of current process aready exists.
+    # In this case it must be close.
     Dir["#{log_directory}/#{pid}-*-open.log"].each do |orphan_log_file_name|
       begin
         orphan_log_file_pid, orphan_log_file_timestamp = extract_pid_and_timestamp_from_path(orphan_log_file_name)
