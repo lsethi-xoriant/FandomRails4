@@ -1,7 +1,0 @@
-<% if errors %>
-  $("#complete-registration-errors").html(<%= render_error_str.html_safe %>);
-<% else %>
-  enable_contest = true;
-  $("#complete-registration-modal").modal("hide");
-  $("#instant-win-modal").modal("show");
-<% end %>
