@@ -1,38 +1,60 @@
 <%= render partial: "/application/user_bar" %>
 
 <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="page-header">
-            <h3><%= @original_show.name %> <a href="/browse/view_all/<%= @original_show.id %>" style="float:right"><small>View all</small></a></h3>
-          </div>
-        </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="page-header">
+        <h3><%= @original_show.name %> <a href="/browse/view_all/<%= @original_show.id %>" style="float:right"><small>View all</small></a></h3>
       </div>
-      <div class="row brws-item">
-      	<% @original_show_contents.each do |c| %>
-      		<% if c.class.name == "CallToAction" %>
-      			<%= render partial: "/browse/cta_box_big", locals: { calltoaction: c } %>
-      		<% else %>
-      			<%= render partial: "/browse/tag_box_big", locals: { tag: c } %>
-      		<% end %>
-      	<% end %>
+    </div>
+  </div>
+  <div class="row brws-item">
+  	<% @original_show_contents.each do |content| %>
+  		<div class="col-xs-6 col-md-4">
+			<div class="thumbnail">
+				<a href="<%= content.detail_url %>">
+				<% if content.has_thumb %>
+					<img class="img-responsive" src="<%= content.thumb_url %>" alt="...">
+				<% else %>
+					<img class="img-responsive" src="http://placehold.it/420x300" alt="...">
+				<% end %>
+				</a>
+				<div class="caption">
+					<h4><%= content.title %></h4>
+					<p><%= content.description %></p>
+				</div>
+			</div>
+		</div>
+	<% end %>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="page-header">
+        <h3>Piu recenti <a href="#" style="float:right"><small>View all</small></a></h3>
       </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="page-header">
-            <h3>Piu recenti <a href="#" style="float:right"><small>View all</small></a></h3>
-          </div>
-        </div>
-      </div>
-      <div class="row brws-item">
-        <% @recent_contents.each do |c| %>
-      		<% if c.class.name == "CallToAction" %>
-      			<%= render partial: "/browse/cta_box_mini", locals: { calltoaction: c } %>
-      		<% else %>
-      			<%= render partial: "/browse/tag_box_mini", locals: { tag: c } %>
-      		<% end %>
-      	<% end %>
-      </div>
+    </div>
+  </div>
+  <div class="row brws-item">
+    <% @recent_contents.each do |content| %>
+  		<div class="col-xs-4 col-md-2">
+	
+			<div class="thumbnail">
+				<a href="<%= content.detail_url %>">
+				<% if content.has_thumb %>
+					<img class="img-responsive" src="<%= content.thumb_url %>" alt="...">
+				<% else %>
+					<img class="img-responsive" src="http://placehold.it/420x300" alt="...">
+				<% end %>
+				</a>
+				<div class="caption">
+					<h4><%= content.title %></h4>
+					<p><%= content.description %></p>
+				</div>
+			</div>
+		
+		</div>
+  	<% end %>
+  </div>
 </div>
 
 <%= render partial: "/application/footer" %>

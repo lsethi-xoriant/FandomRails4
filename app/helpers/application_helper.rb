@@ -6,6 +6,25 @@ require 'fandom_utils'
 module ApplicationHelper
   
   include RewardingSystemHelper
+  
+  class BrowseCategory
+    include ActiveAttr::TypecastedAttributes
+    include ActiveAttr::MassAssignment
+    include ActiveAttr::AttributeDefaults
+
+    # human readable name of this field
+    attribute :title, type: String
+    # html id of this field
+    attribute :id, type: String
+    attribute :has_thumb, type: Boolean
+    attribute :thumb_url, type: String
+    attribute :description, type: String
+    attribute :long_description, type: String
+    attribute :detail_url, type: String
+    attribute :created_at, type: Integer
+    attribute :header_image_url, type: String
+    attribute :icon_url, type: String
+  end
 
 	def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
 		Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id)

@@ -1,4 +1,7 @@
 class CallToAction < ActiveRecord::Base
+
+  include ActionView::Helpers::TextHelper
+  
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
   					:approved, :user_generated, :interaction_watermark_url, :name
@@ -79,6 +82,18 @@ class CallToAction < ActiveRecord::Base
     else
       nil
     end
+  end
+  
+  def to_category
+    BrowseCategory.new(
+      id: id, 
+      has_thumb: media_image.present?, 
+      thumb_url: media_image.url, 
+      title: title, 
+      description: truncate(description, :length => 150, :separator => ' '),
+      detail_url: "/call_to_action/#{id}",
+      created_at: created_at.to_time.to_i
+    )
   end
 
 end

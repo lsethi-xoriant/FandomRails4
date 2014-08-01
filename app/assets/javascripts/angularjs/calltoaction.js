@@ -1,4 +1,3 @@
-// TODO - capire il ruolo di ngRoute
 // Applicazione definita in ng-app="CalltoactionApp" all'interno di un nodo padre.
 var calltoactionApp = angular.module('CalltoactionApp', ['ngRoute', 'CalltoactionControllers']);
 

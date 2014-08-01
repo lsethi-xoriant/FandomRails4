@@ -286,9 +286,25 @@ body {
     }
 }
 
-// Browse
+/* BROWSE */
 .brws-item {
     > div { padding-bottom: 1.5em; }
+}
+
+.page-header-browse{
+  @extend .page-header;
+  border: none;
+  img{
+    width: 100%;
+  }
+  .category-icon{
+    position: absolute; 
+    bottom: 0; 
+    left: 60px;
+    img{
+      max-width: 150px;
+    }
+  }
 }
 
 .tpl-l-img {
