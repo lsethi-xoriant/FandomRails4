@@ -3,6 +3,7 @@ lock '3.1.0'
 
 config = YAML.load_file('config/deploy_settings.yml')
 hostname = config['capistrano']['server_hostname']
+local_precompile = config['capistrano'].fetch('local_precompile', false)
 role :app, hostname
 role :web, hostname
 role :db,  hostname, :primary => true
@@ -90,4 +91,48 @@ namespace :deploy do
     end
   end
 
+end
+
+# overrides the precompile task so that precompilation is performed in the machine running capistrano, 
+# instead of on the server
+if local_precompile
+  namespace :deploy do
+    namespace :assets do
+  
+      Rake::Task['deploy:assets:precompile'].clear_actions
+  
+      desc 'Precompile assets locally and upload to servers'
+      task :precompile do
+        on roles(fetch(:assets_roles)) do
+          puts 'Precompile assets locally and upload to servers'
+          run_locally do
+            with rails_env: fetch(:rails_env) do
+              execute 'rake assets:precompile'
+            end
+          end
+  
+          run_locally do
+            execute 'cd public ; tar czf assets.tgz assets/'
+          end
+  
+          within release_path do
+            with rails_env: fetch(:rails_env) do
+              upload!('./public/assets.tgz', "#{shared_path}/public/") do |channel, name, sent, total|
+              end
+              execute "cd #{shared_path}/public/; tar zxf assets.tgz; rm assets.tgz"
+            end
+          end
+  
+          run_locally do
+            execute 'rm public/assets.tgz'
+          end
+  
+          #run_locally do 
+          #  execute 'rm -rf public/assets' 
+          #end
+        end
+      end
+  
+    end
+  end
 end

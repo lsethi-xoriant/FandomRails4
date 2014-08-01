@@ -10,6 +10,7 @@
 //= require angularjs/calltoaction
 //= require angularjs/comment
 //= require angularjs/stream_calltoaction
+//= require angularjs/eventfilter
 //= require bootstrap
 //= require bootstrap-notify
 //= require bootstrap-fileupload

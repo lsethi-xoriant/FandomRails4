@@ -13,7 +13,7 @@
     </div>
   <% elsif calltoaction.media_type == "IMAGE" %>
     <!-- IMAGE -->
-    <img src="<%= calltoaction.image %>" style="width: 100%; margin-bottom: 15px;">
+    <img src="<%= calltoaction.media_image %>" style="width: 100%; margin-bottom: 15px;">
   <% elsif calltoaction.media_type == "IFRAME" %>
     <div class="<%= "iframe-iphone" if request_is_from_iphone_device?(request) %> video flex-video widescreen text-center" style="background:#222; margin-bottom: 15px;">  
       <%= calltoaction.iframe.html_safe %>

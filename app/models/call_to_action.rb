@@ -1,7 +1,7 @@
 class CallToAction < ActiveRecord::Base
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
-  					:approved, :user_generated, :interaction_watermark_url
+  					:approved, :user_generated, :interaction_watermark_url, :name
 
   extend FriendlyId
   friendly_id :title, use: :slugged
