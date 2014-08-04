@@ -11,6 +11,7 @@
 //= require angularjs/comment
 //= require angularjs/stream_calltoaction
 //= require angularjs/eventfilter
+//= require angularjs/browse
 //= require bootstrap
 //= require bootstrap-notify
 //= require bootstrap-fileupload

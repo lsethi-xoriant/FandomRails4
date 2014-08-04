@@ -18,9 +18,54 @@ class ProfileController < ApplicationController
   end
 
   def levels
+    @rewards_to_show, @are_properties_used = rewards_by_tag("level")
   end
 
   def badges
+    @rewards_to_show, @are_properties_used = rewards_by_tag("badge")
+  end
+
+  def rewards_by_tag(tag_name)
+    tag_to_rewards = get_tag_to_rewards()
+
+    # rewards_from_param can include badges or levels 
+    rewards_from_param = tag_to_rewards[tag_name] 
+
+    property_tags = get_tags_with_tag("property")
+
+    if property_tags.present?
+
+      rewards_to_show = Hash.new
+
+      property_tag_names = property_tags.map{ |tag| tag.name }
+
+      tag_to_rewards.each do |tag_name, rewards|
+        if property_tag_names.include?(tag_name)
+          rewards_to_show[tag_name] = rewards & rewards_from_param
+        end
+      end
+
+      are_properties_used = are_properties_used?(rewards_to_show)
+     
+      unless are_properties_used
+        rewards_to_show = rewards_from_param
+      end
+
+    else
+      are_properties_used = false
+      rewards_to_show = rewards_from_param
+    end
+
+    [rewards_to_show, are_properties_used]
+  end
+
+  def are_properties_used?(rewards_to_show)
+    not_empty_properties_counter = 0
+    rewards_to_show.each do |tag_name, rewards|
+      not_empty_properties_counter += 1 if rewards.any?  
+    end
+
+    not_empty_properties_counter > 0
   end
   
   def prizes

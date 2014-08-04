@@ -1,33 +1,3 @@
-<% get_tags_with_tag("badge").each do |badge_tag| %>
-  <% badge_tag.reward_tags.each do |badge_reward_tag| %>
-    <div class="modal fade" id="badge-modal-<%= badge_reward_tag.reward.id %>" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body profile-badge">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <div class="row">
-              <div class="col-xs-8 col-xs-offset-2 text-center">
-                <img src="<%= badge_reward_tag.reward.main_image %>">
-                <h4 class="text-center"><%= badge_reward_tag.reward.title %></h4>
-                <p><%= badge_reward_tag.reward.long_description %></p>
-              </div>
-            </div>
-          </div>
-          <!--
-          <div class="modal-footer">
-            <div class="row">
-              <div class="col-sm-8 col-sm-offset-2 text-center">
-                <a class="btn btn-default btn-md" href="#"><span class="glyphicon glyphicon-share"></span> Share</a>
-              </div>
-            </div>
-          </div>
-          -->
-        </div>
-      </div>
-    </div>
-  <% end %>
-<% end %>
-
 <%= render partial: "/application/user_bar" %>
 
 <div class="container">
@@ -40,26 +10,37 @@
         </div>
         <div class="panel-body profile-body">
           <%= render partial: "profile/profile_navbar", locals: { page: "badges" } %>
-            <% get_tags_with_tag("badge").each do |badge_tag| %>
+          <% if @are_properties_used %>
+            <% @rewards_to_show.each do |property, rewards| %>
             	<div class="row">
                 <div class="col-md-12">
                   <div id="livelli">
                     <div class="page-header">
-                      <h2><%= badge_tag.name %> <small><%= get_user_reward_with_tag_counter(badge_tag.name) %>/<%= badge_tag.reward_tags.count %></small></h2>
+                      <h2>Badge per <%= property %> <small><%= compute_rewards_gotten_over_total(rewards.map{ |reward| reward.id }) %>/<%= rewards.count %></small></h2>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="row badges text-center">
-                <% badge_tag.reward_tags.each do |badge_reward_tag| %>
-                  <div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
-                    <img class="img-responsive <%= "not-yours" if !user_has_reward(badge_reward_tag.reward.name) %>" src="<%= badge_reward_tag.reward.main_image %>" alt="...">
-                    <p><small><%= badge_reward_tag.reward.title %></small></p></p>
-                    <p><a href="#" class="btn btn-default btn-sm" data-toggle="modal" data-target="#badge-modal-<%= badge_reward_tag.reward.id %>">details</a></p>
-                  </div>
+                <% rewards.each do |reward| %>
+                  <%= render partial: "/profile/badge", locals: { reward: reward } %>
                 <% end %>
               </div>
             <% end %>
+          <% else %>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="page-header">
+                  <h2>Badge <small><%= compute_rewards_gotten_over_total(@rewards_to_show.map{ |reward| reward.id }) %>/<%= @rewards_to_show.count %></small></h2>
+                </div>
+              </div>
+            </div>
+            <div class="row badges text-center">
+              <% @rewards_to_show.each do |reward| %>
+                <%= render partial: "/profile/badge", locals: { reward: reward } %>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

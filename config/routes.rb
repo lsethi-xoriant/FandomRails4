@@ -17,7 +17,8 @@ Fandom::Application.routes.draw do
   match "/browse", :to => "browse#index"
   match "/browse/search", :to => "browse#search"
   match "/browse/fullscreen", :to => "browse#index_fullscreen"
-  match "/browse/view_all/:id", :to => "browse#view_all"
+  match "/browse/view_all/:id_cat", :to => "browse#view_all"
+  match "/browse/category/:id", :to => "browse#index_category"
   
   match "/gallery", :to => "gallery#index"
   match "/gallery/:id", :to => "gallery#show"

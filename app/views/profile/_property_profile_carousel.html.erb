@@ -1,9 +1,0 @@
-<div class="jumbotron bkg-topbar">
-  <div class="container">
-    <h1>FANDOM</h1>
-      <p>SELEZIONA IL PROFILO</p>
-      	<% Property.active.each do |p| %>
-			<a href="/<%= p.slug %>/profile" class="btn btn-lg <%= @current_prop && @current_prop.id == p.id ? "btn-primary" : "btn-default" %>"><%= p.name %></a>
-		<% end %>
-  </div>
-</div>

@@ -1,0 +1,22 @@
+<div class="modal fade" id="badge-modal-<%= reward.id %>" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body profile-badge">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2 text-center">
+            <img src="<%= reward.main_image %>">
+            <h4 class="text-center"><%= reward.title %></h4>
+            <p><%= reward.long_description %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-xs-6 col-sm-3 col-md-2 profile-badge">
+  <img class="img-responsive <%= "not-yours" if !user_has_reward(reward.name) %>" src="<%= reward.main_image %>" alt="...">
+  <p><small><%= reward.title %></small></p></p>
+  <p><a href="#" class="btn btn-default btn-sm" data-toggle="modal" data-target="#badge-modal-<%= reward.id %>">details</a></p>
+</div>

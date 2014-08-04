@@ -6,6 +6,38 @@ require 'fandom_utils'
 module ApplicationHelper
   
   include RewardingSystemHelper
+  
+  class BrowseCategory
+    include ActiveAttr::TypecastedAttributes
+    include ActiveAttr::MassAssignment
+    include ActiveAttr::AttributeDefaults
+
+    # human readable name of this field
+    attribute :title, type: String
+    # html id of this field
+    attribute :id, type: String
+    attribute :has_thumb, type: Boolean
+    attribute :thumb_url, type: String
+    attribute :description, type: String
+    attribute :long_description, type: String
+    attribute :detail_url, type: String
+    attribute :created_at, type: Integer
+    attribute :header_image_url, type: String
+    attribute :icon_url, type: String
+  end
+
+  def get_tag_to_rewards()
+  	cache_short("tag_to_rewards") do
+  		tag_to_rewards = Hash.new
+		  RewardTag.all.each do |reward_tag|
+		  	unless tag_to_rewards.key? reward_tag.tag.name
+		  		tag_to_rewards[reward_tag.tag.name] = Set.new 
+		  	end
+		  	tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
+		  end
+		  tag_to_rewards
+		end
+  end
 
 	def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
 		Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id)
@@ -37,8 +69,12 @@ module ApplicationHelper
 		current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").any?
 	end
 
-	def get_user_reward_with_tag_counter(tag_name)
-		current_or_anonymous_user.user_rewards.includes(reward: { reward_tags: :tag }).where("tags.name=?", tag_name).count
+	def compute_rewards_gotten_over_total(reward_ids)
+		if reward_ids.any?
+			current_or_anonymous_user.user_rewards.where("reward_id IN (?)", reward_ids.join(",")).count
+		else
+			0
+		end
 	end
 
 	def interaction_answer_percentage(interaction, answer)
