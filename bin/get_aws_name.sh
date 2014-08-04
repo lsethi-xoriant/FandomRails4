@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script output the value of the tag "Name" of the currently running instance.
+# This script outputs the value of the tag "Name" of the currently running instance.
 # It requires awscli and cloud-utils pacakges.
 # In case some command fails, the hostname is printed instead
 
