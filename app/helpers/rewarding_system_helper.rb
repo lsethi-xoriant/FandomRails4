@@ -315,7 +315,7 @@ module RewardingSystemHelper
     benchmark("Compute and save outcome") do
       outcome = compute_outcome(user_interaction, rules_buffer)
       if outcome.reward_name_to_counter.any? || outcome.unlocks.any?
-        log_info("reward event", "info", true, :outcome => outcome)
+        log_info("reward event", :outcome => outcome)
         user = user_interaction.user
         outcome.reward_name_to_counter.each do |reward_name, reward_counter|
           UserReward.assign_reward(user, reward_name, reward_counter)

@@ -1,10 +1,17 @@
 class BrowseController < ApplicationController
   
   def index
-    @original_show = Tag.find_by_name("OriginalShow")
-    @original_show_contents = get_original_show_content(@original_show)
-    recent = get_recent_ctas()
-    @recent_contents = prepare_contents(recent)
+    browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY).value
+    browse_areas = browse_settings.split(",")
+    @browse_section = Array.new
+    browse_areas.each do |area|
+      if area.start_with?("$")
+        func = "get_#{area[1..area.length]}"
+        @browse_section << send(func)
+      else
+        @browse_section << get_browse_area_by_category(area)
+      end
+    end
   end
   
   def index_category
@@ -15,9 +22,48 @@ class BrowseController < ApplicationController
     @contents = merge_contents(ctas, tags)
   end
 
-  def get_original_show_content(original_show)
+  def get_featured
+    featured = Tag.find_by_name(FETURED_BROWSE_TAG)
+    featured_contents = get_featured_content(featured)
+    browse_area = BrowsePageArea.new(
+      title: featured.tag_fields.find_by_name("title").value,
+      contents: featured_contents,
+      view_all_link: "/browse/view_all/#{featured.id}",
+      is_sticky: true
+    )
+  end
+  
+  def get_recent
+    recent = get_recent_ctas()
+    recent_contents = prepare_contents(recent)
+    browse_area = BrowsePageArea.new(
+      title: "I piu recenti",
+      contents: recent_contents,
+      view_all_link: "/browse/view_recent",
+      is_sticky: false
+    )
+  end
+  
+  def get_browse_area_by_category(tag_name)
+    category = Tag.find_by_name(tag_name)
+    contents = get_contents_by_category(category)
+    browse_area = BrowsePageArea.new(
+      title: category.tag_fields.find_by_name("title").value,
+      contents: contents,
+      view_all_link: "/browse/view_all/#{category.id}",
+      is_sticky: false
+    )
+  end
+  
+  def get_contents_by_category(category)
+    tags = get_tags_with_tag(category.name).order("tags.created_at DESC")
+    ctas = get_ctas_with_tag(category.name).order("call_to_actions.created_at DESC")
+    contents = merge_contents(ctas, tags)
+  end
+
+  def get_featured_content(featured)
     contents = Array.new
-    original_show.tag_fields.find_by_name("contents").value.split(",").each do |name|
+    featured.tag_fields.find_by_name("contents").value.split(",").each do |name|
       cta = CallToAction.find_by_name(name)
       if cta
         contents << cta
@@ -26,7 +72,7 @@ class BrowseController < ApplicationController
         contents << tag
       end
     end
-    @contents = prepare_contents(contents)
+    contents = prepare_contents(contents)
   end
   
   def get_recent_ctas

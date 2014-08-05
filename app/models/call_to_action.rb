@@ -91,6 +91,7 @@ class CallToAction < ActiveRecord::Base
       thumb_url: media_image.url, 
       title: title, 
       description: truncate(description, :length => 150, :separator => ' '),
+      long_description: description,
       detail_url: "/call_to_action/#{id}",
       created_at: created_at.to_time.to_i
     )

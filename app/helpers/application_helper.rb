@@ -26,6 +26,17 @@ module ApplicationHelper
     attribute :icon_url, type: String
   end
 
+  class BrowsePageArea
+    include ActiveAttr::TypecastedAttributes
+    include ActiveAttr::MassAssignment
+    include ActiveAttr::AttributeDefaults
+    
+    attribute :title, type: String
+    attribute :contents
+    attribute :view_all_link, type: String
+    attribute :is_sticky, type: Boolean
+  end
+
   def get_tag_to_rewards()
   	cache_short("tag_to_rewards") do
   		tag_to_rewards = Hash.new

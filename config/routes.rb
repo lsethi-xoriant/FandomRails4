@@ -104,6 +104,10 @@ Fandom::Application.routes.draw do
     
     match "rules", :to => "easyadmin_rewarding_rules#index"
     match "rules/save", :to => "easyadmin_rewarding_rules#save"
+    
+    # SETTING
+    match "settings/browse", :to => "settings#browse_settings"
+    match "settings/browse/save", :to => "settings#save_browse_settings"
   end
 
   constraints(SiteMatcher.new('maxibon')) do

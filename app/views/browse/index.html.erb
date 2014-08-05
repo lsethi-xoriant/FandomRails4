@@ -1,60 +1,63 @@
 <%= render partial: "/application/user_bar" %>
 
 <div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="page-header">
-        <h3><%= @original_show.name %> <a href="/browse/view_all/<%= @original_show.id %>" style="float:right"><small>View all</small></a></h3>
-      </div>
-    </div>
-  </div>
-  <div class="row brws-item">
-  	<% @original_show_contents.each do |content| %>
-  		<div class="col-xs-6 col-md-4">
-			<div class="thumbnail">
-				<a href="<%= content.detail_url %>">
-				<% if content.has_thumb %>
-					<img class="img-responsive" src="<%= content.thumb_url %>" alt="...">
-				<% else %>
-					<img class="img-responsive" src="http://placehold.it/420x300" alt="...">
-				<% end %>
-				</a>
-				<div class="caption">
-					<h4><%= content.title %></h4>
-					<p><%= content.description %></p>
-				</div>
-			</div>
-		</div>
-	<% end %>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="page-header">
-        <h3>Piu recenti <a href="#" style="float:right"><small>View all</small></a></h3>
-      </div>
-    </div>
-  </div>
-  <div class="row brws-item">
-    <% @recent_contents.each do |content| %>
-  		<div class="col-xs-4 col-md-2">
 	
-			<div class="thumbnail">
-				<a href="<%= content.detail_url %>">
-				<% if content.has_thumb %>
-					<img class="img-responsive" src="<%= content.thumb_url %>" alt="...">
-				<% else %>
-					<img class="img-responsive" src="http://placehold.it/420x300" alt="...">
-				<% end %>
-				</a>
-				<div class="caption">
-					<h4><%= content.title %></h4>
-					<p><%= content.description %></p>
+  <% @browse_section.each do |section| %>
+  	  <div class="row">
+	    <div class="col-xs-12">
+	      <div class="page-header">
+	        <h3><%= section.title %> <a href="<%= section.view_all_link %>" style="float:right"><small>View all</small></a></h3>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="row brws-item">
+	  <% if section.is_sticky %>
+		  
+	  	<% section.contents.each do |content| %>
+	  		<div class="col-xs-6 col-md-4">
+				<div class="thumbnail">
+					<a href="<%= content.detail_url %>">
+					<% if content.has_thumb %>
+						<img class="img-responsive" src="<%= content.thumb_url %>" alt="...">
+					<% else %>
+						<img class="img-responsive" src="http://placehold.it/420x300" alt="...">
+					<% end %>
+					</a>
+					<div class="caption">
+						<h4><%= content.title %></h4>
+						<p><%= content.description %></p>
+					</div>
 				</div>
 			</div>
+		<% end %>
+		  
+	  <% else %>
+	  
+	  	<% section.contents.each do |content| %>
+	  		<div class="col-xs-4 col-md-2">
 		
-		</div>
-  	<% end %>
-  </div>
+				<div class="thumbnail">
+					<a href="<%= content.detail_url %>">
+					<% if content.has_thumb %>
+						<img class="img-responsive" src="<%= content.thumb_url %>" alt="...">
+					<% else %>
+						<img class="img-responsive" src="http://placehold.it/420x300" alt="...">
+					<% end %>
+					</a>
+					<div class="caption">
+						<h4><%= content.title %></h4>
+						<p><%= content.description %></p>
+					</div>
+				</div>
+			
+			</div>
+	  	<% end %>
+	  
+	  <% end %>
+	  </div>
+	  
+  <% end %>
+
 </div>
 
 <%= render partial: "/application/footer" %>
