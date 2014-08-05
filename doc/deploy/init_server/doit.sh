@@ -40,7 +40,10 @@ apt-get install vim \
   libmagickwand-dev \
   whois \
   unzip \
-  memcached
+  memcached \
+  awscli \
+  cloud-utils
+  
 apt-get build-dep ruby${RUBY_VERSION}
 
 #
