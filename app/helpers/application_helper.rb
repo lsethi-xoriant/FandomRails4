@@ -26,15 +26,17 @@ module ApplicationHelper
     attribute :icon_url, type: String
   end
 
-  class BrowsePageArea
+  class ContentSection
     include ActiveAttr::TypecastedAttributes
     include ActiveAttr::MassAssignment
     include ActiveAttr::AttributeDefaults
     
+    # key can be either tag name or special keyword such as $recent
+    attribute :key, type: String
     attribute :title, type: String
     attribute :contents
     attribute :view_all_link, type: String
-    attribute :is_sticky, type: Boolean
+    attribute :column_number, type: Integer
   end
 
   def get_tag_to_rewards()

@@ -20,8 +20,6 @@ INTERACTION_TYPES = Set.new(['Quiz', 'Check', 'Comment', 'Like', 'Play', 'Share'
 REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
 BROWSE_SETTINGS_KEY = 'browse.setting'
 
-FETURED_BROWSE_TAG = 'OriginalShow'
-
 MEDIA_TYPES = ["IMAGE", "YOUTUBE", "IFRAME", "VOID"]
 
 LOGGER_PROCESS_FILE_SIZE = 1024*1024

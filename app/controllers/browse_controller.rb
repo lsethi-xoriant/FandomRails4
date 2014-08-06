@@ -9,7 +9,12 @@ class BrowseController < ApplicationController
         func = "get_#{area[1..area.length]}"
         @browse_section << send(func)
       else
-        @browse_section << get_browse_area_by_category(area)
+        tag_area = Tag.find_by_name(area)
+        if tag_area.tag_fields.any? && tag_area.tag_fields.find_by_name("contents")
+          @browse_section << get_featured(tag_area)
+        else
+          @browse_section << get_browse_area_by_category(tag_area)
+        end
       end
     end
   end
@@ -22,36 +27,37 @@ class BrowseController < ApplicationController
     @contents = merge_contents(ctas, tags)
   end
 
-  def get_featured
-    featured = Tag.find_by_name(FETURED_BROWSE_TAG)
+  def get_featured(featured)
     featured_contents = get_featured_content(featured)
-    browse_area = BrowsePageArea.new(
+    browse_section = ContentSection.new(
+      key: "featured",
       title: featured.tag_fields.find_by_name("title").value,
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
-      is_sticky: true
+      column_number: 12/featured_contents.count
     )
   end
   
   def get_recent
     recent = get_recent_ctas()
     recent_contents = prepare_contents(recent)
-    browse_area = BrowsePageArea.new(
+    browse_section = ContentSection.new(
+      key: "recent",
       title: "I piu recenti",
       contents: recent_contents,
       view_all_link: "/browse/view_recent",
-      is_sticky: false
+      column_number: 12/6
     )
   end
   
-  def get_browse_area_by_category(tag_name)
-    category = Tag.find_by_name(tag_name)
+  def get_browse_area_by_category(category)
     contents = get_contents_by_category(category)
-    browse_area = BrowsePageArea.new(
+    browse_section = ContentSection.new(
+      key: category.name,
       title: category.tag_fields.find_by_name("title").value,
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
-      is_sticky: false
+      column_number: 12/6
     )
   end
   
