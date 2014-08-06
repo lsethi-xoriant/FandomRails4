@@ -119,7 +119,16 @@
 	    <% end %>
 	    
 	    <% if can? :manage, :all %>
-		    <li class="<%= "active" if page == "rules" %>"><a href="/easyadmin/rules"><i class="fa fa-comment"></i>Regole Reward</a></li>
+	    	<li class="dropdown <%= "active opened" if page == "settings" %>"><a href="javascript:void(0);"><i class="fa fa-gear"></i>Impostazioni<span class="caret"></span></a>
+		      <ul class="sub-nav">
+		        <li >
+		        	<a href="/easyadmin/rules"><i class="fa fa-comment"></i>Regole Reward</a>
+		        </li>
+		        <li >
+		        	<a href="/easyadmin/settings/browse"><i class="fa fa-th-large"></i>Pagina Browse</a>
+		        </li>
+		      </ul>
+		    </li>
 	    <% end %>
 
 	  </ul>

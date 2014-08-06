@@ -1,9 +1,9 @@
-<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "rules" } %>
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "settings" } %>
     
 <div id="content">    
 
   <div id="content-header">
-    <h1>Gestione Rewarding Rules</h1>
+    <h1>Impostazioni pagina browse</h1>
   </div> <!-- #content-header --> 
 
   <div id="content-container">
@@ -37,8 +37,6 @@
       </div>
     </div>
 
-    <h3>Impostazioni pagina browse</h3>
-    <hr/>
     <%= form_tag("/easyadmin/settings/browse/save", method: "post") do %>
     	<%= hidden_field_tag :key, BROWSE_SETTINGS_KEY %>
     	<div class="row">
