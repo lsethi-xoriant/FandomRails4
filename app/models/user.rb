@@ -18,7 +18,6 @@ class User < ActiveRecord::Base
   has_many :user_comments
   has_many :user_rewards
   has_many :user_counters
-  has_many :call_to_actions
   has_many :user_upload_interactions
 
   before_save :set_date_of_birth
