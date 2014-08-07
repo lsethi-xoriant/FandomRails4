@@ -33,6 +33,7 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
+							<th>Name</th>
 							<th>Titolo</th>
 							<th>Costo</th>
 							<th>Immagine</th>
@@ -43,6 +44,7 @@
 					</thead>
 					<% @reward_list.each do |p| %>
 						<tr>
+							<td><%= p.name %></td>
 							<td><%= p.title %></td>
 							<td><%= p.cost %></td>
 							<td>
