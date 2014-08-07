@@ -43,7 +43,7 @@
 							<th>Azioni</th>
 						</tr>
 					</thead>
-					<% @cta_approved.each do |c| %>
+					<% @ctas.each do |c| %>
 						<tr id="cta-<%= c.id %>">
 							<td><%= c.title %></td>
 							<td class="hidden-xs hidden-sm"><%= c.created_at.strftime("%d/%m/%Y %H:%M") %></td>
