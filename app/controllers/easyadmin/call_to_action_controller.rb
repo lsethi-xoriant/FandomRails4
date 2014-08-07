@@ -114,8 +114,7 @@ class Easyadmin::CallToActionController < ApplicationController
   def get_user_cta_with_status(approvation_status = nil)
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
-    
-    if status.nil?
+    if approvation_status.nil?
       @ctas = CallToAction.where("user_generated = TRUE and approved IS NULL").page(page).per(per_page).order("created_at DESC NULLS LAST")
     else
       @ctas = CallToAction.where("user_generated = TRUE and approved = ?", approvation_status).page(page).per(per_page).order("created_at DESC NULLS LAST")
