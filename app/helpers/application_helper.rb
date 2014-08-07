@@ -84,7 +84,8 @@ module ApplicationHelper
 
 	def compute_rewards_gotten_over_total(reward_ids)
 		if reward_ids.any?
-			current_or_anonymous_user.user_rewards.where("reward_id IN (?)", reward_ids.join(",")).count
+		  place_holders = (["?"] * reward_ids.count).join ", "
+			current_or_anonymous_user.user_rewards.where("reward_id IN (#{place_holders})", *reward_ids).count
 		else
 			0
 		end
