@@ -4,6 +4,7 @@ class UserReward < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :reward
+  belongs_to :period
 
 
   def self.get_user_reward(user, reward_name)

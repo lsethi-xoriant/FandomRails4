@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140724080412) do
+ActiveRecord::Schema.define(:version => 20140807095109) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -271,6 +271,14 @@ ActiveRecord::Schema.define(:version => 20140724080412) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "periods", :force => true do |t|
+    t.string   "kind"
+    t.datetime "start_datetime"
+    t.datetime "end_datetime"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "plays", :force => true do |t|
     t.string   "title"
     t.datetime "created_at", :null => false
@@ -304,6 +312,15 @@ ActiveRecord::Schema.define(:version => 20140724080412) do
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
     t.boolean  "one_shot",             :default => true
+  end
+
+  create_table "rankings", :force => true do |t|
+    t.integer  "reward_id",  :null => false
+    t.string   "name"
+    t.string   "title"
+    t.string   "period"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "registrations", :force => true do |t|
@@ -474,6 +491,7 @@ ActiveRecord::Schema.define(:version => 20140724080412) do
     t.integer  "counter",    :default => 0
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
+    t.integer  "period_id"
   end
 
   create_table "user_upload_interactions", :force => true do |t|
