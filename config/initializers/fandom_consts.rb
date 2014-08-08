@@ -15,7 +15,7 @@ MAXIBON_DAILY_ACCESS = 1
 MAXIBON_PARTY_GUETTA = 2
 MAXIBON_PARTY_NIGHT = 3
 
-INTERACTION_TYPES = Set.new(['Quiz', 'Check', 'Comment', 'Like', 'Play', 'Share'])
+INTERACTION_TYPES = Set.new(['Quiz', 'Check', 'Comment', 'Like', 'Play', 'Share', 'Download', 'Upload'])
 
 REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
 BROWSE_SETTINGS_KEY = 'browse.setting'
