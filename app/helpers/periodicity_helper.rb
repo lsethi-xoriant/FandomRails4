@@ -14,6 +14,16 @@ module PeriodicityHelper
     period_list
   end
   
+  def get_period_by_kind(periodicity_kind)
+    period = Period.where("kind = ? and start_datetime < ? AND end_datetime > ?", periodicity_kind, Time.now, Time.now)
+    # TODO: send an alert if period are more than one
+    if period.any?
+      period.first
+    else
+      nil
+    end
+  end
+  
   def create_weekly_periodicity
     start_date = Date.today.beginning_of_week
     end_date = Date.today.end_of_week
