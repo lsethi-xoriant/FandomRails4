@@ -17,6 +17,8 @@ MAXIBON_PARTY_NIGHT = 3
 
 INTERACTION_TYPES = Set.new(['Quiz', 'Check', 'Comment', 'Like', 'Play', 'Share', 'Download', 'Upload'])
 
+DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
 REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
 BROWSE_SETTINGS_KEY = 'browse.setting'
 

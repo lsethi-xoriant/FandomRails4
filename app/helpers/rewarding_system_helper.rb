@@ -318,7 +318,7 @@ module RewardingSystemHelper
         log_info("reward event", :outcome => outcome)
         user = user_interaction.user
         outcome.reward_name_to_counter.each do |reward_name, reward_counter|
-          UserReward.assign_reward(user, reward_name, reward_counter)
+          UserReward.assign_reward(user, reward_name, reward_counter, request.site)
         end          
         outcome.unlocks.each do |reward_name|
           UserReward.unlock_reward(user, reward_name)
@@ -327,7 +327,6 @@ module RewardingSystemHelper
       outcome
     end
   end
-
 
   def get_mocked_user_interaction(interaction, user, interaction_is_correct)
     if current_user.nil?
