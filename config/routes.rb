@@ -30,6 +30,8 @@ Fandom::Application.routes.draw do
     
     resources :tag
     
+    resources :ranking
+    
     match "tag/clone/:id", :to => "tag#clone"
     
     match "winner", :to => "easyadmin#index_winner"
