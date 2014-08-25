@@ -86,6 +86,12 @@ mkdir /etc/railsweb
 cp etc/railsweb-unicorn.conf /etc/railsweb/unicorn.conf
 update-rc.d railsweb defaults
 
+#
+# Setup log_daemon
+#
+cp etc/log_daemon-init.d /etc/init.d/log_daemon
+chmod a+x /etc/init.d/log_daemon
+update-rc.d log_daemon defaults
 
 #
 # Run the other commands as user "app"
