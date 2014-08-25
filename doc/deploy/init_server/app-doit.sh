@@ -52,3 +52,4 @@ rvm install 1.9.3
 gem install bundler
 gem install rmagick -v '2.13.2'
 gem install rails -v 3.2.17
+gem install daemons
