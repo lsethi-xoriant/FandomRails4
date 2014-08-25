@@ -5,15 +5,6 @@ require 'logger'
 
 def main
 
-  if ARGV.size < 3
-    puts <<-EOF
-      Usage: #{$0} -- <env> <rails_root_project> <loop_delay>
-        <env> is the environment for database configuration set in <rails_root_project>/config/database.yml.
-        <rails_root_project> is used also for find log files that are stored in <rails_root_project>/log/events.
-      EOF
-    exit
-  end
-
   loop_delay = ARGV[2].to_i
   puts "Daemon start with loop_delay #{loop_delay}s"
 
