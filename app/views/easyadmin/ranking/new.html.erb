@@ -1,4 +1,4 @@
-<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "tags" } %>
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "ranking" } %>
     
 <div id="content">    
 
@@ -61,7 +61,8 @@
           </div>
 		  <div class="form-group">
               <label class="text-input">Periodo della classifica</label>
-          	  <% date_array = request.site.periodicity_kinds { |period_type| [period_type, period_type] } %>
+          	  <% date_array = request.site.periodicity_kinds.map { |period_type| [period_type, period_type] } %>
+          	  <% date_array.unshift(["general", nil]) %>
           	  <%= f.select(:period, date_array, {}, { :class => "form-control" }) %>
           </div>
         </div>

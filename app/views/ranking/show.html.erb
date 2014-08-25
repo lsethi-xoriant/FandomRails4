@@ -1,12 +1,14 @@
+<%= render partial: "/application/user_bar" %>
+
 <div class="container">
 
     <div class="row">
     <div class="col-md-12">
       <div class="page-header">
-        <h2><%= @ranking.title %></h2>
+        <h1><%= "#{@ranking.title} dei #{@ranking.reward.title}" %></h1>
       </div>
       
-      <h4><%= "Classifica dei #{@ranking.reward.title}"%></h4>
+      <h3>I primi 20</h3>
       <ul class="list-group">
         <% i = 1 %>
         <% @rank_list.each do |rank| %>
@@ -21,6 +23,25 @@
           <% i = i + 1 %>
         <% end %>
       </ul>
+      
+      <% if @user_rankings %>
+	      <h3>La mia posizione</h3>
+	      <ul class="list-group">
+	        <% i = 1 %>
+	        <% @rank_list.each do |rank| %>
+	          <li class="list-group-item <%= "list-group-item-warning" if current_user && rank.user.id == current_user.id %>">
+	            <div class="row">
+	              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin"><%= i %></h4></div>
+	              <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar rank.user %>" class="img-circle img-responsive"></div>
+	              <div class="col-sm-5 col-xs-7"><h4><%= "#{rank.user.first_name} #{rank.user.last_name}" %></h4></div>
+	              <div class="col-sm-3 col-xs-3 text-right"><h4 class="no-margin"><%= rank.counter %></h4></div>
+	            </div>
+	          </li>
+	          <% i = i + 1 %>
+	        <% end %>
+	      </ul>
+	   <% end %>
+      
     </div>
     </div>
   
