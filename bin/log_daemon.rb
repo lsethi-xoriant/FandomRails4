@@ -19,7 +19,7 @@ def main
     monitor: true
   }
 
-  Daemons.run('log_daemon_impl.rb', options)
+  Daemons.run("#{app_root_path}/bin/log_daemon_impl.rb", options)
 
 end
 
