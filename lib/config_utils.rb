@@ -37,6 +37,7 @@ module ConfigUtils
     attribute :force_ssl, :default => false
     attribute :force_facebook_tab, type: String
     attribute :public_pages, :default => Set.new([])
+    attribute :periodicity_kinds, :default => ["daily","weekly", "monthly"]
 
     def unbranded?
       self.id == 'fandom'

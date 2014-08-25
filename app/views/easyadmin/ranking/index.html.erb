@@ -1,0 +1,71 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "tags" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1>Elenco Classifiche</h1>
+    </div> <!-- #content-header --> 
+
+    	<div id="content-container">
+
+    	<% if flash[:notice] %>
+	    	<div class="row">
+		      <div class="col-md-12">         
+		          <div class="row">
+		            <div class="col-lg-12">
+		              <div class="alert alert-success"><%= flash[:notice] %></div>
+		            </div>
+		          </div>
+		      </div>
+		    </div>
+	    <% end %>
+
+	    
+	    <div class="row text-right">
+	    	<div class="col-md-12">
+	    		<a href="/easyadmin/ranking/new"><button type="button" class="btn btn-primary">NUOVA</button></a>
+	    	</div>
+	    </div>
+
+		<div class="row reward-to-show">
+			<div class="col-md-12"> 
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Titolo</th>
+							<th>Reward</th>
+							<th>Periodo</th>
+							<th>Azioni</th>
+						</tr>
+					</thead>
+					<% @rankings.each do |r| %>
+						<tr>
+							<td><%= r.name %></td>
+							<td><%= r.title %></td>
+							<td>
+								<%= r.reward.title %>
+							</td>
+							<td>
+								<%= r.period %>
+							</td>
+							<td>
+								<div class="row">
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/ranking/<%= r.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+									</div>
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="/easyadmin/ranking/<%= r.id %>/edit"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
+									</div>
+
+								</div>
+							</td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
