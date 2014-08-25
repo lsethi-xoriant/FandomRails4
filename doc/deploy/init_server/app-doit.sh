@@ -54,3 +54,4 @@ gem install rmagick -v '2.13.2'
 gem install rails -v 3.2.17
 gem install daemons
 gem install activerecord-postgresql-adapter
+gem install sys-proctable
