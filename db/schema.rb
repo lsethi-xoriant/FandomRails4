@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140807095109) do
+ActiveRecord::Schema.define(:version => 20140825141441) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -80,6 +80,10 @@ ActiveRecord::Schema.define(:version => 20140807095109) do
     t.boolean  "user_generated"
     t.integer  "releasing_file_id"
     t.boolean  "approved"
+    t.string   "thumbnail_file_name"
+    t.string   "thumbnail_content_type"
+    t.integer  "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
