@@ -161,13 +161,13 @@ module EventHandlerHelper
     end
 
     if @@process_file_descriptor.nil?
-      close_orphan_files_with_same_current_pid(pid)
+      close_orphan_files_with_same_current_pid(pid, log_directory)
       @@process_file_descriptor = File.open(log_file_name, "a+")    
     end
 
   end
 
-  def close_orphan_files_with_same_current_pid(pid)
+  def close_orphan_files_with_same_current_pid(pid, log_directory)
     # check if a file assigned to an old precess with the same pid of current process aready exists.
     # In this case it must be close.
     Dir["#{log_directory}/#{pid}-*-open.log"].each do |orphan_log_file_name|
