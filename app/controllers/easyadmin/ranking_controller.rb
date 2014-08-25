@@ -23,7 +23,14 @@ class Easyadmin::RankingController < ApplicationController
   end
   
   def update
-    
+    @ranking = Ranking.find(params[:id])
+    @ranking.update_attributes(params[:ranking])
+    if @ranking.errors.any?
+      render template: "edit"
+    else
+      flash[:notice] = "Classifica aggiornata correttamente"
+      redirect_to "/easyadmin/ranking"
+    end
   end
 
   def edit

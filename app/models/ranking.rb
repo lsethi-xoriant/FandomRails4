@@ -3,8 +3,4 @@ class Ranking < ActiveRecord::Base
 
   belongs_to :reward
   
-  def get_periods_enum
-    PERIOD_TYPES
-  end
-  
 end
