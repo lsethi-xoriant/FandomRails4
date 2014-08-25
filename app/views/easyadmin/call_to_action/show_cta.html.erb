@@ -22,7 +22,7 @@
 	
 	<div class="row text-right">
     	<div class="col-md-12">
-    		<a href="/easyadmin/cta/edit/<%= @current_cta.id %>w"><button type="button" class="btn btn-primary">EDIT</button></a>
+    		<a href="/easyadmin/cta/edit/<%= @current_cta.id %>w"><button type="button" class="btn btn-primary">MODIFICA</button></a>
     	</div>
     </div>
 	
@@ -47,9 +47,18 @@
 
           </dl>
       </div>
-      <div class="col-sm-3">
-      	<img class="img-responsive" src="<%= @current_cta.media_image.url %>" style="border: 1px solid black; border-radius: 10px;">
-      </div>
+      <% if  @current_cta.media_image.present? %>
+        <div class="col-sm-2 text-center">
+          <label>Immagine</label>
+        	<img class="img-responsive" src="<%= @current_cta.media_image %>" style="border: 1px solid #ccc; border-radius: 10px;">
+        </div>
+      <% end %>
+      <% if @current_cta.thumbnail.present? %>
+        <div class="col-sm-2 text-center">
+          <label>Thumbnail</label>
+          <img class="img-responsive" src="<%= @current_cta.thumbnail %>" style="border: 1px solid #ccc; border-radius: 10px;">
+        </div>
+      <% end %>
     </div> 
 
     <div class="row">
