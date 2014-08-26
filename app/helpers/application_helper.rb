@@ -39,6 +39,10 @@ module ApplicationHelper
     attribute :column_number, type: Integer
   end
 
+  def interaction_done?(interaction)
+    return current_user && UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
+  end
+
   def get_tag_to_rewards()
   	cache_short("tag_to_rewards") do
   		tag_to_rewards = Hash.new

@@ -4,7 +4,18 @@
         <div class="overvideo-content">
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1 text-center" style="background-color: rgba(0, 0, 0, 0.5); border-radius: 10px;">
-                  <h1 style="color: #fff;"><%= calltoaction.title %></h1>   
+                  <h1 style="color: #fff;"><%= calltoaction.title %></h1> 
+                  <% if interaction_done?(play_interaction) %>   
+                    <% if play_interaction.resource.text_after.present? %>
+                        <!-- TEXT AFTER PLAY -->
+                        <h5><%= play_interaction.resource.text_after %></h5>
+                    <% end %>
+                  <% else %>
+                    <% if play_interaction.resource.text_before.present? %>
+                        <!-- TEXT BEFORE PLAY -->
+                        <h5><%= play_interaction.resource.text_before %></h5>
+                    <% end %>
+                  <% end %>
                   <h5>Gioca per ottenere fino a +<%= get_max_call_to_action_reward("POINT", calltoaction) %> punti</h5>
                 </div>
             </div>
