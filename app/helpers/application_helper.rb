@@ -74,7 +74,12 @@ module ApplicationHelper
 
 	def get_max_call_to_action_reward(reward_name, calltoaction)
 		counter = predict_max_cta_outcome(calltoaction, current_or_anonymous_user).reward_name_to_counter[reward_name]
-		counter.nil? ? 0 : counter   
+    
+    {
+      counter: counter,
+      reward: Reward.find_by_name(reward_name)
+    }
+
 	end
 
 	def get_counter_about_user_reward(reward_name)

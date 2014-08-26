@@ -23,11 +23,11 @@ class Reward < ActiveRecord::Base
     :numeric_display,
     :reward_id
 
-  attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time # Attributi di appoggio per l'easyadmin.
+  attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time # Accessor attributes for easyadmin.
 
   has_attached_file :main_image, :styles => { :medium => "400x400#", :thumb => "100x100#" }, :default_url => ""
-  has_attached_file :preview_image, :styles => { :thumb => "200x112#" }, :default_url => ""
-  has_attached_file :not_awarded_image  #, :styles => { :big => "100x100>", :thumb => "50x50>" }, :default_url => ""
+  has_attached_file :preview_image, :styles => { :thumb => "100x100#" }, :default_url => ""
+  has_attached_file :not_awarded_image, :styles => { :thumb => "100x100#" }, :default_url => ""
   has_attached_file :media_file
   
   has_many :reward_tags

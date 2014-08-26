@@ -329,11 +329,11 @@ module RewardingSystemHelper
   end
 
   def get_mocked_user_interaction(interaction, user, interaction_is_correct)
-    if current_user.nil?
+    if user.id == anonymous_user.id
       MockedUserInteraction.new(interaction, user, 1, interaction_is_correct)
     else
       user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user.id, interaction.id)
-      MockedUserInteraction.new(interaction, user, (user_interaction.nil? ? 1 : user_interaction.counter), interaction_is_correct)  
+      MockedUserInteraction.new(interaction, user, (user_interaction.nil? ? 1 : (user_interaction.counter + 1)), interaction_is_correct)  
     end
   end
 

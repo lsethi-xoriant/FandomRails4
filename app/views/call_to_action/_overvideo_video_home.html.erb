@@ -5,18 +5,14 @@
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1 text-center" style="background-color: rgba(0, 0, 0, 0.5); border-radius: 10px;">
                   <h1 style="color: #fff;"><%= calltoaction.title %></h1> 
-                  <% if interaction_done?(play_interaction) %>   
-                    <% if play_interaction.resource.text_after.present? %>
-                        <!-- TEXT AFTER PLAY -->
-                        <h5><%= play_interaction.resource.text_after %></h5>
+                  <h5>
+                    Gioca per ottenere fino a +<%= get_max_call_to_action_reward("POINT", calltoaction)[:counter] %> punti
+                    <% unless get_max_call_to_action_reward("POINT", calltoaction)[:reward].numeric_display %>
+                        <% get_max_call_to_action_reward("POINT", calltoaction)[:counter].times do %>
+                            <img src="<%= get_max_call_to_action_reward("POINT", calltoaction)[:reward].preview_image(:thumb) %>" style="max-width: 30px;">
+                        <% end %>
                     <% end %>
-                  <% else %>
-                    <% if play_interaction.resource.text_before.present? %>
-                        <!-- TEXT BEFORE PLAY -->
-                        <h5><%= play_interaction.resource.text_before %></h5>
-                    <% end %>
-                  <% end %>
-                  <h5>Gioca per ottenere fino a +<%= get_max_call_to_action_reward("POINT", calltoaction) %> punti</h5>
+                  </h5>
                 </div>
             </div>
         </div>
