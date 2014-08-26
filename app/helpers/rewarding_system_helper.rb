@@ -159,7 +159,7 @@ module RewardingSystemHelper
         return ALL.equal?(options[:interactions]) || (
           interaction_is_included_in_options?(options, :names, interaction.name) &&
           interaction_is_included_in_options?(options, :ctas, interaction.call_to_action.name) &&
-          interaction_is_included_in_options?(options, :types, interaction.resource_type) &&
+          interaction_type_is_included_in_options?(options, interaction) &&
           (!options[:interactions].key?(:tags) || interaction.cta.tags.intersect?(options[:interactions][:tags]))
         )
       else
@@ -171,6 +171,15 @@ module RewardingSystemHelper
       !options[:interactions].key?(label) || options[:interactions][label].include?(element) 
     end
 
+    # Checks if the interaction type matches with what has been specified in the options parameter.
+    # It handles a kind of subtype relation between Quiz and Trivia or Versus 
+    def interaction_type_is_included_in_options?(options, interaction)
+      (interaction_is_included_in_options?(options, :types, interaction.resource_type) || 
+       (interaction.resource_type == 'Quiz' &&
+        interaction_is_included_in_options?(options, :types, interaction.resource.quiz_type.capitalize))
+      )      
+    end
+    
     # Similar to merge_rewards, but the value of the map is a MockedUserReward
     def merge_user_rewards(user_rewards, normalized_rule_rewards)
       normalized_rule_rewards.each do |k, v|
