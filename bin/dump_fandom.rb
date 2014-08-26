@@ -19,12 +19,12 @@ EOF
   username = db.key?('username')? "-U #{db['username']}" : "" 
   host = db.key?('host')? "-h #{db['host']}" : "" 
   
-  run_or_die("mkdir /tmp/#{archive_name}")
+  run_or_die("mkdir -p /tmp/#{archive_name}/system")
   run_or_die("pg_dump #{username} #{host} #{db['database']} > /tmp/#{archive_name}/db.sql")
-  run_or_die("cp -a #{fandom_path}/public/system /tmp/#{archive_name}/")
+  run_or_die("cp -a #{fandom_path}/public/system/* /tmp/#{archive_name}/system/")
   run_or_die("cd /tmp ; tar czf #{archive_name}.tgz #{archive_name}")
   run_or_die("rm -rf /tmp/#{archive_name}")
-    
+      
 end
 
 def run_or_die(cmd)
