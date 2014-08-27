@@ -181,7 +181,7 @@ class CallToActionController < ApplicationController
     if interaction.resource_type.downcase.to_sym == :quiz
       
       answer = Answer.find(params[:answer_id])
-      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id)
+      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id, nil)
 
       response["have_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
@@ -198,7 +198,7 @@ class CallToActionController < ApplicationController
       user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, like)
 
     else
-      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id)
+      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil)
     end
 
     if current_user
@@ -230,10 +230,25 @@ class CallToActionController < ApplicationController
       response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
     end
 
+    if current_user && outcome
+      update_user_interaction_outcome(outcome, user_interaction)
+      response['winnable_reward_count'] = get_current_call_to_action_reward_status("POINT", interaction.call_to_action)[:winnable_reward_count]
+    end
+
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
   end 
+
+  def update_user_interaction_outcome(outcome, user_interaction)
+    if user_interaction.outcome
+      new_outcome = Outcome.new(JSON.parse(user_interaction.outcome))
+      new_outcome.merge!(outcome)
+      user_interaction.update_attribute(:outcome, new_outcome.to_json)
+    else
+      user_interaction.update_attribute(:outcome, outcome.to_json)
+    end
+  end
 
   def calltoaction_overvideo_end
     calltoaction = CallToAction.find(params[:calltoaction_id])

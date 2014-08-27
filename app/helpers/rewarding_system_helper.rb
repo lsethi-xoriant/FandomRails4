@@ -36,15 +36,21 @@ module RewardingSystemHelper
         reward_name_to_counter[k] += v
       end
     end
-    
-    def initialize
-      self.matching_rules = Set.new
-      self.reward_name_to_counter = {}
-      self.reward_name_to_counter.default = 0
-      self.unlocks = Set.new
-      self.errors = []
+
+    def initialize(params = nil)
+      if params.nil?
+        self.matching_rules = Set.new
+        self.reward_name_to_counter = {}
+        self.reward_name_to_counter.default = 0
+        self.unlocks = Set.new
+        self.errors = []
+      else
+        super(params)
+        self.matching_rules = Set.new(self.matching_rules)
+        self.unlocks = Set.new(self.unlocks)
+      end
     end
-    
+
     def merge!(other)
       Outcome.merge_rewards(self.reward_name_to_counter, other.reward_name_to_counter)          
       self.matching_rules += other.matching_rules 
@@ -377,20 +383,34 @@ module RewardingSystemHelper
       if cta.interactions.count == 0
         Outcome.new
       else
-        first_interaction = cta.interactions[0]
-        other_interactions = cta.interactions[1 .. -1]
-    
-        user_interaction = get_mocked_user_interaction(first_interaction, user, true)
-        context = prepare_rules_and_context(user_interaction, nil)    
-        outcome = context.compute_outcome_just_for_interaction(user_interaction)
-    
-        other_interactions.each do |interaction|
-          user_interaction = get_mocked_user_interaction(interaction, user, true)
-          new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
-          outcome.merge!(new_outcome)
+        interaction_outcomes = []
+        
+        total_outcome = Outcome.new
+
+        sorted_interactions = cta.interactions.where("required_to_complete").order("seconds ASC")
+
+        if sorted_interactions.any?
+
+          first_interaction = sorted_interactions[0]
+          other_interactions = sorted_interactions[1 .. -1]
+      
+          user_interaction = get_mocked_user_interaction(first_interaction, user, true)
+          context = prepare_rules_and_context(user_interaction, nil)  
+          first_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+
+          interaction_outcomes << first_outcome
+          total_outcome.merge!(first_outcome)
+      
+          other_interactions.each do |interaction|
+            user_interaction = get_mocked_user_interaction(interaction, user, true)
+            new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+            interaction_outcomes << new_outcome
+            total_outcome.merge!(new_outcome)
+          end
+
         end
         
-        outcome
+        [total_outcome, interaction_outcomes, sorted_interactions]
       end
     end
   end

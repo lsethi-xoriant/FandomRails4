@@ -72,15 +72,82 @@ module ApplicationHelper
 		user.user_interactions.find_by_interaction_id(interaction.id)
 	end
 
-	def get_max_call_to_action_reward(reward_name, calltoaction)
-		counter = predict_max_cta_outcome(calltoaction, current_or_anonymous_user).reward_name_to_counter[reward_name]
-    
+  def push_in_array(array, element, push_times)
+    push_times.times do
+      array << element
+    end
+  end
+
+  # Generate an hash with reward information about reward_name and current calltoaction passed in params.
+	def get_current_call_to_action_reward_status(reward_name, calltoaction)
+    reward = Reward.find_by_name(reward_name)
+
+    empty_user = User.new
+
+    max_outcome = predict_max_cta_outcome(calltoaction, empty_user)
+    max_outcome_and_interaction = max_outcome[1].zip(max_outcome[2])
+
+    reward_status_images = Array.new
+    winnable_reward_count = 0
+
+    max_outcome_and_interaction.each do |outcome, interaction|
+      total_reward_count = outcome["reward_name_to_counter"][reward_name]
+      
+      if current_user
+        user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)
+        if user_interaction
+          win_reward_count = JSON.parse(user_interaction.outcome)["attributes"]["reward_name_to_counter"][reward_name]
+          push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
+          push_in_array(reward_status_images, reward.not_winnable_image(:thumb), (total_reward_count - win_reward_count))
+        else 
+          winnable_reward_count += total_reward_count
+          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), total_reward_count)
+        end
+      else
+        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), total_reward_count)
+      end
+
+    end
+
     {
-      counter: counter,
+      all_reward_count: max_outcome[0]["reward_name_to_counter"][reward_name],
+      winnable_reward_count: winnable_reward_count,
+      reward_status_images: reward_status_images,
       reward: Reward.find_by_name(reward_name)
     }
 
 	end
+
+  def get_current_interaction_reward_status(reward_name, interaction)
+    reward = Reward.find_by_name(reward_name)
+
+    empty_user = User.new
+
+    total_reward_count = predict_outcome(interaction, empty_user, true).reward_name_to_counter[reward_name]
+    if current_user
+      winnable_reward_count = predict_outcome(interaction, current_user, true).reward_name_to_counter[reward_name]
+      user_interaction = current_user.user_interactions.find_by_interaction_id(interaction.id)
+    else
+      winnable_reward_count = total_reward_count
+    end
+
+    reward_status_images = Array.new 
+      
+    if current_user && user_interaction
+      outcome = JSON.parse(user_interaction.outcome)
+      win_reward_count = outcome["attributes"]["reward_name_to_counter"][reward_name]      
+      push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
+      push_in_array(reward_status_images, reward.not_winnable_image(:thumb), (total_reward_count - win_reward_count))
+    else
+      push_in_array(reward_status_images, reward.not_awarded_image(:thumb), total_reward_count)
+    end
+
+    {
+      reward_status_images: reward_status_images,
+      reward: reward
+    }
+
+  end
 
 	def get_counter_about_user_reward(reward_name)
 		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").first
@@ -111,7 +178,7 @@ module ApplicationHelper
 	end
 
 	def current_or_anonymous_user
-		current_user.present? ? current_user : User.find_by_email("anonymous@shado.tv")
+		current_user.present? ? current_user : anonymous_user
 	end
 	
 	def mobile_device?()

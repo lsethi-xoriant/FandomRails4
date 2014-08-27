@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140826071530) do
+ActiveRecord::Schema.define(:version => 20140826155607) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -365,8 +365,8 @@ ActiveRecord::Schema.define(:version => 20140826071530) do
     t.boolean  "countable"
     t.boolean  "numeric_display"
     t.string   "name"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.string   "preview_image_file_name"
     t.string   "preview_image_content_type"
     t.integer  "preview_image_file_size"
@@ -383,6 +383,10 @@ ActiveRecord::Schema.define(:version => 20140826071530) do
     t.string   "not_awarded_image_content_type"
     t.integer  "not_awarded_image_file_size"
     t.datetime "not_awarded_image_updated_at"
+    t.string   "not_winnable_image_file_name"
+    t.string   "not_winnable_image_content_type"
+    t.integer  "not_winnable_image_file_size"
+    t.datetime "not_winnable_image_updated_at"
   end
 
   add_index "rewards", ["name"], :name => "index_rewards_on_name", :unique => true
@@ -486,6 +490,7 @@ ActiveRecord::Schema.define(:version => 20140826071530) do
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
     t.boolean  "like"
+    t.text     "outcome"
   end
 
   create_table "user_rewards", :force => true do |t|

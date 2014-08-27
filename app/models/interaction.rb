@@ -3,7 +3,7 @@
 
 class Interaction < ActiveRecord::Base
   attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :calltoaction_id, :resource_attributes,
-    :points, :added_points, :when_show_interaction, :points_type, :property_default_point_id
+    :points, :added_points, :when_show_interaction, :points_type, :property_default_point_id, :required_to_complete
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
   belongs_to :call_to_action

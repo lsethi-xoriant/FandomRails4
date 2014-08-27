@@ -6,6 +6,7 @@ class Reward < ActiveRecord::Base
     :preview_image, 
     :main_image,
     :not_awarded_image,
+    :not_winnable_image,
     :button_label, 
     :cost,
     :video_url, 
@@ -28,6 +29,7 @@ class Reward < ActiveRecord::Base
   has_attached_file :main_image, :styles => { :medium => "400x400#", :thumb => "100x100#" }, :default_url => ""
   has_attached_file :preview_image, :styles => { :thumb => "100x100#" }, :default_url => ""
   has_attached_file :not_awarded_image, :styles => { :thumb => "100x100#" }, :default_url => ""
+  has_attached_file :not_winnable_image, :styles => { :thumb => "100x100#" }, :default_url => ""
   has_attached_file :media_file
   
   has_many :reward_tags

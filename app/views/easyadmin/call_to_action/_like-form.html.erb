@@ -16,6 +16,12 @@
 				   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["MAI_VISIBILE", "MAI_VISIBILE"]], {}, { :class => "form-control" }) %>
 				</div>
 			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+          <label class="text-input">Richiesto per il completamento</label>
+            <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+        </div>
+      </div>
 		</div>
 
 		<%= f.fields_for :resource do |likeform| %>
