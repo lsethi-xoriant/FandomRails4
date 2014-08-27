@@ -15,7 +15,8 @@ MAXIBON_DAILY_ACCESS = 1
 MAXIBON_PARTY_GUETTA = 2
 MAXIBON_PARTY_NIGHT = 3
 
-INTERACTION_TYPES = Set.new(['Quiz', 'Check', 'Comment', 'Like', 'Play', 'Share', 'Download', 'Upload'])
+# Trivia and Versus are just subtypes of Quiz
+INTERACTION_TYPES = Set.new(['Quiz', 'Trivia', 'Versus', 'Check', 'Comment', 'Like', 'Play', 'Share', 'Download', 'Upload'])
 
 DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -30,3 +31,7 @@ LOGGER_PROCESS_FILE_SIZE = 1024*1024
 BYTES_IN_MEGABYTE = 1048576
 MAX_UPLOAD_SIZE = 3 #Megabyte (Mb)
 
+PERIOD_KIND_TOTAL = "TOTAL"
+PERIOD_KIND_DAILY = "DAILY"
+PERIOD_KIND_WEEKLY = "WEEKLY"
+PERIOD_KIND_MONTHLY = "MONTHLY"
