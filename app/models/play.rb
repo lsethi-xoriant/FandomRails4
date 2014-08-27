@@ -1,5 +1,5 @@
 class Play < ActiveRecord::Base 
-  attr_accessible :title, :text_before, :text_after
+  attr_accessible :title
   
   has_one :interaction, as: :resource
 end
