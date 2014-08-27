@@ -183,7 +183,9 @@ module RewardingSystemHelper
     # Similar to merge_rewards, but the value of the map is a MockedUserReward
     def merge_user_rewards(user_rewards, normalized_rule_rewards)
       normalized_rule_rewards.each do |k, v|
-        user_rewards[k].counter += v
+        user_rewards[k].counters.each do |period, old_value|
+           user_rewards[k].counters[period] = old_value + v
+        end
       end
     end
     
@@ -229,7 +231,7 @@ module RewardingSystemHelper
   def new_context(user_interaction)
     user = user_interaction.user
     interaction = user_interaction.interaction
-    user_reward_info = UserReward.get_rewards_info(user_interaction.user)
+    user_reward_info = UserReward.get_rewards_info(user_interaction.user, get_current_periodicities)
     user_rewards, uncountable_user_reward_names, user_unlocked_names = get_user_reward_data(user_reward_info)
     Context.new(
       user: user,
@@ -246,19 +248,18 @@ module RewardingSystemHelper
   
   # Mocks a user reward, to be used in rules.
   class MockedUserReward
-    def initialize(counter)
-      @counter = counter
+    # counters is an hash of periodicity to numbers
+    def initialize(counters)
+      @counters = counters
     end
     
-    def counter
-      @counter
-    end
-    
-    def counter=(num)
-      @counter = num
+    def counters
+      @counters
     end
   end
   
+  # Extracts interesting data from the UserReward model. 
+  #   user_reward_info - the result of a complex query joining UserReward with Reward and Period.
   def get_user_reward_data(user_reward_info)
     user_rewards = {}
     user_unlocked_names = Set.new()
@@ -268,17 +269,22 @@ module RewardingSystemHelper
       available = info.available
       countable = info.reward.countable
       counter = info.counter
-      user_rewards[name] = MockedUserReward.new(counter)
-      if !countable
-        if available
-          user_unlocked_names << name
+      period_kind = info.period.nil? ? PERIOD_KIND_TOTAL : info.period.kind
+      if user_rewards.key?(name)
+        user_rewards[name].counters[period_kind.upcase] = counter
+      else
+        user_rewards[name] = MockedUserReward.new({ period_kind.upcase => counter })
+        if !countable
+          if available
+            user_unlocked_names << name
+          end
+          uncountable_user_reward_names << name
         end
-        uncountable_user_reward_names << name
       end 
     end
     get_all_reward_names().each do |name|
       unless user_rewards.key?(name)
-        user_rewards[name] = MockedUserReward.new(0)
+        user_rewards[name] = MockedUserReward.new({ PERIOD_KIND_TOTAL => 0 })
       end
     end
     [user_rewards, uncountable_user_reward_names, user_unlocked_names]
@@ -390,7 +396,7 @@ module RewardingSystemHelper
         other_interactions = cta.interactions[1 .. -1]
     
         user_interaction = get_mocked_user_interaction(first_interaction, user, true)
-        context = prepare_rules_and_context(user_interaction, nil)    
+        context = prepare_rules_and_context(user_interaction, nil)  
         outcome = context.compute_outcome_just_for_interaction(user_interaction)
     
         other_interactions.each do |interaction|
