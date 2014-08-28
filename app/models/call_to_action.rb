@@ -4,7 +4,7 @@ class CallToAction < ActiveRecord::Base
   
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
-  					:approved, :user_generated, :interaction_watermark_url, :name
+  					:approved, :user_generated, :interaction_watermark_url, :name, :thumbnail
 
   extend FriendlyId
   friendly_id :title, use: :slugged
@@ -25,7 +25,9 @@ class CallToAction < ActiveRecord::Base
       :thumb => "100x100#"
       } 
     }, 
-    :default_url => "/assets/video1.jpg"
+    :default_url => "/assets/media-image-default.jpg"
+
+  has_attached_file :thumbnail, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }
   
   has_many :interactions, dependent: :destroy
   has_many :call_to_action_tags, dependent: :destroy

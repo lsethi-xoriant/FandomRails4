@@ -5,9 +5,25 @@
 </div>
 <div class="col-sm-12 text-center" style="margin-top: 15px;">
   <div class="row">
-    <!-- ANSWER STREAM AS CIRCLE -->
     <% interaction.resource.answers.each do |answer|%>
       <%= render partial: "/call_to_action/trivia_answer", locals: { user_interaction: user_interaction, answer: answer, interaction: interaction } %>
     <% end %>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+    
+      <% if user_interaction %>
+        FATTO
+      <% else %>
+        Rispondi per ottenere fino a +<%= get_current_interaction_reward_status("POINT", interaction)[:all_reward_count] %> punti
+      <% end %>
+      
+      <% unless get_current_interaction_reward_status("POINT", interaction)[:reward].numeric_display %>    
+        <% get_current_interaction_reward_status("POINT", interaction)[:reward_status_images].each do |reward| %>
+          <img src="<%= reward %>" style="max-width: 30px;">
+        <% end %>
+      <% end %>
+
+    </div>
   </div>
 </div>

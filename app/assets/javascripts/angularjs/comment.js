@@ -138,6 +138,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
       .success(function(data) {
         if(data.errors) {
           // TODO: show errors in a modal.
+          alert("message save error");
         } else {
 
           if($scope.comment.current_user) {

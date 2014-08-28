@@ -108,7 +108,8 @@ class CallToActionController < ApplicationController
   end
 
   def add_comment
-    comment_resource = Interaction.find(params[:interaction_id]).resource
+    interaction = Interaction.find(params[:interaction_id])
+    comment_resource = interaction.resource
 
     approved = comment_resource.must_be_approved ? nil : true
     user_text = params[:comment] # sanitize(params[:comment])
@@ -117,13 +118,20 @@ class CallToActionController < ApplicationController
 
     if current_user
       user_comment = UserComment.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
-      response[:error] = user_comment.errors
+      if approved && user_comment.errors.blank?
+        user_interaction = UserInteraction.create_or_update_interaction(user_comment.user_id, interaction.id, nil, nil)
+      end
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
       if response[:captcha_check]
         user_comment = UserComment.create(user_id: current_or_anonymous_user.id, text: user_text, comment_id: comment_resource.id)
+        if approved && !user_comment.errors.blank?
+          user_interaction = UserInteraction.create_or_update_interaction(user_comment.user_id, interaction.id, nil, nil)
+        end
       end
     end
+
+    response[:error] = user_comment.errors
 
     respond_to do |format|
       format.json { render :json => response.to_json }
@@ -177,11 +185,15 @@ class CallToActionController < ApplicationController
     interaction = Interaction.find(params[:interaction_id])
 
     response = Hash.new
+    
+    if interaction.resource_type.downcase == "download" 
+      response["download_interaction_attachment"] = interaction.resource.attachment.url
+    end
 
     if interaction.resource_type.downcase.to_sym == :quiz
       
       answer = Answer.find(params[:answer_id])
-      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id)
+      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id, nil)
 
       response["have_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
@@ -198,12 +210,14 @@ class CallToActionController < ApplicationController
       user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, like)
 
     else
-      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id)
+      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil)
     end
 
     if current_user
-      UserCounter.update_counters(user_interaction, current_user)
       outcome = compute_and_save_outcome(user_interaction)
+
+      update_user_interaction_outcome(outcome, user_interaction)
+      response['winnable_reward_count'] = get_current_call_to_action_reward_status("POINT", interaction.call_to_action)[:winnable_reward_count]
 
       logger.info("rewards: #{outcome.reward_name_to_counter.inspect}")
       logger.info("unlocks: #{outcome.unlocks.inspect}")
@@ -234,6 +248,16 @@ class CallToActionController < ApplicationController
       format.json { render :json => response.to_json }
     end
   end 
+
+  def update_user_interaction_outcome(outcome, user_interaction)
+    if user_interaction.outcome
+      new_outcome = Outcome.new(JSON.parse(user_interaction.outcome))
+      new_outcome.merge!(outcome)
+      user_interaction.update_attribute(:outcome, new_outcome.to_json)
+    else
+      user_interaction.update_attribute(:outcome, outcome.to_json)
+    end
+  end
 
   def calltoaction_overvideo_end
     calltoaction = CallToAction.find(params[:calltoaction_id])

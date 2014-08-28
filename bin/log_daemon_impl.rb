@@ -2,6 +2,7 @@ require 'rubygems'
 require 'active_record'
 require 'yaml'
 require 'logger'
+require 'sys/proctable'
 
 def main
 
@@ -54,8 +55,7 @@ def main
 end
 
 def close_orphan_files(event_logs_path, logger)
-  pipe = IO.popen("ps -ef")
-  active_pids = pipe.readlines.map { |line| line.split(/\s+/)[2] }
+  active_pids = Sys::ProcTable.ps.map { |process| process.pid }
 
   opened_event_log_files(event_logs_path).each do |log_file_name|
     pid, timestamp = extract_pid_and_timestamp_from_path(log_file_name)

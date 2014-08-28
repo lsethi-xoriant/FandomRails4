@@ -36,15 +36,21 @@ module RewardingSystemHelper
         reward_name_to_counter[k] += v
       end
     end
-    
-    def initialize
-      self.matching_rules = Set.new
-      self.reward_name_to_counter = {}
-      self.reward_name_to_counter.default = 0
-      self.unlocks = Set.new
-      self.errors = []
+
+    def initialize(params = nil)
+      if params.nil?
+        self.matching_rules = Set.new
+        self.reward_name_to_counter = {}
+        self.reward_name_to_counter.default = 0
+        self.unlocks = Set.new
+        self.errors = []
+      else
+        super(params)
+        self.matching_rules = Set.new(self.matching_rules)
+        self.unlocks = Set.new(self.unlocks)
+      end
     end
-    
+
     def merge!(other)
       Outcome.merge_rewards(self.reward_name_to_counter, other.reward_name_to_counter)          
       self.matching_rules += other.matching_rules 
@@ -159,7 +165,7 @@ module RewardingSystemHelper
         return ALL.equal?(options[:interactions]) || (
           interaction_is_included_in_options?(options, :names, interaction.name) &&
           interaction_is_included_in_options?(options, :ctas, interaction.call_to_action.name) &&
-          interaction_is_included_in_options?(options, :types, interaction.resource_type) &&
+          interaction_type_is_included_in_options?(options, interaction) &&
           (!options[:interactions].key?(:tags) || interaction.cta.tags.intersect?(options[:interactions][:tags]))
         )
       else
@@ -171,10 +177,21 @@ module RewardingSystemHelper
       !options[:interactions].key?(label) || options[:interactions][label].include?(element) 
     end
 
+    # Checks if the interaction type matches with what has been specified in the options parameter.
+    # It handles a kind of subtype relation between Quiz and Trivia or Versus 
+    def interaction_type_is_included_in_options?(options, interaction)
+      (interaction_is_included_in_options?(options, :types, interaction.resource_type) || 
+       (interaction.resource_type == 'Quiz' &&
+        interaction_is_included_in_options?(options, :types, interaction.resource.quiz_type.capitalize))
+      )      
+    end
+    
     # Similar to merge_rewards, but the value of the map is a MockedUserReward
     def merge_user_rewards(user_rewards, normalized_rule_rewards)
       normalized_rule_rewards.each do |k, v|
-        user_rewards[k].counter += v
+        user_rewards[k].counters.each do |period, old_value|
+           user_rewards[k].counters[period] = old_value + v
+        end
       end
     end
     
@@ -220,7 +237,7 @@ module RewardingSystemHelper
   def new_context(user_interaction)
     user = user_interaction.user
     interaction = user_interaction.interaction
-    user_reward_info = UserReward.get_rewards_info(user_interaction.user)
+    user_reward_info = UserReward.get_rewards_info(user_interaction.user, get_current_periodicities)
     user_rewards, uncountable_user_reward_names, user_unlocked_names = get_user_reward_data(user_reward_info)
     Context.new(
       user: user,
@@ -237,19 +254,18 @@ module RewardingSystemHelper
   
   # Mocks a user reward, to be used in rules.
   class MockedUserReward
-    def initialize(counter)
-      @counter = counter
+    # counters is an hash of periodicity to numbers
+    def initialize(counters)
+      @counters = counters
     end
     
-    def counter
-      @counter
-    end
-    
-    def counter=(num)
-      @counter = num
+    def counters
+      @counters
     end
   end
   
+  # Extracts interesting data from the UserReward model. 
+  #   user_reward_info - the result of a complex query joining UserReward with Reward and Period.
   def get_user_reward_data(user_reward_info)
     user_rewards = {}
     user_unlocked_names = Set.new()
@@ -259,17 +275,22 @@ module RewardingSystemHelper
       available = info.available
       countable = info.reward.countable
       counter = info.counter
-      user_rewards[name] = MockedUserReward.new(counter)
-      if !countable
-        if available
-          user_unlocked_names << name
+      period_kind = info.period.nil? ? PERIOD_KIND_TOTAL : info.period.kind
+      if user_rewards.key?(name)
+        user_rewards[name].counters[period_kind.upcase] = counter
+      else
+        user_rewards[name] = MockedUserReward.new({ period_kind.upcase => counter })
+        if !countable
+          if available
+            user_unlocked_names << name
+          end
+          uncountable_user_reward_names << name
         end
-        uncountable_user_reward_names << name
       end 
     end
     get_all_reward_names().each do |name|
       unless user_rewards.key?(name)
-        user_rewards[name] = MockedUserReward.new(0)
+        user_rewards[name] = MockedUserReward.new({ PERIOD_KIND_TOTAL => 0 })
       end
     end
     [user_rewards, uncountable_user_reward_names, user_unlocked_names]
@@ -329,11 +350,11 @@ module RewardingSystemHelper
   end
 
   def get_mocked_user_interaction(interaction, user, interaction_is_correct)
-    if current_user.nil?
+    if user.id == anonymous_user.id
       MockedUserInteraction.new(interaction, user, 1, interaction_is_correct)
     else
       user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user.id, interaction.id)
-      MockedUserInteraction.new(interaction, user, (user_interaction.nil? ? 1 : user_interaction.counter), interaction_is_correct)  
+      MockedUserInteraction.new(interaction, user, (user_interaction.nil? ? 1 : (user_interaction.counter + 1)), interaction_is_correct)  
     end
   end
 
@@ -377,20 +398,35 @@ module RewardingSystemHelper
       if cta.interactions.count == 0
         Outcome.new
       else
-        first_interaction = cta.interactions[0]
-        other_interactions = cta.interactions[1 .. -1]
-    
-        user_interaction = get_mocked_user_interaction(first_interaction, user, true)
-        context = prepare_rules_and_context(user_interaction, nil)    
-        outcome = context.compute_outcome_just_for_interaction(user_interaction)
-    
-        other_interactions.each do |interaction|
-          user_interaction = get_mocked_user_interaction(interaction, user, true)
-          new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
-          outcome.merge!(new_outcome)
+        
+        interaction_outcomes = []
+        
+        total_outcome = Outcome.new
+
+        sorted_interactions = cta.interactions.where("required_to_complete").order("seconds ASC")
+
+        if sorted_interactions.any?
+
+          first_interaction = sorted_interactions[0]
+          other_interactions = sorted_interactions[1 .. -1]
+      
+          user_interaction = get_mocked_user_interaction(first_interaction, user, true)
+          context = prepare_rules_and_context(user_interaction, nil)  
+          first_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+
+          interaction_outcomes << first_outcome
+          total_outcome.merge!(first_outcome)
+      
+          other_interactions.each do |interaction|
+            user_interaction = get_mocked_user_interaction(interaction, user, true)
+            new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+            interaction_outcomes << new_outcome
+            total_outcome.merge!(new_outcome)
+          end
+
         end
         
-        outcome
+        [total_outcome, interaction_outcomes, sorted_interactions]
       end
     end
   end

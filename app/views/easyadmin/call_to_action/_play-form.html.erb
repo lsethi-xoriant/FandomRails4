@@ -17,7 +17,13 @@
 						  <label class="text-input">Nome</label>
 						   <%= quizform.text_field :title, :class => "form-control" %>
 						</div>
-					</div>
+					</div>				
+					<div class="col-lg-6">
+						<div class="form-group">
+	            <label class="text-input">Richiesto per il completamento</label>
+	              <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+	          </div>
+	        </div>
 				</div>
 			</div>
 

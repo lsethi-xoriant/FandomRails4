@@ -100,13 +100,6 @@ RailsAdmin.config do |config|
   end
 
   config.model Interaction do
-    edit do
-      # Rimosso il campo cache_counter dall'edit per evitare che un salvataggio durante
-      # un eventuale azione compiuta dall'utente modifichi in modo errato il dato.
-      configure :cache_counter do
-          hide
-      end
-    end
   end
   
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140825150931) do
+ActiveRecord::Schema.define(:version => 20140827144323) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -79,6 +79,10 @@ ActiveRecord::Schema.define(:version => 20140825150931) do
     t.text     "media_data"
     t.integer  "releasing_file_id"
     t.boolean  "approved"
+    t.string   "thumbnail_file_name"
+    t.string   "thumbnail_content_type"
+    t.integer  "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name", :unique => true
@@ -281,8 +285,10 @@ ActiveRecord::Schema.define(:version => 20140825150931) do
 
   create_table "plays", :force => true do |t|
     t.string   "title"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "text_before"
+    t.string   "text_after"
   end
 
   create_table "playticket_events", :force => true do |t|
@@ -362,8 +368,8 @@ ActiveRecord::Schema.define(:version => 20140825150931) do
     t.boolean  "countable"
     t.boolean  "numeric_display"
     t.string   "name"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.string   "preview_image_file_name"
     t.string   "preview_image_content_type"
     t.integer  "preview_image_file_size"
@@ -380,6 +386,10 @@ ActiveRecord::Schema.define(:version => 20140825150931) do
     t.string   "not_awarded_image_content_type"
     t.integer  "not_awarded_image_file_size"
     t.datetime "not_awarded_image_updated_at"
+    t.string   "not_winnable_image_file_name"
+    t.string   "not_winnable_image_content_type"
+    t.integer  "not_winnable_image_file_size"
+    t.datetime "not_winnable_image_updated_at"
   end
 
   add_index "rewards", ["name"], :name => "index_rewards_on_name", :unique => true
@@ -467,14 +477,8 @@ ActiveRecord::Schema.define(:version => 20140825150931) do
     t.boolean  "approved"
   end
 
-  create_table "user_counters", :force => true do |t|
-    t.string   "name"
-    t.integer  "correct_answer", :default => 0
-    t.integer  "play",           :default => 0
-    t.integer  "user_id"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
-  end
+# Could not dump table "user_counters" because of following StandardError
+#   Unknown type 'json' for column 'counters'
 
   create_table "user_interactions", :force => true do |t|
     t.integer  "user_id",                       :null => false
@@ -484,6 +488,7 @@ ActiveRecord::Schema.define(:version => 20140825150931) do
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
     t.boolean  "like"
+    t.text     "outcome"
   end
 
   create_table "user_rewards", :force => true do |t|

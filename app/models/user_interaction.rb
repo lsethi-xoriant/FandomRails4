@@ -3,7 +3,7 @@ include InstantwinHelper
 include FandomUtils
 
 class UserInteraction < ActiveRecord::Base
-  attr_accessible :user_id, :interaction_id, :answer_id, :promocode_id, :counter, :like
+  attr_accessible :user_id, :interaction_id, :answer_id, :promocode_id, :counter, :like, :outcome
 
   belongs_to :user
   belongs_to :interaction
@@ -18,14 +18,17 @@ class UserInteraction < ActiveRecord::Base
   #   errors.add(:limit_exceeded, "hai raggiunto il limite giornaliero di inviti") if uicount > 4
   # end
 
-  def self.create_or_update_interaction(user_id, interaction_id, answer_id = nil, like = nil)
+  def self.create_or_update_interaction(user_id, interaction_id, answer_id, like)
+    user = User.find(user_id)
     user_interaction = find_by_user_id_and_interaction_id(user_id, interaction_id)
     if user_interaction.nil?
-      create(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like)
+      user_interaction = create(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like)
+      UserCounter.update_unique_counters(user_interaction, user)
     else
       user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like)
-      user_interaction
     end
+    UserCounter.update_all_counters(user_interaction, user)
+    user_interaction
   end
 
   # This might need some caching

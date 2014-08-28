@@ -197,7 +197,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
         enableWaitingAudio("play");
 
-        $("#home-overvideo-" + calltoaction_id).html(data.overvideo);
+        $("#home-overvideo-" + calltoaction_id).html(data.overvideo.toString());
 
         if(data.interaction_done_before && data.interaction_one_shot) {
           $timeout(function() { 
@@ -206,6 +206,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             $("#home-overvideo-" + calltoaction_id).html("");
 
             enableWaitingAudio("stop");
+
+            // Unlock interaction
+            $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
 
           }, 5000);  
         } else {
@@ -294,6 +297,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             showAnimateFeedback(data.feedback, calltoaction_id);
             updateUserRewardInView(data.main_reward_counter);
           }
+
+          if(data.call_to_action_completed) {
+            showCallToActionCompletedFeedback(calltoaction_id);
+          } else {
+            updateCallToActionRewardCounter(calltoaction_id, data.winnable_reward_count);
+          }
+          
         }).error(function() {
           // ERROR.
         });
@@ -361,6 +371,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id, main_reward_name: "POINT" })
           .success(function(data) {
 
+            if(data.download_interaction_attachment) {
+              window.open(data.download_interaction_attachment, '_blank');
+            }
+
             if(data.answer) {
               current_user_answer_response_correct[calltoaction_id] = data.answer.correct;
             }
@@ -389,6 +403,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
             if(data.call_to_action_completed) {
               showCallToActionCompletedFeedback(calltoaction_id);
+            } else {
+              updateCallToActionRewardCounter(calltoaction_id, data.winnable_reward_count);
             }
 
           }).error(function() {
@@ -562,6 +578,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $("#head-feedback-calltoaction-" + calltoaction_id)
       .html("FATTO <span class=\"glyphicon glyphicon-ok\"></span>")
       .removeClass("label-warning").addClass("label-success");
+  };
+
+  $window.updateCallToActionRewardCounter = function(calltoaction_id, reward_counter) { 
+    $("#head-feedback-calltoaction-" + calltoaction_id)
+      .html("+" + reward_counter + " <span class=\"glyphicon glyphicon-star\"></span>");
   };
 
   $window.showMarkerNearInteraction = function(interaction_id) {

@@ -57,6 +57,21 @@
             <label class="text-input">Commenti Disqus</label>
               <%= f.select(:enable_disqus, [["NON ABILITATI", false], ["ABILITATI", true]], {}, { :class => "form-control" }) %>
           </div>
+          <div class="form-group media-image-form-group">
+            <label class="text-input">Thumbnail</label>
+            <div class="fileupload fileupload-new text-center" data-provides="fileupload">
+              <div class="fileupload-preview thumbnail" style="width: 100%; height: 100px; line-height: 20px;">
+                <% if f.object.thumbnail.present? %>
+                  <img src="<%= f.object.thumbnail.url %>">
+                <% end %>
+              </div>
+              <div>
+                <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA LA THUMBNAIL</span>
+                <span class="fileupload-exists">Change</span><%= f.file_field :thumbnail  %></span>
+                <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="col-lg-6 text-center">
