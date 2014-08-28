@@ -1,54 +1,69 @@
 module RankingHelper
   
   include PeriodicityHelper
+  include ApplicationHelper
   
   class RankingElement
     include ActiveAttr::TypecastedAttributes
     include ActiveAttr::MassAssignment
     include ActiveAttr::AttributeDefaults
     
-    # key can be either tag name or special keyword such as $recent
     attribute :period, type: String
     attribute :title, type: String
     attribute :rankings
     attribute :user_to_position
-  end
-  
-  def get_user_position(ranking)
-    reward = ranking.reward
-    period = get_period_by_ranking(ranking)
-    if period.nil?
-      current_user_reward = reward.user_rewards.where("user_id = ? AND period_id IS NULL", current_user.id).first
-      reward.user_rewards.where("counter >= ? AND period_id IS NULL ", current_user_reward.counter).order("counter ASC").count
-    else
-      current_user_reward = reward.user_rewards.where("user_id = ? AND period_id = ?", current_user.id, period.id).first
-      reward.user_rewards.where("counter >= ? AND period_id = ? ", current_user_reward.counter, period.id).order("counter ASC").count
-    end
-  end
-  
-  def get_period_by_ranking(ranking)
-    active_periods = get_current_periodicities
-    active_periods[ranking.period]
+    attribute :total, type: Integer
+    attribute :number_of_pages, type: Integer
   end
   
   def get_ranking(ranking)
     rankings = Array.new
-    if ranking.period.blank?
-      rankings = cache_short("general") do
-        UserReward.where("reward_id = ? and period_id IS NULL", @ranking.reward_id).order("counter DESC, updated_at ASC, user_id ASC").to_a
+    period = get_current_periodicities[ranking.period]
+    if period.blank?
+      rankings = cache_short("#{ranking.id}_general") do
+        UserReward.where("reward_id = ? and period_id IS NULL", ranking.reward_id).order("counter DESC, updated_at ASC, user_id ASC").to_a
       end
     else
-      rankings = cache_short(ranking.period) do
-        UserReward.where("reward_id = ? and period_id = ?", @ranking.reward_id, period.id).order("counter DESC, updated_at ASC, user_id ASC").to_a
+      rankings = cache_short("#{ranking.id}_#{period.id}") do
+        UserReward.where("reward_id = ? and period_id = ?", ranking.reward_id, period.id).order("counter DESC, updated_at ASC, user_id ASC").to_a
       end
     end
     user_position_hash = cache_short { generate_user_position_hash(rankings) }
     rank = RankingElement.new(
       period: ranking.period,
       title: ranking.title,
-      rankings: rankings,
-      user_to_position: user_position_hash
+      rankings: prepare_rank_for_json(rankings, user_position_hash),
+      user_to_position: user_position_hash,
+      total: rankings.count,
+      number_of_pages: get_total_pages(rankings.count, 20) 
     )
+  end
+  
+  def prepare_rank_for_json(ranking, user_position_hash)
+    positions = Array.new
+    ranking.each do |r|
+      positions << { 
+        "position" => user_position_hash[rank.user.id], 
+        "avatar" => user_avatar(rank.user), 
+        "user" => "#{rank.user.first_name} #{rank.user.last_name}", 
+        "counter" => rank.counter 
+      }
+    end
+  end
+  
+  def prepare_friends_rank_for_json(ranking, rank)
+    positions = Array.new
+    period = get_current_periodicities[ranking.period]
+    ranking.each do |r|
+      user = User.find(r[0])
+      counter = UserReward.where("reward_id = ? AND user_id = ? AND period_id = ?", rank.reward.id, user.id, period.id)
+      positions << { 
+        "position" => r[1], 
+        "avatar" => user_avatar(user), 
+        "user" => "#{user.first_name} #{user.last_name}",
+        "counter" => counter
+      }
+    end
   end
   
   def generate_user_position_hash(rankings)

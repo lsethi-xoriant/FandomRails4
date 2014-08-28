@@ -24,6 +24,7 @@ BROWSE_SETTINGS_KEY = 'browse.setting'
 
 MEDIA_TYPES = ["IMAGE", "YOUTUBE", "IFRAME", "VOID"]
 PERIOD_TYPES = ["GIORNALIERA", "SETTIMANALE", "MENSILE", "GLOBALE"]
+RANKING_TYPES = {"full" => "Top20", "my_position" => "La mia posizione", "full_compressed" => "Triclassifica"}
 
 LOGGER_PROCESS_FILE_SIZE = 1024*1024
 

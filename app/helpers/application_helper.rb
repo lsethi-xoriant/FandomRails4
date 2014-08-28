@@ -302,4 +302,12 @@ module ApplicationHelper
    DAYS_IN_MONTH[month]
   end
   
+  def get_total_pages(results, results_per_page)
+    if results % results_per_page == 0
+      results / results_per_page
+    else
+      results / results_per_page + 1
+    end
+  end
+  
 end
