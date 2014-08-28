@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140826155607) do
+ActiveRecord::Schema.define(:version => 20140827144323) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -473,14 +473,8 @@ ActiveRecord::Schema.define(:version => 20140826155607) do
     t.boolean  "approved"
   end
 
-  create_table "user_counters", :force => true do |t|
-    t.string   "name"
-    t.integer  "correct_answer", :default => 0
-    t.integer  "play",           :default => 0
-    t.integer  "user_id"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
-  end
+# Could not dump table "user_counters" because of following StandardError
+#   Unknown type 'json' for column 'counters'
 
   create_table "user_interactions", :force => true do |t|
     t.integer  "user_id",                       :null => false

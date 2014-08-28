@@ -78,7 +78,7 @@ module ApplicationHelper
     end
   end
 
-  # Generate an hash with reward information about reward_name and current calltoaction passed in params.
+  # Generates an hash with reward information.
 	def get_current_call_to_action_reward_status(reward_name, calltoaction)
     reward = Reward.find_by_name(reward_name)
 

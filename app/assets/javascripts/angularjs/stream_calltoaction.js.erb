@@ -371,6 +371,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id, main_reward_name: "POINT" })
           .success(function(data) {
 
+            if(data.download_interaction_attachment) {
+              window.open(data.download_interaction_attachment, '_blank');
+            }
+
             if(data.answer) {
               current_user_answer_response_correct[calltoaction_id] = data.answer.correct;
             }

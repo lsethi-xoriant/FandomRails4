@@ -1,6 +1,6 @@
 <div id="undervideo-<%= interaction.id %>" class="row undervideo" style="padding: 0 15px 0 15px;" >
 
-  <% if interaction.resource_type.downcase.to_sym == :check || interaction.resource_type.downcase.to_sym == :like %>
+  <% if interaction.resource_type.downcase.to_sym == :check || interaction.resource_type.downcase.to_sym == :like  || interaction.resource_type.downcase.to_sym == :download %>
     <%= render partial: "/call_to_action/#{interaction.resource_type.downcase}_interaction", locals: { interaction: interaction, outcome: outcome } %>
   <% elsif interaction.resource_type.downcase.to_sym == :upload %>
   	<%= render partial: "/call_to_action/#{interaction.resource_type.downcase}_interaction", locals: { interaction: interaction, outcome: outcome, cta_id: ctaid } %>

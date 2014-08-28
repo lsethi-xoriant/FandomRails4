@@ -7,7 +7,8 @@
                   <h1 style="color: #fff;"><%= calltoaction.title %></h1> 
                   <h5>
                     Gioca per ottenere fino a +<%= get_current_call_to_action_reward_status("POINT", calltoaction)[:winnable_reward_count] %> punti
-                    <% unless get_current_call_to_action_reward_status("POINT", calltoaction)[:reward].numeric_display %>    <% get_current_call_to_action_reward_status("POINT", calltoaction)[:reward_status_images].each do |reward| %>
+                    <% unless get_current_call_to_action_reward_status("POINT", calltoaction)[:reward].numeric_display %>    
+                        <% get_current_call_to_action_reward_status("POINT", calltoaction)[:reward_status_images].each do |reward| %>
                             <img src="<%= reward %>" style="max-width: 30px;">
                         <% end %>
                     <% end %>

@@ -19,13 +19,16 @@ class UserInteraction < ActiveRecord::Base
   # end
 
   def self.create_or_update_interaction(user_id, interaction_id, answer_id, like)
+    user = User.find(user_id)
     user_interaction = find_by_user_id_and_interaction_id(user_id, interaction_id)
     if user_interaction.nil?
-      create(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like)
+      user_interaction = create(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like)
+      UserCounter.update_unique_counters(user_interaction, user)
     else
       user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like)
-      user_interaction
     end
+    UserCounter.update_all_counters(user_interaction, user)
+    user_interaction
   end
 
   # This might need some caching

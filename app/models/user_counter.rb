@@ -1,30 +1,55 @@
   class UserCounter < ActiveRecord::Base
-  attr_accessible :name, :user_id, :correct_answer, :play
+  attr_accessible :name, :user_id, :counters
 
   belongs_to :user
 
-  def self.update_counters(user_interaction, user)
-    if(user_interaction.answer && user_interaction.is_answer_correct?)
-      update_correct_answer_counter(user) 
+  def self.update_unique_counters(user_interaction, user)
+    update_counters(user_interaction, user, "unique")
+  end
+
+  def self.update_all_counters(user_interaction, user)
+    update_counters(user_interaction, user, "all")
+  end
+
+  def self.update_counters(user_interaction, user, counter_type)
+    resource_type = user_interaction.interaction.resource_type.downcase
+
+    counter_name = "#{counter_type}_#{user_interaction.interaction.resource_type.downcase}"
+    update_counters_in_all_periodicities(user, counter_name)
+
+    if resource_type == "quiz"
+      counter_name = "#{counter_type}_#{user_interaction.interaction.resource.quiz_type.downcase}"
+
+      quiz_type = user_interaction.interaction.resource.quiz_type.downcase
+      if quiz_type == "trivia"
+        update_counters_in_all_periodicities(user, "#{counter_name}_answer_#{user_interaction.answer.correct}")
+      end
+      update_counters_in_all_periodicities(user, counter_name)
     end
   end
 
-  def self.update_correct_answer_counter(user)
-    update_correct_answer_by_name(user, "TOTAL")
-    update_correct_answer_by_name(user, "DAILY") 
+  def self.update_counters_in_all_periodicities(user, counter_name)
+    update_counter(user, counter_name, "TOTAL")
+    update_counter(user, counter_name, "DAILY")
   end
 
-  def self.update_correct_answer_by_name(user, name)
+  def self.update_counter(user, counter_name, name)
     user_counter = user.user_counters.find_by_name(name)
     if user_counter
+      user_counters = JSON.parse(user_counter.counters) 
       if name == "DAILY" && (user_counter.updated_at.strftime("%d") != DateTime.now.utc.strftime("%d"))
-        correct_answer_counter_updated = 1
-      else
-        correct_answer_counter_updated = user_counter.correct_answer + 1
+        user_counters[counter_name] = 1
+      else 
+        if user_counters[counter_name]
+          user_counters[counter_name] += 1
+        else
+          user_counters[counter_name] = 1
+        end
       end
-      user_counter.update_attribute(:correct_answer, correct_answer_counter_updated)
+      user_counter.update_attribute(:counters, user_counters.to_json)
     else
-      user_counter = UserCounter.create(user_id: user.id, name: name, correct_answer: 1)
+      counters = { "#{counter_name}" => 1 }
+      user_counter = UserCounter.create(user_id: user.id, name: name, counters: counters.to_json)
     end
   end
 
