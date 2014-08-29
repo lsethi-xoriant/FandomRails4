@@ -86,7 +86,7 @@
                     <% if current_user.authentications.where("provider='twitter'").any? %>
                       <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/twitter">disconnetti</a>
                     <% else %>
-                      <a href="/auth/twitter_<%= get_site_from_request(request).id %>"><button type="button" class="btn btn-default btn-account">Connect</button></a>
+                      <a href="/auth/twitter_<%= request.site.id %>"><button type="button" class="btn btn-default btn-account">Connect</button></a>
                     <% end %>
                   </div>
                 </div>
@@ -98,7 +98,7 @@
                     <% if current_user.authentications.where("provider='facebook'").any? %>
                        <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/facebook">disconnetti</a>
                     <% else %>
-                      <a href="/auth/facebook_<%= get_site_from_request(request).id %>"><button type="button" class="btn btn-default btn-account">Connect</button></a>
+                      <a href="/auth/facebook_<%= request.site.id %>"><button type="button" class="btn btn-default btn-account">Connect</button></a>
                     <% end %>
                   </div>
                 </div>

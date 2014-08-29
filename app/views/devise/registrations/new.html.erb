@@ -78,8 +78,9 @@
                   <p class="text-center">Oppure entra con:</p>
                   <div class="facebook-connect">
   
-                  <a href="/auth/facebook_<%= get_site_from_request(request).id %>" class="btn btn-fb btn-md btn-block">Signin with Facebook</a>
-                  <a href="/auth/twitter_<%= get_site_from_request(request).id %>" class="btn btn-tw btn-md btn-block">Signin with Twitter</a>
+                  <% debugger %>
+                  <a href="/auth/facebook_<%= request.site.id %>" class="btn btn-fb btn-md btn-block">Signin with Facebook</a>
+                  <a href="/auth/twitter_<%= request.site.id %>" class="btn btn-tw btn-md btn-block">Signin with Twitter</a>
                   <!--<button type="button" class="btn btn-g btn-md btn-block">Signin with Google+</button>-->
                     
                   <p>&nbsp;</p>
