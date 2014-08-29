@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
 
   def sign_in_tt_from_page
     cookies[:connect_from_page] = request.referrer
-    redirect_to "/auth/twitter" 
+    redirect_to "/auth/twitter_#{get_site_from_request(request).id}" 
   end
 
   def sign_in_simple_from_page
