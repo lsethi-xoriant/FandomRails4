@@ -10,7 +10,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
   end
 
   def update_comment_status
-    current_comment = UserComment.find(params[:comment_id])
+    current_comment = UserCommentInteraction.find(params[:comment_id])
     current_comment.update_attributes(approved: params[:approved])
 
     if current_comment.approved
@@ -38,7 +38,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    @comment_not_approved = UserComment.where("approved=false", params[:id]).page(page).per(per_page).order("created_at ASC")
+    @comment_not_approved = UserCommentInteraction.where("approved=false", params[:id]).page(page).per(per_page).order("created_at ASC")
 
     @page_size = @comment_not_approved.num_pages
     @page_current = page
@@ -49,7 +49,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    @comment_to_be_approved = UserComment.where("approved IS NULL", params[:id]).page(page).per(per_page).order("created_at ASC")
+    @comment_to_be_approved = UserCommentInteraction.where("approved IS NULL", params[:id]).page(page).per(per_page).order("created_at ASC")
 
     @page_size = @comment_to_be_approved.num_pages
     @page_current = page
@@ -60,7 +60,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    @comment_approved = UserComment.where("approved=true", params[:id]).page(page).per(per_page).order("created_at ASC")
+    @comment_approved = UserCommentInteraction.where("approved=true", params[:id]).page(page).per(per_page).order("created_at ASC")
 
     @page_size = @comment_approved.num_pages
     @page_current = page
