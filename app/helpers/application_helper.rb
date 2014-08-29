@@ -96,7 +96,7 @@ module ApplicationHelper
       if current_user
         user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)
         if user_interaction
-          win_reward_count = JSON.parse(user_interaction.outcome)["attributes"]["reward_name_to_counter"][reward_name]
+          win_reward_count = JSON.parse(user_interaction.outcome)["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
           push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
           push_in_array(reward_status_images, reward.not_winnable_image(:thumb), (total_reward_count - win_reward_count))
         else 
