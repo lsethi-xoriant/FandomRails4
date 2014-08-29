@@ -544,7 +544,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $("#quiz-waiting-audio").jPlayer({
       ready: function (event) {
         $(this).jPlayer("setMedia", {
-          wav: "<%= asset_path('quiz-waiting-audio.wav') %>"
+          wav: WAITING_WAV_PATH
         });
       },
       ended: function() {
