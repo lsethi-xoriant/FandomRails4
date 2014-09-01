@@ -23,7 +23,8 @@ Fandom::Application.routes.draw do
   match "/gallery", :to => "gallery#index"
   match "/gallery/:id", :to => "gallery#show"
   
-  match "/classifica/:id", :to => "ranking#show"
+  #match "/classifica/:id", :to => "ranking#show"
+  match "classifiche", :to => "ranking#show_rankings_page"
   
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"

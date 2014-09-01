@@ -74,7 +74,7 @@
           
           <div class="form-group">
               <label class="text-input">Filtro utenti</label>
-          	  <% date_array = [["Tutti","all"], ["Amici di facebook","facebook_friends"]] %>
+          	  <% date_array = @ranking.get_ranking_user_filter %>
           	  <%= f.select(:people_filter, date_array, {}, { :class => "form-control" }) %>
           </div>
           

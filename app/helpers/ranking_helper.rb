@@ -35,7 +35,7 @@ module RankingHelper
       rankings: prepare_rank_for_json(rankings, user_position_hash),
       user_to_position: user_position_hash,
       total: rankings.count,
-      number_of_pages: get_total_pages(rankings.count, 20) 
+      number_of_pages: get_pages(rankings.count, RANKING_USER_PER_PAGE) 
     )
   end
   
@@ -58,6 +58,7 @@ module RankingHelper
       user = User.find(r[0])
       counter = UserReward.where("reward_id = ? AND user_id = ? AND period_id = ?", rank.reward.id, user.id, period.id)
       positions << { 
+        "user_id" => user.id,
         "position" => r[1], 
         "avatar" => user_avatar(user), 
         "user" => "#{user.first_name} #{user.last_name}",
@@ -74,6 +75,16 @@ module RankingHelper
       position += 1
     end
     user_position_hash
+  end
+  
+  def get_position_among_friends(rank_list)
+    i = 1
+    rank_list.each do |rl|
+      if rl["user_id"] == current_user.id
+        return i
+      end
+      i += 1
+    end
   end
   
 end

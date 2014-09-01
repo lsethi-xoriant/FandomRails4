@@ -7,6 +7,10 @@ class Ranking < ActiveRecord::Base
     RANKING_TYPES.map{|k,v| [v,k]}
   end
   
+  def get_ranking_user_filter
+    RANKING_USER_FILTER.map{|k,v| [v,k]}
+  end
+  
   def get_rank_type
     RANKING_TYPES[rank_type]
   end
