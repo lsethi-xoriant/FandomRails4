@@ -3,7 +3,7 @@
 	  <ul id="main-nav" class="open-active">      
 	    
 	    <% if can? :manage, :all %>
-		  	<li class="<%= "active" if page == "dashboard" %>"><a href="/easyadmin/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a>
+		  	<li class="<%= "active" if page == "dashboard" %>"><a href="/easyadmin/dashboard"><i class="fa fa-pie-chart"></i>Dashboard</a>
 		    </li>
 		   <% end %>
 
@@ -18,16 +18,16 @@
 	    -->
 
 	    <% if can? :manage, :all %>
-		    <li class="dropdown <%= "active opened" if page == "carousel" %>"><a href="javascript:void(0);"><i class="fa fa-caret-square-o-right"></i>Carosello<span class="caret"></span></a>
+		    <li class="dropdown <%= "active opened" if page == "carousel" %>"><a href="javascript:void(0);"><i class="fa fa-flag"></i>Carosello<span class="caret"></span></a>
 		      <ul class="sub-nav">
 		        <li>
 		          <a href="/easyadmin/home_launchers">
-		            <i class="fa fa-th-list"></i>Lista item
+		            <i class="fa fa-list"></i>Lista item
 		          </a>
 		        </li>
 		        <li>
 		          <a href="/easyadmin/home_launchers/new">
-		            <i class="fa fa-save"></i>Nuovo item
+		            <i class="fa fa-gears"></i>Nuovo item
 		          </a>
 		        </li>
 		      </ul>
@@ -35,17 +35,17 @@
 	    <% end %>
 
 	    <% if can? :manage, :all %>
-		    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-dribbble"></i>CallToAction<span class="caret"></span></a>
+		    <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-futbol-o"></i>CallToAction<span class="caret"></span></a>
 		      <ul class="sub-nav">
 		        <li>
 		          <a href="/easyadmin/cta">
-		            <i class="fa fa-th-list"></i>TUTTI
+		            <i class="fa fa-list"></i>Tutte
 		          </a>
 		          <a href="/easyadmin/cta/to_approve">
-		            <i class="fa fa-th-list"></i>CTA USER
+		            <i class="fa fa-users"></i>CallToAction utente
 		          </a>
 		          <a href="/easyadmin/cta/new">
-		            <i class="fa fa-th-list"></i>NUOVA
+		            <i class="fa fa-gears"></i>Nuova
 		          </a>
 		        </li>
 		      </ul>
