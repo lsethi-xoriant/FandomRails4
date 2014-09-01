@@ -84,7 +84,7 @@ module RewardingSystemHelper
       user_interaction.counter == 1
     end
 
-    # Evaluate all rules in this context and return an Outcome object    
+    # Evaluates all rules in this context and return an Outcome object    
     def compute_outcome(user_interaction)
       outcome = Outcome.new()
       rules.each do |rule|
@@ -93,7 +93,7 @@ module RewardingSystemHelper
       outcome
     end
     
-    # Evaluate just the rules applying to an interaction, and return an Outcome object    
+    # Evaluates just the rules applying to an interaction, and return an Outcome object    
     def compute_outcome_just_for_interaction(user_interaction)
       outcome = Outcome.new()
       rules.each do |rule|
@@ -102,6 +102,11 @@ module RewardingSystemHelper
       outcome
     end
     
+    # Evaluates a single rule, updating both the current Context and the outcome object passed as parameter.
+    #   rule - the rule to be evaluated
+    #   outcome - the object used to collect the rewards assigned/unlocked
+    #   user_interaction - the interaction made by the user
+    #   just_rules_applying_to_interaction - if true, the rule is evaluated only if the rule is 
     def evaluate_rule(rule, outcome, user_interaction, just_rules_applying_to_interaction)
       if rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction)
         begin
