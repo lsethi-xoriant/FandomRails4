@@ -1,6 +1,6 @@
 module OmniAuth::Strategies
 
-  Rails.configuration.deploy_settings["sites"].each do |tenant_id, values|
+  Rails.configuration.deploy_settings.fetch("sites", []).each do |tenant_id, values|
     authentications = values.fetch("authentications", [])
     authentications.each do |authentication_name, authentication_app_data|
 
