@@ -186,24 +186,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         video_player_during_video_interaction_locked[calltoaction_id] = true;
         current_video_player = video_players[calltoaction_id];
         current_video_player.pauseVideo();
-        getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player, false);
+        getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player, false, "OVERVIDEO_DURING");
       }
     });
   };
 
-  $window.getOvervideoInteraction = function(calltoaction_id, interaction_id, current_video_player, switch_to_main_video_after_ajax) { 
+  $window.getOvervideoInteraction = function(calltoaction_id, interaction_id, current_video_player, switch_to_main_video_after_ajax, when_show_interaction) { 
     $http.post("/get_overvideo_during_interaction", { interaction_id: interaction_id })
       .success(function(data) { 
-
-        enableWaitingAudio("play");
 
         $("#home-overvideo-" + calltoaction_id).html(data.overvideo.toString());
 
         if(data.interaction_done_before && data.interaction_one_shot) {
           $timeout(function() { 
 
-            current_video_player.playVideo(); 
-            $("#home-overvideo-" + calltoaction_id).html("");
+            if(when_show_interaction == "OVERVIDEO_DURING") {
+              current_video_player.playVideo(); 
+              $("#home-overvideo-" + calltoaction_id).html("");
+            }
 
             enableWaitingAudio("stop");
 
@@ -212,6 +212,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
           }, 5000);  
         } else {
+          enableWaitingAudio("play");
         }                           
 
         if(switch_to_main_video_after_ajax) {
@@ -394,9 +395,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
                 userAnswerWithoutMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction);
               }
 
-              interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
-              if(interaction_point) {
-                showAnimateFeedback(data.feedback, calltoaction_id);
+              if(when_show_interaction == "OVERVIDEO_DURING") {
+                interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
+                if(interaction_point) {
+                  showAnimateFeedback(data.feedback, calltoaction_id);
+                }
               }
 
             }
@@ -455,6 +458,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.userAnswerWithoutMedia = function(answer, calltoaction_id, interaction_id, when_show_interaction) {
+    current_video_player = video_players[calltoaction_id];
+    getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player, false, when_show_interaction);
+    /*
     if(answer.blocking) {
       current_video_player = video_players[calltoaction_id];
       getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player, false);
@@ -465,6 +471,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
       }
     }
+    */
   };
 
   //////////////////////// SWITCHING MAIN MEDIA WITH SECONDARY MEDIA METHODS ////////////////////////
@@ -490,7 +497,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     } else {
       interaction_shown_id = secondary_video_players[calltoaction_id]["interaction_shown_id"];
       current_video_player = video_players[calltoaction_id];
-      getOvervideoInteraction(calltoaction_id, interaction_shown_id, current_video_player, true);
+      getOvervideoInteraction(calltoaction_id, interaction_shown_id, current_video_player, true, interaction_shown_in);
     }
   }
 
@@ -544,7 +551,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $("#quiz-waiting-audio").jPlayer({
       ready: function (event) {
         $(this).jPlayer("setMedia", {
-          wav: "<%= asset_path('quiz-waiting-audio.wav') %>"
+          wav: WAITING_WAV_PATH
         });
       },
       ended: function() {

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140827144323) do
+ActiveRecord::Schema.define(:version => 20140829144118) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -468,7 +468,7 @@ ActiveRecord::Schema.define(:version => 20140827144323) do
     t.datetime "watermark_updated_at"
   end
 
-  create_table "user_comments", :force => true do |t|
+  create_table "user_comment_interactions", :force => true do |t|
     t.integer  "user_id"
     t.integer  "comment_id"
     t.text     "text"

@@ -125,20 +125,16 @@ class Easyadmin::CallToActionController < ApplicationController
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
   end
 
-  def filter_cta
-    cta_filter_list = CallToAction.where("title LIKE ?", "%#{ params[:filter] }%").order("activated_at DESC").limit(5)
+  def filter_calltoaction
+    stream_call_to_action_to_render = CallToAction.where("LOWER(title) LIKE ?", "%#{ params[:filter].downcase }%").order("activated_at DESC").limit(5)
 
-    risp = Hash.new
-    cta_filter_list.each do |cta|
-      risp["#{cta.id}"] = {
-          "title" => cta.title,
-          "activated_at" => cta.activated_at,
-          "image" => cta.image.url
-        }
+    render_calltoactions_str = ""
+    stream_call_to_action_to_render.each do |calltoaction|
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/easyadmin/call_to_action/_index_row", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
     end
 
     respond_to do |format|
-      format.json { render :json => risp.to_json }
+      format.json { render :json => render_calltoactions_str.to_json }
     end
   end
 

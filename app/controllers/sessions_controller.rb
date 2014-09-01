@@ -83,7 +83,7 @@ class SessionsController < Devise::SessionsController
   def create_from_oauth
     user, from_registration = User.not_logged_from_omniauth env["omniauth.auth"], params[:provider]
     if user.errors.any?
-      redirect_to_registration_page
+      redirect_to_registration_page(user)
     else
       sign_in(user)
       fandom_play_login(user)
@@ -112,7 +112,7 @@ class SessionsController < Devise::SessionsController
     redirect_to connect_from_page()
   end
   
-  def redirect_to_registration_page
+  def redirect_to_registration_page(user)
     session["oauth"] ||= {}
     session["oauth"]["params"] = env["omniauth.auth"].except("extra") # "extra" is removed to prevent cookie overflow
     session["oauth"]["params"]["provider"] = params[:provider]

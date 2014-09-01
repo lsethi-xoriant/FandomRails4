@@ -1,4 +1,4 @@
-class UserComment < ActiveRecord::Base
+class UserCommentInteraction < ActiveRecord::Base
   attr_accessible :text, :approved, :user_id, :comment_id
   
   scope :approved, where("approved=true")

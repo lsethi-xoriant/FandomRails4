@@ -1,6 +1,5 @@
 <div class="container-full">
   <%= render partial: "/application/user_bar" %>
-
   <div class="container">
     <div class="row">
       <div class="col-md-12 cta">
@@ -78,9 +77,9 @@
                   <hr>
                   <p class="text-center">Oppure entra con:</p>
                   <div class="facebook-connect">
-  
-                  <a href="/auth/facebook" class="btn btn-fb btn-md btn-block">Signin with Facebook</a>
-                  <a href="/auth/twitter" class="btn btn-tw btn-md btn-block">Signin with Twitter</a>
+
+                  <a href="/auth/facebook_<%= request.site.id %>" class="btn btn-fb btn-md btn-block">Signin with Facebook</a>
+                  <a href="/auth/twitter_<%= request.site.id %>" class="btn btn-tw btn-md btn-block">Signin with Twitter</a>
                   <!--<button type="button" class="btn btn-g btn-md btn-block">Signin with Google+</button>-->
                     
                   <p>&nbsp;</p>

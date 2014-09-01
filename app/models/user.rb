@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
 
   has_many :authentications, dependent: :destroy
   has_many :user_interactions
-  has_many :user_comments
+  has_many :user_comment_interactions
   has_many :user_rewards
   has_many :user_counters
   has_many :user_upload_interactions

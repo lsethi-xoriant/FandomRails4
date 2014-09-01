@@ -20,9 +20,14 @@ class UserReward < ActiveRecord::Base
   # Returns a list of triples: name, available, counter
   def self.get_rewards_info(user, current_periodicities)
     period_ids = current_periodicities.values.map { |p| p.id }
-    period_id_qmarks = (["?"] * period_ids.count).join(", ") 
     
-    UserReward.includes(:reward).includes(:period).select("rewards.name, rewards.countable, available, counter, periods.kind").where("user_id = ? and (period_id in (#{period_id_qmarks}) or period_id is null)", user.id, *period_ids)
+    query_first_part = UserReward.includes(:reward).includes(:period).select("rewards.name, rewards.countable, available, counter, periods.kind")
+    if period_ids.any?
+      period_id_qmarks = (["?"] * period_ids.count).join(", ") 
+      query_first_part.where("user_id = ? and (period_id in (#{period_id_qmarks}) or period_id is null)", user.id, *period_ids)
+    else
+      query_first_part.where("user_id = ? and period_id is null", user.id)
+    end
   end
   
   def self.assign_reward(user, reward_name, counter, site)
