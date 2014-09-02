@@ -43,8 +43,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def twitter
-    tt_user = self.authentications.find_by_provider("twitter")
+  def twitter(tenant)
+    tt_user = self.authentications.find_by_provider("twitter_#{tenant}")
     if tt_user
       @twitter ||= Twitter::REST::Client.new do |config|
         config.consumer_key = ENV["TWITTER_APP_ID"]
@@ -55,9 +55,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  def facebook
+  def facebook(tenant)
     begin
-      fb_user = self.authentications.find_by_provider("facebook")
+      fb_user = self.authentications.find_by_provider("facebook_#{tenant}")
       @facebook ||= Koala::Facebook::API.new(fb_user.oauth_token) if fb_user
     rescue Exception => e
     end 

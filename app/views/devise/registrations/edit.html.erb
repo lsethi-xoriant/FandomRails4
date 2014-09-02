@@ -83,7 +83,7 @@
                 <div class="form-group">
                   <label class="col-xs-4 control-label text-right">Twitter connect</label>
                   <div class="col-xs-8 text-left">
-                    <% if current_user.authentications.where("provider='twitter'").any? %>
+                    <% if current_user.twitter(request.site.id).present? %>
                       <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/twitter">disconnetti</a>
                     <% else %>
                       <a href="/auth/twitter_<%= request.site.id %>"><button type="button" class="btn btn-default btn-account">Connect</button></a>
@@ -95,7 +95,7 @@
                 <div class="form-group">
                   <label class="col-xs-4 control-label text-right">Facebook connect</label>
                   <div class="col-xs-8">
-                    <% if current_user.authentications.where("provider='facebook'").any? %>
+                    <% if current_user.facebook(request.site.id).present? %>
                        <span class="glyphicon glyphicon-ok ok-color"></span> Hai già collegato il tuo account <a href="/profile/remove-provider/facebook">disconnetti</a>
                     <% else %>
                       <a href="/auth/facebook_<%= request.site.id %>"><button type="button" class="btn btn-default btn-account">Connect</button></a>
