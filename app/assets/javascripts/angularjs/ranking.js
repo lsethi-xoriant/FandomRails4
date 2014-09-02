@@ -15,6 +15,7 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 	var Api = $resource('/ranking/page');
 	
 	$scope.init = function(rankings) {
+		console.log(rankings);
 		$scope.rankings = rankings;
 	};
 	
