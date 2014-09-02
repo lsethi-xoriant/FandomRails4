@@ -7,7 +7,7 @@
 </div>
 
 
-<div class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @galleries_user_cta.to_json %>, '<%= @galleries_user_cta.count %>', <%= @calltoactions_during_video_interactions_second.to_json %>)">   
+<div class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @galleries_user_cta.to_json %>, '<%= @galleries_user_cta.count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
   
   <!-- CUSTOM SITE HEADER --> 
   <%#= render partial: "/application/header" %>

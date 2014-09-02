@@ -39,6 +39,14 @@ module ApplicationHelper
     attribute :column_number, type: Integer
   end
 
+  def ga_code
+    begin
+      ga = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["ga"]
+    rescue Exception => exception
+    end
+    ga
+  end
+
   def interaction_done?(interaction)
     return current_user && UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
   end

@@ -186,6 +186,10 @@ class CallToActionController < ApplicationController
 
     response = Hash.new
     
+    response[:ga] = Hash.new
+    response[:ga][:category] = "UserInteraction"
+    response[:ga][:action] = "CreateOrUpdate"
+
     if interaction.resource_type.downcase == "download" 
       response["download_interaction_attachment"] = interaction.resource.attachment.url
     end
@@ -202,6 +206,12 @@ class CallToActionController < ApplicationController
         response["answer"]["media_image"] = answer.media_image
       end
 
+      if interaction.resource.quiz_type.downcase == "trivia"
+        response[:ga][:label] = "#{interaction.resource.quiz_type.downcase}-answer-#{answer.correct ? "right" : "wrong"}"
+      else 
+        response[:ga][:label] = interaction.resource.quiz_type.downcase
+      end
+
     elsif interaction.resource_type.downcase.to_sym == :like
 
       user_interaction = get_user_interaction_from_interaction(interaction, current_or_anonymous_user)
@@ -209,8 +219,11 @@ class CallToActionController < ApplicationController
 
       user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, like)
 
+      response[:ga][:label] = "Like"
+
     else
       user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil)
+      response[:ga][:label] = interaction.resource_type.downcase
     end
 
     if current_user

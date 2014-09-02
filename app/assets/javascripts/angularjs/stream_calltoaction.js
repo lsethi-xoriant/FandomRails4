@@ -20,13 +20,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   var polling = false;
 
-  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second) {
+  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code) {
 
     $scope.current_user = current_user;
     $scope.calltoactions = calltoactions;
 
     $scope.calltoaction_offset = calltoactions.length;
     $scope.calltoactions_count = calltoactions_count;
+
+    $scope.google_analytics_code = google_analytics_code;
 
     $scope.calltoactions_during_video_interactions_second = calltoactions_during_video_interactions_second;
 
@@ -49,6 +51,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     }
 
   };
+
+  $window.update_ga_event = function(category, action, label, value) {
+    if($scope.google_analytics_code.length > 0) {
+      ga('send', 'event', category, action, label, value);
+    }
+  }
 
   //////////////////////// UPDATING AND ADDING PLAYERS AND CALLTOACTIONS METHODS ////////////////////////
 
@@ -291,9 +299,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $("#home-overvideo-title-" + calltoaction_id).addClass("hidden");
       play_event_tracked[calltoaction_id] = true;
 
-      $http.post("/update_interaction", { interaction_id: interaction_id, main_reward_name: "POINT" })
+      $http.post("/update_interaction", { interaction_id: interaction_id, main_reward_name: MAIN_REWARD_NAME })
         .success(function(data) {
-          interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
+
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+          }
+
+          interaction_point = data.outcome.attributes.reward_name_to_counter[MAIN_REWARD_NAME];
           if(interaction_point) {
             showAnimateFeedback(data.feedback, calltoaction_id);
             updateUserRewardInView(data.main_reward_counter);
@@ -369,8 +382,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       enableWaitingAudio("stop");
 
-      $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id, main_reward_name: "POINT" })
+      $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id, main_reward_name: MAIN_REWARD_NAME })
           .success(function(data) {
+
+            if(data.ga) {
+              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+              /* 
+              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              });
+              */
+            }
 
             if(data.download_interaction_attachment) {
               window.open(data.download_interaction_attachment, '_blank');
@@ -396,7 +418,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
               }
 
               if(when_show_interaction == "OVERVIDEO_DURING") {
-                interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
+                interaction_point = data.outcome.attributes.reward_name_to_counter[MAIN_REWARD_NAME];
                 if(interaction_point) {
                   showAnimateFeedback(data.feedback, calltoaction_id);
                 }
