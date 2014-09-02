@@ -54,7 +54,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.update_ga_event = function(category, action, label, value) {
     if($scope.google_analytics_code.length > 0) {
-      ga('send', 'event', category, action, label, 10);
+      ga('send', 'event', category, action, label, value);
     }
   }
 
