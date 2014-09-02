@@ -23,7 +23,7 @@ DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
 BROWSE_SETTINGS_KEY = 'browse.setting'
 
-MEDIA_TYPES = ["IMAGE", "YOUTUBE", "IFRAME", "VOID"]
+MEDIA_TYPES = ["VOID", "IMAGE", "YOUTUBE", "IFRAME"]
 PERIOD_TYPES = ["GIORNALIERA", "SETTIMANALE", "MENSILE", "GLOBALE"]
 RANKING_TYPES = {"full" => "Top20", "my_position" => "La mia posizione", "full_compressed" => "Triclassifica"}
 RANKING_USER_FILTER = {"all" => "Tutti", "fb_friends" => "Amici di facebook"}

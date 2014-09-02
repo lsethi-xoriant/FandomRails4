@@ -84,8 +84,8 @@ module ApplicationHelper
 
     empty_user = User.new
 
-    max_outcome = predict_max_cta_outcome(calltoaction, empty_user)
-    max_outcome_and_interaction = max_outcome[1].zip(max_outcome[2])
+    total_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, empty_user)
+    max_outcome_and_interaction = interaction_outcomes.zip(sorted_interactions)
 
     reward_status_images = Array.new
     winnable_reward_count = 0
@@ -110,7 +110,7 @@ module ApplicationHelper
     end
 
     {
-      all_reward_count: max_outcome[0]["reward_name_to_counter"][reward_name],
+      all_reward_count: total_outcome["reward_name_to_counter"][reward_name],
       winnable_reward_count: winnable_reward_count,
       reward_status_images: reward_status_images,
       reward: Reward.find_by_name(reward_name)
