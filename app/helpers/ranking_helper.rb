@@ -49,7 +49,7 @@ module RankingHelper
     compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
   end
   
-  def get_facebook_friends_rank(ranking)
+  def get_fb_friends_rank(ranking)
     current_user_fb_friends = current_user.facebook.get_connections("me", "friends").map { |f| f.id }
     rank = get_ranking(ranking)
     filtered_rank = rank.user_to_position.select { |key,_| current_user_fb_friends.include? key }
@@ -97,13 +97,16 @@ module RankingHelper
   
   def prepare_rank_for_json(ranking, user_position_hash)
     positions = Array.new
+    i = 1
     ranking.each do |r|
       positions << { 
-        "position" => user_position_hash[r.user.id], 
+        "position" => i,
+        "general_position" => user_position_hash[r.user.id], 
         "avatar" => user_avatar(r.user), 
         "user" => "#{r.user.first_name} #{r.user.last_name}", 
         "counter" => r.counter 
       }
+      i += 1
     end
     positions
   end

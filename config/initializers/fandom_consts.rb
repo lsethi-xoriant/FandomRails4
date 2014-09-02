@@ -25,7 +25,7 @@ BROWSE_SETTINGS_KEY = 'browse.setting'
 
 MEDIA_TYPES = ["VOID", "IMAGE", "YOUTUBE", "IFRAME"]
 PERIOD_TYPES = ["GIORNALIERA", "SETTIMANALE", "MENSILE", "GLOBALE"]
-RANKING_TYPES = {"full" => "Top20", "my_position" => "La mia posizione", "full_compressed" => "Triclassifica"}
+RANKING_TYPES = {"full" => "Top10", "my_position" => "La mia posizione", "trirank" => "Triclassifica", "full_compressed" => "Triclassifica (smart)"}
 RANKING_USER_FILTER = {"all" => "Tutti", "fb_friends" => "Amici di facebook"}
 
 LOGGER_PROCESS_FILE_SIZE = 1024*1024
@@ -38,4 +38,4 @@ PERIOD_KIND_DAILY = "DAILY"
 PERIOD_KIND_WEEKLY = "WEEKLY"
 PERIOD_KIND_MONTHLY = "MONTHLY"
 
-RANKING_USER_PER_PAGE = 20
+RANKING_USER_PER_PAGE = 10
