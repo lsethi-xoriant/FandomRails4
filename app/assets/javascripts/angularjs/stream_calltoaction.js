@@ -54,7 +54,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.update_ga_event = function(category, action, label, value) {
     if($scope.google_analytics_code.length > 0) {
-      ga('send', 'event', category, action, label, value);
+      ga('send', 'event', category, action, label, 100, true);
     }
   }
 
@@ -387,11 +387,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
             if(data.ga) {
               update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-              /* 
               angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
                 update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
               });
-              */
             }
 
             if(data.download_interaction_attachment) {
