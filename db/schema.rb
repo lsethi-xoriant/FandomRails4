@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140829144118) do
+ActiveRecord::Schema.define(:version => 20140903070245) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -399,16 +399,13 @@ ActiveRecord::Schema.define(:version => 20140829144118) do
   end
 
   create_table "shares", :force => true do |t|
-    t.text     "description"
-    t.string   "message"
-    t.string   "share_type"
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
     t.string   "picture_file_name"
     t.string   "picture_content_type"
     t.integer  "picture_file_size"
     t.datetime "picture_updated_at"
-    t.string   "link"
+    t.text     "providers"
   end
 
   create_table "synced_log_files", :force => true do |t|
