@@ -36,6 +36,8 @@
 							<th>Titolo</th>
 							<th>Reward</th>
 							<th>Periodo</th>
+							<th>Tipo</th>
+							<th>Target</th>
 							<th>Azioni</th>
 						</tr>
 					</thead>
@@ -49,6 +51,8 @@
 							<td>
 								<%= r.period %>
 							</td>
+							<td><%= r.get_rank_type %></td>
+							<td><%= r.people_filter %></td>
 							<td>
 								<div class="row">
 

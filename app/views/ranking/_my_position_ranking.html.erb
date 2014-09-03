@@ -1,0 +1,19 @@
+<div class="row" ng-controller="RankingCtrl" ng-init="init(<%= ranking %>, <%= rank_list.to_json %>, <%= total %>, <%= number_of_pages %>)">
+    <div class="col-md-12">
+      <div class="page-header">
+        <h1>{{rank.title}}</h1>
+      </div>
+      
+      <h3>{{rank.type}}</h3>
+      <ul class="list-group">
+          <li ng-repeat="rank in rankings" ng-class="{list-group-item: true, list-group-item-warning: }" class="list-group-item <%= "list-group-item-warning" if current_user && rank.user.id == current_user.id %>">
+            <div class="row">
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{rank.position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{rank.avatar}}" class="img-circle img-responsive"></div>
+              <div class="col-sm-5 col-xs-7"><h4>{{rank.user}}</h4></div>
+              <div class="col-sm-3 col-xs-3 text-right"><h4 class="no-margin">{{rank.counter}}</h4></div>
+            </div>
+          </li>
+      </ul>
+    </div>
+</div>

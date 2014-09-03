@@ -1,76 +1,17 @@
 <%= render partial: "/application/user_bar" %>
-        
-<div class="container">
-  <% Reward.where("countable=true").each do |reward| %>
-    <div class="row">
-    <div class="col-md-12">
-      <div class="page-header">
-        <h2>Classifica</h2>
-      </div>
 
-      <% users_before_and_after = users_before_and_after(reward) %>
-      <% if current_user && users_before_and_after %>
-        <div class="row">
-          <div class="col-sm-6">
-            <h4>La tua posizione in classifica</h4>
-            <ul class="list-group">
-              <% users_before_and_after.each do |user| %>
-                <li class="list-group-item <%= "list-group-item-warning" if user[:id] == current_user.id %>">
-                  <div class="row">
-                    <div class="col-sm-2 col-xs-2 text-right"><h5 class="no-margin"><%= user[:position] %></h5></div>
-                    <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar User.find(user[:id]) %>" class="img-circle img-responsive"></div>
-                    <div class="col-sm-5 col-xs-7"><h5><%= "#{user[:first_name]} #{user[:last_name]}" %></h5></div>
-                    <div class="col-sm-3 col-xs-3 text-right"><h5 class="no-margin"><%= user[:points] %></h5></div>
-                  </div>
-                </li>
-              <% end %>
-            </ul>
-          </div>
-          <div class="col-sm-6">
-            <h4>La tua posizione fra i tuoi amici FB</h4>
-            <% users_fb_before_and_after = users_fb_before_and_after(reward) %>
-            <% if users_fb_before_and_after %>
-              <ul class="list-group">
-                <% users_fb_before_and_after.each do |user| %>
-                  <li class="list-group-item <%= "list-group-item-warning" if user[:id] == current_user.id %>">
-                    <div class="row">
-                      <div class="col-sm-2 col-xs-2 text-right"><h5 class="no-margin"><%= user[:position] %></h5></div>
-                      <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar User.find(user[:id]) %>" class="img-circle img-responsive"></div>
-                      <div class="col-sm-5 col-xs-7"><h5><%= "#{user[:first_name]} #{user[:last_name]}" %></h5></div>
-                      <div class="col-sm-3 col-xs-3 text-right"><h5 class="no-margin"><%= user[:points] %></h5></div>
-                    </div>
-                  </li>
-                <% end %>
-              </ul>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-      
-      <h4>Leaderboard TOP 10</h4>
-      <ul class="list-group">
-        <% i = 1 %>
-        <% users_ranking(reward).each do |user_reward| %>
-          <li class="list-group-item <%= "list-group-item-warning" if current_user && user_reward.user.id == current_user.id %>">
-            <div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin"><%= i %></h4></div>
-              <div class="col-sm-2 hidden-xs"><img src="<%= user_avatar user_reward.user %>" class="img-circle img-responsive"></div>
-              <div class="col-sm-5 col-xs-7"><h4><%= "#{user_reward.user.first_name} #{user_reward.user.last_name}" %></h4></div>
-              <div class="col-sm-3 col-xs-3 text-right"><h4 class="no-margin"><%= user_reward.counter %></h4></div>
-            </div>
-          </li>
-          <% i = i + 1 %>
-        <% end %>
-        <!--
-        <li class="list-group-item text-center">
-          <a href="#">more</a>
-        </li>
-        -->
-      </ul>
-    </div>
-    </div>
-  <% end %>
+<div class="container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(["general_chart", "my_position_general", "monthly_general_rank"]).to_json %>);">
+
+<%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
+<%= render partial: "/ranking/rank", locals: { rankings: "rankings.general_chart" } %>
+<%= render partial: "/ranking/rank", locals: { rankings: "rankings.monthly_general_rank" } %>
+
+
+
+
 </div>
+
+
 <footer class="bs-footer" role="contentinfo" >
   <div class="jumbotron bkg-topbar" style="margin-bottom: 0">
     <div class="container">
