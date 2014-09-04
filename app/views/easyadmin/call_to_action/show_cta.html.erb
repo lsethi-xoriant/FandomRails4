@@ -84,17 +84,6 @@
             </div> <!-- /.dashboard-stat -->
         </div> <!-- /.col-md-3 -->
       <% end %>
-      <% share_inter = @current_cta.interactions.find_all_by_resource_type("Share") %>
-      <% share_inter.each do |s| %>
-        <div class="col-md-2 col-sm-6">
-            <div class="dashboard-stat tertiary">
-              <div class="details">
-                <span class="content">SHARE <%= s.resource.share_type %></span>
-                <span class="value">TODO</span>
-              </div> <!-- /.details -->
-            </div> <!-- /.dashboard-stat -->
-        </div> <!-- /.col-md-3 -->
-      <% end %>
     </div>
 
     <h3>QUIZ</h3>

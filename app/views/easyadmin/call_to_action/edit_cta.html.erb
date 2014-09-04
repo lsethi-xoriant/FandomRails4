@@ -52,7 +52,7 @@
           </div>
           <div class="form-group">
             <label class="text-input">Commenti Disqus</label>
-              <%= f.select(:enable_disqus, [["NON ABILITATI", false], ["ABILITATI", true]], {}, { :class => "form-control" }) %>
+              <%= f.select(:enable_disqus, [["NON ABILITATI", false]], {}, { :class => "form-control" }) %>
           </div>
           <div class="form-group media-image-form-group">
             <label class="text-input">Thumbnail</label>
@@ -76,8 +76,10 @@
         </div>
       </div>
 
-      <h3>TRIVIA <p style="float: right;"><%= link_to_add_quiz_fields "AGGIUNGI TRIVIA", f, :interactions %></p></h3>
-      <hr/>
+      <div class="row">
+        <div class="col-md-10"><h3>TRIVIA</h3></div>
+        <div class="col-md-2"><%= link_to_add_quiz_fields "AGGIUNGI TRIVIA", f, :interactions %></div>
+      </div>
               
       <div id="tmp-quiz-add"></div>
 
@@ -87,8 +89,10 @@
         <% end %>
       <% end %>
 
-      <h3>VERSUS <p style="float: right;"><%= link_to_add_versus_fields "AGGIUNGI VERSUS", f, :interactions %></p></h3>
-      <hr/>
+      <div class="row">
+        <div class="col-md-10"><h3>VERSUS</h3></div>
+        <div class="col-md-2"><%= link_to_add_versus_fields "AGGIUNGI VERSUS", f, :interactions %></div>
+      </div>
 
       <div id="tmp-versus-add"></div>
 
@@ -98,8 +102,10 @@
         <% end %>
       <% end %>
 
-      <h3>CHECK <p style="float: right;"><%= link_to_add_check_fields "AGGIUNGI CHECK", f, :interactions %></p></h3>
-      <hr/>
+      <div class="row">
+        <div class="col-md-10"><h3>CHECK</h3></div>
+        <div class="col-md-2"><%= link_to_add_check_fields "AGGIUNGI CHECK", f, :interactions %></div>
+      </div> 
 
       <div id="tmp-check-add"></div>
 
@@ -109,8 +115,10 @@
         <% end %>
       <% end %>
 
-      <h3>LIKE <p style="float: right;"><%= link_to_add_like_fields "AGGIUNGI LIKE", f, :interactions if f.object.interactions.where("resource_type='Like'").blank? %></p></h3>
-      <hr/>
+      <div class="row">
+        <div class="col-md-10"><h3>LIKE</h3></div>
+        <div class="col-md-2"><%= link_to_add_like_fields "AGGIUNGI LIKE", f, :interactions %></div>
+      </div>
 
       <div id="tmp-like-add"></div>
       
@@ -120,8 +128,10 @@
         <% end %>
       <% end %>
 
-      <h3>DOWNLOAD <p style="float: right;"><%= link_to_add_download_fields "AGGIUNGI DOWNLOAD", f, :interactions %></p></h3>
-      <hr/>
+      <div class="row">
+        <div class="col-md-10"><h3>DOWNLOAD</h3></div>
+        <div class="col-md-2"><%= link_to_add_download_fields "AGGIUNGI DOWNLOAD", f, :interactions %></div>
+      </div>
 
       <div id="tmp-download-add"></div>
       
@@ -131,8 +141,10 @@
         <% end %>
       <% end %>
 
-      <h3>COMMENTI <p style="float: right;"><%= link_to_add_comment_fields "AGGIUNGI COMMENTI", f, :interactions %></p></h3>
-      <hr/>
+      <div class="row">
+        <div class="col-md-10"><h3>COMMENTI</h3></div>
+        <div class="col-md-2"><%= link_to_add_comment_fields "AGGIUNGI COMMENTI", f, :interactions, "comment" %></div>
+      </div>
 
       <div id="tmp-comment-add"></div>
       
@@ -153,68 +165,18 @@
         <% end %>
       <% end %>
 
-      <h3>SHARE EMAIL</h3>
-      <hr/>
-
       <div class="row">
-        <div class="col-lg-12">
-          <div class="panel panel-default">
-            <% e = false %>
-            <% f.object.interactions.where("resource_type='Share'").each { |r| e = true if r.resource.share_type == "email" } %>
-            <div class="panel-heading">EMAIL <p style="float: right;"><%= link_to_add_share_email_fields "AGGIUNGI EMAIL", f, :interactions unless e %></p></div>
-            
-            <div class="panel-body" style="padding-bottom: 0px;"> 
-              <div id="tmp-share-email-add"></div>
-
-              <%= f.fields_for :interactions do |builder| %>
-                <% if builder.object.resource_type == "Share" && builder.object.resource.share_type == "email" %>
-                  <%= render 'share-email-form', :f => builder %>
-                <% end %>
-              <% end %>
-            </div>
-          </div>
-        </div>
+        <div class="col-md-10"><h3>SHARE</h3></div>
+        <div class="col-md-2"><%= link_to_add_share_fields "AGGIUNGI SHARE", f, :interactions %></div>
       </div>
 
-      <h3>SHARE PROVIDER</h3>
-      <hr/>
+      <div id="tmp-share-add"></div>
 
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="panel panel-default">
-            <% fb = false %>
-            <% f.object.interactions.where("resource_type='Share'").each { |r| fb = true if r.resource.share_type == "facebook" } %>
-            <div class="panel-heading">FACEBOOK <p style="float: right;"><%= link_to_add_share_fb_fields "AGGIUNGI FACEBOOK", f, :interactions unless fb %></p></div>
-            
-            <div class="panel-body" style="padding-bottom: 0px;"> 
-              <div id="tmp-share-fb-add"></div>
-
-              <%= f.fields_for :interactions do |builder| %>
-                <% if builder.object.resource_type == "Share" && builder.object.resource.share_type == "facebook" %>
-                  <%= render 'share-fb-form', :f => builder %>
-                <% end %>
-              <% end %>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="panel panel-default">
-            <% tw = false %>
-            <% f.object.interactions.where("resource_type='Share'").each { |r| tw = true if r.resource.share_type == "twitter" } %>
-            <div class="panel-heading">TWITTER <p style="float: right;"><%= link_to_add_share_tt_fields "AGGIUNGI TWITTER", f, :interactions unless tw %></p></div>
-            
-            <div class="panel-body" style="padding-bottom: 0px;"> 
-              <div id="tmp-share-tt-add"></div>
-
-              <%= f.fields_for :interactions do |builder| %>
-                <% if builder.object.resource_type == "Share" && builder.object.resource.share_type == "twitter" %>
-                  <%= render 'share-tt-form', :f => builder %>
-                <% end %>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </div>
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Share" %>
+          <%= render '/easyadmin/call_to_action/share-form', :f => builder %>
+        <% end %>
+      <% end %>
 
       <h3>TAGGING</h3>
       <hr/>
@@ -360,34 +322,10 @@
     });
   }
 
-  var share_fb_counter = false; 
-  function add_share_fb_fields(link, association, content) {
-    if(!share_fb_counter) {
-      var new_id = new Date().getTime();
-      var regexp = new RegExp("new_" + association, "g");
-      $("#tmp-share-fb-add").prepend(content.replace(regexp, new_id));
-      share_fb_counter = true;
-    }
-  }
-
-  var share_tt_counter = false; 
-  function add_share_tt_fields(link, association, content) {
-    if(!share_tt_counter) {
-      var new_id = new Date().getTime();
-      var regexp = new RegExp("new_" + association, "g");
-      $("#tmp-share-tt-add").prepend(content.replace(regexp, new_id));
-      share_tt_counter = true;
-    }
-  }
-
-  var share_email_counter = false; 
-  function add_share_email_fields(link, association, content) {
-    if(!share_email_counter) {
-      var new_id = new Date().getTime();
-      var regexp = new RegExp("new_" + association, "g");
-      $("#tmp-share-email-add").prepend(content.replace(regexp, new_id));
-      share_email_counter = true;
-    }
+  function add_share_fields(link, association, content) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-share-add").prepend(content.replace(regexp, new_id));
   }
 
   function add_check_fields(link, association, content) {
@@ -447,19 +385,8 @@
     play_counter = false;
   }
 
-  function remove_share_fb_fields(link) {
+  function remove_share_fields(link) {
     $(link).parent().parent().parent().remove();
-    share_fb_counter = false;
-  }
-
-  function remove_share_tt_fields(link) {
-    $(link).parent().parent().parent().remove();
-    share_tt_counter = false;
-  }
-
-  function remove_share_email_fields(link) {
-    $(link).parent().parent().parent().remove();
-    share_email_counter = false;
   }
 
   function remove_check_fields(link) {
