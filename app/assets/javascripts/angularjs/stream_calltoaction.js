@@ -329,45 +329,29 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
-  // TODO TODO TODO TODO TODO TODO
-  $window.shareWith = function(provider, interaction_id, calltoaction_id) {
+  $window.shareWith = function(interaction_id, provider) {
 
-    $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
-    $("#share-" + provider + "-" + interaction_id).html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
+    button = $("#" + provider + "-interaction-" + interaction_id);
 
-    $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
-      .success(function(data) {
-        // Modifico lo stato del bottone e notifico la condivisione.
-        $("#share-" + provider + "-" + interaction_id).attr('disabled', false); // Modifico lo stato del bottone.
-        $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI CON " + provider.toUpperCase());
+    button.attr('disabled', true);
+    button_main_content = button.html();
+    button.html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
 
-        $(".current_user_points").html(data.points_updated);
+    share_with_email_address = $("#address-interaction-" + interaction_id).val();
 
-        $("#share-modal-" + calltoaction_id).modal("hide");
+    $http.post("/update_interaction", { interaction_id: interaction_id, main_reward_name: MAIN_REWARD_NAME, share_with_email_address: share_with_email_address, provider: provider })
+          .success(function(data) {
 
-        if(provider == "email") {
-          $("#share-email-address-" + interaction_id).val("");
-          $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI");
+          button.attr('disabled', false);
+          button.html(button_main_content);
 
-          if(data.email_correct) {
-            $("#share-" + calltoaction_id).addClass("btn-success");
-            $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
-          } else {
-            $("#invalid-email-modal").modal("show"); 
+          if(provider == "email") {
+            $("#address-interaction-" + interaction_id).val();
+          } 
+
+          if(!data.share.result) {
+            alert(data.share.exception);
           }
-
-        } else {
-          $("#share-" + calltoaction_id).addClass("btn-success");
-          $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
-        }
-
-        if(data.calltoaction_complete) {
-          $("#circle-calltoaction-done-" + calltoaction_id).removeClass("hidden");
-        }
-
-        if(data.undervideo_share_feedback) {
-          $("#share-mobile-feedback-" + calltoaction_id).html(data.undervideo_share_feedback);
-        } 
 
       }).error(function() {
         // ERRORE

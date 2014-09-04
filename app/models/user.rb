@@ -47,8 +47,8 @@ class User < ActiveRecord::Base
     tt_user = self.authentications.find_by_provider("twitter_#{tenant}")
     if tt_user
       @twitter ||= Twitter::REST::Client.new do |config|
-        config.consumer_key = ENV["TWITTER_APP_ID"]
-        config.consumer_secret = ENV["TWITTER_APP_SECRET"]
+        config.consumer_key = Rails.configuration.deploy_settings["sites"][tenant]["authentications"]["twitter"]["app_id"]
+        config.consumer_secret = Rails.configuration.deploy_settings["sites"][tenant]["authentications"]["twitter"]["app_secret"]
         config.access_token = tt_user.oauth_token
         config.access_token_secret = tt_user.oauth_secret
       end
@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
           uid: auth.uid,
           name: auth.info.name,
           oauth_token: auth.credentials.token,
-          oauth_secret: (provider == "twitter" ? auth.credentials.secret : ""),
+          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
           avatar: auth.info.image,
           user_id: self.id
@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
           uid: auth.uid,
           name: auth.info.name,
           oauth_token: auth.credentials.token,
-          oauth_secret: (provider == "twitter" ? auth.credentials.secret : ""),
+          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
           provider: provider,
           avatar: auth.info.image,
@@ -104,7 +104,7 @@ class User < ActiveRecord::Base
           uid: auth.uid,
           name: auth.info.name,
           oauth_token: auth.credentials.token,
-          oauth_secret: (provider == "twitter" ? auth.credentials.secret : ""),
+          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
           avatar: auth.info.image,
       )
@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
           uid: auth.uid,
           name: auth.info.name,
           oauth_token: auth.credentials.token,
-          oauth_secret: (provider == "twitter" ? auth.credentials.secret : ""),
+          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
           provider: provider,
           avatar: auth.info.image

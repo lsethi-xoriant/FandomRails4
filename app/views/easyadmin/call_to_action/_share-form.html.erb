@@ -30,6 +30,16 @@
 				</div>
 
 				<div class="form-group">
+          <label class="text-input">Richiesto per il completamento</label>
+           <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+        </div>
+
+				<div class="form-group">
+				  <label class="text-input">Visibile</label>
+				   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["MAI_VISIBILE", "MAI_VISIBILE"]], {}, { :class => "form-control" }) %>
+				</div>
+
+				<div class="form-group hidden">
           <label class="text-input">JSON</label>
 					<%= shareform.text_area :providers, class: "form-control provider-json", rows: 4, readonly: true, style: "font-size: 10px;" %>
 				</div>
@@ -57,12 +67,8 @@
           	<label>Twitter</label>
 						<hr>
 					 	<div class="form-group">
-              <label class="text-input">Titolo</label>
+              <label class="text-input">Messaggio</label>
               <%= text_field_tag :twitter_message, nil, class: "form-control twitter-message", id: nil, onkeyup: "updateProviderJson(this)" %>
-          	</div>
-          	<div class="form-group">
-              <label class="text-input">Descrizione</label>
-              <%= text_field_tag :twitter_description, nil, class: "form-control twitter-description", id: nil, onkeyup: "updateProviderJson(this)" %>
           	</div>
           	<div class="form-group">
               <label class="text-input">Link</label>
@@ -116,7 +122,6 @@
 
 			if(json.twitter) {
 				$(provider_div).find(".twitter-message").val(json.twitter.message); 
-				$(provider_div).find(".twitter-description").val(json.twitter.description); 
 				$(provider_div).find(".twitter-link").val(json.twitter.link); 
 
 				$(provider_div).find(".twitter-checkbox").attr("checked", "checked");
@@ -157,7 +162,6 @@
 		if(twitter_checkbox.checked) {
 			json.twitter = {}
 			json.twitter.message = provider_div.find(".twitter-message").val(); 
-			json.twitter.description = provider_div.find(".twitter-description").val(); 
 			json.twitter.link = provider_div.find(".twitter-link").val(); 
 
 			$(provider_div).find(".twitter-share").removeClass("hidden");
@@ -192,7 +196,6 @@
 		if(twitter_checkbox.checked) {
 			json.twitter = {};
 			json.twitter.message = twitter_share.find(".twitter-message").val(); 
-			json.twitter.description = twitter_share.find(".twitter-description").val(); 
 			json.twitter.link = twitter_share.find(".twitter-link").val(); 
 		}
 
