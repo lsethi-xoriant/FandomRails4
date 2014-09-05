@@ -1,7 +1,7 @@
 <% if user_interaction %>
   <!-- CURRENT USER HAS ALREADY RESPONDED -->
   <% if interaction.resource.one_shot %>
-    <div class="<%= answer_counter > 2 ? "col-sm-4" : "col-sm-4" %> col-xs-12 text-center" style="margin-bottom: 15px;">
+    <div class="<%= answer_counter > 2 ? "col-sm-4" : "col-sm-6" %> col-xs-12 text-center" style="margin-bottom: 15px;">
 
       <% if answer.image.present? %>
         <a href="javascript: void(0)" class="thumbnail"><img src="<%= answer.image(:medium) %>" alt="..."></a>
