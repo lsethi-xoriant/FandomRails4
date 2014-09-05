@@ -24,85 +24,60 @@
           </div>
         </div>
       </div>
-    </div>
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label class="text-input">Bloccante</label>
+            <%= f.select(:blocking, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+        </div>
 
-    <div class="row text-left">
-      <div class="col-lg-12">
-        <div class="panel-group">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#answer-advance">
-                  Avanzate
-                </a>
-              </h4>
+        <div class="form-group text-center">
+          <label class="text-input">Immagine risposta</label>
+          <div class="fileupload fileupload-new" data-provides="fileupload">
+            <div class="fileupload-preview thumbnail" style="width: 100%; height: 100px; line-height: 20px;">
+                <% unless f.object.image.blank? %><img src="<%= f.object.image.url %>"><% end %>
             </div>
-            <div id="answer-advance" class="panel-collapse collapse ">
-              <div class="panel-body">
-                <div class="row text-left">
+            <div>
+              <span class="btn btn-default btn-file"><span class="fileupload-new"><i class="fa fa-picture-o"></i></span>
+              <span class="fileupload-exists"><i class="fa fa-pencil"></i></span><%= f.file_field :image  %></span>
+              <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload"><i class="fa fa-times-circle"></i></a>
+            </div>
+          </div>
+        </div>
 
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label class="text-input">Bloccante</label>
-                        <%= f.select(:blocking, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
-                    </div>
+        <div class="form-group">
+          <label class="text-input">CallToAction</label>
+          <% date_array = CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND tags.name='step'", Time.now.utc).order("activated_at DESC").map { |c| [ "#{ c.title }", c.id] } %>
+          <% date_array.unshift ["", ""] %>
+          <%= f.select :call_to_action_id, date_array, {}, :class => "form-control" %>
+        </div>                 
+      </div>
 
-                    <div class="form-group text-center">
-                      <label class="text-input">Immagine risposta</label>
-                      <div class="fileupload fileupload-new" data-provides="fileupload">
-                        <div class="fileupload-preview thumbnail" style="width: 100%; height: 100px; line-height: 20px;">
-                            <% unless f.object.image.blank? %><img src="<%= f.object.image.url %>"><% end %>
-                        </div>
-                        <div>
-                          <span class="btn btn-default btn-file"><span class="fileupload-new"><i class="fa fa-picture-o"></i></span>
-                          <span class="fileupload-exists"><i class="fa fa-pencil"></i></span><%= f.file_field :image  %></span>
-                          <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload"><i class="fa fa-times-circle"></i></a>
-                        </div>
-                      </div>
-                    </div>
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label class="text-input">Media associato</label>
+          <% date_array = f.object.media_type_enum.map { |media_type| [media_type, media_type] } %>
+          <%= f.select(:media_type, date_array, {}, { :class => "form-control answer-media-type", :onchange => "updateMedia(this)" }) %>
+        </div>
+        <div class="form-group media_data-form-group">
+          <label class="text-input media-data-label">MEDIA DATA</label>
+          <%= f.text_area :media_data, :class => "form-control", rows: 2 %>
+        </div>
 
-                    <div class="form-group">
-                      <label class="text-input">CallToAction</label>
-                      <% date_array = CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND tags.name='step'", Time.now.utc).order("activated_at DESC").map { |c| [ "#{ c.title }", c.id] } %>
-                      <% date_array.unshift ["", ""] %>
-                      <%= f.select :call_to_action_id, date_array, {}, :class => "form-control" %>
-                    </div>                 
-                  </div>
-
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label class="text-input">Media associato</label>
-                      <% date_array = f.object.media_type_enum.map { |media_type| [media_type, media_type] } %>
-                      <%= f.select(:media_type, date_array, {}, { :class => "form-control answer-media-type", :onchange => "updateMedia(this)" }) %>
-                    </div>
-                    <div class="form-group media_data-form-group">
-                      <label class="text-input media-data-label">MEDIA DATA</label>
-                      <%= f.text_area :media_data, :class => "form-control", rows: 2 %>
-                    </div>
-
-                    <div class="form-group media-image-form-group text-center">
-                      <label class="text-input">Immagine media</label>
-                      <div class="fileupload fileupload-new" data-provides="fileupload">
-                        <div class="fileupload-preview thumbnail" style="width: 100%; height: 100px; line-height: 20px;">
-                          <img src="<%= f.object.media_image.url %>">
-                        </div>
-                        <div>
-                          <span class="btn btn-default btn-file"><span class="fileupload-new"><i class="fa fa-picture-o"></i></span>
-                          <span class="fileupload-exists">Change</span><%= f.file_field :media_image  %></span>
-                          <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload"><i class="fa fa-times-circle"></i></a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
+        <div class="form-group media-image-form-group text-center">
+          <label class="text-input">Immagine media</label>
+          <div class="fileupload fileupload-new" data-provides="fileupload">
+            <div class="fileupload-preview thumbnail" style="width: 100%; height: 100px; line-height: 20px;">
+              <img src="<%= f.object.media_image.url %>">
+            </div>
+            <div>
+              <span class="btn btn-default btn-file"><span class="fileupload-new"><i class="fa fa-picture-o"></i></span>
+              <span class="fileupload-exists">Change</span><%= f.file_field :media_image  %></span>
+              <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload"><i class="fa fa-times-circle"></i></a>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
