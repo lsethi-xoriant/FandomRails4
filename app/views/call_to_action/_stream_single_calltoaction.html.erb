@@ -1,3 +1,5 @@
+<% calltoaction_reward_status = get_current_call_to_action_reward_status("POINT", calltoaction) %>
+
 <div class="row cta">      
   <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1">
     <div class="panel panel-default cta-page">
@@ -20,7 +22,7 @@
                   FATTO <span class="glyphicon glyphicon-ok"></span>
                 </span>
               <% else %>
-                <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 7px;">+<%= get_current_call_to_action_reward_status("POINT", calltoaction)[:winnable_reward_count] %>
+                <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 7px;">+<%= calltoaction_reward_status[:winnable_reward_count] %>
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               <% end %>
@@ -34,7 +36,7 @@
         </div>
       </div>
   
-      <%= render partial: "/call_to_action/single_calltoaction_panel_body", locals: { calltoaction: calltoaction } %>
+      <%= render partial: "/call_to_action/single_calltoaction_panel_body", locals: { calltoaction: calltoaction, calltoaction_reward_status: calltoaction_reward_status } %>
        
       <div class="panel-footer">
         <div class="row">
