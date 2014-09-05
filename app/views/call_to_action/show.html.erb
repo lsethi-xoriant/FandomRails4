@@ -51,7 +51,7 @@
 			                <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-success" style="padding-top: 7px;">FATTO <span class="glyphicon glyphicon-ok"></span>
 			                </span>
 			              <% else %>
-			                <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-warning" style="padding-top: 7px;">+<%= get_current_call_to_action_reward_status("POINT", calltoaction)[:winnable_reward_count] %>
+			                <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-warning" style="padding-top: 7px;">+<%= get_current_call_to_action_reward_status("POINT", c)[:winnable_reward_count] %>
 			                  <span class="glyphicon glyphicon-star"></span>
 			                </span>
 			              <% end %>

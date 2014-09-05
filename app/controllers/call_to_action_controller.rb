@@ -119,14 +119,14 @@ class CallToActionController < ApplicationController
     if current_user
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
       if approved && user_comment.errors.blank?
-        user_interaction = UserInteraction.create_or_update_interaction(user_comment.user_id, interaction.id, nil, nil)
+        user_interaction, outcome = create_or_update_interaction(user_comment.user_id, interaction.id, nil, nil)
       end
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
       if response[:captcha_check]
         user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, text: user_text, comment_id: comment_resource.id)
         if approved && !user_comment.errors.blank?
-          user_interaction = UserInteraction.create_or_update_interaction(user_comment.user_id, interaction.id, nil, nil)
+          user_interaction, outcome = create_or_update_interaction(user_comment.user_id, interaction.id, nil, nil)
         end
       end
     end
@@ -194,10 +194,10 @@ class CallToActionController < ApplicationController
       response["download_interaction_attachment"] = interaction.resource.attachment.url
     end
 
-    if interaction.resource_type.downcase.to_sym == :quiz
+    if interaction.resource_type.downcase == "quiz"
       
       answer = Answer.find(params[:answer_id])
-      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id, nil)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id, nil)
 
       response["have_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
@@ -217,7 +217,7 @@ class CallToActionController < ApplicationController
       user_interaction = get_user_interaction_from_interaction(interaction, current_or_anonymous_user)
       like = user_interaction ? !user_interaction.like : true
 
-      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, like)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, like)
 
       response[:ga][:label] = "Like"
 
@@ -226,7 +226,7 @@ class CallToActionController < ApplicationController
       result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address])
       if result
         aux = { "#{provider}" => 1 }
-        user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
+        user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
         response[:ga][:label] = interaction.resource_type.downcase
       end
 
@@ -235,30 +235,23 @@ class CallToActionController < ApplicationController
       response[:share][:exception] = exception.to_s
 
     else
-      user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil)
       response[:ga][:label] = interaction.resource_type.downcase
     end
 
     if current_user && user_interaction
-      outcome = compute_and_save_outcome(user_interaction)
 
-      update_user_interaction_outcome(outcome, user_interaction)
       response['winnable_reward_count'] = get_current_call_to_action_reward_status("POINT", interaction.call_to_action)[:winnable_reward_count]
 
-      logger.info("rewards: #{outcome.reward_name_to_counter.inspect}")
-      logger.info("unlocks: #{outcome.unlocks.inspect}")
-
       if outcome.errors.any?
-
         logger.error("errors in the rewarding system:")
-
         outcome.errors.each do |error|
           logger.error(error)
         end
       end
+
       response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, current_user)
-
 
       if interaction.when_show_interaction == "SEMPRE_VISIBILE"
         response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome }, layout: false, formats: :html 
@@ -276,16 +269,6 @@ class CallToActionController < ApplicationController
       format.json { render :json => response.to_json }
     end
   end 
-
-  def update_user_interaction_outcome(outcome, user_interaction)
-    if user_interaction.outcome
-      new_outcome = Outcome.new(JSON.parse(user_interaction.outcome))
-      new_outcome.merge!(outcome)
-      user_interaction.update_attribute(:outcome, new_outcome.to_json)
-    else
-      user_interaction.update_attribute(:outcome, outcome.to_json)
-    end
-  end
 
   def calltoaction_overvideo_end
     calltoaction = CallToAction.find(params[:calltoaction_id])

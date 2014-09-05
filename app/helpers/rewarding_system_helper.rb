@@ -111,7 +111,7 @@ module RewardingSystemHelper
       if rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction)
         begin
           if rule.condition.nil? || rule.condition.call
-            Rails.logger.info("rule #{rule.name} evaluate to true") 
+            log_info("rule evaluation", { rule_name: rule.name, value: true }) 
             outcome.matching_rules << rule.name
             Outcome.merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
             merge_user_rewards(self.user_rewards, rule.normalized_rewards)
@@ -119,9 +119,10 @@ module RewardingSystemHelper
             self.user_unlocked_names += rule.unlocks
             # TODO: self.uncountable_user_reward_names should be updated as well 
           else
-            Rails.logger.info("rule #{rule.name} evaluate to false") 
+            log_info("rule evaluation", { rule_name: rule.name, value: false }) 
           end
         rescue Exception => ex
+          log_error("exception on rule",  { rule_name: rule.name, exception: ex.to_s }) 
           outcome.errors << "rule #{rule.name}: #{ex}\n#{ex.backtrace.join("\n")}" 
         end
       end
@@ -131,26 +132,26 @@ module RewardingSystemHelper
       repeatable = rule.options.fetch(:repeatable, false)
       
       if !interaction_matches?(user_interaction, rule.options, just_rules_applying_to_interaction)
-        Rails.logger.info("rule #{rule.name} not applied because interaction doesn't match") 
+        log_info("rule #{rule.name} not applied because interaction doesn't match", {}) 
         return false
       end
       
       if user_already_own_rewards?(rule.normalized_rewards, rule.unlocks)
-        Rails.logger.info("rule #{rule.name} not applied because user already own the rewards") 
+        log_info("rule #{rule.name} not applied because user already own the rewards", {}) 
         return false
       end
 
       if rule.options.key?(:interactions) && !repeatable && user_interaction.counter > 1
-        Rails.logger.info("rule #{rule.name} not applied because user the user already done it") 
+        log_info("rule #{rule.name} not applied because user the user already done it", {}) 
         return false
       end
       
       if !current_datetime_is_valid?(rule.options)
-        Rails.logger.info("rule #{rule.name} because date/time is not valid") 
+        log_info("rule #{rule.name} because date/time is not valid", {}) 
         return false
       end
       
-      Rails.logger.info("rule #{rule.name} will be evaluated") 
+      log_info("rule #{rule.name} will be evaluated", {}) 
       return true
     end
     
@@ -242,19 +243,33 @@ module RewardingSystemHelper
   def new_context(user_interaction)
     user = user_interaction.user
     interaction = user_interaction.interaction
-    user_reward_info = UserReward.get_rewards_info(user_interaction.user, get_current_periodicities)
-    user_rewards, uncountable_user_reward_names, user_unlocked_names = get_user_reward_data(user_reward_info)
-    Context.new(
-      user: user,
-      user_rewards: user_rewards,
-      cta: interaction.call_to_action,
-      correct_answer: get_correct_answer(user_interaction),
-      counters: get_counters(user),
-      uncountable_user_reward_names: uncountable_user_reward_names,
-      user_unlocked_names: user_unlocked_names,
-      user_rewards: user_rewards,
-      rules: []
-    )
+    if user.mocked?
+      Context.new(
+        user: user,
+        user_rewards: {},
+        cta: interaction.call_to_action,
+        correct_answer: get_correct_answer(user_interaction),
+        counters: {},
+        uncountable_user_reward_names: Set.new(),
+        user_unlocked_names: Set.new(),
+        user_rewards: Set.new(),
+        rules: []
+      )
+    else
+      user_reward_info = UserReward.get_rewards_info(user_interaction.user, get_current_periodicities)
+      user_rewards, uncountable_user_reward_names, user_unlocked_names = get_user_reward_data(user_reward_info)
+      Context.new(
+        user: user,
+        user_rewards: user_rewards,
+        cta: interaction.call_to_action,
+        correct_answer: get_correct_answer(user_interaction),
+        counters: get_counters(user),
+        uncountable_user_reward_names: uncountable_user_reward_names,
+        user_unlocked_names: user_unlocked_names,
+        user_rewards: user_rewards,
+        rules: []
+      )
+    end
   end
   
   # Mocks a user reward, to be used in rules.
@@ -355,13 +370,23 @@ module RewardingSystemHelper
   end
 
   def get_mocked_user_interaction(interaction, user, interaction_is_correct)
-    if user.id == anonymous_user.id
+    if user.nil? or user.id.nil? or user.id == anonymous_user.id
+      user = MOCKED_USER
       MockedUserInteraction.new(interaction, user, 1, interaction_is_correct)
     else
       user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user.id, interaction.id)
       MockedUserInteraction.new(interaction, user, (user_interaction.nil? ? 1 : (user_interaction.counter + 1)), interaction_is_correct)  
     end
   end
+
+  # Simulate an user with no rewards or interactions done.
+  # It is used to predict the outcome of an interaction.
+  class MockedUser
+    def mocked?
+      true
+    end
+  end
+  MOCKED_USER = MockedUser.new
 
   # Simulate an user interaction where the correctness of an answer/interaction can be set in advance.
   # It is used to predict the outcome of an interaction.
@@ -390,6 +415,10 @@ module RewardingSystemHelper
     end
   end
 
+  # Predicts the outcome of an interaction. It does not save the outcome in the DB.
+  #   interaction - the interaction to be predicted
+  #   user - the user performing the interaction; if nil or anonymous, the context of the interaction will be reset (counters and rewards)
+  #   interaction_is_correct - specifies if the interaction should be treated as "correct" (i.e. givin more points), for example a correct trivia answer.
   def predict_outcome(interaction, user, interaction_is_correct)
     benchmark("Predict outcome") do
       user_interaction = get_mocked_user_interaction(interaction, user, interaction_is_correct)
@@ -398,12 +427,14 @@ module RewardingSystemHelper
     end
   end
 
+  # Predicts the maximun outcome of a CTA.
+  #   cta - the cta
+  #   user - the user performing the interaction; if nil or anonymous, the context of the interaction will be reset (counters and rewards)
   def predict_max_cta_outcome(cta, user)
     benchmark("Predict max CTA outcome") do
       if cta.interactions.count == 0
         Outcome.new
       else
-        
         interaction_outcomes = []
         
         total_outcome = Outcome.new

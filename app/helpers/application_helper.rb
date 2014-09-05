@@ -47,6 +47,72 @@ module ApplicationHelper
     ga
   end
 
+  def merge_aux(aux_1, aux_2)
+
+    begin
+      aux_1 = JSON.parse(aux_1)
+      aux_2 = JSON.parse(aux_2)
+
+      aux_2.each do |key, value|
+        if aux_1[key].present?
+          aux_1[key] = aux_1[key] + value
+        else
+          aux_1[key] = value
+        end
+      end
+    rescue Exception => exception
+      return nil
+    end
+
+    aux_1.present ? aux_1.to_json : nil
+
+  end
+
+  def create_or_update_interaction(user_id, interaction_id, answer_id, like, aux = "{}")
+    user = User.find(user_id)
+    user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user_id, interaction_id)
+    interaction = Interaction.find(interaction_id)
+
+    if interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
+      predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
+    end
+
+    if user_interaction.nil?
+      user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
+
+      outcome = compute_and_save_outcome(user_interaction)
+
+      outcome_for_user_interaction = {
+        win: outcome,
+        correct_answer: predict_outcome_with_correct_answer ? predict_outcome_with_correct_answer : Outcome.new 
+      }.to_json
+
+      user_interaction.outcome = outcome_for_user_interaction
+      user_interaction.save
+
+      UserCounter.update_unique_counters(user_interaction, user)
+    else
+      user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
+      
+      outcome = compute_and_save_outcome(user_interaction)
+
+      interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
+      interaction_outcome.merge!(outcome)
+
+      interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
+      interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
+
+      outcome_for_user_interaction = {
+        win: interaction_outcome,
+        correct_answer: interaction_correct_answer_outcome
+      }.to_json
+
+      user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+    end
+    UserCounter.update_all_counters(user_interaction, user)
+    [user_interaction, outcome]
+  end
+
   def interaction_done?(interaction)
     return current_user && UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
   end
@@ -90,36 +156,36 @@ module ApplicationHelper
 	def get_current_call_to_action_reward_status(reward_name, calltoaction)
     reward = Reward.find_by_name(reward_name)
 
-    empty_user = User.new
-
-    total_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, empty_user)
-    max_outcome_and_interaction = interaction_outcomes.zip(sorted_interactions)
+    winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
+    interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
 
     reward_status_images = Array.new
-    winnable_reward_count = 0
 
-    max_outcome_and_interaction.each do |outcome, interaction|
-      total_reward_count = outcome["reward_name_to_counter"][reward_name]
-      
-      if current_user
-        user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)
-        if user_interaction
-          win_reward_count = JSON.parse(user_interaction.outcome)["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
+    if current_user
+
+      interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
+        user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)        
+  
+        if user_interaction && user_interaction.outcome.present?
+          win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
+          correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
+          correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
+
           push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
-          push_in_array(reward_status_images, reward.not_winnable_image(:thumb), (total_reward_count - win_reward_count))
+          push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
+          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
         else 
-          winnable_reward_count += total_reward_count
-          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), total_reward_count)
-        end
-      else
-        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), total_reward_count)
+          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+        end       
+
       end
 
+    else
+      push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
     end
 
     {
-      all_reward_count: total_outcome["reward_name_to_counter"][reward_name],
-      winnable_reward_count: winnable_reward_count,
+      winnable_reward_count: winnable_outcome["reward_name_to_counter"][reward_name],
       reward_status_images: reward_status_images,
       reward: Reward.find_by_name(reward_name)
     }
@@ -129,25 +195,18 @@ module ApplicationHelper
   def get_current_interaction_reward_status(reward_name, interaction)
     reward = Reward.find_by_name(reward_name)
 
-    empty_user = User.new
-
-    total_reward_count = predict_outcome(interaction, empty_user, true).reward_name_to_counter[reward_name]
-    if current_user
-      winnable_reward_count = predict_outcome(interaction, current_user, true).reward_name_to_counter[reward_name]
-      user_interaction = current_user.user_interactions.find_by_interaction_id(interaction.id)
-    else
-      winnable_reward_count = total_reward_count
-    end
-
     reward_status_images = Array.new 
-      
-    if current_user && user_interaction
-      outcome = JSON.parse(user_interaction.outcome)
-      win_reward_count = outcome["attributes"]["reward_name_to_counter"][reward_name]      
+
+    if current_user && (user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)) 
+      win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
+      correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
+      correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
+
       push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
-      push_in_array(reward_status_images, reward.not_winnable_image(:thumb), (total_reward_count - win_reward_count))
+      push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
     else
-      push_in_array(reward_status_images, reward.not_awarded_image(:thumb), total_reward_count)
+      winnable_reward_count = predict_outcome(interaction, nil, true).reward_name_to_counter[reward_name]
+      push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_reward_count)
     end
 
     {
@@ -212,12 +271,11 @@ module ApplicationHelper
   # Get calltoaction's share interactions.
 	def share_interactions(calltoaction)
 		calltoaction_share_interactions = cache_short("calltoaction_#{calltoaction.id}_share_interactions") do
-		  calltoaction.interactions.where("resource_type=? AND when_show_interaction=?", "Share", "SEMPRE_VISIBILE").to_a
+		  calltoaction.interactions.where("resource_type = ? AND when_show_interaction = ?", "Share", "SEMPRE_VISIBILE").to_a
 		end
 	end
 
 	def current_avatar size = "normal"
-		# Ritorna l'indirizzo dell'avatar corrente.
 		if current_user
 			return user_avatar current_user
 		else
@@ -226,7 +284,6 @@ module ApplicationHelper
 	end
 
 	def user_avatar user, size = "normal"
-		# Ritorna l'indirizzo dell'avatar associato all'utente specificato.
 		case user.avatar_selected
 		when "upload"
 			avatar = user.avatar ? user.avatar(:thumb) : "/assets/anon.png"
@@ -306,34 +363,6 @@ module ApplicationHelper
 	        return ""
 	    end
   	end
-
-  def calltoactions_totalpoints(calltoaction)
-    cache_short("calltoactions_totalpoints_#{calltoaction.id}") do
-      # TODO: update with new reward system
-      #totalpoints = calltoaction.interactions.where("resource_type<>'Share'").sum("points")
-      #totalpoints = totalpoints + calltoaction.interactions.where("resource_type<>'Share'").sum("added_points")
-    	0
-
-    	# Not include share interactions points.
-      # inter_share = calltoaction.interactions.where("resource_type='Share'")
-      # totalpoints = totalpoints + inter_share.maximum("points") if inter_share.count > 0
-    end
-  end
-
-  def calltoactions_share_points(calltoaction)
-  	cache_short("calltoactions_share_points_#{calltoaction.id}") do
-  		# TODO: update with new reward system
-  		#inter_share = calltoaction.interactions.where("resource_type='Share'")
-  		#share_points = (inter_share.any? ? inter_share.maximum("points") : 0)
-  		return 0
-  	end
-  end
-
-  def all_share_interactions(calltoaction)
-    cache_short("all_share_interactions_#{calltoaction.id}") do
-      calltoaction.interactions.where("resource_type='Share'").to_a
-    end
-  end
   
   def compute_save_and_notify_outcome(userinteraction, user_upload_interaction)
     outcome = compute_and_save_outcome(userinteraction)
