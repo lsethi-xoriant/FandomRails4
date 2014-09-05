@@ -156,10 +156,7 @@ module ApplicationHelper
 	def get_current_call_to_action_reward_status(reward_name, calltoaction)
     reward = Reward.find_by_name(reward_name)
 
-    user_for_predict = current_user ? current_user : User.new
-
-    # CHECK WINNABLE OUTCOME
-    winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user_for_predict)
+    winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
     interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
 
     reward_status_images = Array.new
@@ -197,7 +194,6 @@ module ApplicationHelper
 
   def get_current_interaction_reward_status(reward_name, interaction)
     reward = Reward.find_by_name(reward_name)
-    empty_user = User.new
 
     reward_status_images = Array.new 
 
@@ -209,7 +205,7 @@ module ApplicationHelper
       push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
       push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
     else
-      winnable_reward_count = predict_outcome(interaction, empty_user, true).reward_name_to_counter[reward_name]
+      winnable_reward_count = predict_outcome(interaction, nil, true).reward_name_to_counter[reward_name]
       push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_reward_count)
     end
 
