@@ -29,6 +29,7 @@
   end
 
   def self.update_counters_in_all_periodicities(user, counter_name)
+    # TODO: periodicity is hardcoded
     update_counter(user, counter_name, "TOTAL")
     update_counter(user, counter_name, "DAILY")
   end
@@ -54,9 +55,22 @@
   end
 
   def self.get_by_user(user)
+    # TODO: periodicity is hardcoded
+    if user.mocked?
+      { "DAILY" => get_mocked_counters(), "TOTAL" => get_mocked_counters() }
+    else
+      result = {}
+      user.user_counters.map do |counter|
+        result[counter.name] = JSON.parse(counter.counters)
+      end
+      result
+    end
+  end
+  
+  def get_mocked_counters
     result = {}
-    user.user_counters.map do |counter|
-      result[counter.name] = JSON.parse(counter.counters)
+    COUNTER_NAMES.each do |name|
+      result[name] = 0
     end
     result
   end
