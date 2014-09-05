@@ -14,8 +14,8 @@ module EventHandlerHelper
     log_event(msg, "info", false, data)
   end
 
-  def log_err(msg, data)
-    log_event(msg, "err", false, data)
+  def log_error(msg, data)
+    log_event(msg, "error", false, data)
   end
 
   def log_warn(msg, data)
@@ -68,7 +68,7 @@ module EventHandlerHelper
     data_to_string = data.map { |key, value| "#{key}: #{value}" }
     data_to_string = data_to_string.join(", ")
 
-    logger_development = "message: #{msg}, #{data_to_string}, line_number: #{line_number}, file_name: #{file_name}, method_name: #{method_name}, level: #{level}"
+    logger_development = "#{timestamp} #{file_name}:#{line_number} #{level.upcase} #{msg} -- #{data_to_string}"
   end
 
   def log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
