@@ -1,4 +1,5 @@
 require 'active_attr'
+require_relative '../config/initializers/fandom_consts'
 
 module ConfigUtils
 
