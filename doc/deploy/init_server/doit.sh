@@ -42,7 +42,8 @@ apt-get install vim \
   unzip \
   memcached \
   awscli \
-  cloud-utils
+  cloud-utils \
+  default-jdk
   
 apt-get build-dep ruby${RUBY_VERSION}
 
