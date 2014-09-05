@@ -71,7 +71,7 @@ class UserReward < ActiveRecord::Base
       end  
     else
       reward = Reward.find_by_name(reward_name)
-      period_id = send("create_#{periodicity_kind}_periodicity")
+      period_id = send("create_#{periodicity_kind.downcase}_periodicity")
       create(:user_id => user.id, :reward_id => reward.id, :available => true, :counter => counter, :period_id => period_id)
     end
   end

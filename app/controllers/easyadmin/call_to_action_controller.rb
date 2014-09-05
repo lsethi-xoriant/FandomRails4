@@ -195,7 +195,7 @@ class Easyadmin::CallToActionController < ApplicationController
       user_upload_interaction = cta.user_upload_interaction
       notice = Notice.create(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
       notice.send_to_user(request)
-      userinteraction = UserInteraction.create_or_update_interaction(user_upload_interaction.user_id, user_upload_interaction.upload_id, nil, nil)
+      userinteraction, outcome = UserInteraction.create_or_update_interaction(user_upload_interaction.user_id, user_upload_interaction.upload_id, nil, nil)
       compute_save_and_notify_outcome(userinteraction, user_upload_interaction)
     end
     # TODO insert call to log moderation ugc event
