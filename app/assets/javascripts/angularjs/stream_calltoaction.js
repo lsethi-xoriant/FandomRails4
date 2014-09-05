@@ -56,7 +56,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     if($scope.google_analytics_code.length > 0) {
       ga('send', 'event', category, action, label, 100, true);
     }
-  }
+  };
 
   //////////////////////// UPDATING AND ADDING PLAYERS AND CALLTOACTIONS METHODS ////////////////////////
 
@@ -139,7 +139,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         videoId: media_data,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
       });
-  }
+  };
 
   $window.appendCallToAction = function() {
     if($scope.calltoactions_count > $scope.calltoaction_offset) {
@@ -148,7 +148,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset, tag_id: $scope.current_tag_id })
       .success(function(data) {
-        $scope.calltoaction_offset = $scope.calltoaction_offset + data.calltoactions.length
+        $scope.calltoaction_offset = $scope.calltoaction_offset + data.calltoactions.length;
 
         hash_to_append = data.calltoactions_during_video_interactions_second;
         hash_main = $scope.calltoactions_during_video_interactions_second;
@@ -159,7 +159,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         updateSecondaryVideoPlayers(data.calltoactions);
 
         $("#calltoaction-stream").append(data.html_to_append);
-
+		
         if(!($scope.calltoactions_count > $scope.calltoaction_offset))
           $("#append-other button").hide();
 
@@ -168,10 +168,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         });
 
         $("#append-other button").attr('disabled', false);
+        
+        window.parent.iframeResize();
+        
       });
+      
     } else {
       $("#append-other").remove();
     }
+    
   };
 
   $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, autoplay) {
@@ -184,7 +189,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         current_video_player.cueVideoById(calltoaction_video_code);
       }
     }
-  }
+  };
 
   //////////////////////// SHOWING AND GETTING INTERACTION METHODS ////////////////////////
 
@@ -325,7 +330,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     } else {
       // Button play already selected.
     }
-  }
+  };
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
@@ -483,7 +488,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $window.hideCallToActionYTIframe = function(calltoaction_id) {
     $("#main-media-" + calltoaction_id).addClass("hidden");
     $("#secondary-media-" + calltoaction_id).removeClass("hidden");
-  }
+  };
 
   $window.showCallToActionYTIframe = function(calltoaction_id) {
     answer_selected_blocking = secondary_video_players[calltoaction_id]["answer_selected_blocking"];
@@ -503,7 +508,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       current_video_player = video_players[calltoaction_id];
       getOvervideoInteraction(calltoaction_id, interaction_shown_id, current_video_player, true, interaction_shown_in);
     }
-  }
+  };
 
   //////////////////////// POLLING METHODS ////////////////////////
 
