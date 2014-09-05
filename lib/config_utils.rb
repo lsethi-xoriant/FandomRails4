@@ -1,4 +1,5 @@
 require 'active_attr'
+require_relative '../config/initializers/fandom_consts'
 
 module ConfigUtils
 
@@ -37,7 +38,7 @@ module ConfigUtils
     attribute :force_ssl, :default => false
     attribute :force_facebook_tab, type: String
     attribute :public_pages, :default => Set.new([])
-    attribute :periodicity_kinds, :default => ["daily","weekly", "monthly"]
+    attribute :periodicity_kinds, :default => [PERIOD_KIND_DAILY, PERIOD_KIND_WEEKLY, PERIOD_KIND_MONTHLY]
 
     def unbranded?
       self.id == 'fandom'
