@@ -4,9 +4,9 @@
 class SystemMailer < ActionMailer::Base
   default from: ENV['EMAIL_ADDRESS']
 
-  def share_content_email(user, address_to_send, calltoaction)
+  def share_interaction(user, address_to_send, calltoaction)
     @calltoaction = calltoaction
-    mail(to: address_to_send, subject: "Ti hanno condiviso un contenuto da Maxibon - The Pool")
+    mail(to: address_to_send, subject: "")
   end
 
   def welcome_mail(user)

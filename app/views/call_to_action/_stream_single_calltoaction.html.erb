@@ -40,23 +40,27 @@
         <div class="row">
           <div class="col-xs-12 text-center">
           	<div class="row">
-          		  <!--
-                <div class="col-xs-3 col-xs-offset-3">
-                  <button type="button" class="btn btn-default btn-xs btn-block" data-toggle="modal" data-target="#facebook-like-modal"><span class="glyphicon glyphicon-thumbs-up"> <span class="hidden-xs">Like</span></span></button>
-                </div>
-               -->
-                <div class="col-xs-3 col-xs-offset-3">
-                  <button type="button" class="btn btn-default btn-xs btn-block" data-toggle="modal" data-target="#facebook-share-modal"><span class="glyphicon glyphicon-share"> <span class="hidden-xs">Condividi</span></span></button>
-                </div>
 
-                <div class="col-xs-3">
-                  <a class="btn btn-default btn-xs btn-block" href="/call_to_action/<%= calltoaction.id %>">Vedi</a>
-                </div>
-                
+              <div class="col-xs-3 col-xs-offset-3">
+
+                <% if (share_interactions = share_interactions(calltoaction)).any? %>
+
+                  <%= render partial: "/application/share_with", locals: { calltoaction: calltoaction, interaction: share_interactions.first } %>
+                  
+                  <button type="button" class="btn btn-default btn-xs btn-block" data-toggle="modal" data-target="#share-interaction-modal-<%= share_interactions.first.id %>"><span class="glyphicon glyphicon-share"> <span class="hidden-xs">Condividi</span></span></button>
+
+                <% end %>
+
               </div>
-              
+
+              <div class="col-xs-3">
+                <a class="btn btn-default btn-xs btn-block" href="/call_to_action/<%= calltoaction.id %>">Vedi</a>
+              </div>
+                
+            </div>             
           </div>
         </div>
+
       </div>
     </div>        
   </div>

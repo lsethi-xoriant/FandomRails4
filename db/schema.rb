@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140829144118) do
+ActiveRecord::Schema.define(:version => 20140904135454) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -320,12 +320,14 @@ ActiveRecord::Schema.define(:version => 20140829144118) do
   end
 
   create_table "rankings", :force => true do |t|
-    t.integer  "reward_id",  :null => false
+    t.integer  "reward_id",     :null => false
     t.string   "name"
     t.string   "title"
     t.string   "period"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.string   "rank_type"
+    t.string   "people_filter"
   end
 
   create_table "registrations", :force => true do |t|
@@ -398,18 +400,8 @@ ActiveRecord::Schema.define(:version => 20140829144118) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "shares", :force => true do |t|
-    t.text     "description"
-    t.string   "message"
-    t.string   "share_type"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
-    t.string   "picture_file_name"
-    t.string   "picture_content_type"
-    t.integer  "picture_file_size"
-    t.datetime "picture_updated_at"
-    t.string   "link"
-  end
+# Could not dump table "shares" because of following StandardError
+#   Unknown type 'json' for column 'providers'
 
   create_table "synced_log_files", :force => true do |t|
     t.string   "pid"
@@ -476,16 +468,8 @@ ActiveRecord::Schema.define(:version => 20140829144118) do
 # Could not dump table "user_counters" because of following StandardError
 #   Unknown type 'json' for column 'counters'
 
-  create_table "user_interactions", :force => true do |t|
-    t.integer  "user_id",                       :null => false
-    t.integer  "interaction_id",                :null => false
-    t.integer  "answer_id"
-    t.integer  "counter",        :default => 1
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
-    t.boolean  "like"
-    t.text     "outcome"
-  end
+# Could not dump table "user_interactions" because of following StandardError
+#   Unknown type 'json' for column 'aux'
 
   create_table "user_rewards", :force => true do |t|
     t.integer  "user_id"

@@ -7,6 +7,7 @@ class Easyadmin::CallToActionController < ApplicationController
   include EasyadminHelper
   include CallToActionHelper
   include RewardingSystemHelper
+  include EventHandlerHelper
 
   layout "admin"
 
@@ -188,7 +189,7 @@ class Easyadmin::CallToActionController < ApplicationController
   def update_cta_status
     cta = CallToAction.find(params[:id])
     cta.update_attributes(activated_at: DateTime.now, approved: params[:approved])
-
+    log_synced("Moderated UGC content", approved: params[:approved], cta_id: cta.id, moderator_id: current_user.id)
     if cta.approved
       html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_ugc_approved_template", layout: false, formats: :html
       user_upload_interaction = cta.user_upload_interaction

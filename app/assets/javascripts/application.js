@@ -9,6 +9,7 @@
 //= require angularjs/notice
 //= require angularjs/calltoaction
 //= require angularjs/comment
+//= require angularjs/ranking
 //= require config
 //= require angularjs/stream_calltoaction
 //= require angularjs/eventfilter

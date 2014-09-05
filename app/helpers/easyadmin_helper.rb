@@ -6,16 +6,17 @@ module EasyadminHelper
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/call_to_action/check-form", f: builder)
     end
-    link_to_function(name, "add_check_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
+    link_to_function(name, "add_check_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-block")
   end
 
-  def link_to_add_comment_fields(name, f, association)
+  # TODO: start here to uniform methods
+  def link_to_add_comment_fields(name, f, association, resource)
     new_object = Interaction.new
-    new_object.resource = Comment.new(title: "#COMMENT#{ DateTime.now.strftime("%Y%m%d") }")
+    new_object.resource = resource.singularize.classify.constantize.new(title: "##{resource.upcase}#{ DateTime.now.strftime("%Y%m%d") }")
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/comment-form", f: builder)
+      render("/easyadmin/call_to_action/#{resource}-form", f: builder)
     end
-    link_to_function(name, "add_comment_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
+    link_to_function(name, "add_#{resource}_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-block")
   end
 
   def link_to_add_download_fields(name, f, association)
@@ -24,7 +25,7 @@ module EasyadminHelper
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/call_to_action/download-form", f: builder)
     end
-    link_to_function(name, "add_download_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
+    link_to_function(name, "add_download_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-block")
   end
 
   def link_to_add_play_fields(name, f, association)
@@ -36,31 +37,13 @@ module EasyadminHelper
     link_to_function(name, "add_play_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs btn-block")
   end
 
-  def link_to_add_share_fb_fields(name, f, association)
+  def link_to_add_share_fields(name, f, association)
     new_object = Interaction.new
     new_object.resource = Share.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/share-fb-form", f: builder)
+      render("/easyadmin/call_to_action/share-form", f: builder)
     end
-    link_to_function(name, "add_share_fb_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
-  end
-
-  def link_to_add_share_tt_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Share.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/share-tt-form", f: builder)
-    end
-    link_to_function(name, "add_share_tt_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
-  end
-
-  def link_to_add_share_email_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Share.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/share-email-form", f: builder)
-    end
-    link_to_function(name, "add_share_email_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
+    link_to_function(name, "add_share_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-block")
   end
 
   def link_to_add_like_fields(name, f, association)
@@ -69,7 +52,7 @@ module EasyadminHelper
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/call_to_action/like-form", f: builder)
     end
-    link_to_function(name, "add_like_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
+    link_to_function(name, "add_like_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-block")
   end
 
   def link_to_add_quiz_fields(name, f, association)
@@ -78,7 +61,7 @@ module EasyadminHelper
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/call_to_action/quiz-form", f: builder)
     end
-    link_to_function(name, "add_quiz_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
+    link_to_function(name, "add_quiz_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-block")
   end
 
   def link_to_add_versus_fields(name, f, association)
@@ -87,7 +70,7 @@ module EasyadminHelper
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/call_to_action/versus-form", f: builder)
     end
-    link_to_function(name, "add_versus_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
+    link_to_function(name, "add_versus_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-block")
   end
 
   def link_to_add_answer_quiz_fields(name, f, association)

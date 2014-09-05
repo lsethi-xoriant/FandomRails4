@@ -20,13 +20,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   var polling = false;
 
-  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second) {
+  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code) {
 
     $scope.current_user = current_user;
     $scope.calltoactions = calltoactions;
 
     $scope.calltoaction_offset = calltoactions.length;
     $scope.calltoactions_count = calltoactions_count;
+
+    $scope.google_analytics_code = google_analytics_code;
 
     $scope.calltoactions_during_video_interactions_second = calltoactions_during_video_interactions_second;
 
@@ -48,6 +50,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $("#append-other button").show();
     }
 
+  };
+
+  $window.update_ga_event = function(category, action, label, value) {
+    if($scope.google_analytics_code.length > 0) {
+      ga('send', 'event', category, action, label, 100, true);
+    }
   };
 
   //////////////////////// UPDATING AND ADDING PLAYERS AND CALLTOACTIONS METHODS ////////////////////////
@@ -131,7 +139,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         videoId: media_data,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
       });
-  }
+  };
 
   $window.appendCallToAction = function() {
     if($scope.calltoactions_count > $scope.calltoaction_offset) {
@@ -140,7 +148,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset, tag_id: $scope.current_tag_id })
       .success(function(data) {
-        $scope.calltoaction_offset = $scope.calltoaction_offset + data.calltoactions.length
+        $scope.calltoaction_offset = $scope.calltoaction_offset + data.calltoactions.length;
 
         hash_to_append = data.calltoactions_during_video_interactions_second;
         hash_main = $scope.calltoactions_during_video_interactions_second;
@@ -151,7 +159,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         updateSecondaryVideoPlayers(data.calltoactions);
 
         $("#calltoaction-stream").append(data.html_to_append);
-
+		
         if(!($scope.calltoactions_count > $scope.calltoaction_offset))
           $("#append-other button").hide();
 
@@ -160,10 +168,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         });
 
         $("#append-other button").attr('disabled', false);
+        
+        window.parent.iframeResize();
+        
       });
+      
     } else {
       $("#append-other").remove();
     }
+    
   };
 
   $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, autoplay) {
@@ -176,7 +189,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         current_video_player.cueVideoById(calltoaction_video_code);
       }
     }
-  }
+  };
 
   //////////////////////// SHOWING AND GETTING INTERACTION METHODS ////////////////////////
 
@@ -291,9 +304,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $("#home-overvideo-title-" + calltoaction_id).addClass("hidden");
       play_event_tracked[calltoaction_id] = true;
 
-      $http.post("/update_interaction", { interaction_id: interaction_id, main_reward_name: "POINT" })
+      $http.post("/update_interaction", { interaction_id: interaction_id, main_reward_name: MAIN_REWARD_NAME })
         .success(function(data) {
-          interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
+
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+          }
+
+          interaction_point = data.outcome.attributes.reward_name_to_counter[MAIN_REWARD_NAME];
           if(interaction_point) {
             showAnimateFeedback(data.feedback, calltoaction_id);
             updateUserRewardInView(data.main_reward_counter);
@@ -312,49 +330,33 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     } else {
       // Button play already selected.
     }
-  }
+  };
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
-  // TODO TODO TODO TODO TODO TODO
-  $window.shareWith = function(provider, interaction_id, calltoaction_id) {
+  $window.shareWith = function(interaction_id, provider) {
 
-    $("#share-" + provider + "-" + interaction_id).attr('disabled', true); // Modifico lo stato del bottone.
-    $("#share-" + provider + "-" + interaction_id).html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
+    button = $("#" + provider + "-interaction-" + interaction_id);
 
-    $http.post("/user_event/share/" + provider, { interaction_id: interaction_id, share_email_address: $("#share-email-address-" + interaction_id).val() })
-      .success(function(data) {
-        // Modifico lo stato del bottone e notifico la condivisione.
-        $("#share-" + provider + "-" + interaction_id).attr('disabled', false); // Modifico lo stato del bottone.
-        $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI CON " + provider.toUpperCase());
+    button.attr('disabled', true);
+    button_main_content = button.html();
+    button.html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
 
-        $(".current_user_points").html(data.points_updated);
+    share_with_email_address = $("#address-interaction-" + interaction_id).val();
 
-        $("#share-modal-" + calltoaction_id).modal("hide");
+    $http.post("/update_interaction", { interaction_id: interaction_id, main_reward_name: MAIN_REWARD_NAME, share_with_email_address: share_with_email_address, provider: provider })
+          .success(function(data) {
 
-        if(provider == "email") {
-          $("#share-email-address-" + interaction_id).val("");
-          $("#share-" + provider + "-" + interaction_id).html("CONDIVIDI");
+          button.attr('disabled', false);
+          button.html(button_main_content);
 
-          if(data.email_correct) {
-            $("#share-" + calltoaction_id).addClass("btn-success");
-            $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
-          } else {
-            $("#invalid-email-modal").modal("show"); 
+          if(provider == "email") {
+            $("#address-interaction-" + interaction_id).val();
+          } 
+
+          if(!data.share.result) {
+            alert(data.share.exception);
           }
-
-        } else {
-          $("#share-" + calltoaction_id).addClass("btn-success");
-          $("#share-" + calltoaction_id).html("<span class=\"glyphicon glyphicon-ok\"></span>");
-        }
-
-        if(data.calltoaction_complete) {
-          $("#circle-calltoaction-done-" + calltoaction_id).removeClass("hidden");
-        }
-
-        if(data.undervideo_share_feedback) {
-          $("#share-mobile-feedback-" + calltoaction_id).html(data.undervideo_share_feedback);
-        } 
 
       }).error(function() {
         // ERRORE
@@ -369,8 +371,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       enableWaitingAudio("stop");
 
-      $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id, main_reward_name: "POINT" })
+      $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id, main_reward_name: MAIN_REWARD_NAME })
           .success(function(data) {
+
+            if(data.ga) {
+              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              });
+            }
 
             if(data.download_interaction_attachment) {
               window.open(data.download_interaction_attachment, '_blank');
@@ -396,7 +405,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
               }
 
               if(when_show_interaction == "OVERVIDEO_DURING") {
-                interaction_point = data.outcome.attributes.reward_name_to_counter["POINT"];
+                interaction_point = data.outcome.attributes.reward_name_to_counter[MAIN_REWARD_NAME];
                 if(interaction_point) {
                   showAnimateFeedback(data.feedback, calltoaction_id);
                 }
@@ -479,7 +488,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $window.hideCallToActionYTIframe = function(calltoaction_id) {
     $("#main-media-" + calltoaction_id).addClass("hidden");
     $("#secondary-media-" + calltoaction_id).removeClass("hidden");
-  }
+  };
 
   $window.showCallToActionYTIframe = function(calltoaction_id) {
     answer_selected_blocking = secondary_video_players[calltoaction_id]["answer_selected_blocking"];
@@ -499,7 +508,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       current_video_player = video_players[calltoaction_id];
       getOvervideoInteraction(calltoaction_id, interaction_shown_id, current_video_player, true, interaction_shown_in);
     }
-  }
+  };
 
   //////////////////////// POLLING METHODS ////////////////////////
 

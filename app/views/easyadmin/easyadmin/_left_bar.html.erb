@@ -119,13 +119,13 @@
 	    <% end %>
 	    
 	    <% if can? :manage, :all %>
-	    	<li class="dropdown <%= "active opened" if page == "ranking" %>"><a href="javascript:void(0);"><i class="fa fa-cup"></i>Classifiche<span class="caret"></span></a>
+	    	<li class="dropdown <%= "active opened" if page == "ranking" %>"><a href="javascript:void(0);"><i class="fa fa-star"></i>Classifiche<span class="caret"></span></a>
 		      <ul class="sub-nav">
 		        <li >
-		        	<a href="/easyadmin/ranking"><i class="fa fa-comment"></i>Elenco classifiche</a>
+		        	<a href="/easyadmin/ranking"><i class="fa fa-th-list"></i>Elenco classifiche</a>
 		        </li>
 		        <li >
-		        	<a href="/easyadmin/ranking/new"><i class="fa fa-th-large"></i>Nuova classifica</a>
+		        	<a href="/easyadmin/ranking/new"><i class="fa fa-save"></i>Nuova classifica</a>
 		        </li>
 		      </ul>
 		    </li>

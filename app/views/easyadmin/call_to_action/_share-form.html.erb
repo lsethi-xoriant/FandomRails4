@@ -1,0 +1,204 @@
+<div class="panel panel-default">
+	<% if f.object.id %>
+		<div class="panel-heading">&nbsp;</div>
+	<% else %>
+		<div class="panel-heading">&nbsp; 
+			<p style="float: right"><%= link_to_remove_share_fb_fields "rimuovi" %></p>
+		</div>
+	<% end %>
+	<div class="panel-body">
+		<%= f.hidden_field :resource_type, :class => "form-control" %>
+		<%= f.fields_for :resource do |shareform| %>
+			
+			<div class="col-lg-3">
+				<label>Provider per lo share</label>
+				<div class="checkbox">
+					<label>
+					<input class="facebook-checkbox" type="checkbox" value="facebook" onchange="updateJsonForShare(this)">
+						Facebook
+					</label>
+				</div>
+				<div class="checkbox">
+					<input class="twitter-checkbox" type="checkbox" value="twitter" onchange="updateJsonForShare(this)">
+						Twitter
+					</label>
+				</div>
+				<div class="checkbox">
+					<input class="email-checkbox" type="checkbox" value="twitter" onchange="updateJsonForShare(this)">
+						Email
+					</label>
+				</div>
+
+				<div class="form-group">
+          <label class="text-input">Richiesto per il completamento</label>
+           <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+        </div>
+
+				<div class="form-group">
+				  <label class="text-input">Visibile</label>
+				   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["MAI_VISIBILE", "MAI_VISIBILE"]], {}, { :class => "form-control" }) %>
+				</div>
+
+				<div class="form-group hidden">
+          <label class="text-input">JSON</label>
+					<%= shareform.text_area :providers, class: "form-control provider-json", rows: 4, readonly: true, style: "font-size: 10px;" %>
+				</div>
+
+			</div>
+
+			<div class="col-lg-5">
+				<div class="facebook-share hidden">
+						<label>Facebook</label>
+						<hr>
+					 	<div class="form-group">
+              <label class="text-input">Titolo</label>
+              <%= text_field_tag :facebook_message, nil, class: "form-control facebook-message", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+          	<div class="form-group">
+              <label class="text-input">Descrizione</label>
+              <%= text_field_tag :facebook_description, nil, class: "form-control facebook-description", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+          	<div class="form-group">
+              <label class="text-input">Link</label>
+              <%= text_field_tag :facebook_link, nil, class: "form-control facebook-link", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+         </div>
+         <div class="twitter-share hidden">
+          	<label>Twitter</label>
+						<hr>
+					 	<div class="form-group">
+              <label class="text-input">Messaggio</label>
+              <%= text_field_tag :twitter_message, nil, class: "form-control twitter-message", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+          	<div class="form-group">
+              <label class="text-input">Link</label>
+              <%= text_field_tag :twitter_link, nil, class: "form-control twitter-link", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4 text-center">
+		      <div class="form-group">
+		          <div class="fileupload fileupload-new" data-provides="fileupload">
+		            <div class="fileupload-preview thumbnail" style="width: 100%; height: 200px; line-height: 20px;">
+		                <% unless shareform.object.picture.blank? %><img src="<%= shareform.object.picture.url %>"><% end %>
+		            </div>
+		            <div>
+		              <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA IMMAGINE</span>
+		              <span class="fileupload-exists">MODIFICA</span><%= shareform.file_field :picture  %></span>
+		              <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">ELIMINA</a>
+		            </div>
+		          </div>
+		      </div>
+		    </div>
+
+		<% end %>
+  	</div>
+</div>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$.each($(".provider-json"), function(index, element) {
+			fromJsonToForm(element);
+		});
+	});
+
+	function fromJsonToForm(element) {
+		if($(element).val()) {
+			json = JSON.parse($(element).val());
+			provider_div = $(element).parent().parent().parent();
+
+			if(json.facebook) {
+				$(provider_div).find(".facebook-message").val(json.facebook.message); 
+				$(provider_div).find(".facebook-description").val(json.facebook.description); 
+				$(provider_div).find(".facebook-link").val(json.facebook.link); 
+
+				$(provider_div).find(".facebook-checkbox").attr("checked", "checked");
+				$(provider_div).find(".facebook-share").removeClass("hidden");
+			} else {
+				$(provider_div).find(".facebook-share").addClass("hidden");
+			}
+
+			if(json.twitter) {
+				$(provider_div).find(".twitter-message").val(json.twitter.message); 
+				$(provider_div).find(".twitter-link").val(json.twitter.link); 
+
+				$(provider_div).find(".twitter-checkbox").attr("checked", "checked");
+				$(provider_div).find(".twitter-share").removeClass("hidden");
+			} else {
+				$(provider_div).find(".twitter-share").addClass("hidden");
+			}
+
+			if(json.email) {
+				$(provider_div).find(".email-checkbox").attr("checked", "checked");
+			}
+
+		}
+
+	}
+
+	function updateJsonForShare(element) {
+		provider_name = $(element).val();
+		provider_div = $(element).parent().parent().parent().parent();
+		
+		json = {}
+
+		facebook_checkbox = $(element).parent().parent().parent().parent().find(".facebook-checkbox")[0];
+		twitter_checkbox = $(element).parent().parent().parent().parent().find(".twitter-checkbox")[0];
+		email_checkbox = $(element).parent().parent().parent().parent().find(".email-checkbox")[0];
+		
+		if(facebook_checkbox.checked) {
+			json.facebook = {}
+			json.facebook.message = provider_div.find(".facebook-message").val(); 
+			json.facebook.description = provider_div.find(".facebook-description").val(); 
+			json.facebook.link = provider_div.find(".facebook-link").val(); 
+
+			$(provider_div).find(".facebook-share").removeClass("hidden");
+		} else {
+			$(provider_div).find(".facebook-share").addClass("hidden");
+		}
+
+		if(twitter_checkbox.checked) {
+			json.twitter = {}
+			json.twitter.message = provider_div.find(".twitter-message").val(); 
+			json.twitter.link = provider_div.find(".twitter-link").val(); 
+
+			$(provider_div).find(".twitter-share").removeClass("hidden");
+		} else {
+			$(provider_div).find(".twitter-share").addClass("hidden");
+		}
+
+		if(email_checkbox.checked) { 
+			json.email = {};
+		}
+
+		json_div = $(element).parent().parent().parent().parent().find(".provider-json").val(JSON.stringify(json));
+
+	}
+
+	function updateProviderJson(element) {
+		facebook_share = $(element).parent().parent().parent().find(".facebook-share");
+		twitter_share = $(element).parent().parent().parent().find(".twitter-share");
+
+		json = {};
+
+		facebook_checkbox = $(element).parent().parent().parent().parent().find(".facebook-checkbox")[0];
+		twitter_checkbox = $(element).parent().parent().parent().parent().find(".twitter-checkbox")[0];
+	
+		if(facebook_checkbox.checked) {
+			json.facebook = {};
+			json.facebook.message = facebook_share.find(".facebook-message").val(); 
+			json.facebook.description = facebook_share.find(".facebook-description").val(); 
+			json.facebook.link = facebook_share.find(".facebook-link").val(); 
+		}
+
+		if(twitter_checkbox.checked) {
+			json.twitter = {};
+			json.twitter.message = twitter_share.find(".twitter-message").val(); 
+			json.twitter.link = twitter_share.find(".twitter-link").val(); 
+		}
+
+		json_div = $(element).parent().parent().parent().parent().find(".provider-json").val(JSON.stringify(json));
+	}
+</script>

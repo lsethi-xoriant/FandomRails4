@@ -186,6 +186,10 @@ class CallToActionController < ApplicationController
 
     response = Hash.new
     
+    response[:ga] = Hash.new
+    response[:ga][:category] = "UserInteraction"
+    response[:ga][:action] = "CreateOrUpdate"
+
     if interaction.resource_type.downcase == "download" 
       response["download_interaction_attachment"] = interaction.resource.attachment.url
     end
@@ -202,18 +206,40 @@ class CallToActionController < ApplicationController
         response["answer"]["media_image"] = answer.media_image
       end
 
-    elsif interaction.resource_type.downcase.to_sym == :like
+      if interaction.resource.quiz_type.downcase == "trivia"
+        response[:ga][:label] = "#{interaction.resource.quiz_type.downcase}-answer-#{answer.correct ? "right" : "wrong"}"
+      else 
+        response[:ga][:label] = interaction.resource.quiz_type.downcase
+      end
+
+    elsif interaction.resource_type.downcase == "like"
 
       user_interaction = get_user_interaction_from_interaction(interaction, current_or_anonymous_user)
       like = user_interaction ? !user_interaction.like : true
 
       user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, like)
 
+      response[:ga][:label] = "Like"
+
+    elsif interaction.resource_type.downcase == "share"
+      provider = params[:provider]
+      result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address])
+      if result
+        aux = { "#{provider}" => 1 }
+        user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
+        response[:ga][:label] = interaction.resource_type.downcase
+      end
+
+      response[:share] = Hash.new
+      response[:share][:result] = result
+      response[:share][:exception] = exception.to_s
+
     else
       user_interaction = UserInteraction.create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil)
+      response[:ga][:label] = interaction.resource_type.downcase
     end
 
-    if current_user
+    if current_user && user_interaction
       outcome = compute_and_save_outcome(user_interaction)
 
       update_user_interaction_outcome(outcome, user_interaction)
@@ -232,17 +258,19 @@ class CallToActionController < ApplicationController
       end
       response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, current_user)
+
+
+      if interaction.when_show_interaction == "SEMPRE_VISIBILE"
+        response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome }, layout: false, formats: :html 
+      else
+        response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
+      end
+
     else
       response['outcome'] = nil
     end
 
     response["main_reward_counter"] = get_counter_about_user_reward(params[:main_reward_name])
-
-    if interaction.when_show_interaction == "SEMPRE_VISIBILE"
-      response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome }, layout: false, formats: :html 
-    else
-      response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
-    end
 
     respond_to do |format|
       format.json { render :json => response.to_json }
@@ -338,79 +366,55 @@ class CallToActionController < ApplicationController
     response
   end
 
-  def share_free
-    risp = Hash.new
+  def update_share_interaction(interaction, provider, address)
+    # When this function is called, there is a current user with the current provider anchor
 
-    user_id = current_user ? current_user.id : -1 
+    provider_json = JSON.parse(interaction.resource.providers)[provider]
+    result = true
 
-    i = Interaction.find(params[:interaction_id].to_i)
-    ui = UserInteraction.find_by_user_id_and_interaction_id(user_id, i.id)
+    if provider == "facebook"
 
-    if ui
-      ui.update_attribute(:counter, ui.counter + 1)
-    else
-      ui = UserInteraction.create(user_id: user_id, interaction_id: params[:interaction_id].to_i)
-    end
-
-    respond_to do |format|
-      format.json { render :json => risp.to_json }
-    end 
-  end
-
-  def share
-    risp = Hash.new
-
-    i = Interaction.find(params[:interaction_id].to_i)
-    ui = UserInteraction.find_by_user_id_and_interaction_id(current_user.id, i.id)
-
-    if ui
-      ui.update_attribute(:counter, ui.counter + 1)
-    else
-      ui = UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i)
-      if mobile_device?
-        risp["undervideo_share_feedback"] = render_to_string "/call_to_action/_share_mobile_feedback", locals: { calltoaction: i.call_to_action }, layout: false, formats: :html 
+      begin
+        if Rails.env == "production"
+          current_user.facebook(request.site.id).put_wall_post(" ", 
+            { name: provider_json["message"], description: provider_json["description"], link: provider_json["link"], picture: "#{interaction.resource.picture.url}" })
+        else
+          current_user.facebook(request.site.id).put_wall_post(" ", 
+            { name: provider_json["message"], description: provider_json["description"], link: "http://entertainment.shado.tv/" })
+        end  
+      rescue Exception => exception
+        result = false
+        error = exception
       end
-      risp["points_for_user"] = ui.points
-    end
 
-    risp["calltoaction_complete"] = calltoaction_done? i.call_to_action
+    elsif provider == "twitter"
 
-    if params[:provider] == "facebook" && current_user && current_user.facebook
-      if Rails.env.production?
-        current_user.facebook.put_wall_post(" ", { name: i.resource.message, description: i.resource.description, link: "#{ i.resource.link.blank? ? request.referer : i.resource.link }", picture: "#{ root_url }#{i.resource.picture.url}" })
-      else
-        current_user.facebook.put_wall_post(" ", { name: i.resource.message, description: i.resource.description, link: "#{ i.resource.link.blank? ? request.referer : i.resource.link }", picture: "#{ root_url }#{i.resource.picture.url}" })
-        #current_user.facebook.put_wall_post("DEV #{ DateTime.now }", { name: i.resource.description })
-      end
-      risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
-      respond_to do |format|
-        format.json { render :json => risp.to_json }
-      end 
-    # elsif params[:provier] = "twitter" && current_user && current_user.twitter
-    #   current_user.twitter.update(i.resource.message)
-    elsif params[:provider] == "email" && current_user
-      if params[:share_email_address] =~ Devise.email_regexp
-
-        SystemMailer.share_content_email(current_user, params[:share_email_address], i.call_to_action).deliver
-
-        ui ? (ui.update_attribute(:counter, ui.counter + 1)) : (UserInteraction.create(user_id: current_user.id, interaction_id: params[:interaction_id].to_i))
-        risp["email_correct"] = true
-        risp['points_updated'] = (get_current_contest_points current_user.id) if current_user
-
-        respond_to do |format|
-          format.json { render :json => risp.to_json }
-        end 
-      else
-        risp["email_correct"] = false
-        respond_to do |format|
-          format.json { render :json => risp.to_json }
+      begin 
+        if Rails.env == "production"
+          media = URI.parse("#{interaction.resource.picture.url}").open
+          current_user.twitter(request.site.id).update_with_media("#{interaction.call_to_action.title} #{provider_json["message"]}", media)
+        else
+          current_user.twitter(request.site.id).update("#{interaction.call_to_action.title} #{provider_json["message"]}")
         end
+      rescue Exception => exception
+        result = false
+        error = exception
       end
+
+    elsif provider == "email"
+
+      if address =~ Devise.email_regexp
+        SystemMailer.share_interaction(current_user, address, interaction.call_to_action).deliver
+      else
+        result = false
+        error = "invalid format"
+      end
+
     else
-      respond_to do |format|
-        format.json { render :json => "current-user-no-provider" }
-      end
+      result = false
     end
+
+    [result, error]
   end
   
   def upload

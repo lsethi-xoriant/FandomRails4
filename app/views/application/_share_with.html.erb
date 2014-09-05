@@ -1,25 +1,59 @@
-<!-- Modal -->
-<div class="modal fade" id="share-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-	    <div class="modal-header">
-	      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	      <h4 class="modal-title" id="myModalLabel">Condividi con il provider che preferisci</h4>
-	    </div>
-	    <div class="modal-body">
-	    	<% if current_user %>
-	    		<% share.each do |s| %>
-	    			<% if s.resource.share_type != "EMAIL" %>
-	    				<button id="share-<%= s.resource.share_type %>" type="button" class="btn btn-default" onclick="shareWith('<%= s.resource.share_type %>', <%= s.id %>)"><%= s.resource.share_type %></button>
-	    			<% end %>
-	    		<% end %>
-	    	<% else %>
-	      		Per poter giocare devi <a href="/users/sign_up">loggarti o registrarti</a>
-	      	<% end %>
-	    </div>
-	    <div class="modal-footer">
-	      <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	    </div>
-	  </div>
-	</div>
+<div class="modal fade" id="share-interaction-modal-<%= interaction.id %>" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="text-center">CONDIVIDI IL CONTENUTO</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <h4>Contenuto: <%= calltoaction.title %></h4>
+          </div>
+          <div class="col-sm-10 col-sm-offset-1" style="margin-top: 15px;">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="row text-center">
+
+                	<% if JSON.parse(interaction.resource.providers)["facebook"] %>
+	                  <div class="col-md-6">                    
+	                    <% if current_user && current_user.facebook(request.site.id) %>
+	                      <button id="facebook-interaction-<%= interaction.id %>" type="button" class="btn btn-fb btn-block" onclick="shareWith(<%= interaction.id %>, 'facebook')">CONDIVIDI CON FACEBOOK</button>
+	                    <% else %>
+	                      <a href="/auth/facebook_<%= request.site.id %>"><button type="button" class="btn btn-fb btn-block">ENTRA CON FACEBOOK</button></a>
+	                    <% end %>
+	                  </div>
+                  <% end %>
+
+                  <% if JSON.parse(interaction.resource.providers)["twitter"] %>
+	                  <div class="col-md-6">                    
+	                    <% if current_user && current_user.twitter(request.site.id) %>
+	                      <button id="twitter-interaction-<%= interaction.id %>" type="button" class="btn btn-tw btn-block" onclick="shareWith(<%= interaction.id %>, 'twitter')">CONDIVIDI CON TWITTER</button>
+	                    <% else %>
+	                      <a href="/auth/twitter_<%= request.site.id %>"><button type="button" class="btn btn-tw btn-block">ENTRA CON TWITTER</button></a>
+	                    <% end %>
+	                  </div>
+                  <% end %>
+
+                  <% if current_user && JSON.parse(interaction.resource.providers)["email"] %>
+                    <div class="col-md-6" style="margin-top: 10px;">
+                      <%= text_field_tag :address, nil, class: "form-control", id: "address-interaction-#{ interaction.id }", placeholder: "example@shado.tv" %>
+                    </div>
+                    <div class="col-md-6" style="margin-top: 10px;">
+                      <button id="email-interaction-<%= interaction.id %>" type="button" class="btn btn-default btn-block" onclick="shareWith(<%= interaction.id %>, 'email')">CONDIVIDI VIA EMAIL</button>
+                    </div>
+                  <% end %>
+
+                </div>
+              </div>
+            </div>
+          </div>    
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+      </div>
+    </div>
+  </div>
 </div>

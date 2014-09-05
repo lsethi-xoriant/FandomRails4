@@ -1,6 +1,6 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= [@calltoaction].to_json %>, 1, <%= @calltoactions_during_video_interactions_second.to_json %>)">   
+<div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= [@calltoaction].to_json %>, 1, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
   
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1">

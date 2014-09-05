@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-md-12">
+      <div class="page-header">
+        <h1><%= "#{ranking.title} dei #{ranking.reward.title}" %></h1>
+      </div>
+      <% ranks = {"first" => rank_list.first, "me" => rank_list[my_position], "last" => rank_list.last} %>
+      <ul class="list-group">
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin"><%= ranks["first"]["position"]%></h4></div>
+              <div class="col-sm-2 hidden-xs"><img src="<%= ranks["first"]["avatar"] %>" class="img-circle img-responsive"></div>
+              <div class="col-sm-5 col-xs-7"><h4><%= ranks["first"]["user"] %></h4></div>
+              <div class="col-sm-3 col-xs-3 text-right"><h4 class="no-margin"><%= ranks["first"]["counter"] %></h4></div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              .<br />.<br />.<br />
+            </div>
+          </li>
+          <li ng-repeat="rank in rankings" class="list-group-item list-group-item-warning">
+            <div class="row">
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin"><%= ranks["me"]["position"]%></h4></div>
+              <div class="col-sm-2 hidden-xs"><img src="<%= ranks["me"]["avatar"] %>" class="img-circle img-responsive"></div>
+              <div class="col-sm-5 col-xs-7"><h4><%= ranks["me"]["user"] %></h4></div>
+              <div class="col-sm-3 col-xs-3 text-right"><h4 class="no-margin"><%= ranks["me"]["counter"] %></h4></div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              .<br />.<br />.<br />
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin"><%= ranks["last"]["position"]%></h4></div>
+              <div class="col-sm-2 hidden-xs"><img src="<%= ranks["last"]["avatar"] %>" class="img-circle img-responsive"></div>
+              <div class="col-sm-5 col-xs-7"><h4><%= ranks["last"]["user"] %></h4></div>
+              <div class="col-sm-3 col-xs-3 text-right"><h4 class="no-margin"><%= ranks["last"]["counter"] %></h4></div>
+            </div>
+          </li>
+      </ul>
+    </div>
+</div>

@@ -6,7 +6,7 @@
 <div class="col-sm-12 text-center" style="margin-top: 15px;">
   <div class="row">
     <% interaction.resource.answers.each do |answer|%>
-      <%= render partial: "/call_to_action/trivia_answer", locals: { user_interaction: user_interaction, answer: answer, interaction: interaction } %>
+      <%= render partial: "/call_to_action/trivia_answer", locals: { user_interaction: user_interaction, answer: answer, interaction: interaction, answer_counter: interaction.resource.answers.count } %>
     <% end %>
   </div>
   <div class="row">

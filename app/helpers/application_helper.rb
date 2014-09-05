@@ -39,6 +39,14 @@ module ApplicationHelper
     attribute :column_number, type: Integer
   end
 
+  def ga_code
+    begin
+      ga = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["ga"]
+    rescue Exception => exception
+    end
+    ga
+  end
+
   def interaction_done?(interaction)
     return current_user && UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
   end
@@ -201,47 +209,11 @@ module ApplicationHelper
 		return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
 	end 
 
-	def calltoactions_except_share(calltoaction)
-		calltoactions_except_share = cache_short("calltoactions_except_share_#{calltoaction.id}") do
-		  calltoaction.interactions.where("resource_type<>'Share'").to_a
+  # Get calltoaction's share interactions.
+	def share_interactions(calltoaction)
+		calltoaction_share_interactions = cache_short("calltoaction_#{calltoaction.id}_share_interactions") do
+		  calltoaction.interactions.where("resource_type=? AND when_show_interaction=?", "Share", "SEMPRE_VISIBILE").to_a
 		end
-	end
-
-	def calltoaction_interaction_share_done?(calltoaction)
-	  done = true
-	  if current_user
-	    calltoactions_just_share = cache_short("calltoactions_just_share_#{calltoaction.id}") do
-	      calltoaction.interactions.where("resource_type='Share'").to_a
-	    end	    
-	    done = false if current_user.user_interactions.where("interaction_id in (?)", calltoactions_just_share.map.collect { |u| u["id"] }).blank?
-		else
-			done = false
-		end 
-	  return done
-	end
-
-	def user_points_except_share_for(calltoaction)
-		calltoactions_except_share_with_user_interactions = calltoaction.interactions.includes(:user_interactions).where("interactions.resource_type<>'Share'")
-		# TODO: update with new reward system
-		#user_points = calltoactions_except_share_with_user_interactions.where("user_interactions.user_id=?", current_user).sum("user_interactions.points")
-		#user_points = user_points + calltoactions_except_share_with_user_interactions.where("user_interactions.user_id=?", current_user).sum("user_interactions.added_points")
-		0
-	end
-
-	def calltoaction_except_share_done?(calltoaction)
-		# Check if user completed calltoaction.
-	  done = true
-	  if current_user
-	  		# TODO: when_show_interaction!='MAI_VISIBILE'
-	  		calltoactions_except_share = calltoactions_except_share(calltoaction)
-	  		
-		    calltoactions_except_share.each do |i|
-		      done = false if UserInteraction.where("interaction_id=? AND user_id=?", i.id, current_user.id).blank?
-		    end
-		else
-			done = false
-		end 
-	    return done
 	end
 
 	def current_avatar size = "normal"
@@ -376,6 +348,14 @@ module ApplicationHelper
   def days_in_month(month, year = Time.now.year)
    return 29 if month == 2 && Date.gregorian_leap?(year)
    DAYS_IN_MONTH[month]
+  end
+  
+  def get_pages(results, results_per_page)
+    if results % results_per_page == 0
+      results / results_per_page
+    else
+      results / results_per_page + 1
+    end
   end
   
 end

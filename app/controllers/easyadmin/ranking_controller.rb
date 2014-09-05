@@ -9,7 +9,7 @@ class Easyadmin::RankingController < ApplicationController
 
   def new
     @ranking = Ranking.new
-    @reward_options = Reward.all.map { |r| [r.name, r.id] }
+    @reward_options = Reward.where("countable = TRUE").map { |r| [r.name, r.id] }
   end
   
   def create
