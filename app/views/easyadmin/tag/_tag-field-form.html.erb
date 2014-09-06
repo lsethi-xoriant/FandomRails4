@@ -9,7 +9,7 @@
 		<% end %>
 		<div class="panel-body">
 
-				<div class="col-lg-10">
+				<div class="col-lg-10 metadata-form-container">
 					<div class="row" style="margin-bottom: 0px;">
 						<div class="col-lg-6">
 							<div class="form-group">
@@ -20,11 +20,11 @@
 						<div class="col-lg-6">
 							<div class="form-group">
 							  <label class="text-input">Tipo</label>
-							   <%= f.select(:field_type, [["STRINGA", "STRINGA"], ["UPLOAD", "UPLOAD"]], {}, { :class => "form-control" }) %>
+							   <%= f.select(:field_type, [["STRINGA", "STRINGA"], ["MEDIA", "UPLOAD"]], {}, { :class => "form-control meta-type", :onchange => "changeMetadataType(this);" }) %>
 							</div>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row string-metadata">
 						<div class="col-lg-12">
 							<div class="form-group">
 								<label class="text-input">Valore</label>
@@ -32,12 +32,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row media-metadata">
 						<div class="col-lg-6 text-center">
 				          
 				          <% if f.object.id && f.object.upload %>
 				          <div class="form-group">
-				              <label class="text-input">Upload</label>
+				              <label class="text-input">Media</label>
 				              <div class="fileupload fileupload-new" data-provides="fileupload">
 				                <div class="fileupload-preview thumbnail" style="width: 400px; height: 300px; line-height: 20px;">
 				                	<img src="<%= f.object.upload.url %>">
@@ -51,7 +51,7 @@
 				          </div>
 				          <% else %>
 				          <div class="form-group">
-				              <label class="text-input">Upload</label>
+				              <label class="text-input">Media</label>
 				              <div class="fileupload fileupload-new" data-provides="fileupload">
 				                <div class="fileupload-preview thumbnail" style="width: 400px; height: 300px; line-height: 20px;"></div>
 				                <div>
@@ -68,3 +68,30 @@
   	</div>
   	
 </div>
+<style>
+	.media-metadata{ display: none; }
+</style>
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		$(".metadata-form-container").each(function(index){
+			select = $(this).find("select.meta-type");
+			changeMetadataType(select);
+		});
+	});
+	
+	function getSelectValue(select){
+		return $(select).find("option:selected").val();
+	}
+	
+	function changeMetadataType(type_element){
+		var value = getSelectValue(type_element);
+		if(value == "UPLOAD"){
+			$(type_element).parents(".metadata-form-container").find(".string-metadata").hide();
+			$(type_element).parents(".metadata-form-container").find(".media-metadata").show();
+		}else{
+			$(type_element).parents(".metadata-form-container").find(".media-metadata").hide();
+			$(type_element).parents(".metadata-form-container").find(".string-metadata").show();
+		}
+	}
+</script>
