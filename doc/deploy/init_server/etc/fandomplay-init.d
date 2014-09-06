@@ -22,10 +22,10 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Fandom on Play! Framework"
 NAME=fandomplay
 USER=app
-DAEMON_PATH=/home/$USER/playapps/FandomPlay
-DAEMON=$DAEMON_PATH/current/bin/$NAME
-PIDFILE=$DAEMON_PATH/RUNNING_PID
-DAEMON_ARGS="-Dconfig.file=$DAEMON_PATH/deploy_conf/application.conf -Dpidfile.path=$PIDFILE"
+DAEMON_BASEDIR=/home/$USER/playapps/FandomPlay
+DAEMON=$DAEMON_BASEDIR/current/bin/$NAME
+PIDFILE=$DAEMON_BASEDIR/RUNNING_PID
+DAEMON_ARGS="-Dconfig.file=$DAEMON_BASEDIR/deploy_conf/application_deploy.conf -Dpidfile.path=$PIDFILE"
 SCRIPTNAME=/etc/init.d/$NAME
 
 # Exit if the package is not installed
@@ -52,7 +52,7 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-	start-stop-daemon --start --verbose --pidfile $PIDFILE --startas $DAEMON --name java -c $USER --background -- \
+	start-stop-daemon --start --verbose --pidfile $PIDFILE --startas $DAEMON --name java -c $USER --background --chdir $DAEMON_BASEDIR/current -- \
 		$DAEMON_ARGS 
 	RETVAL="$?"
 	return "$RETVAL"
