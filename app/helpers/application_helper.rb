@@ -92,22 +92,30 @@ module ApplicationHelper
 
       UserCounter.update_unique_counters(user_interaction, user)
     else
-      user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
+      if interaction.resource_type.downcase == "vote"
+        user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
       
-      outcome = compute_and_save_outcome(user_interaction)
+        outcome = compute_and_save_outcome(user_interaction)
+        user_interaction.update_attribute(:outcome, outcome)
 
-      interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
-      interaction_outcome.merge!(outcome)
-
-      interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
-      interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
-
-      outcome_for_user_interaction = {
-        win: interaction_outcome,
-        correct_answer: interaction_correct_answer_outcome
-      }.to_json
-
-      user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+      else
+        user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
+      
+        outcome = compute_and_save_outcome(user_interaction)
+  
+        interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
+        interaction_outcome.merge!(outcome)
+  
+        interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
+        interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
+  
+        outcome_for_user_interaction = {
+          win: interaction_outcome,
+          correct_answer: interaction_correct_answer_outcome
+        }.to_json
+        user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+      end
+      
     end
     UserCounter.update_all_counters(user_interaction, user)
     [user_interaction, outcome]

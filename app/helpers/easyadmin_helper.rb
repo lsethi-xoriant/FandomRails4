@@ -113,6 +113,15 @@ module EasyadminHelper
     end
     link_to_function(name, "add_upload_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
   end
+  
+  def link_to_add_vote_fields(name, f, association)
+    new_object = Interaction.new
+    new_object.resource = Vote.new
+    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
+      render("/easyadmin/call_to_action/vote-form", f: builder)
+    end
+    link_to_function(name, "add_vote_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
+  end
 
   def link_to_remove_check_fields(name)
     link_to_function(name, "remove_check_fields(this)", class: "btn btn-warning btn-xs")
@@ -176,6 +185,10 @@ module EasyadminHelper
   
   def link_to_remove_upload_fields(name)
     link_to_function(name, "remove_upload_fields(this)", class: "btn btn-warning btn-xs")
+  end
+  
+  def link_to_remove_vote_fields(name)
+    link_to_function(name, "remove_vote_fields(this)", class: "btn btn-warning btn-xs")
   end
 
 end
