@@ -246,10 +246,9 @@ class CallToActionController < ApplicationController
     if interaction.resource_type.downcase == "download" 
       response["download_interaction_attachment"] = interaction.resource.attachment.url
     end
-
     if interaction.resource_type.downcase == "quiz"
       
-      answer = Answer.find(params[:answer_id])
+      answer = Answer.find(params[:params])
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id, nil)
 
       response["have_answer_media"] = answer.answer_with_media?
@@ -286,6 +285,12 @@ class CallToActionController < ApplicationController
       response[:share] = Hash.new
       response[:share][:result] = result
       response[:share][:exception] = exception.to_s
+    
+    elsif interaction.resource_type.downcase == "vote"
+      vote = params[:params]
+      aux = { "call_to_action_id" => interaction.call_to_action.id, "vote" => vote }
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
+      response[:ga][:label] = interaction.resource_type.downcase
 
     else
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil)

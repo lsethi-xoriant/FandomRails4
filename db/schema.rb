@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140904135454) do
+ActiveRecord::Schema.define(:version => 20140908093920) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -71,13 +71,12 @@ ActiveRecord::Schema.define(:version => 20140904135454) do
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
     t.string   "slug"
+    t.boolean  "user_generated"
     t.string   "media_image_file_name"
     t.string   "media_image_content_type"
     t.integer  "media_image_file_size"
     t.datetime "media_image_updated_at"
     t.text     "media_data"
-    t.integer  "user_id"
-    t.boolean  "user_generated"
     t.integer  "releasing_file_id"
     t.boolean  "approved"
     t.string   "thumbnail_file_name"
@@ -86,7 +85,7 @@ ActiveRecord::Schema.define(:version => 20140904135454) do
     t.datetime "thumbnail_updated_at"
   end
 
-  add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name"
+  add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name", :unique => true
   add_index "call_to_actions", ["slug"], :name => "index_call_to_actions_on_slug"
 
   create_table "checks", :force => true do |t|
@@ -150,20 +149,20 @@ ActiveRecord::Schema.define(:version => 20140904135454) do
   end
 
   create_table "events", :force => true do |t|
-    t.string   "session_id"
-    t.integer  "pid"
-    t.string   "message"
-    t.string   "request_uri"
-    t.string   "file_name"
-    t.string   "method_name"
-    t.string   "line_number"
-    t.text     "params"
-    t.text     "data"
-    t.string   "event_hash"
-    t.string   "level"
-    t.string   "tenant"
-    t.integer  "user_id"
-    t.datetime "timestamp"
+    t.string  "session_id"
+    t.integer "pid"
+    t.string  "message"
+    t.string  "request_uri"
+    t.string  "file_name"
+    t.string  "method_name"
+    t.string  "line_number"
+    t.text    "params"
+    t.text    "data"
+    t.string  "timestamp"
+    t.string  "event_hash"
+    t.string  "level"
+    t.string  "tenant"
+    t.integer "user_id"
   end
 
   create_table "home_launchers", :force => true do |t|
@@ -211,6 +210,8 @@ ActiveRecord::Schema.define(:version => 20140904135454) do
     t.string  "resource_type"
     t.integer "call_to_action_id"
   end
+
+  add_index "interactions", ["name"], :name => "index_interactions_on_name", :unique => true
 
   create_table "likes", :force => true do |t|
     t.string   "title"
@@ -284,10 +285,8 @@ ActiveRecord::Schema.define(:version => 20140904135454) do
 
   create_table "plays", :force => true do |t|
     t.string   "title"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.string   "text_before"
-    t.string   "text_after"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "playticket_events", :force => true do |t|
@@ -414,7 +413,7 @@ ActiveRecord::Schema.define(:version => 20140904135454) do
   create_table "tag_fields", :force => true do |t|
     t.integer  "tag_id"
     t.string   "name"
-    t.string   "type"
+    t.string   "field_type"
     t.text     "value"
     t.string   "upload_file_name"
     t.string   "upload_content_type"
@@ -433,22 +432,23 @@ ActiveRecord::Schema.define(:version => 20140904135454) do
   add_index "tags", ["name"], :name => "index_tags_on_name", :unique => true
 
   create_table "tags_tags", :force => true do |t|
-    t.integer "tag_id"
-    t.integer "belongs_tag_id"
+    t.integer  "tag_id"
+    t.integer  "other_tag_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
+  add_index "tags_tags", ["other_tag_id"], :name => "index_tags_tags_on_other_tag_id"
+  add_index "tags_tags", ["tag_id"], :name => "index_tags_tags_on_tag_id"
+
   create_table "uploads", :force => true do |t|
-    t.integer  "call_to_action_id",               :null => false
+    t.integer  "call_to_action_id",      :null => false
     t.boolean  "releasing"
     t.text     "releasing_description"
     t.boolean  "privacy"
     t.text     "privacy_description"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-    t.string   "releasing_document_file_name"
-    t.string   "releasing_document_content_type"
-    t.integer  "releasing_document_file_size"
-    t.datetime "releasing_document_updated_at"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.integer  "upload_number"
     t.string   "watermark_file_name"
     t.string   "watermark_content_type"
@@ -533,5 +533,14 @@ ActiveRecord::Schema.define(:version => 20140904135454) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
+
+  create_table "votes", :force => true do |t|
+    t.string   "title"
+    t.integer  "vote_min",   :default => 1
+    t.integer  "vote_max",   :default => 10
+    t.boolean  "oneshot"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+  end
 
 end

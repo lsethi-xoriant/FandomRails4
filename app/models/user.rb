@@ -156,4 +156,8 @@ class User < ActiveRecord::Base
     update_attributes(params) 
   end
 
+  # Specifies that this is a real user, not somebody used just interanlly by the system, such as to evaluate rules
+  def mocked?
+    false
+  end
 end

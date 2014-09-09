@@ -1,0 +1,47 @@
+<div class="row" style="margin-bottom: 15px; margin-top: 15px;">
+  <div class="col-sm-10 col-sm-offset-1" style="padding: 0 30px;">
+    <p class="text-center" style="font-size: 16px;"><%= interaction.resource.title.html_safe %></p>
+  </div>
+
+  <% if current_user && current_user.user_interactions.find_by_interaction_id(interaction.id) && interaction.resource.oneshot? %>
+    <!-- CURRENT USER HAS ALREADY VOTED -->
+    <% vote = JSON.parse(current_user.user_interactions.find_by_interaction_id(interaction.id).aux)['vote'] %>
+    <div class="col-xs-6 col-xs-offset-3 text-center">
+      <button class="btn btn-primary btn-lg disabled"><%= vote %></button>
+    </div>
+  <% else %>
+    <!-- CURRENT USER HAS NOT VOTED -->
+    <div class="col-xs-6 col-xs-offset-3 text-center">
+    	<div class="row text-center">
+    		<div class="col-xs-12">
+    			<% if current_user && current_user.user_interactions.find_by_interaction_id(interaction.id) && !interaction.resource.oneshot? %>
+    			<% vote = JSON.parse(current_user.user_interactions.find_by_interaction_id(interaction.id).aux)['vote'] %>
+    				<p>Voto precedente: <%= vote %></p>
+    			<% end %>
+    		  <select id="interaction-<%= interaction.id %>-vote-value">
+		      	<% (interaction.resource.vote_min..interaction.resource.vote_max).each do |i| %>
+		      		<option value="<%= i %>"><%= i %></option>
+		      	<% end %>
+		      </select>
+		    </div>
+    	</div>
+      <div class="row text-center">
+      	<div class="col-xs-12">
+      		<button class="button-inter-<%= interaction.id %> btn btn-lg btn-primary" onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')">VOTA</button>
+      	</div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="row">
+  <% if current_user %>
+    <% if outcome && outcome.reward_name_to_counter["POINT"] && outcome.reward_name_to_counter["POINT"] > 0 %>       
+      <div class="col-sm-10 col-sm-offset-1 text-center">
+        <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+        <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter["POINT"] %> punti.
+        </div>
+      </div> 
+    <% end %>
+  <% end %>
+</div>

@@ -50,7 +50,7 @@ module RankingHelper
   end
   
   def get_fb_friends_rank(ranking)
-    current_user_fb_friends = current_user.facebook.get_connections("me", "friends").map { |f| f.id }
+    current_user_fb_friends = current_user.facebook(request.site.id).get_connections("me", "friends").map { |f| f.id }
     rank = get_ranking(ranking)
     filtered_rank = rank.user_to_position.select { |key,_| current_user_fb_friends.include? key }
     filtered_rank = filtered_rank.sort_by { |key, value| value }

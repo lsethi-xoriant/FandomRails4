@@ -373,7 +373,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
-  $window.updateAnswer = function(calltoaction_id, interaction_id, answer_id, when_show_interaction) {
+  $window.updateAnswer = function(calltoaction_id, interaction_id, params, when_show_interaction) {
     if($scope.current_user) {
 
       $(".button-inter-" + interaction_id).attr('disabled', true);
@@ -381,7 +381,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       enableWaitingAudio("stop");
 
-      $http.post("/update_interaction", { interaction_id: interaction_id, answer_id: answer_id, main_reward_name: MAIN_REWARD_NAME })
+      $http.post("/update_interaction", { interaction_id: interaction_id, params: params, main_reward_name: MAIN_REWARD_NAME })
           .success(function(data) {
 
             if(data.ga) {
@@ -438,6 +438,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $(".button-inter-" + interaction_id).attr('disabled', false);
 
     }
+  };
+  
+  $window.updateVote = function(call_to_action_id, interaction_id, when_show_interaction){
+  	var vote = $("#interaction-"+interaction_id+"-vote-value").val();
+  	updateAnswer(call_to_action_id, interaction_id, vote, when_show_interaction);
   };
 
   //////////////////////// UPDATING VIEW METHODS AFTER USER INTERACTION ////////////////////////

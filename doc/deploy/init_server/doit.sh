@@ -42,7 +42,8 @@ apt-get install vim \
   unzip \
   memcached \
   awscli \
-  cloud-utils
+  cloud-utils \
+  default-jdk
   
 apt-get build-dep ruby${RUBY_VERSION}
 
@@ -77,7 +78,7 @@ service nginx restart
 cp etc/logrotate-rails /etc/logrotate.d/rails
 
 #
-# Setup rails init script
+# Setup init scripts
 #
 
 cp etc/railsweb-init.d /etc/init.d/railsweb
@@ -85,6 +86,11 @@ chmod a+x /etc/init.d/railsweb
 mkdir /etc/railsweb
 cp etc/railsweb-unicorn.conf /etc/railsweb/unicorn.conf
 update-rc.d railsweb defaults
+
+cp etc/fandomplay-init.d /etc/init.d/fandomplay
+chmod a+x /etc/init.d/fandomplay
+update-rc.d fandomplay defaults
+
 
 #
 # Setup log_daemon
