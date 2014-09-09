@@ -164,6 +164,17 @@
           <%= render '/easyadmin/call_to_action/upload-form', :f => builder %>
         <% end %>
       <% end %>
+      
+      <h3>VOTA <p style="float: right;"><%= link_to_add_vote_fields "AGGIUNGI VOTA", f, :interactions %></p></h3>
+      <hr/>
+
+      <div id="tmp-vote-add"></div>
+      
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Vote" %>
+          <%= render '/easyadmin/call_to_action/vote-form', :f => builder %>
+        <% end %>
+      <% end %>
 
       <div class="row">
         <div class="col-md-10"><h3>SHARE</h3></div>
@@ -349,6 +360,16 @@
       comment_counter = true;
     }
   }
+  
+  var vote_counter = false;
+  function add_vote_fields(link, association, content) {
+  	if(!vote_counter){
+	    var new_id = new Date().getTime();
+	    var regexp = new RegExp("new_" + association, "g");
+	    $("#tmp-vote-add").prepend(content.replace(regexp, new_id));
+	    vote_counter = true;
+	}
+  }
 
   function remove_comment_fields(link) {
     $(link).parent().parent().parent().remove();
@@ -396,6 +417,11 @@
   function remove_upload_fields(link) {
     $(link).parent().parent().parent().remove();
     upload_counter = false;
+  }
+  
+  function remove_vote_fields(link) {
+    $(link).parent().parent().parent().remove();
+    vote_counter = false;
   }
 
   function updateDeleteHiddenField(element) {

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140904135454) do
+ActiveRecord::Schema.define(:version => 20140908093920) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -533,5 +533,14 @@ ActiveRecord::Schema.define(:version => 20140904135454) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
+
+  create_table "votes", :force => true do |t|
+    t.string   "title"
+    t.integer  "vote_min",   :default => 1
+    t.integer  "vote_max",   :default => 10
+    t.boolean  "oneshot"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+  end
 
 end

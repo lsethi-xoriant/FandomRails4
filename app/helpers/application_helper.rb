@@ -92,22 +92,30 @@ module ApplicationHelper
 
       UserCounter.update_unique_counters(user_interaction, user)
     else
-      user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
+      if interaction.resource_type.downcase == "vote"
+        user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
       
-      outcome = compute_and_save_outcome(user_interaction)
+        outcome = compute_and_save_outcome(user_interaction)
+        user_interaction.update_attribute(:outcome, outcome)
 
-      interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
-      interaction_outcome.merge!(outcome)
-
-      interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
-      interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
-
-      outcome_for_user_interaction = {
-        win: interaction_outcome,
-        correct_answer: interaction_correct_answer_outcome
-      }.to_json
-
-      user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+      else
+        user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
+      
+        outcome = compute_and_save_outcome(user_interaction)
+  
+        interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
+        interaction_outcome.merge!(outcome)
+  
+        interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
+        interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
+  
+        outcome_for_user_interaction = {
+          win: interaction_outcome,
+          correct_answer: interaction_correct_answer_outcome
+        }.to_json
+        user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+      end
+      
     end
     UserCounter.update_all_counters(user_interaction, user)
     [user_interaction, outcome]
@@ -202,6 +210,8 @@ module ApplicationHelper
       correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
       correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
 
+      winnable_reward_count = 0
+
       push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
       push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
     else
@@ -210,6 +220,8 @@ module ApplicationHelper
     end
 
     {
+      win_reward_count: win_reward_count,
+      winnable_reward_count: winnable_reward_count,
       reward_status_images: reward_status_images,
       reward: reward
     }

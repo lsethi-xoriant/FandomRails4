@@ -1,66 +1,30 @@
+<% quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND resource_type = ?", "SEMPRE_VISIBILE", "Quiz").order("seconds ASC") %>
+
 <div class="row cta">      
-  <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1">
+  <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-10 col-sm-offset-1">
     <div class="panel panel-default cta-page cta-stream lg-panel">
 
+      <div id="calltoaction-<%= calltoaction.id %>-cover" style="position: relative;">
+        <div style="width: 100%; padding-bottom: 2000px; background-color: #ccc; position: absolute; z-index: 10;">
+          <div class="row">
+            <div class="col-sm-12 text-center">
+              <h1><%= calltoaction.title %></h1>
+              <button class="btn btn-warning" onclick="showCallToAction(<%= calltoaction.id %>)">INIZIA</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="panel-body no-pad">
+       
         <div class="row cta-md">
 
           <!-- LEFT COLUMN WITH IMAGE -->
-          <div class="col-md-8 cta-media no-pad text-center">
-           
-            <!-- SECONDARY MEDIA -->
-            <div id="secondary-media-<%= calltoaction.id %>" class="hidden">
-              <div id="secondary-media-video-<%= calltoaction.id %>" class="video flex-video widescreen secondary-media" style="background:#222;"> 
-                <div id="home-stream-video-secondary-<%= calltoaction.id %>" main-calltoaction-media="false" calltoaction-id="<%= calltoaction.id %>"></div>
-                <!-- OVERVIDEO AREA -->
-                <div class="home-overvideo-feedback-<%= calltoaction.id %>"></div> 
-              </div>
-              <img id="secondary-media-image-<%= calltoaction.id %>" class="secondary-media" src="<%= calltoaction.media_image %>" style="width: 100%;">
-            </div>
-
-            <!-- MAIN MEDIA -->
-            <div id="main-media-<%= calltoaction.id %>">
-              <% if calltoaction.media_type == "YOUTUBE" %>
-                  <div class="video flex-video widescreen" style="background:#222;">             
-                    <!-- IFRAME VIDEO -->
-                    <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-media=true calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").id %>"></div>
-                    <!-- OVERVIDEO AREA -->
-                    <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
-                    <!-- OVERVIDEO TITLE -->
-                    <div id="home-overvideo-title-<%= calltoaction.id %>"><%= render partial: "/call_to_action/overvideo_interaction_play", locals: { calltoaction: calltoaction, play_interaction: find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play") } %></div>
-                    <!-- OVERVIDEO FEEDBACK -->
-                    <div class="home-overvideo-feedback-<%= calltoaction.id %>"></div>
-                  </div>
-              <% elsif calltoaction.media_type == "IMAGE" %>
-                <!-- IMAGE -->
-                <img src="<%= calltoaction.media_image(:large) %>" style="width: 100%; margin-bottom: 15px;">
-              <% elsif calltoaction.media_type == "IFRAME" %>
-                <div class="<%= "iframe-iphone" if request_is_from_iphone_device?(request) %> video flex-video widescreen text-center" style="background:#222; margin-bottom: 15px;">  
-                  <%= calltoaction.media_data.html_safe %>
-                </div>
-              <% end %>
-            </div>
-        
-          </div>
+          <%= render partial: "/call_to_action/stream_single_calltoaction_media", locals: { calltoaction: calltoaction } %>
 
           <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
-          <div class="col-md-4 yes-pad cta-content">
+          <%= render partial: "/call_to_action/stream_single_calltoaction_interactions", locals: { calltoaction: calltoaction, quiz_interactions: quiz_interactions } %>
 
-            <!-- TITLE AND DESCRIPTION -->
-            <div class="row cta-stream-heading">
-              <div class="col-xs-6">
-                <h5 style="margin: 0.5em 0">CATEGORIA</h5>
-              </div>
-              <div class="col-xs-6 text-right">
-                <h5 style="margin: 0.5em 0; line-height: 30px;"><small>DATA ATTIVAZIONE</small></h5>
-              </div>
-              <div class="col-xs-12">
-                 <h4>TITOLO</h4>
-                 <p>contenuto con interazioni</p>
-              </div>
-            </div>
-
-          </div>
         </div>
 
       </div>
