@@ -115,14 +115,11 @@ Fandom::Application.routes.draw do
     match "settings/browse/save", :to => "settings#save_browse_settings"
   end
 
-  constraints(SiteMatcher.new('maxibon')) do
-    constraints(MaxibonUtils::Matcher.new) do
-      match '', to: redirect("https://apps.facebook.com/shadostage")
-      match '*path', to: redirect("https://apps.facebook.com/shadostage")
-    end
-  end
+  #constraints(SiteMatcher.new('ballando')) do
+  #end
 
-  post "/", to: "property#index"
+  match '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }
+  match '/check_next_interaction', to: "call_to_action#check_next_interaction", defaults: { format: 'json' }
   
   #reward
   match "/reward/catalogue", :to => "reward#index"

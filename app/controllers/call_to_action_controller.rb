@@ -48,6 +48,57 @@ class CallToActionController < ApplicationController
     
   end
 
+  def next_interaction
+    calltoaction = CallToAction.find(params[:calltoaction_id])
+    quiz_interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
+
+    next_quiz_interaction = quiz_interactions.first
+
+    if next_quiz_interaction
+      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: nil }, layout: false, formats: :html
+      interaction_id = next_quiz_interaction.id
+    else
+      render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: quiz_interactions, calltoaction: calltoaction }, layout: false, formats: :html
+    end
+
+    response = Hash.new
+    response = {
+      next_quiz_interaction: (quiz_interactions.count > 1),
+      render_interaction_str: render_interaction_str,
+      interaction_id: interaction_id
+    }
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+  end
+
+  def check_next_interaction
+    calltoaction = CallToAction.find(params[:calltoaction_id])
+    quiz_interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
+
+    response = Hash.new
+    response = {
+      next_quiz_interaction: quiz_interactions.any?
+    }
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+  end
+
+  def calculate_next_interactions(calltoaction, interactions_showed_ids)
+                                         
+    if interactions_showed_ids
+      interactions_showed_id_qmarks = (["?"] * interactions_showed_ids.count).join(", ")
+      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND resource_type = ? AND id NOT IN (#{interactions_showed_id_qmarks})", "SEMPRE_VISIBILE", "Quiz", *interactions_showed_ids)
+                                                   .order("seconds ASC")
+    else
+      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND resource_type = ?", "SEMPRE_VISIBILE", "Quiz")
+                                                   .order("seconds ASC")
+    end
+  end
+
   def show
     @calltoaction = CallToAction.find(params[:id])
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([@calltoaction])
@@ -185,6 +236,8 @@ class CallToActionController < ApplicationController
     interaction = Interaction.find(params[:interaction_id])
 
     response = Hash.new
+
+    response[:calltoaction_id] = interaction.call_to_action_id;
     
     response[:ga] = Hash.new
     response[:ga][:category] = "UserInteraction"
@@ -254,7 +307,7 @@ class CallToActionController < ApplicationController
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, current_user)
 
       if interaction.when_show_interaction == "SEMPRE_VISIBILE"
-        response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome }, layout: false, formats: :html 
+        response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome, ctaid: interaction.call_to_action_id }, layout: false, formats: :html 
       else
         response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
       end

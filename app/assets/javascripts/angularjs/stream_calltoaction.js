@@ -309,6 +309,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
           if(data.ga) {
             update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+              update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+            });
           }
 
           interaction_point = data.outcome.attributes.reward_name_to_counter[MAIN_REWARD_NAME];
@@ -356,6 +359,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
           if(!data.share.result) {
             alert(data.share.exception);
+          } else {
+            if(data.ga) {
+              update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              });
+            }
           }
 
       }).error(function() {

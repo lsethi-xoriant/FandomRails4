@@ -206,14 +206,19 @@ module ApplicationHelper
       correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
       correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
 
+      winnable_reward_count = 0
+
       push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
       push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
     else
+      win_reward_count = 0
       winnable_reward_count = predict_outcome(interaction, empty_user, true).reward_name_to_counter[reward_name]
       push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_reward_count)
     end
 
     {
+      win_reward_count: win_reward_count,
+      winnable_reward_count: winnable_reward_count,
       reward_status_images: reward_status_images,
       reward: reward
     }

@@ -1,0 +1,26 @@
+<div class="col-md-4 yes-pad cta-content">
+
+  <div class="row cta-stream-heading">
+    <div class="row">
+      <div class="col-xs-12">
+
+        <% if quiz_interactions.any? %>
+          <div id="home-undervideo-calltoaction-<%= calltoaction.id %>">
+            <%= render partial: "/call_to_action/cover_for_interactions", locals: { quiz_interactions: quiz_interactions,calltoaction: calltoaction } %>
+          </div>
+        <% end %>
+
+      </div>
+
+      <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">
+        <!-- UNDERVIDEO FEEDBACK -->               
+      </div>
+
+      <div class="col-md-12" id="share-footer-<%= calltoaction.id %>">
+        <!-- SHARE FOOTER -->
+      </div>
+
+    </div>
+  </div>
+
+</div>
