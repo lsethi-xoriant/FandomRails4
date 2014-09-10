@@ -1,0 +1,19 @@
+<% if user_interaction %>
+  <!-- CURRENT USER HAS ALREADY RESPONDED -->
+  <div id="answer-<%= answer.id %>" class="col-xs-6 text-center answer-interaction-<%= interaction.id %>">
+    <% if position % 2 == 0 %>
+      <%= render partial: "/call_to_action/versus_left_answer", locals: { interaction: interaction, answer: answer, percent: (interaction_answer_percentage(interaction, answer)), enable: !interaction.resource.one_shot, user_answer: (user_interaction.answer_id == answer.id) } %>
+    <% elsif position % 2 != 0 %>
+      <%= render partial: "/call_to_action/versus_right_answer", locals: { interaction: interaction, answer: answer, percent: (interaction_answer_percentage(interaction, answer)), enable: !interaction.resource.one_shot, user_answer: (user_interaction.answer_id == answer.id) } %>
+    <% end %>
+  </div>
+<% else %>
+  <!-- CURRENT USER HAS NOT RESPONDED -->
+  <div id="answer-<%= answer.id %>" class="col-xs-6 answer-interaction-<%= interaction.id %>">
+    <% if position % 2 == 0 %>
+      <%= render partial: "/call_to_action/versus_left_answer", locals: { interaction: interaction, answer: answer, percent: nil, enable: true, user_answer: false } %>
+    <% elsif position % 2 != 0 %>
+      <%= render partial: "/call_to_action/versus_right_answer", locals: { interaction: interaction, answer: answer, percent: nil, enable: true, user_answer: false } %>
+    <% end %>
+  </div>
+<% end %>                       

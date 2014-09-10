@@ -24,11 +24,11 @@
 
             <% if answer.correct %>
 
-              <a href="javascript: void(0)" class="thumbnail right" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="..."></a>
+              <a href="javascript: void(0)" class="thumbnail right" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="current_user"></a>
 
             <% else %>
 
-              <a href="javascript: void(0)" class="thumbnail <%= "wrong" if user_interaction.answer_id == answer.id %>" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="..."></a>
+              <a href="javascript: void(0)" class="thumbnail <%= "wrong" if user_interaction.answer_id == answer.id %>" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="current_user"></a>
 
             <% end %>
 
@@ -133,17 +133,3 @@
     </div>
   <% end %>
 <% end %>
-
-<script type="text/javascript">
-
-  function onEnterInteraction(interaction_id, answer_id) {
-    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden")
-    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").removeClass("square");
-  }
-
-  function onLeaveInteraction(interaction_id, answer_id) {
-    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
-    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").addClass("square");
-  }
-
-</script>
