@@ -3,15 +3,20 @@ Instructions for deployment with capistrano
 To initialize a new server
 --------------------------
 
-1) Install your SSH public key on the server.
-
-2) Copy the "init_server" directory in the /tmp folder of the server, and run the doit.sh script as root. 
+1) Copy the "init_server" directory in the /tmp folder of the server, and run the doit.sh script as root. 
 WARNING: this script applies several changes to the system as root, it should be checked with care.
 When prompted for the password of the app user, set it as per company policy.
 
-3) Set the SSH keys of the app user (just copy them from the same user in another server)
+For instance, on amazon:
+- postgresql-server should be skipped because RDS is used instead
+- however the postgresql-client-common and apt-get install postgresql-server-dev-9.3 should be installed anyway 
+- the SSH config of the app user should be copied from the ubuntu user
+- if the server is public, the app user should not be in the sudoers group
 
-4) When finished, edit the system configuration appropriately: 
+2) Set the SSH keys of the app user: take the app_ssh_config.tgz archive (ask the sysadmin) and copy it as 
+the ~/.ssh folder of the app user 
+
+3) When finished, edit the system configuration appropriately: 
 - edit /etc/nginx/sites-available/default to change the site virtual host
 - if there are locale issues, try setting: 
 
@@ -19,13 +24,13 @@ When prompted for the password of the app user, set it as per company policy.
 
 in /etc/environment and rebooting.
 
-5) Create the files that are not versioned; the list can be found in config/deploy.rb (linked_files)
+4) Create the files that are not versioned; the list can be found in config/deploy.rb (linked_files)
 
-6) Once Fandom has been deployed, manually create the schemas needed for the different tenant: 
+5) Once Fandom has been deployed, manually create the schemas needed for the different tenant: 
 
   rake apartment:create
 
-7) in case of AWS installation, put the automatic update command in /etc/rc.local:
+6) in case of AWS installation, put the automatic update command in /etc/rc.local:
 
   sudo -u app -i bash /home/app/bin/aws_remote_update.sh
 
