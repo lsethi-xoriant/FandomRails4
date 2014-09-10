@@ -1,27 +1,54 @@
-<div class="row">
-  <div class="col-xs-12 text-center">
-    <h5 style="margin: 0 0 0 0px"><%= answer.text %></h5>
-  </div>
-  <div class="col-xs-12">
+<% if answer.image.present? %>
+  <div class="row">
+    <div class="col-xs-12 text-center">
+      <h5 style="margin: 0 0 0 0px"><%= answer.text %></h5>
+    </div>
+    <div class="col-xs-12">
 
-    <div class="progress vertical bottom" style="position: absolute; top: 0; bottom: 0; width: 15px; right: 0; margin-right: 15px;">
-      <div class="progress-bar" role="progressbar" style="height: <%= percent %>%;">
+      <div class="progress vertical bottom" style="position: absolute; top: 0; bottom: 0; width: 15px; right: 0; margin-right: 15px;">
+        <div class="progress-bar" role="progressbar" style="height: <%= percent %>%;">
+        </div>
       </div>
+
+      <% if enable %>
+        <a style="width: 80%; margin-right: 20px; margin-bottom: 0; float: right;" href="javascript: void(0)" class="thumbnail" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>"></a>
+      <% else %>
+        <a style="width: 80%; margin-right: 20px; margin-bottom: 0;  float: right;" href="javascript: void(0)" class="thumbnail" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>"></a>
+      <% end %>   
+
     </div>
+    <div class="col-xs-12 text-center" style="margin-top: 8px; padding-right: 8px;">
+                
+      <div class="no-pad interaction-baloon" style="width: 30px; float: right;">
+        <div class="baloon baloon-top <%= "unchosen square" unless user_answer %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer %>" style="width: 100%; border-radius: 3px;"></div>
+      </div>
+      <h3><%= percent ? percent : "-" %>%</h3>
 
-    <% if enable %>
-      <a style="width: 80%; margin-right: 20px; margin-bottom: 0; float: right;" href="javascript: void(0)" class="thumbnail" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>"></a>
-    <% else %>
-      <a style="width: 80%; margin-right: 20px; margin-bottom: 0;  float: right;" href="javascript: void(0)" class="thumbnail" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>"></a>
-    <% end %>   
-
-  </div>
-  <div class="col-xs-12 text-center" style="margin-top: 8px; padding-right: 8px;">
-              
-    <div class="no-pad interaction-baloon" style="width: 30px; float: right;">
-      <div class="baloon baloon-top <%= "unchosen square" unless user_answer %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer %>" style="width: 100%; border-radius: 3px;"></div>
     </div>
-    <h3><%= percent ? percent : "-" %>%</h3>
-
   </div>
-</div>
+<% else %>
+  <div class="row">
+    <div class="col-xs-12" style="position: relative; padding-bottom: 55%;">
+
+      <div class="progress vertical bottom" style="position: absolute; top: 0; bottom: 0; width: 15px; right: 0; margin-right: 15px;">
+        <div class="progress-bar" role="progressbar" style="height: <%= percent %>%;">
+        </div>
+      </div>
+
+      <% if enable %>
+        <button class="btn btn-primary btn-versus right" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><%= answer.text %></button>
+      <% else %>
+        <button class="btn btn-primary btn-versus right active" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><%= answer.text %></button>
+      <% end %>
+      
+    </div>
+    <div class="col-xs-12 text-center" style="margin-top: 8px; padding-right: 8px;">
+                
+      <div class="no-pad interaction-baloon" style="width: 30px; float: right;">
+        <div class="baloon baloon-top <%= "unchosen square" unless user_answer %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer %>" style="width: 100%; border-radius: 3px;"></div>
+      </div>
+      <h3><%= percent ? percent : "-" %>%</h3>
+
+    </div>
+  </div>
+<% end %>

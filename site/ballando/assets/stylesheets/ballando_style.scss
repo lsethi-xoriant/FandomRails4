@@ -15,6 +15,24 @@ button, h1, h2, h3, h4, h5, h6, li {
     font-family: trade-gothic-lt-bold-condensed-20, helvetica, arial, sans-serif;
 }
 
+.btn-versus {
+    white-space: normal;
+    width: 100px;
+    top: 0; 
+    bottom: 0; 
+    width: 60%; 
+    position: absolute;
+}
+
+.btn-versus.right {
+    margin-right: 35px;
+    right: 0; 
+}
+
+.btn-versus.left {
+    left: 35px; 
+}
+
 .interaction-baloon {
     .baloon {
         width: 100%;         
