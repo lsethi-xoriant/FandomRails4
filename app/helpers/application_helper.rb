@@ -81,6 +81,8 @@ module ApplicationHelper
       user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
 
       outcome = compute_and_save_outcome(user_interaction)
+      outcome.info = []
+      outcome.errors = []
 
       outcome_for_user_interaction = {
         win: outcome,
@@ -96,12 +98,21 @@ module ApplicationHelper
         user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
       
         outcome = compute_and_save_outcome(user_interaction)
-        user_interaction.update_attribute(:outcome, outcome)
+        outcome.info = []
+        outcome.errors = []
+
+        outcome_for_user_interaction = {
+          win: outcome
+        }.to_json
+
+        user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
 
       else
         user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
       
         outcome = compute_and_save_outcome(user_interaction)
+        outcome.info = []
+        outcome.errors = []
   
         interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
         interaction_outcome.merge!(outcome)
@@ -113,6 +124,7 @@ module ApplicationHelper
           win: interaction_outcome,
           correct_answer: interaction_correct_answer_outcome
         }.to_json
+
         user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
       end
       

@@ -1,4 +1,4 @@
-<% quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND resource_type = ?", "SEMPRE_VISIBILE", "Quiz").order("seconds ASC") %>
+<% quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC") %>
 
 <div class="row cta">      
   <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-10 col-sm-offset-1">

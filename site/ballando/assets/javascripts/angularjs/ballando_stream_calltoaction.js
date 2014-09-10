@@ -81,13 +81,23 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.onEnterInteraction = function(interaction_id, answer_id) {
-    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden")
-    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").removeClass("square");
+    if(answer_id) {
+      $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden")
+      $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").removeClass("square");
+    } else {
+      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden")
+      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen").removeClass("square");
+    }
   };
 
   $window.onLeaveInteraction = function(interaction_id, answer_id) {
-    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
-    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").addClass("square");
+    if(answer_id) {
+      $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
+      $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").addClass("square");
+    } else {
+      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
+      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen").addClass("square");
+    }
   };
 
 }

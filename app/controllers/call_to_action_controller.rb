@@ -87,14 +87,13 @@ class CallToActionController < ApplicationController
     end
   end
 
-  def calculate_next_interactions(calltoaction, interactions_showed_ids)
-                                         
+  def calculate_next_interactions(calltoaction, interactions_showed_ids)         
     if interactions_showed_ids
       interactions_showed_id_qmarks = (["?"] * interactions_showed_ids.count).join(", ")
-      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND resource_type = ? AND id NOT IN (#{interactions_showed_id_qmarks})", "SEMPRE_VISIBILE", "Quiz", *interactions_showed_ids)
+      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ? AND id NOT IN (#{interactions_showed_id_qmarks})", "SEMPRE_VISIBILE", true, *interactions_showed_ids)
                                                    .order("seconds ASC")
     else
-      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND resource_type = ?", "SEMPRE_VISIBILE", "Quiz")
+      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true)
                                                    .order("seconds ASC")
     end
   end
