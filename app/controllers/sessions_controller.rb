@@ -29,7 +29,8 @@ class SessionsController < Devise::SessionsController
     if Rails.configuration.fandom_play_enabled
       token = Digest::MD5.hexdigest(user.email + Rails.configuration.secret_token)
       host, port = Rails.configuration.deploy_settings['fandom_play']['server'].split(':')
-      url = "http://#{host}:#{port}/login/#{URI.encode(user.email)}/#{token}"
+      url_path = Rails.configuration.deploy_settings['fandom_play']['url_path']
+      url = "http://#{host}:#{port}/#{url_path}/#{URI.encode(user.email)}/#{token}"
       logger.info("FandomPlay single sign on: #{url}...")
       post_result = HTTParty.post(url)
       logger.info("FandomPlay response: #{post_result}")
@@ -54,12 +55,7 @@ class SessionsController < Devise::SessionsController
   def fandom_play_logout
     if Rails.configuration.fandom_play_enabled
       session_cookie_name = Rails.configuration.deploy_settings['fandom_play']['session_cookie_name']
-      cookies[session_cookie_name] = {
-        value: "",
-        path: '/',
-        httponly: true,
-        expires: (Time.now - 1.day) 
-      }      
+      cookies.delete(session_cookie_name.to_sym)
     else
       logger.info("no FandomPlay configuration, skipping logout syncronization")
     end    

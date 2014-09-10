@@ -28,7 +28,8 @@ module RewardingSystemHelper
     attribute :matching_rules #, type: Array
     attribute :reward_name_to_counter #, type: Hash[String, Int]
     attribute :unlocks #, type: Set
-    attribute :errors #, type: Hash
+    attribute :errors #, type: Array
+    attribute :info #, type: Array
 
     # Merges the rewards won with a single rule with those already won.
     def self.merge_rewards(reward_name_to_counter, normalized_rule_rewards)
@@ -44,6 +45,7 @@ module RewardingSystemHelper
         self.reward_name_to_counter.default = 0
         self.unlocks = Set.new
         self.errors = []
+        self.info = []
       else
         super(params)
         self.matching_rules = Set.new(self.matching_rules)
@@ -85,21 +87,17 @@ module RewardingSystemHelper
     end
 
     # Evaluates all rules in this context and return an Outcome object    
-    def compute_outcome(user_interaction)
+    def compute_outcome(user_interaction, just_rules_applying_to_interaction = false)
       outcome = Outcome.new()
       rules.each do |rule|
-        evaluate_rule(rule, outcome, user_interaction, false)
+        evaluate_rule(rule, outcome, user_interaction, just_rules_applying_to_interaction)
       end
       outcome
     end
     
     # Evaluates just the rules applying to an interaction, and return an Outcome object    
     def compute_outcome_just_for_interaction(user_interaction)
-      outcome = Outcome.new()
-      rules.each do |rule|
-        evaluate_rule(rule, outcome, user_interaction, true)
-      end
-      outcome
+      compute_outcome(user_interaction, true)
     end
     
     # Evaluates a single rule, updating both the current Context and the outcome object passed as parameter.
@@ -108,10 +106,10 @@ module RewardingSystemHelper
     #   user_interaction - the interaction made by the user
     #   just_rules_applying_to_interaction - if true, the rule is evaluated only if the rule is 
     def evaluate_rule(rule, outcome, user_interaction, just_rules_applying_to_interaction)
-      if rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction)
+      if rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction, outcome)
         begin
           if rule.condition.nil? || rule.condition.call
-            log_info("rule evaluation", { rule_name: rule.name, value: true }) 
+            outcome.info << ["rule evaluation", { rule_name: rule.name, value: true }] 
             outcome.matching_rules << rule.name
             Outcome.merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
             merge_user_rewards(self.user_rewards, rule.normalized_rewards)
@@ -119,39 +117,38 @@ module RewardingSystemHelper
             self.user_unlocked_names += rule.unlocks
             # TODO: self.uncountable_user_reward_names should be updated as well 
           else
-            log_info("rule evaluation", { rule_name: rule.name, value: false }) 
+            outcome.info << ["rule evaluation", { rule_name: rule.name, value: false }] 
           end
         rescue Exception => ex
-          log_error("exception on rule",  { rule_name: rule.name, exception: ex.to_s }) 
-          outcome.errors << "rule #{rule.name}: #{ex}\n#{ex.backtrace.join("\n")}" 
+          outcome.errors << ["exception on rule",  { rule_name: rule.name, exception: ex.to_s }] 
         end
       end
     end
     
-    def rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction)
+    def rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction, outcome)
       repeatable = rule.options.fetch(:repeatable, false)
       
       if !interaction_matches?(user_interaction, rule.options, just_rules_applying_to_interaction)
-        log_info("rule #{rule.name} not applied because interaction doesn't match", {}) 
+        outcome.info << ["rule #{rule.name} not applied because interaction doesn't match", {}] 
         return false
       end
       
       if user_already_own_rewards?(rule.normalized_rewards, rule.unlocks)
-        log_info("rule #{rule.name} not applied because user already own the rewards", {}) 
+        outcome.info << ["rule #{rule.name} not applied because user already own the rewards", {}] 
         return false
       end
 
       if rule.options.key?(:interactions) && !repeatable && user_interaction.counter > 1
-        log_info("rule #{rule.name} not applied because user the user already done it", {}) 
+        outcome.info << ["rule #{rule.name} not applied because user the user already done it", {}] 
         return false
       end
       
       if !current_datetime_is_valid?(rule.options)
-        log_info("rule #{rule.name} because date/time is not valid", {}) 
+        outcome.info << ["rule #{rule.name} because date/time is not valid", {}] 
         return false
       end
       
-      log_info("rule #{rule.name} will be evaluated", {}) 
+      outcome.info << ["rule #{rule.name} will be evaluated", {}] 
       return true
     end
     
@@ -328,7 +325,18 @@ module RewardingSystemHelper
   # Returns an instance of the class Outcome
   def compute_outcome(user_interaction, rules_buffer = nil)
     context = prepare_rules_and_context(user_interaction, rules_buffer)    
-    context.compute_outcome(user_interaction)
+    outcome = context.compute_outcome(user_interaction)
+    log_outcome(outcome)
+    outcome
+  end
+  
+  def log_outcome(outcome)
+    outcome.info.each do |params|
+      log_info(*params)
+    end
+    outcome.errors.each do |params|
+      log_error(*params)
+    end
   end
 
   def prepare_rules_and_context(user_interaction, rules_buffer = nil)
@@ -355,6 +363,7 @@ module RewardingSystemHelper
   def compute_and_save_outcome(user_interaction, rules_buffer = nil)
     benchmark("Compute and save outcome") do
       outcome = compute_outcome(user_interaction, rules_buffer)
+      log_outcome(outcome)
       if outcome.reward_name_to_counter.any? || outcome.unlocks.any?
         log_info("reward event", :outcome => outcome)
         user = user_interaction.user
@@ -422,8 +431,10 @@ module RewardingSystemHelper
   def predict_outcome(interaction, user, interaction_is_correct)
     benchmark("Predict outcome") do
       user_interaction = get_mocked_user_interaction(interaction, user, interaction_is_correct)
-      context = prepare_rules_and_context(user_interaction, nil)    
-      context.compute_outcome_just_for_interaction(user_interaction)
+      context = prepare_rules_and_context(user_interaction, nil)
+      outcome = context.compute_outcome_just_for_interaction(user_interaction)
+      log_outcome(outcome)
+      outcome
     end
   end
 
