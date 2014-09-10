@@ -14,7 +14,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $window.showCallToAction = function(calltoaction_id) {
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
-    showCallToActionCountdown(calltoaction_id, 5);
+    showCallToActionCountdown(calltoaction_id, 2);
   };
 
   $window.showCallToActionCountdown = function(calltoaction_id, time) {
@@ -80,5 +80,14 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   };
 
+  $window.onEnterInteraction = function(interaction_id, answer_id) {
+    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden")
+    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").removeClass("square");
+  };
+
+  $window.onLeaveInteraction = function(interaction_id, answer_id) {
+    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
+    $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").addClass("square");
+  };
 
 }

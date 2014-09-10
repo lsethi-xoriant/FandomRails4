@@ -2,17 +2,17 @@
 
 <div class="row cta">      
   <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-10 col-sm-offset-1">
-    <div class="panel panel-default cta-page cta-stream lg-panel">
+    <div class="panel panel-default cta-page cta-stream lg-panel" style="position: relative;">
 
-      <div id="calltoaction-<%= calltoaction.id %>-cover" style="position: relative;">
-        <div style="width: 100%; padding-bottom: 2000px; background-color: #ccc; position: absolute; z-index: 10;">
+      <div id="calltoaction-<%= calltoaction.id %>-cover" style="width: 100%; top:0; bottom: 0; background-color: #ccc; position: absolute; z-index: 10;" >
+        
           <div class="row">
             <div class="col-sm-12 text-center">
               <h1><%= calltoaction.title %></h1>
               <button class="btn btn-warning" onclick="showCallToAction(<%= calltoaction.id %>)">INIZIA</button>
             </div>
           </div>
-        </div>
+        
       </div>
 
       <div class="panel-body no-pad">

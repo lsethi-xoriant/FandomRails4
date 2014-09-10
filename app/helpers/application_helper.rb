@@ -64,7 +64,7 @@ module ApplicationHelper
       return nil
     end
 
-    aux_1.present ? aux_1.to_json : nil
+    aux_1.present? ? aux_1.to_json : nil
 
   end
 

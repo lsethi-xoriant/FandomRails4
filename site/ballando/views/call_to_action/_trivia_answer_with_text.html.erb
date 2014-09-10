@@ -1,0 +1,76 @@
+<% if user_interaction %>
+  <!-- CURRENT USER HAS ALREADY RESPONDED -->
+  <% if interaction.resource.one_shot %>
+    <div id="answer-<%= answer.id %>" class="col-xs-12 answer-interaction-<%= interaction.id %>">
+
+      <div class="row">
+        <div class="col-xs-12" style="margin-bottom: 5px; padding-right: 0; padding-left: 45px; postione: relative;">
+          <% if user_interaction.answer_id == answer.id %>
+            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
+              <div class="baloon baloon-right"> 
+                <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
+              </div>
+            </div>
+          <% else %>
+            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
+              <div class="baloon baloon-right square unchosen"> 
+                <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+              </div>
+            </div>
+          <% end %>
+
+          <% if user_interaction.answer_id == answer.id %>
+            <button class="btn btn-<%= answer.correct ? "success" : "danger" %> btn-block" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><%= answer.text %></button>
+          <% else %>
+            <button class="btn btn-<%= answer.correct ? "success" : "primary" %> btn-block" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><%= answer.text %></button>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+  <% else %>
+    <div id="answer-<%= answer.id %>" class="col-xs-12 answer-interaction-<%= interaction.id %>">
+
+      <div class="row">
+        <div class="col-xs-12" style="margin-bottom: 5px; padding-right: 0; padding-left: 45px; postione: relative;">
+          <% if user_interaction.answer_id == answer.id %>
+            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
+              <div class="baloon baloon-right"> 
+                <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
+              </div>
+            </div>
+          <% else %>
+            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
+              <div class="baloon baloon-right square unchosen"> 
+                <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+              </div>
+            </div>
+          <% end %>
+
+          <% if user_interaction.answer_id == answer.id %>
+            <button class="btn btn-<%= answer.correct ? "success" : "danger" %> btn-block" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><%= answer.text %></button>
+          <% else %>
+            <button class="btn btn-primary btn-block" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><%= answer.text %></button>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+  <% end %>
+<% else %>
+  <!-- CURRENT USER HAS NOT RESPONDED -->
+  <div id="answer-<%= answer.id %>" class="col-xs-12 answer-interaction-<%= interaction.id %>">
+
+    <div class="row">
+      <div class="col-xs-12" style="margin-bottom: 5px; padding-right: 0; padding-left: 45px; postione: relative;">
+        <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
+          <div class="baloon baloon-right square unchosen"> 
+            <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><%= answer.text %></button>
+      </div>
+    </div>
+
+  </div>
+<% end %>

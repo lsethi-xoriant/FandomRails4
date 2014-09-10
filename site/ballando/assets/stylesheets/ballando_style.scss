@@ -27,7 +27,7 @@ button, h1, h2, h3, h4, h5, h6, li {
         padding-bottom: 100%; 
     }
 
-    .baloon-right:after, .baloon:before { 
+    .baloon-right:after, .baloon-right:before { 
         left: 100%; top: 50%; 
         border: solid transparent; 
         content: ""; 
@@ -75,13 +75,38 @@ button, h1, h2, h3, h4, h5, h6, li {
         margin-top: -6px; 
         left: -12px;
     }
+
+    .baloon-top:after, .baloon-top:before { 
+        bottom: 100%; 
+        left: 50%; 
+        border: solid transparent; 
+        content: ""; 
+        height: 0; 
+        width: 0; 
+        position: absolute; 
+        pointer-events: none; 
+    } 
+
+    .baloon-top:after { 
+        border-color: rgba(136, 183, 213, 0); 
+        border-bottom-color: #fff; 
+        border-width: 3px; 
+        margin-left: -3px; 
+    } 
+
+    .baloon-top:before { 
+        border-color: rgba(194, 225, 245, 0); 
+        border-bottom-color: #ccc; 
+        border-width: 4px; 
+        margin-left: -4px; 
+    }
 }
 
 .thumbnail { 
     padding: 4px;
     border: 0px;
     background-color: #ccc;
-    border-radius: 0;
+    border-radius: 0;  
 }
 
 .thumbnail.right {
