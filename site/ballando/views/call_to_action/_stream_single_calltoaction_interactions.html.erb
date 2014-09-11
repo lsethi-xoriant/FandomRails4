@@ -6,7 +6,7 @@
 
         <% if quiz_interactions.any? %>
           <div id="home-undervideo-calltoaction-<%= calltoaction.id %>">
-            <%= render partial: "/call_to_action/cover_for_interactions", locals: { quiz_interactions: quiz_interactions,calltoaction: calltoaction } %>
+            <%= render partial: "/call_to_action/cover_for_interactions", locals: { quiz_interactions: quiz_interactions,calltoaction: calltoaction, calltoaction_reward_status: calltoaction_reward_status } %>
           </div>
         <% end %>
 

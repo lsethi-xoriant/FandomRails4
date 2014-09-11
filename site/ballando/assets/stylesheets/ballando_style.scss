@@ -15,6 +15,35 @@ button, h1, h2, h3, h4, h5, h6, li {
     font-family: trade-gothic-lt-bold-condensed-20, helvetica, arial, sans-serif;
 }
 
+.calltoaction-cover {
+    width: 100%; 
+    top: 0; 
+    bottom: 0;
+    position: absolute; 
+    z-index: 10;
+    background-position: center; 
+    background-color: #000;
+    button {
+        margin-top: 22px;
+    }
+    .row {
+        position: absolute; 
+        width: 100%; 
+        left: 15px;
+        padding: 0 15px;
+    }
+    .row.bottom {
+        bottom: 20px;  
+    }
+    .row.top {
+        top: 20px;
+    }
+    h3, h5 {
+        color: #fff; 
+        font-weight: bold; 
+    }
+}
+
 .btn-versus {
     white-space: normal;
     width: 100px;
@@ -706,7 +735,7 @@ span.notify {
     }
     .panel.cta-stream {
         .panel-body {
-            padding: 5px 0 5px 5px;
+            padding: 0; //padding: 5px 0 5px 5px;
         }
     }
 
@@ -936,6 +965,11 @@ height: 100%;
             .panel-body {
                 padding: 0;
             }
+        }
+    }
+    .calltoaction-cover {
+        button {
+            margin-top: 0;
         }
     }
 }
