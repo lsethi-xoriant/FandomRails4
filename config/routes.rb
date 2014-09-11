@@ -165,6 +165,14 @@ Fandom::Application.routes.draw do
     match 'auth/:provider/callback', :to => 'sessions#create'
     match '/auth/failure' => 'sessions#omniauth_failure'
     match '/profile/edit', :to => 'registrations#edit'
+
+    scope module: "sites" do
+      scope module: "ballando" do
+        match "/users/rai/sign_up/create", :to => "registrations#ballando_create"
+        match "/users/rai/sign_in/create", :to => "sessions#ballando_create"
+      end
+    end
+
   end
 
   match "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }
