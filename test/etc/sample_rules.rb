@@ -5,7 +5,7 @@
 
 rule "GIVE_SOME_TO_ALL", 
   interactions: ALL,
-  rewards: [{ "POINT" => 10 }]
+  rewards: [{ MAIN_REWARD_NAME => 10 }]
 # => assigns 10 points to all interactions that have been executed the first time
 
 ###################################################################################################
@@ -15,14 +15,14 @@ rule "GIVE_SOME_TO_ALL",
 
 rule "QUIZ_RULE",
   interactions: { types: ["QUIZ"], ctas: ["SUPERWIN"] },
-  rewards: [{ "POINT" => 5 }] { 
+  rewards: [{ MAIN_REWARD_NAME => 5 }] { 
     correct_answer
   }
 # => assigns 2 points to interaction of type quiz of CTA "superwin", if the answer is correct
 
 rule "PLAY_RULE",
   interactions: { types: ["PLAY"], tags: ["NEW_PLAY"] },  
-  rewards: [{ "POINT" => 5 }]
+  rewards: [{ MAIN_REWARD_NAME => 5 }]
 # => assigns 5 more points to interaction of type PLAY, for CTA with tag "NEW_PLAY"
 
 #################################################################################################
@@ -32,7 +32,7 @@ rule "PLAY_RULE",
  
 rule "DEDICATED_PLAYER",
   rewards: ["DEDICATED_PLAYER"] { 
-    user_rewards["POINT"].counter > 1000
+    user_rewards[MAIN_REWARD_NAME].counter > 1000
   } 
 # => assigns a badge if the user has more than 1000 points
 
@@ -70,12 +70,12 @@ rule "ADDICTED_PLAYER_BADGE",
 
 rule "LEVEL2",
   rewards: ["LEVEL"] { 
-    user_rewards["LEVEL"].counter == 1 and user_rewards["POINT"].counter > 99 
+    user_rewards["LEVEL"].counter == 1 and user_rewards[MAIN_REWARD_NAME].counter > 99 
   }
 
 rule "LEVEL3",
   rewards: ["LEVEL"] { 
-    user_rewards["LEVEL"].counter == 2 and user_rewards["POINT"].counter > 199 
+    user_rewards["LEVEL"].counter == 2 and user_rewards[MAIN_REWARD_NAME].counter > 199 
   }
 
 
@@ -87,7 +87,7 @@ rule "LEVEL3",
 
 rule "UNLOCK_RULE",
   unlocks: ["SPECIAL_AVATAR"] { 
-    user_rewards["POINT"].counter > 10000
+    user_rewards[MAIN_REWARD_NAME].counter > 10000
   } 
 
 

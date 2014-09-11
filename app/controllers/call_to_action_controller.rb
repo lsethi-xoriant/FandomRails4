@@ -298,7 +298,7 @@ class CallToActionController < ApplicationController
 
     if current_user && user_interaction
 
-      response['winnable_reward_count'] = get_current_call_to_action_reward_status("POINT", interaction.call_to_action)[:winnable_reward_count]
+      response['winnable_reward_count'] = get_current_call_to_action_reward_status(MAIN_REWARD_NAME, interaction.call_to_action)[:winnable_reward_count]
 
       if outcome.errors.any?
         logger.error("errors in the rewarding system:")

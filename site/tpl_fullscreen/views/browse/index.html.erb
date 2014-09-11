@@ -15,7 +15,7 @@
                       FATTO <span class="glyphicon glyphicon-ok"></span>
                     </span>
                   <% else %>
-                    &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning">+<%= predict_max_cta_outcome(calltoaction, anonymous_user).reward_name_to_counter["POINT"] %>
+                    &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning">+<%= predict_max_cta_outcome(calltoaction, anonymous_user).reward_name_to_counter[MAIN_REWARD_NAME] %>
                       <span class="glyphicon glyphicon-star"></span>
                     </span>
                   <% end %>

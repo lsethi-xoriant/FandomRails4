@@ -166,7 +166,7 @@
                     <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-success" style="padding-top: 7px;">FATTO <span class="glyphicon glyphicon-ok"></span>
                     </span>
                   <% else %>
-                    <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-warning" style="padding-top: 7px;">+<%= predict_max_cta_outcome(c, anonymous_user).reward_name_to_counter["POINT"] %>
+                    <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-warning" style="padding-top: 7px;">+<%= predict_max_cta_outcome(c, anonymous_user).reward_name_to_counter[MAIN_REWARD_NAME] %>
                       <span class="glyphicon glyphicon-star"></span>
                     </span>
                   <% end %>

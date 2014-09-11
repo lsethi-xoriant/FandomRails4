@@ -1,6 +1,6 @@
 <% quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC") %>
 
-<% calltoaction_reward_status = get_current_call_to_action_reward_status("POINT", calltoaction) %>
+<% calltoaction_reward_status = get_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction) %>
 
 <div class="row cta">      
   <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-10 col-sm-offset-1">

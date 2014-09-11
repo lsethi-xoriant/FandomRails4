@@ -1,22 +1,22 @@
 <% if current_user %>
-  <% if outcome && outcome.reward_name_to_counter["POINT"] && outcome.reward_name_to_counter["POINT"] > 0 %>       
+  <% if outcome && outcome.reward_name_to_counter[MAIN_REWARD_NAME] && outcome.reward_name_to_counter[MAIN_REWARD_NAME] > 0 %>       
     <% if interaction.resource.quiz_type.downcase.to_sym == :versus %>
       <div class="col-sm-10 col-sm-offset-1 text-center">
         <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
-        <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter["POINT"] %> punti.
+        <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter[MAIN_REWARD_NAME] %> punti.
         </div>
       </div> 
     <% elsif interaction.resource.quiz_type.downcase.to_sym == :trivia %>
       <% if get_user_interaction_from_interaction(interaction, current_user).answer.correct %>
         <div class="col-sm-10 col-sm-offset-1 text-center">
           <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
-          <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter["POINT"] %> punti.
+          <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter[MAIN_REWARD_NAME] %> punti.
           </div>
         </div> 
       <% else %>
         <div class="col-sm-10 col-sm-offset-1 text-center">
           <div class="alert alert-danger" style="margin-bottom: 0; margin-top: 15px;">
-          <strong>Risposta errata!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter["POINT"] %> punti.
+          <strong>Risposta errata!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter[MAIN_REWARD_NAME] %> punti.
           </div>
         </div> 
       <% end %>

@@ -204,7 +204,7 @@ module RewardingSystemHelper
     # name - the name of the rule, used for logging
     # options
     #     :rewards      - a list of rewards to assign if the rule matches; the list contains names, or 
-    #                     hashes mapping names to counters (for example to award 10 points write { "POINT" => 10 })
+    #                     hashes mapping names to counters (for example to award 10 points write { MAIN_REWARD_NAME => 10 })
     #     :unlock       - a list of reward names to unlock
     #
     # The block defines the condition by which the rewards should be assigned or unlocked  

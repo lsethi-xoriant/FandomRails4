@@ -40,8 +40,8 @@
         <div class="panel panel-default">
           <div class="panel-body" style="padding-top: 8px;">
             <p style="font-size: 12px; display: inline;"><span style="color: green;" class="glyphicon glyphicon glyphicon-ok-sign"></span> Bravo! +<%= interaction_reward_status[:win_reward_count] %> punti</p>
-            <% unless get_current_interaction_reward_status("POINT", interaction)[:reward].numeric_display %>    
-              <% get_current_interaction_reward_status("POINT", interaction)[:reward_status_images].each do |reward| %>
+            <% unless get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)[:reward].numeric_display %>    
+              <% get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)[:reward_status_images].each do |reward| %>
                 <img src="<%= reward %>" style="max-width: 20px; margin-bottom: 5px;">
               <% end %>
             <% end %>

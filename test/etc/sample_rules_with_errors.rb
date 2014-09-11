@@ -1,16 +1,16 @@
 
 rule "DUP", 
-  rewards: [{ "POINT" => 10 }] { 
+  rewards: [{ MAIN_REWARD_NAME => 10 }] { 
     (user_interaction.counter == 1) 
   }
 
 rule "OPTIONS", 
-  reward: [{ "POINT" => 10 }] { 
+  reward: [{ MAIN_REWARD_NAME => 10 }] { 
     (user_interaction.counter == 1) 
   }
 
 rule "DUP", 
-  rewards: [{ "POINT" => 10}] { 
+  rewards: [{ MAIN_REWARD_NAME => 10}] { 
     first_time 
   }
 

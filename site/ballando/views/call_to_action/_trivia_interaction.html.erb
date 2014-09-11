@@ -22,8 +22,8 @@
             <% else %>
               <p style="font-size: 12px; display: inline;"><span style="color: red;" class="glyphicon glyphicon glyphicon-remove-sign"></span> SBAGLIATO! +<%= interaction_reward_status[:win_reward_count] %> punti</p>
             <% end %>
-            <% unless get_current_interaction_reward_status("POINT", interaction)[:reward].numeric_display %>    
-              <% get_current_interaction_reward_status("POINT", interaction)[:reward_status_images].each do |reward| %>
+            <% unless get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)[:reward].numeric_display %>    
+              <% get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)[:reward_status_images].each do |reward| %>
                 <img src="<%= reward %>" style="max-width: 20px; margin-bottom: 5px;">
               <% end %>
             <% end %>

@@ -15,11 +15,11 @@
       <% if user_interaction %>
         FATTO
       <% else %>
-        Rispondi per ottenere fino a +<%= get_current_interaction_reward_status("POINT", interaction)[:all_reward_count] %> punti
+        Rispondi per ottenere fino a +<%= get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)[:all_reward_count] %> punti
       <% end %>
       
-      <% unless get_current_interaction_reward_status("POINT", interaction)[:reward].numeric_display %>    
-        <% get_current_interaction_reward_status("POINT", interaction)[:reward_status_images].each do |reward| %>
+      <% unless get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)[:reward].numeric_display %>    
+        <% get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)[:reward_status_images].each do |reward| %>
           <img src="<%= reward %>" style="max-width: 30px;">
         <% end %>
       <% end %>
