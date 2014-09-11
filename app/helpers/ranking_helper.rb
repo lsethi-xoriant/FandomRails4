@@ -39,6 +39,43 @@ module RankingHelper
     )
   end
   
+  def get_vote_ranking(vote_ranking)
+    rankings = Array.new
+    period = get_current_periodicities[vote_ranking.period]
+    if period.blank?
+      rankings = cache_short("vote_rank_#{vote_ranking.id}_general") do
+        vote_ranking_list = Array.new
+        vote_ranking.vote_ranking_tags.each do |rt|
+          call_to_actions = get_ctas_with_tag(rt.tag.name)
+          call_to_actions.each do |cta|
+            vote_sum = UserInteraction.select("SUM((aux->>'vote')::int)").where("(aux->>'call_to_action_id')::int = ?", cta.id).first.sum
+            vote_ranking_list << {cta: cta, total_vote: vote_sum, user: cta.user}
+          end
+        end
+        vote_ranking_list = vote_ranking_list.sort_by{ |x| x[:total_vote] }
+      end
+    else
+      rankings = cache_short("vote_rank_#{vote_ranking.id}_#{period.id}") do
+        vote_ranking_list = Array.new
+        vote_ranking.vote_ranking_tags.each do |rt|
+          call_to_actions = get_ctas_with_tag(rt.tag.name)
+          call_to_actions.each do |cta|
+            vote_sum = UserInteraction.select("SUM((aux->>'vote')::int)").where("(aux->>'call_to_action_id')::int = ?", cta.id)
+            vote_ranking_list << {cta: cta, total_vote: vote_sum, user: cta.user}
+          end
+        end
+        vote_ranking_list = vote_ranking_list.sort_by{ |x| x[:total_vote] }
+      end
+    end
+    rank = RankingElement.new(
+      period: vote_ranking.period,
+      title: vote_ranking.title,
+      rankings: prepare_vote_rank_for_json(rankings),
+      total: rankings.count,
+      number_of_pages: get_pages(rankings.count, RANKING_USER_PER_PAGE) 
+    )
+  end
+  
   def get_full_rank(ranking)
     rank = get_ranking(ranking)
     if current_user
@@ -47,6 +84,11 @@ module RankingHelper
       my_position = -1
     end
     compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+  end
+  
+  def get_full_vote_rank(vote_ranking)
+    rank = get_vote_ranking(vote_ranking)
+    compose_vote_ranking_info(vote_ranking.rank_type, vote_ranking, rank.rankings, rank.rankings.count, rank.number_of_pages)
   end
   
   def get_fb_friends_rank(ranking)
@@ -71,17 +113,13 @@ module RankingHelper
     {rank_list: rank_list, rank_type: rank_type, ranking: ranking, current_page: current_page, my_position: my_position, total: total, number_of_pages: number_of_pages}
   end
   
-  def get_full_rank_page
-    page = prams[:page]
-    off = (page - 1) * RANKING_USER_PER_PAGE
-    ranking = Ranking.find(params[:id])
-    rank = get_ranking(ranking)
-    rank_list = rank.rankings.slice(off, RANKING_USER_PER_PAGE)
-    respond_to do |format|
-      format.json { render json: rank_list.to_json }
-    end
+  def compose_vote_ranking_info(rank_type, ranking, rank_list, total = 0, number_of_pages = 0)
+    current_page = 1
+    off = 0
+    rank_list = rank_list.slice(off, RANKING_USER_PER_PAGE)
+    {rank_list: rank_list, rank_type: rank_type, ranking: ranking, current_page: current_page, total: total, number_of_pages: number_of_pages}
   end
-  
+    
   def populate_rankings(ranking_names)
     rankings = Hash.new
     ranking_names.each do |rn|
@@ -91,6 +129,15 @@ module RankingHelper
       else
         rankings[rn] = get_full_rank(rank)
       end
+    end
+    rankings
+  end
+  
+  def populate_vote_rankings(vote_ranking_names)
+    rankings = Hash.new
+    vote_ranking_names.each do |rn|
+      rank = VoteRanking.find_by_name(rn)
+      rankings[rn] = get_full_vote_rank(rank)
     end
     rankings
   end
@@ -105,6 +152,34 @@ module RankingHelper
         "avatar" => user_avatar(r.user), 
         "user" => "#{r.user.first_name} #{r.user.last_name}", 
         "counter" => r.counter 
+      }
+      i += 1
+    end
+    positions
+  end
+  
+  def prepare_vote_rank_for_json(ranking)
+    positions = Array.new
+    i = 1
+    ranking.each do |r|
+      if r[:user]
+        avatar = user_avatar(r[:user])
+        user_id = r[:user].id
+        user_name = "#{r[:user].first_name} #{r[:user].last_name}"
+      else
+        avatar = ""
+        user_id = -1
+        user_name = ""
+      end
+      
+      positions << { 
+        "position" => i, 
+        "cta_thumb" => r[:cta].thumbnail(:thumb),
+        "cta_title" => r[:cta].title,
+        "avatar" => avatar, 
+        "user_id" => user_id,
+        "user" => user_name, 
+        "counter" => r[:total_vote] 
       }
       i += 1
     end

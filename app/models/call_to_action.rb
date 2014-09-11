@@ -4,7 +4,7 @@ class CallToAction < ActiveRecord::Base
   
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
-  					:approved, :user_generated, :interaction_watermark_url, :name, :thumbnail
+  					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail
 
   extend FriendlyId
   friendly_id :title, use: :slugged
@@ -33,6 +33,7 @@ class CallToAction < ActiveRecord::Base
   has_many :call_to_action_tags, dependent: :destroy
   has_many :answers
   belongs_to :releasing_file
+  belongs_to :user
   has_one :user_upload_interaction
 
   validates_associated :interactions
@@ -79,7 +80,7 @@ class CallToAction < ActiveRecord::Base
   end
   
   def get_watermark
-    if user_generated && interaction_watermark_url
+    if !user_id.nil? && interaction_watermark_url
       interaction_watermark_url
     else
       nil

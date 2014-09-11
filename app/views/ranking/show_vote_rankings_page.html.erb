@@ -1,0 +1,7 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container" ng-controller="RankingCtrl" ng-init="init(<%= populate_vote_rankings(["true_detective_vote_rank"]).to_json %>);">
+
+<%= render partial: "/ranking/vote_rank", locals: { rankings: "rankings.true_detective_vote_rank" } %>
+
+</div>
