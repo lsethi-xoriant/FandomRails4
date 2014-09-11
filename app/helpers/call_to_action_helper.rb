@@ -28,7 +28,7 @@ module CallToActionHelper
   
   def duplicate_user_generated_cta(old_cta_id, params, upload_file_index, watermark)
     cta = CallToAction.find(old_cta_id)
-    cta.user_generated = true
+    cta.user_id = current_user.id
     cta.activated_at = nil
     cta.name = generate_unique_name()
     cta_attributes = cta.attributes
@@ -120,7 +120,7 @@ module CallToActionHelper
   end
   
   def is_call_to_action_gallery(calltoaction)
-    return has_tag_recursive(calltoaction.call_to_action_tags.map{|c| c.tag}, "Gallery")
+    return has_tag_recursive(calltoaction.call_to_action_tags.map{|c| c.tag}, "gallery")
   end
   
   def has_tag_recursive(tags, tag_name)

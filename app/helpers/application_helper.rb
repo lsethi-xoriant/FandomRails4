@@ -161,7 +161,16 @@ module ApplicationHelper
   def get_ctas_with_tag(tag_name)
     CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name)
   end
-
+  
+  def get_tags_for_vote_ranking(vote_ranking)
+    tags = vote_ranking.vote_ranking_tags
+    taglist = Array.new
+    tags.each do |t|
+      taglist << t.tag.name
+    end
+    taglist.join(",")
+  end
+  
 	def get_user_interaction_from_interaction(interaction, user)
 		user.user_interactions.find_by_interaction_id(interaction.id)
 	end

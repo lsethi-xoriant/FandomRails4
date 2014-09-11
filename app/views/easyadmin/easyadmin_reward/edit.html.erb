@@ -62,7 +62,7 @@
               <label class="text-input">Tipo currency</label>
               <% date_array = @currency_rewards.map { |currency| [currency.title, currency.id] } %>
               <% date_array.unshift ["", ""] %>
-              <%= select_tag :currency_id, options_for_select(date_array), :class => "form-control" %>
+              <%= f.select :currency_id, date_array, {}, { :class => "form-control" } %>
           </div>
           <div class="form-group">
             <label class="text-input">Tipologia di contenuto</label>

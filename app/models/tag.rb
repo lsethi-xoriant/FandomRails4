@@ -11,6 +11,7 @@ class Tag < ActiveRecord::Base
   has_many :reward_tags
   has_many :tags_tags, dependent: :destroy
   has_many :tag_fields, dependent: :destroy
+  has_many :vote_ranking_tags
   
   accepts_nested_attributes_for :tag_fields
   
