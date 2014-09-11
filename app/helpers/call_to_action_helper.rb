@@ -120,7 +120,7 @@ module CallToActionHelper
   end
   
   def is_call_to_action_gallery(calltoaction)
-    return has_tag_recursive(calltoaction.call_to_action_tags.map{|c| c.tag}, "Gallery")
+    return has_tag_recursive(calltoaction.call_to_action_tags.map{|c| c.tag}, "gallery")
   end
   
   def has_tag_recursive(tags, tag_name)
