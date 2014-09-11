@@ -16,7 +16,7 @@
             <div class="row">      
               <div class="col-md-6">
                 <h4 class="lead">Registrati </h4>
-                <%= form_for resource, :url => user_registration_path do |f| %> 
+                <%= form_for resource, :url => "/users/rai/sign_up/create" do |f| %> 
                   <% if resource.errors.any? %>
                     <div style="margin-top: 10px; margin-bottom: 10px; margin-left: -20px;">
                       <ul>
@@ -27,6 +27,10 @@
                       </ul>
                     </div>
                   <% end %>
+                  <div class="form-group text-left">
+                    <!--<label for="exampleInputEmail1">Email address</label>-->
+                    <%= f.text_field :username, :class => "form-control", :placeholder => "Username" %>
+                  </div>
                   <div class="form-group text-left">
                     <!--<label for="exampleInputEmail1">Email address</label>-->
                     <%= f.text_field :first_name, :class => "form-control", :placeholder => "Nome" %>
@@ -43,13 +47,6 @@
                     <!--<label for="exampleInputPassword1">Password</label>-->
                     <%= f.password_field :password, :class => "form-control", :placeholder => "Password" %>
                   </div>
-                  <div class="form-group text-left">
-                    <!--<label for="exampleInputPassword1">Password</label>-->
-                    <%= f.password_field :password_confirmation, :class => "form-control", :placeholder => "Conferma password" %>
-                  </div>
-                  <div class="checkbox text-left">
-                    <label><%= f.check_box :privacy %> Accetto i <a href="#">termini d'uso</a></label>
-                  </div>
                   <button type="submit" class="btn btn-info btn-lg btn-block">Registrati</button>
                   <div class="checkbox text-left">
                     
@@ -57,13 +54,13 @@
                 <% end %>
                 <p>&nbsp;</p>
               </div>
-              <%= form_for resource, :url => user_sign_in_path do |f| %>
+              <%= form_for resource, :url => "/users/rai/sign_in/create" do |f| %>
                 <div class="col-md-6">
                   <h4 class="lead text-left">Login</h4>
                   <p><%= flash[:alert] %></p>
                   <div class="form-group text-left">
                     <!--<label for="exampleInputEmail1">Email address</label>-->
-                    <%= f.text_field :email, :class => "form-control", :placeholder => "Email" %>
+                    <%= f.text_field :username, :class => "form-control", :placeholder => "Email" %>
                   </div>
                   <div class="form-group text-left">
                     <!--<label for="exampleInputPassword1">Password</label>-->
