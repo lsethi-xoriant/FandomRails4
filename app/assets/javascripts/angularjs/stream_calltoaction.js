@@ -20,6 +20,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   var polling = false;
 
+  var containerWindow;
+  var append_other_locked = false;
+
   $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code) {
 
     $scope.current_user = current_user;
@@ -49,6 +52,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     } else {
       $("#append-other button").show();
     }
+
+    containerWindow = $(window.parent);
+    
+    containerWindow.scroll(function() {
+      if(containerWindow.scrollTop() + containerWindow.height() == $(window.parent.document).height()) {
+        append_other_locked = true;
+        appendCallToAction();
+      }
+    });
 
   };
 
@@ -170,6 +182,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         $("#append-other button").attr('disabled', false);
         
         window.parent.iframeResize();
+        append_other_locked = false;
         
       });
       
@@ -625,6 +638,5 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $window.updateUserRewardInView = function(counter) {
     $(".user-reward-counter").html("+" + counter + " PUNTI");
   };
-
 
 }
