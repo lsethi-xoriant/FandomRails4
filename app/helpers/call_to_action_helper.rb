@@ -28,7 +28,7 @@ module CallToActionHelper
   
   def duplicate_user_generated_cta(old_cta_id, params, upload_file_index, watermark)
     cta = CallToAction.find(old_cta_id)
-    cta.user_generated = true
+    cta.user_id = current_user.id
     cta.activated_at = nil
     cta.name = generate_unique_name()
     cta_attributes = cta.attributes

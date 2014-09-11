@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140908093920) do
+ActiveRecord::Schema.define(:version => 20140911124628) do
 
   create_table "answers", :force => true do |t|
     t.integer  "quiz_id",                                     :null => false
@@ -71,7 +71,6 @@ ActiveRecord::Schema.define(:version => 20140908093920) do
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
     t.string   "slug"
-    t.boolean  "user_generated"
     t.string   "media_image_file_name"
     t.string   "media_image_content_type"
     t.integer  "media_image_file_size"
@@ -83,6 +82,7 @@ ActiveRecord::Schema.define(:version => 20140908093920) do
     t.string   "thumbnail_content_type"
     t.integer  "thumbnail_file_size"
     t.datetime "thumbnail_updated_at"
+    t.integer  "user_id"
   end
 
   add_index "call_to_actions", ["name"], :name => "index_call_to_actions_on_name", :unique => true
@@ -285,8 +285,10 @@ ActiveRecord::Schema.define(:version => 20140908093920) do
 
   create_table "plays", :force => true do |t|
     t.string   "title"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "text_before"
+    t.string   "text_after"
   end
 
   create_table "playticket_events", :force => true do |t|
@@ -533,6 +535,22 @@ ActiveRecord::Schema.define(:version => 20140908093920) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
+
+  create_table "vote_ranking_tags", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "vote_ranking_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "vote_rankings", :force => true do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "period"
+    t.string   "rank_type"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "votes", :force => true do |t|
     t.string   "title"

@@ -93,7 +93,7 @@ class Easyadmin::CallToActionController < ApplicationController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    @cta_list = CallToAction.where("user_generated = FALSE OR user_generated IS NULL").page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    @cta_list = CallToAction.where("user_id IS NULL").page(page).per(per_page).order("activated_at DESC NULLS LAST")
 
     @page_size = @cta_list.num_pages
     @page_current = page
@@ -116,9 +116,9 @@ class Easyadmin::CallToActionController < ApplicationController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
     if approvation_status.nil?
-      @ctas = CallToAction.where("user_generated = TRUE and approved IS NULL").page(page).per(per_page).order("created_at DESC NULLS LAST")
+      @ctas = CallToAction.where("user_id IS NOT NULL and approved IS NULL").page(page).per(per_page).order("created_at DESC NULLS LAST")
     else
-      @ctas = CallToAction.where("user_generated = TRUE and approved = ?", approvation_status).page(page).per(per_page).order("created_at DESC NULLS LAST")
+      @ctas = CallToAction.where("user_id IS NOT NULL and approved = ?", approvation_status).page(page).per(per_page).order("created_at DESC NULLS LAST")
     end
 
     @page_size = @ctas.num_pages

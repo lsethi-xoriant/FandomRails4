@@ -1,0 +1,25 @@
+<div ng-class="{'row': <%= rankings %>.rank_type == 'full', 'col-sm-6': <%= rankings %>.rank_type != 'full'}">
+		
+
+    <div class="col-md-12">
+      <div class="page-header">
+        <h1>{{<%= rankings %>.ranking.title}}</h1>
+      </div>
+      
+      <ul class="list-group">
+          <li ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'list-group-item': true, 'list-group-item-warning': rank_user.user_id == <%= current_user.id %> }">
+            <div class="row">
+              <div class="col-sm-1 col-xs-2 text-right"><h4 class="no-margin">{{rank_user.position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{rank_user.cta_thumb}}" class="img-responsive"></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{rank_user.avatar}}" class="img-circle img-responsive"></div>
+              <div class="col-sm-5 col-xs-7"><h6>{{rank_user.user}}</h6><h4>{{rank_user.cta_title}}</h4></div>
+              <div class="col-sm-2 col-xs-3 text-right"><h4 class="no-margin">{{rank_user.counter}}</h4></div>
+            </div>
+          </li>
+      </ul>
+      <button ng-disabled="currentPage == 1" ng-click="perv_page(<%= rankings %>.current_page, <%= rankings %>)">Previous</button>
+      {{<%= rankings %>.current_page}}/{{<%= rankings %>.number_of_pages}}
+      <button ng-disabled="currentPage >= total_page" ng-click="next_page(<%= rankings %>.current_page, <%= rankings %>)">Next</button>
+    </div>
+
+</div>

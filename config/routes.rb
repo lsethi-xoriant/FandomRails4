@@ -25,6 +25,7 @@ Fandom::Application.routes.draw do
   
   #match "/classifica/:id", :to => "ranking#show"
   match "classifiche", :to => "ranking#show_rankings_page"
+  match "bootcamp", :to => "ranking#show_vote_rankings_page"
   
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
@@ -34,6 +35,8 @@ Fandom::Application.routes.draw do
     resources :tag
     
     resources :ranking
+    
+    resources :vote_ranking
     
     match "tag/clone/:id", :to => "tag#clone"
     

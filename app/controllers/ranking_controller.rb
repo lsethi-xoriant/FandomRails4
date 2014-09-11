@@ -6,6 +6,8 @@ include RankingHelper
 
 class RankingController < ApplicationController
   
-  
+  def show_vote_rankings_page
+    
+  end
   
 end
