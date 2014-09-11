@@ -51,7 +51,7 @@ module EventHandlerHelper
       end
 
     rescue Exception => e
-      Rails.logger.error("[EventHandlerError] Exception: #{e}")
+      Rails.logger.error("[EventHandlerError] Exception: #{e} - full backtrace:\n#{e.backtrace.join("\n")}")
     end
     
   end

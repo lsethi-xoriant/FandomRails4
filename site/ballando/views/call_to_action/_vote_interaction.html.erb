@@ -1,0 +1,103 @@
+<div class="col-sm-12">
+  <div class="row text-center">
+    <div class="col-sm-12" style="padding-top: 15px;">
+      <h4 style="font-size: 16px;">
+        <%= interaction.resource.title %>
+      </h4>
+    </div>
+
+    <div id="interaction-<%= interaction.id %>" class="col-xs-12">
+
+      <% if user_interaction %>
+        <div class="row">
+          <div class="col-xs-12" style="margin-bottom: 5px; padding-left: 60px; postione: relative;">
+            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 15px;"> 
+              <div class="baloon baloon-right"> 
+                <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
+              </div>
+            </div>
+
+            <% if interaction.resource.oneshot %>
+
+              <% vote = JSON.parse(current_user.user_interactions.find_by_interaction_id(interaction.id).aux)['vote'] %>
+
+              <select id="interaction-<%= interaction.id %>-vote-value" class="form-control" style="margin-bottom: 10px;" disabled>
+                <% (interaction.resource.vote_min..interaction.resource.vote_max).each do |i| %>
+                  <% if vote.to_i == i %>
+                    <option value="<%= i %>" selected="selected"><%= i %></option>
+                  <% else %>
+                    <option value="<%= i %>"><%= i %></option>
+                  <% end %>
+                <% end %>
+              </select>
+
+              <button class="btn btn-primary btn-block active" onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)"><%= interaction.resource.title %></button>
+
+            <% else %>
+
+              <% vote = JSON.parse(current_user.user_interactions.find_by_interaction_id(interaction.id).aux)['vote'] %>
+
+              <select id="interaction-<%= interaction.id %>-vote-value" class="form-control" style="margin-bottom: 10px;">
+                <% (interaction.resource.vote_min..interaction.resource.vote_max).each do |i| %>
+                  <% if vote.to_i == i %>
+                    <option value="<%= i %>" selected="selected"><%= i %></option>
+                  <% else %>
+                    <option value="<%= i %>"><%= i %></option>
+                  <% end %>
+                <% end %>
+              </select>
+
+              <button class="btn btn-primary btn-block" onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')" ><%= interaction.resource.title %></button>
+
+            <% end %>
+
+          </div>
+        </div>
+      <% else %>
+        <div class="row">
+          <div class="col-xs-12" style="margin-bottom: 5px; padding-left: 60px; postione: relative;">
+            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 15px;"> 
+              <div class="baloon baloon-right square unchosen"> 
+                <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+              </div>
+            </div>
+
+            <select id="interaction-<%= interaction.id %>-vote-value" class="form-control" style="margin-bottom: 10px;">
+              <% (interaction.resource.vote_min..interaction.resource.vote_max).each do |i| %>
+                <option value="<%= i %>"><%= i %></option>
+              <% end %>
+            </select>
+
+            <button class="btn btn-primary btn-block" onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)"><%= interaction.resource.title %></button>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="col-xs-12">
+ 
+      <% if user_interaction %>
+        <div class="panel panel-default">
+          <div class="panel-body" style="padding-top: 8px;">
+            <p style="font-size: 12px; display: inline;"><span style="color: green;" class="glyphicon glyphicon glyphicon-ok-sign"></span> Bravo! +<%= interaction_reward_status[:win_reward_count] %> punti</p>
+            <% unless get_current_interaction_reward_status("POINT", interaction)[:reward].numeric_display %>    
+              <% get_current_interaction_reward_status("POINT", interaction)[:reward_status_images].each do |reward| %>
+                <img src="<%= reward %>" style="max-width: 20px; margin-bottom: 5px;">
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <button id="interaction-<%= interaction.id %>-next" class="btn btn-primary btn-block hidden" onclick="nextInteraction(<%= calltoaction_id %>)">VAI AVANTI</button>
+      <% else %>
+        <p style="font-size: 12px; display: inline;">Ottieni fino a +<%= interaction_reward_status[:winnable_reward_count] %> punti</p>
+        <% unless interaction_reward_status[:reward].numeric_display %>    
+          <% interaction_reward_status[:reward_status_images].each do |reward| %>
+            <img src="<%= reward %>" style="max-width: 20px; margin-bottom: 5px;">
+          <% end %>
+        <% end %>
+      <% end %>
+
+    </div>
+  </div>
+</div>

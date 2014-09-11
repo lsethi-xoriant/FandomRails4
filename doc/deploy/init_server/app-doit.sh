@@ -19,12 +19,6 @@ cp etc/app-rvmrc ~/.rvmrc
 cp etc/app-bashrc ~/.bashrc
 
 #
-# setup SSH
-#
-cp -a etc/ssh ~/.ssh/
-chmod 600 ~/.ssh/id_rsa
-
-#
 # Setup the maintenance pages
 #
 cp -a etc/public_html ~

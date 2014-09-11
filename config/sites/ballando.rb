@@ -2,10 +2,12 @@ module Fandom
   class Application < Rails::Application
     register_fandom_site(
       id: 'ballando', 
-      title: 'Ballando',
-      domains: ['ballando.fandom.localdomain'],
-      share_db: 'fandom',
-      assets_precompile: ['ballando_application.css'] #, 'ballando_application.js']
+      title: 'Ballando con le stelle',
+      domains: ['ballando.fandom.localdomain', 'ballando.shado.tv', 'ballando.stage.fandomlab.com', 'ballando.live.fandomlab.com', 'ballando.dev.fandomlab.com'],
+      assets_precompile: ['ballando_application.css', 'ballando_application.js'],
+      environment: { 
+        'EMAIL_ADDRESS' => 'noreply@ballando.it', 
+      }
     )
   end
 end

@@ -13,7 +13,7 @@
   <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
 
   <%= stylesheet_link_tag "ballando_application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "ballando_application" %>
 
   <%= csrf_meta_tags %>
 
@@ -116,6 +116,10 @@
   <%= yield %>
 
   <%= render partial: "/application/ga" %>
+
+  <script type="text/javascript" src="http://cdn.gigya.com/js/socialize.js?apiKey=3_H6AyGSYZJkl6L9-AVpZS3UHc2twYG3rxy_5IHTpEVGIIopQd3lQzbenhWgyRl3Ap">
+    { connectWithoutLoginBehavior: 'alwaysLogin' }
+  </script>
 
 </body>
 </html>

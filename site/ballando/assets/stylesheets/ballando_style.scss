@@ -5,7 +5,7 @@ $navbar-default-link-hover-bg: #eee;
 
 // Inverted navbar
 // Reset inverted navbar basics
-$navbar-default-bg:                         #fff !default;
+$navbar-default-bg: #fff !default;
 
 @import "bootstrap/bootstrap";
 
@@ -13,6 +13,129 @@ p.oblique { font-style:oblique }
 
 button, h1, h2, h3, h4, h5, h6, li {
     font-family: trade-gothic-lt-bold-condensed-20, helvetica, arial, sans-serif;
+}
+
+.btn-versus {
+    white-space: normal;
+    width: 100px;
+    top: 0; 
+    bottom: 0; 
+    width: 60%; 
+    position: absolute;
+}
+
+.btn-versus.right {
+    margin-right: 35px;
+    right: 0; 
+}
+
+.btn-versus.left {
+    left: 35px; 
+}
+
+.interaction-baloon {
+    .baloon {
+        width: 100%;         
+        border-radius: 3px; 
+        border: 1px solid #ccc;
+        position: relative; 
+    }
+
+    .baloon.square {
+        padding-bottom: 100%; 
+    }
+
+    .baloon-right:after, .baloon-right:before { 
+        left: 100%; top: 50%; 
+        border: solid transparent; 
+        content: ""; 
+        height: 0; 
+        width: 0; 
+        position: absolute; 
+        pointer-events: none; 
+    } 
+
+    .baloon-right:after { 
+        border-color: rgba(136, 183, 213, 0); 
+        border-left-color: #fff; 
+        border-width: 5px; 
+        margin-top: -5px; 
+    } 
+
+    .baloon-right:before { 
+        border-color: #fff; 
+        border-left-color: #ccc; 
+        border-width: 6px; 
+        margin-top: -6px; 
+    }
+
+    .baloon-left:after, .baloon-left:before { 
+        right: 100%; 
+        top: 50%; 
+        border: solid transparent; 
+        content: ""; 
+        height: 0; 
+        width: 0; position: absolute; 
+        pointer-events: none; 
+    } 
+
+    .baloon-left:after { 
+        border-color: rgba(136, 183, 213, 0); 
+        border-right-color: #fff; 
+        border-width: 5px; 
+        margin-top: -5px; 
+    } 
+
+    .baloon-left:before { 
+        border-color: rgba(204, 204, 204, 0); 
+        border-right-color: #ccc; 
+        border-width: 6px; 
+        margin-top: -6px; 
+        left: -12px;
+    }
+
+    .baloon-top:after, .baloon-top:before { 
+        bottom: 100%; 
+        left: 50%; 
+        border: solid transparent; 
+        content: ""; 
+        height: 0; 
+        width: 0; 
+        position: absolute; 
+        pointer-events: none; 
+    } 
+
+    .baloon-top:after { 
+        border-color: rgba(136, 183, 213, 0); 
+        border-bottom-color: #fff; 
+        border-width: 3px; 
+        margin-left: -3px; 
+    } 
+
+    .baloon-top:before { 
+        border-color: rgba(194, 225, 245, 0); 
+        border-bottom-color: #ccc; 
+        border-width: 4px; 
+        margin-left: -4px; 
+    }
+}
+
+.thumbnail { 
+    padding: 4px;
+    border: 0px;
+    background-color: #ccc;
+    border-radius: 0;  
+}
+
+.thumbnail.right {
+        background-color: green;
+    }
+.thumbnail.wrong {
+    background-color: red;
+}
+
+.thumbnail:hover { 
+    background-color: orange;
 }
 
 .bg-fluid {
@@ -266,9 +389,6 @@ body {
 /* STREAM */
 
 .cta-stream {
-    h4, h6 {
-        text-transform: uppercase;
-    }
     h6 { margin-top: 0; }
     p {
         line-height: 1em;
@@ -669,7 +789,11 @@ span.notify {
                 }
                 //CHOISE 
                 .choice {
-                    .thumbnail { /*background-color: #000;*/ margin-bottom:0;}
+                    .thumbnail { 
+                        /* background-color: #000; */ 
+                        margin-bottom:0;
+                        padding: 0px;
+                    }
                     a.thumbnail:hover { 
                         img { opacity: 0.5; } 
                     }
@@ -882,9 +1006,9 @@ height: 100%;
 }
 
 .panel.cta-stream {
-    -webkit-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-    -moz-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-    box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    // -webkit-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    // -moz-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    // box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
 }
 
 @media (min-width: $screen-md-min) {
@@ -906,7 +1030,7 @@ height: 100%;
         .cta-md {
             margin: 0;
             position: relative; 
-            height: 320px;
+            height: 395px;
             background: #000;
         }
         .cta-stream-heading {

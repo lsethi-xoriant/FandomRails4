@@ -118,14 +118,11 @@ Fandom::Application.routes.draw do
     match "settings/browse/save", :to => "settings#save_browse_settings"
   end
 
-  constraints(SiteMatcher.new('maxibon')) do
-    constraints(MaxibonUtils::Matcher.new) do
-      match '', to: redirect("https://apps.facebook.com/shadostage")
-      match '*path', to: redirect("https://apps.facebook.com/shadostage")
-    end
-  end
+  #constraints(SiteMatcher.new('ballando')) do
+  #end
 
-  post "/", to: "property#index"
+  match '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }
+  match '/check_next_interaction', to: "call_to_action#check_next_interaction", defaults: { format: 'json' }
   
   #reward
   match "/reward/catalogue", :to => "reward#index"
@@ -171,6 +168,14 @@ Fandom::Application.routes.draw do
     match 'auth/:provider/callback', :to => 'sessions#create'
     match '/auth/failure' => 'sessions#omniauth_failure'
     match '/profile/edit', :to => 'registrations#edit'
+
+    scope module: "sites" do
+      scope module: "ballando" do
+        match "/users/rai/sign_up/create", :to => "registrations#ballando_create"
+        match "/users/rai/sign_in/create", :to => "sessions#ballando_create"
+      end
+    end
+
   end
 
   match "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }
