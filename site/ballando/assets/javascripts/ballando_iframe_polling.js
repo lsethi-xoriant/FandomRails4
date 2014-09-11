@@ -1,5 +1,6 @@
+document.domain = "shado.tv";
+
 jQuery(document).ready(function($) {
-	document.domain = "shado.tv";
 
 	$.definePollingEvent('iframeResize', {
 		// polling interval, a minimal delay before a next polling cycle
@@ -36,7 +37,6 @@ jQuery(document).ready(function($) {
 	});
 
 	$('body').on('iframeResize', function(e) {
-		console.log("ciao");
 		parent.containerResize();
 	});
 }); 
