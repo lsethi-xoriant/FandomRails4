@@ -1,5 +1,5 @@
 <div class="col-sm-12">
-  <div class="row text-center">
+  <div class="row text-center cta-stream-heading">
     <div class="col-sm-12" style="padding-top: 15px;">
       <h4 style="font-size: 16px;">
         <%= interaction.resource.question %>
@@ -12,9 +12,9 @@
         <% position += 1 %>
       <% end %>
     </div>
-    <div class="col-xs-12">
  
-      <% if user_interaction %>
+    <% if user_interaction %>
+      <div class="col-xs-12 text-center undervideo-feedback">
         <div class="panel panel-default">
           <div class="panel-body" style="padding-top: 8px;">
             <% if user_interaction.answer.correct %>
@@ -22,23 +22,25 @@
             <% else %>
               <p style="font-size: 12px; display: inline;"><span style="color: red;" class="glyphicon glyphicon glyphicon-remove-sign"></span> SBAGLIATO! +<%= interaction_reward_status[:win_reward_count] %> punti</p>
             <% end %>
-            <% unless get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)[:reward].numeric_display %>    
-              <% get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)[:reward_status_images].each do |reward| %>
+            <% unless interaction_reward_status[:reward].numeric_display %>    
+              <% interaction_reward_status[:reward_status_images].each do |reward| %>
                 <img src="<%= reward %>" style="max-width: 20px; margin-bottom: 5px;">
               <% end %>
             <% end %>
           </div>
         </div>
-        <button id="interaction-<%= interaction.id %>-next" class="btn btn-primary btn-block hidden" onclick="nextInteraction(<%= calltoaction_id %>)">VAI AVANTI</button>
-      <% else %>
-        <p style="font-size: 12px; display: inline;">Ottieni fino a +<%= interaction_reward_status[:winnable_reward_count] %> punti</p>
-        <% unless interaction_reward_status[:reward].numeric_display %>    
+        <button id="interaction-<%= interaction.id %>-next" class="btn btn-primary btn-block hidden" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px;">VAI AVANTI</button>
+      </div>
+    <% else %>
+      <div class="col-xs-12 text-center undervideo-feedback" style="padding-bottom: 15px;">
+        <h5>Ottieni fino a +<%= interaction_reward_status[:winnable_reward_count] %> punti</h5>
+        <% unless interaction_reward_status[:reward].numeric_display %>  
           <% interaction_reward_status[:reward_status_images].each do |reward| %>
-            <img src="<%= reward %>" style="max-width: 20px; margin-bottom: 5px;">
+              <img src="<%= reward %>" style="width: 20px;">
           <% end %>
         <% end %>
-      <% end %>
+      </div>
+    <% end %>
 
-    </div>
   </div>
 </div>

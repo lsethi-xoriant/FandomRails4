@@ -39,7 +39,6 @@ class Sites::Ballando::SessionsController < SessionsController
     rescue Exception => exception
       User.new.errors.add("Eccezione", exception)
       render template: "/devise/registrations/new", locals: { resource: User.new }
-      return
     end
   end
   

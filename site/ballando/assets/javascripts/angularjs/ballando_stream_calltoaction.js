@@ -24,20 +24,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     } else {
       nextInteraction(calltoaction_id);
     }
-
-    /*
-    var countdown = $("#calltoaction-" + calltoaction_id + "-countdown").countdown360({
-       strokeStyle : "#d30909",
-       fillStyle   : "#FFFFFF",
-       fontColor   : "#d30909",
-       radius      : 40,
-       seconds     : time,
-       onComplete  : function () { console.log("AAA") }
-     });
-
-    countdown.start();
-    */
-
   };
 
   $window.restartInteractions = function(calltoaction_id) {
