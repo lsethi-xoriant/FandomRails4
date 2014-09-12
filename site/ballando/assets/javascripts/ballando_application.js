@@ -22,3 +22,4 @@
 //= require ballando_iframe_polling
 //= require jquery.update.js
 //= require jquerycountdown360
+//= require respond.min
