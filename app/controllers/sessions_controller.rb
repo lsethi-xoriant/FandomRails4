@@ -2,6 +2,8 @@ require 'fandom_utils'
 include FandomUtils
 
 class SessionsController < Devise::SessionsController
+  include FandomPlayAuthHelper
+  
   prepend_before_filter :anchor_provider_to_current_user, only: :create, :if => proc {|c| current_user && env["omniauth.auth"].present? }
   skip_before_filter :iur_authenticate
 
@@ -21,44 +23,6 @@ class SessionsController < Devise::SessionsController
   def omniauth_failure
     flash[:error] = "Errore nella sincronizzazione con il provider, assicurati di avere accettato i permessi."
     redirect_to "/users/sign_up"
-  end
-
-  # Calls a FandomPlay service to automatically log the user there as well. 
-  # Sets the cookie to be sent to the client. 
-  def fandom_play_login(user)
-    if Rails.configuration.fandom_play_enabled
-      token = Digest::MD5.hexdigest(user.email + Rails.configuration.secret_token)
-      host, port = Rails.configuration.deploy_settings['fandom_play']['server'].split(':')
-      url_path = Rails.configuration.deploy_settings['fandom_play']['url_path']
-      url = "http://#{host}:#{port}/#{url_path}/#{URI.encode(user.email)}/#{token}"
-      logger.info("FandomPlay single sign on: #{url}...")
-      post_result = HTTParty.post(url)
-      logger.info("FandomPlay response: #{post_result}")
-      set_play_cookie(post_result)
-    else
-      logger.info("no FandomPlay configuration, skipping login syncronization")
-    end
-  end
-  
-  def set_play_cookie(post_result)
-    if post_result.body == 'authorized'
-      cookie_header = post_result.headers['Set-Cookie']
-      logger.info("Setting FandomPlay cookie: #{cookie_header}")
-      # this header is merged into 'set-cookie' by a middleware; 
-      # it's a workaround to avoid rails encoding on cookies
-      response.headers["raw-set-cookie"] = cookie_header
-    end
-  end
-  
-  # Calls a FandomPlay service to automatically log out the user there as well. 
-  # Sets the cookie to be sent to the client accordingly. 
-  def fandom_play_logout
-    if Rails.configuration.fandom_play_enabled
-      session_cookie_name = Rails.configuration.deploy_settings['fandom_play']['session_cookie_name']
-      cookies.delete(session_cookie_name.to_sym)
-    else
-      logger.info("no FandomPlay configuration, skipping logout syncronization")
-    end    
   end
 
   # Authenticates and log in the user from the standard application form.
