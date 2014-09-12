@@ -1,4 +1,6 @@
 class Sites::Ballando::SessionsController < SessionsController
+  include FandomPlayAuthHelper
+  
   def ballando_create
     begin
 
@@ -23,6 +25,7 @@ class Sites::Ballando::SessionsController < SessionsController
           end
 
           sign_in(:user, user)
+          on_success(user)
           redirect_after_successful_login
         else
           flash[:error] = rai_response_user["authMyRaiTv"]
@@ -34,8 +37,12 @@ class Sites::Ballando::SessionsController < SessionsController
       end
 
     rescue Exception => exception
-      User.new().errors.add("Eccezione", exception)
+      User.new.errors.add("Eccezione", exception)
       render template: "/devise/registrations/new", locals: { resource: User.new }
     end
+  end
+  
+  def on_success(user)
+    fandom_play_login(user)
   end
 end
