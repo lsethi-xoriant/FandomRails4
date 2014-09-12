@@ -1,4 +1,5 @@
-document.domain = "shado.tv";
+document.domain = "fandom.localdomain:3000";
+
 
 jQuery(document).ready(function($) {
 
@@ -37,6 +38,9 @@ jQuery(document).ready(function($) {
 	});
 
 	$('body').on('iframeResize', function(e) {
-		parent.containerResize();
+		console.log("A");
+		window.parent.containerResize();
 	});
+
+
 }); 
