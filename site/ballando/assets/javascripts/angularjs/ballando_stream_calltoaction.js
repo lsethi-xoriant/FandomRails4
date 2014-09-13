@@ -15,6 +15,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   $window.showCallToAction = function(calltoaction_id) {
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
     showCallToActionCountdown(calltoaction_id, 5);
+
+    $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
   };
 
   $window.showCallToActionCountdown = function(calltoaction_id, time) {
@@ -22,6 +24,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       $("#calltoaction-" + calltoaction_id + "-countdown h3").html(time);
       $timeout(function() { showCallToActionCountdown(calltoaction_id, --time) }, 1000);
     } else {
+      $("#calltoaction-" + calltoaction_id + "-countdown").html("");
       nextInteraction(calltoaction_id);
     }
   };
