@@ -1,7 +1,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui-1.10.4.custom
-//= require ballando_iframe_polling
 //= require angular
 //= require angular-resource
 //= require angular-route
@@ -20,6 +19,8 @@
 //= require bootstrap-notify
 //= require bootstrap-fileupload
 //= require jquery.jplayer
-//= require jquery.update.js
+//= require jquery.update
 //= require jquerycountdown360
 //= require respond.min
+//= require ballando_iframe_polling
+

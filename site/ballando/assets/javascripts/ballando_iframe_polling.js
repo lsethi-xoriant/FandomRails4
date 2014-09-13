@@ -1,4 +1,4 @@
-document.domain = "fandom.localdomain:3000";
+document.domain = "shado.tv";
 
 
 jQuery(document).ready(function($) {
