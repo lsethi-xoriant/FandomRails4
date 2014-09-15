@@ -14,7 +14,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $window.showCallToAction = function(calltoaction_id) {
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
-    showCallToActionCountdown(calltoaction_id, 600);
+    showCallToActionCountdown(calltoaction_id, 3);
 
     $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
   };
