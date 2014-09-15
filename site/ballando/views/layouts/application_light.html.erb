@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <title>BALLANDO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="FANDOM" /> 
+  <meta property="og:description" content="" />  
+  <meta property="og:image" content="" />
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+  <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
+
+  <%= stylesheet_link_tag "ballando_application", :media => "all" %>
+  <%= javascript_include_tag "ballando_application_light" %>
+
+  <%= csrf_meta_tags %>
+
+</head>
+<body ng-app="FandomApp" class="bg-fluid" style="background-color: #FAFAFA;">
+
+  <div id="quiz-waiting-audio"></div>
+
+  <%= yield %>
+
+  <%= render partial: "/application/ga" %>
+
+  <script type="text/javascript" src="http://cdn.gigya.com/js/socialize.js?apiKey=3_H6AyGSYZJkl6L9-AVpZS3UHc2twYG3rxy_5IHTpEVGIIopQd3lQzbenhWgyRl3Ap">
+    { connectWithoutLoginBehavior: 'alwaysLogin' }
+  </script>
+
+</body>
+</html>
