@@ -1,4 +1,4 @@
-document.domain = "shado.tv";
+//document.domain = "shado.tv";
 
 /*
 jQuery(document).ready(function($) {
@@ -46,9 +46,9 @@ jQuery(document).ready(function($) {
 */
 
 function checkDocumentHeight(callback){
-    var lastHeight = document.body.clientHeight, newHeight, timer;
+    var lastHeight = $("body").height(), newHeight, timer;
     (function run(){
-        newHeight = document.body.clientHeight;
+        newHeight = $("body").height();
         if( lastHeight != newHeight ) {
             callback();
         }
