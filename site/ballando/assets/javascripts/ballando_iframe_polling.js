@@ -1,4 +1,4 @@
-//document.domain = "shado.tv";
+document.domain = "shado.tv";
 
 /*
 jQuery(document).ready(function($) {
