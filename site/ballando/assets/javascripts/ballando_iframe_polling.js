@@ -1,9 +1,9 @@
 document.domain = "shado.tv";
 
 function checkDocumentHeight(){
-  var lastHeight = $("body").height(), newHeight, timer;
+  var lastHeight = $("body").innerHeight(), newHeight, timer;
   (function run(){
-    newHeight = $("body").height();
+    newHeight = $("body").innerHeight();
     if(lastHeight != newHeight) {
       window.parent.containerHeight(newHeight);
     }
