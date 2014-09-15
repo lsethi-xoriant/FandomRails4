@@ -1,4 +1,4 @@
-<div class="col-md-8 col-sm-8 cta-media no-pad text-center">
+<div class="col-md-8 col-sm-8 cta-media text-center">
            
   <!-- SECONDARY MEDIA -->
   <div id="secondary-media-<%= calltoaction.id %>" class="hidden">
@@ -23,9 +23,9 @@
         </div>
     <% elsif calltoaction.media_type == "IMAGE" %>
       <!-- IMAGE -->
-      <img src="<%= calltoaction.media_image(:large) %>" style="width: 100%; margin-bottom: 15px;">
+      <img src="<%= calltoaction.media_image(:large) %>" style="width: 100%;">
     <% elsif calltoaction.media_type == "IFRAME" %>
-      <div class="<%= "iframe-iphone" if request_is_from_iphone_device?(request) %> video flex-video widescreen text-center v-center" style="background:#222; margin-bottom: 15px;">  
+      <div class="<%= "iframe-iphone " if request_is_from_iphone_device?(request) %>video flex-video widescreen text-center v-center" style="background:#222;">  
         <%= calltoaction.media_data.html_safe %>
       </div>
     <% end %>

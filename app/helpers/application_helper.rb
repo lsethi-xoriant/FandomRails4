@@ -69,68 +69,75 @@ module ApplicationHelper
   end
 
   def create_or_update_interaction(user_id, interaction_id, answer_id, like, aux = "{}")
-    user = User.find(user_id)
-    user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user_id, interaction_id)
-    interaction = Interaction.find(interaction_id)
+    ActiveRecord::Base.transaction do
+      user = User.find(user_id)
 
-    if interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
-      predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
-    end
+      user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user_id, interaction_id)
+      interaction = Interaction.find(interaction_id)
 
-    if user_interaction.nil?
-      user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
-
-      outcome = compute_and_save_outcome(user_interaction)
-      outcome.info = []
-      outcome.errors = []
-
-      outcome_for_user_interaction = {
-        win: outcome,
-        correct_answer: predict_outcome_with_correct_answer ? predict_outcome_with_correct_answer : Outcome.new 
-      }.to_json
-
-      user_interaction.outcome = outcome_for_user_interaction
-      user_interaction.save
-
-      UserCounter.update_unique_counters(user_interaction, user)
-    else
-      if interaction.resource_type.downcase == "vote"
-        user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
-      
-        outcome = compute_and_save_outcome(user_interaction)
-        outcome.info = []
-        outcome.errors = []
-
-        outcome_for_user_interaction = {
-          win: outcome
-        }.to_json
-
-        user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
-
-      else
-        user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
-      
-        outcome = compute_and_save_outcome(user_interaction)
-        outcome.info = []
-        outcome.errors = []
-  
-        interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
-        interaction_outcome.merge!(outcome)
-  
-        interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
-        interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
-  
-        outcome_for_user_interaction = {
-          win: interaction_outcome,
-          correct_answer: interaction_correct_answer_outcome
-        }.to_json
-
-        user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+      if interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
+        predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
       end
-      
+
+      if user_interaction.nil?
+        user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
+        UserCounter.update_unique_counters(user_interaction, user)
+        UserCounter.update_all_counters(user_interaction, user)
+
+        outcome = compute_and_save_outcome(user_interaction)
+        outcome.info = []
+        outcome.errors = []
+
+        outcome_for_user_interaction = {
+          win: outcome,
+          correct_answer: predict_outcome_with_correct_answer ? predict_outcome_with_correct_answer : Outcome.new 
+        }.to_json
+
+        user_interaction.outcome = outcome_for_user_interaction
+        user_interaction.save
+      else
+        UserCounter.update_all_counters(user_interaction, user)
+
+        if interaction.resource_type.downcase == "vote"
+          user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
+        
+          outcome = compute_and_save_outcome(user_interaction)
+          outcome.info = []
+          outcome.errors = []
+
+          outcome_for_user_interaction = {
+            win: outcome
+          }.to_json
+
+          user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+
+        else
+          user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
+        
+          outcome = compute_and_save_outcome(user_interaction)
+          outcome.info = []
+          outcome.errors = []
+    
+          interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
+          interaction_outcome.merge!(outcome)
+    
+          interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
+          interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
+    
+          outcome_for_user_interaction = {
+            win: interaction_outcome,
+            correct_answer: interaction_correct_answer_outcome
+          }.to_json
+
+          user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+        end
+        
+      end
+
+      [user_interaction, outcome]
+
     end
-    UserCounter.update_all_counters(user_interaction, user)
-    [user_interaction, outcome]
+
   end
 
   def interaction_done?(interaction)
