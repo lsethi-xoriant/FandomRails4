@@ -171,6 +171,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         
         window.parent.iframeResize();
         
+        iframe_height = $(".iframe-iphone").innerHeight();
+        iframe_width = $(".iframe-iphone").innerWidth();
+        $(".iframe-iphone iframe").css("height", iframe_height);
+        $(".iframe-iphone iframe").css("width", iframe_width);
+        
       });
       
     } else {
