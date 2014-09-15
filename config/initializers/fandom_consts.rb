@@ -44,4 +44,6 @@ unless defined? FILTER_OPERATOR_CONTAINS
   RANKING_USER_PER_PAGE = 10
   
   MAIN_REWARD_NAME = "point"  
+  
+  DAILY_CHECK_CAP = 10
 end
