@@ -1,4 +1,6 @@
 class Sites::Ballando::RegistrationsController < RegistrationsController
+  include FandomPlayAuthHelper
+
   def ballando_create
     user = User.new(params[:user])
     if user.valid?
@@ -14,6 +16,7 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
       end
 
       if rai_response_json["authMyRaiTv"] == "OK"
+        fandom_play_login(user)
         create
       else
         user.errors.add("Utente", rai_response_json["authMyRaiTv"]) 
@@ -35,5 +38,9 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
       "username" => user.username
     }
   end
+  
+  def on_success(user)
+    fandom_play_login(user)
+  end  
 end
 

@@ -1,5 +1,6 @@
 document.domain = "shado.tv";
 
+
 jQuery(document).ready(function($) {
 
 	$.definePollingEvent('iframeResize', {
@@ -37,6 +38,9 @@ jQuery(document).ready(function($) {
 	});
 
 	$('body').on('iframeResize', function(e) {
-		parent.containerResize();
+		console.log("A");
+		window.parent.containerResize();
 	});
+
+
 }); 

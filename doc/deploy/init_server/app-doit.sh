@@ -28,6 +28,7 @@ cp -a etc/public_html ~
 #
 mkdir ~/bin
 cp etc/aws_remote_update.sh ~/bin
+ln -s ~/railsapps/Fandom/current/bin/events.rb ~/bin
 
 #
 # create a default database.yml file on the server

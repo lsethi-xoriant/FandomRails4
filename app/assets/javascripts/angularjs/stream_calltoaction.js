@@ -20,8 +20,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   var polling = false;
 
-  var containerWindow;
-
   $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code) {
 
     $scope.current_user = current_user;
@@ -51,8 +49,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     } else {
       $("#append-other button").show();
     }
-
-    containerWindow = $(window.parent);
 
   };
 

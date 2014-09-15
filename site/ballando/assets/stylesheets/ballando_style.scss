@@ -15,13 +15,26 @@ button, h1, h2, h3, h4, h5, h6, li {
     font-family: trade-gothic-lt-bold-condensed-20, helvetica, arial, sans-serif;
 }
 
+h1, h2, h3 {
+    word-wrap: break-word;
+}
+
+.cta-stream-heading {
+    min-height: 380px;
+}
+
+.undervideo-feedback {
+    position: absolute; 
+    bottom: 0;
+}
+
 .calltoaction-cover {
     width: 100%; 
     top: 0; 
     bottom: 0;
     position: absolute; 
     z-index: 10;
-    background-position: center; 
+    background-position: top center; 
     background-color: #000;
     button {
         margin-top: 22px;
@@ -46,20 +59,7 @@ button, h1, h2, h3, h4, h5, h6, li {
 
 .btn-versus {
     white-space: normal;
-    width: 100px;
-    top: 0; 
-    bottom: 0; 
-    width: 60%; 
-    position: absolute;
-}
-
-.btn-versus.right {
-    margin-right: 35px;
-    right: 0; 
-}
-
-.btn-versus.left {
-    left: 35px; 
+    padding: 35%;
 }
 
 .interaction-baloon {
@@ -207,7 +207,6 @@ button, h1, h2, h3, h4, h5, h6, li {
 }
 
 .undervideo {
-    margin-bottom: 30px;
     h2 {
         color: #000;
     }
@@ -500,7 +499,6 @@ body {
     }
     .panel-body {
       padding: 6px 0;
-      h3, h4 { margin: 5px 0 13px 0; }
       min-height: 150px;
     }
     .panel-footer {
@@ -747,9 +745,6 @@ span.notify {
             h2 { margin: 10px 0; }
             h3 { margin-top:4px; }
         }
-        .panel-body {
-            h3, h4 { margin: 5px 0 13px 0; }
-        }
 
         // INTERACTIONS
         .panel-body.cta-interactions {
@@ -947,6 +942,12 @@ height: 100%;
 @media (max-width: $screen-sm-min) {
     .img-profile { max-height: 64px; }
     .border-right { border-right: 1px solid #e4e4e4; }
+
+    .undervideo-feedback {
+        position: static;
+        margin-top: 50px; 
+    }
+
     hr { clear: both; }
     .panel {
         .yes-pad {
@@ -982,12 +983,16 @@ height: 100%;
             }
         }
     }
+
+    .cta-stream-heading {
+        min-height: 330px;
+    }
 }
 
 @media (min-width: $screen-sm-min) {
     .panel {
         .yes-pad {
-            padding: $panel-body-padding $panel-body-padding*2 0 $panel-body-padding*2;
+            padding: $panel-body-padding $panel-body-padding*2 0 $panel-body-padding;
         }
         .cta-media {
             overflow: none;
@@ -1067,9 +1072,6 @@ height: 100%;
             height: 395px;
             background: #000;
         }
-        .cta-stream-heading {
-            min-height: 235px;
-        }
         .yes-pad {
             padding: $panel-body-padding $panel-body-padding 0 $panel-body-padding;
         }
@@ -1094,13 +1096,72 @@ height: 100%;
     }
 }
 
-@media (min-width: $screen-lg-min) {
-    .container {
-        max-width: 960px;
-    }
-    .panel {
-        .yes-pad {
-            padding: 0 $panel-body-padding 0 $panel-body-padding;
-        }
-    }
+//--------------- TIMER --------------- 
+
+.wrapper {
+  position: relative;
+  margin: 40px auto;
+  background: white;
 }
+
+@mixin timer($item, $duration, $size, $color, $border, $hover: running) {
+  #{$item}, #{$item} * { @include box-sizing(border-box); }
+
+  #{$item} { 
+    width: $size;
+    height: $size;
+  }
+
+  #{$item} .pie {
+    width: 50%;
+    height: 100%;
+    transform-origin: 100% 50%;
+    position: absolute;
+    background: $color;
+    border: #{$border};
+  }
+
+  #{$item} .spinner {
+    border-radius: 100% 0 0 100% / 50% 0 0 50%;
+    z-index: 200;
+    border-right: none;
+    animation: rota $duration + s linear infinite;
+  }
+
+  #{$item}:hover .spinner,
+  #{$item}:hover .filler, 
+  #{$item}:hover .mask {
+    animation-play-state: $hover;    
+  }
+
+  #{$item} .filler {
+    border-radius: 0 100% 100% 0 / 0 50% 50% 0; 
+    left: 50%;
+    opacity: 0;
+    z-index: 100;
+    animation: opa $duration + s steps(1,end) infinite reverse;
+    border-left: none;
+  }
+
+  #{$item} .mask {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    background: inherit;
+    opacity: 1;
+    z-index: 300;
+    animation: opa $duration + s steps(1,end) infinite;
+  }
+
+  @keyframes rota {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes opa {
+    0% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+}
+
+@include timer('.wrapper', 1, 100px, transparent, '10px solid red');

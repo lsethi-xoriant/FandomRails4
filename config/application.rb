@@ -108,7 +108,7 @@ module Fandom
     
     config.fandom_play_enabled = config.deploy_settings.key? 'fandom_play'
     if config.fandom_play_enabled
-      config.middleware.insert_before "ActionDispatch::Static", SetRawCookieMiddleware
+      config.middleware.insert_before "Rack::Lock", SetRawCookieMiddleware
     end
 
     config.middleware.use "HttpRequestDebugger"
