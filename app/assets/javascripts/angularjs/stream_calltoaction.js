@@ -148,6 +148,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset, tag_id: $scope.current_tag_id })
       .success(function(data) {
+
         $scope.calltoaction_offset = $scope.calltoaction_offset + data.calltoactions.length;
 
         hash_to_append = data.calltoactions_during_video_interactions_second;
@@ -168,9 +169,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         });
 
         $("#append-other button").attr('disabled', false);
-        
-        window.parent.iframeResize();
-        
+
         iframe_height = $(".iframe-iphone").innerHeight();
         iframe_width = $(".iframe-iphone").innerWidth();
         $(".iframe-iphone iframe").css("height", iframe_height);
