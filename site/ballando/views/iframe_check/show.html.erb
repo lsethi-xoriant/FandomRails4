@@ -1,12 +1,14 @@
-<div id="check-container"></div>
-
+<div id="check-container" ng-controller="BallandoIframeCalltoactionCtrl"></div>
 <script type="text/javascript">
+	
+	var referrer = document.referrer;
+	
 	$(document).ready(function(){
 		$.ajax({
 			url: "/iframe/get_check.json",
-			data: {referrer: document.referrer },
+			data: {referrer: referrer },
 			success: function(data){
-				$("#check_container").html(data);
+				$("#check-container").html(data);
 			}
 		});
 	});
@@ -14,9 +16,9 @@
 	function do_check(){
 		$.ajax({
 			url: "/iframe/do_check.json",
-			data: {referrer: document.referrer },
+			data: {referrer: referrer },
 			success: function(data){
-				$("#check_container").html(data);
+				$("#check-container").html(data);
 			}
 		});
 	}
