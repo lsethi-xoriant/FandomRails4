@@ -173,6 +173,9 @@ Fandom::Application.routes.draw do
       scope module: "ballando" do
         match "/users/rai/sign_up/create", :to => "registrations#ballando_create"
         match "/users/rai/sign_in/create", :to => "sessions#ballando_create"
+        match "/iframe/check", :to => "iframe_check#show"
+        match "/iframe/get_check", :to => "iframe_check#get_check_template"
+        match "/iframe/do_check", :to => "iframe_check#do_chek"
       end
     end
 
