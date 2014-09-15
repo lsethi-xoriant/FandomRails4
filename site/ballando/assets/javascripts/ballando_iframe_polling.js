@@ -1,6 +1,6 @@
 document.domain = "shado.tv";
 
-
+/*
 jQuery(document).ready(function($) {
 
 	$.definePollingEvent('iframeResize', {
@@ -42,5 +42,23 @@ jQuery(document).ready(function($) {
 		window.parent.containerResize();
 	});
 
+});
+*/
 
-}); 
+function checkDocumentHeight(callback){
+    var lastHeight = document.body.clientHeight, newHeight, timer;
+    (function run(){
+        newHeight = document.body.clientHeight;
+        if( lastHeight != newHeight ) {
+            callback();
+        }
+        lastHeight = newHeight;
+        timer = setTimeout(run, 300);
+    })();
+}
+
+function parentContainerResize(){
+	window.parent.containerResize();
+}
+
+checkDocumentHeight(parentContainerResize); 
