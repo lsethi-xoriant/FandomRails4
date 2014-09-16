@@ -23,6 +23,15 @@ h1, h2, h3 {
     min-height: 397px;
 }
 
+.go-on {
+    background: none repeat scroll 0 0 #000;
+    color: #fff;
+    cursor: pointer;
+    line-height: 35px;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
 .cta-stream-heading {
     min-height: 380px;
 }
@@ -975,6 +984,14 @@ height: 100%;
     .undervideo-feedback {
         position: static;
         margin-top: 50px; 
+    }
+
+    .cta-stream-heading.feedback {
+        margin-left: 0;
+    }
+
+    .undervideo {
+        padding: 0 15px;
     }
 
     hr { clear: both; }
