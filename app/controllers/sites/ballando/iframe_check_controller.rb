@@ -10,11 +10,12 @@ class Sites::Ballando::IframeCheckController < ApplicationController
     referrer = params[:referrer]
     cta = CallToAction.find_by_name("check_iframe")
     check_interaction = cta.interactions.first
+    user_interaction = UserInteraction.where("interaction_id = ? AND user_id = ?", check_interaction.id, current_user.id).first
     if !current_user
       template = render_to_string "/iframe_check/_not_logged_check", locals: { interaction: check_interaction }, layout: false, formats: :html
     elsif can_do_check(check_interaction, referrer)
       template = render_to_string "/iframe_check/_check_to_do", locals: { interaction: check_interaction }, layout: false, formats: :html
-    elsif reached_cap
+    elsif reached_cap(user_interaction)
       template = render_to_string "/iframe_check/_cap_reached", locals: { interaction: check_interaction }, layout: false, formats: :html
     else
       template = render_to_string "/iframe_check/_check_already_done", locals: { interaction: check_interaction }, layout: false, formats: :html
@@ -26,7 +27,7 @@ class Sites::Ballando::IframeCheckController < ApplicationController
   
   def can_do_check(interaction, referrer)
     user_interaction = UserInteraction.where("interaction_id = ? AND user_id = ?", interaction.id, current_user.id).first
-    if user_interaction.nil? || ( !reached_cap && !has_already_checked(interaction, referrer) ) 
+    if user_interaction.nil? || ( !reached_cap(user_interaction) && !has_already_checked(interaction, referrer) ) 
       true
     else
       false
@@ -42,9 +43,10 @@ class Sites::Ballando::IframeCheckController < ApplicationController
       user_interaction = UserInteraction.where("interaction_id = ? AND user_id = ?", check_interaction.id, current_user.id).first
       aux = JSON.parse(user_interaction.aux)
       aux['referrer_list'] = aux['referrer_list'] + ",#{referrer}"
+      aux = update_counter_cap(aux)
     else
       aux['referrer_list'] = "#{referrer}"
-      #aux = "{referrer_list: '#{referrer}'}"
+      aux = create_counter_cap(aux)
     end
     update_check_counter(check_interaction, aux.to_json)
     template = render_to_string "/iframe_check/_check_already_done", locals: { interaction: check_interaction }, layout: false, formats: :html 
@@ -53,16 +55,35 @@ class Sites::Ballando::IframeCheckController < ApplicationController
     end
   end
   
+  def update_counter_cap(aux)
+    counter = aux['check_counter'].split("::")
+    if counter[0] == Date.today.to_s
+      counter[1] = counter[1].to_i + 1
+    else
+      counter[0] = Date.today.to_s
+      counter[1] = 0
+    end
+    aux['check_counter'] = counter.join("::")
+    aux
+  end
+  
+  def create_counter_cap(aux)
+    counter = [Date.today.to_s, 1]
+    aux['check_counter'] = counter.join("::")
+    aux
+  end
+  
   def update_check_counter(interaction, aux)
     create_or_update_interaction(current_user.id, interaction.id, nil, nil, aux)
   end
   
-  def reached_cap
-    check_counter = UserCounter.get_by_user(current_user)["DAILY"]["ALL_CHECK"]
-    if check_counter.nil? || check_counter < DAILY_CHECK_CAP
+  def reached_cap(user_interaction)
+    if user_interaction.nil?
       false
     else
-      true
+      check_info = JSON.parse(user_interaction.aux)
+      check_counter = check_info['check_counter'].split("::")
+      check_counter[0] == Date.today.to_s && check_counter[1].to_i >= BALLANDO_DAILY_CHECK_CAP
     end
   end
   
