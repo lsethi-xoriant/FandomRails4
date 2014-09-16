@@ -17,7 +17,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
     showCallToActionCountdown(calltoaction_id, 3);
 
-    $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
+    $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper hidden-xs\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
   };
 
   $window.showCallToActionCountdown = function(calltoaction_id, time) {
@@ -64,6 +64,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
     $("#undervideo-area-" + interaction_id).html(data.feedback); 
     $("#undervideo-interaction-" + interaction_id).css("display", "none"); 
+    $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "black");
 
     calltoaction_id = data.calltoaction_id
     $http.post("/check_next_interaction", { interactions_showed: interactions_showed[calltoaction_id], calltoaction_id: data.calltoaction_id })
@@ -72,8 +73,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
         if(data.next_quiz_interaction || interactions_showed[calltoaction_id].length > 1) {
           $("#interaction-" + interaction_id + "-next").removeClass("hidden");
         }
-
-        $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "black");
 
         $timeout(function() { 
           $("#undervideo-outcome-" + interaction_id).css("display", "none"); 

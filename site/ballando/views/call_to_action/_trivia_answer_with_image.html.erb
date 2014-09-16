@@ -21,10 +21,9 @@
 
           <div class="col-xs-10">
             <% if answer.correct %>
-
-              <a href="javascript: void(0)" class="thumbnail right" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="current_user"></a>
+              <a href="javascript: void(0)" class="thumbnail right"><img src="<%= answer.image(:medium) %>" alt="current_user"></a>
             <% else %>
-              <a href="javascript: void(0)" class="thumbnail <%= "wrong" if user_interaction.answer_id == answer.id %>" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="current_user"></a>
+              <a href="javascript: void(0)" class="thumbnail <%= "wrong" if user_interaction.answer_id == answer.id %>"><img src="<%= answer.image(:medium) %>" alt="current_user"></a>
             <% end %>
           </div>
 
@@ -68,11 +67,11 @@
 
             <% if user_interaction.answer_id == answer.id %>
 
-              <a href="javascript: void(0)" class="thumbnail <%= answer.correct ? "right" : "wrong" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="..."></a>
+              <a href="javascript: void(0)" class="thumbnail active <%= answer.correct ? "right" : "wrong" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="..."></a>
 
             <% else %>
 
-              <a href="javascript: void(0)" class="thumbnail" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="..."></a>
+              <a href="javascript: void(0)" class="thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="..."></a>
 
             <% end %>
 
@@ -109,7 +108,7 @@
       <% end %>
 
       <div class="col-xs-10">
-        <a href="javascript: void(0)" class="thumbnail" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="..."></a>
+        <a href="javascript: void(0)" class="thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)"><img src="<%= answer.image(:medium) %>" alt="..."></a>
       </div>
 
       <% if position % 2 != 0 %>

@@ -95,8 +95,12 @@ h1, h2, h3 {
         position: relative; 
     }
 
+    .baloon img {
+        padding: 2px;
+    }
+
     .baloon.square {
-        padding-bottom: 100%; 
+        padding-bottom: 95%; 
     }
 
     .baloon-right:after, .baloon-right:before { 
@@ -188,7 +192,7 @@ h1, h2, h3 {
     background-color: red;
 }
 
-.thumbnail:hover { 
+.thumbnail.active:hover { 
     background-color: orange;
 }
 
