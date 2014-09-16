@@ -20,6 +20,5 @@
 //= require bootstrap-notify
 //= require bootstrap-fileupload
 //= require jquery.jplayer
-//= require jquerycountdown360
 //= require respond.min
 
