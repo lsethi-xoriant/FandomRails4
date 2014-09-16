@@ -20,8 +20,6 @@
 //= require bootstrap-notify
 //= require bootstrap-fileupload
 //= require jquery.jplayer
-//= require jquery.update
-//= require jquerycountdown360
 //= require respond.min
 //= require ballando_iframe_polling
 
