@@ -45,5 +45,5 @@ unless defined? FILTER_OPERATOR_CONTAINS
   
   MAIN_REWARD_NAME = "point"  
   
-  DAILY_CHECK_CAP = 10
+  BALLANDO_DAILY_CHECK_CAP = 10
 end

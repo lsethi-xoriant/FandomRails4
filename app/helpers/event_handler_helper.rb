@@ -68,7 +68,7 @@ module EventHandlerHelper
     data_to_string = data.map { |key, value| "#{key}: #{value}" }
     data_to_string = data_to_string.join(", ")
 
-    logger_development = "#{timestamp} #{file_name}:#{line_number} #{level.upcase} #{msg} -- #{data_to_string}"
+    logger_development = "#{timestamp} [#{level.upcase}] #{file_name}:#{line_number} #{msg} -- #{data_to_string}"
   end
 
   def log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
