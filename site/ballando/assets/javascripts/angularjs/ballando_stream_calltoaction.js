@@ -72,8 +72,11 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
           $("#interaction-" + interaction_id + "-next").removeClass("hidden");
         }
 
+        $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "black");
+
         $timeout(function() { 
           $("#undervideo-outcome-" + interaction_id).css("display", "none"); 
+          $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "white");
           $("#undervideo-interaction-" + interaction_id).css("display", "block"); 
         }, 3000);
 
