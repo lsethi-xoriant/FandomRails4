@@ -13,16 +13,15 @@ function setBallandoDomain() {
 }
 setBallandoDomain();
 
-function checkDocumentHeight(){
+function checkDocumentHeight(myIframeId){
   var lastHeight = $("body").innerHeight(), newHeight, timer;
   (function run(){
     newHeight = $("body").innerHeight();
     if(lastHeight != newHeight) {
-      window.parent.containerHeight(newHeight);
+      window.parent.containerHeight(newHeight, myIframeId);
     }
     lastHeight = newHeight;
     timer = setTimeout(run, 300);
   })();
 }
 
-checkDocumentHeight(); 
