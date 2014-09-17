@@ -3,6 +3,7 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
 
   def ballando_create
     user = User.new(params[:user])
+
     if user.valid?
 
       rai_user = build_rai_user(user)
@@ -10,6 +11,7 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
       begin
         rai_response_json = JSON.parse(open("#{Rails.configuration.deploy_settings["sites"][request.site.id]["register_url"]}?#{rai_user.to_query}").read)
       rescue Exception => exception
+        @error = "RAI registrationUserFromGigya exception"
         render template: "/devise/registrations/new", locals: { resource: user }
         return
       end
@@ -18,7 +20,7 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
         fandom_play_login(user)
         create
       else
-        user.errors.add("Utente", rai_response_json["authMyRaiTv"]) 
+        @error = rai_response_json["authMyRaiTv"]
         render template: "/devise/registrations/new", locals: { resource: user }
       end
 

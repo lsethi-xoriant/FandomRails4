@@ -8,7 +8,13 @@ class Sites::Ballando::SessionsController < SessionsController
       valid_response, rai_response_user = evaluate_response(rai_response)
 
       if valid_response
+
         rai_response_user = JSON.parse(rai_response_user)
+
+        if rai_response_user.empty?
+          flash[:error] = "Username o password errati"
+          redirect_to "/users/sign_up" and return
+        end
 
         if rai_response_user["authMyRaiTv"] == "OK"
           user = User.find_by_username(rai_response_user["UID"])
@@ -28,16 +34,17 @@ class Sites::Ballando::SessionsController < SessionsController
           redirect_after_successful_login
         else
           flash[:error] = rai_response_user["authMyRaiTv"]
-          redirect_to "/user/sign_up"
+          redirect_to "/users/sign_up"
         end
 
       else
+        flash[:error] = "RAI registrationUserFromGigya exception"
         render template: "/devise/registrations/new", locals: { resource: User.new }
       end
 
     rescue Exception => exception
-      User.new.errors.add("Eccezione", exception)
-      render template: "/devise/registrations/new", locals: { resource: User.new }
+      flash[:error] = "RAI registrationUserFromGigya exception"
+      redirect_to "/users/sign_up"
     end
   end
 
