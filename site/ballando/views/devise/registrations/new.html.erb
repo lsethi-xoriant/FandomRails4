@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <%= render partial: "/application/user_bar" %>
+  <%#= render partial: "/application/user_bar" %>
   <div class="container">
     <div class="row">
       <div class="col-md-12 cta">
@@ -67,10 +67,13 @@
                     <%= f.password_field :password, :class => "form-control", :placeholder => "Password" %>
                   </div>
                   <button type="submit" class="btn btn-info btn-lg btn-block">Login</button>
+                  <!--
                   <div class="checkbox text-left">
                     <label> <input type="checkbox" name="user[remember_me]" value="1" /> Ricordati di me</label>
                   </div>
+                  
                   <p>Dimenticato la Password? <br/><%= link_to new_password_path(:user) do %>ricevine una nuova<% end %></p>
+                  -->
                   <hr>
                   <p class="text-center">Oppure entra con:</p>
                   <div class="facebook-connect">
