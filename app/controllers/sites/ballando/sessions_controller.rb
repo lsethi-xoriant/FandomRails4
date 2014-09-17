@@ -50,7 +50,7 @@ class Sites::Ballando::SessionsController < SessionsController
 
     if valid_response && rai_response_user["authMyRaiTv"] == "OK"
       
-      unless rai_response_user["profile"]["email"] && (user = User.find_by_email(response_user["profile"]["email"])) 
+      unless rai_response_user["profile"]["email"] && (user = User.find_by_email(rai_response_user["profile"]["email"])) 
         user = new_user_from_provider(rai_response_user)
       end
 
