@@ -22,4 +22,5 @@
 //= require jquery.jplayer
 //= require respond.min
 //= require ballando_iframe_polling
+//= require jquery.flexslider-min
 
