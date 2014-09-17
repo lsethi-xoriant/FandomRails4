@@ -70,13 +70,13 @@
                   <div class="checkbox text-left">
                     <label> <input type="checkbox" name="user[remember_me]" value="1" /> Ricordati di me</label>
                   </div>
-                  <p>Dimenticato la Password? <br/><%= link_to new_password_path(:user) do %>ricevine una nuova<% end %></p>
+                  <p>Dimenticato la Password? <br/><a href="http://www.rai.tv/dl/RaiTV/MyRaiTV/iscrizione.html#PasswordRecovery" target="_top">ricevine una nuova</a></p>
                   <hr>
                   <p class="text-center">Oppure entra con:</p>
                   <div class="facebook-connect">
 
                   <button type="button" class="btn btn-fb btn-md btn-block" onclick="gigyaSocializeLogin('facebook')">Signin with Facebook</button>
-                  <a class="btn btn-tw btn-md btn-block">Signin with Twitter</a>
+                  <a class="btn btn-tw btn-md btn-block" onclick="gigyaSocializeLogin('twitter')">Signin with Twitter</a>
                   <!--<button type="button" class="btn btn-g btn-md btn-block">Signin with Google+</button>-->
                     
                   <p>&nbsp;</p>
@@ -91,25 +91,42 @@
 
 </div>
 
+<button onclick="generateUserFromProvider()">cliccami</button>
+
+
 <script type="text/javascript">
 
   function gigyaSocializeLogin(provider) {
     gigya.socialize.login({
       provider: provider,
       callback: function (loginResult) {
-        gigya.socialize.getUserInfo(function (getUserInfoResult) { // TODO: is this a function or a dictionary with a callback label?
-          loginSocialBallando(getUserInfoResult); 
+        gigya.socialize.getUserInfo({
+          callback: function (getUserInfoResult) {
+            loginSocialBallando(getUserInfoResult); 
+          }
         });
       }
     });
   }
 
-  function loginSocialBallando(data) {
+  function loginSocialBallando(getUserInfoResult) {
     $.ajax({
       type: "POST", // TODO: get or post?
-      url: 'http://www.rai.it/MyRaiTv/loginSocialBallando.do',
-      data: data, // TODO: what to pass here?
+      url: "http://www.rai.tv/MyRaiTv/loginSocialBallando.do",
+      data: { userObject: JSON.stringify(getUserInfoResult) },
       success: function(data) {
+        generateUserFromProvider(data);
+      }
+    });
+  }
+
+  function generateUserFromProvider(user) {
+    $.ajax({
+      type: "POST", // TODO: get or post?
+      url: "/users/rai/sign_in_from_provider/create",
+      data: { user: user },
+      success: function(data) {
+        window.location.replace("/");
       }
     });
   }
