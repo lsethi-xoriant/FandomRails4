@@ -14,7 +14,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.checkDocumentHeight = function(myIframeId){
-    var lastHeight = $("body").innerHeight(), newHeight, timer;
+    var lastHeight = 0;
     (function run(){
       newHeight = $("body").innerHeight();
       if(lastHeight != newHeight) {
