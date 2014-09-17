@@ -106,7 +106,7 @@ class Sites::Ballando::SessionsController < SessionsController
     end
 
     User.create(
-      username: "#{response_user["UID"]}#{user_email}", 
+      username: response_user["UID"], 
       email: user_email, 
       first_name: response_user["profile"]["firstName"], 
       last_name: response_user["profile"]["lastName"],
