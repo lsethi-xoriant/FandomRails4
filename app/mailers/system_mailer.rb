@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 class SystemMailer < ActionMailer::Base
-  default from: ENV['EMAIL_ADDRESS']
+  default from: Rails.configuration.deploy_settings.fetch("mailer", {}).fetch("default_from", MAILER_DEFAULT_FROM)
 
   def share_interaction(user, address_to_send, calltoaction)
     @calltoaction = calltoaction

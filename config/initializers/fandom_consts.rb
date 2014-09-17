@@ -45,5 +45,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
   
   MAIN_REWARD_NAME = "point"  
   
+  MAILER_DEFAULT_FROM = "noreply@shado.tv"
+  
   BALLANDO_DAILY_CHECK_CAP = 10
+  
 end
