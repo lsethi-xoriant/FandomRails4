@@ -1,5 +1,5 @@
 class Authentication < ActiveRecord::Base
-  	attr_accessible :uid, :name, :oauth_token, :oauth_secret, :oauth_expires_at, :user_id, :provider, :avatar
+  	attr_accessible :uid, :name, :oauth_token, :oauth_secret, :oauth_expires_at, :user_id, :provider, :avatar, :aux
  
   	belongs_to :user
 

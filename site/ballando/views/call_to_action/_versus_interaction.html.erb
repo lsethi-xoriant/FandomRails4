@@ -9,7 +9,7 @@
     <div class="row vs-ixd vs-ixd-x">
       <% position = 0 %>
       <% interaction.resource.answers.each do |answer|%>
-        <%= render partial: "/call_to_action/versus_answer", locals: { user_interaction: user_interaction, interaction: interaction, answer: answer, position: position } %>
+        <%= render partial: "/call_to_action/versus_answer", locals: { user_interaction: user_interaction, interaction: interaction, answer: answer, position: position, user_interaction: user_interaction } %>
         <% position += 1 %>
       <% end %>
     </div>

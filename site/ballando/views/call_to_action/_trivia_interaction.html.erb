@@ -1,46 +1,17 @@
-<div class="col-sm-12">
-  <div class="row text-center cta-stream-heading">
-    <div class="col-sm-12" style="padding-top: 15px;">
-      <h4 style="font-size: 16px;">
-        <%= interaction.resource.question %>
-      </h4>
-    </div>
-    <div class="col-sm-12 text-center">
-      <% position = 0 %>
-      <% interaction.resource.answers.each do |answer|%>
-        <%= render partial: "/call_to_action/trivia_answer", locals: { user_interaction: user_interaction, answer: answer, interaction: interaction, answer_counter: interaction.resource.answers.count, position: position } %>
-        <% position += 1 %>
-      <% end %>
-    </div>
- 
-    <% if user_interaction %>
-      <div class="col-xs-12 text-center undervideo-feedback">
-        <div class="panel panel-default">
-          <div class="panel-body" style="padding-top: 8px;">
-            <% if user_interaction.answer.correct %>
-              <p style="font-size: 12px; display: inline;"><span style="color: green;" class="glyphicon glyphicon-ok-sign"></span> CORRETTO! +<%= interaction_reward_status[:win_reward_count] %> punti</p>
-            <% else %>
-              <p style="font-size: 12px; display: inline;"><span style="color: red;" class="glyphicon glyphicon glyphicon-remove-sign"></span> SBAGLIATO! +<%= interaction_reward_status[:win_reward_count] %> punti</p>
-            <% end %>
-            <% unless interaction_reward_status[:reward].numeric_display %>    
-              <% interaction_reward_status[:reward_status_images].each do |reward| %>
-                <img src="<%= reward %>" style="max-width: 20px; margin-bottom: 5px;">
-              <% end %>
-            <% end %>
-          </div>
-        </div>
-        <button id="interaction-<%= interaction.id %>-next" class="btn btn-primary btn-block hidden" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px;">VAI AVANTI</button>
-      </div>
-    <% else %>
-      <div class="col-xs-12 text-center undervideo-feedback" style="padding-bottom: 15px;">
-        <h5>Ottieni fino a +<%= interaction_reward_status[:winnable_reward_count] %> punti</h5>
-        <% unless interaction_reward_status[:reward].numeric_display %>  
-          <% interaction_reward_status[:reward_status_images].each do |reward| %>
-              <img src="<%= reward %>" style="width: 20px;">
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
-
+<div class="row text-center cta-stream-heading">
+  <div class="col-xs-12 text-center question">
+    <h4>
+      <%= interaction.resource.question %>
+    </h4>
   </div>
+  <div class="col-sm-12 text-center">
+    <% position = 0 %>
+    <% interaction.resource.answers.each do |answer|%>
+      <%= render partial: "/call_to_action/trivia_answer", locals: { user_interaction: user_interaction, answer: answer, interaction: interaction, answer_counter: interaction.resource.answers.count, position: position } %>
+      <% position += 1 %>
+    <% end %>
+  </div>
+
+  <%= render partial: "/call_to_action/feedback_small_undervideo", locals: { interaction_reward_status: interaction_reward_status, user_interaction: user_interaction, interaction: interaction, calltoaction_id: calltoaction_id } %>
+
 </div>
