@@ -38,9 +38,6 @@ h1, h2, h3 {
 .cta-stream-heading.feedback {
     margin-top: -15px;
     min-height: 395px;
-    border: 10px solid black;
-    border-radius: 20px;
-    background-color: white;
 }
 
 .video {
@@ -436,7 +433,7 @@ body {
 /*
 .panel {
     .yes-pad {
-        padding: $panel-body-padding ($panel-body-padding*2) 0 $panel-body-padding;
+        padding: $panel-body-padding ($panel-body-padding*2) 0 0;
     }
 }
 */
@@ -1047,96 +1044,20 @@ height: 100%;
     }
 }
 
-@media (max-width: $screen-md-min) {
-    .cta {
-        .panel.cta-stream {
-            .panel-body {
-                padding: 0;
-            }
-        }
-    }
-
-    .undervideo {
-        padding: 0 15px 0 0;
-    }
-
-    .cta-stream-heading {
-        min-height: 380px;
-    }
-}
-
 @media (min-width: $screen-sm-min) {
+    .v-center {
+        height: 100%;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0px;
+        bottom: 0;
+        right: 0px;
+    }
     .panel {
-        .yes-pad {
-            padding: $panel-body-padding $panel-body-padding*2 0 $panel-body-padding;
-        }
-        .cta-media {
-            //overflow: none;
-            img {
-                @extend .image-responsive;
-                width: 100%;
-            }
-        }
         .panel-footer {
             border-top: 0;
         }
-    }
-    .page-header {
-        h1, h2 { font-size: 2em; }
-        h3 { font-size: 1.3em; }
-    }
-    .overlay-title {
-        .page-header {
-            h3 { margin-top: 0.7em; }
-            h2 { margin-top: 0.25em; }
-        }
-    }
-    .bike-configurator-instruction {
-        line-height: 40px;
-    }
-    .how-to {
-        background-image: none; 
-    }
-    .container {
-        max-width: 960px; //1060px;
-    }
-
-    /* Remove the padding we set earlier */
-    .header,
-    .marketing,
-    .footer {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    /* Space out the masthead */
-    .header {
-        margin-bottom: 30px;
-    }
-    
-    /* Remove the bottom border on the jumbotron for visual effect */
-    .jumbotron {
-        border-bottom: 0;
-    }
-}
-
-.panel.cta-stream {
-    // -webkit-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-    // -moz-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-    // box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-}
-
-@media (min-width: $screen-md-min) {
-    .v-center {
-      height: 100%;
-      margin: auto;
-      position: absolute;
-      top: 0;
-      left: 0px;
-      bottom: 0;
-      right: 0px;
-    }
-    .panel {
         .cta-stream {
             -webkit-box-shadow: 0px 14px 7px -10px rgba(0, 0, 0, 0.42);
             -moz-box-shadow: 0px 14px 7px -10px rgba(0, 0, 0, 0.42);
@@ -1168,7 +1089,38 @@ height: 100%;
             background: #FFF;
             height: 100%;
         }
+    }
+    .page-header {
+        h1, h2 { font-size: 2em; }
+        h3 { font-size: 1.3em; }
+    }
+    .overlay-title {
+        .page-header {
+            h3 { margin-top: 0.7em; }
+            h2 { margin-top: 0.25em; }
+        }
+    }
+    
+    .container {
+        max-width: 960px; //1060px;
+    }
 
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+    
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
     }
 }
 

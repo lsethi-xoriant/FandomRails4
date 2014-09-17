@@ -64,7 +64,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
     $("#undervideo-area-" + interaction_id).html(data.feedback); 
     $("#undervideo-interaction-" + interaction_id).css("display", "none"); 
-    $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "black");
 
     calltoaction_id = data.calltoaction_id
     $http.post("/check_next_interaction", { interactions_showed: interactions_showed[calltoaction_id], calltoaction_id: data.calltoaction_id })
@@ -76,7 +75,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
         $timeout(function() { 
           $("#undervideo-outcome-" + interaction_id).css("display", "none"); 
-          $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "white");
           $("#undervideo-interaction-" + interaction_id).css("display", "block"); 
         }, 3000);
 
