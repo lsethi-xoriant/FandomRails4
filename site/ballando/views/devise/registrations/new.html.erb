@@ -91,9 +91,6 @@
 
 </div>
 
-<button onclick="generateUserFromProvider()">cliccami</button>
-
-
 <script type="text/javascript">
 
   function gigyaSocializeLogin(provider) {
@@ -126,6 +123,7 @@
       url: "/users/rai/sign_in_from_provider/create",
       data: { user: user },
       success: function(data) {
+        console.log(data);
         window.location.replace("/");
       }
     });

@@ -50,9 +50,7 @@ class Sites::Ballando::SessionsController < SessionsController
 
     if valid_response && rai_response_user["authMyRaiTv"] == "OK"
       
-      user = User.find_by_username(rai_response_user["UID"])
-
-      unless user
+      unless rai_response_user["profile"]["email"] && (user = User.find_by_email(response_user["profile"]["email"])) 
         user = new_user_from_provider(rai_response_user)
       end
 
@@ -63,6 +61,8 @@ class Sites::Ballando::SessionsController < SessionsController
       else
         user.authentications.build(authentication_attributes_from_provider(rai_response_user))
       end
+
+      response[:user] = user
 
       if user.errors.blank?
         sign_in(:user, user)
@@ -106,7 +106,7 @@ class Sites::Ballando::SessionsController < SessionsController
     end
 
     User.create(
-      username: response_user["UID"], 
+      username: "#{response_user["UID"]}#{user_email}", 
       email: user_email, 
       first_name: response_user["profile"]["firstName"], 
       last_name: response_user["profile"]["lastName"],
