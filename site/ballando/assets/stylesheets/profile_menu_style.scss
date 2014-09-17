@@ -1,0 +1,138 @@
+$screen-sm-min: 760;
+
+.menu-area {
+  background-color: #000;
+  .container.container-menu {
+    background: transparent;
+
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .container-submenu {
+    @media (min-width: $screen-sm-min) {
+    padding-bottom: 20px;
+    }
+  }
+
+  .submenu {
+    margin-top: 15px;
+
+    .flexslider {
+      background: transparent;
+      border: 0px;
+      border-radius: 0px;
+      box-shadow: none;
+//      margin: 0px;
+        margin: 0px 20px;
+    }
+    
+    .flexslider .slides > li {
+      border-right: 10px solid transparent;
+
+      .slide {
+        position: relative;
+        width: 100%;
+      }
+
+      .border {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: inherit;
+        height: 100%;
+        z-index: 20;
+      }
+
+      .border:hover {
+        border: 5px solid rgba(255,255,255, 0.5);
+      }
+
+      .active {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: inherit;
+        height: 100%;
+        z-index: 100;
+        border: 5px solid #ffffff;
+      }
+
+      .comment-bottom {
+        position: absolute;
+        z-index: 15;
+        width: inherit;
+        bottom: 0;
+        text-align: center;
+        padding-bottom: 2px;
+
+        h5 {
+          font-size: 16px;
+          margin-bottom: 7px;
+        }
+      }
+
+      .comment-center {
+        //position: absolute;
+        z-index: 15;
+        width: inherit;
+        bottom: 0;
+        text-align: center;
+        padding: 10px;
+
+        h2 {
+          margin: 0;
+          text-shadow: 1px 1px rgb(15,9,3);
+        }
+
+      }
+
+      .triangle {
+        margin: 0 auto;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 10px 10px 0 10px;
+        border-color: #fff transparent transparent transparent;
+      }
+
+    }
+
+    .flexslider .slides > li:last-child {
+      border-right: 10px solid transparent;
+    }
+
+    .flex-direction-nav a {
+      color: white;
+      transition: none;
+    }
+
+    // Make arrow out of the slider
+      .flex-prev,
+      .flex-prev:hover {
+        left: -28px !important;
+      }
+
+      .flex-next,
+      .flex-next:hover {
+        right: -28px !important;
+      }
+    }
+//  }
+
+
+}
+
+.ie8 .menu-area .container.container-menu .menu .btn-default:hover,
+.ie8 .menu-area .container.container-menu .menu .btn-default:focus {
+  background: url('../images/background/000000-0.6.png');
+}
+
+.ie8 .menu-area .container.container-menu .menu .btn-default:focus,
+.ie8 .menu-area .container.container-menu .menu .btn-default.active {
+  background: url('../images/background/000000-0.3.png');
+}
+
+.ie8 .flexslider .slides > li:hover .border {
+    border: 5px solid white;
+}

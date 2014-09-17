@@ -1,0 +1,13 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container ballando-ranking" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(["general_chart", "my_position_general", "monthly_general_rank"]).to_json %>);">
+
+<div class="row">
+	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
+</div>
+
+<%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
+<%= render partial: "/ranking/rank", locals: { rankings: "rankings.general_chart" } %>
+<%#= render partial: "/ranking/rank", locals: { rankings: "rankings.monthly_general_rank" } %>
+
+</div>
