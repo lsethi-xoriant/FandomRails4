@@ -21,7 +21,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
         window.parent.containerHeight(newHeight, myIframeId);
       }
       lastHeight = newHeight;
-      console.log(newHeight);
       timer = setTimeout(run, 300);
     })();
   };
