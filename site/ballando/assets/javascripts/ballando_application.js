@@ -22,5 +22,4 @@
 //= require bootstrap-fileupload
 //= require jquery.jplayer
 //= require respond.min
-
-
+//= require jquery.flexslider-min

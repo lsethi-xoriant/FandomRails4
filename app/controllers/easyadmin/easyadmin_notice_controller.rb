@@ -49,7 +49,8 @@ class Easyadmin::EasyadminNoticeController < ApplicationController
   end
   
   def resend_notice
-    Notice.send_to_user(request)
+    notice = Notice.find(params[:notice_id])
+    notice.send_to_user(request)
     respond_to do |format|
       format.json { render :json => "OK".to_json }
     end

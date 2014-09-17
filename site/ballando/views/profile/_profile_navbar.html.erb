@@ -1,0 +1,115 @@
+<div class="menu-area">
+	<div class="container-menu">
+		<div class="submenu">
+			<div class="row">
+			    <div class="col-xs-12 profile-menu">
+			      <div class="flexslider">
+			        <ul class="slides">
+			            <li>
+			                <div class="slide">
+			                    <div class="border"></div>
+			                    <% if page == "levels" %>
+			                    	<div class="active"></div>
+			                   	<% end %>
+			                    <div class="comment-center">
+			                        <a href="/profile/levels">LIVELLI</a>
+			                    </div>
+			                </div>
+			                <% if page == "levels" %>
+			                	<div class="triangle"></div>
+			                <% end %>
+			            </li>
+			            <li>
+			                <div class="slide">
+			                    <div class="border"></div>
+			                    <% if page == "badges" %>
+			                    	<div class="active"></div>
+			                    <% end %>
+			                    <div class="comment-center">
+			                        <a href="/profile/badges">BADGES</a>
+			                    </div>
+			                </div>
+			                <% if page == "badges" %>
+			                	<div class="triangle"></div>
+			                <% end %>
+			            </li>
+			            <li>
+			                <div class="slide">
+			                    <div class="border"></div>
+			                    <% if page == "notices" %>
+			                    	<div class="active"></div>
+			                    <% end %>
+			                    <div class="comment-center">
+			                        <a href="/profile/notices">NOTIFICHE</a>
+			                    </div>
+			                </div>
+			                <% if page == "notices" %>
+			                	<div class="triangle"></div>
+			                <% end %>
+			            </li>
+			            <li>
+			                <div class="slide">
+			                    <div class="border"></div>
+			                    <% if page == "rankings" %>
+			                    	<div class="active"></div>
+			                    <% end %>
+			                    <div class="comment-center">
+			                        <a href="/profile/rankings">CLASSIFICA</a>
+			                    </div>
+			                </div>
+			                <% if page == "rankings" %>
+			                	<div class="triangle"></div>
+			               	<% end %>
+			            </li>
+			         </ul>
+			      </div>
+			    </div>
+			</div>
+	
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $('.profile-menu .flexslider').flexslider({
+	        animation: "slide",
+	        controlNav: false,
+	        directionNav: true,
+	        slideshow: false,
+	        itemWidth: 180,
+	        itemMargin: 10,
+	        minItems: 1,
+	        maxItems: 6
+	    });
+	    
+	    $(window).resize(function() {
+	
+	        $('.profile-menu .flexslider').flexslider({
+	            animation: "slide",
+	            directionNav: true,
+	            prevText: "",
+	            nextText: "",
+	            slideshow: false,
+	            itemWidth: getItemSize(),
+	            itemMargin: 20,
+	            minItems: getGridSize(),
+	            move: getGridSize()
+	        });
+	        $('.profile-menu .flexslider .slides li').css('width', getItemSize()+'px');
+		});
+	});
+
+	function getGridSize() {
+	    if ($(window).innerWidth() < 768)
+	        return 2;
+	    else
+	        return 3;
+	}
+	
+	function getItemSize() {
+	    if ($(window).innerWidth() < 768)
+	        return 190;
+	    else
+	        return 180;
+	}
+</script>
