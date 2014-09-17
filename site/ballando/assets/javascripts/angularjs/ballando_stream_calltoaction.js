@@ -13,6 +13,19 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     checkDocumentHeight("fandom"); 
   };
 
+  $window.checkDocumentHeight = function(myIframeId){
+    var lastHeight = $("body").innerHeight(), newHeight, timer;
+    (function run(){
+      newHeight = $("body").innerHeight();
+      if(lastHeight != newHeight) {
+        window.parent.containerHeight(newHeight, myIframeId);
+      }
+      lastHeight = newHeight;
+      console.log(newHeight);
+      timer = setTimeout(run, 300);
+    })();
+  };
+
   $window.showCallToAction = function(calltoaction_id) {
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
     showCallToActionCountdown(calltoaction_id, 3);
