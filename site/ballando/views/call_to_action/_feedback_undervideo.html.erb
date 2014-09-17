@@ -1,27 +1,37 @@
 <div class="col-sm-12">
-  <div class="row text-center">
+  <div class="row text-center cta-stream-heading feedback">
     <% if user_interaction %>
-      <% if user_interaction.interaction.resource_type.downcase == "quiz" && user_interaction.interaction.resource.quiz_type.downcase == "trivia" %>
-        <div class="col-sm-6 col-sm-offset-3" style="padding-top: 70px;">
+      
+      <div class="col-sm-12">
+        <% if user_interaction.interaction.resource_type.downcase == "quiz" && user_interaction.interaction.resource.quiz_type.downcase == "trivia" %>
           <% if user_interaction.answer.correct %>
-            <h3 style="color: green;">Risposta<br>corretta!</h3>
+            <h3 style="margin-top: 50px; color: green;">Risposta<br>corretta!</h3>
           <% else %>
-            <h3 style="color: red;">Risposta<br>sbagliata!</h3>
+            <h3 style="margin-top: 50px; color: red;">Risposta<br>sbagliata!</h3>
           <% end %>
-        </div>
-      <% elsif user_interaction.interaction.resource_type.downcase == "quiz" && user_interaction.interaction.resource.quiz_type.downcase == "versus" %>
-        <h3 style="color: green;">Versus<br>fatto!</h3>
-      <% end %>
-      <div class="col-sm-12" style="padding-top: 25px;">
+        <% elsif user_interaction.interaction.resource_type.downcase == "quiz" && user_interaction.interaction.resource.quiz_type.downcase == "versus" %>
+          <h3 style="margin-top: 50px; margin-bottom: 0;">Versus<br>fatto!</h3>
+        <% else %>
+          <h3 style="margin-top: 50px; margin-bottom: 0;"><%= user_interaction.interaction.resource_type.camelcase %><br>fatto!</h3>
+        <% end %>
+      </div>
+
+      <div class="col-sm-12" style="margin-bottom: 20px;">
+        <h1><span class="glyphicon glyphicon-ok-sign"></span></h1>
+      </div>
+
+      <div class="col-sm-12">
         <% unless interaction_reward_status[:reward].numeric_display %>    
           <% interaction_reward_status[:reward_status_images].each do |reward| %>
-            <img src="<%= reward %>" style="max-width: 30px; margin-bottom: 5px;">
+            <img src="<%= reward %>" style="width: 40px;">
           <% end %>
         <% end %>
       </div>
-      <div class="col-sm-6 col-sm-offset-3" style="padding-top: 25px;">
-        <h4>Hai ottenuto<br>+<%= interaction_reward_status[:win_reward_count] %> punti</h4>
+
+      <div class="col-sm-12" style="padding-top: 25px;">
+        <h5>Hai ottenuto<br>+<%= interaction_reward_status[:win_reward_count] %> punti</h5>
       </div>
+
     <% end %>
   </div>
 </div>

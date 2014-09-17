@@ -10,7 +10,6 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
       begin
         rai_response_json = JSON.parse(open("#{Rails.configuration.deploy_settings["sites"][request.site.id]["register_url"]}?#{rai_user.to_query}").read)
       rescue Exception => exception
-        user.errors.add("Eccezione", exception)
         render template: "/devise/registrations/new", locals: { resource: user }
         return
       end

@@ -10,13 +10,14 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code) {
     $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code);
+    checkDocumentHeight("fandom"); 
   };
 
   $window.showCallToAction = function(calltoaction_id) {
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
     showCallToActionCountdown(calltoaction_id, 3);
 
-    $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
+    $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper hidden-xs\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
   };
 
   $window.showCallToActionCountdown = function(calltoaction_id, time) {
@@ -63,6 +64,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
     $("#undervideo-area-" + interaction_id).html(data.feedback); 
     $("#undervideo-interaction-" + interaction_id).css("display", "none"); 
+    $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "black");
 
     calltoaction_id = data.calltoaction_id
     $http.post("/check_next_interaction", { interactions_showed: interactions_showed[calltoaction_id], calltoaction_id: data.calltoaction_id })
@@ -74,6 +76,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
         $timeout(function() { 
           $("#undervideo-outcome-" + interaction_id).css("display", "none"); 
+          $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "white");
           $("#undervideo-interaction-" + interaction_id).css("display", "block"); 
         }, 3000);
 

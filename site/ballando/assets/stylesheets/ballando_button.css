@@ -1,0 +1,144 @@
+/* DEFAULT HOME PAGE */
+
+.btn-2 {   
+    padding: 3px 0 2px 0; 
+    font-size: 18px;
+    font-weight: bold;
+    width: 100%;
+    position: relative;
+    min-height: 35px;
+    cursor: pointer;
+    border-radius: 3px;
+    color: #fff;
+    border: 0px solid #000;
+    box-shadow: 0 4px 0 #9C1A06;
+    background-color: #D6260B;
+    text-align: center;
+}
+
+.btn-2::-moz-focus-inner{ border: 0 }
+
+.btn-2:hover {
+    background-color: #D63820;
+    border: 0px solid #000;
+}
+
+.btn-2:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #9C1A06;
+}
+
+/* VERSUS */
+
+.btn-2.btn-2-versus {
+  font-size: 12px;
+  padding-bottom: 35%;
+  padding-top: 35%;
+  box-shadow: 0 4px 0 #363636;
+  background-color: #969696;
+}
+
+.btn-2.btn-2-versus:hover {
+  background-color: #FF9D00;
+  box-shadow: 0 4px 0 #825000;
+}
+
+.btn-2.btn-2-versus.active:hover {
+  box-shadow: 0 1px 0 #363636;
+  background-color: #969696;
+}
+
+.btn-2.btn-2-versus:active, .btn-2.btn-2-versus.active {
+    top: 3px;
+    box-shadow: 0 1px 0 #363636;
+}
+
+.btn-2.btn-2-versus.btn-2-versus-orange.active {
+    top: 3px;
+    background-color: #FF9D00;
+    box-shadow: 0 1px 0 #825000;
+}
+.btn-2.btn-2-versus.btn-2-versus-orange.active:hover {
+    background-color: #F2AB3A;
+}
+
+.btn-2.btn-2-versus:active:hover {
+    top: 3px;
+    box-shadow: 0 1px 0 #825000;
+}
+
+/* TRIVIA */
+
+.btn-2.btn-2-default {
+  font-size: 14px;
+  box-shadow: 0 4px 0 #363636;
+  background-color: #969696;
+  min-height: 30px;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
+.btn-2.btn-2-default:hover {
+  background-color: #FF9D00;
+  box-shadow: 0 4px 0 #825000;
+}
+
+.btn-2.btn-2-default:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #363636;
+}
+
+.btn-2.btn-2-default.active {
+  top: 3px;
+  background-color: #FF9D00;
+  box-shadow: 0 1px 0 #825000;
+}
+
+.btn-2.btn-2-default.active:hover {
+  background-color: #F2AB3A;
+}
+
+.btn-2.btn-2-default:active:hover {
+    top: 3px;
+    box-shadow: 0 1px 0 #825000;
+}
+
+.btn-2.btn-2-default-success {
+  box-shadow: 0 4px 0 #438A3D;
+  background-color: #1EB510;
+}
+
+.btn-2.btn-2-default-success:hover {
+  background-color: #4EC942;
+  box-shadow: 0 4px 0 #438A3D;
+}
+
+.btn-2.btn-2-default-success:active, .btn-2.btn-2-default-success.active {
+    top: 3px;
+    box-shadow: 0 1px 0 #438A3D;
+}
+
+.btn-2.btn-2-default-success:active:hover {
+    top: 3px;
+    box-shadow: 0 1px 0 #438A3D;
+}
+
+.btn-2.btn-2-default-danger {
+  box-shadow: 0 4px 0 #9C1A06;
+  background-color: #D6260B;
+}
+
+.btn-2.btn-2-default-danger:hover {
+  background-color: #D63820;
+  box-shadow: 0 4px 0 #9C1A06;
+}
+
+.btn-2.btn-2-default-danger:active, .btn-2.btn-2-default-danger.active {
+    top: 3px;
+    box-shadow: 0 1px 0 #9C1A06;
+}
+
+.btn-2.btn-2-default-danger:active:hover {
+    top: 3px;
+    box-shadow: 0 1px 0 #9C1A06;
+}

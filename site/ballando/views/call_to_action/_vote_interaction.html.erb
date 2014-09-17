@@ -1,7 +1,7 @@
 <div class="col-sm-12">
   <div class="row text-center cta-stream-heading">
-    <div class="col-sm-12" style="padding-top: 15px;">
-      <h4 style="font-size: 16px;">
+    <div class="col-xs-12 text-center question">
+      <h4>
         <%= interaction.resource.title %>
       </h4>
     </div>
@@ -31,7 +31,7 @@
                 <% end %>
               </select>
 
-              <button class="btn btn-primary btn-block active" onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)"><%= interaction.resource.title %></button>
+              <button class="btn-2 btn-2-default active"><%= interaction.resource.title %></button>
 
             <% else %>
 
@@ -47,7 +47,7 @@
                 <% end %>
               </select>
 
-              <button class="btn btn-primary btn-block" onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')" ><%= interaction.resource.title %></button>
+              <button class="btn-2 btn-2-default" onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')" ><%= interaction.resource.title %></button>
 
             <% end %>
 
@@ -68,37 +68,13 @@
               <% end %>
             </select>
 
-            <button class="btn btn-primary btn-block" onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)"><%= interaction.resource.title %></button>
+            <button class="btn-2 btn-2-default" onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)"><%= interaction.resource.title %></button>
           </div>
         </div>
       <% end %>
 
     </div>
 
-    
-    <% if user_interaction %>
-      <div class="col-xs-12 text-center undervideo-feedback">
-        <div class="panel panel-default">
-          <div class="panel-body" style="padding-top: 5px;">
-            <p style="font-size: 12px; display: inline;"><span style="color: green;" class="glyphicon glyphicon-ok-sign"></span> CORRETTO! +<%= interaction_reward_status[:win_reward_count] %> punti</p>          
-            <% unless interaction_reward_status[:reward].numeric_display %>    
-              <% interaction_reward_status[:reward_status_images].each do |reward| %>
-                <img src="<%= reward %>" style="max-width: 20px; margin-bottom: 5px;">
-              <% end %>
-            <% end %>
-          </div>
-        </div>
-        <button id="interaction-<%= interaction.id %>-next" class="btn btn-primary btn-block hidden" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px;">VAI AVANTI</button>
-      </div>
-    <% else %>
-      <div class="col-xs-12 text-center undervideo-feedback" style="padding-bottom: 15px;">
-        <h5>Ottieni fino a +<%= interaction_reward_status[:winnable_reward_count] %> punti</h5>
-        <% unless interaction_reward_status[:reward].numeric_display %>  
-          <% interaction_reward_status[:reward_status_images].each do |reward| %>
-              <img src="<%= reward %>" style="width: 20px;">
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
+    <%= render partial: "/call_to_action/feedback_small_undervideo", locals: { interaction_reward_status: interaction_reward_status, user_interaction: user_interaction, interaction: interaction, calltoaction_id: calltoaction_id } %>
 
 </div>
