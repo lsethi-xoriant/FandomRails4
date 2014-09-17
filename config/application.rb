@@ -115,5 +115,36 @@ module Fandom
     
     config.active_record.schema_format = :sql
 
+
+  if config.deploy_settings.key?("mailer")
+    mailer_conf = config.deploy_settings["mailer"]
+    
+    config.action_mailer.perform_deliveries = mailer_conf.fetch("perform_deliveries", true)
+
+    config.action_mailer.default_url_options = { :host => mailer_conf.fetch("devise_host", true) }
+  
+    # Don't care if the mailer can't send
+    config.action_mailer.raise_delivery_errors = false
+    
+    if mailer_conf.key?("ses")
+      ses_conf = config.deploy_settings["mailer"]["ses"]
+      ActionMailer::Base.add_delivery_method :ses, AWS::SES::Base, ses_conf
+      config.action_mailer.delivery_method = :ses
+    end  
+  
+    if mailer_conf.key?("smtp")
+      unless config.action_mailer.delivery_method.nil?
+        Rails.logger.error("'mailer' has been misconfigured in deploy_settings!")
+      end
+      
+      config.action_mailer.delivery_method = :smtp
+      smtp_conf = config.deploy_settings["mailer"]["smtp"] 
+      config.action_mailer.smtp_settings = smtp_conf
+    end  
+  else
+    config.action_mailer.perform_deliveries = false
+  end
+
+
   end
 end

@@ -97,3 +97,6 @@ gem 'apartment'
 gem 'dalli'
 
 gem 'spring'
+
+# aws simple email service
+gem "aws-ses", "~> 0.5.0", :require => 'aws/ses'

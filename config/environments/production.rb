@@ -49,10 +49,7 @@ Fandom::Application.configure do
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
   config.assets.precompile += ['application.css.scss', 'easyadmin.css', 'easyadmin.js', 'jquery.jcarousel.js', 'jcarousel.responsive.js']
 
-  # Disable delivery errors, bad email addresses will be ignored
-  config.action_mailer.raise_delivery_errors = false
-
-  # Enable threaded mode
+    # Enable threaded mode
   # config.threadsafe!
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
@@ -62,16 +59,6 @@ Fandom::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
   Paperclip.options[:command_path] = "/usr/local/bin"
-
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_url_options = { :host => ENV['EMAIL_HOST'] }
-
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {    
-        :user_name => ENV["EMAIL_ACCOUNT"], # account
-        :address => ENV["EMAIL_IP"], # indirizzo ip della macchina
-        :password => ENV["EMAIL_PASSWORD"]
-  }
 
   # config/environments/production.rb
   if config.deploy_settings.key?('paperclip')
