@@ -91,10 +91,6 @@
 
 </div>
 
-<!--
-<button onclick="generateUserFromProvider()">cliccami</button>
--->
-
 <script type="text/javascript">
 
   function gigyaSocializeLogin(provider) {
@@ -125,7 +121,7 @@
     $.ajax({
       type: "POST", // TODO: get or post?
       url: "/users/rai/sign_in_from_provider/create",
-      data: { user: JSON.stringify(user) },
+      data: { user: user },
       success: function(data) {
         window.location.replace("/");
       }

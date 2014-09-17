@@ -45,7 +45,7 @@ class Sites::Ballando::SessionsController < SessionsController
     response = Hash.new
 
     rai_response = params["user"]
-    valid_response, rai_response_user = evaluate_response(rai_response)
+    valid_response, rai_response_user = evaluate_response(rai_response.strip)
     rai_response_user = JSON.parse(rai_response_user)
 
     if valid_response && rai_response_user["authMyRaiTv"] == "OK"
