@@ -89,7 +89,8 @@
 }
 
 .btn-2.btn-2-default.active:hover {
-  background-color: #F2AB3A;
+  background-color: #B8B4B4;
+  box-shadow: 0 1px 0 #363636;
 }
 
 .btn-2.btn-2-default:active:hover {
