@@ -1,5 +1,25 @@
 /* DEFAULT HOME PAGE */
 
+.btn-2-a:link {
+  text-decoration: none;
+  color: #fff;
+}
+
+.btn-2-a:visited {
+  text-decoration: none;
+  color: #fff;
+}
+
+.btn-2-a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.btn-2-a:active {
+  text-decoration: underline;
+  color: #fff;
+}
+
 .btn-2 {   
     padding: 3px 0 2px 0; 
     font-size: 18px;
