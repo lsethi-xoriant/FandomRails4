@@ -24,7 +24,7 @@
 
         <!-- PROGRESS BAR -->
         <div class="progress vertical bottom" style="position: absolute; top: 0; bottom: 0; left: -25px; margin-right: 0;">
-          <div class="progress-bar progress-bar-warning" role="progressbar" style="height: <%= percent %>%;"></div>
+          <div class="progress-bar progress-bar-warning" role="progressbar" style="height: <%= percent if user_interaction %>%;"></div>
         </div>
 
         <!-- BALOON -->
@@ -33,7 +33,7 @@
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -40px;">
-          <h5><%= percent ? percent : "-" %>%</h5>
+          <h5><%= percent && user_interaction ? percent : "-" %>%</h5>
         </div>
 
       </div>
@@ -63,7 +63,7 @@
         
         <!-- PROGRESS BAR -->
         <div class="progress vertical bottom" style="position: absolute; top: 4px; bottom: 0; left: -25px; margin-right: 0;">
-          <div class="progress-bar progress-bar-warning" role="progressbar" style="height: <%= percent %>%;"></div>
+          <div class="progress-bar progress-bar-warning" role="progressbar" style="height: <%= percent if user_interaction %>%;"></div>
         </div>
 
         <!-- BALOON -->
@@ -72,7 +72,7 @@
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -40px;">
-          <h5><%= percent ? percent : "-" %>%</h5>
+          <h5><%= percent && user_interaction ? percent : "-" %>%</h5>
         </div>
 
       </div>
