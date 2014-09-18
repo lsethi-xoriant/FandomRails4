@@ -100,6 +100,7 @@ class ApplicationController < ActionController::Base
   end
 
   def sign_in_simple_from_page
+    debugger
     cookies[:connect_from_page] = request.referrer
     redirect_to "/users/sign_up"
   end
