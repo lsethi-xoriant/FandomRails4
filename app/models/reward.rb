@@ -49,10 +49,14 @@ class Reward < ActiveRecord::Base
   
   def set_expire_at
     if valid_to_date.present? && valid_to_time.present?
-      write_attribute :publish_time_end, Time.parse("#{valid_to_date} #{valid_to_time} Rome")
+      write_attribute :valid_to, Time.parse("#{valid_to_date} #{valid_to_time} Rome")
       valid_to_date = nil
       valid_to_time = nil
     end
+  end
+  
+  def is_published
+    (valid_from.nil? && valid_to.nil?) || (Time.now.utc > valid_from && Time.now.utc < valid_to)
   end
 
 end
