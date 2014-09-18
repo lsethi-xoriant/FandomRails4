@@ -8,16 +8,18 @@
       </a>
 
       <% if current_user %>
+        <!--
         <a href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>" target="_top">
           <div class="text-center visible-xs iframe-notice-baloon">
             <span><%= @notices_count %></span>
           </div>
         <a>
+        -->
       <% end %>
 
     </div>
     <div class="col-xs-8" style="padding-left: 10px;">
-      <h4 style="padding-top: 10px; color: #fff;">
+      <h4 style="padding-top: 15px; color: #fff;">
         <%= current_user ? "#{current_user.first_name} #{current_user.last_name}" : "Anonimo" %>
       </h4>
       <% if current_user %>
