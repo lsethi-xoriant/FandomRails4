@@ -21,7 +21,7 @@
   <%= csrf_meta_tags %>
 
 </head>
-<body ng-app="FandomApp" class="bg-fluid">
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>">
 
   <div id="quiz-waiting-audio"></div>
 

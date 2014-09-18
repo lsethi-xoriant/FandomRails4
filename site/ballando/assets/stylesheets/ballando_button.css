@@ -16,6 +16,11 @@
     text-align: center;
 }
 
+.btn-2.btn-2-small {
+  font-size: 10px;
+  min-height: 0;
+}
+
 .btn-2::-moz-focus-inner{ border: 0 }
 
 .btn-2:hover {
