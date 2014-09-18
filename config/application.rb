@@ -85,7 +85,8 @@ module Fandom
       # the IP address has to be used instead of 'localhost' because of a defect in dalli
       servers = get_deploy_setting('memcache/servers', '127.0.0.1:11211').split(',')
     else
-      servers = Dalli::ElastiCache.new(elasticcache).servers 
+      servers = Dalli::ElastiCache.new(elasticcache).servers
+      puts("using ElastiCache automatic node discovery: #{servers}") 
     end
 
     config.cache_store = :dalli_store, *servers.split(','), {
