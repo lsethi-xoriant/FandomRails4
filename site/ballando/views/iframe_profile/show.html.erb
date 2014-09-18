@@ -1,11 +1,17 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-4 no-pad" style="position: relative; padding: 10px;">
-      <img src="<%= current_avatar %>" class="img-responsive img-circle" style="border: 4px solid #fff; width: 100%;">
+      <a href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>" target="_top">
+        <img src="<%= current_avatar %>" class="img-responsive img-circle" style="border: 4px solid #fff; width: 100%;">
+      </a>
 
-      <div class="text-center visible-xs iframe-notice-baloon">
-        <span><%= @notices_count %></span>
-      </div>
+      <% if current_user %>
+        <a href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>" target="_top">
+          <div class="text-center visible-xs iframe-notice-baloon">
+            <span><%= @notices_count %></span>
+          </div>
+        <a>
+      <% end %>
 
     </div>
     <div class="col-xs-8">

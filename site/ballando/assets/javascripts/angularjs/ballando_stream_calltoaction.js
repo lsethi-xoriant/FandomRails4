@@ -15,7 +15,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $window.showRegistrateView = function() {
     document.cookie = "connect_from_page = " + top.location;
-    top.location = "http://ballando.container.fandomlab.com.s3.amazonaws.com/registrazione.html"
+    top.location = PROFILE_URL;
   }
 
   $window.checkDocumentHeight = function(myIframeId){

@@ -12,6 +12,7 @@
 //= require angularjs/comment
 //= require angularjs/ranking
 //= require config
+//= require ballando_config
 //= require angularjs/stream_calltoaction
 //= require angularjs/ballando_stream_calltoaction
 //= require angularjs/ballando_iframe_calltoaction
