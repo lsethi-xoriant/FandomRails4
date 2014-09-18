@@ -29,7 +29,7 @@
           </span>
         </h5>
       <% else %>
-        <button class="btn-2 btn-2-small">REGISTRATI</button>
+        <a href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>" target="_top" class="btn-2 btn-2-small">REGISTRATI</a>
       <% end %>
     </div>
   </div>

@@ -9,5 +9,3 @@ function checkDocumentHeight(myIframeId) {
     timer = setTimeout(run, 300);
   })();
 }
-
-checkDocumentHeight("fandom");
