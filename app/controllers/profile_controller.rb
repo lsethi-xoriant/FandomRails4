@@ -4,6 +4,15 @@
 class ProfileController < ApplicationController
   include ProfileHelper
   include ApplicationHelper
+  
+  before_filter :check_user_logged
+  
+  def check_user_logged
+    if !current_user
+      cookies[:connect_from_page] = request.path      
+      redirect_to "/users/sign_up"
+    end
+  end
 
   def index
   end

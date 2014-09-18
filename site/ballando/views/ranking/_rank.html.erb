@@ -1,7 +1,7 @@
 <div ng-class="{'col-sm-6': <%= rankings %>.rank_type == 'full', 'col-sm-6': <%= rankings %>.rank_type != 'full'}">
 		
 
-    <div class="col-md-12" ng-if="<%= rankings %>.rank_type == 'full'">
+    <div class="col-sm-6" ng-if="<%= rankings %>.rank_type == 'full'">
         <h1 class="text-center">{{<%= rankings %>.ranking.title}}</h1>
       <ul class="list-group">
           <li ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'list-group-item': true, 'list-group-item-warning': rank_user.general_position == <%= rankings %>.my_position }">

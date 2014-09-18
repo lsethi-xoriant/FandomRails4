@@ -1,4 +1,4 @@
-<div class="menu-area">
+<div class=" row menu-area">
 	<div class="container-menu">
 		<div class="submenu">
 			<div class="row">
@@ -6,27 +6,9 @@
 			      <div class="flexslider">
 			        <ul class="slides">
 			            <li>
-			                <div class="slide">
-			                    <div class="border"></div>
-			                    <% if page == "levels" %>
-			                    	<div class="active"></div>
-			                   	<% end %>
+			                <div class="slide <%= "active" if page == "badges" %>">
 			                    <div class="comment-center">
-			                        <a href="/profile/levels">LIVELLI</a>
-			                    </div>
-			                </div>
-			                <% if page == "levels" %>
-			                	<div class="triangle"></div>
-			                <% end %>
-			            </li>
-			            <li>
-			                <div class="slide">
-			                    <div class="border"></div>
-			                    <% if page == "badges" %>
-			                    	<div class="active"></div>
-			                    <% end %>
-			                    <div class="comment-center">
-			                        <a href="/profile/badges">BADGES</a>
+			                        <a href="/profile/badges">SUPERFAN</a>
 			                    </div>
 			                </div>
 			                <% if page == "badges" %>
@@ -34,11 +16,7 @@
 			                <% end %>
 			            </li>
 			            <li>
-			                <div class="slide">
-			                    <div class="border"></div>
-			                    <% if page == "notices" %>
-			                    	<div class="active"></div>
-			                    <% end %>
+			                <div class="slide <%= "active" if page == "notices" %>">
 			                    <div class="comment-center">
 			                        <a href="/profile/notices">NOTIFICHE</a>
 			                    </div>
@@ -48,11 +26,7 @@
 			                <% end %>
 			            </li>
 			            <li>
-			                <div class="slide">
-			                    <div class="border"></div>
-			                    <% if page == "rankings" %>
-			                    	<div class="active"></div>
-			                    <% end %>
+			                <div class="slide <%= "active" if page == "rankings" %>">
 			                    <div class="comment-center">
 			                        <a href="/profile/rankings">CLASSIFICA</a>
 			                    </div>
@@ -76,7 +50,7 @@
 	        controlNav: false,
 	        directionNav: true,
 	        slideshow: false,
-	        itemWidth: 180,
+	        itemWidth: 320,
 	        itemMargin: 10,
 	        minItems: 1,
 	        maxItems: 6
@@ -110,6 +84,6 @@
 	    if ($(window).innerWidth() < 768)
 	        return 190;
 	    else
-	        return 180;
+	        return 275;
 	}
 </script>
