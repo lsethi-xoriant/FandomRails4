@@ -1,48 +1,26 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container">
+<div class="container profile-container">
   
-  <div class="row" style="margin-top: 1.5em;">
+  <div class="row">
     <div class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading profile-heading">
-          <%= render partial: "profile/profile_header" %>
-        </div>
-        <div class="panel-body profile-body">
-          <%= render partial: "profile/profile_navbar", locals: { page: "badges" } %>
-          <% if @are_properties_used %>
-            <% @rewards_to_show.each do |property, rewards| %>
-            	<div class="row">
-                <div class="col-md-12">
-                  <div id="livelli">
-                    <div class="page-header">
-                      <h2>Badge per <%= property %> <small><%= compute_rewards_gotten_over_total(rewards.map{ |reward| reward.id }) %>/<%= rewards.count %></small></h2>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row badges text-center">
-                <% rewards.each do |reward| %>
-                  <%= render partial: "/profile/badge", locals: { reward: reward } %>
-                <% end %>
-              </div>
+	  <%= render partial: "profile/profile_header" %>
+      <%= render partial: "profile/profile_navbar", locals: { page: "badges" } %>
+      <% if @are_properties_used %>
+        <% @rewards_to_show.each do |property, rewards| %>
+          <div class="row badges text-center">
+            <% rewards.each do |reward| %>
+              <%= render partial: "/profile/badge", locals: { reward: reward } %>
             <% end %>
-          <% else %>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="page-header">
-                  <h2>Badge <small><%= compute_rewards_gotten_over_total(@rewards_to_show.map{ |reward| reward.id }) %>/<%= @rewards_to_show.count %></small></h2>
-                </div>
-              </div>
-            </div>
-            <div class="row badges text-center">
-              <% @rewards_to_show.each do |reward| %>
-                <%= render partial: "/profile/badge", locals: { reward: reward } %>
-              <% end %>
-            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="row badges text-center">
+          <% @rewards_to_show.each do |reward| %>
+            <%= render partial: "/profile/badge", locals: { reward: reward } %>
           <% end %>
         </div>
-      </div>
+      <% end %>
     </div>
   </div>
 

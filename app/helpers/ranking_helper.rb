@@ -16,6 +16,16 @@ module RankingHelper
     attribute :number_of_pages, type: Integer
   end
   
+  def get_my_general_position
+    ranking = Ranking.find_by_name("general_chart")
+    rank = get_ranking(ranking)
+    rank.user_to_position[current_user.id]
+  end
+  
+  def get_superfan_reward
+    Reward.find_by_name("superfan")
+  end
+  
   def get_ranking(ranking)
     rankings = Array.new
     period = get_current_periodicities[ranking.period]

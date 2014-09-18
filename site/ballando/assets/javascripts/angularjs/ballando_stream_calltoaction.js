@@ -13,6 +13,23 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     checkDocumentHeight("fandom"); 
   };
 
+  $window.showRegistrateView = function() {
+    document.cookie = "connect_from_page = " + top.location;
+    top.location = PROFILE_URL;
+  }
+
+  $window.checkDocumentHeight = function(myIframeId){
+    var lastHeight = 0;
+    (function run(){
+      newHeight = $("body").innerHeight();
+      if(lastHeight != newHeight) {
+        window.parent.containerHeight(newHeight, myIframeId);
+      }
+      lastHeight = newHeight;
+      timer = setTimeout(run, 300);
+    })();
+  };
+
   $window.showCallToAction = function(calltoaction_id) {
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
     showCallToActionCountdown(calltoaction_id, 3);
@@ -64,7 +81,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
     $("#undervideo-area-" + interaction_id).html(data.feedback); 
     $("#undervideo-interaction-" + interaction_id).css("display", "none"); 
-    $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "black");
 
     calltoaction_id = data.calltoaction_id
     $http.post("/check_next_interaction", { interactions_showed: interactions_showed[calltoaction_id], calltoaction_id: data.calltoaction_id })
@@ -76,7 +92,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
         $timeout(function() { 
           $("#undervideo-outcome-" + interaction_id).css("display", "none"); 
-          $("#undervideo-outcome-" + interaction_id).closest(".cta-content").css("background-color", "white");
           $("#undervideo-interaction-" + interaction_id).css("display", "block"); 
         }, 3000);
 

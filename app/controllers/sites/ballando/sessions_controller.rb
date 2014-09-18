@@ -8,7 +8,13 @@ class Sites::Ballando::SessionsController < SessionsController
       valid_response, rai_response_user = evaluate_response(rai_response)
 
       if valid_response
+
         rai_response_user = JSON.parse(rai_response_user)
+
+        if rai_response_user.empty?
+          flash[:error] = "Username o password errati"
+          redirect_to "/users/sign_up" and return
+        end
 
         if rai_response_user["authMyRaiTv"] == "OK"
           user = User.find_by_username(rai_response_user["UID"])
@@ -28,16 +34,17 @@ class Sites::Ballando::SessionsController < SessionsController
           redirect_after_successful_login
         else
           flash[:error] = rai_response_user["authMyRaiTv"]
-          redirect_to "/user/sign_up"
+          redirect_to "/users/sign_up"
         end
 
       else
+        flash[:error] = "RAI registrationUserFromGigya exception"
         render template: "/devise/registrations/new", locals: { resource: User.new }
       end
 
     rescue Exception => exception
-      User.new.errors.add("Eccezione", exception)
-      render template: "/devise/registrations/new", locals: { resource: User.new }
+      flash[:error] = "RAI registrationUserFromGigya exception"
+      redirect_to "/users/sign_up"
     end
   end
 
@@ -68,17 +75,28 @@ class Sites::Ballando::SessionsController < SessionsController
         user.authentications.build(authentication_attributes_from_provider(rai_response_user))
       end
 
-      response[:user] = user
-
       if user.errors.blank?
+        response[:connect_from_page] = path_for_redirect_after_successful_login()
         sign_in(:user, user)
         on_success(user)
+      else
+        response[:errors] = user.errors.full_messages.map { |error_message| "#{error_message}<br>"}
       end
 
     end
 
     respond_to do |format|
       format.json { render json: response.to_json }
+    end
+  end
+
+  def path_for_redirect_after_successful_login
+    if cookies[:connect_from_page].blank?
+      return "/"
+    else
+      connect_from_page = cookies[:connect_from_page]
+      cookies.delete(:connect_from_page)
+      return connect_from_page
     end
   end
 

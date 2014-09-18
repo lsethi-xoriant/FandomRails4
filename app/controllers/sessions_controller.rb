@@ -69,7 +69,7 @@ class SessionsController < Devise::SessionsController
   def redirect_to_original_page
     connect_from_page = cookies[:connect_from_page]
     cookies.delete(:connect_from_page)
-    redirect_to connect_from_page()
+    redirect_to connect_from_page
   end
   
   def redirect_to_registration_page(user)

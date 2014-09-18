@@ -1,0 +1,34 @@
+<% content_for :body_class, "iframe-profile" %>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-4 no-pad" style="position: relative; padding: 10px;">
+      <a href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>" target="_top">
+        <img src="<%= current_avatar %>" class="img-responsive img-circle" style="border: 2px solid #fff; width: 100%;">
+      </a>
+
+      <% if current_user %>
+        <a href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>" target="_top">
+          <div class="text-center visible-xs iframe-notice-baloon">
+            <span><%= @notices_count %></span>
+          </div>
+        <a>
+      <% end %>
+
+    </div>
+    <div class="col-xs-8" style="padding-left: 10px;">
+      <h4 style="padding-top: 10px; color: #fff;">
+        <%= current_user ? "#{current_user.first_name} #{current_user.last_name}" : "Anonimo" %>
+      </h4>
+      <% if current_user %>
+        <h5 style="color: #fff;"> Hai fatto              
+          <span id="iframe-profile-main-reward" class="label label-warning">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME) %>
+            <span class="glyphicon glyphicon-star"></span>
+          </span>
+        </h5>
+      <% else %>
+        <button class="btn-2 btn-2-small">REGISTRATI</button>
+      <% end %>
+    </div>
+  </div>
+</div>

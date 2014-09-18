@@ -16,6 +16,11 @@
     text-align: center;
 }
 
+.btn-2.btn-2-small {
+  font-size: 10px;
+  min-height: 0;
+}
+
 .btn-2::-moz-focus-inner{ border: 0 }
 
 .btn-2:hover {
@@ -83,19 +88,23 @@
   box-shadow: 0 4px 0 #825000;
 }
 
-.btn-2.btn-2-default:active {
+.btn-2.btn-2-default:active, .btn-2.btn-2-default.active {
     top: 3px;
     box-shadow: 0 1px 0 #363636;
 }
 
-.btn-2.btn-2-default.active {
-  top: 3px;
-  background-color: #FF9D00;
-  box-shadow: 0 1px 0 #825000;
+.btn-2.btn-2-default.active:hover, {
+  background-color: #B8B4B4;
+  box-shadow: 0 1px 0 #363636;
 }
 
-.btn-2.btn-2-default.active:hover {
-  background-color: #F2AB3A;
+.btn-2.btn-2-default.btn-2-default-orange.active {
+  background-color: #FF9D00; /* ORANGE */
+  box-shadow: 0 1px 0 #825000; /* DARK ORANGE */
+}
+
+.btn-2.btn-2-default.btn-2-default-orange.active:hover {
+  background-color: #F2AB3A; /* LIGHT ORANGE */
 }
 
 .btn-2.btn-2-default:active:hover {
@@ -115,11 +124,13 @@
 
 .btn-2.btn-2-default-success:active, .btn-2.btn-2-default-success.active {
     top: 3px;
+    background-color: #1EB510;
     box-shadow: 0 1px 0 #438A3D;
 }
 
-.btn-2.btn-2-default-success:active:hover {
+.btn-2.btn-2-default-success.active:hover {
     top: 3px;
+    background-color: #4EC942;
     box-shadow: 0 1px 0 #438A3D;
 }
 
@@ -135,10 +146,12 @@
 
 .btn-2.btn-2-default-danger:active, .btn-2.btn-2-default-danger.active {
     top: 3px;
+    background-color: #D6260B;
     box-shadow: 0 1px 0 #9C1A06;
 }
 
-.btn-2.btn-2-default-danger:active:hover {
+.btn-2.btn-2-default-danger.active:hover {
     top: 3px;
+    background-color: #D63820;
     box-shadow: 0 1px 0 #9C1A06;
 }

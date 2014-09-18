@@ -13,7 +13,29 @@ p.oblique { font-style: oblique }
 
 button, h1, h2, h3, h4, h5, h6, li {
     font-family: "Roboto", helvetica, arial, sans-serif;
-    color: #FFF;
+}
+
+#iframe-profile-main-reward {
+    padding-top: 4px; 
+    margin-left: 5px;
+}
+
+.iframe-notice-baloon {
+    background-color: red; 
+    position: absolute; 
+    width: 20px; 
+    height: 20px; 
+    top: 20%; 
+    left: 10px; 
+    border-radius: 50%; 
+    padding: 0 15px 0 0;
+    span {
+        color: #fff; 
+        font-size: 14px; 
+        position: absolute; 
+        right: 0; 
+        left: 0;
+    }
 }
 
 h1, h2, h3 {
@@ -39,9 +61,6 @@ h1, h2, h3 {
 .cta-stream-heading.feedback {
     margin-top: -15px;
     min-height: 395px;
-    border: 10px solid black;
-    border-radius: 20px;
-    background-color: white;
 }
 
 .video {
@@ -362,9 +381,13 @@ h1, h2, h3 {
 
 /* Space out content a bit */
 body {
-    padding-top: 50px;
-    background-image: url("/assets/bg.jpg");
-    background-position: top center;
+    background-color: rgba(0, 0, 0, 0.6);
+    //background-image: url("/assets/bg.jpg");
+    //background-position: top center;
+}
+
+body.iframe-profile {
+    background-color: transparent;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -437,7 +460,7 @@ body {
 /*
 .panel {
     .yes-pad {
-        padding: $panel-body-padding ($panel-body-padding*2) 0 $panel-body-padding;
+        padding: $panel-body-padding ($panel-body-padding*2) 0 0;
     }
 }
 */
@@ -953,7 +976,17 @@ height: 100%;
 }
 
 //RANKING BALLANDO
-.ballando-ranking{
+.profile-container{
+  
+  h1, h2, h3, h4, h5, h6{
+    color: #FFF;
+  }
+  
+  .img-profile{
+    max-height: 100px;
+    border: 2px solid #fff;
+  }
+  
   .list-group-item{
     border-left: none;
     border-right: none;
@@ -967,7 +1000,97 @@ height: 100%;
   .list-group-item-warning{
     background-color: rgba(255, 255, 255, 0.5);
   }
+  
+  p{
+    color: #fff;
+  }
+  
+  .profile-badge{
+    img{
+      max-width: 100%;
+      margin: 10px 0 10px 0;
+      //border: 2px solid red;
+    }
+    img.not-yours{
+      border: none;
+      opacity: 0.1;
+    }
+  }
+  
+  .profile-bar{
+    padding: 15px 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    .ranking-info{
+      h4, h5, h6{
+        text-align: center;
+      }
+      button{
+        display: block;
+        width: 100%;
+      }
+    }
+    .label-warning, .label-default{
+      display: block; 
+      text-align: center; 
+      padding: 10px 0; 
+      font-weight: bold;
+    }
+    .label-default{
+      background-color: #D3D3D3;
+    }
+    span.contents-to-unlock{
+      font-size: 57px;
+      font-weight: bold;
+    }
+    a{
+      color: #fff;
+    }
+    .no-border{
+      border: none !important;
+    }
+    .col-sm-3{
+      border-left: 1px solid #ccc;
+    }
+  }
+  
 }
+
+//MOKU MENU SLIDER
+.menu-area{
+  margin-bottom: 20px;
+  background-color: rgba(43, 42, 42, 0.6) !important;
+  .submenu{
+    margin-top: 0 !important;
+  }
+}
+
+.profile-menu{
+  padding-top: 10px;
+}
+
+.comment-center{ 
+  background-color: #6b6d6d;
+  border: 4px solid transparent;
+  a{
+    line-height: 50px;
+    color: #fff;
+    display: block;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+  }
+}
+
+.active{
+  .comment-center{
+    border-color: #fff;
+  }
+}
+
+.comment-center:hover{
+  border-color: #ccc;
+}
+
 
 @media only screen and (max-device-width: 800px), only screen and (device-width: 1024px) and (device-height: 600px), only screen and (width: 1280px) and (orientation: landscape), only screen and (device-width: 800px), only screen and (max-width: 767px) {
     .flex-video { padding-top: 0; }
@@ -1045,96 +1168,20 @@ height: 100%;
     }
 }
 
-@media (max-width: $screen-md-min) {
-    .cta {
-        .panel.cta-stream {
-            .panel-body {
-                padding: 0;
-            }
-        }
-    }
-
-    .undervideo {
-        padding: 0 15px 0 0;
-    }
-
-    .cta-stream-heading {
-        min-height: 380px;
-    }
-}
-
 @media (min-width: $screen-sm-min) {
+    .v-center {
+        height: 100%;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0px;
+        bottom: 0;
+        right: 0px;
+    }
     .panel {
-        .yes-pad {
-            padding: $panel-body-padding $panel-body-padding*2 0 $panel-body-padding;
-        }
-        .cta-media {
-            //overflow: none;
-            img {
-                @extend .image-responsive;
-                width: 100%;
-            }
-        }
         .panel-footer {
             border-top: 0;
         }
-    }
-    .page-header {
-        h1, h2 { font-size: 2em; }
-        h3 { font-size: 1.3em; }
-    }
-    .overlay-title {
-        .page-header {
-            h3 { margin-top: 0.7em; }
-            h2 { margin-top: 0.25em; }
-        }
-    }
-    .bike-configurator-instruction {
-        line-height: 40px;
-    }
-    .how-to {
-        background-image: none; 
-    }
-    .container {
-        max-width: 960px; //1060px;
-    }
-
-    /* Remove the padding we set earlier */
-    .header,
-    .marketing,
-    .footer {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    /* Space out the masthead */
-    .header {
-        margin-bottom: 30px;
-    }
-    
-    /* Remove the bottom border on the jumbotron for visual effect */
-    .jumbotron {
-        border-bottom: 0;
-    }
-}
-
-.panel.cta-stream {
-    // -webkit-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-    // -moz-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-    // box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-}
-
-@media (min-width: $screen-md-min) {
-    .v-center {
-      height: 100%;
-      margin: auto;
-      position: absolute;
-      top: 0;
-      left: 0px;
-      bottom: 0;
-      right: 0px;
-    }
-    .panel {
         .cta-stream {
             -webkit-box-shadow: 0px 14px 7px -10px rgba(0, 0, 0, 0.42);
             -moz-box-shadow: 0px 14px 7px -10px rgba(0, 0, 0, 0.42);
@@ -1166,7 +1213,38 @@ height: 100%;
             background: #FFF;
             height: 100%;
         }
+    }
+    .page-header {
+        h1, h2 { font-size: 2em; }
+        h3 { font-size: 1.3em; }
+    }
+    .overlay-title {
+        .page-header {
+            h3 { margin-top: 0.7em; }
+            h2 { margin-top: 0.25em; }
+        }
+    }
+    
+    .container {
+        max-width: 960px; //1060px;
+    }
 
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+    
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
     }
 }
 
