@@ -376,7 +376,7 @@ h1, h2, h3 {
 
 /* Space out content a bit */
 body {
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.6);
     //background-image: url("/assets/bg.jpg");
     //background-position: top center;
 }
@@ -1000,10 +1000,11 @@ height: 100%;
     img{
       max-width: 100%;
       margin: 10px 0 10px 0;
-      border: 2px solid red;
+      //border: 2px solid red;
     }
     img.not-yours{
       border: none;
+      opacity: 0.1;
     }
   }
   
