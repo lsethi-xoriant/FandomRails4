@@ -57,7 +57,6 @@ group :development do
 end
 
 group :production do
-  gem 'dalli-elasticache'
   gem 'unicorn' # high performance web server
   gem 'rack-handlers' # needed by unicorn
 end
@@ -95,6 +94,7 @@ gem 'apartment'
 
 # cache store
 gem 'dalli'
+gem 'dalli-elasticache'
 
 gem 'spring'
 
