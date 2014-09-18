@@ -15,6 +15,11 @@ button, h1, h2, h3, h4, h5, h6, li {
     font-family: "Roboto", helvetica, arial, sans-serif;
 }
 
+#iframe-profile-main-reward {
+    padding-top: 4px; 
+    margin-left: 5px;
+}
+
 .iframe-notice-baloon {
     background-color: red; 
     position: absolute; 
@@ -26,7 +31,7 @@ button, h1, h2, h3, h4, h5, h6, li {
     padding: 0 15px 0 0;
     span {
         color: #fff; 
-        font-size: 15px; 
+        font-size: 14px; 
         position: absolute; 
         right: 0; 
         left: 0;
@@ -379,6 +384,10 @@ body {
     background-color: rgba(0, 0, 0, 0.6);
     //background-image: url("/assets/bg.jpg");
     //background-position: top center;
+}
+
+body.iframe-profile {
+    background-color: transparent;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */

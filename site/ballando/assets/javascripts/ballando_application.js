@@ -2,6 +2,7 @@
 //= require jquery_ujs
 //= require jquery-ui-1.10.4.custom
 //= require ballando_domain
+//= require ballando_iframe_polling
 //= require angular
 //= require angular-resource
 //= require angular-route
@@ -12,6 +13,7 @@
 //= require angularjs/comment
 //= require angularjs/ranking
 //= require config
+//= require ballando_config
 //= require angularjs/stream_calltoaction
 //= require angularjs/ballando_stream_calltoaction
 //= require angularjs/ballando_iframe_calltoaction

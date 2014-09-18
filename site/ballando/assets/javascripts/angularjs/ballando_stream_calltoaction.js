@@ -10,12 +10,12 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code) {
     $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code);
-    checkDocumentHeight("fandom"); 
+    //checkDocumentHeight("fandom"); 
   };
 
   $window.showRegistrateView = function() {
     document.cookie = "connect_from_page = " + top.location;
-    top.location = "http://ballando.container.fandomlab.com.s3.amazonaws.com/registrazione.html"
+    top.location = PROFILE_URL;
   }
 
   $window.checkDocumentHeight = function(myIframeId){
