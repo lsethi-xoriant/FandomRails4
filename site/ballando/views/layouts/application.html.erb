@@ -137,10 +137,12 @@
       checkDocumentHeight("fandom");
 
       <% if request_is_from_iphone_device?(request) %>
+
         iframe_height = $(".iframe-iphone").innerHeight();
         iframe_width = $(".iframe-iphone").innerWidth();
         $(".iframe-iphone iframe").css("height", iframe_height);
         $(".iframe-iphone iframe").css("width", iframe_width);
+
       <% end %>
 
     });
