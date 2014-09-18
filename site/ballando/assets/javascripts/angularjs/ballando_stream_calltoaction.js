@@ -13,6 +13,11 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     checkDocumentHeight("fandom"); 
   };
 
+  $window.showRegistrateView = function() {
+    document.cookie = "connect_from_page = " + top.location;
+    top.location = "/users/sign_up"
+  }
+
   $window.checkDocumentHeight = function(myIframeId){
     var lastHeight = 0;
     (function run(){

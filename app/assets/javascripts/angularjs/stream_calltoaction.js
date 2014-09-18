@@ -197,6 +197,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   //////////////////////// SHOWING AND GETTING INTERACTION METHODS ////////////////////////
 
+  $window.showRegistrateView = function() {
+    $("#registrate-modal").modal('show');
+  }
+
   $window.executeInteraction = function(calltoaction_id, second, calltoaction_interacations) { 
     angular.forEach(calltoaction_interacations, function(interaction_second, interaction_id) {
       if(second == interaction_second) {
@@ -438,7 +442,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           });
     } else {
 
-      $("#registrate-modal").modal('show');
+      showRegistrateView();
+
       $(".button-inter-" + interaction_id).attr('disabled', false);
 
     }

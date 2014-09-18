@@ -75,17 +75,28 @@ class Sites::Ballando::SessionsController < SessionsController
         user.authentications.build(authentication_attributes_from_provider(rai_response_user))
       end
 
-      response[:user] = user
-
       if user.errors.blank?
+        response[:connect_from_page] = path_for_redirect_after_successful_login()
         sign_in(:user, user)
         on_success(user)
+      else
+        response[:errors] = user.errors.full_messages.map { |error_message| "#{error_message}<br>"}
       end
 
     end
 
     respond_to do |format|
       format.json { render json: response.to_json }
+    end
+  end
+
+  def path_for_redirect_after_successful_login
+    if cookies[:connect_from_page].blank?
+      return "/"
+    else
+      connect_from_page = cookies[:connect_from_page]
+      cookies.delete(:connect_from_page)
+      return connect_from_page
     end
   end
 
