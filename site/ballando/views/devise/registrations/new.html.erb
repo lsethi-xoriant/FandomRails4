@@ -4,9 +4,10 @@
     <div class="row">
       <div class="col-md-12 cta">
             <div class="row">      
-              <div class="col-md-8 col-md-offset-2">
+              <div class="col-sm-8 col-md-offset-2">
                 <p style="float: left">Registrati a <img src="/assets/rai-tv.png" class="img-responsive" style="display: inline-block" /></p>
                 <p style="float: right">Sei già registrato? <a href="/users/sign_in" class="btn btn-default">LOGIN</a></p>
+                <div style="clear: both;"></div>
                 <%= form_for resource, :url => "/users/rai/sign_up/create" do |f| %> 
 
                   <% if resource.errors.any? %>
@@ -60,7 +61,7 @@
                     <label><%= f.check_box :newsletter %> Desidero registrarmi alla newsletter Rai.tv</label>
                   </div>
 					<div class="col-sm-6 col-sm-offset-3">
-						<button type="submit" class="btn btn-danger btn-lg btn-block">REGISTRATI</button>
+						<button type="submit" class="btn-2 btn-danger btn-lg btn-block">REGISTRATI</button>
 					</div>
                 <% end %>
                 <p>&nbsp;</p>
@@ -76,7 +77,7 @@
 		<div class="col-md-5 col-md-offset-3">
 			<p>Registrandoti a Rai.tv potrai fruire di servizi esclusivi come:
 				<ul>
-					<li>Scoail Tv: accedi a tutti gli eventi Social Tv dei programi Rai</li>
+					<li>Social Tv: accedi a tutti gli eventi Social Tv dei programi Rai</li>
 					<li>Preferiti: scegli programmi e contenuti on-demand (video, audio, podcast) preferiti</li>
 					<li>Newsletter: i migliori contenuti della settimana Rai da rivedere</li>
 				</ul>	
@@ -87,7 +88,7 @@
 
 <div class="container-fluid" style="padding: 10px 0;">
 	<div class="row disclaimer">
-		<div class="col-md-5 col-md-offset-3">
+		<div class="col-sm-5 col-md-offset-3">
 			<p class="text-center">&copy; Ballando con le stelle. Tutti i diritti riservati.</p>
 		</div>
 	</div>

@@ -499,7 +499,7 @@ module RewardingSystemHelper
       log_info("predict max cta outcome", { 
         'time' => total_time, 
         'cta' => cta.name, 
-        'user' => user.email, 
+        'user' => user.username, 
         'outcome_rewards' => total_outcome.reward_name_to_counter, 
         'outcome_unlocks' => total_outcome.unlocks.any? ? total_outcome.unlocks : [] })
                
