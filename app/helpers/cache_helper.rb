@@ -34,7 +34,7 @@ module CacheHelper
   def get_cache_key(key = nil)
     site = get_site_from_request!
     if key.nil?
-      parts = caller[1].split(':')
+      parts = caller[2].split(':')
       part = parts[0].split('/')[-1]
       key = "#{part}:#{parts[1]}"
     end
