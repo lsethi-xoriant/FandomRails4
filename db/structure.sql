@@ -98,7 +98,8 @@ CREATE TABLE authentications (
     user_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    new boolean
+    new boolean,
+    aux json
 );
 
 
@@ -1660,7 +1661,8 @@ CREATE TABLE users (
     number character varying(255),
     rule boolean,
     birth_date date,
-    username character varying(255)
+    username character varying(255),
+    newsletter boolean
 );
 
 
@@ -3410,7 +3412,8 @@ CREATE TABLE users (
     number character varying(255),
     rule boolean,
     birth_date date,
-    username character varying(255)
+    username character varying(255),
+    newsletter boolean
 );
 
 
@@ -5524,3 +5527,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140911085734');
 INSERT INTO schema_migrations (version) VALUES ('20140911124628');
 
 INSERT INTO schema_migrations (version) VALUES ('20140917074818');
+
+INSERT INTO schema_migrations (version) VALUES ('20140919073315');

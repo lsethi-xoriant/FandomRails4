@@ -3,9 +3,16 @@ function checkDocumentHeight(myIframeId) {
   (function run(){
     newHeight = $("body").innerHeight();
     if(lastHeight != newHeight) {
-      window.parent.containerHeight(newHeight, myIframeId);
+
+      try {
+        window.parent.containerHeight(newHeight, myIframeId);
+        lastHeight = newHeight;
+      } catch(err) {
+        lastHeight = 0;
+      }
+      
     }
-    lastHeight = newHeight;
+    
     timer = setTimeout(run, 300);
   })();
 }

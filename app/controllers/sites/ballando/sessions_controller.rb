@@ -25,6 +25,7 @@ class Sites::Ballando::SessionsController < SessionsController
                 email: "#{rai_response_user["UID"]}@FAKE___DOMAIN.com", 
                 first_name: rai_response_user["firstName"], 
                 last_name: rai_response_user["lastName"],
+                privacy: true,
                 password: password
                 )
           end
@@ -131,6 +132,7 @@ class Sites::Ballando::SessionsController < SessionsController
       email: user_email, 
       first_name: response_user["profile"]["firstName"], 
       last_name: last_name,
+      privacy: true,
       password: password
     )
   end

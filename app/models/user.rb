@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
-    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username
+    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter
 
   attr_accessor :day_of_birth, :month_of_birth, :year_of_birth
 
@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   validates :privacy, :acceptance => { :accept => true }
 
   validates_presence_of :username
+  validates_presence_of :privacy
   validates :username, uniqueness: true
 
   def major

@@ -18,18 +18,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     top.location = PROFILE_URL;
   }
 
-  $window.checkDocumentHeight = function(myIframeId){
-    var lastHeight = 0;
-    (function run(){
-      newHeight = $("body").innerHeight();
-      if(lastHeight != newHeight) {
-        window.parent.containerHeight(newHeight, myIframeId);
-      }
-      lastHeight = newHeight;
-      timer = setTimeout(run, 300);
-    })();
-  };
-
   $window.showCallToAction = function(calltoaction_id) {
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
     showCallToActionCountdown(calltoaction_id, 3);
