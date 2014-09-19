@@ -5,7 +5,7 @@ module BallandoHelper
   
   def get_superfan_reward
     cache_short("weekly_superfan") do
-      Reward.includes(reward_tags: :tag).where("tags.name = 'badge' and rewards.valid_from < ? and rewards.valid_to > ?", Time.now.utc, Time.now.utc).first  
+      Reward.includes(reward_tags: :tag).where("tags.name = 'superfan' and rewards.valid_from < ? and rewards.valid_to > ?", Time.now.utc, Time.now.utc).first  
     end
   end
   
