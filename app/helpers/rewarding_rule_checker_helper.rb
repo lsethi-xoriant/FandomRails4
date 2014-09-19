@@ -49,7 +49,7 @@ module RewardingRuleCheckerHelper
       end
       if k == :validity_start or k == :validity_end
         begin 
-          options[k] = Date.parse(v)
+          options[k] = Time.parse(v)
         rescue
           errors << "rule #{rule.name}: date/time parse error on #{k}"
         end

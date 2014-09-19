@@ -157,9 +157,24 @@ module RewardingSystemHelper
     end
     
     def current_datetime_is_valid?(options)
-      now = DateTime.now
-      return ( (!options.key?(:validity_start) || now >= options[:validity_start]) and
-               (!options.key?(:validity_end) || now <= options[:validity_end]) )
+      now = nil # the "time" system call is only made if either validity option has been specified
+      if options.key?(:validity_start)
+        now = Time.now.utc
+        validity_start = Time.parse(options[:validity_start]).utc
+        if now < validity_start
+          return false
+        end 
+      end
+      
+      if options.key?(:validity_end)
+        now = now.nil? ? Time.now.utc : now
+        validity_end = Time.parse(options[:validity_end]).utc
+        if now > validity_end
+          return false
+        end 
+      end
+      
+      return true
     end
 
     def interaction_matches?(user_interaction, options, just_rules_applying_to_interaction)
