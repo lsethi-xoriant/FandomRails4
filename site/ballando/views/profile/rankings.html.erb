@@ -1,6 +1,6 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(["general_chart", "my_position_general"]).to_json %>);">
+<div class="container-fluid profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(["general_chart", "my_position_general"]).to_json %>);">
 
 
 <%= render partial: "profile/profile_header" %>
@@ -10,3 +10,11 @@
 <%= render partial: "/ranking/rank", locals: { rankings: "rankings.general_chart" } %>
 
 </div>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    checkDocumentHeight("fandom");
+  });
+
+</script>

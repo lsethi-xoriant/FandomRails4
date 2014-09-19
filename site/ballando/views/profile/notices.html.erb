@@ -2,7 +2,7 @@
 
 <%= render partial: "/application/user_bar" %>
 
-<div class="container profile-container">
+<div class="container-fluid profile-container">
   
   <div class="row">
     <div class="col-md-12">
@@ -62,5 +62,8 @@
 	      } // success AJAX
       	});
 	}
+
+  $(document).ready(function() {
+    checkDocumentHeight("fandom");
+  });
 </script>
-        

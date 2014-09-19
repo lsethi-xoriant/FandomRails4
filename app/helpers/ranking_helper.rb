@@ -119,8 +119,6 @@ module RankingHelper
   end
   
   def compose_ranking_info(rank_type, ranking, rank_list, my_position, total = 0, number_of_pages = 0)
-    
-    debugger
     if rank_type == "my_position" && my_position
       current_page = get_pages(my_position, RANKING_USER_PER_PAGE) 
       off = (current_page - 1) * RANKING_USER_PER_PAGE
