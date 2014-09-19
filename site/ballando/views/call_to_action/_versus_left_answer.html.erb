@@ -17,7 +17,7 @@
           </a>
         <% else %>
           <!-- IMAGE ACTIVE -->
-          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"  onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)">
+          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
             <img src="<%= answer.image(:medium) %>">
           </a>
         <% end %>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -40px;">
-          <h5><%= percent && user_interaction ? percent : "-" %>%</h5>
+          <h5><%= percent if percent && user_interaction %>%</h5>
         </div>
 
       </div>
@@ -72,7 +72,7 @@
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -40px;">
-          <h5><%= percent && user_interaction ? percent : "-" %>%</h5>
+          <h5><%= percent if percent && user_interaction %>%</h5>
         </div>
 
       </div>
