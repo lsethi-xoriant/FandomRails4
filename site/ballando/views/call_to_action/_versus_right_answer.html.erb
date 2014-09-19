@@ -12,13 +12,13 @@
           </a>
         <% else %>
           <!-- IMAGE ACTIVE -->
-          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"  onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)">
+          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
             <img src="<%= answer.image(:medium) %>">
           </a>
         <% end %>
 
         <!-- PROGRESS BAR -->
-        <div class="progress vertical bottom" style="position: absolute; top: 0; bottom: 0; right: -25px; margin-right: 0;">
+        <div class="progress vertical bottom" style="position: absolute; top: 0; bottom: 0; right: -25px; margin-right: 0; z-index: 10;">
           <div class="progress-bar progress-bar-warning" role="progressbar" style="height: <%= percent if user_interaction %>%;"></div>
         </div>
 
@@ -28,7 +28,7 @@
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -40px;">
-          <h5><%= percent && user_interaction ? percent : "-" %>%</h5>
+          <h5><%= percent if percent && user_interaction %>%</h5>
         </div>
 
       </div>
@@ -45,13 +45,13 @@
           </button>
         <% else %>
           <!-- BUTTON ACTIVE -->
-          <button href="javascript: void(0)" style="margin-bottom: 0;" class="btn-2 btn-2-versus <%= "btn-2-versus-orange" if user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"  onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)">
+          <button href="javascript: void(0)" style="margin-bottom: 0;" class="btn-2 btn-2-versus <%= "btn-2-versus-orange" if user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
             <%= answer.text %>
           </button>
         <% end %>
 
         <!-- PROGRESS BAR -->
-        <div class="progress vertical bottom" style="position: absolute; top: 4px; bottom: 0; right: -25px; margin-right: 0;">
+        <div class="progress vertical bottom" style="position: absolute; top: 4px; bottom: 0; right: -25px; margin-right: 0; z-index: 10;">
           <div class="progress-bar progress-bar-warning" role="progressbar" style="height: <%= percent if user_interaction %>%;"></div>
         </div>
 
@@ -61,7 +61,7 @@
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -40px;">
-          <h5><%= percent && user_interaction ? percent : "-" %>%</h5>
+          <h5><%= percent if percent && user_interaction %>%</h5>
         </div>
 
       </div>

@@ -1,22 +1,12 @@
-<div class="container-fluid">
+<div class="container-fluid login-page">
 
   <div class="container">
     <div class="row">
-      <div class="col-md-6 col-md-offset-3 cta">
-        <div class="panel panel-default cta-page">
-          <div class="panel-heading">
-            <div class="row ">
-              <div class="col-md-12">                      
-                <h3 class="text-muted">Entra in Fandom</h3>
-              </div>
-              
-            </div>
-          </div>
-          <div class="panel-body">
+      <div class="col-md-5 cta">
             <div class="row">      
               <%= form_for resource, :url => "/users/rai/sign_in/create" do |f| %>
                 <div class="col-md-12">
-                  <h4 class="lead text-left">Login</h4>
+                  <p>Accedi con il tuo profilo <img src="/assets/rai-tv.png" class="img-responsive" style="display: inline-block" /></p>
                   <p id="form-errors"><%= flash[:error] %></p>
                   <div class="form-group text-left">
                     <!--<label for="exampleInputEmail1">Email address</label>-->
@@ -26,27 +16,41 @@
                     <!--<label for="exampleInputPassword1">Password</label>-->
                     <%= f.password_field :password, :class => "form-control", :placeholder => "Password" %>
                   </div>
-                  <button type="submit" class="btn btn-info btn-lg btn-block">Login</button>
+                  <div class="form-group text-left">
+                  	<button type="submit" class="btn btn-default btn-lg btn-block"><img src="/assets/rai-tv.png" class="img-responsive" style="display: inline-block" /> | Login</button>
+				  </div>
+                  <p><a href="http://www.rai.tv/dl/RaiTV/MyRaiTV/iscrizione.html#PasswordRecovery" target="_blank">Hai dimenticato la Password?</a></p>
 
-                  <p>Dimenticato la Password? <br/><a href="http://www.rai.tv/dl/RaiTV/MyRaiTV/iscrizione.html#PasswordRecovery" target="_blank">ricevine una nuova</a></p>
-
-                  <p class="text-center">Oppure:</p>
-                  <div class="facebook-connect">
-  
-                  <button type="button" class="btn btn-fb btn-md btn-block" onclick="gigyaSocializeLogin('facebook')">Signin with Facebook</button>
-                  <a class="btn btn-tw btn-md btn-block" onclick="gigyaSocializeLogin('twitter')">Signin with Twitter</a>
-                  <!--<button type="button" class="btn btn-g btn-md btn-block">Signin with Google+</button>-->
-                    
+				  <div class="checkbox text-left">
+                    <label> <input type="checkbox" name="user[remember_me]" value="1" /> Ricordati di me</label>
+                  </div>
+                  <p>&nbsp;</p>
+                  <p>Non sei ancora registrato? <a href="/users/sign_up">REGISTRATI</a></p>    
+                  
                   </div>
 
                   <p>&nbsp;</p>
                 </div>
               <% end %>  
-            </div>
-          </div>
         </div>
+        
+        <div class="col-md-4 col-md-offset-1 cta">
+	      	<div class="row">
+	      		<div class="col-sm-12">
+	      			<p class="text-center">Oppure accedi con il tuo profilo social</p>
+	                  <div class="facebook-connect">
+	  					<div class="form-group text-left">
+	                  		<button type="button" class="btn btn-fb btn-md btn-block" onclick="gigyaSocializeLogin('facebook')"><i class="fa fa-facebook"></i> | CONNECT</button>
+	                  	</div>
+	                  	<div class="form-group text-left">
+	                  		<a class="btn btn-tw btn-md btn-block" onclick="gigyaSocializeLogin('twitter')"><i class="fa fa-twitter"></i> | CONNECT</a>
+	                  		<!--<button type="button" class="btn btn-g btn-md btn-block">Signin with Google+</button>-->
+	                  	</div>
+	      		</div>
+	      	</div>
+	      </div>
+	    </div>
       </div>
-    </div>
   </div>
 
 </div>
