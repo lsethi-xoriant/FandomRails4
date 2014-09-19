@@ -264,7 +264,7 @@ module RewardingSystemHelper
         counters: {},
         uncountable_user_reward_names: Set.new(),
         user_unlocked_names: Set.new(),
-        user_rewards: Set.new(),
+        user_rewards: fill_user_rewards({}),
         rules: []
       )
     else
@@ -320,13 +320,20 @@ module RewardingSystemHelper
         end
       end 
     end
+    fill_user_rewards(user_rewards)
+    [user_rewards, uncountable_user_reward_names, user_unlocked_names]
+  end
+
+  # Fills the user_rewards argument with all rewards names, with counters set to 0
+  def fill_user_rewards(user_rewards)
     get_all_reward_names().each do |name|
       unless user_rewards.key?(name)
         user_rewards[name] = MockedUserReward.new({ PERIOD_KIND_TOTAL => 0 })
       end
     end
-    [user_rewards, uncountable_user_reward_names, user_unlocked_names]
+    user_rewards
   end
+
   
   def get_correct_answer(user_interaction)
     user_interaction.is_answer_correct?
@@ -369,10 +376,9 @@ module RewardingSystemHelper
   end
   
   def get_rules_buffer()
-    # TODO: caching
-    #cache_short('rewarding_rules') do 
+    cache_short('rewarding_rules') do 
       Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
-    #end
+    end
   end
   
   def compute_and_save_outcome(user_interaction, rules_buffer = nil)
@@ -457,39 +463,48 @@ module RewardingSystemHelper
   #   cta - the cta
   #   user - the user performing the interaction; if nil or anonymous, the context of the interaction will be reset (counters and rewards)
   def predict_max_cta_outcome(cta, user)
-    benchmark("Predict max CTA outcome") do
-      if cta.interactions.count == 0
-        Outcome.new
-      else
-        interaction_outcomes = []
-        
-        total_outcome = Outcome.new
-
-        sorted_interactions = cta.interactions.where("required_to_complete").order("seconds ASC")
-
-        if sorted_interactions.any?
-
-          first_interaction = sorted_interactions[0]
-          other_interactions = sorted_interactions[1 .. -1]
+    if cta.interactions.count == 0
+      Outcome.new
+    else
+      start_time = Time.now.utc
       
-          user_interaction = get_mocked_user_interaction(first_interaction, user, true)
-          context = prepare_rules_and_context(user_interaction, nil)  
-          first_outcome = context.compute_outcome_just_for_interaction(user_interaction)
-
-          interaction_outcomes << first_outcome
-          total_outcome.merge!(first_outcome)
+      interaction_outcomes = []
       
-          other_interactions.each do |interaction|
-            user_interaction = get_mocked_user_interaction(interaction, user, true)
-            new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
-            interaction_outcomes << new_outcome
-            total_outcome.merge!(new_outcome)
-          end
+      total_outcome = Outcome.new
 
+      sorted_interactions = cta.interactions.where("required_to_complete").order("seconds ASC")
+
+      if sorted_interactions.any?
+
+        first_interaction = sorted_interactions[0]
+        other_interactions = sorted_interactions[1 .. -1]
+    
+        user_interaction = get_mocked_user_interaction(first_interaction, user, true)
+        context = prepare_rules_and_context(user_interaction, nil)  
+        first_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+
+        interaction_outcomes << first_outcome
+        total_outcome.merge!(first_outcome)
+    
+        other_interactions.each do |interaction|
+          user_interaction = get_mocked_user_interaction(interaction, user, true)
+          new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+          interaction_outcomes << new_outcome
+          total_outcome.merge!(new_outcome)
         end
-        
-        [total_outcome, interaction_outcomes, sorted_interactions]
+
       end
+      
+      total_time = Time.now.utc - start_time
+      log_info("predict max cta outcome", { 
+        'time' => total_time, 
+        'cta' => cta.name, 
+        'user' => user.username, 
+        'outcome_rewards' => total_outcome.reward_name_to_counter, 
+        'outcome_unlocks' => total_outcome.unlocks.any? ? total_outcome.unlocks : [] })
+               
+      log_outcome(total_outcome)
+      [total_outcome, interaction_outcomes, sorted_interactions]
     end
   end
 

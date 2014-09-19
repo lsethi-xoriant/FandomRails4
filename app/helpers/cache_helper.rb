@@ -34,7 +34,10 @@ module CacheHelper
   def get_cache_key(key = nil)
     site = get_site_from_request!
     if key.nil?
-      parts = caller[2].split(':')
+      # WARNING: this statement assumes that get_cache_key is used at a certain call stack depth. 
+      # Refactoring the code without changing this line might corrupt the cache!
+      my_call_stack = caller[2]
+      parts = my_call_stack.split(':')
       part = parts[0].split('/')[-1]
       key = "#{part}:#{parts[1]}"
     end
