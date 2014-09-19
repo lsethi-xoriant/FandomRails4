@@ -56,13 +56,9 @@ class Reward < ActiveRecord::Base
   end
   
   def is_published
-    if valid_from.nil? && !valid_to.nil?
-      Time.now.utc < valid_to
-    elsif !valid_from.nil? && valid_to.nil?
-      Time.now.utc > valid_from
-    elsif valid_from.nil? && valid_to.nil?
-      Time.now.utc > valid_from && Time.now.utc < valid_to
-    end
+    from_valid = valid_from.nil? || Time.now.utc > valid_from
+    to_valid =  valid_to.nil? || Time.now.utc < valid_to
+    return from_valid && to_valid
   end
 
 end

@@ -25,8 +25,8 @@
       <!-- IMAGE -->
       <img src="<%= calltoaction.media_image(:large) %>" style="width: 100%;">
     <% elsif calltoaction.media_type == "IFRAME" %>
-      <div class="<%= "iframe-iphone " if request_is_from_iphone_device?(request) %>video flex-video widescreen text-center v-center" style="background:#222;">  
-        <%= calltoaction.media_data.html_safe %>
+      <div id="iframe-calltoaction-<%= calltoaction.id %>" class="<%= "iframe-iphone " if request_is_from_iphone_device?(request) %>video flex-video widescreen text-center v-center" style="background:#222;">  
+        <%#= calltoaction.media_data.html_safe %>
       </div>
     <% end %>
   </div>

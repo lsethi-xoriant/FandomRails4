@@ -10,17 +10,17 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
-  var video_players = {};
-  var video_player_during_video_interaction_locked = {};
-
-  var secondary_video_players = {};
-
-  var play_event_tracked = {};
-  var current_user_answer_response_correct = {};
-
-  var polling = false;
-
   $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code) {
+
+    $scope.video_players = {};
+    $scope.video_player_during_video_interaction_locked = {};
+
+    $scope.secondary_video_players = {};
+
+    $scope.play_event_tracked = {};
+    $scope.current_user_answer_response_correct = {};
+
+    $scope.polling = false;
 
     $scope.current_user = current_user;
     $scope.calltoactions = calltoactions;
@@ -62,7 +62,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.updateSecondaryVideoPlayers = function(calltoactions) {
     angular.forEach(calltoactions, function(calltoaction) {
-      secondary_video_players[calltoaction.id] = new Object();
+      $scope.secondary_video_players[calltoaction.id] = new Object();
     });
   };
 
@@ -109,22 +109,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.appendYTIframe = function(calltoaction) {
     if(calltoaction.media_type == "YOUTUBE" && $scope.youtube_api_ready) {
-      video_players[calltoaction.id] = new YT.Player(('home-stream-video-' + calltoaction.id), {
+      $scope.video_players[calltoaction.id] = new YT.Player(('home-stream-video-' + calltoaction.id), {
         playerVars: { html5: 1 /* controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 */ },
         height: "100%", width: "100%",
         videoId: calltoaction.media_data,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
       });
-      play_event_tracked[calltoaction.id] = false;
-      current_user_answer_response_correct[calltoaction.id] = false;
+      $scope.play_event_tracked[calltoaction.id] = false;
+      $scope.current_user_answer_response_correct[calltoaction.id] = false;
+    } else if(calltoaction.media_type == "IFRAME") {
+      $scope.video_players[calltoaction.id] = calltoaction.media_data;
     }
   };
 
   $window.appendOrUpdateYTIframeSecondary = function(calltoaction_id, media_data) {
     if($scope.youtube_api_ready) {
-      video_player_from_calltoaction = secondary_video_players[calltoaction_id]["player"];
+      video_player_from_calltoaction = $scope.secondary_video_players[calltoaction_id]["player"];
       if(video_player_from_calltoaction) {
-        video_player_from_calltoaction = secondary_video_players[calltoaction_id]["player"];
+        video_player_from_calltoaction = $scope.secondary_video_players[calltoaction_id]["player"];
         video_player_from_calltoaction.loadVideoById(media_data);
       } else {
         appendYTIframeSecondary(calltoaction_id, media_data);
@@ -133,7 +135,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.appendYTIframeSecondary = function(calltoaction_id, media_data) { 
-    secondary_video_players[calltoaction_id]["player"] = new YT.Player(('home-stream-video-secondary-' + calltoaction_id), {
+    $scope.secondary_video_players[calltoaction_id]["player"] = new YT.Player(('home-stream-video-secondary-' + calltoaction_id), {
         playerVars: { html5: 1, autoplay: 1 /* controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 */ },
         height: "100%", width: "100%",
         videoId: media_data,
@@ -184,9 +186,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, autoplay) {
-    current_video_player = video_players[calltoaction_id];
+    current_video_player = $scope.video_players[calltoaction_id];
     if($scope.youtube_api_ready && current_video_player) {
-      play_event_tracked[calltoaction_id] = false;
+      $scope.play_event_tracked[calltoaction_id] = false;
       if(autoplay) {
         current_video_player.loadVideoById(calltoaction_video_code);
       } else {
@@ -204,8 +206,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $window.executeInteraction = function(calltoaction_id, second, calltoaction_interacations) { 
     angular.forEach(calltoaction_interacations, function(interaction_second, interaction_id) {
       if(second == interaction_second) {
-        video_player_during_video_interaction_locked[calltoaction_id] = true;
-        current_video_player = video_players[calltoaction_id];
+        $scope.video_player_during_video_interaction_locked[calltoaction_id] = true;
+        current_video_player = $scope.video_players[calltoaction_id];
         current_video_player.pauseVideo();
         getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player, false, "OVERVIDEO_DURING");
       }
@@ -229,7 +231,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             enableWaitingAudio("stop");
 
             // Unlock interaction
-            $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
+            $timeout(function() { $scope.video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
 
           }, 5000);  
         } else {
@@ -266,7 +268,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     if(main_calltoaction_media) {
 
-      current_video_player = video_players[calltoaction_id];
+      current_video_player = $scope.video_players[calltoaction_id];
       current_video_player_state = current_video_player.getPlayerState();
 
       if(current_video_player_state == 1) {
@@ -286,7 +288,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       }
     } else {
 
-      current_video_player = secondary_video_players[calltoaction_id]["player"];
+      current_video_player = $scope.secondary_video_players[calltoaction_id]["player"];
       current_video_player_state = current_video_player.getPlayerState();
 
       if(current_video_player_state == 0) {
@@ -298,8 +300,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   //////////////////////// METHODS FOR SETTINGS INTERACTIONS BEFORE AND END IN VIDEO ////////////////////////
 
   $window.updateEndVideoInteraction = function(calltoaction_id) {
-    play_event_tracked[calltoaction_id] = false;
-    $http.post("/calltoaction_overvideo_end", { calltoaction_id: calltoaction_id, right_answer_response: current_user_answer_response_correct[key] })
+    $scope.play_event_tracked[calltoaction_id] = false;
+    $http.post("/calltoaction_overvideo_end", { calltoaction_id: calltoaction_id, right_answer_response: $scope.current_user_answer_response_correct[key] })
       .success(function(data) {
         $("#home-overvideo-" + calltoaction_id).html(data.overvideo);
       }).error(function() {
@@ -308,9 +310,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.updateStartVideoInteraction = function(calltoaction_id, interaction_id) {
-    if(!play_event_tracked[calltoaction_id]) {
+    if(!$scope.play_event_tracked[calltoaction_id]) {
       $("#home-overvideo-title-" + calltoaction_id).addClass("hidden");
-      play_event_tracked[calltoaction_id] = true;
+      $scope.play_event_tracked[calltoaction_id] = true;
 
       $http.post("/update_interaction", { interaction_id: interaction_id, main_reward_name: MAIN_REWARD_NAME })
         .success(function(data) {
@@ -404,7 +406,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             }
 
             if(data.answer) {
-              current_user_answer_response_correct[calltoaction_id] = data.answer.correct;
+              $scope.current_user_answer_response_correct[calltoaction_id] = data.answer.correct;
             }
             
             if(when_show_interaction == "SEMPRE_VISIBILE") {
@@ -470,9 +472,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     $(".secondary-media").hide();
 
-    secondary_video_players[calltoaction_id]["answer_selected_blocking"] = answer.blocking;
-    secondary_video_players[calltoaction_id]["interaction_shown_in"] = when_show_interaction;
-    secondary_video_players[calltoaction_id]["interaction_shown_id"] = interaction_id;
+    $scope.secondary_video_players[calltoaction_id]["answer_selected_blocking"] = answer.blocking;
+    $scope.secondary_video_players[calltoaction_id]["interaction_shown_in"] = when_show_interaction;
+    $scope.secondary_video_players[calltoaction_id]["interaction_shown_id"] = interaction_id;
 
     if(answer.media_type == "YOUTUBE") {
       $("#secondary-media-video-" + calltoaction_id).show();
@@ -491,17 +493,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.userAnswerWithoutMedia = function(answer, calltoaction_id, interaction_id, when_show_interaction) {
-    current_video_player = video_players[calltoaction_id];
+    current_video_player = $scope.video_players[calltoaction_id];
     getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player, false, when_show_interaction);
     /*
     if(answer.blocking) {
-      current_video_player = video_players[calltoaction_id];
+      current_video_player = $scope.video_players[calltoaction_id];
       getOvervideoInteraction(calltoaction_id, interaction_id, current_video_player, false);
     } else {
       if(when_show_interaction == "OVERVIDEO_DURING") {
-        video_players[calltoaction_id].playVideo(); 
+        $scope.video_players[calltoaction_id].playVideo(); 
         $("#home-overvideo-" + calltoaction_id).html(""); 
-        $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
+        $timeout(function() { $scope.video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
       }
     }
     */
@@ -515,21 +517,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.showCallToActionYTIframe = function(calltoaction_id) {
-    answer_selected_blocking = secondary_video_players[calltoaction_id]["answer_selected_blocking"];
-    interaction_shown_in = secondary_video_players[calltoaction_id]["interaction_shown_in"];
+    answer_selected_blocking = $scope.secondary_video_players[calltoaction_id]["answer_selected_blocking"];
+    interaction_shown_in = $scope.secondary_video_players[calltoaction_id]["interaction_shown_in"];
 
     if(!answer_selected_blocking) { 
       $("#main-media-" + calltoaction_id).removeClass("hidden");
       $("#secondary-media-" + calltoaction_id).addClass("hidden");
 
       if(interaction_shown_in == "OVERVIDEO_DURING") {
-        video_players[calltoaction_id].playVideo();
+        $scope.video_players[calltoaction_id].playVideo();
       }
 
-      $timeout(function() { video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
+      $timeout(function() { $scope.video_player_during_video_interaction_locked[calltoaction_id] = false; }, 2000);
     } else {
-      interaction_shown_id = secondary_video_players[calltoaction_id]["interaction_shown_id"];
-      current_video_player = video_players[calltoaction_id];
+      interaction_shown_id = $scope.secondary_video_players[calltoaction_id]["interaction_shown_id"];
+      current_video_player = $scope.video_players[calltoaction_id];
       getOvervideoInteraction(calltoaction_id, interaction_shown_id, current_video_player, true, interaction_shown_in);
     }
   };
@@ -537,17 +539,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   //////////////////////// POLLING METHODS ////////////////////////
 
   $window.mayStartPooling = function(calltoaction_id) {
-    if(!polling && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
-      polling = $interval(videoPolling, 800);
+    if(!$scope.polling && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
+      $scope.polling = $interval(videoPolling, 800);
     }
   };
 
   $window.mayStopPolling = function() { 
-    if(polling) {
+    if($scope.polling) {
       
       video_with_polling_counter = false;
       
-      angular.forEach(play_event_tracked, function(video_started, calltoaction_id) {
+      angular.forEach($scope.play_event_tracked, function(video_started, calltoaction_id) {
         if(video_started && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
           video_with_polling_counter = true;
         } else {
@@ -556,8 +558,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
 
       if(!video_with_polling_counter) {
-        $interval.cancel(polling);
-        polling = false;
+        $interval.cancel($scope.polling);
+        $scope.polling = false;
       } else {
         // There is almost one video with polling.
       }
@@ -566,12 +568,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.videoPolling = function() {
-    angular.forEach(play_event_tracked, function(video_started, calltoaction_id) {
+    angular.forEach($scope.play_event_tracked, function(video_started, calltoaction_id) {
       if(video_started && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
-        current_video_player = video_players[calltoaction_id];
+        current_video_player = $scope.video_players[calltoaction_id];
         current_video_player_time = current_video_player.getCurrentTime(); 
         current_video_player_second = Math.floor(current_video_player_time);
-        if(!video_player_during_video_interaction_locked[calltoaction_id]) {
+        if(!$scope.video_player_during_video_interaction_locked[calltoaction_id]) {
           executeInteraction(calltoaction_id, current_video_player_second, $scope.calltoactions_during_video_interactions_second[calltoaction_id]);
         }
       }

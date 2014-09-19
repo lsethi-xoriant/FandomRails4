@@ -69,8 +69,8 @@
 }
 
 .btn-2.btn-2-versus.active:hover {
-  box-shadow: 0 1px 0 #363636;
-  background-color: #969696;
+  background-color: #969696; /* GRAY */
+  box-shadow: 0 1px 0 #363636; /* DARK GRAY */
 }
 
 .btn-2.btn-2-versus:active, .btn-2.btn-2-versus.active {
@@ -82,9 +82,6 @@
     top: 3px;
     background-color: #FF9D00;
     box-shadow: 0 1px 0 #825000;
-}
-.btn-2.btn-2-versus.btn-2-versus-orange.active:hover {
-    background-color: #F2AB3A;
 }
 
 .btn-2.btn-2-versus:active:hover {
@@ -108,23 +105,19 @@
   box-shadow: 0 4px 0 #825000;
 }
 
+.btn-2.btn-2-default.active:hover {
+  background-color: #969696; /* GRAY */
+  box-shadow: 0 1px 0 #363636; /* DARK GRAY */
+}
+
 .btn-2.btn-2-default:active, .btn-2.btn-2-default.active {
     top: 3px;
     box-shadow: 0 1px 0 #363636;
 }
 
-.btn-2.btn-2-default.active:hover, {
-  background-color: #B8B4B4;
-  box-shadow: 0 1px 0 #363636;
-}
-
 .btn-2.btn-2-default.btn-2-default-orange.active {
   background-color: #FF9D00; /* ORANGE */
   box-shadow: 0 1px 0 #825000; /* DARK ORANGE */
-}
-
-.btn-2.btn-2-default.btn-2-default-orange.active:hover {
-  background-color: #F2AB3A; /* LIGHT ORANGE */
 }
 
 .btn-2.btn-2-default:active:hover {
@@ -135,6 +128,11 @@
 .btn-2.btn-2-default-success {
   box-shadow: 0 4px 0 #438A3D;
   background-color: #1EB510;
+}
+
+.btn-2.btn-2-default-success.active:hover {
+  box-shadow: 0 1px 0 #438A3D; /* GREEN */
+  background-color: #1EB510; /* DARK GREEN */
 }
 
 .btn-2.btn-2-default-success:hover {
@@ -148,15 +146,14 @@
     box-shadow: 0 1px 0 #438A3D;
 }
 
-.btn-2.btn-2-default-success.active:hover {
-    top: 3px;
-    background-color: #4EC942;
-    box-shadow: 0 1px 0 #438A3D;
-}
-
 .btn-2.btn-2-default-danger {
   box-shadow: 0 4px 0 #9C1A06;
   background-color: #D6260B;
+}
+
+.btn-2.btn-2-default-danger.active:hover {
+  box-shadow: 0 1px 0 #9C1A06; /* RED */ 
+  background-color: #D6260B; /* DARK RED */
 }
 
 .btn-2.btn-2-default-danger:hover {
@@ -167,11 +164,5 @@
 .btn-2.btn-2-default-danger:active, .btn-2.btn-2-default-danger.active {
     top: 3px;
     background-color: #D6260B;
-    box-shadow: 0 1px 0 #9C1A06;
-}
-
-.btn-2.btn-2-default-danger.active:hover {
-    top: 3px;
-    background-color: #D63820;
     box-shadow: 0 1px 0 #9C1A06;
 }

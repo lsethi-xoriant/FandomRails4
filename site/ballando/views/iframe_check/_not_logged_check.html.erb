@@ -12,7 +12,7 @@
             <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
           </div>
         </div>
-        <button class="btn btn-primary btn-block" onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" onclick="">REGISTRATI</button>
+        <button class="btn btn-primary btn-block" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" <% end %> onclick="">REGISTRATI</button>
 	</div>
 	<div class="col-xs-1">
 		<!--
