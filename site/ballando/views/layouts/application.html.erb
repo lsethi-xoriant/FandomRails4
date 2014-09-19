@@ -132,6 +132,8 @@
 
   <script type="text/javascript">
 
+    var PROFILE_URL = "<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>";
+
     $(document).ready(function() {
 
       <% if request_is_from_iphone_device?(request) %>
