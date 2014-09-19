@@ -686,6 +686,27 @@ span.notify {
     .no-margin { margin: 0; }
     .profile-header-title { margin-top: 0; }
 }
+
+.login-page{
+  color: #fff;
+  padding: 50px 0 30px 0;
+  .btn-default{
+    background-color: #B6B4B4;
+    border-color: #797878;
+    border-bottom-width: 4px;
+  }
+  .btn-default:hover{
+    background-color: #ccc;
+    border-color: #AFAEAE;
+  }
+  .btn-fb, .btn-tw{
+    padding: 8px 0;
+  }
+  a{
+    color: #fff;
+  }
+}
+
 .profile-heading.progress-level{
     padding-bottom: 0;
     .profile-no-pad {

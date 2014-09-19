@@ -4,7 +4,7 @@
 require 'fandom_utils'
 
 module ApplicationHelper
-  
+  include CacheHelper
   include RewardingSystemHelper
   
   class BrowseCategory
