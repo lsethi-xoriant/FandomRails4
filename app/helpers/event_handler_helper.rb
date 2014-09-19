@@ -40,9 +40,9 @@ module EventHandlerHelper
     begin 
 
       case Rails.env  
-      when "production"
-        log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
       when "development"
+        log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
+      when ""
         log_string_for_development = generate_log_string_for_development(msg, data, caller_data, level, timestamp)
         logger_method = level == "audit" ? "info" : level
         Rails.logger.send(logger_method, log_string_for_development)
@@ -74,7 +74,7 @@ module EventHandlerHelper
   def log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
     pid = Process.pid
     file_name, line_number, method_name = parse_caller_data(caller_data)
-    params, request_uri, session_id, tenant, user_id = catch_top_level_attributes_from_data(data)
+    request_uri, session_id, tenant, user_id = catch_top_level_attributes_from_data(data)
 
     logger_production = Hash.new
     logger_production = {
@@ -85,7 +85,6 @@ module EventHandlerHelper
       "data" => data,
       "pid" => pid,
       "session_id" => session_id,
-      "params" => params,
       "request_uri" => request_uri,
       "line_number" => line_number,
       "file_name" => file_name,
@@ -95,7 +94,7 @@ module EventHandlerHelper
 
     if force_saving_in_db
       Event.create(session_id: session_id, pid: pid, message: msg, request_uri: request_uri, file_name: file_name, 
-        method_name: method_name, line_number: line_number, params: params.to_json, data: data.to_json, timestamp: timestamp, 
+        method_name: method_name, line_number: line_number, data: data.to_json, timestamp: timestamp, 
         level: level, tenant: tenant, user_id: user_id)
     else
 
@@ -112,9 +111,6 @@ module EventHandlerHelper
       session_id = data[:session_id]
       data.delete(:session_id)
 
-      params = data[:params] 
-      data.delete(:params)
-
       request_uri = data[:request_uri]
       data.delete(:request_uri)
 
@@ -126,7 +122,6 @@ module EventHandlerHelper
 
     else
 
-      params = request.params
       request_uri = request.url
       session_id = request.session["session_id"]
       tenant = get_site_from_request(request).try(:id)
@@ -134,7 +129,7 @@ module EventHandlerHelper
 
     end
 
-    [params, request_uri, session_id, tenant, user_id]
+    [request_uri, session_id, tenant, user_id]
   end
 
   def update_process_log_file(log_to_append) 

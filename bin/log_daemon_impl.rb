@@ -38,13 +38,13 @@ def main
         rescue ActiveRecord::RecordNotUnique => exception      
           # if the file that contains log events has already been saved, an exception RecordNotUnique is raised.
           # In this case the file will be deleted, because it means that it does  already saved in the past.
+          base_db_connection.connection.execute("ROLLBACK;")
           delete_process_file(process_file_path)        
           logger.error exception
-
         rescue Exception => exception
-
+          base_db_connection.connection.execute("ROLLBACK;")
+          mark_file_with_errors(event_logs_path, process_file_path)        
           logger.error exception
-
         end
 
       end
@@ -73,6 +73,18 @@ def close_orphan_files(event_logs_path, logger)
   end
 end
 
+def mark_file_with_errors(event_logs_path, process_file_path)
+  pid, timestamp = extract_pid_and_timestamp_from_path(process_file_path)
+  destination_log_file_name = "#{event_logs_path}/#{pid}-#{timestamp}-error.log"
+
+  begin
+    File.rename(process_file_path, destination_log_file_name)
+  rescue Exception => exception
+    # it may be that rails closed the same file at the same time. This error condition can safely be ignored.
+    logger.error exception
+  end
+end
+
 def extract_pid_and_timestamp_from_path(process_file_path)
   process_file_name = process_file_path.sub(".log", "").split("/").last
   pid, timestamp, status = process_file_name.split("-")
@@ -91,7 +103,7 @@ def generate_sql_insert_values_for_event(process_file_path)
     event_log_line_json = JSON.parse(event_log_line)
 
     tenant = event_log_line_json["tenant"]
-    values_for_event << "(#{event_log_line_json.map{ |key, value| ActiveRecord::Base.connection.quote(value.to_s) }.join(', ')})"
+    values_for_event << "(#{generate_values_for_event_log_line(event_log_line_json)})"
   end
 
   if values_for_event.any? && tenant.present?
@@ -102,8 +114,23 @@ def generate_sql_insert_values_for_event(process_file_path)
 
 end
 
+def generate_values_for_event_log_line(event_log_line_json)
+  values_for_event_log_line = Array.new
+  event_log_line_json.each do |key, value|
+    case key
+    when "data"
+      values_for_event_log_line << ActiveRecord::Base.connection.quote(value.to_json)
+    when "pid", "user_id"
+      values_for_event_log_line << value
+    else
+      values_for_event_log_line << ActiveRecord::Base.connection.quote(value.to_s[0..244])
+    end
+  end
+  values_for_event_log_line.join(', ')
+end
+
 def generate_sql_insert_query(insert_values_for_event, pid, timestamp)
-  insert_columns_for_event = "user_id, tenant, message, level, data, pid, session_id, params, request_uri, line_number, file_name, method_name, timestamp"
+  insert_columns_for_event = "user_id, tenant, message, level, data, pid, session_id, request_uri, line_number, file_name, method_name, timestamp"
   insert_columns_for_synced_log_files = "pid, server_hostname, timestamp"
 
   sql_query = "BEGIN;"
