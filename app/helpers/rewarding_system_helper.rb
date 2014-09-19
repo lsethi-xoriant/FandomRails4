@@ -415,6 +415,10 @@ module RewardingSystemHelper
     def mocked?
       true
     end
+    
+    def username
+      "$MockedUser"
+    end
   end
   MOCKED_USER = MockedUser.new
 
@@ -499,7 +503,7 @@ module RewardingSystemHelper
       log_info("predict max cta outcome", { 
         'time' => total_time, 
         'cta' => cta.name, 
-        'user' => user.username, 
+        'user' => user_interaction.user.username, 
         'outcome_rewards' => total_outcome.reward_name_to_counter, 
         'outcome_unlocks' => total_outcome.unlocks.any? ? total_outcome.unlocks : [] })
                
