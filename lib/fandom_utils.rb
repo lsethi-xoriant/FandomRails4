@@ -72,53 +72,6 @@ module FandomUtils
   end 
 
   
-  # Enable browser caching. is_public set to false instruct any intermediary cache (such as web proxies) 
-  # to not share the content for multiple users  
-  def browser_caching(seconds, is_public=true)
-    if request.method == 'GET' || request.method == 'HEAD' 
-      # this would be useful for akamai
-      #headers['Edge-control'] = "!no-store, max-age=#{seconds/60}"
-      
-      expires_in seconds, :public => is_public, 'max-stale' => 0, 'must-revalidate' => true
-    end
-  end
-
-  # Handle headers in the response to allow frontend caching. Warning: it removes the session cookie, so this 
-  # method should be called only from controller actions that does not require it  
-  def edge_caching(seconds)
-    if current_user.nil?
-      env['rack.session.options'][:skip] = true
-      
-      # this tells nginx to ignore the Cache-Control header, used by browsers, and cache the resource for X seconds  
-      response.headers["X-Accel-Expires"] = seconds
-    end
-  end
-
-  def get_cache_key(key = nil)
-    site = get_site_from_request!
-    if key.nil?
-      parts = caller[1].split(':')
-      key = "#{parts[0]}:#{parts[1]}"
-    end
-    result = "#{site.id}:#{key}"
-    logger.info("caching with key: #{result}")
-    result
-  end
-
-  # cache a block for a set amount of time
-  def cache_short(key = nil, &block)
-    Rails.cache.fetch(get_cache_key(key), :expires_in => 1.minute, :race_condition_ttl => 30, &block)
-  end
-  def cache_medium(key = nil, &block)
-    Rails.cache.fetch(get_cache_key(key), :expires_in => 5.minute, :race_condition_ttl => 1.minute, &block)
-  end
-  def cache_long(key = nil, &block)
-    Rails.cache.fetch(get_cache_key(key), :expires_in => 1.hour, :race_condition_ttl => 5.minute, &block)
-  end
-  def cache_huge(key = nil, &block)
-    Rails.cache.fetch(get_cache_key(key), :expires_in => 1.day, :race_condition_ttl => 1.hour, &block)
-  end
-
   # Can be used as a constrains in routes.rb to define site-specific routes.
   class SiteMatcher
     include FandomUtils
