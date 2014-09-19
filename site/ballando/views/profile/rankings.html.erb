@@ -1,6 +1,6 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(["general_chart", "my_position_general", "monthly_general_rank"]).to_json %>);">
+<div class="container profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(["general_chart", "my_position_general"]).to_json %>);">
 
 
 <%= render partial: "profile/profile_header" %>
@@ -8,6 +8,5 @@
 
 <%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
 <%= render partial: "/ranking/rank", locals: { rankings: "rankings.general_chart" } %>
-<%#= render partial: "/ranking/rank", locals: { rankings: "rankings.monthly_general_rank" } %>
 
 </div>
