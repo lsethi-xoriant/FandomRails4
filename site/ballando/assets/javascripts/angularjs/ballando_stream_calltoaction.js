@@ -109,4 +109,10 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     }
   };
 
+  $window.updateUserRewardInView = function(counter) {
+    try {
+      window.parent.updateIframeProfileWidget("+" + counter + "<span class=\"glyphicon glyphicon-star\"></span>");
+    } catch(err) { }
+  };
+
 }
