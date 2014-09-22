@@ -382,21 +382,31 @@ module RewardingSystemHelper
   end
   
   def compute_and_save_outcome(user_interaction, rules_buffer = nil)
-    benchmark("Compute and save outcome") do
-      outcome = compute_outcome(user_interaction, rules_buffer)
-      log_outcome(outcome)
-      if outcome.reward_name_to_counter.any? || outcome.unlocks.any?
-        log_info("reward event", :outcome => outcome)
-        user = user_interaction.user
-        outcome.reward_name_to_counter.each do |reward_name, reward_counter|
-          UserReward.assign_reward(user, reward_name, reward_counter, request.site)
-        end          
-        outcome.unlocks.each do |reward_name|
-          UserReward.unlock_reward(user, reward_name)
-        end          
-      end
-      outcome
+    start_time = Time.now.utc
+    outcome = compute_outcome(user_interaction, rules_buffer)
+    total_time = Time.now.utc - start_time
+
+    log_outcome(outcome)
+    if outcome.reward_name_to_counter.any? || outcome.unlocks.any?
+  
+      log_synced("assigning reward to user", { 
+        'time' => total_time, 
+        'cta' => user_interaction.interaction.call_to_action.name, 
+        'interaction' => user_interaction.interaction.id, 
+        'user' => user_interaction.user.username, 
+        'outcome_rewards' => outcome.reward_name_to_counter, 
+        'outcome_unlocks' => outcome.unlocks.to_a })
+      
+      log_info("reward event", :outcome => outcome)
+      user = user_interaction.user
+      outcome.reward_name_to_counter.each do |reward_name, reward_counter|
+        UserReward.assign_reward(user, reward_name, reward_counter, request.site)
+      end          
+      outcome.unlocks.each do |reward_name|
+        UserReward.unlock_reward(user, reward_name)
+      end          
     end
+    outcome
   end
 
   def get_mocked_user_interaction(interaction, user, interaction_is_correct)
@@ -454,13 +464,24 @@ module RewardingSystemHelper
   #   user - the user performing the interaction; if nil or anonymous, the context of the interaction will be reset (counters and rewards)
   #   interaction_is_correct - specifies if the interaction should be treated as "correct" (i.e. givin more points), for example a correct trivia answer.
   def predict_outcome(interaction, user, interaction_is_correct)
-    benchmark("Predict outcome") do
-      user_interaction = get_mocked_user_interaction(interaction, user, interaction_is_correct)
-      context = prepare_rules_and_context(user_interaction, nil)
-      outcome = context.compute_outcome_just_for_interaction(user_interaction)
-      log_outcome(outcome)
-      outcome
-    end
+    start_time = Time.now.utc
+    
+    user_interaction = get_mocked_user_interaction(interaction, user, interaction_is_correct)
+    context = prepare_rules_and_context(user_interaction, nil)
+    outcome = context.compute_outcome_just_for_interaction(user_interaction)
+
+    total_time = Time.now.utc - start_time
+    
+    log_outcome(outcome)
+    log_info("predict interaction outcome", { 
+      'time' => total_time, 
+      'cta' => interaction.call_to_action.name,
+      'interaction' => interaction.id, 
+      'user' => user_interaction.user.username, 
+      'outcome_rewards' => outcome.reward_name_to_counter, 
+      'outcome_unlocks' => outcome.unlocks.to_a })
+
+    outcome
   end
 
   # Predicts the maximun outcome of a CTA.
@@ -499,15 +520,16 @@ module RewardingSystemHelper
 
       end
       
+      log_outcome(total_outcome)
+
       total_time = Time.now.utc - start_time
       log_info("predict max cta outcome", { 
         'time' => total_time, 
         'cta' => cta.name, 
         'user' => user_interaction.user.username, 
         'outcome_rewards' => total_outcome.reward_name_to_counter, 
-        'outcome_unlocks' => total_outcome.unlocks.any? ? total_outcome.unlocks : [] })
+        'outcome_unlocks' => total_outcome.unlocks.to_a })
                
-      log_outcome(total_outcome)
       [total_outcome, interaction_outcomes, sorted_interactions]
     end
   end
