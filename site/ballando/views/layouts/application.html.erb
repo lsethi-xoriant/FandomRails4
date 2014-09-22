@@ -163,12 +163,12 @@
       $.ajax({
         type: "POST",
         url: "/users/rai/sign_in_from_provider/create",
-        data: { user: tmp },
-        success: function(user) {
+        data: { user: user },
+        success: function(data) {
           if(data.errors) {
             $("#form-errors").html(data.errors);
           } else {
-            window.top.location(data.connect_from_page);
+            window.top.location.href = data.connect_from_page;
           }
         }
       });
