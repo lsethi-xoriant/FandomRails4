@@ -98,7 +98,7 @@ module ApplicationHelper
       else
         UserCounter.update_all_counters(user_interaction, user)
 
-        if interaction.resource_type.downcase == "vote"
+        if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "check" 
           user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
         
           outcome = compute_and_save_outcome(user_interaction)
