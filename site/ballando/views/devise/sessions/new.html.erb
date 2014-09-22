@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-5 col-sm-offset-1">
         <div class="row">      
-          <%= form_for resource, :url => "/users/rai/sign_in/create" do |f| %>
+          <%= form_for resource, :url => "/users/rai/sign_in/create", html: { :target => "_top" } do |f| %>
             <div class="col-sm-12">
               <p>Accedi con il tuo profilo <img src="/assets/rai-tv.png" class="img-responsive" style="display: inline-block" /></p>
               <p id="form-errors"><%= flash[:error] %></p>
