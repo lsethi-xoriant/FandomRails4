@@ -227,7 +227,8 @@ Fandom::Application.routes.draw do
   match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
   match "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
 
-  match "profile", :to => "profile#show"
+  match "/profile", :to => "profile#badges"
+
   match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
   match "get_overvideo_during_interaction", :to => "call_to_action#get_overvideo_during_interaction", defaults: { format: 'json' }
