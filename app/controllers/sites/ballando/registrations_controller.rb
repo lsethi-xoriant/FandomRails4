@@ -20,7 +20,7 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
         fandom_play_login(user)
         create
       else
-        @error = rai_response_json["authMyRaiTv"]
+        @error = rai_response_json["authMyRaiTv"] == "USERALREADYEXIST" ? "Username o email già utilizzati" : rai_response_json["authMyRaiTv"]
         render template: "/devise/registrations/new", locals: { resource: user }
       end
 
