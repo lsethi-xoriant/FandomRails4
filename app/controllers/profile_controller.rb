@@ -10,7 +10,7 @@ class ProfileController < ApplicationController
   def check_user_logged
     if !current_user
       cookies[:connect_from_page] = request.url      
-      redirect_to "/users/sign_up"
+      redirect_to "/users/sign_in"
     end
   end
 
