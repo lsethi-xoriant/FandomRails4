@@ -15,6 +15,16 @@ button, h1, h2, h3, h4, h5, h6, li {
     font-family: "Roboto", helvetica, arial, sans-serif;
 }
 
+.panel-card {
+    padding: 3px;
+}
+
+.panel-shadow {
+    -webkit-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+    box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+}
+
 .iframe-profile-avatar {
     border: 2px solid #fff; 
     width: 100%; 
@@ -90,9 +100,10 @@ h1, h2, h3 {
 }
 
 .calltoaction-cover {
-    width: 100%; 
-    top: 0; 
-    bottom: 0;
+    top: 3px; 
+    bottom: 3px;
+    left: 3px;
+    right: 3px;
     position: absolute; 
     z-index: 10;
     background-position: top center; 
@@ -836,11 +847,6 @@ span.notify {
     .hidden-xs {
         h3 { margin-top:4px; }
     }
-    .panel.cta-stream {
-        .panel-body {
-            padding: 0; //padding: 5px 0 5px 5px;
-        }
-    }
 
     .panel.cta-page {
         margin-top:15px;
@@ -1224,13 +1230,6 @@ height: 100%;
             }
         }
     }
-    .cta {
-        .panel.cta-stream {
-            .panel-body {
-                padding: 0;
-            }
-        }
-    }
     .calltoaction-cover {
         button {
             margin-top: 0;
@@ -1422,4 +1421,294 @@ height: 100%;
   50%, 100% {
     opacity: 0;
   }
+}
+
+/* BUTTONS CUSTOM */
+
+/* DEFAULT HOME PAGE */
+
+.btn-2-a:link {
+  text-decoration: none;
+  color: #fff;
+}
+
+.btn-2-a:visited {
+  text-decoration: none;
+  color: #fff;
+}
+
+.btn-2-a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.btn-2-a:active {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.btn-2 {   
+    padding: 3px 0 2px 0; 
+    font-size: 18px;
+    font-weight: bold;
+    width: 100%;
+    position: relative;
+    min-height: 35px;
+    cursor: pointer;
+    border-radius: 3px;
+    color: #fff;
+    border: 0px solid #000;
+    box-shadow: 0 4px 0 #9C1A06;
+    background-color: #D6260B;
+    text-align: center;
+}
+
+.btn-2.btn-2-small {
+  font-size: 10px;
+  min-height: 0;
+}
+
+/* SQUARE BUTTON */
+
+.btn-2.btn-2-versus {
+  font-size: 12px;
+  padding-bottom: 35%;
+  padding-top: 35%;
+  box-shadow: 0 4px 0 #363636;
+  background-color: #969696;
+}
+
+.btn-2.btn-2-versus.active {
+    top: 3px;
+    box-shadow: 0 1px 0 #363636;
+}
+
+.btn-2.btn-2-versus.btn-2-versus-orange.active {
+    top: 3px;
+    background-color: #FF9D00;
+    box-shadow: 0 1px 0 #825000;
+}
+
+/* DEFAULT BUTTON */
+
+.btn-2.btn-2-default, .btn-2.btn-2-login {
+  font-size: 14px;
+  box-shadow: 0 4px 0 #363636;
+  background-color: #969696;
+  min-height: 30px;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
+.btn-2.btn-2-fb {
+  font-size: 14px;
+  box-shadow: 0 4px 0 #24417D;
+  background-color: #47639e;
+  min-height: 30px;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
+.btn-2.btn-2-tt {
+  font-size: 14px;
+  box-shadow: 0 4px 0 #2B86CC;
+  background-color: #55acee;
+  min-height: 30px;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
+.btn-2.btn-2-default.active {
+  top: 3px;
+  box-shadow: 0 1px 0 #363636;
+}
+
+.btn-2.btn-2-default.btn-2-default-orange.active {
+  background-color: #FF9D00; /* ORANGE */
+  box-shadow: 0 1px 0 #825000; /* DARK ORANGE */
+}
+
+.btn-2.btn-2-default-success {
+  box-shadow: 0 4px 0 #438A3D;
+  background-color: #1EB510;
+}
+
+.btn-2.btn-2-default-success.active {
+    top: 3px;
+    background-color: #1EB510;
+    box-shadow: 0 1px 0 #438A3D;
+}
+
+.btn-2.btn-2-default-danger {
+  box-shadow: 0 4px 0 #9C1A06;
+  background-color: #D6260B;
+}
+
+.btn-2.btn-2-default-danger.active {
+    top: 3px;
+    background-color: #D6260B;
+    box-shadow: 0 1px 0 #9C1A06;
+}
+
+/* MOBILE */
+@media (min-width: $screen-sm-min) {
+  .btn-2:hover {
+    background-color: #D63820;
+    border: 0px solid #000;
+  }
+
+  .btn-2:active {
+      top: 3px;
+      box-shadow: 0 1px 0 #9C1A06;
+  }
+
+  .btn-2.btn-2-versus:hover {
+    background-color: #FF9D00;
+    box-shadow: 0 4px 0 #825000;
+  }
+
+  .btn-2.btn-2-versus.active:hover {
+    background-color: #969696; /* GRAY */
+    box-shadow: 0 1px 0 #363636; /* DARK GRAY */
+  }
+
+  .btn-2.btn-2-versus:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #363636;
+  }
+
+  .btn-2.btn-2-versus:active:hover {
+    top: 3px;
+    box-shadow: 0 1px 0 #825000;
+  }
+
+  .btn-2.btn-2-default:hover {
+    background-color: #FF9D00;
+    box-shadow: 0 4px 0 #825000;
+  }
+
+  .btn-2.btn-2-login:hover {
+    background-color: #ABABAB;
+    box-shadow: 0 4px 0 #363636;
+  }
+
+  .btn-2.btn-2-tt:hover {
+    background-color: #6BB2E8;
+    box-shadow: 0 4px 0 #2B86CC;
+  }
+
+  .btn-2.btn-2-fb:hover {
+    background-color: #4669B3;
+    box-shadow: 0 4px 0 #24417D;
+  }
+
+  .btn-2.btn-2-default.active:hover {
+    background-color: #969696; /* GRAY */
+    box-shadow: 0 1px 0 #363636; /* DARK GRAY */
+  }
+
+  .btn-2.btn-2-default:active, .btn-2.btn-2-default.active {
+    top: 3px;
+    box-shadow: 0 1px 0 #363636;
+  }
+
+  .btn-2.btn-2-login:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #363636;
+  }
+
+  .btn-2.btn-2-tt:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #2B86CC;
+  }
+
+  .btn-2.btn-2-fb:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #24417D;
+  }
+
+  .btn-2.btn-2-default:active:hover {
+    top: 3px;
+    box-shadow: 0 1px 0 #825000;
+  }
+
+  .btn-2.btn-2-default-success.active:hover {
+    box-shadow: 0 1px 0 #438A3D; /* GREEN */
+    background-color: #1EB510; /* DARK GREEN */
+  }
+
+  .btn-2.btn-2-default-success:hover {
+    background-color: #4EC942;
+    box-shadow: 0 4px 0 #438A3D;
+  }
+
+  .btn-2.btn-2-default-danger:active {
+    top: 3px;
+    background-color: #D6260B;
+    box-shadow: 0 1px 0 #9C1A06;
+  }
+
+  .btn-2.btn-2-default-danger.active:hover {
+    box-shadow: 0 1px 0 #9C1A06; /* RED */ 
+    background-color: #D6260B; /* DARK RED */
+  }
+
+  .btn-2.btn-2-default-danger:hover {
+    background-color: #D63820;
+    box-shadow: 0 4px 0 #9C1A06;
+  }
+
+  .btn-2.btn-2-default-success:active {
+      top: 3px;
+      background-color: #1EB510;
+      box-shadow: 0 1px 0 #438A3D;
+  }
+}
+
+/* BOOTSTRAP BUTTON */
+
+.btn-append { 
+  color: #000000; 
+  background-color: #777C87; 
+  border-color: #777C87; 
+} 
+ 
+.btn-append:hover, 
+.btn-append:focus, 
+.btn-append:active, 
+.btn-append.active, 
+.open .dropdown-toggle.btn-append { 
+  color: #000000; 
+  background-color: #91949C; 
+  border-color: #777C87; 
+} 
+ 
+.btn-append:active, 
+.btn-append.active, 
+.open .dropdown-toggle.btn-append { 
+  background-image: none; 
+} 
+ 
+.btn-append.disabled, 
+.btn-append[disabled], 
+fieldset[disabled] .btn-append, 
+.btn-append.disabled:hover, 
+.btn-append[disabled]:hover, 
+fieldset[disabled] .btn-append:hover, 
+.btn-append.disabled:focus, 
+.btn-append[disabled]:focus, 
+fieldset[disabled] .btn-append:focus, 
+.btn-append.disabled:active, 
+.btn-append[disabled]:active, 
+fieldset[disabled] .btn-append:active, 
+.btn-append.disabled.active, 
+.btn-append[disabled].active, 
+fieldset[disabled] .btn-append.active { 
+  background-color: #777C87; 
+  border-color: #777C87; 
+} 
+ 
+.btn-append .badge { 
+  color: #777C87; 
+  background-color: #000000; 
 }
