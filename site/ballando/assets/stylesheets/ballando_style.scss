@@ -1115,6 +1115,10 @@ height: 100%;
   
 }
 
+div.progress{
+  height: 10px;
+}
+
 //MOKU MENU SLIDER
 .menu-area{
   margin-bottom: 20px;
@@ -1234,6 +1238,12 @@ height: 100%;
         button {
             margin-top: 0;
         }
+    }
+    
+    .profile-bar{
+      .col-sm-3{
+        border: none !important;
+      }
     }
 }
 

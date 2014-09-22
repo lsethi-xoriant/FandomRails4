@@ -131,7 +131,9 @@
           <div class="form-group">
             <label class="text-input">Immagine reward perso</label>
             <div class="fileupload fileupload-new" data-provides="fileupload">
-              <div class="fileupload-preview thumbnail" style="width: 100px; height: 100px; line-height: 20px;"></div>
+              <div class="fileupload-preview thumbnail" style="width: 100px; height: 100px; line-height: 20px;">
+              	<img src="<%= @reward.not_winnable_image.url %>">
+              </div>
               <div>
                 <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
                 <span class="fileupload-exists">Change</span><%= f.file_field :not_winnable_image  %></span>

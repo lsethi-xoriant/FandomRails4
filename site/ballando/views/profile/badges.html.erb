@@ -6,8 +6,9 @@
     <div class="col-md-12">
 	  <%= render partial: "profile/profile_header" %>
       <%= render partial: "profile/profile_navbar", locals: { page: "badges" } %>
+      <% rewards = order_rewards(@rewards_to_show.to_a, REWARD_SORT_BY_TITLE) %>
       <% if @are_properties_used %>
-        <% @rewards_to_show.each do |property, rewards| %>
+        <% rewards.each do |property, rewards| %>
           <div class="row badges text-center">
             <% rewards.each do |reward| %>
               <%= render partial: "/profile/badge", locals: { reward: reward } %>
@@ -16,7 +17,7 @@
         <% end %>
       <% else %>
         <div class="row badges text-center">
-          <% @rewards_to_show.each do |reward| %>
+          <% rewards.each do |reward| %>
             <%= render partial: "/profile/badge", locals: { reward: reward } %>
           <% end %>
         </div>

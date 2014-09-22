@@ -22,7 +22,7 @@ module RankingHelper
     rank.user_to_position[current_user.id]
   end
   
-  def get_weekly_points(period_kind, reward_name)
+  def get_reward_points_in_period(period_kind, reward_name)
     period = get_current_periodicities[period_kind]
     reward = cache_short("#{reward_name}") { Reward.find_by_name(reward_name) }
     user_reward = UserReward.where("reward_id = ? and period_id = ? and user_id = ?", reward.id, period.id, current_user.id).first

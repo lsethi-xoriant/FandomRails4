@@ -49,4 +49,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
   
   BALLANDO_DAILY_CHECK_CAP = 10
   
+  REWARD_SORT_BY_VALIDITY_END = "valid_to"
+  REWARD_SORT_BY_NAME = "name"
+  REWARD_SORT_BY_TITLE = "title"
+  
 end
