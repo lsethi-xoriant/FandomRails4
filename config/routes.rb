@@ -176,7 +176,8 @@ Fandom::Application.routes.draw do
         match "/users/rai/sign_in/create", :to => "sessions#ballando_create"
         match "/users/rai/sign_in_from_provider/create", :to => "sessions#ballando_create_from_provider", defaults: { format: 'json' }
 
-        match "/iframe/profile", :to => "iframe_profile#show"
+        match "/profile/widget", :to => "iframe_profile#show"
+        
         match "/iframe/check", :to => "iframe_check#show"
         match "/iframe/get_check", :to => "iframe_check#get_check_template"
         match "/iframe/do_check", :to => "iframe_check#do_chek"
