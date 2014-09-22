@@ -215,3 +215,51 @@
     background-color: #D6260B;
     box-shadow: 0 1px 0 #9C1A06;
 }
+
+/* BOOTSTRAP BUTTON */
+
+.btn-append { 
+  color: #000000; 
+  background-color: #777C87; 
+  border-color: #777C87; 
+} 
+ 
+.btn-append:hover, 
+.btn-append:focus, 
+.btn-append:active, 
+.btn-append.active, 
+.open .dropdown-toggle.btn-append { 
+  color: #000000; 
+  background-color: #91949C; 
+  border-color: #777C87; 
+} 
+ 
+.btn-append:active, 
+.btn-append.active, 
+.open .dropdown-toggle.btn-append { 
+  background-image: none; 
+} 
+ 
+.btn-append.disabled, 
+.btn-append[disabled], 
+fieldset[disabled] .btn-append, 
+.btn-append.disabled:hover, 
+.btn-append[disabled]:hover, 
+fieldset[disabled] .btn-append:hover, 
+.btn-append.disabled:focus, 
+.btn-append[disabled]:focus, 
+fieldset[disabled] .btn-append:focus, 
+.btn-append.disabled:active, 
+.btn-append[disabled]:active, 
+fieldset[disabled] .btn-append:active, 
+.btn-append.disabled.active, 
+.btn-append[disabled].active, 
+fieldset[disabled] .btn-append.active { 
+  background-color: #777C87; 
+  border-color: #777C87; 
+} 
+ 
+.btn-append .badge { 
+  color: #777C87; 
+  background-color: #000000; 
+}
