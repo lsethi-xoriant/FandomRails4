@@ -102,8 +102,11 @@ def generate_sql_insert_values_for_event(process_file_path)
   process_file_descriptor.each_line do |event_log_line|
     event_log_line_json = JSON.parse(event_log_line)
 
-    tenant = event_log_line_json["tenant"]
-    values_for_event << "(#{generate_values_for_event_log_line(event_log_line_json)})"
+    unless event_log_line_json["data"]["already_synced"]
+      tenant = event_log_line_json["tenant"]
+      values_for_event << "(#{generate_values_for_event_log_line(event_log_line_json)})"
+    end
+
   end
 
   if values_for_event.any? && tenant.present?

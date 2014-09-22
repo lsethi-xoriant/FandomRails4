@@ -3,27 +3,27 @@ module EventHandlerHelper
   @@process_file_descriptor = nil
 
   def log_synced(msg, data) 
-    log_event(msg, "audit", true, data)
+    log_event(msg, "audit", true, (data || {}))
   end
 
   def log_audit(msg, data)
-    log_event(msg, "audit", false, data)
+    log_event(msg, "audit", false, (data || {}))
   end
 
   def log_info(msg, data)
-    log_event(msg, "info", false, data)
+    log_event(msg, "info", false, (data || {}))
   end
 
   def log_error(msg, data)
-    log_event(msg, "error", false, data)
+    log_event(msg, "error", false, (data || {}))
   end
 
   def log_warn(msg, data)
-    log_event(msg, "warn", false, data)
+    log_event(msg, "warn", false, (data || {}))
   end
 
   def log_debug(msg, data)
-    log_event(msg, "debug", false, data)
+    log_event(msg, "debug", false, (data || {}))
   end
 
   private
@@ -36,6 +36,8 @@ module EventHandlerHelper
     caller_data = caller[1]
     
     timestamp = calculate_event_timestamp()
+
+    data = data.merge("already_synced" => force_saving_in_db)
 
     begin 
 
@@ -96,12 +98,10 @@ module EventHandlerHelper
       Event.create(session_id: session_id, pid: pid, message: msg, request_uri: request_uri, file_name: file_name, 
         method_name: method_name, line_number: line_number, data: data.to_json, timestamp: timestamp, 
         level: level, tenant: tenant, user_id: user_id)
-    else
-
-      may_move_and_open_new_process_log_file(pid, timestamp)
-      update_process_log_file(logger_production.to_json)
-  
     end
+
+    may_move_and_open_new_process_log_file(pid, timestamp)
+    update_process_log_file(logger_production.to_json)
 
   end  
 
