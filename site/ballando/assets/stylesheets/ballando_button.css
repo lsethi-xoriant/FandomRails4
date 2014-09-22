@@ -53,7 +53,7 @@
     box-shadow: 0 1px 0 #9C1A06;
 }
 
-/* VERSUS */
+/* SQUARE BUTTON */
 
 .btn-2.btn-2-versus {
   font-size: 12px;
@@ -89,9 +89,9 @@
     box-shadow: 0 1px 0 #825000;
 }
 
-/* TRIVIA */
+/* DEFAULT BUTTON */
 
-.btn-2.btn-2-default {
+.btn-2.btn-2-default, .btn-2.btn-2-login {
   font-size: 14px;
   box-shadow: 0 4px 0 #363636;
   background-color: #969696;
@@ -100,9 +100,42 @@
   margin-bottom: 10px;
 }
 
+.btn-2.btn-2-fb {
+  font-size: 14px;
+  box-shadow: 0 4px 0 #24417D;
+  background-color: #47639e;
+  min-height: 30px;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
+.btn-2.btn-2-tt {
+  font-size: 14px;
+  box-shadow: 0 4px 0 #2B86CC;
+  background-color: #55acee;
+  min-height: 30px;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
 .btn-2.btn-2-default:hover {
   background-color: #FF9D00;
-  box-shadow: 0 4px 0 #825000;
+  box-shadow: 0 4px 0 #24417D;
+}
+
+.btn-2.btn-2-login:hover {
+  background-color: #ABABAB;
+  box-shadow: 0 4px 0 #363636;
+}
+
+.btn-2.btn-2-tt:hover {
+  background-color: #6BB2E8;
+  box-shadow: 0 4px 0 #2B86CC;
+}
+
+.btn-2.btn-2-fb:hover {
+  background-color: #4669B3;
+  box-shadow: 0 4px 0 #24417D;
 }
 
 .btn-2.btn-2-default.active:hover {
@@ -113,6 +146,22 @@
 .btn-2.btn-2-default:active, .btn-2.btn-2-default.active {
     top: 3px;
     box-shadow: 0 1px 0 #363636;
+}
+
+.btn-2.btn-2-login:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #363636;
+}
+
+
+.btn-2.btn-2-tt:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #2B86CC;
+}
+
+.btn-2.btn-2-fb:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #24417D;
 }
 
 .btn-2.btn-2-default.btn-2-default-orange.active {

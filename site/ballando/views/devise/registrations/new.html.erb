@@ -3,76 +3,88 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12 cta">
-            <div class="row">      
-              <div class="col-sm-8 col-md-offset-2">
-                <p style="float: left">Registrati a <img src="/assets/rai-tv.png" class="img-responsive" style="display: inline-block" /></p>
-                <p style="float: right">Sei già registrato? <a href="/users/sign_in" class="btn btn-default">LOGIN</a></p>
-                <div style="clear: both;"></div>
-                <%= form_for resource, :url => "/users/rai/sign_up/create" do |f| %> 
-
-                  <% if resource.errors.any? %>
-                    <div style="margin-top: 10px; margin-bottom: 10px;">
-                      <p style="font-size: 15px;">Errori nella compilazione del modulo:</p>
-                      <ul>
-                        <% resource.errors.full_messages.each do |error_message| %>
-                            <li><%= error_message %></li>
-                        <% end %>
-                      </ul>
-                    </div>
-                  <% end %>
-
-                  <% if @error %>
-                    <div style="margin-top: 10px; margin-bottom: 10px;">
-                      <p style="font-size: 15px;">Errore: <%= @error %></p>
-                    </div>
-                  <% end %>
-
-                  <div class="form-group text-left">
-                    <!--<label for="exampleInputEmail1">Email address</label>-->
-                    <%= f.text_field :username, :class => "form-control", :placeholder => "Username" %>
-                  </div>
-                  <div class="form-group text-left">
-                    <!--<label for="exampleInputEmail1">Email address</label>-->
-                    <%= f.text_field :first_name, :class => "form-control", :placeholder => "Nome" %>
-                  </div>
-                  <div class="form-group text-left">
-                    <!--<label for="exampleInputPassword1">Password</label>-->
-                    <%= f.text_field :last_name, :class => "form-control", :placeholder => "Cognome" %>
-                  </div>
-                  <div class="form-group text-left">
-                    <!--<label for="exampleInputEmail1">Email address</label>-->
-                    <%= f.text_field :email, :class => "form-control", :placeholder => "Email" %>
-                  </div>
-                  <div class="form-group text-left">
-                    <!--<label for="exampleInputPassword1">Password</label>-->
-                    <%= f.password_field :password, :class => "form-control", :placeholder => "Password" %>
-                  </div>
-
-                  <div class="form-group text-left">
-                    <!--<label for="exampleInputPassword1">Password</label>-->
-                    <%= f.password_field :password_confirmation, :class => "form-control", :placeholder => "Conferma password" %>
-                  </div>
-
-                  <div class="checkbox text-left">
-                    <label><%= f.check_box :privacy %> Accetto i <a href="#" data-toggle="modal" data-target="#privacy">termini e le condizioni di utilizzo</a></label>
-                  </div>
-
-                  <div class="checkbox text-left">
-                    <label><%= f.check_box :newsletter %> Desidero registrarmi alla newsletter Rai.tv</label>
-                  </div>
-					<div class="col-sm-6 col-sm-offset-3">
-						<button type="submit" class="btn-2 btn-danger btn-lg btn-block">REGISTRATI</button>
-					</div>
-                <% end %>
-                <p>&nbsp;</p>
-              </div>
-            </div>
+        <div class="row">      
+          <div class="col-sm-4 col-md-offset-2 col-xs-12 col-xs-offset-0" style="margin-bottom: 10px;">
+            <h5>Registrati a <img src="/assets/rai-tv.png" class="img-responsive" style="display: inline-block; padding-left: 5px;" /></h5>
           </div>
+          <div class="col-sm-2 hidden-xs text-right">
+            <h5>Sei già registrato?</h5>
+          </div>
+          <div class="visible-xs col-xs-12 col-xs-offset-0">
+            <h5>Sei già registrato?</h5>
+          </div>
+          <div class="col-sm-2 col-xs-12 col-xs-offset-0" style="margin-bottom: 10px;">
+            <a href="/users/sign_in"><button class="btn-2 btn-2-login">LOGIN</button></a>
+          </div>
+          <div class="col-sm-8 col-sm-offset-2 col-xs-12 col-xs-offset-0">
+            <%= form_for resource, :url => "/users/rai/sign_up/create" do |f| %> 
+
+              <% if resource.errors.any? %>
+                <div style="margin-top: 10px; margin-bottom: 10px;">
+                  <p style="font-size: 15px;">Errori nella compilazione del modulo:</p>
+                  <ul>
+                    <% resource.errors.full_messages.each do |error_message| %>
+                        <li><%= error_message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+
+              <% if @error %>
+                <div style="margin-top: 10px; margin-bottom: 10px;">
+                  <p style="font-size: 15px;">Errore: <%= @error %></p>
+                </div>
+              <% end %>
+
+              <div class="form-group text-left">
+                <!--<label for="exampleInputEmail1">Email address</label>-->
+                <%= f.text_field :username, :class => "form-control", :placeholder => "Username" %>
+              </div>
+              <div class="form-group text-left">
+                <!--<label for="exampleInputEmail1">Email address</label>-->
+                <%= f.text_field :first_name, :class => "form-control", :placeholder => "Nome" %>
+              </div>
+              <div class="form-group text-left">
+                <!--<label for="exampleInputPassword1">Password</label>-->
+                <%= f.text_field :last_name, :class => "form-control", :placeholder => "Cognome" %>
+              </div>
+              <div class="form-group text-left">
+                <!--<label for="exampleInputEmail1">Email address</label>-->
+                <%= f.text_field :email, :class => "form-control", :placeholder => "Email" %>
+              </div>
+              <div class="form-group text-left">
+                <!--<label for="exampleInputPassword1">Password</label>-->
+                <%= f.password_field :password, :class => "form-control", :placeholder => "Password" %>
+              </div>
+
+              <div class="form-group text-left">
+                <!--<label for="exampleInputPassword1">Password</label>-->
+                <%= f.password_field :password_confirmation, :class => "form-control", :placeholder => "Conferma password" %>
+              </div>
+
+              <div class="checkbox text-left">
+                <label><%= f.check_box :privacy %> Accetto i <a href="#" data-toggle="modal" data-target="#privacy">termini e le condizioni di utilizzo</a></label>
+              </div>
+
+              <div class="checkbox text-left">
+                <label><%= f.check_box :newsletter %> Desidero registrarmi alla newsletter Rai.tv</label>
+              </div>
+
+    					<div class="col-sm-6 col-sm-offset-3">
+    						<button type="submit" class="btn-2 btn-danger btn-lg btn-block">REGISTRATI</button>
+    					</div>
+
+            <% end %>
+            <p>&nbsp;</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
-<div class="container-fluid" style="background-color: #fff; padding: 20px 0;">
+
+<div class="container-fluid" style="background-color: #fff; padding-top: 20px; padding-bottom: 20px;">
 	<div class="row disclaimer">
 		<div class="col-md-5 col-md-offset-3">
 			<p>Registrandoti a Rai.tv potrai fruire di servizi esclusivi come:
@@ -86,12 +98,45 @@
 	</div>
 </div>
 
-<div class="container-fluid" style="padding: 10px 0;">
+<div class="container-fluid" style="padding-top: 10px;">
 	<div class="row disclaimer">
-		<div class="col-sm-5 col-md-offset-3">
-			<p class="text-center">&copy; Ballando con le stelle. Tutti i diritti riservati.</p>
+		<div class="col-sm-5 col-sm-offset-3 col-xs-12 text-center">
+			<p>&copy; Ballando con le stelle. Tutti i diritti riservati.</p>
 		</div>
 	</div>
+</div>
+
+<!-- PRIVACY MODAL -->
+<div class="modal fade" id="privacy" tabindex="-1" role="dialog" aria-labelledby="Termini e condizioni" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4>Termini e condizioni di utilizzo</h4>
+      </div>
+      <div class="modal-body">
+        <p class="small">
+        	Ai sensi dell'Informativa ex art. 13 del Decreto Legislativo 30 Giugno 2003 n. 196, RAINET S.p.A. dichiara che i dati personali degli utenti forniti con le schede di registrazione sono trattati in forma automatizzata al solo fine di permettere all'utente l'accesso e l'utilizzo del servizio di MyRai.tv. 
+
+          L'utente acconsente espressamente che RAINET, o i soggetti da questa designati, possano trattare i dati registrati e quelli relativi all'utilizzo del Servizio da parte dell'utente per le finalità di accesso ed utilizzo dei servizi personalizzati offerti dal sito, di informazioni commerciali o l'invio di messaggi promozionali, se autorizzati espressamente dall'utente. 
+
+          L'utente acconsente che i dati registrati possano essere comunicati a terzi soggetti qualora questi svolgano operazioni di trattamento per conto di RAINET S.p.A. o per conto dei quali RAINET svolge operazioni di trattamento. 
+
+          RAINET non diffonderà né rivelerà a nessuno i dati personali dell'utente, senza il suo preventivo consenso, a meno che non sia in buona fede convinta che tale azione sia necessaria per: - conformarsi a prescrizioni di legge o soddisfare procedimenti; - proteggere e difendere i propri diritti da violazioni commesse dall'utente dei quali dati si tratta; - motivi contrattuali; - agire a protezione degli interessi dei propri utenti o di altri soggetti. 
+
+          RAINET informa l'utente che il conferimento dei dati relativi ad user name e ID è indispensabile ai fini della prestazione dei Servizi offerti dal Sito e che la mancata prestazione del consenso sarà di impedimento alla prestazione dei Servizi. 
+
+          Titolare del trattamento è RAINET S.p.A., Via Teulada 66, 00195 Roma. 
+
+          L'utente può esercitare i diritti di cui all'art. 7 del Decreto Legislativo 30 Giugno 2003 n. 196 (accesso, correzione, cancellazione, opposizione al trattamento, ecc...) rivolgendosi a RAINET S.p.A., Via Teulada 66, 00195 Roma. 
+
+          Dobbiamo anche informarti del fatto che gli applicativi software da noi utilizzati possono contenere la tecnologia "cookie". I cookie hanno principalmente la funzione di agevolare la navigazione da parte dell'utente. I cookie potranno fornire informazioni sulla navigazione all'interno del nostro portale permettono il funzionamento di alcuni servizi che richiedono l'identificazione del percorso dell'utente attraverso diverse pagine del portale. I cookie presenti negli applicativi software utilizzati da RAINET sono di tipo anonimo e non sono riconducibili ai dati personali dell'utente. Per qualsiasi accesso al portale, indipendentemente dalla presenza di un cookie, noi registriamo il tipo di browser (es. Internet Explorer, Firefox, ecc...), il sistema operativo (es. Linux, Windows, Macintosh), HOST e URL di provenienza del visitatore, oltre ai dati sulla pagina richiesta. Manifestazione del consenso al trattamento dei dati personali ex Decreto Legislativo 30 Giugno 2003 n. 196: 
+
+          Preso atto delle informazioni ricevute mediante l'Informativa di cui sopra, con l'indicazione dell'indirizzo di posta elettronica manifesto la libera disponibilità e rilascio l'incondizionato consenso a che i miei dati personali vengano trattati da RAINET S.p.A. per poter essere contattato dalla redazione MyRai.tv.
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">
@@ -101,36 +146,3 @@
   });
 
 </script>
-
-<!-- Modal -->
-<div class="modal fade" id="privacy" tabindex="-1" role="dialog" aria-labelledby="Termini e condizioni" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Termini e condizioni di utilizzo</h4>
-      </div>
-      <div class="modal-body">
-        <p class="small">
-        	Ai sensi dell'Informativa ex art. 13 del Decreto Legislativo 30 Giugno 2003 n. 196, RAINET S.p.A. dichiara che i dati personali degli utenti forniti con le schede di registrazione sono trattati in forma automatizzata al solo fine di permettere all'utente l'accesso e l'utilizzo del servizio di MyRai.tv. 
-
-L'utente acconsente espressamente che RAINET, o i soggetti da questa designati, possano trattare i dati registrati e quelli relativi all'utilizzo del Servizio da parte dell'utente per le finalità di accesso ed utilizzo dei servizi personalizzati offerti dal sito, di informazioni commerciali o l'invio di messaggi promozionali, se autorizzati espressamente dall'utente. 
-
-L'utente acconsente che i dati registrati possano essere comunicati a terzi soggetti qualora questi svolgano operazioni di trattamento per conto di RAINET S.p.A. o per conto dei quali RAINET svolge operazioni di trattamento. 
-
-RAINET non diffonderà né rivelerà a nessuno i dati personali dell'utente, senza il suo preventivo consenso, a meno che non sia in buona fede convinta che tale azione sia necessaria per: - conformarsi a prescrizioni di legge o soddisfare procedimenti; - proteggere e difendere i propri diritti da violazioni commesse dall'utente dei quali dati si tratta; - motivi contrattuali; - agire a protezione degli interessi dei propri utenti o di altri soggetti. 
-
-RAINET informa l'utente che il conferimento dei dati relativi ad user name e ID è indispensabile ai fini della prestazione dei Servizi offerti dal Sito e che la mancata prestazione del consenso sarà di impedimento alla prestazione dei Servizi. 
-
-Titolare del trattamento è RAINET S.p.A., Via Teulada 66, 00195 Roma. 
-
-L'utente può esercitare i diritti di cui all'art. 7 del Decreto Legislativo 30 Giugno 2003 n. 196 (accesso, correzione, cancellazione, opposizione al trattamento, ecc...) rivolgendosi a RAINET S.p.A., Via Teulada 66, 00195 Roma. 
-
-Dobbiamo anche informarti del fatto che gli applicativi software da noi utilizzati possono contenere la tecnologia "cookie". I cookie hanno principalmente la funzione di agevolare la navigazione da parte dell'utente. I cookie potranno fornire informazioni sulla navigazione all'interno del nostro portale permettono il funzionamento di alcuni servizi che richiedono l'identificazione del percorso dell'utente attraverso diverse pagine del portale. I cookie presenti negli applicativi software utilizzati da RAINET sono di tipo anonimo e non sono riconducibili ai dati personali dell'utente. Per qualsiasi accesso al portale, indipendentemente dalla presenza di un cookie, noi registriamo il tipo di browser (es. Internet Explorer, Firefox, ecc...), il sistema operativo (es. Linux, Windows, Macintosh), HOST e URL di provenienza del visitatore, oltre ai dati sulla pagina richiesta. Manifestazione del consenso al trattamento dei dati personali ex Decreto Legislativo 30 Giugno 2003 n. 196: 
-
-Preso atto delle informazioni ricevute mediante l'Informativa di cui sopra, con l'indicazione dell'indirizzo di posta elettronica manifesto la libera disponibilità e rilascio l'incondizionato consenso a che i miei dati personali vengano trattati da RAINET S.p.A. per poter essere contattato dalla redazione MyRai.tv.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>

@@ -13,7 +13,7 @@ class Sites::Ballando::SessionsController < SessionsController
 
         if rai_response_user.empty?
           flash[:error] = "Username o password errati"
-          redirect_to "/users/sign_up" and return
+          redirect_to "/users/sign_in" and return
         end
 
         if rai_response_user["authMyRaiTv"] == "OK"
@@ -35,17 +35,17 @@ class Sites::Ballando::SessionsController < SessionsController
           redirect_after_successful_login
         else
           flash[:error] = rai_response_user["authMyRaiTv"]
-          redirect_to "/users/sign_up"
+          redirect_to "/users/sign_in"
         end
 
       else
         flash[:error] = "RAI registrationUserFromGigya exception"
-        render template: "/devise/registrations/new", locals: { resource: User.new }
+        render template: "/devise/sessions/new", locals: { resource: User.new }
       end
 
     rescue Exception => exception
       flash[:error] = "RAI registrationUserFromGigya exception"
-      redirect_to "/users/sign_up"
+      redirect_to "/users/sign_in"
     end
   end
 
