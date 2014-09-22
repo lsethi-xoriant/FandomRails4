@@ -164,7 +164,7 @@
         type: "POST",
         url: "/users/rai/sign_in_from_provider/create",
         data: { user: user },
-        success: function(user) {
+        success: function(data) {
           if(data.errors) {
             $("#form-errors").html(data.errors);
           } else {
