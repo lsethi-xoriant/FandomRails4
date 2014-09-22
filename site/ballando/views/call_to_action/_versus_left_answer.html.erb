@@ -56,7 +56,7 @@
           </button>
         <% else %>
           <!-- BUTTON ACTIVE -->
-          <button href="javascript: void(0)" style="margin-bottom: 0;" class="btn-2 btn-2-versus <%= "btn-2-versus-orange" if user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)">
+          <button href="javascript: void(0)" style="margin-bottom: 0;" class="btn-2 btn-2-versus <%= "btn-2-versus-orange" if user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
             <%= answer.text %>
           </button>
         <% end %>

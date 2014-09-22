@@ -15,6 +15,13 @@ button, h1, h2, h3, h4, h5, h6, li {
     font-family: "Roboto", helvetica, arial, sans-serif;
 }
 
+.iframe-profile-avatar {
+    border: 2px solid #fff; 
+    width: 100%; 
+    min-width: 25px; 
+    max-width: 80px;
+}
+
 .cover-countdown {
     position: absolute; 
     top: 28px; 
@@ -1302,6 +1309,16 @@ height: 100%;
     /* Remove the bottom border on the jumbotron for visual effect */
     .jumbotron {
         border-bottom: 0;
+    }
+}
+
+/* TINY WIDGET */
+@media (max-width: 200px) {
+    .hidden-xxs {
+        display: none;
+    }
+    .col-xxs-12 {
+        width: 100%;
     }
 }
 
