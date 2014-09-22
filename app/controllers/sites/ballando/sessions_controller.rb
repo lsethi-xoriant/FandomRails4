@@ -42,12 +42,10 @@ class Sites::Ballando::SessionsController < SessionsController
         end
 
       else
-        flash[:error] = "RAI registrationUserFromGigya exception"
         render template: "/devise/sessions/new", locals: { resource: User.new }
       end
 
     rescue Exception => exception
-      flash[:error] = "RAI registrationUserFromGigya exception"
       redirect_to "/users/sign_in"
     end
   end
@@ -96,11 +94,11 @@ class Sites::Ballando::SessionsController < SessionsController
 
   def path_for_redirect_after_successful_login
     if cookies[:connect_from_page].blank?
-      return "/"
+      "/"
     else
       connect_from_page = cookies[:connect_from_page]
       cookies.delete(:connect_from_page)
-      return connect_from_page
+      connect_from_page
     end
   end
 
