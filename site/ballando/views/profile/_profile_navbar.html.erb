@@ -48,7 +48,7 @@
 	        controlNav: false,
 	        directionNav: true,
 	        slideshow: false,
-	        itemWidth: 320,
+	        itemWidth: getItemSize(),//320,
 	        itemMargin: 10,
 	        minItems: 1,
 	        maxItems: 6
@@ -79,9 +79,12 @@
 	}
 	
 	function getItemSize() {
+		return ($(window).innerWidth() / getGridSize()) - 10;
+		/*
 	    if ($(window).innerWidth() < 768)
 	        return 190;
 	    else
 	        return 275;
+	        */
 	}
 </script>
