@@ -89,7 +89,7 @@ def extract_pid_and_timestamp_from_path(process_file_path)
   process_file_name = process_file_path.sub(".log", "").split("/").last
   pid, timestamp, status = process_file_name.split("-")
 
-  [pid, timestamp]
+  [pid.to_i, timestamp]
 end
 
 def generate_sql_insert_values_for_event(process_file_path)

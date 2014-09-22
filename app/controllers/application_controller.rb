@@ -23,7 +23,6 @@ class ApplicationController < ActionController::Base
   end
 
   def index
-    log_synced("prova", ciaociao: 2)
     @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
     @home = true
