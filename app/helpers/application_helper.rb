@@ -268,7 +268,7 @@ module ApplicationHelper
   end
 
 	def get_counter_about_user_reward(reward_name)
-		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").first
+		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}' and period_id IS NULL").first
 		user_reward ? user_reward.counter : 0
 	end
 
