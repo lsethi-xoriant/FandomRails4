@@ -37,8 +37,6 @@ module EventHandlerHelper
     
     timestamp = calculate_event_timestamp()
 
-    data = data.merge("already_synced" => force_saving_in_db)
-
     begin 
 
       case Rails.env  
@@ -98,6 +96,8 @@ module EventHandlerHelper
       Event.create(session_id: session_id, pid: pid, message: msg, request_uri: request_uri, file_name: file_name, 
         method_name: method_name, line_number: line_number, data: data.to_json, timestamp: timestamp, 
         level: level, tenant: tenant, user_id: user_id)
+
+      data = data.merge("already_synced" => force_saving_in_db)
     end
 
     may_move_and_open_new_process_log_file(pid, timestamp)
@@ -190,7 +190,7 @@ module EventHandlerHelper
     process_file_name = process_file_path.sub(".log", "").split("/").last
     pid, timestamp, status = process_file_name.split("-")
 
-    [pid, timestamp]
+    [pid.to_i, timestamp]
   end
 
 end
