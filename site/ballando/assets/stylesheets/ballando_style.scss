@@ -414,7 +414,8 @@ h1, h2, h3 {
 /* Space out content a bit */
 body {
     background-color: rgba(0, 0, 0, 0.6);
-    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)"
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+    font-family: 'Roboto Condensed', helvetica, arial, sans-serif;
     //background-image: url("/assets/bg.jpg");
     //background-position: top center;
 }
@@ -1095,12 +1096,14 @@ height: 100%;
       background-color: #D3D3D3;
     }
     span.contents-to-unlock{
-      font-size: 57px;
+      font-size: 100px;
       font-weight: bold;
       background-image: url("/assets/lock_mini.png");
       background-repeat: no-repeat;
       background-position: right center;
-      padding-right: 60px;
+      background-size: 30px;
+      padding-right: 50px;
+      line-height: 121px;
     }
     a{
       color: #fff;
