@@ -58,7 +58,14 @@ class RegistrationsController < Devise::RegistrationsController
   def after_sign_up_path_for(resource)
     SystemMailer.welcome_mail(current_user).deliver
     flash[:notice] = "from_registration"
-    return "/"
+
+    if cookies[:connect_from_page].blank?
+      "/"
+    else
+      connect_from_page = cookies[:connect_from_page]
+      cookies.delete(:connect_from_page)
+      connect_from_page
+    end
   end 
 
 end

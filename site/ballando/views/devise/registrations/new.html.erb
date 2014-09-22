@@ -17,7 +17,7 @@
             <a href="/users/sign_in"><button class="btn-2 btn-2-login">LOGIN</button></a>
           </div>
           <div class="col-sm-12 col-xs-12">
-            <%= form_for resource, :url => "/users/rai/sign_up/create", html: { :target => "_top" } do |f| %> 
+            <%= form_for resource, :url => "/users/rai/sign_up/create" do |f| %> 
 
               <% if resource.errors.any? %>
                 <div style="margin-top: 10px; margin-bottom: 10px;">

@@ -46,5 +46,13 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
   def on_success(user)
     fandom_play_login(user)
   end  
+
+  protected 
+
+  def after_sign_up_path_for(resource)
+    #SystemMailer.welcome_mail(current_user).deliver
+    "/refresh_top_window"
+  end 
+
 end
 

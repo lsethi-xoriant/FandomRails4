@@ -168,7 +168,7 @@
           if(data.errors) {
             $("#form-errors").html(data.errors);
           } else {
-            window.top.location(data.connect_from_page);
+            window.top.location.href = data.connect_from_page;
           }
         }
       });
