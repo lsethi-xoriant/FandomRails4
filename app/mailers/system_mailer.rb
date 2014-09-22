@@ -11,7 +11,7 @@ class SystemMailer < ActionMailer::Base
 
   def welcome_mail(user)
     @cuser = user
-    mail(to: user.email, subject: "Benvenuto su MAXIBON!")
+    mail(to: user.email, subject: "Benvenuto!")
   end  
 
   def win_mail(user, price, time_to_win)
