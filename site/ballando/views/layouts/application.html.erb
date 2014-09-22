@@ -163,7 +163,7 @@
       $.ajax({
         type: "POST",
         url: "/users/rai/sign_in_from_provider/create",
-        data: { user: tmp },
+        data: { user: user },
         success: function(user) {
           if(data.errors) {
             $("#form-errors").html(data.errors);
