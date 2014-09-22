@@ -1,3 +1,6 @@
+#!/bin/env ruby
+# encoding: utf-8
+
 class Sites::Ballando::RegistrationsController < RegistrationsController
   include FandomPlayAuthHelper
 
