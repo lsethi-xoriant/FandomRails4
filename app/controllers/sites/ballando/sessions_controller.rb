@@ -138,6 +138,7 @@ class Sites::Ballando::SessionsController < SessionsController
       email: user_email, 
       first_name: response_user["profile"]["firstName"], 
       last_name: last_name,
+      avatar_selected: provider,
       privacy: true,
       password: password
     )
