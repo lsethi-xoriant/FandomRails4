@@ -298,14 +298,16 @@ module ApplicationHelper
 	end
 
 	def anonymous_user
-		User.find_by_email("anonymous@shado.tv")
+	  cache_medium('anonymous_user') { 
+		  User.find_by_email("anonymous@shado.tv")
+		}
 	end
 
 	def current_or_anonymous_user
 	  if current_user.present? 
 		  current_user
 		else
-		  cache_medium('anonymous_user') { anonymous_user }
+		  anonymous_user
 		end
 	end
 	
