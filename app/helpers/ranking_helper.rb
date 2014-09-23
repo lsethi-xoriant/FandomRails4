@@ -38,11 +38,11 @@ module RankingHelper
     period = get_current_periodicities[ranking.period]
     if period.blank?
       rankings = cache_short("#{ranking.id}_general") do
-        UserReward.where("reward_id = ? and period_id IS NULL", ranking.reward_id).order("counter DESC, updated_at ASC, user_id ASC").to_a
+        UserReward.where("reward_id = ? and period_id IS NULL and user_id <> ?", ranking.reward_id, anonymous_user.id).order("counter DESC, updated_at ASC, user_id ASC").to_a
       end
     else
       rankings = cache_short("#{ranking.id}_#{period.id}") do
-        UserReward.where("reward_id = ? and period_id = ?", ranking.reward_id, period.id).order("counter DESC, updated_at ASC, user_id ASC").to_a
+        UserReward.where("reward_id = ? and period_id = ? and user_id <> ?", ranking.reward_id, period.id, anonymous_user.id).order("counter DESC, updated_at ASC, user_id ASC").to_a
       end
     end
     user_position_hash = cache_short { generate_user_position_hash(rankings) }
