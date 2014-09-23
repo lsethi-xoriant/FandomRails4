@@ -2,11 +2,27 @@ require 'fandom_utils'
 require 'digest/md5'
 
 module CallToActionHelper
+
+  def get_cta_tags_from_cache(cta)
+    cache_short(get_cta_tags_cache_key(cta.id)) do
+      cta.tags.includes("tag_fields").to_a
+    end
+  end
+  
+  def interactions_required_to_complete(cta)
+    cache_short get_interactions_required_to_complete_cache_key(cta.id) do
+      cta.interactions.includes(:call_to_action, :resource).where("required_to_complete").order("seconds ASC").to_a
+    end
+  end
   
   def call_to_action_completed?(cta, user)
-    all_interactions = cta.interactions.where("required_to_complete")
-    interactions_done = all_interactions.includes(:user_interactions).where("user_interactions.user_id = ?", user.id)
-    all_interactions.any? && (all_interactions.count == interactions_done.count)
+    all_interactions = interactions_required_to_complete(cta)
+    if user_signed_in?
+      interactions_done = all_interactions.includes(:user_interactions).where("user_interactions.user_id = ?", user.id)
+      all_interactions.any? && (all_interactions.count == interactions_done.count)
+    else
+      all_interactions.empty?
+    end
   end
   
   def get_cta_template_option_list

@@ -48,7 +48,7 @@ class Easyadmin::EasyadminEventConsoleController < ApplicationController
   #
   # params - array of filter conidtions
   def build_query(params)
-    query = UserInteraction.includes(:user).includes(:interaction).includes(:answer)
+    query = UserInteraction.includes(:user, :interaction, :answer)
     fields = get_fields()
     params.each do |filter|
       field_id = filter['field'].to_sym

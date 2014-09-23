@@ -2,6 +2,12 @@ module RewardHelper
   
   include PeriodicityHelper
   include ApplicationHelper
+
+  def get_reward_from_cache(reward_name)
+    cache_short(get_reward_cache_key(reward_name)) do
+      Reward.find_by_name(reward_name)
+    end
+  end
   
   def get_reward_image_for_status(reward)
     if user_has_reward(reward.name)
