@@ -31,7 +31,7 @@
                 <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
                 <% if tags_with_miniformat_in_calltoaction.any? %>
                   <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
-                  <%= tags_with_miniformat_in_calltoaction.first.name %>
+                  <%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("title").try(:value) %>
                 <% else %>
                   &nbsp;
                 <% end %>
