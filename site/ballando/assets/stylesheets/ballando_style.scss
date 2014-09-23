@@ -12,7 +12,7 @@ $navbar-default-bg: #fff !default;
 p.oblique { font-style: oblique } 
 
 button, h1, h2, h3, h4, h5, h6, li {
-    font-family: "Roboto", helvetica, arial, sans-serif;
+    font-family: "Roboto Condensed", helvetica, arial, sans-serif;
 }
 
 .text-with-shadow {
@@ -109,7 +109,7 @@ h1, h2, h3 {
     left: 3px;
     right: 3px;
     position: absolute; 
-    z-index: 10;
+    z-index: 100;
     background-position: top center; 
     background-size: 100% auto;
     background-color: #000;
@@ -852,6 +852,7 @@ span.notify {
     }
 
     .panel.cta-page {
+        border-radius: 0;
         margin-top:15px;
         .panel-heading {
             //background: none;

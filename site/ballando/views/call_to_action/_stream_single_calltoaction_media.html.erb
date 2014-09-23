@@ -13,7 +13,7 @@
   <!-- MAIN MEDIA -->
   <div id="main-media-<%= calltoaction.id %>">
     <% if calltoaction.media_type == "YOUTUBE" %>
-        <div class="video flex-video widescreen v-center" style="background:#222;">             
+        <div class="video flex-video widescreen v-center media-youtube" style="background:#222;">             
           <!-- IFRAME VIDEO -->
           <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-media=true calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").id %>"></div>
           <!-- OVERVIDEO AREA -->
@@ -25,7 +25,7 @@
       <!-- IMAGE -->
       <img src="<%= calltoaction.media_image(:large) %>" style="width: 100%;">
     <% elsif calltoaction.media_type == "IFRAME" %>
-      <div id="iframe-calltoaction-<%= calltoaction.id %>" class="<%= "iframe-iphone " if request_is_from_iphone_device?(request) %>video flex-video widescreen text-center v-center" style="background:#222;">  
+      <div id="iframe-calltoaction-<%= calltoaction.id %>" class="<%= "iframe-iphone " if request_is_from_iphone_device?(request) %>video flex-video widescreen text-center v-center media-iframe" style="background:#222;">  
         <%#= calltoaction.media_data.html_safe %>
       </div>
     <% end %>
