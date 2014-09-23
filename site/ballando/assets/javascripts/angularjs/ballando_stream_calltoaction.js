@@ -23,18 +23,38 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $(".iframe-iphone iframe").css("width", $(".iframe-iphone").innerWidth());
   };
 
-  $window.showCallToAction = function(calltoaction_id) {
-    $("#iframe-calltoaction-" + calltoaction_id).html($scope.video_players[calltoaction_id]);
+  $window.showCallToAction = function(calltoaction_id, calltoaction_media_type) {
 
-    adjustIPhoneIframes();
+    $(".calltoaction-cover").removeClass("hidden");
+    $(".media-iframe").html("");
+    $(".home-undervideo-calltoaction").html("");
 
-    $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
+    $http.post("/generate_cover_for_calltoaction", { calltoaction_id: calltoaction_id })
+      .success(function(data) {
+        $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
+        $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_calltoaction_cover);
 
-    $("#iframe-calltoaction-" + calltoaction_id + " iframe").load(function() {
-      $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper hidden-xs\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
-      showCallToActionCountdown(calltoaction_id, COUNTDOWN_TIME);
-    });
+        if(calltoaction_media_type == "iframe") {
+          $("#iframe-calltoaction-" + calltoaction_id).html($scope.video_players[calltoaction_id]);
+
+          adjustIPhoneIframes();
+
+          $("#iframe-calltoaction-" + calltoaction_id + " iframe").load(function() {
+            appendAndStartCountdown(calltoaction_id); 
+          });
+        } else {
+          appendAndStartCountdown(calltoaction_id); 
+        }
+      }).error(function() {
+        // ERROR.
+      });
+
   };
+
+  $window.appendAndStartCountdown = function(calltoaction_id) {
+    $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper hidden-xs\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
+    showCallToActionCountdown(calltoaction_id, COUNTDOWN_TIME);
+  }
 
   $window.showCallToActionCountdown = function(calltoaction_id, time) {
     if(time > 0) {
