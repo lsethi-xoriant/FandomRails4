@@ -128,7 +128,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
         $timeout(function() { 
           $("#undervideo-outcome-" + interaction_id).css("display", "none"); 
           $("#undervideo-interaction-" + interaction_id).css("display", "block"); 
-        }, 3000);
+        }, 300000);
 
       }).error(function() {
         // ERROR.
