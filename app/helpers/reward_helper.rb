@@ -6,10 +6,10 @@ module RewardHelper
   def get_reward_image_for_status(reward)
     if user_has_reward(reward.name)
       reward.main_image
-    elsif reward.is_published
-      reward.not_awarded_image
-    else
+    elsif reward.is_expired
       reward.not_winnable_image
+    else
+      reward.not_awarded_image
     end
   end
   
