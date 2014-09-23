@@ -90,9 +90,10 @@ module FandomUtils
     return name.singularize.classify.constantize
   end
 
+=begin
   # Returns true if the request comes from a mobile device.
-  def request_is_from_phone_mobile_device?(request)
-    iphone = request_is_from_iphone_device?(request)
+  def request_is_from_mobile_device?(request)
+    iphone = request_is_from_apple_mobile_device?(request)
     ipad = request.user_agent =~ /iPad/ 
     mobile = request.user_agent =~ /Mobile/
     android = request.user_agent =~ /Android/  
@@ -100,9 +101,10 @@ module FandomUtils
     # Mobile and Android identifica il MOBILE di tipo Android, altrimenti con solo Android abbiamo il TABLET.
     return ((iphone && !ipad) || (mobile && android))
   end
+=end
 
   def request_is_from_mobile_device?(request)
-    iphone = request_is_from_iphone_device?(request)
+    iphone = request.user_agent =~ /iPhone/ 
     ipad = request.user_agent =~ /iPad/ 
     mobile = request.user_agent =~ /Mobile/
     android = request.user_agent =~ /Android/  
@@ -111,8 +113,10 @@ module FandomUtils
     return ((iphone || ipad) || android)
   end
 
-  def request_is_from_iphone_device?(request)
+  def request_is_from_apple_mobile_device?(request)
     iphone = request.user_agent =~ /iPhone/ 
+    ipad = request.user_agent =~ /iPad/
+    iphone || ipad
   end
   
   # Returns the number of cores in the machine. It requires the command line utility nproc
