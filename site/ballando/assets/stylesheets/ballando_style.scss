@@ -416,8 +416,6 @@ body {
     background-color: rgba(0, 0, 0, 0.6);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
     font-family: 'Roboto Condensed', helvetica, arial, sans-serif;
-    //background-image: url("/assets/bg.jpg");
-    //background-position: top center;
 }
 
 body.iframe-profile {
@@ -1162,6 +1160,13 @@ div.progress{
   border-color: #ccc;
 }
 
+//IE8 FIXES
+.ie8{
+  body{
+    background-image: url("/assets/pixel-ie8.png");
+    background-repeat: repeat;
+  }
+}
 
 @media only screen and (max-device-width: 800px), only screen and (device-width: 1024px) and (device-height: 600px), only screen and (width: 1280px) and (orientation: landscape), only screen and (device-width: 800px), only screen and (max-width: 767px) {
     .flex-video { padding-top: 0; }

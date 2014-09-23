@@ -9,7 +9,7 @@
             <% if tags_with_miniformat_in_calltoaction.any? %>
               <h5 class="text-muted">
                 <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
-                <%= tags_with_miniformat_in_calltoaction.first.name %>
+                <%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("title").try(:value) %>
               </h5>
             <% end %>
           </div>
