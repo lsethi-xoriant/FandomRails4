@@ -28,10 +28,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     adjustIPhoneIframes();
 
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
-
-    showCallToActionCountdown(calltoaction_id, COUNTDOWN_TIME);
-
     $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper hidden-xs\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
+    showCallToActionCountdown(calltoaction_id, COUNTDOWN_TIME);
   };
 
   $window.showCallToActionCountdown = function(calltoaction_id, time) {

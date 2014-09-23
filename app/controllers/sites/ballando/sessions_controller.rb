@@ -37,17 +37,15 @@ class Sites::Ballando::SessionsController < SessionsController
           on_success(user)
           redirect_to "/refresh_top_window"
         else
-          @flash[:error] = rai_response_json["authMyRaiTv"] == "USERALREADYEXIST" ? "Username o email già utilizzati" : rai_response_json["authMyRaiTv"]
+          flash[:error] = rai_response_json["authMyRaiTv"] == "USERALREADYEXIST" ? "Username o email già utilizzati" : rai_response_json["authMyRaiTv"]
           redirect_to "/users/sign_in"
         end
 
       else
-        flash[:error] = "RAI registrationUserFromGigya exception"
         render template: "/devise/sessions/new", locals: { resource: User.new }
       end
 
     rescue Exception => exception
-      flash[:error] = "RAI registrationUserFromGigya exception"
       redirect_to "/users/sign_in"
     end
   end
@@ -67,8 +65,11 @@ class Sites::Ballando::SessionsController < SessionsController
         user_email = "#{rai_response_user["UID"]}@FAKE___DOMAIN.com"
       end
       
-      unless (user = User.find_by_email(user_email)) 
-        user = new_user_from_provider(rai_response_user, user_email)
+      user = User.find_by_username(response_user["UID"])
+      if user && user.user_email.include?("@FAKE___DOMAIN.com")
+        user.update_attribute(:email, user_email)
+      elsif user.nil?
+        user = new_user_from_provider(rai_response_user)
       end
 
       authentication = user.authentications.find_by_provider(rai_response_user["loginProvider"])
@@ -87,6 +88,8 @@ class Sites::Ballando::SessionsController < SessionsController
         response[:errors] = user.errors.full_messages.map { |error_message| "#{error_message}<br>"}
       end
 
+    else
+      response[:errors] = rai_response_user["authMyRaiTv"]
     end
 
     respond_to do |format|
@@ -96,11 +99,11 @@ class Sites::Ballando::SessionsController < SessionsController
 
   def path_for_redirect_after_successful_login
     if cookies[:connect_from_page].blank?
-      return "/"
+      "/"
     else
       connect_from_page = cookies[:connect_from_page]
       cookies.delete(:connect_from_page)
-      return connect_from_page
+      connect_from_page
     end
   end
 
