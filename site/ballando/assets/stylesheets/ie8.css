@@ -1,0 +1,10 @@
+/* IE8 CLASS */
+
+body{
+	background-image: url("/assets/pixel-ie8.png");
+	background-repeat: repeat;
+}
+
+.placeholder{
+	color: #ccc;
+}
