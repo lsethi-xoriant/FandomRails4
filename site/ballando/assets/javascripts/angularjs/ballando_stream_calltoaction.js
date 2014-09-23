@@ -18,9 +18,9 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     top.location = PROFILE_URL;
   };
 
-  $window.adjustIPhoneIframes = function() {
-    $(".iframe-iphone iframe").css("height", $(".iframe-iphone").innerHeight());
-    $(".iframe-iphone iframe").css("width", $(".iframe-iphone").innerWidth());
+  $window.adjustAppleMobileIframes = function() {
+    $(".iframe-apple-mobile iframe").css("height", $(".iframe-apple-mobile").innerHeight());
+    $(".iframe-apple-mobile iframe").css("width", $(".iframe-apple-mobile").innerWidth());
   };
 
   $window.showCallToAction = function(calltoaction_id, calltoaction_media_type) {
@@ -38,7 +38,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
         
         if(calltoaction_media_type == "iframe") {
           $("#iframe-calltoaction-" + calltoaction_id).html($scope.video_players[calltoaction_id]);
-          adjustIPhoneIframes();
+          adjustAppleMobileIframes();
 
           if(data.calltoaction_completed) {
             mountNextInteractionFromRequest(calltoaction_id, data.next_interaction);
