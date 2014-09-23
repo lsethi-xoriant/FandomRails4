@@ -52,21 +52,7 @@ class CallToActionController < ApplicationController
     calltoaction = CallToAction.find(params[:calltoaction_id])
     quiz_interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
 
-    next_quiz_interaction = quiz_interactions.first
-
-    if next_quiz_interaction
-      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: nil }, layout: false, formats: :html
-      interaction_id = next_quiz_interaction.id
-    else
-      render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: quiz_interactions, calltoaction: calltoaction }, layout: false, formats: :html
-    end
-
-    response = Hash.new
-    response = {
-      next_quiz_interaction: (quiz_interactions.count > 1),
-      render_interaction_str: render_interaction_str,
-      interaction_id: interaction_id
-    }
+    response = generate_response_for_next_interaction(quiz_interactions, calltoaction)
     
     respond_to do |format|
       format.json { render json: response.to_json }
@@ -84,17 +70,6 @@ class CallToActionController < ApplicationController
     
     respond_to do |format|
       format.json { render json: response.to_json }
-    end
-  end
-
-  def calculate_next_interactions(calltoaction, interactions_showed_ids)         
-    if interactions_showed_ids
-      interactions_showed_id_qmarks = (["?"] * interactions_showed_ids.count).join(", ")
-      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ? AND id NOT IN (#{interactions_showed_id_qmarks})", "SEMPRE_VISIBILE", true, *interactions_showed_ids)
-                                                   .order("seconds ASC")
-    else
-      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true)
-                                                   .order("seconds ASC")
     end
   end
 
@@ -308,7 +283,7 @@ class CallToActionController < ApplicationController
       end
 
       response['outcome'] = outcome
-      response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action, current_user)
+      response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action)
 
       if interaction.when_show_interaction == "SEMPRE_VISIBILE"
         response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome, ctaid: interaction.call_to_action_id }, layout: false, formats: :html 

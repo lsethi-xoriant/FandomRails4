@@ -22,7 +22,7 @@
           <% if user_interaction.answer_id == answer.id %>
             <button class="btn-2 btn-2-default  btn-2-default-<%= answer.correct ? "success" : "danger" %> active"><%= answer.text %></button>
           <% else %>
-            <button class="btn-2 btn-2-default <%= "btn-2-default-success" if answer.correct %> active"><%= answer.text %></button>
+            <button class="btn-2 btn-2-default <%= "btn-2-default-success" if answer.correct %> inactive"><%= answer.text %></button>
           <% end %>
         </div>
       </div>

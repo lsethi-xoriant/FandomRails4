@@ -15,7 +15,7 @@
           </div>
           <div class="col-md-4 col-xs-4 text-right">
             <h4>
-              <% if call_to_action_completed?(calltoaction, current_or_anonymous_user) %>
+              <% if call_to_action_completed?(calltoaction) %>
                 <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 7px;">
                   FATTO <span class="glyphicon glyphicon-ok"></span>
                 </span>

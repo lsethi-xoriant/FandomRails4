@@ -65,8 +65,8 @@ class Sites::Ballando::SessionsController < SessionsController
         user_email = "#{rai_response_user["UID"]}@FAKE___DOMAIN.com"
       end
       
-      user = User.find_by_username(response_user["UID"])
-      if user && user.user_email.include?("@FAKE___DOMAIN.com")
+      user = User.find_by_username(rai_response_user["UID"])
+      if user && user.email.include?("@FAKE___DOMAIN.com")
         user.update_attribute(:email, user_email)
       elsif user.nil?
         user = new_user_from_provider(rai_response_user)
