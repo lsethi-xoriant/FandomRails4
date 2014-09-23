@@ -25,11 +25,15 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $window.showCallToAction = function(calltoaction_id) {
     $("#iframe-calltoaction-" + calltoaction_id).html($scope.video_players[calltoaction_id]);
+
     adjustIPhoneIframes();
 
     $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
-    $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper hidden-xs\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
-    showCallToActionCountdown(calltoaction_id, COUNTDOWN_TIME);
+
+    $("#iframe-calltoaction-" + calltoaction_id + " iframe").load(function() {
+      $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper hidden-xs\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
+      showCallToActionCountdown(calltoaction_id, COUNTDOWN_TIME);
+    });
   };
 
   $window.showCallToActionCountdown = function(calltoaction_id, time) {
