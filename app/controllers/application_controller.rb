@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   include FandomUtils
   include ApplicationHelper
   include EventHandlerHelper
+  include CacheHelper
+  include CacheKeysHelper
 
   before_filter :fandom_before_filter
 

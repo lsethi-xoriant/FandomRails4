@@ -65,6 +65,12 @@ module CacheHelper
     result
   end
 
+  def expire_cache_key(key)
+    actual_key = get_cache_key(key)
+    log_info("expiring cache key", { key: actual_key })
+    Rails.cache.delete(actual_key)
+  end
+
   # Enable browser caching. is_public set to false instruct any intermediary cache (such as web proxies) 
   # to not share the content for multiple users  
   def browser_caching(seconds, is_public=true)

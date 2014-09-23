@@ -1,6 +1,7 @@
 class Easyadmin::EasyadminNoticeController < ApplicationController
   include EasyadminHelper
   include TableHelper
+  include NoticeHelper
 
   layout "admin"
   
@@ -39,7 +40,7 @@ class Easyadmin::EasyadminNoticeController < ApplicationController
       params[:users].split(",").each do |u|
         user = User.find_by_email(u)
         if user
-          notice = Notice.create(:user_id => user.id, :html_notice => params[:notice], :viewed => false, :read => false)
+          notice = create_notice(:user_id => user.id, :html_notice => params[:notice], :viewed => false, :read => false)
           notice.send_to_user(request)
         end
       end

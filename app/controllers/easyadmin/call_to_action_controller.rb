@@ -8,6 +8,7 @@ class Easyadmin::CallToActionController < ApplicationController
   include CallToActionHelper
   include RewardingSystemHelper
   include EventHandlerHelper
+  include NoticeHelper
 
   layout "admin"
 
@@ -193,7 +194,7 @@ class Easyadmin::CallToActionController < ApplicationController
     if cta.approved
       html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_ugc_approved_template", layout: false, formats: :html
       user_upload_interaction = cta.user_upload_interaction
-      notice = Notice.create(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+      notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
       notice.send_to_user(request)
       userinteraction, outcome = UserInteraction.create_or_update_interaction(user_upload_interaction.user_id, user_upload_interaction.upload_id, nil, nil)
       compute_save_and_notify_outcome(userinteraction, user_upload_interaction)

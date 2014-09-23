@@ -2,6 +2,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
   include EasyadminHelper
   include FandomUtils
   include RewardingSystemHelper
+  include NoticeHelper
 
   layout "admin"
 
@@ -19,7 +20,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
         interaction = current_comment.comment.interaction
         user_interaction, outcome = UserInteraction.create_or_update_interaction(current_comment.user_id, interaction.id, nil, nil)
 
-        Notice.create(:user_id => current_comment.user_id, :html_notice => current_comment.text, :viewed => false, :read => false)
+        create_notice(:user_id => current_comment.user_id, :html_notice => current_comment.text, :viewed => false, :read => false)
 
         outcome = compute_and_save_outcome(user_interaction)
         # TODO: notify outcome

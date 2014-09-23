@@ -6,6 +6,7 @@ require 'fandom_utils'
 module ApplicationHelper
   include CacheHelper
   include RewardingSystemHelper
+  include NoticeHelper
   
   class BrowseCategory
     include ActiveAttr::TypecastedAttributes
@@ -301,7 +302,11 @@ module ApplicationHelper
 	end
 
 	def current_or_anonymous_user
-		current_user.present? ? current_user : anonymous_user
+	  if current_user.present? 
+		  current_user
+		else
+		  cache_medium('anonymous_user') { anonymous_user }
+		end
 	end
 	
 	def mobile_device?()
@@ -425,7 +430,7 @@ module ApplicationHelper
     outcome.reward_name_to_counter.each do |r|
       reward = Reward.find_by_name(r.first)
       html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { icon: reward.preview_image, title: reward.title }, layout: false, formats: :html
-      notice = Notice.create(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+      notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
       notice.send_to_user(request)
     end
   end
