@@ -65,8 +65,11 @@ class Sites::Ballando::SessionsController < SessionsController
         user_email = "#{rai_response_user["UID"]}@FAKE___DOMAIN.com"
       end
       
-      unless (user = User.find_by_email(user_email)) 
-        user = new_user_from_provider(rai_response_user, user_email)
+      user = User.find_by_username(response_user["UID"])
+      if user && user.user_email.include?("@FAKE___DOMAIN.com")
+        user.update_attribute(:email, user_email)
+      elsif user.nil?
+        user = new_user_from_provider(rai_response_user)
       end
 
       authentication = user.authentications.find_by_provider(rai_response_user["loginProvider"])
@@ -85,6 +88,8 @@ class Sites::Ballando::SessionsController < SessionsController
         response[:errors] = user.errors.full_messages.map { |error_message| "#{error_message}<br>"}
       end
 
+    else
+      response[:errors] = rai_response_user["authMyRaiTv"]
     end
 
     respond_to do |format|
