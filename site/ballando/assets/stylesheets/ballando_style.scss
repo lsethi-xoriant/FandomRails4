@@ -102,7 +102,7 @@ h1, h2, h3 {
 }
 
 .go-on {
-    background: none repeat scroll 0 0 #000;
+    background: none repeat scroll 0 0 #333;
     color: #fff;
     cursor: pointer;
     line-height: 35px;
@@ -1306,6 +1306,20 @@ div.progress{
 }
 
 @media (min-width: $screen-sm-min) {
+    .baloon-right.small:after, .baloon-left.small:after { 
+        border-width: 3px; 
+        margin-top: -3px; 
+    } 
+
+    .baloon-right.small:before, .baloon-left.small:before { 
+        border-width: 4px; 
+        margin-top: -4px; 
+    }
+
+    .baloon-left.small:before {
+        left: -8px;
+    }
+
     .v-center {
         height: 100%;
         margin: auto;
