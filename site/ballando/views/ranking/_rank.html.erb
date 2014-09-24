@@ -1,4 +1,4 @@
-<div class="col-sm-6">
+<div class="col-sm-8 col-sm-offset-2">
 		
 
     <div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'full'">
@@ -22,13 +22,13 @@
       <div class="text-center">
       	<ul class="pagination">
 	      <li ng-class="{'disabled': <%= rankings %>.current_page == 1 }">
-	      	<a href="javascript:void(0);" ng-click="prev_page(<%= rankings %>.current_page, <%= rankings %>)">&laquo; Prev</a>
+	      	<a href="javascript:void(0);" ng-click="prev_page(<%= rankings %>.current_page, <%= rankings %>)">&laquo;</a>
 	      </li>
 	      <li>
 	      	<a href="javascipt:void(0);">Pagina {{<%= rankings %>.current_page}} di {{<%= rankings %>.number_of_pages}}</a>
 	      </li>
 	      <li ng-class="{'disabled': <%= rankings %>.current_page >= <%= rankings %>.number_of_pages }">
-	      	<a href="javascript:void(0);" ng-click="next_page(<%= rankings %>.current_page, <%= rankings %>)">&raquo; Next</a>
+	      	<a href="javascript:void(0);" ng-click="next_page(<%= rankings %>.current_page, <%= rankings %>)">&raquo;</a>
 	      </li>
 	    </ul>
       </div>

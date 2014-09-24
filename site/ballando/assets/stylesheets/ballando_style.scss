@@ -1060,6 +1060,9 @@ height: 100%;
 }
 
 //RANKING BALLANDO
+.label{
+  color: #2f2f2f;
+}
 .profile-container{
   
   h1, h2, h3, h4, h5, h6{
@@ -1144,6 +1147,20 @@ height: 100%;
     img.not-yours{
       border: none;
       opacity: 0.1;
+    }
+  }
+  
+  ul.pagination{
+    li{
+      a{
+        border-radius: 0px;
+        border-color: #ccc;
+        color: #fff;
+        background-color: transparent;
+      }
+      a:hover{
+        background-color: #ccc;
+      }
     }
   }
   
