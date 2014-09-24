@@ -1170,6 +1170,10 @@ height: 100%;
     }
   }
   
+  .profile-badge{
+    min-height: 270px;
+  }
+  
 }
 
 div.progress{
@@ -1244,6 +1248,9 @@ div.progress{
 
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
+    .profile-badge{
+      min-height: 0;
+    }
     .img-profile { max-height: 64px; }
     .border-right { border-right: 1px solid #e4e4e4; }
 
