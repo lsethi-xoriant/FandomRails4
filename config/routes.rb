@@ -52,6 +52,7 @@ Fandom::Application.routes.draw do
   #match "/classifica/:id", :to => "ranking#show"
   match "classifiche", :to => "ranking#show_rankings_page"
   match "bootcamp", :to => "ranking#show_vote_rankings_page"
+  match "/ranking/page", :to => "ranking#get_rank_page"
   
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
