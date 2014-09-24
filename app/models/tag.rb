@@ -7,11 +7,11 @@ class Tag < ActiveRecord::Base
   validates_presence_of :name
   validates :name, uniqueness: true
   
-  has_many :call_to_action_tags
-  has_many :reward_tags
+  has_many :call_to_action_tags, dependent: :destroy
+  has_many :reward_tags, dependent: :destroy
   has_many :tags_tags, dependent: :destroy
   has_many :tag_fields, dependent: :destroy
-  has_many :vote_ranking_tags
+  has_many :vote_ranking_tags, dependent: :destroy
   
   accepts_nested_attributes_for :tag_fields
   

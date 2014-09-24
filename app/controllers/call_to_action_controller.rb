@@ -141,6 +141,10 @@ class CallToActionController < ApplicationController
     
     response = Hash.new
 
+    response[:ga] = Hash.new
+    response[:ga][:category] = "UserCommentInteraction"
+    response[:ga][:action] = "AddComment"
+
     if current_user
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
       if approved && user_comment.errors.blank?

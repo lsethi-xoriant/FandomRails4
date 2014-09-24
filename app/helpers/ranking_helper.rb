@@ -103,6 +103,16 @@ module RankingHelper
     compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
   end
   
+  def get_full_rank_page(ranking, page)
+    rank = get_ranking(ranking)
+    if current_user
+      my_position = rank.user_to_position[current_user.id]
+    else
+      my_position = -1
+    end
+    compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages, page)
+  end
+  
   def get_full_vote_rank(vote_ranking)
     rank = get_vote_ranking(vote_ranking)
     compose_vote_ranking_info(vote_ranking.rank_type, vote_ranking, rank.rankings, rank.rankings.count, rank.number_of_pages)
@@ -118,14 +128,11 @@ module RankingHelper
     compose_ranking_info(ranking.rank_type, ranking, rank_list, my_position, rank.rankings.count, rank.number_of_pages)
   end
   
-  def compose_ranking_info(rank_type, ranking, rank_list, my_position, total = 0, number_of_pages = 0)
+  def compose_ranking_info(rank_type, ranking, rank_list, my_position, total = 0, number_of_pages = 0, current_page = 1)
     if rank_type == "my_position" && my_position
-      current_page = get_pages(my_position, RANKING_USER_PER_PAGE) 
-      off = (current_page - 1) * RANKING_USER_PER_PAGE
-    else
-      current_page = 1
-      off = 0
+      current_page = get_pages(my_position, RANKING_USER_PER_PAGE)
     end
+    off = (current_page.to_i - 1) * RANKING_USER_PER_PAGE
     rank_list = rank_list.slice(off, RANKING_USER_PER_PAGE)
     {rank_list: rank_list, rank_type: rank_type, ranking: ranking, current_page: current_page, my_position: my_position, total: total, number_of_pages: number_of_pages}
   end

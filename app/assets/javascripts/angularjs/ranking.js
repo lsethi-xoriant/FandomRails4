@@ -12,19 +12,40 @@ rankingModule.controller('RankingCtrl', RankingCtrl);
 
 function RankingCtrl($scope, $window, $resource, $sce) {
 
-	var Api = $resource('/ranking/page');
+	var Api = $resource('/ranking/page.json');
 	
 	$scope.init = function(rankings) {
 		console.log(rankings);
 		$scope.rankings = rankings;
 	};
 	
-	function get_data_for_page(page, rank){
-		Api.get({ page: page, perpage: params.count(), conditions: JSON.stringify($scope.tableFilters) }, function(data) {
-		    angular.forEach(data.result, function(value, key) {
-		       value.notice = $sce.trustAsHtml(value.notice);
-		     });
-		});
-	}
+	$scope.prev_page = function(current_page, rank){
+		page = parseInt(current_page) - 1;
+		console.log("PAGE INSIDE PREV " + page);
+		$scope.get_rank_page(page, rank);
+	};
 	
+	$scope.next_page = function(current_page, rank){
+		page = parseInt(current_page) + 1;
+		$scope.get_rank_page(page, rank);
+	};
+	
+	$scope.get_rank_page = function(page, rank){
+		if(page >= 1 && page <= rank.number_of_pages){
+			Api.get({ page: page, rank: rank }, function(data) {
+				var newData = {
+					current_page: data.current_page,
+					my_position: data.my_position,
+					number_of_pages: data.number_of_pages,
+					rank_list: data.rank_list,
+					rank_type: data.rank_type,
+					ranking: data.ranking,
+					total: data.total
+				};
+				console.log("PAGINA: "+page);
+			    var newrank = eval("$scope.rankings." + data.ranking.name + " = " + JSON.stringify(newData));
+			});
+		}
+	};
+		
 }

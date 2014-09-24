@@ -102,7 +102,7 @@ h1, h2, h3 {
 }
 
 .go-on {
-    background: none repeat scroll 0 0 #000;
+    background: none repeat scroll 0 0 #333;
     color: #fff;
     cursor: pointer;
     line-height: 35px;
@@ -441,7 +441,7 @@ h1, h2, h3 {
 
 /* Space out content a bit */
 body {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
     font-family: 'Roboto Condensed', helvetica, arial, sans-serif;
 }
@@ -1060,6 +1060,9 @@ height: 100%;
 }
 
 //RANKING BALLANDO
+.label{
+  color: #2f2f2f;
+}
 .profile-container{
   
   h1, h2, h3, h4, h5, h6{
@@ -1144,6 +1147,20 @@ height: 100%;
     img.not-yours{
       border: none;
       opacity: 0.1;
+    }
+  }
+  
+  ul.pagination{
+    li{
+      a{
+        border-radius: 0px;
+        border-color: #ccc;
+        color: #fff;
+        background-color: transparent;
+      }
+      a:hover{
+        background-color: #ccc;
+      }
     }
   }
   
@@ -1289,6 +1306,20 @@ div.progress{
 }
 
 @media (min-width: $screen-sm-min) {
+    .baloon-right.small:after, .baloon-left.small:after { 
+        border-width: 3px; 
+        margin-top: -3px; 
+    } 
+
+    .baloon-right.small:before, .baloon-left.small:before { 
+        border-width: 4px; 
+        margin-top: -4px; 
+    }
+
+    .baloon-left.small:before {
+        left: -8px;
+    }
+
     .v-center {
         height: 100%;
         margin: auto;
@@ -1312,7 +1343,6 @@ div.progress{
             margin: 0;
             position: relative; 
             height: 395px;
-            background: #000;
         }
         .yes-pad {
             padding: 15px;

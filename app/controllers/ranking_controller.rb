@@ -10,4 +10,13 @@ class RankingController < ApplicationController
     
   end
   
+  def get_rank_page
+    rank = JSON.parse(params[:rank])
+    ranking = Ranking.find_by_name(rank['ranking']['name'])
+    result = get_full_rank_page(ranking, params[:page])
+    respond_to do |format|
+       format.json { render :json => result.to_json }
+    end
+  end
+  
 end

@@ -60,5 +60,10 @@ class Reward < ActiveRecord::Base
     to_valid =  valid_to.nil? || Time.now.utc < valid_to
     return from_valid && to_valid
   end
+  
+  def is_expired
+    to_valid =  valid_to.nil? || Time.now.utc < valid_to
+    return !to_valid
+  end
 
 end

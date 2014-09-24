@@ -10,7 +10,7 @@
       <%
 =begin if current_user %>
         <!--
-        <a href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>" target="_top">
+        <a href="<%= @profile_url %>" target="_top">
           <div class="text-center visible-xs iframe-notice-baloon">
             <span><%= @notices_count %></span>
           </div>
@@ -33,7 +33,7 @@
           </span>
         </h5>
       <% else %>
-        <a class="btn-2-a" href="<%= @profile_url %>" target="_top"><button class="btn-2 btn-2-small">LOGIN / REGISTRATI</button></a>
+        <button class="btn-2 btn-2-small" onclick="window.top.location.href = '<%= @profile_url %>';">LOGIN / REGISTRATI</button>
       <% end %>
     </div>
 
