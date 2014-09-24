@@ -25,15 +25,18 @@ class ApplicationController < ActionController::Base
   end
 
   def index
+    # warning: the 2nd element of the array being cached is converted to json to workaround a strange serialization defect
     @calltoactions, 
-    @calltoactions_during_video_interactions_second,
-    @calltoactions_active_count = cache_short("stream_ctas_init") do
+    calltoactions_during_video_interactions_second_json,
+    @calltoactions_active_count = 
+    cache_short("stream_ctas_init") do
       calltoactions = CallToAction.active.limit(3).to_a
       [calltoactions,
-       initCallToActionsDuringVideoInteractionsSecond(calltoactions),
+       initCallToActionsDuringVideoInteractionsSecond(calltoactions).to_json,
        CallToAction.active.count
       ]
     end
+    @calltoactions_during_video_interactions_second = calltoactions_during_video_interactions_second_json
     @home = true
   end
   
