@@ -147,6 +147,10 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
             userFeedbackAfterSubmitCommentWithCaptcha(data);
           }
 
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+          }
+
           newCommentsPolling();
           $("#user-comment-" + $scope.comment.interaction_id).val("");
         }
