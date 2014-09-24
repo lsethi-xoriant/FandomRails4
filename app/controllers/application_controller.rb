@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   include EventHandlerHelper
   include CacheHelper
   include CacheKeysHelper
+  include RewardHelper
 
   before_filter :fandom_before_filter
 
@@ -25,15 +26,20 @@ class ApplicationController < ActionController::Base
   end
 
   def index
-    @calltoactions, 
-    @calltoactions_during_video_interactions_second,
-    @calltoactions_active_count = cache_short("stream_ctas_init") do
-      calltoactions = CallToAction.active.limit(3).to_a
-      [calltoactions,
-       initCallToActionsDuringVideoInteractionsSecond(calltoactions),
-       CallToAction.active.count
-      ]
+    # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are mashalled 
+    
+    @calltoactions = cache_short("stream_ctas_init_calltoactions") do
+      CallToAction.active.limit(3).to_a
     end
+
+    @calltoactions_during_video_interactions_second = cache_short("stream_ctas_init_calltoactions_during_video_interactions_second") do
+      initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+    end
+
+    @calltoactions_active_count = cache_short("stream_ctas_init_calltoactions_active_count") do
+      CallToAction.active.count
+    end
+
     @home = true
   end
   
