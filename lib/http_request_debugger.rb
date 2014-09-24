@@ -17,7 +17,7 @@ class HttpRequestDebugger
     if env["rack.session"]["warden.user.user.key"].present?
       user_id = env["rack.session"]["warden.user.user.key"][0][0] 
     else
-      user_id = anonymous_user.id
+      user_id = -1
     end
 
     EventHandlerHelper.log_info(

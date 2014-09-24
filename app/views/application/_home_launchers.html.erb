@@ -1,16 +1,13 @@
-<% if HomeLauncher.active.any? %>
+<% if active_home_launchers.any? %>
   <div id="home-carousel" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
     <ol class="carousel-indicators">
-      <% i = 0 %>
-      <% HomeLauncher.active.each do |home_launcher| %>
+      <% active_home_launchers.each_with_index do |home_launcher, i| %>
         <li data-target="#home-carousel" data-slide-to="0" class="<%= "active" if i == 0 %>"></li>
-        <% i = i + 1 %>
       <% end %>
     </ol>
     <div class="carousel-inner">
-      <% i = 0 %>
-      <% HomeLauncher.active.each do |home_launcher| %>
+      <% active_home_launchers.each_with_index do |home_launcher, i| %>
         <div class="item <%= "active" if i == 0 %>" style="background: url('<%= home_launcher.image %>') no-repeat center top; background-size: cover;">
           <!--<img src="http://placehold.it/1000x500">-->
           <div class="container">
@@ -27,7 +24,6 @@
             </div>
           </div>
         </div>
-        <% i = i + 1 %>
       <% end %>
     </div>
     <a class="left carousel-control" href="#home-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>

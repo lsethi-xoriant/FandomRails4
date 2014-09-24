@@ -1,4 +1,4 @@
-<% quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC") %>
+<% quiz_interactions = always_shown_interactions(calltoaction) %>
 
 <% calltoaction_reward_status = get_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction) %>
 

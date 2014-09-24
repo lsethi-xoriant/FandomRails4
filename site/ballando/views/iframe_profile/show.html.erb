@@ -7,7 +7,8 @@
         <img src="<%= current_avatar %>" class="img-responsive img-circle iframe-profile-avatar">
       </a>
 
-      <% if current_user %>
+      <%
+=begin if current_user %>
         <!--
         <a href="<%= @profile_url %>" target="_top">
           <div class="text-center visible-xs iframe-notice-baloon">
@@ -15,7 +16,9 @@
           </div>
         <a>
         -->
-      <% end %>
+      <% end 
+=end
+      %>
 
     </div>
 

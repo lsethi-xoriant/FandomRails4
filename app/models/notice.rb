@@ -3,14 +3,6 @@ class Notice < ActiveRecord::Base
   
   belongs_to :user
   
-  def self.get_unread_notifications(user_id)
-    Notice.where("user_id = ? AND viewed = FALSE", user_id)
-  end
-  
-  def self.get_unread_notifications_count(user_id)
-    Notice.where("user_id = ? AND viewed = FALSE", user_id).count
-  end
-  
   def self.mark_all_as_viewed
     Notice.where("viewed = FALSE").each do |n|
       n.update_attribute(:viewed, true)

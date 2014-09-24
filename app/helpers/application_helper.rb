@@ -6,6 +6,7 @@ require 'fandom_utils'
 module ApplicationHelper
   include CacheHelper
   include RewardingSystemHelper
+  include NoticeHelper
   
   class BrowseCategory
     include ActiveAttr::TypecastedAttributes
@@ -158,15 +159,21 @@ module ApplicationHelper
   end
 
 	def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
-		Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id)
+	  cache_short get_tag_with_tag_about_call_to_action_cache_key(calltoaction.id, tag_name) do
+		  Tag.includes(:tags_tags => { :other_tag => [ :call_to_action_tags, :tag_fields ]}).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).to_a
+		end
 	end
 
 	def get_tags_with_tag(tag_name)
-		Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ?", tag_name)
+	  cache_short get_tags_with_tag_cache_key(tag_name) do
+		  Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).to_a
+		end
 	end
-
+	
   def get_ctas_with_tag(tag_name)
-    CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name)
+    cache_short get_ctas_with_tag_cache_key(tag_name) do
+      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
+    end
   end
   
   def get_tags_for_vote_ranking(vote_ranking)
@@ -190,8 +197,8 @@ module ApplicationHelper
 
   # Generates an hash with reward information.
 	def get_current_call_to_action_reward_status(reward_name, calltoaction)
-    reward = Reward.find_by_name(reward_name)
-
+	  reward = get_reward_from_cache(reward_name)
+	  
     winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
     interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
 
@@ -227,7 +234,7 @@ module ApplicationHelper
       winnable_reward_count: winnable_outcome["reward_name_to_counter"][reward_name],
       win_reward_count: total_win_reward_count,
       reward_status_images: reward_status_images,
-      reward: Reward.find_by_name(reward_name)
+      reward: reward
     }
 
 	end
@@ -297,11 +304,17 @@ module ApplicationHelper
 	end
 
 	def anonymous_user
-		User.find_by_email("anonymous@shado.tv")
+	  cache_medium('anonymous_user') { 
+		  User.find_by_email("anonymous@shado.tv")
+		}
 	end
 
 	def current_or_anonymous_user
-		current_user.present? ? current_user : anonymous_user
+	  if current_user.present? 
+		  current_user
+		else
+		  anonymous_user
+		end
 	end
 	
 	def mobile_device?()
@@ -425,7 +438,7 @@ module ApplicationHelper
     outcome.reward_name_to_counter.each do |r|
       reward = Reward.find_by_name(r.first)
       html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { icon: reward.preview_image, title: reward.title }, layout: false, formats: :html
-      notice = Notice.create(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+      notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
       notice.send_to_user(request)
     end
   end

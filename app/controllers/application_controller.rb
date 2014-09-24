@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   include FandomUtils
   include ApplicationHelper
   include EventHandlerHelper
+  include CacheHelper
+  include CacheKeysHelper
 
   before_filter :fandom_before_filter
 
@@ -23,8 +25,15 @@ class ApplicationController < ActionController::Base
   end
 
   def index
-    @calltoactions = cache_short { CallToAction.active.limit(3).to_a }
-    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+    @calltoactions, 
+    @calltoactions_during_video_interactions_second,
+    @calltoactions_active_count = cache_short("stream_ctas_init") do
+      calltoactions = CallToAction.active.limit(3).to_a
+      [calltoactions,
+       initCallToActionsDuringVideoInteractionsSecond(calltoactions),
+       CallToAction.active.count
+      ]
+    end
     @home = true
   end
   

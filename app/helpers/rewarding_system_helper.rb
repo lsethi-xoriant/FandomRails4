@@ -184,7 +184,7 @@ module RewardingSystemHelper
           interaction_is_included_in_options?(options, :names, interaction.name) &&
           interaction_is_included_in_options?(options, :ctas, interaction.call_to_action.name) &&
           interaction_type_is_included_in_options?(options, interaction) &&
-          (!options[:interactions].key?(:tags) || interaction.cta.tags.intersect?(options[:interactions][:tags]))
+          (!options[:interactions].key?(:tags) || get_cta_tags_from_cache(interaction.cta).intersect?(options[:interactions][:tags]))
         )
       else
         !just_rules_applying_to_interaction
@@ -488,7 +488,9 @@ module RewardingSystemHelper
   #   cta - the cta
   #   user - the user performing the interaction; if nil or anonymous, the context of the interaction will be reset (counters and rewards)
   def predict_max_cta_outcome(cta, user)
-    if cta.interactions.count == 0
+    sorted_interactions = interactions_required_to_complete(cta)
+
+    if sorted_interactions.count == 0
       Outcome.new
     else
       start_time = Time.now.utc
@@ -496,8 +498,6 @@ module RewardingSystemHelper
       interaction_outcomes = []
       
       total_outcome = Outcome.new
-
-      sorted_interactions = cta.interactions.where("required_to_complete").order("seconds ASC")
 
       if sorted_interactions.any?
 
