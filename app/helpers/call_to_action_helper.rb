@@ -11,20 +11,49 @@ module CallToActionHelper
   
   def interactions_required_to_complete(cta)
     cache_short get_interactions_required_to_complete_cache_key(cta.id) do
-      cta.interactions.includes(:call_to_action, :resource).where("required_to_complete").order("seconds ASC").to_a
+      cta.interactions.includes(:call_to_action, :resource).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
     end
   end
   
-  def call_to_action_completed?(cta, user)
-    all_interactions = interactions_required_to_complete(cta)
-    if user_signed_in?
-      interactions_done = all_interactions.includes(:user_interactions).where("user_interactions.user_id = ?", user.id)
-      all_interactions.any? && (all_interactions.count == interactions_done.count)
+  def call_to_action_completed?(cta)
+    if current_user
+      require_to_complete_interactions = interactions_required_to_complete(cta)
+      interactions_done = require_to_complete_interactions.includes(:user_interactions).where("user_interactions.user_id = ?", current_user.id)
+      require_to_complete_interactions.any? && (require_to_complete_interactions.count == interactions_done.count)
     else
-      all_interactions.empty?
+      false
     end
   end
+
+  def generate_response_for_next_interaction(quiz_interactions, calltoaction)
+    next_quiz_interaction = quiz_interactions.first
+
+    if next_quiz_interaction
+      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: nil }, layout: false, formats: :html
+      interaction_id = next_quiz_interaction.id
+    else
+      render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: quiz_interactions, calltoaction: calltoaction }, layout: false, formats: :html
+    end
+
+    response = Hash.new
+    response = {
+      next_quiz_interaction: (quiz_interactions.count > 1),
+      render_interaction_str: render_interaction_str,
+      interaction_id: interaction_id
+    }
+  end
   
+  def calculate_next_interactions(calltoaction, interactions_showed_ids)         
+    if interactions_showed_ids
+      interactions_showed_id_qmarks = (["?"] * interactions_showed_ids.count).join(", ")
+      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ? AND id NOT IN (#{interactions_showed_id_qmarks})", "SEMPRE_VISIBILE", true, *interactions_showed_ids)
+                                                   .order("seconds ASC")
+    else
+      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true)
+                                                   .order("seconds ASC")
+    end
+  end
+
   def get_cta_template_option_list
     CallToAction.includes({:call_to_action_tags => :tag}).where("tags.name ILIKE 'template'").map{|cta| [cta.title, cta.id]}
   end

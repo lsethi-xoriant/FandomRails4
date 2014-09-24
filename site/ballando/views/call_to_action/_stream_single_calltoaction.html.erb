@@ -11,7 +11,7 @@
           <div class="row top text-right">
             <div class="col-xs-12">
               <h4>
-                <% if call_to_action_completed?(calltoaction, current_or_anonymous_user) %>
+                <% if call_to_action_completed?(calltoaction) %>
                   <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
                     FATTO <span class="glyphicon glyphicon-ok"></span>
                   </span>
@@ -31,7 +31,7 @@
                 <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
                 <% if tags_with_miniformat_in_calltoaction.any? %>
                   <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
-                  <%= tags_with_miniformat_in_calltoaction.first.name %>
+                  <%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("title").try(:value) %>
                 <% else %>
                   &nbsp;
                 <% end %>
@@ -40,7 +40,7 @@
             </div>
 
             <div class="col-md-2 col-sm-3 col-xs-12">
-              <button class="btn-2" onclick="showCallToAction(<%= calltoaction.id %>)">GUARDA</button>
+              <button class="btn-2" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')">GUARDA</button>
             </div>
 
           </div>

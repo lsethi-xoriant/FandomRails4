@@ -23,15 +23,51 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $(".iframe-iphone iframe").css("width", $(".iframe-iphone").innerWidth());
   };
 
-  $window.showCallToAction = function(calltoaction_id) {
-    $("#iframe-calltoaction-" + calltoaction_id).html($scope.video_players[calltoaction_id]);
-    adjustIPhoneIframes();
+  $window.showCallToAction = function(calltoaction_id, calltoaction_media_type) {
 
-    $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
+    $(".calltoaction-cover").removeClass("hidden");
+    $(".media-iframe").html("");
+    $(".home-undervideo-calltoaction").html("");
 
-    showCallToActionCountdown(calltoaction_id, COUNTDOWN_TIME);
+    $scope.interactions_showed[calltoaction_id] = [];
 
+    $http.post("/generate_cover_for_calltoaction", { calltoaction_id: calltoaction_id, interactions_showed: $scope.interactions_showed[calltoaction_id] })
+      .success(function(data) {
+
+        $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
+        
+        if(calltoaction_media_type == "iframe") {
+          $("#iframe-calltoaction-" + calltoaction_id).html($scope.video_players[calltoaction_id]);
+          adjustIPhoneIframes();
+
+          if(data.calltoaction_completed) {
+            mountNextInteractionFromRequest(calltoaction_id, data.next_interaction);
+          } else {
+            $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_calltoaction_cover);
+            $("#iframe-calltoaction-" + calltoaction_id + " iframe").load(function() {
+              appendAndStartCountdown(calltoaction_id); 
+            });
+          }
+
+        } else {
+
+          if(data.calltoaction_completed) {
+            mountNextInteractionFromRequest(calltoaction_id, data.next_interaction);
+          } else {
+            $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_calltoaction_cover);
+            appendAndStartCountdown(calltoaction_id); 
+          }
+
+        }
+      }).error(function() {
+        // ERROR.
+      });
+
+  };
+
+  $window.appendAndStartCountdown = function(calltoaction_id) {
     $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper hidden-xs\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
+    showCallToActionCountdown(calltoaction_id, COUNTDOWN_TIME);
   };
 
   $window.showCallToActionCountdown = function(calltoaction_id, time) {
@@ -52,23 +88,25 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   $window.nextInteraction = function(calltoaction_id) {
     $http.post("/next_interaction", { interactions_showed: $scope.interactions_showed[calltoaction_id], calltoaction_id: calltoaction_id })
       .success(function(data) {
-
-        $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_interaction_str);
-        if(data.interaction_id) {
-          if($scope.interactions_showed[calltoaction_id]) {
-            $scope.interactions_showed[calltoaction_id].push(data.interaction_id);
-          } else {
-            $scope.interactions_showed[calltoaction_id] = [data.interaction_id];
-          }
-        }
-
-        if(data.next_quiz_interaction || $scope.interactions_showed[calltoaction_id].length > 1) {
-          $("#interaction-" + data.interaction_id + "-next").removeClass("hidden");
-        }
-
+        mountNextInteractionFromRequest(calltoaction_id, data);
       }).error(function() {
         // ERROR.
       });
+  };
+
+  $window.mountNextInteractionFromRequest = function(calltoaction_id, data) {
+    $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_interaction_str);
+    if(data.interaction_id) {
+      if($scope.interactions_showed[calltoaction_id]) {
+        $scope.interactions_showed[calltoaction_id].push(data.interaction_id);
+      } else {
+        $scope.interactions_showed[calltoaction_id] = [data.interaction_id];
+      }
+    }
+
+    if(data.next_quiz_interaction || $scope.interactions_showed[calltoaction_id].length > 1) {
+      $("#interaction-" + data.interaction_id + "-next").removeClass("hidden");
+    }
   };
 
   $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
