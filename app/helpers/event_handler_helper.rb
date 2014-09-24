@@ -125,7 +125,7 @@ module EventHandlerHelper
       request_uri = request.url
       session_id = request.session["session_id"]
       tenant = get_site_from_request(request).try(:id)
-      user_id = current_or_anonymous_user.id
+      user_id = current_user ? current_user.id : -1
 
     end
 
