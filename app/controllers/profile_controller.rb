@@ -8,9 +8,11 @@ class ProfileController < ApplicationController
   before_filter :check_user_logged
   
   def check_user_logged
-    if !current_user
-      profile_path = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["profile_url"] || request.url
-      cookies[:connect_from_page] = profile_path
+    unless current_user
+      if cookies[:connect_from_page].blank?
+        profile_path = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["profile_url"] || request.url
+        cookies[:connect_from_page] = profile_path
+      end
       redirect_to "/users/sign_in"
     end
   end
