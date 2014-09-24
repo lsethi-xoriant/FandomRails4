@@ -135,6 +135,7 @@
     }, false);
 
     function gigyaSocializeLogin(provider) {
+      $("#waiting-registration-layer").removeClass("hidden");
       gigya.socialize.login({
         provider: provider,
         callback: function (loginResult) {
@@ -166,6 +167,7 @@
         success: function(data) {
           if(data.errors) {
             $("#form-errors").html(data.errors);
+            $("#waiting-registration-layer").addClass("hidden");
           } else {
             window.top.location.href = data.connect_from_page;
           }
