@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   include EventHandlerHelper
   include CacheHelper
   include CacheKeysHelper
+  include RewardHelper
 
   before_filter :fandom_before_filter
 
