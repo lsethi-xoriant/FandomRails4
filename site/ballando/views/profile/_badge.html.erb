@@ -4,7 +4,7 @@
   <p class="small" style="margin: 0;"><%= reward.short_description %></p>
   <% if reward.is_published && !reward.cost.blank? %>
 	  <div class="progress" style="margin: 10px auto; width: 65%;">
-		<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: <%= (get_reward_points_in_period(PERIOD_KIND_WEEKLY, MAIN_REWARD_NAME) * 100) / reward.cost %>%;"></div>
+		<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: <%= (get_reward_points_in_period(PERIOD_KIND_DAILY, MAIN_REWARD_NAME) * 100) / reward.cost %>%;"></div>
 	  </div>
   <% end %>
 </div>

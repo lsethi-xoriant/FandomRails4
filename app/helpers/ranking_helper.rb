@@ -24,8 +24,13 @@ module RankingHelper
   
   def get_reward_points_in_period(period_kind, reward_name)
     period = get_current_periodicities[period_kind]
+    if period.nil?
+      period_id = send("create_#{period_kind.downcase}_periodicity")
+    else
+      period_id = period.id
+    end
     reward = cache_short("#{reward_name}") { Reward.find_by_name(reward_name) }
-    user_reward = UserReward.where("reward_id = ? and period_id = ? and user_id = ?", reward.id, period.id, current_user.id).first
+    user_reward = UserReward.where("reward_id = ? and period_id = ? and user_id = ?", reward.id, period_id, current_user.id).first
     if user_reward
       user_reward.counter
     else
