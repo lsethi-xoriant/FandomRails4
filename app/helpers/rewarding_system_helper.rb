@@ -309,9 +309,9 @@ module RewardingSystemHelper
       counter = info.counter
       period_kind = info.period.nil? ? PERIOD_KIND_TOTAL : info.period.kind
       if user_rewards.key?(name)
-        user_rewards[name].counters[period_kind.upcase] = counter
+        user_rewards[name].counters[period_kind.downcase] = counter
       else
-        user_rewards[name] = MockedUserReward.new({ period_kind.upcase => counter })
+        user_rewards[name] = MockedUserReward.new({ period_kind.downcase => counter })
         if !countable
           if available
             user_unlocked_names << name
