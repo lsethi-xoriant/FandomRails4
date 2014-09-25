@@ -29,5 +29,6 @@ class Sites::Ballando::ApplicationController < ApplicationController
       format.json { render json: response.to_json }
     end
   end
+
 end
 
