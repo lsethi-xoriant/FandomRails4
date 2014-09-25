@@ -100,6 +100,13 @@ chmod a+x /etc/init.d/log_daemon
 update-rc.d log_daemon defaults
 
 #
+# Security updates
+#
+
+cp etc/apt.conf.d/20auto-upgrades /etc/apt/apt.conf.d/
+cp etc/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/
+
+#
 # Run the other commands as user "app"
 #
 
