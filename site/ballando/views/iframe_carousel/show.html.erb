@@ -9,7 +9,7 @@
             <ol class="carousel-indicators">
               <% if @calltoactions.count > 1 %>
                 <% @calltoactions.each_with_index do |calltoaction, i| %>
-                  <li data-target="#home-carousel" data-slide-to="0" class="<%= "active" if i == 0 %>"></li>
+                  <li data-target="#home-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
                 <% end %>
               <% end %>
             </ol>
@@ -37,19 +37,21 @@
                     </div>
 
                     <div class="carousel-caption" style="bottom: 0; top: initial;">
-                      <div class="col-xs-8 col-xsm-12 text-left">
+                      <div class="col-xs-12 text-left" style="position: relative; padding-right: 20%;">
                         <h5 class="text-with-shadow">
                           <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
                           <% if tags_with_miniformat_in_calltoaction.any? %>
-                            <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
+                            <span class="miniformat <%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
                             <%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("title").try(:value) %>
                           <% else %>
                             &nbsp;
                           <% end %>
                         </h5>      
-                        <h2 class="text-with-shadow" style="margin-top: 0px;"><%= calltoaction.title %></h2>
+                        <h2 class="text-with-shadow" style="margin-top: 0px; font-size: 24px; font-weight: 700;">
+                          <%= calltoaction.title %>
+                        </h2>
+                        <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '<%= @stream_url %>';">GUARDA</button></h2> 
                       </div>
-                      <div class="col-xs-4 col-xsm-12 margin-top-sm-10"><h2><button class="btn-2" role="button" onclick="window.top.location.href = '<%= @stream_url %>';">GUARDA</button></h2></div>   
                     </div>
 
 
@@ -70,7 +72,7 @@
             <ol class="carousel-indicators">
               <% if @active_home_launchers.count > 1 %>
                 <% @active_home_launchers.each_with_index do |home_launcher, i| %>
-                  <li data-target="#home-carousel" data-slide-to="0" class="<%= "active" if i == 0 %>"></li>
+                  <li data-target="#home-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
                 <% end %>
               <% end %>
             </ol>
@@ -81,11 +83,11 @@
                     <div class="carousel-caption" style="left: 10%; bottom: 15px; top: initial;">
                       <div class="row">
                         <div class="col-xs-8 text-left">    
-                          <h2 class="text-with-shadow"><%= home_launcher.description %></h2>
+                          <h2 class="text-with-shadow" style="font-size: 24px; font-weight: 700;"><%= home_launcher.description %></h2>
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col-xs-3 text-left">
+                        <div class="col-xs-3 text-left btn-col">
                           <h2><button class="btn-2" role="button" onclick="window.top.location.href = '<%= home_launcher.url %>';"><%= home_launcher.button %></button></h2>
                         </div>
                       </div>   
