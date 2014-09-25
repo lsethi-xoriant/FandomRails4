@@ -1,28 +1,80 @@
-<ul class="nav nav-pills nav-justified fandom-nav">
-  <li id="home-filter-all" class="active home-filter">
-    <a href="javascript: void(0)" onclick="updatePageWithTag(null)">
-      <div class="row">
-        <div class="col-md-12" style="font-size: 24px;">
-          <span class="glyphicon glyphicon-th"></span>
-        </div>
-        <div class="col-md-12">
-          <span class="glyphicon-class">Tutti</span>
-        </div>
-      </div>
-    </a>
-  </li>
-  <% get_tags_with_tag("miniformat").each do |tag| %>
-    <li id="home-filter-<%= tag.id %>" class="home-filter">
-      <a href="javascript: void(0)" onclick="updatePageWithTag(<%= tag.id %>)">
-        <div class="row">
-          <div class="col-md-12" style="font-size: 24px;">
-            <span class="<%= tag.tag_fields.find_by_name("icon").try(:value) %>"></span>
-          </div>
-          <div class="col-md-12">
-            <span class="glyphicon-class"><%= tag.name %></span>
-          </div>
-        </div>
-      </a>
-    </li>
-  <% end %>
-</ul>
+<div class=" row menu-area">
+	<div class="container-menu" style="background-color: #000; float: left; width: 100%; padding: 10px 0 0 0;">
+		<div class="submenu">
+			    <div class="col-xs-12 filter-menu-tag">
+			      <div class="flexslider">
+			        <ul class="slides filter-home-menu">
+			        	<% get_tags_with_tag("menu").each do |tag| %>
+			            <li>
+			                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" %>" style="background-size: 100%; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+			                    <div class="comment-center">
+			                        <a href="javascript: void(0)" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
+								      <div class="row">
+								        <div class="col-md-12">
+								          <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
+								        </div>
+								      </div>
+								    </a>
+			                    </div>
+			                </div>
+			                <div class="triangle" style="<%= tag.name == "home_filter_all" ? "" : "display: none;" %>"></div>
+			            </li>
+			            <% end %>
+			         </ul>
+			      </div>
+			    </div>
+	
+		</div>
+	</div>
+	<div class="menu-info-extra">
+		<% get_tags_with_tag("menu").each do |tag| %>
+			<div class="extra-info extra-info-<%= tag.id %> <%= "extra-info-all" if tag.name == "home_filter_all" %>">
+				<img class="extra-info-img" src="<%= tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload }.first %>" />
+				<span class="extra-info-description"><%= tag.tag_fields.select { |tf| tf.name == "description" }.map { |tf| tf.value }.first %></span>
+			</div>
+		<% end %>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $('.filter-menu-tag .flexslider').flexslider({
+	        animation: "slide",
+	        controlNav: false,
+	        directionNav: true,
+	        slideshow: false,
+	        itemWidth: getItemSize(),//320,
+	        itemMargin: 10,
+	        minItems: 1,
+	        maxItems: 6
+	    });
+	    
+	    $(window).resize(function() {
+	
+	        $('.filter-menu-tag .flexslider').flexslider({
+	            animation: "slide",
+	            directionNav: true,
+	            prevText: "",
+	            nextText: "",
+	            slideshow: false,
+	            itemWidth: getItemSize(),
+	            itemMargin: 20,
+	            minItems: getGridSize(),
+	            move: getGridSize()
+	        });
+	        $('.filter-menu-tag .flexslider .slides li').css('width', getItemSize()+'px');
+		});
+	});
+
+	function getGridSize() {
+	    if ($(window).innerWidth() < 768)
+	        return 2;
+	    else
+	        return 3;
+	}
+	
+	function getItemSize() {
+		return ($(".container-menu").innerWidth() / getGridSize()) - 10;
+	}
+</script>

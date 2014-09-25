@@ -73,7 +73,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   $window.showCallToActionCountdown = function(calltoaction_id, time) {
     if(time > 0) {
       $("#calltoaction-" + calltoaction_id + "-countdown h3").html(time);
-      $timeout(function() { showCallToActionCountdown(calltoaction_id, --time) }, 1000);
+      $timeout(function() { showCallToActionCountdown(calltoaction_id, --time); }, 1000);
     } else {
       $("#calltoaction-" + calltoaction_id + "-countdown").html("");
       nextInteraction(calltoaction_id);
@@ -117,7 +117,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $("#undervideo-area-" + interaction_id).html(data.feedback); 
     $("#undervideo-interaction-" + interaction_id).css("display", "none"); 
 
-    calltoaction_id = data.calltoaction_id
+    calltoaction_id = data.calltoaction_id;
     $http.post("/check_next_interaction", { interactions_showed: $scope.interactions_showed[calltoaction_id], calltoaction_id: data.calltoaction_id })
       .success(function(data) {
         
@@ -138,10 +138,10 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $window.onEnterInteraction = function(interaction_id, answer_id) {
     if(answer_id) {
-      $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden")
+      $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden");
       $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").removeClass("square");
     } else {
-      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden")
+      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden");
       $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen").removeClass("square");
     }
   };
@@ -162,4 +162,19 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     } catch(err) { }
   };
 
+  $window.updateFiltersMenu = function(tag_id){
+  	$(".filter-home-menu .slide").removeClass("active");
+  	$(".filter-home-menu .triangle").hide();
+  	$(".extra-info").hide();
+  	if(tag_id){
+   		$(".filter-home-menu .slide-" + tag_id).addClass("active");
+   		$(".filter-home-menu .slide-" + tag_id).parent().find(".triangle").show();
+   		$(".menu-info-extra .extra-info-" + tag_id).show();
+   }else{
+   		$(".filter-home-menu .filter-all").addClass("active");
+   		$(".filter-home-menu .filter-all").parent().find(".triangle").show();
+   		$(".menu-info-extra .extra-info-all").show();
+   }
+  };
+  
 }
