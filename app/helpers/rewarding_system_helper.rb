@@ -400,7 +400,7 @@ module RewardingSystemHelper
       log_info("reward event", :outcome => outcome)
       user = user_interaction.user
       outcome.reward_name_to_counter.each do |reward_name, reward_counter|
-        UserReward.assign_reward(user, reward_name, reward_counter, request.site)
+        assign_reward(user, reward_name, reward_counter, request.site)
       end          
       outcome.unlocks.each do |reward_name|
         UserReward.unlock_reward(user, reward_name)
