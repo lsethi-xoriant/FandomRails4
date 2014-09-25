@@ -12,7 +12,26 @@ $navbar-default-bg: #fff !default;
 p.oblique { font-style: oblique } 
 
 .carousel-indicators {
-    bottom: 0;
+    bottom: -40px;
+    li {
+        background: none repeat scroll 0 0 #535353;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
+        cursor: pointer;
+        height: 11px;
+        width: 11px;
+        margin: 4px !important; 
+        border: none;
+    }
+    li.active {
+        margin: 0 !important;
+        background: none repeat scroll 0 0 #ffffff;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
+        cursor: pointer;
+        height: 11px;
+        width: 11px;
+        margin: 4px !important; 
+        border: none;
+    }
 }
 
 .carousel-control {
@@ -21,7 +40,7 @@ p.oblique { font-style: oblique }
     height: 50px;
     margin-top: auto;
     margin-bottom: auto;
-    width: 10%;
+    width: 5%;
 }
 
 .carousel-control:hover, .carousel-control:focus {
