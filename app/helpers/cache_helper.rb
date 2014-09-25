@@ -5,16 +5,16 @@ module CacheHelper
 
   # TODO: currently untested
   def template_cache_short(key = nil, &block)
-    cache(get_cache_key(key), :expires_in => 1.minute, :race_condition_ttl => 30, &block)
+    template_cache_aux(key, 1.minute, &block)
   end
   def template_cache_medium(key = nil, &block)
-    cache(get_cache_key(key), :expires_in => 5.minute, :race_condition_ttl => 1.minute, &block)
+    template_cache_aux(key, 5.minute, &block)
   end
   def template_cache_long(key = nil, &block)
-    cache(get_cache_key(key), :expires_in => 1.hour, :race_condition_ttl => 5.minute, &block)
+    template_cache_aux(key, 1.hour, &block)
   end
   def template_cache_huge(key = nil, &block)
-    cache(get_cache_key(key), :expires_in => 1.day, :race_condition_ttl => 1.hour, &block)
+    template_cache_aux(key, 1.day, &block)
   end
 
   # cache a block for a set amount of time
@@ -57,6 +57,28 @@ module CacheHelper
     end
     
     result = Rails.cache.fetch(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
+    
+    if block_time.nil?
+      log_info("cache hit", { 'key' => cache_key })
+    else
+      log_info("cache miss", { 'key' => cache_key, "time" => block_time })
+    end
+    result
+  end
+
+  def template_cache_aux(key = nil, expires_in, &block)
+    cache_key = get_cache_key(key)
+    
+    block_time = nil
+    wrapped_block = lambda  do
+      start_time = Time.now.utc 
+      block_result = yield block
+      block_time = (Time.now.utc - start_time) 
+      block_result 
+    end
+    
+    result = cache(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
+    
     if block_time.nil?
       log_info("cache hit", { 'key' => cache_key })
     else
