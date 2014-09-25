@@ -34,6 +34,21 @@ p.oblique { font-style: oblique }
     }
 }
 
+.miniformat {
+    text-transform: uppercase;
+}
+
+.carousel {
+    .btn-container {
+        bottom: 0;
+        left: 10px;
+        position: absolute;
+        right: 15px;
+        width: 15%;
+        margin-left: auto;
+    }
+}
+
 .carousel-control {
     z-index: 10;
     background-image: none !important;
