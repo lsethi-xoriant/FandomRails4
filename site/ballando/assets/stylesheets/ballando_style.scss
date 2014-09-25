@@ -11,6 +11,30 @@ $navbar-default-bg: #fff !default;
 
 p.oblique { font-style: oblique } 
 
+.carousel-indicators {
+    bottom: 0;
+}
+
+.carousel-control {
+    z-index: 10;
+    background-image: none !important;
+    height: 50px;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 10%;
+}
+
+.carousel-control:hover, .carousel-control:focus {
+    opacity: 1;
+}
+
+.carousel-caption {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
 button, h1, h2, h3, h4, h5, h6, li {
     font-family: "Roboto Condensed", helvetica, arial, sans-serif;
 }
@@ -1409,6 +1433,21 @@ div.progress{
     /* Remove the bottom border on the jumbotron for visual effect */
     .jumbotron {
         border-bottom: 0;
+    }
+}
+
+.margin-top-sm-10 {
+    margin-top: 10px;
+}
+
+/* TINY WIDGET FOR CAROUSEL */
+@media (max-width: 600px) {
+    .col-xsm-12 {
+        width: 100%;
+    }
+
+    .margin-top-sm-10 {
+        margin-top: 0;
     }
 }
 

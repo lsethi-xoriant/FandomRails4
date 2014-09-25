@@ -57,7 +57,7 @@ class Sites::Ballando::SessionsController < SessionsController
     valid_response, rai_response_user = evaluate_response(rai_response.strip)
     rai_response_user = JSON.parse(rai_response_user)
 
-    if valid_response && rai_response_user["authMyRaiTv"] == "OK"
+    if valid_response # TODO: && rai_response_user["authMyRaiTv"] == "OK"
 
       if rai_response_user["profile"]["email"]
         user_email = rai_response_user["profile"]["email"]
@@ -69,7 +69,7 @@ class Sites::Ballando::SessionsController < SessionsController
       if user && user.email.include?("@FAKE___DOMAIN.com")
         user.update_attribute(:email, user_email)
       elsif user.nil?
-        user = new_user_from_provider(rai_response_user)
+        user = new_user_from_provider(rai_response_user, user_email)
       end
 
       authentication = user.authentications.find_by_provider(rai_response_user["loginProvider"])
