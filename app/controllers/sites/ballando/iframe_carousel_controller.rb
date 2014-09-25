@@ -5,7 +5,7 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
   def show
     if current_user
       @calltoactions = cache_short("iframe_carousel_calltoactions") do
-        CallToAction.active.limit(1).to_a
+        CallToAction.active.limit(3).to_a
       end
       @calltoaction_reward_status = Hash.new
       @calltoactions.each do |calltoaction|
