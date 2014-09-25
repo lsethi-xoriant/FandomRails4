@@ -491,7 +491,7 @@ module RewardingSystemHelper
     sorted_interactions = interactions_required_to_complete(cta)
 
     if sorted_interactions.count == 0
-      Outcome.new
+      [Outcome.new, [], []] 
     else
       start_time = Time.now.utc
       
