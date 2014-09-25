@@ -852,6 +852,39 @@ span.notify {
     .form-control, .btn-account { margin-bottom: 1em; }
 }
 
+//HOME FILTERS
+.extra-info-img{
+  width: 100%;
+}
+.extra-info{
+  display: none;
+}
+.extra-info-all{
+  display: block;
+}
+.extra-info-description{
+  display: block;
+  position: absolute;
+  width: "50%";
+  bottom: 20px;
+  left: 20%;
+}
+.menu-info-extra{
+  width: 100%; 
+  float: left; 
+  overflow: hidden; 
+  position: relative;
+}
+.filter-menu-tag{
+  .comment-center{
+    background-color: rgba(107, 109, 109, 0.4);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+    h2{
+      text-transform: uppercase;
+    }
+  }
+}
+
 // LIVELLI
 .livelli {
     .no-box {
