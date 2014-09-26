@@ -6,7 +6,7 @@
             .on('jcarousel:reload jcarousel:create', function () {
                 var width = jcarousel.innerWidth();
 
-                if (width >= 600) {
+                if (width >= 500) {
                     width = width / 4;
 
                     jcarousel.jcarouselAutoscroll({

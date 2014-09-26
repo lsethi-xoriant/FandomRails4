@@ -25,7 +25,7 @@ def main
         print "restarting application server #{app_user}@#{instance.dns_name}... "
         $stdout.flush
         
-        input, output, error_output, thread = Open3::popen3("ssh #{app_user}@#{instance.dns_name} \"#{AWS_REMOTE_UPDATE_COMMAND}\"")
+        input, output, error_output, thread = Open3::popen3("ssh -oStrictHostKeyChecking=no #{app_user}@#{instance.dns_name} \"#{AWS_REMOTE_UPDATE_COMMAND}\"")
         if thread.value.exitstatus == 0
           puts "ok.".green
         else

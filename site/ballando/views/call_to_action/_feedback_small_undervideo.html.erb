@@ -1,7 +1,7 @@
 <% if current_user && user_interaction %>
   <div class="col-xs-12 text-center undervideo-feedback">
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="panel panel-default" style="margin-bottom: 10px;">
+      <div class="panel-body" style="padding: 5px;">
         <% if interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia" %>
           <% if user_interaction.answer.correct %>
             <p style="font-size: 12px; display: inline;"><span style="color: green;" class="glyphicon glyphicon-ok-sign"></span> CORRETTO! +<%= interaction_reward_status[:win_reward_count] %> punti</p>

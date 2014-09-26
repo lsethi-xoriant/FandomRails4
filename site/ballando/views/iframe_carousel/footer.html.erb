@@ -9,11 +9,10 @@
               <% @calltoactions.each do |calltoaction| %>
                 <li>
                   <div class="row">
-                    <div class="col-xs-12 jcarousel-img-container">
-                       <img src="<%= calltoaction.thumbnail(:medium) %>" class="img-responsive" style="width: 100%;">  
-
-
-                       <h4 style="position: absolute; top: 0; right: 22px;">
+                    <a href="/redirect_into_iframe_calltoaction/<%= calltoaction.id %>" target="_top">
+                      <div class="col-xs-12 jcarousel-img-container">
+                        <img src="<%= calltoaction.thumbnail(:medium) %>" class="img-responsive" style="width: 100%;">  
+                        <h4 style="position: absolute; top: 0; right: 22px;">
                           <% if call_to_action_completed?(calltoaction) %>
                             <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
                               FATTO <span class="glyphicon glyphicon-ok"></span>
@@ -25,13 +24,14 @@
                           <% end %>
                         </h4>
 
-                    </div>
-                    <div class="col-xs-12">
-                      <h5 style="color: #fff;"><%= calltoaction.title %></h5>
-                    </div>
-                     <div class="col-xs-12">
-                      <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%M/%Y") %></h6>
-                    </div>
+                      </div>
+                      <div class="col-xs-12">
+                        <h5 style="color: #fff;"><%= calltoaction.title %></h5>
+                      </div>
+                       <div class="col-xs-12">
+                        <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%M/%Y") %></h6>
+                      </div>
+                    </a>
                   </div>
                 </li>
               <% end %>
@@ -64,7 +64,7 @@
 <script type="text/javascript">
   
   $(document).ready(function() {
-    checkDocumentHeight("fandom-carousel-footer-widget");
+    checkDocumentHeight("fandom-footer-widget");
   });
 
 </script>
