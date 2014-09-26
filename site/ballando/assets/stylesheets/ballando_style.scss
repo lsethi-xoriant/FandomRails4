@@ -34,6 +34,21 @@ p.oblique { font-style: oblique }
     }
 }
 
+.miniformat {
+    text-transform: uppercase;
+}
+
+.carousel {
+    .btn-container {
+        bottom: 0;
+        left: 10px;
+        position: absolute;
+        right: 15px;
+        width: 15%;
+        margin-left: auto;
+    }
+}
+
 .carousel-control {
     z-index: 10;
     background-image: none !important;
@@ -837,6 +852,39 @@ span.notify {
     .form-control, .btn-account { margin-bottom: 1em; }
 }
 
+//HOME FILTERS
+.extra-info-img{
+  width: 100%;
+}
+.extra-info{
+  display: none;
+}
+.extra-info-all{
+  display: block;
+}
+.extra-info-description{
+  display: block;
+  position: absolute;
+  width: "50%";
+  bottom: 20px;
+  left: 20%;
+}
+.menu-info-extra{
+  width: 100%; 
+  float: left; 
+  overflow: hidden; 
+  position: relative;
+}
+.filter-menu-tag{
+  .comment-center{
+    background-color: rgba(107, 109, 109, 0.4);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+    h2{
+      text-transform: uppercase;
+    }
+  }
+}
+
 // LIVELLI
 .livelli {
     .no-box {
@@ -1188,7 +1236,7 @@ height: 100%;
       color: #fff;
     }
     .no-border{
-      border: none !important;
+      border: none;
     }
     .col-sm-3{
       border-left: 1px solid #ccc;
@@ -1291,7 +1339,7 @@ div.progress{
 
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
-    .profile-badge{
+    .profile-container .profile-badge{
       min-height: 0;
     }
     .img-profile { max-height: 64px; }
@@ -1355,8 +1403,16 @@ div.progress{
     }
     
     .profile-bar{
-      .col-sm-3{
-        border: none !important;
+      .col-sm-3 {
+        border-left: none !important;
+        padding: 20px 0;
+        border-top: 2px solid #ccc;
+      }
+      .ranking-info{
+        .label-warning, .label-default{
+          width: 60%;
+          margin: 5px auto;
+        }
       }
     }
 }

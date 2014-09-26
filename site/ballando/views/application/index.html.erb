@@ -7,15 +7,13 @@
   <!-- CUSTOM SITE HEADER --> 
   <%#= render partial: "/application/header" %>
 
-  <%
-=begin  
-  div class="row">
+  <div class="row">
     <div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0" style="margin-top: 15px;">
-      %= render partial: "/application/home_filters" %
+      <%= render partial: "/application/home_filters" %>
     </div>
   </div>
-=end
-%>
+  
+
   <div class="row">
     <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
       <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions } %>

@@ -94,17 +94,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         } else {
           $("#append-other button").show();
         }
+		
+		updateFiltersMenu(tag_id);
+        
+      }).error(function() {
+        // ERROR.
+      });
+  };
 
-        $(".home-filter").removeClass("active");
+  $window.updateFiltersMenu = function(tag_id){
+  	$(".home-filter").removeClass("active");
         if(tag_id) {
           $("#home-filter-" + tag_id).addClass("active");
         } else {
           $("#home-filter-all").addClass("active");
         }
-
-      }).error(function() {
-        // ERROR.
-      });
   };
 
   $window.appendYTIframe = function(calltoaction) {
@@ -201,7 +205,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.showRegistrateView = function() {
     $("#registrate-modal").modal('show');
-  }
+  };
 
   $window.executeInteraction = function(calltoaction_id, second, calltoaction_interacations) { 
     angular.forEach(calltoaction_interacations, function(interaction_second, interaction_id) {
