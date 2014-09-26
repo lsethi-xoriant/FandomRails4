@@ -49,15 +49,13 @@ p.oblique { font-style: oblique }
     text-transform: uppercase;
 }
 
-.carousel {
-    .btn-container {
-        bottom: 0;
-        left: 10px;
-        position: absolute;
-        right: 15px;
-        width: 15%;
-        margin-left: auto;
-    }
+.btn-container {
+    bottom: 0;
+    left: 10px;
+    position: absolute;
+    right: 15px;
+    width: 15%;
+    margin-left: auto;
 }
 
 .carousel-control {
@@ -86,6 +84,7 @@ button, h1, h2, h3, h4, h5, h6, li {
 
 .text-with-shadow {
     text-shadow: 1px 2px 3px #000;
+    color: #fff;
 }
 
 #waiting-registration-layer {
