@@ -74,13 +74,16 @@ class CallToActionController < ApplicationController
   end
 
   def show
-    @calltoaction = CallToAction.find(params[:id])
-    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([@calltoaction])
 
-    @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(@calltoaction, "Comment")
-    @calltoaction_like_interaction = find_interaction_for_calltoaction_by_resource_type(@calltoaction, "Comment")
+    calltoaction = CallToAction.find(params[:id])
+    @calltoactions = [calltoaction]
 
-    @calltoactions_correlated = get_correlated_cta(@calltoaction)
+    @calltoactions_active_count = 1    
+    
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([calltoaction])
+    @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction, "Comment")
+
+    # TODO: @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
     if page_require_captcha?(@calltoaction_comment_interaction)
       @captcha_data = generate_captcha_response

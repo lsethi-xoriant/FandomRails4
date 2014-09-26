@@ -1,0 +1,24 @@
+<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions.to_json %>, '<%= @calltoactions_active_count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
+
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0" style="margin-top: 15px;">
+      <%= render partial: "/application/home_filters" %>
+    </div>
+  </div>
+  
+
+  <div class="row">
+    <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
+      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions } %>
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    checkDocumentHeight("fandom");
+  });
+
+</script>
