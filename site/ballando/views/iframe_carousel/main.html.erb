@@ -41,8 +41,8 @@
                         <h5 class="text-with-shadow">
                           <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
                           <% if tags_with_miniformat_in_calltoaction.any? %>
-                            <span class="miniformat <%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
-                            <%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("title").try(:value) %>
+                            <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>"></span>
+                            <%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
                           <% else %>
                             &nbsp;
                           <% end %>
@@ -50,7 +50,10 @@
                         <h2 class="text-with-shadow" style="margin-top: 0px; font-size: 24px; font-weight: 700;">
                           <%= calltoaction.title %>
                         </h2>
-                        <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '<%= @stream_url %>';">GUARDA</button></h2> 
+                        <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">GUARDA</button></h2> 
+                      </div>
+                      <div class="col-xs-12 text-left visible-xs">
+                        <h2><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">GUARDA</button></h2> 
                       </div>
                     </div>
 

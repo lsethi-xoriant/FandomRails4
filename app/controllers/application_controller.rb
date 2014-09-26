@@ -14,9 +14,25 @@ class ApplicationController < ActionController::Base
 
   before_filter :fandom_before_filter
 
+  before_filter :check_redirect_into_iframe_calltoaction, only: :index
+
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = "Access denied!"
     redirect_to "/"
+  end
+
+  def redirect_into_iframe_calltoaction
+    cookies["calltoaction"] = params[:calltoaction_id]
+    redirect_to Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["stream_url"]
+  end
+
+  def check_redirect_into_iframe_calltoaction
+    if cookies["calltoaction"].present?
+      calltoaction_id = cookies["calltoaction"]
+      cookies.delete(:calltoaction)
+      redirect_to "/call_to_action/#{calltoaction_id}"
+      return
+    end
   end
 
   def delete_current_user_interactions
