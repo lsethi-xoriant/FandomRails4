@@ -1458,6 +1458,8 @@ height: 100%;
 }
 
 @media (min-width: $screen-sm-min) {
+    
+    
     .baloon-right.small:after, .baloon-left.small:after { 
         border-width: 3px; 
         margin-top: -3px; 
