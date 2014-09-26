@@ -1241,7 +1241,7 @@ height: 100%;
       color: #fff;
     }
     .no-border{
-      border: none !important;
+      border: none;
     }
     .col-sm-3{
       border-left: 1px solid #ccc;
@@ -1344,7 +1344,7 @@ div.progress{
 
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
-    .profile-badge{
+    .profile-container .profile-badge{
       min-height: 0;
     }
     .img-profile { max-height: 64px; }
@@ -1408,8 +1408,16 @@ div.progress{
     }
     
     .profile-bar{
-      .col-sm-3{
-        border: none !important;
+      .col-sm-3 {
+        border-left: none !important;
+        padding: 20px 0;
+        border-top: 2px solid #ccc;
+      }
+      .ranking-info{
+        .label-warning, .label-default{
+          width: 60%;
+          margin: 5px auto;
+        }
       }
     }
 }
