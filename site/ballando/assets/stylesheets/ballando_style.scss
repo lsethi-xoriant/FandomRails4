@@ -1367,6 +1367,10 @@ height: 100%;
 
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
+    .cta-stream {
+        min-height: 600px;
+    }
+
     .container-cover-countdown {
         min-height: 50px !important;
         h3 { font-weight: bold; }
@@ -1458,8 +1462,6 @@ height: 100%;
 }
 
 @media (min-width: $screen-sm-min) {
-    
-    
     .baloon-right.small:after, .baloon-left.small:after { 
         border-width: 3px; 
         margin-top: -3px; 
@@ -1568,7 +1570,7 @@ height: 100%;
 }
 
 /* TINY WIDGET FOR CAROUSEL */
-@media (max-width: 600px) {
+@media (max-width: 500px) {
     .col-xsm-12 {
         width: 100%;
     }
