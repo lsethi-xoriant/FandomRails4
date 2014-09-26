@@ -1,0 +1,70 @@
+<div class="container-fluid footer-carousel">
+  <div class="row">
+    <div class="col-xs-12 col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3">
+
+      <% if true #current_user %>
+        <div class="jcarousel-wrapper">
+          <div class="jcarousel">
+            <ul>
+              <% @calltoactions.each do |calltoaction| %>
+                <li>
+                  <div class="row">
+                    <div class="col-xs-12 jcarousel-img-container">
+                       <img src="<%= calltoaction.thumbnail(:medium) %>" class="img-responsive" style="width: 100%;">  
+
+
+                       <h4 style="position: absolute; top: 0; right: 22px;">
+                          <% if call_to_action_completed?(calltoaction) %>
+                            <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
+                              FATTO <span class="glyphicon glyphicon-ok"></span>
+                            </span>
+                          <% else %>
+                            <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= @calltoaction_reward_status[calltoaction.id][:winnable_reward_count] %>
+                              <span class="glyphicon glyphicon-star"></span>
+                            </span>
+                          <% end %>
+                        </h4>
+
+                    </div>
+                    <div class="col-xs-12">
+                      <h5 style="color: #fff;"><%= calltoaction.title %></h5>
+                    </div>
+                     <div class="col-xs-12">
+                      <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%M/%Y") %></h6>
+                    </div>
+                  </div>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+
+          <!--
+          <a href="#" class="jcarousel-control-prev hidden-xsm">&lsaquo;</a>
+          <a href="#" class="jcarousel-control-next hidden-xsm">&rsaquo;</a>
+          -->
+
+          <a href="#" class="jcarousel-control-prev mobile visible-xsm"><span class="glyphicon glyphicon-chevron-left"></span></a>
+          <a href="#" class="jcarousel-control-next mobile visible-xsm"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          
+
+          <!-- PAGINATION DESKTOP -->
+          <p class="jcarousel-pagination hidden-xsm"></p>
+
+          <!-- PAGINATION MOBILE -->
+          <p class="jcarousel-pagination mobile visible-xsm"></p>
+
+        </div>
+      <% else %>
+      <% end %>
+        
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  
+  $(document).ready(function() {
+    checkDocumentHeight("fandom-carousel-footer-widget");
+  });
+
+</script>

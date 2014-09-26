@@ -25,6 +25,10 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
+  def healthcheck
+    render :inline => "Healthy."
+  end
+
   def index
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are mashalled 
     
