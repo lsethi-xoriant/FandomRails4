@@ -58,18 +58,25 @@
               <%= f.text_field :button_label, :class => "form-control" %>
           </div>
           <div class="form-group">
-              <label class="text-input">Costo premio</label>
+              <label class="text-input">Valore premio</label>
               <%= f.text_field :cost, :class => "form-control" %>
           </div>
           <div class="form-group">
               <label class="text-input">Tipo currency</label>
               <% date_array = @currency_rewards.map { |currency| [currency.title, currency.id] } %>
               <% date_array.unshift ["", ""] %>
-              <%= select_tag :currency_id, options_for_select(date_array), :class => "form-control" %>
+              <%= f.select(:currency_id, date_array, {}, { :class => "form-control" }) %>
           </div>
+          
           <div class="form-group">
             <label class="text-input">Tipologia di contenuto</label>
-              <%= f.select(:media_type, [["DIGITALE", "DIGITALE"], ["FISICO", "FISICO"]], {}, { :class => "form-control" }) %>
+              <%= f.select(:media_type, [["DIGITALE", "DIGITALE"], ["FISICO", "FISICO"], ["CALLTOACTION", "CALLTOACTION"]], {}, { :class => "form-control" }) %>
+          </div>
+          <div class="form-group cta-erward">
+              <label class="text-input">Call to action premio</label>
+              <% date_array = get_ctas_with_tag(CTA_REWARD_TAG).map { |cta| [cta.title, cta.id] } %>
+              <% date_array.unshift ["", ""] %>
+              <%= f.select(:call_to_action_id, date_array, {}, { :class => "form-control" }) %>
           </div>
           <div class="form-group">
               <label class="text-input">Video URL</label>
@@ -225,4 +232,18 @@
       tokenSeparators: [","]
     })
   });
+  
+  function getSelectValue(select){
+	return $(select).find("option:selected").val();
+  }
+	
+  function changeMetadataType(type_element){
+	var value = getSelectValue(type_element);
+	if(value == "CALLTOACTION"){
+		$(type_element).parents(".metadata-form-container").find(".string-metadata").hide();
+		$(type_element).parents(".metadata-form-container").find(".media-metadata").show();
+	}
+  }
+  
+  
 </script>

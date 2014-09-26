@@ -22,7 +22,8 @@ class Reward < ActiveRecord::Base
     :spendable,
     :countable,
     :numeric_display,
-    :reward_id
+    :reward_id,
+    :call_to_action_id
 
   attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time # Accessor attributes for easyadmin.
 
@@ -34,7 +35,9 @@ class Reward < ActiveRecord::Base
   
   has_many :reward_tags
   has_many :user_rewards
+  has_many :rewards
   belongs_to :currency, :class_name => "Reward", :foreign_key => 'currency_id'
+  belongs_to :call_to_action
   
   before_save :set_active_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
   before_save :set_expire_at # Costruisco la data di disattivazione se arrivo dall'easyadmin.
