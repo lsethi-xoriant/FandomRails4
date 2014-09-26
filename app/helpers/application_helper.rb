@@ -344,6 +344,9 @@ module ApplicationHelper
 		end
 	end
 
+  def current_user_name_or_username
+  end
+
 	def current_avatar size = "normal"
 		if current_user
 			return user_avatar current_user
