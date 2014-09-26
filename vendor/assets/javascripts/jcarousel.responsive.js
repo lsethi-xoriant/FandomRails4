@@ -8,8 +8,22 @@
 
                 if (width >= 600) {
                     width = width / 4;
+
+                    jcarousel.jcarouselAutoscroll({
+                        interval: 3000,
+                        target: '+=4',
+                        autostart: true
+                    });
+
                 } else if (width >= 350) {
                     width = width / 1;
+
+                    jcarousel.jcarouselAutoscroll({
+                        interval: 3000,
+                        target: '+=1',
+                        autostart: true
+                    });
+
                 }
 
                 jcarousel.jcarousel('items').css('width', width + 'px');
@@ -17,7 +31,7 @@
             .jcarousel({
                 wrap: 'circular'
             });
-
+            
         $('.jcarousel-control-prev')
             .jcarouselControl({
                 target: '-=4'
