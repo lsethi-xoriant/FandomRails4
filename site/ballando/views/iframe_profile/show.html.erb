@@ -31,6 +31,7 @@
           <span id="iframe-profile-main-reward" class="label label-warning">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME) %>
             <span class="glyphicon glyphicon-star"></span>
           </span>
+          <a href="/users/sign_out" target="_top">LOGOUT</a>
         </h5>
       <% else %>
         <button class="btn-2 btn-2-small" onclick="window.top.location.href = '<%= @profile_url %>';">LOGIN / REGISTRATI</button>

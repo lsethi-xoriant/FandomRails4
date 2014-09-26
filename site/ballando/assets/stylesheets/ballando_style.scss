@@ -391,7 +391,7 @@ h1, h2, h3 {
         color: #000;
     }
     .question {
-        margin-top: 20px; margin-bottom: 20px;
+        margin-top: 0; margin-bottom: 20px;
         h4 {
             font-weight: bold;
         }
@@ -1367,7 +1367,11 @@ height: 100%;
 
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
-    .profile-container .profile-badge{
+    .btn-container {
+        display: none;
+    }
+
+    .profile-container .profile-badge {
       min-height: 0;
     }
     .img-profile { max-height: 64px; }

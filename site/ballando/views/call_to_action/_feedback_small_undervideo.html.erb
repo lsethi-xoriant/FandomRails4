@@ -1,6 +1,6 @@
 <% if current_user && user_interaction %>
   <div class="col-xs-12 text-center undervideo-feedback">
-    <div class="panel panel-default" style="margin-bottom: 5px;">
+    <div class="panel panel-default" style="margin-bottom: 10px;">
       <div class="panel-body" style="padding: 5px;">
         <% if interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia" %>
           <% if user_interaction.answer.correct %>
