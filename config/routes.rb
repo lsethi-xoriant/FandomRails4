@@ -55,6 +55,9 @@ Fandom::Application.routes.draw do
   match "bootcamp", :to => "ranking#show_vote_rankings_page"
   match "/ranking/page", :to => "ranking#get_rank_page"
   
+  match "/healthcheck", :to => "application#healthcheck"
+
+
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"
 
