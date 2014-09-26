@@ -22,29 +22,6 @@ p.oblique { font-style: oblique }
     padding-bottom: 40px;
 }
 
-.carousel-indicators {
-    bottom: -40px;
-    li {
-        background: none repeat scroll 0 0 #535353;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
-        cursor: pointer;
-        height: 11px;
-        width: 11px;
-        margin: 4px !important; 
-        border: none;
-    }
-    li.active {
-        margin: 0 !important;
-        background: none repeat scroll 0 0 #ffffff;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
-        cursor: pointer;
-        height: 11px;
-        width: 11px;
-        margin: 4px !important; 
-        border: none;
-    }
-}
-
 .miniformat {
     text-transform: uppercase;
 }
@@ -1707,4 +1684,29 @@ height: 100%;
   50%, 100% {
     opacity: 0;
   }
+}
+
+/* CUSTOM BOOTSTRAP CAROUSEL */
+
+.carousel-indicators {
+    bottom: -40px;
+    li {
+        background: none repeat scroll 0 0 #535353;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
+        cursor: pointer;
+        height: 11px;
+        width: 11px;
+        margin: 4px !important; 
+        border: none;
+    }
+    li.active {
+        margin: 0 !important;
+        background: none repeat scroll 0 0 #ffffff;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
+        cursor: pointer;
+        height: 11px;
+        width: 11px;
+        margin: 4px !important; 
+        border: none;
+    }
 }
