@@ -11,6 +11,12 @@ $navbar-default-bg: #fff !default;
 
 p.oblique { font-style: oblique } 
 
+.cover-grid {
+    position: absolute; 
+    top: 0; bottom: 0; left: 0; right: 0; 
+    background-image: url('ballando_grid.png');
+}
+
 .footer-carousel {
     background: #8d1e12;
     padding-bottom: 40px;
@@ -1304,9 +1310,9 @@ height: 100%;
   
 }
 
-div.progress{
+.progress {
   height: 10px;
-  background-color: #000;
+  background-color: #eee;
 }
 
 .progress-bar-warning{
