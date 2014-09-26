@@ -1174,6 +1174,10 @@ height: 100%;
 .label{
   color: #2f2f2f;
 }
+
+.label-warning{
+  background-color: #ffba00;
+}
 .profile-container{
   
   h1, h2, h3, h4, h5, h6{
@@ -1283,6 +1287,11 @@ height: 100%;
 
 div.progress{
   height: 10px;
+  background-color: #000;
+}
+
+.progress-bar-warning{
+  background-color: #ffba00;
 }
 
 //MOKU MENU SLIDER
