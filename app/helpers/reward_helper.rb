@@ -7,7 +7,7 @@ module RewardHelper
     user_reward = get_user_reward(user, reward_name)
     if user_reward.nil?
       reward = Reward.find_by_name(reward_name)
-      create(:user_id => user.id, :reward_id => reward.id, :available => true, :counter => counter, :period_id => nil)
+      UserReward.create(:user_id => user.id, :reward_id => reward.id, :available => true, :counter => counter, :period_id => nil)
     else
       user_reward.update_attributes(:counter => user_reward.counter + counter, :available => true)
     end

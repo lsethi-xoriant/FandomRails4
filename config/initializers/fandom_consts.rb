@@ -52,5 +52,6 @@ unless defined? FILTER_OPERATOR_CONTAINS
   REWARD_SORT_BY_VALIDITY_END = "valid_to"
   REWARD_SORT_BY_NAME = "name"
   REWARD_SORT_BY_TITLE = "title"
+  CTA_REWARD_TAG = "reward-cta"
   
 end

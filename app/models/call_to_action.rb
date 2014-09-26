@@ -32,6 +32,7 @@ class CallToAction < ActiveRecord::Base
   has_many :interactions, dependent: :destroy
   has_many :call_to_action_tags, dependent: :destroy
   has_many :answers
+  has_many :rewards
   belongs_to :releasing_file
   belongs_to :user
   has_one :user_upload_interaction
