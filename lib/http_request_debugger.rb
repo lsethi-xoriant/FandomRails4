@@ -20,6 +20,12 @@ class HttpRequestDebugger
       user_id = -1
     end
 
+    if Rails.configuration.domain_to_site.key?(http_host)
+      tenant = Rails.configuration.domain_to_site[http_host].id
+    else
+      tenant = "no_tenant"
+    end
+
     EventHandlerHelper.log_info(
         msg, 
         request_uri: "#{env["REQUEST_URI"]}",
@@ -30,7 +36,7 @@ class HttpRequestDebugger
         session_id: "#{env["rack.session"]["session_id"]}",
         remote_ip: "#{env["action_dispatch.remote_ip"]}",
         time: "#{(stop - start)}",
-        tenant: Rails.configuration.domain_to_site[http_host].id,
+        tenant: tenant,
         user_id: user_id,
         middleware: true
       )
