@@ -182,4 +182,23 @@ module CallToActionHelper
     return false
   end
   
+  def cta_is_a_reward(cta)
+    cta.rewards.any?
+  end
+  
+  def is_cta_locked(cta)
+    cta_is_a_reward(cta) && !cta_is_unlocked(cta)
+  end
+  
+  def cta_is_unlocked(cta)
+    unlocked = false
+    cta.rewards.each do |r|
+      if user_has_reward(r.name)
+        unlocked = true
+        break
+      end
+    end
+    unlocked
+  end
+  
 end

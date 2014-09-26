@@ -8195,7 +8195,8 @@ CREATE TABLE rewards (
     not_winnable_image_file_name character varying(255),
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
-    not_winnable_image_updated_at timestamp without time zone
+    not_winnable_image_updated_at timestamp without time zone,
+    call_to_action_id integer
 );
 
 
@@ -13425,3 +13426,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140919145505');
 INSERT INTO schema_migrations (version) VALUES ('20140919145609');
 
 INSERT INTO schema_migrations (version) VALUES ('20140919151718');
+
+INSERT INTO schema_migrations (version) VALUES ('20140926073909');
