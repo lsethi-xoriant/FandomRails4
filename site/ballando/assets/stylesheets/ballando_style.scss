@@ -11,6 +11,11 @@ $navbar-default-bg: #fff !default;
 
 p.oblique { font-style: oblique } 
 
+.footer-carousel {
+    background: #8d1e12;
+    padding-bottom: 40px;
+}
+
 .carousel-indicators {
     bottom: -40px;
     li {
@@ -1507,6 +1512,16 @@ div.progress{
     margin-top: 10px;
 }
 
+.visible-xsm {
+    display: none;
+}
+
+.jcarousel-img-container {
+    height: 120px; 
+    position: relative; 
+    overflow-y: hidden;
+}
+
 /* TINY WIDGET FOR CAROUSEL */
 @media (max-width: 600px) {
     .col-xsm-12 {
@@ -1515,6 +1530,18 @@ div.progress{
 
     .margin-top-sm-10 {
         margin-top: 0;
+    }
+
+    .hidden-xsm {
+        display: none;
+    }
+
+    .visible-xsm {
+        display: block;
+    }
+
+    .jcarousel-img-container {
+        height: inherit; position: relative;
     }
 }
 

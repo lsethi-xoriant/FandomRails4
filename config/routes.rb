@@ -22,7 +22,8 @@ Fandom::Application.routes.draw do
           match "/users/rai/sign_in_from_provider/create", :to => "sessions#ballando_create_from_provider", defaults: { format: 'json' }
   
           match "/profile/widget", :to => "iframe_profile#show"
-          match "/carousel/widget", :to => "iframe_carousel#show"
+          match "/carousel/widget", :to => "iframe_carousel#main"
+          match "/carousel_footer/widget", :to => "iframe_carousel#footer"
           
           match "/iframe/check", :to => "iframe_check#show"
           match "/iframe/get_check", :to => "iframe_check#get_check_template"
