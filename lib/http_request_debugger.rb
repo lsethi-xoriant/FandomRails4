@@ -21,7 +21,7 @@ class HttpRequestDebugger
     end
 
     if Rails.configuration.domain_to_site.key?(http_host)
-      tenant = Rails.configuration.domain_to_site.key[http_host].id
+      tenant = Rails.configuration.domain_to_site[http_host].id
     else
       tenant = "no_tenant"
     end
