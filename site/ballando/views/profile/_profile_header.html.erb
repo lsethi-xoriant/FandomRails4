@@ -1,13 +1,13 @@
 <div class="row profile-bar">
 	<div class="col-sm-3 no-border">
-	  <div class="text-center">
+	  <div class="text-center" style="padding-top: 23px;">
 	  	<img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-profile">
 	  	<h4><%= "#{current_user.first_name} #{current_user.last_name}" %></h4>
 	  </div>
 	</div>
 	<div class="col-sm-3">
 		<% superfan = get_superfan_reward %>
-		<div class="text-center">
+		<div class="text-center" style="padding-top: 20px;">
 			<% if superfan %>
 				<img src="<%= get_reward_image_for_status(superfan) %>" alt="profile img" class="img-circle img-profile">
 				<% if superfan.cost.present? %>

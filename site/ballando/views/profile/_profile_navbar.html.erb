@@ -5,9 +5,15 @@
 			      <div class="flexslider">
 			        <ul class="slides">
 			            <li>
-			                <div class="slide <%= "active" if page == "badges" %>">
+			                <div class="slide <%= "active" if page == "badges" %>" style="background: url('<%= asset_path('superfan.jpg') %>') no-repeat center center;">
 			                    <div class="comment-center">
-			                        <a href="/profile/badges">SUPERFAN</a>
+			                        <a href="/profile/badges">
+			                        	<div class="row">
+								        	<div class="col-md-12">
+								        		<h2>SUPERFAN</h2>
+								        	</div>
+								        </div>
+								    </a>
 			                    </div>
 			                </div>
 			                <% if page == "badges" %>
@@ -15,24 +21,34 @@
 			                <% end %>
 			            </li>
 			            <li>
-			                <div class="slide <%= "active" if page == "notices" %>">
+			                <div class="slide <%= "active" if page == "rankings" %>" style="background: url('<%= asset_path('classifica.jpg') %>') no-repeat center center;">
 			                    <div class="comment-center">
-			                        <a href="/profile/notices">NOTIFICHE</a>
-			                    </div>
-			                </div>
-			                <% if page == "notices" %>
-			                	<div class="triangle"></div>
-			                <% end %>
-			            </li>
-			            <li>
-			                <div class="slide <%= "active" if page == "rankings" %>">
-			                    <div class="comment-center">
-			                        <a href="/profile/rankings">CLASSIFICA</a>
+			                        <a href="/profile/rankings">
+			                        	<div class="row">
+								        	<div class="col-md-12"><h2>CLASSIFICA</h2>
+								        	</div>
+								        </div>
+								    </a>
 			                    </div>
 			                </div>
 			                <% if page == "rankings" %>
 			                	<div class="triangle"></div>
 			               	<% end %>
+			            </li>
+			            <li>
+			                <div class="slide <%= "active" if page == "notices" %>" style="background: url('<%= asset_path('notifiche.jpg') %>') no-repeat center center;">
+			                    <div class="comment-center">
+			                        <a href="/profile/notices">
+			                        	<div class="row">
+								        	<div class="col-md-12"><h2>NOTIFICHE</h2>
+								        	</div>
+								        </div>
+								    </a>
+			                    </div>
+			                </div>
+			                <% if page == "notices" %>
+			                	<div class="triangle"></div>
+			                <% end %>
 			            </li>
 			         </ul>
 			      </div>
