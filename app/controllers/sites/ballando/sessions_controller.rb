@@ -57,7 +57,7 @@ class Sites::Ballando::SessionsController < SessionsController
     valid_response, rai_response_user = evaluate_response(rai_response.strip)
     rai_response_user = JSON.parse(rai_response_user)
 
-    if valid_response # TODO: && rai_response_user["authMyRaiTv"] == "OK"
+    if valid_response && rai_response_user["authMyRaiTv"] == "OK"
 
       if rai_response_user["profile"]["email"]
         user_email = rai_response_user["profile"]["email"]

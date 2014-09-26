@@ -3,8 +3,8 @@
 <div class="col-sm-12">
   <div class="row text-center cta-stream-heading" style="position: relative;">
     <div class="col-sm-12">
-      <h1><span class="glyphicon glyphicon glyphicon-ok-sign"></span></h1>
-      <h4>Sfida fatta!</h4>
+      <h1 style="font-size: 50px; margin-top: 20px;"><span class="glyphicon glyphicon glyphicon-ok-sign"></span></h1>
+      <h2 style="margin-top: 15px; font-weight: bold;">Sfida<br>completata!</h2>
     </div>
     <div class="col-xs-12 text-center undervideo-feedback">
       <% if calltoaction_reward_status[:winnable_reward_count] > 0 %>
@@ -19,7 +19,7 @@
           <% end %>
         </div>
       <% end %>
-      <div class="go-on" onclick="restartInteractions(<%= calltoaction.id %>)" style="">RIVEDI LE RISPOSTE</div>
+      <div class="go-init" onclick="restartInteractions(<%= calltoaction.id %>)" style="">RIVEDI LE RISPOSTE</div>
     </div>
   </div>
 </div>
