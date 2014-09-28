@@ -138,16 +138,16 @@ def generate_sql_insert_query(insert_values_for_event, pid, timestamp)
 
   sql_query = "BEGIN;"
   insert_values_for_event.each do |tenant, value| 
-
-    timestamp_quote = ActiveRecord::Base.connection.quote(Time.parse(timestamp).utc)
-    tenant_quote = ActiveRecord::Base.connection.quote(tenant)
-    pid_quote = ActiveRecord::Base.connection.quote(pid)
-
-    insert_values_for_synced_log_files = "#{pid_quote}, #{tenant_quote}, #{timestamp_quote}"
-
-    sql_query << "INSERT INTO #{tenant}.synced_log_files (#{insert_columns_for_synced_log_files}) VALUES (#{insert_values_for_synced_log_files});"
-    sql_query << "INSERT INTO #{tenant}.events (#{insert_columns_for_event}) VALUES #{value};"
-
+    if tenant != "no_tenant"
+      timestamp_quote = ActiveRecord::Base.connection.quote(Time.parse(timestamp).utc)
+      tenant_quote = ActiveRecord::Base.connection.quote(tenant)
+      pid_quote = ActiveRecord::Base.connection.quote(pid)
+  
+      insert_values_for_synced_log_files = "#{pid_quote}, #{tenant_quote}, #{timestamp_quote}"
+  
+      sql_query << "INSERT INTO #{tenant}.synced_log_files (#{insert_columns_for_synced_log_files}) VALUES (#{insert_values_for_synced_log_files});"
+      sql_query << "INSERT INTO #{tenant}.events (#{insert_columns_for_event}) VALUES #{value};"
+    end
   end
   sql_query << "COMMIT;"
 
