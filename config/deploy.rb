@@ -72,9 +72,11 @@ namespace :deploy do
       # execute :touch, release_path.join('tmp/restart.txt')
       puts "restarting unicorn..."
       execute "/etc/init.d/railsweb restart"
+      puts "restarting log daemon..."
+      execute "/etc/init.d/log_daemon restart"
       sleep 5
-      puts "is unicorn running? Look at this ps!"
-      execute "ps aux | grep unicorn"
+      puts "are they running? Look at this ps!"
+      execute "ps aux | grep -e 'unicorn\|log_daemon'"
       puts "making an archive of the current release (for AWS)"
       execute "cd #{deploy_to} ; tar -czf current.tgz releases/$(basename $(readlink current))"
     end
