@@ -76,7 +76,7 @@ namespace :deploy do
       puts "is unicorn running? Look at this ps!"
       execute "ps aux | grep unicorn"
       puts "making an archive of the current release (for AWS)"
-      execute "cd #{deploy_to} ; tar --exclude='tmp/pids/*' --exclude='log/*' -chzf current.tgz releases/$(basename $(readlink current))"
+      execute "cd #{deploy_to} ; tar -czf current.tgz releases/$(basename $(readlink current))"
     end
   end
 
