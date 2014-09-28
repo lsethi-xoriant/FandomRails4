@@ -42,6 +42,7 @@ else
     # sets the current link and restart rails
     ln -nfs $remote_current current
     service railsweb restart
+    /etc/init.d/log_daemon restart	
 fi
 
 # release lock

@@ -3,7 +3,12 @@ require "#{File.dirname(__FILE__)}/../lib/fandom_utils"
 # Set environment to development unless something else is specified
 env = ENV["RAILS_ENV"] || "development"
 
-worker_number = FandomUtils::get_number_of_cores() * 2
+core_number = FandomUtils::get_number_of_cores()
+if core_number == 1
+  worker_number =  3
+else
+  worker_number = core_number * 4
+end  
 worker_processes worker_number
 
 preload_app true

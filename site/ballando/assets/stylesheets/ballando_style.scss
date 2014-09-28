@@ -57,6 +57,7 @@ p.oblique { font-style: oblique }
 
 button, h1, h2, h3, h4, h5, h6, li {
     font-family: "Roboto Condensed", helvetica, arial, sans-serif;
+    text-transform: uppercase;
 }
 
 .text-with-shadow {
@@ -879,14 +880,14 @@ span.notify {
 }
 .extra-info-description{
   color: #fff;
-  text-align: center;
-  font-size: 23px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 700;
   display: block;
   position: absolute;
-  width: 24%;
-  bottom: 25px;
-  left: 32%;
+  width: 30%;
+  top: 40%;
+  left: 50px;
+  text-shadow: 1px 2px 3px #000;
 }
 .menu-info-extra{
   width: 100%; 
@@ -895,8 +896,10 @@ span.notify {
   position: relative;
 }
 .filter-menu-tag{
+  padding: 10px 0 0 0;
   .comment-center{
-    background-color: rgba(107, 109, 109, 0.4);
+    padding: 20px 0 !important;
+    background-color: rgba(107, 109, 109, 0.0);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
     h2{
       text-transform: uppercase;
@@ -904,6 +907,13 @@ span.notify {
   }
 }
 
+
+.comment-center{
+  h2{
+    text-transform: uppercase;
+    font-size: 18px;
+  }
+}
 // LIVELLI
 .livelli {
     .no-box {
@@ -1180,13 +1190,22 @@ height: 100%;
   color: #2f2f2f;
 }
 
+.spacer{
+  clear: both;
+  margin: 40px 0;
+}
+
 .label-warning{
   background-color: #ffba00;
+  //color: #fff;
 }
 .profile-container{
   
   h1, h2, h3, h4, h5, h6{
     color: #FFF;
+  }
+  h3,h4,h5,h6{
+    text-transform: lowercase;
   }
   
   .img-profile{
@@ -1241,28 +1260,34 @@ height: 100%;
       text-align: center; 
       padding: 10px 0; 
       font-weight: bold;
+      font-size: 20px;
+      width: 80%;
+      margin: 20px auto 0 auto;
     }
+    
     .label-default{
       background-color: #D3D3D3;
+      font-size: 20px;
     }
     span.contents-to-unlock{
-      font-size: 100px;
+      font-size: 109px;
       font-weight: bold;
       background-image: url("/assets/lock_mini.png");
       background-repeat: no-repeat;
       background-position: right center;
       background-size: 30px;
       padding-right: 50px;
-      line-height: 121px;
+      line-height: 150px;
     }
     a{
       color: #fff;
     }
-    .no-border{
+    .col-sm-3.no-border{
       border: none;
     }
     .col-sm-3{
       border-left: 1px solid #ccc;
+      min-height: 204px;
     }
     img.not-yours{
       border: none;
@@ -1291,8 +1316,8 @@ height: 100%;
 }
 
 .progress {
-  height: 10px;
-  background-color: #eee;
+  height: 10px !important;
+  background-color: #000 !important;
 }
 
 .progress-bar-warning{
@@ -1309,7 +1334,16 @@ height: 100%;
 }
 
 .profile-menu{
-  padding-top: 10px;
+  padding: 10px 0 0 0;
+  .comment-center{
+    padding: 20px 0 !important;
+    background-color: rgba(107, 109, 109, 0.0);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+  }
+}
+
+.flex-direction-nav{
+  display: none !important;
 }
 
 .comment-center{ 
@@ -1456,6 +1490,11 @@ height: 100%;
         }
       }
     }
+    
+    .flexslider .slide{
+      background-image: none !important;
+    }
+    
 }
 
 @media (min-width: $screen-sm-min) {
