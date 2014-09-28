@@ -19,8 +19,9 @@ def main
     monitor: true
   }
 
-  Daemons.run("#{app_root_path}/bin/log_daemon_impl.rb", options)
-
+  d = Daemons.run("#{app_root_path}/bin/log_daemon_impl.rb", options)
+  result = d.applications.length > 0 ? 0 : 1
+  exit result
 end
 
 def daemon_help
