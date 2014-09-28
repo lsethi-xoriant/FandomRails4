@@ -76,7 +76,7 @@ namespace :deploy do
       execute "/etc/init.d/log_daemon restart"
       sleep 5
       puts "are they running? Look at this ps!"
-      execute "ps aux | grep -e 'unicorn\|log_daemon'"
+      execute "ps aux | grep -e 'unicorn\\|log_daemon'"
       puts "making an archive of the current release (for AWS)"
       execute "cd #{deploy_to} ; tar -czf current.tgz releases/$(basename $(readlink current))"
     end
