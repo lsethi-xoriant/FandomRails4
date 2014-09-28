@@ -183,7 +183,7 @@ module RankingHelper
         "position" => i,
         "general_position" => user_position_hash[r.user.id], 
         "avatar" => user_avatar(r.user), 
-        "user" => "#{r.user.first_name} #{r.user.last_name}", 
+        "user" => extract_name_or_username(r.user), 
         "counter" => r.counter 
       }
       i += 1
@@ -198,7 +198,7 @@ module RankingHelper
       if r[:user]
         avatar = user_avatar(r[:user])
         user_id = r[:user].id
-        user_name = "#{r[:user].first_name} #{r[:user].last_name}"
+        user_name = extract_name_or_username(r[:user])
       else
         avatar = ""
         user_id = -1
@@ -229,7 +229,7 @@ module RankingHelper
         "user_id" => user.id,
         "position" => r[1], 
         "avatar" => user_avatar(user), 
-        "user" => "#{user.first_name} #{user.last_name}",
+        "user" => extract_name_or_username(user),
         "counter" => counter
       }
     end

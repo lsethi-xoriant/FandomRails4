@@ -24,7 +24,7 @@
 
     <div class="col-xs-8 hidden-xxs">
       <h4 style="padding-top: 15px; color: #fff;">
-        <%= current_user ? "#{current_user.first_name} #{current_user.last_name}" : "Iscriviti alla community" %>
+        <%= current_user ? extract_name_or_username(current_user) : "Iscriviti alla community" %>
       </h4>
       <% if current_user %>
         <h5 style="color: #fff;"> Hai fatto              

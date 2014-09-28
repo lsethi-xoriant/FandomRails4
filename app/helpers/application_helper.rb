@@ -344,7 +344,12 @@ module ApplicationHelper
 		end
 	end
 
-  def current_user_name_or_username
+  def extract_name_or_username(user)
+    if user.first_name.present? || user.last_name.present?
+      "#{user.first_name} #{user.last_name}"
+    else
+      user.username
+    end
   end
 
 	def current_avatar size = "normal"
