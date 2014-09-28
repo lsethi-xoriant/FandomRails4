@@ -9,7 +9,7 @@
 		<% superfan = get_superfan_reward %>
 		<div class="text-center" style="padding-top: 20px;">
 			<% if superfan %>
-				<img src="<%= get_reward_image_for_status(superfan) %>" alt="profile img" class="img-circle img-profile">
+				<img src="<%= get_reward_image_for_status(superfan) %>" alt="profile img" class="img-circle" style="max-width: 115px;">
 				<% if superfan.cost.present? %>
 					<div class="progress" style="margin: 10px auto; width: 30%;">
 				    	<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: <%= (get_reward_points_in_period(PERIOD_KIND_DAILY, MAIN_REWARD_NAME) * 100) / superfan.cost %>%;"></div>
