@@ -99,7 +99,6 @@ module CacheHelper
         block_result 
       end
       
-    debugger
       result = cache(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
       
       time = (Time.now.utc - start_time) 
