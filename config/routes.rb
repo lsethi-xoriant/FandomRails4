@@ -28,7 +28,7 @@ Fandom::Application.routes.draw do
           
           match "/iframe/check", :to => "iframe_check#show"
           match "/iframe/get_check", :to => "iframe_check#get_check_template"
-          match "/iframe/do_check", :to => "iframe_check#do_chek"
+          match "/iframe/do_check", :to => "iframe_check#do_check"
 
           match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
   
