@@ -37,7 +37,7 @@ class Sites::Ballando::SessionsController < SessionsController
           on_success(user)
           redirect_to "/refresh_top_window"
         else
-          flash[:error] = rai_response_json["authMyRaiTv"] == "USERALREADYEXIST" ? "Username o email già utilizzati" : rai_response_json["authMyRaiTv"]
+          flash[:error] = "Username o password errati"
           redirect_to "/users/sign_in"
         end
 

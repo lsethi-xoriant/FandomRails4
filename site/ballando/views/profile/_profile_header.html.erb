@@ -2,7 +2,7 @@
 	<div class="col-sm-3 no-border">
 	  <div class="text-center" style="padding-top: 23px;">
 	  	<img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-profile">
-	  	<h4><%= "#{current_user.first_name} #{current_user.last_name}" %></h4>
+	  	<h4><%= "#{current_user.first_name} #{current_user.last_name}" %> <a href="/users/sign_out" target="_top"><span class="glyphicon glyphicon-off"></span></a></h4>
 	  </div>
 	</div>
 	<div class="col-sm-3">
