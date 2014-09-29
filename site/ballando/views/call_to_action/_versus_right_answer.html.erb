@@ -7,12 +7,12 @@
       <div style="width: 80%; float: left; position: relative;">
         <% if interaction.resource.one_shot && current_user && user_interaction %>
           <!-- IMAGE INACTIVE -->
-          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="thumbnail">
+          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="button-inter-<%= interaction.id %> thumbnail">
             <img src="<%= answer.image(:medium) %>">
           </a>
         <% else %>
           <!-- IMAGE ACTIVE -->
-          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
+          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
             <img src="<%= answer.image(:medium) %>">
           </a>
         <% end %>
@@ -44,12 +44,12 @@
       <div style="width: 80%; float: left; position: relative; padding-top: 4px;">
         <% if interaction.resource.one_shot && current_user && user_interaction %>
           <!-- BUTTON INACTIVE -->
-          <button href="javascript: void(0)" style="margin-bottom: 0;" class="btn-2 btn-2-versus <%= user_answer ? "btn-2-versus-orange active" : "inactive" %>">
+          <button href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %> btn-2 btn-2-versus <%= user_answer ? "btn-2-versus-orange active" : "inactive" %>">
             <%= answer.text %>
           </button>
         <% else %>
           <!-- BUTTON ACTIVE -->
-          <button href="javascript: void(0)" style="margin-bottom: 0;" class="btn-2 btn-2-versus <%= "btn-2-versus-orange" if user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
+          <button href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %> btn-2 btn-2-versus <%= "btn-2-versus-orange" if user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
             <%= answer.text %>
           </button>
         <% end %>

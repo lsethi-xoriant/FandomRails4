@@ -3,6 +3,7 @@ require 'active_record'
 require 'yaml'
 require 'logger'
 require 'sys/proctable'
+require 'socket'
 
 def main
 
@@ -140,10 +141,10 @@ def generate_sql_insert_query(insert_values_for_event, pid, timestamp)
   insert_values_for_event.each do |tenant, value| 
     if tenant != "no_tenant"
       timestamp_quote = ActiveRecord::Base.connection.quote(Time.parse(timestamp).utc)
-      tenant_quote = ActiveRecord::Base.connection.quote(tenant)
+      server_hostname = ActiveRecord::Base.connection.quote(Socket.gethostname)
       pid_quote = ActiveRecord::Base.connection.quote(pid)
   
-      insert_values_for_synced_log_files = "#{pid_quote}, #{tenant_quote}, #{timestamp_quote}"
+      insert_values_for_synced_log_files = "#{pid_quote}, #{server_hostname}, #{timestamp_quote}"
   
       sql_query << "INSERT INTO #{tenant}.synced_log_files (#{insert_columns_for_synced_log_files}) VALUES (#{insert_values_for_synced_log_files});"
       sql_query << "INSERT INTO #{tenant}.events (#{insert_columns_for_event}) VALUES #{value};"

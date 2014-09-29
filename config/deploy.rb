@@ -79,6 +79,7 @@ namespace :deploy do
       execute "ps aux | grep -e 'unicorn\\|log_daemon'"
       puts "making an archive of the current release (for AWS)"
       execute "cd #{deploy_to} ; tar -czf current.tgz releases/$(basename $(readlink current))"
+      execute "cd #{deploy_to} ; tar -czf current_assets.tgz shared/public/assets/"
     end
   end
 

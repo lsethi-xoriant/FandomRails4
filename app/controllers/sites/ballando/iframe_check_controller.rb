@@ -28,25 +28,22 @@ class Sites::Ballando::IframeCheckController < ApplicationController
   end
   
   def can_do_check(interaction, referrer, user_interaction)
-    if user_interaction.nil? || ( !reached_cap(user_interaction) && !has_already_checked(interaction, referrer) ) 
-      true
-    else
-      false
-    end
+    user_interaction.nil? || (!reached_cap(user_interaction) && !has_already_checked(interaction, referrer)) 
   end
   
-  def do_chek
+  def do_check
     referrer = params[:referrer]
     cta = CallToAction.find_by_name("check_iframe")
+
     check_interaction = cta.interactions.first
-    aux = {}
-    user_interaction = UserInteraction.where("interaction_id = ? AND user_id = ?", check_interaction.id, current_user.id).first
-    if !user_interaction.nil?
+    user_interaction = current_user.user_interactions.find_by_interaction_id(check_interaction.id)
+    
+    if user_interaction
       aux = JSON.parse(user_interaction.aux)
       aux['referrer_list'] = aux['referrer_list'] + ",#{referrer}"
       aux = update_counter_cap(aux)
     else
-      aux['referrer_list'] = "#{referrer}"
+      aux = { 'referrer_list' => "#{referrer}" }
       aux = create_counter_cap(aux)
     end
     update_check_counter(check_interaction, aux.to_json)
@@ -89,12 +86,8 @@ class Sites::Ballando::IframeCheckController < ApplicationController
   end
   
   def has_already_checked(interaction, referrer)
-    user_interaction = UserInteraction.where("interaction_id = ? AND user_id = ?", interaction.id, current_user.id).first
-    if user_interaction.nil? || !is_referrer_present(referrer, user_interaction.aux)
-      false
-    else
-      true
-    end
+    user_interaction = current_user.user_interactions.find_by_interaction_id(interaction.id)
+    user_interaction && is_referrer_present(referrer, user_interaction.aux)
   end
   
   def is_referrer_present(referrer, aux)
