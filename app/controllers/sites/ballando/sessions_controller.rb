@@ -144,4 +144,12 @@ class Sites::Ballando::SessionsController < SessionsController
     )
   end
 
+  def ballando_destroy
+    destroy
+  end
+
+  def after_sign_out_path_for(resource_or_scope)
+    Rails.configuration.deploy_settings["sites"]["ballando"]["stream_url"]
+  end
+
 end
