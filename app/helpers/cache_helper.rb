@@ -3,18 +3,21 @@ require 'fandom_utils'
 module CacheHelper
   include FandomUtils
 
-  # TODO: currently untested
-  def template_cache_short(key = nil, &block)
-    template_cache_aux(key, 1.minute, &block)
+  # Caches a rails template, that should be passed as block.
+  #
+  # key       - A simple string, or a model (or an array of models) from which the template depends
+  # condition - The cache is performed only if condition is true
+  def template_cache_short(key = nil, condition=true, &block)
+    template_cache_aux(key, condition, 1.minute, &block)
   end
-  def template_cache_medium(key = nil, &block)
-    template_cache_aux(key, 5.minute, &block)
+  def template_cache_medium(key = nil, condition=true, &block)
+    template_cache_aux(key, condition, 5.minute, &block)
   end
-  def template_cache_long(key = nil, &block)
-    template_cache_aux(key, 1.hour, &block)
+  def template_cache_long(key = nil, condition=true, &block)
+    template_cache_aux(key, condition, 1.hour, &block)
   end
-  def template_cache_huge(key = nil, &block)
-    template_cache_aux(key, 1.day, &block)
+  def template_cache_huge(key = nil, condition=true, &block)
+    template_cache_aux(key, condition, 1.day, &block)
   end
 
   # cache a block for a set amount of time
@@ -44,6 +47,18 @@ module CacheHelper
     result = "#{site.id}:#{key}"
     result
   end
+  
+  def may_get_template_cache_key(key)
+    site = get_site_from_request!
+    if key.is_a? String
+      [site.id, key]
+    elsif key.is_a? Array
+      [site.id] + key
+    else
+      log_error("bad cache key", { key: key.to_s, key_class: key.class })
+      nil
+    end
+  end
 
   def cache_aux(key = nil, expires_in, &block)
     start_time = Time.now.utc 
@@ -69,28 +84,33 @@ module CacheHelper
     result
   end
 
-  def template_cache_aux(key = nil, expires_in, &block)
+  def template_cache_aux(key, condition, expires_in, &block)
     start_time = Time.now.utc 
-
-    cache_key = get_cache_key(key)
-
-    block_run = false    
-    wrapped_block = lambda  do
-      block_run = true 
-      block_result = yield block
-      block_result 
-    end
-    
-    result = cache(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
-    
-    time = (Time.now.utc - start_time) 
-
-    if block_run
-      log_info("cache miss", { 'key' => cache_key, "time" => time })
+  
+    cache_key = may_get_template_cache_key(key)
+    if cache_key.nil? or !condition
+      result = yield block
     else
-      log_info("cache hit", { 'key' => cache_key,  "time" => time })
+  
+      block_run = false    
+      wrapped_block = lambda  do
+        block_run = true 
+        block_result = yield block
+        block_result 
+      end
+      
+    debugger
+      result = cache(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
+      
+      time = (Time.now.utc - start_time) 
+  
+      if block_run
+        log_info("cache miss", { 'key' => cache_key, "time" => time })
+      else
+        log_info("cache hit", { 'key' => cache_key,  "time" => time })
+      end
+      result
     end
-    result
   end
 
   def expire_cache_key(key)

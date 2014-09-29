@@ -33,10 +33,12 @@ else
     # check if the required release already exists; if not, downloads it
     cd ~/railsapps/Fandom/
     if [ ! -d $remote_current ]; then
-        archive="$STAGE_ENVIRONMENT:~/railsapps/Fandom/current.tgz"
-        echo "downloading $archive"
+        for filename in current current_assets; do
+            archive="$STAGE_ENVIRONMENT:~/railsapps/Fandom/$filename.tgz"
+            echo "downloading $archive"
             scp -o "StrictHostKeyChecking no" $archive .
-            tar xhzf current.tgz
+            tar --overwrite -xhzf $filename.tgz
+        done
     fi
 
     # sets the current link and restart rails
