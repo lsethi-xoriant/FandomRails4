@@ -148,7 +148,7 @@ module EventHandlerHelper
     log_file_timestamp = Time.parse(timestamp).utc.strftime("%Y%m%d%H%M%S")
 
     log_directory = "log/events"
-    log_file_name = "#{log_directory}/#{pid}-#{log_file_timestamp}-open.log"
+    log_file_name = "#{pid}-#{log_file_timestamp}-open.log"
 
     if !File.directory?(log_directory)
       FileUtils.mkdir_p(log_directory)
@@ -156,12 +156,12 @@ module EventHandlerHelper
 
     if @@process_file_descriptor.nil?
       close_orphan_files_with_same_current_pid(pid, log_directory)
-      open_process_log_file(log_file_name)
+      open_process_log_file("#{log_directory}/#{log_file_name}")
     elsif File.size(@@process_file_name) > LOGGER_PROCESS_FILE_SIZE 
-      destination_log_file_name = "#{log_directory}/#{pid}-#{timestamp}-close.log"
+      destination_log_file_name = "#{log_directory}/#{pid}-#{log_file_timestamp}-close.log"
       File.rename(@@process_file_name, destination_log_file_name)
       @@process_file_descriptor.close()
-      open_process_log_file(log_file_name)
+      open_process_log_file("#{log_directory}/#{log_file_name}")
     end
 
   end

@@ -32,8 +32,9 @@ module CallToActionHelper
     end
   end
 
-  def generate_response_for_next_interaction(quiz_interactions, calltoaction, index_current_interaction = nil)
+  def generate_response_for_next_interaction(quiz_interactions, calltoaction)
     next_quiz_interaction = quiz_interactions.first
+    index_current_interaction = calculate_interaction_index(calltoaction, next_quiz_interaction)
 
     if next_quiz_interaction
       shown_interactions = always_shown_interactions(calltoaction)
@@ -60,6 +61,13 @@ module CallToActionHelper
     else
       calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true)
                                                    .order("seconds ASC")
+    end
+  end
+
+  def calculate_interaction_index(calltoaction, interaction)
+    cache_short("interaction_#{interaction.id}_index_in_calltoaction") do
+      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ? AND seconds <= ?", "SEMPRE_VISIBILE", true, interaction.seconds)
+                                                   .order("seconds ASC").count
     end
   end
 

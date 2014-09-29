@@ -52,8 +52,7 @@ class CallToActionController < ApplicationController
     calltoaction = CallToAction.find(params[:calltoaction_id])
     interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
 
-    interaction_index = params[:interactions_showed].present? ? (params[:interactions_showed].count + 1) : "1"
-    response = generate_response_for_next_interaction(interactions, calltoaction, interaction_index)
+    response = generate_response_for_next_interaction(interactions, calltoaction)
     
     respond_to do |format|
       format.json { render json: response.to_json }
@@ -293,8 +292,12 @@ class CallToActionController < ApplicationController
       response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action)
 
+      index_current_interaction = calculate_interaction_index(interaction.call_to_action, interaction)
+      shown_interactions = always_shown_interactions(interaction.call_to_action)
+      shown_interactions_count = shown_interactions.count if shown_interactions.count > 1      
+
       if interaction.when_show_interaction == "SEMPRE_VISIBILE"
-        response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome, ctaid: interaction.call_to_action_id }, layout: false, formats: :html 
+        response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome, ctaid: interaction.call_to_action_id, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction }, layout: false, formats: :html 
       else
         response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
       end
