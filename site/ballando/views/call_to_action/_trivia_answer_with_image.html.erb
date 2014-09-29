@@ -67,11 +67,11 @@
 
             <% if user_interaction.answer_id == answer.id %>
 
-              <a href="javascript: void(0)" class="thumbnail active <%= answer.correct ? "right" : "wrong" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><img src="<%= answer.image(:medium) %>" alt="..."></a>
+              <a href="javascript: void(0)" class="button-inter-<%= interaction.id %> thumbnail active <%= answer.correct ? "right" : "wrong" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><img src="<%= answer.image(:medium) %>" alt="..."></a>
 
             <% else %>
 
-              <a href="javascript: void(0)" class="thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><img src="<%= answer.image(:medium) %>" alt="..."></a>
+              <a href="javascript: void(0)" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><img src="<%= answer.image(:medium) %>" alt="..."></a>
 
             <% end %>
 
@@ -108,7 +108,7 @@
       <% end %>
 
       <div class="col-xs-10">
-        <a href="javascript: void(0)" class="thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><img src="<%= answer.image(:medium) %>" alt="..."></a>
+        <a href="javascript: void(0)" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><img src="<%= answer.image(:medium) %>" alt="..."></a>
       </div>
 
       <% if position % 2 != 0 %>
