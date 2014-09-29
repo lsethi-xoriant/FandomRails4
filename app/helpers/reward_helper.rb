@@ -68,4 +68,21 @@ module RewardHelper
     end
   end
   
+  def get_reward_with_cta
+    cache_short("rewards_with_cta") do
+      Reward.where("media_type = 'CALLTOACTION'").to_a
+    end
+  end
+  
+  def get_unlocked_contents
+    rewards_with_cta = get_reward_with_cta
+    total = rewards_with_cta.count
+    rewards_with_cta.each do |r|
+      if user_has_reward(r.name)
+        total -= 1
+      end
+    end
+    total
+  end
+  
 end

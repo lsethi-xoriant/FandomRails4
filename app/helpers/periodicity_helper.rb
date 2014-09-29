@@ -28,8 +28,8 @@ module PeriodicityHelper
   
   def create_weekly_periodicity
     ActiveRecord::Base.transaction do
-      start_date = Date.today.beginning_of_week
-      end_date = Date.today.end_of_week
+      start_date = Date.today.beginning_of_week - 2
+      end_date = Date.today.end_of_week - 2
       period = Period.create(kind: PERIOD_KIND_WEEKLY, start_datetime: start_date.beginning_of_day, end_datetime: end_date.end_of_day)
       expire_cache_key("current_periodicities")
       period.id

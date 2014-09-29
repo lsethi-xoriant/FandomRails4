@@ -10,7 +10,7 @@
       	<%= render partial: "/call_to_action/cover_stream_single_calltoaction_locked", locals: { calltoaction: calltoaction } %>
       <% else %>
       	<%= render partial: "/call_to_action/cover_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_reward_status: calltoaction_reward_status } %>
-      <% end %>
+      
 
       <div class="panel-body panel-card">
        
@@ -25,6 +25,9 @@
         </div>
 
       </div>
+      
+      <% end %>
+      
     </div>
   </div>
 </div>
