@@ -16,6 +16,9 @@
 			    	</div>
 		    	<% end %>
 			    <h4><%= superfan.title.upcase %></h4>
+		    <% else %>
+		    	<img src="<%= asset_path("badge_placeholder.png") %>" class="img-circle" style="max-width: 130px;" />
+		    	<h4>Dal 4 ottobre</h4>
 		    <% end %>
 	  </div>
 	</div>
