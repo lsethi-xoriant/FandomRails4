@@ -157,8 +157,7 @@ module EventHandlerHelper
     if @@process_file_descriptor.nil?
       close_orphan_files_with_same_current_pid(pid, log_directory)
       open_process_log_file(log_file_name)
-    elsif File.exist?(@@process_file_name) && File.size(@@process_file_name) > LOGGER_PROCESS_FILE_SIZE
-      
+    elsif File.size(@@process_file_name) > LOGGER_PROCESS_FILE_SIZE 
       destination_log_file_name = "#{log_directory}/#{pid}-#{timestamp}-close.log"
       File.rename(@@process_file_name, destination_log_file_name)
       @@process_file_descriptor.close()
