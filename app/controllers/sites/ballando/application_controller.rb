@@ -17,8 +17,8 @@ class Sites::Ballando::ApplicationController < ApplicationController
     calltoaction = CallToAction.find(params[:calltoaction_id])
     if call_to_action_completed?(calltoaction)
       response[:calltoaction_completed] = true
-      quiz_interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
-      response[:next_interaction] = generate_response_for_next_interaction(quiz_interactions, calltoaction)
+      interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
+      response[:next_interaction] = generate_response_for_next_interaction(interactions, calltoaction)
     else
       response[:calltoaction_completed] = false
       calltoaction_reward_status = get_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction)

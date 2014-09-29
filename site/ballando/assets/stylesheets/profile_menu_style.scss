@@ -28,8 +28,8 @@ $screen-sm-min: 760;
     }
     
     .flexslider .slides > li {
-      border-right: 10px solid transparent;
-
+      /*border-right: 10px solid transparent;*/
+      margin-right: 10px;
       .slide {
         position: relative;
         width: 100%;

@@ -1,5 +1,8 @@
 <div class="row text-center cta-stream-heading">
   <div class="col-xs-12 text-center question">
+    <% if shown_interactions_count %>
+      <h6 id="index-interaction-<%= interaction.id %>">Domanda <%= index_current_interaction %> di <%= shown_interactions_count %></h6>
+    <% end %>
     <h4>
       <%= interaction.resource.question %>
     </h4>
