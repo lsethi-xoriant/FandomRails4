@@ -1,6 +1,7 @@
 module EventHandlerHelper
 
   @@process_file_descriptor = nil
+  @@process_file_name = nil
 
   def log_synced(msg, data) 
     log_event(msg, "audit", true, (data || {}))
@@ -138,6 +139,11 @@ module EventHandlerHelper
     @@process_file_descriptor.flush
   end
 
+  def open_process_log_file(log_file_name)
+    @@process_file_descriptor = File.open(log_file_name, "a+")  
+    @@process_file_name = log_file_name  
+  end
+
   def may_move_and_open_new_process_log_file(pid, timestamp)
     log_file_timestamp = Time.parse(timestamp).utc.strftime("%Y%m%d%H%M%S")
 
@@ -148,16 +154,14 @@ module EventHandlerHelper
       FileUtils.mkdir_p(log_directory)
     end
 
-    if File.exist?(log_file_name) && File.size(log_file_name) > LOGGER_PROCESS_FILE_SIZE
-      
-      destination_log_file_name = "#{log_directory}/#{pid}-#{timestamp}-close.log"
-      File.rename(log_file_name, destination_log_file_name)
-
-    end
-
     if @@process_file_descriptor.nil?
       close_orphan_files_with_same_current_pid(pid, log_directory)
-      @@process_file_descriptor = File.open(log_file_name, "a+")    
+      open_process_log_file(log_file_name)
+    elsif File.size(@@process_file_name) > LOGGER_PROCESS_FILE_SIZE 
+      destination_log_file_name = "#{log_directory}/#{pid}-#{timestamp}-close.log"
+      File.rename(@@process_file_name, destination_log_file_name)
+      @@process_file_descriptor.close()
+      open_process_log_file(log_file_name)
     end
 
   end

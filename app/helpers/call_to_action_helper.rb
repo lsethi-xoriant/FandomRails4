@@ -3,6 +3,12 @@ require 'digest/md5'
 
 module CallToActionHelper
 
+  def always_shown_interactions(calltoaction)
+    cache_short("always_shown_interactions_#{calltoaction.id}") do
+      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC").to_a
+    end
+  end
+
   def get_cta_tags_from_cache(cta)
     cache_short(get_cta_tags_cache_key(cta.id)) do
       cta.tags.includes("tag_fields").to_a
@@ -26,11 +32,13 @@ module CallToActionHelper
     end
   end
 
-  def generate_response_for_next_interaction(quiz_interactions, calltoaction)
+  def generate_response_for_next_interaction(quiz_interactions, calltoaction, index_current_interaction = nil)
     next_quiz_interaction = quiz_interactions.first
 
     if next_quiz_interaction
-      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: nil }, layout: false, formats: :html
+      shown_interactions = always_shown_interactions(calltoaction)
+      shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
+      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: nil, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction }, layout: false, formats: :html
       interaction_id = next_quiz_interaction.id
     else
       render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: quiz_interactions, calltoaction: calltoaction }, layout: false, formats: :html
@@ -47,10 +55,10 @@ module CallToActionHelper
   def calculate_next_interactions(calltoaction, interactions_showed_ids)         
     if interactions_showed_ids
       interactions_showed_id_qmarks = (["?"] * interactions_showed_ids.count).join(", ")
-      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ? AND id NOT IN (#{interactions_showed_id_qmarks})", "SEMPRE_VISIBILE", true, *interactions_showed_ids)
+      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ? AND id NOT IN (#{interactions_showed_id_qmarks})", "SEMPRE_VISIBILE", true, *interactions_showed_ids)
                                                    .order("seconds ASC")
     else
-      quiz_interactions = calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true)
+      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true)
                                                    .order("seconds ASC")
     end
   end
