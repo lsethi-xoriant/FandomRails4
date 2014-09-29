@@ -15,8 +15,9 @@ Fandom::Application.configure do
   config.action_controller.perform_caching = get_boolean(config.deploy_settings, 'development/perform_caching')
   if config.action_controller.perform_caching
     puts 'caching enabled'
+  else
+    config.action_controller.perform_caching = false
   end
-  config.action_controller.perform_caching = false
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
