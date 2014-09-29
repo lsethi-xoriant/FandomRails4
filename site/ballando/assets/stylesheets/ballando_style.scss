@@ -1403,6 +1403,10 @@ height: 100%;
 
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
+    .container-fluid {
+        margin: 0;
+        overflow: hidden;
+    }
 
     .container-cover-countdown {
         min-height: 50px !important;
