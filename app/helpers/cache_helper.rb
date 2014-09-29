@@ -46,43 +46,49 @@ module CacheHelper
   end
 
   def cache_aux(key = nil, expires_in, &block)
+    start_time = Time.now.utc 
+
     cache_key = get_cache_key(key)
-    
-    block_time = nil
+
+    block_run = false    
     wrapped_block = lambda  do
-      start_time = Time.now.utc 
+      block_run = true 
       block_result = yield block
-      block_time = (Time.now.utc - start_time) 
       block_result 
     end
     
     result = Rails.cache.fetch(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
     
-    if block_time.nil?
-      log_info("cache hit", { 'key' => cache_key })
+    time = (Time.now.utc - start_time) 
+
+    if block_run
+      log_info("cache miss", { 'key' => cache_key, "time" => time })
     else
-      log_info("cache miss", { 'key' => cache_key, "time" => block_time })
+      log_info("cache hit", { 'key' => cache_key,  "time" => time })
     end
     result
   end
 
   def template_cache_aux(key = nil, expires_in, &block)
+    start_time = Time.now.utc 
+
     cache_key = get_cache_key(key)
-    
-    block_time = nil
+
+    block_run = false    
     wrapped_block = lambda  do
-      start_time = Time.now.utc 
+      block_run = true 
       block_result = yield block
-      block_time = (Time.now.utc - start_time) 
       block_result 
     end
     
     result = cache(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
     
-    if block_time.nil?
-      log_info("cache hit", { 'key' => cache_key })
+    time = (Time.now.utc - start_time) 
+
+    if block_run
+      log_info("cache miss", { 'key' => cache_key, "time" => time })
     else
-      log_info("cache miss", { 'key' => cache_key, "time" => block_time })
+      log_info("cache hit", { 'key' => cache_key,  "time" => time })
     end
     result
   end
