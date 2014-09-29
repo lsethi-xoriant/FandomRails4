@@ -17,6 +17,7 @@ Fandom::Application.routes.draw do
 
           match "/refresh_top_window", :to => "application#refresh_top_window"
   
+          match '/users/rai/sign_out', :to => 'sessions#ballando_destroy'
           match "/users/rai/sign_up/create", :to => "registrations#ballando_create"
           match "/users/rai/sign_in/create", :to => "sessions#ballando_create"
           match "/users/rai/sign_in_from_provider/create", :to => "sessions#ballando_create_from_provider", defaults: { format: 'json' }
