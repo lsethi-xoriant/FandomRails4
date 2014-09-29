@@ -50,9 +50,10 @@ class CallToActionController < ApplicationController
 
   def next_interaction
     calltoaction = CallToAction.find(params[:calltoaction_id])
-    quiz_interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
+    interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
 
-    response = generate_response_for_next_interaction(quiz_interactions, calltoaction)
+    interaction_index = params[:interactions_showed].present? ? (params[:interactions_showed].count + 1) : "1"
+    response = generate_response_for_next_interaction(interactions, calltoaction, interaction_index)
     
     respond_to do |format|
       format.json { render json: response.to_json }
@@ -61,11 +62,11 @@ class CallToActionController < ApplicationController
 
   def check_next_interaction
     calltoaction = CallToAction.find(params[:calltoaction_id])
-    quiz_interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
+    interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
 
     response = Hash.new
     response = {
-      next_quiz_interaction: quiz_interactions.any?
+      next_quiz_interaction: interactions.any?
     }
     
     respond_to do |format|
