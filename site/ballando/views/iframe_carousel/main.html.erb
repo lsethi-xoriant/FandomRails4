@@ -53,7 +53,7 @@
                         <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">GUARDA</button></h2> 
                       </div>
                       <div class="col-xs-12 text-left visible-xs">
-                        <h2><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">GUARDA</button></h2> 
+                        <h2 style="margin-top: 0;"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">GUARDA</button></h2> 
                       </div>
                     </div>
 
@@ -83,18 +83,18 @@
               <% @active_home_launchers.each_with_index do |home_launcher, i| %>
                 <div class="item <%= "active" if i == 0 %>" style="background: url('<%= home_launcher.image %>') no-repeat center top; background-size: cover;">
                   <div class="container">
-                    <div class="carousel-caption" style="left: 10%; bottom: 15px; top: initial;">
-                      <div class="row">
-                        <div class="col-xs-8 text-left">    
-                          <h2 class="text-with-shadow" style="font-size: 24px; font-weight: 700;"><%= home_launcher.description %></h2>
-                        </div>
+
+                    <div class="carousel-caption" style="bottom: 0; top: initial;">
+                      <div class="col-xs-12 text-left" style="position: relative;">     
+                        <h2 class="text-with-shadow" style="margin-top: 0px; font-size: 24px; font-weight: 700;">
+                          <%= home_launcher.description %>
+                        </h2>
                       </div>
-                      <div class="row">
-                        <div class="col-xs-3 text-left btn-col">
-                          <h2><button class="btn-2" role="button" onclick="window.top.location.href = '<%= home_launcher.url %>';"><%= home_launcher.button %></button></h2>
-                        </div>
-                      </div>   
+                      <div class="col-sm-4 col-xs-6 text-left">
+                        <h2 style="margin-top: 0;"><button class="btn-2" role="button" onclick="window.top.location.href = '<%= home_launcher.url %>';"><%= home_launcher.button %></button></h2> 
+                      </div>
                     </div>
+
                   </div>
                 </div>
               <% end %>

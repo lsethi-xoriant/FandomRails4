@@ -1195,7 +1195,8 @@ CREATE TABLE rewards (
     not_winnable_image_file_name character varying(255),
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
-    not_winnable_image_updated_at timestamp without time zone
+    not_winnable_image_updated_at timestamp without time zone,
+    call_to_action_id integer
 );
 
 
@@ -2945,7 +2946,8 @@ CREATE TABLE rewards (
     not_winnable_image_file_name character varying(255),
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
-    not_winnable_image_updated_at timestamp without time zone
+    not_winnable_image_updated_at timestamp without time zone,
+    call_to_action_id integer
 );
 
 
@@ -4695,7 +4697,8 @@ CREATE TABLE rewards (
     not_winnable_image_file_name character varying(255),
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
-    not_winnable_image_updated_at timestamp without time zone
+    not_winnable_image_updated_at timestamp without time zone,
+    call_to_action_id integer
 );
 
 
@@ -6445,7 +6448,8 @@ CREATE TABLE rewards (
     not_winnable_image_file_name character varying(255),
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
-    not_winnable_image_updated_at timestamp without time zone
+    not_winnable_image_updated_at timestamp without time zone,
+    call_to_action_id integer
 );
 
 

@@ -1,46 +1,50 @@
-<div class=" row menu-area">
-	<div class="container-menu" style="background-color: rgba(0, 0, 0, 0.6); float: left; width: 100%; padding: 10px 0 0 0;">
-		<div class="submenu">
-			    <div class="col-xs-12 filter-menu-tag">
-			      <div class="flexslider">
-			        <ul class="slides filter-home-menu">
-			        	<% 
-			        	tag_menu = get_tags_with_tag("menu")
-			        	all_filter = tag_menu.detect{ |tm| tm.name == "home_filter_all" }
-			        	tag_menu.delete(all_filter)
-			        	tag_menu.unshift(all_filter) 
-			        	%>
-			        	<% tag_menu.each do |tag| %>
-			            <li>
-			                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
-			                    <div class="comment-center">
-			                        <a href="javascript: void(0)" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
-								      <div class="row">
-								        <div class="col-md-12">
-								          <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
-								        </div>
-								      </div>
-								    </a>
-			                    </div>
-			                </div>
-			                <div class="triangle" style="<%= tag.name == "home_filter_all" ? "" : "display: none;" %>"></div>
-			            </li>
+<% tag_menu = get_tags_with_tag("menu") %>
+<% if tag_menu.any? %>
+	<div class=" row menu-area">
+		<div class="container-menu" style="background-color: rgba(0, 0, 0, 0.6); float: left; width: 100%; padding: 10px 0 0 0;">
+			<div class="submenu">
+				    <div class="col-xs-12 filter-menu-tag">
+				      <div class="flexslider">
+				        <ul class="slides filter-home-menu">
+				        	<% 			        	
+				        	all_filter = tag_menu.detect{ |tm| tm.name == "home_filter_all" }
+				        	tag_menu.delete(all_filter)
+				        	tag_menu.unshift(all_filter) 
+				        	%>
+				        	
+				        	<% tag_menu.each do |tag| %>
+				            <li>
+				                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                    <div class="comment-center">
+				                        <a href="javascript: void(0)" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
+									      <div class="row">
+									        <div class="col-md-12">
+									          <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
+									        </div>
+									      </div>
+									    </a>
+				                    </div>
+				                </div>
+				                <div class="triangle" style="<%= tag.name == "home_filter_all" ? "" : "display: none;" %>"></div>
+				            </li>
 			            <% end %>
-			         </ul>
-			      </div>
-			    </div>
-	
+				          
+				         </ul>
+				      </div>
+				    </div>
+		
+			</div>
+		</div>
+		<div class="menu-info-extra hidden-xs">
+			<% get_tags_with_tag("menu").each do |tag| %>
+				<div class="extra-info extra-info-<%= tag.id %> <%= "extra-info-all" if tag.name == "home_filter_all" %>">
+					<img class="extra-info-img" src="<%= tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload }.first %>" />
+					<span class="extra-info-description"><%= tag.tag_fields.select { |tf| tf.name == "description" }.map { |tf| tf.value }.first %></span>
+				</div>
+			<% end %>
 		</div>
 	</div>
-	<div class="menu-info-extra hidden-xs">
-		<% get_tags_with_tag("menu").each do |tag| %>
-			<div class="extra-info extra-info-<%= tag.id %> <%= "extra-info-all" if tag.name == "home_filter_all" %>">
-				<img class="extra-info-img" src="<%= tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload }.first %>" />
-				<span class="extra-info-description"><%= tag.tag_fields.select { |tf| tf.name == "description" }.map { |tf| tf.value }.first %></span>
-			</div>
-		<% end %>
-	</div>
-</div>
+<% end %>
 
 
 <script type="text/javascript">
