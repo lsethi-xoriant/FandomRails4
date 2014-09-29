@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   end
 
   def index
-    # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are mashalled 
+    # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
     
     @calltoactions = cache_short("stream_ctas_init_calltoactions") do
       CallToAction.active.limit(3).to_a
