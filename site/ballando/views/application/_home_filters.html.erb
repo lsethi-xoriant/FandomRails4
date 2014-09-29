@@ -54,7 +54,7 @@
 	        controlNav: false,
 	        directionNav: true,
 	        slideshow: false,
-	        itemWidth: 184, //getItemSize(),
+	        itemWidth: getItemSize(),
 	        itemMargin: 10,
 	        minItems: 1,
 	        maxItems: 6
@@ -85,6 +85,6 @@
 	}
 	
 	function getItemSize() {
-		return ($(".filter-menu-tag").innerWidth() / getGridSize());
+		return ($(".flexslider").innerWidth() / getGridSize()) - 10;
 	}
 </script>
