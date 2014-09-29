@@ -39,7 +39,7 @@
 			<% get_tags_with_tag("menu").each do |tag| %>
 				<div class="extra-info extra-info-<%= tag.id %> <%= "extra-info-all" if tag.name == "home_filter_all" %>">
 					<img class="extra-info-img" src="<%= tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload }.first %>" />
-					<span class="extra-info-description"><%= tag.tag_fields.select { |tf| tf.name == "description" }.map { |tf| tf.value }.first %></span>
+					<span class="extra-info-description text-with-shadow"><%= tag.tag_fields.select { |tf| tf.name == "description" }.map { |tf| tf.value }.first %></span>
 				</div>
 			<% end %>
 		</div>
