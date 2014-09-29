@@ -64,7 +64,7 @@
 	        controlNav: false,
 	        directionNav: true,
 	        slideshow: false,
-	        itemWidth: 307,//getItemSize(),
+	        itemWidth: getItemSize(),
 	        itemMargin: 10,
 	        minItems: 1,
 	        maxItems: 6
@@ -95,7 +95,7 @@
 	}
 	
 	function getItemSize() {
-		return ($(".profile-menu").innerWidth() / getGridSize());
+		return ($(".flexslider").innerWidth() / getGridSize()) - 10;
 		/*
 	    if ($(window).innerWidth() < 768)
 	        return 190;
