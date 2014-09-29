@@ -172,7 +172,16 @@
       });
     }
 
-  </script>
-
+	function openCtaShareModal(modalId, elem){
+		var positionTop = $(elem).position().top;
+		var modalHeight, modalObj, innerModalObj;
+		modalObj = $("#"+modalId);
+		position = positionTop - 500;
+		modalObj.modal('show');
+		modalObj.css({
+			"top": position+"px"
+		});
+	}
+	</script>
 </body>
 </html>
