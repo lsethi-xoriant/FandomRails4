@@ -17,6 +17,12 @@ p.oblique { font-style: oblique }
     background-image: url('ballando_grid.png');
 }
 
+.cover-grid-locked{
+    position: absolute; 
+    top: 0; bottom: 0; left: 0; right: 0; 
+    background-image: url('ballando_grid_locked.png');
+}
+
 .footer-carousel {
     background: #8d1e12;
     padding-bottom: 40px;
@@ -625,12 +631,6 @@ body.iframe-profile {
             > div { padding-bottom: 1.5em; }
         }
     }
-}
-
-.calltoaction-cover.locked{
-  background-image: url("/assets/lock_mini.png");
-  background-repeat: no-repeat;
-  background-position: center center;
 }
 
 /* BROWSE */
