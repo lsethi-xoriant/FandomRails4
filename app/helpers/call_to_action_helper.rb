@@ -22,13 +22,15 @@ module CallToActionHelper
   end
   
   def call_to_action_completed?(cta)
-    if current_user
-      require_to_complete_interactions = interactions_required_to_complete(cta)
-      require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
-      interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", current_user.id, require_to_complete_interactions_ids)
-      require_to_complete_interactions.any? && (require_to_complete_interactions.count == interactions_done.count)
-    else
-      false
+    trace_block("call_to_action_completed?", { cta: cta.name }) do
+      if current_user
+        require_to_complete_interactions = interactions_required_to_complete(cta)
+        require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
+        interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", current_user.id, require_to_complete_interactions_ids)
+        require_to_complete_interactions.any? && (require_to_complete_interactions.count == interactions_done.count)
+      else
+        false
+      end
     end
   end
 

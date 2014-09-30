@@ -231,7 +231,6 @@ class CallToActionController < ApplicationController
       
       answer = Answer.find(params[:params])
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id, nil)
-
       response["have_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
 
@@ -292,9 +291,11 @@ class CallToActionController < ApplicationController
       response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action)
 
-      index_current_interaction = calculate_interaction_index(interaction.call_to_action, interaction)
-      shown_interactions = always_shown_interactions(interaction.call_to_action)
-      shown_interactions_count = shown_interactions.count if shown_interactions.count > 1      
+      trace_block("compute interaction total number and current index", { interaction: interaction.id }) do
+        index_current_interaction = calculate_interaction_index(interaction.call_to_action, interaction)
+        shown_interactions = always_shown_interactions(interaction.call_to_action)
+        shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
+      end      
 
       if interaction.when_show_interaction == "SEMPRE_VISIBILE"
         response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome, ctaid: interaction.call_to_action_id, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction }, layout: false, formats: :html 
@@ -478,7 +479,7 @@ class CallToActionController < ApplicationController
             end
           end
         else
-          # TODO insert log call for trace attack
+          # TODO insert log call for trace_block attack
           flash[:error] = ["I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"]
         end
       end
