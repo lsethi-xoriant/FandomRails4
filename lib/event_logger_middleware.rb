@@ -15,7 +15,6 @@ class EventLoggerMiddleware
     http_host = (env["HTTP_HOST"]).split(":").first
 
     if env["rack.session"]["warden.user.user.key"].present? && env["rack.session"]["warden.user.user.key"][0].present?
-      debugger
       user_id = env["rack.session"]["warden.user.user.key"][0][0] 
     else
       user_id = -1
