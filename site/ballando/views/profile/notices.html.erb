@@ -13,6 +13,9 @@
           <%= render partial: "profile/profile_navbar", locals: { page: "notices" } %>
           <div class="row">
             <div class="col-md-12">
+              <% if @notices_list.blank? %>
+              	<h3 class="text-center">Non hai nessuna notifica al momento</h3>
+              <% end %>
               <% @notices_list.each do |date, nl| %>
               <h5><%= date %></h5>
               <ul class="list-group">

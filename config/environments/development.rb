@@ -37,6 +37,9 @@ Fandom::Application.configure do
 
   Paperclip.options[:command_path] = "/usr/local/bin"
 
-
+  if config.deploy_settings.key?('asset_host')
+    puts "using asset_host: #{config.deploy_settings['asset_host']}"
+    config.action_controller.asset_host = config.deploy_settings['asset_host']
+  end
   
 end
