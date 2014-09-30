@@ -254,19 +254,17 @@ class CallToActionController < ApplicationController
       response[:ga][:label] = "Like"
 
     elsif interaction.resource_type.downcase == "share"
-      trace("quiz/create_or_update_interaction", {}) do
-        provider = params[:provider]
-        result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address])
-        if result
-          aux = { "#{provider}" => 1 }
-          user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
-          response[:ga][:label] = interaction.resource_type.downcase
-        end
-  
-        response[:share] = Hash.new
-        response[:share][:result] = result
-        response[:share][:exception] = exception.to_s
+      provider = params[:provider]
+      result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address])
+      if result
+        aux = { "#{provider}" => 1 }
+        user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
+        response[:ga][:label] = interaction.resource_type.downcase
       end
+
+      response[:share] = Hash.new
+      response[:share][:result] = result
+      response[:share][:exception] = exception.to_s
     
     elsif interaction.resource_type.downcase == "vote"
       vote = params[:params]
@@ -293,9 +291,11 @@ class CallToActionController < ApplicationController
       response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action)
 
-      index_current_interaction = calculate_interaction_index(interaction.call_to_action, interaction)
-      shown_interactions = always_shown_interactions(interaction.call_to_action)
-      shown_interactions_count = shown_interactions.count if shown_interactions.count > 1      
+      trace("compute interaction total number and current index", { interaction: interaction.id }) do
+        index_current_interaction = calculate_interaction_index(interaction.call_to_action, interaction)
+        shown_interactions = always_shown_interactions(interaction.call_to_action)
+        shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
+      end      
 
       if interaction.when_show_interaction == "SEMPRE_VISIBILE"
         response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome, ctaid: interaction.call_to_action_id, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction }, layout: false, formats: :html 
