@@ -1227,13 +1227,18 @@ height: 100%;
   background-color: #ffba00;
   //color: #fff;
 }
+
+.label-danger{
+  background-color: #D6260B;
+}
+
 .profile-container{
   
   h1, h2, h3, h4, h5, h6{
     color: #FFF;
   }
   h3,h4,h5,h6{
-    text-transform: lowercase;
+    text-transform: capitalize;
   }
   
   .img-profile{
