@@ -57,7 +57,7 @@ p.oblique { font-style: oblique }
 
 button, h1, h2, h3, h4, h5, h6, li {
     font-family: "Roboto Condensed", helvetica, arial, sans-serif;
-    text-transform: uppercase;
+    //text-transform: uppercase;
 }
 
 .text-with-shadow {
@@ -1407,15 +1407,12 @@ height: 100%;
     .container-fluid {
         margin: 0;
         overflow: hidden;
+        padding: 0;
     }
 
     .container-cover-countdown {
         min-height: 50px !important;
         h3 { font-weight: bold; }
-    }
-
-    .btn-container {
-        display: none;
     }
 
     .profile-container .profile-badge {
@@ -1612,6 +1609,10 @@ height: 100%;
 @media (max-width: 500px) {
     .col-xsm-12 {
         width: 100%;
+    }
+
+    .btn-container {
+        display: none;
     }
 
     .margin-top-sm-10 {
