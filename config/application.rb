@@ -118,7 +118,7 @@ module Fandom
       config.middleware.insert_before "Rack::Lock", SetRawCookieMiddleware
     end
 
-    config.middleware.use "HttpRequestDebugger"
+    config.middleware.use "EventLoggerMiddleware"
     
     config.active_record.schema_format = :sql
 
