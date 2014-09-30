@@ -291,7 +291,7 @@ class CallToActionController < ApplicationController
       response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action)
 
-      trace("compute interaction total number and current index", { interaction: interaction.id }) do
+      trace_block("compute interaction total number and current index", { interaction: interaction.id }) do
         index_current_interaction = calculate_interaction_index(interaction.call_to_action, interaction)
         shown_interactions = always_shown_interactions(interaction.call_to_action)
         shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
@@ -479,7 +479,7 @@ class CallToActionController < ApplicationController
             end
           end
         else
-          # TODO insert log call for trace attack
+          # TODO insert log call for trace_block attack
           flash[:error] = ["I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"]
         end
       end

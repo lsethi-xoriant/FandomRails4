@@ -70,7 +70,7 @@ module ApplicationHelper
   end
 
   def create_or_update_interaction(user_id, interaction_id, answer_id, like, aux = "{}")
-    trace("create_or_update_interaction", {}) do
+    trace_block("create_or_update_interaction", {}) do
       ActiveRecord::Base.transaction do
         user = User.find(user_id)
   
@@ -83,7 +83,7 @@ module ApplicationHelper
   
         if user_interaction.nil?
           user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
-          trace("update counters anonymous", { user_interaction: user_interaction.id }) do
+          trace_block("update counters anonymous", { user_interaction: user_interaction.id }) do
             UserCounter.update_unique_counters(user_interaction, user)
             UserCounter.update_all_counters(user_interaction, user)
           end
@@ -100,7 +100,7 @@ module ApplicationHelper
           user_interaction.outcome = outcome_for_user_interaction
           user_interaction.save
         else
-          trace("update counters logged-in", { user_interaction: user_interaction.id }) do
+          trace_block("update counters logged-in", { user_interaction: user_interaction.id }) do
             UserCounter.update_all_counters(user_interaction, user)
           end
   
@@ -202,7 +202,7 @@ module ApplicationHelper
 
   # Generates an hash with reward information.
 	def get_current_call_to_action_reward_status(reward_name, calltoaction)
-	  trace("get_current_call_to_action_reward_status", { cta: calltoaction.name }) do
+	  trace_block("get_current_call_to_action_reward_status", { cta: calltoaction.name }) do
   	  reward = get_reward_from_cache(reward_name)
   	  
       winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
@@ -281,7 +281,7 @@ module ApplicationHelper
   end
 
 	def get_counter_about_user_reward(reward_name)
-	  trace("get_counter_about_user_reward", {}) do
+	  trace_block("get_counter_about_user_reward", {}) do
   		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}' and period_id IS NULL").first
   		user_reward ? user_reward.counter : 0
     end
@@ -472,7 +472,9 @@ module ApplicationHelper
     end
   end
 
-  def trace(message, data, &block)
+  # Trace the time spend by the block passed as parameter.
+  # This function cannot be named just "trace" because of a conflict with rake db:migrate
+  def trace_block(message, data, &block)
     start_time = Time.now.utc
     yield block
     time = Time.now.utc - start_time
