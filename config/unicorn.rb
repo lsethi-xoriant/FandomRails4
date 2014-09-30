@@ -4,14 +4,10 @@ require "#{File.dirname(__FILE__)}/../lib/fandom_utils"
 env = ENV["RAILS_ENV"] || "development"
 
 core_number = FandomUtils::get_number_of_cores()
-if core_number == 1
-  worker_number =  3
-else
-  worker_number = core_number * 4
-end  
+worker_number = core_number * 2
 worker_processes worker_number
 
-preload_app true
+preload_app false
 
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
@@ -50,6 +46,8 @@ before_fork do |server, worker|
   if defined? ActiveRecord::Base
     ActiveRecord::Base.connection.disconnect!
   end
+
+  Rails.cache.reset
 
   if defined?(Resque)
     Resque.redis.quit
