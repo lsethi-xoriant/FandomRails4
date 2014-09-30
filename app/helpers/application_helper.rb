@@ -463,5 +463,14 @@ module ApplicationHelper
       results / results_per_page + 1
     end
   end
+
+  def trace(message, data, &block)
+    start_time = Time.now.utc
+    yield block
+    time = Time.now.utc - start_time
+    data['time'] = time
+    log_debug(message, data)
+  end
+
   
 end

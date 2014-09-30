@@ -231,7 +231,6 @@ class CallToActionController < ApplicationController
       
       answer = Answer.find(params[:params])
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id, nil)
-
       response["have_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
 
@@ -255,17 +254,19 @@ class CallToActionController < ApplicationController
       response[:ga][:label] = "Like"
 
     elsif interaction.resource_type.downcase == "share"
-      provider = params[:provider]
-      result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address])
-      if result
-        aux = { "#{provider}" => 1 }
-        user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
-        response[:ga][:label] = interaction.resource_type.downcase
+      trace("quiz/create_or_update_interaction", {}) do
+        provider = params[:provider]
+        result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address])
+        if result
+          aux = { "#{provider}" => 1 }
+          user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
+          response[:ga][:label] = interaction.resource_type.downcase
+        end
+  
+        response[:share] = Hash.new
+        response[:share][:result] = result
+        response[:share][:exception] = exception.to_s
       end
-
-      response[:share] = Hash.new
-      response[:share][:result] = result
-      response[:share][:exception] = exception.to_s
     
     elsif interaction.resource_type.downcase == "vote"
       vote = params[:params]
