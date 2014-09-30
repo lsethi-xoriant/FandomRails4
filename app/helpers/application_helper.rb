@@ -97,8 +97,10 @@ module ApplicationHelper
             correct_answer: predict_outcome_with_correct_answer ? predict_outcome_with_correct_answer : Outcome.new 
           }.to_json
   
-          user_interaction.outcome = outcome_for_user_interaction
-          user_interaction.save
+          trace_block("user_interaction outcome save", { user_interaction: user_interaction.id }) do
+            user_interaction.outcome = outcome_for_user_interaction
+            user_interaction.save
+          end
         else
           trace_block("update counters logged-in", { user_interaction: user_interaction.id }) do
             UserCounter.update_all_counters(user_interaction, user)
@@ -116,9 +118,10 @@ module ApplicationHelper
             }.to_json
   
             user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
-  
           else
-            user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
+            trace_block("update user interaction counter", { user_interaction: user_interaction.id }) do
+              user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
+            end
           
             outcome = compute_and_save_outcome(user_interaction)
             outcome.info = []
@@ -135,7 +138,9 @@ module ApplicationHelper
               correct_answer: interaction_correct_answer_outcome
             }.to_json
   
-            user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+            trace_block("update user interaction outcome", { user_interaction: user_interaction.id }) do
+              user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+            end
           end
           
         end
