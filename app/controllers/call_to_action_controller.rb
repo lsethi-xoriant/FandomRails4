@@ -291,8 +291,11 @@ class CallToActionController < ApplicationController
       response['outcome'] = outcome
       response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action)
 
-      shown_interactions_count = trace_block("compute interaction total number and current index", { interaction: interaction.id }) do
-        index_current_interaction = calculate_interaction_index(interaction.call_to_action, interaction)
+      index_current_interaction = trace_block("compute interaction index", { interaction: interaction.id }) do
+        calculate_interaction_index(interaction.call_to_action, interaction)
+      end
+        
+      shown_interactions_count = trace_block("compute interaction total number", { interaction: interaction.id }) do
         shown_interactions = always_shown_interactions(interaction.call_to_action)
         shown_interactions.count if shown_interactions.count > 1
       end      
