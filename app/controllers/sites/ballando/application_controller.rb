@@ -15,6 +15,12 @@ class Sites::Ballando::ApplicationController < ApplicationController
     response = Hash.new
 
     calltoaction = CallToAction.find(params[:calltoaction_id])
+    
+    response[:calltoaction_completed] = true
+    interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
+    response[:next_interaction] = generate_response_for_next_interaction(interactions, calltoaction)
+
+=begin
     if call_to_action_completed?(calltoaction)
       response[:calltoaction_completed] = true
       interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
@@ -24,6 +30,7 @@ class Sites::Ballando::ApplicationController < ApplicationController
       calltoaction_reward_status = get_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction)
       response[:render_calltoaction_cover] = render_to_string "/call_to_action/_cover_for_interactions", locals: { calltoaction: calltoaction, calltoaction_reward_status: calltoaction_reward_status }, layout: false, formats: :html
     end
+=end
 
     respond_to do |format|
       format.json { render json: response.to_json }
