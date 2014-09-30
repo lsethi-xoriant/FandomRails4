@@ -476,10 +476,11 @@ module ApplicationHelper
   # This function cannot be named just "trace" because of a conflict with rake db:migrate
   def trace_block(message, data, &block)
     start_time = Time.now.utc
-    yield block
+    result = yield block
     time = Time.now.utc - start_time
     data['time'] = time
     log_debug(message, data)
+    result 
   end
 
   
