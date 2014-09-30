@@ -83,8 +83,10 @@ module ApplicationHelper
   
         if user_interaction.nil?
           user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
-          UserCounter.update_unique_counters(user_interaction, user)
-          UserCounter.update_all_counters(user_interaction, user)
+          trace("update counters anonymous", { user_interaction: user_interaction.id }) do
+            UserCounter.update_unique_counters(user_interaction, user)
+            UserCounter.update_all_counters(user_interaction, user)
+          end
             
           outcome = compute_and_save_outcome(user_interaction)
           outcome.info = []
@@ -98,7 +100,9 @@ module ApplicationHelper
           user_interaction.outcome = outcome_for_user_interaction
           user_interaction.save
         else
-          UserCounter.update_all_counters(user_interaction, user)
+          trace("update counters logged-in", { user_interaction: user_interaction.id }) do
+            UserCounter.update_all_counters(user_interaction, user)
+          end
   
           if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "check" 
             user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)

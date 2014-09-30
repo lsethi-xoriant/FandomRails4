@@ -12,21 +12,19 @@
   end
 
   def self.update_counters(user_interaction, user, counter_type)
-    trace("update counters", { user_interaction: user_interaction.id, counter_type: counter_type }) do
-      resource_type = user_interaction.interaction.resource_type.downcase
-  
-      counter_name = "#{counter_type}_#{user_interaction.interaction.resource_type}".upcase
-      update_counters_in_all_periodicities(user, counter_name)
-  
-      if resource_type == "quiz"
-        counter_name = "#{counter_type}_#{user_interaction.interaction.resource.quiz_type}".upcase
-  
-        quiz_type = user_interaction.interaction.resource.quiz_type.downcase
-        if quiz_type == "trivia" && user_interaction.answer.correct
-          update_counters_in_all_periodicities(user, "#{counter_name}_correct_answer".upcase)
-        end
-        update_counters_in_all_periodicities(user, counter_name)
+    resource_type = user_interaction.interaction.resource_type.downcase
+
+    counter_name = "#{counter_type}_#{user_interaction.interaction.resource_type}".upcase
+    update_counters_in_all_periodicities(user, counter_name)
+
+    if resource_type == "quiz"
+      counter_name = "#{counter_type}_#{user_interaction.interaction.resource.quiz_type}".upcase
+
+      quiz_type = user_interaction.interaction.resource.quiz_type.downcase
+      if quiz_type == "trivia" && user_interaction.answer.correct
+        update_counters_in_all_periodicities(user, "#{counter_name}_correct_answer".upcase)
       end
+      update_counters_in_all_periodicities(user, counter_name)
     end
   end
 
