@@ -18,7 +18,7 @@
   <%= stylesheet_link_tag "ballando_application", :media => "all" %>
   <%= javascript_include_tag "ballando_application" %>
 
-  <!--[if lt IE 9]>
+  <!--[if lte IE 9]>
     <link href="<%= asset_path("ballando_application.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
     <script src="<%= asset_path("ballando_application.js").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" type="text/javascript"></script>  
   <![endif]-->
