@@ -63,7 +63,10 @@ p.oblique { font-style: oblique }
 
 button, h1, h2, h3, h4, h5, h6, li {
     font-family: "Roboto Condensed", helvetica, arial, sans-serif;
-    //text-transform: uppercase;
+}
+
+h5, h6 {
+    text-transform: uppercase;
 }
 
 .text-with-shadow {
@@ -99,6 +102,12 @@ button, h1, h2, h3, h4, h5, h6, li {
     border: 1px solid #ccc;
     .progress-bar {
         box-shadow: none !important;
+    }
+}
+
+.versus-interaction {
+    .progress-bar-warning {
+        background-color: #FF9D00;
     }
 }
 
