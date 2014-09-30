@@ -21,6 +21,7 @@
 .btn-2.btn-2-small {
   font-size: 10px;
   min-height: 0;
+  width: 50%;
 }
 
 /* SQUARE BUTTON */
@@ -255,9 +256,9 @@
 /* BOOTSTRAP BUTTON */
 
 .btn-append { 
-  color: #000000; 
-  background-color: #777C87; 
-  border-color: #777C87; 
+  color: #777C87; 
+  background-color: transparent; 
+  border: none; 
 } 
  
 .btn-append:hover, 
@@ -265,9 +266,12 @@
 .btn-append:active, 
 .btn-append.active, 
 .open .dropdown-toggle.btn-append { 
+  color: #777C87;
+  /*
   color: #000000; 
   background-color: #91949C; 
-  border-color: #777C87; 
+  border-color: #777C87;
+  */ 
 } 
  
 .btn-append:active, 
@@ -291,8 +295,10 @@ fieldset[disabled] .btn-append:active,
 .btn-append.disabled.active, 
 .btn-append[disabled].active, 
 fieldset[disabled] .btn-append.active { 
+  /*
   background-color: #777C87; 
-  border-color: #777C87; 
+  border-color: #777C87;
+  */ 
 } 
  
 .btn-append .badge { 

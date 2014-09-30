@@ -2,7 +2,7 @@
 	<div class="col-sm-3 no-border">
 	  <div class="text-center" style="padding-top: 23px;">
 	  	<img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-profile">
-	  	<h4><%= "#{current_user.first_name} #{current_user.last_name}" %> <a href="/users/rai/sign_out" target="_top"><span class="glyphicon glyphicon-off"></span></a></h4>
+	  	<h4><%= "#{current_user.first_name} #{current_user.last_name}" %> <a href="/users/rai/sign_out" target="_top"><span class="glyphicon glyphicon-off" style="font-size: 14px; padding-left: 10px; color: #ccc;"></span></a></h4>
 	  </div>
 	</div>
 	<div class="col-sm-3">
@@ -24,12 +24,12 @@
 	</div>
 	<div class="col-sm-3">
 		<div class="text-center">
-			<p style="margin: 0;"><span class="contents-to-unlock"><%= get_unlocked_contents %></span></p>
+			<p style="margin: 0;"><span class="contents-to-unlock"><%= get_unlocked_contents %></span><i class="fa fa-lock fa-4" style="font-size: 80px;"></i></p>
 			<h4 style="margin: 0;">CONTENUTI ESCLUSIVI<br />da sbloccare</h4>
 		</div>
 	</div>
 	<div class="col-sm-3 ranking-info">
-		<span class="label-warning"><%= get_counter_about_user_reward(MAIN_REWARD_NAME) %> <span class="glyphicon glyphicon-star"></span></span>
+		<span class="label-warning"><%= get_counter_about_user_reward(MAIN_REWARD_NAME) %> <span class="glyphicon glyphicon-star" style="padding-left: 5px; font-size: 25px;"></span></span>
 		<h4>PUNTI TOTALI</h4>
 		<span class="label-default">
 			<% if get_my_general_position %>

@@ -3,17 +3,17 @@
         
       <div class="row top text-right">
         <div class="col-xs-12">
-          <h4 style="color: #fff;">
+          <h5 style="color: #fff;">
           	Ti mancano
               <span class="label label-danger" style="padding-top: 5px;">- <%= calltoaction.rewards.first.cost.to_i - get_counter_about_user_reward(MAIN_REWARD_NAME).to_i %>
                 <span class="glyphicon glyphicon-star"></span>
               </span>
-          </h4>
+          </h5>
         </div>
       </div>
       
       <div class="row center text-center">
-      <img src="<%= asset_path('lock_mini.png') %>" />
+      	<i class="fa fa-lock fa-8" style="font-size: 80px; color: #fff;"></i>
       </div>
 
       <div class="row bottom">
