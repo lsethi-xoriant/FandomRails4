@@ -1,5 +1,5 @@
 <div class="container-fluid login-page">
-  <div class="container">
+  <div class="container" style="padding-top: 20px;">
 
     <div class="row">
       <div class="col-sm-5 col-sm-offset-1">
@@ -16,14 +16,13 @@
                 <!--<label for="exampleInputPassword1">Password</label>-->
                 <%= f.password_field :password, :class => "form-control", :placeholder => "Password" %>
               </div>
+              <p><a href="http://www.rai.tv/dl/RaiTV/MyRaiTV/iscrizione.html#PasswordRecovery" target="_blank">Hai dimenticato la Password?</a></p>
               <div class="form-group text-left">
                 <button type="submit" class="btn-2 btn-2-login">Login</button>
-				      </div>     
-              <p><a href="http://www.rai.tv/dl/RaiTV/MyRaiTV/iscrizione.html#PasswordRecovery" target="_blank">Hai dimenticato la Password?</a></p>
-      				<div class="checkbox text-left">
+			  </div>
+      		  <div class="checkbox text-left">
                 <label> <input type="checkbox" name="user[remember_me]" value="1" /> Ricordati di me</label>
               </div>
-              <p>&nbsp;</p>
               <p>Non sei ancora registrato? <a href="/users/sign_up">REGISTRATI</a></p>          
             </div>
           <% end %>  
