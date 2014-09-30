@@ -41,5 +41,11 @@ Fandom::Application.configure do
     puts "using asset_host: #{config.deploy_settings['asset_host']}"
     config.action_controller.asset_host = config.deploy_settings['asset_host']
   end
+
+  # config/environments/production.rb
+  if config.deploy_settings.key?('paperclip')
+    config.paperclip_defaults = config.deploy_settings['paperclip']
+  end
+
   
 end

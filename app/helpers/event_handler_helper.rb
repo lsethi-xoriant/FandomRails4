@@ -41,9 +41,9 @@ module EventHandlerHelper
     begin 
 
       case Rails.env  
-      when "production"
-        log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
       when "development"
+        log_string_for_production(msg, data, caller_data, timestamp, force_saving_in_db, level)
+      when "development-"
         log_string_for_development = generate_log_string_for_development(msg, data, caller_data, level, timestamp)
         logger_method = level == "audit" ? "info" : level
         Rails.logger.send(logger_method, log_string_for_development)

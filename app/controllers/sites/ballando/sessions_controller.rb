@@ -20,7 +20,8 @@ class Sites::Ballando::SessionsController < SessionsController
         end
 
         if rai_response_user["authMyRaiTv"] == "OK"
-          user = User.find_by_username(rai_response_user["UID"])
+          user = User.find(:first, conditions: ["lower(username) = ?", rai_response_user["UID"].downcase])
+
           unless user
             password = Devise.friendly_token.first(8)
             user = User.create(
@@ -30,12 +31,20 @@ class Sites::Ballando::SessionsController < SessionsController
                 last_name: rai_response_user["lastName"],
                 privacy: true,
                 password: password
-                )
+                )  
+
+            if user.errros.any?
+              flash[:error] = user.errors.full_messages.map { |error_message| "#{error_message}<br>"}
+              redirect_to "/users/sign_in"
+              return
+            end
+
           end
 
           sign_in(:user, user)
           on_success(user)
           redirect_to "/refresh_top_window"
+          
         else
           flash[:error] = "Username o password errati"
           redirect_to "/users/sign_in"
