@@ -9,8 +9,9 @@ class HttpRequestDebugger
   def call(env)
     start = Time.now
     status, headers, response = @app.call(env)
+    [status, headers, response]
+  ensure
     stop = Time.now    
-
     msg = "http request in middleware"
     http_host = (env["HTTP_HOST"]).split(":").first
 
@@ -30,7 +31,7 @@ class HttpRequestDebugger
         msg, 
         request_uri: "#{env["REQUEST_URI"]}",
         method: "#{env["REQUEST_METHOD"]}",
-        status: status,
+        status: status.nil? ? -1 : status,
         params: env["action_dispatch.request.parameters"],
         http_referer: "#{env["HTTP_REFERER"]}",
         session_id: "#{env["rack.session"]["session_id"]}",
@@ -40,8 +41,6 @@ class HttpRequestDebugger
         user_id: user_id,
         middleware: true
       )
-
-    [status, headers, response]
   end
 end
 
