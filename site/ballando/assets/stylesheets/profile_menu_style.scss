@@ -1,10 +1,8 @@
 $screen-sm-min: 760;
 
 .menu-area {
-  background-color: #000;
+  /*background-color: #000;*/
   .container.container-menu {
-    background: transparent;
-
     padding-left: 10px;
     padding-right: 10px;
   }
@@ -127,12 +125,12 @@ $screen-sm-min: 760;
 
 .ie8 .menu-area .container.container-menu .menu .btn-default:hover,
 .ie8 .menu-area .container.container-menu .menu .btn-default:focus {
-  background: url('../images/background/000000-0.6.png');
+  /*background: url('../images/background/000000-0.6.png');*/
 }
 
 .ie8 .menu-area .container.container-menu .menu .btn-default:focus,
 .ie8 .menu-area .container.container-menu .menu .btn-default.active {
-  background: url('../images/background/000000-0.3.png');
+  /*background: url('../images/background/000000-0.3.png');*/
 }
 
 .ie8 .flexslider .slides > li:hover .border {

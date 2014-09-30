@@ -394,10 +394,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $(".button-inter-" + interaction_id).attr('onclick', "");
 
       enableWaitingAudio("stop");
-
+	  $("#waiting-registration-layer").removeClass("hidden");
+	  //$("#fountainG").removeClass("hidden");
+	  
       $http.post("/update_interaction", { interaction_id: interaction_id, params: params, main_reward_name: MAIN_REWARD_NAME })
           .success(function(data) {
-
+			
             if(data.ga) {
               update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
               angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
@@ -446,6 +448,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           }).error(function() {
             // ERROR.
           });
+          
     } else {
 
       showRegistrateView();

@@ -24,7 +24,7 @@
   <div class="col-xs-12 text-center undervideo-feedback">
     <h6 style="margin-bottom: 0;">Ottieni fino a +<%= interaction_reward_status[:winnable_reward_count] %> punti</h6>
     <% unless interaction_reward_status[:reward].numeric_display %>  
-      <div class="col-sm-12 text-center" style="margin-bottom: 5px;">  
+      <div class="col-sm-12 text-center" style="margin-bottom: 20px;">  
         <% interaction_reward_status[:reward_status_images].each do |reward| %>
             <img src="<%= reward %>" style="width: 15px;">
         <% end %>

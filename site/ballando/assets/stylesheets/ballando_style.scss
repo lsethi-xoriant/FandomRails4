@@ -11,6 +11,10 @@ $navbar-default-bg: #fff !default;
 
 p.oblique { font-style: oblique } 
 
+.container-menu{
+  background-color: transparent !important;
+}
+
 .carousel-inner{
   padding: 3px;
 }
@@ -111,7 +115,7 @@ h5, h6 {
 
 .versus-interaction {
     .progress-bar-warning {
-        background-color: #FF9D00;
+        background-color: #ff9d00;
     }
 }
 
@@ -173,7 +177,7 @@ h1, h2, h3 {
 }
 
 .go-on {
-    background: none repeat scroll 0 0 #ccc;
+    background: none repeat scroll 0 0 #ff9d00;
     color: #000;
     cursor: pointer;
     line-height: 35px;
@@ -182,7 +186,7 @@ h1, h2, h3 {
 }
 
 .go-init {
-    background: none repeat scroll 0 0 #ccc;
+    background: none repeat scroll 0 0 #ff9d00;
     color: #000;
     cursor: pointer;
     line-height: 35px;
@@ -191,7 +195,7 @@ h1, h2, h3 {
 }
 
 .go-on:hover, .go-init:hover {
-    background: #FF9D00;
+    background: #de8900;
 }
 
 .cta-stream-heading {
@@ -216,6 +220,16 @@ h1, h2, h3 {
 .undervideo-feedback {
     position: absolute; 
     bottom: 0;
+}
+
+.undervideo{
+  #waiting-registration-layer{
+    background-color: rgba(255, 255, 255, 0.6);
+    left:15px;
+  }
+  .container1 > div, .container2 > div, .container3 > div{
+    background-color: #000;
+  }
 }
 
 .calltoaction-cover {
@@ -909,7 +923,7 @@ span.notify {
   position: relative;
 }
 .filter-menu-tag{
-  padding: 10px 0 0 0;
+  padding: 10px 0 10px 0;
   .comment-center{
     h2{
       text-transform: uppercase;
@@ -1300,7 +1314,7 @@ height: 100%;
       border: none;
     }
     .col-sm-3{
-      border-left: 1px solid #ccc;
+      border-left: 1px solid #777C87;
       min-height: 204px;
     }
     img.not-yours{
@@ -1343,20 +1357,20 @@ height: 100%;
 }
 
 .progress-bar-warning{
-  background-color: #ffba00;
+  background-color: #ff9d00;
 }
 
 //MOKU MENU SLIDER
 .menu-area{
   margin-bottom: 20px;
-  background-color: rgba(43, 42, 42, 0.6) !important;
+  background-color: transparent !important;
   .submenu{
     margin-top: 0 !important;
   }
 }
 
 .profile-menu{
-  padding: 10px 0 0 0;
+  padding: 10px 0 10px 0;
 }
 
 .flex-direction-nav{
@@ -1498,7 +1512,7 @@ height: 100%;
       .col-sm-3 {
         border-left: none !important;
         padding: 20px 0;
-        border-top: 2px solid #ccc;
+        border-top: 2px solid #777C87;
       }
       .ranking-info {
         .label-warning, .label-default{
@@ -1515,19 +1529,11 @@ height: 100%;
     }
     
     .go-on {
-        background: none repeat scroll 0 0 #ccc;
-        color: #000;
-        cursor: pointer;
-        line-height: 35px;
         margin-left: -9px;
         margin-right: -24px;
     }
     
     .go-init {
-        background: none repeat scroll 0 0 #ccc;
-        color: #000;
-        cursor: pointer;
-        line-height: 35px;
         margin-left: -14px;
         margin-right: -14px;
     }
