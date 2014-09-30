@@ -133,7 +133,8 @@ h5, h6 {
     border: 2px solid #fff; 
     width: 100%; 
     min-width: 25px; 
-    max-width: 80px;
+    max-width: 60px;
+    margin: 0 auto;
 }
 
 .cover-countdown {
@@ -1436,7 +1437,11 @@ height: 100%;
         overflow: hidden;
         padding: 0;
     }
-
+    
+    .iframe-profile-avatar {
+        max-width: 80px;
+    }
+    
     .container-cover-countdown {
         min-height: 50px !important;
         h3 { font-weight: bold; }
