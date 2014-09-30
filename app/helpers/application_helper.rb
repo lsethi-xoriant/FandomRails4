@@ -70,75 +70,85 @@ module ApplicationHelper
   end
 
   def create_or_update_interaction(user_id, interaction_id, answer_id, like, aux = "{}")
-    ActiveRecord::Base.transaction do
-      user = User.find(user_id)
-
-      user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user_id, interaction_id)
-      interaction = Interaction.find(interaction_id)
-
-      if interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
-        predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
-      end
-
-      if user_interaction.nil?
-        user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
-        UserCounter.update_unique_counters(user_interaction, user)
-        UserCounter.update_all_counters(user_interaction, user)
-
-        outcome = compute_and_save_outcome(user_interaction)
-        outcome.info = []
-        outcome.errors = []
-
-        outcome_for_user_interaction = {
-          win: outcome,
-          correct_answer: predict_outcome_with_correct_answer ? predict_outcome_with_correct_answer : Outcome.new 
-        }.to_json
-
-        user_interaction.outcome = outcome_for_user_interaction
-        user_interaction.save
-      else
-        UserCounter.update_all_counters(user_interaction, user)
-
-        if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "check" 
-          user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
-        
-          outcome = compute_and_save_outcome(user_interaction)
-          outcome.info = []
-          outcome.errors = []
-
-          outcome_for_user_interaction = {
-            win: outcome
-          }.to_json
-
-          user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
-
-        else
-          user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
-        
-          outcome = compute_and_save_outcome(user_interaction)
-          outcome.info = []
-          outcome.errors = []
-    
-          interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
-          interaction_outcome.merge!(outcome)
-    
-          interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
-          interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
-    
-          outcome_for_user_interaction = {
-            win: interaction_outcome,
-            correct_answer: interaction_correct_answer_outcome
-          }.to_json
-
-          user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+    trace_block("create_or_update_interaction", {}) do
+      ActiveRecord::Base.transaction do
+        user = User.find(user_id)
+  
+        user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user_id, interaction_id)
+        interaction = Interaction.find(interaction_id)
+  
+        if interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
+          predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
         end
-        
+  
+        if user_interaction.nil?
+          user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
+          trace_block("update counters anonymous", { user_interaction: user_interaction.id }) do
+            UserCounter.update_unique_counters(user_interaction, user)
+            UserCounter.update_all_counters(user_interaction, user)
+          end
+            
+          outcome = compute_and_save_outcome(user_interaction)
+          outcome.info = []
+          outcome.errors = []
+  
+          outcome_for_user_interaction = {
+            win: outcome,
+            correct_answer: predict_outcome_with_correct_answer ? predict_outcome_with_correct_answer : Outcome.new 
+          }.to_json
+  
+          trace_block("user_interaction outcome save", { user_interaction: user_interaction.id }) do
+            user_interaction.outcome = outcome_for_user_interaction
+            user_interaction.save
+          end
+        else
+          trace_block("update counters logged-in", { user_interaction: user_interaction.id }) do
+            UserCounter.update_all_counters(user_interaction, user)
+          end
+  
+          if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "check" 
+            user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
+          
+            outcome = compute_and_save_outcome(user_interaction)
+            outcome.info = []
+            outcome.errors = []
+  
+            outcome_for_user_interaction = {
+              win: outcome
+            }.to_json
+  
+            user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+          else
+            trace_block("update user interaction counter", { user_interaction: user_interaction.id }) do
+              user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
+            end
+          
+            outcome = compute_and_save_outcome(user_interaction)
+            outcome.info = []
+            outcome.errors = []
+      
+            interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
+            interaction_outcome.merge!(outcome)
+      
+            interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
+            interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
+      
+            outcome_for_user_interaction = {
+              win: interaction_outcome,
+              correct_answer: interaction_correct_answer_outcome
+            }.to_json
+  
+            trace_block("update user interaction outcome", { user_interaction: user_interaction.id }) do
+              user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
+            end
+          end
+          
+        end
+  
+        [user_interaction, outcome]
+  
       end
-
-      [user_interaction, outcome]
-
     end
-
   end
 
   def interaction_done?(interaction)
@@ -197,46 +207,47 @@ module ApplicationHelper
 
   # Generates an hash with reward information.
 	def get_current_call_to_action_reward_status(reward_name, calltoaction)
-	  reward = get_reward_from_cache(reward_name)
-	  
-    winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
-    interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
-
-    reward_status_images = Array.new
-    total_win_reward_count = 0
-
-    if current_user
-
-      interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
-        user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)        
+	  trace_block("get_current_call_to_action_reward_status", { cta: calltoaction.name }) do
+  	  reward = get_reward_from_cache(reward_name)
+  	  
+      winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
+      interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
   
-        if user_interaction && user_interaction.outcome.present?
-          win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
-          correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
-          correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
-
-          total_win_reward_count += win_reward_count;
-
-          push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
-          push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
-          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-        else 
-          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-        end       
-
+      reward_status_images = Array.new
+      total_win_reward_count = 0
+  
+      if current_user
+  
+        interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
+          user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)        
+    
+          if user_interaction && user_interaction.outcome.present?
+            win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
+            correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
+            correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
+  
+            total_win_reward_count += win_reward_count;
+  
+            push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
+            push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
+            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+          else 
+            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+          end       
+  
+        end
+  
+      else
+        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
       end
-
-    else
-      push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
+  
+      {
+        winnable_reward_count: winnable_outcome["reward_name_to_counter"][reward_name],
+        win_reward_count: total_win_reward_count,
+        reward_status_images: reward_status_images,
+        reward: reward
+      }
     end
-
-    {
-      winnable_reward_count: winnable_outcome["reward_name_to_counter"][reward_name],
-      win_reward_count: total_win_reward_count,
-      reward_status_images: reward_status_images,
-      reward: reward
-    }
-
 	end
 
   def get_current_interaction_reward_status(reward_name, interaction)
@@ -275,8 +286,10 @@ module ApplicationHelper
   end
 
 	def get_counter_about_user_reward(reward_name)
-		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}' and period_id IS NULL").first
-		user_reward ? user_reward.counter : 0
+	  trace_block("get_counter_about_user_reward", {}) do
+  		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}' and period_id IS NULL").first
+  		user_reward ? user_reward.counter : 0
+    end
 	end
 
 	def user_has_reward(reward_name)
@@ -463,5 +476,17 @@ module ApplicationHelper
       results / results_per_page + 1
     end
   end
+
+  # Trace the time spend by the block passed as parameter.
+  # This function cannot be named just "trace" because of a conflict with rake db:migrate
+  def trace_block(message, data, &block)
+    start_time = Time.now.utc
+    result = yield block
+    time = Time.now.utc - start_time
+    data['time'] = time
+    log_debug(message, data)
+    result 
+  end
+
   
 end

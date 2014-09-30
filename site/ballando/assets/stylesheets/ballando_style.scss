@@ -67,6 +67,9 @@ p.oblique { font-style: oblique }
 
 button, h1, h2, h3, h4, h5, h6, li {
     font-family: "Roboto Condensed", helvetica, arial, sans-serif;
+}
+
+h5, h6 {
     text-transform: uppercase;
 }
 
@@ -103,6 +106,12 @@ button, h1, h2, h3, h4, h5, h6, li {
     border: 1px solid #ccc;
     .progress-bar {
         box-shadow: none !important;
+    }
+}
+
+.versus-interaction {
+    .progress-bar-warning {
+        background-color: #FF9D00;
     }
 }
 
@@ -1418,15 +1427,12 @@ height: 100%;
     .container-fluid {
         margin: 0;
         overflow: hidden;
+        padding: 0;
     }
 
     .container-cover-countdown {
         min-height: 50px !important;
         h3 { font-weight: bold; }
-    }
-
-    .btn-container {
-        display: none;
     }
 
     .profile-container .profile-badge {
@@ -1472,7 +1478,7 @@ height: 100%;
     }
 
     .undervideo {
-        padding: 0 25px 0 10px;
+        padding: 0 10px 0 10px;
     }
 
     hr { clear: both; }
@@ -1646,6 +1652,10 @@ height: 100%;
 @media (max-width: 500px) {
     .col-xsm-12 {
         width: 100%;
+    }
+
+    .btn-container {
+        display: none;
     }
 
     .margin-top-sm-10 {
