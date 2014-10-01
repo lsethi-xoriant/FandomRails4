@@ -81,7 +81,11 @@ class EventLoggerMiddleware
         $process_file_descriptor.close()
         $process_file_descriptor = nil
       end
-      File.rename($process_file_path, $process_file_path.sub("open", "closed"))
+      begin
+        File.rename($process_file_path, $process_file_path.sub("open", "closed"))
+      rescue Exception => ex
+        # might have been removed by the background daemon
+      end
     end
     
     if $process_file_descriptor.nil?
@@ -100,8 +104,8 @@ class EventLoggerMiddleware
       begin
         orphan_log_file_timestamp = extract_timestamp_from_path(orphan_log_file_path)
         File.rename(orphan_log_file_path, orphan_log_file_path.sub("open", "closed"))
-      rescue Exception => exception
-        # it may be that the background daemon closed the same file at the same time.
+      rescue Exception => ex
+        # might have been removed by the background daemon
       end
     end
   end
