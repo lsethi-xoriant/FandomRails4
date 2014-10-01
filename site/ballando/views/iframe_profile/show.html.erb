@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-4 col-xxs-12" style="padding: 20px;">
+    <div class="col-xs-4 col-xxs-12" style="padding: 10px;">
       <a href="<%= @profile_url %>" target="_top">
         <img src="<%= current_avatar %>" class="img-responsive img-circle iframe-profile-avatar">
       </a>
@@ -24,7 +24,7 @@
 
     <div class="col-xs-8 hidden-xxs" style="padding-left: 0;">
       <h4 style="padding-top: 15px; color: #fff;">
-        <%= current_user ? extract_name_or_username(current_user) : "Iscriviti alla community" %>
+        <b><%= current_user ? extract_name_or_username(current_user) : "Iscriviti alla community" %></b>
       </h4>
       <% if current_user %>
         <h5 style="color: #fff;"> Hai fatto              

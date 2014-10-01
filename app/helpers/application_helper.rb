@@ -306,14 +306,16 @@ module ApplicationHelper
 	end
 
 	def interaction_answer_percentage(interaction, answer)
-		interaction_answers_count = interaction.user_interactions.count
-    
-    if interaction_answers_count < 1
-      return nil
+    cache_short("interaction_#{interaction.id}_answer_#{answer.id}_percentage") do
+  		interaction_answers_count = interaction.user_interactions.count
+      
+      if interaction_answers_count < 1
+        nil
+      else
+        interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
+        ((interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100).round
+      end
     end
-
-		interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
-		return ((interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100).round
 	end
 
 	def anonymous_user

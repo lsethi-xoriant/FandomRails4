@@ -12,7 +12,41 @@
     <% else %>
       <%= render partial: "/call_to_action/#{interaction.resource_type.downcase}_interaction", locals: { interaction: interaction, outcome: outcome, user_interaction: get_user_interaction_from_interaction(interaction, current_or_anonymous_user), interaction_reward_status: interaction_reward_status, calltoaction_id: ctaid, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction } %>   
     <% end %>
-
+	
+	<div id="waiting-registration-layer" class="hidden">
+	    <div class="spinner-waiting">
+	      <div class="spinner-container container1">
+	        <div class="circle1"></div>
+	        <div class="circle2"></div>
+	        <div class="circle3"></div>
+	        <div class="circle4"></div>
+	      </div>
+	      <div class="spinner-container container2">
+	        <div class="circle1"></div>
+	        <div class="circle2"></div>
+	        <div class="circle3"></div>
+	        <div class="circle4"></div>
+	      </div>
+	      <div class="spinner-container container3">
+	        <div class="circle1"></div>
+	        <div class="circle2"></div>
+	        <div class="circle3"></div>
+	        <div class="circle4"></div>
+	      </div>
+	    </div>
+  	</div>
+  	
+  	<div id="fountainG" class="hidden">
+		<div id="fountainG_1" class="fountainG"></div>
+		<div id="fountainG_2" class="fountainG"></div>
+		<div id="fountainG_3" class="fountainG"></div>
+		<div id="fountainG_4" class="fountainG"></div>
+		<div id="fountainG_5" class="fountainG"></div>
+		<div id="fountainG_6" class="fountainG"></div>
+		<div id="fountainG_7" class="fountainG"></div>
+		<div id="fountainG_8" class="fountainG"></div>
+	</div>
+	
   </div>
 
   <% if outcome.present? %>
