@@ -77,9 +77,10 @@ class EventLoggerMiddleware
   
   def open_or_rotate_process_log_file()
     if $process_file_size && $process_file_size > LOGGER_PROCESS_FILE_SIZE
-      debugger 
-      $process_file_descriptor.close()
-      $process_file_descriptor = nil
+      unless $process_file_descriptor.nil?
+        $process_file_descriptor.close()
+        $process_file_descriptor = nil
+      end
       File.rename($process_file_path, $process_file_path.sub("open", "closed"))
     end
     
