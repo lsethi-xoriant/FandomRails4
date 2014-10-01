@@ -1448,9 +1448,9 @@ height: 100%;
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
     .container-fluid {
-        margin: 0;
-        overflow: hidden;
-        padding: 0;
+        //margin: 0;
+        //overflow: hidden;
+        //padding: 0;
     }
     
     .iframe-profile-avatar{
