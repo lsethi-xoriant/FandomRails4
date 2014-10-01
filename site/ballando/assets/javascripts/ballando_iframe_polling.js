@@ -13,6 +13,6 @@ function checkDocumentHeight(myIframeId) {
       
     }
     
-    timer = setTimeout(run, 300);
+    timer = setTimeout(run, 600);
   })();
 }
