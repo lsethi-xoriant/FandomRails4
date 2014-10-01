@@ -83,10 +83,8 @@ module ApplicationHelper
   
         if user_interaction.nil?
           user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
-          trace_block("update counters anonymous", { user_interaction: user_interaction.id }) do
-            UserCounter.update_unique_counters(user_interaction, user)
-            UserCounter.update_all_counters(user_interaction, user)
-          end
+          UserCounter.update_unique_counters(user_interaction, user)
+          UserCounter.update_all_counters(user_interaction, user)
             
           outcome = compute_and_save_outcome(user_interaction)
           outcome.info = []
@@ -97,14 +95,10 @@ module ApplicationHelper
             correct_answer: predict_outcome_with_correct_answer ? predict_outcome_with_correct_answer : Outcome.new 
           }.to_json
   
-          trace_block("user_interaction outcome save", { user_interaction: user_interaction.id }) do
-            user_interaction.outcome = outcome_for_user_interaction
-            user_interaction.save
-          end
+          user_interaction.outcome = outcome_for_user_interaction
+          user_interaction.save
         else
-          trace_block("update counters logged-in", { user_interaction: user_interaction.id }) do
-            UserCounter.update_all_counters(user_interaction, user)
-          end
+          UserCounter.update_all_counters(user_interaction, user)
   
           if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "check" 
             user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
@@ -119,9 +113,7 @@ module ApplicationHelper
   
             user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
           else
-            trace_block("update user interaction counter", { user_interaction: user_interaction.id }) do
-              user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
-            end
+            user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
           
             outcome = compute_and_save_outcome(user_interaction)
             outcome.info = []
@@ -138,9 +130,7 @@ module ApplicationHelper
               correct_answer: interaction_correct_answer_outcome
             }.to_json
   
-            trace_block("update user interaction outcome", { user_interaction: user_interaction.id }) do
-              user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
-            end
+            user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
           end
           
         end
@@ -286,10 +276,8 @@ module ApplicationHelper
   end
 
 	def get_counter_about_user_reward(reward_name)
-	  trace_block("get_counter_about_user_reward", {}) do
-  		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}' and period_id IS NULL").first
-  		user_reward ? user_reward.counter : 0
-    end
+		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}' and period_id IS NULL").first
+		user_reward ? user_reward.counter : 0
 	end
 
 	def user_has_reward(reward_name)
