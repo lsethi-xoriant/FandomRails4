@@ -4,6 +4,7 @@
 		
         jcarousel
             .on('jcarousel:reload jcarousel:create', function () {
+                $(".jcarousel-wrapper").css("width", $("body").innerWidth());
                 var width = jcarousel.innerWidth();
 				
                 if (width >= 500) {
