@@ -7,7 +7,7 @@ core_number = FandomUtils::get_number_of_cores()
 worker_number = core_number * 3
 worker_processes worker_number
 
-preload_app false
+preload_app true
 
 listen 3000
 listen "/tmp/Fandom.socket", :backlog => 64
