@@ -2,6 +2,24 @@ require "open3"
 
 module FandomUtils
 
+  # These are mostly used by the event logging system
+  def init_global_variables
+    $pid = Process.pid
+    $request_uri = "unknown"
+    $method = "unknown"
+    $http_params = "unknown"
+    $http_referer = "unknown"
+    $session_id = "unknown"
+    $remote_ip = "unknown"
+    $tenant = "no_tenant"
+    $user_id = -1
+    $cache_hits = 0
+    $cache_misses = 0    
+    $process_file_size = 0
+    $process_file_path = nil
+    $process_file_descriptor = nil
+  end
+
   # Returns the Site class defined for the requested domain. 
   # The request variable is taken by dynamic scoping, and the Site is set in the request itself.
   def get_site_from_request!

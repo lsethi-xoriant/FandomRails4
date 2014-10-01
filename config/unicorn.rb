@@ -63,6 +63,7 @@ before_fork do |server, worker|
 end
 
 after_fork do |server, worker|
+  FandomUtils::init_global_variables
   # Start up the database connection again in the worker
   if defined?(ActiveRecord::Base)
     ActiveRecord::Base.establish_connection
