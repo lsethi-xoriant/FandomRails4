@@ -5,7 +5,7 @@
         jcarousel
             .on('jcarousel:reload jcarousel:create', function () {
                 var width = jcarousel.innerWidth();
-				console.log("jcarousel: "+width+" pixel");
+				
                 if (width >= 500) {
                     width = width / 4;
 

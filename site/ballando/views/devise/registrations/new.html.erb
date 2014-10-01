@@ -21,7 +21,7 @@
 
               <% if resource.errors.any? %>
                 <div style="margin-top: 10px; margin-bottom: 10px;">
-                  <p style="font-size: 15px; color: #8d1e12;">Errori nella compilazione del modulo:</p>
+                  <p style="font-size: 15px; color: #DA1500;">Errori nella compilazione del modulo:</p>
                   <ul class="errors">
                     <% resource.errors.full_messages.each do |error_message| %>
                         <li><%= error_message %></li>

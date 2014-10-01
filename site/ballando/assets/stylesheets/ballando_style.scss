@@ -176,7 +176,7 @@ h1, h2, h3 {
 }
 
 .errors li{
-  color: #8d1e12;
+  color: #DA1500;
 }
 
 .cta-stream {
@@ -944,7 +944,7 @@ span.notify {
   height: 55px;
   h2{
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 45px;
   }
   .col-md-12{
@@ -1453,8 +1453,12 @@ height: 100%;
         //padding: 0;
     }
     
+    .menu-area{
+      margin-bottom: 0;
+    }
+    
     .iframe-profile-avatar{
-      max-width: 40px;
+      max-width: 50px;
     }
     
     .calltoaction-cover {
@@ -1555,7 +1559,7 @@ height: 100%;
     
     .comment-center{
       h2{
-        font-size: 15px;
+        font-size: 14px;
       }
     }
     
