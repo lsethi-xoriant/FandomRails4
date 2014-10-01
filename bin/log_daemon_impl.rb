@@ -25,29 +25,32 @@ def main
     if event_directory_exist
       close_orphan_files(event_logs_path, logger)
 
-      closed_event_log_files(event_logs_path).each do |process_file_path|
+      # TODO: log_daemon disabled while changing log file format!
+      if false
+        closed_event_log_files(event_logs_path).each do |process_file_path|
+          
+          insert_values_for_event = generate_sql_insert_values_for_event(process_file_path)
+          pid, timestamp = extract_pid_and_timestamp_from_path(process_file_path)
         
-        insert_values_for_event = generate_sql_insert_values_for_event(process_file_path)
-        pid, timestamp = extract_pid_and_timestamp_from_path(process_file_path)
-      
-        begin
-          sql_query = generate_sql_insert_query(insert_values_for_event, pid, timestamp)
-
-          base_db_connection.connection.execute(sql_query)        
-
-          delete_process_file(process_file_path)
-        rescue ActiveRecord::RecordNotUnique => exception      
-          # if the file that contains log events has already been saved, an exception RecordNotUnique is raised.
-          # In this case the file will be deleted, because it means that it does  already saved in the past.
-          base_db_connection.connection.execute("ROLLBACK;")
-          delete_process_file(process_file_path)        
-          logger.error exception
-        rescue Exception => exception
-          base_db_connection.connection.execute("ROLLBACK;")
-          mark_file_with_errors(event_logs_path, process_file_path)        
-          logger.error exception
+          begin
+            sql_query = generate_sql_insert_query(insert_values_for_event, pid, timestamp)
+  
+            base_db_connection.connection.execute(sql_query)        
+  
+            delete_process_file(process_file_path)
+          rescue ActiveRecord::RecordNotUnique => exception      
+            # if the file that contains log events has already been saved, an exception RecordNotUnique is raised.
+            # In this case the file will be deleted, because it means that it does  already saved in the past.
+            base_db_connection.connection.execute("ROLLBACK;")
+            delete_process_file(process_file_path)        
+            logger.error exception
+          rescue Exception => exception
+            base_db_connection.connection.execute("ROLLBACK;")
+            mark_file_with_errors(event_logs_path, process_file_path)        
+            logger.error exception
+          end
+  
         end
-
       end
     end
 
