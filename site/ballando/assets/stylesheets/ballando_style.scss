@@ -1449,6 +1449,21 @@ height: 100%;
         padding: 0;
     }
     
+    .iframe-profile-avatar{
+      max-width: 40px;
+    }
+    
+    .calltoaction-cover {
+      .row{
+        padding: 0px;
+      }
+    }
+    
+    .comment-center:hover{
+      border-color: #fff;
+    }
+
+    
     .container-cover-countdown {
         min-height: 50px !important;
         h3 { font-weight: bold; }
@@ -1550,7 +1565,9 @@ height: 100%;
         margin-right: -14px;
     }
     
-    .row.cta{}
+    .row.cta{
+      margin-right: -10px;
+    }
 }
 
 @media (min-width: $screen-sm-min) {

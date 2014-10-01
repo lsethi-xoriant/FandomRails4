@@ -42,7 +42,7 @@
 
 .btn-2.btn-2-versus.active {
     top: 3px;
-    box-shadow: 0 1px 0 #363636;
+    box-shadow: 0 0px 0 #363636;
 }
 
 .btn-2.btn-2-versus.btn-2-versus-orange.active {
@@ -82,17 +82,17 @@
 
 .btn-2.btn-2-default.active {
   top: 3px;
-  box-shadow: 0 1px 0 #363636;
+  box-shadow: 0 0px 0 #363636;
 }
 
 .btn-2.btn-2-default.btn-2-default-orange.active {
   background-color: #FF9D00; /* ORANGE */
-  box-shadow: 0 1px 0 #825000; /* DARK ORANGE */
+  box-shadow: 0 0px 0 #825000; /* DARK ORANGE */
 }
 
 .btn-2.btn-2-default.btn-2-default-orange.active:hover {
   background-color: #FF9D00; /* ORANGE */
-  box-shadow: 0 1px 0 #825000; /* DARK ORANGE */
+  box-shadow: 0 0px 0 #825000; /* DARK ORANGE */
 }
 
 .btn-2.btn-2-default-danger {
@@ -113,13 +113,13 @@
 .btn-2.btn-2-default-success.active {
     top: 3px;
     background-color: #1EB510 !important; /* GREEN */
-    box-shadow: 0 1px 0 #438A3D !important; /* DARK GREEN */
+    box-shadow: 0 0px 0 #438A3D !important; /* DARK GREEN */
 }
 
 .btn-2.btn-2-default-danger.active {
     top: 3px;
     background-color: #D6260B !important;
-    box-shadow: 0 1px 0 #9C1A06 !important;
+    box-shadow: 0 0px 0 #9C1A06 !important;
 }
 
 /* HOVER AND ACTIVE */
@@ -158,17 +158,17 @@
 
 .btn-2.btn-2-versus.active:hover {
     background-color: #FF9D00; /* ORANGE */
-    box-shadow: 0 1px 0 #825000; /* DARK ORANGE */
+    box-shadow: 0 0px 0 #825000; /* DARK ORANGE */
 }
 
 .btn-2.btn-2-versus:active {
     top: 3px;
-    box-shadow: 0 1px 0 #363636;
+    box-shadow: 0 0px 0 #363636;
 }
 
 .btn-2.btn-2-versus:active:hover {
     top: 3px;
-    box-shadow: 0 1px 0 #825000;
+    box-shadow: 0 0px 0 #825000;
 }
 
 .btn-2.btn-2-default:hover {
@@ -193,12 +193,12 @@
 
 .btn-2.btn-2-default.active:hover {
     background-color: #969696; /* GRAY */
-    box-shadow: 0 1px 0 #363636; /* DARK GRAY */
+    box-shadow: 0 0px 0 #363636; /* DARK GRAY */
 }
 
 .btn-2.btn-2-default:active, .btn-2.btn-2-default.active {
     top: 3px;
-    box-shadow: 0 1px 0 #363636;
+    box-shadow: 0 0px 0 #363636;
 }
 
 .btn-2.btn-2-login:active {
@@ -218,11 +218,11 @@
 
 .btn-2.btn-2-default:active:hover {
     top: 3px;
-    box-shadow: 0 1px 0 #825000;
+    box-shadow: 0 0px 0 #825000;
 }
 
 .btn-2.btn-2-default-success.active:hover {
-    box-shadow: 0 1px 0 #438A3D; /* GREEN */
+    box-shadow: 0 0px 0 #438A3D; /* GREEN */
     background-color: #1EB510; /* DARK GREEN */
 }
 
@@ -238,7 +238,7 @@
 }
 
 .btn-2.btn-2-default-danger.active:hover {
-    box-shadow: 0 1px 0 #9C1A06; /* RED */ 
+    box-shadow: 0 0px 0 #9C1A06; /* RED */ 
     background-color: #D6260B; /* DARK RED */
 }
 
