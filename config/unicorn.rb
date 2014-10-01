@@ -46,8 +46,6 @@ before_fork do |server, worker|
     ActiveRecord::Base.connection.disconnect!
   end
 
-  Rails.cache.reset
-
   if defined?(Resque)
     Resque.redis.quit
     Rails.logger.info('Disconnected from Redis')
@@ -69,6 +67,8 @@ after_fork do |server, worker|
   if defined?(ActiveRecord::Base)
     ActiveRecord::Base.establish_connection
   end
+
+  Rails.cache.reset
 
   if defined?(Resque)
     Resque.redis = ENV['REDIS_URI']
