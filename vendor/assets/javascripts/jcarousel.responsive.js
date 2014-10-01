@@ -1,10 +1,10 @@
 (function($) {
     $(function() {
-        //var jcarousel = $('.jcarousel');
-		var jcarousel = $('.footer-carousel');
+        var jcarousel = $('.jcarousel');
+		var container = $('.footer-carousel');
         jcarousel
             .on('jcarousel:reload jcarousel:create', function () {
-                var width = jcarousel.innerWidth();
+                var width = container.innerWidth();
 
                 if (width >= 500) {
                     width = width / 4;
