@@ -86,8 +86,8 @@ module EventHandlerHelper
   def update_process_log_file(log_to_append) 
     $process_file_descriptor.write(log_to_append)
     $process_file_descriptor.write("\n")
+    $process_file_descriptor.flush
     $process_file_size += (log_to_append.size + 1)
-    #$process_file_descriptor.flush
   end
 
   def parse_caller_data(caller_data)
