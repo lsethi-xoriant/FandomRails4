@@ -16,7 +16,9 @@ p.oblique { font-style: oblique }
 }
 
 .carousel-inner{
-  padding: 3px;
+  .item{
+    border: 6px solid #fff;
+  }
 }
 
 .cover-grid {
@@ -133,7 +135,7 @@ h5, h6 {
     border: 2px solid #fff; 
     width: 100%; 
     min-width: 25px; 
-    max-width: 60px;
+    max-width: 50px;
     margin: 0 auto;
 }
 
@@ -938,8 +940,12 @@ span.notify {
   height: 55px;
   h2{
     text-transform: uppercase;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 45px;
+  }
+  .col-md-12{
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
 // LIVELLI
@@ -1443,10 +1449,6 @@ height: 100%;
         padding: 0;
     }
     
-    .iframe-profile-avatar {
-        max-width: 80px;
-    }
-    
     .container-cover-countdown {
         min-height: 50px !important;
         h3 { font-weight: bold; }
@@ -1547,6 +1549,8 @@ height: 100%;
         margin-left: -14px;
         margin-right: -14px;
     }
+    
+    .row.cta{}
 }
 
 @media (min-width: $screen-sm-min) {
