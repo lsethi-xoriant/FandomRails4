@@ -19,7 +19,7 @@ def main
       data_to_string = json['data'].map { |key, value| "#{key}: #{value}" }
       data_to_string = data_to_string.join(", ")
 
-      puts "#{json['timestamp']} #{json['file_name']}:#{json['line_number']} #{json['level'].upcase} #{json['message']} -- #{data_to_string}"
+      puts "#{json['timestamp']} #{json['pid']} #{json['level'].upcase} #{json['message']} -- #{data_to_string}"
     end
   end
 end
