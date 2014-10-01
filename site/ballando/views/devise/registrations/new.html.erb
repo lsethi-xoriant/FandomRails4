@@ -63,17 +63,17 @@
               </div>
 
               <div class="checkbox text-left">
-                <label><%= f.check_box :privacy %> Accetto i <a href="#" data-toggle="modal" data-target="#privacy">termini e le condizioni di utilizzo</a></label>
+                <label><%= f.check_box :privacy %> Accetto i <a href="#" data-toggle="modal" data-target="#privacy">termini e le condizioni di utilizzo *</a></label>
               </div>
 
               <div class="checkbox text-left">
                 <label><%= f.check_box :newsletter %> Desidero registrarmi alla newsletter Rai.tv</label>
               </div>
 
-    					<div class="col-sm-6 col-sm-offset-3">
-    						<button type="submit" class="btn-2 btn-danger btn-lg btn-block">REGISTRATI</button>
-    					</div>
-
+				<div class="col-sm-6 col-sm-offset-3">
+					<button type="submit" class="btn-2 btn-danger btn-lg btn-block">REGISTRATI</button>
+				</div>
+				<p class="small" style="color: white; display: block; clear: both; margin-top: 25px; margin-bottom: 0; float: left;">* Campo obbligatorio</p>
             <% end %>
             <p>&nbsp;</p>
           </div>
