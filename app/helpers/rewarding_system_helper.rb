@@ -353,12 +353,10 @@ module RewardingSystemHelper
   end
   
   def log_outcome(outcome)
-    outcome.info.each do |params|
-      log_info(*params)
-    end
-    outcome.errors.each do |params|
-      log_error(*params)
-    end
+    log_info("outcome error and info", { info: outcome.info, errors: outcome.errors })
+    # empty the lists of info/errors for performance
+    outcome.info = []
+    outcome.errors = []
   end
 
   def prepare_rules_and_context(user_interaction, rules_buffer = nil)

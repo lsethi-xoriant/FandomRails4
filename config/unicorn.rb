@@ -4,17 +4,12 @@ require "#{File.dirname(__FILE__)}/../lib/fandom_utils"
 env = ENV["RAILS_ENV"] || "development"
 
 core_number = FandomUtils::get_number_of_cores()
-if core_number == 1
-  worker_number =  3
-else
-  worker_number = core_number * 4
-end  
+worker_number = core_number * 3
 worker_processes worker_number
 
 preload_app true
 
-# listen on both a Unix domain socket and a TCP port,
-# we use a shorter backlog for quicker failover when busy
+listen 3000
 listen "/tmp/Fandom.socket", :backlog => 64
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
@@ -72,6 +67,8 @@ after_fork do |server, worker|
   if defined?(ActiveRecord::Base)
     ActiveRecord::Base.establish_connection
   end
+
+  Rails.cache.reset
 
   if defined?(Resque)
     Resque.redis = ENV['REDIS_URI']
