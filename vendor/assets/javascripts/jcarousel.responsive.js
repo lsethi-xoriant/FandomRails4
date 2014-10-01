@@ -1,7 +1,7 @@
 (function($) {
     $(function() {
-        var jcarousel = $('.jcarousel');
-
+        //var jcarousel = $('.jcarousel');
+		var jcarousel = $('.footer-carousel');
         jcarousel
             .on('jcarousel:reload jcarousel:create', function () {
                 var width = jcarousel.innerWidth();

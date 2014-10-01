@@ -97,9 +97,3 @@
     -moz-box-shadow: 0 0 2px #4E443C;
     box-shadow: 0 0 2px #4E443C;
 }
-
-@media (max-width: 350px){
-	.jcarousel{
-		width: 320px !important;
-	}
-}
