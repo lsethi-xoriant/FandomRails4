@@ -1,3 +1,12 @@
+upstream fandom {
+  # fail_timeout=0 means we always retry an upstream even if it failed
+  # to return a good HTTP response (in case the Unicorn master nukes a
+  # single worker for timing out).
+
+  # for UNIX domain socket setups:
+  server unix:/tmp/Fandom.socket fail_timeout=0;
+}
+
 server {
     # if you're running multiple servers, instead of "default" you should
     # put your main domain name here
@@ -11,7 +20,7 @@ server {
 
     location / {
         #all requests are sent to the UNIX socket
-        proxy_pass  http://localhost:3000/;
+        proxy_pass  http://unix:/tmp/Fandom.socket:/;
         proxy_redirect     off;
 
         proxy_set_header   Host             $host;

@@ -7,7 +7,13 @@ require 'json'
 RAILS_LOG_DIR = "~/railsapps/Fandom/shared/log/events"
 
 def main
-  IO.popen("xtail #{RAILS_LOG_DIR}").each do |line|
+  if ARGV.size >= 1
+    dir = ARGV[0]
+  else
+    dir = RAILS_LOG_DIR
+  end
+
+  IO.popen("xtail #{dir}").each do |line|
     if line.start_with?("{")
       json = JSON.parse(line)
       data_to_string = json['data'].map { |key, value| "#{key}: #{value}" }
