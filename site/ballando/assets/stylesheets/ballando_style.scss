@@ -16,7 +16,9 @@ p.oblique { font-style: oblique }
 }
 
 .carousel-inner{
-  padding: 3px;
+  .item{
+    border: 6px solid #fff;
+  }
 }
 
 .cover-grid {
@@ -133,7 +135,7 @@ h5, h6 {
     border: 2px solid #fff; 
     width: 100%; 
     min-width: 25px; 
-    max-width: 60px;
+    max-width: 50px;
     margin: 0 auto;
 }
 
@@ -171,6 +173,10 @@ h5, h6 {
 
 h1, h2, h3 {
     word-wrap: break-word;
+}
+
+.errors li{
+  color: #8d1e12;
 }
 
 .cta-stream {
@@ -938,8 +944,12 @@ span.notify {
   height: 55px;
   h2{
     text-transform: uppercase;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 45px;
+  }
+  .col-md-12{
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
 // LIVELLI
@@ -1443,9 +1453,20 @@ height: 100%;
         padding: 0;
     }
     
-    .iframe-profile-avatar {
-        max-width: 80px;
+    .iframe-profile-avatar{
+      max-width: 40px;
     }
+    
+    .calltoaction-cover {
+      .row{
+        padding: 0px;
+      }
+    }
+    
+    .comment-center:hover{
+      border-color: #fff;
+    }
+
     
     .container-cover-countdown {
         min-height: 50px !important;
@@ -1546,6 +1567,10 @@ height: 100%;
     .go-init {
         margin-left: -14px;
         margin-right: -14px;
+    }
+    
+    .row.cta{
+      margin-right: -10px;
     }
 }
 
