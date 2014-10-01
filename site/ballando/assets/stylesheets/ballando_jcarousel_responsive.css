@@ -98,8 +98,28 @@
     box-shadow: 0 0 2px #4E443C;
 }
 
-@media (max-width: 350px){
+/*
+@media(max-width: 1024px){
 	.jcarousel{
-		width: 320px !important;
+		width: 1004px;
 	}
 }
+
+@media(max-width: 768px){
+	.jcarousel{
+		width: 748px;
+	}
+}
+
+@media(max-width: 768px){
+	.jcarousel{
+		width: 748px;
+	}
+}
+
+@media(max-width: 350px){
+	.jcarousel{
+		width: 330px;
+	}
+}
+*/
