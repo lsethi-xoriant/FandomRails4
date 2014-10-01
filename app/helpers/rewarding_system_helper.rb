@@ -353,7 +353,7 @@ module RewardingSystemHelper
   end
   
   def log_outcome(outcome)
-    log_info("outcome error and info", { info: outcome.info, errors: outcome.errors })
+    log_info("outcome messages", { info: outcome.info, errors: outcome.errors })
     # empty the lists of info/errors for performance
     outcome.info = []
     outcome.errors = []
