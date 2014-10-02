@@ -4,7 +4,7 @@
 
       <% if true #current_user %>
         <div class="jcarousel-wrapper">
-          <div class="jcarousel">
+          <div class="jcarousel <%= request_is_from_apple_mobile_device?(request) ? "jcarousel-apple" : "jcarousel-deafault" %>">
             <ul>
               <% @calltoactions.each do |calltoaction| %>
                 <li>
