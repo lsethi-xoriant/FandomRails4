@@ -184,4 +184,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def update_avatar_image
+    user = User.find(params[:user_id])
+    user.update_attribute(:avatar, params[:avatar])
+    redirect_to "/profile/badges"
+  end
+
 end
