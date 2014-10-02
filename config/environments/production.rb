@@ -1,6 +1,16 @@
 Fandom::Application.configure do
 
   # Settings specified here will take precedence over those in config/application.rb
+  
+  puts "disabling production logs, please check the events directory"
+  config.log_level = :error
+  #config.logger = Logger.new('/dev/null')
+  class LogSubscriber < ActiveSupport::LogSubscriber
+    def process_action event
+      log_info("rails logger", event.payload)
+    end
+  end
+  LogSubscriber.attach_to :action_controller
 
   # Code is not reloaded between requests
   config.cache_classes = true
@@ -31,8 +41,6 @@ Fandom::Application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
-  # See everything in the log (default is :info)
-  # config.log_level = :debug
 
   # Prepend all log lines with the following tags
   # config.log_tags = [ :subdomain, :uuid ]

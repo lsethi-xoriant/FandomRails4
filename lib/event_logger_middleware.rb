@@ -39,6 +39,8 @@ class EventLoggerMiddleware
     $remote_ip = "#{env["action_dispatch.remote_ip"]}"
     $tenant = tenant
     $user_id = user_id
+    $cache_hits = 0
+    $cache_misses = 0
 
     data = {
       request_uri: $request_uri,
@@ -62,6 +64,8 @@ class EventLoggerMiddleware
       start = Time.now
       status, headers, response = @app.call(env)
       data[:status] = status
+      data[:cache_hits] = $cache_hits
+      data[:cache_misses] = $cache_misses
       data[:time] = (Time.now - start).to_s
       EventHandlerHelper.log_info(msg, data)
       [status, headers, response]
@@ -81,7 +85,11 @@ class EventLoggerMiddleware
         $process_file_descriptor.close()
         $process_file_descriptor = nil
       end
-      File.rename($process_file_path, $process_file_path.sub("open", "closed"))
+      begin
+        File.rename($process_file_path, $process_file_path.sub("open", "closed"))
+      rescue Exception => ex
+        # might have been removed by the background daemon
+      end
     end
     
     if $process_file_descriptor.nil?
@@ -100,8 +108,8 @@ class EventLoggerMiddleware
       begin
         orphan_log_file_timestamp = extract_timestamp_from_path(orphan_log_file_path)
         File.rename(orphan_log_file_path, orphan_log_file_path.sub("open", "closed"))
-      rescue Exception => exception
-        # it may be that the background daemon closed the same file at the same time.
+      rescue Exception => ex
+        # might have been removed by the background daemon
       end
     end
   end

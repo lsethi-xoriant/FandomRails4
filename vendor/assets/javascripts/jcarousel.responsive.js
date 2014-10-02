@@ -1,6 +1,6 @@
 (function($) {
     $(function() {
-        var jcarousel = $('.jcarousel');
+        var jcarousel = $('.jcarousel-default');
 		
         jcarousel
             .on('jcarousel:reload jcarousel:create', function () {
@@ -31,7 +31,40 @@
             .jcarousel({
                 wrap: 'circular'
             });
-            
+
+        var jcarousel = $('.jcarousel-apple');
+        
+        jcarousel
+            .on('jcarousel:reload jcarousel:create', function () {
+                var width = screen.width;
+                jcarousel.css("width", width);
+                
+                if (width >= 500) {
+                    width = width / 4;
+
+                    jcarousel.jcarouselAutoscroll({
+                        interval: 3000,
+                        target: '+=4',
+                        autostart: true
+                    });
+
+                } else if (width >= 350) {
+                    width = width / 1;
+
+                    jcarousel.jcarouselAutoscroll({
+                        interval: 3000,
+                        target: '+=1',
+                        autostart: true
+                    });
+
+                }
+
+                jcarousel.jcarousel('items').css('width', width + 'px');
+            })
+            .jcarousel({
+                wrap: 'circular'
+            });
+
         $('.jcarousel-control-prev')
             .jcarouselControl({
                 target: '-=4'

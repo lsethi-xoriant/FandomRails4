@@ -77,9 +77,10 @@ module CacheHelper
     time = (Time.now.utc - start_time) 
 
     if block_run
-      log_info("cache miss", { 'key' => cache_key, "time" => time })
+      log_info("cache miss computation", { 'key' => cache_key, "time" => time })
+      $cache_misses += 1
     else
-      log_info("cache hit", { 'key' => cache_key,  "time" => time })
+      $cache_hits += 1
     end
     result
   end
