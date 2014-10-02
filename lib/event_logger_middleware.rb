@@ -39,6 +39,8 @@ class EventLoggerMiddleware
     $remote_ip = "#{env["action_dispatch.remote_ip"]}"
     $tenant = tenant
     $user_id = user_id
+    $cache_hits = 0
+    $cache_misses = 0
 
     data = {
       request_uri: $request_uri,
@@ -62,6 +64,8 @@ class EventLoggerMiddleware
       start = Time.now
       status, headers, response = @app.call(env)
       data[:status] = status
+      data[:cache_hits] = $cache_hits
+      data[:cache_misses] = $cache_misses
       data[:time] = (Time.now - start).to_s
       EventHandlerHelper.log_info(msg, data)
       [status, headers, response]

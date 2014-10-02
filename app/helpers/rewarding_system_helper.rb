@@ -353,10 +353,12 @@ module RewardingSystemHelper
   end
   
   def log_outcome(outcome)
-    log_info("outcome messages", { info: outcome.info, errors: outcome.errors })
-    # empty the lists of info/errors for performance
-    outcome.info = []
-    outcome.errors = []
+    if Rails.env == 'development'
+      log_info("outcome messages", { info: outcome.info, errors: outcome.errors })
+      # empty the lists of info/errors for performance
+      outcome.info = []
+      outcome.errors = []
+    end
   end
 
   def prepare_rules_and_context(user_interaction, rules_buffer = nil)
@@ -384,18 +386,14 @@ module RewardingSystemHelper
     outcome = compute_outcome(user_interaction, rules_buffer)
     total_time = Time.now.utc - start_time
 
-    log_outcome(outcome)
     if outcome.reward_name_to_counter.any? || outcome.unlocks.any?
   
       log_synced("assigning reward to user", { 
         'time' => total_time, 
-        'cta' => user_interaction.interaction.call_to_action.name, 
-        'interaction' => user_interaction.interaction.id, 
-        'user' => user_interaction.user.username, 
+        'user_interaction' => user_interaction.id, 
         'outcome_rewards' => outcome.reward_name_to_counter, 
         'outcome_unlocks' => outcome.unlocks.to_a })
-      
-      log_info("reward event", :outcome => outcome)
+
       user = user_interaction.user
       outcome.reward_name_to_counter.each do |reward_name, reward_counter|
         assign_reward(user, reward_name, reward_counter, request.site)
@@ -473,9 +471,7 @@ module RewardingSystemHelper
     log_outcome(outcome)
     log_info("predict interaction outcome", { 
       'time' => total_time, 
-      'cta' => interaction.call_to_action.name,
       'interaction' => interaction.id, 
-      'user' => user_interaction.user.username, 
       'outcome_rewards' => outcome.reward_name_to_counter, 
       'outcome_unlocks' => outcome.unlocks.to_a })
 
@@ -523,8 +519,7 @@ module RewardingSystemHelper
       total_time = Time.now.utc - start_time
       log_info("predict max cta outcome", { 
         'time' => total_time, 
-        'cta' => cta.name, 
-        'user' => user_interaction.user.username, 
+        'cta' => cta.id, 
         'outcome_rewards' => total_outcome.reward_name_to_counter, 
         'outcome_unlocks' => total_outcome.unlocks.to_a })
                

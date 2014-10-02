@@ -71,7 +71,7 @@ module ApplicationHelper
 
   def create_or_update_interaction(user_id, interaction_id, answer_id, like, aux = "{}")
     trace_block("create_or_update_interaction", {}) do
-      ActiveRecord::Base.transaction do
+      #ActiveRecord::Base.transaction do
         user = User.find(user_id)
   
         user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user_id, interaction_id)
@@ -137,7 +137,7 @@ module ApplicationHelper
   
         [user_interaction, outcome]
   
-      end
+      #end
     end
   end
 
