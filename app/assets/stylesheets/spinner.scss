@@ -121,13 +121,13 @@ bottom: 85px;
 left: 34%;
 }
 
-@media (min-width: 760px) {
+@media (max-width: 760px) {
   #fountainG{
     position: absolute;
     width: 83px;
     height: 10px;
-    bottom: 85px;
-    left: 39%;
+    bottom: 68px;
+    left: 40%;
   }
 }
 
