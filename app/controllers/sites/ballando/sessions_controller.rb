@@ -68,8 +68,8 @@ class Sites::Ballando::SessionsController < SessionsController
 
     if valid_response && rai_response_user["authMyRaiTv"] == "OK"
 
-      if rai_response_user.key?("profile") and rai_response_user["profile"].key?("email")
-        user_email = rai_response_user["profile"]["email"]
+      if rai_response_user.key?("user") and rai_response_user["user"].key?("email")
+        user_email = rai_response_user["user"]["email"]
       else
         user_email = "#{rai_response_user["UID"]}@FAKE___DOMAIN.com"
       end
@@ -131,7 +131,7 @@ class Sites::Ballando::SessionsController < SessionsController
     {
       uid: response_user["UID"],
       provider: response_user["loginProvider"],
-      avatar: response_user["profile"]["photoURL"],
+      avatar: response_user["user"]["photoURL"],
       aux: response_user.to_json
     }
   end
@@ -140,12 +140,12 @@ class Sites::Ballando::SessionsController < SessionsController
     password = Devise.friendly_token.first(8)
     
     provider = response_user["loginProvider"]
-    last_name = provider == "twitter" ? response_user["profile"]["firstName"] : response_user["profile"]["lastName"]
+    last_name = provider == "twitter" ? response_user["user"]["firstName"] : response_user["user"]["lastName"]
 
     User.create(
       username: response_user["UID"], 
       email: user_email, 
-      first_name: response_user["profile"]["firstName"], 
+      first_name: response_user["user"]["firstName"], 
       last_name: last_name,
       avatar_selected: provider,
       privacy: true,

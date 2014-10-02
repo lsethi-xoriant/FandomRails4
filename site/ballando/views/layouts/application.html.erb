@@ -121,6 +121,8 @@
     </div>
   </div>
 
+  <button onclick="generateUserFromProvider('')">CIAO</button>
+
   <%= yield %>
 
   <%= render partial: "/application/ga" %>
@@ -132,6 +134,8 @@
   <script type="text/javascript">
 
     var PROFILE_URL = "<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>";
+
+    var tmp = '{"errorMessage":"","status":"OK","UIDSignature":"HRQealHe+c2md+rkViOf5qTZsWI=","callId":"015f04eea1d141aa8eb3f094c450b872","statusMessage":"","timestamp":"2014-10-02 07:47:46","operation":"getUserInfo","UID":"facebook_alessandro_shado","signatureTimestamp":"1412236066","errorCode":0,"UIDSig":"T3c+vOdbkBTXm/GlB0RX2g4YKvU=","requestParams":{"connectWithoutLoginBehavior":"alwaysLogin","APIKey":"3_y7zC1MAf5AXquxPyEwA0Weug-iSRX5yQVm8Z-M6XcvYFGPBNkdMk2R-aY0Dlz5FO","apiDomain":"us1.gigya.com","lang":"en"},"user":{"oldestDataAge":0,"isSiteUID":true,"isTempUser":false,"birthMonth":"11","UIDSignature":"HRQealHe+c2md+rkViOf5qTZsWI=","state":"","isLoggedIn":true,"city":"Treviso, Italy","timestamp":"2014-10-02 07:47:46","statusCode":200,"providers":["facebook"],"age":26,"gender":"m","firstName":"Alessandro","thumbnailURL":"https://graph.facebook.com/100005216490207/picture?type=square","zip":"","lastName":"Shado","birthYear":"1987","photoURL":"https://graph.facebook.com/100005216490207/picture?type=large","nickname":"Alessandro Shado","identities":{"facebook":{"isLoginIdentity":true,"birthMonth":"11","state":"","lastUpdatedTimestamp":1412236065560,"isExpiredSession":false,"providerUID":"100005216490207","city":"Treviso, Italy","age":"26","gender":"m","oldestDataUpdated":"2014-10-02T07:47:45.369Z","firstName":"Alessandro","lastLoginTime":1412236065,"thumbnailURL":"https://graph.facebook.com/100005216490207/picture?type=square","zip":"","lastName":"Shado","birthYear":"1987","photoURL":"https://graph.facebook.com/100005216490207/picture?type=large","missingPermissions":"","nickname":"Alessandro Shado","lastUpdated":"2014-10-02T07:47:45.56Z","birthDay":"9","allowsLogin":true,"provider":"facebook","country":"","proxiedEmail":"","oldestDataUpdatedTimestamp":1412236065369,"email":"atolomio@shado.tv","profileURL":"https://www.facebook.com/alessandro.shado"}},"isSiteUser":true,"birthDay":"9","country":"","proxiedEmail":"","oldestDataUpdatedTimestamp":1412236065369,"email":"atolomio@shado.tv","UID":"facebook_alessandro_shado","statusReason":"OK","signatureTimestamp":"1412236066","isConnected":true,"UIDSig":"T3c+vOdbkBTXm/GlB0RX2g4YKvU=","loginProviderUID":"100005216490207","capabilities":{"photos":true,"friends":true,"status":true,"notifications":false,"login":true,"actions":true,"contacts":true},"profileURL":"https://www.facebook.com/alessandro.shado","loginProvider":"facebook"},"authMyRaiTv":"OK","signature":"T3c+vOdbkBTXm/GlB0RX2g4YKvU="}|261212ff2d4b21017a792fd2269a6c79';
 
     window.addEventListener("orientationchange", function() {
       window.parent.containerResize();
@@ -166,7 +170,7 @@
       $.ajax({
         type: "POST",
         url: "/users/rai/sign_in_from_provider/create",
-        data: { user: user },
+        data: { user: tmp },
         success: function(data) {
           if(data.errors) {
             $("#form-errors").html(data.errors);
@@ -194,6 +198,7 @@
 		v: "banner",
 		hideEmpty: true
 	});
+
 	</script>
 </body>
 </html>
