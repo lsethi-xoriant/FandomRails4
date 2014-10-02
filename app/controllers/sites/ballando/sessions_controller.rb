@@ -81,7 +81,7 @@ class Sites::Ballando::SessionsController < SessionsController
         user = new_user_from_provider(rai_response_user, user_email)
       end
 
-      authentication = user.authentications.find_by_provider(rai_response_user["loginProvider"])
+      authentication = user.authentications.find_by_provider(rai_response_user["user"]["loginProvider"])
 
       if authentication
         authentication.update_attributes(authentication_attributes_from_provider(rai_response_user))
@@ -130,7 +130,7 @@ class Sites::Ballando::SessionsController < SessionsController
   def authentication_attributes_from_provider(response_user)
     {
       uid: response_user["UID"],
-      provider: response_user["loginProvider"],
+      provider: response_user["user"]["loginProvider"],
       avatar: response_user["user"]["photoURL"],
       aux: response_user.to_json
     }
@@ -139,7 +139,7 @@ class Sites::Ballando::SessionsController < SessionsController
   def new_user_from_provider(response_user, user_email)
     password = Devise.friendly_token.first(8)
     
-    provider = response_user["loginProvider"]
+    provider = response_user["user"]["loginProvider"]
     last_name = provider == "twitter" ? response_user["user"]["firstName"] : response_user["user"]["lastName"]
 
     User.create(
