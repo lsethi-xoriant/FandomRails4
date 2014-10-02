@@ -131,7 +131,7 @@ class Sites::Ballando::SessionsController < SessionsController
     {
       uid: response_user["UID"],
       provider: response_user["user"]["loginProvider"],
-      avatar: response_user["user"]["photoURL"],
+      avatar: response_user["user"]["thumbnailURL"],
       aux: response_user.to_json
     }
   end
