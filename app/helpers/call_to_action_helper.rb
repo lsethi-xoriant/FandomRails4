@@ -201,7 +201,9 @@ module CallToActionHelper
   end
   
   def cta_is_a_reward(cta)
-    cta.rewards.any?
+    cache_short("cta_#{cta.id}_is_a_reward") do
+      cta.rewards.any?
+    end
   end
   
   def is_cta_locked(cta)
@@ -221,7 +223,7 @@ module CallToActionHelper
   
   def has_done_share_interaction(calltoaction)
     interaction = get_share_from_calltoaction(calltoaction)
-    if interaction
+    if !cached_nil?(interaction)
       if current_user
         [current_user.user_interactions.find_by_interaction_id(interaction.id), interaction]
       else
@@ -234,7 +236,7 @@ module CallToActionHelper
   
   def get_share_from_calltoaction(calltoaction)
     cache_short("share_interaction_cta_#{calltoaction.id}") do
-      calltoaction.interactions.find_by_resource_type("Share")
+      calltoaction.interactions.find_by_resource_type("Share") || CACHED_NIL
     end
   end
   

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# just wait for log_daemon to cleanup the log after the application server has been shutdown
+
+sleep 120

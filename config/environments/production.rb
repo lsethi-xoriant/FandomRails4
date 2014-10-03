@@ -13,6 +13,7 @@ Fandom::Application.configure do
       if event.payload.key?(:db_runtime)
         event.payload[:db_runtime] /= 1000.0
       end
+      event.payload.delete(:params) # params delete to avoid cluttering logs with uploads
       log_info("rails logger", event.payload)
     end
   end
