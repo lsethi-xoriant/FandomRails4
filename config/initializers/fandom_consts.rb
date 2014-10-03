@@ -53,5 +53,10 @@ unless defined? FILTER_OPERATOR_CONTAINS
   REWARD_SORT_BY_NAME = "name"
   REWARD_SORT_BY_TITLE = "title"
   CTA_REWARD_TAG = "reward-cta"
+
+  class CachedNil
+  end
+
+  CACHED_NIL = CachedNil.new
   
 end
