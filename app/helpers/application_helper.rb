@@ -40,6 +40,10 @@ module ApplicationHelper
     attribute :column_number, type: Integer
   end
 
+  def cached_nil?(cached_value)
+    cached_value.class == CachedNil
+  end
+
   def ga_code
     begin
       ga = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["ga"]
