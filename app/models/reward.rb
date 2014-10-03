@@ -22,8 +22,8 @@ class Reward < ActiveRecord::Base
     :spendable,
     :countable,
     :numeric_display,
-    :reward_id,
-    :call_to_action_id
+    :call_to_action_id,
+    :reward_tag_ids
 
   attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time # Accessor attributes for easyadmin.
 
@@ -35,7 +35,6 @@ class Reward < ActiveRecord::Base
   
   has_many :reward_tags
   has_many :user_rewards
-  has_many :rewards
   belongs_to :currency, :class_name => "Reward", :foreign_key => 'currency_id'
   belongs_to :call_to_action
   
