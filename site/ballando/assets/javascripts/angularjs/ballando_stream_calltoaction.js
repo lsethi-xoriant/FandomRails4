@@ -8,16 +8,112 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   var COUNTDOWN_TIME = 3;
 
-  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code) {
+  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, request_url) {
     $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code);
     $scope.interactions_showed = {};
+    $scope.request_url = request_url;
+    $scope.interactionShareId = -1;
+    $scope.ctaShareId = -1;
+    $scope.imageShareUrl = "";
+    $scope.shareTitle = "";
   };
 
   $window.showRegistrateView = function() {
     document.cookie = "connect_from_page = " + top.location;
     top.location = PROFILE_URL;
   };
+  
+  $window.doFbShare = function (){
+  		ctaUrl = encodeURI($scope.request_url+"redirect_into_iframe_calltoaction/"+$scope.ctaShareId);
+  		imageUrl = encodeURI($scope.imageShareUrl);
+		url = "https://www.facebook.com/sharer/sharer.php?s=100&p[url]="+ctaUrl+"&p[iimages][0]="+imageUrl+"&p[title]="+$scope.shareTitle;
+		window.open(url);
+		
+		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId })
+          .success(function(data) {
+			
+            if(data.ga) {
+              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              });
+            }
+            
+            $('#facebook-share-modal').modal('toggle');
+            positiontop = $('#facebook-share-modal').offset().top - 40;
+            $('#facebook-share-modal-done').modal('show');
+            $('#facebook-share-modal-done').css({
+				"top": positiontop + "px"
+			});
+            openShareDoneModal('openShareDoneModal', '#bottom-feedback-share-'+$scope.ctaShareId+' #button-share-cta');
+            $('#bottom-feedback-share-'+$scope.ctaShareId+' #button-share-cta').attr('onclick','openShareDoneModal(\'facebook-share-modal-done\', this)');
+            $('#bottom-feedback-share-'+$scope.ctaShareId+' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
+            $('#bottom-feedback-share-'+$scope.ctaShareId+' #feedback-label-share').removeClass("label-warning").addClass("label-success");
+          });
+	};
+	
+	$window.doTwShare = function (){
+		ctaUrl = encodeURI($scope.request_url+"redirect_into_iframe_calltoaction/"+$scope.ctaShareId);
+		url = "https://twitter.com/intent/tweet?url="+ctaUrl+"&text="+$scope.shareTitle;
+		window.open(url);
+		
+		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId })
+          .success(function(data) {
+			
+            if(data.ga) {
+              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              });
+            }
+            
+            $('#facebook-share-modal').modal('toggle');
+            positiontop = $('#facebook-share-modal').offset().top - 40;
+            $('#facebook-share-modal-done').modal('show');
+            $('#facebook-share-modal-done').css({
+				"top": positiontop + "px"
+			});
+            openShareDoneModal('openShareDoneModal', '#bottom-feedback-share-'+$scope.ctaShareId+' #button-share-cta');
+            $('#bottom-feedback-share-'+$scope.ctaShareId+' #button-share-cta').attr('onclick','openShareDoneModal(\'facebook-share-modal-done\', this)');
+            $('#bottom-feedback-share-'+$scope.ctaShareId+' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
+            $('#bottom-feedback-share-'+$scope.ctaShareId+' #feedback-label-share').removeClass("label-warning").addClass("label-success");
+          });
+	};
+	
+	$window.openCtaShareModal = function (modalId, elem, interactionId, ctaId, imageToShare, title){
+		if($scope.current_user) {
+			var positionTop = $(elem).offset().top;
+			var modalHeight, modalObj, innerModalObj;
+			modalObj = $("#" + modalId);
+			position = positionTop - 350;
+			modalObj.modal('show');
+			modalObj.css({
+				"top": position + "px"
+			});
+			$scope.interactionShareId = interactionId;
+			$scope.ctaShareId = ctaId;
+			$scope.imageShareUrl = imageToShare;
+			$scope.shareTitle = title;
+		} else {
 
+      		showRegistrateView();
+
+    	}
+	};
+	
+	$window.openShareDoneModal = function (modalId, elem){
+		
+			var positionTop = $(elem).offset().top;
+			var modalHeight, modalObj, innerModalObj;
+			modalObj = $("#" + modalId);
+			position = positionTop - 400;
+			modalObj.modal('show');
+			modalObj.css({
+				"top": position + "px"
+			});
+
+	};
+  
   $window.adjustAppleMobileIframes = function() {
     $(".iframe-apple-mobile iframe").css("height", $(".iframe-apple-mobile").innerHeight());
     $(".iframe-apple-mobile iframe").css("width", $(".iframe-apple-mobile").innerWidth());

@@ -36,6 +36,24 @@ class Sites::Ballando::ApplicationController < ApplicationController
       format.json { render json: response.to_json }
     end
   end
-
+  
+  def update_basic_share_interaction
+    response = Hash.new
+    
+    response[:ga] = Hash.new
+    response[:ga][:category] = "UserInteraction"
+    response[:ga][:action] = "CreateOrUpdate"
+    response[:ga][:label] = "Share"
+    user_interaction, response[:outcome] = create_or_update_interaction(current_or_anonymous_user.id, params[:interaction_id], nil, nil)
+    
+    response[:result] = user_interaction.errors.blank?
+    debugger  
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+    
+  end
+  
 end
 

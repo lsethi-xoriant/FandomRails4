@@ -4,7 +4,7 @@
 	
 	<%#= render partial: "/application/home_launchers" %>
 	
-	<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= @calltoactions_active_count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
+	<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= @calltoactions_active_count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', '<%= request.url %>')">   
 	
 	  <div class="row">
 	    <div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">

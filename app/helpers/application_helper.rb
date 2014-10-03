@@ -478,5 +478,16 @@ module ApplicationHelper
     result 
   end
 
+  def get_main_reward
+    cache_short("main_reward") do
+      Reward.find_by_name(MAIN_REWARD_NAME);
+    end
+  end
+  
+  def get_main_reward_image_url
+    cache_short("main_reward_image") do
+      Reward.find_by_name(MAIN_REWARD_NAME).main_image.url
+    end
+  end
   
 end

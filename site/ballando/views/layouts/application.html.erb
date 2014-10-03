@@ -103,20 +103,59 @@
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="facebook-share-modal" tabindex="-1" role="dialog" aria-labelledby="facebookModal" aria-hidden="true">
+  <!-- Modal Share -->
+  <div class="modal fade" id="facebook-share-modal" tabindex="-1" role="dialog" aria-labelledby="shareModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
+      	<div class="modal-header" style="padding-bottom: 25px; border: none;">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="myModalLabel">Share su Facebook</h4>
         </div>
-        <div class="modal-body">
-         <p>Per effettuare la condivisione devi essere collegato a Facebook</p>
+        <div class="modal-body" style="padding: 10px 0 30px 0;">
+        	<div class="row">
+        		<div class="col-xs-12">
+        			<p class="text-center" style="font-weight: bold; font-size: 17px;">Condividi questo contenuto sui social</p>
+        		</div>
+        	</div>
+        	
+        	<div class="row">
+        		<div class="col-xs-12 text-center">
+        			<button type="button" class="btn-2 btn-2-fb" onclick="doFbShare();" style="width: 80px; height: 80px; margin-right: 20px;">
+        				<i class="fa fa-facebook" style="font-size: 30px;"></i>
+        			</button>
+        			<button class="btn-2 btn-2-tt" onclick="doTwShare();" style="width: 80px; height: 80px;">
+        				<i class="fa fa-twitter" style="font-size: 30px;"></i>
+        			</button>
+        			<h6 style="margin-bottom: 0; margin-top: 5px;">Ottieni fino a +1 punti <img src="http://s3-eu-west-1.amazonaws.com/dev.fandomlab.com/rewards/not_awarded_images/000/000/001/thumb/stella3.png?1411468867" style="width: 15px;"></h6>
+        		</div>
+        	</div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        	
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Share Done -->
+  <div class="modal fade" id="facebook-share-modal-done" tabindex="-1" role="dialog" aria-labelledby="shareModalDone" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      	<div class="modal-header" style="padding-bottom: 25px; border: none;">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         </div>
+        <div class="modal-body" style="padding: 10px 0 30px 0;">
+        	<div class="row">
+        		<div class="col-xs-12">
+        			<p class="text-center" style="font-weight: bold; font-size: 17px;">Prima Condivisione Fatta!</p>
+        		</div>
+        	</div>
+        	
+        	<div class="row">
+        		<div class="col-xs-12 text-center">
+        			<img src=<%= get_main_reward_image_url %> style="display: block; margin: 10px auto; max-width: 150px;" />
+        			<p>Hai ottenuto +1 Punto</p>
+        		</div>
+        	</div>
+        </div>
+        	
       </div>
     </div>
   </div>
@@ -132,7 +171,7 @@
   <script type="text/javascript">
 
     var PROFILE_URL = "<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>";
-
+	var ctaShareId = -1;
     window.addEventListener("orientationchange", function() {
       window.parent.containerResize();
     }, false);
@@ -177,17 +216,6 @@
         }
       });
     }
-
-	function openCtaShareModal(modalId, elem){
-		var positionTop = $(elem).position().top;
-		var modalHeight, modalObj, innerModalObj;
-		modalObj = $("#"+modalId);
-		position = positionTop - 500;
-		modalObj.modal('show');
-		modalObj.css({
-			"top": position+"px"
-		});
-	}
 	
 	Banners.vars.push({ 
 		s: "#banner-rai",
