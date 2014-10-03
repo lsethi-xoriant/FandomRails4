@@ -2,6 +2,13 @@
 
 /* DEFAULT HOME PAGE */
 
+a.btn-2, a.btn-2:hover{
+	text-decoration: none !important;
+	color: #fff !important;
+	line-height: 30px;
+	display: inline-block;
+}
+
 .btn-2 {   
     padding: 3px 0 2px 0; 
     font-size: 18px;
