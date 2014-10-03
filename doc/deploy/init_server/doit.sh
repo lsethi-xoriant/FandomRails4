@@ -81,23 +81,16 @@ cp etc/logrotate-rails /etc/logrotate.d/rails
 # Setup init scripts
 #
 
-cp etc/railsweb-init.d /etc/init.d/railsweb
-chmod a+x /etc/init.d/railsweb
 mkdir /etc/railsweb
 cp etc/railsweb-unicorn.conf /etc/railsweb/unicorn.conf
-update-rc.d railsweb defaults
 
-cp etc/fandomplay-init.d /etc/init.d/fandomplay
-chmod a+x /etc/init.d/fandomplay
-update-rc.d fandomplay defaults
+chmod a+x etc/init.d/* 
+cp etc/init.d/* /etc/init.d/
 
-
-#
-# Setup log_daemon
-#
-cp etc/log_daemon-init.d /etc/init.d/log_daemon
-chmod a+x /etc/init.d/log_daemon
-update-rc.d log_daemon defaults
+update-rc.d log_daemon defaults 40
+update-rc.d wait_for_log_daemon_cleanup stop 45 0 1 6 .
+update-rc.d fandomplay defaults 50
+update-rc.d railsweb defaults 60
 
 #
 # Security updates
