@@ -31,7 +31,7 @@ Fandom::Application.routes.draw do
           match "/iframe/do_check", :to => "iframe_check#do_check"
 
           match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
-  
+          match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
         end
       end
     end

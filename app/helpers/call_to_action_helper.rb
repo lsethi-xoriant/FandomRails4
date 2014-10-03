@@ -219,4 +219,23 @@ module CallToActionHelper
     unlocked
   end
   
+  def has_done_share_interaction(calltoaction)
+    interaction = get_share_from_calltoaction(calltoaction)
+    if interaction
+      if current_user
+        [current_user.user_interactions.find_by_interaction_id(interaction.id), interaction]
+      else
+        [nil, interaction]
+      end
+    else
+      [nil, nil]
+    end
+  end
+  
+  def get_share_from_calltoaction(calltoaction)
+    cache_short("share_interaction_cta_#{calltoaction.id}") do
+      calltoaction.interactions.find_by_resource_type("Share")
+    end
+  end
+  
 end

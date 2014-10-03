@@ -10,7 +10,7 @@
             FATTO <span class="glyphicon glyphicon-ok"></span>
           </span>
         <% else %>
-          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= calltoaction_reward_status[:winnable_reward_count] %>
+          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= get_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction, false)[:winnable_reward_count] %>
             <span class="glyphicon glyphicon-star"></span>
           </span>
         <% end %>

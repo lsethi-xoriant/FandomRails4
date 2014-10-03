@@ -1,7 +1,5 @@
 <% quiz_interactions = always_shown_interactions(calltoaction) %>
 
-<% calltoaction_reward_status = get_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction, false) %>
-
 <div class="row cta">      
   <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0">
     <div class="panel panel-default cta-page cta-stream panel-shadow" style="position: relative;">
@@ -9,25 +7,37 @@
       <% if is_cta_locked(calltoaction) %>
       	<%= render partial: "/call_to_action/cover_stream_single_calltoaction_locked", locals: { calltoaction: calltoaction } %>
       <% else %>
-      	<%= render partial: "/call_to_action/cover_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_reward_status: calltoaction_reward_status } %>
+      	<%= render partial: "/call_to_action/cover_stream_single_calltoaction", locals: { calltoaction: calltoaction } %>
       
+        <div class="panel-body panel-card">   
+          <div class="row cta-md">
+            <!-- LEFT COLUMN WITH IMAGE -->
+            <%= render partial: "/call_to_action/stream_single_calltoaction_media", locals: { calltoaction: calltoaction } %>
 
-      <div class="panel-body panel-card">
-       
-        <div class="row cta-md">
-
-          <!-- LEFT COLUMN WITH IMAGE -->
-          <%= render partial: "/call_to_action/stream_single_calltoaction_media", locals: { calltoaction: calltoaction } %>
-
-          <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
-          <%= render partial: "/call_to_action/stream_single_calltoaction_interactions", locals: { calltoaction: calltoaction, quiz_interactions: quiz_interactions, calltoaction_reward_status: calltoaction_reward_status } %>
-
+            <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
+            <%= render partial: "/call_to_action/stream_single_calltoaction_interactions", locals: { calltoaction: calltoaction, quiz_interactions: quiz_interactions } %>
+          </div>
         </div>
-
-      </div>
       
       <% end %>
       
     </div>
+    
+    <div class="row">
+	    <div class="col-xs-3" id="bottom-feedback-share-<%= calltoaction.id %>">
+	    <% user_interaction, interaction = has_done_share_interaction(calltoaction) %>
+	    <% if interaction %>
+			  <% if user_interaction %>
+				  <button class="btn-2 btn-2-small" role="button" onclick="openShareDoneModal('facebook-share-modal-done', this)" style="padding-top: 5px;">CONDIVIDI</button>
+		    	<span id="feedback-label-share" class="label label-success" style="padding-top: 3px;margin-top: 5px;">Fatto <span class="glyphicon glyphicon-ok"></span></span>
+		    <% else %>
+		    	<button id="button-share-cta" class="btn-2 btn-2-small" role="button" onclick="openCtaShareModal('facebook-share-modal', this, <%= interaction.id %>, <%= calltoaction.id %>, '<%= interaction.resource.picture.url.split("?")[0] %>', '<%= calltoaction.title %>')" style="padding-top: 5px;">CONDIVIDI</button>
+		    	<span id="feedback-label-share" class="label label-warning" style="padding-top: 3px;margin-top: 5px;">+1 <span class="glyphicon glyphicon-star"></span></span>
+		    <% end %>
+		  <% end %>
+	</span>
+	</div>
+  </div>
+    
   </div>
 </div>

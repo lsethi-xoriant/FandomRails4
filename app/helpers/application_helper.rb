@@ -72,7 +72,6 @@ module ApplicationHelper
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
 
-    # merge_aux(user_interaction.aux, aux) for share
     if user_interaction
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
       UserCounter.update_counters(interaction, user_interaction, user, false) 
@@ -173,34 +172,39 @@ module ApplicationHelper
       reward = get_reward_from_cache(reward_name)
       
       winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
-      interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
-  
-      reward_status_images = Array.new
-      total_win_reward_count = 0
-  
-      if current_user
-  
-        interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
-          user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)        
+      
+      if compute_reward_status_images
+
+        interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
     
-          if user_interaction && user_interaction.outcome.present?
-            win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
-            correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
-            correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
-  
-            total_win_reward_count += win_reward_count;
-  
-            push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
-            push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
-            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-          else 
-            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-          end       
-  
+        reward_status_images = Array.new
+        total_win_reward_count = 0
+    
+        if current_user
+    
+          interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
+            user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)        
+      
+            if user_interaction && user_interaction.outcome.present?
+              win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
+              correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
+              correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
+    
+              total_win_reward_count += win_reward_count;
+    
+              push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
+              push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
+              push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+            else 
+              push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+            end       
+    
+          end
+    
+        else
+          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
         end
-  
-      else
-        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
+
       end
   
       {
@@ -450,5 +454,16 @@ module ApplicationHelper
     result 
   end
 
+  def get_main_reward
+    cache_short("main_reward") do
+      Reward.find_by_name(MAIN_REWARD_NAME);
+    end
+  end
+  
+  def get_main_reward_image_url
+    cache_short("main_reward_image") do
+      Reward.find_by_name(MAIN_REWARD_NAME).main_image.url
+    end
+  end
   
 end
