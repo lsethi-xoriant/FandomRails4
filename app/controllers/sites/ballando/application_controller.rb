@@ -44,11 +44,13 @@ class Sites::Ballando::ApplicationController < ApplicationController
     response[:ga][:category] = "UserInteraction"
     response[:ga][:action] = "CreateOrUpdate"
     response[:ga][:label] = "Share"
+
     interaction = Interaction.find(params[:interaction_id])
-    user_interaction, response[:outcome] = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil)
+    aux = { "#{params[:provider]}" => 1 }
+
+    user_interaction, response[:outcome] = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
     
     response[:result] = user_interaction.errors.blank?
-    debugger  
     
     respond_to do |format|
       format.json { render json: response.to_json }
