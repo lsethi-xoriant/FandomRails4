@@ -24,31 +24,14 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
   
   $window.doFbShare = function (){
-  		ctaUrl = encodeURI($scope.request_url+"redirect_into_iframe_calltoaction/"+$scope.ctaShareId);
-  		imageUrl = encodeURI($scope.imageShareUrl);
+  	ctaUrl = encodeURI($scope.request_url+"redirect_into_iframe_calltoaction/"+$scope.ctaShareId);
+  	imageUrl = encodeURI($scope.imageShareUrl);
 		url = "https://www.facebook.com/sharer/sharer.php?s=100&p[url]="+ctaUrl+"&p[iimages][0]="+imageUrl+"&p[title]="+$scope.shareTitle;
 		window.open(url);
 		
-		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId })
+		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "facebook" })
           .success(function(data) {
-			
-            if(data.ga) {
-              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-              });
-            }
-            
-            $('#facebook-share-modal').modal('toggle');
-            positiontop = $('#facebook-share-modal').offset().top - 40;
-            $('#facebook-share-modal-done').modal('show');
-            $('#facebook-share-modal-done').css({
-				"top": positiontop + "px"
-			});
-            openShareDoneModal('openShareDoneModal', '#bottom-feedback-share-'+$scope.ctaShareId+' #button-share-cta');
-            $('#bottom-feedback-share-'+$scope.ctaShareId+' #button-share-cta').attr('onclick','openShareDoneModal(\'facebook-share-modal-done\', this)');
-            $('#bottom-feedback-share-'+$scope.ctaShareId+' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
-            $('#bottom-feedback-share-'+$scope.ctaShareId+' #feedback-label-share').removeClass("label-warning").addClass("label-success");
+            afterShareAjax(data);
           });
 	};
 	
@@ -57,28 +40,30 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 		url = "https://twitter.com/intent/tweet?url="+ctaUrl+"&text="+$scope.shareTitle;
 		window.open(url);
 		
-		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId })
-          .success(function(data) {
-			
-            if(data.ga) {
-              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-              });
-            }
-            
-            $('#facebook-share-modal').modal('toggle');
-            positiontop = $('#facebook-share-modal').offset().top - 40;
-            $('#facebook-share-modal-done').modal('show');
-            $('#facebook-share-modal-done').css({
-				"top": positiontop + "px"
-			});
-            openShareDoneModal('openShareDoneModal', '#bottom-feedback-share-'+$scope.ctaShareId+' #button-share-cta');
-            $('#bottom-feedback-share-'+$scope.ctaShareId+' #button-share-cta').attr('onclick','openShareDoneModal(\'facebook-share-modal-done\', this)');
-            $('#bottom-feedback-share-'+$scope.ctaShareId+' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
-            $('#bottom-feedback-share-'+$scope.ctaShareId+' #feedback-label-share').removeClass("label-warning").addClass("label-success");
+		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "twitter" })
+          .success(function(data) {		
+            afterShareAjax(data);
           });
 	};
+
+  $window.afterShareAjax = function(data) {
+    if(data.ga) {
+      update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+      angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+        update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+      });
+    }
+    
+    $('#facebook-share-modal').modal('toggle');
+    positiontop = $('#facebook-share-modal').offset().top - 40;
+    $('#facebook-share-modal-done').modal('show');
+    $('#facebook-share-modal-done').css({ "top": positiontop + "px" });
+
+    openShareDoneModal('openShareDoneModal', '#bottom-feedback-share-' + $scope.ctaShareId + ' #button-share-cta');
+    $('#bottom-feedback-share-' + $scope.ctaShareId + ' #button-share-cta').attr('onclick','openShareDoneModal(\'facebook-share-modal-done\', this)');
+    $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
+    $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').removeClass("label-warning").addClass("label-success");
+  };
 	
 	$window.openCtaShareModal = function (modalId, elem, interactionId, ctaId, imageToShare, title){
 		if($scope.current_user) {

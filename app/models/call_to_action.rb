@@ -43,7 +43,7 @@ class CallToAction < ActiveRecord::Base
 
   accepts_nested_attributes_for :interactions
 
-  scope :active, -> { includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NULL OR tags.name NOT IN (?))", Time.now, ["step"]).order("activated_at DESC") }
+  scope :active, -> { where("activated_at <= ? AND activated_at IS NOT NULL AND media_type <> 'VOID'", Time.now).order("activated_at DESC") }
 
   def media_image_url
     media_image.url
