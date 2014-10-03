@@ -7,6 +7,12 @@ Fandom::Application.configure do
   #config.logger = Logger.new('/dev/null')
   class LogSubscriber < ActiveSupport::LogSubscriber
     def process_action event
+      if event.payload.key?(:view_runtime)
+        event.payload[:view_runtime] /= 1000.0
+      end
+      if event.payload.key?(:db_runtime)
+        event.payload[:db_runtime] /= 1000.0
+      end
       log_info("rails logger", event.payload)
     end
   end
