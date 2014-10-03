@@ -75,6 +75,10 @@ class Sites::Ballando::SessionsController < SessionsController
       end
       
       user = User.find_by_username(rai_response_user["UID"])
+      unless user
+        user = user.find_by_email(user_email)
+      end
+
       if user && user.email.include?("@FAKE___DOMAIN.com")
         user.update_attribute(:email, user_email)
       elsif user.nil?
