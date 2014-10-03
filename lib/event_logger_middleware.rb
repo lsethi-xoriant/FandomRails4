@@ -86,7 +86,7 @@ class EventLoggerMiddleware
         $process_file_descriptor = nil
       end
       begin
-        File.rename($process_file_path, $process_file_path.sub("open", "closed"))
+        close_process_file($process_file_path)
       rescue Exception => ex
         # might have been removed by the background daemon
       end
@@ -97,13 +97,20 @@ class EventLoggerMiddleware
       open_process_log_file()
     end
   end
+  
+  def close_process_file(file_path)
+    parts = file_path.split('/')
+    parts[-1] = parts[-1].sub("open", "closed")
+    dest_path = parts.join('/')
+    File.rename(file_path, dest_path)
+  end
 
   def close_orphan_files_with_same_current_pid()
     # check if a file assigned to an old precess with the same pid of current process already exists.
     # In this case it must be closed.
     Dir["#{LOG_DIRECTORY}/#{$pid}-*-open.log"].each do |orphan_log_file_path|
       begin
-        File.rename(orphan_log_file_path, orphan_log_file_path.sub("open", "closed"))
+        close_process_file(orphan_log_file_path)
       rescue Exception => ex
         # might have been removed by the background daemon
       end
