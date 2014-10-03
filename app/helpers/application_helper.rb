@@ -168,7 +168,7 @@ module ApplicationHelper
   end
 
   # Generates an hash with reward information.
-  def get_current_call_to_action_reward_status(reward_name, calltoaction)
+  def get_current_call_to_action_reward_status(reward_name, calltoaction, compute_reward_status_images = true)
     trace_block("get_current_call_to_action_reward_status", { cta: calltoaction.name }) do
       reward = get_reward_from_cache(reward_name)
       
