@@ -1,8 +1,13 @@
 <div class="row profile-bar">
+	<%= form_tag("/profile/update_avatar", multipart: true, class: "hidden", id: "update_avatar" ) do %>
+		<%= hidden_field_tag 'user_id', "#{current_user.id}" %>
+		<%= file_field_tag 'avatar', { :onchange => "mostraAnteprima(this)" } %>
+	<% end %>
 	<div class="col-sm-3 no-border">
 	  <div class="text-center" style="padding-top: 23px;">
-	  	<img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-profile">
+	  	<img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-profile" id="user-avatar-image">
 	  	<h4 style="font-weight: bold;"><%= "#{current_user.first_name} #{current_user.last_name}" %> <a href="/users/rai/sign_out" target="_top"><span class="glyphicon glyphicon-off" style="font-size: 14px; padding-left: 10px; color: #777C87;"></span></a></h4>
+	  	<div id="link-update"><a href="javascript:void(0)" onclick="chooseFoto();">Cambia foto ></a></div>
 	  </div>
 	</div>
 	<div class="col-sm-3">
@@ -25,7 +30,7 @@
 	</div>
 	<div class="col-sm-3">
 		<div class="text-center">
-			<p style="margin: 0;"><span class="contents-to-unlock"><%= get_unlocked_contents %></span><i class="fa fa-lock fa-4" style="font-size: 80px;"></i></p>
+			<p style="margin: 0;"><span class="contents-to-unlock"><%= get_unlocked_contents %></span><i class="fa fa-gift fa-4" style="font-size: 80px;"></i></p>
 			<h4 style="margin: 0;">CONTENUTI ESCLUSIVI<br />da sbloccare</h4>
 		</div>
 	</div>
@@ -42,3 +47,24 @@
 		<h4>CLASSIFICA</h4>
 	</div>
 </div>
+
+<script type="text/javascript">
+	function mostraAnteprima(image) {
+		if (image.files && image.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				$("#user-avatar-image").attr('src', e.target.result).width(100).height(100);
+			};
+			reader.readAsDataURL(image.files[0]);
+			$("#link-update").html('<a href="javascript:void(0);" onclick="saveProfile();" class="btn btn-2 btn-2-small">CONFERMA FOTO</a>');
+		}
+	}
+	
+	function chooseFoto(){
+		$("#avatar").click();
+	}
+	
+	function saveProfile(){
+		$("#update_avatar").submit();
+	}
+</script>

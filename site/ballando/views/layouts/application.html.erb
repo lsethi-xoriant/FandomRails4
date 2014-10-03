@@ -24,7 +24,7 @@
   <![endif]-->
 
   <%= csrf_meta_tags %>
-
+  <script type="text/javascript" src="http://www.ballandoconlestelle.rai.it/dl/js/common.js"></script>
 </head>
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>">
 
@@ -188,6 +188,13 @@
 			"top": position+"px"
 		});
 	}
+	
+	Banners.vars.push({ 
+		s: "#banner-rai",
+		v: "banner",
+		hideEmpty: true
+	});
+
 	</script>
 </body>
 </html>

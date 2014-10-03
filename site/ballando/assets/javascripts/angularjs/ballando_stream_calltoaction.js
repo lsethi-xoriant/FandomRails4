@@ -118,10 +118,10 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $("#undervideo-interaction-" + interaction_id).css("display", "none"); 
 
     calltoaction_id = data.calltoaction_id;
-    $http.post("/check_next_interaction", { interactions_showed: $scope.interactions_showed[calltoaction_id], calltoaction_id: data.calltoaction_id })
+    $http.post("/check_next_interaction", { interaction_id: interaction_id, calltoaction_id: data.calltoaction_id })
       .success(function(data) {
         
-        if(data.next_quiz_interaction || $scope.interactions_showed[calltoaction_id].length > 1) {
+        if(data.next_interaction || $scope.interactions_showed[calltoaction_id].length > 1) {
           $("#interaction-" + interaction_id + "-next").removeClass("hidden");
         }
 

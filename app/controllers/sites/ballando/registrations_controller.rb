@@ -12,7 +12,15 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
       rai_user = build_rai_user(user)
 
       begin
-        rai_response_json = JSON.parse(open("#{Rails.configuration.deploy_settings["sites"][request.site.id]["register_url"]}?#{rai_user.to_query}").read)
+        response = (open("#{Rails.configuration.deploy_settings["sites"][request.site.id]["register_url"]}?#{rai_user.to_query}").read).strip
+        rai_response, pipe, md5 = response.rpartition("|")
+
+        # If user already exist in RAI and not in FANDOM, reponse not have md5
+        if rai_response.empty?
+          rai_response = md5
+        end
+
+        rai_response_json = JSON.parse(rai_response)
       rescue Exception => exception
         log_error("ballando registration error", { exception: exception.to_s }) 
         render template: "/devise/registrations/new", locals: { resource: user }
