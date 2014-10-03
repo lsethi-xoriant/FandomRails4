@@ -124,21 +124,17 @@ module RewardingSystemHelper
     def evaluate_rule(rule, outcome, user_interaction)
       if rule_should_be_evaluated(rule, user_interaction, outcome)
         begin
-          # WARNING: eval()
-          if rule.options.key?(:condition)
-            if endeval(rule.options[:condition])
-              outcome.info << ["rule evaluation", { rule_name: rule.name, value: true }] 
-              outcome.matching_rules << rule.name
-              Outcome.merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
-              merge_user_rewards(self.user_rewards, rule.normalized_rewards)
-              outcome.unlocks += rule.unlocks
-              self.user_unlocked_names += rule.unlocks
-              # TODO: self.uncountable_user_reward_names should be updated as well 
-            else
-              outcome.info << ["rule evaluation", { rule_name: rule.name, value: false }]
-            end
+          if !rule.options.key?(:condition) || eval(rule.options[:condition])
+            outcome.info << ["rule evaluation", { rule_name: rule.name, value: true }] 
+            outcome.matching_rules << rule.name
+            Outcome.merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
+            merge_user_rewards(self.user_rewards, rule.normalized_rewards)
+            outcome.unlocks += rule.unlocks
+            self.user_unlocked_names += rule.unlocks
+            # TODO: self.uncountable_user_reward_names should be updated as well 
+            outcome.info << ["rule evaluation", { rule_name: rule.name, value: true }]
           else 
-            outcome.info << ["unconditioned rule", { rule_name: rule.name }]
+            outcome.info << ["rule evaluation", { rule_name: rule.name, value: false }]
           end
         rescue Exception => ex
           outcome.errors << ["exception on rule",  { rule_name: rule.name, exception: ex.to_s }] 
