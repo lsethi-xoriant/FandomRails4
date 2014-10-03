@@ -44,7 +44,8 @@ class Sites::Ballando::ApplicationController < ApplicationController
     response[:ga][:category] = "UserInteraction"
     response[:ga][:action] = "CreateOrUpdate"
     response[:ga][:label] = "Share"
-    user_interaction, response[:outcome] = create_or_update_interaction(current_or_anonymous_user.id, params[:interaction_id], nil, nil)
+    interaction = Interaction.find(params[:interaction_id])
+    user_interaction, response[:outcome] = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil)
     
     response[:result] = user_interaction.errors.blank?
     debugger  
