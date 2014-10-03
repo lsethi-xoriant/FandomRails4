@@ -5,8 +5,10 @@ require 'logger'
 require 'sys/proctable'
 require 'socket'
 
-def main
+EVENTS_COLUMNS = ['user_id', 'tenant', 'message', 'level', 'data', 'pid', 'session_id', 'request_uri', 'timestamp']
+EVENTS_COLUMNS_STRING = EVENTS_COLUMNS.join(', ') 
 
+def main
   loop_delay = ARGV[2].to_i
   puts "Daemon start with loop_delay #{loop_delay}s"
 
@@ -16,42 +18,36 @@ def main
   base_db_connection = establish_connection_with_db(database_yaml_path, env)
 
   event_logs_path = "#{app_root_path}/log/events"
-  event_directory_exist = File.directory?(event_logs_path)
 
   logger = Logger.new("#{app_root_path}/log/log_daemon.log")
 
   loop do
-    # If directory does not exist perhaps rails as not been started yet. Waiting not it.
-    if event_directory_exist
+    begin
+      # If directory does not exist perhaps rails as not been started yet. Waiting not it.
       close_orphan_files(event_logs_path, logger)
+      closed_event_log_files(event_logs_path).each do |process_file_path|
+        pid, timestamp = extract_pid_and_timestamp_from_path(process_file_path)
+        insert_values_for_event = generate_sql_insert_values_for_event(process_file_path, pid)
+        begin
+          sql_query = generate_sql_insert_query(insert_values_for_event, pid, timestamp)
 
-      # TODO: log_daemon disabled while changing log file format!
-      if false
-        closed_event_log_files(event_logs_path).each do |process_file_path|
-          
-          insert_values_for_event = generate_sql_insert_values_for_event(process_file_path)
-          pid, timestamp = extract_pid_and_timestamp_from_path(process_file_path)
-        
-          begin
-            sql_query = generate_sql_insert_query(insert_values_for_event, pid, timestamp)
-  
-            base_db_connection.connection.execute(sql_query)        
-  
-            delete_process_file(process_file_path)
-          rescue ActiveRecord::RecordNotUnique => exception      
-            # if the file that contains log events has already been saved, an exception RecordNotUnique is raised.
-            # In this case the file will be deleted, because it means that it does  already saved in the past.
-            base_db_connection.connection.execute("ROLLBACK;")
-            delete_process_file(process_file_path)        
-            logger.error exception
-          rescue Exception => exception
-            base_db_connection.connection.execute("ROLLBACK;")
-            mark_file_with_errors(event_logs_path, process_file_path)        
-            logger.error exception
-          end
-  
+          base_db_connection.connection.execute(sql_query)        
+
+          delete_process_file(process_file_path)
+        rescue ActiveRecord::RecordNotUnique => exception      
+          # if the file that contains log events has already been saved, an exception RecordNotUnique is raised.
+          # In this case the file will be deleted, because it means that it has already been saved in the past.
+          base_db_connection.connection.execute("ROLLBACK;")
+          delete_process_file(process_file_path)        
+          logger.error exception
+        rescue Exception => exception
+          base_db_connection.connection.execute("ROLLBACK;")
+          mark_file_with_errors(event_logs_path, process_file_path)        
+          logger.error("exception: #{exception} - #{exception.backtrace[0, 5]}")
         end
       end
+    rescue Exception => exception
+      logger.error("exception in main loop: #{exception} - #{exception.backtrace[0, 5]}")
     end
 
     sleep(loop_delay)
@@ -59,7 +55,7 @@ def main
 end
 
 def close_orphan_files(event_logs_path, logger)
-  active_pids = Sys::ProcTable.ps.map { |process| process.pid }
+  active_pids = Set.new(Sys::ProcTable.ps.map { |process| process.pid })
 
   opened_event_log_files(event_logs_path).each do |log_file_name|
     pid, timestamp = extract_pid_and_timestamp_from_path(log_file_name)
@@ -96,35 +92,65 @@ def extract_pid_and_timestamp_from_path(process_file_path)
   [pid.to_i, timestamp]
 end
 
-def generate_sql_insert_values_for_event(process_file_path)
-  insert_values_for_event = Hash.new
+def generate_sql_insert_values_for_event(process_file_path, pid)
+  tenant_to_insert_values = Hash.new
 
-  process_file_descriptor = File.open(process_file_path,'r')
+  process_file_descriptor = File.open(process_file_path, 'r')
   
-  values_for_event = Array.new
-  tenant = nil
+  request_data = init_request_data(pid)
   process_file_descriptor.each_line do |event_log_line|
-    event_log_line_json = JSON.parse(event_log_line)
+    event_values = JSON.parse(event_log_line)
 
-    unless event_log_line_json["data"]["already_synced"]
-      tenant = event_log_line_json["tenant"]
-      values_for_event << "(#{generate_values_for_event_log_line(event_log_line_json)})"
+    unless event_values["data"]["already_synced"]
+      if event_values['message'] == 'http request start'
+        request_data = get_request_data(event_values, pid)
+      end
+      event_values.merge!(request_data)
+      
+      tenant = event_values["tenant"]
+      (tenant_to_insert_values[tenant] ||= []) << "(#{generate_values_for_event_log_line(event_values)})" 
     end
-
   end
 
-  if values_for_event.any? && tenant.present?
-    insert_values_for_event[tenant] = values_for_event.join(", ")
+  result = {}
+  tenant_to_insert_values.each do |k, vs|
+    result[k] = vs.join(", ")
   end
-
-  insert_values_for_event
-
+  
+  result  
 end
 
-def generate_values_for_event_log_line(event_log_line_json)
+def init_request_data(pid)
+  { 'request_uri' => 'unknown',
+    'method' => 'unknown',
+    'params' => '{}',
+    'http_referer' => 'unknown',
+    'session_id' => 'unknown',
+    'remote_ip' => 'unknown',
+    'tenant' => 'no_tenant',
+    'user_id' => 'unknown',
+    'pid' => pid
+  }  
+end
+
+def get_request_data(event_values, pid)
+  { 'request_uri' => event_values['data']['request_uri'],
+    'method' => event_values['data']['method'],
+    'params' => event_values['data']['params'],
+    'http_referer' => event_values['data']['http_referer'],
+    'session_id' => event_values['data']['session_id'],
+    'remote_ip' => event_values['data']['remote_ip'],
+    'tenant' => event_values['data']['tenant'],
+    'user_id' => event_values['data']['user_id'],
+    'pid' => pid
+  }  
+end
+
+def generate_values_for_event_log_line(event_values)
   values_for_event_log_line = Array.new
-  event_log_line_json.each do |key, value|
-    case key
+  EVENTS_COLUMNS.each do |column|
+    value = event_values[column]
+    case column
     when "data"
       values_for_event_log_line << ActiveRecord::Base.connection.quote(value.to_json)
     when "pid", "user_id"
@@ -137,7 +163,7 @@ def generate_values_for_event_log_line(event_log_line_json)
 end
 
 def generate_sql_insert_query(insert_values_for_event, pid, timestamp)
-  insert_columns_for_event = "user_id, tenant, message, level, data, pid, session_id, request_uri, line_number, file_name, method_name, timestamp"
+  insert_columns_for_event = EVENTS_COLUMNS_STRING
   insert_columns_for_synced_log_files = "pid, server_hostname, timestamp"
 
   sql_query = "BEGIN;"
@@ -159,7 +185,7 @@ def generate_sql_insert_query(insert_values_for_event, pid, timestamp)
 end
 
 def closed_event_log_files(event_logs_path)
-  Dir["#{event_logs_path}/*-*-close.log"]
+  Dir["#{event_logs_path}/*-*-close*.log"]
 end
 
 def opened_event_log_files(event_logs_path)
