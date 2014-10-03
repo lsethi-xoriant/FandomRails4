@@ -71,8 +71,7 @@ module ApplicationHelper
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
-    debugger
-    # merge_aux(user_interaction.aux, aux) for share
+
     if user_interaction
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
       UserCounter.update_counters(interaction, user_interaction, user, false) 
