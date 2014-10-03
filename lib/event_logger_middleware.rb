@@ -54,7 +54,7 @@ class EventLoggerMiddleware
       pid: $pid
     }
 
-    EventHandlerHelper.log_info(
+    log_info(
       "http request start",
       data
     )
@@ -67,13 +67,13 @@ class EventLoggerMiddleware
       data[:cache_hits] = $cache_hits
       data[:cache_misses] = $cache_misses
       data[:time] = (Time.now - start).to_s
-      EventHandlerHelper.log_info(msg, data)
+      log_info(msg, data)
       [status, headers, response]
     rescue Exception => ex
       data[:exception] = ex.to_s
       data[:backtrace] = ex.backtrace[0, 5]
       data[:time] = (Time.now - start).to_s
-      EventHandlerHelper.log_info(msg, data)
+      log_info(msg, data)
       raise ex
     end 
 
