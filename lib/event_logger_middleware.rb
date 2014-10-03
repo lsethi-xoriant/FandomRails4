@@ -54,7 +54,7 @@ class EventLoggerMiddleware
       pid: $pid
     }
 
-    EventHandlerHelper.log_info(
+    log_info(
       "http request start",
       data
     )
@@ -67,13 +67,13 @@ class EventLoggerMiddleware
       data[:cache_hits] = $cache_hits
       data[:cache_misses] = $cache_misses
       data[:time] = (Time.now - start).to_s
-      EventHandlerHelper.log_info(msg, data)
+      log_info(msg, data)
       [status, headers, response]
     rescue Exception => ex
       data[:exception] = ex.to_s
       data[:backtrace] = ex.backtrace[0, 5]
       data[:time] = (Time.now - start).to_s
-      EventHandlerHelper.log_info(msg, data)
+      log_info(msg, data)
       raise ex
     end 
 
@@ -94,9 +94,6 @@ class EventLoggerMiddleware
     
     if $process_file_descriptor.nil?
       close_orphan_files_with_same_current_pid()
-      if !File.directory?(LOG_DIRECTORY)
-        FileUtils.mkdir_p(LOG_DIRECTORY)
-      end
       open_process_log_file()
     end
   end
@@ -106,7 +103,6 @@ class EventLoggerMiddleware
     # In this case it must be closed.
     Dir["#{LOG_DIRECTORY}/#{$pid}-*-open.log"].each do |orphan_log_file_path|
       begin
-        orphan_log_file_timestamp = extract_timestamp_from_path(orphan_log_file_path)
         File.rename(orphan_log_file_path, orphan_log_file_path.sub("open", "closed"))
       rescue Exception => ex
         # might have been removed by the background daemon
@@ -114,13 +110,10 @@ class EventLoggerMiddleware
     end
   end
 
-  def extract_timestamp_from_path(process_file_path)
-    process_file_name = process_file_path.split("/").last
-    _, timestamp, _ = process_file_name.split("-")
-    timestamp
-  end
-
   def open_process_log_file()
+    if !File.directory?(LOG_DIRECTORY)
+      FileUtils.mkdir_p(LOG_DIRECTORY)
+    end
     process_file_timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S")
     $process_file_path = "#{LOG_DIRECTORY}/#{$pid}-#{process_file_timestamp}-open.log"  
     $process_file_descriptor = File.open($process_file_path, "a+")

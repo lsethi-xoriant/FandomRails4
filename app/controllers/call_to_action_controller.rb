@@ -61,11 +61,21 @@ class CallToActionController < ApplicationController
 
   def check_next_interaction
     calltoaction = CallToAction.find(params[:calltoaction_id])
-    interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
+    current_interaction = calltoaction.interactions.find(params[:interaction_id])
+
+    interactions = always_shown_interactions(calltoaction)
+
+    next_interaction = false
+    interactions.each do |interaction|
+      if interaction.seconds > current_interaction.seconds
+        next_interaction = true 
+        break
+      end
+    end
 
     response = Hash.new
     response = {
-      next_quiz_interaction: interactions.any?
+      next_interaction: next_interaction
     }
     
     respond_to do |format|
@@ -227,10 +237,11 @@ class CallToActionController < ApplicationController
     if interaction.resource_type.downcase == "download" 
       response["download_interaction_attachment"] = interaction.resource.attachment.url
     end
+
     if interaction.resource_type.downcase == "quiz"
       
       answer = Answer.find(params[:params])
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, answer.id, nil)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil)
       response["have_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
 
@@ -246,10 +257,11 @@ class CallToActionController < ApplicationController
 
     elsif interaction.resource_type.downcase == "like"
 
+      # TODO: user_interaction calculated 2 times
       user_interaction = get_user_interaction_from_interaction(interaction, current_or_anonymous_user)
       like = user_interaction ? !user_interaction.like : true
 
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, like)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, like)
 
       response[:ga][:label] = "Like"
 
@@ -258,7 +270,7 @@ class CallToActionController < ApplicationController
       result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address])
       if result
         aux = { "#{provider}" => 1 }
-        user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
+        user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
         response[:ga][:label] = interaction.resource_type.downcase
       end
 
@@ -269,31 +281,30 @@ class CallToActionController < ApplicationController
     elsif interaction.resource_type.downcase == "vote"
       vote = params[:params]
       aux = { "call_to_action_id" => interaction.call_to_action.id, "vote" => vote }
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil, aux.to_json)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
       response[:ga][:label] = interaction.resource_type.downcase
 
     else
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user.id, interaction.id, nil, nil)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil)
       response[:ga][:label] = interaction.resource_type.downcase
     end
 
     if current_user && user_interaction
 
-      response['winnable_reward_count'] = get_current_call_to_action_reward_status(MAIN_REWARD_NAME, interaction.call_to_action)[:winnable_reward_count]
+      calltoaction = interaction.call_to_action
+      
+      response['outcome'] = outcome
 
-      if outcome.errors.any?
-        logger.error("errors in the rewarding system:")
-        outcome.errors.each do |error|
-          logger.error(error)
-        end
+      if call_to_action_completed?(calltoaction)
+        response["call_to_action_completed"] = true
+      else
+        winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
+        response['winnable_reward_count'] = winnable_outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
       end
 
-      response['outcome'] = outcome
-      response["call_to_action_completed"] = call_to_action_completed?(interaction.call_to_action)
-
-      index_current_interaction = calculate_interaction_index(interaction.call_to_action, interaction)
+      index_current_interaction = calculate_interaction_index(calltoaction, interaction)
         
-      shown_interactions = always_shown_interactions(interaction.call_to_action)
+      shown_interactions = always_shown_interactions(calltoaction)
       shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
 
       if interaction.when_show_interaction == "SEMPRE_VISIBILE"
@@ -302,11 +313,9 @@ class CallToActionController < ApplicationController
         response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
       end
 
-    else
-      response['outcome'] = nil
     end
 
-    response["main_reward_counter"] = get_counter_about_user_reward(params[:main_reward_name])
+    response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME)
 
     respond_to do |format|
       format.json { render :json => response.to_json }

@@ -69,76 +69,48 @@ module ApplicationHelper
 
   end
 
-  def create_or_update_interaction(user_id, interaction_id, answer_id, like, aux = "{}")
-    trace_block("create_or_update_interaction", {}) do
-      #ActiveRecord::Base.transaction do
-        user = User.find(user_id)
-  
-        user_interaction = UserInteraction.find_by_user_id_and_interaction_id(user_id, interaction_id)
-        interaction = Interaction.find(interaction_id)
-  
-        if interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
-          predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
-        end
-  
-        if user_interaction.nil?
-          user_interaction = UserInteraction.new(user_id: user_id, interaction_id: interaction_id, answer_id: answer_id, like: like, aux: aux)
-          UserCounter.update_unique_counters(user_interaction, user)
-          UserCounter.update_all_counters(user_interaction, user)
-            
-          outcome = compute_and_save_outcome(user_interaction)
-          outcome.info = []
-          outcome.errors = []
-  
-          outcome_for_user_interaction = {
-            win: outcome,
-            correct_answer: predict_outcome_with_correct_answer ? predict_outcome_with_correct_answer : Outcome.new 
-          }.to_json
-  
-          user_interaction.outcome = outcome_for_user_interaction
-          user_interaction.save
-        else
-          UserCounter.update_all_counters(user_interaction, user)
-  
-          if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "check" 
-            user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
-          
-            outcome = compute_and_save_outcome(user_interaction)
-            outcome.info = []
-            outcome.errors = []
-  
-            outcome_for_user_interaction = {
-              win: outcome
-            }.to_json
-  
-            user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
-          else
-            user_interaction.update_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: merge_aux(user_interaction.aux, aux))
-          
-            outcome = compute_and_save_outcome(user_interaction)
-            outcome.info = []
-            outcome.errors = []
-      
-            interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
-            interaction_outcome.merge!(outcome)
-      
-            interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
-            interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer) if predict_outcome_with_correct_answer
-      
-            outcome_for_user_interaction = {
-              win: interaction_outcome,
-              correct_answer: interaction_correct_answer_outcome
-            }.to_json
-  
-            user_interaction.update_attribute(:outcome, outcome_for_user_interaction)
-          end
-          
-        end
-  
-        [user_interaction, outcome]
-  
-      #end
+  def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
+    user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
+
+    # merge_aux(user_interaction.aux, aux) for share
+    if user_interaction
+      user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
+      UserCounter.update_counters(interaction, user_interaction, user, false) 
+    else
+      user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, like: like, aux: aux)
+      UserCounter.update_counters(interaction, user_interaction, user, true)
     end
+
+    outcome = compute_and_save_outcome(user_interaction)
+    outcome.info = []
+    outcome.errors = []
+
+    if user_interaction.outcome.present?
+      interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
+      interaction_outcome.merge!(outcome)
+    else
+      interaction_outcome = outcome
+    end
+
+    outcome_for_user_interaction = { win: interaction_outcome }
+
+    is_trivia_interaction = interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
+    if is_trivia_interaction
+      predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
+      if user_interaction.outcome.present?
+        interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
+        interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer)
+      else
+        interaction_correct_answer_outcome = predict_outcome_with_correct_answer
+      end
+      outcome_for_user_interaction[:correct_answer] = interaction_correct_answer_outcome
+    end
+
+    user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
+    user_interaction.save
+
+    [user_interaction, outcome]
+  
   end
 
   def interaction_done?(interaction)
@@ -146,30 +118,30 @@ module ApplicationHelper
   end
 
   def get_tag_to_rewards()
-  	cache_short("tag_to_rewards") do
-  		tag_to_rewards = Hash.new
-		  RewardTag.all.each do |reward_tag|
-		  	unless tag_to_rewards.key? reward_tag.tag.name
-		  		tag_to_rewards[reward_tag.tag.name] = Set.new 
-		  	end
-		  	tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
-		  end
-		  tag_to_rewards
-		end
+    cache_short("tag_to_rewards") do
+      tag_to_rewards = Hash.new
+      RewardTag.all.each do |reward_tag|
+        unless tag_to_rewards.key? reward_tag.tag.name
+          tag_to_rewards[reward_tag.tag.name] = Set.new 
+        end
+        tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
+      end
+      tag_to_rewards
+    end
   end
 
-	def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
-	  cache_short get_tag_with_tag_about_call_to_action_cache_key(calltoaction.id, tag_name) do
-		  Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).to_a
-		end
-	end
+  def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
+    cache_short get_tag_with_tag_about_call_to_action_cache_key(calltoaction.id, tag_name) do
+      Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).to_a
+    end
+  end
 
-	def get_tags_with_tag(tag_name)
-	  cache_short get_tags_with_tag_cache_key(tag_name) do
+  def get_tags_with_tag(tag_name)
+    cache_short get_tags_with_tag_cache_key(tag_name) do
       Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ?", tag_name).to_a
-		end
-	end
-	
+    end
+  end
+  
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
       CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
@@ -185,9 +157,9 @@ module ApplicationHelper
     taglist.join(",")
   end
   
-	def get_user_interaction_from_interaction(interaction, user)
-		user.user_interactions.find_by_interaction_id(interaction.id)
-	end
+  def get_user_interaction_from_interaction(interaction, user)
+    user.user_interactions.find_by_interaction_id(interaction.id)
+  end
 
   def push_in_array(array, element, push_times)
     push_times.times do
@@ -196,10 +168,10 @@ module ApplicationHelper
   end
 
   # Generates an hash with reward information.
-	def get_current_call_to_action_reward_status(reward_name, calltoaction)
-	  trace_block("get_current_call_to_action_reward_status", { cta: calltoaction.name }) do
-  	  reward = get_reward_from_cache(reward_name)
-  	  
+  def get_current_call_to_action_reward_status(reward_name, calltoaction, compute_reward_status_images = true)
+    trace_block("get_current_call_to_action_reward_status", { cta: calltoaction.name }) do
+      reward = get_reward_from_cache(reward_name)
+      
       winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
       interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
   
@@ -238,7 +210,7 @@ module ApplicationHelper
         reward: reward
       }
     end
-	end
+  end
 
   def get_current_interaction_reward_status(reward_name, interaction)
     reward = Reward.find_by_name(reward_name)
@@ -275,27 +247,27 @@ module ApplicationHelper
 
   end
 
-	def get_counter_about_user_reward(reward_name)
-		user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}' and period_id IS NULL").first
-		user_reward ? user_reward.counter : 0
-	end
+  def get_counter_about_user_reward(reward_name)
+    user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}' and period_id IS NULL").first
+    user_reward ? user_reward.counter : 0
+  end
 
-	def user_has_reward(reward_name)
-		current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").any?
-	end
+  def user_has_reward(reward_name)
+    current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").any?
+  end
 
-	def compute_rewards_gotten_over_total(reward_ids)
-		if reward_ids.any?
-		  place_holders = (["?"] * reward_ids.count).join ", "
-			current_or_anonymous_user.user_rewards.where("reward_id IN (#{place_holders})", *reward_ids).count
-		else
-			0
-		end
-	end
+  def compute_rewards_gotten_over_total(reward_ids)
+    if reward_ids.any?
+      place_holders = (["?"] * reward_ids.count).join ", "
+      current_or_anonymous_user.user_rewards.where("reward_id IN (#{place_holders})", *reward_ids).count
+    else
+      0
+    end
+  end
 
-	def interaction_answer_percentage(interaction, answer)
+  def interaction_answer_percentage(interaction, answer)
     cache_short("interaction_#{interaction.id}_answer_#{answer.id}_percentage") do
-  		interaction_answers_count = interaction.user_interactions.count
+      interaction_answers_count = interaction.user_interactions.count
       
       if interaction_answers_count < 1
         nil
@@ -304,48 +276,48 @@ module ApplicationHelper
         ((interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100).round
       end
     end
-	end
+  end
 
-	def anonymous_user
-	  cache_medium('anonymous_user') { 
-		  User.find_by_email("anonymous@shado.tv")
-		}
-	end
+  def anonymous_user
+    cache_medium('anonymous_user') { 
+      User.find_by_email("anonymous@shado.tv")
+    }
+  end
 
-	def current_or_anonymous_user
-	  if current_user.present? 
-		  current_user
-		else
-		  anonymous_user
-		end
-	end
-	
-	def mobile_device?()
-	  FandomUtils::request_is_from_mobile_device?(request)
-	end
+  def current_or_anonymous_user
+    if current_user.present? 
+      current_user
+    else
+      anonymous_user
+    end
+  end
+  
+  def mobile_device?()
+    FandomUtils::request_is_from_mobile_device?(request)
+  end
 
-	def ipad?
-		return request.user_agent =~ /iPad/ 
-	end
+  def ipad?
+    return request.user_agent =~ /iPad/ 
+  end
 
-	def find_interaction_for_calltoaction_by_resource_type(calltoaction, resource_type)
-		calltoaction.interactions.find_by_resource_type(resource_type)
-	end
+  def find_interaction_for_calltoaction_by_resource_type(calltoaction, resource_type)
+    calltoaction.interactions.find_by_resource_type(resource_type)
+  end
 
-	def calltoaction_active_with_tag(tag, order)
-		return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
-	end
+  def calltoaction_active_with_tag(tag, order)
+    return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
+  end
 
-	def calltoaction_coming_soon_with_tag(tag, order)
-		return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
-	end 
+  def calltoaction_coming_soon_with_tag(tag, order)
+    return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
+  end 
 
   # Get calltoaction's share interactions.
-	def share_interactions(calltoaction)
-		calltoaction_share_interactions = cache_short("calltoaction_#{calltoaction.id}_share_interactions") do
-		  calltoaction.interactions.where("resource_type = ? AND when_show_interaction = ?", "Share", "SEMPRE_VISIBILE").to_a
-		end
-	end
+  def share_interactions(calltoaction)
+    calltoaction_share_interactions = cache_short("calltoaction_#{calltoaction.id}_share_interactions") do
+      calltoaction.interactions.where("resource_type = ? AND when_show_interaction = ?", "Share", "SEMPRE_VISIBILE").to_a
+    end
+  end
 
   def extract_name_or_username(user)
     if user.first_name.present? || user.last_name.present?
@@ -355,94 +327,94 @@ module ApplicationHelper
     end
   end
 
-	def current_avatar size = "normal"
-		if current_user
-			return user_avatar current_user
-		else
-			return "/assets/anon.png"
-		end
-	end
+  def current_avatar size = "normal"
+    if current_user
+      return user_avatar current_user
+    else
+      return "/assets/anon.png"
+    end
+  end
 
-	def user_avatar user, size = "normal"
-		case user.avatar_selected
-		when "upload"
-			avatar = user.avatar ? user.avatar(:thumb) : "/assets/anon.png"
-		when "facebook"
-			avatar = user.authentications.find_by_provider("facebook").avatar
-		when "twitter"
-			avatar = user.authentications.find_by_provider("twitter").avatar.gsub("_normal","_#{ size }")
-		end
-		return avatar
-	end
+  def user_avatar user, size = "normal"
+    case user.avatar_selected
+    when "upload"
+      avatar = user.avatar ? user.avatar(:thumb) : "/assets/anon.png"
+    when "facebook"
+      avatar = user.authentications.find_by_provider("facebook").avatar
+    when "twitter"
+      avatar = user.authentications.find_by_provider("twitter").avatar.gsub("_normal","_#{ size }")
+    end
+    return avatar
+  end
 
-	def disqus_sso
-		if current_user && ENV['DISQUS_SECRET_KEY'] && ENV['DISQUS_PUBLIC_KEY']
-  		user = current_user
-	    data = {
-	      	'id' => user.id,
-	      	'username' => "#{ user.first_name } #{ user.last_name }",
-	      	'email' => user.email,
-	     	'avatar' =>  current_avatar
-	        # 'url' => user.url
-	    }.to_json
-	 
-	    message = Base64.encode64(data).gsub("\n", "") # Encode the data to base64.    
-	    timestamp = Time.now.to_i # Generate a timestamp for signing the message.
-	    sig = OpenSSL::HMAC.hexdigest('sha1', ENV['DISQUS_SECRET_KEY'], '%s %s' % [message, timestamp]) # Generate our HMAC signature
-	 
-		 	x = 
-		 		"<script type=\"text/javascript\">" +
-					"var disqus_config = function() {" +
-					"this.page.remote_auth_s3 = \"#{ message } #{ sig } #{ timestamp }\";" +
-					"this.page.api_key = \"#{ ENV['DISQUS_PUBLIC_KEY'] }\";" +
-					"this.sso = {" +
-				          "name:   \"SampleNews\"," +
-				          "button:  \"http://placehold.it/50x50\"," +
-				          "icon:     \"http://placehold.it/50x50\"," +
-				          "url:        \"http://example.com/login/\"," +
-				          "logout:  \"http://example.com/logout/\"," +
-				          "width:   \"800\"," +
-				          "height:  \"400\"" +
-				    "};" +
-					"}" +
-		    "</script>"
-	    
-			return x
-		else
-			return "DISQUS debugger: user not logged or wrong keys."
-		end
-   	end
+  def disqus_sso
+    if current_user && ENV['DISQUS_SECRET_KEY'] && ENV['DISQUS_PUBLIC_KEY']
+      user = current_user
+      data = {
+          'id' => user.id,
+          'username' => "#{ user.first_name } #{ user.last_name }",
+          'email' => user.email,
+        'avatar' =>  current_avatar
+          # 'url' => user.url
+      }.to_json
+   
+      message = Base64.encode64(data).gsub("\n", "") # Encode the data to base64.    
+      timestamp = Time.now.to_i # Generate a timestamp for signing the message.
+      sig = OpenSSL::HMAC.hexdigest('sha1', ENV['DISQUS_SECRET_KEY'], '%s %s' % [message, timestamp]) # Generate our HMAC signature
+   
+      x = 
+        "<script type=\"text/javascript\">" +
+          "var disqus_config = function() {" +
+          "this.page.remote_auth_s3 = \"#{ message } #{ sig } #{ timestamp }\";" +
+          "this.page.api_key = \"#{ ENV['DISQUS_PUBLIC_KEY'] }\";" +
+          "this.sso = {" +
+                  "name:   \"SampleNews\"," +
+                  "button:  \"http://placehold.it/50x50\"," +
+                  "icon:     \"http://placehold.it/50x50\"," +
+                  "url:        \"http://example.com/login/\"," +
+                  "logout:  \"http://example.com/logout/\"," +
+                  "width:   \"800\"," +
+                  "height:  \"400\"" +
+            "};" +
+          "}" +
+        "</script>"
+      
+      return x
+    else
+      return "DISQUS debugger: user not logged or wrong keys."
+    end
+    end
 
-	def calculate_month_string_ita(month_number)
-	    case month_number
-	      when 1
-	        return "gennaio"
-	      when 2
-	        return "febbraio"
-	      when 3
-	        return "marzo"
-	      when 4
-	        return "aprile"
-	      when 5
-	        return "maggio"
-	      when 6
-	        return "giugno"
-	      when 7
-	        return "luglio"
-	      when 8
-	        return "agosto"
-	      when 9
-	        return "settembre"
-	      when 10
-	        return "ottobre"
-	      when 11
-	        return "novembre"
-	      when 12
-	        return "dicembre"
-	      else
-	        return ""
-	    end
-  	end
+  def calculate_month_string_ita(month_number)
+      case month_number
+        when 1
+          return "gennaio"
+        when 2
+          return "febbraio"
+        when 3
+          return "marzo"
+        when 4
+          return "aprile"
+        when 5
+          return "maggio"
+        when 6
+          return "giugno"
+        when 7
+          return "luglio"
+        when 8
+          return "agosto"
+        when 9
+          return "settembre"
+        when 10
+          return "ottobre"
+        when 11
+          return "novembre"
+        when 12
+          return "dicembre"
+        else
+          return ""
+      end
+    end
   
   def compute_save_and_notify_outcome(userinteraction, user_upload_interaction)
     outcome = compute_and_save_outcome(userinteraction)

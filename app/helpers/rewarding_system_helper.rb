@@ -2,6 +2,7 @@ module RewardingSystemHelper
   include EventHandlerHelper
   include ModelHelper
   include RewardingRuleCheckerHelper
+  include RewardingRulesCollectorHelper
 
   # The Abstract Syntax of a rule
   class Rule
@@ -9,12 +10,11 @@ module RewardingSystemHelper
     include ActiveAttr::MassAssignment
     include ActiveAttr::AttributeDefaults
     
-    ALLOWED_OPTIONS = [:interactions, :rewards, :unlocks, :repeatable, :draft, :validity_start, :validity_end]
+    ALLOWED_OPTIONS = [:interactions, :rewards, :unlocks, :repeatable, :draft, :validity_start, :validity_end, :condition]
     ALLOWED_INTERACTIONS = [:names, :tags, :ctas, :types]
     
     attribute :name, type: String
     attribute :options #, type: Hash
-    attribute :condition #, type: Proc
     attribute :normalized_rewards #, type: Hash
     attribute :unlocks #, type: Hash
   end
@@ -77,20 +77,37 @@ module RewardingSystemHelper
     attribute :user_unlocked_names #, type: Array # of String
     attribute :user_rewards #, type: Hash
     
-    # this list is populated by side-effects by evaluating the rules buffer 
-    attribute :rules #, type: Array
-    
-    ALL = "ALL INTERACTIONS"
+    attribute :rules_collector #, type: RulesCollector
     
     def first_time
       user_interaction.counter == 1
     end
 
+    def get_interaction_rules(interaction_id)
+      result = rules_collector.interaction_id_by_rules[interaction_id]
+      if result.nil?
+        # refresh rules_collector
+        rules_collector = get_rules_collector()
+        result = rules_collector.interaction_id_by_rules[interaction_id]
+        if rules.nil?
+          log_error("cannot find interaction in rules collector", { interaction: interaction_id })
+          return []
+        end
+      end
+      result
+    end
+
     # Evaluates all rules in this context and return an Outcome object    
     def compute_outcome(user_interaction, just_rules_applying_to_interaction = false)
       outcome = Outcome.new()
-      rules.each do |rule|
-        evaluate_rule(rule, outcome, user_interaction, just_rules_applying_to_interaction)
+      interaction_rules = get_interaction_rules(user_interaction.interaction.id)
+      interaction_rules.each do |rule|
+        evaluate_rule(rule, outcome, user_interaction)
+      end
+      unless just_rules_applying_to_interaction
+        rules_collector.context_only_rules.each do |rule|
+          evaluate_rule(rule, outcome, user_interaction)
+        end
       end
       outcome
     end
@@ -104,11 +121,10 @@ module RewardingSystemHelper
     #   rule - the rule to be evaluated
     #   outcome - the object used to collect the rewards assigned/unlocked
     #   user_interaction - the interaction made by the user
-    #   just_rules_applying_to_interaction - if true, the rule is evaluated only if the rule is 
-    def evaluate_rule(rule, outcome, user_interaction, just_rules_applying_to_interaction)
-      if rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction, outcome)
+    def evaluate_rule(rule, outcome, user_interaction)
+      if rule_should_be_evaluated(rule, user_interaction, outcome)
         begin
-          if rule.condition.nil? || rule.condition.call
+          if !rule.options.key?(:condition) || eval(rule.options[:condition])
             outcome.info << ["rule evaluation", { rule_name: rule.name, value: true }] 
             outcome.matching_rules << rule.name
             Outcome.merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
@@ -116,8 +132,9 @@ module RewardingSystemHelper
             outcome.unlocks += rule.unlocks
             self.user_unlocked_names += rule.unlocks
             # TODO: self.uncountable_user_reward_names should be updated as well 
-          else
-            outcome.info << ["rule evaluation", { rule_name: rule.name, value: false }] 
+            outcome.info << ["rule evaluation", { rule_name: rule.name, value: true }]
+          else 
+            outcome.info << ["rule evaluation", { rule_name: rule.name, value: false }]
           end
         rescue Exception => ex
           outcome.errors << ["exception on rule",  { rule_name: rule.name, exception: ex.to_s }] 
@@ -125,13 +142,8 @@ module RewardingSystemHelper
       end
     end
     
-    def rule_should_be_evaluated(rule, user_interaction, just_rules_applying_to_interaction, outcome)
+    def rule_should_be_evaluated(rule, user_interaction, outcome)
       repeatable = rule.options.fetch(:repeatable, false)
-      
-      if !interaction_matches?(user_interaction, rule.options, just_rules_applying_to_interaction)
-        outcome.info << ["rule #{rule.name} not applied because interaction doesn't match", {}] 
-        return false
-      end
       
       if user_already_own_rewards?(rule.normalized_rewards, rule.unlocks)
         outcome.info << ["rule #{rule.name} not applied because user already own the rewards", {}] 
@@ -148,7 +160,6 @@ module RewardingSystemHelper
         return false
       end
       
-      outcome.info << ["rule #{rule.name} will be evaluated", {}] 
       return true
     end
     
@@ -176,33 +187,6 @@ module RewardingSystemHelper
       
       return true
     end
-
-    def interaction_matches?(user_interaction, options, just_rules_applying_to_interaction)
-      interaction = user_interaction.interaction
-      if options.key?(:interactions)
-        return ALL.equal?(options[:interactions]) || (
-          interaction_is_included_in_options?(options, :names, interaction.name) &&
-          interaction_is_included_in_options?(options, :ctas, interaction.call_to_action.name) &&
-          interaction_type_is_included_in_options?(options, interaction) &&
-          (!options[:interactions].key?(:tags) || get_cta_tags_from_cache(interaction.cta).intersect?(options[:interactions][:tags]))
-        )
-      else
-        !just_rules_applying_to_interaction
-      end
-    end
-    
-    def interaction_is_included_in_options?(options, label, element)
-      !options[:interactions].key?(label) || options[:interactions][label].include?(element) 
-    end
-
-    # Checks if the interaction type matches with what has been specified in the options parameter.
-    # It handles a kind of subtype relation between Quiz and Trivia or Versus 
-    def interaction_type_is_included_in_options?(options, interaction)
-      (interaction_is_included_in_options?(options, :types, interaction.resource_type) || 
-       (interaction.resource_type == 'Quiz' &&
-        interaction_is_included_in_options?(options, :types, interaction.resource.quiz_type.capitalize))
-      )      
-    end
     
     # Similar to merge_rewards, but the value of the map is a MockedUserReward
     def merge_user_rewards(user_rewards, normalized_rule_rewards)
@@ -212,47 +196,11 @@ module RewardingSystemHelper
         end
       end
     end
-    
-    # This is the method called by the rules file, through an instance_eval. It just stores all parameters (and the block)
-    # into a data structure to process it later.
-    #
-    # name - the name of the rule, used for logging
-    # options
-    #     :rewards      - a list of rewards to assign if the rule matches; the list contains names, or 
-    #                     hashes mapping names to counters (for example to award 10 points write { MAIN_REWARD_NAME => 10 })
-    #     :unlock       - a list of reward names to unlock
-    #
-    # The block defines the condition by which the rewards should be assigned or unlocked  
-    def rule(name, options, &block)
-      rule = Rule.new({ 
-        name: name,
-        options: options,
-        condition: block.nil? ? nil : proc(&block), 
-        normalized_rewards: normalize_rewards(options),
-        unlocks: Set.new(options.fetch(:unlocks, []))
-        })
-      rules << rule 
-    end
-
-    # Convert the "rewards" clause, that is an Array of Hash or String, into an Hash 
-    def normalize_rewards(options)
-      result = {}
-      result.default = 0    
-      options.fetch(:rewards, []).each do |r|
-        if r.is_a? String
-          result[r] = 1 
-        else
-          r.each do |k, v|
-            result[k] += v
-          end
-        end
-      end
-      result
-    end
 
   end
   
-  def new_context(user_interaction)
+  def new_context(user_interaction, rules_collector)
+    st = Time.now.utc 
     user = user_interaction.user
     interaction = user_interaction.interaction
     if user.mocked?
@@ -265,7 +213,7 @@ module RewardingSystemHelper
         uncountable_user_reward_names: Set.new(),
         user_unlocked_names: Set.new(),
         user_rewards: fill_user_rewards({}),
-        rules: []
+        rules_collector: rules_collector
       )
     else
       user_reward_info = UserReward.get_rewards_info(user_interaction.user, get_current_periodicities)
@@ -279,7 +227,7 @@ module RewardingSystemHelper
         uncountable_user_reward_names: uncountable_user_reward_names,
         user_unlocked_names: user_unlocked_names,
         user_rewards: user_rewards,
-        rules: []
+        rules_collector: rules_collector
       )
     end
   end
@@ -361,23 +309,28 @@ module RewardingSystemHelper
     end
   end
 
-  def prepare_rules_and_context(user_interaction, rules_buffer = nil)
-    if rules_buffer.nil?
-      rules_buffer = get_rules_buffer()
+  def prepare_rules_and_context(user_interaction, rules_collector = nil)
+    if rules_collector.nil?
+      rules_collector = get_rules_collector()
     end
-    context = new_context(user_interaction)
-    context.instance_eval(rules_buffer)
+    context = new_context(user_interaction, rules_collector)
     context        
   end
   
   def check_rules(buffer)
-    init_check_rules_aux(Context.new(rules: []), Rule::ALLOWED_OPTIONS, Rule::ALLOWED_INTERACTIONS)
+    init_check_rules_aux(RulesCollector.new, Rule::ALLOWED_OPTIONS, Rule::ALLOWED_INTERACTIONS)
     check_rules_aux(buffer)
   end
   
-  def get_rules_buffer()
-    cache_short('rewarding_rules') do 
-      Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
+  def get_rules_collector()
+    cache_short('rewarding_rules_collector') do 
+      rules_buffer = Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
+      rules_collector = RulesCollector.new
+      # WARNING: instance_eval
+      rules_collector.instance_eval(rules_buffer)
+      interactions = Interaction.includes(:call_to_action).all
+      rules_collector.set_interaction_id_by_rules(interactions)
+      rules_collector
     end
   end
   

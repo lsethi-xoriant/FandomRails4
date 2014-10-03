@@ -2,8 +2,8 @@ module RewardingRuleCheckerHelper
   include ModelHelper
 
   # This method is needed just to overcome scoping issues with helpers. It should be invoked before check_rules_aux.
-  def init_check_rules_aux(context, allowed_options, allowed_interactions)
-    @context = context
+  def init_check_rules_aux(rules_collector, allowed_options, allowed_interactions)
+    @rules_collector = rules_collector
     @allowed_options = allowed_options
     @allowed_interactions = allowed_interactions
     @all_reward_names = get_all_reward_names()
@@ -15,13 +15,13 @@ module RewardingRuleCheckerHelper
   # Returns a list of strings describing errors in rules, or the empty list if there are no errors
   def check_rules_aux(rules_buffer)
     begin
-      @context.instance_eval(rules_buffer)
+      @rules_collector.instance_eval(rules_buffer)
     rescue Exception => e
       return ["caught an exception while parsing rules: #{e}"]
     else
       errors = []
       seen_rules = Set.new
-      @context.rules.each do |rule|
+      @rules_collector.rules.each do |rule|
         check_rule(rule, seen_rules, errors)
       end
       errors
