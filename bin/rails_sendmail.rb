@@ -1,5 +1,4 @@
 require('yaml')
-require('csv')
 require('aws/ses')
 
 # Script entry point.
