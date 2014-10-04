@@ -7,7 +7,7 @@
 	  <a class="btn-2 visible-xs" style="width: 70%; margin: 0 auto;" onclick="window.top.location.href = 'http://www.ballando.rai.it/dl/portali/site/articolo/ContentItem-73c59d94-cb97-4ffe-a1ea-8e7fac2eb28e.html';">VAI ALLA COMMUNITY</a>
 	  <div class="text-center" style="padding-top: 23px;">
 	  	<img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-profile" id="user-avatar-image">
-	  	<h4 style="font-weight: bold;"><%= "#{current_user.first_name} #{current_user.last_name}" %> <a href="/users/rai/sign_out" target="_top"><span class="glyphicon glyphicon-off" style="font-size: 14px; padding-left: 10px; color: #777C87;"></span></a></h4>
+	  	<h4 style="font-weight: bold;"><%= extract_name_or_username(current_user) %> <a href="/users/rai/sign_out" target="_top"><span class="glyphicon glyphicon-off" style="font-size: 14px; padding-left: 10px; color: #777C87;"></span></a></h4>
 	  	<div id="link-update"><a href="javascript:void(0)" onclick="chooseFoto();">Cambia foto ></a></div>
 	  </div>
 	</div>

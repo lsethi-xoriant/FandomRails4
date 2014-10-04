@@ -33,8 +33,8 @@ class Sites::Ballando::SessionsController < SessionsController
                 password: password
                 )  
 
-            if user.errros.any?
-              flash[:error] = user.errors.full_messages.map { |error_message| "#{error_message}<br>"}
+            if user.errors.any?
+              flash[:error] = user.errors.full_messages.map { |error_message| "#{error_message}<br>"}.join("").html_safe
               redirect_to "/users/sign_in"
               return
             end

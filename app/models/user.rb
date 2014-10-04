@@ -25,8 +25,8 @@ class User < ActiveRecord::Base
 
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/anon.png"
 
-  validates_presence_of :first_name
-  validates_presence_of :last_name
+  #validates_presence_of :first_name
+  #validates_presence_of :last_name
   validates :privacy, :acceptance => { :accept => true }
 
   validates_presence_of :username
