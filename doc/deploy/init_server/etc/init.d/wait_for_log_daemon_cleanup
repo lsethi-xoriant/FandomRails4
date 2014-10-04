@@ -2,4 +2,19 @@
 
 # just wait for log_daemon to cleanup the log after the application server has been shutdown
 
-sleep 120
+# make sure the daemon is running
+/etc/init.d/log_daemon start
+
+dir=/home/app/railsapps/Fandom/shared/log/events
+i=0
+while [ $i -lt 40 ];
+do
+    # are there still files?
+    [ -z "$(ls $dir/*open* $dir/*close*  2>/dev/null)" ] && exit;
+    echo "waiting on log files"
+    sleep 3;
+    i=$((i+1))
+done
+
+logger "log daemon shutting down but not all logs have been cleaned up!"
+logger "$(ls $dir/*open* $dir/*close*  2>/dev/null)"
