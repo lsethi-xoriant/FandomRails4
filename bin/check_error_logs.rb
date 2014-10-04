@@ -19,7 +19,7 @@ EOF
   from = deploy_settings['mailer']['default_from']
   to = deploy_settings['mailer']['shado_monitoring_address']
   hostname = Socket.gethostbyname(Socket.gethostname).first
-  if Dir["#{rails_app_dir}/log/events/*close*.log"].any?
+  if Dir["#{rails_app_dir}/log/events/*error*.log"].any?
     ses.send_email(
      :to        => [to],
      :source    => from,
@@ -37,8 +37,8 @@ end
 
 def configure_ses(deploy_settings)
   ses = AWS::SES::Base.new(
-    :access_key_id     => deploy_settings['aws']['access_key_id'], 
-    :secret_access_key => deploy_settings['aws']['secret_access_key']
+    :access_key_id     => deploy_settings['mailer']['ses'][:access_key_id], 
+    :secret_access_key => deploy_settings['mailer']['ses'][:secret_access_key]
   )
   ses
 end
