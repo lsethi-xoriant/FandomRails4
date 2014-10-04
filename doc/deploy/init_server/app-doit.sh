@@ -50,3 +50,4 @@ gem install rails -v 3.2.17
 gem install daemons
 gem install activerecord-postgresql-adapter
 gem install sys-proctable
+gem install aws-ses

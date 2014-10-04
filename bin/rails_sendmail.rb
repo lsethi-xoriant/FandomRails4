@@ -24,8 +24,8 @@ end
 def configure_ses(rails_app_dir)
   deploy_settings = YAML.load_file("#{rails_app_dir}/config/deploy_settings.yml")
   ses = AWS::SES::Base.new(
-    :access_key_id     => deploy_settings['aws']['access_key_id'], 
-    :secret_access_key => deploy_settings['aws']['secret_access_key']
+    :access_key_id     => deploy_settings['mailer']['ses'][:access_key_id], 
+    :secret_access_key => deploy_settings['mailer']['ses'][:secret_access_key]
   )
   [ses, deploy_settings['mailer']['default_from']]
 end
