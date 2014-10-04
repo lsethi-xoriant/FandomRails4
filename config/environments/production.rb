@@ -7,10 +7,10 @@ Fandom::Application.configure do
   #config.logger = Logger.new('/dev/null')
   class LogSubscriber < ActiveSupport::LogSubscriber
     def process_action event
-      if event.payload.key?(:view_runtime)
+      unless event.payload[:view_runtime].nil? # warning: key?() can't be used because value can be nil
         event.payload[:view_runtime] /= 1000.0
       end
-      if event.payload.key?(:db_runtime)
+      unless event.payload[:db_runtime].nil? # warning: key?() can't be used because value can be nil
         event.payload[:db_runtime] /= 1000.0
       end
       event.payload.delete(:params) # params delete to avoid cluttering logs with uploads

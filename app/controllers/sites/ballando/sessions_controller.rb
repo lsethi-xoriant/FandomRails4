@@ -33,8 +33,8 @@ class Sites::Ballando::SessionsController < SessionsController
                 password: password
                 )  
 
-            if user.errros.any?
-              flash[:error] = user.errors.full_messages.map { |error_message| "#{error_message}<br>"}
+            if user.errors.any?
+              flash[:error] = user.errors.full_messages.map { |error_message| "#{error_message}<br>"}.join("").html_safe
               redirect_to "/users/sign_in"
               return
             end
@@ -77,7 +77,9 @@ class Sites::Ballando::SessionsController < SessionsController
       user = User.find_by_username(rai_response_user["UID"])
       unless user
         user = User.find_by_email(user_email)
-        user.username = rai_response_user["UID"]
+        if user
+          user.username = rai_response_user["UID"]
+        end
       end
 
       if user && user.email.include?("@FAKE___DOMAIN.com")

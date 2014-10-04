@@ -328,10 +328,10 @@ module ApplicationHelper
   end
 
   def extract_name_or_username(user)
-    if user.first_name.present? || user.last_name.present?
-      "#{user.first_name} #{user.last_name}"
-    else
+    if user.first_name.blank? && user.last_name.blank?
       user.username
+    else
+      "#{user.first_name} #{user.last_name}"
     end
   end
 
