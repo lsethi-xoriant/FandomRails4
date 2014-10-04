@@ -14,7 +14,7 @@
   <% else %>
     <!-- CURRENT USER HAS NOT RESPONDED -->
     <div class="col-xs-6 col-xs-offset-3 text-center">
-      <button class="button-inter-<%= interaction.id %> btn btn-lg btn-primary" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, null, '<%= interaction.when_show_interaction %>')"><%= interaction.resource.title %></button>
+      <a class="button-inter-<%= interaction.id %> btn btn-lg btn-primary" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, null, '<%= interaction.when_show_interaction %>')"><%= interaction.resource.title %></a>
       <!--
       <div id="marker-<%= interaction.id %>" class="yellow-marker">+<%= predict_outcome(interaction, current_or_anonymous_user, true).reward_name_to_counter[MAIN_REWARD_NAME] %></div>
       -->
