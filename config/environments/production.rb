@@ -8,10 +8,10 @@ Fandom::Application.configure do
   class LogSubscriber < ActiveSupport::LogSubscriber
     def process_action event
       if event.payload.key?(:view_runtime)
-        event.payload[:view_runtime] /= 1000.0
+        event.payload[:view_runtime] = event.payload.fetch(:view_runtime, 0.0) / 1000.0
       end
       if event.payload.key?(:db_runtime)
-        event.payload[:db_runtime] /= 1000.0
+        event.payload[:db_runtime] = event.payload.fetch(:db_runtime, 0.0) / 1000.0
       end
       event.payload.delete(:params) # params delete to avoid cluttering logs with uploads
       log_info("rails logger", event.payload)
