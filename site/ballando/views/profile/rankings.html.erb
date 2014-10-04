@@ -7,7 +7,7 @@
 	<div class="hidden-xs">
 		<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
 		<div class="row">
-			<% if get_my_general_position %>
+			<% if get_my_general_position && false %>
 				<%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
 				<div class="spacer"></div>
 			<% end %>

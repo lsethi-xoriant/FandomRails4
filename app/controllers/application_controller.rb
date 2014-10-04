@@ -62,8 +62,8 @@ class ApplicationController < ActionController::Base
   def update_call_to_action_in_page_with_tag
 
     if params[:tag_id].present?
-      calltoactions_count = CallToAction.active.where("call_to_action_tags.tag_id=?", params[:tag_id]).count
-      calltoactions = CallToAction.active.where("call_to_action_tags.tag_id=?", params[:tag_id]).limit(3)
+      calltoactions_count = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", params[:tag_id]).count
+      calltoactions = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", params[:tag_id]).limit(3)
     else
       calltoactions_count = CallToAction.active.count
       calltoactions = CallToAction.active.limit(3)
