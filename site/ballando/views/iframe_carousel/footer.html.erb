@@ -66,14 +66,14 @@
                       <h5 style="color: #fff;"><%= calltoaction.title %><%= (i % @calltoactions_for_page) %></h5>
                       <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%M/%Y") %></h6>
                     </div>
-                    <% if i != 0 && (i % @calltoactions_for_page) == (@calltoactions_for_page - 1) %>
+                    <% if i != 0 && i != @calltoaction_count && (i % @calltoactions_for_page) == (@calltoactions_for_page - 1) %>
                       </div><!-- ROW --></div><!-- ITEM --><div class="item">
                     <% end %>
                   <% end %>                   
                 </div>
               </div>
             </div>
-            <ol class="carousel-indicators">
+            <ol class="carousel-indicators" style="bottom: -25px; width: 100%;">
               <% if @calltoaction_pages > 1 %>
                 <% @calltoaction_pages.times do |i| %>
                   <li data-target="#footer-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
