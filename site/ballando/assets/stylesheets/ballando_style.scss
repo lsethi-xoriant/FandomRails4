@@ -43,6 +43,7 @@ p.oblique { font-style: oblique }
 }
 
 .footer-carousel {
+    padding-top: 10px;
     background: #8d1e12;
     padding-bottom: 40px;
     .item {
@@ -52,6 +53,7 @@ p.oblique { font-style: oblique }
             overflow-y: hidden; 
             width: 100%;
             background-size: 100% auto;
+            background-position: center;
         }
     }
 }
@@ -1463,8 +1465,119 @@ height: 100%;
     box-shadow: 0px 2px 1px -1px rgba(45, 45, 45, 0.45);
 }
 
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text 
+
+body {
+  padding-bottom: 40px;
+  color: #5a5a5a;
+}*/
+
+
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+}
+
+/* Flip around the padding for proper display in narrow viewports */
+.navbar-wrapper .container {
+  padding-right: 0;
+  padding-left: 0;
+}
+.navbar-wrapper .navbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  margin-bottom: 60px;
+}
+
+.carousel-widget {
+  .carousel, .carousel .item, .carousel-inner > .item > img {
+    height: 300px;
+  }
+}
+
+.footer-carousel {
+  .carousel, .carousel .item, .carousel-inner > .item > img {
+    height: 130px;
+  }
+}
+
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  background-color: #777;
+}
+
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+}
+
+/* CUSTOM BOOTSTRAP CAROUSEL */
+
+.carousel-indicators {
+    bottom: -40px;
+    li {
+        background: none repeat scroll 0 0 #535353;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
+        cursor: pointer;
+        height: 11px;
+        width: 11px;
+        margin: 4px !important; 
+        border: none;
+    }
+    li.active {
+        margin: 0 !important;
+        background: none repeat scroll 0 0 #ffffff;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
+        cursor: pointer;
+        height: 11px;
+        width: 11px;
+        margin: 4px !important; 
+        border: none;
+    }
+}
+
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
+    .footer-carousel {
+        padding-bottom: 0;
+        .carousel, .carousel .item, .carousel-inner > .item > img {
+            height: auto;
+        }
+    }
+
+    .footer-carousel {
+        .item {
+            .calltoaction-thumbnail-container {
+                height: 220px; 
+                background-size: auto 100%;
+            }
+        }
+    }
+
     .media-image {
         height: 200px;
         background-size: auto 100%; 
@@ -1837,29 +1950,4 @@ height: 100%;
   50%, 100% {
     opacity: 0;
   }
-}
-
-/* CUSTOM BOOTSTRAP CAROUSEL */
-
-.carousel-indicators {
-    bottom: -40px;
-    li {
-        background: none repeat scroll 0 0 #535353;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
-        cursor: pointer;
-        height: 11px;
-        width: 11px;
-        margin: 4px !important; 
-        border: none;
-    }
-    li.active {
-        margin: 0 !important;
-        background: none repeat scroll 0 0 #ffffff;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
-        cursor: pointer;
-        height: 11px;
-        width: 11px;
-        margin: 4px !important; 
-        border: none;
-    }
 }

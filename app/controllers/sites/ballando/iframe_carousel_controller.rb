@@ -19,10 +19,8 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
   end
 
   def footer
-    @calltoactions_for_page = 4
-
     @calltoactions = cache_short("iframe_carousel_footer_calltoactions") do
-      CallToAction.active.limit(4).to_a
+      CallToAction.active.limit(8).to_a
     end
     
     @calltoaction_reward_status = Hash.new
@@ -31,7 +29,11 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
     end
 
     @calltoaction_count = @calltoactions.count
-    @calltoaction_pages = (@calltoaction_count.to_f / @calltoactions_for_page).ceil
+
+    unless mobile_device?()
+      @calltoactions_for_page = 4
+      @calltoaction_pages = (@calltoaction_count.to_f / @calltoactions_for_page).ceil
+    end
 
     render template: "/iframe_carousel/footer"
   end
