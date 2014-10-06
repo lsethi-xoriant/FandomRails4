@@ -23,5 +23,8 @@
   $(document).ready(function() {
     checkDocumentHeight("fandom");
   });
-
+  
+  <% if @redirect %>
+  	location.href= "/redirect_into_iframe_calltoaction/<%= @calltoactions.first.id %>";
+  <% end %>
 </script>
