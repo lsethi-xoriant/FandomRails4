@@ -2,7 +2,62 @@
   <div class="row">
     <div class="col-xs-12 col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3">
 
-      <% if true #current_user %>
+      <% if @calltoactions.any? %>
+          <div class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+              <% if @calltoaction_pages > 1 %>
+                <% @calltoaction_pages.times do |i| %>
+                  <li data-target="#home-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
+                <% end %>
+              <% end %>
+            </ol>
+            <div class="carousel-inner">
+              <div class="item active">
+                <div class="row">
+                  <% @calltoactions.each_with_index do |calltoaction, i| %>
+                        
+                    <div class="col-xs-3">
+                      <a href="/redirect_into_iframe_calltoaction/<%= calltoaction.id %>" target="_top">
+                        <div class="calltoaction-thumbnail-container" style="background-image: url('<%= calltoaction.thumbnail.url %>');">
+                        </div>
+                      </a> 
+                      <h4 style="position: absolute; top: 0; right: 22px;">
+                        <% if call_to_action_completed?(calltoaction) %>
+                          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
+                            FATTO <span class="glyphicon glyphicon-ok"></span>
+                          </span>
+                        <% else %>
+                          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= @calltoaction_reward_status[calltoaction.id][:winnable_reward_count] %>
+                            <span class="glyphicon glyphicon-star"></span>
+                          </span>
+                        <% end %>
+                      </h4>
+                      <h5 style="color: #fff;"><%= calltoaction.title %></h5>
+                       <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%M/%Y") %></h6>
+                    </div>
+            
+
+                    <% if i != 0 && (i % @calltoactions_for_page) == 0 %>
+                      </div><!-- ROW --></div><!-- ITEM --><div class="item">
+                    <% end %>
+
+                  <% end %>
+                  </div>                     
+                </div>
+              </div>
+            </div>
+
+            <!--
+            <a class="left carousel-control" href="#home-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+            <a class="right carousel-control" href="#home-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+            -->
+
+          </div>
+        <% end %>
+
+
+      <% if false #current_user %>
         <div class="jcarousel-wrapper">
           <div class="jcarousel <%= request_is_from_apple_mobile_device?(request) ? "jcarousel-apple" : "jcarousel-deafault" %>">
             <ul>
@@ -38,19 +93,12 @@
             </ul>
           </div>
 
-          <!--
-          <a href="#" class="jcarousel-control-prev hidden-xsm">&lsaquo;</a>
-          <a href="#" class="jcarousel-control-next hidden-xsm">&rsaquo;</a>
-          -->
-
           <a href="#" class="jcarousel-control-prev mobile visible-xsm"><span class="glyphicon glyphicon-chevron-left"></span></a>
           <a href="#" class="jcarousel-control-next mobile visible-xsm"><span class="glyphicon glyphicon-chevron-right"></span></a>
           
 
-          <!-- PAGINATION DESKTOP -->
           <p class="jcarousel-pagination hidden-xsm"></p>
 
-          <!-- PAGINATION MOBILE -->
           <p class="jcarousel-pagination mobile visible-xsm"></p>
 
         </div>
