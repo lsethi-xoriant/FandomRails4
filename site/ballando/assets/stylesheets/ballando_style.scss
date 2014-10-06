@@ -15,10 +15,12 @@ p.oblique { font-style: oblique }
   background-color: transparent !important;
 }
 
-.carousel-inner{
-  .item{
-    border: 6px solid #fff;
-  }
+.carousel-widget {
+    .carousel-inner {
+      .item{
+        border: 6px solid #fff;
+      }
+    }
 }
 
 .media-image {
@@ -43,6 +45,15 @@ p.oblique { font-style: oblique }
 .footer-carousel {
     background: #8d1e12;
     padding-bottom: 40px;
+    .item {
+        background: #8d1e12 !important;
+        .calltoaction-thumbnail-container {
+            height: 120px; 
+            overflow-y: hidden; 
+            width: 100%;
+            background-size: 100% auto;
+        }
+    }
 }
 
 .miniformat {
@@ -1687,12 +1698,6 @@ height: 100%;
     display: none;
 }
 
-.jcarousel-img-container {
-    height: 120px; 
-    position: relative; 
-    overflow-y: hidden;
-}
-
 /* TINY WIDGET FOR CAROUSEL */
 @media (max-width: 500px) {
     .col-xsm-12 {
@@ -1713,10 +1718,6 @@ height: 100%;
 
     .visible-xsm {
         display: block;
-    }
-
-    .jcarousel-img-container {
-        height: inherit; position: relative;
     }
     
     .carousel-caption{
