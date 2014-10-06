@@ -9,9 +9,9 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
-    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter
+    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs
 
-  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth
+  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :required_attrs
 
   has_many :authentications, dependent: :destroy
   has_many :user_interactions
@@ -25,13 +25,21 @@ class User < ActiveRecord::Base
 
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/anon.png"
 
-  #validates_presence_of :first_name
-  #validates_presence_of :last_name
+  validates_presence_of :first_name, if: Proc.new { |f| required_attr?("first_name") }
+  validates_presence_of :last_name, if: Proc.new { |f| required_attr?("last_name") }
   validates :privacy, :acceptance => { :accept => true }
 
   validates_presence_of :username
   validates_presence_of :privacy
   validates :username, uniqueness: true
+
+  def required_attr?(attr_name)
+    if required_attrs.present?
+      required_attrs.include?(attr_name)
+    else
+      false
+    end
+  end
 
   def major
     if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present?

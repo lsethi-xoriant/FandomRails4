@@ -39,6 +39,7 @@ module ConfigUtils
     attribute :force_facebook_tab, type: String
     attribute :public_pages, :default => Set.new([])
     attribute :periodicity_kinds, :default => [PERIOD_KIND_DAILY, PERIOD_KIND_WEEKLY, PERIOD_KIND_MONTHLY]
+    attribute :required_attrs, :default => []
 
     def unbranded?
       self.id == 'fandom'
