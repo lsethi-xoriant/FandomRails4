@@ -74,6 +74,9 @@ module ApplicationHelper
   end
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
+    expire_cache_key(get_cta_status_for_user(interaction.call_to_action_id, user.id))
+    expire_cache_key(get_cta_completed_by_user(interaction.call_to_action_id, user.id))
+
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
 
     if user_interaction
@@ -175,7 +178,9 @@ module ApplicationHelper
     trace_block("get_current_call_to_action_reward_status", { cta: calltoaction.name }) do
       reward = get_reward_from_cache(reward_name)
       
-      winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
+      winnable_outcome, interaction_outcomes, sorted_interactions = cache_short get_cta_status_for_user(calltoaction.id, current_or_anonymous_user) do
+        winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
+      end
       
       if compute_reward_status_images
 

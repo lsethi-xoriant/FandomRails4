@@ -323,7 +323,7 @@ module RewardingSystemHelper
   end
   
   def get_rules_collector()
-    cache_short('rewarding_rules_collector') do 
+    #cache_short('rewarding_rules_collector') do 
       rules_buffer = Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
       rules_collector = RulesCollector.new
       # WARNING: instance_eval
@@ -331,7 +331,7 @@ module RewardingSystemHelper
       interactions = Interaction.includes(:call_to_action).all
       rules_collector.set_interaction_id_by_rules(interactions)
       rules_collector
-    end
+    #end
   end
   
   def compute_and_save_outcome(user_interaction, rules_buffer = nil)

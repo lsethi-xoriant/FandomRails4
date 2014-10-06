@@ -17,6 +17,16 @@ module CacheKeysHelper
     "reward_#{reward_name}"
   end
 
+  # USER
+  # ~~~~~
+
+  def get_cta_completed_by_user(cta_id, user_id)
+    "cta_#{cta_id}_completed_by_user_#{user_id}"
+  end
+
+  def get_cta_status_for_user(cta_id, user_id) 
+    "cta_#{cta_id}_status_for_user_#{user_id}"
+  end
   
   # CTA
   # ~~~~~
@@ -24,7 +34,6 @@ module CacheKeysHelper
   def get_interactions_required_to_complete_cache_key(cta_id)
     "interactions_required_to_complete_#{cta_id}"
   end
-
 
   # CTA and tags
   # ~~~~~
