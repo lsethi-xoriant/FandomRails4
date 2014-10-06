@@ -92,7 +92,13 @@ class CallToActionController < ApplicationController
     
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([calltoaction])
     @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction, "Comment")
-
+    
+    @fb_meta_tags = '<meta property="og:type" content="article" /> '
+    @fb_meta_tags += '<meta property="og:locale" content="it_IT" /> '
+    @fb_meta_tags += '<meta property="og:title" content="'+calltoaction.title+'" /> '
+    @fb_meta_tags += '<meta property="og:description" content="'+calltoaction.description+'" /> '
+    @fb_meta_tags += '<meta property="og:image" content="'+calltoaction.thumbnail(:thumb).split("?").first+'" /> '
+    
     # TODO: @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
     if page_require_captcha?(@calltoaction_comment_interaction)
