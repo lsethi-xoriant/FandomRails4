@@ -21,6 +21,13 @@ p.oblique { font-style: oblique }
   }
 }
 
+.media-image {
+    background-size: auto 100%; 
+    background-position: center; 
+    width: 100%; 
+    height: 100%;
+}
+
 .cover-grid {
     position: absolute; 
     top: 0; bottom: 0; left: 0; right: 0; 
@@ -1447,10 +1454,9 @@ height: 100%;
 
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
-    .container-fluid {
-        //margin: 0;
-        //overflow: hidden;
-        //padding: 0;
+    .media-image {
+        height: 200px;
+        background-size: auto 100%; 
     }
     
     .menu-area{
@@ -1622,9 +1628,10 @@ height: 100%;
         }
         .cta-media {
             margin: 0;
-            padding-right: 0px; 
+            padding-right: 0; 
             height: 100%;
             overflow: hidden;
+            padding-left: 0; 
             img {
                 height: 100%;
                 width: auto;
