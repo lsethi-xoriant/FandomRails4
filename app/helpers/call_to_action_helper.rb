@@ -222,8 +222,9 @@ module CallToActionHelper
   end
   
   def has_done_share_interaction(calltoaction)
-    interaction = get_share_from_calltoaction(calltoaction)
-    if !cached_nil?(interaction)
+    share_interactions = get_share_from_calltoaction(calltoaction)
+    if share_interactions.any?
+      interaction = share_interactions.first
       if current_user
         [current_user.user_interactions.find_by_interaction_id(interaction.id), interaction]
       else
@@ -236,7 +237,7 @@ module CallToActionHelper
   
   def get_share_from_calltoaction(calltoaction)
     cache_short("share_interaction_cta_#{calltoaction.id}") do
-      calltoaction.interactions.find_by_resource_type("Share") || CACHED_NIL
+      calltoaction.interactions.where("when_show_interaction = 'SEMPRE_VISIBILE' AND resource_type = 'Share'").to_a
     end
   end
   
