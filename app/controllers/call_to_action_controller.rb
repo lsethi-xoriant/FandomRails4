@@ -82,6 +82,49 @@ class CallToActionController < ApplicationController
       format.json { render json: response.to_json }
     end
   end
+  
+  def get_fb_meta(cta)
+    info = Hash.new
+    share = cta.interactions.find_by_resource_type("Share").resource
+    share_info = JSON.parse(share.providers)
+    info['title'] = get_cta_share_title(cta, share_info)
+    #info['url'] = get_cta_share_url(calltoaction, share_info)
+    info['description'] = get_cta_share_description(cta, share_info)
+    info['image_url'] = get_cta_share_image(cta, share)
+    info
+  end
+  
+  def get_cta_share_title(cta, share_info)
+    if share_info['facebook']['message'].present?
+      share_info['facebook']['message']
+    else
+      cta.title
+    end
+  end
+  
+  def get_cta_share_description(cta, share_info)
+    if share_info['facebook']['description'].present?
+      share_info['facebook']['description']
+    else
+      cta.description
+    end
+  end
+  
+  def get_cta_share_url(cta, share_info)
+    if share_info['facebook']['link'].present?
+      share_info['facebook']['link']
+    else
+      ""
+    end
+  end
+  
+  def get_cta_share_image(cta, share)
+    if share.picture.present?
+      share.picture(:thumb).split("?").first
+    else
+      cta.thumbnail(:medium).split("?").first
+    end
+  end
 
   def show
 
@@ -93,12 +136,14 @@ class CallToActionController < ApplicationController
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([calltoaction])
     @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction, "Comment")
     
+    fb_meta_info = get_fb_meta(calltoaction)
     @fb_meta_tags = '<meta property="og:type" content="article" /> '
     @fb_meta_tags += '<meta property="og:locale" content="it_IT" /> '
-    @fb_meta_tags += '<meta property="og:title" content="'+calltoaction.title+'" /> '
-    @fb_meta_tags += '<meta property="og:description" content="'+calltoaction.description+'" /> '
-    @fb_meta_tags += '<meta property="og:image" content="'+calltoaction.thumbnail(:thumb).split("?").first+'" /> '
-    
+    @fb_meta_tags += '<meta property="og:title" content="'+fb_meta_info['title']+'" /> '
+    @fb_meta_tags += '<meta property="og:description" content="'+fb_meta_info['description']+'" /> '
+    @fb_meta_tags += '<meta property="og:image" content="'+fb_meta_info['image_url']+'" /> '
+    debugger
+    @redirect = params[:redirect].present?
     # TODO: @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
     if page_require_captcha?(@calltoaction_comment_interaction)
