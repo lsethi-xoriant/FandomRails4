@@ -142,7 +142,7 @@ class CallToActionController < ApplicationController
     @fb_meta_tags += '<meta property="og:title" content="'+fb_meta_info['title']+'" /> '
     @fb_meta_tags += '<meta property="og:description" content="'+fb_meta_info['description']+'" /> '
     @fb_meta_tags += '<meta property="og:image" content="'+fb_meta_info['image_url']+'" /> '
-    debugger
+    
     @redirect = params[:redirect].present?
     # TODO: @calltoactions_correlated = get_correlated_cta(@calltoaction)
 

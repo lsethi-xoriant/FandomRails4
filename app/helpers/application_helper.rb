@@ -84,7 +84,7 @@ module ApplicationHelper
       UserCounter.update_counters(interaction, user_interaction, user, true)
     end
 
-    outcome = compute_and_save_outcome(user_interaction)
+    outcome = compute_save_and_notify_outcome(user_interaction)
     outcome.info = []
     outcome.errors = []
 
@@ -148,6 +148,12 @@ module ApplicationHelper
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
       CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
+    end
+  end
+  
+  def get_rewards_with_tag(tag_name)
+    cache_short get_rewards_with_tag_cache_key(tag_name) do
+      Reward.includes(reward_tags: :tag).where("tags.name = ?", tag_name).to_a
     end
   end
   
@@ -424,14 +430,30 @@ module ApplicationHelper
       end
     end
   
-  def compute_save_and_notify_outcome(userinteraction, user_upload_interaction)
-    outcome = compute_and_save_outcome(userinteraction)
-    outcome.reward_name_to_counter.each do |r|
-      reward = Reward.find_by_name(r.first)
-      html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { icon: reward.preview_image, title: reward.title }, layout: false, formats: :html
-      notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
-      notice.send_to_user(request)
+  def get_to_be_notified_reward_names
+    rewards = get_rewards_with_tag(TO_BE_NOTIFIED_REWARD_NAME)
+    to_be_notified_rewards_names = Set.new
+    rewards.each do |r|
+      to_be_notified_rewards_names.add(r.name)
     end
+    to_be_notified_rewards_names
+  end
+  
+  def compute_save_and_notify_outcome(user_interaction)
+    outcome = compute_and_save_outcome(user_interaction)
+    to_be_notified_reward_names = get_to_be_notified_reward_names
+    
+    outcome.reward_name_to_counter.each do |r|
+      reward_name = r.first
+      if to_be_notified_reward_names.include?(reward_name)
+        reward = Reward.find_by_name(reward_name)
+        html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { reward: reward }, layout: false, formats: :html
+        notice = create_notice(:user_id => user_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+        #notice.send_to_user(request)
+      end
+    end
+    
+    outcome
   end
   
   def days_in_month(month, year = Time.now.year)

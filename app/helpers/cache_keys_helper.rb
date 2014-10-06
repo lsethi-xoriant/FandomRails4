@@ -40,6 +40,10 @@ module CacheKeysHelper
   def get_ctas_with_tag_cache_key(tag_name)
     "ctas_with_tag_#{tag_name}"
   end
+  
+  def get_rewards_with_tag_cache_key(tag_name)
+    "rewards_with_tag_#{tag_name}"
+  end
 
 
   # Tags
