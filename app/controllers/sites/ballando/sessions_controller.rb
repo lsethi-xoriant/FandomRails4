@@ -30,7 +30,8 @@ class Sites::Ballando::SessionsController < SessionsController
                 first_name: rai_response_user["firstName"], 
                 last_name: rai_response_user["lastName"],
                 privacy: true,
-                password: password
+                password: password,
+                required_attrs: get_site_from_request(request)["required_attrs"]
                 )  
 
             if user.errors.any?
@@ -147,16 +148,16 @@ class Sites::Ballando::SessionsController < SessionsController
     password = Devise.friendly_token.first(8)
     
     provider = response_user["user"]["loginProvider"]
-    last_name = provider == "twitter" ? response_user["user"]["firstName"] : response_user["user"]["lastName"]
 
     User.create(
       username: response_user["UID"], 
       email: user_email, 
       first_name: response_user["user"]["firstName"], 
-      last_name: last_name,
+      last_name: response_user["user"]["lastName"],
       avatar_selected: provider,
       privacy: true,
-      password: password
+      password: password,
+      required_attrs: get_site_from_request(request)["required_attrs"]
     )
   end
 

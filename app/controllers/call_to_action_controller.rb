@@ -14,7 +14,7 @@ class CallToActionController < ApplicationController
     calltoactions = Array.new
 
     if params[:tag_id].present?
-      stream_call_to_action_to_render = CallToAction.active.where("call_to_action_tags.tag_id=?", params[:tag_id]).offset(params[:offset]).limit(3)
+      stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id=?", params[:tag_id]).offset(params[:offset]).limit(3)
     else
       stream_call_to_action_to_render = CallToAction.active.offset(params[:offset]).limit(3)
     end
@@ -129,7 +129,7 @@ class CallToActionController < ApplicationController
     tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat")
     if tags_with_miniformat_in_calltoaction.any?
       tag_id = tags_with_miniformat_in_calltoaction.first.id
-      calltoactions = CallToAction.active.where("call_to_action_tags.tag_id=? and call_to_actions.id <> ?", tag_id, calltoaction.id).limit(3)
+      calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id=? and call_to_actions.id <> ?", tag_id, calltoaction.id).limit(3)
     else
        calltoactions = Array.new
     end
