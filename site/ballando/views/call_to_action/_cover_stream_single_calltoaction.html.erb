@@ -31,7 +31,7 @@
         <% end %>
       </h5>      
       <h2 class="text-with-shadow" style="margin-top: 0px; font-size: 24px; font-weight: 700;">
-        <%= calltoaction.title %>
+        <a class="cta-title-link" href="javascript:void(0);" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')"><%= calltoaction.title %></a>
       </h2>
       <h2 class="btn-container"><a class="btn-2" role="button" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')">GUARDA</a></h2> 
     </div>
