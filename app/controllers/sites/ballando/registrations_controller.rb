@@ -6,6 +6,7 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
 
   def ballando_create
     user = User.new(params[:user])
+    user.required_attrs = get_site_from_request(request)["required_attrs"]
 
     if user.valid?
 

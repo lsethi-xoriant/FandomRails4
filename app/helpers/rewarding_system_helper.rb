@@ -91,7 +91,7 @@ module RewardingSystemHelper
         # refresh rules_collector
         rules_collector = get_rules_collector()
         result = rules_collector.interaction_id_by_rules[interaction_id]
-        if rules.nil?
+        if result.nil?
           log_error("cannot find interaction in rules collector", { interaction: interaction_id })
           return []
         end

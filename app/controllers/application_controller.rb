@@ -38,6 +38,12 @@ class ApplicationController < ActionController::Base
   def delete_current_user_interactions
     authorize! :manage, :all
     current_user.user_interactions.destroy_all
+
+    CallToAction.active.each do |calltoaction|
+      expire_cache_key(get_cta_status_for_user(calltoaction.id, current_user.id))
+      expire_cache_key(get_cta_completed_by_user(calltoaction.id, current_user.id))
+    end
+
     redirect_to "/"
   end
 

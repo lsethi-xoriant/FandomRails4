@@ -22,12 +22,10 @@
               	<% nl.each do |n| %>
                 <li id="<%= n.id %>" class="list-group-item <%= "list-group-item-warning" if !n.read %>">
                   <div class="row">
-                  	<div class="col-md-11">
-                  		<div class="row">
-                  			<%= n.html_notice.html_safe %>
-                  		</div>
+                  	<div class="col-sm-11">
+                  		<%= n.html_notice.html_safe %>
                   	</div>
-                  	<div class="col-md-1">
+                  	<div class="col-sm-1">
                   			<% if n.read %>
                   				<i class="fa fa-circle" style="float: right;"></i>
                   			<% else %>

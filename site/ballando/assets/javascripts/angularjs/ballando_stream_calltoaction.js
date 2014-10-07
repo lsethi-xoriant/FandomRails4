@@ -12,10 +12,9 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code);
     $scope.interactions_showed = {};
     $scope.request_url = request_url;
-    $scope.interactionShareId = -1;
     $scope.ctaShareId = -1;
-    $scope.imageShareUrl = "";
-    $scope.shareTitle = "";
+    $scope.ctaShareTitle = "";
+    $scope.interactionShareId = -1;
   };
 
   $window.showRegistrateView = function() {
@@ -24,20 +23,19 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
   
   $window.doFbShare = function (){
-  	ctaUrl = encodeURI($scope.request_url+"redirect_into_iframe_calltoaction/"+$scope.ctaShareId);
-  	imageUrl = encodeURI($scope.imageShareUrl);
-		url = "https://www.facebook.com/sharer/sharer.php?s=100&p[url]="+ctaUrl+"&p[iimages][0]="+imageUrl+"&p[title]="+$scope.shareTitle;
-		window.open(url);
-		
-		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "facebook" })
-          .success(function(data) {
-            afterShareAjax(data);
-          });
+  	ctaUrl = encodeURI($scope.request_url+"call_to_action/"+$scope.ctaShareId);
+	url = "https://www.facebook.com/sharer/sharer.php?s=100&p[url]="+ctaUrl;
+	window.open(url);
+	
+	$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "facebook" })
+      .success(function(data) {
+        afterShareAjax(data);
+      });
 	};
 	
 	$window.doTwShare = function (){
 		ctaUrl = encodeURI($scope.request_url+"redirect_into_iframe_calltoaction/"+$scope.ctaShareId);
-		url = "https://twitter.com/intent/tweet?url="+ctaUrl+"&text="+$scope.shareTitle;
+		url = "https://twitter.com/intent/tweet?url="+ctaUrl+"&text="+$scope.ctaShareTitle;
 		window.open(url);
 		
 		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "twitter" })
@@ -65,7 +63,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').removeClass("label-warning").addClass("label-success");
   };
 	
-	$window.openCtaShareModal = function (modalId, elem, interactionId, ctaId, imageToShare, title){
+	$window.openCtaShareModal = function (modalId, elem, ctaId, ctaTitle, interactionId){
 		if($scope.current_user) {
 			var positionTop = $(elem).offset().top;
 			var modalHeight, modalObj, innerModalObj;
@@ -75,10 +73,10 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 			modalObj.css({
 				"top": position + "px"
 			});
-			$scope.interactionShareId = interactionId;
 			$scope.ctaShareId = ctaId;
-			$scope.imageShareUrl = imageToShare;
-			$scope.shareTitle = title;
+			$scope.ctaShareTitle = ctaTitle;
+			$scope.interactionShareId = interactionId;
+
 		} else {
 
       		showRegistrateView();

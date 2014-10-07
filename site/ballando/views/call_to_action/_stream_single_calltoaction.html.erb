@@ -31,8 +31,8 @@
 				  <button class="btn-2 btn-2-small" role="button" onclick="openShareDoneModal('facebook-share-modal-done', this)" style="padding-top: 5px;">CONDIVIDI</button>
 		    	<span id="feedback-label-share" class="label label-success" style="padding-top: 3px;margin-top: 5px;">Fatto <span class="glyphicon glyphicon-ok"></span></span>
 		    <% else %>
-		    	<button id="button-share-cta" class="btn-2 btn-2-small" role="button" onclick="openCtaShareModal('facebook-share-modal', this, <%= interaction.id %>, <%= calltoaction.id %>, '<%= interaction.resource.picture.url.split("?")[0] %>', '<%= calltoaction.title %>')" style="padding-top: 5px;">CONDIVIDI</button>
-		    	<span id="feedback-label-share" class="label label-warning" style="padding-top: 3px;margin-top: 5px;">+1 <span class="glyphicon glyphicon-star"></span></span>
+		    	<button id="button-share-cta" class="btn-2 btn-2-small" role="button" onclick="openCtaShareModal('facebook-share-modal', this, <%= calltoaction.id %>, '<%= calltoaction.title %>', <%= interaction.id %>)" style="padding-top: 5px;">CONDIVIDI</button>
+		    	<span id="feedback-label-share" class="label label-warning" style="padding-top: 3px;margin-top: 5px;">+3 <span class="glyphicon glyphicon-star"></span></span>
 		    <% end %>
 		  <% end %>
 	</span>

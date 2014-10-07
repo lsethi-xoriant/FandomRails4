@@ -20,19 +20,6 @@ module CallToActionHelper
       cta.interactions.includes(:call_to_action, :resource).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
     end
   end
-  
-  def call_to_action_completed?(cta)
-    trace_block("call_to_action_completed?", { cta: cta.name }) do
-      if current_user
-        require_to_complete_interactions = interactions_required_to_complete(cta)
-        require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
-        interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", current_user.id, require_to_complete_interactions_ids)
-        require_to_complete_interactions.any? && (require_to_complete_interactions.count == interactions_done.count)
-      else
-        false
-      end
-    end
-  end
 
   def generate_response_for_next_interaction(quiz_interactions, calltoaction)
     next_quiz_interaction = quiz_interactions.first
@@ -222,8 +209,9 @@ module CallToActionHelper
   end
   
   def has_done_share_interaction(calltoaction)
-    interaction = get_share_from_calltoaction(calltoaction)
-    if !cached_nil?(interaction)
+    share_interactions = get_share_from_calltoaction(calltoaction)
+    if share_interactions.any?
+      interaction = share_interactions.first
       if current_user
         [current_user.user_interactions.find_by_interaction_id(interaction.id), interaction]
       else
@@ -236,7 +224,7 @@ module CallToActionHelper
   
   def get_share_from_calltoaction(calltoaction)
     cache_short("share_interaction_cta_#{calltoaction.id}") do
-      calltoaction.interactions.find_by_resource_type("Share") || CACHED_NIL
+      calltoaction.interactions.where("when_show_interaction = 'SEMPRE_VISIBILE' AND resource_type = 'Share'").to_a
     end
   end
   
