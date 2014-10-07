@@ -72,7 +72,7 @@ class Sites::Ballando::IframeCheckController < ApplicationController
   end
   
   def update_check_counter(interaction, aux)
-    create_or_update_interaction(current_user.id, interaction.id, nil, nil, aux)
+    create_or_update_interaction(current_user, interaction, nil, nil, aux)
   end
   
   def reached_cap(user_interaction)
