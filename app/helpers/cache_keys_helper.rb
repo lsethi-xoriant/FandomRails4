@@ -20,12 +20,9 @@ module CacheKeysHelper
   # USER
   # ~~~~~
 
-  def get_cta_completed_by_user(cta_id, user_id)
-    "cta_#{cta_id}_completed_by_user_#{user_id}"
-  end
-
-  def get_cta_status_for_user(cta_id, user_id) 
-    "cta_#{cta_id}_status_for_user_#{user_id}"
+  def get_cta_completed_or_reward_status_cache_key(cta_id, user_id, compute_reward_status_images)
+    extended = "_extended" if compute_reward_status_images
+    "cta_#{cta_id}_completed_or_reward_status_for_user_#{user_id}#{extended}"
   end
   
   # CTA
