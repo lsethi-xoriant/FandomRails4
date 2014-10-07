@@ -12,6 +12,11 @@ class CallToAction < ActiveRecord::Base
   attr_accessor :activation_date, :activation_time, :interaction_watermark_url # Attributi di appoggio per l'easyadmin.
 
   validates_presence_of :title
+  validates_presence_of :name
+  validates_uniqueness_of :name
+  validate :interaction_resource
+  validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" }
+  validates_associated :interactions
 
   before_save :set_activated_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
 
@@ -36,10 +41,6 @@ class CallToAction < ActiveRecord::Base
   belongs_to :releasing_file
   belongs_to :user
   has_one :user_upload_interaction
-
-  validates_associated :interactions
-  validate :interaction_resource
-  validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" }
 
   accepts_nested_attributes_for :interactions
 
