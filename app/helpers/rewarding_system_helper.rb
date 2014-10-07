@@ -68,6 +68,7 @@ module RewardingSystemHelper
     include ActiveAttr::MassAssignment
     include ActiveAttr::AttributeDefaults
 
+    attribute :request #, type: RulesCollector
     attribute :user #, type: User
     attribute :interaction #, type: Interaction
     attribute :cta #, type: CallToAction
@@ -78,6 +79,7 @@ module RewardingSystemHelper
     attribute :user_rewards #, type: Hash
     
     attribute :rules_collector #, type: RulesCollector
+    
     
     def first_time
       user_interaction.counter == 1
@@ -205,6 +207,7 @@ module RewardingSystemHelper
     interaction = user_interaction.interaction
     if user.mocked?
       Context.new(
+        request: request,
         user: user,
         user_rewards: {},
         cta: interaction.call_to_action,
@@ -219,6 +222,7 @@ module RewardingSystemHelper
       user_reward_info = UserReward.get_rewards_info(user_interaction.user, get_current_periodicities)
       user_rewards, uncountable_user_reward_names, user_unlocked_names = get_user_reward_data(user_reward_info)
       Context.new(
+        request: request,
         user: user,
         user_rewards: user_rewards,
         cta: interaction.call_to_action,
