@@ -90,7 +90,6 @@ module Fandom
     end
 
     config.cache_store = :dalli_store, *servers.split(','), {
-      :namespace => 'f',
       :expires_in => 120,
       # If a cache expires and due to heavy load several different processes will try
       # to read data natively and then they all will try to write to cache. To avoid

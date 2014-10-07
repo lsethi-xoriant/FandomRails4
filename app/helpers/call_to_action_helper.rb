@@ -20,19 +20,6 @@ module CallToActionHelper
       cta.interactions.includes(:call_to_action, :resource).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
     end
   end
-  
-  def call_to_action_completed?(cta)
-    if current_user
-      cache_short get_cta_completed_by_user(cta.id, current_user.id) do
-        require_to_complete_interactions = interactions_required_to_complete(cta)
-        require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
-        interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", current_user.id, require_to_complete_interactions_ids)
-        require_to_complete_interactions.any? && (require_to_complete_interactions.count == interactions_done.count)
-      end
-    else
-      false
-    end
-  end
 
   def generate_response_for_next_interaction(quiz_interactions, calltoaction)
     next_quiz_interaction = quiz_interactions.first

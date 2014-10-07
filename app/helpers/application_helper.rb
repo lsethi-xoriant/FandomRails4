@@ -74,9 +74,6 @@ module ApplicationHelper
   end
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
-    expire_cache_key(get_cta_status_for_user(interaction.call_to_action_id, user.id))
-    expire_cache_key(get_cta_completed_by_user(interaction.call_to_action_id, user.id))
-
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
 
     if user_interaction
@@ -85,6 +82,9 @@ module ApplicationHelper
     else
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, like: like, aux: aux)
       UserCounter.update_counters(interaction, user_interaction, user, true)
+
+      expire_cache_key(get_cta_completed_or_reward_status_cache_key(interaction.call_to_action_id, user.id, true))
+      expire_cache_key(get_cta_completed_or_reward_status_cache_key(interaction.call_to_action_id, user.id, false))
     end
 
     outcome = compute_save_and_notify_outcome(user_interaction)
@@ -179,60 +179,77 @@ module ApplicationHelper
     end
   end
 
-  # Generates an hash with reward information.
-  def get_current_call_to_action_reward_status(reward_name, calltoaction, compute_reward_status_images = true)
-    trace_block("get_current_call_to_action_reward_status", { cta: calltoaction.name }) do
-      reward = get_reward_from_cache(reward_name)
-      
-      winnable_outcome, interaction_outcomes, sorted_interactions = cache_short get_cta_status_for_user(calltoaction.id, current_or_anonymous_user) do
-        winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
-      end
-      
-      if compute_reward_status_images
-
-        interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
-    
-        reward_status_images = Array.new
-        total_win_reward_count = 0
-    
-        if current_user
-    
-          interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
-            user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)        
-      
-            if user_interaction && user_interaction.outcome.present?
-              win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
-              correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
-              correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
-    
-              total_win_reward_count += win_reward_count;
-    
-              push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
-              push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
-              push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-            else 
-              push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-            end       
-    
-          end
-    
-        else
-          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
-        end
-
-      end
-  
-      {
-        winnable_reward_count: winnable_outcome["reward_name_to_counter"][reward_name],
-        win_reward_count: total_win_reward_count,
-        reward_status_images: reward_status_images,
-        reward: reward
-      }
+  def call_to_action_completed?(cta)
+    if current_user
+      require_to_complete_interactions = interactions_required_to_complete(cta)
+      require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
+      interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", current_user.id, require_to_complete_interactions_ids)
+      require_to_complete_interactions.any? && (require_to_complete_interactions.count == interactions_done.count)
+    else
+      false
     end
   end
 
+  def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, compute_reward_status_images = true)
+    cache_short get_cta_completed_or_reward_status_cache_key(calltoaction.id, current_or_anonymous_user.id, compute_reward_status_images) do
+      if compute_reward_status_images || !call_to_action_completed?(calltoaction)
+        compute_current_call_to_action_reward_status(reward_name, calltoaction, compute_reward_status_images)
+      else
+        CACHED_NIL
+      end
+    end
+  end
+
+  # Generates an hash with reward information.
+  def compute_current_call_to_action_reward_status(reward_name, calltoaction, compute_reward_status_images = true)
+    reward = get_reward_from_cache(reward_name)
+    
+    winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
+    
+    if compute_reward_status_images
+
+      interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
+  
+      reward_status_images = Array.new
+      total_win_reward_count = 0
+  
+      if current_user
+  
+        interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
+          user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)        
+    
+          if user_interaction && user_interaction.outcome.present?
+            win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
+            correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
+            correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
+  
+            total_win_reward_count += win_reward_count;
+  
+            push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
+            push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
+            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+          else 
+            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+          end       
+  
+        end
+  
+      else
+        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
+      end
+
+    end
+
+    {
+      winnable_reward_count: winnable_outcome["reward_name_to_counter"][reward_name],
+      win_reward_count: total_win_reward_count,
+      reward_status_images: reward_status_images,
+      reward: reward
+    }
+  end
+
   def get_current_interaction_reward_status(reward_name, interaction)
-    reward = Reward.find_by_name(reward_name)
+    reward = get_reward_by_name(reward_name)
 
     reward_status_images = Array.new 
 
@@ -451,10 +468,10 @@ module ApplicationHelper
     outcome.reward_name_to_counter.each do |r|
       reward_name = r.first
       if to_be_notified_reward_names.include?(reward_name)
-        reward = Reward.find_by_name(reward_name)
+        reward = get_reward_by_name(reward_name)
         html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { reward: reward }, layout: false, formats: :html
         notice = create_notice(:user_id => user_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
-        #notice.send_to_user(request)
+        # notice.send_to_user(request)
       end
     end
     
@@ -488,6 +505,12 @@ module ApplicationHelper
   def get_main_reward
     cache_short("main_reward") do
       Reward.find_by_name(MAIN_REWARD_NAME);
+    end
+  end
+
+  def get_reward_by_name(reward_name)
+    cache_short("reward_#{reward_name}") do
+      Reward.find_by_name(reward_name)
     end
   end
   

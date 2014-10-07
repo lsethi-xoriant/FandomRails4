@@ -44,7 +44,7 @@ module CacheHelper
       part = parts[0].split('/')[-1]
       key = "#{part}:#{parts[1]}"
     end
-    result = "#{site.id}:#{key}"
+    result = "f:#{site.id}:#{key}"
     result
   end
   

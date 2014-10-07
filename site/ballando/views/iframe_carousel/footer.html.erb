@@ -15,7 +15,7 @@
                         </div>
                       </a> 
                       <h4 style="position: absolute; top: 0; right: 22px;">
-                        <% if call_to_action_completed?(calltoaction) %>
+                        <% if cached_nil?(@calltoaction_reward_status[calltoaction.id]) %>
                           <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
                             FATTO <span class="glyphicon glyphicon-ok"></span>
                           </span>
@@ -53,7 +53,7 @@
                         </div>
                       </a> 
                       <h4 style="position: absolute; top: 0; right: 22px;">
-                        <% if call_to_action_completed?(calltoaction) %>
+                        <% if cached_nil?(@calltoaction_reward_status[calltoaction.id]) %>
                           <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
                             FATTO <span class="glyphicon glyphicon-ok"></span>
                           </span>
