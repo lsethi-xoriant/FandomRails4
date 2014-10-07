@@ -9,7 +9,7 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
       end
       @calltoaction_reward_status = Hash.new
       @calltoactions.each do |calltoaction|
-        @calltoaction_reward_status[calltoaction.id] = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction, false)
+        @calltoaction_reward_status[calltoaction.id] = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction)
       end
     else
       @active_home_launchers = active_home_launchers()
@@ -26,7 +26,7 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
     if current_user
       @calltoaction_reward_status = Hash.new
       @calltoactions.each do |calltoaction|
-        @calltoaction_reward_status[calltoaction.id] = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction, false)
+        @calltoaction_reward_status[calltoaction.id] = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction)
       end
     end
 

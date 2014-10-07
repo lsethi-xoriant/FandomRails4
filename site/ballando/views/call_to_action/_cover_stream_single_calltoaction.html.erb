@@ -5,8 +5,8 @@
   <div class="row top text-right">
     <div class="col-xs-12">
       <h4>
-        <% current_call_to_action_reward_status = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction, false) %>
-        <% if cached_nil?(current_call_to_action_reward_status[calltoaction.id]) %>
+        <% current_call_to_action_reward_status = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction) %>
+        <% if cached_nil?(current_call_to_action_reward_status) %>
           <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
             FATTO <span class="glyphicon glyphicon-ok"></span>
           </span>
