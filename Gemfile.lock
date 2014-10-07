@@ -129,6 +129,7 @@ GEM
     execjs (2.0.2)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
+    fastclick-rails (1.0.1)
     figaro (0.7.0)
       bundler (~> 1.0)
       rails (>= 3, < 5)
@@ -403,6 +404,7 @@ DEPENDENCIES
   doorkeeper
   ejs
   execjs
+  fastclick-rails (~> 1.0.1)
   figaro
   fog
   friendly_id

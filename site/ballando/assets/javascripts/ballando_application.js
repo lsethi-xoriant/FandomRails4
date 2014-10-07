@@ -27,3 +27,4 @@
 //= require jquery.flexslider-min
 //= require jquery.jcarousel
 //= require jcarousel.responsive
+//= require fastclick

@@ -26,6 +26,8 @@ gem "hamster"
 
 gem 'paperclip-watermark'
 
+gem 'fastclick-rails', '~> 1.0.1'
+
 group :assets do
   gem 'turbo-sprockets-rails3'
   gem 'sprockets'
