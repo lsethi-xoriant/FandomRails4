@@ -30,11 +30,11 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
   
   $window.doFbShare = function (){
-  	ctaUrl = encodeURI($scope.request_url + "call_to_action/" + $scope.ctaShareId);
-	url = "https://www.facebook.com/sharer/sharer.php?s=100&p[url]=" + ctaUrl;
-	window.open(url);
+  	ctaUrl = encodeURI($scope.request_url + "call_to_action/" + $scope.ctaShareId + "?redirect=true");
+  	url = "https://www.facebook.com/sharer/sharer.php?s=100&p[url]=" + ctaUrl;
+  	window.open(url);
 	
-	$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "facebook" })
+	  $http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "facebook" })
       .success(function(data) {
         afterShareAjax(data);
       });
