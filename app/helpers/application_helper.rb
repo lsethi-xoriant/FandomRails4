@@ -373,15 +373,7 @@ module ApplicationHelper
   end
 
   def user_avatar user, size = "normal"
-    case user.avatar_selected
-    when "upload"
-      avatar = user.avatar ? user.avatar(:thumb) : "/assets/anon.png"
-    when "facebook"
-      avatar = user.authentications.find_by_provider("facebook").avatar
-    when "twitter"
-      avatar = user.authentications.find_by_provider("twitter").avatar.gsub("_normal","_#{ size }")
-    end
-    return avatar
+    user.avatar_selected_url.present? ? user.avatar_selected_url : "/assets/anon.png"
   end
 
   def disqus_sso
