@@ -1,7 +1,7 @@
  
-<% content_for :fb_meta_tags, @fb_meta_tags.html_safe %>
+<% content_for :fb_meta_tags, @fb_meta_tags %>
 
-<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions.to_json %>, '<%= @calltoactions_active_count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', '<%= request.url %>')">   
+<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions_with_current.to_json %>, <%= get_cta_active_count() %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', <%= @calltoactions_with_current.first.id %>, '<%= request.url %>', <%= @redirect %>)">   
 
   <div class="row">
     <div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0" style="margin-top: 15px;">
@@ -9,10 +9,17 @@
     </div>
   </div>
   
-
   <div class="row">
     <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions } %>
+      <%= render partial: "/call_to_action/stream_calltoactions_in_show", locals: { calltoactions: @calltoactions_with_current } %>
+    </div>
+  </div>
+
+  <div class="row">      
+    <div class="col-sm-6 col-sm-offset-3">
+      <div id="append-other" class="text-center" style="margin-bottom: 20px;">
+        <button class="btn btn-append" href="javascript: void(0)" onclick="appendCallToAction();"><i class="fa fa-plus-circle"></i> CARICA ALTRI</button>
+      </div>
     </div>
   </div>
 
@@ -23,8 +30,5 @@
   $(document).ready(function() {
     checkDocumentHeight("fandom");
   });
-  
-  <% if @redirect %>
-  	location.href= "/redirect_into_iframe_calltoaction/<%= @calltoactions.first.id %>";
-  <% end %>
+
 </script>
