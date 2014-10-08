@@ -3,6 +3,12 @@ require 'digest/md5'
 
 module CallToActionHelper
 
+  def get_cta_active_count()
+    cache_short("cta_active_count") do
+      CallToAction.active.count
+    end
+  end
+
   def always_shown_interactions(calltoaction)
     cache_short("always_shown_interactions_#{calltoaction.id}") do
       calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC").to_a

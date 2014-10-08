@@ -1,0 +1,8 @@
+<% calltoactions.each_with_index do |calltoaction, index| %>
+  <%= render partial: "/call_to_action/stream_single_calltoaction", locals: { calltoaction: calltoaction, type: "" } %>
+  <% if index == 0 %>
+    <div class="row">
+      <div class="col-lg-12 text-center"><h3>GUARDA ANCHE</h3></div>
+    </div>
+  <% end %>
+<% end %>

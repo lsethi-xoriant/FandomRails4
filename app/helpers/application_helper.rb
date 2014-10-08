@@ -191,10 +191,10 @@ module ApplicationHelper
 
   def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction)
     cache_short get_cta_completed_or_reward_status_cache_key(calltoaction.id, current_or_anonymous_user.id) do
-      if !call_to_action_completed?(calltoaction)
-        compute_current_call_to_action_reward_status(reward_name, calltoaction)
-      else
+      if call_to_action_completed?(calltoaction)
         CACHED_NIL
+      else
+        compute_current_call_to_action_reward_status(reward_name, calltoaction)
       end
     end
   end
