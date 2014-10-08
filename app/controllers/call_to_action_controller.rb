@@ -9,6 +9,20 @@ class CallToActionController < ApplicationController
   include ApplicationHelper
   include CaptchaHelper
 
+  def facebook_share_page_with_meta
+    @calltoaction = CallToAction.active.find(params[:calltoaction_id])
+    fb_meta_info = get_fb_meta(@calltoaction)
+    if fb_meta_info
+      @fb_meta_tags = (
+                        '<meta property="og:type" content="article" />' +
+                        '<meta property="og:locale" content="it_IT" />' +
+                        '<meta property="og:title" content="' + fb_meta_info['title'] + '" />' +
+                        '<meta property="og:description" content="' + fb_meta_info['description'] +'" />' +
+                        '<meta property="og:image" content="' + fb_meta_info['image_url'] + '" />'
+                      ).html_safe
+    end
+  end
+
   def append_calltoaction
     render_calltoactions_str = String.new
     calltoactions = Array.new
@@ -153,18 +167,6 @@ class CallToActionController < ApplicationController
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions_with_current)
     @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction[0], "Comment")
     
-    fb_meta_info = get_fb_meta(calltoaction[0])
-    if fb_meta_info
-      @fb_meta_tags = (
-                        '<meta property="og:type" content="article" />' +
-                        '<meta property="og:locale" content="it_IT" />' +
-                        '<meta property="og:title" content="' + fb_meta_info['title'] + '" />' +
-                        '<meta property="og:description" content="' + fb_meta_info['description'] +'" />' +
-                        '<meta property="og:image" content="' + fb_meta_info['image_url'] + '" />'
-                      ).html_safe
-    end
-    
-    @redirect = params[:redirect].present?
     # TODO: @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
     if page_require_captcha?(@calltoaction_comment_interaction)

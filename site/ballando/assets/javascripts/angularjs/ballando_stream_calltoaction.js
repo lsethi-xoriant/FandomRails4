@@ -8,20 +8,10 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   var COUNTDOWN_TIME = 3;
 
-  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url, redirect) {
-    if(redirect) {
-      location.href = "/redirect_into_iframe_calltoaction/" + current_calltoaction;
-    } else {
-      $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction);
-      $scope.interactions_showed = {};
-      $scope.request_url = request_url;
-      
-      /*
-      $scope.ctaShareId = -1;
-      $scope.ctaShareTitle = "";
-      $scope.interactionShareId = -1;
-      */
-    }
+  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url) {
+    $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction);
+    $scope.interactions_showed = {};
+    $scope.request_url = request_url;
   };
 
   $window.showRegistrateView = function() {
@@ -30,8 +20,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
   
   $window.doFbShare = function (){
-  	ctaUrl = encodeURI($scope.request_url + "call_to_action/" + $scope.ctaShareId + "?redirect=true");
-  	url = "https://www.facebook.com/sharer/sharer.php?s=100&p[url]=" + ctaUrl;
+  	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + $scope.ctaShareId);
+  	url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + ctaUrl;
   	window.open(url);
 	
 	  $http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "facebook" })
@@ -41,14 +31,14 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 	};
 	
 	$window.doTwShare = function (){
-		ctaUrl = encodeURI($scope.request_url + "redirect_into_iframe_calltoaction/" + $scope.ctaShareId);
+		ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + $scope.ctaShareId);
 		url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + $scope.ctaShareTitle;
 		window.open(url);
 		
 		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "twitter" })
-          .success(function(data) {		
-            afterShareAjax(data);
-          });
+      .success(function(data) {		
+        afterShareAjax(data);
+      });
 	};
 
   $window.afterShareAjax = function(data) {
