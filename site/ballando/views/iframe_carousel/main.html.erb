@@ -2,111 +2,71 @@
   <div class="row">
     <div class="col-xs-12 col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3">
 
-      <% if current_user %>
-        <% if @calltoactions.any? %>
-          <div id="home-carousel" class="carousel slide" data-ride="carousel">
-            <!-- Indicators -->
-            <ol class="carousel-indicators">
-              <% if @calltoactions.count > 1 %>
-                <% @calltoactions.each_with_index do |calltoaction, i| %>
-                  <li data-target="#home-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
-                <% end %>
-              <% end %>
-            </ol>
-            <div class="carousel-inner">
-              <% @calltoactions.each_with_index do |calltoaction, i| %>
-                <div class="item <%= "active" if i == 0 %>" style="background: url('<%= calltoaction.thumbnail %>') no-repeat center top; background-size: cover;">
-
-
-                  <div class="container">
-
-                    <div class="carousel-caption" style="top: 0;">
-                      <div class="col-xs-12 text-right">
-                        <h4>
-                          <% if @calltoaction_reward_status[calltoaction.id].present? %>
-                            <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= @calltoaction_reward_status[calltoaction.id]["winnable_reward_count"] %>
-                              <span class="glyphicon glyphicon-star"></span>
-                            </span>
-                          <% else %>
-                            <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
-                              FATTO <span class="glyphicon glyphicon-ok"></span>
-                            </span>
-                          <% end %>
-                        </h4>
-                      </div>
-                    </div>
-
-                    <div class="carousel-caption" style="bottom: 0; top: initial;">
-                      <div class="col-xs-12 text-left" style="position: relative; padding-right: 20%;">
-                        <h5 class="text-with-shadow">
-                          <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
-                          <% if tags_with_miniformat_in_calltoaction.any? %>
-                            <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>"></span>
-                            <%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
-                          <% else %>
-                            &nbsp;
-                          <% end %>
-                        </h5>      
-                        <h2 class="text-with-shadow" style="margin-top: 0px; font-size: 24px; font-weight: 700;">
-                          <%= calltoaction.title %>
-                        </h2>
-                        <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">GUARDA</button></h2> 
-                      </div>
-                      <div class="col-xs-12 text-left visible-xsm">
-                        <h2 style="margin-top: 0;"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">GUARDA</button></h2> 
-                      </div>
-                    </div>
-
-
-                  </div>
-                </div>
-              <% end %>
-            </div>
+      <% if @calltoactions.any? %>
+        <div id="home-carousel" class="carousel slide" data-ride="carousel">
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
             <% if @calltoactions.count > 1 %>
-              <a class="left carousel-control" href="#home-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-              <a class="right carousel-control" href="#home-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
-            <% end %>
-          </div>
-        <% end %>
-      <% else %>
-        <% if @active_home_launchers.any? %>
-          <div id="home-carousel" class="carousel slide" data-ride="carousel">
-            <!-- Indicators -->
-            <ol class="carousel-indicators">
-              <% if @active_home_launchers.count > 1 %>
-                <% @active_home_launchers.each_with_index do |home_launcher, i| %>
-                  <li data-target="#home-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
-                <% end %>
+              <% @calltoactions.each_with_index do |calltoaction, i| %>
+                <li data-target="#home-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
               <% end %>
-            </ol>
-            <div class="carousel-inner">
-              <% @active_home_launchers.each_with_index do |home_launcher, i| %>
-                <div class="item <%= "active" if i == 0 %>" style="background: url('<%= home_launcher.image %>') no-repeat center top; background-size: cover;">
-                  <div class="container">
+            <% end %>
+          </ol>
+          <div class="carousel-inner">
+            <% @calltoactions.each_with_index do |calltoaction, i| %>
+              <div class="item <%= "active" if i == 0 %>" style="background: url('<%= calltoaction.thumbnail %>') no-repeat center top; background-size: cover;">
 
-                    <div class="carousel-caption" style="bottom: 0; top: initial;">
-                      <div class="col-xs-12 text-left" style="position: relative;">     
-                        <h2 class="text-with-shadow" style="margin-top: 0px; font-size: 24px; font-weight: 700;">
-                          <%= home_launcher.description %>
-                        </h2>
-                      </div>
-                      <div class="col-sm-4 col-xs-6 text-left">
-                        <h2 style="margin-top: 0;"><button class="btn-2" role="button" onclick="window.top.location.href = '<%= home_launcher.url %>';"><%= home_launcher.button %></button></h2> 
-                      </div>
+
+                <div class="container">
+
+                  <div class="carousel-caption" style="top: 0;">
+                    <div class="col-xs-12 text-right">
+                      <h4>
+                        <% if @calltoaction_reward_status[calltoaction.id].present? %>
+                          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= @calltoaction_reward_status[calltoaction.id]["winnable_reward_count"] %>
+                            <span class="glyphicon glyphicon-star"></span>
+                          </span>
+                        <% else %>
+                          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
+                            FATTO <span class="glyphicon glyphicon-ok"></span>
+                          </span>
+                        <% end %>
+                      </h4>
                     </div>
-
                   </div>
+
+                  <div class="carousel-caption" style="bottom: 0; top: initial;">
+                    <div class="col-xs-12 text-left" style="position: relative; padding-right: 20%;">
+                      <h5 class="text-with-shadow">
+                        <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
+                        <% if tags_with_miniformat_in_calltoaction.any? %>
+                          <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>"></span>
+                          <%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
+                        <% else %>
+                          &nbsp;
+                        <% end %>
+                      </h5>      
+                      <h2 class="text-with-shadow" style="margin-top: 0px; font-size: 24px; font-weight: 700;">
+                        <%= calltoaction.title %>
+                      </h2>
+                      <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">GUARDA</button></h2> 
+                    </div>
+                    <div class="col-xs-12 text-left visible-xsm">
+                      <h2 style="margin-top: 0;"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">GUARDA</button></h2> 
+                    </div>
+                  </div>
+
+
                 </div>
-              <% end %>
-            </div>
-            <% if @active_home_launchers.count > 1 %>
-              <a class="left carousel-control" href="#home-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-              <a class="right carousel-control" href="#home-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+              </div>
             <% end %>
           </div>
-        <% end %>
+          <% if @calltoactions.count > 1 %>
+            <a class="left carousel-control" href="#home-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+            <a class="right carousel-control" href="#home-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          <% end %>
+        </div>
       <% end %>
-        
 
     </div>
   </div>
