@@ -38,10 +38,8 @@ Fandom::Application.routes.draw do
   end
 
   match "/redirect_into_iframe_calltoaction/:calltoaction_id", to: "application#redirect_into_iframe_calltoaction"
+  match "/facebook_share_page_with_meta/:calltoaction_id", to: "call_to_action#facebook_share_page_with_meta"
   match "/profile/update_avatar", to: "application#update_avatar_image"
-
-  # TODO: Maxibon youtube widget url
-  match "/youtube", :to => "youtube_widget#index"
 
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
   match "/cta/upload", :to => "call_to_action#upload"
