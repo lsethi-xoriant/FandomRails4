@@ -16,10 +16,11 @@ p.oblique { font-style: oblique }
 }
 
 .carousel-widget {
+    .label-warning {
+        text-shadow: none;
+    }
     .carousel-inner {
-      .item{
         border: 6px solid #fff;
-      }
     }
 }
 
@@ -1543,7 +1544,7 @@ body {
 /* CUSTOM BOOTSTRAP CAROUSEL */
 
 .carousel-indicators {
-    bottom: -40px;
+    bottom: -50px;
     li {
         background: none repeat scroll 0 0 #535353;
         box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;

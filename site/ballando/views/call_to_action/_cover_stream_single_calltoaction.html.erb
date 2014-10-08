@@ -5,14 +5,14 @@
   <div class="row top text-right">
     <div class="col-xs-12">
       <h4>
-        <% current_call_to_action_reward_status = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction, false) %>
-        <% if cached_nil?(current_call_to_action_reward_status[calltoaction.id]) %>
-          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
-            FATTO <span class="glyphicon glyphicon-ok"></span>
+        <% current_call_to_action_reward_status = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction) %>
+        <% if current_call_to_action_reward_status.present? %>
+          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= current_call_to_action_reward_status["winnable_reward_count"] %>
+            <span class="glyphicon glyphicon-star"></span>
           </span>
         <% else %>
-          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= current_call_to_action_reward_status[:winnable_reward_count] %>
-            <span class="glyphicon glyphicon-star"></span>
+          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
+            FATTO <span class="glyphicon glyphicon-ok"></span>
           </span>
         <% end %>
       </h4>
