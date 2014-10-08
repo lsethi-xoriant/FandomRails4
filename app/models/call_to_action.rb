@@ -72,13 +72,18 @@ class CallToAction < ActiveRecord::Base
       end
     end
   end
+  
+  def parse_to_utc(datetime)
+    Time.parse("#{datetime} #{USER_TIME_ZONE}").utc
+  end
 
   def set_activated_at
-  	if activation_date.present? && activation_time.present?
-  		write_attribute :activated_at, "#{activation_date} #{activation_time}"
-  		activation_date = nil
-  		activation_time = nil
-  	end
+    if self.activation_date.present? && self.activation_time.present?
+      datetime_utc = parse_to_utc("#{activation_date} #{activation_time}")
+      write_attribute :activated_at, "#{datetime_utc}"
+      activation_date = nil
+      activation_time = nil
+    end
   end
   
   def get_watermark
