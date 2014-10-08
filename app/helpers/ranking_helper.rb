@@ -17,10 +17,12 @@ module RankingHelper
   end
   
   def get_my_general_position
-    ranking = Ranking.find_by_name("general_chart")
-    rank = get_ranking(ranking)
-    if rank
-      rank.user_to_position[current_user.id]
+    cache_short(get_general_position_key(current_user.id)) do
+      ranking = Ranking.find_by_name("general_chart")
+      rank = get_ranking(ranking)
+      if rank
+        rank.user_to_position[current_user.id]
+      end
     end
   end
   
@@ -184,7 +186,8 @@ module RankingHelper
         "position" => i,
         "general_position" => user_position_hash[r.user.id], 
         "avatar" => r.user.avatar_selected_url, 
-        "user" => extract_name_or_username(r.user), 
+        "user" => extract_name_or_username(r.user),
+        "user_id" => r.user.id, 
         "counter" => r.counter 
       }
       i += 1

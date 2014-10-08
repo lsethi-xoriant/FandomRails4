@@ -1,6 +1,6 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container-fluid profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(["general_chart", "my_position_general"]).to_json %>);">
+<div class="container-fluid profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(["general_chart", "my_position_general"]).to_json %>, <%= current_user.to_json %>);">
 
 
 <%= render partial: "profile/profile_header" %>
