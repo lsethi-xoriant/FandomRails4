@@ -155,6 +155,7 @@ class Sites::Ballando::SessionsController < SessionsController
       first_name: response_user["user"]["firstName"], 
       last_name: response_user["user"]["lastName"],
       avatar_selected: provider,
+      avatar_selected_url: response_user["user"]["thumbnailURL"],
       privacy: true,
       password: password,
       required_attrs: get_site_from_request(request)["required_attrs"]
