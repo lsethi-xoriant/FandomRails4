@@ -36,6 +36,26 @@ class Easyadmin::CallToActionController < ApplicationController
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
+ 
+  def update_cta
+    @cta = CallToAction.find(params[:id])
+    unless @cta.update_attributes(params[:call_to_action])
+      @tag_list = params[:tag_list].split(",")
+      render template: "/easyadmin/call_to_action/edit_cta"   
+    else
+
+      tag_list = params[:tag_list].split(",")
+      @cta.call_to_action_tags.delete_all
+      tag_list.each do |t|
+        tag = Tag.find_by_name(t)
+        tag = Tag.create(name: t) unless tag
+        CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
+      end
+
+      flash[:notice] = "CallToAction aggiornata correttamente"
+      redirect_to "/easyadmin/cta/show/#{ @cta.id }"
+    end
+  end
 
   def tag_cta_update
     calltoaction = CallToAction.find(params[:id])
@@ -164,26 +184,6 @@ class Easyadmin::CallToActionController < ApplicationController
 
     respond_to do |format|
       format.json { render :json => risp.to_json }
-    end
-  end
-  
-  def update_cta
-    @cta = CallToAction.find(params[:id])
-    unless @cta.update_attributes(params[:call_to_action])
-      @tag_list = params[:tag_list].split(",")
-      render template: "/easyadmin/call_to_action/edit_cta"   
-    else
-
-      tag_list = params[:tag_list].split(",")
-      @cta.call_to_action_tags.delete_all
-      tag_list.each do |t|
-        tag = Tag.find_by_name(t)
-        tag = Tag.create(name: t) unless tag
-        CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
-      end
-
-      flash[:notice] = "CallToAction aggiornata correttamente"
-      redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
   
