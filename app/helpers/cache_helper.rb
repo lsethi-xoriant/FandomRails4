@@ -33,6 +33,12 @@ module CacheHelper
   def cache_huge(key = nil, &block)
     cache_aux(key, 1.day, &block)
   end
+  
+  def cache_short_write_key(key, value)
+    actual_key = get_cache_key(key)
+    log_info("rewriting cache key", { key: actual_key })
+    Rails.cache.write(actual_key, value, :expires_in => 1.minute, :race_condition_ttl => 30)
+  end
 
   def get_cache_key(key = nil)
     site = get_site_from_request!
@@ -61,23 +67,22 @@ module CacheHelper
   end
 
   def cache_aux(key = nil, expires_in, &block)
-    start_time = Time.now.utc 
 
     cache_key = get_cache_key(key)
 
     block_run = false    
-    wrapped_block = lambda  do
+    wrapped_block = lambda do
+      start_time = Time.now.utc 
       block_run = true 
       block_result = yield block
+      time = (Time.now.utc - start_time)
+      log_info("cache miss computation", { 'key' => cache_key, "time" => time })
       block_result 
     end
     
     result = Rails.cache.fetch(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
     
-    time = (Time.now.utc - start_time) 
-
     if block_run
-      log_info("cache miss computation", { 'key' => cache_key, "time" => time })
       $cache_misses += 1
     else
       $cache_hits += 1
@@ -118,7 +123,7 @@ module CacheHelper
     log_info("expiring cache key", { key: actual_key })
     Rails.cache.delete(actual_key)
   end
-
+  
   # Enable browser caching. is_public set to false instruct any intermediary cache (such as web proxies) 
   # to not share the content for multiple users  
   def browser_caching(seconds, is_public=true)

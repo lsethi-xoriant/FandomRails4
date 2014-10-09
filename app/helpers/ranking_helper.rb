@@ -17,13 +17,8 @@ module RankingHelper
   end
   
   def get_my_general_position
-    cache_short(get_general_position_key(current_user.id)) do
-      ranking = Ranking.find_by_name("general_chart")
-      rank = get_ranking(ranking)
-      if rank
-        rank.user_to_position[current_user.id]
-      end
-    end
+    users_positions = cache_short(get_ranking_page_key){ populate_rankings(get_ranking_settings) }
+    users_positions['general_user_position'][current_user.id]
   end
   
   def get_reward_points_in_period(period_kind, reward_name)
@@ -33,14 +28,28 @@ module RankingHelper
     else
       period_id = period.id
     end
-    cache_short(get_reward_points_in_period_key(reward_name, current_user.id, period_id)) do
-      reward = Reward.find_by_name(reward_name)
-      user_reward = UserReward.where("reward_id = ? and period_id = ? and user_id = ?", reward.id, period_id, current_user.id).first
-      if user_reward
-        user_reward.counter
-      else
-        0
-      end
+    
+    reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
+      reward_points = Hash.new
+      reward_points[period_id] = calculate_reward_points_in_period(reward_name, period_id)
+      reward_points
+    end
+    
+    if reward_points[period_id].nil?
+      reward_points[period_id] = calculate_reward_points_in_period(reward_name, period_id)
+      cache_short_write_key(get_reward_points_for_user_key(reward_name, current_user.id), reward_points)
+    end
+    
+    reward_points[period_id]
+  end
+  
+  def calculate_reward_points_in_period(reward_name, period_id)
+    reward = Reward.find_by_name(reward_name)
+    user_reward = UserReward.where("reward_id = ? and period_id = ? and user_id = ?", reward.id, period_id, current_user.id).first
+    if user_reward
+      user_reward.counter
+    else
+      0
     end
   end
   
@@ -155,7 +164,7 @@ module RankingHelper
   end
     
   def populate_rankings(ranking_names)
-    cache_short("ranking_page") do
+    cache_short(get_ranking_page_key) do
       rankings = Hash.new
       ranking_names.each do |rn|
         rank = Ranking.find_by_name(rn)
@@ -165,18 +174,28 @@ module RankingHelper
           rankings[rn] = get_full_rank(rank)
         end
       end
+      rankings['general_user_position'] = create_general_user_position()
       rankings
     end
   end
   
   def populate_vote_rankings(vote_ranking_names)
-    cache_short("ranking_vote_page") do 
+    cache_short(get_vote_ranking_page_key) do 
       rankings = Hash.new
       vote_ranking_names.each do |rn|
         rank = VoteRanking.find_by_name(rn)
         rankings[rn] = get_full_vote_rank(rank)
       end
       rankings
+    end
+  end
+  
+  def create_general_user_position
+    ranking = Ranking.find_by_name("general_chart")
+    rank = get_ranking(ranking)
+    debugger
+    if rank
+      rank.user_to_position
     end
   end
   
@@ -258,6 +277,17 @@ module RankingHelper
         return i
       end
       i += 1
+    end
+  end
+  
+  def get_active_ranking
+    Ranking.all.to_a
+  end
+  
+  def get_ranking_settings
+    cache_short(get_ranking_settings_key) do
+      setting = Setting.find_by_key(RANKING_SETTINGS_KEY)
+      setting.value.split(",")
     end
   end
   
