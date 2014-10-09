@@ -7,6 +7,7 @@ require 'socket'
 
 EVENTS_COLUMNS = ['user_id', 'tenant', 'message', 'level', 'data', 'pid', 'session_id', 'request_uri', 'timestamp']
 EVENTS_COLUMNS_STRING = EVENTS_COLUMNS.join(', ') 
+TIMESTAMP_FMT = "%Y%m%d_%H%M%S_%N"
 
 def main
   loop_delay = ARGV[2].to_i
@@ -42,7 +43,7 @@ def main
           logger.error exception
         rescue Exception => exception
           base_db_connection.connection.execute("ROLLBACK;")
-          mark_file_with_errors(event_logs_path, process_file_path)        
+          rename_file_path_part(process_file_path, 'closed', 'error', logger)        
           logger.error("exception: #{exception} - #{exception.backtrace[0, 5]}")
         end
       end
@@ -54,33 +55,44 @@ def main
   end
 end
 
-def close_orphan_files(event_logs_path, logger)
-  active_pids = Set.new(Sys::ProcTable.ps.map { |process| process.pid })
-
+# Returns all open files in a hash indexed by pid, where the related file names are sorted lexicographically
+# (since all filenames with the same pid have the same length, this is the same as numeric sorting)
+def get_pid_to_sorted_file_names(event_logs_path)
+  result = {}
   opened_event_log_files(event_logs_path).each do |log_file_name|
     pid, timestamp = extract_pid_and_timestamp_from_path(log_file_name)
-    if !active_pids.include?(pid)
-      destination_log_file_name = "#{event_logs_path}/#{pid}-#{timestamp}-close.log"
+    (result[pid] ||= []) << log_file_name
+  end
+  result.each do |pid, file_name|
+    result[pid].sort!    
+  end
+  result
+end
 
-      begin
-        File.rename(log_file_name, destination_log_file_name)
-      rescue Exception => exception
-        # it may be that rails closed the same file at the same time. This error condition can safely be ignored.
-        logger.error exception
-      end
-
+def close_orphan_files(event_logs_path, logger)
+  active_pids = Set.new(Sys::ProcTable.ps.map { |process| process.pid })
+  get_pid_to_sorted_file_names(event_logs_path).each do |pid, log_file_names|
+    # in the rare chance (if possible at all) of a process that dies and another respawn with the same pid, 
+    # there could be two log files with the same pid and different timestamps; only the most recent should be kept,
+    # all others should be collected as orphans
+    if active_pids.include?(pid)
+      log_file_names = log_file_names[0..-2]
     end
+
+    log_file_names.each do |log_file_name|
+      logger.info "closing orphan file: #{log_file_name}"
+      rename_file_path_part(log_file_name, 'open', 'closed', logger)
+    end  
   end
 end
 
-def mark_file_with_errors(event_logs_path, process_file_path)
-  pid, timestamp = extract_pid_and_timestamp_from_path(process_file_path)
-  destination_log_file_name = "#{event_logs_path}/#{pid}-#{timestamp}-error.log"
-
+def rename_file_path_part(file_path, from, to, logger)
   begin
-    File.rename(process_file_path, destination_log_file_name)
+    parts = file_path.split('/')
+    parts[-1] = parts[-1].sub(from, to)
+    dest_path = parts.join('/')
+    File.rename(file_path, dest_path)
   rescue Exception => exception
-    # it may be that rails closed the same file at the same time. This error condition can safely be ignored.
     logger.error exception
   end
 end
@@ -169,11 +181,11 @@ def generate_sql_insert_query(insert_values_for_event, pid, timestamp)
   sql_query = "BEGIN;"
   insert_values_for_event.each do |tenant, value| 
     if tenant != "no_tenant"
-      timestamp_quote = ActiveRecord::Base.connection.quote(Time.parse(timestamp).utc)
+      timestamp_db = Time.strptime(timestamp, TIMESTAMP_FMT).strftime("%Y-%m-%d %H:%M:%S.%N")
       server_hostname = ActiveRecord::Base.connection.quote(Socket.gethostname)
       pid_quote = ActiveRecord::Base.connection.quote(pid)
   
-      insert_values_for_synced_log_files = "#{pid_quote}, #{server_hostname}, #{timestamp_quote}"
+      insert_values_for_synced_log_files = "#{pid_quote}, #{server_hostname}, '#{timestamp_db}'"
   
       sql_query << "INSERT INTO #{tenant}.synced_log_files (#{insert_columns_for_synced_log_files}) VALUES (#{insert_values_for_synced_log_files});"
       sql_query << "INSERT INTO #{tenant}.events (#{insert_columns_for_event}) VALUES #{value};"
