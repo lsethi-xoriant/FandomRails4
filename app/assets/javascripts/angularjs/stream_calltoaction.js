@@ -26,10 +26,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.current_calltoaction = current_calltoaction;
     $scope.calltoactions_count = calltoactions_count;
 
-    if($scope.calltoactions.length > 0) {
-      $scope.last_calltoaction_shown_activated_at = $scope.calltoactions[$scope.calltoactions.length - 1].activated_at;
-    } 
-
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
     $scope.youtube_api_ready = false;
@@ -75,10 +71,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
         $scope.calltoactions = data.calltoactions;
         $scope.calltoactions_count = data.calltoactions_count;
-
-        if($scope.calltoactions.length > 0) {
-          $scope.last_calltoaction_shown_activated_at = $scope.calltoactions[$scope.calltoactions.length - 1].activated_at;
-        } 
 
         $scope.calltoactions_during_video_interactions_second = data.calltoactions_during_video_interactions_second;
     
@@ -154,7 +146,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       $("#append-other button").attr('disabled', true);
 
-      $http.post("/append_calltoaction", { last_calltoaction_shown_activated_at: $scope.last_calltoaction_shown_activated_at, tag_id: $scope.current_tag_id, current_calltoaction: $scope.current_calltoaction  })
+      $http.post("/append_calltoaction", { calltoactions_showed: $scope.calltoactions, tag_id: $scope.current_tag_id, current_calltoaction: $scope.current_calltoaction  })
       .success(function(data) {
 
         hash_to_append = data.calltoactions_during_video_interactions_second;

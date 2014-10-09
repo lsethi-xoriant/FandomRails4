@@ -4,7 +4,7 @@
     <div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'full'">
       <h2 class="text-center" style="font-size: 24px; padding-bottom: 5px;">{{<%= rankings %>.ranking.title}}</h2>
       <ul class="list-group">
-          <li ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'list-group-item': true, 'list-group-item-warning': rank_user.general_position == <%= rankings %>.my_position }">
+          <li ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'list-group-item': true, 'list-group-item-warning': rank_user.user_id == user.id }">
             <div class="row">
               <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{rank_user.position}}</h4></div>
               <div class="col-sm-2 hidden-xs"><img ng-src="{{rank_user.avatar}}" class="img-circle img-responsive img-rank"></div>
@@ -37,20 +37,20 @@
     
     <div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'my_position'">
         <h2 class="text-center" style="font-size: 24px; padding-bottom: 5px;">{{<%= rankings %>.ranking.title}}</h2>
-      <ul class="list-group">
-          <li ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'list-group-item': true, 'list-group-item-warning': rank_user.general_position == <%= rankings %>.my_position }" >
-            <div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{rank_user.position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{rank_user.avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{rank_user.user}}</h4></div>
-              <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{rank_user.counter}}
-                    <span class="glyphicon glyphicon-star"></span>
-                </span>
-              	</h4></div>
-            </div>
-          </li>
-      </ul>
+	      <ul class="list-group">
+	          <li ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'list-group-item': true, 'list-group-item-warning': rank_user.user_id == user.id }" >
+	            <div class="row">
+	              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{rank_user.position}}</h4></div>
+	              <div class="col-sm-2 hidden-xs"><img ng-src="{{rank_user.avatar}}" class="img-circle img-responsive img-rank"></div>
+	              <div class="col-sm-5 col-xs-6"><h4>{{rank_user.user}}</h4></div>
+	              <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
+	              	<span class="label label-warning" style="padding-top: 7px;">{{rank_user.counter}}
+	                    <span class="glyphicon glyphicon-star"></span>
+	                </span>
+	              	</h4></div>
+	            </div>
+	          </li>
+	      </ul>
     </div>
     
     <div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'full_compressed'">
@@ -226,6 +226,5 @@
           </li>
       </ul>
     </div>
-
 
 </div>

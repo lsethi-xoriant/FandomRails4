@@ -1,26 +1,12 @@
-<div class="row">
-	<div class="col-xs-2">
-		<img src="" class="img-circle img-responsive" />
-	</div>
-	<div class="col-xs-5">
-		<h4>PARTECIPA ALLA COMMUNITY</h4>
-		<h5>Registrati colleziona i punti <span class="glyphicon glyphicon-star"></span></h5>
-	</div>
-	<div id="iframe-interaction" class="col-xs-3" style="position: relative; padding-left: 60px;">
-		<div class="interaction-baloon" style="width: 33px; position: absolute; left: 15px;"> 
-          <div class="baloon baloon-right square unchosen"> 
-            <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
-          </div>
-        </div>
-        <button class="btn btn-primary btn-block" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" <% end %> onclick="">REGISTRATI</button>
-	</div>
-	<div class="col-xs-1">
-		<!--
-		<h4>
-          <span id="head-feedback-calltoaction-16" class="label label-warning" style="padding-top: 7px;">+1
-            <span class="glyphicon glyphicon-star"></span>
-          </span>
-      	</h4>
-      -->
-	</div>
+<div class="container-fluid">
+  <div class="row" style="margin-top: 15px;">
+    <div class="col-xs-5 text-center">
+      <h5>PARTECIPA ALLA COMMUNITY</h5>
+      <h6 style="text-transform: none;">Registrati colleziona i punti <span class="glyphicon glyphicon-star"></span></h6>
+    </div>
+
+    <div id="iframe-interaction" class="col-xs-5" style="position: relative; padding-left: 60px; margin-top: 10px;">
+      <a href="javascript: void(0)" style="padding: 5px 0 0;" class="button-inter-<%= interaction.id %> btn-2" onclick="showRegistrateView()" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" <% end %>>REGISTRATI</a>
+    </div>
+  </div>
 </div>

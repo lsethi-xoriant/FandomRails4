@@ -30,7 +30,7 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
 
     @calltoaction_count = @calltoactions.count
 
-    unless mobile_device?()
+    unless small_mobile_devise?()
       @calltoactions_for_page = 4
       @calltoaction_pages = (@calltoaction_count.to_f / @calltoactions_for_page).ceil
     end

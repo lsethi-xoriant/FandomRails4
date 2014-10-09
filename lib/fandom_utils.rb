@@ -131,6 +131,16 @@ module FandomUtils
     return ((iphone || ipad) || android)
   end
 
+  def request_is_from_small_mobile_device?(request)
+    iphone = request.user_agent =~ /iPhone/ 
+    ipad = request.user_agent =~ /iPad/ 
+    mobile = request.user_agent =~ /Mobile/
+    android = request.user_agent =~ /Android/  
+
+    # Mobile and Android identifica il MOBILE di tipo Android, altrimenti con solo Android abbiamo il TABLET.
+    return ((iphone || !ipad) || android)
+  end
+
   def request_is_from_apple_mobile_device?(request)
     iphone = request.user_agent =~ /iPhone/ 
     ipad = request.user_agent =~ /iPad/

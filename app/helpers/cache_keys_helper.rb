@@ -58,4 +58,9 @@ module CacheKeysHelper
     "tags_with_tag_#{tag_name}"
   end
 
+  # Rankings
+  # ~~~~~
+  def get_general_position_key(user_id)
+    "user_#{user_id}_general_position"
+  end
 end
