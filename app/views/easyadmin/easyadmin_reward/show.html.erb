@@ -41,11 +41,11 @@
             <dt>Tipologia premio</dt><dd><p><%= @current_reward.media_type %></p></dd>
             
             <% unless @current_reward.valid_from.nil? %>
-            	<dt>Attivo dal</dt><dd><p><%= @current_reward.valid_from.strftime("%d/%m/%Y %H:%m") %></p></dd>
+            	<dt>Attivo dal</dt><dd><p><%= @current_reward.valid_from.in_time_zone("Rome").strftime("%d/%m/%Y %H:%M") %></p></dd>
             <% end %>
             
             <% unless @current_reward.valid_to.nil? %>
-            	<dt>Scadenza premio</dt><dd><p><%= @current_reward.valid_to.strftime("%d/%m/%Y %H:%m") %></p></dd>
+            	<dt>Scadenza premio</dt><dd><p><%= @current_reward.valid_to.in_time_zone("Rome").strftime("%d/%m/%Y %H:%M") %></p></dd>
             <% end %>
 
             <% unless @current_reward.video_url.blank? %>
