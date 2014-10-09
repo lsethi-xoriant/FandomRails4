@@ -33,12 +33,14 @@ module RankingHelper
     else
       period_id = period.id
     end
-    reward = cache_short("#{reward_name}") { Reward.find_by_name(reward_name) }
-    user_reward = UserReward.where("reward_id = ? and period_id = ? and user_id = ?", reward.id, period_id, current_user.id).first
-    if user_reward
-      user_reward.counter
-    else
-      0
+    cache_short(get_reward_points_in_period_key(reward_name, current_user.id, period_id)) do
+      reward = Reward.find_by_name(reward_name)
+      user_reward = UserReward.where("reward_id = ? and period_id = ? and user_id = ?", reward.id, period_id, current_user.id).first
+      if user_reward
+        user_reward.counter
+      else
+        0
+      end
     end
   end
   

@@ -176,7 +176,6 @@ class User < ActiveRecord::Base
   end
   
   def set_current_avatar
-    debugger
     if avatar.present?
       self.avatar_selected_url = avatar.url(:thumb)
     end
