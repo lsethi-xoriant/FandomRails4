@@ -12,12 +12,18 @@ class Easyadmin::EasyadminRewardController < ApplicationController
     @currency_rewards = Reward.where("spendable = TRUE")
   end
 
+  def clone
+    @currency_rewards = Reward.where("spendable = TRUE")
+    clone_reward(params)
+  end
+
   def save
+    @currency_rewards = Reward.where("spendable = TRUE")
     @reward = Reward.create(params[:reward])
     tag_list = params[:tag_list].split(",")
     if @reward.errors.any?
       @tag_list = tag_list
-      render template: "/easyadmin/easyadmin/new_reward"     
+      render template: "/easyadmin/easyadmin_reward/new"
     else
       @reward.update_attribute(:currency_id,params[:currency_id])
       update_and_redirect(tag_list, "Reward generato correttamente", @reward)
@@ -47,18 +53,18 @@ class Easyadmin::EasyadminRewardController < ApplicationController
     flash[:notice] = flash_message
     redirect_to "/easyadmin/reward/show/#{ reward.id }"
   end
-  
+
   def show
     @current_reward = Reward.find(params[:id])
     @tag_list = get_reward_tag_list(@current_reward)
   end
-  
+
   def get_reward_tag_list(reward)
     tag_list_arr = Array.new
     reward.reward_tags.each { |t| tag_list_arr << t.tag.name }
     return tag_list = tag_list_arr.join(",")
   end
-  
+
   def update_reward_tag(tag_list, reward)
     reward.reward_tags.destroy_all
     tag_list.each do |t|
