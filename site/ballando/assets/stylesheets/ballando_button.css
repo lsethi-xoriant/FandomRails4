@@ -315,10 +315,16 @@ fieldset[disabled] .btn-append.active {
 
 @media(max-width: 768px){
 	.btn-2-default:hover, 
-	.btn-2-versus:hover{
+	.btn-2-versus:hover {
 		background-color: #969696 !important;
 		box-shadow: 0 4px 0 #363636 !important;
 	}
+
+  .btn-2-default:hover:active, 
+  .btn-2-versus:hover:active {
+    background-color: #969696 !important;
+    box-shadow: 0 1px 0 #363636 !important;
+  }
 	
 	.btn-2.btn-2-default.active {
 	  top: 3px;
