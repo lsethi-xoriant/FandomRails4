@@ -62,6 +62,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 	
 	$window.openCtaShareModal = function (modalId, elem, ctaId, ctaTitle, interactionId){
 		if($scope.current_user) {
+
 			var positionTop = $(elem).offset().top;
 			var modalHeight, modalObj, innerModalObj;
 			modalObj = $("#" + modalId);
@@ -70,6 +71,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 			modalObj.css({
 				"top": position + "px"
 			});
+
 			$scope.ctaShareId = ctaId;
 			$scope.ctaShareTitle = ctaTitle;
 			$scope.interactionShareId = interactionId;
@@ -120,9 +122,13 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
             mountNextInteractionFromRequest(calltoaction_id, data.next_interaction);
           } else {
             $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_calltoaction_cover);
+            
+            /*
             $("#iframe-calltoaction-" + calltoaction_id + " iframe").load(function() {
               appendAndStartCountdown(calltoaction_id); 
             });
+            */
+
           }
 
         } else {
@@ -131,7 +137,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
             mountNextInteractionFromRequest(calltoaction_id, data.next_interaction);
           } else {
             $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_calltoaction_cover);
-            appendAndStartCountdown(calltoaction_id); 
+            /* appendAndStartCountdown(calltoaction_id); */
           }
 
         }
