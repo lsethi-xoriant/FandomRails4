@@ -104,7 +104,11 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   $window.showCallToAction = function(calltoaction_id, calltoaction_media_type) {
 
     $(".calltoaction-cover").removeClass("hidden");
-    $(".media-iframe").html("");
+    //$(".media-iframe").html("");
+    $(".media-iframe iframe").each(function(i, obj) {
+      $(obj).remove();
+    });
+
     $(".home-undervideo-calltoaction").html("");
 
     $scope.interactions_showed[calltoaction_id] = [];
