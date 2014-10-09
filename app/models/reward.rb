@@ -45,9 +45,15 @@ class Reward < ActiveRecord::Base
   before_save :set_active_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
   before_save :set_expire_at # Costruisco la data di disattivazione se arrivo dall'easyadmin.
 
+  def parse_to_utc(datetime)
+    Time.parse("#{datetime} #{USER_TIME_ZONE}").utc
+  end
+
   def set_active_at
     if valid_from_date.present? && valid_from_time.present?
-      write_attribute :valid_from, Time.parse("#{valid_from_date} #{valid_from_time} Rome")
+      # write_attribute :valid_from, Time.parse("#{valid_from_date} #{valid_from_time} Rome")
+      datetime_utc = parse_to_utc("#{valid_from_date} #{valid_from_time}")
+      write_attribute :valid_from, "#{datetime_utc}"
       valid_from_date = nil
       valid_from_time = nil
     end
@@ -55,7 +61,9 @@ class Reward < ActiveRecord::Base
   
   def set_expire_at
     if valid_to_date.present? && valid_to_time.present?
-      write_attribute :valid_to, Time.parse("#{valid_to_date} #{valid_to_time} Rome")
+      #write_attribute :valid_to, Time.parse("#{valid_to_date} #{valid_to_time} Rome")
+      datetime_utc = parse_to_utc("#{valid_to_date} #{valid_to_time}")
+      write_attribute :valid_to, "#{datetime_utc}"
       valid_to_date = nil
       valid_to_time = nil
     end
