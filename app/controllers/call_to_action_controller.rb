@@ -27,13 +27,15 @@ class CallToActionController < ApplicationController
     render_calltoactions_str = String.new
     calltoactions = Array.new
 
+    calltoactions_showed_ids = params[:calltoactions_showed].map { |calltoaction| calltoaction["id"] }
+    calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")
+
     if params[:tag_id].present?
       
-      stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).active
+      stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", params[:tag_id]).active
       if params[:current_calltoaction].present?
         stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
       end
-      stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_action_tags.tag_id = ?", params[:tag_id]).where("activated_at < ?", params[:last_calltoaction_shown_activated_at]).limit(3)
     
     else
 
@@ -41,9 +43,10 @@ class CallToActionController < ApplicationController
       if params[:current_calltoaction].present?
         stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
       end
-      stream_call_to_action_to_render = stream_call_to_action_to_render.where("activated_at < ?", params[:last_calltoaction_shown_activated_at]).limit(3)
 
     end
+
+    stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id NOT IN (#{calltoactions_showed_id_qmarks})", *calltoactions_showed_ids).limit(3)
     
     stream_call_to_action_to_render.each do |calltoaction|
       calltoactions << calltoaction
