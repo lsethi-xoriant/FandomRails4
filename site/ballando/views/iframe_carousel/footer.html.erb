@@ -3,7 +3,7 @@
     <div class="col-xs-12 col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3">
 
       <% if @calltoactions.any? %>
-        <% if mobile_device?() %>
+        <% if small_mobile_devise?() %>
           <div id="footer-carousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
               <% @calltoactions.each_with_index do |calltoaction, i| %>
@@ -25,20 +25,24 @@
                           </span>
                         <% end %>
                       </h4>
+                      <div style="min-height: 60px;">
                       <h5 style="color: #fff;"><%= calltoaction.title %></h5>
                       <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%M/%Y") %></h6>
+                      </div>
                     </div>
                   </div>
                 </div>
               <% end %>                  
             </div>
-            <ol class="carousel-indicators" style="bottom: -50px;">
-              <% if @calltoaction_count > 1 %>
-                <% @calltoaction_count.times do |i| %>
-                  <li data-target="#footer-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
+            <div class="row">
+              <ol class="carousel-indicators">
+                <% if @calltoaction_count > 1 %>
+                  <% @calltoaction_count.times do |i| %>
+                    <li data-target="#footer-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
+                  <% end %>
                 <% end %>
-              <% end %>
-            </ol>
+              </ol>
+            </div>
           </div>
         <% else %>
           <div id="footer-carousel" class="carousel slide" data-ride="carousel">
@@ -73,13 +77,15 @@
                 </div>
               </div>
             </div>
-            <ol class="carousel-indicators" style="bottom: 0;">
-              <% if @calltoaction_pages > 1 %>
-                <% @calltoaction_pages.times do |i| %>
-                  <li data-target="#footer-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
+            <div class="row">
+              <ol class="carousel-indicators">
+                <% if @calltoaction_pages > 1 %>
+                  <% @calltoaction_pages.times do |i| %>
+                    <li data-target="#footer-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
+                  <% end %>
                 <% end %>
-              <% end %>
-            </ol>
+              </ol>
+            </div>
           </div>
         <% end %>
       <% end %>

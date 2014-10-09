@@ -5,49 +5,62 @@ class Sites::Ballando::IframeCheckController < ApplicationController
   def show
     render template: "/iframe_check/show"
   end
+
+  def get_check_interaction
+    calltoaction = CallToAction.find_by_name("check_iframe")
+    calltoaction.interactions.first
+  end
   
   def get_check_template
     referrer = params[:referrer]
-    cta = CallToAction.find_by_name("check_iframe")
-    check_interaction = cta.interactions.first
+    check_interaction = get_check_interaction()
+
     if current_user
-      user_interaction = UserInteraction.where("interaction_id = ? AND user_id = ?", check_interaction.id, current_user.id).first
-      if can_do_check(check_interaction, referrer, user_interaction)
-        template = render_to_string "/iframe_check/_check_to_do", locals: { interaction: check_interaction }, layout: false, formats: :html
-      elsif reached_cap(user_interaction)
-        template = render_to_string "/iframe_check/_cap_reached", locals: { interaction: check_interaction }, layout: false, formats: :html
-      else
-        template = render_to_string "/iframe_check/_check_already_done", locals: { interaction: check_interaction }, layout: false, formats: :html
-      end
+      user_interaction = current_user.user_interactions.find_by_interaction_id(check_interaction.id)
+      template = render_to_string "/iframe_check/_logged_check", locals: { interaction: check_interaction, reached_cap: reached_cap(user_interaction), can_do_check: can_do_check(check_interaction, referrer, user_interaction) }, layout: false, formats: :html
     else
       template = render_to_string "/iframe_check/_not_logged_check", locals: { interaction: check_interaction }, layout: false, formats: :html
     end
+
     respond_to do |format|
        format.json { render :json => template.to_json }
     end
   end
   
   def can_do_check(interaction, referrer, user_interaction)
-    user_interaction.nil? || (!reached_cap(user_interaction) && !has_already_checked(interaction, referrer)) 
+    user_interaction.nil? || !has_already_checked(interaction, referrer)
   end
   
   def do_check
     referrer = params[:referrer]
-    cta = CallToAction.find_by_name("check_iframe")
+    check_interaction = get_check_interaction()
 
-    check_interaction = cta.interactions.first
-    user_interaction = current_user.user_interactions.find_by_interaction_id(check_interaction.id)
-    
-    if user_interaction
-      aux = JSON.parse(user_interaction.aux)
-      aux['referrer_list'] = aux['referrer_list'] + ",#{referrer}"
-      aux = update_counter_cap(aux)
+    if current_user
+      user_interaction = current_user.user_interactions.find_by_interaction_id(check_interaction.id)
+      
+      user_can_do_check = can_do_check(check_interaction, referrer, user_interaction)
+      user_reached_cap = reached_cap(user_interaction)
+
+      if user_can_do_check && !user_reached_cap
+        if user_interaction
+          aux = JSON.parse(user_interaction.aux)
+          aux['referrer_list'] = aux['referrer_list'] + ",#{referrer}"
+          aux = update_counter_cap(aux)
+        else
+          aux = { 'referrer_list' => "#{referrer}" }
+          aux = create_counter_cap(aux)
+        end
+        update_check_counter(check_interaction, aux.to_json)
+        template = render_to_string "/iframe_check/_logged_check", locals: { interaction: check_interaction, reached_cap: false, can_do_check: false}, layout: false, formats: :html   
+      else
+        template = render_to_string "/iframe_check/_logged_check", locals: { interaction: check_interaction, reached_cap: user_reached_cap, can_do_check: user_can_do_check }, layout: false, formats: :html
+      end
+   
     else
-      aux = { 'referrer_list' => "#{referrer}" }
-      aux = create_counter_cap(aux)
+      template = render_to_string "/iframe_check/_not_logged_check", locals: { interaction: check_interaction }, layout: false, formats: :html
     end
-    update_check_counter(check_interaction, aux.to_json)
-    template = render_to_string "/iframe_check/_check_already_done", locals: { interaction: check_interaction }, layout: false, formats: :html 
+
+
     respond_to do |format|
        format.json { render :json => template.to_json }
     end

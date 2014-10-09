@@ -1,25 +1,36 @@
 <div id="check-container" ng-controller="BallandoIframeCalltoactionCtrl"></div>
 <script type="text/javascript">
 	
-	var referrer = "" + top.location;
+	var referrer;
 	
 	$(document).ready(function(){
+
+		referrer = top.location.toString();
+
 		$.ajax({
 			url: "/iframe/get_check.json",
 			data: { referrer: referrer },
+			beforeSend: function(jqXHR, settings) {
+	      jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+	    },
 			success: function(data){
 				$("#check-container").html(data);
 			}
 		});
+
 	});
 	
-	function do_check(){
+	function doCheck() {
 		$.ajax({
 			url: "/iframe/do_check.json",
 			data: { referrer: referrer },
+			beforeSend: function(jqXHR, settings) {
+	      jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+	    },
 			success: function(data){
 				$("#check-container").html(data);
 			}
 		});
 	}
+
 </script>

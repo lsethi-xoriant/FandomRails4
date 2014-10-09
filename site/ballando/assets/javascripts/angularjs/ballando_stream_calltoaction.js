@@ -62,6 +62,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 	
 	$window.openCtaShareModal = function (modalId, elem, ctaId, ctaTitle, interactionId){
 		if($scope.current_user) {
+
 			var positionTop = $(elem).offset().top;
 			var modalHeight, modalObj, innerModalObj;
 			modalObj = $("#" + modalId);
@@ -70,6 +71,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 			modalObj.css({
 				"top": position + "px"
 			});
+
 			$scope.ctaShareId = ctaId;
 			$scope.ctaShareTitle = ctaTitle;
 			$scope.interactionShareId = interactionId;
@@ -102,7 +104,11 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   $window.showCallToAction = function(calltoaction_id, calltoaction_media_type) {
 
     $(".calltoaction-cover").removeClass("hidden");
-    $(".media-iframe").html("");
+    //$(".media-iframe").html("");
+    $(".media-iframe iframe").each(function(i, obj) {
+      $(obj).detach();
+    });
+
     $(".home-undervideo-calltoaction").html("");
 
     $scope.interactions_showed[calltoaction_id] = [];
@@ -114,15 +120,18 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
         
         if(calltoaction_media_type == "iframe") {
           $("#iframe-calltoaction-" + calltoaction_id).html($scope.video_players[calltoaction_id]);
+
           adjustAppleMobileIframes();
 
           if(data.calltoaction_completed) {
             mountNextInteractionFromRequest(calltoaction_id, data.next_interaction);
           } else {
             $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_calltoaction_cover);
-            $("#iframe-calltoaction-" + calltoaction_id + " iframe").load(function() {
+            
+            /* $("#iframe-calltoaction-" + calltoaction_id + " iframe").load(function() {
               appendAndStartCountdown(calltoaction_id); 
-            });
+            }); */
+
           }
 
         } else {
@@ -131,7 +140,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
             mountNextInteractionFromRequest(calltoaction_id, data.next_interaction);
           } else {
             $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_calltoaction_cover);
-            appendAndStartCountdown(calltoaction_id); 
+            /* appendAndStartCountdown(calltoaction_id); */
           }
 
         }

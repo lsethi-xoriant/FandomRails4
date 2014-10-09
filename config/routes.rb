@@ -108,6 +108,7 @@ Fandom::Application.routes.draw do
     match "reward/new", :to => "easyadmin_reward#new"
     match "reward/save", :to => "easyadmin_reward#save"
     match "reward/update", :to => "easyadmin_reward#update"
+    match "reward/clone/:id", to: "easyadmin_reward#clone"
     
     # INSTANT WIN
     match "contest", :to => "easyadmin#index_contest"

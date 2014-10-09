@@ -178,7 +178,7 @@
           <div class="form-group">
             <label class="text-input">Giorno</label>
             <div id="calltoaction_activation_date_div" class="input-group date" data-auto-close="true" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
-              <%= f.text_field :valid_from_date, :class => "form-control", value: @reward && @reward.valid_from ? @reward.valid_from.strftime("%Y-%m-%d") : "" %>
+              <%= f.text_field :valid_from_date, :class => "form-control", value: @reward && @reward.valid_from ? @reward.valid_from.in_time_zone("Rome").strftime("%Y-%m-%d") : "" %>
               <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
           </div>
@@ -187,7 +187,7 @@
           <div class="form-group">
             <label class="text-input">Ora</label>
             <div id="dp-ex-3" class="input-group bootstrap-timepicker">
-              <%= f.text_field :valid_from_time, :class => "form-control", value: @reward && @reward.valid_from ? @reward.valid_from.strftime("%H:%M") : DateTime.now.strftime("%H:%M") %>
+              <%= f.text_field :valid_from_time, :class => "form-control", value: @reward && @reward.valid_from ? @reward.valid_from.in_time_zone("Rome").strftime("%H:%M") : DateTime.now.strftime("%H:%M") %>
               <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
             </div>
           </div>
@@ -202,7 +202,7 @@
           <div class="form-group">
             <label class="text-input">Giorno</label>
             <div id="calltoaction_activation_date_div" class="input-group date" data-auto-close="true" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
-              <%= f.text_field :valid_to_date, :class => "form-control", value: @reward && @reward.valid_to ? @reward.valid_to.strftime("%Y-%m-%d") : "" %>
+              <%= f.text_field :valid_to_date, :class => "form-control", value: @reward && @reward.valid_to ? @reward.valid_to.in_time_zone("Rome").strftime("%Y-%m-%d") : "" %>
               <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
           </div>
@@ -211,7 +211,7 @@
           <div class="form-group">
             <label class="text-input">Ora</label>
             <div id="dp-ex-3" class="input-group bootstrap-timepicker">
-              <%= f.text_field :valid_to_time, :class => "form-control", value: @reward && @reward.valid_to ? @reward.valid_to.strftime("%H:%M") : "" %>
+              <%= f.text_field :valid_to_time, :class => "form-control", value: @reward && @reward.valid_to ? @reward.valid_to.in_time_zone("Rome").strftime("%H:%M") : "" %>
               <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
             </div>
           </div>

@@ -7,8 +7,12 @@ class Sites::Ballando::SessionsController < SessionsController
   def ballando_create
     begin
 
-      rai_response = (open("#{Rails.configuration.deploy_settings["sites"][request.site.id]["register_url"]}/loginSocialBallando.do?#{params[:user].to_query}").read).strip
-      valid_response, rai_response_user = evaluate_response(rai_response)
+      rai_response = open("#{Rails.configuration.deploy_settings["sites"][request.site.id]["register_url"]}/loginSocialBallando.do?#{params[:user].to_query}").read     
+      log_info("rai sign in response", { 'response' => rai_response })
+      
+      rai_strip_response = rai_response.strip
+
+      valid_response, rai_response_user = evaluate_response(rai_strip_response)
 
       if valid_response
 
@@ -64,6 +68,9 @@ class Sites::Ballando::SessionsController < SessionsController
     response = Hash.new
 
     rai_response = params["user"]
+
+    log_info("rai sign in from provider response", { 'response' => rai_response })
+
     valid_response, rai_response_user = evaluate_response(rai_response.strip)
     rai_response_user = JSON.parse(rai_response_user)
 

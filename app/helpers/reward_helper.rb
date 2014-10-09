@@ -88,5 +88,31 @@ module RewardHelper
       total
     end
   end
+
+  def clone_reward(params)
+    old_reward = Reward.find(params[:id])
+    new_reward = duplicate_reward(old_reward.id)
+    old_reward.reward_tags.each do |tag|
+      duplicate_reward_tag(new_reward, tag)
+    end
+    @reward = new_reward
+    tag_array = Array.new
+    @reward.reward_tags.each { |t| tag_array << t.tag.name }
+    @tag_list = tag_array.join(",")
+    render template: "/easyadmin/easyadmin_reward/new"
+  end
+
+  def duplicate_reward(old_reward_id)
+    reward = Reward.find(old_reward_id)
+    reward.title = "Copy of " + reward.title
+    reward.created_at = DateTime.now
+    reward_attributes = reward.attributes
+    reward_attributes.delete("id")
+    Reward.new(reward_attributes, :without_protection => true)
+  end
   
+  def duplicate_reward_tag(new_reward, tag)
+    new_reward.reward_tags.build(:reward_id => new_reward.id, :tag_id => tag.tag_id)
+  end
+
 end
