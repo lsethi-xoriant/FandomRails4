@@ -31,8 +31,6 @@ unless defined? FILTER_OPERATOR_CONTAINS
   RANKING_TYPES = {"full" => "Top10", "my_position" => "La mia posizione", "trirank" => "Triclassifica", "full_compressed" => "Triclassifica (smart)"}
   RANKING_USER_FILTER = {"all" => "Tutti", "fb_friends" => "Amici di facebook"}
   
-  LOGGER_PROCESS_FILE_SIZE = 300*1024
-  
   BYTES_IN_MEGABYTE = 1048576
   MAX_UPLOAD_SIZE = 3 #Megabyte (Mb)
   
