@@ -13,8 +13,11 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
       rai_user = build_rai_user(user)
 
       begin
-        response = (open("#{Rails.configuration.deploy_settings["sites"][request.site.id]["register_url"]}?#{rai_user.to_query}").read).strip
-        rai_response, pipe, md5 = response.rpartition("|")
+        response = open("#{Rails.configuration.deploy_settings["sites"][request.site.id]["register_url"]}?#{rai_user.to_query}").read
+        log_info("rai sign up response", { 'response' => rai_response })
+        strip_response = response.strip
+
+        rai_response, pipe, md5 = strip_response.rpartition("|")
 
         # If user already exist in RAI and not in FANDOM, reponse not have md5
         if rai_response.empty?
