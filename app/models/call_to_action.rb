@@ -22,6 +22,8 @@ class CallToAction < ActiveRecord::Base
   validates_associated :interactions
   validates :privacy, :acceptance => { :accept => true }, if: Proc.new { |c| privacy_required }
 
+  validates_attachment_size :media_image, :less_than => MAX_UPLOAD_SIZE.megabytes
+
   before_save :set_activated_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
 
   has_attached_file :media_image,
