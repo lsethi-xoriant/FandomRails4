@@ -14,7 +14,7 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
 
       begin
         response = open("#{Rails.configuration.deploy_settings["sites"][request.site.id]["register_url"]}?#{rai_user.to_query}").read
-        log_info("rai sign up response", { 'response' => rai_response })
+        log_info("rai sign up response", { 'response' => response })
         strip_response = response.strip
 
         rai_response, pipe, md5 = strip_response.rpartition("|")
