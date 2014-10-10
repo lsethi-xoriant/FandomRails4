@@ -69,12 +69,16 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
-      # execute :touch, release_path.join('tmp/restart.txt')
       puts "restarting unicorn..."
+      #execute :touch, release_path.join('tmp/restart.txt') # this only works with phusion passenger
       execute "/etc/init.d/railsweb restart"
+      
       puts "restarting log daemon..."
-      execute "/etc/init.d/log_daemon restart"
-      sleep 5
+      #execute "/etc/init.d/log_daemon restart" # this does not work for an mysterious problem
+      run_locally do
+        execute "ssh #{hostname} /etc/init.d/log_daemon restart"
+      end
+      sleep 1
       puts "are they running? Look at this ps!"
       execute "ps aux | grep -e 'unicorn\\|log_daemon'"
       puts "making an archive of the current release (for AWS)"
