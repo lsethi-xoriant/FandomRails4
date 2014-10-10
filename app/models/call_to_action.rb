@@ -4,12 +4,13 @@ class CallToAction < ActiveRecord::Base
   
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
-  					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required
+  					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required,
+            :privacy_required, :privacy
 
   extend FriendlyId
   friendly_id :title, use: :slugged
 
-  attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required
+  attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required
 
   validates_presence_of :title
   validates_presence_of :name
@@ -19,6 +20,7 @@ class CallToAction < ActiveRecord::Base
   validate :interaction_resource
   validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" }
   validates_associated :interactions
+  validates :privacy, :acceptance => { :accept => true }, if: Proc.new { |c| privacy_required }
 
   before_save :set_activated_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
 

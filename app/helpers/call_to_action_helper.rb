@@ -84,6 +84,11 @@ module CallToActionHelper
 
       user_calltoaction.release_required = upload_interaction.releasing? 
       user_calltoaction.build_releasing_file(file: params[:releasing])
+
+      user_calltoaction.privacy_required = upload_interaction.privacy? 
+      user_calltoaction.privacy = !params[:privacy].blank?
+
+     
       #user_calltoaction.releasing_file_id = releasing.id
 
     user_calltoaction
