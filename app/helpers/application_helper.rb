@@ -302,7 +302,7 @@ module ApplicationHelper
   
   def calculate_reward_points_general(reward_name)
     reward = Reward.find_by_name(reward_name)
-    user_reward = UserReward.where("reward_id = ? and period_id IS NULL and user_id = ?", reward.id, current_user.id).first
+    user_reward = UserReward.where("reward_id = ? and period_id IS NULL and user_id = ?", reward.id, current_or_anonymous_user.id).first
     if user_reward
       user_reward.counter
     else
