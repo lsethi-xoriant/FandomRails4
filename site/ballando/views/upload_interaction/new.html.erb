@@ -72,9 +72,9 @@
 		      </div>
 			  
 			  <div class="row">
-				    <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 text-center">
+				    <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 text-center" id="load-button">
 				      <% if current_user %>
-				        <button type="submit" class="btn-2">CARICA</button>
+				        <button type="submit" class="btn-2" onclick="startLoader();">CARICA</button>
 				      <% else %>
 				      	<button type="button" class="btn-2" onclick="goToLogin();">CARICA</button>
 				      <% end %>
@@ -121,6 +121,10 @@
 	function goToLogin(){
 		document.cookie = "connect_from_page = " + top.location;
     	top.location = PROFILE_URL;
+	}
+	
+	function startLoader(){
+		$("#load-button").html('<p class="text-center">... Caricamento Video in corso ...</p>');
 	}
 	
 </script>
