@@ -30,6 +30,8 @@ Fandom::Application.routes.draw do
           match "/iframe/get_check", :to => "iframe_check#get_check_template"
           match "/iframe/do_check", :to => "iframe_check#do_check"
 
+          match "/upload_interaction/new", :to => "upload_interaction#new"
+
           match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
           match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
         end
@@ -42,7 +44,7 @@ Fandom::Application.routes.draw do
   match "/profile/update_avatar", to: "application#update_avatar_image"
 
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
-  match "/cta/upload", :to => "call_to_action#upload"
+  match "/interaction_upload/:interaction_id", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
   match "/browse/search", :to => "browse#search"

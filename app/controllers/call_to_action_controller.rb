@@ -554,15 +554,17 @@ class CallToActionController < ApplicationController
     for i in(1 .. upload_interaction.upload_number) do
       if params["upload-#{i}"]
         if params["upload-#{i}"].size <= get_max_upload_size()
-          cloned_cta = clone_and_create_cta(params, i, upload_interaction.watermark)
+          cloned_cta = clone_and_create_cta(upload_interaction, params, i, upload_interaction.watermark)
           if cloned_cta.errors.any?
             flash[:error] << cloned_cta.errors
           else
             UserUploadInteraction.create(user_id: current_user.id, call_to_action_id: cloned_cta.id, upload_id: upload_interaction.id)
             if upload_interaction.releasing?
               releasing.save if releasing.id.blank?
-              cloned_cta.update_attribute(:releasing_file_id, releasing.id)
+              cloned_cta.releasing_file_id = releasing.id
             end
+            cloned_cta.title = params["title"]
+            cloned_cta.save
           end
         else
           flash[:error] = ["I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"]
@@ -574,10 +576,10 @@ class CallToActionController < ApplicationController
   def check_valid_upload(upload_interaction)
     errors = Array.new
     if !check_privacy_accepted(upload_interaction) 
-      errors << "Errore non hai accettato la privacy" 
+      errors << "Devi accettare la privacy" 
     end
     if !check_releasing_accepted(upload_interaction)
-      errors << "Errore non hai caricato la liberatoria"
+      errors << "Devi caricare la liberatoria"
     end
     if !check_uploaded_file()
       errors << "I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"
