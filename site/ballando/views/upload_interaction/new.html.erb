@@ -37,7 +37,8 @@
 		      <div class="row form-group">
 		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">1. Invia il tuo video</label>
 		        <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 text-left">
-		        	<button type="button" class="btn-2" onclick="chooseFile();" style="display: inline-block; width: 100%;">CARICA IL TUO VIDEO</button>
+		        	<a type="button" class="btn-2" onclick="chooseFile();" style="display: inline-block; width: 100%;">CARICA IL TUO VIDEO</a>
+		        	<p class="small" style="margin-top: 10px; color: #fff;">I file video non devono superare i 40 Mb</p>
 		        	<div class="hidden"><%= file_field_tag "upload", { :onchange => "uploadDone(this)" } %></div>
 		        </div>
 		        <div class="col-xs-12 col-sm-1">
