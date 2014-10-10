@@ -25,6 +25,14 @@
 		  </div>
 		  </div>
 		  <% end %>
+		  
+		  <% if flash[:notice] %>
+		  <div class="row">
+		 	<div class="col-sm-8 text-left">
+		  		<div class="alert alert-success"><%= flash[:notice] %></div>
+		  	</div>
+		  </div>
+		  <% end %>
 		
 		  <div class="row">
 		    <%= form_tag "/upload_interaction/create/#{ @upload_interaction.id }", multipart: true do %>
