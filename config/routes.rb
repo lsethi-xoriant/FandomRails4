@@ -252,7 +252,8 @@ Fandom::Application.routes.draw do
   resources :call_to_action do
     match "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }
   end
-
+  
+  match "/tag/:name", :to => "application#index"
   root :to => "application#index"
 
 end

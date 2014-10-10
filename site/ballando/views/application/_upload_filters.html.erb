@@ -16,7 +16,7 @@
 				            <li>
 				                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" && !single_cta %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
 				                    <div class="comment-center">
-				                        <a href="javascript: void(0)" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
+				                        <a href="/tag/<%= tag.name %>">
 									      <div class="row">
 									        <div class="col-md-12">
 									          <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
@@ -41,7 +41,7 @@
 				                    </div>
 				                </div>
 				                <div class="triangle"></div>
-				            </li> 
+				            </li>
 				         </ul>
 				      </div>
 				    </div>
@@ -91,7 +91,6 @@
 	        });
 	        $('.filter-menu-tag .flexslider .slides li').css('width', getItemSize()+'px');
 		});
-
 	});
 
 	function getGridSize() {
@@ -104,5 +103,4 @@
 	function getItemSize() {
 		return ($(".flexslider").innerWidth() / getGridSize()) - 10;
 	}
-	
 </script>

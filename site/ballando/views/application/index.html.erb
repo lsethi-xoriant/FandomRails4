@@ -28,6 +28,11 @@
 	
 	  $(document).ready(function() {
 	    checkDocumentHeight("fandom");
+	    
+	    <% if @tag.present? %>
+			updateFiltersMenu(<%= @tag.id %>)
+		<% end %>
+	    
 	  });
 	
 	</script>

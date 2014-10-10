@@ -1,52 +1,85 @@
 <style>
   hr{ border-color: #000; }
 </style>
-<div class="col-sm-12 text-center" style="margin-top: 15px;">
-  <div class="row">
-    <%= form_tag "/interaction_upload/#{ @upload_interaction.id }", multipart: true do %>
-    <div class="col-sm-12">
-      <div class="row form-group">
-      <% (1..@upload_interaction.resource.upload_number).each do |i| %>
-        <label><%= i %>° Upload:</label>
-        <%= file_field_tag "upload-#{i}" %>
-      <% end %>
-    <hr />
-    </div>
 
-      <div class="form-group">
-        <label>Titolo</label>
-        <%= text_field_tag :title, nil, class: "form-control" %>
-      </div>
+<div class="container-fluid"
 
-      <div class="row form-group">
-        <% if @upload_interaction.resource.privacy? %>
-          <%= check_box_tag "privacy" %>
-          <label>Accettazione privacy</label>
-          <p class="small"><%= @upload_interaction.resource.privacy_description %></p>
-          <hr />
-        <% end %>
-
-        <% if @upload_interaction.resource.releasing? %>
-          <label>Liberatoria</label>
-          <p class="small"><%= @upload_interaction.resource.releasing_description %></p>
-          <p class="text-center"><%= file_field_tag 'releasing' %></p>
-          <hr />
-        <% end %>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12 text-center">
-      <% if current_user %>
-          <button type="submit" class="btn btn-primary">CARICA</button>
-        <% else %>
-      <button class="btn btn-primary" data-toggle="modal" data-target="#login">CARICA</button>
-        <% end %>
-    </div>
-  </div>
-  <% end %>
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+		  <%= render partial: "/application/upload_filters", locals: { single_cta: false } %>
+		</div>
+	</div>
+	
+	<div class="row" style="background-color: rgba(255, 255, 255, 0.5);">
+		
+		<div class="col-sm-12 text-center" style="margin-top: 15px;">
+		
+		  <%= flash[:error] %>ERROR
+		  <%= flash[:notice] %>NOTICE
+		
+		  <div class="row">
+		    <%= form_tag "/uplaod_interaction/create/#{ @upload_interaction.id }", multipart: true do %>
+		    <div class="col-sm-12">
+		      <div class="row form-group">
+		        <label class="col-sm-3 col-sm-offset-1 text-left">1. Invia il tuo video</label>
+		        <div class="col-sm-6 text-left">
+		        	<button type="button" class="btn-danger btn-md" onclick="chooseFile();" style="display: inline-block; width: 100%;">CARICA IL TUO VIDEO</button>
+		        	<div class="hidden"><%= file_field_tag "upload", { :onchange => "uploadDone(this)" } %></div>
+		        </div>
+		        <div class="col-sm-1">
+		        	<div class="confirm-step upload-file"></div>
+		        </div>
+		      </div>
+		
+		      <div class="row form-group">
+		        <label class="col-sm-3 col-sm-offset-1 text-left">2. Dai un titolo</label>
+		        <div class="col-sm-6">
+		        	<%= text_field_tag :title, nil, { class: "form-control", onchange: "titleInserted(this)" } %>
+		        </div>
+		        <div class="col-sm-1">
+		        	<div class="confirm-step upload-title"></div>
+		        </div>
+		      </div>
+		      
+		      <div class="row form-group">
+		      	<div class="col-sm-12 text-center">
+		      		<% if @upload_interaction.resource.privacy? %>
+			          <%= check_box_tag "privacy" %>
+			          <label>Accettazione privacy</label>
+			        <% end %>
+			
+			        <% if @upload_interaction.resource.releasing? %>
+			          <label>Liberatoria</label>
+			          <p class="small"><%= @upload_interaction.resource.releasing_description %></p>
+			          <p class="text-center"><%= file_field_tag 'releasing' %></p>
+			        <% end %>
+		      	</div>
+		      </div>
+			  
+			  <div class="row">
+				    <div class="col-sm-12 text-center">
+				      <% if current_user %>
+				        <button type="submit" class="btn-danger btn-md">CARICA</button>
+				      <% else %>
+				      	<button class="btn-danger btn-md" data-toggle="modal" data-target="#login">CARICA</button>
+				      <% end %>
+				    </div>
+				    <div class="col-sm-12 text-center">
+				    	
+				    </div>
+			  </div>
+				  <% end %>
+			  </div>
+			  
+		    </div>
+		  </div>
+		  
+		  
+		
+	</div>
+	
 </div>
-
+		
 <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -61,3 +94,30 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+	function chooseFile(){
+		$("#upload").click();
+	}
+	
+	function uploadDone(video) {
+		if (video.files && video.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				//$("#user-avatar-image").attr('src', e.target.result).width(100).height(100);
+			};
+			//reader.readAsDataURL(image.files[0]);
+			$(".confirm-step.upload-file").html('<i class="fa fa-check" style="font-size: 20px; color: green;"></i>');
+		}
+	}
+	
+	function titleInserted(title){
+		if( $(title).val() != ''){
+			$(".confirm-step.upload-title").html('<i class="fa fa-check" style="font-size: 20px; color: green;"></i>');
+		}else{
+			$(".confirm-step.upload-title").html('');
+		}
+		
+	}
+	
+</script>

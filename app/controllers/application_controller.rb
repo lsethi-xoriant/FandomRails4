@@ -45,10 +45,18 @@ class ApplicationController < ActionController::Base
   def index
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
     
-    @calltoactions = cache_short("stream_ctas_init_calltoactions") do
-      CallToAction.active.limit(3).to_a
+    if params[:name]
+      @tag = Tag.find_by_name(params[:name])
     end
-
+    
+    @calltoactions = cache_short("stream_ctas_init_calltoactions") do
+      if params[:name].nil? || params[:name] == "home_filter_all"
+        CallToAction.active.limit(3).to_a
+      else
+        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", @tag.id).limit(3)
+      end
+    end
+    
     @calltoactions_during_video_interactions_second = cache_short("stream_ctas_init_calltoactions_during_video_interactions_second") do
       initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
     end
