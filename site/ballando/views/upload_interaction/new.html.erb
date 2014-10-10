@@ -60,7 +60,7 @@
 		      	<div class="col-sm-12 text-center">
 		      		<% if @upload_interaction.resource.privacy? %>
 			          <%= check_box_tag "privacy" %>
-			          <label style="color: #fff;">Accetto i <a style="text-decoration: underline;" href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/termini_uso_ballando.pdf" target="_blank" style="color: #fff;">termini d'uso</a></label>
+			          <label style="color: #fff;">Accetto i <a style="text-decoration: underline; color: #fff;" href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/termini_uso_ballando.pdf" target="_blank" style="color: #fff;">termini d'uso</a></label>
 			        <% end %>
 			
 			        <% if @upload_interaction.resource.releasing? %>
@@ -124,7 +124,7 @@
 	}
 	
 	function startLoader(){
-		$("#load-button").html('<p class="text-center">... Caricamento Video in corso ...</p>');
+		$("#load-button").html('<p class="text-center" style="color: #fff;">... Caricamento Video in corso ...</p>');
 		$("#form-upload").submit();
 	}
 	
