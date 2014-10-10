@@ -39,6 +39,8 @@ Fandom::Application.routes.draw do
     end
   end
 
+  match "/file_upload_too_large", to: "application#file_upload_too_large"
+
   match "/redirect_into_iframe_calltoaction/:calltoaction_id", to: "application#redirect_into_iframe_calltoaction"
   match "/facebook_share_page_with_meta/:calltoaction_id", to: "call_to_action#facebook_share_page_with_meta"
   match "/profile/update_avatar", to: "application#update_avatar_image"

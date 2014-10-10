@@ -22,24 +22,26 @@ class CallToAction < ActiveRecord::Base
   validates_associated :interactions
   validates :privacy, :acceptance => { :accept => true }, if: Proc.new { |c| privacy_required }
 
-  validates_attachment_size :media_image, :less_than => MAX_UPLOAD_SIZE.megabytes
-
   before_save :set_activated_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
 
   has_attached_file :media_image,
     :processors => [:watermark],
-    :styles => lambda { |cta| 
-      {
-      :large => { :geometry => "600x600>", :watermark_path => cta.instance.get_watermark }, 
-      :extra => "260x150#", 
-      :medium => "300x300#", 
-      :thumb => "100x100#"
-      } 
+    :styles => lambda { |image| 
+        if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
+          {
+            :large => { :geometry => "600x600>", :watermark_path => image.instance.get_watermark }, 
+            :extra => "260x150#", 
+            :medium => "300x300#", 
+            :thumb => "100x100#"
+          }
+        else
+         {} 
+        end
     }, 
     :default_url => "/assets/media-image-default.jpg"
 
   has_attached_file :thumbnail, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }
-  
+
   has_many :interactions, dependent: :destroy
   has_many :call_to_action_tags, dependent: :destroy
   has_many :answers
