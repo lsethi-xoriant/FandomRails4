@@ -285,7 +285,7 @@ module ApplicationHelper
   end
 
   def get_counter_about_user_reward(reward_name)
-    reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
+    reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_or_anonymous_user.id)) do
       reward_points = Hash.new
       reward_points['general'] = calculate_reward_points_general(reward_name)
       reward_points
@@ -293,7 +293,7 @@ module ApplicationHelper
     
     if reward_points['general'].nil?
       reward_points['general'] = calculate_reward_points_general(reward_name)
-      cache_short_write_key(get_reward_points_for_user_key(reward_name, current_user.id), reward_points)
+      cache_short_write_key(get_reward_points_for_user_key(reward_name, current_or_anonymous_user.id), reward_points)
     end
     
     reward_points['general']
