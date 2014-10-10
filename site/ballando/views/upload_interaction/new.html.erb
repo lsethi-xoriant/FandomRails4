@@ -1,7 +1,3 @@
-<style>
-  hr{ border-color: #000; }
-</style>
-
 <div class="container-fluid"
 
 	<div class="row">
@@ -38,23 +34,23 @@
 		    <%= form_tag "/upload_interaction/create/#{ @upload_interaction.id }", multipart: true do %>
 		    <div class="col-sm-12">
 		      <div class="row form-group">
-		        <label class="col-sm-3 col-sm-offset-1 text-left">1. Invia il tuo video</label>
-		        <div class="col-sm-6 text-left">
-		        	<button type="button" class="btn-danger btn-md" onclick="chooseFile();" style="display: inline-block; width: 100%;">CARICA IL TUO VIDEO</button>
+		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">1. Invia il tuo video</label>
+		        <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 text-left">
+		        	<button type="button" class="btn-2" onclick="chooseFile();" style="display: inline-block; width: 100%;">CARICA IL TUO VIDEO</button>
 		        	<div class="hidden"><%= file_field_tag "upload", { :onchange => "uploadDone(this)" } %></div>
 		        </div>
-		        <div class="col-sm-1">
-		        	<div class="confirm-step upload-file"></div>
+		        <div class="col-xs-12 col-sm-1">
+		        	<div class="confirm-step upload-file" style="margin: 10px auto;"></div>
 		        </div>
 		      </div>
 		
 		      <div class="row form-group">
-		        <label class="col-sm-3 col-sm-offset-1 text-left">2. Dai un titolo</label>
-		        <div class="col-sm-6">
+		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">2. Dai un titolo</label>
+		        <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0">
 		        	<%= text_field_tag :title, (@cloned_cta.title if @cloned_cta), { class: "form-control", onchange: "titleInserted(this)" } %>
 		        </div>
-		        <div class="col-sm-1">
-		        	<div class="confirm-step upload-title"></div>
+		        <div class="col-xs-12 col-sm-1">
+		        	<div class="confirm-step upload-title" style="margin: 10px auto;"></div>
 		        </div>
 		      </div>
 		      
@@ -62,7 +58,7 @@
 		      	<div class="col-sm-12 text-center">
 		      		<% if @upload_interaction.resource.privacy? %>
 			          <%= check_box_tag "privacy" %>
-			          <label>Accettazione privacy</label>
+			          <label style="color: #fff;">Accetto i <a href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/termini_uso_ballando.pdf" target="_blank" style="color: #fff;">termini d'uso</a></label>
 			        <% end %>
 			
 			        <% if @upload_interaction.resource.releasing? %>
@@ -74,15 +70,13 @@
 		      </div>
 			  
 			  <div class="row">
-				    <div class="col-sm-12 text-center">
+				    <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 text-center">
 				      <% if current_user %>
-				        <button type="submit" class="btn-danger btn-md">CARICA</button>
+				        <button type="submit" class="btn-2">CARICA</button>
 				      <% else %>
-				      	<button class="btn-danger btn-md" data-toggle="modal" data-target="#login">CARICA</button>
+				      	<button type="button" class="btn-2" onclick="goToLogin();">CARICA</button>
 				      <% end %>
-				    </div>
-				    <div class="col-sm-12 text-center">
-				    	
+				      <p>&nbsp;</p>
 				    </div>
 			  </div>
 				  <% end %>
@@ -97,21 +91,6 @@
 	
 </div>
 		
-<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Devi essere registrato</h4>
-      </div>
-      <div class="modal-body">
-        <p>Per poter caricare contenuti devi prima effetuare il login o registrarti.</p>
-        <p><a href="users/sign_up">Login / Registrati</a></p>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script type="text/javascript">
 	function chooseFile(){
 		$("#upload").click();
@@ -135,6 +114,11 @@
 			$(".confirm-step.upload-title").html('');
 		}
 		
+	}
+	
+	function goToLogin(){
+		document.cookie = "connect_from_page = " + top.location;
+    	top.location = PROFILE_URL;
 	}
 	
 </script>
