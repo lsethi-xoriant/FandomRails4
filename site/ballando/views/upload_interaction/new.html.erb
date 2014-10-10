@@ -15,9 +15,15 @@
 		<div class="col-sm-12 text-center" style="margin-top: 15px;">
 		
 		 <% if @cloned_cta && @cloned_cta.errors.any? %>
+		 <div class="row">
+		 	<div class="col-sm-8 col-sm-offset-1">
+		 <ul class="text-left">
 		    <% @cloned_cta.errors.full_messages.each do |error_message| %>
-		      <%= error_message %>
+		      <li><%= error_message %></li>
 		    <% end %>
+		  </ul>
+		  </div>
+		  </div>
 		  <% end %>
 		
 		  <div class="row">
