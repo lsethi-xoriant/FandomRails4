@@ -2,7 +2,7 @@ Fandom::Application.configure do
 
   # Settings specified here will take precedence over those in config/application.rb
   
-  puts "disabling production logs, please check the events directory"
+  puts "disabling standard production logs, logs are redirected to the event directory"
   config.log_level = :error
   #config.logger = Logger.new('/dev/null')
   class LogSubscriber < ActiveSupport::LogSubscriber

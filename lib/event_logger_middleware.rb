@@ -6,17 +6,13 @@ include ApplicationHelper
 # The global variables are safe, provided this rails application is run on servers with process-only concurrency. 
 class EventLoggerMiddleware
   LOG_DIRECTORY = "log/events"
-
+  TIMESTAMP_FMT = "%Y%m%d_%H%M%S_%N"
   def initialize(app)
     @app = app
     $pid = Process.pid
   end
-  
-  def call(env)
-    if Rails.env == "production"
-      open_or_rotate_process_log_file()
-    end
-    
+
+  def init_data(env)
     http_host = (env["HTTP_HOST"]).split(":").first
 
     if env["rack.session"]["warden.user.user.key"].present? && env["rack.session"]["warden.user.user.key"][0].present?
@@ -24,7 +20,7 @@ class EventLoggerMiddleware
     else
       user_id = -1
     end
-
+    
     if Rails.configuration.domain_to_site.key?(http_host)
       tenant = Rails.configuration.domain_to_site[http_host].id
     else
@@ -54,6 +50,16 @@ class EventLoggerMiddleware
       pid: $pid
     }
 
+    data    
+  end
+  
+  def call(env)
+    data = init_data(env)
+
+    if Rails.env == "production"
+      open_process_log_file()
+    end
+    
     log_info(
       "http request start",
       data
@@ -68,64 +74,67 @@ class EventLoggerMiddleware
       data[:cache_misses] = $cache_misses
       data[:time] = (Time.now - start).to_s
       log_info(msg, data)
+      close_process_log_file()
       [status, headers, response]
     rescue Exception => ex
       data[:exception] = ex.to_s
       data[:backtrace] = ex.backtrace[0, 5]
       data[:time] = (Time.now - start).to_s
       log_info(msg, data)
+      close_process_log_file()
       raise ex
     end 
 
   end
-  
-  def open_or_rotate_process_log_file()
-    if $process_file_size && $process_file_size > LOGGER_PROCESS_FILE_SIZE
-      unless $process_file_descriptor.nil?
-        $process_file_descriptor.close()
-        $process_file_descriptor = nil
-      end
+
+  # Opens a new file to log data for this request. The file has the pid of the process and a timestamp.
+  # It is very unlikely that a file with the same name already exists (it means that within the clock resolution, 
+  # let's within 1 millinsecond, the current process died and respawned); however, to handle this case, the
+  # file creation is attempted multiple times, with 1 ms pause in between (so the timestamp changes)
+  def open_process_log_file()
+    if !File.directory?(LOG_DIRECTORY)
+      FileUtils.mkdir_p(LOG_DIRECTORY)
+    end
+    success = false
+    3.times do |i|
       begin
-        close_process_file($process_file_path)
-      rescue Exception => ex
-        # might have been removed by the background daemon
+        $process_file_path = get_open_process_log_filename()
+        $process_file_descriptor = File.open($process_file_path, File::WRONLY|File::CREAT|File::EXCL)
+        success = true
+        break
+      rescue Errno::EEXIST => exception  
+        sleep(0.01)
       end
     end
-    
-    if $process_file_descriptor.nil?
-      close_orphan_files_with_same_current_pid()
-      open_process_log_file()
+    unless success
+      raise Exception.new('log file creation failed') # this exception should be captured by the standard rails production log
+    end
+    $process_file_size = 0 # incremented in event handler  
+  end
+  
+  def get_open_process_log_filename()
+    timestamp = Time.now.utc.strftime(TIMESTAMP_FMT)
+    "#{LOG_DIRECTORY}/#{$pid}-#{timestamp}-open.log"
+  end
+  
+  def close_process_log_file()
+    unless $process_file_descriptor.nil?
+      $process_file_descriptor.close()
+      $process_file_descriptor = nil
+    end
+    begin
+      rename_open_to_closed($process_file_path)
+    rescue Exception => ex
+      # might have been removed by the background daemon
     end
   end
   
-  def close_process_file(file_path)
+  def rename_open_to_closed(file_path)
     parts = file_path.split('/')
     parts[-1] = parts[-1].sub("open", "closed")
     dest_path = parts.join('/')
     File.rename(file_path, dest_path)
   end
 
-  def close_orphan_files_with_same_current_pid()
-    # check if a file assigned to an old precess with the same pid of current process already exists.
-    # In this case it must be closed.
-    Dir["#{LOG_DIRECTORY}/#{$pid}-*-open.log"].each do |orphan_log_file_path|
-      begin
-        close_process_file(orphan_log_file_path)
-      rescue Exception => ex
-        # might have been removed by the background daemon
-      end
-    end
-  end
-
-  def open_process_log_file()
-    if !File.directory?(LOG_DIRECTORY)
-      FileUtils.mkdir_p(LOG_DIRECTORY)
-    end
-    process_file_timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S")
-    $process_file_path = "#{LOG_DIRECTORY}/#{$pid}-#{process_file_timestamp}-open.log"  
-    $process_file_descriptor = File.open($process_file_path, "a+")
-    $process_file_size = 0 # incremented in event handler  
-  end
-  
 end
 
