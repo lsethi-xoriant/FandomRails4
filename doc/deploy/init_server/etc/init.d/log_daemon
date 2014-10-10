@@ -2,4 +2,14 @@
 
 LOOP_DELAY=3
 
-sudo -i -u app ruby /home/app/railsapps/Fandom/current/bin/log_daemon.rb $@ -- production /home/app/railsapps/Fandom/current $LOOP_DELAY
+RAILS_USER=app
+
+CMD="ruby /home/app/railsapps/Fandom/current/bin/log_daemon.rb $@ -- production /home/app/railsapps/Fandom/current $LOOP_DELAY"
+
+set -e
+
+if [ "$RAILS_USER" != "`whoami`" ]; then
+  sudo -i -u $RAILS_USER $CMD
+else
+  bash -l -c "$CMD"
+fi
