@@ -44,7 +44,7 @@ Fandom::Application.routes.draw do
   match "/profile/update_avatar", to: "application#update_avatar_image"
 
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
-  match "/interaction_upload/:interaction_id", :to => "call_to_action#upload"
+  match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
   match "/browse/search", :to => "browse#search"

@@ -4,16 +4,18 @@ class CallToAction < ActiveRecord::Base
   
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
-  					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail
+  					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required
 
   extend FriendlyId
   friendly_id :title, use: :slugged
 
-  attr_accessor :activation_date, :activation_time, :interaction_watermark_url # Attributi di appoggio per l'easyadmin.
+  attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required
 
   validates_presence_of :title
   validates_presence_of :name
   validates_uniqueness_of :name
+  validates_presence_of :media_image, if: Proc.new { |c| user_id.present? }
+  validates_associated :releasing_file, if: Proc.new { |c| release_required }
   validate :interaction_resource
   validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" }
   validates_associated :interactions
