@@ -32,7 +32,7 @@
 		  <% end %>
 		
 		  <div class="row">
-		    <%= form_tag "/upload_interaction/create/#{ @upload_interaction.id }", multipart: true do %>
+		    <%= form_tag "/upload_interaction/create/#{ @upload_interaction.id }", multipart: true, id: "form-upload" do %>
 		    <div class="col-sm-12">
 		      <div class="row form-group">
 		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">1. Invia il tuo video</label>
@@ -60,7 +60,7 @@
 		      	<div class="col-sm-12 text-center">
 		      		<% if @upload_interaction.resource.privacy? %>
 			          <%= check_box_tag "privacy" %>
-			          <label style="color: #fff;">Accetto i <a href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/termini_uso_ballando.pdf" target="_blank" style="color: #fff;">termini d'uso</a></label>
+			          <label style="color: #fff;">Accetto i <a style="text-decoration: underline;" href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/termini_uso_ballando.pdf" target="_blank" style="color: #fff;">termini d'uso</a></label>
 			        <% end %>
 			
 			        <% if @upload_interaction.resource.releasing? %>
@@ -74,7 +74,7 @@
 			  <div class="row">
 				    <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 text-center" id="load-button">
 				      <% if current_user %>
-				        <button type="submit" class="btn-2" onclick="startLoader();">CARICA</button>
+				        <button type="button" class="btn-2" onclick="startLoader();">CARICA</button>
 				      <% else %>
 				      	<button type="button" class="btn-2" onclick="goToLogin();">CARICA</button>
 				      <% end %>
@@ -125,6 +125,11 @@
 	
 	function startLoader(){
 		$("#load-button").html('<p class="text-center">... Caricamento Video in corso ...</p>');
+		$("#form-upload").submit();
 	}
+	
+	$(document).ready(function() {
+	    checkDocumentHeight("fandom");
+	});
 	
 </script>
