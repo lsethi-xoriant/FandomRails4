@@ -40,14 +40,14 @@
 							<th>Tags</th>
 							<th>Immagine</th>
 							<th>Liberatoria</th>
-							<th>Azioni</th>
+							<!--<th>Azioni</th>-->
 						</tr>
 					</thead>
 					<% @ctas.each do |c| %>
 						<tr id="cta-<%= c.id %>">
 							<td><%= c.title %></td>
 							<td class="hidden-xs hidden-sm"><%= c.created_at.strftime("%d/%m/%Y %H:%M") %></td>
-							<td><%= "#{c.user_upload_interaction.user.first_name} #{c.user_upload_interaction.user.last_name}" %></td>
+							<td><%= "#{c.user.first_name} #{c.user.last_name}" %></td>
 							<td>
 								<% c.call_to_action_tags.each do |ctatag| %>
 									<%= ctatag.tag.name %>
@@ -55,23 +55,28 @@
 							</td>
 							<td>
 								<% if c.media_image.present? %>
-									<img src="<%= c.media_image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+									<a href="<%= c.media_image.url %>" target="_blank"><%= c.media_image.url %></a>
 								<% end %>
 							</td>
 							<td>
-								<% if c.releasing_file.present? && c.releasing_file.file_content_type.split("/").first == "image" %>
-									<img src="<%= c.releasing_file.file.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
-								<% elsif c.releasing_file.present? && c.releasing_file.file_content_type.split("/").first != "image" %>
-									<a href="<%= c.releasing_file.file.url %>" target="_blank">scarica</a>
-								<% else %>
-									--
+								<% if c.releasing_file.present? && c.releasing_file.file.present? %>
+									<% if c.releasing_file.file_content_type.split("/").first == "image" %>
+										<img src="<%= c.releasing_file.file.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+									<% elsif c.releasing_file.file_content_type.split("/").first != "image" %>
+										<a href="<%= c.releasing_file.file.url %>" target="_blank">scarica</a>
+									<% else %>
+										--
+									<% end %>
 								<% end %>
 							</td>
+							<!--
 							<td>
 								<button type="button" class="btn btn-default btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>
 								&nbsp;&nbsp;
 								<button type="button" class="btn btn-warning btn-xs" onclick="updateCta(false, <%= c.id %>)">Rifiuta</button>							
-							</td>						</tr>
+							</td>
+							-->						
+							</tr>
 					<% end %>
 				</table>
 			</div>
