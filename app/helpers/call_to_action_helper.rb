@@ -70,38 +70,47 @@ module CallToActionHelper
     CallToAction.includes({:call_to_action_tags => :tag}).where("tags.name ILIKE 'template'").map{|cta| [cta.title, cta.id]}
   end
   
-  def clone_and_create_cta(upload_interaction, params, upload_file_index, watermark)
-    template_cta_id = interaction.resource.call_to_action_id
-    calltoaction_template = CallToAction.find(template_cta_id)
-    user_calltoaction = duplicate_user_generated_cta(calltoaction_template, params, upload_file_index, watermark)
+  def clone_and_create_cta(upload_interaction, params, watermark)
+    calltoaction_template = upload_interaction.call_to_action
+    user_calltoaction = duplicate_user_generated_cta(params, watermark)
+
     calltoaction_template.interactions.each do |i|
-      duplicate_interaction(new_cta,i)
+      duplicate_interaction(user_calltoaction, i)
     end
+
     calltoaction_template.call_to_action_tags.each do |tag|
-      duplicate_cta_tag(new_cta, tag)
+      duplicate_cta_tag(user_calltoaction, tag)
     end
-    user_calltoaction.save
+
+      user_calltoaction.release_required = upload_interaction.releasing? 
+      user_calltoaction.build_releasing_file(file: params[:releasing])
+
+      user_calltoaction.privacy_required = upload_interaction.privacy? 
+      user_calltoaction.privacy = !params[:privacy].blank?
+
+     
+      #user_calltoaction.releasing_file_id = releasing.id
+
     user_calltoaction
   end
   
-  def duplicate_user_generated_cta(calltoaction_template, params, upload_file_index, watermark)
-    calltoaction_template.user_id = current_user.id
-    calltoaction_template.activated_at = nil
-    calltoaction_template.name = generate_unique_name()
-    calltoaction_template.title = params[:title]
-    cta_attributes = calltoaction_template.attributes
-    cta_attributes.delete("id")
-    user_calltoaction = CallToAction.new(cta_attributes)
+  def duplicate_user_generated_cta(params, watermark)
+
+    user_calltoaction = CallToAction.new(
+        title: params[:title], 
+        name: generate_unique_name(), 
+        user_id: current_user.id,
+        media_image: params["upload"],
+        media_type: "IMAGE"
+        )
+
     if watermark.exists?
       if watermark.url.start_with?("http")
         user_calltoaction.interaction_watermark_url = watermark.url(:normalized)
       else
         user_calltoaction.interaction_watermark_url = watermark.path(:normalized)
       end
-    else
-      user_calltoaction.interaction_watermark_url = nil
     end
-    user_calltoaction.media_image = params["upload-#{upload_file_index}"]
     user_calltoaction
   end
   

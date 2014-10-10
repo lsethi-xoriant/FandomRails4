@@ -1,5 +1,20 @@
 require 'daemons'
 
+
+# patch Daemons to log in the rails log directory
+# (the dir setting is used for pids and logs)
+$monitor_log_file = nil
+module Daemons
+  class Application
+    def logfile
+      $monitor_log_file
+    end
+    def output_logfile
+      $monitor_log_file
+    end
+  end
+end
+
 def main
 
   daemon_argv_from_index = ARGV.rindex("--") ? (ARGV.rindex("--") + 1) : ARGV.size
@@ -18,6 +33,9 @@ def main
     dir: "#{app_root_path}/tmp/pids",
     monitor: true
   }
+
+  # the monitor log file
+  $monitor_log_file = "#{app_root_path}/log/log_daemon_monitor.log"
 
   d = Daemons.run("#{app_root_path}/bin/log_daemon_impl.rb", options)
   result = d.applications.length > 0 ? 0 : 1

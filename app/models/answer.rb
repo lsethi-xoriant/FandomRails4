@@ -13,7 +13,7 @@ class Answer < ActiveRecord::Base
 
   belongs_to :call_to_action
 
-  validates_presence_of :text
+  #validates_presence_of :text
 
   after_update :check_remove_answer
 
