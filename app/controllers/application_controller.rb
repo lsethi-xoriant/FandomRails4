@@ -21,6 +21,9 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
+  def file_upload_too_large
+  end
+
   def redirect_into_iframe_calltoaction
     cookies["calltoaction"] = params[:calltoaction_id]
     redirect_to Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["stream_url"]
