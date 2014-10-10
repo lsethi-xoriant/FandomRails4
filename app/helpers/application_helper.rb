@@ -89,7 +89,7 @@ module ApplicationHelper
     outcome = compute_save_and_notify_outcome(user_interaction)
     outcome.info = []
     outcome.errors = []
-
+    
     if user_interaction.outcome.present?
       interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
       interaction_outcome.merge!(outcome)
@@ -113,11 +113,11 @@ module ApplicationHelper
 
     user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
     user_interaction.save
-
+  
     [user_interaction, outcome]
   
   end
-
+  
   def interaction_done?(interaction)
     return current_user && UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
   end
@@ -190,12 +190,18 @@ module ApplicationHelper
   end
 
   def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction)
-    cache_short get_cta_completed_or_reward_status_cache_key(calltoaction.id, current_or_anonymous_user.id) do
-      if !call_to_action_completed?(calltoaction)
-        compute_current_call_to_action_reward_status(reward_name, calltoaction)
-      else
+    call_to_action_completed_or_reward_status = cache_short get_cta_completed_or_reward_status_cache_key(calltoaction.id, current_or_anonymous_user.id) do
+      if call_to_action_completed?(calltoaction)
         CACHED_NIL
+      else
+        compute_current_call_to_action_reward_status(reward_name, calltoaction)
       end
+    end
+
+    if !cached_nil?(call_to_action_completed_or_reward_status)
+      JSON.parse(call_to_action_completed_or_reward_status)
+    else 
+      nil
     end
   end
 
@@ -240,7 +246,7 @@ module ApplicationHelper
       win_reward_count: total_win_reward_count,
       reward_status_images: reward_status_images,
       reward: reward
-    }
+    }.to_json
   end
 
   def get_current_interaction_reward_status(reward_name, interaction)
@@ -279,8 +285,29 @@ module ApplicationHelper
   end
 
   def get_counter_about_user_reward(reward_name)
-    user_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}' and period_id IS NULL").first
-    user_reward ? user_reward.counter : 0
+    reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
+      reward_points = Hash.new
+      reward_points['general'] = calculate_reward_points_general(reward_name)
+      reward_points
+    end
+    
+    if reward_points['general'].nil?
+      reward_points['general'] = calculate_reward_points_general(reward_name)
+      cache_short_write_key(get_reward_points_for_user_key(reward_name, current_user.id), reward_points)
+    end
+    
+    reward_points['general']
+    
+  end
+  
+  def calculate_reward_points_general(reward_name)
+    reward = Reward.find_by_name(reward_name)
+    user_reward = UserReward.where("reward_id = ? and period_id IS NULL and user_id = ?", reward.id, current_user.id).first
+    if user_reward
+      user_reward.counter
+    else
+      0
+    end
   end
 
   def user_has_reward(reward_name)
@@ -327,6 +354,10 @@ module ApplicationHelper
     FandomUtils::request_is_from_mobile_device?(request)
   end
 
+  def small_mobile_devise?()
+    FandomUtils::request_is_from_small_mobile_device?(request)
+  end
+
   def ipad?
     return request.user_agent =~ /iPad/ 
   end
@@ -367,15 +398,7 @@ module ApplicationHelper
   end
 
   def user_avatar user, size = "normal"
-    case user.avatar_selected
-    when "upload"
-      avatar = user.avatar ? user.avatar(:thumb) : "/assets/anon.png"
-    when "facebook"
-      avatar = user.authentications.find_by_provider("facebook").avatar
-    when "twitter"
-      avatar = user.authentications.find_by_provider("twitter").avatar.gsub("_normal","_#{ size }")
-    end
-    return avatar
+    user.avatar_selected_url.present? ? user.avatar_selected_url : "/assets/anon.png"
   end
 
   def disqus_sso

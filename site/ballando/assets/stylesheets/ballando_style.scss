@@ -16,11 +16,17 @@ p.oblique { font-style: oblique }
 }
 
 .carousel-widget {
-    .carousel-inner {
-      .item{
-        border: 6px solid #fff;
-      }
+    .label-warning {
+        text-shadow: none;
     }
+    .carousel-inner {
+        border: 6px solid #fff;
+    }
+}
+
+a.cta-title-link, a.cta-title-link:hover{
+  color: #fff;
+  text-decoration: none;
 }
 
 .media-image {
@@ -1503,7 +1509,7 @@ body {
 
 /* Carousel base class */
 .carousel {
-  margin-bottom: 60px;
+  margin-bottom: 45px;
 }
 
 .carousel-widget {
@@ -1538,7 +1544,7 @@ body {
 /* CUSTOM BOOTSTRAP CAROUSEL */
 
 .carousel-indicators {
-    bottom: -40px;
+    bottom: -50px;
     li {
         background: none repeat scroll 0 0 #535353;
         box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;

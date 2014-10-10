@@ -1,0 +1,65 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "settings" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>Impostazioni pagina classifiche</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if @saved %>
+        	<% if flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+          <% end %>
+        <% else %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p>Errori nel salvataggio delle regole:</p>
+                <p>
+                  <ul>
+                    <% flash[:error].each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%= form_tag("/easyadmin/settings/ranking/save", method: "post") do %>
+    	<%= hidden_field_tag :key, RANKING_SETTINGS_KEY %>
+    	<div class="row">
+    		<div class="col-lg-8 col-lg-offset-3">
+    			<div class="alert alert-info" role="alert">
+    				In questo campo si possono inserire i nomi delle classifiche create nella sezione apposita.
+    				Le classifiche appariranno in ordine di elencazione. Le possibili classifiche sono:
+    				<dl class="dl-horizontal">
+    				<% get_active_ranking.each do |ar| %>
+    					<dt><%= ar.name %></dt><dd><%= ar.title %></dd>
+    				<% end %>
+    				</dl> 				
+    			</div>
+    		</div>
+    	</div>
+        <div class="row form-group">
+            <div class="col-lg-3"><%= label_tag(:rankings, "Classifiche da visualizzare:") %></div>
+            <div class="col-lg-8"><%= text_area_tag(:setting, @setting_value, :class => "form-control", size: "60x10") %> </div>
+        </div>
+        <div class="row">
+          <div class="col-sm12 text-center">
+              <button type="submit" class="btn btn-primary">SALVA</button>
+          </div>
+        </div>
+    <% end %>
+</div>

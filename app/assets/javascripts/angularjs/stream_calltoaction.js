@@ -10,7 +10,7 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
-  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code) {
+  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction) {
 
     $scope.video_players = {};
     $scope.video_player_during_video_interaction_locked = {};
@@ -20,18 +20,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.play_event_tracked = {};
     $scope.current_user_answer_response_correct = {};
 
-    $scope.polling = false;
-
     $scope.current_user = current_user;
     $scope.calltoactions = calltoactions;
-
-    $scope.calltoaction_offset = calltoactions.length;
+    $scope.calltoactions_during_video_interactions_second = calltoactions_during_video_interactions_second;
+    $scope.current_calltoaction = current_calltoaction;
     $scope.calltoactions_count = calltoactions_count;
 
     $scope.google_analytics_code = google_analytics_code;
-
-    $scope.calltoactions_during_video_interactions_second = calltoactions_during_video_interactions_second;
-
+    $scope.polling = false;
     $scope.youtube_api_ready = false;
 
     var tag = document.createElement('script');
@@ -44,7 +40,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     updateSecondaryVideoPlayers($scope.calltoactions);
 
     $("#append-other button").attr('disabled', false);
-    if($scope.calltoaction_offset >= $scope.calltoactions_count) {
+    if($scope.calltoactions.length >= $scope.calltoactions_count) {
       $("#append-other button").hide();
     } else {
       $("#append-other button").show();
@@ -74,8 +70,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         $scope.current_tag_id = tag_id; 
 
         $scope.calltoactions = data.calltoactions;
-
-        $scope.calltoaction_offset = data.calltoactions.length;
         $scope.calltoactions_count = data.calltoactions_count;
 
         $scope.calltoactions_during_video_interactions_second = data.calltoactions_during_video_interactions_second;
@@ -89,13 +83,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         updateSecondaryVideoPlayers($scope.calltoactions);
 
         $("#append-other button").attr('disabled', false);
-        if($scope.calltoaction_offset >= $scope.calltoactions_count) {
+        if($scope.calltoactions.length >= $scope.calltoactions_count) {
           $("#append-other button").hide();
         } else {
           $("#append-other button").show();
         }
 		
-		updateFiltersMenu(tag_id);
+		    updateFiltersMenu(tag_id);
         
       }).error(function() {
         // ERROR.
@@ -148,39 +142,37 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.appendCallToAction = function() {
-    if($scope.calltoactions_count > $scope.calltoaction_offset) {
+    if($scope.calltoactions.length < $scope.calltoactions_count) {
 
       $("#append-other button").attr('disabled', true);
 
-      $http.post("/append_calltoaction", { offset: $scope.calltoaction_offset, tag_id: $scope.current_tag_id })
+      $http.post("/append_calltoaction", { calltoactions_showed: $scope.calltoactions, tag_id: $scope.current_tag_id, current_calltoaction: $scope.current_calltoaction  })
       .success(function(data) {
-
-        $scope.calltoaction_offset = $scope.calltoaction_offset + data.calltoactions.length;
 
         hash_to_append = data.calltoactions_during_video_interactions_second;
         hash_main = $scope.calltoactions_during_video_interactions_second;
-        for(var name in hash_to_append) { hash_to_append[name] = hash_to_append[name]; }
-        $scope.calltoactions_during_video_interactions_second = hash_to_append;
+        for(var name in hash_to_append) { 
+          hash_main[name] = hash_to_append[name]; 
+        }
+        $scope.calltoactions_during_video_interactions_second = hash_main;
 
-        $scope.calltoactions.push(data.calltoactions);
         updateSecondaryVideoPlayers(data.calltoactions);
 
-        $("#calltoaction-stream").append(data.html_to_append);
-		
-        if(!($scope.calltoactions_count > $scope.calltoaction_offset))
-          $("#append-other button").hide();
-
         angular.forEach(data.calltoactions, function(calltoaction) {
+          $scope.calltoactions.push(calltoaction);
           appendYTIframe(calltoaction);
         });
 
+        $scope.last_calltoaction_shown_activated_at = $scope.calltoactions[$scope.calltoactions.length - 1].activated_at;
+
+        $("#calltoaction-stream").append(data.html_to_append);
+
+        if($scope.calltoactions.length >= $scope.calltoactions_count) {
+          $("#append-other button").hide();
+        }
+
         $("#append-other button").attr('disabled', false);
 
-        iframe_height = $(".iframe-iphone").innerHeight();
-        iframe_width = $(".iframe-iphone").innerWidth();
-        $(".iframe-iphone iframe").css("height", iframe_height);
-        $(".iframe-iphone iframe").css("width", iframe_width);
-        
       });
       
     } else {

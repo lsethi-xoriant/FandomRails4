@@ -3,6 +3,12 @@ require 'digest/md5'
 
 module CallToActionHelper
 
+  def get_cta_active_count()
+    cache_short("cta_active_count") do
+      CallToAction.active.count
+    end
+  end
+
   def always_shown_interactions(calltoaction)
     cache_short("always_shown_interactions_#{calltoaction.id}") do
       calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC").to_a
@@ -64,38 +70,39 @@ module CallToActionHelper
     CallToAction.includes({:call_to_action_tags => :tag}).where("tags.name ILIKE 'template'").map{|cta| [cta.title, cta.id]}
   end
   
-  def clone_and_create_cta(params, upload_file_index, watermark)
-    old_cta = CallToAction.find(params[:template_cta_id])
-    new_cta = duplicate_user_generated_cta(old_cta.id, params, upload_file_index, watermark)
-    old_cta.interactions.each do |i|
+  def clone_and_create_cta(upload_interaction, params, upload_file_index, watermark)
+    template_cta_id = interaction.resource.call_to_action_id
+    calltoaction_template = CallToAction.find(template_cta_id)
+    user_calltoaction = duplicate_user_generated_cta(calltoaction_template, params, upload_file_index, watermark)
+    calltoaction_template.interactions.each do |i|
       duplicate_interaction(new_cta,i)
     end
-    old_cta.call_to_action_tags.each do |tag|
+    calltoaction_template.call_to_action_tags.each do |tag|
       duplicate_cta_tag(new_cta, tag)
     end
-    new_cta.save
-    new_cta
+    user_calltoaction.save
+    user_calltoaction
   end
   
-  def duplicate_user_generated_cta(old_cta_id, params, upload_file_index, watermark)
-    cta = CallToAction.find(old_cta_id)
-    cta.user_id = current_user.id
-    cta.activated_at = nil
-    cta.name = generate_unique_name()
-    cta_attributes = cta.attributes
+  def duplicate_user_generated_cta(calltoaction_template, params, upload_file_index, watermark)
+    calltoaction_template.user_id = current_user.id
+    calltoaction_template.activated_at = nil
+    calltoaction_template.name = generate_unique_name()
+    calltoaction_template.title = params[:title]
+    cta_attributes = calltoaction_template.attributes
     cta_attributes.delete("id")
-    cta = CallToAction.new(cta_attributes, :without_protection => true)
+    user_calltoaction = CallToAction.new(cta_attributes)
     if watermark.exists?
       if watermark.url.start_with?("http")
-        cta.interaction_watermark_url = watermark.url(:normalized)
+        user_calltoaction.interaction_watermark_url = watermark.url(:normalized)
       else
-        cta.interaction_watermark_url = watermark.path(:normalized)
+        user_calltoaction.interaction_watermark_url = watermark.path(:normalized)
       end
     else
-      cta.interaction_watermark_url = nil
+      user_calltoaction.interaction_watermark_url = nil
     end
-    cta.media_image = params["upload-#{upload_file_index}"]
-    cta
+    user_calltoaction.media_image = params["upload-#{upload_file_index}"]
+    user_calltoaction
   end
   
   def generate_unique_name
@@ -130,6 +137,7 @@ module CallToActionHelper
   def duplicate_cta(old_cta_id)
     cta = CallToAction.find(old_cta_id)
     cta.title = "Copy of " + cta.title
+    cta.activated_at = DateTime.now
     cta_attributes = cta.attributes
     cta_attributes.delete("id")
     CallToAction.new(cta_attributes, :without_protection => true)

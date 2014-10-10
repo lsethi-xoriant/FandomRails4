@@ -14,9 +14,9 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 
 	var Api = $resource('/ranking/page.json');
 	
-	$scope.init = function(rankings) {
-		console.log(rankings);
+	$scope.init = function(rankings, user) {
 		$scope.rankings = rankings;
+		$scope.user = user;
 	};
 	
 	$scope.prev_page = function(current_page, rank){

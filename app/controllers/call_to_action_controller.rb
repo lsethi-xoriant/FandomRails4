@@ -9,15 +9,44 @@ class CallToActionController < ApplicationController
   include ApplicationHelper
   include CaptchaHelper
 
+  def facebook_share_page_with_meta
+    @calltoaction = CallToAction.active.find(params[:calltoaction_id])
+    fb_meta_info = get_fb_meta(@calltoaction)
+    if fb_meta_info
+      @fb_meta_tags = (
+                        '<meta property="og:type" content="article" />' +
+                        '<meta property="og:locale" content="it_IT" />' +
+                        '<meta property="og:title" content="' + fb_meta_info['title'] + '" />' +
+                        '<meta property="og:description" content="' + fb_meta_info['description'] +'" />' +
+                        '<meta property="og:image" content="' + fb_meta_info['image_url'] + '" />'
+                      ).html_safe
+    end
+  end
+
   def append_calltoaction
     render_calltoactions_str = String.new
     calltoactions = Array.new
 
+    calltoactions_showed_ids = params[:calltoactions_showed].map { |calltoaction| calltoaction["id"] }
+    calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")
+
     if params[:tag_id].present?
-      stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id=?", params[:tag_id]).offset(params[:offset]).limit(3)
+      
+      stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", params[:tag_id]).active
+      if params[:current_calltoaction].present?
+        stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
+      end
+    
     else
-      stream_call_to_action_to_render = CallToAction.active.offset(params[:offset]).limit(3)
+
+      stream_call_to_action_to_render = CallToAction.active
+      if params[:current_calltoaction].present?
+        stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
+      end
+
     end
+
+    stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id NOT IN (#{calltoactions_showed_id_qmarks})", *calltoactions_showed_ids).limit(3)
     
     stream_call_to_action_to_render.each do |calltoaction|
       calltoactions << calltoaction
@@ -83,15 +112,20 @@ class CallToActionController < ApplicationController
     end
   end
   
+  # TODO: cache this
   def get_fb_meta(cta)
-    info = Hash.new
-    share = cta.interactions.find_by_resource_type("Share").resource
-    share_info = JSON.parse(share.providers)
-    info['title'] = get_cta_share_title(cta, share_info)
-    #info['url'] = get_cta_share_url(calltoaction, share_info)
-    info['description'] = get_cta_share_description(cta, share_info)
-    info['image_url'] = get_cta_share_image(cta, share)
-    info
+    share_interaction = cta.interactions.find_by_resource_type("Share")
+    if share_interaction
+      share_resource = share_interaction.resource
+      share_info = JSON.parse(share_resource.providers)
+      info = {
+        'title' => get_cta_share_title(cta, share_info),
+        'description' => get_cta_share_description(cta, share_info),
+        'image_url' => get_cta_share_image(cta, share_resource)
+      }
+    else
+      nil
+    end
   end
   
   def get_cta_share_title(cta, share_info)
@@ -128,22 +162,14 @@ class CallToActionController < ApplicationController
 
   def show
 
-    calltoaction = CallToAction.find(params[:id])
-    @calltoactions = [calltoaction]
+    calltoaction = CallToAction.includes(:interactions).active.where("call_to_actions.id = ?", params[:id]).to_a
+    calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction[0].id).limit(2).to_a
+    
+    @calltoactions_with_current = calltoaction + calltoactions
 
-    @calltoactions_active_count = 1    
+    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions_with_current)
+    @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction[0], "Comment")
     
-    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond([calltoaction])
-    @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction, "Comment")
-    
-    fb_meta_info = get_fb_meta(calltoaction)
-    @fb_meta_tags = '<meta property="og:type" content="article" /> '
-    @fb_meta_tags += '<meta property="og:locale" content="it_IT" /> '
-    @fb_meta_tags += '<meta property="og:title" content="'+fb_meta_info['title']+'" /> '
-    @fb_meta_tags += '<meta property="og:description" content="'+fb_meta_info['description']+'" /> '
-    @fb_meta_tags += '<meta property="og:image" content="'+fb_meta_info['image_url']+'" /> '
-    
-    @redirect = params[:redirect].present?
     # TODO: @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
     if page_require_captcha?(@calltoaction_comment_interaction)
@@ -164,6 +190,7 @@ class CallToActionController < ApplicationController
       end
     end
 =end
+
   end
 
   def page_require_captcha?(calltoaction_comment_interaction)
@@ -527,15 +554,17 @@ class CallToActionController < ApplicationController
     for i in(1 .. upload_interaction.upload_number) do
       if params["upload-#{i}"]
         if params["upload-#{i}"].size <= get_max_upload_size()
-          cloned_cta = clone_and_create_cta(params, i, upload_interaction.watermark)
+          cloned_cta = clone_and_create_cta(upload_interaction, params, i, upload_interaction.watermark)
           if cloned_cta.errors.any?
             flash[:error] << cloned_cta.errors
           else
             UserUploadInteraction.create(user_id: current_user.id, call_to_action_id: cloned_cta.id, upload_id: upload_interaction.id)
             if upload_interaction.releasing?
               releasing.save if releasing.id.blank?
-              cloned_cta.update_attribute(:releasing_file_id, releasing.id)
+              cloned_cta.releasing_file_id = releasing.id
             end
+            cloned_cta.title = params["title"]
+            cloned_cta.save
           end
         else
           flash[:error] = ["I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"]
@@ -547,10 +576,10 @@ class CallToActionController < ApplicationController
   def check_valid_upload(upload_interaction)
     errors = Array.new
     if !check_privacy_accepted(upload_interaction) 
-      errors << "Errore non hai accettato la privacy" 
+      errors << "Devi accettare la privacy" 
     end
     if !check_releasing_accepted(upload_interaction)
-      errors << "Errore non hai caricato la liberatoria"
+      errors << "Devi caricare la liberatoria"
     end
     if !check_uploaded_file()
       errors << "I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"

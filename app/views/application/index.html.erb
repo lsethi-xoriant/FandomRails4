@@ -2,7 +2,7 @@
 
 <%= render partial: "/application/home_launchers" %>
 
-<div class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= CallToAction.active.count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
+<div class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
 
   <!-- CUSTOM SITE HEADER --> 
   <%#= render partial: "/application/header" %>

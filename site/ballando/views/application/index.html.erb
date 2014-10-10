@@ -1,10 +1,6 @@
 <% template_cache_short('index', !user_signed_in?) do %>
-
-	<%# render partial: "/application/user_bar" %>
 	
-	<%#= render partial: "/application/home_launchers" %>
-	
-	<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= @calltoactions_active_count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', '<%= request.url %>')">   
+	<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= @calltoactions_active_count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, '<%= request.url %>')">   
 	
 	  <div class="row">
 	    <div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
@@ -12,7 +8,6 @@
 	    </div>
 	  </div>
 	  
-	
 	  <div class="row">
 	    <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
 	      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions } %>

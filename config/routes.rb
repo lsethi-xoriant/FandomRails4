@@ -30,6 +30,8 @@ Fandom::Application.routes.draw do
           match "/iframe/get_check", :to => "iframe_check#get_check_template"
           match "/iframe/do_check", :to => "iframe_check#do_check"
 
+          match "/upload_interaction/new", :to => "upload_interaction#new"
+
           match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
           match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
         end
@@ -38,13 +40,11 @@ Fandom::Application.routes.draw do
   end
 
   match "/redirect_into_iframe_calltoaction/:calltoaction_id", to: "application#redirect_into_iframe_calltoaction"
+  match "/facebook_share_page_with_meta/:calltoaction_id", to: "call_to_action#facebook_share_page_with_meta"
   match "/profile/update_avatar", to: "application#update_avatar_image"
 
-  # TODO: Maxibon youtube widget url
-  match "/youtube", :to => "youtube_widget#index"
-
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
-  match "/cta/upload", :to => "call_to_action#upload"
+  match "/interaction_upload/:interaction_id", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
   match "/browse/search", :to => "browse#search"
@@ -110,6 +110,7 @@ Fandom::Application.routes.draw do
     match "reward/new", :to => "easyadmin_reward#new"
     match "reward/save", :to => "easyadmin_reward#save"
     match "reward/update", :to => "easyadmin_reward#update"
+    match "reward/clone/:id", to: "easyadmin_reward#clone"
     
     # INSTANT WIN
     match "contest", :to => "easyadmin#index_contest"
@@ -152,6 +153,8 @@ Fandom::Application.routes.draw do
     # SETTING
     match "settings/browse", :to => "settings#browse_settings"
     match "settings/browse/save", :to => "settings#save_browse_settings"
+    match "settings/ranking", :to => "settings#ranking_settings"
+    match "settings/ranking/save", :to => "settings#save_ranking_settings"
   end
 
   match '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }

@@ -354,12 +354,17 @@ module RewardingSystemHelper
       user = user_interaction.user
       outcome.reward_name_to_counter.each do |reward_name, reward_counter|
         assign_reward(user, reward_name, reward_counter, request.site)
+        clear_cache_reward_points(reward_name, user)
       end          
       outcome.unlocks.each do |reward_name|
         UserReward.unlock_reward(user, reward_name)
       end          
     end
     outcome
+  end
+  
+  def clear_cache_reward_points(reward_name, user)
+    expire_cache_key(get_reward_points_for_user_key(reward_name, user.id))
   end
 
   def get_mocked_user_interaction(interaction, user, interaction_is_correct)

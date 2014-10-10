@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
-    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs
+    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url
 
   attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :required_attrs
 
@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
   has_many :call_to_actions
 
   before_save :set_date_of_birth
+  before_update :set_current_avatar
 
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/anon.png"
 
@@ -173,4 +174,11 @@ class User < ActiveRecord::Base
   def mocked?
     false
   end
+  
+  def set_current_avatar
+    if avatar.present?
+      self.avatar_selected_url = avatar.url(:thumb)
+    end
+  end
+  
 end

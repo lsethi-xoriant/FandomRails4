@@ -8687,7 +8687,8 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean
+    newsletter boolean,
+    avatar_selected_url character varying(255)
 );
 
 
@@ -13432,3 +13433,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140919145609');
 INSERT INTO schema_migrations (version) VALUES ('20140919151718');
 
 INSERT INTO schema_migrations (version) VALUES ('20140926073909');
+
+INSERT INTO schema_migrations (version) VALUES ('20141007160640');

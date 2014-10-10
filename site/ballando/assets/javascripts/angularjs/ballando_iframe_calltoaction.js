@@ -5,6 +5,11 @@ ballandoIframeCalltoactionModule.controller('BallandoIframeCalltoactionCtrl', Ba
 
 function BallandoIframeCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
+  $window.showRegistrateView = function() {
+    document.cookie = "connect_from_page = " + top.location;
+    top.location = PROFILE_URL;
+  };
+  
   $window.onEnterInteraction = function(interaction_id, answer_id) {
     if(answer_id) {
       $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden");

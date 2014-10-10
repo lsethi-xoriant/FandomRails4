@@ -39,11 +39,6 @@ class ApplicationController < ActionController::Base
     authorize! :manage, :all
     current_user.user_interactions.destroy_all
 
-    CallToAction.active.each do |calltoaction|
-      expire_cache_key(get_cta_status_for_user(calltoaction.id, current_user.id))
-      expire_cache_key(get_cta_completed_by_user(calltoaction.id, current_user.id))
-    end
-
     redirect_to "/"
   end
 

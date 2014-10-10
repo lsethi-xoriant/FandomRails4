@@ -25,6 +25,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   
   REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
   BROWSE_SETTINGS_KEY = 'browse.setting'
+  RANKING_SETTINGS_KEY = 'ranking.setting'
   
   MEDIA_TYPES = ["VOID", "IMAGE", "YOUTUBE", "IFRAME"]
   PERIOD_TYPES = ["GIORNALIERA", "SETTIMANALE", "MENSILE", "GLOBALE"]
@@ -52,6 +53,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
   REWARD_SORT_BY_NAME = "name"
   REWARD_SORT_BY_TITLE = "title"
   CTA_REWARD_TAG = "reward-cta"
+  
+  USER_TIME_ZONE = "Rome"
 
   class CachedNil
   end
