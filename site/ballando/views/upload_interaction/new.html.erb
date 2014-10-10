@@ -3,11 +3,16 @@
 </style>
 <div class="col-sm-12 text-center" style="margin-top: 15px;">
 
-  <%= flash[:error] %>ERROR
-  <%= flash[:notice] %>NOTICE
 
+
+  <% if @cloned_cta && @cloned_cta.errors.any? %>
+    <% @cloned_cta.errors.full_messages.each do |error_message| %>
+      <%= error_message %>
+    <% end %>
+  <% end %>
+           
   <div class="row">
-    <%= form_tag "/uplaod_interaction/create/#{ @upload_interaction.id }", multipart: true do %>
+    <%= form_tag "/upload_interaction/create/#{ @upload_interaction.id }", multipart: true do %>
     <div class="col-sm-12">
       <div class="row form-group">
         <label>Upload:</label>
@@ -17,7 +22,7 @@
 
       <div class="form-group">
         <label>Titolo</label>
-        <%= text_field_tag :title, nil, class: "form-control" %>
+        <%= text_field_tag :title,  (@cloned_cta.title if @cloned_cta), class: "form-control" %>
       </div>
 
       <div class="row form-group">
