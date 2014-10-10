@@ -29,7 +29,7 @@
 				            </li>
 			            <% end %>
 				         	<li>
-				                <div class="slide slide-upload active" style="background-position:center center; background-repeat: no-repeat; background-image: url('');">
+				                <div class="slide slide-upload active" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= asset_path('joe-maska_thumb.jpg') %>');">
 				                    <div class="comment-center">
 				                        <a href="/upload_interaction/new">
 									      <div class="row">
@@ -73,7 +73,7 @@
 	        itemWidth: getItemSize(),
 	        itemMargin: 10,
 	        minItems: 1,
-	        maxItems: 7
+	        maxItems: 6
 	    });
 	    
 	    $(window).resize(function() {
@@ -98,7 +98,7 @@
 	    if ($(window).innerWidth() < 760)
 	        return 2;
 	    else
-	        return 7;
+	        return 6;
 	}
 	
 	function getItemSize() {
