@@ -53,12 +53,14 @@ module RewardHelper
   end
   
   def get_reward_image_for_status(reward)
-    if user_has_reward(reward.name)
-      reward.main_image
-    elsif reward.is_expired
-      reward.not_winnable_image
-    else
-      reward.not_awarded_image
+    cache_short(get_status_rewar_image_key(reward.name, current_user.id)) do
+      if user_has_reward(reward.name)
+        reward.main_image.url
+      elsif reward.is_expired
+        reward.not_winnable_image.url
+      else
+        reward.not_awarded_image.url
+      end
     end
   end
   
@@ -75,14 +77,16 @@ module RewardHelper
   end
   
   def get_unlocked_contents
-    rewards_with_cta = get_reward_with_cta
-    total = rewards_with_cta.count
-    rewards_with_cta.each do |r|
-      if user_has_reward(r.name)
-        total -= 1
+    cache_short(get_unlocked_contents_for_user(current_user.id)) do
+      rewards_with_cta = get_reward_with_cta
+      total = rewards_with_cta.count
+      rewards_with_cta.each do |r|
+        if user_has_reward(r.name)
+          total -= 1
+        end
       end
+      total
     end
-    total
   end
 
   def clone_reward(params)

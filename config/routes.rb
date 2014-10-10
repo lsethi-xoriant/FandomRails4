@@ -153,6 +153,8 @@ Fandom::Application.routes.draw do
     # SETTING
     match "settings/browse", :to => "settings#browse_settings"
     match "settings/browse/save", :to => "settings#save_browse_settings"
+    match "settings/ranking", :to => "settings#ranking_settings"
+    match "settings/ranking/save", :to => "settings#save_ranking_settings"
   end
 
   match '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }

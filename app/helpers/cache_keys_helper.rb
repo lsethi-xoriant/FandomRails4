@@ -63,4 +63,35 @@ module CacheKeysHelper
   def get_general_position_key(user_id)
     "user_#{user_id}_general_position"
   end
+  
+  def get_ranking_page_key
+    "ranking_page"
+  end
+  
+  def get_ranking_settings_key
+    "ranking_page_settings"
+  end
+  
+  # Profile
+  # ~~~~~
+  def get_current_user_key(user_id)
+    "current_user_#{user_id}"
+  end
+  
+  def get_status_rewar_image_key(reward_name, user_id)
+    "status_reward_#{reward_name}_#{user_id}"
+  end
+  
+  def get_reward_points_for_user_key(reward_name, user_id)
+    "reward_#{reward_name}_points_counter_user_#{user_id}"
+  end
+  
+  def get_unlocked_contents_for_user(user_id)
+    "unlocked_conents_for_user_#{user_id}"
+  end
+  
+  def get_counter_general_reward_user_key(reward_name, user_id)
+    "reward_#{reward_name}_general_counter_user_#{user_id}"
+  end
+  
 end
