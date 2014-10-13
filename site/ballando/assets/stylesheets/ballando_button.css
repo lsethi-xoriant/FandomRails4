@@ -31,6 +31,10 @@ a.btn-2, a.btn-2:hover{
   width: 50%;
 }
 
+a.btn-2.btn-2-small {
+  line-height: 15px; min-height: 20px;
+}
+
 /* SQUARE BUTTON */
 
 .btn-2.btn-2-versus {
