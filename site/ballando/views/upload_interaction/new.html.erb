@@ -105,13 +105,13 @@
 				//$("#user-avatar-image").attr('src', e.target.result).width(100).height(100);
 			};
 			//reader.readAsDataURL(image.files[0]);
-			$(".confirm-step.upload-file").html('<i class="fa fa-check" style="font-size: 20px; color: green;"></i>');
+			$(".confirm-step.upload-file").html('<i class="fa fa-check" style="font-size: 20px; color: #FFF;"></i>');
 		}
 	}
 	
 	function titleInserted(title){
 		if( $(title).val() != ''){
-			$(".confirm-step.upload-title").html('<i class="fa fa-check" style="font-size: 20px; color: green;"></i>');
+			$(".confirm-step.upload-title").html('<i class="fa fa-check" style="font-size: 20px; color: #FFF;"></i>');
 		}else{
 			$(".confirm-step.upload-title").html('');
 		}
@@ -124,7 +124,7 @@
 	}
 	
 	function startLoader(){
-		$("#load-button").html('<p class="text-center" style="color: #fff;">... Caricamento Video in corso ...</p>');
+		$("#load-button").html('<p class="text-center" style="color: #fff;">Caricamento video in corso ...</p>');
 		$("#form-upload").submit();
 	}
 	
