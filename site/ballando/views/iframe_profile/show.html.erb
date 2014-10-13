@@ -2,23 +2,18 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-3 col-xxs-12" style="padding: 20px 10px;">
+    <div class="col-xs-3 col-xxs-12 text-left" style="padding: 20px 10px;">
       <a href="<%= @profile_url %>" target="_top">
         <img src="<%= current_avatar %>" class="img-responsive img-circle iframe-profile-avatar">
       </a>
 
-      <%
-=begin if current_user %>
-        <!--
+      <% if current_user %>
         <a href="<%= @profile_url %>" target="_top">
-          <div class="text-center visible-xs iframe-notice-baloon">
+          <div class="text-center iframe-notice-baloon">
             <span><%= @notices_count %></span>
           </div>
         <a>
-        -->
-      <% end 
-=end
-      %>
+      <% end %>
 
     </div>
 
