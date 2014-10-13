@@ -22,6 +22,7 @@
 
   <%= csrf_meta_tags %>
   <script type="text/javascript" src="http://www.ballandoconlestelle.rai.it/dl/js/common.js"></script>
+  <script type="text/javascript" src="http://ad2.neodatagroup.com/uploads/js/sid49jq.js"></script>
   <meta property="og:site_name" content="Ballando con le stelle 2014"/>
   <%= yield (:fb_meta_tags) %>
   
@@ -221,9 +222,10 @@
 	
 	Banners.vars.push({ 
 		s: "#banner-rai",
-		v: "banner",
+		v: "rai_uno^rai_uno_ballando_medium_box_var^300x250^",
 		hideEmpty: true
 	});
+	Banner.reloadAll();
 	
 	$(function() {
 		FastClick.attach(document.body);
