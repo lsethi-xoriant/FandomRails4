@@ -3,9 +3,16 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
   include CallToActionHelper
   
   def main
-    @calltoactions = cache_short("iframe_carousel_calltoactions") do
-      CallToAction.active.limit(3).to_a
+    @calltoactions = cache_short("iframe_carousel_calltoactions") do     
+      highlight_calltoactions = get_highlight_calltoactions()
+      if highlight_calltoactions.any?
+        last_calltoactions = CallToAction.active.where("id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
+      else
+        last_calltoactions = CallToAction.active.limit(3).to_a
+      end
+      highlight_calltoactions + last_calltoactions
     end
+
     @calltoaction_reward_status = Hash.new
     @calltoactions.each do |calltoaction|
       @calltoaction_reward_status[calltoaction.id] = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction)

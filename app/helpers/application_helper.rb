@@ -40,6 +40,43 @@ module ApplicationHelper
     attribute :column_number, type: Integer
   end
 
+  def order_highlight_calltoactions_by_ordering_meta(meta_ordering, highlight_calltoactions)
+    ordered_highlight_calltoaction_names = meta_ordering.value.split(",")
+    if ordered_highlight_calltoaction_names.any?         
+      ordered_highlight_calltoactions = Array.new
+      ordered_highlight_calltoaction_names.each do |calltoaction_name|
+        highlight_calltoactions.each do |calltoaction|
+          if calltoaction.name == calltoaction_name
+            ordered_highlight_calltoactions << calltoaction
+          end
+        end
+      end
+      highlight_calltoactions.each do |calltoaction|
+        unless ordered_highlight_calltoaction_names.include?(calltoaction.name) 
+          ordered_highlight_calltoactions << calltoaction
+        end
+      end
+      ordered_highlight_calltoactions
+    else
+      highlight_calltoactions
+    end
+  end
+
+  def get_highlight_calltoactions()
+    tag = Tag.find_by_name("highlight")
+    if tag
+      highlight_calltoactions = calltoaction_active_with_tag(tag.name, "DESC")
+      meta_ordering = tag.tag_fields.find_by_name("ordering")    
+      if meta_ordering
+        ordered_highlight_calltoactions = order_highlight_calltoactions_by_ordering_meta(meta_ordering, highlight_calltoactions)
+      else
+        highlight_calltoactions
+      end
+    else
+      []
+    end
+  end
+
   def cached_nil?(cached_value)
     cached_value.class == CachedNil
   end
@@ -367,7 +404,7 @@ module ApplicationHelper
   end
 
   def calltoaction_active_with_tag(tag, order)
-    return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
+    return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at <= ? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name = ?)", Time.now, tag).order("activated_at #{order}")
   end
 
   def calltoaction_coming_soon_with_tag(tag, order)
