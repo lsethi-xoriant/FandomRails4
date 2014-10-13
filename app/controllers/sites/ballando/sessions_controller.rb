@@ -91,7 +91,7 @@ class Sites::Ballando::SessionsController < SessionsController
       end
 
       if user && user.email.include?("@FAKE___DOMAIN.com")
-        user.update_attribute(:email, user_email)
+        user.update_attributes(:email => user_email, :avatar_selected_url => rai_response_user["user"]["thumbnailURL"])
       elsif user.nil?
         user = new_user_from_provider(rai_response_user, user_email)
       end

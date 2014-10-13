@@ -193,7 +193,6 @@ module RankingHelper
   def create_general_user_position
     ranking = Ranking.find_by_name("general_chart")
     rank = get_ranking(ranking)
-    debugger
     if rank
       rank.user_to_position
     end

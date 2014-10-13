@@ -27,7 +27,7 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
 
   def footer
     @calltoactions = cache_short("iframe_carousel_footer_calltoactions") do
-      CallToAction.active.limit(8).to_a
+      CallToAction.active.includes(:call_to_action_tags => :tag).where("tags.name <> 'reward-cta'").limit(8).to_a
     end
     
     @calltoaction_reward_status = Hash.new
