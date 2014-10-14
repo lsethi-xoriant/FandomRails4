@@ -83,7 +83,7 @@ module CacheKeysHelper
   end
   
   def get_reward_points_for_user_key(reward_name, user_id)
-    "reward_#{reward_name}_points_counter_user_#{user_id}"
+    "rewards_#{reward_name}_counter_for_user_#{user_id}"
   end
   
   def get_unlocked_contents_for_user(user_id)

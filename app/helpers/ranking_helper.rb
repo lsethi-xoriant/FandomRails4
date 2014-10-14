@@ -21,36 +21,9 @@ module RankingHelper
     users_positions['general_user_position'][current_user.id]
   end
   
-  def get_reward_points_in_period(period_kind, reward_name)
-    period = get_current_periodicities[period_kind]
-    if period.nil?
-      period_id = send("create_#{period_kind.downcase}_periodicity")
-    else
-      period_id = period.id
-    end
-    
-    reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
-      reward_points = Hash.new
-      reward_points[period_id] = calculate_reward_points_in_period(reward_name, period_id)
-      reward_points
-    end
-    
-    if reward_points[period_id].nil?
-      reward_points[period_id] = calculate_reward_points_in_period(reward_name, period_id)
-      cache_short_write_key(get_reward_points_for_user_key(reward_name, current_user.id), reward_points)
-    end
-    
-    reward_points[period_id]
-  end
-  
-  def calculate_reward_points_in_period(reward_name, period_id)
-    reward = Reward.find_by_name(reward_name)
-    user_reward = UserReward.where("reward_id = ? and period_id = ? and user_id = ?", reward.id, period_id, current_user.id).first
-    if user_reward
-      user_reward.counter
-    else
-      0
-    end
+  def get_reward_points_in_period(period_kind, reward_name)    
+    reward_points = get_counter_about_user_reward(reward_name, true)
+    reward_points[period_kind].present? ? reward_points[period_kind] : 0
   end
   
   def get_ranking(ranking)

@@ -8,6 +8,7 @@ class CallToActionController < ApplicationController
   include CallToActionHelper
   include ApplicationHelper
   include CaptchaHelper
+  include CommentHelper
 
   def facebook_share_page_with_meta
     @calltoaction = CallToAction.active.find(params[:calltoaction_id])
@@ -170,11 +171,16 @@ class CallToActionController < ApplicationController
     @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions_with_current)
     @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction[0], "Comment")
     
-    # TODO: @calltoactions_correlated = get_correlated_cta(@calltoaction)
+    if @calltoaction_comment_interaction
+      @comments_to_shown = get_last_comments_to_view(@calltoaction_comment_interaction)
+      @comments_to_shown_ids = @comments_to_shown.map { |comment| comment.id }
 
-    if page_require_captcha?(@calltoaction_comment_interaction)
-      @captcha_data = generate_captcha_response
+      if page_require_captcha?(@calltoaction_comment_interaction)
+        @captcha_data = generate_captcha_response
+      end
     end
+
+    # TODO: @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
 =begin
     if @calltoaction.enable_disqus
@@ -228,7 +234,7 @@ class CallToActionController < ApplicationController
     comment_resource = interaction.resource
 
     approved = comment_resource.must_be_approved ? nil : true
-    user_text = params[:comment] # sanitize(params[:comment])
+    user_text = params[:comment]
     
     response = Hash.new
 
@@ -239,14 +245,14 @@ class CallToActionController < ApplicationController
     if current_user
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
       if approved && user_comment.errors.blank?
-        user_interaction, outcome = create_or_update_interaction(user_comment.user_id, interaction.id, nil, nil)
+        user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
       end
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
       if response[:captcha_check]
         user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, text: user_text, comment_id: comment_resource.id)
         if approved && !user_comment.errors.blank?
-          user_interaction, outcome = create_or_update_interaction(user_comment.user_id, interaction.id, nil, nil)
+          user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
         end
       end
     end
@@ -264,13 +270,16 @@ class CallToActionController < ApplicationController
 
     response = Hash.new
     render_calltoactions_str = String.new
+    comment_to_append_ids = Array.new
 
     comments_to_show = query_block.call(interaction, response)
 
     comments_to_show.each do |user_comment|
+      comment_to_append_ids << user_comment.id
       render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_comment", locals: { user_comment: user_comment, new_comment_class: true }, layout: false, formats: :html)
     end
 
+    response[:comments_to_append_ids] = comment_to_append_ids
     response[:comments_to_append] = render_calltoactions_str
 
     respond_to do |format|
@@ -278,25 +287,36 @@ class CallToActionController < ApplicationController
     end
   end
 
+  def get_comments_approved_except_ids(user_comments, except_ids)
+    comments_showed_id_qmarks = (["?"] * except_ids.count).join(", ")
+    comments_to_show_approved = user_comments.approved.where("id NOT IN (#{comments_showed_id_qmarks})", *except_ids)
+  end
+
   def new_comments_polling
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
 
+      comments_to_show_approved = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comments_shown])
+
       if params[:first_comment_shown_date].present?
-        comments_to_show = interaction.resource.user_comment_interactions.approved.where("date_trunc('second', updated_at) > ?", params[:first_comment_shown_date]).order("updated_at DESC")
+        comments_to_show = comments_to_show_approved.where("date_trunc('milliseconds', updated_at) >= ?", params[:first_comment_shown_date]).order("updated_at DESC")
       else
-        comments_to_show = interaction.resource.user_comment_interactions.approved.order("date_trunc('second', updated_at) DESC")
+        comments_to_show = comments_to_show_approved.order("date_trunc('milliseconds', updated_at) DESC")
       end
 
-      response[:first_comment_shown_date] = comments_to_show.any? ? comments_to_show.first.updated_at : nil
+      response[:first_comment_shown_date] = comments_to_show.any? ? comments_to_show.first.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N") : nil
       comments_to_show
     end
   end
 
   def append_comments
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
-      comments_to_show = interaction.resource.user_comment_interactions.approved.where("updated_at < ?", params[:last_comment_shown_date]).order("updated_at DESC").limit(10)
-      response[:last_comment_shown_date] = comments_to_show.any? ? comments_to_show.last.updated_at : nil
+      
+      comments_to_show_approved = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comments_shown])
+      comments_to_show = comments_to_show_approved.where("date_trunc('milliseconds', updated_at) <= ?", params[:last_comment_shown_date]).order("updated_at DESC").limit(10)
+      
+      response[:last_comment_shown_date] = comments_to_show.any? ? comments_to_show.last.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N") : nil
       response[:comments_to_append_counter] = comments_to_show.count
+      
       comments_to_show
     end    
   end
@@ -393,7 +413,7 @@ class CallToActionController < ApplicationController
 
     end
 
-    response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME)
+    response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
 
     respond_to do |format|
       format.json { render :json => response.to_json }

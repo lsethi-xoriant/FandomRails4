@@ -215,7 +215,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
     
     showMarkerNearInteraction(interaction_id);
-    updateUserRewardInView(data.main_reward_counter);
+    updateUserRewardInView(data.main_reward_counter.weekly);
 
     $("#undervideo-area-" + interaction_id).html(data.feedback); 
     $("#undervideo-interaction-" + interaction_id).css("display", "none"); 
