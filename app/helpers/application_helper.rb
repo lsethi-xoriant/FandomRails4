@@ -114,6 +114,10 @@ module ApplicationHelper
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
 
     if user_interaction
+      if interaction.resource_type.downcase == "share"
+        aux = merge_aux(aux, user_interaction.aux)
+      end
+
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
       UserCounter.update_counters(interaction, user_interaction, user, false) 
     else
