@@ -398,7 +398,10 @@ module ApplicationHelper
   end
 
   def find_interaction_for_calltoaction_by_resource_type(calltoaction, resource_type)
-    calltoaction.interactions.find_by_resource_type(resource_type)
+    interactions = cache_short get_interaction_for_calltoaction_by_resource_type_cache_key(calltoaction.id, resource_type) do
+      calltoaction.interactions.where("resource_type = ? AND when_show_interaction <> 'MAI_VISIBILE", resource_type)
+    end
+    interactions.any? ? interactions.first : nil
   end
 
   def calltoaction_active_with_tag(tag, order)

@@ -67,7 +67,11 @@ class ApplicationController < ActionController::Base
     end
     
     @calltoactions_during_video_interactions_second = cache_short("stream_ctas_init_calltoactions_during_video_interactions_second") do
-      initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+      init_calltoactions_during_video_interactions_second(@calltoactions)
+    end
+
+    @calltoactions_comment_interactions = cache_short("stream_ctas_init_calltoactions_comment_interaction") do
+      init_calltoactions_comment_interaction(@calltoactions)
     end
 
     @calltoactions_active_count = cache_short("stream_ctas_init_calltoactions_active_count") do
@@ -94,7 +98,7 @@ class ApplicationController < ActionController::Base
       calltoactions_render: render_calltoactions_str,
       calltoactions: calltoactions,
       calltoactions_count: calltoactions_count,
-      calltoactions_during_video_interactions_second: initCallToActionsDuringVideoInteractionsSecond(calltoactions)
+      calltoactions_during_video_interactions_second: init_calltoactions_during_video_interactions_second(calltoactions)
     }
   
     respond_to do |format|
@@ -102,7 +106,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def initCallToActionsDuringVideoInteractionsSecond(calltoactions)
+  def init_calltoactions_comment_interaction(calltoactions)
+    calltoactions_comment_interactions = Hash.new
+    calltoactions.each do |calltoaction|
+      calltoactions_comment_interactions[calltoaction.id] = find_interaction_for_calltoaction_by_resource_type(calltoaction[0], "Comment")
+    end
+    calltoactions_comment_interactions
+  end
+
+  def init_calltoactions_during_video_interactions_second(calltoactions)
     calltoactions_during_video_interactions_second = Hash.new
     calltoactions.each do |calltoaction|
       interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")
