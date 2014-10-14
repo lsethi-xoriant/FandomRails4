@@ -23,7 +23,6 @@ class ApplicationController < ActionController::Base
   end
 
   def check_registration_ga
-    debugger
     @registration_ga = cookies[:after_registration].present?
     cookies.delete(:after_registration)
   end
