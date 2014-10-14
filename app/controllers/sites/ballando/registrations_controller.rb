@@ -63,6 +63,7 @@ class Sites::Ballando::RegistrationsController < RegistrationsController
 
   def after_sign_up_path_for(resource)
     #SystemMailer.welcome_mail(current_user).deliver
+    cookies[:after_registration] = { value: true, expires: 1.minute.from_now }
     "/refresh_top_window"
   end 
 

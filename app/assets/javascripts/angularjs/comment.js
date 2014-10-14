@@ -10,14 +10,15 @@ commentModule.config(["$httpProvider", function(provider) {
 
 function CommentCtrl($scope, $window, $http, $timeout, $interval) {
 
-  $scope.init = function(current_user, interaction_id, must_be_approved, last_comment_shown_date, first_comment_shown_date, not_shown_comments_counter, captcha_data) {
+  $scope.init = function(comments_shown, interaction_id, must_be_approved, last_comment_shown_date, first_comment_shown_date, not_shown_comments_counter, captcha_data) {
 
     $scope.comment = new Object();
+
+    $scope.comments_shown = comments_shown;
 
     $scope.comment.last_comment_shown_date = last_comment_shown_date;
     $scope.comment.first_comment_shown_date = first_comment_shown_date;
 
-    $scope.comment.current_user = current_user;
     $scope.comment.interaction_id = interaction_id;
 
     $scope.comment.must_be_approved = must_be_approved;
@@ -30,7 +31,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
 
     $interval(function() { newCommentsPolling(); }, 15000);
 
-    if(!$scope.comment.current_user) {
+    if(!$scope.$parent.current_user) {
       initSessionStorageAndCaptchaImage(captcha_data);
     }
 
@@ -55,13 +56,18 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
       $scope.comment.ajax_polling_in_progress = true;
 
       try {
-        $http.post("/new_comments_polling", { interaction_id: $scope.comment.interaction_id, first_comment_shown_date: $scope.comment.first_comment_shown_date })
+        $http.post("/new_comments_polling", { comments_shown: $scope.comments_shown, interaction_id: $scope.comment.interaction_id, first_comment_shown_date: $scope.comment.first_comment_shown_date })
           .success(function(data) {
 
             if(haveNewCommentsToAppend(data)) {
+
+              $scope.comments_shown = $scope.comments_shown.concat(data.comments_to_append_ids);
+
               $scope.comment.first_comment_shown_date = data.first_comment_shown_date;
               $("#comments-" + $scope.comment.interaction_id).prepend(data.comments_to_append);
+
               showNewCommentFeedback();   
+
             }
 
           }).error(function() {
@@ -82,8 +88,10 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
       $scope.comment.ajax_append_in_progress = true;
 
       try {
-        $http.post("/append_comments", { interaction_id: $scope.comment.interaction_id, last_comment_shown_date: $scope.comment.last_comment_shown_date })
+        $http.post("/append_comments", { comments_shown: $scope.comments_shown, interaction_id: $scope.comment.interaction_id, last_comment_shown_date: $scope.comment.last_comment_shown_date })
           .success(function(data) {
+            
+            $scope.comments_shown = $scope.comments_shown.concat(data.comments_to_append_ids);
 
             $scope.comment.last_comment_shown_date = data.last_comment_shown_date;
             $("#comments-" + $scope.comment.interaction_id).append(data.comments_to_append);
@@ -141,7 +149,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
           alert("message save error");
         } else {
 
-          if($scope.comment.current_user) {
+          if($scope.$parent.current_user) {
             userFeedbackAfterSubmitComment(data);
           } else {
             userFeedbackAfterSubmitCommentWithCaptcha(data);
