@@ -114,6 +114,10 @@ module ApplicationHelper
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
 
     if user_interaction
+      if interaction.resource_type.downcase == "share"
+        aux = merge_aux(aux, user_interaction.aux)
+      end
+
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
       UserCounter.update_counters(interaction, user_interaction, user, false) 
     else
@@ -528,6 +532,7 @@ module ApplicationHelper
         html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { reward: reward }, layout: false, formats: :html
         notice = create_notice(:user_id => user_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
         # notice.send_to_user(request)
+        expire_cache_key(notification_cache_key(user_interaction.user_id))
       end
     end
     
