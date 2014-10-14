@@ -413,7 +413,7 @@ class CallToActionController < ApplicationController
 
     end
 
-    response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME)
+    response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
 
     respond_to do |format|
       format.json { render :json => response.to_json }

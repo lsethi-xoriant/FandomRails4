@@ -323,7 +323,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           interaction_point = data.outcome.attributes.reward_name_to_counter[MAIN_REWARD_NAME];
           if(interaction_point) {
             showAnimateFeedback(data.feedback, calltoaction_id);
-            updateUserRewardInView(data.main_reward_counter);
+            updateUserRewardInView(data.main_reward_counter.general);
           }
 
           if(data.call_to_action_completed) {
@@ -459,7 +459,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
     showMarkerNearInteraction(interaction_id);
-    updateUserRewardInView(data.main_reward_counter);
+    updateUserRewardInView(data.main_reward_counter.general);
 
     $("#home-undervideo-interaction-" + interaction_id).html(data.feedback); 
   };

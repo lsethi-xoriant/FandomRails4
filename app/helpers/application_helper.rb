@@ -321,7 +321,7 @@ module ApplicationHelper
 
   end
 
-  def get_counter_about_user_reward(reward_name, period = nil)
+  def get_counter_about_user_reward(reward_name, all_periods = false)
     if current_user
       reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
         reward_points = Hash.new
@@ -336,7 +336,8 @@ module ApplicationHelper
       end
     end
  
-    period.present? ? reward_points[period] : reward_points[:general]   
+    all_periods ? reward_points : reward_points[:general]  
+
   end
   
   def get_reward_with_periods(reward_name)
