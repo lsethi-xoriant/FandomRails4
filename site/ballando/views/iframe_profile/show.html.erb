@@ -28,7 +28,7 @@
       </h4>
       <% if current_user %>
         <h5 style="color: #fff; text-transform: none;"> Hai fatto              
-          <span id="iframe-profile-main-reward" class="label label-warning">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME, true)["weekly"] %>
+          <span id="iframe-profile-main-reward" class="label label-warning">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME, true)["weekly"] || 0 %>
             <span class="glyphicon glyphicon-star"></span>
           </span>
           <span style="margin-left: 7px;">di 100 <span class="glyphicon glyphicon-star"></span></span>

@@ -23,7 +23,7 @@ module RankingHelper
   
   def get_reward_points_in_period(period_kind, reward_name)    
     reward_points = get_counter_about_user_reward(reward_name, true)
-    reward_points[period_kind]
+    reward_points[period_kind].present? ? reward_points[period_kind] : 0
   end
   
   def get_ranking(ranking)
