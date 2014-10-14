@@ -528,6 +528,7 @@ module ApplicationHelper
         html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { reward: reward }, layout: false, formats: :html
         notice = create_notice(:user_id => user_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
         # notice.send_to_user(request)
+        expire_cache_key(notification_cache_key(user_interaction.user_id))
       end
     end
     
