@@ -9,7 +9,7 @@
 
       <% if current_user %>
         <a href="<%= @profile_url %>" target="_top">
-          <div class="text-center iframe-notice-baloon">
+          <div class="text-center iframe-notice-baloon hidden-xxs">
             <span><%= @notices_count %></span>
           </div>
         </a>
@@ -27,10 +27,11 @@
         </b>
       </h4>
       <% if current_user %>
-        <h5 style="color: #fff;"> Hai fatto              
-          <span id="iframe-profile-main-reward" class="label label-warning">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME) %>
+        <h5 style="color: #fff; text-transform: none;"> Hai fatto              
+          <span id="iframe-profile-main-reward" class="label label-warning">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME, "weekly") %>
             <span class="glyphicon glyphicon-star"></span>
           </span>
+          <span style="margin-left: 7px;">di 100 <span class="glyphicon glyphicon-star"></span></span>
         </h5>
       <% else %>
         <button class="btn-2 btn-2-small" onclick="window.top.location.href = '<%= @profile_url %>';">LOGIN / REGISTRATI</button>

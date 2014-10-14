@@ -321,30 +321,27 @@ module ApplicationHelper
 
   end
 
-  def get_counter_about_user_reward(reward_name)
-    reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_or_anonymous_user.id)) do
-      reward_points = Hash.new
-      reward_points['general'] = calculate_reward_points_general(reward_name)
-      reward_points
+  def get_counter_about_user_reward(reward_name, period = nil)
+    if current_user
+      reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
+        reward_points = Hash.new
+        get_reward_with_periods(reward_name).each do |user_reward|
+          if user_reward.period.blank?
+            reward_points[:general] = user_reward.counter
+          else
+            reward_points[user_reward.period.kind] = user_reward.counter
+          end
+        end 
+        reward_points     
+      end
     end
-    
-    if reward_points['general'].nil?
-      reward_points['general'] = calculate_reward_points_general(reward_name)
-      cache_short_write_key(get_reward_points_for_user_key(reward_name, current_or_anonymous_user.id), reward_points)
-    end
-    
-    reward_points['general']
-    
+ 
+    period.present? ? reward_points[period] : reward_points[:general]   
   end
   
-  def calculate_reward_points_general(reward_name)
+  def get_reward_with_periods(reward_name)
     reward = Reward.find_by_name(reward_name)
-    user_reward = UserReward.where("reward_id = ? and period_id IS NULL and user_id = ?", reward.id, current_or_anonymous_user.id).first
-    if user_reward
-      user_reward.counter
-    else
-      0
-    end
+    user_reward = UserReward.includes(:period).where("reward_id = ? AND user_id = ?", reward.id, current_user.id)
   end
 
   def user_has_reward(reward_name)
