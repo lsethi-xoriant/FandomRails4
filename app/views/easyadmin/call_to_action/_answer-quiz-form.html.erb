@@ -32,14 +32,19 @@
 
         <div class="form-group text-center">
           <label class="text-input">Immagine risposta</label>
-          <div class="fileupload fileupload-new" data-provides="fileupload">
+          <% if f.object.image.blank? %>
+          	<div class="fileupload fileupload-new" data-provides="fileupload">
+          <% else %>
+          	<div class="fileupload fileupload-exists" data-provides="fileupload">
+          <% end %>
             <div class="fileupload-preview thumbnail" style="width: 100%; height: 100px; line-height: 20px;">
                 <% unless f.object.image.blank? %><img src="<%= f.object.image.url %>"><% end %>
             </div>
             <div>
               <span class="btn btn-default btn-file"><span class="fileupload-new"><i class="fa fa-picture-o"></i></span>
               <span class="fileupload-exists"><i class="fa fa-pencil"></i></span><%= f.file_field :image  %></span>
-              <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload"><i class="fa fa-times-circle"></i></a>
+              <span class="fileupload-exists"><%= f.check_box :destroy_image %> Elimina </span>
+              <!--<a class="btn btn-default fileupload-exists" data-dismiss="fileupload" href="#"><i class="fa fa-times-circle"></i></a> -->
             </div>
           </div>
         </div>

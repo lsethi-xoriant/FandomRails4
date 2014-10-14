@@ -46,7 +46,6 @@ class Interaction < ActiveRecord::Base
       resource.save # Per poter visualizzare gli errori.
       if resource.errors.any?
         resource.errors.each do |key, message|
-          #errors.add("resource.#{key}", message)
           errors.add("resource.#{key}", message)
         end
       end

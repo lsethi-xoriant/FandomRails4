@@ -3,11 +3,13 @@
 
 class Answer < ActiveRecord::Base
   attr_accessible :text, :correct, :quiz_id, :image, :remove_answer, :call_to_action_id,
-    :media_data, :media_image, :media_type, :blocking
+    :media_data, :media_image, :media_type, :blocking, :destroy_image
+
+  attr_accessor :destroy_image
 
   has_attached_file :media_image, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }
   has_attached_file :image, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }
-  
+
   belongs_to :quiz
   has_many :user_interactions
 
@@ -23,6 +25,10 @@ class Answer < ActiveRecord::Base
 
   def media_type_enum
     MEDIA_TYPES
+  end
+
+  def destroy_image=(destroy_check)
+    self.image.destroy if destroy_check == '1'
   end
 
   def check_remove_answer

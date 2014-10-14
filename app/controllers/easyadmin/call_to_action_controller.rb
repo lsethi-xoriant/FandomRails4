@@ -36,7 +36,7 @@ class Easyadmin::CallToActionController < ApplicationController
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
- 
+
   def update_cta
     @cta = CallToAction.find(params[:id])
     unless @cta.update_attributes(params[:call_to_action])
