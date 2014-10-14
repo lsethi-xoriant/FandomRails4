@@ -334,10 +334,10 @@ module ApplicationHelper
         end 
         reward_points     
       end
+      all_periods ? reward_points : reward_points[:general]  
+    else
+      nil
     end
- 
-    all_periods ? reward_points : reward_points[:general]  
-
   end
   
   def get_reward_with_periods(reward_name)
