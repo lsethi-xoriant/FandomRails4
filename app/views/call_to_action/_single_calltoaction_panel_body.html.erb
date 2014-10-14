@@ -18,7 +18,7 @@
         <% if calltoaction.media_type == "YOUTUBE" %>
             <div class="video flex-video widescreen" style="background:#222;">             
               <!-- IFRAME VIDEO -->
-              <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-media=true calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").id %>"></div>
+              <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-media=true calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").try(:id) %>"></div>
               <!-- OVERVIDEO AREA -->
               <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
               <!-- OVERVIDEO TITLE -->
