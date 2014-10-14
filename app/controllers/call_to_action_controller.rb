@@ -168,7 +168,7 @@ class CallToActionController < ApplicationController
     
     @calltoactions_with_current = calltoaction + calltoactions
 
-    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@calltoactions_with_current)
+    @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@calltoactions_with_current)
     @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction[0], "Comment")
     
     if @calltoaction_comment_interaction

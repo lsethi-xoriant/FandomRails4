@@ -23,7 +23,7 @@
             </h3>
           </div> <!-- /.portlet-header -->
           <div class="portlet-content">
-            <div id="line-chart" class="chart-holder"></div>              
+            <div id="line-chart" class="chart-holder"></div>
           </div> <!-- /.portlet-content -->
         </div> <!-- /.portlet -->         
       </div> <!-- /.col -->
@@ -37,7 +37,7 @@
             </h3>
           </div> <!-- /.portlet-header -->
           <div class="portlet-content">
-            <div id="fb-reg-donut-chart" class="chart-holder"></div>             
+            <div id="fb-reg-donut-chart" class="chart-holder"></div>
           </div> <!-- /.portlet-content -->
         </div> <!-- /.portlet -->
       </div> <!-- /.col -->
@@ -67,6 +67,72 @@
               <span class="content">UTENTI CON PROFILO COMPLETO</span>
 
               <span class="value"><%= User.where("rule=true").count %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary">
+            <div class="details">
+              <span class="content">TRIVIA RISPOSTI</span>
+              <span class="value"><%= all_trivia = UserCounter.where("name ilike 'TOTAL'").sum("(counters::json->>'ALL_TRIVIA')::int") %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary">
+            <div class="details">
+              <span class="content">TRIVIA RISPOSTI CORRETTAMENTE</span>
+              <span class="value"><%= all_trivia_correct_answer = UserCounter.where("name ilike 'TOTAL'").sum("(counters::json->>'ALL_TRIVIA_CORRECT_ANSWER')::int") %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat secondary">
+            <div class="details">
+              <span class="content">% RISPOSTE CORRETTE TRIVIA</span>
+
+              <span class="value"><%= ((all_trivia_correct_answer.to_i * 100).to_f / all_trivia.to_i).round(2) %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary">
+            <div class="details">
+              <span class="content">VERSUS RISPOSTI</span>
+              <span class="value"><%= UserCounter.where("name ilike 'TOTAL'").sum("(counters::json->>'ALL_VERSUS')::int") %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary">
+            <div class="details">
+              <span class="content">CHECK RISPOSTI</span>
+              <span class="value"><%= UserCounter.where("name ilike 'TOTAL'").sum("(counters::json->>'ALL_CHECK')::int") %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary">
+            <div class="details">
+              <span class="content">SHARE FACEBOOK</span>
+              <span class="value"><%= UserInteraction.sum("(aux::json->>'facebook')::int") %></span>
+            </div> <!-- /.details -->
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary">
+            <div class="details">
+              <span class="content">SHARE TWITTER</span>
+              <span class="value"><%= UserInteraction.sum("(aux::json->>'twitter')::int") %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
