@@ -40,3 +40,9 @@
 
   </div>
 </div>
+
+<script type="text/javascript">
+  <% if @registration_ga %>
+    ga('send', 'event', "Registration", "Registration", "registered_user", 1, true);
+  <% end %>
+</script>

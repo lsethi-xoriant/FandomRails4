@@ -13,18 +13,10 @@ class ApplicationController < ActionController::Base
   include RewardHelper
 
   before_filter :fandom_before_filter
-  before_filter :check_registration_ga, :if => proc {|c| ga_code().present? }, 
-                except: [:redirect_into_iframe_calltoaction, :redirect_into_iframe_calltoaction, :refresh_top_window] 
-  before_filter :check_redirect_into_iframe_calltoaction
-
+  
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = "Access denied!"
     redirect_to "/"
-  end
-
-  def check_registration_ga
-    @registration_ga = cookies[:after_registration].present?
-    cookies.delete(:after_registration)
   end
 
   def file_upload_too_large
@@ -53,7 +45,8 @@ class ApplicationController < ActionController::Base
 
   def index
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
-    
+    check_redirect_into_iframe_calltoaction
+
     if params[:name]
       @tag = Tag.find_by_name(params[:name])
     end
