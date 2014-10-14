@@ -1,11 +1,14 @@
 class Sites::Ballando::IframeProfileController < ApplicationController
   include NoticeHelper
 
-  before_filter :check_registration_ga, :if => proc {|c| ga_code().present? }
-  
+  before_filter :check_registration_ga
+
   def check_registration_ga
-    @registration_ga = cookies[:after_registration].present?
-    cookies.delete(:after_registration)
+    debugger
+    if ga_code().present? 
+      @registration_ga = cookies[:after_registration].present?
+      cookies.delete(:after_registration)
+    end
   end
   
   def show
