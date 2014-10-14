@@ -26,7 +26,11 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 	
 	  $http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "facebook" })
       .success(function(data) {
-        afterShareAjax(data);
+        if(data.outcome.attributes.reward_name_to_counter.point == null){
+      		afterShareAjaxWithoutPoint(data);
+      	}else{
+      		afterShareAjax(data);
+      	}
       });
 	};
 	
