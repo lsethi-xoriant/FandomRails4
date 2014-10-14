@@ -10,7 +10,7 @@
 			
 			<% get_ranking_settings.each do |rs| %>
 				<% if rs == "my_position_general" %>
-					<% if get_my_general_position && false %>
+					<% if get_my_general_position %>
 						<%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
 					<% end %>
 				<% else %>
