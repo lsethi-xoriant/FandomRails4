@@ -29,6 +29,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
         if(data.outcome.attributes.reward_name_to_counter.point == null){
       		afterShareAjaxWithoutPoint(data);
       	}else{
+      		updateUserRewardInView(data.main_reward_counter.weekly);
       		afterShareAjax(data);
       	}
       });
@@ -44,6 +45,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       	if(data.outcome.attributes.reward_name_to_counter.point == null){
       		afterShareAjaxWithoutPoint(data);
       	}else{
+      		updateUserRewardInView(data.main_reward_counter.weekly);
       		afterShareAjax(data);
       	}	
       });
