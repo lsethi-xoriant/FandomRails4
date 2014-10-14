@@ -44,6 +44,8 @@ class Sites::Ballando::SessionsController < SessionsController
               return
             end
 
+            cookies[:after_registration] = { value: true, expires: 1.minute.from_now }
+
           end
 
           sign_in(:user, user)

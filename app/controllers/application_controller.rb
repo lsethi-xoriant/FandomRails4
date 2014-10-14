@@ -13,12 +13,19 @@ class ApplicationController < ActionController::Base
   include RewardHelper
 
   before_filter :fandom_before_filter
-
-  before_filter :check_redirect_into_iframe_calltoaction, only: :index
+  before_filter :check_registration_ga, :if => proc {|c| ga_code().present? }, 
+                except: [:redirect_into_iframe_calltoaction, :redirect_into_iframe_calltoaction, :refresh_top_window] 
+  before_filter :check_redirect_into_iframe_calltoaction
 
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = "Access denied!"
     redirect_to "/"
+  end
+
+  def check_registration_ga
+    debugger
+    @registration_ga = cookies[:after_registration].present?
+    cookies.delete(:after_registration)
   end
 
   def file_upload_too_large
