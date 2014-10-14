@@ -30,16 +30,20 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       });
 	};
 	
-	$window.doTwShare = function (){
-		ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + $scope.ctaShareId);
-		url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + $scope.ctaShareTitle;
-		window.open(url);
+  $window.doTwShare = function (){
+	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + $scope.ctaShareId);
+	url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + $scope.ctaShareTitle;
+	window.open(url);
 		
-		$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "twitter" })
-      .success(function(data) {		
-        afterShareAjax(data);
+	$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "twitter" })
+      .success(function(data) {
+      	if(data.outcome.attributes.reward_name_to_counter.point == null){
+      		afterShareAjaxWithoutPoint(data);
+      	}else{
+      		afterShareAjax(data);
+      	}	
       });
-	};
+  };
 
   $window.afterShareAjax = function(data) {
     if(data.ga) {
@@ -54,19 +58,33 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $('#facebook-share-modal-done').modal('show');
     $('#facebook-share-modal-done').css({ "top": positiontop + "px" });
 
-    openShareDoneModal('openShareDoneModal', '#bottom-feedback-share-' + $scope.ctaShareId + ' #button-share-cta');
-    $('#bottom-feedback-share-' + $scope.ctaShareId + ' #button-share-cta').attr('onclick','openShareDoneModal(\'facebook-share-modal-done\', this)');
+    $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
+    $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').removeClass("label-warning").addClass("label-success");
+  };
+  
+  $window.afterShareAjaxWithoutPoint = function(data) {
+    if(data.ga) {
+      update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+      angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+        update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+      });
+    }
+    
+    $('#facebook-share-modal').modal('toggle');
+
     $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
     $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').removeClass("label-warning").addClass("label-success");
   };
 	
-	$window.openCtaShareModal = function (modalId, elem, ctaId, ctaTitle, interactionId){
+	$window.openCtaShareModal = function (modalId, elem, ctaId, ctaTitle, interactionId, alreadyDone){
 		if($scope.current_user) {
 
 			var positionTop = $(elem).offset().top;
 			var modalHeight, modalObj, innerModalObj;
 			modalObj = $("#" + modalId);
 			position = positionTop - 350;
+			if(alreadyDone)
+				$("#" + modalId + " .feedback-point").html('<span style="color: green;" class="glyphicon glyphicon-ok-sign"></span> BRAVO! Hai già ottenuto +3 punti');
 			modalObj.modal('show');
 			modalObj.css({
 				"top": position + "px"
