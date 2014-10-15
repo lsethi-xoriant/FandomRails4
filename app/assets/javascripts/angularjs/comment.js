@@ -151,6 +151,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
 
           if($scope.$parent.current_user) {
             userFeedbackAfterSubmitComment(data);
+            $("#user-comment-" + $scope.comment.interaction_id).val("");
           } else {
             userFeedbackAfterSubmitCommentWithCaptcha(data);
           }
@@ -160,7 +161,6 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
           }
 
           newCommentsPolling();
-          $("#user-comment-" + $scope.comment.interaction_id).val("");
         }
 
         $("#comment-button-" + $scope.comment.interaction_id).attr('disabled', false);

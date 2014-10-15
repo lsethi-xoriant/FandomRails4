@@ -13,18 +13,24 @@
 			 <%= cform.hidden_field :title, :class => "form-control" %>
 			<div class="col-lg-12">
 				<div class="row">
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<div class="form-group">
 						  <label class="text-input">Tipo di commenti</label>
 						   <%= cform.select(:must_be_approved, [["DA APPROVARE", true], ["PUBBLICATI IMMEDIATAMENTE", false]], {}, { :class => "form-control" }) %>
 						</div>
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-3">
 						<div class="form-group">
 	            <label class="text-input">Richiesto per il completamento</label>
 	              <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
 	          </div>
           </div>
+          <div class="col-lg-3">
+						<div class="form-group">
+						  <label class="text-input">Visibile</label>
+						   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
+						</div>
+					</div>
 				</div>
 			</div>
 

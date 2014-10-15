@@ -11,6 +11,12 @@ $navbar-default-bg: #fff !default;
 
 p.oblique { font-style: oblique } 
 
+.comment-section {
+    .insert-comment {
+        border-radius: 0;
+    }
+}
+
 .container-menu{
   background-color: transparent !important;
 }
