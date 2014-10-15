@@ -110,9 +110,9 @@ class Easyadmin::EasyadminController < ApplicationController
   def dashboard
     @user_week_list = Hash.new
     if User.any? 
-      @from_time = (params[:datepicker_from_date].nil? || params[:datepicker_from_date].empty?) ? User.order("created_at ASC").limit(1).first.created_at.strftime("%Y-%m-%d")
+      @from_time = (params[:datepicker_from_date].blank?) ? User.order("created_at ASC").limit(1).first.created_at.strftime("%Y-%m-%d")
                   : Date.strptime(params[:datepicker_from_date], '%m/%d/%Y').to_date.strftime("%Y-%m-%d")
-      @to_time = (params[:datepicker_to_date].nil? || params[:datepicker_to_date].empty?) ? Time.now.to_date.strftime("%Y-%m-%d")
+      @to_time = (params[:datepicker_to_date].blank?) ? Time.now.to_date.strftime("%Y-%m-%d")
                   : Date.strptime(params[:datepicker_to_date], '%m/%d/%Y').to_date.strftime("%Y-%m-%d")
       from = @from_time
       to = @to_time

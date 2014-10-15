@@ -1,4 +1,6 @@
 class Reward < ActiveRecord::Base
+  include DateMethods
+
   attr_accessible :name,
     :title, 
     :short_description, 
@@ -44,10 +46,6 @@ class Reward < ActiveRecord::Base
 
   before_save :set_active_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
   before_save :set_expire_at # Costruisco la data di disattivazione se arrivo dall'easyadmin.
-
-  def parse_to_utc(datetime)
-    Time.parse("#{datetime} #{USER_TIME_ZONE}").utc
-  end
 
   def set_active_at
     if valid_from_date.present? && valid_from_time.present?
