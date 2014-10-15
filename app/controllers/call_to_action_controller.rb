@@ -253,8 +253,8 @@ class CallToActionController < ApplicationController
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
       if response[:captcha_check]
-        user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, text: user_text, comment_id: comment_resource.id)
-        if approved && !user_comment.errors.blank?
+        user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+        if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
         end
       end
