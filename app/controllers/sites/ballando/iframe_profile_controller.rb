@@ -4,7 +4,6 @@ class Sites::Ballando::IframeProfileController < ApplicationController
   before_filter :check_registration_ga
 
   def check_registration_ga
-    debugger
     if ga_code().present? 
       @registration_ga = cookies[:after_registration].present?
       cookies.delete(:after_registration)
