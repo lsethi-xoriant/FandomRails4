@@ -7,16 +7,16 @@ module CacheHelper
   #
   # key       - A simple string, or a model (or an array of models) from which the template depends
   # condition - The cache is performed only if condition is true
-  def template_cache_short(key = nil, condition=true, &block)
+  def template_cache_short(key, condition=true, &block)
     template_cache_aux(key, condition, 1.minute, &block)
   end
-  def template_cache_medium(key = nil, condition=true, &block)
+  def template_cache_medium(key, condition=true, &block)
     template_cache_aux(key, condition, 5.minute, &block)
   end
-  def template_cache_long(key = nil, condition=true, &block)
+  def template_cache_long(key, condition=true, &block)
     template_cache_aux(key, condition, 1.hour, &block)
   end
-  def template_cache_huge(key = nil, condition=true, &block)
+  def template_cache_huge(key, condition=true, &block)
     template_cache_aux(key, condition, 1.day, &block)
   end
 
