@@ -109,14 +109,19 @@ class Easyadmin::EasyadminController < ApplicationController
 
   def dashboard
     @user_week_list = Hash.new
-    if User.any?
-      time = User.order("created_at ASC").limit(1).first.created_at.strftime("%Y-%m-%d")
-      while time.to_date < Time.now.to_date do
-        @user_week_list["#{ time.to_date.strftime("%Y-%m-%d") }"] = {
-          "tot" => User.where("created_at<=?", time).count,
-          "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", time).count
+    if User.any? 
+      @from_time = (params[:datepicker_from_date].nil? || params[:datepicker_from_date].empty?) ? User.order("created_at ASC").limit(1).first.created_at.strftime("%Y-%m-%d")
+                  : Date.strptime(params[:datepicker_from_date], '%m/%d/%Y').to_date.strftime("%Y-%m-%d")
+      @to_time = (params[:datepicker_to_date].nil? || params[:datepicker_to_date].empty?) ? Time.now.to_date.strftime("%Y-%m-%d")
+                  : Date.strptime(params[:datepicker_to_date], '%m/%d/%Y').to_date.strftime("%Y-%m-%d")
+      from = @from_time
+      to = @to_time
+      while from.to_date < to.to_date do
+        @user_week_list["#{from.to_date.strftime("%Y-%m-%d") }"] = {
+          "tot" => User.where("created_at<=?", from).count,
+          "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", from).count
           }
-        time = time.to_date + 1.week
+        from = params[:time_interval] == "daily" ? from.to_date + 1.day : from.to_date + 1.week
       end
     end
   end
