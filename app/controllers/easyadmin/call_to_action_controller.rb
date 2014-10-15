@@ -15,7 +15,7 @@ class Easyadmin::CallToActionController < ApplicationController
   def clone
     clone_cta(params)
   end
-  
+
   def save_cta
     @cta = CallToAction.create(params[:call_to_action])
     if @cta.errors.any?
@@ -121,6 +121,20 @@ class Easyadmin::CallToActionController < ApplicationController
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
   end
   
+  def index_cta_template
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+
+    tag_template_id_list = Tag.where("name ilike 'template'").pluck("id") # should be only one
+    cta_ids_with_tag_template = CallToActionTag.where("tag_id = ?", tag_template_id_list).pluck("call_to_action_id")
+    @cta_template_list = CallToAction.where(:id => cta_ids_with_tag_template).page(page).per(per_page).order("activated_at DESC NULLS LAST")
+
+    @page_size = @cta_template_list.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+
+  end
+
   def index_user_cta_to_be_approved
     get_user_cta_with_status()
   end

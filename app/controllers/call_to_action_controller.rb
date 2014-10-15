@@ -51,7 +51,8 @@ class CallToActionController < ApplicationController
     
     stream_call_to_action_to_render.each do |calltoaction|
       calltoactions << calltoaction
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
+      calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction, "Comment")
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoaction_comment_interaction }, layout: false, formats: :html)
     end
 
     calltoactions_during_video_interactions_second = Hash.new
@@ -163,19 +164,21 @@ class CallToActionController < ApplicationController
 
   def show
 
-    calltoaction = CallToAction.includes(:interactions).active.where("call_to_actions.id = ?", params[:id]).to_a
+    calltoaction_id = params[:id].to_i
+    calltoaction = CallToAction.includes(:interactions).active.where("call_to_actions.id = ?", calltoaction_id).to_a
     calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction[0].id).limit(2).to_a
     
     @calltoactions_with_current = calltoaction + calltoactions
 
     @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@calltoactions_with_current)
-    @calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction[0], "Comment")
+    @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
     
-    if @calltoaction_comment_interaction
-      @comments_to_shown = get_last_comments_to_view(@calltoaction_comment_interaction)
+    current_calltoaction_comment_interaction = @calltoactions_comment_interaction[calltoaction_id]
+    if current_calltoaction_comment_interaction
+      @comments_to_shown = get_last_comments_to_view(current_calltoaction_comment_interaction)
       @comments_to_shown_ids = @comments_to_shown.map { |comment| comment.id }
 
-      if page_require_captcha?(@calltoaction_comment_interaction)
+      if page_require_captcha?(current_calltoaction_comment_interaction)
         @captcha_data = generate_captcha_response
       end
     end
@@ -250,14 +253,16 @@ class CallToActionController < ApplicationController
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
       if response[:captcha_check]
-        user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, text: user_text, comment_id: comment_resource.id)
-        if approved && !user_comment.errors.blank?
+        user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+        if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
         end
       end
     end
 
-    response[:error] = user_comment.errors
+    if user_comment
+      response[:error] = user_comment.errors
+    end
 
     respond_to do |format|
       format.json { render :json => response.to_json }
