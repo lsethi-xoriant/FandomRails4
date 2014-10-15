@@ -114,6 +114,10 @@ module ApplicationHelper
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
 
     if user_interaction
+      if interaction.resource_type.downcase == "share"
+        aux = merge_aux(aux, user_interaction.aux)
+      end
+
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
       UserCounter.update_counters(interaction, user_interaction, user, false) 
     else
@@ -334,15 +338,17 @@ module ApplicationHelper
         end 
         reward_points     
       end
+      all_periods ? reward_points : reward_points[:general]  
+    else
+      nil
     end
- 
-    all_periods ? reward_points : reward_points[:general]  
-
   end
   
   def get_reward_with_periods(reward_name)
     reward = Reward.find_by_name(reward_name)
-    user_reward = UserReward.includes(:period).where("reward_id = ? AND user_id = ?", reward.id, current_user.id)
+    user_reward = UserReward.includes(:period)
+      .where("user_rewards.reward_id = ? AND user_rewards.user_id = ?", reward.id, current_user.id)
+      .where("periods.id IS NULL OR (periods.start_datetime < ? AND periods.end_datetime > ?)", Time.now.utc, Time.now.utc)
   end
 
   def user_has_reward(reward_name)
@@ -398,7 +404,10 @@ module ApplicationHelper
   end
 
   def find_interaction_for_calltoaction_by_resource_type(calltoaction, resource_type)
-    calltoaction.interactions.find_by_resource_type(resource_type)
+    interactions = cache_short get_interaction_for_calltoaction_by_resource_type_cache_key(calltoaction.id, resource_type) do
+      calltoaction.interactions.where("resource_type = ? AND when_show_interaction <> 'MAI_VISIBILE'", resource_type)
+    end
+    interactions.any? ? interactions.first : nil
   end
 
   def calltoaction_active_with_tag(tag, order)
@@ -525,6 +534,7 @@ module ApplicationHelper
         html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { reward: reward }, layout: false, formats: :html
         notice = create_notice(:user_id => user_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
         # notice.send_to_user(request)
+        expire_cache_key(notification_cache_key(user_interaction.user_id))
       end
     end
     

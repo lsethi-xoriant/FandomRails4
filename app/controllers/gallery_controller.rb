@@ -5,7 +5,7 @@ class GalleryController < ApplicationController
   def index
     @galleries_cta = calltoaction_active_with_tag("gallery", "DESC").where("user_id IS NULL")
     @galleries_user_cta = calltoaction_active_with_tag("gallery", "DESC").where("user_id IS NOT NULL")
-    @calltoactions_during_video_interactions_second = initCallToActionsDuringVideoInteractionsSecond(@galleries_user_cta)
+    @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@galleries_user_cta)
   end
   
   def show

@@ -9,7 +9,7 @@
 
       <% if current_user %>
         <a href="<%= @profile_url %>" target="_top">
-          <div class="text-center iframe-notice-baloon hidden-xxs">
+          <div class="text-center iframe-notice-baloon hidden-xxs <%= "hidden" if @notices_count < 1 %>">
             <span><%= @notices_count %></span>
           </div>
         </a>

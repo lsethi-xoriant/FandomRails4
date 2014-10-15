@@ -13,18 +13,10 @@ class ApplicationController < ActionController::Base
   include RewardHelper
 
   before_filter :fandom_before_filter
-  before_filter :check_registration_ga, :if => proc {|c| ga_code().present? }, 
-                except: [:redirect_into_iframe_calltoaction, :redirect_into_iframe_calltoaction, :refresh_top_window] 
-  before_filter :check_redirect_into_iframe_calltoaction
-
+  
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = "Access denied!"
     redirect_to "/"
-  end
-
-  def check_registration_ga
-    @registration_ga = cookies[:after_registration].present?
-    cookies.delete(:after_registration)
   end
 
   def file_upload_too_large
@@ -53,7 +45,8 @@ class ApplicationController < ActionController::Base
 
   def index
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
-    
+    check_redirect_into_iframe_calltoaction
+
     if params[:name]
       @tag = Tag.find_by_name(params[:name])
     end
@@ -67,8 +60,10 @@ class ApplicationController < ActionController::Base
     end
     
     @calltoactions_during_video_interactions_second = cache_short("stream_ctas_init_calltoactions_during_video_interactions_second") do
-      initCallToActionsDuringVideoInteractionsSecond(@calltoactions)
+      init_calltoactions_during_video_interactions_second(@calltoactions)
     end
+
+    @calltoactions_comment_interactions = init_calltoactions_comment_interaction(@calltoactions)
 
     @calltoactions_active_count = cache_short("stream_ctas_init_calltoactions_active_count") do
       CallToAction.active.count
@@ -94,7 +89,7 @@ class ApplicationController < ActionController::Base
       calltoactions_render: render_calltoactions_str,
       calltoactions: calltoactions,
       calltoactions_count: calltoactions_count,
-      calltoactions_during_video_interactions_second: initCallToActionsDuringVideoInteractionsSecond(calltoactions)
+      calltoactions_during_video_interactions_second: init_calltoactions_during_video_interactions_second(calltoactions)
     }
   
     respond_to do |format|
@@ -102,7 +97,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def initCallToActionsDuringVideoInteractionsSecond(calltoactions)
+  def init_calltoactions_comment_interaction(calltoactions)
+    cache_short("stream_ctas_init_calltoactions_comment_interaction") do
+      calltoactions_comment_interactions = Hash.new
+      calltoactions.each do |calltoaction|
+        calltoactions_comment_interactions[calltoaction.id] = find_interaction_for_calltoaction_by_resource_type(calltoaction, "Comment")
+      end
+      calltoactions_comment_interactions
+    end
+  end
+
+  def init_calltoactions_during_video_interactions_second(calltoactions)
     calltoactions_during_video_interactions_second = Hash.new
     calltoactions.each do |calltoaction|
       interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")

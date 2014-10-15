@@ -2,6 +2,8 @@ require "aws-sdk"
 require_relative "../lib/cli_utils"
 include CliUtils
 
+SLEEP_COUNT = 300
+
 # Returns an hash with the script configuration
 def get_config(postfix)
   config = get_deploy_settings
@@ -116,6 +118,12 @@ Usage: #{$0} <postfix>\n\
   )
   
   wait_on_desired_capacity(group, instance_count * 2)
+
+  puts "waiting on instances to finish their bootstrap: #{SLEEP_COUNT}s. Countdown:"
+  SLEEP_COUNT.times do |i|
+    puts(SLEEP_COUNT - i)
+    sleep(1)
+  end
 
   puts "restoring original group capacity:\n\
   desired capacity: #{instance_count}\n\

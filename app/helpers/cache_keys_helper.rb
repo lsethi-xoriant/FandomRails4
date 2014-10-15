@@ -31,6 +31,10 @@ module CacheKeysHelper
     "interactions_required_to_complete_#{cta_id}"
   end
 
+  def get_interaction_for_calltoaction_by_resource_type_cache_key(calltoaction_id, resource_type)
+    "interaction_for_calltoaction_#{calltoaction_id}_by_resource_type_#{resource_type}"
+  end
+
   # CTA and tags
   # ~~~~~
 
