@@ -116,7 +116,7 @@ class Easyadmin::EasyadminController < ApplicationController
                   : Date.strptime(params[:datepicker_to_date], '%m/%d/%Y').to_date.strftime("%Y-%m-%d")
       from = @from_time
       to = @to_time
-      while from.to_date < to.to_date do
+      while from.to_date <= to.to_date do
         @user_week_list["#{from.to_date.strftime("%Y-%m-%d") }"] = {
           "tot" => User.where("created_at<=?", from).count,
           "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", from).count
