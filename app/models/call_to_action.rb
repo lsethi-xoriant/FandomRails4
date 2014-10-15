@@ -1,6 +1,7 @@
 class CallToAction < ActiveRecord::Base
 
   include ActionView::Helpers::TextHelper
+  include DateMethods
   
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
@@ -79,10 +80,6 @@ class CallToAction < ActiveRecord::Base
         end
       end
     end
-  end
-  
-  def parse_to_utc(datetime)
-    Time.parse("#{datetime} #{USER_TIME_ZONE}").utc
   end
 
   def set_activated_at

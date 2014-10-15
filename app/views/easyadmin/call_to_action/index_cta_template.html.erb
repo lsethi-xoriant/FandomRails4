@@ -3,14 +3,14 @@
   <div id="content">    
     
     <div id="content-header">
-      <h1>Elenco CALLTOACTION</h1>
+      <h1>Elenco TEMPLATECALLTOACTION</h1>
     </div> <!-- #content-header --> 
 
     <div id="content-container">
-
+    	
    	<ul class="nav nav-tabs">
-      <li class="active"><a href="/easyadmin/cta">Elenco</a></li>
-      <li><a href="/easyadmin/cta/template">Template</a></li>
+      <li><a href="/easyadmin/cta">Elenco</a></li>
+      <li class="active"><a href="/easyadmin/cta/template">Template</a></li>
 	</ul>
 
     	<% if flash[:notice] %>
@@ -59,7 +59,7 @@
 							<th>Azioni</th>
 						</tr>
 					</thead>
-					<% @cta_list.each do |calltoaction| %>
+					<% @cta_template_list.each do |calltoaction| %>
 						<%= render partial: "/easyadmin/call_to_action/index_row", locals: { calltoaction: calltoaction } %>
 					<% end %>
 				</table>
