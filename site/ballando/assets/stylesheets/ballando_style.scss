@@ -1554,11 +1554,9 @@ body {
 -------------------------------------------------- */
 
 /* Carousel base class */
-.carousel {
-  //margin-bottom: 45px;
-}
 
 .carousel-widget {
+  margin-bottom: 45px;
   .carousel, .carousel .item, .carousel-inner > .item > img {
     height: 300px;
   }
