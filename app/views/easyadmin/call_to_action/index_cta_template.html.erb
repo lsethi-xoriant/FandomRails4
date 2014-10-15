@@ -32,20 +32,6 @@
 	    	</div>
 	    </div>
 
-	    <div class="row">
-	    	<div class="col-md-3">
-	    		<label>Filtra per TITOLO</label><input class="form-control" type="text" onkeyup="updateCtaToFilter(this);">
-	    	</div>
-	    </div>
-
-	    <div id="cta-to-filter" class="row hidden">
-				<div class="col-md-12"> 
-					<table id="cta-from-ajax-request" class="table table-striped">
-					</table>
-				</div>
-			</div>
-
-
 		<div class="row cta-to-show">
 			<div class="col-md-12"> 
 				<table class="table table-striped">
@@ -93,57 +79,5 @@
 	}
 
 	var ajax_in_progress = false;
-	function updateCtaToFilter(filter) {
-		if($(filter).val().length < 1) {
-
-			$(".cta-to-show").removeClass("hidden");
-			$("#cta-to-filter").addClass("hidden");
-
-		} else {
-
-			$(".cta-to-show").addClass("hidden");
-			$("#cta-to-filter").removeClass("hidden");
-
-				if(!ajax_in_progress) {
-
-				ajax_in_progress = true;
-
-				$.ajax({
-	            type: "GET",
-	            url: "cta/filter/" + $(filter).val(),
-	            beforeSend: function(jqXHR, settings) {
-	                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-	            },
-	            success: function(data) {
-
-								$("#cta-from-ajax-request").html("");
-
-	            	$("#cta-from-ajax-request").html(data);
-
-	            	html =
-	            				"<thead>" +
-												"<tr>" +
-													"<th>Titolo</th>" +
-													"<th class=\"hidden-xs hidden-sm\">Data attivazione</th>" +
-													"<th>TAG</th>" +
-													"<th>Padre</th>" +
-													"<th>Immagine</th>" +
-													"<th>Azioni</th>" +
-												"</tr>" +
-											"</thead>";
-
-								$("#cta-from-ajax-request").prepend(html);
-
-								ajax_in_progress = false;
-
-	            },
-	            error: function(data) {
-	            	ajax_in_progress = false;
-	            }
-	        });
-				}
-
-		}
-   }
 
 </script>
