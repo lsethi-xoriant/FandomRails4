@@ -7,7 +7,7 @@
     </div>
 
     <% if reached_cap %>
-      <button class="button-inter-<%= interaction.id %> btn-2 btn-2-default" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" <% end %>><%= interaction.resource.title %></button>
+      <button class="button-inter-check btn-2 btn-2-default" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" <% end %>><%= interaction.resource.title %></button>
     <% else %>
       <button class="button-inter-<%= interaction.id %> btn-2 btn-2-default" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" <% end %> onclick="doCheck()"><%= interaction.resource.title %></button>
     <% end %>
@@ -24,7 +24,7 @@
   <% if reached_cap %>
     <div class="text-center" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color:rgba(0,0,0,0.7); z-index: 100; padding-top: 10px;">
       <h4 style="color: #fff;">HAI RAGGIUNTO IL LIMITE GIORNALIERO</h4>
-      <h6><a href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["stream_url"] %>" style="color: #fff;">Scopri come ottenere altri punti</a></h6>
+      <h6><a target="_top" href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["stream_url"] %>" style="color: #fff;">Scopri come ottenere altri punti</a></h6>
     </div>
   <% end %>
 
@@ -36,7 +36,7 @@
         <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
       </div>
     </div>
-    <button class="button-inter-<%= interaction.id %> btn-2 btn-2-default btn-2-default-orange active">FATTO</button>
+    <button class="button-inter-check btn-2 btn-2-default btn-2-default-orange active">FATTO</button>
   </div>
   <div class="col-xs-1 no-pad" style="margin-top: 12px;">
     <h4>

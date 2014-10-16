@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
   include CacheHelper
   include CacheKeysHelper
   include RewardHelper
+  include CommentHelper
+  include CallToActionHelper
 
   before_filter :fandom_before_filter
   
@@ -98,13 +100,31 @@ class ApplicationController < ActionController::Base
   end
 
   def init_calltoactions_comment_interaction(calltoactions)
-    cache_short("stream_ctas_init_calltoactions_comment_interaction") do
-      calltoactions_comment_interaction = Hash.new
-      calltoactions.each do |calltoaction|
-        calltoactions_comment_interaction[calltoaction.id] = find_interaction_for_calltoaction_by_resource_type(calltoaction, "Comment")
+    calltoactions_comment_interaction = Hash.new
+    calltoactions.each do |calltoaction|
+
+      calltoactions_comment_interaction[calltoaction.id] = cache_short(get_calltoaction_comment_interaction_cache_key(calltoaction.id)) do
+        interactions =  calltoaction.interactions.includes(:resource).where("resource_type = 'Comment' AND when_show_interaction <> 'MAI_VISIBILE'")
+
+        calltoaction_comment_interaction = Hash.new
+        if interactions.any?
+          interaction = interactions[0]
+          calltoaction_comment_interaction[:interaction] = interaction
+          comments_to_shown = get_last_comments_to_view(interaction)
+          calltoaction_comment_interaction[:comments_to_shown] = comments_to_shown
+          calltoaction_comment_interaction[:comments_to_shown_ids] = comments_to_shown.map { |comment| comment.id }
+          
+          if page_require_captcha?(interaction)
+            ccalltoaction_comment_interaction[:captcha_data] = generate_captcha_response
+          end
+        end
+        calltoaction_comment_interaction
       end
-      calltoactions_comment_interaction
+
     end
+
+    calltoactions_comment_interaction
+
   end
 
   def init_calltoactions_during_video_interactions_second(calltoactions)

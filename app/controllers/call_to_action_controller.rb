@@ -48,11 +48,11 @@ class CallToActionController < ApplicationController
     end
 
     stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id NOT IN (#{calltoactions_showed_id_qmarks})", *calltoactions_showed_ids).limit(3)
-    
+    calltoactions_comment_interaction = init_calltoactions_comment_interaction(stream_call_to_action_to_render)
+
     stream_call_to_action_to_render.each do |calltoaction|
       calltoactions << calltoaction
-      calltoaction_comment_interaction = find_interaction_for_calltoaction_by_resource_type(calltoaction, "Comment")
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoaction_comment_interaction }, layout: false, formats: :html)
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], current_calltoaction_id: nil }, layout: false, formats: :html)
     end
 
     calltoactions_during_video_interactions_second = Hash.new
@@ -172,18 +172,6 @@ class CallToActionController < ApplicationController
 
     @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@calltoactions_with_current)
     @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
-    
-    current_calltoaction_comment_interaction = @calltoactions_comment_interaction[calltoaction_id]
-    if current_calltoaction_comment_interaction
-      @comments_to_shown = get_last_comments_to_view(current_calltoaction_comment_interaction)
-      @comments_to_shown_ids = @comments_to_shown.map { |comment| comment.id }
-
-      if page_require_captcha?(current_calltoaction_comment_interaction)
-        @captcha_data = generate_captcha_response
-      end
-    end
-
-    # TODO: @calltoactions_correlated = get_correlated_cta(@calltoaction)
 
 =begin
     if @calltoaction.enable_disqus
@@ -200,10 +188,6 @@ class CallToActionController < ApplicationController
     end
 =end
 
-  end
-
-  def page_require_captcha?(calltoaction_comment_interaction)
-    return !current_user && calltoaction_comment_interaction
   end
   
   def get_correlated_cta(calltoaction)
@@ -249,6 +233,7 @@ class CallToActionController < ApplicationController
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
       if approved && user_comment.errors.blank?
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
+        expire_cache_key(get_calltoaction_comment_interaction_cache_key(interaction.call_to_action_id))
       end
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
@@ -256,6 +241,7 @@ class CallToActionController < ApplicationController
         user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
         if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
+          expire_cache_key(get_calltoaction_comment_interaction_cache_key(interaction.call_to_action_id))
         end
       end
     end

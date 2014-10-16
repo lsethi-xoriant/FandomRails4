@@ -16,12 +16,36 @@ p.oblique { font-style: oblique }
 }
 
 .comment-section {
+    .captcha-img {
+        width: 180px; 
+        height: 34px;
+    }
+    .title {
+        margin-bottom: 15px;
+    }
+    .img-profile {
+        max-width: 80px;
+        margin-left: auto;
+    }
+    .btn-2-small {
+        width: 100% !important;
+    }
     .insert-comment {
         border-radius: 0;
     }
+    textarea {
+        resize: none;
+    }
+    textarea:hover, 
+    textarea:active, 
+    textarea:focus {
+        outline: 0px !important;
+        -webkit-appearance: none !important;
+        box-shadow: none !important;
+    }
 }
 
-.container-menu{
+.container-menu {
   background-color: transparent !important;
 }
 
@@ -257,7 +281,7 @@ h1, h2, h3 {
 }
 
 .video {
-    min-height: 395px;
+    //min-height: 395px;
 }
 
 .undervideo-feedback {
@@ -1234,7 +1258,7 @@ span.notify {
     border: none;
 }
 .comment p {
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .flex-video {
