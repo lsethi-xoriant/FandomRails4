@@ -34,19 +34,35 @@ class Easyadmin::EasyadminNoticeController < ApplicationController
   end
   
   def create
-    if params[:users].blank? || params[:notice].blank?
-      notice[:error] = "ERRORE: Devi inserire sia mail utenti che l'html della notifica."
-    else
-      params[:users].split(",").each do |u|
-        user = User.find_by_email(u)
-        if user
-          notice = create_notice(:user_id => user.id, :html_notice => params[:notice], :viewed => false, :read => false)
-          notice.send_to_user(request)
-        end
+    if params[:all_users]
+      if params[:notice].blank?
+        flash[:error] = "ERRORE: Devi inserire l'html della notifica."
+      else
+        bulk_insert_notices(params[:notice])
+        flash[:notice] = "Notifiche inviate correttamente"
       end
-      flash[:notice] = "Notifiche inviate correttamente"
-    end 
+    else
+      if params[:users].blank? || params[:notice].blank?
+        flash[:error] = "ERRORE: Devi inserire sia mail utenti che l'html della notifica."
+      else
+        params[:users].split(",").each do |u|
+          user = User.find_by_email(u)
+          if user
+            notice = create_notice(:user_id => user.id, :html_notice => params[:notice], :viewed => false, :read => false)
+            #commented send mail for ballando
+            #notice.send_to_user(request)
+          end
+        end
+        flash[:notice] = "Notifiche inviate correttamente"
+      end
+    end
     render template: "/easyadmin/easyadmin_notice/new"
+  end
+  
+  def bulk_insert_notices(html_notice)
+    User.all.each do |u|
+      create_notice(:user_id => u.id, :html_notice => html_notice, :viewed => false, :read => false)
+    end
   end
   
   def resend_notice
