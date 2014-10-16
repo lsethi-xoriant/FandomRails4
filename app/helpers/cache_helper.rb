@@ -34,7 +34,7 @@ module CacheHelper
     cache_aux(key, 1.day, &block)
   end
   
-  def cache_short_write_key(key, value)
+  def cache_write_short(key, value)
     actual_key = get_cache_key(key)
     log_info("rewriting cache key", { key: actual_key })
     Rails.cache.write(actual_key, value, :expires_in => 1.minute, :race_condition_ttl => 30)
