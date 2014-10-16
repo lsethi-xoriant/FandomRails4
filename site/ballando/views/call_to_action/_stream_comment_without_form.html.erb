@@ -1,0 +1,7 @@
+<div class="comment-section">   
+  <% calltoaction_comment_interaction[:comments_to_shown][0..1].each do |user_comment| %>
+    <%= render partial: "/call_to_action/comment", locals: { user_comment: user_comment, new_comment_class: false } %>
+  <% end %>
+</div>
+
+

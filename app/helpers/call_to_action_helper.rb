@@ -9,6 +9,10 @@ module CallToActionHelper
     end
   end
 
+  def page_require_captcha?(calltoaction_comment_interaction)
+    return !current_user && calltoaction_comment_interaction
+  end
+
   def always_shown_interactions(calltoaction)
     cache_short("always_shown_interactions_#{calltoaction.id}") do
       calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC").to_a

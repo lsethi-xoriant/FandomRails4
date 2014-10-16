@@ -1,7 +1,7 @@
 class UserCommentInteraction < ActiveRecord::Base
   attr_accessible :text, :approved, :user_id, :comment_id
   
-  scope :approved, where("approved=true")
+  scope :approved, where("user_comment_interactions.approved = true")
 
   belongs_to :comment
   belongs_to :user
