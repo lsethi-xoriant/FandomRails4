@@ -107,14 +107,14 @@
 
 	<div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'trirank'">
         <h2 class="text-center" style="font-size: 24px; padding-bottom: 5px;">{{<%= rankings %>.ranking.title}}</h2>
-      <ul class="list-group" ng-if="<%= rankings %>.my_position == 1" >
+      <ul class="list-group" ng-if="user_offset == 0" >
           <li class="list-group-item list-group-item-warning">
           	<div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].user}}</h4></div>
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[user_offset].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[user_offset].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[user_offset].user}}</h4></div>
               <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].counter}}
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[user_offset].counter}}
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               	</h4></div>
@@ -122,23 +122,23 @@
           </li>
           <li class="list-group-item">
             <div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position].position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position].avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position].user}}</h4></div>
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[user_offset + 1].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[user_offset + 1].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[user_offset + 1].user}}</h4></div>
               <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position].counter}}
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[user_offset + 1].counter}}
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               	</h4></div>
             </div>
           </li>
-          <li class="list-group-item" ng-if="<%= rankings %>.my_position != <%= rankings %>.total">
+          <li class="list-group-item">
             <div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position + 1].position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position + 1].avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position + 1].user}}</h4></div>
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[user_offset + 2].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[user_offset + 2].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[user_offset + 2].user}}</h4></div>
               <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position + 1].counter}}
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[user_offset + 2].counter}}
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               	</h4></div>
@@ -146,14 +146,14 @@
           </li>
       </ul>
       
-      <ul class="list-group" ng-if="<%= rankings %>.my_position == <%= rankings %>.total" >
+      <ul class="list-group" ng-if="user_offset == 9" >
           <li class="list-group-item">
           	<div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 3].position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 3].avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 3].user}}</h4></div>
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[user_offset - 2].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[user_offset - 2].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[user_offset - 2].user}}</h4></div>
               <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 3].counter}}
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[user_offset - 2].counter}}
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               	</h4></div>
@@ -161,11 +161,11 @@
           </li>
           <li class="list-group-item">
             <div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 2].position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 2].avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 2].user}}</h4></div>
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[user_offset - 1].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[user_offset - 1].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[user_offset - 1].user}}</h4></div>
               <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 2].counter}}
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[user_offset - 1].counter}}
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               	</h4></div>
@@ -173,11 +173,11 @@
           </li>
           <li class="list-group-item list-group-item-warning"">
             <div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].user}}</h4></div>
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[user_offset].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[user_offset].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[user_offset].user}}</h4></div>
               <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].counter}}
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[user_offset].counter}}
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               	</h4></div>
@@ -185,14 +185,14 @@
           </li>
       </ul>
       
-      <ul class="list-group" ng-if="<%= rankings %>.my_position != 1 && <%= rankings %>.my_position != <%= rankings %>.total" >
+      <ul class="list-group" ng-if="user_offset != 0 && user_offset != 9" >
           <li class="list-group-item">
           	<div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 2].position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 2].avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 2].user}}</h4></div>
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[user_offset - 1].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[user_offset - 1].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[user_offset - 1].user}}</h4></div>
               <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 2].counter}}
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[user_offset - 1].counter}}
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               	</h4></div>
@@ -200,24 +200,24 @@
           </li>
           <li class="list-group-item list-group-item-warning">
             <div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].user}}</h4></div>
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[user_offset].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[user_offset].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[user_offset].user}}</h4></div>
               <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].counter}}
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[user_offset].counter}}
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               	</h4></div>
             </div>
           </li>
-          <li class="list-group-item" ng-if="<%= rankings %>.my_position != <%= rankings %>.total">
+          <li class="list-group-item">
             <div class="row">
-              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position].position}}</h4></div>
-              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position].avatar}}" class="img-circle img-responsive img-rank"></div>
-              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position].user}}</h4></div>
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[user_offset + 1].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[user_offset + 1].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[user_offset + 1].user}}</h4></div>
               <div class="col-sm-3 col-xs-4 text-right">
               	<h4 class="no-margin">
-              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position].counter}}
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[user_offset + 1].counter}}
                   <span class="glyphicon glyphicon-star"></span>
                 </span>
               	</h4>

@@ -49,7 +49,23 @@ class Easyadmin::TagController < ApplicationController
   def update
     create_or_update("edit") do
       @tag = Tag.find(params[:id])
-      @tag.update_attributes(params[:tag])
+      old_name = @tag.name
+      new_name = params[:tag][:name]
+
+      if old_name == new_name
+        @tag.update_attributes(params[:tag])
+      else
+        change_name_if_not_locked(@tag, params)
+      end
+    end
+  end
+
+  def change_name_if_not_locked(tag, new_tag_params)
+    if (tag.locked && new_tag_params[:tag]["locked"] == "1")
+      flash[:error] = "Non puoi modificare il nome di un tag contrassegnato come locked"
+      false
+    else
+      tag.update_attributes(new_tag_params[:tag])
     end
   end
 
