@@ -19,13 +19,40 @@
           <div class="portlet-header">
             <h3>
               <i class="fa fa-bar-chart-o"></i>
-              UTENTI REGISTRATI
+              UTENTI REGISTRATI DAL <%= Date.strptime(@from_time).to_date.strftime("%d/%m/%Y") %>
+              AL <%= Date.strptime(@to_time).to_date.strftime("%d/%m/%Y	") %>
             </h3>
           </div> <!-- /.portlet-header -->
           <div class="portlet-content">
             <div id="line-chart" class="chart-holder"></div>
+          <div class="col-md-3">
+          	<%= form_tag :method => 'post' do %>
+          	<div class="form-group">
+              <label class="text-input">DAL GIORNO</label></br>
+              	<%= text_field_tag :datepicker_from_date %>
+            </div>
+          </div>
+          <div class="col-md-3">
+          	<div class="form-group">
+              <label class="text-input">AL GIORNO</label></br>
+              	<%= text_field_tag :datepicker_to_date %>
+            </div>
+          </div>
+          <div class="col-md-3">
+          	<div>
+              <label class="text-input">INTERVALLO</label></br>
+              <%= radio_button_tag :time_interval, 'weekly', true  %> Settimanale </br>
+              <%= radio_button_tag :time_interval, 'daily' %> Giornaliero
+            </div>
+          </div>
+          <div class="col-md-2">
+          	<div class="form-group">
+                </br> <%= submit_tag 'Filtra per data', class: 'btn btn-primary' %>
+		  	    <% end %>
+            </div>
+          </div>
           </div> <!-- /.portlet-content -->
-        </div> <!-- /.portlet -->         
+        </div> <!-- /.portlet -->
       </div> <!-- /.col -->
 
       <div class="col-md-3">
@@ -94,7 +121,7 @@
             <div class="details">
               <span class="content">% RISPOSTE CORRETTE TRIVIA</span>
 
-              <span class="value"><%= ((all_trivia_correct_answer.to_i * 100).to_f / all_trivia.to_i).round(2) %></span>
+              <span class="value"><%= "#{((all_trivia_correct_answer.to_i * 100).to_f / all_trivia.to_i).round(2)}\%" %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -178,7 +205,7 @@
 
       var data_arr = [];
 
-      data_arr.push({ time: first_user_created_at, tot: 0, provider: 0, simple: 0 });
+      //data_arr.push({ time: first_user_created_at, tot: 0, provider: 0, simple: 0 });
 
       user_arr = <%= raw(@user_week_list.to_json) %>;
       $.each(user_arr, function(key, value) {
@@ -189,17 +216,7 @@
           simple: value.simple
         });
       });
-   
-      current_time = "<%= Time.now.to_date.strftime("%Y-%m-%d") %>"; 
-      current_time_user = <%= User.where("created_at<=?", Time.now).count %>;
-      current_time_user_simple = <%= User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", Time.now).count %>;
-      data_arr.push({        
-          time: current_time,
-          tot: current_time_user,
-          provider: (current_time_user - current_time_user_simple),
-          simple: current_time_user_simple
-      });
-          
+
       Morris.Line({
         element: 'line-chart',
         data: data_arr,
@@ -212,5 +229,10 @@
 
     }
   } 
+
+  $(function() {
+    $("#datepicker_from_date").datepicker()
+    $("#datepicker_to_date").datepicker()
+  });
 
 </script>

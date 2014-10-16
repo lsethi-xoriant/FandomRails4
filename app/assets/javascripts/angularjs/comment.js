@@ -114,6 +114,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
 
     if(data_from_submit_comment_ajax.captcha_check) {
       $("#user-captcha-" + $scope.comment.interaction_id).val("");
+      $("#user-comment-" + $scope.comment.interaction_id).val("");
       userFeedbackAfterSubmitComment(data_from_submit_comment_ajax);
     } else {
       $("#comment-captcha-error-feedback").modal("show");
@@ -151,6 +152,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
 
           if($scope.$parent.current_user) {
             userFeedbackAfterSubmitComment(data);
+            $("#user-comment-" + $scope.comment.interaction_id).val("");
           } else {
             userFeedbackAfterSubmitCommentWithCaptcha(data);
           }
@@ -160,7 +162,6 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
           }
 
           newCommentsPolling();
-          $("#user-comment-" + $scope.comment.interaction_id).val("");
         }
 
         $("#comment-button-" + $scope.comment.interaction_id).attr('disabled', false);

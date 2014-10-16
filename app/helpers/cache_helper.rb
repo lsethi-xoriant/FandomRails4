@@ -7,16 +7,16 @@ module CacheHelper
   #
   # key       - A simple string, or a model (or an array of models) from which the template depends
   # condition - The cache is performed only if condition is true
-  def template_cache_short(key = nil, condition=true, &block)
+  def template_cache_short(key, condition=true, &block)
     template_cache_aux(key, condition, 1.minute, &block)
   end
-  def template_cache_medium(key = nil, condition=true, &block)
+  def template_cache_medium(key, condition=true, &block)
     template_cache_aux(key, condition, 5.minute, &block)
   end
-  def template_cache_long(key = nil, condition=true, &block)
+  def template_cache_long(key, condition=true, &block)
     template_cache_aux(key, condition, 1.hour, &block)
   end
-  def template_cache_huge(key = nil, condition=true, &block)
+  def template_cache_huge(key, condition=true, &block)
     template_cache_aux(key, condition, 1.day, &block)
   end
 
@@ -34,7 +34,7 @@ module CacheHelper
     cache_aux(key, 1.day, &block)
   end
   
-  def cache_short_write_key(key, value)
+  def cache_write_short(key, value)
     actual_key = get_cache_key(key)
     log_info("rewriting cache key", { key: actual_key })
     Rails.cache.write(actual_key, value, :expires_in => 1.minute, :race_condition_ttl => 30)

@@ -11,6 +11,16 @@ $navbar-default-bg: #fff !default;
 
 p.oblique { font-style: oblique } 
 
+#check-container {
+    background: #fff;
+}
+
+.comment-section {
+    .insert-comment {
+        border-radius: 0;
+    }
+}
+
 .container-menu{
   background-color: transparent !important;
 }
@@ -1554,11 +1564,9 @@ body {
 -------------------------------------------------- */
 
 /* Carousel base class */
-.carousel {
-  margin-bottom: 45px;
-}
 
 .carousel-widget {
+  margin-bottom: 45px;
   .carousel, .carousel .item, .carousel-inner > .item > img {
     height: 300px;
   }
@@ -1566,7 +1574,7 @@ body {
 
 .footer-carousel {
   .carousel, .carousel .item, .carousel-inner > .item > img {
-    height: 130px;
+    height: 190px;
   }
 }
 

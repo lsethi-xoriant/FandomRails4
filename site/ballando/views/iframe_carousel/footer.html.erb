@@ -46,7 +46,17 @@
           </div>
         <% else %>
           <div id="footer-carousel" class="carousel slide" data-ride="carousel">
+
+            <ol class="carousel-indicators">
+              <% if @calltoaction_pages > 1 %>
+                <% @calltoaction_pages.times do |i| %>
+                  <li data-target="#footer-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
+                <% end %>
+              <% end %>
+            </ol>
+
             <div class="carousel-inner">
+
               <div class="item active">
                 <div class="row">
                   <% @calltoactions.each_with_index do |calltoaction, i| %>
@@ -67,24 +77,15 @@
                           </span>
                         <% end %>
                       </h4>
-                      <h5 style="color: #fff;"><%= calltoaction.title %><%= (i % @calltoactions_for_page) %></h5>
+                      <h5 style="color: #fff;"><%= calltoaction.title %></h5>
                       <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%M/%Y") %></h6>
                     </div>
                     <% if i != 0 && i != @calltoaction_count && (i % @calltoactions_for_page) == (@calltoactions_for_page - 1) %>
-                      </div><!-- ROW --></div><!-- ITEM --><div class="item">
+                      </div><!-- ROW --></div><!-- ITEM --><div class="item"><div class="row">
                     <% end %>
                   <% end %>                   
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <ol class="carousel-indicators">
-                <% if @calltoaction_pages > 1 %>
-                  <% @calltoaction_pages.times do |i| %>
-                    <li data-target="#footer-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
-                  <% end %>
-                <% end %>
-              </ol>
             </div>
           </div>
         <% end %>
