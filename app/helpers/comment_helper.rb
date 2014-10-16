@@ -3,7 +3,7 @@ require 'fandom_utils'
 module CommentHelper
   
   def get_last_comments_to_view(interaction)
-    interaction.resource.user_comment_interactions.approved.order("updated_at DESC").limit(5)
+    interaction.resource.user_comment_interactions.approved.order("updated_at DESC").limit(5).to_a
   end
 
   def get_last_comments_to_view_date(interaction)

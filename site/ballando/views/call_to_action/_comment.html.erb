@@ -1,9 +1,9 @@
 <div class="row comment <%= "new-comment" if new_comment_class %>">
   <div class="col-xs-2 text-right">
-    <h5><img src="<%= user_avatar user_comment.user if user_comment.user %>" alt="..." class="img-circle img-responsive img-profile pull-right" width="50%"></h5>
+    <h6><img src="<%= user_avatar user_comment.user %>" alt="..." class="img-circle img-responsive img-profile pull-right" width="50%"></h6>
   </div>
   <div class="col-xs-10 text-left">
-    <h5><%= user_comment.user ? "#{ user_comment.user.first_name } #{ user_comment.user.last_name }" : "Anonimo" %> <small>&bull; <%= user_comment.updated_at.in_time_zone("Rome").strftime("%m/%d/%Y %H:%M:%S") %></small></h5>
+    <h6><%= user_comment.user ? "#{ user_comment.user.first_name } #{ user_comment.user.last_name }" : "Anonimo" %> <small>&bull; <%= user_comment.updated_at.in_time_zone("Rome").strftime("%m/%d/%Y %H:%M:%S") %></small></h6>
     <p class="text-muted"><%= user_comment.text %></p>
     <hr>
   </div>

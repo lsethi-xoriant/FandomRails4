@@ -15,15 +15,17 @@ class Sites::Ballando::IframeCheckController < ApplicationController
     referrer = params[:referrer]
     check_interaction = get_check_interaction()
 
+    response = Hash.new
+
     if current_user   
       user_interaction = current_user.user_interactions.find_by_interaction_id(check_interaction.id)
-      template = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction, reached_cap: reached_cap(user_interaction), can_do_check: can_do_check(check_interaction, referrer, user_interaction) }, layout: false, formats: :html
+      response[:template] = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction, reached_cap: reached_cap(user_interaction), can_do_check: can_do_check(check_interaction, referrer, user_interaction) }, layout: false, formats: :html
     else
-      template = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction }, layout: false, formats: :html
+      response[:template] = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction }, layout: false, formats: :html
     end
 
     respond_to do |format|
-       format.json { render :json => template.to_json }
+       format.json { render :json => response.to_json }
     end
   end
   
@@ -34,6 +36,8 @@ class Sites::Ballando::IframeCheckController < ApplicationController
   def do_check
     referrer = params[:referrer]
     check_interaction = get_check_interaction()
+
+    response = Hash.new
 
     if current_user
       user_interaction = current_user.user_interactions.find_by_interaction_id(check_interaction.id)
@@ -51,17 +55,17 @@ class Sites::Ballando::IframeCheckController < ApplicationController
           aux = create_counter_cap(aux)
         end
         update_check_counter(check_interaction, aux.to_json)
-        template = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction, reached_cap: false, can_do_check: false}, layout: false, formats: :html   
+        response[:template] = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction, reached_cap: false, can_do_check: false}, layout: false, formats: :html   
       else
-        template = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction, reached_cap: user_reached_cap, can_do_check: user_can_do_check }, layout: false, formats: :html
+        response[:template] = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction, reached_cap: user_reached_cap, can_do_check: user_can_do_check }, layout: false, formats: :html
       end
    
     else
-      template = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction }, layout: false, formats: :html
+      response[:template] = render_to_string "/iframe_check/_interaction", locals: { interaction: check_interaction }, layout: false, formats: :html
     end
 
     respond_to do |format|
-       format.json { render :json => template.to_json }
+       format.json { render :json => response.to_json }
     end
   end
   
