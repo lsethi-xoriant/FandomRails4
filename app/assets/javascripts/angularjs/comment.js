@@ -29,6 +29,10 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.comment.not_shown_comments_counter = not_shown_comments_counter;
     $("#comment-append-counter-" + $scope.comment.interaction_id).html($scope.comment.not_shown_comments_counter);
 
+    if($scope.comment.not_shown_comments_counter < 1) {
+      $("#comment-append-button-" + $scope.comment.interaction_id).hide();
+    }
+
     $interval(function() { newCommentsPolling(); }, 15000);
 
     if(!$scope.$parent.current_user) {
@@ -97,7 +101,11 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
             $("#comments-" + $scope.comment.interaction_id).append(data.comments_to_append);
 
             $scope.comment.not_shown_comments_counter -= data.comments_to_append_counter;
-            $("#comment-append-counter-" + $scope.comment.interaction_id).html($scope.comment.not_shown_comments_counter);    
+            $("#comment-append-counter-" + $scope.comment.interaction_id).html($scope.comment.not_shown_comments_counter);   
+
+            if($scope.comment.not_shown_comments_counter < 1) {
+              $("#comment-append-button-" + $scope.comment.interaction_id).hide();
+            } 
 
             showNewCommentFeedback();    
             
@@ -117,7 +125,8 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
       $("#user-comment-" + $scope.comment.interaction_id).val("");
       userFeedbackAfterSubmitComment(data_from_submit_comment_ajax);
     } else {
-      $("#comment-captcha-error-feedback").modal("show");
+      //$("#comment-captcha-error-feedback").modal("show");
+      alert("Captcha errato");
     }
 
     initCaptcha();
@@ -132,7 +141,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
       $("#comment-must-be-approved").css("display", "none");
     }
 
-    $("#comment-feedback").modal("show");
+    //$("#comment-feedback").modal("show");
     
   }
 
