@@ -5,6 +5,25 @@ ballandoIframeCalltoactionModule.controller('BallandoIframeCalltoactionCtrl', Ba
 
 function BallandoIframeCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
+  $scope.ballandoIframeCalltoactionCtrl = function() {
+    $scope.referrer = top.location.toString();
+
+    $http.post("/iframe/get_check.json", { referrer: $scope.referrer })
+      .success(function(data) {
+        $("#check-container").html(data.template);
+      });
+  };
+  
+  $window.doCheck = function() {
+    $(".button-inter-check").attr('disabled', true);
+    $(".button-inter-check").attr('onclick', "");
+
+    $http.post("/iframe/do_check.json", { referrer: $scope.referrer })
+      .success(function(data) {
+        $("#check-container").html(data.template);
+      });
+  };
+
   $window.showRegistrateView = function() {
     document.cookie = "connect_from_page = " + top.location;
     top.location = PROFILE_URL;
