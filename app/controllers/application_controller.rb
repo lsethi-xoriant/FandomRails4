@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   include RewardHelper
   include CommentHelper
   include CallToActionHelper
+  include CaptchaHelper
 
   before_filter :fandom_before_filter
   
