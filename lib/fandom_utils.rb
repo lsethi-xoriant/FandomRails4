@@ -17,6 +17,8 @@ module FandomUtils
     $process_file_size = 0
     $process_file_path = nil
     $process_file_descriptor = nil
+    $active_record_time = nil
+    $view_time = nil
   end
 
   # Returns the Site class defined for the requested domain. 
