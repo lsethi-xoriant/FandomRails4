@@ -67,6 +67,8 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
 
               $scope.comments_shown = $scope.comments_shown.concat(data.comments_to_append_ids);
 
+              $("#interaction-" + $scope.comment.interaction_id + "-comment-counter").html(data.comments_count);
+
               $scope.comment.first_comment_shown_date = data.first_comment_shown_date;
               $("#comments-" + $scope.comment.interaction_id).prepend(data.comments_to_append);
 

@@ -3,7 +3,7 @@
 <div class="row cta">      
   <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0">
     <div class="panel panel-default cta-page cta-stream panel-shadow">
-      <div style="position: relative">
+      <div class="panel-body" style="position: relative; padding: 0; min-height: 397px;">
         <% if is_cta_locked(calltoaction) %>
           <%= render partial: "/call_to_action/cover_stream_single_calltoaction_locked", locals: { calltoaction: calltoaction } %>
         <% else %>
@@ -25,7 +25,7 @@
       <% if interaction || (!current_calltoaction_id && calltoaction_comment_interaction && !calltoaction_comment_interaction.empty?) %>
         <div class="panel-footer">
           <div class="row">
-            <div class="col-xs-3" id="bottom-feedback-share-<%= calltoaction.id %>">       
+            <div class="col-xs-6 col-sm-3" id="bottom-feedback-share-<%= calltoaction.id %>">       
               <% if interaction %>
                 <% if user_interaction %>
                   <button id="button-share-cta" class="btn-2 btn-2-small" role="button" onclick="openCtaShareModal('facebook-share-modal', this, <%= calltoaction.id %>, '<%= calltoaction.title %>', <%= interaction.id %>, true)" style="padding-top: 5px;">CONDIVIDI</button>
@@ -36,9 +36,9 @@
                 <% end %>
               <% end %>
             </div> 
-            <div class="col-xs-3 col-xs-offset-6 text-right">
-              <% if !current_calltoaction_id && calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
-                <a href="/call_to_action/<%= calltoaction.id %>" style="text-transform: none; color: #000;"><span class="glyphicon glyphicon-comment"></span> 120 commenti</a>
+            <div class="col-xs-6 col-sm-3 col-sm-offset-6 text-right">
+              <% if calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
+                <a href="/call_to_action/<%= calltoaction.id %>" class="comment-preview"><span class="glyphicon glyphicon-comment"></span> <span id="interaction-<%= calltoaction_comment_interaction[:interaction].id %>-comment-counter"><%= calltoaction_comment_interaction[:comments_count] %></span> commenti</a>
               <% end %>           
             </div>
           </div>
@@ -46,12 +46,13 @@
       <% end %>
 
       <% if calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
-        <% if current_calltoaction_id  %>
+        <% if current_calltoaction_id && current_calltoaction_id == calltoaction.id  %>
+          <hr class="no-margin">
           <div class="panel-footer">
             <%= render partial: "/call_to_action/stream_comment_with_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction] } %>
           </div> 
         <% else %>
-          <%= render partial: "/call_to_action/stream_comment_without_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction] } %>
+          <%= render partial: "/call_to_action/stream_comment_without_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction], calltoaction_id: calltoaction.id } %>
         <% end %>
       <% end %>
     </div>
