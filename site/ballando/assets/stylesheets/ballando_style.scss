@@ -21,6 +21,10 @@ p.oblique { font-style: oblique }
     font-size: 11px;
 }
 
+.comment-text {
+    word-wrap: break-word;
+}
+
 .comment-section {
     .captcha-img {
         width: 180px; 

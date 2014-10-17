@@ -9,7 +9,7 @@
             <img src="<%= user_avatar user_comment.user %>" alt="..." class="img-circle img-responsive img-profile">
           </div>
           <div class="col-xs-10 col-sm-11 text-left">
-            <h6 style="text-transform: none;"><span><%= user_comment.user ? "#{ user_comment.user.first_name } #{ user_comment.user.last_name }" : "Anonimo" %></span> - <span style="color: #999"><%= user_comment.text %></span></h6>
+            <h6 style="text-transform: none;"><span><%= user_comment.user ? "#{ user_comment.user.first_name } #{ user_comment.user.last_name }" : "Anonimo" %></span> - <span class="comment-text" style="color: #999"><%= user_comment.text %></span></h6>
           </div>
         </div>
 
