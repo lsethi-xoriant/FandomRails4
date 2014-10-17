@@ -2,7 +2,10 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-3 col-xxs-12 text-left" style="padding: 20px 10px;">
+  	<% if !current_user %>
+  		<a href="javascript:void(0);" onclick="window.top.location.href = '<%= @profile_url %>';" style="display: block; width: 100%; height: 100%; position: absolute; z-index: 99;"></a>
+  	<% end %>
+    <div class="col-xs-3 col-xxs-12 text-left" style="padding: 20px 10px 0 10px;">
       <a href="<%= @profile_url %>" target="_top">
         <img src="<%= current_avatar %>" class="img-responsive img-circle iframe-profile-avatar">
       </a>
@@ -18,9 +21,9 @@
     </div>
 
     <div class="col-xs-8 hidden-xxs" style="padding-left: 0;">
-      <h4 style="padding-top: 15px; color: #fff;">
+      <h4 style="padding-top: 15px; color: #fff; margin-bottom: 5px;">
         <b><% if current_user %>
-        		<%= extract_name_or_username(current_user) %> <a href="/users/rai/sign_out" target="_top"><span class="glyphicon glyphicon-off" style="font-size: 13px; padding-left: 5px; color: #fff;"></span></a> 
+        		<a href="<%= @profile_url %>" target="_top" style="color: #fff; text-decoration: none;"><%= extract_name_or_username(current_user) %></a> <a href="/users/rai/sign_out" target="_top"><span class="glyphicon glyphicon-off" style="font-size: 13px; padding-left: 5px; color: #fff;"></span></a> 
         	<% else %>
         		Iscriviti alla community
         	<% end %>
