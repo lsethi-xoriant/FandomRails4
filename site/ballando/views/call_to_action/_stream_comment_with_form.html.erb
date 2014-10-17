@@ -23,10 +23,10 @@
             <div class="col-sm-8">
               <% unless current_user %>
                 <div class="row">               
-                  <div class="col-md-6">
+                  <div class="col-sm-6">
                     <img src="" id="captcha-img-<%= comment_interaction.id %>" class="captcha-img">
                   </div>              
-                  <div class="col-md-6">
+                  <div class="col-sm-6">
                     <%= text_field_tag :code, "", id: "user-captcha-#{comment_interaction.id}", placeholder: "captcha", class: "form-control" %>
                   </div>
                 </div>
