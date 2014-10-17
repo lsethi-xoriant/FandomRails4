@@ -85,7 +85,8 @@ class ApplicationController < ActionController::Base
       calltoactions = CallToAction.active.limit(3)
     end
 
-    render_calltoactions_str = (render_to_string "/call_to_action/_stream_calltoactions", locals: { calltoactions: calltoactions }, layout: false, formats: :html)
+    calltoactions_comment_interaction = init_calltoactions_comment_interaction(calltoactions)
+    render_calltoactions_str = (render_to_string "/call_to_action/_stream_calltoactions", locals: { calltoactions: calltoactions, calltoactions_comment_interaction: calltoactions_comment_interaction, current_calltoaction_id: nil }, layout: false, formats: :html)
 
     response = Hash.new
     response = {

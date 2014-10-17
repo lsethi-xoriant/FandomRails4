@@ -5,10 +5,10 @@
       <% calltoaction_comment_interaction[:comments_to_shown][0..1].each do |user_comment| %>
         
         <div class="row comment" style="margin-bottom: 5px;">
-          <div class="col-xs-1" style="padding-right: 0; width: 40px;">
+          <div class="col-xs-2 col-sm-1" style="padding-right: 0; width: 40px;">
             <img src="<%= user_avatar user_comment.user %>" alt="..." class="img-circle img-responsive img-profile">
           </div>
-          <div class="col-xs-11 text-left">
+          <div class="col-xs-10 col-sm-11 text-left">
             <h6 style="text-transform: none;"><span><%= user_comment.user ? "#{ user_comment.user.first_name } #{ user_comment.user.last_name }" : "Anonimo" %></span> - <span style="color: #999"><%= user_comment.text %></span></h6>
           </div>
         </div>
@@ -21,7 +21,7 @@
     <div class="comment-section home-comment-section">   
         
       <div class="row">
-        <div class="col-xs-4 col-xs-offset-4 text-left">
+        <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-4 text-left">
           <a href="/call_to_action/<%= calltoaction_id %>" class="btn btn-default btn-xs btn-block">
             <img src="<%= user_avatar current_or_anonymous_user %>" class="img-circle img-responsive img-profile button-profile"> COMMENTA</a>
         </div>
