@@ -27,8 +27,8 @@ module CacheKeysHelper
   # CTA
   # ~~~~~
 
-  def get_calltoaction_comment_interaction_cache_key(cta_id)
-    "calltoaction_#{cta_id}_comment_interaction"
+  def get_calltoaction_last_comments_cache_key(cta_id)
+    "calltoaction_#{cta_id}_last_comments"
   end
 
   def get_interactions_required_to_complete_cache_key(cta_id)

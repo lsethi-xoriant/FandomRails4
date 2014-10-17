@@ -21,36 +21,38 @@
         <% end %> 
       </div>    
       
+      <% user_interaction, interaction = has_done_share_interaction(calltoaction) %>
+      <% if interaction || (!current_calltoaction_id && calltoaction_comment_interaction && !calltoaction_comment_interaction.empty?) %>
+        <div class="panel-footer">
+          <div class="row">
+            <div class="col-xs-3" id="bottom-feedback-share-<%= calltoaction.id %>">       
+              <% if interaction %>
+                <% if user_interaction %>
+                  <button id="button-share-cta" class="btn-2 btn-2-small" role="button" onclick="openCtaShareModal('facebook-share-modal', this, <%= calltoaction.id %>, '<%= calltoaction.title %>', <%= interaction.id %>, true)" style="padding-top: 5px;">CONDIVIDI</button>
+                  <span id="feedback-label-share" class="label label-success" style="padding-top: 3px;margin-top: 5px;">Fatto <span class="glyphicon glyphicon-ok"></span></span>
+                <% else %>
+                  <button id="button-share-cta" class="btn-2 btn-2-small" role="button" onclick="openCtaShareModal('facebook-share-modal', this, <%= calltoaction.id %>, '<%= calltoaction.title %>', <%= interaction.id %>, false)" style="padding-top: 5px;">CONDIVIDI</button>
+                  <span id="feedback-label-share" class="label label-warning" style="padding-top: 3px;margin-top: 5px;">+3 <span class="glyphicon glyphicon-star"></span></span>
+                <% end %>
+              <% end %>
+            </div> 
+            <div class="col-xs-3 col-xs-offset-6 text-right">
+              <% if !current_calltoaction_id && calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
+                <a href="/call_to_action/<%= calltoaction.id %>" style="text-transform: none; color: #000;"><span class="glyphicon glyphicon-comment"></span> 120 commenti</a>
+              <% end %>           
+            </div>
+          </div>
+        </div>
+      <% end %>
+
       <% if calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
         <% if current_calltoaction_id  %>
           <div class="panel-footer">
             <%= render partial: "/call_to_action/stream_comment_with_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction] } %>
           </div> 
         <% else %>
-          <div class="panel-footer">
-            <%= render partial: "/call_to_action/stream_comment_without_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction] } %>
-          </div> 
+          <%= render partial: "/call_to_action/stream_comment_without_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction] } %>
         <% end %>
-      <% end %>
-    </div>
-    
-    <div class="row">
-      <div class="col-sm-3 col-xs-6" id="bottom-feedback-share-<%= calltoaction.id %>">
-        <% user_interaction, interaction = has_done_share_interaction(calltoaction) %>
-        <% if interaction %>
-          <% if user_interaction %>
-          <button id="button-share-cta" class="btn-2 btn-2-small" role="button" onclick="openCtaShareModal('facebook-share-modal', this, <%= calltoaction.id %>, '<%= calltoaction.title %>', <%= interaction.id %>, true)" style="padding-top: 5px;">CONDIVIDI</button>
-            <span id="feedback-label-share" class="label label-success" style="padding-top: 3px;margin-top: 5px;">Fatto <span class="glyphicon glyphicon-ok"></span></span>
-          <% else %>
-            <button id="button-share-cta" class="btn-2 btn-2-small" role="button" onclick="openCtaShareModal('facebook-share-modal', this, <%= calltoaction.id %>, '<%= calltoaction.title %>', <%= interaction.id %>, false)" style="padding-top: 5px;">CONDIVIDI</button>
-            <span id="feedback-label-share" class="label label-warning" style="padding-top: 3px;margin-top: 5px;">+3 <span class="glyphicon glyphicon-star"></span></span>
-          <% end %>
-        <% end %>
-      </div> 
-      <% if !current_calltoaction_id && calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
-        <div class="col-sm-3 col-sm-offset-6 col-xs-6 text-right">
-          <a href="/call_to_action/<%= calltoaction.id %>" class="btn-2 btn-2-small">VEDI</a>
-        </div>
       <% end %>
     </div>
     
