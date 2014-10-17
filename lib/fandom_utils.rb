@@ -7,7 +7,6 @@ module FandomUtils
     $pid = Process.pid
     $request_uri = "unknown"
     $method = "unknown"
-    $http_params = "unknown"
     $http_referer = "unknown"
     $session_id = "unknown"
     $remote_ip = "unknown"

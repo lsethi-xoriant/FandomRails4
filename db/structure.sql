@@ -196,13 +196,13 @@ CREATE TABLE call_to_actions (
     media_image_file_size integer,
     media_image_updated_at timestamp without time zone,
     media_data text,
-    user_id integer,
     releasing_file_id integer,
     approved boolean,
     thumbnail_file_name character varying(255),
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
-    thumbnail_updated_at timestamp without time zone
+    thumbnail_updated_at timestamp without time zone,
+    user_id integer
 );
 
 
@@ -473,11 +473,10 @@ CREATE TABLE events (
     file_name character varying(255),
     method_name character varying(255),
     line_number character varying(255),
-    event_hash character varying(255),
+    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
-    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -892,9 +891,7 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    text_before character varying(255),
-    text_after character varying(255)
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -1402,7 +1399,9 @@ ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 CREATE TABLE tags_tags (
     id integer NOT NULL,
     tag_id integer,
-    other_tag_id integer
+    other_tag_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -1438,10 +1437,6 @@ CREATE TABLE uploads (
     privacy_description text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    releasing_document_file_name character varying(255),
-    releasing_document_content_type character varying(255),
-    releasing_document_file_size integer,
-    releasing_document_updated_at timestamp without time zone,
     upload_number integer,
     watermark_file_name character varying(255),
     watermark_content_type character varying(255),
@@ -1683,7 +1678,8 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean
+    newsletter boolean DEFAULT false,
+    avatar_selected_url character varying(255)
 );
 
 
@@ -1947,13 +1943,13 @@ CREATE TABLE call_to_actions (
     media_image_file_size integer,
     media_image_updated_at timestamp without time zone,
     media_data text,
-    user_id integer,
     releasing_file_id integer,
     approved boolean,
     thumbnail_file_name character varying(255),
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
-    thumbnail_updated_at timestamp without time zone
+    thumbnail_updated_at timestamp without time zone,
+    user_id integer
 );
 
 
@@ -2224,11 +2220,10 @@ CREATE TABLE events (
     file_name character varying(255),
     method_name character varying(255),
     line_number character varying(255),
-    event_hash character varying(255),
+    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
-    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -2643,9 +2638,7 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    text_before character varying(255),
-    text_after character varying(255)
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -3085,7 +3078,7 @@ CREATE TABLE tag_fields (
     id integer NOT NULL,
     tag_id integer,
     name character varying(255),
-    type character varying(255),
+    field_type character varying(255),
     value text,
     upload_file_name character varying(255),
     upload_content_type character varying(255),
@@ -3153,7 +3146,9 @@ ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 CREATE TABLE tags_tags (
     id integer NOT NULL,
     tag_id integer,
-    belongs_tag_id integer
+    other_tag_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -3189,10 +3184,6 @@ CREATE TABLE uploads (
     privacy_description text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    releasing_document_file_name character varying(255),
-    releasing_document_content_type character varying(255),
-    releasing_document_file_size integer,
-    releasing_document_updated_at timestamp without time zone,
     upload_number integer,
     watermark_file_name character varying(255),
     watermark_content_type character varying(255),
@@ -3434,7 +3425,8 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean
+    newsletter boolean DEFAULT false,
+    avatar_selected_url character varying(255)
 );
 
 
@@ -3698,13 +3690,13 @@ CREATE TABLE call_to_actions (
     media_image_file_size integer,
     media_image_updated_at timestamp without time zone,
     media_data text,
-    user_id integer,
     releasing_file_id integer,
     approved boolean,
     thumbnail_file_name character varying(255),
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
-    thumbnail_updated_at timestamp without time zone
+    thumbnail_updated_at timestamp without time zone,
+    user_id integer
 );
 
 
@@ -3975,11 +3967,10 @@ CREATE TABLE events (
     file_name character varying(255),
     method_name character varying(255),
     line_number character varying(255),
-    event_hash character varying(255),
+    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
-    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -4394,9 +4385,7 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    text_before character varying(255),
-    text_after character varying(255)
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -4836,7 +4825,7 @@ CREATE TABLE tag_fields (
     id integer NOT NULL,
     tag_id integer,
     name character varying(255),
-    type character varying(255),
+    field_type character varying(255),
     value text,
     upload_file_name character varying(255),
     upload_content_type character varying(255),
@@ -4904,7 +4893,9 @@ ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 CREATE TABLE tags_tags (
     id integer NOT NULL,
     tag_id integer,
-    belongs_tag_id integer
+    other_tag_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -4940,10 +4931,6 @@ CREATE TABLE uploads (
     privacy_description text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    releasing_document_file_name character varying(255),
-    releasing_document_content_type character varying(255),
-    releasing_document_file_size integer,
-    releasing_document_updated_at timestamp without time zone,
     upload_number integer,
     watermark_file_name character varying(255),
     watermark_content_type character varying(255),
@@ -5185,7 +5172,8 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean
+    newsletter boolean DEFAULT false,
+    avatar_selected_url character varying(255)
 );
 
 
@@ -5449,13 +5437,13 @@ CREATE TABLE call_to_actions (
     media_image_file_size integer,
     media_image_updated_at timestamp without time zone,
     media_data text,
-    user_id integer,
     releasing_file_id integer,
     approved boolean,
     thumbnail_file_name character varying(255),
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
-    thumbnail_updated_at timestamp without time zone
+    thumbnail_updated_at timestamp without time zone,
+    user_id integer
 );
 
 
@@ -5726,11 +5714,10 @@ CREATE TABLE events (
     file_name character varying(255),
     method_name character varying(255),
     line_number character varying(255),
-    event_hash character varying(255),
+    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
-    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -6145,9 +6132,7 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    text_before character varying(255),
-    text_after character varying(255)
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -6587,7 +6572,7 @@ CREATE TABLE tag_fields (
     id integer NOT NULL,
     tag_id integer,
     name character varying(255),
-    type character varying(255),
+    field_type character varying(255),
     value text,
     upload_file_name character varying(255),
     upload_content_type character varying(255),
@@ -6655,7 +6640,9 @@ ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 CREATE TABLE tags_tags (
     id integer NOT NULL,
     tag_id integer,
-    belongs_tag_id integer
+    other_tag_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -6691,10 +6678,6 @@ CREATE TABLE uploads (
     privacy_description text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    releasing_document_file_name character varying(255),
-    releasing_document_content_type character varying(255),
-    releasing_document_file_size integer,
-    releasing_document_updated_at timestamp without time zone,
     upload_number integer,
     watermark_file_name character varying(255),
     watermark_content_type character varying(255),
@@ -6936,7 +6919,8 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean
+    newsletter boolean DEFAULT false,
+    avatar_selected_url character varying(255)
 );
 
 
@@ -7070,7 +7054,6 @@ CREATE TABLE answers (
     quiz_id integer NOT NULL,
     text character varying(255) NOT NULL,
     correct boolean,
-    remove_answer boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     image_file_name character varying(255),
@@ -7200,13 +7183,13 @@ CREATE TABLE call_to_actions (
     media_image_file_size integer,
     media_image_updated_at timestamp without time zone,
     media_data text,
-    user_id integer,
     releasing_file_id integer,
     approved boolean,
     thumbnail_file_name character varying(255),
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
-    thumbnail_updated_at timestamp without time zone
+    thumbnail_updated_at timestamp without time zone,
+    user_id integer
 );
 
 
@@ -7474,14 +7457,10 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    file_name character varying(255),
-    method_name character varying(255),
-    line_number character varying(255),
-    event_hash character varying(255),
+    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
-    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -7896,9 +7875,7 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    text_before character varying(255),
-    text_after character varying(255)
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -8338,7 +8315,7 @@ CREATE TABLE tag_fields (
     id integer NOT NULL,
     tag_id integer,
     name character varying(255),
-    type character varying(255),
+    field_type character varying(255),
     value text,
     upload_file_name character varying(255),
     upload_content_type character varying(255),
@@ -8406,7 +8383,9 @@ ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 CREATE TABLE tags_tags (
     id integer NOT NULL,
     tag_id integer,
-    belongs_tag_id integer
+    other_tag_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -8442,10 +8421,6 @@ CREATE TABLE uploads (
     privacy_description text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    releasing_document_file_name character varying(255),
-    releasing_document_content_type character varying(255),
-    releasing_document_file_size integer,
-    releasing_document_updated_at timestamp without time zone,
     upload_number integer,
     watermark_file_name character varying(255),
     watermark_content_type character varying(255),
@@ -8687,7 +8662,7 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean,
+    newsletter boolean DEFAULT false,
     avatar_selected_url character varying(255)
 );
 
@@ -12458,7 +12433,7 @@ CREATE INDEX index_authentications_on_user_id ON authentications USING btree (us
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
+CREATE UNIQUE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
 
 
 --
@@ -12466,6 +12441,13 @@ CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name)
 --
 
 CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
+
+
+--
+-- Name: index_interactions_on_name; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_interactions_on_name ON interactions USING btree (name);
 
 
 --
@@ -12522,6 +12504,20 @@ CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timest
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag_id);
+
+
+--
+-- Name: index_tags_tags_on_tag_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
 
 
 --
@@ -12607,7 +12603,7 @@ CREATE INDEX index_authentications_on_user_id ON authentications USING btree (us
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
+CREATE UNIQUE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
 
 
 --
@@ -12615,6 +12611,13 @@ CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name)
 --
 
 CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
+
+
+--
+-- Name: index_interactions_on_name; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_interactions_on_name ON interactions USING btree (name);
 
 
 --
@@ -12671,6 +12674,20 @@ CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timest
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag_id);
+
+
+--
+-- Name: index_tags_tags_on_tag_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
 
 
 --
@@ -12756,7 +12773,7 @@ CREATE INDEX index_authentications_on_user_id ON authentications USING btree (us
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
+CREATE UNIQUE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
 
 
 --
@@ -12764,6 +12781,13 @@ CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name)
 --
 
 CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
+
+
+--
+-- Name: index_interactions_on_name; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_interactions_on_name ON interactions USING btree (name);
 
 
 --
@@ -12820,6 +12844,20 @@ CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timest
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag_id);
+
+
+--
+-- Name: index_tags_tags_on_tag_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
 
 
 --
@@ -12905,7 +12943,7 @@ CREATE INDEX index_authentications_on_user_id ON authentications USING btree (us
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
+CREATE UNIQUE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
 
 
 --
@@ -12913,6 +12951,13 @@ CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name)
 --
 
 CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
+
+
+--
+-- Name: index_interactions_on_name; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_interactions_on_name ON interactions USING btree (name);
 
 
 --
@@ -12969,6 +13014,20 @@ CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timest
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag_id);
+
+
+--
+-- Name: index_tags_tags_on_tag_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
 
 
 --
@@ -13054,7 +13113,7 @@ CREATE INDEX index_authentications_on_user_id ON authentications USING btree (us
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
+CREATE UNIQUE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
 
 
 --
@@ -13062,6 +13121,13 @@ CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name)
 --
 
 CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
+
+
+--
+-- Name: index_interactions_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_interactions_on_name ON interactions USING btree (name);
 
 
 --
@@ -13118,6 +13184,20 @@ CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timest
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag_id);
+
+
+--
+-- Name: index_tags_tags_on_tag_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
 
 
 --
@@ -13312,8 +13392,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140708123117');
 
 INSERT INTO schema_migrations (version) VALUES ('20140708155243');
 
-INSERT INTO schema_migrations (version) VALUES ('20140708162117');
-
 INSERT INTO schema_migrations (version) VALUES ('20140709084527');
 
 INSERT INTO schema_migrations (version) VALUES ('20140709084646');
@@ -13378,10 +13456,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140825141441');
 
 INSERT INTO schema_migrations (version) VALUES ('20140825150931');
 
-INSERT INTO schema_migrations (version) VALUES ('20140826071500');
-
-INSERT INTO schema_migrations (version) VALUES ('20140826071530');
-
 INSERT INTO schema_migrations (version) VALUES ('20140826134544');
 
 INSERT INTO schema_migrations (version) VALUES ('20140826155607');
@@ -13435,3 +13509,7 @@ INSERT INTO schema_migrations (version) VALUES ('20140919151718');
 INSERT INTO schema_migrations (version) VALUES ('20140926073909');
 
 INSERT INTO schema_migrations (version) VALUES ('20141007160640');
+
+INSERT INTO schema_migrations (version) VALUES ('20141016093356');
+
+INSERT INTO schema_migrations (version) VALUES ('20141016154259');

@@ -103,23 +103,23 @@ class ApplicationController < ActionController::Base
     calltoactions_comment_interaction = Hash.new
     calltoactions.each do |calltoaction|
 
-      calltoactions_comment_interaction[calltoaction.id] = cache_short(get_calltoaction_comment_interaction_cache_key(calltoaction.id)) do
-        interactions =  calltoaction.interactions.includes(:resource).where("resource_type = 'Comment' AND when_show_interaction <> 'MAI_VISIBILE'")
+      interactions = cache_short("calltoaction_#{calltoaction.id}_comment_interactions") do
+        calltoaction.interactions.includes(:resource).where("resource_type = 'Comment' AND when_show_interaction <> 'MAI_VISIBILE'").to_a
+      end  
 
-        calltoaction_comment_interaction = Hash.new
-        if interactions.any?
-          interaction = interactions[0]
-          calltoaction_comment_interaction[:interaction] = interaction
-          comments_to_shown = get_last_comments_to_view(interaction)
-          calltoaction_comment_interaction[:comments_to_shown] = comments_to_shown
-          calltoaction_comment_interaction[:comments_to_shown_ids] = comments_to_shown.map { |comment| comment.id }
-          
-          if page_require_captcha?(interaction)
-            ccalltoaction_comment_interaction[:captcha_data] = generate_captcha_response
-          end
+      calltoaction_comment_interaction = Hash.new
+      if interactions.any?
+        interaction = interactions[0]
+        calltoaction_comment_interaction[:interaction] = interaction
+        comments_to_shown = get_last_comments_to_view(interaction)
+        calltoaction_comment_interaction[:comments_to_shown_ids] = comments_to_shown.map { |comment| comment.id }
+        calltoaction_comment_interaction[:comments_to_shown] = comments_to_shown          
+        
+        if page_require_captcha?(interaction)
+          calltoaction_comment_interaction[:captcha_data] = generate_captcha_response
         end
-        calltoaction_comment_interaction
       end
+      calltoactions_comment_interaction[calltoaction.id] = calltoaction_comment_interaction
 
     end
 

@@ -25,7 +25,6 @@ p.oblique { font-style: oblique }
     }
     .img-profile {
         max-width: 80px;
-        margin-left: auto;
     }
     .btn-2-small {
         width: 100% !important;
@@ -42,6 +41,14 @@ p.oblique { font-style: oblique }
         outline: 0px !important;
         -webkit-appearance: none !important;
         box-shadow: none !important;
+    }
+}
+
+.comment-section.home-comment-section {
+    .img-profile {
+        width: 100%;
+        margin-right: auto;
+        max-width: 25px;
     }
 }
 

@@ -233,7 +233,7 @@ class CallToActionController < ApplicationController
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
       if approved && user_comment.errors.blank?
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
-        expire_cache_key(get_calltoaction_comment_interaction_cache_key(interaction.call_to_action_id))
+        expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
       end
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
@@ -241,7 +241,7 @@ class CallToActionController < ApplicationController
         user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
         if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
-          expire_cache_key(get_calltoaction_comment_interaction_cache_key(interaction.call_to_action_id))
+          expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
         end
       end
     end
