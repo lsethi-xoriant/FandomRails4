@@ -5,19 +5,6 @@ Fandom::Application.configure do
   puts "disabling standard production logs, logs are redirected to the event directory"
   config.log_level = :error
   #config.logger = Logger.new('/dev/null')
-  class LogSubscriber < ActiveSupport::LogSubscriber
-    def process_action event
-      unless event.payload[:view_runtime].nil? # warning: key?() can't be used because value can be nil
-        event.payload[:view_runtime] /= 1000.0
-      end
-      unless event.payload[:db_runtime].nil? # warning: key?() can't be used because value can be nil
-        event.payload[:db_runtime] /= 1000.0
-      end
-      event.payload.delete(:params) # params delete to avoid cluttering logs with uploads
-      log_info("rails logger", event.payload)
-    end
-  end
-  LogSubscriber.attach_to :action_controller
 
   # Code is not reloaded between requests
   config.cache_classes = true
