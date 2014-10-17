@@ -86,5 +86,11 @@ class SessionsController < Devise::SessionsController
       create_from_oauth()
     end
   end
+  
+  def destroy
+    fandom_play_logout()
+    super
+  end  
+  
 end
 
