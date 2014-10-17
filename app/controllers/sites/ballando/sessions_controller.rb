@@ -179,4 +179,9 @@ class Sites::Ballando::SessionsController < SessionsController
     Rails.configuration.deploy_settings["sites"]["ballando"]["stream_url"]
   end
 
+  def destroy
+    fandom_play_logout()
+    super
+  end  
+
 end
