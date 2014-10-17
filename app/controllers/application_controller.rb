@@ -111,9 +111,10 @@ class ApplicationController < ActionController::Base
       if interactions.any?
         interaction = interactions[0]
         calltoaction_comment_interaction[:interaction] = interaction
-        comments_to_shown = get_last_comments_to_view(interaction)
+        comments_to_shown, comments_count = get_last_comments_to_view(interaction)
         calltoaction_comment_interaction[:comments_to_shown_ids] = comments_to_shown.map { |comment| comment.id }
-        calltoaction_comment_interaction[:comments_to_shown] = comments_to_shown          
+        calltoaction_comment_interaction[:comments_to_shown] = comments_to_shown     
+        calltoaction_comment_interaction[:comments_count] = comments_count    
         
         if page_require_captcha?(interaction)
           calltoaction_comment_interaction[:captcha_data] = generate_captcha_response

@@ -15,6 +15,12 @@ p.oblique { font-style: oblique }
     background: #fff;
 }
 
+.comment-preview {
+    text-transform: none; 
+    color: #000;
+    font-size: 11px;
+}
+
 .comment-section {
     .captcha-img {
         width: 180px; 
@@ -50,6 +56,16 @@ p.oblique { font-style: oblique }
         margin-right: auto;
         max-width: 25px;
     }
+    .button-profile {
+        display: inline; 
+        width: 15px; 
+        margin-bottom: 2px; 
+        margin-right: 5px;
+    }
+}
+
+hr.no-margin {
+    margin: 0; 
 }
 
 .container-menu {

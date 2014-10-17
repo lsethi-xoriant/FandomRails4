@@ -4,7 +4,9 @@ module CommentHelper
   
   def get_last_comments_to_view(interaction)
     cache_short(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id)) do
-      interaction.resource.user_comment_interactions.approved.order("updated_at DESC").limit(5).to_a
+      comments_to_shown = interaction.resource.user_comment_interactions.approved.order("updated_at DESC").limit(5).to_a
+      comments_count = interaction.resource.user_comment_interactions.approved.count
+      [comments_to_shown, comments_count]
     end
   end
 
