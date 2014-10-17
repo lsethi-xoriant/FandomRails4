@@ -14,7 +14,7 @@
           <div class="row">
             <div class="col-lg-12">
               <div class="alert alert-danger">
-                <p><%= flas[:error] %></p>
+                <p><%= flash[:error] %></p>
               </div>
             </div>
           </div>
@@ -37,6 +37,10 @@
             <div class="col-lg-6"><%= text_field_tag :users, "", :class => "form-control" %> </div>
         </div>
         <div class="row form-group">
+            <div class="col-lg-4"><%= label_tag(:all_users, "Manda a tutti gli utenti:") %></div>
+            <div class="col-lg-6"><%= check_box_tag :all_users, "1", false, :onclick => "checkAllUsers(this);" %> </div>
+        </div>
+        <div class="row form-group">
             <div class="col-lg-4"><%= label_tag(:notice, "HTML notifica:") %></div>
             <div class="col-lg-6"><%= text_area_tag(:notice, "", :class => "form-control", size: "24x6") %> </div>
         </div>
@@ -48,3 +52,13 @@
     <% end %>
   </div>
 </div>
+
+<script type="text/javascript">
+	function checkAllUsers(checkbox){
+		if( $(checkbox).is(":checked") ){
+			$("#users").attr("disabled","disabled");
+		}else{
+			$("#users").removeAttr("disabled");
+		}
+	}
+</script>

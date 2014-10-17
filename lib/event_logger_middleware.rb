@@ -29,8 +29,10 @@ class EventLoggerMiddleware
     
     $request_uri = "#{env["REQUEST_URI"]}"
     $method = "#{env["REQUEST_METHOD"]}"
-    $http_params = env["action_dispatch.request.parameters"]
     $http_referer = "#{env["HTTP_REFERER"]}"
+    user_agent = "#{env["HTTP_USER_AGENT"]}"
+    lang = "#{env["HTTP_ACCEPT_LANGUAGE"]}"
+    app_server = Socket.gethostname 
     $session_id = "#{env["rack.session"]["session_id"]}"
     $remote_ip = "#{env["action_dispatch.remote_ip"]}"
     $tenant = tenant
@@ -41,8 +43,10 @@ class EventLoggerMiddleware
     data = {
       request_uri: $request_uri,
       method: $method,
-      params: $http_params,
       http_referer: $http_referer,
+      user_agent: user_agent,
+      lang: lang,
+      app_server: app_server,
       session_id: $session_id,
       remote_ip: $remote_ip,
       tenant: $tenant,
