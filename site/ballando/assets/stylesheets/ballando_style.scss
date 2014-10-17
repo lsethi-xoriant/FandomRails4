@@ -1669,6 +1669,13 @@ body {
 
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
+
+    .comment-section {
+        .img-profile {
+            max-width: 100%;
+        }
+    }
+
     .footer-carousel {
         padding-bottom: 0;
         .carousel, .carousel .item, .carousel-inner > .item > img {
