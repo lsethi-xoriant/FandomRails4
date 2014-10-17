@@ -293,8 +293,11 @@ class CallToActionController < ApplicationController
       else
         comments_to_show = comments_to_show_approved.order("date_trunc('milliseconds', updated_at) DESC")
       end
-
-      response[:first_comment_shown_date] = comments_to_show.any? ? comments_to_show.first.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N") : nil
+      
+      if comments_to_show.any?
+        response[:comments_count] = interaction.resource.user_comment_interactions.approved.count
+        response[:first_comment_shown_date] =  comments_to_show.first.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N")
+      end
       comments_to_show
     end
   end

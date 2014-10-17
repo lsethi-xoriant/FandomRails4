@@ -37,8 +37,8 @@
               <% end %>
             </div> 
             <div class="col-xs-3 col-xs-offset-6 text-right">
-              <% if !current_calltoaction_id && calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
-                <a href="/call_to_action/<%= calltoaction.id %>" style="text-transform: none; color: #000;"><span class="glyphicon glyphicon-comment"></span> 120 commenti</a>
+              <% if calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
+                <a href="/call_to_action/<%= calltoaction.id %>" class="comment-preview"><span class="glyphicon glyphicon-comment"></span> <span id="interaction-<%= calltoaction_comment_interaction[:interaction].id %>-comment-counter"><%= calltoaction_comment_interaction[:comments_count] %></span> commenti</a>
               <% end %>           
             </div>
           </div>
@@ -47,11 +47,12 @@
 
       <% if calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
         <% if current_calltoaction_id  %>
+          <hr class="no-margin">
           <div class="panel-footer">
             <%= render partial: "/call_to_action/stream_comment_with_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction] } %>
           </div> 
         <% else %>
-          <%= render partial: "/call_to_action/stream_comment_without_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction] } %>
+          <%= render partial: "/call_to_action/stream_comment_without_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction], calltoaction_id: calltoaction.id } %>
         <% end %>
       <% end %>
     </div>
