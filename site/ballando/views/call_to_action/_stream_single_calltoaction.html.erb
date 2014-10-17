@@ -46,7 +46,7 @@
       <% end %>
 
       <% if calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
-        <% if current_calltoaction_id  %>
+        <% if current_calltoaction_id && current_calltoaction_id == calltoaction.id  %>
           <hr class="no-margin">
           <div class="panel-footer">
             <%= render partial: "/call_to_action/stream_comment_with_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction] } %>
