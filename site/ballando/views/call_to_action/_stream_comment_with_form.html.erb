@@ -1,4 +1,4 @@
-<div class="comment-section" ng-controller="CommentCtrl" ng-init="init(<%= calltoaction_comment_interaction[:comments_to_shown_ids] %>, <%= comment_interaction.id %>, <%= comment_interaction.resource.must_be_approved %>, '<%= get_last_comments_to_view_date(comment_interaction) %>', '<%= get_first_comments_to_view_date(comment_interaction) %>', <%= get_comments_append_counter(comment_interaction) %>, <%= calltoaction_comment_interaction[:captcha_data].to_json %>)">   
+<div class="comment-section" ng-controller="CommentCtrl" ng-init="init(<%= calltoaction_comment_interaction[:comments_to_shown_ids] %>, <%= comment_interaction.id %>, <%= comment_interaction.resource.must_be_approved %>, '<%= get_last_comments_to_view_date(comment_interaction) %>', '<%= get_first_comments_to_view_date(comment_interaction) %>', <%= calltoaction_comment_interaction[:comments_count] %>, <%= calltoaction_comment_interaction[:captcha_data].to_json %>)">   
 
   <div class="row">
     <div class="col-md-12">
@@ -23,10 +23,10 @@
             <div class="col-sm-8">
               <% unless current_user %>
                 <div class="row">               
-                  <div class="col-md-6">
+                  <div class="col-sm-6">
                     <img src="" id="captcha-img-<%= comment_interaction.id %>" class="captcha-img">
                   </div>              
-                  <div class="col-md-6">
+                  <div class="col-sm-6">
                     <%= text_field_tag :code, "", id: "user-captcha-#{comment_interaction.id}", placeholder: "captcha", class: "form-control" %>
                   </div>
                 </div>

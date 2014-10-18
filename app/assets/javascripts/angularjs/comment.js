@@ -10,7 +10,7 @@ commentModule.config(["$httpProvider", function(provider) {
 
 function CommentCtrl($scope, $window, $http, $timeout, $interval) {
 
-  $scope.init = function(comments_shown, interaction_id, must_be_approved, last_comment_shown_date, first_comment_shown_date, not_shown_comments_counter, captcha_data) {
+  $scope.init = function(comments_shown, interaction_id, must_be_approved, last_comment_shown_date, first_comment_shown_date, comments_counter, captcha_data) {
 
     $scope.comment = new Object();
 
@@ -26,10 +26,9 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.comment.ajax_polling_in_progress = false;
     $scope.comment.ajax_append_in_progress = false;
 
-    $scope.comment.not_shown_comments_counter = not_shown_comments_counter;
-    $("#comment-append-counter-" + $scope.comment.interaction_id).html($scope.comment.not_shown_comments_counter);
+    $scope.comment.comments_counter = comments_counter;
 
-    if($scope.comment.not_shown_comments_counter < 1) {
+    if($scope.comments_shown.length >= comments_counter) {
       $("#comment-append-button-" + $scope.comment.interaction_id).hide();
     }
 
@@ -90,7 +89,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
   }
 
   $window.appendComments = function() {
-    if($scope.comment.not_shown_comments_counter > 0 && !$scope.comment.ajax_append_in_progress) {
+    if($scope.comments_shown.length < $scope.comment.comments_counter && !$scope.comment.ajax_append_in_progress) {
       $scope.comment.ajax_append_in_progress = true;
 
       try {
@@ -102,10 +101,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
             $scope.comment.last_comment_shown_date = data.last_comment_shown_date;
             $("#comments-" + $scope.comment.interaction_id).append(data.comments_to_append);
 
-            $scope.comment.not_shown_comments_counter -= data.comments_to_append_counter;
-            $("#comment-append-counter-" + $scope.comment.interaction_id).html($scope.comment.not_shown_comments_counter);   
-
-            if($scope.comment.not_shown_comments_counter < 1) {
+            if($scope.comments_shown.length >= $scope.comment.comments_counter) {
               $("#comment-append-button-" + $scope.comment.interaction_id).hide();
             } 
 

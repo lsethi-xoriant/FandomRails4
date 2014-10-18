@@ -4,7 +4,7 @@
   </div>
   <div class="col-xs-10 text-left">
     <h6><%= user_comment.user ? "#{ user_comment.user.first_name } #{ user_comment.user.last_name }" : "Anonimo" %> <small>&bull; <%= user_comment.updated_at.in_time_zone("Rome").strftime("%m/%d/%Y %H:%M:%S") %></small></h6>
-    <p class="text-muted"><%= user_comment.text %></p>
+    <p class="text-muted comment-text"><%= user_comment.text %></p>
     <hr>
   </div>
 </div>
