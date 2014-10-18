@@ -18,7 +18,11 @@
         <% end %>
       </div>
     </div>
+    <!--
+    <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn-2 btn-2-small" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
+    -->
     <div id="interaction-<%= interaction.id %>-next" class="go-on hidden" onclick="nextInteraction(<%= calltoaction_id %>)" style="">VAI AVANTI</div>
+    
   </div>
 <% else %>
   <div class="col-xs-12 text-center undervideo-feedback">
