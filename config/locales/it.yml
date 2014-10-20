@@ -248,6 +248,8 @@ it:
               taken: "già in uso"
 
     attributes:
+      user_comment_interaction:
+        text: "Il testo del commento"
       user:
         first_name: "Nome"
         last_name: "Cognome"
@@ -263,42 +265,7 @@ it:
         address: "Indirizzo"
         number: "Numero"
         province: "Provincia"
-        phone: "Telefono"
-      your_course:
-        grade: "Il voto del diploma di istruzione secondaria superiore"  
-        degree_grade: "Il voto di laurea"
-        master_degree_grade: "Il voto della laurea magistrale"  
-        diploma: "Diploma di istruzione secondaria superiore"
-        institute: "Nome dell'istituto"
-        diploma_year: "Anno di diploma"
-        division_diploma: "Indirizzo di istruzione secondaria superiore"
-        degree: "Laurea"
-        university: "Università"
-        thesis: "Titolo della tesi"
-        degree_grade: "Voto di laurea"
-        enrolment_year: "Anno di immatricolazione all'università"
-        graduation_year: "Anno di laurea"
-        division_degree: "Indirizzo dell'università"
-      your_detail:
-        first_name: "Nome"
-        last_name: "Cognome"
-        date_of_birth: "Data di nascita"
-        nation_of_birth: "Nazione di nascita"
-        place_of_birth: "Luogo di nascita"
-        nationality: "Nazionalità"
-        citizenship: "Cittadinanza"
-        fiscal_code: "Codice fiscale"
-        email: "Email"
-        address: "Indirizzo"
-        address_number: "Numero civico"
-        city: "Città"
-        postal_code: "Codice postale"
-        province: "Provincia"
-        nation: "Nazione"
-        phone_or_mobile_phone: ""
-      your_story:
-        text_file: "Il file di testo"
-        youtube: "Il video"  
+        phone: "Telefono" 
   will_paginate:
     page_gap: "&hellip;"
 

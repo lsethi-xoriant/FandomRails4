@@ -137,7 +137,8 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
 
    $window.clearCaptchaWrongSubmitForm = function() {
     $("#user-captcha-" + $scope.comment.interaction_id).val("");
-    $("#captcha-danger-" + $scope.comment.interaction_id).removeClass("hidden");
+    $("#comment-danger-text-" + $scope.comment.interaction_id).html("Captcha errato");
+    $("#comment-danger-" + $scope.comment.interaction_id).removeClass("hidden");
   };
 
   $window.userFeedbackAfterSubmitComment = function(data_from_submit_comment_ajax) {
@@ -158,9 +159,11 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
     $http.post("/add_comment", { comment: comment, interaction_id: $scope.comment.interaction_id, user_filled_captcha: user_filled_captcha, stored_captcha: stored_captcha })
       .success(function(data) {
         if(data.errors) {
-          // TODO: show errors in a modal.
-          alert("message save error");
+          $("#user-captcha-" + $scope.comment.interaction_id).val("");
+          $("#comment-danger-text-" + $scope.comment.interaction_id).html(data.errors);
+          $("#comment-danger-" + $scope.comment.interaction_id).removeClass("hidden");
         } else {
+          $("#comment-danger-" + $scope.comment.interaction_id).addClass("hidden");
 
           if($scope.$parent.current_user) {
             userFeedbackAfterSubmitComment(data);

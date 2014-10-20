@@ -216,6 +216,24 @@ class CallToActionController < ApplicationController
     end
   end
 
+  def check_profanity_words_in_comment(user_comment)
+
+    profanity_words_row_in_settings = cache_short("check_profanity_words") do
+      Setting.select("value").find_by_key("profanity.words") || CACHED_NIL
+    end
+
+    if !cached_nil?(profanity_words_row_in_settings)
+      profanity_words = profanity_words_row_in_settings.value.split(",")
+      text_words = user_comment.text.split(" ")
+      text_words.each do |word| 
+        user_comment.errors.add(:text, "contiene parole non ammesse") if profanity_words.include?(word.downcase)
+      end
+    end
+
+    user_comment
+
+  end
+
   def add_comment
     interaction = Interaction.find(params[:interaction_id])
     comment_resource = interaction.resource
@@ -230,7 +248,10 @@ class CallToActionController < ApplicationController
     response[:ga][:action] = "AddComment"
 
     if current_user
-      user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+      user_comment = UserCommentInteraction.new(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+      unless check_profanity_words_in_comment(user_comment).errors.any?
+        user_comment.save
+      end
       if approved && user_comment.errors.blank?
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
         expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
@@ -238,7 +259,10 @@ class CallToActionController < ApplicationController
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
       if response[:captcha_check]
-        user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+        user_comment = UserCommentInteraction.new(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+        unless check_profanity_words_in_comment(user_comment).errors.any?
+          user_comment.save
+        end
         if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
           expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
@@ -246,8 +270,8 @@ class CallToActionController < ApplicationController
       end
     end
 
-    if user_comment
-      response[:error] = user_comment.errors
+    if user_comment && user_comment.errors.any?
+      response[:errors] = user_comment.errors.full_messages.join(", ")
     end
 
     respond_to do |format|
