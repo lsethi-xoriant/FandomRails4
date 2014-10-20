@@ -92,14 +92,15 @@ class Sites::Ballando::SessionsController < SessionsController
         end
       end
 
+      new_user = false
       if user && user.email.include?("@FAKE___DOMAIN.com")
         user.update_attributes(:email => user_email, :avatar_selected_url => rai_response_user["user"]["thumbnailURL"])
-      elsif user.nil?
+      elsif user.nil?  
         user = new_user_from_provider(rai_response_user, user_email)
+        new_user = true
       end
 
       authentication = user.authentications.find_by_provider(rai_response_user["user"]["loginProvider"])
-
       if authentication
         authentication.update_attributes(authentication_attributes_from_provider(rai_response_user))
       else
@@ -107,6 +108,11 @@ class Sites::Ballando::SessionsController < SessionsController
       end
 
       if user.errors.blank?
+
+        if new_user
+          cookies[:after_registration] = { value: true, expires: 1.minute.from_now }
+        end
+
         response[:connect_from_page] = path_for_redirect_after_successful_login()
         sign_in(:user, user)
         on_success(user)
