@@ -5,8 +5,9 @@ ballandoIframeCalltoactionModule.controller('BallandoIframeCalltoactionCtrl', Ba
 
 function BallandoIframeCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
-  $scope.ballandoIframeCalltoactionCtrl = function() {
+  $scope.ballandoIframeCalltoactionCtrl = function(profile_url) {
     $scope.referrer = top.location.toString();
+    $scope.profile_url = profile_url;
 
     $http.post("/iframe/get_check.json", { referrer: $scope.referrer })
       .success(function(data) {
@@ -25,8 +26,8 @@ function BallandoIframeCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.showRegistrateView = function() {
-    document.cookie = "connect_from_page = " + top.location;
-    top.location = PROFILE_URL;
+    document.cookie = "connect_from_page = " + top.location + "; path=/";
+    top.location = $scope.profile_url;
   };
   
   $window.onEnterInteraction = function(interaction_id, answer_id) {

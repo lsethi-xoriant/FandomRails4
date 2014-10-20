@@ -2,14 +2,11 @@
 
 <div class="container-fluid">
   <div class="row">
-  	<% if !current_user %>
-  		<a href="javascript:void(0);" onclick="window.top.location.href = '<%= @profile_url %>';" style="display: block; width: 100%; height: 100%; position: absolute; z-index: 99;"></a>
-  	<% end %>
+
     <div class="col-xs-3 col-xxs-12 text-left" style="padding: 20px 10px 0 10px;">
-      <a href="<%= @profile_url %>" target="_top">
+      <a href="javascript: void(0)" onclick="profilePageWithRedirectCookie()" target="_top">
         <img src="<%= current_avatar %>" class="img-responsive img-circle iframe-profile-avatar">
       </a>
-
       <% if current_user %>
         <a href="<%= @profile_url %>" target="_top">
           <div class="text-center iframe-notice-baloon hidden-xxs <%= "hidden" if @notices_count < 1 %>">
@@ -37,9 +34,16 @@
           <span style="margin-left: 7px;">di 100 <span class="glyphicon glyphicon-star"></span></span>
         </h5>
       <% else %>
-        <button class="btn-2 btn-2-small" onclick="window.top.location.href = '<%= @profile_url %>';">LOGIN / REGISTRATI</button>
+        <button class="btn-2 btn-2-small" onclick="profilePageWithRedirectCookie()">LOGIN / REGISTRATI</button>
       <% end %>
     </div>
 
   </div>
 </div>
+
+<script type="text/javascript">
+  function profilePageWithRedirectCookie() {
+    document.cookie = "connect_from_page = " + top.location + "; path=/";
+    top.location = "<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>";
+  }
+</script>
