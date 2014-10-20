@@ -5,6 +5,13 @@
       <h4 class="title">LASCIA UN COMMENTO</h4>
     </div>
   </div>
+
+  <div id="captcha-danger-<%= comment_interaction.id %>" class="row hidden">
+    <div class="col-md-12">
+      <div class="alert alert-danger" role="alert">Captcha errato</div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-xs-2 text-center">
       <img src="<%= current_avatar %>" class="img-circle img-responsive img-profile">
