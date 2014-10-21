@@ -40,7 +40,6 @@ class Easyadmin::CallToActionController < ApplicationController
 
   def update_cta
     @cta = CallToAction.find(params[:id])
-    debugger
     unless @cta.update_attributes(params[:call_to_action].merge(extra_options: params[:extra_options]))
       @tag_list = params[:tag_list].split(",")
       @extra_options = params[:extra_options]

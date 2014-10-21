@@ -40,7 +40,6 @@ module CallToActionHelper
 
   def generate_response_for_next_interaction(quiz_interactions, calltoaction)
     next_quiz_interaction = quiz_interactions.first
-
     if next_quiz_interaction
       index_current_interaction = calculate_interaction_index(calltoaction, next_quiz_interaction)
       shown_interactions = always_shown_interactions(calltoaction)

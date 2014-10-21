@@ -9,6 +9,13 @@
               <%= calltoaction_active_interaction[:next_interaction][:render_interaction_str].html_safe %>
             <% end %>
           </div>
+        <% else %>
+        	<% extra_options = JSON.parse(calltoaction.aux) %>
+      		<div class="row cta-stream-heading">
+				<div class="col-xs-12 text-center question">
+    				<h4 style="margin-top: 20px;"><%= extra_options['alternative_description'] %></h4>
+				</div>
+			</div>
         <% end %>
       </div>
 

@@ -87,6 +87,10 @@
 	            <label class="text-input">Testo bottone cta:</label>
 	            <%= text_field_tag "extra_options[button_label]", (@extra_options['button_label'] if @extra_options), class: "form-control" %>
 	        </div>
+	        <div class="form-group">
+	            <label class="text-input">Testo cta in assenza di interazioni:</label>
+	            <%= text_area_tag "extra_options[alternative_description]", (@extra_options['alternative_description'] if @extra_options), class: "form-control" %>
+	        </div>
 		</div>
 	</div>
 
