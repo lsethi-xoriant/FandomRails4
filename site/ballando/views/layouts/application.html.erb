@@ -198,8 +198,6 @@
 
   <script type="text/javascript">
 
-    var PROFILE_URL = "<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>";
-
     <% if @registration_ga %>
       ga('send', 'event', "Registration", "Registration", "registered_user", 1, true);
     <% end %>

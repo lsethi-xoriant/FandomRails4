@@ -8,15 +8,16 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   var COUNTDOWN_TIME = 3;
 
-  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url) {
+  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url, profile_url) {
     $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction);
     $scope.interactions_showed = {};
     $scope.request_url = request_url;
+    $scope.profile_url = profile_url;
   };
 
   $window.showRegistrateView = function() {
-    document.cookie = "connect_from_page = " + top.location;
-    top.location = PROFILE_URL;
+    document.cookie = "connect_from_page = " + top.location + "; path=/";
+    top.location = $scope.profile_url;
   };
   
   $window.doFbShare = function (){

@@ -34,6 +34,7 @@ class ProfileController < ApplicationController
   end
 
   def badges
+    debugger
     @rewards_to_show, @are_properties_used = rewards_by_tag("badge")
   end
 
