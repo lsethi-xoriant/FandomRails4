@@ -52,7 +52,7 @@ class CallToActionController < ApplicationController
 
     stream_call_to_action_to_render.each do |calltoaction|
       calltoactions << calltoaction
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], current_calltoaction_id: nil }, layout: false, formats: :html)
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: nil, calltoaction_active_interaction: Hash.new }, layout: false, formats: :html)
     end
 
     calltoactions_during_video_interactions_second = Hash.new
@@ -306,8 +306,12 @@ class CallToActionController < ApplicationController
   end
 
   def get_comments_approved_except_ids(user_comments, except_ids)
-    comments_showed_id_qmarks = (["?"] * except_ids.count).join(", ")
-    comments_to_show_approved = user_comments.approved.where("id NOT IN (#{comments_showed_id_qmarks})", *except_ids)
+    if except_ids
+      comments_showed_id_qmarks = (["?"] * except_ids.count).join(", ")
+      comments_to_show_approved = user_comments.approved.where("id NOT IN (#{comments_showed_id_qmarks})", *except_ids)
+    else
+      user_comments.approved
+    end
   end
 
   def new_comments_polling
