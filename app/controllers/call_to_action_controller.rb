@@ -227,9 +227,9 @@ class CallToActionController < ApplicationController
 
     if !cached_nil?(profanity_words_row_in_settings)
       profanity_words = profanity_words_row_in_settings.value.split(",")
-      text_words = user_comment.text.split(" ")
-      text_words.each do |word| 
-        user_comment.errors.add(:text, "contiene parole non ammesse") if profanity_words.include?(word.downcase)
+      user_comment_text = user_comment.text.downcase
+      profanity_words.each do |word| 
+        user_comment.errors.add(:text, "contiene parole non ammesse") if user_comment_text.include?(word.downcase)
       end
     end
 
