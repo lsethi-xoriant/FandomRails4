@@ -8,7 +8,6 @@ class ProfileController < ApplicationController
   before_filter :check_user_logged
   
   def check_user_logged
-    debugger
     unless current_user
       if cookies[:connect_from_page].blank?
         profile_path = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["profile_url"] || request.url
