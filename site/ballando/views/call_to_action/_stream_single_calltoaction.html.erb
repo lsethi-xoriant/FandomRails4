@@ -2,7 +2,7 @@
 
 <div class="row cta">      
   <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0">
-    <div class="panel panel-default cta-page cta-stream panel-shadow">
+    <div class="panel panel-default cta-page cta-stream panel-shadow" style="border: none;">
       <div class="panel-body" style="position: relative; padding: 0; min-height: 397px;">
         <% if is_cta_locked(calltoaction) %>
           <%= render partial: "/call_to_action/cover_stream_single_calltoaction_locked", locals: { calltoaction: calltoaction } %>
