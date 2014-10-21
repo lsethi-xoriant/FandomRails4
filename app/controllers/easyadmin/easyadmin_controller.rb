@@ -110,18 +110,24 @@ class Easyadmin::EasyadminController < ApplicationController
   def dashboard
     @user_week_list = Hash.new
     if User.any? 
-      @from_time = (params[:datepicker_from_date].blank?) ? User.order("created_at ASC").limit(1).first.created_at.strftime("%Y-%m-%d")
-                  : Date.strptime(params[:datepicker_from_date], '%m/%d/%Y').to_date.strftime("%Y-%m-%d")
-      @to_time = (params[:datepicker_to_date].blank?) ? Time.now.to_date.strftime("%Y-%m-%d")
-                  : Date.strptime(params[:datepicker_to_date], '%m/%d/%Y').to_date.strftime("%Y-%m-%d")
-      from = @from_time
-      to = @to_time
+      @from_time = (params[:datepicker_from_date].blank? || params[:commit] == "Reset") ? User.order("created_at ASC").limit(1).first.created_at.strftime('%m/%d/%Y')
+                  : params[:datepicker_from_date]
+      @to_time = (params[:datepicker_to_date].blank? || params[:commit] == "Reset") ? Time.now.strftime('%m/%d/%Y')
+                  : params[:datepicker_to_date]
+
+      from = Date.strptime(@from_time, '%m/%d/%Y')
+      to = Date.strptime(@to_time, '%m/%d/%Y')
+
+      if((to - from).to_i <= 7 && params[:time_interval] != "daily")
+        params[:time_interval] = "daily"
+      end
+
       while from.to_date <= to.to_date do
         @user_week_list["#{from.to_date.strftime("%Y-%m-%d") }"] = {
           "tot" => User.where("created_at<=?", from).count,
           "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", from).count
           }
-        from = params[:time_interval] == "daily" ? from.to_date + 1.day : from.to_date + 1.week
+        from = (params[:time_interval] == "daily" && params[:commit] != "Reset") ? from.to_date + 1.day : from.to_date + 1.week
       end
     end
   end
