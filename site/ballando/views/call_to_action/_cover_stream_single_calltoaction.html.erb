@@ -22,10 +22,10 @@
   <div class="row bottom">
     <div class="col-xs-12 text-left" style="position: relative; padding-right: 20%;">
       <%= render partial: "/call_to_action/cover_stream_single_calltoaction_text", locals: { calltoaction: calltoaction } %>
-      <h2 class="btn-container"><a class="btn-2" role="button" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')">GUARDA</a></h2> 
+      <h2 class="btn-container"><a class="btn-2" role="button" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')"><%= get_cta_button_label(calltoaction) %></a></h2> 
     </div>
     <div class="col-xs-12 text-left visible-xsm">
-      <h2 style="margin-top: 0;"><a class="btn-2" role="button" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')">GUARDA</a></h2> 
+      <h2 style="margin-top: 0;"><a class="btn-2" role="button" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')"><%= get_cta_button_label(calltoaction) %></a></h2> 
     </div>
   </div>
     

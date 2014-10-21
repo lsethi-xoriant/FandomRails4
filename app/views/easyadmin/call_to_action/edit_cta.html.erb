@@ -75,6 +75,17 @@
           <%= render partial: "media_type-form", locals: { f: f } %>
         </div>
       </div>
+      
+      <h3>Dati extra</h3>
+		<hr/>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="form-group">
+		            <label class="text-input">Testo bottone cta:</label>
+		            <%= text_field_tag "extra_options[button_label]", @extra_options['button_label'], class: "form-control" %>
+		        </div>
+			</div>
+		</div>
 
       <div class="row">
         <div class="col-md-10"><h3>TRIVIA</h3></div>

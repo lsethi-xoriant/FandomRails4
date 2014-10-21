@@ -6,12 +6,13 @@ class CallToAction < ActiveRecord::Base
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
   					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required,
-            :privacy_required, :privacy
+            :privacy_required, :privacy, :extra_options
 
   extend FriendlyId
   friendly_id :title, use: :slugged
 
-  attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required
+  attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required,
+            :extra_options
 
   validates_presence_of :title
   validates_presence_of :name
@@ -24,7 +25,8 @@ class CallToAction < ActiveRecord::Base
   validates :privacy, :acceptance => { :accept => true }, if: Proc.new { |c| privacy_required }
 
   before_save :set_activated_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
-
+  before_save :set_extra_options
+  
   has_attached_file :media_image,
     :processors => [:watermark],
     :styles => lambda { |image| 
@@ -110,6 +112,12 @@ class CallToAction < ActiveRecord::Base
       detail_url: "/call_to_action/#{id}",
       created_at: created_at.to_time.to_i
     )
+  end
+  
+  def set_extra_options
+    if extra_options
+      write_attribute :aux, extra_options.to_json
+    end
   end
 
 end

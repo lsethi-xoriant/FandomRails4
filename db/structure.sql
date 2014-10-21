@@ -66,7 +66,6 @@ CREATE TABLE answers (
     quiz_id integer NOT NULL,
     text character varying(255) NOT NULL,
     correct boolean,
-    remove_answer boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     image_file_name character varying(255),
@@ -470,9 +469,6 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    file_name character varying(255),
-    method_name character varying(255),
-    line_number character varying(255),
     event_hash character varying(255),
     level character varying(255),
     tenant character varying(255),
@@ -1818,7 +1814,6 @@ CREATE TABLE answers (
     quiz_id integer NOT NULL,
     text character varying(255) NOT NULL,
     correct boolean,
-    remove_answer boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     image_file_name character varying(255),
@@ -2222,9 +2217,6 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    file_name character varying(255),
-    method_name character varying(255),
-    line_number character varying(255),
     event_hash character varying(255),
     level character varying(255),
     tenant character varying(255),
@@ -3570,7 +3562,6 @@ CREATE TABLE answers (
     quiz_id integer NOT NULL,
     text character varying(255) NOT NULL,
     correct boolean,
-    remove_answer boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     image_file_name character varying(255),
@@ -3974,9 +3965,6 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    file_name character varying(255),
-    method_name character varying(255),
-    line_number character varying(255),
     event_hash character varying(255),
     level character varying(255),
     tenant character varying(255),
@@ -5322,7 +5310,6 @@ CREATE TABLE answers (
     quiz_id integer NOT NULL,
     text character varying(255) NOT NULL,
     correct boolean,
-    remove_answer boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     image_file_name character varying(255),
@@ -5726,9 +5713,6 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    file_name character varying(255),
-    method_name character varying(255),
-    line_number character varying(255),
     event_hash character varying(255),
     level character varying(255),
     tenant character varying(255),
@@ -7209,7 +7193,8 @@ CREATE TABLE call_to_actions (
     thumbnail_file_name character varying(255),
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
-    thumbnail_updated_at timestamp without time zone
+    thumbnail_updated_at timestamp without time zone,
+    aux json
 );
 
 
@@ -12469,6 +12454,27 @@ CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug)
 
 
 --
+-- Name: index_events_on_message; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_message ON events USING btree (message);
+
+
+--
+-- Name: index_events_on_request_uri; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
+
+
+--
+-- Name: index_events_on_timestamp; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
+
+
+--
 -- Name: index_oauth_access_grants_on_token; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -12615,6 +12621,27 @@ CREATE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name)
 --
 
 CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
+
+
+--
+-- Name: index_events_on_message; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_message ON events USING btree (message);
+
+
+--
+-- Name: index_events_on_request_uri; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
+
+
+--
+-- Name: index_events_on_timestamp; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
 
 
 --
@@ -12767,6 +12794,27 @@ CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug)
 
 
 --
+-- Name: index_events_on_message; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_message ON events USING btree (message);
+
+
+--
+-- Name: index_events_on_request_uri; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
+
+
+--
+-- Name: index_events_on_timestamp; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
+
+
+--
 -- Name: index_oauth_access_grants_on_token; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -12916,6 +12964,27 @@ CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug)
 
 
 --
+-- Name: index_events_on_message; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_message ON events USING btree (message);
+
+
+--
+-- Name: index_events_on_request_uri; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
+
+
+--
+-- Name: index_events_on_timestamp; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
+
+
+--
 -- Name: index_oauth_access_grants_on_token; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -13048,6 +13117,13 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_options ON user_interactions USING btree (((aux ->> 'share'::text)));
 
 
 --
@@ -13460,5 +13536,7 @@ INSERT INTO schema_migrations (version) VALUES ('20141007160640');
 INSERT INTO schema_migrations (version) VALUES ('20141016093356');
 
 INSERT INTO schema_migrations (version) VALUES ('20141016154259');
+
+INSERT INTO schema_migrations (version) VALUES ('20141020093014');
 
 INSERT INTO schema_migrations (version) VALUES ('20141021073929');
