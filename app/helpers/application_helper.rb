@@ -583,4 +583,12 @@ module ApplicationHelper
     end
   end
   
+  def get_cta_button_label(cta)
+    if cta.aux && JSON.parse(cta.aux)['button_label'] && !JSON.parse(cta.aux)['button_label'].blank?
+      JSON.parse(cta.aux)['button_label']
+    else
+      CTA_DEFAULT_BUTTON_LABEL
+    end
+  end
+  
 end

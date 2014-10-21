@@ -17,10 +17,11 @@ class Easyadmin::CallToActionController < ApplicationController
   end
 
   def save_cta
-    @cta = CallToAction.create(params[:call_to_action])
+    @cta = CallToAction.create(params[:call_to_action].merge(extra_options: params[:extra_options]))
     if @cta.errors.any?
       @tag_list = params[:tag_list].split(",")
-
+      @extra_options = params[:extra_options]
+      
       render template: "/easyadmin/call_to_action/new_cta"     
     else
 
@@ -39,11 +40,12 @@ class Easyadmin::CallToActionController < ApplicationController
 
   def update_cta
     @cta = CallToAction.find(params[:id])
-    unless @cta.update_attributes(params[:call_to_action])
+    debugger
+    unless @cta.update_attributes(params[:call_to_action].merge(extra_options: params[:extra_options]))
       @tag_list = params[:tag_list].split(",")
+      @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/edit_cta"   
     else
-
       tag_list = params[:tag_list].split(",")
       @cta.call_to_action_tags.delete_all
       tag_list.each do |t|
@@ -180,7 +182,11 @@ class Easyadmin::CallToActionController < ApplicationController
 
   def edit_cta
     @cta = CallToAction.find(params[:id])
-
+    if @cta.aux.blank?
+      @extra_options = {}
+    else
+      @extra_options = JSON.parse(@cta.aux)
+    end
     @tag_list_arr = Array.new
     @cta.call_to_action_tags.each { |t| @tag_list_arr << t.tag.name }
     @tag_list = @tag_list_arr.join(",")

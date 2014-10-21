@@ -54,6 +54,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
   REWARD_SORT_BY_TITLE = "title"
   CTA_REWARD_TAG = "reward-cta"
   
+  CTA_DEFAULT_BUTTON_LABEL = "Guarda"
+  
   USER_TIME_ZONE = "Rome"
 
   class CachedNil

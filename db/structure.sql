@@ -66,7 +66,6 @@ CREATE TABLE answers (
     quiz_id integer NOT NULL,
     text character varying(255) NOT NULL,
     correct boolean,
-    remove_answer boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     image_file_name character varying(255),
@@ -202,7 +201,8 @@ CREATE TABLE call_to_actions (
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
     thumbnail_updated_at timestamp without time zone,
-    user_id integer
+    user_id integer,
+    aux json
 );
 
 
@@ -470,9 +470,6 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    file_name character varying(255),
-    method_name character varying(255),
-    line_number character varying(255),
     "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
@@ -491,13 +488,6 @@ CREATE SEQUENCE events_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
---
--- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
---
-
-ALTER SEQUENCE events_id_seq OWNED BY events.id;
 
 
 --
@@ -1813,7 +1803,6 @@ CREATE TABLE answers (
     quiz_id integer NOT NULL,
     text character varying(255) NOT NULL,
     correct boolean,
-    remove_answer boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     image_file_name character varying(255),
@@ -1949,7 +1938,8 @@ CREATE TABLE call_to_actions (
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
     thumbnail_updated_at timestamp without time zone,
-    user_id integer
+    user_id integer,
+    aux json
 );
 
 
@@ -2217,9 +2207,6 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    file_name character varying(255),
-    method_name character varying(255),
-    line_number character varying(255),
     "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
@@ -3560,7 +3547,6 @@ CREATE TABLE answers (
     quiz_id integer NOT NULL,
     text character varying(255) NOT NULL,
     correct boolean,
-    remove_answer boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     image_file_name character varying(255),
@@ -3696,7 +3682,8 @@ CREATE TABLE call_to_actions (
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
     thumbnail_updated_at timestamp without time zone,
-    user_id integer
+    user_id integer,
+    aux json
 );
 
 
@@ -3964,9 +3951,6 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    file_name character varying(255),
-    method_name character varying(255),
-    line_number character varying(255),
     "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
@@ -5307,7 +5291,6 @@ CREATE TABLE answers (
     quiz_id integer NOT NULL,
     text character varying(255) NOT NULL,
     correct boolean,
-    remove_answer boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     image_file_name character varying(255),
@@ -5443,7 +5426,8 @@ CREATE TABLE call_to_actions (
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
     thumbnail_updated_at timestamp without time zone,
-    user_id integer
+    user_id integer,
+    aux json
 );
 
 
@@ -5711,9 +5695,6 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    file_name character varying(255),
-    method_name character varying(255),
-    line_number character varying(255),
     "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
@@ -7189,7 +7170,8 @@ CREATE TABLE call_to_actions (
     thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
     thumbnail_updated_at timestamp without time zone,
-    user_id integer
+    user_id integer,
+    aux json
 );
 
 
@@ -8863,13 +8845,6 @@ ALTER TABLE ONLY contests ALTER COLUMN id SET DEFAULT nextval('contests_id_seq':
 --
 
 ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
---
-
-ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
 
 --
@@ -10564,14 +10539,6 @@ ALTER TABLE ONLY contests
 
 ALTER TABLE ONLY downloads
     ADD CONSTRAINT downloads_pkey PRIMARY KEY (id);
-
-
---
--- Name: events_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
 
 
 --
@@ -12430,6 +12397,13 @@ CREATE INDEX index_authentications_on_user_id ON authentications USING btree (us
 
 
 --
+-- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_options ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -12597,6 +12571,13 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_options ON user_interactions USING btree (((aux ->> 'share'::text)));
 
 
 --
@@ -12770,6 +12751,13 @@ CREATE INDEX index_authentications_on_user_id ON authentications USING btree (us
 
 
 --
+-- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_options ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -12940,6 +12928,13 @@ CREATE INDEX index_authentications_on_user_id ON authentications USING btree (us
 
 
 --
+-- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_options ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -13107,6 +13102,13 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_options ON user_interactions USING btree (((aux ->> 'share'::text)));
 
 
 --
@@ -13513,3 +13515,5 @@ INSERT INTO schema_migrations (version) VALUES ('20141007160640');
 INSERT INTO schema_migrations (version) VALUES ('20141016093356');
 
 INSERT INTO schema_migrations (version) VALUES ('20141016154259');
+
+INSERT INTO schema_migrations (version) VALUES ('20141020093014');
