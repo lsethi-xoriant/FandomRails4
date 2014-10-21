@@ -12,14 +12,10 @@ class Sites::Ballando::ApplicationController < ApplicationController
   end
 
   def generate_cover_for_calltoaction
-    response = Hash.new
-
     calltoaction = CallToAction.find(params[:calltoaction_id])
-    
+    response = generate_next_interaction_response(calltoaction, params[:interactions_showed])
     response[:calltoaction_completed] = true
-    interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
-    response[:next_interaction] = generate_response_for_next_interaction(interactions, calltoaction)
-
+    
 =begin
     if call_to_action_completed?(calltoaction)
       response[:calltoaction_completed] = true

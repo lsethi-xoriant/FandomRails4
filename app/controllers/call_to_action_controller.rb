@@ -173,6 +173,9 @@ class CallToActionController < ApplicationController
     @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@calltoactions_with_current)
     @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
 
+    @calltoactions_active_interaction = Hash.new
+    @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0])
+
 =begin
     if @calltoaction.enable_disqus
       @disqus_requesturl = request.url

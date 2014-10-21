@@ -3,6 +3,13 @@ require 'digest/md5'
 
 module CallToActionHelper
 
+  def generate_next_interaction_response(calltoaction, interactions_showed = nil)
+    response = Hash.new  
+    interactions = calculate_next_interactions(calltoaction, interactions_showed)
+    response[:next_interaction] = generate_response_for_next_interaction(interactions, calltoaction)
+    response
+  end
+
   def get_cta_active_count()
     cache_short("cta_active_count") do
       CallToAction.active.count
@@ -214,7 +221,7 @@ module CallToActionHelper
     end
   end
   
-  def is_cta_locked(cta)
+  def cta_locked?(cta)
     cta_is_a_reward(cta) && !cta_is_unlocked(cta)
   end
   

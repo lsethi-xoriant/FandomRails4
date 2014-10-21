@@ -3,12 +3,13 @@
   <div class="row">
     <div class="row">
       <div class="col-xs-12">
-
-        <% if quiz_interactions.any? %>
+        <% if shown_interactions.any? %>
           <div id="home-undervideo-calltoaction-<%= calltoaction.id %>" class="home-undervideo-calltoaction">
+            <% if calltoaction_active_interaction %>
+              <%= calltoaction_active_interaction[:next_interaction][:render_interaction_str].html_safe %>
+            <% end %>
           </div>
         <% end %>
-
       </div>
 
       <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">

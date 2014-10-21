@@ -72,6 +72,8 @@ class ApplicationController < ActionController::Base
       CallToAction.active.count
     end
 
+    @calltoactions_active_interaction = Hash.new
+
     @home = true
   end
   

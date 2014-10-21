@@ -29,7 +29,9 @@
   <% elsif calltoaction.media_type == "IFRAME" %>
     <div id="main-media-<%= calltoaction.id %>">
       <div id="iframe-calltoaction-<%= calltoaction.id %>" class="<%= "iframe-apple-mobile " if request_is_from_apple_mobile_device?(request) %>video flex-video widescreen text-center v-center media-iframe" style="background:#222;">  
-        <%#= calltoaction.media_data.html_safe %>
+        <% if calltoaction_page %>
+          <%= calltoaction.media_data.html_safe %>
+        <% end %>
       </div>
     </div>
   <% end %>

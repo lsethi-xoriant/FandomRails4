@@ -13,6 +13,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $scope.interactions_showed = {};
     $scope.request_url = request_url;
     $scope.profile_url = profile_url;
+
+    adjustAppleMobileIframes(); // iframe in page.
   };
 
   $window.showRegistrateView = function() {
@@ -85,7 +87,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 	
 	$window.openCtaShareModal = function (modalId, elem, ctaId, ctaTitle, interactionId, alreadyDone){
 		if($scope.current_user) {
-
 			var positionTop = $(elem).offset().top;
 			var modalHeight, modalObj, innerModalObj;
 			modalObj = $("#" + modalId);
@@ -102,23 +103,19 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 			$scope.interactionShareId = interactionId;
 
 		} else {
-
-      		showRegistrateView();
-
-    	}
+    	showRegistrateView();
+  	}
 	};
 	
 	$window.openShareDoneModal = function (modalId, elem){
-		
-			var positionTop = $(elem).offset().top;
-			var modalHeight, modalObj, innerModalObj;
-			modalObj = $("#" + modalId);
-			position = positionTop - 400;
-			modalObj.modal('show');
-			modalObj.css({
-				"top": position + "px"
-			});
-
+		var positionTop = $(elem).offset().top;
+		var modalHeight, modalObj, innerModalObj;
+		modalObj = $("#" + modalId);
+		position = positionTop - 400;
+		modalObj.modal('show');
+		modalObj.css({
+			"top": position + "px"
+		});
 	};
   
   $window.adjustAppleMobileIframes = function() {

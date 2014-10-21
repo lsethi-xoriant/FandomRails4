@@ -9,7 +9,7 @@
   
   <div class="row">
     <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions_with_current, calltoactions_comment_interaction: @calltoactions_comment_interaction, current_calltoaction_id: @calltoactions_with_current[0].id } %>
+      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions_with_current, calltoactions_comment_interaction: @calltoactions_comment_interaction, active_calltoaction_id: @calltoactions_with_current[0].id, calltoactions_active_interaction: @calltoactions_active_interaction } %>
     </div>
   </div>
 
