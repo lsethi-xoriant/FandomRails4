@@ -110,12 +110,20 @@ $screen-sm-min: 760;
     // Make arrow out of the slider
       .flex-prev,
       .flex-prev:hover {
-        left: -28px !important;
+        left: -34px !important;
+        text-indent: -9000px;
+        background-image: url(/assets/prev_button.png);
+        background-repeat: no-repeat;
+        background-position: center center;
       }
 
       .flex-next,
       .flex-next:hover {
-        right: -28px !important;
+        right: -32px !important;
+        text-indent: 9000px;
+        background-image: url(/assets/next_button.png);
+        background-repeat: no-repeat;
+        background-position: center center;
       }
     }
 //  }
