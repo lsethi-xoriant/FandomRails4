@@ -43,7 +43,6 @@
 
 <script type="text/javascript">
   function profilePageWithRedirectCookie() {
-    document.cookie = "connect_from_page = " + top.location + "; path=/";
     top.location = "<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>";
   }
 </script>

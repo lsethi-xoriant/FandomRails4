@@ -10,7 +10,7 @@ class ProfileController < ApplicationController
   def check_user_logged
     unless current_user
       if cookies[:connect_from_page].blank?
-        profile_path = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["profile_url"] || request.url
+        profile_path = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["stream_url"] || request.url
         cookies[:connect_from_page] = profile_path
       end
       redirect_to "/users/sign_in"
@@ -34,7 +34,6 @@ class ProfileController < ApplicationController
   end
 
   def badges
-    debugger
     @rewards_to_show, @are_properties_used = rewards_by_tag("badge")
   end
 
