@@ -2,7 +2,6 @@ class Sites::Ballando::ApplicationController < ApplicationController
   include CallToActionHelper
 
   def refresh_top_window
-    debugger
     if cookies[:connect_from_page].blank?
       render text: "<html><body><script>window.top.location.href = \"/\";</script></body></html>"
     else
