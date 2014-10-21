@@ -80,7 +80,7 @@
                       <h5 style="color: #fff;"><%= calltoaction.title %></h5>
                       <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%M/%Y") %></h6>
                     </div>
-                    <% if i != 0 && i != @calltoaction_count && (i % @calltoactions_for_page) == (@calltoactions_for_page - 1) %>
+                    <% if i != 0 && i != @calltoaction_count - 1 && (i % @calltoactions_for_page) == (@calltoactions_for_page - 1) %>
                       </div><!-- ROW --></div><!-- ITEM --><div class="item"><div class="row">
                     <% end %>
                   <% end %>                   
