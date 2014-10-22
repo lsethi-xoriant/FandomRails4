@@ -2,13 +2,20 @@ $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
 $navbar-default-link-hover-bg: #eee;
-$screen-sm-min: 400px;
 
 // Inverted navbar
 // Reset inverted navbar basics
 $navbar-default-bg: #fff !default;
 
 @import "bootstrap/bootstrap";
+
+#footer-carousel-mobile {
+    display: none;
+}
+
+#footer-carousel {
+    display: block;
+}
 
 p.oblique { font-style: oblique } 
 
@@ -1684,6 +1691,14 @@ body {
         .img-profile {
             max-width: 100%;
         }
+    }
+
+    #footer-carousel-mobile {
+        display: block;
+    }
+
+    #footer-carousel {
+        display: none;
     }
 
     .footer-carousel {
