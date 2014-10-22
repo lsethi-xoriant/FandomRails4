@@ -13,11 +13,12 @@
 
         <div class="panel-body panel-card">   
           <div class="row cta-md">
-            <!-- LEFT COLUMN WITH IMAGE -->
-            <%= render partial: "/call_to_action/stream_single_calltoaction_media", locals: { calltoaction: calltoaction, calltoaction_page: (active_calltoaction_id == calltoaction.id) } %>
-
-            <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
-            <%= render partial: "/call_to_action/stream_single_calltoaction_interactions", locals: { calltoaction: calltoaction, shown_interactions: shown_interactions, calltoaction_active_interaction: calltoaction_active_interaction } %>
+            <% if !cta_locked?(calltoaction) %>
+              <!-- LEFT COLUMN WITH IMAGE -->
+              <%= render partial: "/call_to_action/stream_single_calltoaction_media", locals: { calltoaction: calltoaction, calltoaction_page: (active_calltoaction_id == calltoaction.id) } %>
+              <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
+              <%= render partial: "/call_to_action/stream_single_calltoaction_interactions", locals: { calltoaction: calltoaction, shown_interactions: shown_interactions, calltoaction_active_interaction: calltoaction_active_interaction } %>
+            <% end %>
           </div>
         </div>   
         

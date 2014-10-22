@@ -36,6 +36,8 @@ Fandom::Application.routes.draw do
 
           match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
           match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
+          
+          match "/joe_maska", :to => "application#redirect_into_joe_maska"
         end
       end
     end
@@ -65,7 +67,6 @@ Fandom::Application.routes.draw do
   match "/ranking/page", :to => "ranking#get_rank_page"
   
   match "/healthcheck", :to => "health_check#health_check"
-
 
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"

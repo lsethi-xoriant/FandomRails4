@@ -38,7 +38,16 @@ class ApplicationController < ActionController::Base
       return
     end
   end
-
+  
+  def check_redirect_into_iframe_page
+    if cookies["redirect_to_page"].present?
+      page = cookies["redirect_to_page"]
+      cookies.delete(:redirect_to_page)
+      redirect_to "#{page}"
+      return
+    end
+  end
+  
   def delete_current_user_interactions
     authorize! :manage, :all
     current_user.user_interactions.destroy_all
@@ -49,6 +58,7 @@ class ApplicationController < ActionController::Base
   def index
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
     check_redirect_into_iframe_calltoaction
+    check_redirect_into_iframe_page
 
     if params[:name]
       @tag = Tag.find_by_name(params[:name])
