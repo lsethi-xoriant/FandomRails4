@@ -19,8 +19,7 @@
           <div class="portlet-header">
             <h3>
               <i class="fa fa-bar-chart-o"></i>
-              UTENTI REGISTRATI DAL <%= Date.strptime(@from_time).to_date.strftime("%d/%m/%Y") %>
-              AL <%= Date.strptime(@to_time).to_date.strftime("%d/%m/%Y	") %>
+              UTENTI REGISTRATI DAL <%= @from_time %> AL <%= @to_time %>
             </h3>
           </div> <!-- /.portlet-header -->
           <div class="portlet-content">
@@ -29,25 +28,30 @@
           	<%= form_tag :method => 'post' do %>
           	<div class="form-group">
               <label class="text-input">DAL GIORNO</label></br>
-              	<%= text_field_tag :datepicker_from_date %>
+              	<%= text_field_tag :datepicker_from_date, @from_time %>
             </div>
           </div>
           <div class="col-md-3">
           	<div class="form-group">
               <label class="text-input">AL GIORNO</label></br>
-              	<%= text_field_tag :datepicker_to_date %>
+              	<%= text_field_tag :datepicker_to_date, @to_time %>
             </div>
           </div>
           <div class="col-md-3">
           	<div>
               <label class="text-input">INTERVALLO</label></br>
-              <%= radio_button_tag :time_interval, 'weekly', true  %> Settimanale </br>
-              <%= radio_button_tag :time_interval, 'daily' %> Giornaliero
+              <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
+              <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
             </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
           	<div class="form-group">
-                </br> <%= submit_tag 'Filtra per data', class: 'btn btn-primary' %>
+                </br><%= submit_tag 'Filtra', class: 'btn btn-primary' %>
+            </div>
+          </div>
+          <div class="col-md-1">
+          	<div class="form-group">
+                </br><%= submit_tag 'Reset', class: 'btn btn-primary' %>
 		  	    <% end %>
             </div>
           </div>
