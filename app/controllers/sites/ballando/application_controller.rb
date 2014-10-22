@@ -55,5 +55,10 @@ class Sites::Ballando::ApplicationController < ApplicationController
     
   end
   
+  def redirect_into_joe_maska
+    cookies["redirect_to_page"] = "/upload_interaction/new"
+    check_redirect_into_iframe_page
+  end
+  
 end
 

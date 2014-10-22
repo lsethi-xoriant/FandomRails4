@@ -120,7 +120,7 @@
 	
 	function goToLogin(){
 		document.cookie = "connect_from_page = " + top.location;
-    	top.location = PROFILE_URL;
+    	top.location = "<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>";
 	}
 	
 	function startLoader(){
