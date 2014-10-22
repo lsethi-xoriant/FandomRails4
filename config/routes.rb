@@ -15,6 +15,7 @@ Fandom::Application.routes.draw do
       scope module: "sites" do
         scope module: "ballando" do
 
+          match "/custom_call_to_action/:id/next", :to => "custom_call_to_action#show_next_calltoaction"
           match "/custom_call_to_action/:id", :to => "custom_call_to_action#show"
 
           match "/refresh_top_window", :to => "application#refresh_top_window"
