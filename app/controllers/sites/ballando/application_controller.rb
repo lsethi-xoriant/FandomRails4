@@ -57,7 +57,7 @@ class Sites::Ballando::ApplicationController < ApplicationController
   
   def redirect_into_joe_maska
     cookies["redirect_to_page"] = "/upload_interaction/new"
-    check_redirect_into_iframe_page
+    redirect_to Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["stream_url"]
   end
   
 end
