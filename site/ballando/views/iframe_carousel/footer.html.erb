@@ -1,12 +1,21 @@
-<div class="container-fluid footer-carousel">
+<div class="container footer-carousel">
   <div class="row">
-    <div class="col-xs-12 col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3">
+    <div class="col-xs-12">
 
       <% if @calltoactions.any? %>
-        <% if small_mobile_devise?() %>
-          <div id="footer-carousel" class="carousel slide" data-ride="carousel">
+
+          <div id="footer-carousel-mobile" class="carousel slide" data-ride="carousel">
+
+            <ol class="carousel-indicators" style="bottom: 0;">
+              <% if @calltoactions[0..3].count > 1 %>
+                <% @calltoactions[0..3].count.times do |i| %>
+                  <li data-target="#footer-carousel-mobile" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
+                <% end %>
+              <% end %>
+            </ol>
+
             <div class="carousel-inner">
-              <% @calltoactions.each_with_index do |calltoaction, i| %>
+              <% @calltoactions[0..3].each_with_index do |calltoaction, i| %>
                 <div class="item <%= "active" if i == 0 %>">
                   <div class="row">  
                     <div class="col-xs-12">
@@ -34,17 +43,8 @@
                 </div>
               <% end %>                  
             </div>
-            <div class="row">
-              <ol class="carousel-indicators">
-                <% if @calltoaction_count > 1 %>
-                  <% @calltoaction_count.times do |i| %>
-                    <li data-target="#footer-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
-                  <% end %>
-                <% end %>
-              </ol>
-            </div>
           </div>
-        <% else %>
+
           <div id="footer-carousel" class="carousel slide" data-ride="carousel">
 
             <ol class="carousel-indicators">
@@ -88,7 +88,7 @@
               </div>
             </div>
           </div>
-        <% end %>
+ 
       <% end %>
         
     </div>
