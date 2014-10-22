@@ -9,8 +9,42 @@
 
     <div id="content-container">
 
+    <div class="col-md-4">
     <h3>Registrazioni</h3>
     <hr/>
+    </div>
+
+    <div class="col-md-2">
+    	<%= form_tag :method => 'post' do %>
+        	<div class="form-group">
+            	<label class="text-input">DAL GIORNO</label></br>
+              	<%= text_field_tag :datepicker_from_date, @from_date_string %>
+            </div>
+     </div>
+     <div class="col-md-2">
+          	<div class="form-group">
+              <label class="text-input">AL GIORNO</label></br>
+              <%= text_field_tag :datepicker_to_date, @to_date_string %>
+            </div>
+     </div>
+     <div class="col-md-2">
+          	<div>
+              <label class="text-input">GRAFICO</label></br>
+              <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
+              <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
+            </div>
+      </div>
+      <div class="col-md-1">
+          	<div class="form-group">
+                </br><%= submit_tag 'Filtra', class: 'btn btn-primary' %>
+            </div>
+      </div>
+      <div class="col-md-1">
+          	<div class="form-group">
+                </br><%= submit_tag 'Reset', class: 'btn btn-primary' %>
+		  	    <% end %>
+            </div>
+      </div>
 
     <div class="row">
 
@@ -19,42 +53,13 @@
           <div class="portlet-header">
             <h3>
               <i class="fa fa-bar-chart-o"></i>
-              UTENTI REGISTRATI DAL <%= @from_time %> AL <%= @to_time %>
+              UTENTI REGISTRATI DAL <%= @from_date_string %> AL <%= @to_date_string %>
             </h3>
           </div> <!-- /.portlet-header -->
           <div class="portlet-content">
-            <div id="line-chart" class="chart-holder"></div>
-          <div class="col-md-3">
-          	<%= form_tag :method => 'post' do %>
-          	<div class="form-group">
-              <label class="text-input">DAL GIORNO</label></br>
-              	<%= text_field_tag :datepicker_from_date, @from_time %>
+            <div id="line-chart" class="chart-holder">
             </div>
-          </div>
-          <div class="col-md-3">
-          	<div class="form-group">
-              <label class="text-input">AL GIORNO</label></br>
-              	<%= text_field_tag :datepicker_to_date, @to_time %>
-            </div>
-          </div>
-          <div class="col-md-3">
-          	<div>
-              <label class="text-input">INTERVALLO</label></br>
-              <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
-              <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
-            </div>
-          </div>
-          <div class="col-md-1">
-          	<div class="form-group">
-                </br><%= submit_tag 'Filtra', class: 'btn btn-primary' %>
-            </div>
-          </div>
-          <div class="col-md-1">
-          	<div class="form-group">
-                </br><%= submit_tag 'Reset', class: 'btn btn-primary' %>
-		  	    <% end %>
-            </div>
-          </div>
+
           </div> <!-- /.portlet-content -->
         </div> <!-- /.portlet -->
       </div> <!-- /.col -->
@@ -75,12 +80,16 @@
 
     </div> <!-- /.row -->
 
+    <br/>
+	<h3>Statistiche</h3>
+    <hr/>
+
     <div class="row">
       <div class="col-md-3 col-sm-6">
           <div class="dashboard-stat primary">
             <div class="details">
               <span class="content">REGISTRATI TOTALI</span>
-              <span class="value"><%= User.count %></span>
+              <span class="value"><%= User.where(:created_at => @from_date..@to_date).count %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -88,7 +97,7 @@
           <div class="dashboard-stat primary">
             <div class="details">
               <span class="content">UTENTI REGISTRATI CON SOCIAL</span>
-              <span class="value"><%= User.includes(:authentications).where("authentications.user_id IS NOT NULL").count %></span>
+              <span class="value"><%= User.where(:created_at => @from_date..@to_date).includes(:authentications).where("authentications.user_id IS NOT NULL").count %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -97,7 +106,7 @@
             <div class="details">
               <span class="content">UTENTI CON PROFILO COMPLETO</span>
 
-              <span class="value"><%= User.where("rule=true").count %></span>
+              <span class="value"><%= User.where(:created_at => @from_date..@to_date, :rule => true).count %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -108,7 +117,7 @@
           <div class="dashboard-stat primary">
             <div class="details">
               <span class="content">TRIVIA RISPOSTI</span>
-              <span class="value"><%= all_trivia = UserCounter.where("name ilike 'TOTAL'").sum("(counters::json->>'ALL_TRIVIA')::int") %></span>
+              <span class="value"><%= all_trivia = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_TRIVIA')::int") %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -116,7 +125,7 @@
           <div class="dashboard-stat primary">
             <div class="details">
               <span class="content">TRIVIA RISPOSTI CORRETTAMENTE</span>
-              <span class="value"><%= all_trivia_correct_answer = UserCounter.where("name ilike 'TOTAL'").sum("(counters::json->>'ALL_TRIVIA_CORRECT_ANSWER')::int") %></span>
+              <span class="value"><%= all_trivia_correct_answer = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_TRIVIA_CORRECT_ANSWER')::int") %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -125,7 +134,7 @@
             <div class="details">
               <span class="content">% RISPOSTE CORRETTE TRIVIA</span>
 
-              <span class="value"><%= "#{((all_trivia_correct_answer.to_i * 100).to_f / all_trivia.to_i).round(2)}\%" %></span>
+              <span class="value"><%= "#{all_trivia.to_i != 0 ? ((all_trivia_correct_answer.to_i * 100).to_f / all_trivia.to_i).round(2) : 'Nessuna '}\%" %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -136,7 +145,7 @@
           <div class="dashboard-stat primary">
             <div class="details">
               <span class="content">VERSUS RISPOSTI</span>
-              <span class="value"><%= UserCounter.where("name ilike 'TOTAL'").sum("(counters::json->>'ALL_VERSUS')::int") %></span>
+              <span class="value"><%= UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_VERSUS')::int") %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -144,7 +153,7 @@
           <div class="dashboard-stat primary">
             <div class="details">
               <span class="content">CHECK RISPOSTI</span>
-              <span class="value"><%= UserCounter.where("name ilike 'TOTAL'").sum("(counters::json->>'ALL_CHECK')::int") %></span>
+              <span class="value"><%= UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_CHECK')::int") %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -155,7 +164,7 @@
           <div class="dashboard-stat primary">
             <div class="details">
               <span class="content">SHARE FACEBOOK</span>
-              <span class="value"><%= UserInteraction.sum("(aux::json->>'facebook')::int") %></span>
+              <span class="value"><%= UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'facebook')::int") %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -163,7 +172,7 @@
           <div class="dashboard-stat primary">
             <div class="details">
               <span class="content">SHARE TWITTER</span>
-              <span class="value"><%= UserInteraction.sum("(aux::json->>'twitter')::int") %></span>
+              <span class="value"><%= UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'twitter')::int") %></span>
             </div> <!-- /.details -->
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
