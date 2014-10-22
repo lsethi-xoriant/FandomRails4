@@ -78,7 +78,7 @@ module EasyadminHelper
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/call_to_action/answer-quiz-form", f: builder)
     end
-    link_to_function(name, "add_answer_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
+    link_to_function(name, "add_answer_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-secondary btn-xs")
   end
 
   def link_to_add_answer_versus_fields(name, f, association)
@@ -86,7 +86,7 @@ module EasyadminHelper
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/call_to_action/answer-versus-form", f: builder)
     end
-    link_to_function(name, "add_answer_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
+    link_to_function(name, "add_answer_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-secondary btn-xs")
   end
 
   def link_to_add_contest_fields(name, f, association)
