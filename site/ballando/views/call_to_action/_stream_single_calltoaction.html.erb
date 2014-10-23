@@ -14,7 +14,7 @@
 
         <div class="panel-body panel-card">   
           <div class="row cta-md">
-            <% if !cta_locked?(calltoaction) && calltoaction.enable_for_current_user? %>
+            <% if !cta_locked?(calltoaction) && ((calltoaction.enable_for_current_user? && current_user) || !calltoaction.enable_for_current_user?) %>
               <!-- LEFT COLUMN WITH IMAGE -->
               <%= render partial: "/call_to_action/stream_single_calltoaction_media", locals: { calltoaction: calltoaction, calltoaction_page: (active_calltoaction_id == calltoaction.id) } %>
               <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
