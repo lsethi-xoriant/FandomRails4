@@ -74,7 +74,7 @@
           </div>
           <div class="form-group cta-erward">
               <label class="text-input">Call to action premio</label>
-              <% date_array = get_ctas_with_tag(CTA_REWARD_TAG).map { |cta| [cta.title, cta.id] } %>
+              <% date_array = get_all_ctas_with_tag(CTA_REWARD_TAG).map { |cta| [cta.title, cta.id] } %>
               <% date_array.unshift ["", ""] %>
               <%= f.select(:call_to_action_id, date_array, {}, { :class => "form-control" }) %>
           </div>

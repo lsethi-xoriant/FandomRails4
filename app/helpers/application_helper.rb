@@ -194,6 +194,12 @@ module ApplicationHelper
     end
   end
   
+  def get_all_ctas_with_tag(tag_name)
+    cache_short get_ctas_with_tag_cache_key(tag_name) do
+      CallToAction.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
+    end
+  end
+  
   def get_rewards_with_tag(tag_name)
     cache_short get_rewards_with_tag_cache_key(tag_name) do
       Reward.includes(reward_tags: :tag).where("tags.name = ?", tag_name).to_a
