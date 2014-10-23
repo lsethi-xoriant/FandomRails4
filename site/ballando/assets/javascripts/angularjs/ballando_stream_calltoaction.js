@@ -125,6 +125,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $window.showCallToAction = function(calltoaction_id, calltoaction_media_type) {
 
+    $timeout.cancel($scope.feedback_timeout);
+
     $(".calltoaction-cover").removeClass("hidden");
     //$(".media-iframe").html("");
     $(".media-iframe iframe").each(function(i, obj) {
@@ -232,10 +234,10 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
           $("#interaction-" + interaction_id + "-next").removeClass("hidden");
         }
 
-        $timeout(function() { 
+        $scope.feedback_timeout = $timeout(function() { 
           $("#undervideo-outcome-" + interaction_id).css("display", "none"); 
           $("#undervideo-interaction-" + interaction_id).css("display", "block"); 
-        }, 3000);
+        }, 1500);
 
       }).error(function() {
         // ERROR.
