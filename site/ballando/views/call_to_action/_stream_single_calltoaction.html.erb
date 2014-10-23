@@ -1,5 +1,4 @@
 <% shown_interactions = always_shown_interactions(calltoaction) %>
-
 <div class="row cta">      
   <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0">
     <div class="panel panel-default cta-page cta-stream panel-shadow" style="border: none;">
@@ -7,13 +6,15 @@
         
         <% if cta_locked?(calltoaction) %>
           <%= render partial: "/call_to_action/cover_stream_single_calltoaction_locked", locals: { calltoaction: calltoaction } %>
+        <% elsif (calltoaction.enable_for_current_user? && !current_user) %>
+          <%= render partial: "/call_to_action/cover_stream_single_calltoaction_user_not_logged", locals: { calltoaction: calltoaction } %>
         <% else %>
           <%= render partial: "/call_to_action/cover_stream_single_calltoaction", locals: { calltoaction: calltoaction, hidden: (active_calltoaction_id == calltoaction.id) } %>
         <% end %> 
 
         <div class="panel-body panel-card">   
           <div class="row cta-md">
-            <% if !cta_locked?(calltoaction) %>
+            <% if !cta_locked?(calltoaction) && calltoaction.enable_for_current_user? %>
               <!-- LEFT COLUMN WITH IMAGE -->
               <%= render partial: "/call_to_action/stream_single_calltoaction_media", locals: { calltoaction: calltoaction, calltoaction_page: (active_calltoaction_id == calltoaction.id) } %>
               <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
