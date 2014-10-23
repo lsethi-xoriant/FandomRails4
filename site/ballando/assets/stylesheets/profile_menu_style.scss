@@ -145,7 +145,7 @@ $screen-sm-min: 760;
     border: 5px solid white;
 }
 
-@media (min-width: $screen-sm-min){
+@media (max-width: $screen-sm-min){
   .flex-next,
   .flex-next:hover {
     right: -21px !important;
