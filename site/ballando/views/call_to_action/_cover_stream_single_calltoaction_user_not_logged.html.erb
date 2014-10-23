@@ -1,0 +1,33 @@
+<div id="calltoaction-<%= calltoaction.id %>-cover" class="calltoaction-cover locked" style="background-image: url('<%= calltoaction.thumbnail %>')">
+      <div class="cover-grid-locked"></div>
+      <%= render partial: "/call_to_action/cover_stream_single_calltoaction_flag", locals: { calltoaction: calltoaction } %>       
+      <div class="row top text-right">
+        <div class="col-xs-12">
+          <h4>
+            <% current_call_to_action_reward_status = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction) %>
+            <% if current_call_to_action_reward_status.present? %>
+              <% if current_call_to_action_reward_status["winnable_reward_count"] > 0 %>
+                <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= current_call_to_action_reward_status["winnable_reward_count"] %>
+                  <span class="glyphicon glyphicon-star"></span>
+                </span>
+              <% end %>
+            <% else %>        
+              <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
+                FATTO <span class="glyphicon glyphicon-ok"></span>
+              </span>
+            <% end %>
+          </h4>
+        </div>
+      </div>
+      
+      <div class="row center text-center">
+        <i class="glyphicon glyphicon-lock" style="font-size: 80px; color: #fff;"></i>
+      </div>
+
+      <div class="row bottom">
+        <div class="col-md-10 col-sm-9 col-xs-12">
+          <%= render partial: "/call_to_action/cover_stream_single_calltoaction_text", locals: { calltoaction: calltoaction } %>
+        </div>
+      </div>
+    
+</div>

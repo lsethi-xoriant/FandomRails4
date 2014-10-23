@@ -224,6 +224,8 @@ class Easyadmin::EasyadminController < ApplicationController
     end
   end
 
+=begin
+
   def new_cta
     @cta = CallToAction.new
   end
@@ -292,6 +294,8 @@ class Easyadmin::EasyadminController < ApplicationController
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
+
+=end
 
   def new_periodicity
     @periodicity = PeriodicityType.new

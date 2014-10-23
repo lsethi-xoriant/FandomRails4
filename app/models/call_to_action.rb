@@ -6,13 +6,13 @@ class CallToAction < ActiveRecord::Base
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
   					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required,
-            :privacy_required, :privacy, :extra_options
+            :privacy_required, :privacy, :button_label, :alternative_description, :enable_for_current_user
 
   extend FriendlyId
   friendly_id :title, use: :slugged
 
   attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required,
-            :extra_options
+            :button_label, :alternative_description, :enable_for_current_user
 
   validates_presence_of :title
   validates_presence_of :name
@@ -113,11 +113,21 @@ class CallToAction < ActiveRecord::Base
       created_at: created_at.to_time.to_i
     )
   end
+
+  def enable_for_current_user?
+    if aux
+      JSON.parse(aux)["enable_for_current_user"] == "1"
+    else
+      false
+    end
+  end
   
   def set_extra_options
-    if extra_options
-      write_attribute :aux, extra_options.to_json
-    end
+    write_attribute :aux, { 
+        button_label: button_label, 
+        alternative_description: alternative_description,
+        enable_for_current_user: enable_for_current_user
+      }.to_json
   end
 
 end
