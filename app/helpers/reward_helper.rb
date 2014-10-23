@@ -72,7 +72,7 @@ module RewardHelper
   
   def get_reward_with_cta
     cache_short("rewards_with_cta") do
-      Reward.where("media_type = 'CALLTOACTION'").to_a
+      Reward.includes(:call_to_action).where("rewards.media_type = 'CALLTOACTION' and call_to_actions.activated_at <= ? AND call_to_actions.activated_at IS NOT NULL AND call_to_actions.media_type <> 'VOID' AND call_to_actions.user_id IS NULL", Time.now).to_a
     end
   end
   
