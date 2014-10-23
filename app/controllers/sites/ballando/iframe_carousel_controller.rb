@@ -5,10 +5,11 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
   def main
     @calltoactions = cache_short("iframe_carousel_calltoactions") do     
       highlight_calltoactions = get_highlight_calltoactions()
+      active_calltoactions_without_rewards = CallToAction.includes(call_to_action_tags: :tag).active.where("tags.name <> 'reward-cta' OR tags.id IS NULL")
       if highlight_calltoactions.any?
-        last_calltoactions = CallToAction.active.where("id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
+        last_calltoactions = active_calltoactions_without_rewards.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
       else
-        last_calltoactions = CallToAction.active.limit(3).to_a
+        last_calltoactions = active_calltoactions_without_rewards.active.limit(3).to_a
       end
       highlight_calltoactions + last_calltoactions
     end
