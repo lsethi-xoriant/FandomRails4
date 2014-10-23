@@ -9,6 +9,14 @@ $navbar-default-bg: #fff !default;
 
 @import "bootstrap/bootstrap";
 
+#footer-carousel-mobile {
+    display: none;
+}
+
+#footer-carousel {
+    display: block;
+}
+
 p.oblique { font-style: oblique } 
 
 .custom-calltoaction {
@@ -124,7 +132,7 @@ a.cta-title-link, a.cta-title-link:hover{
             height: 120px; 
             overflow-y: hidden; 
             width: 100%;
-            background-size: auto 100%;
+            background-size: 100% auto;
             background-position: center;
         }
     }
@@ -1685,6 +1693,14 @@ body {
         }
     }
 
+    #footer-carousel-mobile {
+        display: block;
+    }
+
+    #footer-carousel {
+        display: none;
+    }
+
     .footer-carousel {
         padding-bottom: 0;
         .carousel, .carousel .item, .carousel-inner > .item > img {
@@ -1904,7 +1920,7 @@ body {
     }
     
     .container {
-        max-width: 960px; //1060px;
+        max-width: 980px; //1060px;
     }
 
     /* Remove the padding we set earlier */

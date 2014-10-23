@@ -110,13 +110,16 @@ class Easyadmin::EasyadminController < ApplicationController
   def dashboard
     @user_week_list = Hash.new
     if User.any? 
-      @from_time = (params[:datepicker_from_date].blank? || params[:commit] == "Reset") ? User.order("created_at ASC").limit(1).first.created_at.strftime('%m/%d/%Y')
+      @from_date_string = (params[:datepicker_from_date].blank? || params[:commit] == "Reset") ? User.order("created_at ASC").limit(1).first.created_at.strftime('%m/%d/%Y')
                   : params[:datepicker_from_date]
-      @to_time = (params[:datepicker_to_date].blank? || params[:commit] == "Reset") ? Time.now.strftime('%m/%d/%Y')
+      @to_date_string = (params[:datepicker_to_date].blank? || params[:commit] == "Reset") ? Time.now.strftime('%m/%d/%Y')
                   : params[:datepicker_to_date]
 
-      from = Date.strptime(@from_time, '%m/%d/%Y')
-      to = Date.strptime(@to_time, '%m/%d/%Y')
+      @from_date = Date.strptime(@from_date_string, '%m/%d/%Y')
+      @to_date = Date.strptime(@to_date_string, '%m/%d/%Y')
+
+      from = @from_date
+      to = @to_date
 
       if((to - from).to_i <= 7 && params[:time_interval] != "daily")
         params[:time_interval] = "daily"

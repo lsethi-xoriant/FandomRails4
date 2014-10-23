@@ -37,12 +37,8 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
 
     @calltoaction_count = @calltoactions.count
 
-    if small_mobile_devise?()
-      @calltoactions = @calltoactions[0..4]
-    else
-      @calltoactions_for_page = 4
-      @calltoaction_pages = (@calltoaction_count.to_f / @calltoactions_for_page).ceil
-    end
+    @calltoactions_for_page = 4
+    @calltoaction_pages = (@calltoaction_count.to_f / @calltoactions_for_page).ceil
 
     render template: "/iframe_carousel/footer"
   end

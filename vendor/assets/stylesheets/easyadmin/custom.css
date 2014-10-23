@@ -1,0 +1,9 @@
+.panel-heading-dark {
+	padding: 10px 15px;
+	border-bottom: 1px solid transparent;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+	color: #FFFFFF;
+	background-color: #404040;
+	border-color: #ddd;
+}

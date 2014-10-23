@@ -15,6 +15,7 @@ Fandom::Application.routes.draw do
       scope module: "sites" do
         scope module: "ballando" do
 
+          match "/custom_call_to_action/:id/next", :to => "custom_call_to_action#show_next_calltoaction"
           match "/custom_call_to_action/:id", :to => "custom_call_to_action#show"
 
           match "/refresh_top_window", :to => "application#refresh_top_window"
@@ -95,12 +96,12 @@ Fandom::Application.routes.draw do
     match "cta/:id/update_cta_status", :to => "call_to_action#update_cta_status"
     match "cta/filter/:filter", :to => "call_to_action#filter_calltoaction"
     match "cta/new/", :to => "call_to_action#new_cta"
-    match "cta/show/:id", :to => "call_to_action#show_cta"
+    match "cta/show/:id", :to => "call_to_action#show_cta", :as => :cta_show
     match "cta/edit/:id/", :to => "call_to_action#edit_cta"
     match "cta/save", :to => "call_to_action#save_cta"
     match "cta/update", :to => "call_to_action#update_cta"
     match "cta/hide/:id", :to => "call_to_action#hide_cta"
-    match "cta/clone/:id", to: "call_to_action#clone"
+    match "cta/clone/:id", :to => "call_to_action#clone"
 
     match "cta/tag/:id", :to => "easyadmin#tag_cta"
     match "cta/tag/:id/update", :to => "easyadmin#tag_cta_update"
@@ -116,7 +117,7 @@ Fandom::Application.routes.draw do
     match "reward/new", :to => "easyadmin_reward#new"
     match "reward/save", :to => "easyadmin_reward#save"
     match "reward/update", :to => "easyadmin_reward#update"
-    match "reward/clone/:id", to: "easyadmin_reward#clone"
+    match "reward/clone/:id", :to => "easyadmin_reward#clone"
     
     # INSTANT WIN
     match "contest", :to => "easyadmin#index_contest"
