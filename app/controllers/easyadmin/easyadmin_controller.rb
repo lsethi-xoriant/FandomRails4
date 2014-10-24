@@ -135,6 +135,19 @@ class Easyadmin::EasyadminController < ApplicationController
     end
   end
 
+  def index_most_clicked_interactions
+
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+
+    @interaction_list = Interaction.joins(:user_interactions).group("interactions.id").order("SUM(user_interactions.counter) DESC").page(page).per(per_page)
+
+    @page_size = @interaction_list.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+
+  end
+
   def published
   end
 

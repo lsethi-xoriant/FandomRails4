@@ -144,6 +144,7 @@ Fandom::Application.routes.draw do
     match "published", :to => "easyadmin#published"
     match "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
     match "dashboard/update_activated_at", :to => "easyadmin#update_activated_at", defaults: { format: 'json' }
+    match "most_clicked_interactions", :to => "easyadmin#index_most_clicked_interactions"
     
     match "events", :to => "easyadmin_event_console#index"
     match "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }
