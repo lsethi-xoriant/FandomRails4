@@ -92,7 +92,11 @@ module RankingHelper
     else
       my_position = -1
     end
-    compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+    if ranking.rank_type == "trirank"
+      compose_triranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+    else
+      compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+    end
   end
   
   def get_full_rank_page(ranking, page)
@@ -127,6 +131,22 @@ module RankingHelper
     off = (current_page.to_i - 1) * RANKING_USER_PER_PAGE
     rank_list = rank_list.slice(off, RANKING_USER_PER_PAGE)
     {rank_list: rank_list, rank_type: rank_type, ranking: ranking, current_page: current_page, my_position: my_position, total: total, number_of_pages: number_of_pages}
+  end
+  
+  def compose_triranking_info(rank_type, ranking, rank_list, my_position, total = 0, number_of_pages = 0, current_page = 1)
+    rank_list = prepare_trirank_list(rank_list, my_position)
+    {rank_list: rank_list, rank_type: rank_type, ranking: ranking, current_page: current_page, my_position: my_position, total: total, number_of_pages: number_of_pages}
+  end
+  
+  def prepare_trirank_list(rank_list, my_position)
+    if my_position == 1
+      off = my_position - 1
+    elsif my_position == rank_list.count
+      off = my_position - 3
+    else
+      off = my_position - 2
+    end
+    rank_list.slice(off, 3)
   end
   
   def compose_vote_ranking_info(rank_type, ranking, rank_list, total = 0, number_of_pages = 0)
