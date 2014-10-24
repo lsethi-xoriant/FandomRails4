@@ -3,7 +3,19 @@
 	  <ul id="main-nav" class="open-active">      
 	    
 	    <% if can? :manage, :all %>
-		  	<li class="<%= "active" if page == "dashboard" %>"><a href="/easyadmin/dashboard"><i class="fa fa-pie-chart"></i>Dashboard</a>
+		    <li class="dropdown <%= "active opened" if page == "dashboard" %>"><a href="javascript:void(0);"><i class="fa fa-th-large"></i>Dashboard<span class="caret"></span></a>
+		  	  <ul class="sub-nav">
+		        <li>
+		          <a href="/easyadmin/dashboard">
+		            <i class="fa fa-pie-chart"></i>Grafici
+		          </a>
+		        </li>
+		        <li>
+		          <a href="/easyadmin/most_clicked_interactions">
+		            <i class="fa fa-list"></i>Più cliccate
+		          </a>
+		        </li>
+		      </ul>
 		    </li>
 		   <% end %>
 

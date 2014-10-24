@@ -16,8 +16,18 @@ class Easyadmin::CallToActionController < ApplicationController
     clone_cta(params)
   end
 
+  def restore_from_aux(calltoaction)
+    if calltoaction.aux.present?
+      aux = JSON.parse(calltoaction.aux)
+      calltoaction.button_label = aux["button_label"]
+      calltoaction.alternative_description = aux["alternative_description"]
+      calltoaction.enable_for_current_user = aux["enable_for_current_user"]
+    end
+    calltoaction
+  end
+
   def save_cta
-    @cta = CallToAction.create(params[:call_to_action].merge(extra_options: params[:extra_options]))
+    @cta = CallToAction.create(params[:call_to_action])
     if @cta.errors.any?
       @tag_list = params[:tag_list].split(",")
       @extra_options = params[:extra_options]
@@ -40,7 +50,7 @@ class Easyadmin::CallToActionController < ApplicationController
 
   def update_cta
     @cta = CallToAction.find(params[:id])
-    unless @cta.update_attributes(params[:call_to_action].merge(extra_options: params[:extra_options]))
+    unless @cta.update_attributes(params[:call_to_action])
       @tag_list = params[:tag_list].split(",")
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/edit_cta"   
@@ -163,8 +173,24 @@ class Easyadmin::CallToActionController < ApplicationController
   end
 
   def filter_calltoaction
-    stream_call_to_action_to_render = CallToAction.where("LOWER(title) LIKE ?", "%#{ params[:filter].downcase }%").order("activated_at DESC").limit(5)
+    #stream_call_to_action_to_render = CallToAction.joins('LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_action.id').where("LOWER(call_to_action.title) LIKE ? AND LOWER(tags.name) LIKE ?", 
+    #                                  "%#{ params[:title_filter].downcase }%", "%#{ params[:tag_filter].downcase }%").order("activated_at DESC").limit(5)
 
+    conditions = (params[:title_filter] != "nil_title_filter" && params[:tag_filter] != "nil_tag_filter") ?
+                    ['LOWER(call_to_actions.title) LIKE :title AND LOWER(tags.name) LIKE :tag', {:title => "%#{ params[:title_filter].downcase }%", :tag => "%#{ params[:tag_filter].downcase }%"}]
+                  : if params[:title_filter] != "nil_title_filter"
+                      ['LOWER(call_to_actions.title) LIKE ?', "%#{ params[:title_filter].downcase }%"]
+                    else
+                      ['LOWER(tags.name) LIKE ?', "%#{ params[:tag_filter].downcase }%"]
+                    end
+
+    stream_call_to_action_to_render = CallToAction.all(
+                                      :joins => "LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id
+                                                 LEFT OUTER JOIN tags ON call_to_action_tags.tag_id = tags.id",
+                                      :conditions => conditions,
+                                      :order => "activated_at DESC",
+                                      :limit => 10
+                                      )
     render_calltoactions_str = ""
     stream_call_to_action_to_render.each do |calltoaction|
       render_calltoactions_str = render_calltoactions_str + (render_to_string "/easyadmin/call_to_action/_index_row", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
@@ -189,6 +215,8 @@ class Easyadmin::CallToActionController < ApplicationController
     @tag_list_arr = Array.new
     @cta.call_to_action_tags.each { |t| @tag_list_arr << t.tag.name }
     @tag_list = @tag_list_arr.join(",")
+
+    @cta = restore_from_aux(@cta)
   end
 
   def hide_cta

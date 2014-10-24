@@ -94,7 +94,7 @@ Fandom::Application.routes.draw do
     match "cta/approved", :to => "call_to_action#index_user_cta_approved"
     match "cta/not_approved", :to => "call_to_action#index_user_cta_not_approved"
     match "cta/:id/update_cta_status", :to => "call_to_action#update_cta_status"
-    match "cta/filter/:filter", :to => "call_to_action#filter_calltoaction"
+    match "cta/filter/:title_filter/:tag_filter", :to => "call_to_action#filter_calltoaction"
     match "cta/new/", :to => "call_to_action#new_cta"
     match "cta/show/:id", :to => "call_to_action#show_cta", :as => :cta_show
     match "cta/edit/:id/", :to => "call_to_action#edit_cta"
@@ -144,6 +144,7 @@ Fandom::Application.routes.draw do
     match "published", :to => "easyadmin#published"
     match "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
     match "dashboard/update_activated_at", :to => "easyadmin#update_activated_at", defaults: { format: 'json' }
+    match "most_clicked_interactions", :to => "easyadmin#index_most_clicked_interactions"
     
     match "events", :to => "easyadmin_event_console#index"
     match "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }
