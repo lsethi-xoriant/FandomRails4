@@ -173,8 +173,24 @@ class Easyadmin::CallToActionController < ApplicationController
   end
 
   def filter_calltoaction
-    stream_call_to_action_to_render = CallToAction.where("LOWER(title) LIKE ?", "%#{ params[:filter].downcase }%").order("activated_at DESC").limit(5)
+    #stream_call_to_action_to_render = CallToAction.joins('LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_action.id').where("LOWER(call_to_action.title) LIKE ? AND LOWER(tags.name) LIKE ?", 
+    #                                  "%#{ params[:title_filter].downcase }%", "%#{ params[:tag_filter].downcase }%").order("activated_at DESC").limit(5)
 
+    conditions = (params[:title_filter] != "nil_title_filter" && params[:tag_filter] != "nil_tag_filter") ?
+                    ['LOWER(call_to_actions.title) LIKE :title AND LOWER(tags.name) LIKE :tag', {:title => "%#{ params[:title_filter].downcase }%", :tag => "%#{ params[:tag_filter].downcase }%"}]
+                  : if params[:title_filter] != "nil_title_filter"
+                      ['LOWER(call_to_actions.title) LIKE ?', "%#{ params[:title_filter].downcase }%"]
+                    else
+                      ['LOWER(tags.name) LIKE ?', "%#{ params[:tag_filter].downcase }%"]
+                    end
+
+    stream_call_to_action_to_render = CallToAction.all(
+                                      :joins => "LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id
+                                                 LEFT OUTER JOIN tags ON call_to_action_tags.tag_id = tags.id",
+                                      :conditions => conditions,
+                                      :order => "activated_at DESC",
+                                      :limit => 10
+                                      )
     render_calltoactions_str = ""
     stream_call_to_action_to_render.each do |calltoaction|
       render_calltoactions_str = render_calltoactions_str + (render_to_string "/easyadmin/call_to_action/_index_row", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
