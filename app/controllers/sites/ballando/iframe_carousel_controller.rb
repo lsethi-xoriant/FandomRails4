@@ -23,6 +23,8 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
     # @active_home_launchers = active_home_launchers()
 
     @stream_url = Rails.configuration.deploy_settings["sites"]["ballando"]["stream_url"]
+    @profile_url = Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"]
+
     render template: "/iframe_carousel/main"
   end
 
