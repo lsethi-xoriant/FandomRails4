@@ -64,7 +64,7 @@
                       </div>
                     </div>
                   <% else %>
-                    <div class="carousel-caption" style="bottom: 0; top: initial;  z-index: 4;">                  
+                    <div class="carousel-caption" style="bottom: 0; top: initial;  z-index: 40;">                  
                       <div class="col-xs-12 text-left" style="position: relative; padding-right: 20%;">
                         <%= render partial: "/call_to_action/cover_stream_single_calltoaction_text", locals: { calltoaction: calltoaction } %>
                         <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';"><%= get_cta_button_label(calltoaction) %></button></h2> 

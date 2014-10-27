@@ -8,6 +8,8 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
+  match "/tmp", to: "application#tmp"
+
   constraints(SiteMatcher.new('ballando')) do
     match "/profile", :to => "profile#badges"
 
