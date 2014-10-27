@@ -4,9 +4,18 @@ require "colorize"
 require_relative "../lib/cli_utils"
 include CliUtils
 
-AWS_REMOTE_UPDATE_COMMAND = "bash -l ~/bin/aws_remote_update.sh"
-
 def main
+  if ARGV.size < 2
+    puts <<-EOF
+Usage: #{$0} <user> <command>
+  Execute a shell command on every machine of an autoscaling group.
+EOF
+    exit
+  end
+
+  user = ARGV[0]
+  command = ARGV[1]
+
   config = get_deploy_settings['aws']
   
   AWS.config(
@@ -20,18 +29,22 @@ def main
   AWS.memoize do
     group.ec2_instances.each do |instance|
       if instance.status == :running
-        app_user = config['app_user']
-
-        print "restarting application server #{app_user}@#{instance.dns_name}... "
+        print "executing the command on #{user}@#{instance.dns_name}... "
         $stdout.flush
         
-        input, output, error_output, thread = Open3::popen3("ssh -oStrictHostKeyChecking=no #{app_user}@#{instance.dns_name} \"#{AWS_REMOTE_UPDATE_COMMAND}\"")
+        input, output, error_output, thread = Open3::popen3("ssh -t -oStrictHostKeyChecking=no #{user}@#{instance.dns_name} \"#{command}\"")
         if thread.value.exitstatus == 0
           puts "ok.".green
         else
           puts "failed!".red
-          puts "command output: " + output.read
-          puts "command error output: " + error_output.read
+        end
+        output_buf = output.read
+        error_output_buf = error_output.read
+        unless output_buf.empty?
+          puts "command output:\n".yellow + output_buf
+        end
+        unless error_output_buf.empty?
+          puts "command error output:\n".red + error_output_buf
         end
       end
     end
