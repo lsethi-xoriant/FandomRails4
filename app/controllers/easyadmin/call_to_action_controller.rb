@@ -84,6 +84,7 @@ class Easyadmin::CallToActionController < ApplicationController
   end
   
   def show_cta
+
     @current_cta = CallToAction.find(params[:id])
 
     tag_list_arr = Array.new
@@ -92,11 +93,13 @@ class Easyadmin::CallToActionController < ApplicationController
 
     @trivia_answer = Hash.new
     @versus_answer = Hash.new
+
     @current_cta.interactions.where("resource_type='Quiz'").each do |q|
       if q.resource.quiz_type == "TRIVIA"
-        @trivia_answer["#{ q.id }"] = {
-          "answer_correct" => q.resource.cache_correct_answer,
-          "answer_wrong" => q.resource.cache_wrong_answer
+        correct_count = UserInteraction.where("interaction_id = #{q.id} AND outcome::json#>>'{win, attributes, matching_rules}' ILIKE '%TRIVIA_CORRECT%'").count
+        @trivia_answer[q.id] = {
+          "answer_correct" => correct_count,
+          "answer_wrong" => UserInteraction.where("interaction_id = #{q.id}").count - correct_count  
         }
       elsif q.resource.quiz_type == "VERSUS"
         @versus_answer["#{ q.id }"] = Hash.new
@@ -143,7 +146,6 @@ class Easyadmin::CallToActionController < ApplicationController
     @page_size = @cta_template_list.num_pages
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
-
   end
 
   def index_user_cta_to_be_approved
@@ -173,8 +175,21 @@ class Easyadmin::CallToActionController < ApplicationController
   end
 
   def filter_calltoaction
-    stream_call_to_action_to_render = CallToAction.where("LOWER(title) LIKE ?", "%#{ params[:filter].downcase }%").order("activated_at DESC").limit(5)
+    conditions = (params[:title_filter] != "nil_title_filter" && params[:tag_filter] != "nil_tag_filter") ?
+                    ['LOWER(call_to_actions.title) LIKE :title AND LOWER(tags.name) LIKE :tag', {:title => "%#{ params[:title_filter].downcase }%", :tag => "%#{ params[:tag_filter].downcase }%"}]
+                  : if params[:title_filter] != "nil_title_filter"
+                      ['LOWER(call_to_actions.title) LIKE ?', "%#{ params[:title_filter].downcase }%"]
+                    else
+                      ['LOWER(tags.name) LIKE ?', "%#{ params[:tag_filter].downcase }%"]
+                    end
 
+    stream_call_to_action_to_render = CallToAction.all(
+                                      :joins => "LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id
+                                                 LEFT OUTER JOIN tags ON call_to_action_tags.tag_id = tags.id",
+                                      :conditions => conditions,
+                                      :order => "activated_at DESC",
+                                      :limit => 10
+                                      )
     render_calltoactions_str = ""
     stream_call_to_action_to_render.each do |calltoaction|
       render_calltoactions_str = render_calltoactions_str + (render_to_string "/easyadmin/call_to_action/_index_row", locals: { calltoaction: calltoaction }, layout: false, formats: :html)

@@ -1,8 +1,15 @@
 <div class="container-fluid">
   <div class="row" style="padding-top: 15px; padding-bottom: 15px; position: relative;">
-  	<div class="col-xs-5">
-  		<h4 style="font-weight: bold; font-size: 20px;">Entra nella community</h4>
-  		<h5 style="text-transform: none; font-weight: bold;">Clicca e ottieni subito 1 punto</h5>
+  	<div class="col-xs-7">
+  		<div class="row">
+  			<div class="col-xs-3">
+  				<img src="<%= asset_path("milly_circle.png") %>" class="img-responsive" />
+  			</div>
+  			<div class="col-xs-9">
+  				<h4 style="font-weight: bold; font-size: 20px; color: #ffba00;">ACCUMULA PUNTI E SCOPRI I CONTENUTI ESCLUSIVI</h4>
+  				<h5 style="text-transform: none; font-weight: bold; color: #ffba00;">Partecipa alla Community di Ballando</h5>
+  			</div>
+  		</div>
   	</div>
 
     <% if current_user %>
@@ -11,13 +18,5 @@
       <%= render partial: "/iframe_check/not_logged_interaction", locals: { interaction: interaction } %>
     <% end %>
 
-  </div>
-  <div class="row">
-    <div class="col-xs-10" style="background: #ccc;">
-      <h5 style="text-transform: none;">Sei un superfan di Ballando? Scopri la Community!</h5>
-    </div>
-    <div class="col-xs-2 text-right" style="background: #ccc;">
-      <h5><a target="_top" href="<%= Rails.configuration.deploy_settings["sites"]["ballando"]["stream_url"] %>" style="text-transform: none; color: #000; text-decoration: underline;">SCOPRI</a></h5>
-    </div>
   </div>
 </div>
