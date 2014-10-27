@@ -95,7 +95,7 @@ hr.no-margin {
         text-shadow: none;
     }
     .carousel-inner {
-        border: 6px solid #fff;
+        border: 6px solid #ffbc00;
     }
 }
 
@@ -125,10 +125,10 @@ a.cta-title-link, a.cta-title-link:hover{
 
 .footer-carousel {
     padding-top: 10px;
-    background: #8d1e12;
+    background: #ffbc00;
     padding-bottom: 50px;
     .item {
-        background: #8d1e12 !important;
+        background: #ffbc00 !important;
         .calltoaction-thumbnail-container {
             height: 120px; 
             overflow-y: hidden; 
@@ -338,12 +338,6 @@ h1, h2, h3 {
   .container1 > div, .container2 > div, .container3 > div{
     background-color: #000;
   }
-}
-
-.carousel-widget {
-    .row.center {
-        padding-top: 100px;
-    }
 }
 
 .calltoaction-cover {
@@ -1637,10 +1631,19 @@ body {
 /* Carousel base class */
 
 .carousel-widget {
-  margin-bottom: 45px;
-  .carousel, .carousel .item, .carousel-inner > .item > img {
-    height: 300px;
-  }
+    margin-bottom: 45px;
+      .carousel, .carousel .item, .carousel-inner > .item > img {
+        height: 300px;
+    }
+    .row.center {
+        padding-top: 100px;
+    }
+    .title {
+        margin: 0;
+        padding: 12px 8px 8px 8px;
+        font-weight: bold;
+        background: #ffbc00;
+    }
 }
 
 .footer-carousel {
