@@ -97,7 +97,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').removeClass("label-warning").addClass("label-success");
   };
 	
-	$window.openCtaShareModal = function (modalId, elem, ctaId, interactionId, alreadyDone){
+	$window.openCtaShareModal = function (modalId, elem, ctaId, interactionId, alreadyDone, calltoaction_title){
 		if($scope.current_user) {
 			var positionTop = $(elem).offset().top;
 			var modalHeight, modalObj, innerModalObj;
@@ -112,6 +112,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
 			$scope.ctaShareId = ctaId;
 			$scope.interactionShareId = interactionId;
+      $scope.ctaShareTitle = calltoaction_title;
 
 		} else {
     	showRegistrateView();
