@@ -21,6 +21,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     document.cookie = "connect_from_page = " + top.location + "; path=/";
     top.location = $scope.profile_url;
   };
+
+  //////////////////////// SHARE WITH DEFAULT SOCIAL MODAL ////////////////////////
   
   $window.doFbShare = function (){
   	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + $scope.ctaShareId);
@@ -39,20 +41,30 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 	};
 	
   $window.doTwShare = function (){
-	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + $scope.ctaShareId);
-	url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + $scope.ctaShareTitle;
-	window.open(url);
-		
-	$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "twitter" })
+  	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + $scope.ctaShareId);
+  	url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + $scope.ctaShareTitle;
+  	window.open(url);
+  		
+  	$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "twitter" })
       .success(function(data) {
-      	if(data.outcome.attributes.reward_name_to_counter.point == null){
+      	if(data.outcome.attributes.reward_name_to_counter.point == null) {
       		afterShareAjaxWithoutPoint(data);
-      	}else{
+      	} else {
       		updateUserRewardInView(data.main_reward_counter.weekly);
       		afterShareAjax(data);
       	}	
       });
   };
+
+  //////////////////////// AUDIO EFFECTS METHODS ////////////////////////
+
+  $window.initQuizWaitingAudio = function() {
+  };
+
+  $window.enableWaitingAudio = function(status) {
+  };
+
+  //////////////////////// OTHER ////////////////////////
 
   $window.afterShareAjax = function(data) {
     if(data.ga) {
