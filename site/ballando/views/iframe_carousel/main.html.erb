@@ -17,7 +17,11 @@
             <% @calltoactions.each_with_index do |calltoaction, i| %>
               <% calltoaction_enable_for_current_user = calltoaction.enable_for_current_user? %>
 
-              <div class="item <%= "active" if i == 0 %>" style="background: url('<%= calltoaction.thumbnail %>') no-repeat center top; background-size: cover;">
+                <% if (calltoaction_enable_for_current_user && !current_user) %>
+                  <div class="item <%= "active" if i == 0 %>" style="background: url('<%= calltoaction.thumbnail %>') no-repeat center top; background-size: cover;" onclick="window.top.location.href = '<%= @profile_url %>';">
+                <% else %>
+                  <div class="item <%= "active" if i == 0 %>" style="background: url('<%= calltoaction.thumbnail %>') no-repeat center top; background-size: cover;" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">                
+                <% end %>
 
                 <% if (calltoaction_enable_for_current_user && !current_user) %>
                   <div class="cover-grid-locked"></div>                
@@ -74,8 +78,6 @@
                       </div>
                     </div>
                   <% end %>
-
-
                 </div>
               </div>
             <% end %>
