@@ -1,0 +1,77 @@
+<!-- Modal Share -->
+<div class="modal fade" id="facebook-share-modal" tabindex="-1" role="dialog" aria-labelledby="shareModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="padding-bottom: 25px; border: none;">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      </div>
+      <div class="modal-body" style="padding: 10px 0 30px 0;">
+        <div class="row">
+          <div class="col-xs-12">
+            <p class="text-center" style="font-weight: bold; font-size: 17px;">Condividi questo contenuto sui social</p>
+          </div>
+        </div>      
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            <button type="button" class="btn-2 btn-2-fb" onclick="doFbShare();" style="width: 80px; height: 80px; margin-right: 20px;">
+              <i class="fa fa-facebook" style="font-size: 30px;"></i>
+            </button>
+            <button class="btn-2 btn-2-tt" onclick="doTwShare();" style="width: 80px; height: 80px;">
+              <i class="fa fa-twitter" style="font-size: 30px;"></i>
+            </button>
+            <h6 class="feedback-point" style="margin-bottom: 0; margin-top: 5px;">Ottieni fino a +3 punti <img src="<%= get_main_reward_image_url %>" style="width: 15px;"> <img src="<%= get_main_reward_image_url %>" style="width: 15px;"> <img src="<%= get_main_reward_image_url %>" style="width: 15px;"></h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Share Done -->
+<div class="modal fade" id="facebook-share-modal-done" tabindex="-1" role="dialog" aria-labelledby="shareModalDone" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="padding-bottom: 25px; border: none;">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      </div>
+      <div class="modal-body" style="padding: 10px 0 30px 0;">
+        <div class="row">
+          <div class="col-xs-12">
+            <p class="text-center" style="font-weight: bold; font-size: 17px;">Prima Condivisione Fatta!</p>
+          </div>
+        </div>      
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            <img src="<%= get_main_reward_image_url %>" style="margin: 10px auto; max-width: 50px;" />
+            <img src="<%= get_main_reward_image_url %>" style="margin: 10px auto; max-width: 50px;" />
+            <img src="<%= get_main_reward_image_url %>" style="margin: 10px auto; max-width: 50px;" />
+            <p>Hai ottenuto +3 Punti</p>
+          </div>
+        </div>
+      </div>    
+    </div>
+  </div>
+</div>
+
+<!-- Modal Share Done -->
+<div class="modal fade" id="facebook-share-modal-done-2" tabindex="-1" role="dialog" aria-labelledby="shareModalDone2" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="padding-bottom: 25px; border: none;">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      </div>
+      <div class="modal-body" style="padding: 10px 0 30px 0;">
+        <div class="row">
+          <div class="col-xs-12">
+            <p class="text-center" style="font-weight: bold; font-size: 17px;">Grazie per aver condiviso!</p>
+          </div>
+        </div>       
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            <p>Lorem ipsum dolor sit amet.</p>
+          </div>
+        </div>
+      </div>        
+    </div>
+  </div>
+</div>
