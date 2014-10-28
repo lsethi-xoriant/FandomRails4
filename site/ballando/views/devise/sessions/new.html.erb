@@ -98,7 +98,7 @@
     checkDocumentHeight("fandom-profile");
     <% if @gigya_socialize_user %>
       $("#waiting-registration-layer").removeClass("hidden");
-      loginSocialBallando(<%= @gigya_socialize_user %>);
+      loginSocialBallando(<%= raw(@gigya_socialize_user) %>);
     <% end %>
   });
 

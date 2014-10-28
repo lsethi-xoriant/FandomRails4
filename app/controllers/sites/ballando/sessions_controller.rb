@@ -6,7 +6,7 @@ class Sites::Ballando::SessionsController < SessionsController
 
   def ballando_new
     if params["gig_events"].present?
-      @gigya_socialize_user = raw(params.to_json)
+      @gigya_socialize_user = params.to_json
     end
 
     render template: "/devise/sessions/new", locals: { resource: User.new }
