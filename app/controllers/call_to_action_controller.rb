@@ -431,13 +431,8 @@ class CallToActionController < ApplicationController
         response['winnable_reward_count'] = winnable_outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
       end
 
-      index_current_interaction = calculate_interaction_index(calltoaction, interaction)
-        
-      shown_interactions = always_shown_interactions(calltoaction)
-      shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
-
       if interaction.when_show_interaction == "SEMPRE_VISIBILE"
-        response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome, ctaid: interaction.call_to_action_id, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: nil }, layout: false, formats: :html 
+        response["feedback"] = generate_response_for_interaction([interaction], calltoaction, params[:aux] || {}, outcome)[:render_interaction_str]
       else
         response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
       end
