@@ -79,7 +79,7 @@ class CallToActionController < ApplicationController
     calltoaction = CallToAction.find(params[:calltoaction_id])
     interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
 
-    response = generate_response_for_interaction(interactions, calltoaction, params[:aux])
+    response = generate_response_for_interaction(interactions, calltoaction, params[:aux] || {})
     
     respond_to do |format|
       format.json { render json: response.to_json }
