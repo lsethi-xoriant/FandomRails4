@@ -1,0 +1,15 @@
+server {
+    # if you're running multiple servers, instead of "default" you should
+    # put your main domain name here
+    listen 80 default;
+
+    # you could put a list of other domain names this application answers
+    server_name fandom.shado.tv;
+    root /home/app/public_html;
+    access_log /var/log/nginx/Fandom.courtesy_page.log log_fmt;
+    error_log /var/log/nginx/Fandom.courtesy_page.error.log;
+
+    location /  {
+        root   /home/app/public_html/courtesy_page;
+    }
+}
