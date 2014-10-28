@@ -401,7 +401,7 @@ module ApplicationHelper
     FandomUtils::request_is_from_mobile_device?(request)
   end
 
-  def small_mobile_devise?()
+  def small_mobile_device?()
     FandomUtils::request_is_from_small_mobile_device?(request)
   end
 

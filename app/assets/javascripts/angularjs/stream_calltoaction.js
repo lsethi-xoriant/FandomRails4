@@ -156,6 +156,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         }
         $scope.calltoactions_during_video_interactions_second = hash_main;
 
+        $("#calltoaction-stream").append(data.html_to_append);
+
+        if($scope.calltoactions.length >= $scope.calltoactions_count) {
+          $("#append-other button").hide();
+        }
+
         updateSecondaryVideoPlayers(data.calltoactions);
 
         angular.forEach(data.calltoactions, function(calltoaction) {
@@ -164,12 +170,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         });
 
         $scope.last_calltoaction_shown_activated_at = $scope.calltoactions[$scope.calltoactions.length - 1].activated_at;
-
-        $("#calltoaction-stream").append(data.html_to_append);
-
-        if($scope.calltoactions.length >= $scope.calltoactions_count) {
-          $("#append-other button").hide();
-        }
 
         $("#append-other button").attr('disabled', false);
 

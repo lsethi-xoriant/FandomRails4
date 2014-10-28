@@ -1,3 +1,3 @@
 <% calltoactions.each do |calltoaction| %>
-  <%= render partial: "/call_to_action/stream_single_calltoaction", locals: { calltoaction: calltoaction,  calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: active_calltoaction_id, calltoaction_active_interaction: calltoactions_active_interaction[calltoaction.id] } %>
+  <%= render partial: "/call_to_action/stream_single_calltoaction", locals: { calltoaction: calltoaction,  calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: active_calltoaction_id, calltoaction_active_interaction: calltoactions_active_interaction[calltoaction.id], aux: aux } %>
 <% end %>
