@@ -33,10 +33,18 @@ class Reward < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  has_attached_file :main_image, :styles => { :medium => "400x400#", :thumb => "100x100#" }, :default_url => ""
-  has_attached_file :preview_image, :styles => { :thumb => "100x100#" }, :default_url => ""
-  has_attached_file :not_awarded_image, :styles => { :thumb => "100x100#" }, :default_url => ""
-  has_attached_file :not_winnable_image, :styles => { :thumb => "100x100#" }, :default_url => ""
+  has_attached_file :main_image, :styles => { :medium => ["400x400#", :jpg], :thumb => ["100x100#", :jpg] }, 
+                    :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
+                    :default_url => ""
+  has_attached_file :preview_image, :styles => { :thumb => ["100x100#", :jpg] }, 
+                    :convert_options => { :thumb => '-quality 60' }, 
+                    :default_url => ""
+  has_attached_file :not_awarded_image, :styles => { :thumb => ["100x100#", :jpg] }, 
+                    :convert_options => { :thumb => '-quality 60' }, 
+                    :default_url => ""
+  has_attached_file :not_winnable_image, :styles => { :thumb => ["100x100#", :jpg] }, 
+                    :convert_options => { :thumb => '-quality 60' }, 
+                    :default_url => ""
   has_attached_file :media_file
 
   has_many :reward_tags

@@ -29,21 +29,23 @@ class CallToAction < ActiveRecord::Base
   
   has_attached_file :media_image,
     :processors => [:watermark],
-    :styles => lambda { |image| 
+    [:styles, :convert_options] => lambda { |image| 
         if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
-          {
-            :large => { :geometry => "600x600>", :watermark_path => image.instance.get_watermark }, 
-            :extra => "260x150#", 
-            :medium => "300x300#", 
-            :thumb => "100x100#"
-          }
+          [{
+            :large => { :geometry => ["600x600>", :jpg], :watermark_path => image.instance.get_watermark }, 
+            :extra => ["260x150#", :jpg], 
+            :medium => ["300x300#", :jpg], 
+            :thumb => ["100x100#", :jpg]
+          },
+          { :large => '-quality 60', :extra => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }]
         else
-         {} 
+         [{},{}]
         end
-    }, 
-    :default_url => "/assets/media-image-default.jpg"
+     },
+     :default_url => "/assets/media-image-default.jpg"
 
-  has_attached_file :thumbnail, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }
+  has_attached_file :thumbnail, :styles => { :large => ["600x600#", :jpg], :medium => ["300x300#", :jpg], :thumb => ["100x100#", :jpg] }, 
+                    :convert_options => { :large => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }
 
   has_many :interactions, dependent: :destroy
   has_many :call_to_action_tags, dependent: :destroy
