@@ -19,11 +19,13 @@
           <% end %>
         </div>
       <% end %>
-      
-      <a class="btn-2 btn-2-small" role="button" onclick="restartInteractions(<%= calltoaction.id %>)" style="margin-bottom: 15px; width: 50%;">RIVEDI LE RISPOSTE</a>
-      <!--
-      <div class="go-init" onclick="restartInteractions(<%= calltoaction.id %>)" style="">RIVEDI LE RISPOSTE</div>
-      -->
+
+      <% if small_mobile_device? %>
+        <a class="btn-2 btn-2-small go-on" role="button" href="/custom_call_to_action/<%= calltoaction.id %>/next" style="margin-bottom: 15px; width: 50%;">GIOCA ANCORA</a>
+      <% else %>     
+        <a class="btn-2 btn-2-small" role="button" onclick="restartInteractions(<%= calltoaction.id %>)" style="margin-bottom: 15px; width: 50%;">RIVEDI LE RISPOSTE</a>
+      <% end %>
+
     </div>
   </div>
 </div>

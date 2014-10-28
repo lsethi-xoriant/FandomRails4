@@ -20,7 +20,7 @@ class Sites::Ballando::ApplicationController < ApplicationController
     if call_to_action_completed?(calltoaction)
       response[:calltoaction_completed] = true
       interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
-      response[:next_interaction] = generate_response_for_next_interaction(interactions, calltoaction)
+      response[:next_interaction] = generate_response_for_interaction(interactions, calltoaction)
     else
       response[:calltoaction_completed] = false
       calltoaction_reward_status = get_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction)

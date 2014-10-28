@@ -1,6 +1,6 @@
 <% content_for :body_class, "custom-calltoaction" %>
 
-<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions.to_json %>, <%= get_cta_active_count() %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', <%= @calltoactions[0].id %>, '<%= "#{request.protocol}#{request.host}/" %>', '<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>')">   
+<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions.to_json %>, <%= get_cta_active_count() %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', <%= @calltoactions[0].id %>, '<%= "#{request.protocol}#{request.host}/" %>', '<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>', <%= @calltoactions_active_interaction.to_json %>)">   
 
   <div class="row text-center" style="margin-top: 15px;">
     <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12">
@@ -8,15 +8,9 @@
     </div>
   </div>
 
-  <div class="row text-center" style="margin-top: 15px;">
-    <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12">
-      <a class="btn-2 btn-2-small" href="/custom_call_to_action/<%= @calltoactions[0].id %>/next">GIOCA ANCORA</a>
-    </div>
-  </div>
-
   <div class="row">
     <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12">
-      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions, calltoactions_comment_interaction: @calltoactions_comment_interaction, active_calltoaction_id: @calltoactions[0].id, calltoactions_active_interaction: @calltoactions_active_interaction } %>
+      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions, calltoactions_comment_interaction: @calltoactions_comment_interaction, active_calltoaction_id: @calltoactions[0].id, calltoactions_active_interaction: @calltoactions_active_interaction, aux: @aux } %>
     </div>
   </div>
 

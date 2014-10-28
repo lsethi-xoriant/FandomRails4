@@ -1,4 +1,4 @@
-<div id="calltoaction-<%= calltoaction.id %>-cover" class="calltoaction-cover <%= "hidden" if hidden %>" style="background-image: url('<%= calltoaction.thumbnail %>')">
+<div id="calltoaction-<%= calltoaction.id %>-cover" class="calltoaction-cover <%= "hidden" if hidden %>" style="background-image: url('<%= calltoaction.thumbnail %>')" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')">
   <div class="cover-grid"></div>
   <%= render partial: "/call_to_action/cover_stream_single_calltoaction_flag", locals: { calltoaction: calltoaction } %>
   <a href="javascript:void(0);" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')" style="position: absolute; display: block; width:100%; height: 100%;"></a>  
@@ -24,10 +24,10 @@
   <div class="row bottom">
     <div class="col-xs-12 text-left" style="position: relative; padding-right: 20%;">
       <%= render partial: "/call_to_action/cover_stream_single_calltoaction_text", locals: { calltoaction: calltoaction } %>
-      <h2 class="btn-container"><a class="btn-2" role="button" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')"><%= get_cta_button_label(calltoaction) %></a></h2> 
+      <h2 class="btn-container"><a class="btn-2" role="button"><%= get_cta_button_label(calltoaction) %></a></h2> 
     </div>
     <div class="col-xs-12 text-left visible-xsm">
-      <h2 style="margin-top: 0;"><a class="btn-2" role="button" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')"><%= get_cta_button_label(calltoaction) %></a></h2> 
+      <h2 style="margin-top: 0;"><a class="btn-2" role="button"><%= get_cta_button_label(calltoaction) %></a></h2> 
     </div>
   </div>
     
