@@ -3,6 +3,14 @@
 
 class Sites::Ballando::SessionsController < SessionsController
   include FandomPlayAuthHelper
+
+  def ballando_new
+    if params["gig_events"].present?
+      @gigya_socialize_user = raw(params.to_json)
+    end
+
+    render template: "/devise/sessions/new", locals: { resource: User.new }
+  end
   
   def ballando_create
     begin
@@ -78,8 +86,8 @@ class Sites::Ballando::SessionsController < SessionsController
 
     if valid_response && rai_response_user["authMyRaiTv"] == "OK"
 
-      if rai_response_user.key?("user") && !rai_response_user["user"]["email"].empty? #rai_response_user["user"].key?("email") 
-        user_email = rai_response_user["user"]["email"]
+      if !rai_response_user["email"].empty? 
+        user_email = rai_response_user["email"]
       else
         user_email = "#{rai_response_user["UID"]}@FAKE___DOMAIN.com"
       end
@@ -94,13 +102,13 @@ class Sites::Ballando::SessionsController < SessionsController
 
       new_user = false
       if user && user.email.include?("@FAKE___DOMAIN.com")
-        user.update_attributes(:email => user_email, :avatar_selected_url => rai_response_user["user"]["thumbnailURL"])
+        user.update_attributes(:email => user_email, :avatar_selected_url => rai_response_user["thumbnailURL"])
       elsif user.nil?  
         user = new_user_from_provider(rai_response_user, user_email)
         new_user = true
       end
 
-      authentication = user.authentications.find_by_provider(rai_response_user["user"]["loginProvider"])
+      authentication = user.authentications.find_by_provider(rai_response_user["loginProvider"])
       if authentication
         authentication.update_attributes(authentication_attributes_from_provider(rai_response_user))
       else
@@ -153,8 +161,8 @@ class Sites::Ballando::SessionsController < SessionsController
   def authentication_attributes_from_provider(response_user)
     {
       uid: response_user["UID"],
-      provider: response_user["user"]["loginProvider"],
-      avatar: response_user["user"]["thumbnailURL"],
+      provider: response_user["loginProvider"],
+      avatar: response_user["thumbnailURL"],
       aux: response_user.to_json
     }
   end
@@ -167,10 +175,10 @@ class Sites::Ballando::SessionsController < SessionsController
     User.create(
       username: response_user["UID"], 
       email: user_email, 
-      first_name: response_user["user"]["firstName"], 
-      last_name: response_user["user"]["lastName"],
+      first_name: response_user["firstName"], 
+      last_name: response_user["lastName"],
       avatar_selected: provider,
-      avatar_selected_url: response_user["user"]["thumbnailURL"],
+      avatar_selected_url: response_user["thumbnailURL"],
       privacy: true,
       password: password,
       required_attrs: get_site_from_request(request)["required_attrs"]

@@ -17,6 +17,10 @@ Fandom::Application.routes.draw do
       scope module: "sites" do
         scope module: "ballando" do
 
+          match '/users/sign_in', :to => 'sessions#ballando_new', :as => 'user_sign_in'
+
+          match "/callback_gigya_socialize", :to => "application#callback_gigya_socialize"
+
           match "/custom_call_to_action/:id/next", :to => "custom_call_to_action#show_next_calltoaction"
           match "/custom_call_to_action/:id", :to => "custom_call_to_action#show"
 
