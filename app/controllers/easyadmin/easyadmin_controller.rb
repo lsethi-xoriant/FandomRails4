@@ -1,5 +1,6 @@
 class Easyadmin::EasyadminController < ApplicationController
   include EasyadminHelper
+  include DateMethods
 
   layout "admin"
 
@@ -110,13 +111,15 @@ class Easyadmin::EasyadminController < ApplicationController
   def dashboard
     @user_week_list = Hash.new
     if User.any? 
-      @from_date_string = (params[:datepicker_from_date].blank? || params[:commit] == "Reset") ? User.order("created_at ASC").limit(1).first.created_at.strftime('%m/%d/%Y')
-                  : params[:datepicker_from_date]
-      @to_date_string = (params[:datepicker_to_date].blank? || params[:commit] == "Reset") ? Time.now.strftime('%m/%d/%Y')
-                  : params[:datepicker_to_date]
+      @from_date_string = (params[:datepicker_from_date].blank? || params[:commit] == "Reset") ? 
+                              User.order("created_at ASC").limit(1).first.created_at.strftime('%m/%d/%Y')
+                          : params[:datepicker_from_date]
+      @to_date_string = (params[:datepicker_to_date].blank? || params[:commit] == "Reset") ? 
+                              Time.now.strftime('%m/%d/%Y')
+                          : params[:datepicker_to_date]
 
-      @from_date = Date.strptime(@from_date_string, '%m/%d/%Y')
-      @to_date = Date.strptime(@to_date_string, '%m/%d/%Y')
+      @from_date = datetime_parsed_to_utc(DateTime.strptime("#{@from_date_string} 00:00:00 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
+      @to_date = datetime_parsed_to_utc(DateTime.strptime("#{@to_date_string} 23:59:59 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
 
       from = @from_date
       to = @to_date
@@ -125,13 +128,17 @@ class Easyadmin::EasyadminController < ApplicationController
         params[:time_interval] = "daily"
       end
 
-      while from.to_date <= to.to_date do
-        @user_week_list["#{from.to_date.strftime("%Y-%m-%d") }"] = {
+      while from < to - 1.day do 
+        @user_week_list["#{from.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d") }"] = {   
           "tot" => User.where("created_at<=?", from).count,
           "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", from).count
           }
-        from = (params[:time_interval] == "daily" && params[:commit] != "Reset") ? from.to_date + 1.day : from.to_date + 1.week
+        from = (params[:time_interval] == "daily" && params[:commit] != "Reset") ? from + 1.day : from + 1.week
       end
+      @user_week_list["#{from.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d") }"] = {   
+          "tot" => User.where("created_at<=?", to).count,
+          "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", to).count
+          }
     end
   end
 
