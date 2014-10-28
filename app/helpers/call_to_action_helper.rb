@@ -28,7 +28,8 @@ module CallToActionHelper
 
   def get_cta_tags_from_cache(cta)
     cache_short(get_cta_tags_cache_key(cta.id)) do
-      cta.tags.includes("tag_fields").to_a
+      # TODO: rewrite this query as activerecord
+      ActiveRecord::Base.connection.execute("select distinct(tags.name) from call_to_actions join call_to_action_tags on call_to_actions.id = call_to_action_tags.call_to_action_id join tags on tags.id = call_to_action_tags.tag_id where call_to_actions.id = #{cta.id}").map { |row| row['name'] }
     end
   end
   
