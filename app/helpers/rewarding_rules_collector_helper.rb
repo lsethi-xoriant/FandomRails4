@@ -6,7 +6,7 @@ module RewardingRulesCollectorHelper
   class RulesCollector
     attr_accessor :rules, :interaction_id_by_rules, :context_only_rules
     
-    def initialize
+    def initialize()
       @rules = []
       @interaction_id_by_rules = {}
       @context_only_rules = [] 
@@ -51,10 +51,11 @@ module RewardingRulesCollectorHelper
       result
     end
     
-    def set_interaction_id_by_rules(interactions)
+    # parent_object is the object calling this service; it is used to access logging and caching
+    def set_interaction_id_by_rules(interactions, parent_object)
       interactions.each do |interaction|
         @rules.each do |rule|
-          if interaction_matches?(interaction, rule.options)
+          if interaction_matches?(interaction, rule.options, parent_object)
             (@interaction_id_by_rules[interaction.id] ||= []) << rule
           end
         end
@@ -62,13 +63,14 @@ module RewardingRulesCollectorHelper
     end
   end
 
-  def interaction_matches?(interaction, options)
+  def interaction_matches?(interaction, options, parent_object)
     options.key?(:interactions) && (
       ALL.equal?(options[:interactions]) || (
         interaction_is_included_in_options?(options, :names, interaction.name) &&
         interaction_is_included_in_options?(options, :ctas, interaction.call_to_action.name) &&
         interaction_type_is_included_in_options?(options, interaction) &&
-        (!options[:interactions].key?(:tags) || get_cta_tags_from_cache(interaction.cta).intersect?(options[:interactions][:tags]))
+        (!options[:interactions].key?(:tags) || 
+          (parent_object.get_cta_tags_from_cache(interaction.call_to_action) & (options[:interactions][:tags])).count > 0)
       )
     )
   end

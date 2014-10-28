@@ -28,7 +28,8 @@ module CallToActionHelper
 
   def get_cta_tags_from_cache(cta)
     cache_short(get_cta_tags_cache_key(cta.id)) do
-      cta.tags.includes("tag_fields").to_a
+      # TODO: rewrite this query as activerecord
+      ActiveRecord::Base.connection.execute("select distinct(tags.name) from call_to_actions join call_to_action_tags on call_to_actions.id = call_to_action_tags.call_to_action_id join tags on tags.id = call_to_action_tags.tag_id where call_to_actions.id = #{cta.id}").map { |row| row['name'] }
     end
   end
   
@@ -41,10 +42,13 @@ module CallToActionHelper
   def generate_response_for_interaction(interactions, calltoaction, aux = {})
     next_quiz_interaction = interactions.first
     if next_quiz_interaction
-      aux[:next_interaction_present] = (interactions.count > 1)
       index_current_interaction = calculate_interaction_index(calltoaction, next_quiz_interaction)
       shown_interactions = always_shown_interactions(calltoaction)
-      shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
+      if shown_interactions.count > 1
+        shown_interactions_count = shown_interactions.count 
+        aux[:shown_interactions_count] = shown_interactions_count
+      end
+      aux[:next_interaction_present] = (interactions.count > 1)
       render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: nil, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux }, layout: false, formats: :html
       interaction_id = next_quiz_interaction.id
     else

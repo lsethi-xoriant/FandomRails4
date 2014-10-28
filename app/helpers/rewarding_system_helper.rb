@@ -3,6 +3,8 @@ module RewardingSystemHelper
   include ModelHelper
   include RewardingRuleCheckerHelper
   include RewardingRulesCollectorHelper
+  include CallToActionHelper
+  include CacheKeysHelper
 
   # The Abstract Syntax of a rule
   class Rule
@@ -333,7 +335,7 @@ module RewardingSystemHelper
       # WARNING: instance_eval
       rules_collector.instance_eval(rules_buffer)
       interactions = Interaction.includes(:call_to_action).all
-      rules_collector.set_interaction_id_by_rules(interactions)
+      rules_collector.set_interaction_id_by_rules(interactions, self)
       rules_collector
     end
   end

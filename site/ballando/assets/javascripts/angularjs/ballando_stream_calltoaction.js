@@ -8,10 +8,11 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   var COUNTDOWN_TIME = 3;
 
-  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url, profile_url, calltoactions_active_interaction) {
+  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url, profile_url, calltoactions_active_interaction, aux) {
     $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction);
     $scope.request_url = request_url;
     $scope.profile_url = profile_url;
+    $scope.aux = aux;
   
     initInteractionsShowed(calltoactions_active_interaction);
 
@@ -161,7 +162,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
     $scope.interactions_showed[calltoaction_id] = [];
 
-    $http.post("/generate_cover_for_calltoaction", { calltoaction_id: calltoaction_id, interactions_showed: $scope.interactions_showed[calltoaction_id] })
+    $http.post("/generate_cover_for_calltoaction", { aux: $scope.aux, calltoaction_id: calltoaction_id, interactions_showed: $scope.interactions_showed[calltoaction_id] })
       .success(function(data) {
 
         $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
@@ -200,7 +201,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.nextInteraction = function(calltoaction_id) {
-    $http.post("/next_interaction", { interactions_showed: $scope.interactions_showed[calltoaction_id], calltoaction_id: calltoaction_id })
+    $http.post("/next_interaction", { aux: $scope.aux, interactions_showed: $scope.interactions_showed[calltoaction_id], calltoaction_id: calltoaction_id })
       .success(function(data) {
         mountNextInteractionFromRequest(calltoaction_id, data);
       }).error(function() {

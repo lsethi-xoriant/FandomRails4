@@ -20,7 +20,7 @@
         </div>
       <% end %>
 
-      <% if small_mobile_device? %>
+      <% if aux && aux[:show_next_calltoaction_button] %>
         <a class="btn-2 btn-2-small go-on" role="button" href="/custom_call_to_action/<%= calltoaction.id %>/next" style="margin-bottom: 15px; width: 50%;">GIOCA ANCORA</a>
       <% else %>     
         <a class="btn-2 btn-2-small" role="button" onclick="restartInteractions(<%= calltoaction.id %>)" style="margin-bottom: 15px; width: 50%;">RIVEDI LE RISPOSTE</a>
