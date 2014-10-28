@@ -32,7 +32,7 @@ class Sites::Ballando::CustomCallToActionController < ApplicationController
     calltoactions_comment_interaction = init_calltoactions_comment_interaction(calltoactions)
 
     calltoactions_active_interaction = Hash.new
-    aux = { show_next_calltoaction_button: small_mobile_device?, show_calltoaction_page: true }
+    aux = { show_next_calltoaction_button: true, show_calltoaction_page: true }
     calltoactions_active_interaction[calltoactions[0].id] = generate_next_interaction_response(calltoactions[0], nil, aux)
 
     [calltoactions_during_video_interactions_second, calltoactions_active_interaction, calltoactions_comment_interaction, aux]

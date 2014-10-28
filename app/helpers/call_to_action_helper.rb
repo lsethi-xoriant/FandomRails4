@@ -41,10 +41,11 @@ module CallToActionHelper
   def generate_response_for_interaction(interactions, calltoaction, aux = {})
     next_quiz_interaction = interactions.first
     if next_quiz_interaction
-      aux[:next_interaction_present] = (interactions.count > 1)
       index_current_interaction = calculate_interaction_index(calltoaction, next_quiz_interaction)
       shown_interactions = always_shown_interactions(calltoaction)
       shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
+      aux[:shown_interactions_count] = shown_interactions_count
+      aux[:next_interaction_present] = (interactions.count > 1)
       render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: nil, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux }, layout: false, formats: :html
       interaction_id = next_quiz_interaction.id
     else
