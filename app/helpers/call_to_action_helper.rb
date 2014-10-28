@@ -3,10 +3,10 @@ require 'digest/md5'
 
 module CallToActionHelper
 
-  def generate_next_interaction_response(calltoaction, interactions_showed = nil)
+  def generate_next_interaction_response(calltoaction, interactions_showed = nil, aux = {})
     response = Hash.new  
     interactions = calculate_next_interactions(calltoaction, interactions_showed)
-    response[:next_interaction] = generate_response_for_next_interaction(interactions, calltoaction)
+    response[:next_interaction] = generate_response_for_interaction(interactions, calltoaction, aux)
     response
   end
 
@@ -39,21 +39,23 @@ module CallToActionHelper
     end
   end
 
-  def generate_response_for_next_interaction(quiz_interactions, calltoaction)
-    next_quiz_interaction = quiz_interactions.first
+  def generate_response_for_interaction(interactions, calltoaction, aux = {})
+    next_quiz_interaction = interactions.first
     if next_quiz_interaction
       index_current_interaction = calculate_interaction_index(calltoaction, next_quiz_interaction)
       shown_interactions = always_shown_interactions(calltoaction)
       shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
-      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: nil, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction }, layout: false, formats: :html
+      aux[:shown_interactions_count] = shown_interactions_count
+      aux[:next_interaction_present] = (interactions.count > 1)
+      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: nil, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux }, layout: false, formats: :html
       interaction_id = next_quiz_interaction.id
     else
-      render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: quiz_interactions, calltoaction: calltoaction }, layout: false, formats: :html
+      render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: interactions, calltoaction: calltoaction, aux: aux }, layout: false, formats: :html
     end
 
     response = Hash.new
     response = {
-      next_quiz_interaction: (quiz_interactions.count > 1),
+      next_quiz_interaction: (interactions.count > 1),
       render_interaction_str: render_interaction_str,
       interaction_id: interaction_id
     }

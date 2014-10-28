@@ -32,19 +32,15 @@ class CallToActionController < ApplicationController
     calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")
 
     if params[:tag_id].present?
-      
       stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", params[:tag_id]).active
       if params[:current_calltoaction].present?
         stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
       end
-    
     else
-
       stream_call_to_action_to_render = CallToAction.active
       if params[:current_calltoaction].present?
         stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
       end
-
     end
 
     stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id NOT IN (#{calltoactions_showed_id_qmarks})", *calltoactions_showed_ids).limit(3)
@@ -52,7 +48,7 @@ class CallToActionController < ApplicationController
 
     stream_call_to_action_to_render.each do |calltoaction|
       calltoactions << calltoaction
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: nil, calltoaction_active_interaction: Hash.new }, layout: false, formats: :html)
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: nil, calltoaction_active_interaction: Hash.new, aux: nil }, layout: false, formats: :html)
     end
 
     calltoactions_during_video_interactions_second = Hash.new
@@ -83,7 +79,7 @@ class CallToActionController < ApplicationController
     calltoaction = CallToAction.find(params[:calltoaction_id])
     interactions = calculate_next_interactions(calltoaction, params[:interactions_showed])
 
-    response = generate_response_for_next_interaction(interactions, calltoaction)
+    response = generate_response_for_interaction(interactions, calltoaction, params[:aux])
     
     respond_to do |format|
       format.json { render json: response.to_json }
@@ -174,8 +170,9 @@ class CallToActionController < ApplicationController
     @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
 
     @calltoactions_active_interaction = Hash.new
-    @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0])
-
+    aux = { show_calltoaction_page: true }
+    @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0], nil, aux)
+    
 =begin
     if @calltoaction.enable_disqus
       @disqus_requesturl = request.url
@@ -221,23 +218,29 @@ class CallToActionController < ApplicationController
 
   def check_profanity_words_in_comment(user_comment)
 
-    profanity_words_row_in_settings = cache_short("check_profanity_words") do
-      Setting.select("value").find_by_key("profanity.words") || CACHED_NIL
+    user_comment_text = user_comment.text.downcase
+    pattern_array = Array.new
+
+    Setting.where(key: 'profanity.words').first.value.split(",").each do |exp|
+      pattern_array.push(build_regexp(exp))
     end
 
-    if !cached_nil?(profanity_words_row_in_settings)
-      profanity_words = profanity_words_row_in_settings.value.split(",")
-      user_comment_text = user_comment.text.downcase
-      profanity_words.each do |word| 
-        if user_comment_text.include?(word.downcase)
-          user_comment.errors.add(:text, "contiene parole non ammesse")
-          return user_comment
-        end
-      end
+    patterns = Regexp.union(pattern_array)
+    if user_comment_text =~ patterns
+      user_comment.errors.add(:text, "contiene parole non ammesse")
+      return user_comment
     end
 
-    user_comment
+      user_comment
 
+  end
+
+  def build_regexp(line)
+    string = "(\\W+|^)"
+    line.strip.each_char do |c|
+      string += "(\\W*)" + c
+    end
+    Regexp.new(string)
   end
 
   def add_comment
@@ -434,7 +437,7 @@ class CallToActionController < ApplicationController
       shown_interactions_count = shown_interactions.count if shown_interactions.count > 1
 
       if interaction.when_show_interaction == "SEMPRE_VISIBILE"
-        response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome, ctaid: interaction.call_to_action_id, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction }, layout: false, formats: :html 
+        response["feedback"] = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: interaction, outcome: outcome, ctaid: interaction.call_to_action_id, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: nil }, layout: false, formats: :html 
       else
         response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
       end

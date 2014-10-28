@@ -8,13 +8,26 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   var COUNTDOWN_TIME = 3;
 
-  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url, profile_url) {
+  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url, profile_url, calltoactions_active_interaction, aux) {
     $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction);
-    $scope.interactions_showed = {};
     $scope.request_url = request_url;
     $scope.profile_url = profile_url;
+    $scope.aux = aux;
+  
+    initInteractionsShowed(calltoactions_active_interaction);
 
     adjustAppleMobileIframes(); // iframe in page.
+
+    //$scope.interactions_showed
+  };
+
+  $window.initInteractionsShowed = function(calltoactions_active_interaction) {
+    $scope.interactions_showed = {};
+    if(calltoactions_active_interaction) {
+      angular.forEach(calltoactions_active_interaction, function(value, key) {
+        $scope.interactions_showed[key] = [value["next_interaction"]["interaction_id"]];
+      });
+    }
   };
 
   $window.showRegistrateView = function() {
@@ -149,7 +162,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
     $scope.interactions_showed[calltoaction_id] = [];
 
-    $http.post("/generate_cover_for_calltoaction", { calltoaction_id: calltoaction_id, interactions_showed: $scope.interactions_showed[calltoaction_id] })
+    $http.post("/generate_cover_for_calltoaction", { aux: $scope.aux, calltoaction_id: calltoaction_id, interactions_showed: $scope.interactions_showed[calltoaction_id] })
       .success(function(data) {
 
         $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
@@ -163,11 +176,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
             mountNextInteractionFromRequest(calltoaction_id, data.next_interaction);
           } else {
             $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_calltoaction_cover);
-            
             /* $("#iframe-calltoaction-" + calltoaction_id + " iframe").load(function() {
-              appendAndStartCountdown(calltoaction_id); 
             }); */
-
           }
 
         } else {
@@ -176,7 +186,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
             mountNextInteractionFromRequest(calltoaction_id, data.next_interaction);
           } else {
             $("#home-undervideo-calltoaction-" + calltoaction_id).html(data.render_calltoaction_cover);
-            /* appendAndStartCountdown(calltoaction_id); */
           }
 
         }
@@ -186,28 +195,13 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   };
 
-  $window.appendAndStartCountdown = function(calltoaction_id) {
-    $("#calltoaction-" + calltoaction_id + "-countdown").prepend("<div class=\"wrapper hidden-xs\"><div class=\"pie spinner\"></div><div class=\"pie filler\"></div><div class=\"mask\"></div></div>");
-    showCallToActionCountdown(calltoaction_id, COUNTDOWN_TIME);
-  };
-
-  $window.showCallToActionCountdown = function(calltoaction_id, time) {
-    if(time > 0) {
-      $("#calltoaction-" + calltoaction_id + "-countdown h3").html(time);
-      $timeout(function() { showCallToActionCountdown(calltoaction_id, --time); }, 1000);
-    } else {
-      $("#calltoaction-" + calltoaction_id + "-countdown").html("");
-      nextInteraction(calltoaction_id);
-    }
-  };
-
   $window.restartInteractions = function(calltoaction_id) {
     $scope.interactions_showed[calltoaction_id] = [];
     nextInteraction(calltoaction_id);
   };
 
   $window.nextInteraction = function(calltoaction_id) {
-    $http.post("/next_interaction", { interactions_showed: $scope.interactions_showed[calltoaction_id], calltoaction_id: calltoaction_id })
+    $http.post("/next_interaction", { aux: $scope.aux, interactions_showed: $scope.interactions_showed[calltoaction_id], calltoaction_id: calltoaction_id })
       .success(function(data) {
         mountNextInteractionFromRequest(calltoaction_id, data);
       }).error(function() {
@@ -283,19 +277,19 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     } catch(err) { }
   };
 
-  $window.updateFiltersMenu = function(tag_id){
+  $window.updateFiltersMenu = function(tag_id) {
   	$(".filter-home-menu .slide").removeClass("active");
   	$(".filter-home-menu .triangle").hide();
   	$(".extra-info").hide();
-  	if(tag_id){
+  	if(tag_id) {
    		$(".filter-home-menu .slide-" + tag_id).addClass("active");
    		$(".filter-home-menu .slide-" + tag_id).parent().find(".triangle").show();
    		$(".menu-info-extra .extra-info-" + tag_id).show();
-   }else{
+    } else {
    		$(".filter-home-menu .filter-all").addClass("active");
    		$(".filter-home-menu .filter-all").parent().find(".triangle").show();
    		$(".menu-info-extra .extra-info-all").show();
-   }
+    }
   };
   
 }
