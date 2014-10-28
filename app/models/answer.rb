@@ -7,9 +7,9 @@ class Answer < ActiveRecord::Base
 
   attr_accessor :destroy_image, :destroy_answer
 
-  has_attached_file :media_image, :styles => { :large => ["600x600#", :jpg], :medium => ["300x300#", :jpg], :thumb => ["100x100#", :jpg] }, 
+  has_attached_file :media_image, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }, 
                     :convert_options => { :large => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }
-  has_attached_file :image, :styles => { :large => ["600x600#", :jpg], :medium => ["300x300#", :jpg], :thumb => ["100x100#", :jpg] }, 
+  has_attached_file :image, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }, 
                     :convert_options => { :large => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }
 
   belongs_to :quiz
