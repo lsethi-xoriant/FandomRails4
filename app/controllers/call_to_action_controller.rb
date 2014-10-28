@@ -221,23 +221,29 @@ class CallToActionController < ApplicationController
 
   def check_profanity_words_in_comment(user_comment)
 
-    profanity_words_row_in_settings = cache_short("check_profanity_words") do
-      Setting.select("value").find_by_key("profanity.words") || CACHED_NIL
+    user_comment_text = user_comment.text.downcase
+    pattern_array = Array.new
+
+    Setting.where(key: 'profanity.words').first.value.split(",").each do |exp|
+      pattern_array.push(build_regexp(exp))
     end
 
-    if !cached_nil?(profanity_words_row_in_settings)
-      profanity_words = profanity_words_row_in_settings.value.split(",")
-      user_comment_text = user_comment.text.downcase
-      profanity_words.each do |word| 
-        if user_comment_text.include?(word.downcase)
-          user_comment.errors.add(:text, "contiene parole non ammesse")
-          return user_comment
-        end
-      end
+    patterns = Regexp.union(pattern_array)
+    if user_comment_text =~ patterns
+      user_comment.errors.add(:text, "contiene parole non ammesse")
+      return user_comment
     end
 
-    user_comment
+      user_comment
 
+  end
+
+  def build_regexp(line)
+    string = "(\\W+|^)"
+    line.strip.each_char do |c|
+      string += "(\\W*)" + c
+    end
+    Regexp.new(string)
   end
 
   def add_comment

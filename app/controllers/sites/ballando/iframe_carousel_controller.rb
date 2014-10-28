@@ -5,7 +5,7 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
   def main
     @calltoactions = cache_short("iframe_carousel_calltoactions") do     
       highlight_calltoactions = get_highlight_calltoactions()
-      active_calltoactions_without_rewards = CallToAction.includes(call_to_action_tags: :tag).active.where("tags.name <> 'reward-cta' OR tags.id IS NULL")
+      active_calltoactions_without_rewards = CallToAction.includes(:rewards).active.where("rewards.id IS NULL")
       if highlight_calltoactions.any?
         last_calltoactions = active_calltoactions_without_rewards.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
       else
@@ -23,12 +23,14 @@ class Sites::Ballando::IframeCarouselController < ApplicationController
     # @active_home_launchers = active_home_launchers()
 
     @stream_url = Rails.configuration.deploy_settings["sites"]["ballando"]["stream_url"]
+    @profile_url = Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"]
+
     render template: "/iframe_carousel/main"
   end
 
   def footer
     @calltoactions = cache_short("iframe_carousel_footer_calltoactions") do
-      CallToAction.includes(:call_to_action_tags => :tag).active.where("tags.name <> 'reward-cta' OR tags.id IS NULL").limit(8).to_a
+      CallToAction.includes(:rewards).active.where("rewards.id IS NULL").limit(8).to_a
     end
     
     @calltoaction_reward_status = Hash.new

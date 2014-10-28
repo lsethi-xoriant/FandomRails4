@@ -1,9 +1,10 @@
 <div class="container-fluid carousel-widget">
   <div class="row">
     <div class="col-xs-12 col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3">
-
+      <h3 class="title">LA COMMUNITY</h3>
       <% if @calltoactions.any? %>
         <div id="home-carousel" class="carousel slide" data-ride="carousel">
+          
           <!-- Indicators -->
           <ol class="carousel-indicators">
             <% if @calltoactions.count > 1 %>
@@ -14,13 +15,31 @@
           </ol>
           <div class="carousel-inner">
             <% @calltoactions.each_with_index do |calltoaction, i| %>
-              <div class="item <%= "active" if i == 0 %>" style="background: url('<%= calltoaction.thumbnail %>') no-repeat center top; background-size: cover;">
-                <div class="cover-grid"></div>
+              <% calltoaction_enable_for_current_user = calltoaction.enable_for_current_user? %>
+
+                <% if (calltoaction_enable_for_current_user && !current_user) %>
+                  <div class="item <%= "active" if i == 0 %>" style="background: url('<%= calltoaction.thumbnail %>') no-repeat center top; background-size: cover;" onclick="window.top.location.href = '<%= @profile_url %>';">
+                <% else %>
+                  <div class="item <%= "active" if i == 0 %>" style="background: url('<%= calltoaction.thumbnail %>') no-repeat center top; background-size: cover;" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';">                
+                <% end %>
+
+                <% if (calltoaction_enable_for_current_user && !current_user) %>
+                  <div class="cover-grid-locked"></div>                
+                  <div class="row center text-center">
+                    <i class="glyphicon glyphicon-lock" style="font-size: 80px; color: #fff;"></i>
+                  </div>
+                <% else %>
+                  <div class="cover-grid"></div>
+                <% end %>
 
                 <div class="container">
                   <%= render partial: "/call_to_action/cover_stream_single_calltoaction_flag", locals: { calltoaction: calltoaction } %>
                   <div class="carousel-caption" style="top: 0;">
+                    
+                    <!--
                   	<a href="javascript:void(0);" style="position: absolute; width: 100%; height: 100%; display: block; z-index: 6;" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';"></a>
+                    -->
+
                     <div class="col-xs-12 text-right">
                       <h4>
                         <% if @calltoaction_reward_status[calltoaction.id].present? %>
@@ -38,17 +57,27 @@
                     </div>
                   </div>
 
-                  <div class="carousel-caption" style="bottom: 0; top: initial;  z-index: 4;">
-                    <div class="col-xs-12 text-left" style="position: relative; padding-right: 20%;">
-                      <%= render partial: "/call_to_action/cover_stream_single_calltoaction_text", locals: { calltoaction: calltoaction } %>
-                      <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';"><%= get_cta_button_label(calltoaction) %></button></h2> 
+                  <% if (calltoaction_enable_for_current_user && !current_user) %>
+                    <div class="carousel-caption" style="bottom: 0; top: initial;  z-index: 50;">                  
+                      <div class="col-xs-12 text-left" style="position: relative; padding-right: 20%;">
+                        <%= render partial: "/call_to_action/cover_stream_single_calltoaction_text", locals: { calltoaction: calltoaction } %>
+                        <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '<%= @profile_url %>';">REGISTRATI</button></h2> 
+                      </div>
+                      <div class="col-xs-12 text-left visible-xsm">
+                        <h2 style="margin-top: 0;"><button class="btn-2" role="button" onclick="window.top.location.href = '<%= @profile_url %>';">REGISTRATI</button></h2> 
+                      </div>
                     </div>
-                    <div class="col-xs-12 text-left visible-xsm">
-                      <h2 style="margin-top: 0;"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';"><%= get_cta_button_label(calltoaction) %></button></h2> 
+                  <% else %>
+                    <div class="carousel-caption" style="bottom: 0; top: initial;  z-index: 40;">                  
+                      <div class="col-xs-12 text-left" style="position: relative; padding-right: 20%;">
+                        <%= render partial: "/call_to_action/cover_stream_single_calltoaction_text", locals: { calltoaction: calltoaction } %>
+                        <h2 class="btn-container"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';"><%= get_cta_button_label(calltoaction) %></button></h2> 
+                      </div>
+                      <div class="col-xs-12 text-left visible-xsm">
+                        <h2 style="margin-top: 0;"><button class="btn-2" role="button" onclick="window.top.location.href = '/redirect_into_iframe_calltoaction/<%= calltoaction.id %>';"><%= get_cta_button_label(calltoaction) %></button></h2> 
+                      </div>
                     </div>
-                  </div>
-
-
+                  <% end %>
                 </div>
               </div>
             <% end %>

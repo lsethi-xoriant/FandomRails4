@@ -10,7 +10,7 @@ upstream fandom {
 server {
     # if you're running multiple servers, instead of "default" you should
     # put your main domain name here
-    listen 80 default;
+    listen 80;
 
     # you could put a list of other domain names this application answers
     server_name fandom.shado.tv;

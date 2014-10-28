@@ -22,6 +22,12 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
+  def tmp
+    open("http://socialize.gigya.com/socialize.getUserInfo?UID=#{params[:UID]}").read     
+    debugger
+    i=0
+  end
+
   def file_upload_too_large
   end
 
