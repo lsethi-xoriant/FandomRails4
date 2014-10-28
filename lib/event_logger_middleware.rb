@@ -76,7 +76,7 @@ class EventLoggerMiddleware
       data[:status] = status
       data[:cache_hits] = $cache_hits
       data[:cache_misses] = $cache_misses
-      data[:active_record_time] = $active_record_time
+      data[:db_time] = $db_time
       data[:view_time] = $view_time
       data[:time] = (Time.now - start).to_s
       log_info(msg, data)
