@@ -15,9 +15,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     
     initInteractionsShowed(calltoactions_active_interaction);
 
-    adjustAppleMobileIframes(); // iframe in page.
-
-    //$scope.interactions_showed
+    adjustAppleMobileIframes(); // Iframe in page.
   };
 
   $window.initInteractionsShowed = function(calltoactions_active_interaction) {
@@ -271,7 +269,10 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.updateUserRewardInView = function(counter) {
+    // Custom calltoaction user bar
+    $(".user-reward-counter").html("+" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
     try {
+      // Iframe user widget
       window.parent.updateIframeProfileWidget("+" + counter + "<span class=\"glyphicon glyphicon-star\"></span>");
     } catch(err) { }
   };

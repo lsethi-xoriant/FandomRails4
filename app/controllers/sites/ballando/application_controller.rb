@@ -2,7 +2,6 @@ class Sites::Ballando::ApplicationController < ApplicationController
   include CallToActionHelper
 
   def gigya_socialize_redirect
-    debugger
     session[:gigya_socialize_redirect] = params.to_json
     redirect_to Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"]
   end
@@ -17,10 +16,15 @@ class Sites::Ballando::ApplicationController < ApplicationController
     end
   end
 
+  def redirect_into_joe_maska
+    cookies["redirect_to_page"] = "/upload_interaction/new"
+    redirect_to Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["stream_url"]
+  end
+
   def generate_cover_for_calltoaction
     calltoaction = CallToAction.find(params[:calltoaction_id])
     response = generate_next_interaction_response(calltoaction, params[:interactions_showed], params[:aux] || {})
-    response[:calltoaction_completed] = true
+    response[:calltoaction_completed] = true # TODO: remove this in angularJS
     
 =begin
     if call_to_action_completed?(calltoaction)
@@ -59,11 +63,6 @@ class Sites::Ballando::ApplicationController < ApplicationController
       format.json { render json: response.to_json }
     end
     
-  end
-  
-  def redirect_into_joe_maska
-    cookies["redirect_to_page"] = "/upload_interaction/new"
-    redirect_to Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["stream_url"]
   end
   
 end
