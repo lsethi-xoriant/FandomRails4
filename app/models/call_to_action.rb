@@ -74,7 +74,7 @@ class CallToAction < ActiveRecord::Base
       play_inter = true if i.resource_type == "Play"
     end
 
-    errors.add(:media_type, "devi agganciare un interazione di tipo Play per questa calltoaction") unless play_inter
+    errors.add(:media_type, "devi agganciare una interazione di tipo Play per questa calltoaction") unless play_inter
   end
 
   def interaction_resource

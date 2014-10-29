@@ -135,7 +135,7 @@ class Easyadmin::EasyadminController < ApplicationController
           }
         from = (params[:time_interval] == "daily" && params[:commit] != "Reset") ? from + 1.day : from + 1.week
       end
-      @user_week_list["#{from.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d") }"] = {   
+      @user_week_list["#{to.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d") }"] = {
           "tot" => User.where("created_at<=?", to).count,
           "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", to).count
           }
