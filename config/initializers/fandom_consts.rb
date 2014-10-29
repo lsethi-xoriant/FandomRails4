@@ -57,10 +57,13 @@ unless defined? FILTER_OPERATOR_CONTAINS
   CTA_DEFAULT_BUTTON_LABEL = "Guarda"
   
   USER_TIME_ZONE = "Rome"
+  USER_TIME_ZONE_ABBREVIATION = "CET"
 
   class CachedNil
   end
 
   CACHED_NIL = CachedNil.new
+
+  CONTEXT_REWARD_CHECK_SECONDS = 300
   
 end

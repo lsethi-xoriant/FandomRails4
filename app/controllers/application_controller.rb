@@ -22,12 +22,6 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
-  def tmp
-    open("http://socialize.gigya.com/socialize.getUserInfo?UID=#{params[:UID]}").read     
-    debugger
-    i=0
-  end
-
   def file_upload_too_large
   end
 
@@ -62,6 +56,8 @@ class ApplicationController < ActionController::Base
   end
 
   def index
+    check_for_context_rewards
+    
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
     check_redirect_into_iframe_calltoaction
     check_redirect_into_iframe_page
@@ -104,7 +100,7 @@ class ApplicationController < ActionController::Base
     end
 
     calltoactions_comment_interaction = init_calltoactions_comment_interaction(calltoactions)
-    render_calltoactions_str = (render_to_string "/call_to_action/_stream_calltoactions", locals: { calltoactions: calltoactions, calltoactions_comment_interaction: calltoactions_comment_interaction, active_calltoaction_id: nil, calltoactions_active_interaction: Hash.new }, layout: false, formats: :html)
+    render_calltoactions_str = (render_to_string "/call_to_action/_stream_calltoactions", locals: { calltoactions: calltoactions, calltoactions_comment_interaction: calltoactions_comment_interaction, active_calltoaction_id: nil, calltoactions_active_interaction: Hash.new, aux: nil }, layout: false, formats: :html)
 
     response = Hash.new
     response = {

@@ -3,6 +3,8 @@ module RewardingSystemHelper
   include ModelHelper
   include RewardingRuleCheckerHelper
   include RewardingRulesCollectorHelper
+  include CallToActionHelper
+  include CacheKeysHelper
 
   # The Abstract Syntax of a rule
   class Rule
@@ -102,9 +104,11 @@ module RewardingSystemHelper
     # Evaluates all rules in this context and return an Outcome object    
     def compute_outcome(user_interaction, just_rules_applying_to_interaction = false)
       outcome = Outcome.new()
-      interaction_rules = get_interaction_rules(user_interaction.interaction.id)
-      interaction_rules.each do |rule|
-        evaluate_rule(rule, outcome, user_interaction)
+      unless (user_interaction.mocked? && user_interaction.there_is_no_interaction?)
+        interaction_rules = get_interaction_rules(user_interaction.interaction.id)
+        interaction_rules.each do |rule|
+          evaluate_rule(rule, outcome, user_interaction)
+        end
       end
       unless just_rules_applying_to_interaction
         rules_collector.context_only_rules.each do |rule|
@@ -204,13 +208,17 @@ module RewardingSystemHelper
   def new_context(user_interaction, rules_collector)
     st = Time.now.utc 
     user = user_interaction.user
-    interaction = user_interaction.interaction
+    if user_interaction.mocked?
+      cta = nil
+    else
+      cta = user_interaction.interaction.call_to_action
+    end
     if user.mocked?
       Context.new(
         request: request,
         user: user,
         user_rewards: {},
-        cta: interaction.call_to_action,
+        cta: cta,
         correct_answer: get_correct_answer(user_interaction),
         counters: {},
         uncountable_user_reward_names: Set.new(),
@@ -225,7 +233,7 @@ module RewardingSystemHelper
         request: request,
         user: user,
         user_rewards: user_rewards,
-        cta: interaction.call_to_action,
+        cta: cta,
         correct_answer: get_correct_answer(user_interaction),
         counters: get_counters(user),
         uncountable_user_reward_names: uncountable_user_reward_names,
@@ -333,7 +341,7 @@ module RewardingSystemHelper
       # WARNING: instance_eval
       rules_collector.instance_eval(rules_buffer)
       interactions = Interaction.includes(:call_to_action).all
-      rules_collector.set_interaction_id_by_rules(interactions)
+      rules_collector.set_interaction_id_by_rules(interactions, self)
       rules_collector
     end
   end
@@ -347,7 +355,7 @@ module RewardingSystemHelper
   
       log_synced("assigning reward to user", { 
         'time' => total_time, 
-        'user_interaction' => user_interaction.id, 
+        'user_interaction' => user_interaction.mocked? ? nil : user_interaction.id, 
         'outcome_rewards' => outcome.reward_name_to_counter, 
         'outcome_unlocks' => outcome.unlocks.to_a })
 
@@ -362,7 +370,7 @@ module RewardingSystemHelper
     end
     outcome
   end
-  
+
   def clear_cache_reward_points(reward_name, user)
     expire_cache_key(get_reward_points_for_user_key(reward_name, user.id))
   end
@@ -414,6 +422,14 @@ module RewardingSystemHelper
     
     def is_answer_correct?
       @interaction_is_correct
+    end
+    
+    def there_is_no_interaction?
+      @interaction.nil?
+    end
+    
+    def mocked?
+      true
     end
   end
 

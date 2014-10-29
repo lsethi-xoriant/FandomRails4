@@ -10,7 +10,9 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
-  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction) {
+  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
+
+    $scope.aux = aux;
 
     $scope.video_players = {};
     $scope.video_player_during_video_interaction_locked = {};
@@ -156,6 +158,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         }
         $scope.calltoactions_during_video_interactions_second = hash_main;
 
+        $("#calltoaction-stream").append(data.html_to_append);
+
+        if($scope.calltoactions.length >= $scope.calltoactions_count) {
+          $("#append-other button").hide();
+        }
+
         updateSecondaryVideoPlayers(data.calltoactions);
 
         angular.forEach(data.calltoactions, function(calltoaction) {
@@ -164,12 +172,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         });
 
         $scope.last_calltoaction_shown_activated_at = $scope.calltoactions[$scope.calltoactions.length - 1].activated_at;
-
-        $("#calltoaction-stream").append(data.html_to_append);
-
-        if($scope.calltoactions.length >= $scope.calltoactions_count) {
-          $("#append-other button").hide();
-        }
 
         $("#append-other button").attr('disabled', false);
 
@@ -389,7 +391,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   	  //$("#waiting-registration-layer").removeClass("hidden");
   	  $("#fountainG").removeClass("hidden");
   	  
-      $http.post("/update_interaction", { interaction_id: interaction_id, params: params, main_reward_name: MAIN_REWARD_NAME })
+      $http.post("/update_interaction", { interaction_id: interaction_id, params: params, main_reward_name: MAIN_REWARD_NAME, aux: $scope.aux })
           .success(function(data) {
 			
             if(data.ga) {

@@ -25,7 +25,9 @@ class User < ActiveRecord::Base
   before_update :set_current_avatar
   before_create :default_values
 
-  has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, :default_url => "/assets/anon.png"
+  has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, 
+                    :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
+                    :default_url => "/assets/anon.png"
 
   validates_presence_of :first_name, if: Proc.new { |f| required_attr?("first_name") }
   validates_presence_of :last_name, if: Proc.new { |f| required_attr?("last_name") }

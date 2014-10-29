@@ -33,10 +33,18 @@ class Reward < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  has_attached_file :main_image, :styles => { :medium => "400x400#", :thumb => "100x100#" }, :default_url => ""
-  has_attached_file :preview_image, :styles => { :thumb => "100x100#" }, :default_url => ""
-  has_attached_file :not_awarded_image, :styles => { :thumb => "100x100#" }, :default_url => ""
-  has_attached_file :not_winnable_image, :styles => { :thumb => "100x100#" }, :default_url => ""
+  has_attached_file :main_image, :styles => { :medium => "400x400#", :thumb => "100x100#" }, 
+                    :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
+                    :default_url => ""
+  has_attached_file :preview_image, :styles => { :thumb => "100x100#", }, 
+                    :convert_options => { :thumb => '-quality 60' }, 
+                    :default_url => ""
+  has_attached_file :not_awarded_image, :styles => { :thumb => "100x100#", }, 
+                    :convert_options => { :thumb => '-quality 60' }, 
+                    :default_url => ""
+  has_attached_file :not_winnable_image, :styles => { :thumb => "100x100#", }, 
+                    :convert_options => { :thumb => '-quality 60' }, 
+                    :default_url => ""
   has_attached_file :media_file
 
   has_many :reward_tags
@@ -50,7 +58,7 @@ class Reward < ActiveRecord::Base
   def set_active_at
     if valid_from_date.present? && valid_from_time.present?
       # write_attribute :valid_from, Time.parse("#{valid_from_date} #{valid_from_time} Rome")
-      datetime_utc = parse_to_utc("#{valid_from_date} #{valid_from_time}")
+      datetime_utc = time_parsed_to_utc("#{valid_from_date} #{valid_from_time}")
       write_attribute :valid_from, "#{datetime_utc}"
       valid_from_date = nil
       valid_from_time = nil
@@ -60,7 +68,7 @@ class Reward < ActiveRecord::Base
   def set_expire_at
     if valid_to_date.present? && valid_to_time.present?
       #write_attribute :valid_to, Time.parse("#{valid_to_date} #{valid_to_time} Rome")
-      datetime_utc = parse_to_utc("#{valid_to_date} #{valid_to_time}")
+      datetime_utc = time_parsed_to_utc("#{valid_to_date} #{valid_to_time}")
       write_attribute :valid_to, "#{datetime_utc}"
       valid_to_date = nil
       valid_to_time = nil

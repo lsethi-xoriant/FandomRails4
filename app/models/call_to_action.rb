@@ -29,21 +29,24 @@ class CallToAction < ActiveRecord::Base
   
   has_attached_file :media_image,
     :processors => [:watermark],
-    :styles => lambda { |image| 
+    [:styles, :convert_options] => lambda { |image| 
         if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
-          {
+          [{
+            :original => "100%",
             :large => { :geometry => "600x600>", :watermark_path => image.instance.get_watermark }, 
             :extra => "260x150#", 
             :medium => "300x300#", 
             :thumb => "100x100#"
-          }
+          },
+          { :original => '-quality 60', :large => '-quality 60', :extra => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }]
         else
-         {} 
+         [{},{}]
         end
-    }, 
-    :default_url => "/assets/media-image-default.jpg"
+     },
+     :default_url => "/assets/media-image-default.jpg"
 
-  has_attached_file :thumbnail, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }
+  has_attached_file :thumbnail, :styles => { :original => "100%", :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }, 
+                    :convert_options => { :original => '-quality 60', :large => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }
 
   has_many :interactions, dependent: :destroy
   has_many :call_to_action_tags, dependent: :destroy
@@ -86,7 +89,7 @@ class CallToAction < ActiveRecord::Base
 
   def set_activated_at
     if self.activation_date.present? && self.activation_time.present?
-      datetime_utc = parse_to_utc("#{activation_date} #{activation_time}")
+      datetime_utc = time_parsed_to_utc("#{activation_date} #{activation_time}")
       write_attribute :activated_at, "#{datetime_utc}"
       activation_date = nil
       activation_time = nil

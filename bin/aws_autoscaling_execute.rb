@@ -32,7 +32,7 @@ EOF
         print "executing the command on #{user}@#{instance.dns_name}... "
         $stdout.flush
         
-        input, output, error_output, thread = Open3::popen3("ssh -t -oStrictHostKeyChecking=no #{user}@#{instance.dns_name} \"#{command}\"")
+        input, output, error_output, thread = Open3::popen3("ssh -tt -oStrictHostKeyChecking=no #{user}@#{instance.dns_name} \"#{command}\"")
         if thread.value.exitstatus == 0
           puts "ok.".green
         else

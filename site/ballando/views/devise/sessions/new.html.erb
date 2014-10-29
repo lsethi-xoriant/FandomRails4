@@ -19,8 +19,8 @@
               <p><a href="http://www.rai.tv/dl/RaiTV/MyRaiTV/iscrizione.html#PasswordRecovery" target="_blank">Hai dimenticato la Password?</a></p>
               <div class="form-group text-left">
                 <button type="submit" class="btn-2 btn-2-login">Login</button>
-			  </div>
-      		  <div class="checkbox text-left">
+			        </div>
+      		    <div class="checkbox text-left">
                 <label> <input type="checkbox" name="user[remember_me]" value="1" /> Ricordati di me</label>
               </div>
               <p>Non sei ancora registrato? <a href="/users/sign_up">REGISTRATI</a></p>
@@ -40,9 +40,10 @@
 	              </div>
 	              <div class="form-group text-left">
 	                <button class="btn-2 btn-2-tt" onclick="gigyaSocializeLogin('twitter')"><i class="fa fa-twitter"></i> | CONNECT</button>
-	                <!--<button type="button" class="btn btn-g btn-md btn-block">Signin with Google+</button>-->
+	                
 	              </div>
 	      		</div>
+	      	<!--<button type="button" class="btn btn-g btn-md btn-block">Signin with Google+</button>-->
 	      	</div>
 	      </div>
 	    </div>
@@ -75,27 +76,58 @@
 </div>
 
 <!--[if lt IE 10]>
-<script type="text/javascript">
-	$('[placeholder]').focus(function() {
-	  var input = $(this);
-	  if (input.val() == input.attr('placeholder')) {
-	    input.val('');
-	    input.removeClass('placeholder');
-	  }
-	}).blur(function() {
-	  var input = $(this);
-	  if (input.val() == '' || input.val() == input.attr('placeholder')) {
-	    input.addClass('placeholder');
-	    input.val(input.attr('placeholder'));
-	  }
-	}).blur();
-</script>
+  <script type="text/javascript">
+  	$('[placeholder]').focus(function() {
+  	  var input = $(this);
+  	  if (input.val() == input.attr('placeholder')) {
+  	    input.val('');
+  	    input.removeClass('placeholder');
+  	  }
+  	}).blur(function() {
+  	  var input = $(this);
+  	  if (input.val() == '' || input.val() == input.attr('placeholder')) {
+  	    input.addClass('placeholder');
+  	    input.val(input.attr('placeholder'));
+  	  }
+  	}).blur();
+  </script>
 <![endif]-->
 
 <script type="text/javascript">
 
   $(document).ready(function() {
     checkDocumentHeight("fandom-profile");
+    <% if @gigya_socialize_user %>
+      $("#waiting-registration-layer").removeClass("hidden");
+      loginSocialBallando(<%= raw(@gigya_socialize_user) %>);
+    <% end %>
   });
+
+  function loginSocialBallando(getUserInfoResult) {
+    $.ajax({
+      type: "POST",
+      url: "http://www.rai.tv/MyRaiTv/loginSocialBallando.do",
+      data: { userObject: JSON.stringify(getUserInfoResult) },
+      success: function(data) {
+        generateUserFromProvider(data);
+      }
+    });
+  }
+
+  function generateUserFromProvider(user) {
+    $.ajax({
+      type: "POST",
+      url: "/users/rai/sign_in_from_provider/create",
+      data: { user: user },
+      success: function(data) {
+        if(data.errors) {
+          $("#form-errors").html(data.errors);
+          $("#waiting-registration-layer").addClass("hidden");
+        } else {
+          window.top.location.href = data.connect_from_page;
+        }
+      }
+    });
+  }
 
 </script>

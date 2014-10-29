@@ -14,5 +14,8 @@ class UserInteraction < ActiveRecord::Base
     answer.nil? || answer.correct
   end
 
+  def mocked?
+    false
+  end
 end
 

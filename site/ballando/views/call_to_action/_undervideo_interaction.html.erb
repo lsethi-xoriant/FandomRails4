@@ -2,53 +2,50 @@
 
 <div id="undervideo-area-<%= interaction.id %>">
   <div id="undervideo-interaction-<%= interaction.id %>" class="row undervideo">
-
     <% if interaction.resource_type.downcase == "upload" %>
-      <%= render partial: "/call_to_action/#{interaction.resource_type.downcase}_interaction", locals: { interaction: interaction, outcome: outcome, cta_id: ctaid, interaction_reward_status: interaction_reward_status, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction } %>
+      <%= render partial: "/call_to_action/#{interaction.resource_type.downcase}_interaction", locals: { interaction: interaction, outcome: outcome, cta_id: ctaid, interaction_reward_status: interaction_reward_status, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux } %>
     <% elsif interaction.resource_type.downcase == "quiz" %>
         <div class="col-md-12">
-          <%= render partial: "/call_to_action/#{interaction.resource.quiz_type.downcase.to_sym}_interaction", locals: { interaction: interaction, user_interaction: get_user_interaction_from_interaction(interaction, current_or_anonymous_user), interaction_reward_status: interaction_reward_status, calltoaction_id: ctaid, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction } %>
+          <%= render partial: "/call_to_action/#{interaction.resource.quiz_type.downcase.to_sym}_interaction", locals: { interaction: interaction, user_interaction: get_user_interaction_from_interaction(interaction, current_or_anonymous_user), interaction_reward_status: interaction_reward_status, calltoaction_id: ctaid, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux } %>
         </div>
     <% else %>
-      <%= render partial: "/call_to_action/#{interaction.resource_type.downcase}_interaction", locals: { interaction: interaction, outcome: outcome, user_interaction: get_user_interaction_from_interaction(interaction, current_or_anonymous_user), interaction_reward_status: interaction_reward_status, calltoaction_id: ctaid, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction } %>   
+      <%= render partial: "/call_to_action/#{interaction.resource_type.downcase}_interaction", locals: { interaction: interaction, outcome: outcome, user_interaction: get_user_interaction_from_interaction(interaction, current_or_anonymous_user), interaction_reward_status: interaction_reward_status, calltoaction_id: ctaid, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux } %>   
     <% end %>
 	
-	<div id="waiting-registration-layer" class="hidden">
-	    <div class="spinner-waiting">
-	      <div class="spinner-container container1">
-	        <div class="circle1"></div>
-	        <div class="circle2"></div>
-	        <div class="circle3"></div>
-	        <div class="circle4"></div>
-	      </div>
-	      <div class="spinner-container container2">
-	        <div class="circle1"></div>
-	        <div class="circle2"></div>
-	        <div class="circle3"></div>
-	        <div class="circle4"></div>
-	      </div>
-	      <div class="spinner-container container3">
-	        <div class="circle1"></div>
-	        <div class="circle2"></div>
-	        <div class="circle3"></div>
-	        <div class="circle4"></div>
-	      </div>
-	    </div>
+  	<div id="waiting-registration-layer" class="hidden">
+      <div class="spinner-waiting">
+        <div class="spinner-container container1">
+          <div class="circle1"></div>
+          <div class="circle2"></div>
+          <div class="circle3"></div>
+          <div class="circle4"></div>
+        </div>
+        <div class="spinner-container container2">
+          <div class="circle1"></div>
+          <div class="circle2"></div>
+          <div class="circle3"></div>
+          <div class="circle4"></div>
+        </div>
+        <div class="spinner-container container3">
+          <div class="circle1"></div>
+          <div class="circle2"></div>
+          <div class="circle3"></div>
+          <div class="circle4"></div>
+        </div>
+      </div>
+  	</div>	
+    <div id="fountainG" class="hidden">
+  		<div id="fountainG_1" class="fountainG"></div>
+  		<div id="fountainG_2" class="fountainG"></div>
+  		<div id="fountainG_3" class="fountainG"></div>
+  		<div id="fountainG_4" class="fountainG"></div>
+  		<div id="fountainG_5" class="fountainG"></div>
+  		<div id="fountainG_6" class="fountainG"></div>
+  		<div id="fountainG_7" class="fountainG"></div>
+  		<div id="fountainG_8" class="fountainG"></div>
   	</div>
-  	
-  	<div id="fountainG" class="hidden">
-		<div id="fountainG_1" class="fountainG"></div>
-		<div id="fountainG_2" class="fountainG"></div>
-		<div id="fountainG_3" class="fountainG"></div>
-		<div id="fountainG_4" class="fountainG"></div>
-		<div id="fountainG_5" class="fountainG"></div>
-		<div id="fountainG_6" class="fountainG"></div>
-		<div id="fountainG_7" class="fountainG"></div>
-		<div id="fountainG_8" class="fountainG"></div>
-	</div>
 	
   </div>
-
   <% if outcome.present? %>
     <div id="undervideo-outcome-<%= interaction.id %>" class="row undervideo">
       <%= render partial: "/call_to_action/feedback_undervideo", locals: { interaction: interaction, outcome: outcome, interaction_reward_status: interaction_reward_status, user_interaction: get_user_interaction_from_interaction(interaction, current_or_anonymous_user) } %>

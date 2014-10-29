@@ -69,6 +69,8 @@ EOF
 
 cp etc/nginx.conf /etc/nginx/
 cp etc/nginx-default /etc/nginx/sites-available/default
+cp etc/nginx-courtesy_page /etc/nginx/sites-available/courtesy_page
+ln -s /etc/nginx/sites-available/courtesy_page /etc/nginx/sites-enabled
 service nginx restart
 
 #

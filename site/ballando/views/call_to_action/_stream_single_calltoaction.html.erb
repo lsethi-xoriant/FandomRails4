@@ -1,4 +1,5 @@
 <% shown_interactions = always_shown_interactions(calltoaction) %>
+
 <div class="row cta">      
   <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0">
     <div class="panel panel-default cta-page cta-stream panel-shadow" style="border: none;">
@@ -18,7 +19,7 @@
               <!-- LEFT COLUMN WITH IMAGE -->
               <%= render partial: "/call_to_action/stream_single_calltoaction_media", locals: { calltoaction: calltoaction, calltoaction_page: (active_calltoaction_id == calltoaction.id) } %>
               <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
-              <%= render partial: "/call_to_action/stream_single_calltoaction_interactions", locals: { calltoaction: calltoaction, shown_interactions: shown_interactions, calltoaction_active_interaction: calltoaction_active_interaction } %>
+              <%= render partial: "/call_to_action/stream_single_calltoaction_interactions", locals: { calltoaction: calltoaction, shown_interactions: shown_interactions, calltoaction_active_interaction: calltoaction_active_interaction, aux: aux } %>
             <% end %>
           </div>
         </div>   
