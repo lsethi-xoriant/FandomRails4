@@ -6,7 +6,7 @@ class Sites::Ballando::SessionsController < SessionsController
 
   def ballando_new
     if session[:gigya_socialize_redirect].present?
-      @gigya_socialize_user = sessions[:gigya_socialize_redirect]
+      @gigya_socialize_user = session[:gigya_socialize_redirect]
       session.delete(:gigya_socialize_redirect)
     end
 

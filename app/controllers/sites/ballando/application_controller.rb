@@ -2,6 +2,7 @@ class Sites::Ballando::ApplicationController < ApplicationController
   include CallToActionHelper
 
   def gigya_socialize_redirect
+    debugger
     session[:gigya_socialize_redirect] = params.to_json
     redirect_to Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"]
   end
