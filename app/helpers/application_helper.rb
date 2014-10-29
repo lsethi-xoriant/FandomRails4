@@ -546,6 +546,31 @@ module ApplicationHelper
     
     outcome
   end
+
+  # Assigns (or unlocks) rewards to an user based just on his/her other rewards, not on an interaction done
+  # This methods should be called when rules have been updated with new "context" rules (i.e. those assigning rewards
+  # based on other rewards or counters) 
+  def compute_save_and_notify_context_rewards(user)
+    user_interaction = MockedUserInteraction.new(nil, user, 1, false)
+    compute_save_and_notify_outcome(user_interaction)    
+  end
+
+  # this helper should be called in the main page: every 5 minutes checks if the user is entitle to win new rewards due to new context rules
+  # (i.e. rules depending on counters, not on interactions). To perform the check a timestamp is saved in session
+  def check_for_context_rewards
+    if user_signed_in?
+      if session.key?(:context_rewards_timestmap)
+        context_rewards_timestmap = Time.at(session[:context_rewards_timestmap])
+        now = Time.now
+        if now - context_rewards_timestmap > CONTEXT_REWARD_CHECK_SECONDS
+          compute_save_and_notify_context_rewards(current_user)
+          session[:context_rewards_timestmap] = now.to_i
+        end
+      else
+        session[:context_rewards_timestmap] = Time.now.to_i
+      end
+    end
+  end
   
   def days_in_month(month, year = Time.now.year)
    return 29 if month == 2 && Date.gregorian_leap?(year)
