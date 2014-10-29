@@ -155,6 +155,19 @@ class Easyadmin::EasyadminController < ApplicationController
 
   end
 
+  def index_reward_cta_unlocked
+
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+
+    @reward_cta_list = Reward.where("media_type ILIKE 'CallToAction'").page(page).per(per_page)
+
+    @page_size = @reward_cta_list.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+
+  end
+
   def published
   end
 
