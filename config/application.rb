@@ -152,10 +152,10 @@ module Fandom
     class LogSubscriber < ActiveSupport::LogSubscriber
       def process_action event
         unless event.payload[:view_runtime].nil? # warning: key?() can't be used because value can be nil
-          $active_record_time = event.payload[:view_runtime] / 1000.0
+          $db_time = event.payload[:db_runtime] / 1000.0
         end
         unless event.payload[:db_runtime].nil? # warning: key?() can't be used because value can be nil
-          $view_time = event.payload[:db_runtime] / 1000.0
+          $view_time = event.payload[:view_runtime] / 1000.0
         end
       end
     end
