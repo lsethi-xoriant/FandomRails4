@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
 
   before_save :set_date_of_birth
   before_update :set_current_avatar
+  before_create :default_values
 
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, 
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
@@ -181,6 +182,10 @@ class User < ActiveRecord::Base
     if avatar.present?
       self.avatar_selected_url = avatar.url(:thumb)
     end
+  end
+  
+  def default_values
+    self.avatar_selected_url ||= "/assets/anon.png"
   end
   
 end

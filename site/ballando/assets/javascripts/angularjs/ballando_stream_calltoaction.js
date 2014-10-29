@@ -36,34 +36,34 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   //////////////////////// SHARE WITH DEFAULT SOCIAL MODAL ////////////////////////
   
-  $window.doFbShare = function (){
-  	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + $scope.ctaShareId);
+  $window.doFbShare = function (ctaId, interactionId){
+  	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + ctaId);
   	url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + ctaUrl;
   	window.open(url);
 	
-	  $http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "facebook" })
+	  $http.post("/update_basic_share.json", { interaction_id: interactionId, provider: "facebook" })
       .success(function(data) {
         if(data.outcome.attributes.reward_name_to_counter.point == null){
       		afterShareAjaxWithoutPoint(data);
       	}else{
       		updateUserRewardInView(data.main_reward_counter.weekly);
-      		afterShareAjax(data);
+      		afterShareAjax(data,ctaId);
       	}
       });
 	};
 	
-  $window.doTwShare = function (){
-  	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + $scope.ctaShareId);
-  	url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + $scope.ctaShareTitle;
+  $window.doTwShare = function (ctaId, interactionId, calltoaction_title){
+  	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + ctaId);
+  	url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + calltoaction_title;
   	window.open(url);
   		
-  	$http.post("/update_basic_share.json", { interaction_id: $scope.interactionShareId, provider: "twitter" })
+  	$http.post("/update_basic_share.json", { interaction_id: interactionId, provider: "twitter" })
       .success(function(data) {
       	if(data.outcome.attributes.reward_name_to_counter.point == null) {
       		afterShareAjaxWithoutPoint(data);
       	} else {
       		updateUserRewardInView(data.main_reward_counter.weekly);
-      		afterShareAjax(data);
+      		afterShareAjax(data,ctaId);
       	}	
       });
   };
@@ -78,7 +78,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   //////////////////////// OTHER ////////////////////////
 
-  $window.afterShareAjax = function(data) {
+  $window.afterShareAjax = function(data, ctaId) {
     if(data.ga) {
       update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
       angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
@@ -86,13 +86,12 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       });
     }
     
-    $('#facebook-share-modal').modal('toggle');
-    positiontop = $('#facebook-share-modal').offset().top - 40;
+    positiontop = $('#bottom-feedback-share-'+ctaId).offset().top - 300;
     $('#facebook-share-modal-done').modal('show');
     $('#facebook-share-modal-done').css({ "top": positiontop + "px" });
 
-    $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
-    $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').removeClass("label-warning").addClass("label-success");
+    $('#bottom-feedback-share-' + ctaId + ' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
+    $('#bottom-feedback-share-' + ctaId + ' #feedback-label-share').removeClass("label-warning").addClass("label-success");
   };
   
   $window.afterShareAjaxWithoutPoint = function(data) {
@@ -103,8 +102,6 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       });
     }
     
-    $('#facebook-share-modal').modal('toggle');
-
     $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
     $('#bottom-feedback-share-' + $scope.ctaShareId + ' #feedback-label-share').removeClass("label-warning").addClass("label-success");
   };
