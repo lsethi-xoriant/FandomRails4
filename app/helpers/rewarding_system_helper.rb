@@ -250,10 +250,8 @@ module RewardingSystemHelper
     def initialize(counters)
       @counters = counters
     end
-    
-    def counters
-      @counters
-    end
+
+    attr_accessor :counters
   end
   
   # Extracts interesting data from the UserReward model. 
@@ -395,6 +393,10 @@ module RewardingSystemHelper
     def username
       "$MockedUser"
     end
+
+    def id
+      -1
+    end
   end
   MOCKED_USER = MockedUser.new
 
@@ -404,21 +406,12 @@ module RewardingSystemHelper
     def initialize(interaction, user, counter, interaction_is_correct)
       @interaction = interaction
       @user = user
+      @user_id = user.id
       @counter = counter
       @interaction_is_correct = interaction_is_correct
     end
     
-    def counter
-      @counter
-    end
-    
-    def interaction
-      @interaction
-    end
-    
-    def user
-      @user
-    end
+    attr_accessor :counter, :user_id, :user, :interaction
     
     def is_answer_correct?
       @interaction_is_correct

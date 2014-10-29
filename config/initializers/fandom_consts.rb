@@ -64,6 +64,4 @@ unless defined? FILTER_OPERATOR_CONTAINS
 
   CACHED_NIL = CachedNil.new
 
-  CONTEXT_REWARD_CHECK_SECONDS = 300
-  
 end

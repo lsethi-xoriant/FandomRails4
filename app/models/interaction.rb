@@ -46,7 +46,14 @@ class Interaction < ActiveRecord::Base
       resource.save # Per poter visualizzare gli errori.
       if resource.errors.any?
         resource.errors.each do |key, message|
-          errors.add("resource.#{key}", message)
+          case key.to_s
+          when 'question'
+            errors.add("- Domanda:", message)
+          when 'answers'
+            errors.add("- Risposta:", message)
+          else
+            errors.add("- resource.#{key}:", message)
+          end
         end
       end
     end

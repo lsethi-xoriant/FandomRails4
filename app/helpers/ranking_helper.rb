@@ -139,14 +139,18 @@ module RankingHelper
   end
   
   def prepare_trirank_list(rank_list, my_position)
-    if my_position == 1
-      off = my_position - 1
-    elsif my_position == rank_list.count
-      off = my_position - 3
+    if my_position
+      if my_position == 1
+        off = my_position - 1
+      elsif my_position == rank_list.count
+        off = my_position - 3
+      else
+        off = my_position - 2
+      end
+      rank_list.slice(off, 3)
     else
-      off = my_position - 2
+      []
     end
-    rank_list.slice(off, 3)
   end
   
   def compose_vote_ranking_info(rank_type, ranking, rank_list, total = 0, number_of_pages = 0)

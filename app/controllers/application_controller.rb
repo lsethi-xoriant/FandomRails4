@@ -56,7 +56,9 @@ class ApplicationController < ActionController::Base
   end
 
   def index
-    check_for_context_rewards
+    if user_signed_in?
+      compute_save_and_notify_context_rewards(current_user)
+    end
     
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
     check_redirect_into_iframe_calltoaction
