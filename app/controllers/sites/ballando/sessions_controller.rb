@@ -5,8 +5,9 @@ class Sites::Ballando::SessionsController < SessionsController
   include FandomPlayAuthHelper
 
   def ballando_new
-    if params["gig_events"].present?
-      @gigya_socialize_user = params.to_json
+    if session[:gigya_socialize_redirect].present?
+      @gigya_socialize_user = sessions[:gigya_socialize_redirect]
+      session.delete(:gigya_socialize_redirect)
     end
 
     render template: "/devise/sessions/new", locals: { resource: User.new }
