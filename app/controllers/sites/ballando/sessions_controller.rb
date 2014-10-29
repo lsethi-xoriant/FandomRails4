@@ -86,7 +86,7 @@ class Sites::Ballando::SessionsController < SessionsController
 
     if valid_response && rai_response_user["authMyRaiTv"] == "OK"
 
-      if !rai_response_user["email"].empty? 
+      if !rai_response_user["email"].nil? && !rai_response_user["email"].empty? 
         user_email = rai_response_user["email"]
       else
         user_email = "#{rai_response_user["UID"]}@FAKE___DOMAIN.com"
@@ -170,7 +170,7 @@ class Sites::Ballando::SessionsController < SessionsController
   def new_user_from_provider(response_user, user_email)
     password = Devise.friendly_token.first(8)
     
-    provider = response_user["user"]["loginProvider"]
+    provider = response_user["loginProvider"]
 
     User.create(
       username: response_user["UID"], 
