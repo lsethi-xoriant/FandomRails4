@@ -404,21 +404,12 @@ module RewardingSystemHelper
     def initialize(interaction, user, counter, interaction_is_correct)
       @interaction = interaction
       @user = user
+      @user_id = user.id
       @counter = counter
       @interaction_is_correct = interaction_is_correct
     end
     
-    def counter
-      @counter
-    end
-    
-    def interaction
-      @interaction
-    end
-    
-    def user
-      @user
-    end
+    attr_accessor :counter, :user_id, :user, :interaction
     
     def is_answer_correct?
       @interaction_is_correct
