@@ -56,6 +56,8 @@ class ApplicationController < ActionController::Base
   end
 
   def index
+    check_for_context_rewards
+    
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
     check_redirect_into_iframe_calltoaction
     check_redirect_into_iframe_page

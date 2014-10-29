@@ -379,6 +379,22 @@ module RewardingSystemHelper
     compute_and_save_outcome(user_interaction, rules_buffer)    
   end
 
+  # this helper should be called in the main page: every 5 minutes checks if the user is entitle to win new rewards due to new context rules
+  # (i.e. rules depending on counters, not on interactions). To perform the check a timestamp is saved in session
+  def check_for_context_rewards
+    if user_signed_in?
+      if session.key?(:context_rewards_timestmap)
+        context_rewards_timestmap = Time.at(session[:context_rewards_timestmap])
+        now = Time.now
+        if now - context_rewards_timestmap > CONTEXT_REWARD_CHECK_SECONDS
+          compute_and_save_context_rewards(current_user)
+          session[:context_rewards_timestmap] = now.to_i
+        end
+      else
+        session[:context_rewards_timestmap] = Time.now.to_i
+      end
+    end
+  end
   
   def clear_cache_reward_points(reward_name, user)
     expire_cache_key(get_reward_points_for_user_key(reward_name, user.id))
