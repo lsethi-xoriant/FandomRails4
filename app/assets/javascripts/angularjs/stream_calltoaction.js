@@ -10,7 +10,9 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
-  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction) {
+  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
+
+    $scope.aux = aux;
 
     $scope.video_players = {};
     $scope.video_player_during_video_interaction_locked = {};
@@ -389,7 +391,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   	  //$("#waiting-registration-layer").removeClass("hidden");
   	  $("#fountainG").removeClass("hidden");
   	  
-      $http.post("/update_interaction", { interaction_id: interaction_id, params: params, main_reward_name: MAIN_REWARD_NAME })
+      $http.post("/update_interaction", { interaction_id: interaction_id, params: params, main_reward_name: MAIN_REWARD_NAME, aux: $scope.aux })
           .success(function(data) {
 			
             if(data.ga) {

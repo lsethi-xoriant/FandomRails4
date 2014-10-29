@@ -52,11 +52,12 @@
     }, false);
 
     function gigyaSocializeLogin(provider) {
+      var current_window_location_origin = window.location.origin;
       $("#waiting-registration-layer").removeClass("hidden");
       gigya.socialize.login({
         provider: provider,
         authFlow: "redirect",
-        redirectURL: "http://www.stage.community.ballando.rai.it/users/sign_in",
+        redirectURL: current_window_location_origin + "/users/gigya_socialize_redirect",
       });
     }
 

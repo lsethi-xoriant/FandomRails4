@@ -5,8 +5,9 @@ class Sites::Ballando::SessionsController < SessionsController
   include FandomPlayAuthHelper
 
   def ballando_new
-    if params["gig_events"].present?
-      @gigya_socialize_user = params.to_json
+    if session[:gigya_socialize_redirect].present?
+      @gigya_socialize_user = session[:gigya_socialize_redirect]
+      session.delete(:gigya_socialize_redirect)
     end
 
     render template: "/devise/sessions/new", locals: { resource: User.new }
@@ -86,7 +87,7 @@ class Sites::Ballando::SessionsController < SessionsController
 
     if valid_response && rai_response_user["authMyRaiTv"] == "OK"
 
-      if !rai_response_user["email"].empty? 
+      if !rai_response_user["email"].nil? && !rai_response_user["email"].empty? 
         user_email = rai_response_user["email"]
       else
         user_email = "#{rai_response_user["UID"]}@FAKE___DOMAIN.com"
@@ -170,7 +171,7 @@ class Sites::Ballando::SessionsController < SessionsController
   def new_user_from_provider(response_user, user_email)
     password = Devise.friendly_token.first(8)
     
-    provider = response_user["user"]["loginProvider"]
+    provider = response_user["loginProvider"]
 
     User.create(
       username: response_user["UID"], 

@@ -17,7 +17,7 @@ Fandom::Application.routes.draw do
 
           match '/users/sign_in', :to => 'sessions#ballando_new', :as => 'user_sign_in'
 
-          match "/callback_gigya_socialize", :to => "application#callback_gigya_socialize"
+          match "/users/gigya_socialize_redirect", :to => "application#gigya_socialize_redirect"
 
           match "/custom_call_to_action/:id/next", :to => "custom_call_to_action#show_next_calltoaction"
           match "/custom_call_to_action/:id", :to => "custom_call_to_action#show"
@@ -149,6 +149,7 @@ Fandom::Application.routes.draw do
     match "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
     match "dashboard/update_activated_at", :to => "easyadmin#update_activated_at", defaults: { format: 'json' }
     match "most_clicked_interactions", :to => "easyadmin#index_most_clicked_interactions"
+    match "reward_cta_unlocked", :to => "easyadmin#index_reward_cta_unlocked"
     
     match "events", :to => "easyadmin_event_console#index"
     match "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }
