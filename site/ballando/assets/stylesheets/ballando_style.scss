@@ -60,14 +60,15 @@ p.oblique { font-style: oblique }
 
 .comment-section {
     .captcha-img {
-        width: 180px; 
-        height: 34px;
+        //width: 180px; 
+        //height: 34px;
+        width: 100%;
     }
     .title {
         margin-bottom: 15px;
     }
     .img-profile {
-        max-width: 80px;
+        //max-width: 80px;
         margin-left: auto;
     }
     .btn-2-small {
@@ -548,7 +549,7 @@ h1, h2, h3 {
 }
 
 .undervideo {
-    padding: 0 25px;
+    padding: 0 22px 0 25px; //padding: 0 25px;
     h2 {
         color: #000;
     }
