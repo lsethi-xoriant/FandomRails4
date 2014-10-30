@@ -87,7 +87,7 @@ class Sites::Ballando::SessionsController < SessionsController
     if valid_response && rai_response_user["authMyRaiTv"] == "OK"
 
       if rai_response_user["loginProvider"].downcase == "twitter" 
-        rai_response_user_uid = "twitter_#{rai_response_user["nickname"]}"
+        rai_response_user_uid = "twitter_#{rai_response_user["nickname"].downcase}"
       else
         rai_response_user_uid = rai_response_user["UID"]
       end
