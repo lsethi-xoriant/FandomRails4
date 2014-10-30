@@ -22,10 +22,12 @@
     <% if aux && aux[:show_calltoaction_page] %>
 
       <% if aux[:show_next_calltoaction_button] && (!aux[:shown_interactions_count] || aux[:shown_interactions_count] < 1) %>
-        <a class="btn-2 btn-2-small go-on" role="button" href="/custom_call_to_action/<%= interaction.call_to_action_id %>/next" style="margin-bottom: 15px; width: 50%;">GIOCA ANCORA</a>
+        <!-- NEXT CALLTOACTION -->
+        <a class="btn-2 btn-2-small btn-2-small-desktop go-on" role="button" href="/custom_call_to_action/<%= interaction.call_to_action_id %>/next" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
       <% end %>
 
-      <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn-2 btn-2-small go-on <%= "hidden" if !aux[:next_interaction_present] %>" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
+      <!-- NEXT INTERACTION -->
+      <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn-2 btn-2-small go-on <%= "hidden" if !aux[:next_interaction_present] %> <%= "btn-2-small-desktop" if aux[:show_next_calltoaction_button] %>" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
 
     <% else %>
 
