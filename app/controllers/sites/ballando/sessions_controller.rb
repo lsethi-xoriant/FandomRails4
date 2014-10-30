@@ -95,7 +95,7 @@ class Sites::Ballando::SessionsController < SessionsController
       if !rai_response_user["email"].nil? && !rai_response_user["email"].empty? 
         user_email = rai_response_user["email"]
       else
-        user_email = "#{rai_response_user["UID"]}@FAKE___DOMAIN.com"
+        user_email = "#{rai_response_user_uid}@FAKE___DOMAIN.com"
       end
       
       user = User.find_by_username(rai_response_user_uid)
