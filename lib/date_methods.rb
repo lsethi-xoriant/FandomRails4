@@ -5,7 +5,7 @@ module DateMethods
   end
 
   def datetime_parsed_to_utc(datetime)
-    DateTime.parse("#{datetime}").utc
+    datetime.utc
   end
 
 end
