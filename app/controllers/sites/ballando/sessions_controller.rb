@@ -77,7 +77,6 @@ class Sites::Ballando::SessionsController < SessionsController
 
   def ballando_create_from_provider
     response = Hash.new
-
     rai_response = params["user"]
 
     log_info("rai sign in from provider response", { 'response' => rai_response })

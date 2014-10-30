@@ -1,3 +1,4 @@
+
 class Sites::Ballando::ApplicationController < ApplicationController
   include CallToActionHelper
 
@@ -14,6 +15,12 @@ class Sites::Ballando::ApplicationController < ApplicationController
       cookies.delete(:connect_from_page)
       render text: "<html><body><script>window.top.location.href = \"#{connect_from_page}\";</script></body></html>"
     end
+  end
+
+  def redirect_top_with_cookie
+    cookies[:connect_from_page] = params[:connect_from_page]
+    profile_url = Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"]
+    render text: "<html><body><script>window.top.location.href = \"#{profile_url}\";</script></body></html>"
   end
 
   def redirect_into_joe_maska

@@ -8,10 +8,9 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   var COUNTDOWN_TIME = 3;
 
-  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url, profile_url, calltoactions_active_interaction, aux) {
+  $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url, calltoactions_active_interaction, aux) {
     $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux);
     $scope.request_url = request_url;
-    $scope.profile_url = profile_url;
     
     initInteractionsShowed(calltoactions_active_interaction);
 
@@ -28,8 +27,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.showRegistrateView = function() {
-    document.cookie = "connect_from_page = " + top.location + "; path=/";
-    top.location = $scope.profile_url;
+    window.location.href = "/redirect_top_with_cookie?connect_from_page=" + top.location; 
   };
 
   //////////////////////// SHARE WITH DEFAULT SOCIAL MODAL ////////////////////////
