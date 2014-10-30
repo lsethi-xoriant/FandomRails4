@@ -605,4 +605,27 @@ module ApplicationHelper
     end
   end
   
+  def get_cta_date(cta_date)
+    "#{cta_date.day} #{from_month_to_name(cta_date.month)}"
+  end
+  
+  def from_month_to_name(month)
+    MONTH_NAMES[month]
+  end
+  
+  def get_twitter_title_for_share(cta)
+    share_interaction = cta.interactions.find_by_resource_type("Share")
+    if share_interaction
+      share_resource = share_interaction.resource
+      share_info = JSON.parse(share_resource.providers)
+      if share_info['twitter']['message'].present?
+        share_info['twitter']['message']
+      else
+        cta.title
+      end
+    else
+      cta.title
+    end
+  end
+  
 end

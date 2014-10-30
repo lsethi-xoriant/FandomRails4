@@ -64,14 +64,13 @@ class ApplicationController < ActionController::Base
     check_redirect_into_iframe_calltoaction
     check_redirect_into_iframe_page
 
-    if params[:name]
-      @tag = Tag.find_by_name(params[:name])
-    end
-    
-    @calltoactions = cache_short("stream_ctas_init_calltoactions") do
-      if params[:name].nil? || params[:name] == "home_filter_all"
+    if params[:name].nil? || params[:name] == "home_filter_all"
+      @calltoactions = cache_short("stream_ctas_init_calltoactions") do
         CallToAction.active.limit(3).to_a
-      else
+      end
+    else
+      @tag = Tag.find_by_name(params[:name])
+      @calltoactions = cache_short("stream_ctas_init_calltoactions_#{params[:name]}") do
         CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", @tag.id).limit(3)
       end
     end

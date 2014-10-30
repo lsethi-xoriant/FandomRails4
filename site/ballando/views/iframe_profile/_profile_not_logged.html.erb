@@ -1,7 +1,10 @@
-  <div class="row" style="background-color: #ffba00;">
+  <div class="row bg-profile-frame">
 	<a href="javascript:void(0);" onclick="profilePageWithRedirectCookie();" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 10;"></a>
-    <div class="col-xs-3 col-xxs-12 text-left" style="padding: 5px 10px 0 10px;">
+    <div class="col-xs-3 hidden-xxs text-left" style="padding: 5px 10px 0 10px;">
       <img src="<%= asset_path("milly_circle.png") %>" class="img-responsive img-circle iframe-profile-avatar">
+    </div>
+    <div class="col-xxs-12 text-left visible-xxs" style="padding: 5px 10px 0 10px;">
+      <img src="<%= asset_path("anon.png") %>" class="img-responsive img-circle iframe-profile-avatar" style="margin-top: 20px;">
     </div>
 
     <div class="col-xs-6 hidden-xxs" style="padding-left: 0;">
