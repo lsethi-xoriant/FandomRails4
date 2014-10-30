@@ -58,6 +58,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
   
   USER_TIME_ZONE = "Rome"
   USER_TIME_ZONE_ABBREVIATION = "CET"
+  
+  MONTH_NAMES = ["", "gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"]
 
   class CachedNil
   end

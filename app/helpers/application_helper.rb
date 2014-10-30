@@ -605,4 +605,12 @@ module ApplicationHelper
     end
   end
   
+  def get_cta_date(cta_date)
+    "#{cta_date.day} #{from_month_to_name(cta_date.month)}"
+  end
+  
+  def from_month_to_name(month)
+    MONTH_NAMES[month]
+  end
+  
 end
