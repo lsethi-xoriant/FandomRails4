@@ -32,7 +32,8 @@ a.btn-2, a.btn-2:hover{
 }
 
 a.btn-2.btn-2-small {
-  line-height: 15px; min-height: 20px;
+  line-height: 15px; 
+  min-height: 20px;
 }
 
 /* SQUARE BUTTON */
@@ -317,7 +318,18 @@ fieldset[disabled] .btn-append.active {
   background-color: #000000; 
 }
 
-@media(max-width: 768px){
+/* WARNING: SYNC WITH BOOTSTRAP SIZE */
+@media(max-width: 768px) {
+
+  /* SMALL BUTTON IS BIG IN MOBILE */
+  .btn-2-small-desktop {
+    font-size: 18px !important;
+    min-height: 35px !important;
+    width: 50% !important;
+    line-height: 30px !important;
+    margin-left: -25px !important;
+  }
+
 	.btn-2-default:hover, 
 	.btn-2-versus:hover {
 		background-color: #969696 !important;

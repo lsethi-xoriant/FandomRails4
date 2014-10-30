@@ -11,7 +11,8 @@ class Sites::Ballando::CustomCallToActionController < ApplicationController
     @calltoactions_during_video_interactions_second, 
     @calltoactions_active_interaction, 
     @calltoactions_comment_interaction,
-    @aux = init_custom_calltoaction_view(@calltoactions)  
+    @aux,
+    @user_main_reward_count = init_custom_calltoaction_view(@calltoactions)  
 
     render template: "/custom_call_to_action/show"
   end
@@ -22,7 +23,8 @@ class Sites::Ballando::CustomCallToActionController < ApplicationController
     @calltoactions_during_video_interactions_second, 
     @calltoactions_active_interaction, 
     @calltoactions_comment_interaction,
-    @aux = init_custom_calltoaction_view(@calltoactions)  
+    @aux,
+    @user_main_reward_count = init_custom_calltoaction_view(@calltoactions)  
 
     render template: "/custom_call_to_action/show"
   end
@@ -35,7 +37,9 @@ class Sites::Ballando::CustomCallToActionController < ApplicationController
     aux = { show_next_calltoaction_button: true, show_calltoaction_page: true }
     calltoactions_active_interaction[calltoactions[0].id] = generate_next_interaction_response(calltoactions[0], nil, aux)
 
-    [calltoactions_during_video_interactions_second, calltoactions_active_interaction, calltoactions_comment_interaction, aux]
+    user_main_reward_count = current_user ? (get_counter_about_user_reward(MAIN_REWARD_NAME, true)["weekly"] || 0) : 0
+
+    [calltoactions_during_video_interactions_second, calltoactions_active_interaction, calltoactions_comment_interaction, aux, user_main_reward_count]
   end
   
 end

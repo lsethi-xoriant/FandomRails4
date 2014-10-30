@@ -2,4 +2,9 @@
 
 <script type="text/javascript">
   location.href = "/redirect_into_iframe_calltoaction/<%= @calltoaction.id %>";
+  <% if small_mobile_device? %>
+    //location.href = "/custom_call_to_action/<%= @calltoaction.id %>";
+  <% else %>
+    //location.href = "/redirect_into_iframe_calltoaction/<%= @calltoaction.id %>";
+  <% end %>
 </script>

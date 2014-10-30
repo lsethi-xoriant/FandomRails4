@@ -187,6 +187,7 @@ class Easyadmin::CallToActionController < ApplicationController
                                       :joins => "LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id
                                                  LEFT OUTER JOIN tags ON call_to_action_tags.tag_id = tags.id",
                                       :conditions => conditions,
+                                      :group => "call_to_actions.id",
                                       :order => "activated_at DESC",
                                       :limit => 10
                                       )

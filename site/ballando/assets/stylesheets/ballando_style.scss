@@ -1,11 +1,30 @@
 $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
-$navbar-default-link-hover-bg: #eee;
 
-// Inverted navbar
-// Reset inverted navbar basics
-$navbar-default-bg: #fff !default;
+// Navbar
+$navbar-default-color:                      #ccc !default;
+$navbar-default-bg:                         #222 !default;
+$navbar-default-border:                     darken($navbar-default-bg, 10%) !default;
+
+// Inverted navbar links
+$navbar-default-link-color:                 #ccc !default;
+$navbar-default-link-hover-color:           #fff !default;
+$navbar-default-link-hover-bg:              #999 !default;
+$navbar-default-link-active-color:          $navbar-default-link-hover-color !default;
+$navbar-default-link-active-bg:             darken($navbar-default-bg, 10%) !default;
+$navbar-default-link-disabled-color:        #444 !default;
+$navbar-default-link-disabled-bg:           transparent !default;
+
+// Inverted navbar brand label
+$navbar-default-brand-color:                $navbar-default-link-color !default;
+$navbar-default-brand-hover-color:          #42C5ED !default;
+$navbar-default-brand-hover-bg:             transparent !default;
+
+// Inverted navbar toggle
+$navbar-default-toggle-hover-bg:            darken($navbar-default-bg, 10%) !default;
+$navbar-default-toggle-icon-bar-bg:         #ccc !default;
+$navbar-default-toggle-border-color:        #ccc !default;
 
 @import "bootstrap/bootstrap";
 
@@ -17,9 +36,14 @@ $navbar-default-bg: #fff !default;
     display: block;
 }
 
+.alternative-description {
+    padding: 90px 20px 0 20px;
+}
+
 p.oblique { font-style: oblique } 
 
 .custom-calltoaction {
+    padding-top: 50px;
     background-color: #18274b;
     background-image: url("/assets/ballando_bg.jpg");
 }
@@ -40,14 +64,15 @@ p.oblique { font-style: oblique }
 
 .comment-section {
     .captcha-img {
-        width: 180px; 
-        height: 34px;
+        //width: 180px; 
+        //height: 34px;
+        width: 100%;
     }
     .title {
         margin-bottom: 15px;
     }
     .img-profile {
-        max-width: 80px;
+        //max-width: 80px;
         margin-left: auto;
     }
     .btn-2-small {
@@ -528,7 +553,7 @@ h1, h2, h3 {
 }
 
 .undervideo {
-    padding: 0 25px;
+    padding: 0 22px 0 25px; //padding: 0 25px;
     h2 {
         color: #000;
     }
@@ -871,23 +896,17 @@ span.notify {
     margin: 0;
 }
 
-// NAV 
-.navbar-nav > li.play > a{
-    background: #d9534f;
-    color: #fff;
+.navbar-nav > li.play > a:hover, .navbar-nav > li.play > a:visited {
+    background: darken(#d9534f, 20%) !important;
 }
-.navbar-nav > li.play > a:hover{
-    background: darken(#d9534f, 20%);
-}
-.navbar-nav > li.play-2 > a {
+.navbar-nav > li.play-2 > a, .play-2, .navbar-brand.play-2:hover, .navbar-brand.play-2:focus {
     background: #f0ad4e;
-    color: #fff;
-    text-transform: uppercase;
+    color: #fff !important;
+    //text-transform: uppercase;
 }
 
-.navbar-nav > li.play-2 > a:hover{
-    background: darken(#f0ad4e, 10%);
-    color: #fff;
+.play-2  > a {
+    background: #f0ad4e !important;
 }
 
 .navbar-fixed-top {
@@ -1705,6 +1724,10 @@ body {
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
 
+    .alternative-description {
+        padding: 20px 20px 0 20px;
+    }
+
     .comment-section {
         .img-profile {
             max-width: 100%;
@@ -1860,9 +1883,11 @@ body {
         margin-right: -14px;
     }
     
-    .row.cta{
+    /*
+    .row.cta {
       margin-right: -10px;
     }
+    */
 }
 
 @media (min-width: $screen-sm-min) {
