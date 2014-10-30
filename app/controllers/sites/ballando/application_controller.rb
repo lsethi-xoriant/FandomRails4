@@ -29,7 +29,7 @@ class Sites::Ballando::ApplicationController < ApplicationController
     render text: "<html><body><script>window.top.location.href = \"#{profile_url}\";</script></body></html>"
   end
 
-  def redirect_into_joe_maska
+  def redirect_into_special_guest
     cookies["redirect_to_page"] = "/upload_interaction/new"
     redirect_to Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["stream_url"]
   end
