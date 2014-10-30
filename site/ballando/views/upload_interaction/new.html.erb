@@ -114,13 +114,11 @@
 			$(".confirm-step.upload-title").html('<i class="fa fa-check" style="font-size: 20px; color: #FFF;"></i>');
 		}else{
 			$(".confirm-step.upload-title").html('');
-		}
-		
+		}	
 	}
 	
 	function goToLogin(){
-		document.cookie = "connect_from_page = " + top.location;
-    	top.location = "<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>";
+		window.location.href = "/redirect_top_with_cookie?connect_from_page=" + top.location; 
 	}
 	
 	function startLoader(){
@@ -131,5 +129,4 @@
 	$(document).ready(function() {
 	    checkDocumentHeight("fandom");
 	});
-	
 </script>

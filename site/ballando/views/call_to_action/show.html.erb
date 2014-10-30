@@ -1,5 +1,5 @@
  
-<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions_with_current.to_json %>, <%= get_cta_active_count() %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', <%= @calltoactions_with_current.first.id %>, '<%= "#{request.protocol}#{request.host}/" %>', '<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>', <%= @calltoactions_active_interaction.to_json %>, <%= @aux.to_json %>)">   
+<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions_with_current.to_json %>, <%= get_cta_active_count() %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', <%= @calltoactions_with_current.first.id %>, '<%= "#{request.protocol}#{request.host}/" %>', <%= @calltoactions_active_interaction.to_json %>, <%= @aux.to_json %>)">   
 
   <div class="row">
     <div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0" style="margin-top: 15px;">

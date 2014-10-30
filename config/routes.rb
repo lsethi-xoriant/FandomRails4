@@ -15,6 +15,8 @@ Fandom::Application.routes.draw do
       scope module: "sites" do
         scope module: "ballando" do
 
+          match "/redirect_top_with_cookie", :to => "application#redirect_top_with_cookie"
+
           match '/users/sign_in', :to => 'sessions#ballando_new', :as => 'user_sign_in'
 
           match "/users/gigya_socialize_redirect", :to => "application#gigya_socialize_redirect"

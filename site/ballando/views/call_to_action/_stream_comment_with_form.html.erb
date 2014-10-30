@@ -13,17 +13,17 @@
   </div>
 
   <div class="row">
-    <div class="col-xs-2 text-center">
+
+    <div class="col-xs-2 col-sm-1" style="padding-right: 0; width: 40px;">
       <img src="<%= current_avatar %>" class="img-circle img-responsive img-profile">
     </div>
 
-    <div class="col-xs-10">
+    <div class="col-xs-10 col-sm-11">
       <div class="panel panel-default insert-comment">
         <!-- PANEL BODY FOR INPUT COMMENT -->
         <div class="panel-body">
-          <%= text_area_tag :text, nil, rows: 2, id: "user-comment-#{comment_interaction.id}", class: "form-control" %>
+          <%= text_area_tag :text, nil, rows: 1, id: "user-comment-#{comment_interaction.id}", class: "form-control" %>
         </div>
-
         <!-- PANEL FOOTER FOR INPUT COMMENT -->
         <div class="panel-footer">
           <div class="row">
@@ -31,10 +31,10 @@
               <% unless current_user %>
                 <div class="row">               
                   <div class="col-sm-6">
-                    <img src="" id="captcha-img-<%= comment_interaction.id %>" class="captcha-img">
+                    <img src="" id="captcha-img-<%= comment_interaction.id %>" class="captcha-img img-responsive">
                   </div>              
                   <div class="col-sm-6">
-                    <%= text_field_tag :code, "", id: "user-captcha-#{comment_interaction.id}", placeholder: "captcha", class: "form-control" %>
+                    <%= text_field_tag :code, "", id: "user-captcha-#{comment_interaction.id}", placeholder: "captcha", class: "form-control", style: "font-size: 12px; height: 27px;" %>
                   </div>
                 </div>
               <% end %>              

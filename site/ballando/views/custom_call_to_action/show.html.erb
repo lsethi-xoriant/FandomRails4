@@ -1,10 +1,11 @@
 <% content_for :body_class, "custom-calltoaction" %>
 
-<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions.to_json %>, <%= get_cta_active_count() %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', <%= @calltoactions[0].id %>, '<%= "#{request.protocol}#{request.host}/" %>', '<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>', <%= @calltoactions_active_interaction.to_json %>, <%= @aux.to_json %>)">   
+<%= render partial: "/application/user_bar" %>
 
+<div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions.to_json %>, <%= get_cta_active_count() %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', <%= @calltoactions[0].id %>, '<%= "#{request.protocol}#{request.host}/" %>', <%= @calltoactions_active_interaction.to_json %>, <%= @aux.to_json %>)">   
   <div class="row text-center" style="margin-top: 15px;">
-    <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12">
-      <img src="<%= asset_path("ballando_logo.png") %>">
+    <div id="calltoaction-stream" class="col-xs-6 col-xs-offset-3 col-md-12 col-md-offset-0">
+      <img src="<%= asset_path("ballando_logo.png") %>" style="width: 100%; max-width: 245px;">
     </div>
   </div>
 
