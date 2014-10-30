@@ -54,7 +54,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 	
   $window.doTwShare = function (ctaId, interactionId, calltoaction_title){
   	ctaUrl = encodeURI($scope.request_url + "facebook_share_page_with_meta/" + ctaId);
-  	url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + calltoaction_title;
+  	url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + encodeURIComponent(calltoaction_title);
   	window.open(url);
   		
   	$http.post("/update_basic_share.json", { interaction_id: interactionId, provider: "twitter" })
