@@ -12,7 +12,7 @@
           </a>
         <% else %>
           <!-- IMAGE ACTIVE -->
-          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
+          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if current_user && user_answer %>" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
             <img src="<%= answer.image(:medium) %>">
           </a>
         <% end %>
@@ -28,11 +28,11 @@
 
         <!-- BALOON -->
         <div class="no-pad interaction-baloon" style="width: 30px; position: absolute; width: 30px; right: -30px; bottom: -40px;">
-          <div class="baloon baloon-top <%= "unchosen square" unless user_answer %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer %>" style="width: 100%; border-radius: 3px;"></div>
+          <div class="baloon baloon-top <%= "unchosen square" unless user_answer && current_user %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer && current_user %>" style="width: 100%; border-radius: 3px;"></div>
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -46px;">
-          <h5 style="font-size: 22px; font-weight: bold;"><%= "#{percent} %" if percent && user_interaction %></h5>
+          <h5 style="font-size: 22px; font-weight: bold;"><%= "#{percent} %" if percent && current_user && user_interaction %></h5>
         </div>
 
       </div>
@@ -49,7 +49,7 @@
           </button>
         <% else %>
           <!-- BUTTON ACTIVE -->
-          <button href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %> btn-2 btn-2-versus <%= "btn-2-versus-orange" if user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
+          <button href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %> btn-2 btn-2-versus <%= "btn-2-versus-orange" if user_answer && current_user %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
             <%= answer.text %>
           </button>
         <% end %>
@@ -69,7 +69,7 @@
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -46px;">
-          <h5 style="font-size: 22px; font-weight: bold;"><%= percent if percent && user_interaction %>%</h5>
+          <h5 style="font-size: 22px; font-weight: bold;"><%= percent if percent && current_user && user_interaction %>%</h5>
         </div>
 
       </div>

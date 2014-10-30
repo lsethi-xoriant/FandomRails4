@@ -1,4 +1,4 @@
-<% if user_interaction %>
+<% if current_user && user_interaction %>
   <!-- CURRENT USER HAS ALREADY RESPONDED -->
   <% if interaction.resource.one_shot %>
     <div id="answer-<%= answer.id %>" class="col-xs-12 answer-interaction-<%= interaction.id %>">

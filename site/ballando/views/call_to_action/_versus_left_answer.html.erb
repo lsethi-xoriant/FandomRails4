@@ -10,14 +10,14 @@
       </div>
 
       <div style="width: 80%; float: right; position: relative;">
-        <% if interaction.resource.one_shot && user_interaction %>
+        <% if interaction.resource.one_shot && current_user && user_interaction %>
           <!-- IMAGE INACTIVE -->
           <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="button-inter-<%= interaction.id %> thumbnail">
             <img src="<%= answer.image(:medium) %>">
           </a>
         <% else %>
           <!-- IMAGE ACTIVE -->
-          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
+          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer && current_user %>" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
             <img src="<%= answer.image(:medium) %>">
           </a>
         <% end %>
@@ -33,11 +33,11 @@
 
         <!-- BALOON -->
         <div class="no-pad interaction-baloon" style="width: 30px; position: absolute; width: 30px; left: -30px; bottom: -40px;">
-          <div class="baloon baloon-top <%= "unchosen square" unless user_answer %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer %>" style="width: 30px; height: 30px; border-radius: 3px;"></div>
+          <div class="baloon baloon-top <%= "unchosen square" unless user_answer && current_user %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer %>" style="width: 30px; height: 30px; border-radius: 3px;"></div>
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -46px;">
-          <h5 style="font-size: 22px; font-weight: bold;"><%= "#{percent} %" if percent && user_interaction %></h5>
+          <h5 style="font-size: 22px; font-weight: bold;"><%= "#{percent} %" if percent && current_user && user_interaction %></h5>
         </div>
 
       </div>
@@ -53,7 +53,7 @@
       </div>
 
       <div style="width: 80%; float: right; position: relative; padding-top: 4px;">
-        <% if interaction.resource.one_shot && user_interaction %>
+        <% if interaction.resource.one_shot && current_user && user_interaction %>
           <!-- BUTTON INACTIVE -->
           <button href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %> btn-2 btn-2-versus <%= user_answer ? "btn-2-versus-orange active" : "inactive" %>">
             <%= answer.text %>
@@ -76,11 +76,11 @@
 
         <!-- BALOON -->
         <div class="no-pad interaction-baloon" style="width: 30px; position: absolute; width: 30px; left: -30px; bottom: -40px;">
-          <div class="baloon baloon-top <%= "unchosen square" unless user_answer %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer %>" style="width: 100%; border-radius: 3px;"></div>
+          <div class="baloon baloon-top <%= "unchosen square" unless user_answer && current_user %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer && current_user %>" style="width: 100%; border-radius: 3px;"></div>
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -46px;">
-          <h5 style="font-size: 22px; font-weight: bold;"><%= percent if percent && user_interaction %>%</h5>
+          <h5 style="font-size: 22px; font-weight: bold;"><%= percent if percent && current_user && user_interaction %>%</h5>
         </div>
 
       </div>
