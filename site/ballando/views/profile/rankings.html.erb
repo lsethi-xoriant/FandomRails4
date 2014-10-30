@@ -1,5 +1,3 @@
-<%= render partial: "/application/user_bar" %>
-
 <div class="container-fluid profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(get_ranking_settings).to_json %>, <%= current_user.to_json %>);">
 
 

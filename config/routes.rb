@@ -44,7 +44,7 @@ Fandom::Application.routes.draw do
           match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
           match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
           
-          match "/joe_maska", :to => "application#redirect_into_joe_maska"
+          match "/special_guest", :to => "application#redirect_into_special_guest"
         end
       end
     end

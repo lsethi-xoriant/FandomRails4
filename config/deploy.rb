@@ -68,7 +68,7 @@ namespace :deploy do
   
   desc 'Restart application'
   task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
+    on roles(:app), in: :sequence, wait: 0 do
       puts "restarting unicorn..."
       #execute :touch, release_path.join('tmp/restart.txt') # this only works with phusion passenger
       execute "/etc/init.d/railsweb restart"

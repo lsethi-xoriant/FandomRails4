@@ -1,116 +1,15 @@
 <div class="container-fluid">
-
   <div class="row">
     <div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
-      <% tag_menu = get_tags_with_tag("menu") %>
-      <% if tag_menu.any? %>
-        <div class=" row menu-area">
-          <div class="container-menu" style="background-color: rgba(0, 0, 0, 0.6); float: left; width: 100%; padding: 10px 0 0 0;">
-            <div class="submenu">
-                  <div class="col-xs-12 filter-menu-tag">
-                    <div class="flexslider">
-                      <ul class="slides filter-home-menu">
-                        <%                
-                        all_filter = tag_menu.detect{ |tm| tm.name == "home_filter_all" }
-                        tag_menu.delete(all_filter)
-                        tag_menu.unshift(all_filter) 
-                        %>
-                        
-                        <% tag_menu.each do |tag| %>
-                          <li>
-                              <div class="slide slide-<%= tag.id %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
-                                  <div class="comment-center">
-                                      <a href="/tag/<%= tag.name %>">
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
-                                </div>
-                              </div>
-                            </a>
-                                  </div>
-                              </div>
-                          </li>
-                        <% end %>
-                        <li>
-                              <div class="slide slide-upload active" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= asset_path('joe-maska_thumb.jpg') %>');">
-                                  <div class="comment-center">
-                                      <a href="/upload_interaction/new">
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <h2>JOE MASKA</h2>
-                                </div>
-                              </div>
-                            </a>
-                                  </div>
-                              </div>
-                              <div class="triangle"></div>
-                          </li>
-                       </ul>
-                    </div>
-                  </div>
-          
-            </div>
-          </div>
-          
-        </div>
-
-      <% end %>
+      <%= render partial: "/application/home_filters", locals: { single_cta: true } %>
     </div>
   </div>
-  
   <div class="row">
-    
     <div class="col-sm-12 text-center" style="margin-top: 15px; margin-bottom: 15px;">
       <h3 style="color: #fff;">Il file caricato è superiore ai 40 Mb consentiti</h3>
     </div>
-
     <div class="col-sm-2 col-sm-offset-5">
       <button class="btn-2" onclick="window.history.back();">RIPROVA</button>
     </div>
-    
-  </div>
-  
+  </div>  
 </div>
-
-<script type="text/javascript">
-  $(document).ready(function() {
-      $('.filter-menu-tag .flexslider').flexslider({
-          animation: "slide",
-          controlNav: false,
-          directionNav: true,
-          slideshow: false,
-          itemWidth: getItemSize(),
-          itemMargin: 10,
-          minItems: 1,
-          maxItems: 6
-      });
-      
-      $(window).resize(function() {
-  
-          $('.filter-menu-tag .flexslider').flexslider({
-              animation: "slide",
-              directionNav: true,
-              prevText: "",
-              nextText: "",
-              slideshow: false,
-              itemWidth: getItemSize(),
-              itemMargin: 20,
-              minItems: getGridSize(),
-              move: getGridSize()
-          });
-          $('.filter-menu-tag .flexslider .slides li').css('width', getItemSize()+'px');
-    });
-    
-  });
-
-  function getGridSize() {
-      if ($(window).innerWidth() < 760)
-          return 2;
-      else
-          return 6;
-  }
-  
-  function getItemSize() {
-    return ($(".flexslider").innerWidth() / getGridSize()) - 10;
-  }
-</script>

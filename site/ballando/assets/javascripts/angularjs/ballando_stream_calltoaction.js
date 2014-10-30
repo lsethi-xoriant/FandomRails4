@@ -27,7 +27,11 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.showRegistrateView = function() {
-    window.location.href = "/redirect_top_with_cookie?connect_from_page=" + top.location; 
+    redirect_top_with_cookie = "/redirect_top_with_cookie?connect_from_page=" + top.location;
+    if($scope.current_calltoaction) {
+      redirect_top_with_cookie += "&calltoaction_id=" + $scope.current_calltoaction;  
+    }
+    window.location.href = redirect_top_with_cookie;
   };
 
   //////////////////////// SHARE WITH DEFAULT SOCIAL MODAL ////////////////////////

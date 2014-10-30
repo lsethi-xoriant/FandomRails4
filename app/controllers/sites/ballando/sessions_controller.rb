@@ -86,33 +86,39 @@ class Sites::Ballando::SessionsController < SessionsController
 
     if valid_response && rai_response_user["authMyRaiTv"] == "OK"
 
+      if rai_response_user["loginProvider"].downcase == "twitter" 
+        rai_response_user_uid = "twitter_#{rai_response_user["nickname"].downcase}"
+      else
+        rai_response_user_uid = rai_response_user["UID"]
+      end
+
       if !rai_response_user["email"].nil? && !rai_response_user["email"].empty? 
         user_email = rai_response_user["email"]
       else
-        user_email = "#{rai_response_user["UID"]}@FAKE___DOMAIN.com"
+        user_email = "#{rai_response_user_uid}@FAKE___DOMAIN.com"
       end
       
-      user = User.find_by_username(rai_response_user["UID"])
+      user = User.find_by_username(rai_response_user_uid)
       unless user
         user = User.find_by_email(user_email)
         if user
-          user.username = rai_response_user["UID"]
+          user.username = rai_response_user_uid
         end
       end
 
       new_user = false
       if user && user.email.include?("@FAKE___DOMAIN.com")
-        user.update_attributes(:email => user_email, :avatar_selected_url => rai_response_user["thumbnailURL"])
+        user.update_attributes(email: user_email, avatar_selected_url: rai_response_user["thumbnailURL"])
       elsif user.nil?  
-        user = new_user_from_provider(rai_response_user, user_email)
+        user = new_user_from_provider(rai_response_user, user_email, rai_response_user_uid)
         new_user = true
       end
 
       authentication = user.authentications.find_by_provider(rai_response_user["loginProvider"])
       if authentication
-        authentication.update_attributes(authentication_attributes_from_provider(rai_response_user))
+        authentication.update_attributes(authentication_attributes_from_provider(rai_response_user, rai_response_user_uid))
       else
-        user.authentications.build(authentication_attributes_from_provider(rai_response_user))
+        user.authentications.build(authentication_attributes_from_provider(rai_response_user, rai_response_user_uid))
       end
 
       if user.errors.blank?
@@ -158,22 +164,22 @@ class Sites::Ballando::SessionsController < SessionsController
     fandom_play_login(user)
   end  
 
-  def authentication_attributes_from_provider(response_user)
+  def authentication_attributes_from_provider(response_user, rai_response_user_uid)
     {
-      uid: response_user["UID"],
+      uid: rai_response_user_uid,
       provider: response_user["loginProvider"],
       avatar: response_user["thumbnailURL"],
       aux: response_user.to_json
     }
   end
 
-  def new_user_from_provider(response_user, user_email)
+  def new_user_from_provider(response_user, user_email, rai_response_user_uid)
     password = Devise.friendly_token.first(8)
     
     provider = response_user["loginProvider"]
 
     User.create(
-      username: response_user["UID"], 
+      username: rai_response_user_uid, 
       email: user_email, 
       first_name: response_user["firstName"], 
       last_name: response_user["lastName"],
