@@ -84,6 +84,12 @@ class ProfileController < ApplicationController
     # TODO: adjust.
   end
   
+  def superfan_contest
+    contest_points = get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD)
+    @points_to_achieve = contest_points.nil? ? 200 : SUPERFAN_CONTEST_POINTS_TO_WIN - contest_points
+    @already_win = @points_to_achieve <= 0
+  end
+  
   def notices
     Notice.mark_all_as_viewed()
     notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC")

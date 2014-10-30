@@ -1,0 +1,36 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container-fluid profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(get_ranking_settings).to_json %>, <%= current_user.to_json %>);">
+
+
+	<%= render partial: "profile/profile_header" %>
+	<%= render partial: "profile/profile_navbar", locals: { page: "superfan" } %>
+	<div class="row">
+		<div class="col-xs-12">
+			<img src="<%= asset_path('vinci.jpg') %>" class="img-responsive" />
+		</div>
+		<div class="col-xs-8 col-xs-offset-2" style="background-color: #fff; margin-top: -55px; margin-bottom: 20px;">
+			<% if @already_win %>
+				<p class="text-center" style="color: #000; font-size: 20px; padding: 20px; margin: 0;"><span style="color: green; font-size: 25px;" class="glyphicon glyphicon-ok-sign"></span> Complimenti stai partecipando al concorso!</p>
+			<% else %>
+				<p class="text-center" style="color: #000; font-size: 20px; padding: 20px; margin: 0;">Ti mancano <span class="label-warning" style="padding: 10px; font-size: 20px; font-weight: bold;">- <%= @points_to_achieve %> <span class="glyphicon glyphicon-star"></span></span> punti per partecipare</p>
+			<% end %>
+		</div>
+		<div class="col-xs-8 col-xs-offset-2">
+			<h4 class="text-center" style="line-height: 22px;">Guadagna 200 pt interagendo con i contenuti della Community
+			pubblicati dal 31/10/2014 al 28/11/2014 per partecipare all’estrazione di 
+			uno dei 3 biglietti per accedere alle prove della puntata finale 
+			di Ballando con le Stelle</h4>
+			<h5 class="text-center">I vincitori verranno comunicati sul sito ufficiale il giorno 1/12/2014.</h5>
+			<p class="text-center"><a href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/regolamento.pdf" target="_blank" style="font-size: 16px; color: #fff; text-decoration: underline;">Scopri il regolamento</a></p>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    checkDocumentHeight("fandom-profile");
+  });
+
+</script>

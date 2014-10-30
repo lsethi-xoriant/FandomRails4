@@ -74,6 +74,8 @@ Fandom::Application.routes.draw do
   match "/ranking/page", :to => "ranking#get_rank_page"
   
   match "/healthcheck", :to => "health_check#health_check"
+  
+  match "/profile/superfan_contest", :to => "profile#superfan_contest"
 
   namespace :easyadmin do
     match "/", :to => "easyadmin#dashboard"

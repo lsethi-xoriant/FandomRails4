@@ -60,7 +60,10 @@ unless defined? FILTER_OPERATOR_CONTAINS
   USER_TIME_ZONE_ABBREVIATION = "CET"
   
   MONTH_NAMES = ["", "gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"]
-
+  
+  SUPERFAN_CONTEST_REWARD = "contest-point"
+  SUPERFAN_CONTEST_POINTS_TO_WIN = 200
+  
   class CachedNil
   end
 
