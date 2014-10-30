@@ -1964,8 +1964,12 @@ body {
     margin-top: 10px;
 }
 
-.visible-xsm {
+.visible-xsm, .visible-xxs {
     display: none;
+}
+
+.bg-profile-frame{
+  background-color: #ffba00;
 }
 
 /* TINY WIDGET FOR CAROUSEL */
@@ -2004,11 +2008,17 @@ body {
     .hidden-xxs {
         display: none;
     }
+    .visible-xxs{
+      display: block;
+    }
     .col-xxs-12 {
         width: 100%;
     }
 
     .iframe-notice-baloon {
+    }
+    .bg-profile-frame{
+      background-color: transparent;
     }
 }
 
