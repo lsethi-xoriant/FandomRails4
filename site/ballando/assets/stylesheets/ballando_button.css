@@ -2,7 +2,7 @@
 
 /* DEFAULT HOME PAGE */
 
-a.btn-2, a.btn-2:hover{
+a.btn-2, a.btn-2:hover {
   text-decoration: none !important;
   color: #fff !important;
   line-height: 30px;
@@ -29,6 +29,17 @@ a.btn-2, a.btn-2:hover{
   font-size: 10px;
   min-height: 0;
   width: 50%;
+}
+
+.btn-2.btn-2-small.btn-2-block {
+  width: 100%;
+}
+
+.btn-2-versus-text {
+  margin-bottom: 15px;
+  min-height: 35px !important;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 a.btn-2.btn-2-small {
@@ -90,6 +101,11 @@ a.btn-2.btn-2-small {
   min-height: 30px;
   font-weight: normal;
   margin-bottom: 10px;
+}
+
+.btn-2.btn-2-small.active {
+  top: 3px;
+  box-shadow: 0 0 0 #9C1A06;
 }
 
 .btn-2.btn-2-default.active {
