@@ -7,18 +7,18 @@
       <div style="width: 80%; float: left; position: relative;">
         <% if interaction.resource.one_shot && current_user && user_interaction %>
           <!-- IMAGE INACTIVE -->
-          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="button-inter-<%= interaction.id %> thumbnail">
-            <img src="<%= answer.image(:medium) %>">
-          </a>
+          <button href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %> btn-2 btn-2-versus <%= user_answer ? "btn-2-versus-orange active" : "inactive" %>">
+            <img src="<%= answer.image(:medium) %>" style="width: 100%;">
+          </button>
         <% else %>
           <!-- IMAGE ACTIVE -->
-          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if current_user && user_answer %>" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
-            <img src="<%= answer.image(:medium) %>">
-          </a>
+          <button href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %> btn-2 btn-2-versus <%= "btn-2-versus-orange" if user_answer && current_user %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
+            <img src="<%= answer.image(:medium) %>" style="width: 100%;">
+          </button>
         <% end %>
 
         <!-- PROGRESS BAR -->
-        <div class="progress vertical bottom progress-square" style="position: absolute; top: 0; bottom: 0; right: -25px; margin-right: 0; z-index: 10;">
+        <div class="progress vertical bottom progress-square" style="position: absolute; top: 4px; bottom: 0; right: -25px; margin-right: 0; z-index: 10;">
           <% if current_user && user_interaction %>
             <div class="progress-bar <%= user_answer ? "progress-bar-warning" : "inactive" %>" role="progressbar" style="height: <%= percent %>%;"></div>
           <% else %>
@@ -27,7 +27,7 @@
         </div>
 
         <!-- BALOON -->
-        <div class="no-pad interaction-baloon" style="width: 30px; position: absolute; width: 30px; right: -30px; bottom: -40px;">
+        <div class="no-pad interaction-baloon" style="width: 30px; position: absolute; width: 30px; right: -30px; bottom: -45px;">
           <div class="baloon baloon-top <%= "unchosen square" unless user_answer && current_user %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer && current_user %>" style="width: 100%; border-radius: 3px;"></div>
         </div>
 

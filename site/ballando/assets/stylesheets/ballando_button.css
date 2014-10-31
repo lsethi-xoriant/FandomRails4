@@ -40,8 +40,9 @@ a.btn-2.btn-2-small {
 
 .btn-2.btn-2-versus {
   font-size: 12px;
-  padding-bottom: 35%;
-  padding-top: 35%;
+  //padding-bottom: 35%;
+  //padding-top: 35%;
+  padding: 3px;
   box-shadow: 0 4px 0 #363636;
   background-color: #969696;
 }
