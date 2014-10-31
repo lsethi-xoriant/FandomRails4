@@ -33,7 +33,7 @@ class CallToAction < ActiveRecord::Base
         if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
           {
             :original => { :geometry => '100%', :quality => 60 },
-            :large => { :geometry => "600x600#", :quality => 60, :watermark_path => image.instance.get_watermark }, 
+            :large => { :geometry => "600x600>", :quality => 60, :watermark_path => image.instance.get_watermark }, 
             :extra => { :geometry => '260x150#', :quality => 60 },
             :medium => { :geometry => '300x300#', :quality => 60 },
             :thumb => { :geometry => '100x100#', :quality => 60 }
