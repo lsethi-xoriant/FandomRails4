@@ -156,7 +156,7 @@
 		}
 	}
 	
-	function titleInserted(title){
+	function titleInserted(title) {
 		if( $(title).val() != ''){
 			$(".confirm-step.upload-title").html('<i class="fa fa-check" style="font-size: 20px; color: #FFF;"></i>');
 		}else{
@@ -164,11 +164,11 @@
 		}	
 	}
 	
-	function goToLogin(){
-		window.location.href = "/redirect_top_with_cookie?connect_from_page=" + top.location; 
+	function goToLogin() {
+		window.location.href = "/redirect_top_with_cookie?connect_from_page=" + top.location + "&redirect_to_page=/upload_interaction/new"; 
 	}
 	
-	function startLoader(){
+	function startLoader() {
 		$("#load-button").html('<p class="text-center" style="color: #fff;">Caricamento video in corso ...</p>');
 		$("#form-upload").submit();
 	}
