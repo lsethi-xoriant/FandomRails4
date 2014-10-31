@@ -54,6 +54,14 @@ class ApplicationController < ActionController::Base
 
     redirect_to "/"
   end
+  
+  def get_tag_from_params(name)
+    if name
+      Tag.find_by_name(name)  
+    else
+      nil
+    end
+  end
 
   def index
     if user_signed_in?
@@ -63,9 +71,9 @@ class ApplicationController < ActionController::Base
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
     check_redirect_into_iframe_calltoaction
     check_redirect_into_iframe_page
-    @tag = Tag.find_by_name(params[:name])
+    @tag = get_tag_from_params(params[:name])
     
-    if params[:name].nil? || params[:name] == "home_filter_all" || @tag.nil? 
+    if @tag.nil? || params[:name] == "home_filter_all" 
       @calltoactions = cache_short("stream_ctas_init_calltoactions") do
         CallToAction.active.limit(3).to_a
       end
