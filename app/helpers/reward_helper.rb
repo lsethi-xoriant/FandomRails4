@@ -114,5 +114,12 @@ module RewardHelper
   def duplicate_reward_tag(new_reward, tag)
     new_reward.reward_tags.build(:reward_id => new_reward.id, :tag_id => tag.tag_id)
   end
-
+  
+  def get_superfan_points_gap
+    contest_points = cache_short(get_superfan_contest_point_key(current_user.id)) do
+      get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD)
+    end
+    contest_points.nil? ? SUPERFAN_CONTEST_POINTS_TO_WIN : SUPERFAN_CONTEST_POINTS_TO_WIN - contest_points
+  end
+  
 end
