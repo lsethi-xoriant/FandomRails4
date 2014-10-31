@@ -9,7 +9,7 @@
 
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
-			<div class="panel panel-default panel-shadow" style="border: none;">
+			<div class="panel panel-default panel-shadow" style="border: none; border-radius: 0;">
       	<div class="panel-body" style="position: relative; padding: 0;">
 					<div class="row special-guest-container">
 						<div class="col-sm-7">
@@ -56,7 +56,7 @@
 	
 	<div class="row" style="background-color: rgba(255, 255, 255, 0.5);">
 		
-		<div class="col-sm-12 text-center" style="margin-top: 15px;">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-center" style="margin-top: 15px;">
 		
 		 <% if @cloned_cta && @cloned_cta.errors.any? %>
 		 <div class="row">
@@ -82,7 +82,7 @@
 		    <%= form_tag "/upload_interaction/create/#{ @upload_interaction.id }", multipart: true, id: "form-upload" do %>
 		    <div class="col-sm-12">
 		      <div class="row form-group">
-		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">1 Raccogli la sfida!</label>
+		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">1. Invia il tuo video</label>
 		        <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 text-left">
 		        	<a type="button" class="btn-2" onclick="chooseFile();" style="display: inline-block; width: 100%;">CARICA IL TUO VIDEO</a>
 		        	<p class="small" style="margin-top: 10px; color: #fff;">I file video non devono superare i 40 Mb</p>
@@ -94,7 +94,7 @@
 		      </div>
 		
 		      <div class="row form-group">
-		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">2 Registra il tuo video dove canti “ORA” </label>
+		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">2. Dai un titolo</label>
 		        <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0">
 		        	<%= text_field_tag :title, (@cloned_cta.title if @cloned_cta), { class: "form-control", onchange: "titleInserted(this)" } %>
 		        </div>

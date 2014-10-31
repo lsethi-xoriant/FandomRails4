@@ -34,7 +34,7 @@ class Sites::Ballando::CustomCallToActionController < ApplicationController
     calltoactions_comment_interaction = init_calltoactions_comment_interaction(calltoactions)
 
     calltoactions_active_interaction = Hash.new
-    aux = { show_next_calltoaction_button: true, show_calltoaction_page: true }
+    aux = { show_next_calltoaction_button: true, show_calltoaction_page: true, small_mobile_device: small_mobile_device? }
     calltoactions_active_interaction[calltoactions[0].id] = generate_next_interaction_response(calltoactions[0], nil, aux)
 
     user_main_reward_count = current_user ? (get_counter_about_user_reward(MAIN_REWARD_NAME, true)["weekly"] || 0) : 0
