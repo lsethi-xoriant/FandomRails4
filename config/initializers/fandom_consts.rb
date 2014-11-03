@@ -61,6 +61,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
   
   MONTH_NAMES = ["", "gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"]
 
+  REGEX_SPECIAL_CHARS = ["\\", "^", "$", ".", "|", "?", "*", "+", "(", ")", "[", "{"]
+
   class CachedNil
   end
 

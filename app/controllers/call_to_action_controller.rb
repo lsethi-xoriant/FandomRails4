@@ -238,6 +238,9 @@ class CallToActionController < ApplicationController
   def build_regexp(line)
     string = "(\\W+|^)"
     line.strip.each_char do |c|
+      if REGEX_SPECIAL_CHARS.include? c
+        c = "\\" + c
+      end
       string += "(\\W*)" + c
     end
     Regexp.new(string)
