@@ -241,7 +241,9 @@ class CallToActionController < ApplicationController
       if REGEX_SPECIAL_CHARS.include? c
         c = "\\" + c
       end
-      string += "(\\W*)" + c
+      if c != " "
+        string += "(\\W*)" + c
+      end
     end
     Regexp.new(string)
   end
