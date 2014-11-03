@@ -219,20 +219,23 @@ class CallToActionController < ApplicationController
   def check_profanity_words_in_comment(user_comment)
 
     user_comment_text = user_comment.text.downcase
-    pattern_array = Array.new
 
-    Setting.where(key: 'profanity.words').first.value.split(",").each do |exp|
-      pattern_array.push(build_regexp(exp))
+    @profanities_regexp = cache_short("profanities") do
+      pattern_array = Array.new
+
+      Setting.where(key: 'profanity.words').first.value.split(",").each do |exp|
+        pattern_array.push(build_regexp(exp))
+      end
+
+      Regexp.union(pattern_array)
     end
 
-    patterns = Regexp.union(pattern_array)
-    if user_comment_text =~ patterns
+    if user_comment_text =~ @profanities_regexp
       user_comment.errors.add(:text, "contiene parole non ammesse")
       return user_comment
     end
 
-      user_comment
-
+    user_comment
   end
 
   def build_regexp(line)
