@@ -28,22 +28,21 @@ class CallToAction < ActiveRecord::Base
   before_save :set_extra_options
   
   has_attached_file :media_image,
-    :processors => [:watermark],
-    [:styles, :convert_options] => lambda { |image| 
+    processors: [:watermark],
+    styles: lambda { |image| 
         if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
-          [{
-            :original => "100%",
-            :large => { :geometry => "600x600>", :watermark_path => image.instance.get_watermark }, 
-            :extra => "260x150#", 
-            :medium => "300x300#", 
-            :thumb => "100x100#"
-          },
-          { :original => '-quality 60', :large => '-quality 60', :extra => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }]
+          {
+            :original => { :geometry => '100%', :quality => 60 },
+            :large => { :geometry => "600x600>", :quality => 60, :watermark_path => image.instance.get_watermark }, 
+            :extra => { :geometry => '260x150#', :quality => 60 },
+            :medium => { :geometry => '300x300#', :quality => 60 },
+            :thumb => { :geometry => '100x100#', :quality => 60 }
+          }
         else
-         [{},{}]
+          {}
         end
      },
-     :default_url => "/assets/media-image-default.jpg"
+     default_url: "/assets/media-image-default.jpg"
 
   has_attached_file :thumbnail, :styles => { :original => "100%", :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }, 
                     :convert_options => { :original => '-quality 60', :large => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }

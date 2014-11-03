@@ -6,10 +6,57 @@
 		  <%= render partial: "/application/upload_filters", locals: { single_cta: false } %>
 		</div>
 	</div>
+
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+			<div class="panel panel-default panel-shadow" style="border: none; border-radius: 0;">
+      	<div class="panel-body" style="position: relative; padding: 0;">
+					<div class="row special-guest-container">
+						<div class="col-sm-7">
+							<img src="<%= asset_path("special_guest_media_image.jpg") %>" class="img-responsive" style="width: 100%;">
+						</div>
+						<div class="col-sm-5">
+							<div class="row special-guest-list">
+								<div class="col-xs-12">
+									<h4 class="text-center" style="color: green; margin: 0 0 10px 0; line-height: 25px;">
+										Se sei un vero fan di Gigi D'Alessio adatta il ritornello di "ORA" e cantalo con le TUE parole!<br>I video più belli verranno pubblicati nel sito di ballando.rai.it.
+									</h4>
+								</div>
+							</div>
+							<div class="row special-guest-list">
+								<div class="col-xs-2">
+									<div class="boxed">1</div>
+								</div>
+								<div class="col-xs-10">
+									<p class="special-guest">Raccogli la sfida!</p>
+								</div>
+							</div>
+							<div class="row special-guest-list">
+								<div class="col-xs-2">
+									<div class="boxed">2</div>
+								</div>
+								<div class="col-xs-10">
+									<p class="special-guest">Registra il tuo video dove canti "ORA"</p>
+								</div>
+							</div>
+							<div class="row special-guest-list">
+								<div class="col-xs-2">
+									<div class="boxed">3</div>
+								</div>
+								<div class="col-xs-10">
+									<p class="special-guest">Caricalo qui sotto</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	<div class="row" style="background-color: rgba(255, 255, 255, 0.5);">
 		
-		<div class="col-sm-12 text-center" style="margin-top: 15px;">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-center" style="margin-top: 15px;">
 		
 		 <% if @cloned_cta && @cloned_cta.errors.any? %>
 		 <div class="row">
@@ -24,11 +71,11 @@
 		  <% end %>
 		  
 		  <% if flash[:notice] %>
-		  <div class="row">
-		 	<div class="col-sm-9 col-sm-offset-1 text-left">
-		  		<div class="alert alert-success"><%= flash[:notice] %></div>
-		  	</div>
-		  </div>
+			  <div class="row">
+			 		<div class="col-sm-9 col-sm-offset-1 text-left">
+			  		<div class="alert alert-success"><%= flash[:notice] %></div>
+			  	</div>
+			  </div>
 		  <% end %>
 		
 		  <div class="row">
@@ -86,11 +133,7 @@
 			  
 		    </div>
 		  </div>
-		  
-		  
-		
 	</div>
-	
 </div>
 		
 <script type="text/javascript">
@@ -109,7 +152,7 @@
 		}
 	}
 	
-	function titleInserted(title){
+	function titleInserted(title) {
 		if( $(title).val() != ''){
 			$(".confirm-step.upload-title").html('<i class="fa fa-check" style="font-size: 20px; color: #FFF;"></i>');
 		}else{
@@ -117,11 +160,11 @@
 		}	
 	}
 	
-	function goToLogin(){
-		window.location.href = "/redirect_top_with_cookie?connect_from_page=" + top.location; 
+	function goToLogin() {
+		window.location.href = "/redirect_top_with_cookie?connect_from_page=" + top.location + "&redirect_to_page=/upload_interaction/new"; 
 	}
 	
-	function startLoader(){
+	function startLoader() {
 		$("#load-button").html('<p class="text-center" style="color: #fff;">Caricamento video in corso ...</p>');
 		$("#form-upload").submit();
 	}
