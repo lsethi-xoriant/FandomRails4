@@ -12,22 +12,37 @@
 	  </div>
 	</div>
 	<div class="col-sm-3">
-		<% superfan = get_superfan_reward %>
-		<div class="text-center" style="padding-top: 10px;">
-			<% if superfan %>
-				<img src="<%= get_reward_image_for_status(superfan) %>" alt="profile img" class="img-circle" style="max-width: 130px;">
-				<% if superfan.cost.present? %>
-					<div class="progress" style="margin: 8px auto; width: 30%;">
-				    	<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: <%= (get_reward_points_in_period(PERIOD_KIND_WEEKLY, MAIN_REWARD_NAME) * 100) / superfan.cost %>%;"></div>
-			    	</div>
-		    	<% end %>
-			    <h4 style="text-transform: uppercase; font-weight: bold;"><%= superfan.title.upcase %></h4>
-		    <% else %>
-		    	<img src="<%= asset_path("badge_placeholder.png") %>" class="img-circle" style="max-width: 130px;" />
-		    	<h4 style="text-transform: uppercase; font-weight: bold;">SUPERFAN</h4>
-		    	<h4>Dal 4 ottobre</h4>
-		    <% end %>
-	  </div>
+		<% if SUPERFAN_CONTEST_ACTIVE %>
+			<% superfan_points_to_achieve = get_superfan_points_gap %>
+			<div class="text-center" style="padding-top: 10px;">
+				<h4 style="margin-top: 0; font-weight: bold;">PASS SUPERFAN</h4>
+		    	<img src="<%= asset_path("ticket.png") %>" class="img-responsive" style="max-width: 85px; display: inline-block;" />
+		    	<% if superfan_points_to_achieve > 0 %>
+			    	<h5 style="margin: 0;">Ti mancano</h5>
+			    	<span class="label label-warning" style="padding: 5px; font-size: 18px; width: 35%; font-weight: bold; margin: 10px auto;">- <%= superfan_points_to_achieve %> <span class="glyphicon glyphicon-star"></span></span>
+			    <% else %>
+			    	<span class="label label-default" style="background-color: #fff; font-size: 14px; margin-bottom: 10px; padding: 8px 8px; width: 90%;"><span style="color: green; font-size: 20px;" class="glyphicon glyphicon-ok-sign"></span> <span style="position: relative; top: -4px;">Stai partecipando al concorso!</span></span>
+			    <% end %>
+		    	<a href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/regolamento.pdf" target="_blank" style="text-decoration: underline;">Scopri il regolamento</a>
+		    </div>
+		<% else %>
+			<% superfan = get_superfan_reward %>
+			<div class="text-center" style="padding-top: 10px;">
+				<% if superfan %>
+					<img src="<%= get_reward_image_for_status(superfan) %>" alt="profile img" class="img-circle" style="max-width: 130px;">
+					<% if superfan.cost.present? %>
+						<div class="progress" style="margin: 8px auto; width: 30%;">
+					    	<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: <%= (get_reward_points_in_period(PERIOD_KIND_WEEKLY, MAIN_REWARD_NAME) * 100) / superfan.cost %>%;"></div>
+				    	</div>
+			    	<% end %>
+				    <h4 style="text-transform: uppercase; font-weight: bold;"><%= superfan.title.upcase %></h4>
+			    <% else %>
+			    	<img src="<%= asset_path("badge_placeholder.png") %>" class="img-circle" style="max-width: 130px;" />
+			    	<h4 style="text-transform: uppercase; font-weight: bold;">SUPERFAN</h4>
+			    	<h4>Dal 4 ottobre</h4>
+			    <% end %>
+		    </div>
+		<% end %>
 	</div>
 	<div class="col-sm-3">
 		<div class="text-center">
@@ -36,9 +51,9 @@
 		</div>
 	</div>
 	<div class="col-sm-3 ranking-info">
-		<span class="label-warning"><%= get_counter_about_user_reward(MAIN_REWARD_NAME) %> <span class="glyphicon glyphicon-star" style="padding-left: 5px; font-size: 25px;"></span></span>
+		<span class="label label-warning"><%= get_counter_about_user_reward(MAIN_REWARD_NAME) %> <span class="glyphicon glyphicon-star" style="padding-left: 5px; font-size: 25px;"></span></span>
 		<h4>PUNTI TOTALI</h4>
-		<span class="label-default">
+		<span class="label label-default">
 			<% if get_my_general_position %>
 				<%= get_my_general_position %>°
 			<% else %>

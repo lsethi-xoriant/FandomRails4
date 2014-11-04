@@ -121,9 +121,11 @@ Usage: #{$0} <postfix>\n\
 
   puts "waiting on instances to finish their bootstrap: #{SLEEP_COUNT}s. Countdown:"
   SLEEP_COUNT.times do |i|
-    puts(SLEEP_COUNT - i)
+    print(i % 5 == 0? "#{i}" : '.')
+    $stdout.flush
     sleep(1)
   end
+  puts 'done.'
 
   puts "restoring original group capacity:\n\
   desired capacity: #{instance_count}\n\

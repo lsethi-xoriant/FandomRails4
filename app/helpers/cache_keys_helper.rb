@@ -106,4 +106,8 @@ module CacheKeysHelper
     "reward_#{reward_name}_general_counter_user_#{user_id}"
   end
   
+  def get_superfan_contest_point_key(user_id)
+    "superfan_contest_point_user_#{user_id}"
+  end
+  
 end
