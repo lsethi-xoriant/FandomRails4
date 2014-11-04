@@ -1725,8 +1725,16 @@ body {
     }
 }
 
+.versus-answer-col {
+    min-height: 40px;
+}
+
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
+
+    .versus-answer-col {
+        min-height: 0;
+    }
 
     .alternative-description {
         padding: 20px 20px 0 20px;

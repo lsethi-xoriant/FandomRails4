@@ -1,14 +1,13 @@
 <% if answer.image.present? %>
   <div class="row">
-    <div class="col-xs-12 text-center" style="padding-left: 0;">
-      <% if interaction.resource.one_shot && current_user && user_interaction %>
-        <button class="btn-2 btn-2-small btn-2-block btn-2-versus-text <%= "active" if current_user && user_answer %>">
-          <span><%= answer.text %></span>
-        </button>
-      <% else %>
-        <button class="btn-2 btn-2-small btn-2-block btn-2-versus-text <%= "active" if current_user && user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>>
-          <span><%= answer.text %></span>
-        </button>
+    <div class="col-xs-12 text-center versus-answer-col" style="padding-left: 0;">
+      <% if answer.text.present? %>
+        <% if interaction.resource.one_shot && current_user && user_interaction %>
+          <button class="visible-xs btn-2 btn-2-small btn-2-block btn-2-versus-text <%= "active" if current_user && user_answer %>"><%= answer.text %></button>
+        <% else %>
+          <button class="visible-xs btn-2 btn-2-small btn-2-block btn-2-versus-text <%= "active" if current_user && user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><%= answer.text %></button>
+        <% end %>
+        <h5 class="hidden-xs" style="font-weight: bold; position: absolute; bottom: 0; left: 0; right: 0; padding-top: 30px;"><%= answer.text %></h5>
       <% end %>
     </div>
     <div class="col-xs-12" style="position: relative; padding-left: 0;">

@@ -334,20 +334,6 @@ fieldset[disabled] .btn-append.active {
   background-color: #000000; 
 }
 
-@media(min-width: 768px) {
-  .btn-2-versus-text, .btn-2-versus-text:hover, .btn-2-versus-text:active {
-    font-size: 12px !important;
-    min-height: 0 !important;
-    color: #000 !important;
-    background: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    margin-bottom: 5px;
-    font-weight: normal !important;
-    top: 3px !important;
-  }
-}
-
 /* WARNING: SYNC WITH BOOTSTRAP SIZE */
 @media(max-width: 768px) {
 
