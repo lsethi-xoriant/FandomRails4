@@ -4,6 +4,7 @@
 			    <div class="col-xs-12 profile-menu">
 			      <div class="flexslider">
 			        <ul class="slides">
+			        	<% if SUPERFAN_CONTEST_ACTIVE %>
 			        	<li>
 			                <div class="slide <%= "active" if page == "superfan" %>" style="background: url('<%= asset_path('esclusivo-pic.jpg') %>') no-repeat center center;">
 			                    <div class="comment-center">
@@ -20,6 +21,7 @@
 			                	<div class="triangle"></div>
 			                <% end %>
 			            </li>
+			            <% end %>
 			            <li>
 			                <div class="slide <%= "active" if page == "badges" %>" style="background: url('<%= asset_path('superfan.jpg') %>') no-repeat center center;">
 			                    <div class="comment-center">
@@ -107,7 +109,11 @@
 	    if ($(window).innerWidth() < 768)
 	        return 2;
 	    else
-	        return 4;
+	    	<% if SUPERFAN_CONTEST_ACTIVE %>
+	        	return 4;
+	        <% else %>
+	        	return 3;
+	        <% end %>
 	}
 	
 	function getItemSize() {
