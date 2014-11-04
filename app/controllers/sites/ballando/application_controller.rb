@@ -25,6 +25,10 @@ class Sites::Ballando::ApplicationController < ApplicationController
       cookies["calltoaction"] = params[:calltoaction_id]
     end
 
+    if params[:redirect_to_page].present?
+      cookies["redirect_to_page"] = params[:redirect_to_page]
+    end
+
     profile_url = Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"]
     render text: "<html><body><script>window.top.location.href = \"#{profile_url}\";</script></body></html>"
   end

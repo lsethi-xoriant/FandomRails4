@@ -64,7 +64,9 @@ unless defined? FILTER_OPERATOR_CONTAINS
   SUPERFAN_CONTEST_REWARD = "contest-point"
   SUPERFAN_CONTEST_POINTS_TO_WIN = 200
   SUPERFAN_CONTEST_ACTIVE = false
-  
+
+  REGEX_SPECIAL_CHARS = ["\\", "^", "$", ".", "|", "?", "*", "+", "(", ")", "[", "{"]
+
   class CachedNil
   end
 
