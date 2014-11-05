@@ -5,7 +5,7 @@ include CliUtils
 SLEEP_COUNT = 300
 
 # Returns an hash with the script configuration
-def get_config(postfix)
+def get_config()
   config = get_deploy_settings
   AWS.config(
     :access_key_id => config['aws']['access_key_id'],
@@ -73,7 +73,8 @@ def create_launch_configuration(auto_scaling, ec2, postfix, config)
       ami_id,
       config["instance_type"], 
       :security_groups => ["sg-c64d8aa3"],
-      :key_pair => config["key_pair"]
+      :key_pair => config["key_pair"],
+      :user_data => config.fetch('launch_configuration_user_data', '')
       )
   end
   return launch_configuration_name
@@ -91,7 +92,7 @@ Usage: #{$0} <postfix>\n\
   
   postfix = ARGV[0]
   
-  config = get_config(postfix)  
+  config = get_config()  
   
   ec2 = AWS::EC2.new(:region => config['region'])  
   auto_scaling = AWS::AutoScaling.new(:region => config['region'])
