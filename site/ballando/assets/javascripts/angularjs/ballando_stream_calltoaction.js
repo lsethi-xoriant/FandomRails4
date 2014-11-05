@@ -249,7 +249,9 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $window.onEnterInteraction = function(interaction_id, answer_id) {
     if(answer_id) {
-      $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden");
+      var elem = $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img");
+      elem.removeClass("hidden");
+      elem.parent().addClass("baloon-no-pad");
     } else {
       $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden");
     }
@@ -257,7 +259,9 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $window.onLeaveInteraction = function(interaction_id, answer_id) {
     if(answer_id) {
-      $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
+      var elem = $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img");
+      elem.addClass("hidden");
+      elem.parent().removeClass("baloon-no-pad");
     } else {
       $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
     }

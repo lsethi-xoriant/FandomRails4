@@ -28,6 +28,10 @@ $navbar-default-toggle-border-color:        #ccc !default;
 
 @import "bootstrap/bootstrap";
 
+.baloon-no-pad{
+  padding: 0 !important;
+}
+
 #footer-carousel-mobile {
     display: none;
 }
