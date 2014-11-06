@@ -252,8 +252,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden");
       $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").removeClass("square");
     } else {
-      $("#iframe-interaction").find(".interaction-baloon .baloon.unchosen img").removeClass("hidden");
-      $("#iframe-interaction").find(".interaction-baloon .baloon.unchosen").removeClass("square");
+      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen img").removeClass("hidden");
+      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen").removeClass("square");
     }
   };
 
@@ -262,8 +262,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
       $("#answer-" + answer_id).find(".interaction-baloon .baloon.unchosen").addClass("square");
     } else {
-      $("#iframe-interaction").find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
-      $("#iframe-interaction").find(".interaction-baloon .baloon.unchosen").addClass("square");
+      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen img").addClass("hidden");
+      $("#interaction-" + interaction_id).find(".interaction-baloon .baloon.unchosen").addClass("square");
     }
   };
 
