@@ -9,7 +9,6 @@
 //= require angularjs/ng-table
 //= require angularjs/ballando
 //= require angularjs/notice
-//= require angularjs/calltoaction
 //= require angularjs/comment
 //= require angularjs/ranking
 //= require config

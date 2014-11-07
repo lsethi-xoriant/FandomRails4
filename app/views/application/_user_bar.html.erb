@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
       </button>
 
-      <a style="float: right; font-size: 16px;" class="visible-xs navbar-brand user-reward-counter" href="javascript: void(0)">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME) %> <span class="glyphicon glyphicon-star"></span> Punti</a></button>
+      <a style="float: right; font-size: 16px;" class="visible-xs navbar-brand user-reward-counter" href="javascript: void(0)">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME, false) %> <span class="glyphicon glyphicon-star"></span> Punti</a></button>
 
       <!--<a href="../" class="navbar-brand"><span class="glyphicon glyphicon-tower"></span> Fandom</a>-->
     </div>
@@ -75,11 +75,11 @@
 		<% if current_user %>
 
       <li class="play-2">
-        <a class="user-reward-counter" href="javascript: void(0)">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME) %> <span class="glyphicon glyphicon-star"></span> PUNTI</a>
+        <a class="user-reward-counter" href="javascript: void(0)">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME, false) %> <span class="glyphicon glyphicon-star"></span> PUNTI</a>
       </li>
 
 			<li class="dropdown">
-			  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= get_unread_notifications_count(current_user.id) %></span></a>
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= get_unread_notifications_count %></span></a>
 			  <ul class="dropdown-menu" ng-controller="NoticeBarCtrl">
 		          <li role="presentation" class="dropdown-header">Notifiche</li>
 		          <li role="presentation" class="divider"></li>
@@ -103,7 +103,7 @@
           <li class="divider"></li>
           <li><a href="/profile/rankings">Classifica</a></li>
           <li class="divider"></li>
-          <li><a href="/profile/notices">Notifiche <span class="badge pull-right"><%= Notice.get_unread_notifications_count(current_user.id) %></span></a></li>
+          <li><a href="/profile/notices">Notifiche <span class="badge pull-right"><%= get_unread_notifications_count %></span></a></li>
           <li class="divider"></li>
           <li><a href="/users/sign_out">Logout</a></li>
         </ul>

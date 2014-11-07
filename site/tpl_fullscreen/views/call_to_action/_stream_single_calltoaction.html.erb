@@ -30,14 +30,17 @@ color: #fff">
           <div class="col-md-10 col-xs-10 text-left">
             <div class="row">
               <div class="col-md-12 ">
-                <h4><a class="btn btn-default btn-md" href="/call_to_action/<%= calltoaction.id %>">Call To Action</a>&nbsp;
-                  <% if call_to_action_completed?(calltoaction, current_or_anonymous_user) %>
-                    &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success">
+                <h4>
+                  <% current_call_to_action_reward_status = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction) %>
+                  <% if current_call_to_action_reward_status.present? %>
+                    <% if current_call_to_action_reward_status["winnable_reward_count"] > 0 %>
+                      <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= current_call_to_action_reward_status["winnable_reward_count"] %>
+                        <span class="glyphicon glyphicon-star"></span>
+                      </span>
+                    <% end %>
+                  <% else %>        
+                    <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
                       FATTO <span class="glyphicon glyphicon-ok"></span>
-                    </span>
-                  <% else %>
-                    &nbsp;<span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning">+<%= predict_max_cta_outcome(calltoaction, anonymous_user).reward_name_to_counter[MAIN_REWARD_NAME] %>
-                      <span class="glyphicon glyphicon-star"></span>
                     </span>
                   <% end %>
                 </h4>
