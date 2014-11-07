@@ -9,7 +9,7 @@ Fandom::Application.routes.draw do
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   constraints(SiteMatcher.new('ballando')) do
-    match "/profile", :to => "profile#badges"
+    match "/profile", :to => "profile#superfan_contest"
 
     devise_scope :user do
       scope module: "sites" do
