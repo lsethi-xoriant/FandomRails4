@@ -1,15 +1,15 @@
 <% if answer.image.present? %>
   <div class="row">
-    <div class="col-xs-12 text-center versus-answer-col" style="padding-right: 0;">
-      <% if answer.text.present? %>
+    <% if answer.text.present? %>
+      <div class="col-xs-12 text-center versus-answer-col" style="padding-right: 0;">
         <% if interaction.resource.one_shot && current_user && user_interaction %>
           <button class="visible-xs btn-2-default btn-2 btn-2-block btn-2-versus-text <%= "btn-2-default-orange active" if current_user && user_answer %>"><%= answer.text %></button>
         <% else %>
           <button class="visible-xs btn-2 btn-2-default btn-2-block btn-2-versus-text <%= "btn-2-default-orange active" if current_user && user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><%= answer.text %></button>
         <% end %>
-        <h5 class="hidden-xs" style="font-weight: bold; position: absolute; bottom: 0; left: 0; right: 0; padding-top: 30px;"><%= answer.text %></h5>
-      <% end %>
-    </div>
+        <h5 class="hidden-xs" style="font-weight: bold; position: absolute; bottom: 0; left: 0; right: 0; padding-top: 15px;"><%= answer.text %></h5>
+      </div>
+    <% end %>
     <div class="col-xs-12" style="position: relative; padding-right: 0;">
       <!-- PROGRESS BAR -->
       <div class="progress vertical bottom progress-square" style="position: absolute; top: 0; bottom: 0; right: 0; margin-right: 0; z-index: 10; width: 15%;">
