@@ -39,7 +39,7 @@
         <div class="baloon baloon-top versus <%= "unchosen square" unless user_answer && current_user %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer %>" style="width: 100%; border-radius: 3px;"></div>
       </div>
       <div style="width: 70%; float: left;">
-        <h5 style="font-size: 22px; font-weight: bold; margin-top: 5px; margin-bottom: 0;"><%= "#{percent}%" if percent && current_user && user_interaction %></h5>
+        <h5 style="font-size: 22px; font-weight: bold; margin-top: 5px; margin-bottom: 0;"><%= percent && current_user && user_interaction ? "#{percent}%" : "&nbsp;".html_safe %></h5>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -46px;">
-          <h5 style="font-size: 22px; font-weight: bold;"><%= "#{percent}%" if percent && current_user && user_interaction %></h5>
+          <h5 style="font-size: 22px; font-weight: bold;"><%= percent && current_user && user_interaction ? "#{percent}%" : "&nbsp;".html_safe %></h5>
         </div>
 
       </div>
