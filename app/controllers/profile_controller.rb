@@ -85,10 +85,9 @@ class ProfileController < ApplicationController
   end
   
   def superfan_contest
-    contest_points = cache_short(get_reward_points_for_user_key(SUPERFAN_CONTEST_REWARD, current_user.id)) do
-      get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD)
-    end
-    @points_to_achieve = contest_points.nil? ? SUPERFAN_CONTEST_POINTS_TO_WIN : SUPERFAN_CONTEST_POINTS_TO_WIN - contest_points
+    contest_points = get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD, false) || 0
+
+    @points_to_achieve = SUPERFAN_CONTEST_POINTS_TO_WIN - contest_points
     @already_win = @points_to_achieve <= 0
   end
   

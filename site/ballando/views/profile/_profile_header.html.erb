@@ -15,15 +15,14 @@
 		<% if SUPERFAN_CONTEST_ACTIVE %>
 			<% superfan_points_to_achieve = get_superfan_points_gap %>
 			<div class="text-center" style="padding-top: 10px;">
-				<h4 style="margin-top: 0; font-weight: bold;">PASS SUPERFAN</h4>
-		    	<img src="<%= asset_path("ticket.png") %>" class="img-responsive" style="max-width: 85px; display: inline-block;" />
+				<h4 style="margin-top: 0; font-weight: bold; margin-bottom: 35px;">PASS SUPERFAN</h4>
 		    	<% if superfan_points_to_achieve > 0 %>
 			    	<h5 style="margin: 0;">Ti mancano</h5>
 			    	<span class="label label-warning" style="padding: 5px; font-size: 18px; width: 35%; font-weight: bold; margin: 10px auto;">- <%= superfan_points_to_achieve %> <span class="glyphicon glyphicon-star"></span></span>
 			    <% else %>
-			    	<span class="label label-default" style="background-color: #fff; font-size: 14px; margin-bottom: 10px; padding: 8px 8px; width: 90%;"><span style="color: green; font-size: 20px;" class="glyphicon glyphicon-ok-sign"></span> <span style="position: relative; top: -4px;">Stai partecipando al concorso!</span></span>
+			    	<span class="label label-default" style="background-color: #fff; font-size: 14px; margin-bottom: 10px; padding: 8px 8px; width: 90%;"><span style="color: green; font-size: 20px;" class="glyphicon glyphicon-ok-sign"></span> <span style="position: relative; top: -4px;">Obiettivo raggiunto!</span></span>
 			    <% end %>
-		    	<a href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/regolamento.pdf" target="_blank" style="text-decoration: underline;">Scopri il regolamento</a>
+		    	<a href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/pass-superfan.pdf" target="_blank" style="text-decoration: underline;">Scopri l'iniziativa</a>
 		    </div>
 		<% else %>
 			<% superfan = get_superfan_reward %>
