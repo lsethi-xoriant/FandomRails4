@@ -116,10 +116,8 @@ module RewardHelper
   end
   
   def get_superfan_points_gap
-    contest_points = cache_short(get_superfan_contest_point_key(current_user.id)) do
-      get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD)
-    end
-    contest_points.nil? ? SUPERFAN_CONTEST_POINTS_TO_WIN : SUPERFAN_CONTEST_POINTS_TO_WIN - contest_points
+    contest_points = get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD, false) || 0
+    SUPERFAN_CONTEST_POINTS_TO_WIN - contest_points
   end
   
 end
