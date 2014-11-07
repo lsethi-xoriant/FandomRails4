@@ -40,9 +40,15 @@ def main
   # the monitor log file
   $monitor_log_file = "#{app_root_path}/log/log_daemon_monitor.log"
 
-  d = Daemons.run("#{app_root_path}/bin/log_daemon_impl.rb", options)
-  result = d.applications.length > 0 ? 0 : 1
-  exit result
+  begin
+    d = Daemons.run("#{app_root_path}/bin/log_daemon_impl.rb", options)
+    result = d.applications.length > 0 ? 0 : 1
+    exit result
+  rescue Exception => ex
+    File.open($monitor_log_file, 'a') do |f|
+      f.puts("daemons died unexpectedly: #{ex.to_s} - #{ex.backtrace[0, 5]}")
+    end
+  end
 end
 
 def daemon_help
