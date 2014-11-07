@@ -46,7 +46,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
         if(data.outcome.attributes.reward_name_to_counter.point == null){
       		afterShareAjaxWithoutPoint(data);
       	}else{
-      		updateUserRewardInView(data.main_reward_counter.weekly);
+      		//updateUserRewardInView(data.main_reward_counter.weekly);
+      		updateUserRewardInView(200 - data.contest_points_counter);
       		afterShareAjax(data,ctaId);
       	}
       });
