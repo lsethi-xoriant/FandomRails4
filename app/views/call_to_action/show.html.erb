@@ -1,102 +1,26 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= [@calltoaction].to_json %>, 1, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
-  
+ 
+<div class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= current_user.present? %>, <%= @calltoactions_with_current.to_json %>, <%= get_cta_active_count() %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', <%= @calltoactions_with_current.first.id %>, '<%= "#{request.protocol}#{request.host}/" %>', <%= @calltoactions_active_interaction.to_json %>, <%= @aux.to_json %>)">   
+
   <div class="row">
-    <div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-      <div class="row">
-		  <div class="col-md-12"> 
-		    <% if flash[:error] %>
-		      <div class="row">
-		        <div class="col-lg-12">
-		          <div class="alert alert-danger">
-		            <p>Errori proceso di upload:</p>
-		            <p>
-		              <ul>
-		                <% flash[:error].each do |msg| %>
-		                  <li><%= msg %></li>
-		                <% end %>
-		              </ul>
-		            </p>
-		          </div>
-		        </div>
-		      </div>
-		    <% elsif flash[:notice] %>
-		      <div class="row">
-		        <div class="col-lg-12">
-		          <div class="alert alert-success"><%= flash[:notice] %></div>
-		        </div>
-		      </div>
-		    <% end %>
-		  </div>
-		</div>
-    	
-      <%= render partial: "/call_to_action/single_calltoaction", locals: { calltoaction: @calltoaction, calltoaction_comment_interaction: @calltoaction_comment_interaction, calltoaction_like_interaction: @calltoaction_like_interaction, outcome: nil, captcha_data: @captcha_data } %>
-      <%#= render partial: "/call_to_action/stream_single_calltoaction", locals: { calltoaction: @calltoaction, outcome: nil } %>
+    <div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0" style="margin-top: 15px;">
+      <%= render partial: "/application/home_filters", locals: { single_cta: true } %>
     </div>
   </div>
   
   <div class="row">
-  	<div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-  		<div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1">
-  		  <h2 class="text-center">Guarda anche</h2>
-  		  <hr />
-  		  <% @calltoactions_correlated.each do |c| %>
-  		    <div class="panel panel-default tpl-l-img">
-            <div class="panel-body">
-              <div class="row">
-                <div class="points">
-                  <h3>
-                    <% if call_to_action_completed?(c) %>
-			                <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-success" style="padding-top: 7px;">FATTO <span class="glyphicon glyphicon-ok"></span>
-			                </span>
-			              <% else %>
-			                <span id="head-feedback-calltoaction-<%= c.id %>" class="label label-warning" style="padding-top: 7px;">+<%= get_current_call_to_action_reward_status(MAIN_REWARD_NAME, c)[:winnable_reward_count] %>
-			                  <span class="glyphicon glyphicon-star"></span>
-			                </span>
-			              <% end %>
-                  </h3>
-                </div>
-                <div class="col-sm-5 cta-img" style="background: url('<%= c.media_image %>') no-repeat;">
-                  <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(c, "miniformat") %>
-			            <% if tags_with_miniformat_in_calltoaction.any? %>
-			              <h5 class="visible-xs"><span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
-			                <%= tags_with_miniformat_in_calltoaction.first.name %>
-                    </h5>
-			            <% end %>
-                </div>
-                <div class="col-sm-7">
-                  <div class="panel panel-default cta-content">
-                    <div class="panel-heading visible-lg visible-md visible-sm">
-                      <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(c, "miniformat") %>
-				              <% if tags_with_miniformat_in_calltoaction.any? %>
-				                <h5 class="text-muted visible-sm visible-md visible-lg"><span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.find_by_name("icon").try(:value) %>"></span>
-				                  <%= tags_with_miniformat_in_calltoaction.first.name %>
-                        </h5>
-				              <% end %>
-                    </div>
-                    <div class="panel-body">
-                      <h3><%= c.title %> </h3>    
-                        <div class="row">
-                          <div class="col-sm-5">
-                            <p><a href="/call_to_action/<%= c.id %>" class="btn btn-primary btn-lg btn-block" role="button">VAI</a></p>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="panel-footer text-muted">
-                        <div class="row">
-                          <div class="col-md-6 col-xs-6"></div>
-                          <div class="col-md-6 col-xs-6 text-right"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-  	</div>
+    <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
+      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions_with_current, calltoactions_comment_interaction: @calltoactions_comment_interaction, active_calltoaction_id: @calltoactions_with_current[0].id, calltoactions_active_interaction: @calltoactions_active_interaction, aux: @aux } %>
+    </div>
+  </div>
+
+  <div class="row">      
+    <div class="col-sm-6 col-sm-offset-3">
+      <div id="append-other" class="text-center" style="margin-bottom: 20px;">
+        <button class="btn btn-append" href="javascript: void(0)" onclick="appendCallToAction();"><i class="fa fa-plus-circle"></i> CARICA ALTRI</button>
+      </div>
+    </div>
   </div>
 
 </div>

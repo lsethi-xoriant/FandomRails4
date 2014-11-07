@@ -1,7 +1,7 @@
 <% user_answer = user_interaction && (user_interaction.answer_id == answer.id); %>
 <% percent = (interaction_answer_percentage(interaction, answer)) %>
 
-<div id="answer-<%= answer.id %>" class="col-xs-6 answer-interaction-<%= interaction.id %>" style="margin-bottom: 60px;">
+<div id="answer-<%= answer.id %>" class="col-xs-6 answer-interaction-<%= interaction.id %>" style="margin-bottom: 15px;">
   <% if position % 2 == 0 %>
     <%= render partial: "/call_to_action/versus_left_answer", locals: { interaction: interaction, answer: answer, percent: nil, user_interaction: user_interaction, user_answer: user_answer, percent: percent } %>
   <% elsif position % 2 != 0 %>
