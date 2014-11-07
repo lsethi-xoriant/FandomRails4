@@ -4,7 +4,6 @@
 //= require angular
 //= require angular-resource
 //= require angular-route
-//= require angularjs/calltoaction
 //= require bootstrap
 //= require bootstrap-notify
 //= require bootstrap-fileupload
