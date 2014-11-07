@@ -47,7 +47,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       		afterShareAjaxWithoutPoint(data);
       	}else{
       		//updateUserRewardInView(data.main_reward_counter.weekly);
-      		updateUserRewardInView(200 - data.contest_points_counter);
+      		updateUserRewardInView(data.contest_points_counter);
       		afterShareAjax(data,ctaId);
       	}
       });
@@ -63,7 +63,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       	if(data.outcome.attributes.reward_name_to_counter.point == null) {
       		afterShareAjaxWithoutPoint(data);
       	} else {
-      		updateUserRewardInView(data.main_reward_counter.weekly);
+      		//updateUserRewardInView(data.main_reward_counter.weekly);
+      		updateUserRewardInView(data.contest_points_counter);
       		afterShareAjax(data,ctaId);
       	}	
       });
@@ -224,7 +225,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
     
     showMarkerNearInteraction(interaction_id);
-    updateUserRewardInView(data.main_reward_counter.weekly);
+    //updateUserRewardInView(data.main_reward_counter.weekly);
+    updateUserRewardInView(data.contest_points_counter);
 
     $("#undervideo-area-" + interaction_id).html(data.feedback); 
     $("#undervideo-interaction-" + interaction_id).css("display", "none"); 
@@ -270,10 +272,10 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 
   $window.updateUserRewardInView = function(counter) {
     // Custom calltoaction user bar
-    $(".user-reward-counter").html("+" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
+    $(".user-reward-counter").html("-" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
     try {
       // Iframe user widget
-      window.parent.updateIframeProfileWidget("+" + counter + "<span class=\"glyphicon glyphicon-star\"></span>");
+      window.parent.updateIframeProfileWidget("-" + counter + "<span class=\"glyphicon glyphicon-star\"></span>");
     } catch(err) { }
   };
 
