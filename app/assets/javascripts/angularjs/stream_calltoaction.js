@@ -11,7 +11,6 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
-
     $scope.aux = aux;
 
     $scope.video_players = {};
@@ -196,6 +195,26 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   //////////////////////// SHOWING AND GETTING INTERACTION METHODS ////////////////////////
+
+  $window.showCallToAction = function(calltoaction_id, calltoaction_media_type) {
+
+    if(calltoaction_media_type == "iframe") {
+
+      $(".calltoaction-cover").removeClass("hidden");
+      $(".media-iframe").addClass("hidden");
+
+      $(".media-iframe iframe").each(function(i, obj) {
+        $(obj).remove();
+      });
+
+      $("#iframe-calltoaction-" + calltoaction_id).html($scope.video_players[calltoaction_id]);
+      $("#iframe-calltoaction-" + calltoaction_id).removeClass("hidden");
+
+      $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
+
+    }
+
+  };
 
   $window.showRegistrateView = function() {
     $("#registrate-modal").modal('show');

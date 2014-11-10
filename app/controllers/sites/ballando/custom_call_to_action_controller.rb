@@ -18,15 +18,26 @@ class Sites::Ballando::CustomCallToActionController < ApplicationController
   end
 
   def show
-    @calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id = ?", params[:id].to_i).to_a
-    
-    @calltoactions_during_video_interactions_second, 
-    @calltoactions_active_interaction, 
-    @calltoactions_comment_interaction,
-    @aux,
-    @user_main_reward_count = init_custom_calltoaction_view(@calltoactions)  
+    @calltoaction_id = params[:id].to_i
+    @calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id = ?", @calltoaction_id).to_a
 
-    render template: "/custom_call_to_action/show"
+    if @calltoactions.present?
+    
+      @calltoactions_during_video_interactions_second, 
+      @calltoactions_active_interaction, 
+      @calltoactions_comment_interaction,
+      @aux,
+      @user_main_reward_count = init_custom_calltoaction_view(@calltoactions)  
+
+      render template: "/custom_call_to_action/show"
+
+    else
+
+      @user_main_reward_count = current_user ? (get_counter_about_user_reward(MAIN_REWARD_NAME, true)["weekly"] || 0) : 0
+      render template: "/custom_call_to_action/empty"
+
+    end
+
   end
 
   def init_custom_calltoaction_view(calltoactions)

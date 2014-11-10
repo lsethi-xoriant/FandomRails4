@@ -21,10 +21,6 @@ class Sites::Ballando::ApplicationController < ApplicationController
   def redirect_top_with_cookie
     cookies[:connect_from_page] = params[:connect_from_page]
     
-    if params[:calltoaction_id].present?
-      cookies["calltoaction"] = params[:calltoaction_id]
-    end
-
     if params[:redirect_to_page].present?
       cookies["redirect_to_page"] = params[:redirect_to_page]
     end
@@ -75,6 +71,7 @@ class Sites::Ballando::ApplicationController < ApplicationController
     
     response[:result] = user_interaction.errors.blank?
     response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
+    response["contest_points_counter"] = [SUPERFAN_CONTEST_POINTS_TO_WIN - (get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD, false) || 0), 0].max
     
     respond_to do |format|
       format.json { render json: response.to_json }

@@ -232,6 +232,10 @@ it:
         format: "%{attribute} %{message}"
 
       models:
+        call_to_action:
+          attributes:
+            media_image:
+              blank: "deve essere caricato"
         user:
           attributes:
             email:
@@ -248,6 +252,9 @@ it:
               taken: "già in uso"
 
     attributes:
+      call_to_action:
+        title: "Titolo"
+        media_image: "Il media"
       user_comment_interaction:
         text: "Il testo del commento"
       user:

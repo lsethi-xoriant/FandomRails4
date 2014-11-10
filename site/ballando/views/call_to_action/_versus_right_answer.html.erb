@@ -1,10 +1,25 @@
 <% if answer.image.present? %>
   <div class="row">
-    <div class="col-xs-12 text-center versus-with-image-answer-text">
-      <h5><%= answer.text %></h5>
-    </div>
-    <div class="col-xs-12">
-      <div style="width: 80%; float: left; position: relative;">
+    <% if answer.text.present? %>
+      <div class="col-xs-12 text-center versus-answer-col" style="padding-right: 0;">
+        <% if interaction.resource.one_shot && current_user && user_interaction %>
+          <button class="visible-xs btn-2-default btn-2 btn-2-block btn-2-versus-text <%= "btn-2-default-orange active" if current_user && user_answer %>"><%= answer.text %></button>
+        <% else %>
+          <button class="visible-xs btn-2 btn-2-default btn-2-block btn-2-versus-text <%= "btn-2-default-orange active" if current_user && user_answer %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><%= answer.text %></button>
+        <% end %>
+        <h5 class="hidden-xs" style="font-weight: bold; position: absolute; bottom: 0; left: 0; right: 0; padding-top: 15px;"><%= answer.text %></h5>
+      </div>
+    <% end %>
+    <div class="col-xs-12" style="position: relative; padding-right: 0;">
+      <!-- PROGRESS BAR -->
+      <div class="progress vertical bottom progress-square" style="position: absolute; top: 0; bottom: 0; right: 0; margin-right: 0; z-index: 10; width: 15%;">
+        <% if current_user && user_interaction %>
+          <div class="progress-bar <%= user_answer ? "progress-bar-warning" : "inactive" %>" role="progressbar" style="height: <%= percent %>%;"></div>
+        <% else %>
+          <div class="progress-bar progress-bar-warning inactive" role="progressbar" style="height: 0%;"></div>
+        <% end %>
+      </div>
+      <div style="width: 70%; float: left; position: relative;">
         <% if interaction.resource.one_shot && current_user && user_interaction %>
           <!-- IMAGE INACTIVE -->
           <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer %>" class="button-inter-<%= interaction.id %> thumbnail">
@@ -16,25 +31,15 @@
             <img src="<%= answer.image(:medium) %>">
           </a>
         <% end %>
-
-        <!-- PROGRESS BAR -->
-        <div class="progress vertical bottom progress-square" style="position: absolute; top: 0; bottom: 0; right: -25px; margin-right: 0; z-index: 10;">
-          <% if current_user && user_interaction %>
-            <div class="progress-bar <%= user_answer ? "progress-bar-warning" : "inactive" %>" role="progressbar" style="height: <%= percent %>%;"></div>
-          <% else %>
-            <div class="progress-bar progress-bar-warning inactive" role="progressbar" style="height: 0%;"></div>
-          <% end %>
-        </div>
-
-        <!-- BALOON -->
-        <div class="no-pad interaction-baloon" style="width: 30px; position: absolute; width: 30px; right: -30px; bottom: -40px;">
-          <div class="baloon baloon-top <%= "unchosen square" unless user_answer && current_user %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer && current_user %>" style="width: 100%; border-radius: 3px;"></div>
-        </div>
-
-        <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -46px;">
-          <h5 style="font-size: 22px; font-weight: bold;"><%= "#{percent} %" if percent && current_user && user_interaction %></h5>
-        </div>
-
+      </div>
+    </div>
+    <div class="col-xs-12" style="position: relative; padding-right: 0;">
+      <!-- BALOON -->
+      <div class="interaction-baloon" style="width: 15%; position: absolute; top: 6px; right: 0;">
+        <div class="baloon baloon-top versus <%= "unchosen square" unless user_answer && current_user %>"><img src="<%= current_avatar %>" class="img-responsive <%= "hidden" unless user_answer %>" style="width: 100%; border-radius: 3px;"></div>
+      </div>
+      <div style="width: 70%; float: left;">
+        <h5 style="font-size: 22px; font-weight: bold; margin-top: 5px; margin-bottom: 0;"><%= percent && current_user && user_interaction ? "#{percent}%" : "&nbsp;".html_safe %></h5>
       </div>
     </div>
   </div>
@@ -69,7 +74,7 @@
         </div>
 
         <div class="no-pad text-center" style="width: 30px; position: absolute; width: 100%; bottom: -46px;">
-          <h5 style="font-size: 22px; font-weight: bold;"><%= "#{percent}%" if percent && current_user && user_interaction %></h5>
+          <h5 style="font-size: 22px; font-weight: bold;"><%= percent && current_user && user_interaction ? "#{percent}%" : "&nbsp;".html_safe %></h5>
         </div>
 
       </div>

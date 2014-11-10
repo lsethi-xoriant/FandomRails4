@@ -28,6 +28,10 @@ $navbar-default-toggle-border-color:        #ccc !default;
 
 @import "bootstrap/bootstrap";
 
+.baloon-no-pad{
+  padding: 0 !important;
+}
+
 #footer-carousel-mobile {
     display: none;
 }
@@ -418,6 +422,10 @@ h1, h2, h3 {
 
     .baloon.square {
         padding-bottom: 95%; 
+    }
+
+    .baloon.square.versus {
+        padding-bottom: 89%; 
     }
 
     .baloon-right:after, .baloon-right:before { 
@@ -1721,8 +1729,16 @@ body {
     }
 }
 
+.versus-answer-col {
+    min-height: 40px;
+}
+
 /* MOBILE */
 @media (max-width: $screen-sm-min) {
+
+    .versus-answer-col {
+        min-height: 0;
+    }
 
     .alternative-description {
         padding: 20px 20px 0 20px;
@@ -1881,6 +1897,10 @@ body {
     .go-init {
         margin-left: -14px;
         margin-right: -14px;
+    }
+
+    .undervideo-feedback {
+        margin-top: 15px; 
     }
     
     /*

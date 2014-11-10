@@ -26,25 +26,18 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_into_iframe_calltoaction
-    cookies["calltoaction"] = params[:calltoaction_id]
+    cookies["redirect_to_page"] = "/call_to_action/#{params[:calltoaction_id]}"
     redirect_to Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["stream_url"]
   end
-
-  def check_redirect_into_iframe_calltoaction
-    if cookies["calltoaction"].present?
-      calltoaction_id = cookies["calltoaction"]
-      cookies.delete(:calltoaction)
-      redirect_to "/call_to_action/#{calltoaction_id}"
-      return
-    end
-  end
   
-  def check_redirect_into_iframe_page
+  def cookie_based_redirect?
     if cookies["redirect_to_page"].present?
       page = cookies["redirect_to_page"]
       cookies.delete(:redirect_to_page)
       redirect_to "#{page}"
-      return
+      true
+    else
+      false
     end
   end
   
@@ -54,22 +47,30 @@ class ApplicationController < ActionController::Base
 
     redirect_to "/"
   end
+  
+  def get_tag_from_params(name)
+    if name
+      Tag.find_by_name(name)  
+    else
+      nil
+    end
+  end
 
   def index
     if user_signed_in?
       compute_save_and_notify_context_rewards(current_user)
     end
+
+    return if cookie_based_redirect?
     
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
-    check_redirect_into_iframe_calltoaction
-    check_redirect_into_iframe_page
-
-    if params[:name].nil? || params[:name] == "home_filter_all"
+    @tag = get_tag_from_params(params[:name])
+    
+    if @tag.nil? || params[:name] == "home_filter_all" 
       @calltoactions = cache_short("stream_ctas_init_calltoactions") do
         CallToAction.active.limit(3).to_a
       end
     else
-      @tag = Tag.find_by_name(params[:name])
       @calltoactions = cache_short("stream_ctas_init_calltoactions_#{params[:name]}") do
         CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", @tag.id).limit(3)
       end

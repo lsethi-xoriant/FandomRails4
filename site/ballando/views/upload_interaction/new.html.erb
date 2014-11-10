@@ -10,16 +10,17 @@
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
 			<div class="panel panel-default panel-shadow" style="border: none; border-radius: 0;">
-      	<div class="panel-body" style="position: relative; padding: 0;">
+      			<div class="panel-body" style="position: relative; padding: 0;">
 					<div class="row special-guest-container">
 						<div class="col-sm-7">
-							<img src="<%= asset_path("special_guest_media_image.jpg") %>" class="img-responsive" style="width: 100%;">
+							<img src="<%= asset_path("diego.jpg") %>" class="img-responsive" style="width: 100%;">
 						</div>
 						<div class="col-sm-5">
 							<div class="row special-guest-list">
 								<div class="col-xs-12">
 									<h4 class="text-center" style="color: green; margin: 0 0 10px 0; line-height: 25px;">
-										Se sei un vero fan di Gigi D'Alessio adatta il ritornello di "ORA" e cantalo con le TUE parole!<br>I video più belli verranno pubblicati nel sito di ballando.rai.it.
+										Vorresti far vedere a Diego una tua foto durante la diretta di Ballando con le Stelle?<br />
+										Invia il tuo selfie #QuandoPensiADiego e le 3 foto più originali verranno date a Diego durante la diretta!
 									</h4>
 								</div>
 							</div>
@@ -28,7 +29,7 @@
 									<div class="boxed">1</div>
 								</div>
 								<div class="col-xs-10">
-									<p class="special-guest">Raccogli la sfida!</p>
+									<p class="special-guest">Scatta il tuo selfie</p>
 								</div>
 							</div>
 							<div class="row special-guest-list">
@@ -36,7 +37,7 @@
 									<div class="boxed">2</div>
 								</div>
 								<div class="col-xs-10">
-									<p class="special-guest">Registra il tuo video dove canti "ORA"</p>
+									<p class="special-guest">Se sei stata originale, Diego vedrà la tua foto</p>
 								</div>
 							</div>
 							<div class="row special-guest-list">
@@ -82,10 +83,10 @@
 		    <%= form_tag "/upload_interaction/create/#{ @upload_interaction.id }", multipart: true, id: "form-upload" do %>
 		    <div class="col-sm-12">
 		      <div class="row form-group">
-		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">1. Invia il tuo video</label>
+		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">1. Invia la tua foto</label>
 		        <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 text-left">
-		        	<a type="button" class="btn-2" onclick="chooseFile();" style="display: inline-block; width: 100%;">CARICA IL TUO VIDEO</a>
-		        	<p class="small" style="margin-top: 10px; color: #fff;">I file video non devono superare i 40 Mb</p>
+		        	<a type="button" class="btn-2" onclick="chooseFile();" style="display: inline-block; width: 100%;">CARICA LA TUA FOTO</a>
+		        	<p class="small" style="margin-top: 10px; color: #fff;">I file non devono superare i 40 Mb</p>
 		        	<div class="hidden"><%= file_field_tag "upload", { :onchange => "uploadDone(this)" } %></div>
 		        </div>
 		        <div class="col-xs-12 col-sm-1">
@@ -128,9 +129,9 @@
 				      <p>&nbsp;</p>
 				    </div>
 			  </div>
-				  <% end %>
+				  
 			  </div>
-			  
+			  <% end %>
 		    </div>
 		  </div>
 	</div>

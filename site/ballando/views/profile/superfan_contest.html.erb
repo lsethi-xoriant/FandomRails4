@@ -1,0 +1,36 @@
+
+<div class="container-fluid profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(get_ranking_settings).to_json %>, <%= current_user.to_json %>);">
+
+
+	<%= render partial: "profile/profile_header" %>
+  <div class="hidden-xs">
+	<%= render partial: "profile/profile_navbar", locals: { page: "superfan" } %>
+	<div class="row">
+		<div class="col-xs-12">
+			<img src="<%= asset_path('vinci.jpg') %>" class="img-responsive" />
+		</div>
+		<div class="col-xs-8 col-xs-offset-2" style="background-color: #fff; margin-top: -55px; margin-bottom: 20px;">
+			<% if @already_win %>
+				<p class="text-center" style="color: #000; font-size: 20px; padding: 20px; margin: 0;"><span style="color: green; font-size: 25px;" class="glyphicon glyphicon-ok-sign"></span> Complimenti, hai raggiunto i 200 punti Pass Superfan!</p>
+			<% else %>
+				<p class="text-center" style="color: #000; font-size: 20px; padding: 20px; margin: 0;">Ti mancano <span class="label label-warning" style="padding: 10px; font-size: 20px; font-weight: bold;">- <%= @points_to_achieve %> <span class="glyphicon glyphicon-star"></span></span> punti Pass Superfan</p>
+			<% end %>
+		</div>
+		<div class="col-xs-8 col-xs-offset-2">
+			<h4 class="text-center" style="line-height: 22px; text-transform: none;">
+				I primi tre utenti che raggiungeranno in ordine temporale i 200 punti,
+				interagendo con i contenuti pubblicati dal 07/11/2014 al 28/11/2014, 
+				verranno invitati dalla redazione all’esclusivo tour nel backstage di Ballando con le Stelle.</h4>
+			<p class="text-center"><a href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/pass-superfan.pdf" target="_blank" style="font-size: 16px; color: #fff; text-decoration: underline;">Scopri l’iniziativa</a></p>
+		</div>
+	</div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    checkDocumentHeight("fandom-profile");
+  });
+
+</script>

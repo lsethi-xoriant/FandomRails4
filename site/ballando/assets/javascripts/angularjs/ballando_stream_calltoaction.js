@@ -27,9 +27,9 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.showRegistrateView = function() {
-    redirect_top_with_cookie = "/redirect_top_with_cookie?connect_from_page=" + top.location;
+    redirect_top_with_cookie = "http://www.live.community.ballando.rai.it/redirect_top_with_cookie?connect_from_page=" + top.location;
     if($scope.current_calltoaction) {
-      redirect_top_with_cookie += "&calltoaction_id=" + $scope.current_calltoaction;  
+      redirect_top_with_cookie += "&redirect_to_page=/call_to_action/" + $scope.current_calltoaction;  
     }
     window.location.href = redirect_top_with_cookie;
   };
@@ -47,6 +47,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       		afterShareAjaxWithoutPoint(data);
       	}else{
       		updateUserRewardInView(data.main_reward_counter.weekly);
+      		//updateUserRewardInView(data.contest_points_counter);
       		afterShareAjax(data,ctaId);
       	}
       });
@@ -63,6 +64,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       		afterShareAjaxWithoutPoint(data);
       	} else {
       		updateUserRewardInView(data.main_reward_counter.weekly);
+      		//updateUserRewardInView(data.contest_points_counter);
       		afterShareAjax(data,ctaId);
       	}	
       });
@@ -224,6 +226,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
     
     showMarkerNearInteraction(interaction_id);
     updateUserRewardInView(data.main_reward_counter.weekly);
+    //updateUserRewardInView(data.contest_points_counter);
 
     $("#undervideo-area-" + interaction_id).html(data.feedback); 
     $("#undervideo-interaction-" + interaction_id).css("display", "none"); 

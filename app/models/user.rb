@@ -33,9 +33,10 @@ class User < ActiveRecord::Base
   validates_presence_of :last_name, if: Proc.new { |f| required_attr?("last_name") }
   validates :privacy, :acceptance => { :accept => true }
 
-  validates_presence_of :username
+  validates_presence_of :username, if: Proc.new { |f| required_attr?("username") }
+  validates :username, uniqueness: true, if: Proc.new { |f| required_attr?("username") }
+
   validates_presence_of :privacy
-  validates :username, uniqueness: true
 
   def required_attr?(attr_name)
     if required_attrs.present?

@@ -7,7 +7,6 @@
 //= require angularjs/ng-table
 //= require angularjs/fandom
 //= require angularjs/notice
-//= require angularjs/calltoaction
 //= require angularjs/comment
 //= require angularjs/stream_calltoaction
 //= require bootstrap

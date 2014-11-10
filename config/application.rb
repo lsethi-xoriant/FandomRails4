@@ -79,6 +79,15 @@ module Fandom
     # Deploy settings are server/installation specific, and so they should not be "versioned". 
     # Loading should be done the earliest in the boot process.
     config.deploy_settings = YAML.load_file("config/deploy_settings.yml")
+    aws_get_user_data_url = get_deploy_setting('aws/get_user_data', nil)
+    unless aws_get_user_data_url.nil?
+      puts "reading deploy configuration from AWS user data..."
+      user_data_buf = HTTParty.get(aws_get_user_data_url)
+      user_data = JSON.parse(user_data_buf)
+      settings = user_data['deploy_settings']
+      puts "... AWS user data: #{settings}"
+      config.deploy_settings.merge!(settings)
+    end
 
     elasticcache = get_deploy_setting('memcache/elasticache', nil)
     if elasticcache.nil?

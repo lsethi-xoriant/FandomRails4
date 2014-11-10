@@ -31,7 +31,10 @@ def main
     app_name: "log_daemon",
     dir_mode: :normal,
     dir: "#{app_root_path}/tmp/pids",
-    monitor: true
+    monitor: true,
+    # debugging
+    backtrace: true,
+    log_output: true
   }
 
   # the monitor log file
