@@ -161,17 +161,26 @@ class CallToActionController < ApplicationController
   def show
 
     calltoaction_id = params[:id].to_i
-    calltoaction = CallToAction.includes(:interactions).active.where("call_to_actions.id = ?", calltoaction_id).to_a
-    calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction[0].id).limit(2).to_a
-    
-    @calltoactions_with_current = calltoaction + calltoactions
+    calltoaction = CallToAction.includes(:interactions).active.find_by_id(calltoaction_id)
 
-    @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@calltoactions_with_current)
-    @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
+    if calltoaction
 
-    @calltoactions_active_interaction = Hash.new
-    aux = { show_calltoaction_page: true }
-    @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0], nil, aux)
+      calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
+      
+      @calltoactions_with_current = [calltoaction] + calltoactions
+
+      @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@calltoactions_with_current)
+      @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
+
+      @calltoactions_active_interaction = Hash.new
+      aux = { show_calltoaction_page: true }
+      @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0], nil, aux)
+
+    else
+
+      redirect_to "/"
+
+    end
     
 =begin
     if @calltoaction.enable_disqus
