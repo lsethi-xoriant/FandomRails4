@@ -29,7 +29,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   $window.showRegistrateView = function() {
     redirect_top_with_cookie = "http://www.live.community.ballando.rai.it/redirect_top_with_cookie?connect_from_page=" + top.location;
     if($scope.current_calltoaction) {
-      redirect_top_with_cookie += "&calltoaction_id=" + $scope.current_calltoaction;  
+      redirect_top_with_cookie += "&redirect_to_page=/call_to_action/" + $scope.current_calltoaction;  
     }
     window.location.href = redirect_top_with_cookie;
   };
