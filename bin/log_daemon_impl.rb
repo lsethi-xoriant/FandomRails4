@@ -12,7 +12,6 @@ TIMESTAMP_FMT = "%Y%m%d_%H%M%S_%N"
 def main
   begin
     app_root_path = ARGV[1]
-    raise "ciao"
     loop_delay = ARGV[2].to_i
     puts "Daemon start with loop_delay #{loop_delay}s"
 
