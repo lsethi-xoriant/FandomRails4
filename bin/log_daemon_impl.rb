@@ -10,48 +10,56 @@ EVENTS_COLUMNS_STRING = EVENTS_COLUMNS.join(', ')
 TIMESTAMP_FMT = "%Y%m%d_%H%M%S_%N"
 
 def main
-  loop_delay = ARGV[2].to_i
-  puts "Daemon start with loop_delay #{loop_delay}s"
+  begin
+    app_root_path = ARGV[1]
+    raise "ciao"
+    loop_delay = ARGV[2].to_i
+    puts "Daemon start with loop_delay #{loop_delay}s"
 
-  app_root_path = ARGV[1]
-  database_yaml_path = "#{app_root_path}/config/database.yml"
-  env = ARGV[0] ? ARGV[0] : "production"
-  base_db_connection = establish_connection_with_db(database_yaml_path, env)
+    database_yaml_path = "#{app_root_path}/config/database.yml"
+    env = ARGV[0] ? ARGV[0] : "production"
+    base_db_connection = establish_connection_with_db(database_yaml_path, env)
 
-  event_logs_path = "#{app_root_path}/log/events"
+    event_logs_path = "#{app_root_path}/log/events"
 
-  logger = Logger.new("#{app_root_path}/log/log_daemon.log")
+    logger = Logger.new("#{app_root_path}/log/log_daemon.log")
 
-  loop do
-    begin
-      # If directory does not exist perhaps rails as not been started yet. Waiting not it.
-      close_orphan_files(event_logs_path, logger)
-      closed_event_log_files(event_logs_path).each do |process_file_path|
-        pid, timestamp = extract_pid_and_timestamp_from_path(process_file_path)
-        insert_values_for_event = generate_sql_insert_values_for_event(process_file_path, pid)
-        begin
-          sql_query = generate_sql_insert_query(insert_values_for_event, pid, timestamp)
+    loop do
+      begin
+        # If directory does not exist perhaps rails as not been started yet. Waiting not it.
+        close_orphan_files(event_logs_path, logger)
+        closed_event_log_files(event_logs_path).each do |process_file_path|
+          pid, timestamp = extract_pid_and_timestamp_from_path(process_file_path)
+          insert_values_for_event = generate_sql_insert_values_for_event(process_file_path, pid)
+          begin
+            sql_query = generate_sql_insert_query(insert_values_for_event, pid, timestamp)
 
-          base_db_connection.connection.execute(sql_query)        
+            base_db_connection.connection.execute(sql_query)        
 
-          delete_process_file(process_file_path)
-        rescue ActiveRecord::RecordNotUnique => exception      
-          # if the file that contains log events has already been saved, an exception RecordNotUnique is raised.
-          # In this case the file will be deleted, because it means that it has already been saved in the past.
-          base_db_connection.connection.execute("ROLLBACK;")
-          delete_process_file(process_file_path)        
-          logger.error exception
-        rescue Exception => exception
-          base_db_connection.connection.execute("ROLLBACK;")
-          rename_file_path_part(process_file_path, 'closed', 'error', logger)        
-          logger.error("exception: #{exception} - #{exception.backtrace[0, 5]}")
+            delete_process_file(process_file_path)
+          rescue ActiveRecord::RecordNotUnique => exception      
+            # if the file that contains log events has already been saved, an exception RecordNotUnique is raised.
+            # In this case the file will be deleted, because it means that it has already been saved in the past.
+            base_db_connection.connection.execute("ROLLBACK;")
+            delete_process_file(process_file_path)        
+            logger.error exception
+          rescue Exception => exception
+            base_db_connection.connection.execute("ROLLBACK;")
+            rename_file_path_part(process_file_path, 'closed', 'error', logger)        
+            logger.error("exception: #{exception} - #{exception.backtrace[0, 5]}")
+          end
         end
+      rescue Exception => exception
+        logger.error("exception in main loop: #{exception} - #{exception.backtrace[0, 5]}")
       end
-    rescue Exception => exception
-      logger.error("exception in main loop: #{exception} - #{exception.backtrace[0, 5]}")
-    end
 
-    sleep(loop_delay)
+      sleep(loop_delay)
+    end
+  rescue Exception => ex
+    File.open("#{app_root_path}/log/log_daemon.log", 'a') do |f|
+      f.puts("daemons died unexpectedly: #{ex.to_s} - #{ex.backtrace[0, 5]}")
+      f.flush
+    end
   end
 end
 
