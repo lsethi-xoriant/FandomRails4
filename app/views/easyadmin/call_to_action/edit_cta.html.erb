@@ -236,7 +236,7 @@
 
 <script type="text/javascript">
 
-  tl = <%= raw(Tag.select("name").map(&:name).to_json) %>;
+  tl = <%= raw(Tag.select("name").where("valid_to IS NULL OR valid_to > now()").map(&:name).to_json) %>;
   $(document).ready(function() {
 
     $(".answer-media-type").each(function(i, obj) {

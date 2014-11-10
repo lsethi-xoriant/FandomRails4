@@ -76,6 +76,64 @@ class Easyadmin::EasyadminController < ApplicationController
   def edit_tag
     @tag = Tag.find(params[:id])
   end
+  
+  def retag_tag
+    if params[:commit] == "RITAGGA"
+
+      if params[:old_tags_id_list].blank?
+        msg = "Tag da ricercare non inseriti"
+        flash.now[:error] = (flash.now[:error] ||= []) << msg
+      elsif params[:new_tag].is_a?(Array)
+        msg = "Inserire un solo nuovo tag"
+        flash.now[:error] = (flash.now[:error] ||= []) << msg
+      end
+      if params[:new_tag].blank?
+        msg = "Nuovo tag non inserito"
+        flash.now[:error] = (flash.now[:error] ||= []) << msg
+      end
+
+      if params[:old_tags_id_list].present? && params[:new_tag].present? 
+
+        update_class_tag_table(CallToActionTag, "call_to_action_id", "tag_id")
+        update_class_tag_table(RewardTag, "reward_id", "tag_id")
+        update_class_tag_table(TagsTag, "tag_id", "other_tag_id")
+
+      end
+
+    end
+  end
+  
+  def update_class_tag_table(class_name, class_id_field, tag_id_field)
+    id_objects_to_update = class_name.pluck(class_id_field)
+    old_tags_array = params[:old_tags_id_list].split(",").map(&:to_i)
+
+    old_tags_array.each do |tag_id|
+      id_objects_tagged = class_name.where("#{tag_id_field} = ?", tag_id).pluck(class_id_field)
+      id_objects_to_update = id_objects_to_update & id_objects_tagged # intersection
+    end
+
+    id_objects_to_update.each do |object_id|
+      # class_name.delete_all(["#{class_id_field} = ?", object_id]) # uncomment if old tagging must be dismissed
+      new_tag = is_an_integer?(params[:new_tag]) ? Tag.find_by_id(params[:new_tag]) : Tag.find_by_name(params[:new_tag])
+      new_tag = Tag.create(name: params[:new_tag]) unless new_tag
+
+      if class_name.where("#{class_id_field} = ? AND #{tag_id_field} = ?", object_id, new_tag.id).count == 0
+        object_tag = class_name.new
+        object_tag[class_id_field] = object_id
+        object_tag[tag_id_field] = new_tag.id
+        object_tag.save
+      end
+    end
+
+    if id_objects_to_update.size > 0
+      flash.now[:notice].nil? ? flash.now[:notice] = ["#{class_name.to_s.slice(0..-4)} ritaggati/e"] 
+                              : flash.now[:notice] << "#{class_name.to_s.slice(0..-4)} ritaggati/e"
+    end
+  end
+  
+  def is_an_integer?(str)
+    !!(str =~ /\A[-+]?[0-9]+\z/)
+  end
 
   def update_tag
     @tag = Tag.find(params[:id])

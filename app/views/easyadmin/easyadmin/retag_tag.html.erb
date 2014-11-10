@@ -1,0 +1,164 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "tags" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1>RITAGGA</h1>
+    </div> <!-- #content-header --> 
+
+    <div id="content-container">
+    
+    <div class="row">
+      <div class="col-md-12">
+		<% if flash.now[:error] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p>Errori nel ritaggare:</p>
+                <p>
+                  <ul>
+                    <% flash.now[:error].each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+          <% elsif flash.now[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= safe_join(flash.now[:notice], "<br>".html_safe) %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    	    
+	    <div class="row">
+    		<div class="col-lg-8 col-lg-offset-2">
+    			<div class="alert alert-info" role="alert">
+    				Avviando la funzione "RITAGGA", verrà aggiunto il tag inserito in "Nuovo tag" ai contenuti (Call to
+    				action, Reward, Tag) che presentano TUTTI i tag inseriti nel campo "Aggiorna contenuti taggati con".<br>
+    				Per aggiornare i contenuti che presentano ALMENO UNO fra i tag da ricercare, è necessario chiamare
+    				la funzione per ciascun tag da ricercare singolarmente.
+    				<dl class="dl-horizontal">
+    					<dt>Attenzione:</dt><dd>I tag attualmente non validi non risultano presenti negli elenchi a cascata.</dd>
+    				</dl>
+    			</div>
+    		</div>
+    	</div>
+
+    	<%= form_tag :method => 'post' do %>
+
+    	<h3>Aggiorna contenuti taggati con:</h3>
+
+    	<div class="row">
+        <div class="col-sm-6">
+            <%= text_field_tag :old_tags_id_list, @old_tags_id_list, { id: "s2_tokenization", class: "form-control" } %>
+            <span class="help-block">Per separare i TAG digita virgola</span>
+        </div>
+      </div>
+      
+      <p id="message"> </p>
+      <hr/>
+
+      <h3>Nuovo tag</h3>
+
+      <div class="row">
+        <div class="col-sm-6">
+            <%= text_field_tag :new_tag, @new_tag, { id: "s2_tokenization_single", class: "form-control" } %>
+        </div>
+      </div>
+
+      <p id="message_single"> </p>
+      <hr/>
+
+      <br/>
+      <div class="row text-center">
+        <div class="col-sm12">
+          <%= submit_tag 'RITAGGA', class: 'btn btn-primary' %>
+        </div>
+      </div> 
+      
+		<% end %>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+  tl = <%= raw(Tag.select("id, name").where("valid_to IS NULL OR valid_to > now()").map{|t| {id:"#{t.id}", text:"#{t.name}"}}.to_json) %>;
+
+  $(document).ready(function() {
+    $('#s2_tokenization').select2({
+      placeholder: "",
+      tags: tl,
+      tokenSeparators: [","]
+    })
+
+    $('#s2_tokenization_single').select2({
+      placeholder: "",
+      tags: tl,
+      multiple: false
+    })
+  })
+  
+  $("#s2_tokenization").bind("change", show);
+  $("#s2_tokenization_single").bind("change", show);
+
+  function show() {
+  	unactiveTagsName = <%= raw(Tag.where("valid_to < now()").pluck("name").to_json) %>;
+  	allTagsName = <%= raw(Tag.pluck("name").to_json) %>;
+  	allTagsId = <%= raw(Tag.pluck("id").collect{|id| id.to_s }.to_json) %>;
+
+  	//console.log($('#s2_tokenization').select2("val"));
+  	//console.log($('#s2_tokenization_single').select2("val"));
+
+  	unactiveTagsSelected1 = intersect($('#s2_tokenization').select2("val"), unactiveTagsName);
+  	if(unactiveTagsSelected1.length > 0) {
+	  var unactiveTagMsg1 = $(renderAlertDiv("Attenzione: tag '" + unactiveTagsSelected1 + "' non attivo/i"));
+	  var unactiveTagMsgHasChanged1 = true;
+  	}
+  	
+  	unactiveTagsSelected2 = intersect($('#s2_tokenization_single').select2("val"), unactiveTagsName);
+  	if(unactiveTagsSelected2.length > 0) {
+	  var unactiveTagMsg2 = $(renderAlertDiv("Attenzione: tag '" + unactiveTagsSelected2 + "' non attivo/i"));
+	  var unactiveTagMsgHasChanged2 = true;
+  	}
+
+  	existentTagsSelected1 = intersect($('#s2_tokenization').select2("val"), allTagsId);
+  	if((existentTagsSelected1.length != $('#s2_tokenization').select2("val").length) & !unactiveTagMsgHasChanged1) {
+  	//console.log($('#s2_tokenization').select2("val").length);
+  	//console.log(existentTagsSelected1.length);
+  	  var newTagMsg1 = $(renderAlertDiv("Attenzione, sono stati inseriti nomi di tag non esistenti!"));
+  	}
+  	
+  	existentTagsSelected2 = intersect($('#s2_tokenization_single').select2("val"), allTagsId);
+  	if((existentTagsSelected2.length != $('#s2_tokenization_single').select2("val").length) & !unactiveTagMsgHasChanged2) {
+  	//console.log($('#s2_tokenization_single').select2("val").length);
+  	//console.log(existentTagsSelected2.length);
+  	  var newTagMsg2 = $(renderAlertDiv("Nuovi tag verranno creati"));
+  	}
+
+    //var change = $("<div style='background-color:yellow;'>change fired</div>");
+    //$("#message").empty().append(change);
+    //change.animate({opacity:0}, 3000, 'linear', function() { change.remove(); });
+    var unactiveTagMsgHasChanged1 = false;
+    var unactiveTagMsgHasChanged2 = false;
+    $("#message").empty().append(unactiveTagMsg1, newTagMsg1);
+    $("#message_single").empty().append(unactiveTagMsg2, newTagMsg2);
+  };
+
+  function intersect(a, b) {
+    var t;
+    if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
+    return a.filter(function (e) {
+        if (b.indexOf(e) !== -1) return true;
+    });
+  }
+  
+  function renderAlertDiv(str) {
+  	return "<div class='alert alert-info' role='alert'>" + str + "</div>";
+  }
+
+</script>

@@ -87,6 +87,7 @@ Fandom::Application.routes.draw do
     resources :vote_ranking
     
     match "tag/clone/:id", :to => "tag#clone"
+    match "retag", :to => "easyadmin#retag_tag"
     
     match "winner", :to => "easyadmin#index_winner"
     match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
