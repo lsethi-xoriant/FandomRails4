@@ -1,0 +1,53 @@
+
+<div class="row">
+    <div class="col-sm-6">
+		<%= text_field_tag id_text_field, instance_text_field, { id: id_text_field, class: "form-control" } %>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+  tagList = <%= raw(Tag.select("id, name").where("valid_to IS NULL OR valid_to > now()").map{|t| {id:"#{t.id}", text:"#{t.name}"}}.to_json) %>;
+  unactiveTagsName = <%= raw(Tag.where("valid_to < now()").pluck("name").to_json) %>;
+  allTagsName = <%= raw(Tag.pluck("name").to_json) %>;
+  allTagsId = <%= raw(Tag.pluck("id").collect{|id| id.to_s }.to_json) %>; 
+
+  $("<%= "##{id_text_field}" %>").select2({
+    placeholder: "",
+    tags: tagList,
+    tokenSeparators: [","]
+  });
+  
+  $("<%= "##{id_text_field}" %>").bind("change", function() {
+
+  	values = $("<%= "##{id_text_field}" %>").select2("val")
+  	console.log(values);
+
+  	unactiveTagsSelected = intersect(values, unactiveTagsName);
+  	if(unactiveTagsSelected.length > 0) {
+	  var unactiveTagMsg = $(renderAlertDiv("Attenzione: tag '" + unactiveTagsSelected + "' non attivo/i"));
+	  var unactiveTagMsgHasChanged = true;
+  	}
+
+  	existentTagsSelected = intersect(values, allTagsId).concat(intersect(values, allTagsName));
+  	if((existentTagsSelected.length != values.length) & !unactiveTagMsgHasChanged) {
+  	  var newTagMsg = $(renderAlertDiv("<%= "#{new_tag_message}" %>"));
+  	}
+
+    var unactiveTagMsgHasChanged = false;
+    $("<%= "##{id_text_field}_message" %>").empty().append(unactiveTagMsg, newTagMsg);
+  });
+
+  function intersect(a, b) {
+    var t;
+    if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
+    return a.filter(function (e) {
+        if (b.indexOf(e) !== -1) return true;
+    });
+  }
+  
+  function renderAlertDiv(str) {
+  	return "<div class='alert alert-info' role='alert'>" + str + "</div>";
+  }
+
+</script>
