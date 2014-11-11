@@ -45,6 +45,8 @@ Fandom::Application.routes.draw do
           match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
           
           match "/special_guest", :to => "application#redirect_into_special_guest"
+          
+          match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
         end
       end
     end

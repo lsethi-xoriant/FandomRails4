@@ -457,13 +457,18 @@ class CallToActionController < ApplicationController
     end
 
     response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
-    response["contest_points_counter"] = [SUPERFAN_CONTEST_POINTS_TO_WIN - (get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD, false) || 0), 0].max
-
+    
+    response = setup_update_interaction_response_info(response)
+    
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
   end 
 
+  def setup_update_interaction_response_info(response)
+    response
+  end
+  
   def calltoaction_overvideo_end
     calltoaction = CallToAction.find(params[:calltoaction_id])
     interaction = calltoaction.interactions.find_by_when_show_interaction("OVERVIDEO_END")
