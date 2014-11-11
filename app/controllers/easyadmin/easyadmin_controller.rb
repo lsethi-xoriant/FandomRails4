@@ -83,21 +83,17 @@ class Easyadmin::EasyadminController < ApplicationController
       if params[:old_tags_id_list].blank?
         msg = "Tag da ricercare non inseriti"
         flash.now[:error] = (flash.now[:error] ||= []) << msg
-      elsif params[:new_tag].is_a?(Array)
-        msg = "Inserire un solo nuovo tag"
-        flash.now[:error] = (flash.now[:error] ||= []) << msg
       end
       if params[:new_tag].blank?
         msg = "Nuovo tag non inserito"
         flash.now[:error] = (flash.now[:error] ||= []) << msg
-      end
-
-      if params[:old_tags_id_list].present? && params[:new_tag].present? 
-
+      elsif params[:new_tag].include? ","
+        msg = "Inserire un solo nuovo tag"
+        flash.now[:error] = (flash.now[:error] ||= []) << msg
+      elsif params[:old_tags_id_list].present? && params[:new_tag].present? 
         update_class_tag_table(CallToActionTag, "call_to_action_id", "tag_id")
         update_class_tag_table(RewardTag, "reward_id", "tag_id")
         update_class_tag_table(TagsTag, "tag_id", "other_tag_id")
-
       end
 
     end
@@ -105,7 +101,14 @@ class Easyadmin::EasyadminController < ApplicationController
   
   def update_class_tag_table(class_name, class_id_field, tag_id_field)
     id_objects_to_update = class_name.pluck(class_id_field)
-    old_tags_array = params[:old_tags_id_list].split(",").map(&:to_i)
+
+    old_tags_array = params[:old_tags_id_list].split(",").map { |id|
+      if is_an_integer?(id)
+        id.to_i
+      else
+        Tag.find_by_name(id)
+      end
+    }
 
     old_tags_array.each do |tag_id|
       id_objects_tagged = class_name.where("#{tag_id_field} = ?", tag_id).pluck(class_id_field)
@@ -126,11 +129,10 @@ class Easyadmin::EasyadminController < ApplicationController
     end
 
     if id_objects_to_update.size > 0
-      flash.now[:notice].nil? ? flash.now[:notice] = ["#{class_name.to_s.slice(0..-4)} ritaggati/e"] 
-                              : flash.now[:notice] << "#{class_name.to_s.slice(0..-4)} ritaggati/e"
+      flash.now[:notice] = (flash.now[:notice] ||= []) << "#{class_name.to_s.slice(0..-4)} ritaggati/e"
     end
   end
-  
+
   def is_an_integer?(str)
     !!(str =~ /\A[-+]?[0-9]+\z/)
   end

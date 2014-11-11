@@ -99,7 +99,7 @@
     $('#s2_tokenization_single').select2({
       placeholder: "",
       tags: tl,
-      multiple: false
+      tokenSeparators: [","]
     })
   })
   
@@ -111,38 +111,31 @@
   	allTagsName = <%= raw(Tag.pluck("name").to_json) %>;
   	allTagsId = <%= raw(Tag.pluck("id").collect{|id| id.to_s }.to_json) %>;
 
-  	//console.log($('#s2_tokenization').select2("val"));
-  	//console.log($('#s2_tokenization_single').select2("val"));
+  	val1 = $('#s2_tokenization').select2("val")
+  	val2 = $('#s2_tokenization_single').select2("val")
 
-  	unactiveTagsSelected1 = intersect($('#s2_tokenization').select2("val"), unactiveTagsName);
+  	unactiveTagsSelected1 = intersect(val1, unactiveTagsName);
   	if(unactiveTagsSelected1.length > 0) {
 	  var unactiveTagMsg1 = $(renderAlertDiv("Attenzione: tag '" + unactiveTagsSelected1 + "' non attivo/i"));
 	  var unactiveTagMsgHasChanged1 = true;
   	}
   	
-  	unactiveTagsSelected2 = intersect($('#s2_tokenization_single').select2("val"), unactiveTagsName);
+  	unactiveTagsSelected2 = intersect(val2, unactiveTagsName);
   	if(unactiveTagsSelected2.length > 0) {
 	  var unactiveTagMsg2 = $(renderAlertDiv("Attenzione: tag '" + unactiveTagsSelected2 + "' non attivo/i"));
 	  var unactiveTagMsgHasChanged2 = true;
   	}
 
-  	existentTagsSelected1 = intersect($('#s2_tokenization').select2("val"), allTagsId);
-  	if((existentTagsSelected1.length != $('#s2_tokenization').select2("val").length) & !unactiveTagMsgHasChanged1) {
-  	//console.log($('#s2_tokenization').select2("val").length);
-  	//console.log(existentTagsSelected1.length);
+  	existentTagsSelected1 = intersect(val1, allTagsId).concat(intersect(val1, allTagsName));
+  	if((existentTagsSelected1.length != val1.length) & !unactiveTagMsgHasChanged1) {
   	  var newTagMsg1 = $(renderAlertDiv("Attenzione, sono stati inseriti nomi di tag non esistenti!"));
   	}
   	
-  	existentTagsSelected2 = intersect($('#s2_tokenization_single').select2("val"), allTagsId);
-  	if((existentTagsSelected2.length != $('#s2_tokenization_single').select2("val").length) & !unactiveTagMsgHasChanged2) {
-  	//console.log($('#s2_tokenization_single').select2("val").length);
-  	//console.log(existentTagsSelected2.length);
+  	existentTagsSelected2 = intersect(val2, allTagsId).concat(intersect(val2, allTagsName));
+  	if((existentTagsSelected2.length != val2.length) & !unactiveTagMsgHasChanged2) {
   	  var newTagMsg2 = $(renderAlertDiv("Nuovi tag verranno creati"));
   	}
 
-    //var change = $("<div style='background-color:yellow;'>change fired</div>");
-    //$("#message").empty().append(change);
-    //change.animate({opacity:0}, 3000, 'linear', function() { change.remove(); });
     var unactiveTagMsgHasChanged1 = false;
     var unactiveTagMsgHasChanged2 = false;
     $("#message").empty().append(unactiveTagMsg1, newTagMsg1);
