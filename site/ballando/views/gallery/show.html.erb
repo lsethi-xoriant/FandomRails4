@@ -13,7 +13,11 @@
       			<div class="panel-body" style="position: relative; padding: 0;">
 					<div class="row special-guest-container">
 						<div class="col-sm-7">
-							<img src="<%= @extra_info['header_image'].url %>" class="img-responsive" style="width: 100%;">
+							<% if @extra_info['header_image'] %>
+								<img src="<%= @extra_info['header_image'].url %>" class="img-responsive" style="width: 100%;">
+							<% elsif @extra_info['header_embed'] %>
+								<%= @extra_info['header_embed'] %>
+							<% end %>
 						</div>
 						<div class="col-sm-5">
 							<div class="row special-guest-list">
