@@ -111,7 +111,10 @@ module ApplicationHelper
   end
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
-    user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
+
+    unless anonymous_user?(user)
+      user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
+    end
 
     if user_interaction
       if interaction.resource_type.downcase == "share"
@@ -122,9 +125,11 @@ module ApplicationHelper
       UserCounter.update_counters(interaction, user_interaction, user, false) 
     else
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, like: like, aux: aux)
-      UserCounter.update_counters(interaction, user_interaction, user, true)
-
-      expire_cache_key(get_cta_completed_or_reward_status_cache_key(interaction.call_to_action_id, user.id))
+  
+      unless anonymous_user?(user)
+        UserCounter.update_counters(interaction, user_interaction, user, true)
+        expire_cache_key(get_cta_completed_or_reward_status_cache_key(interaction.call_to_action_id, user.id))
+      end
     end
 
     outcome = compute_save_and_notify_outcome(user_interaction)
@@ -153,7 +158,10 @@ module ApplicationHelper
     end
 
     user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
-    user_interaction.save
+
+    unless anonymous_user?(user)
+      user_interaction.save
+    end
   
     [user_interaction, outcome]
   
@@ -387,6 +395,10 @@ module ApplicationHelper
     cache_medium('anonymous_user') { 
       User.find_by_email("anonymous@shado.tv")
     }
+  end
+
+  def anonymous_user?(user)
+    anonymous_user.id == user.id
   end
 
   def current_or_anonymous_user

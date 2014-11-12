@@ -40,6 +40,7 @@ module ConfigUtils
     attribute :public_pages, :default => Set.new([])
     attribute :periodicity_kinds, :default => [PERIOD_KIND_DAILY, PERIOD_KIND_WEEKLY, PERIOD_KIND_MONTHLY]
     attribute :required_attrs, :default => []
+    attribute :anonymous_interaction, :default => false
 
     def unbranded?
       self.id == 'fandom'

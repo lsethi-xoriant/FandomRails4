@@ -1,46 +1,33 @@
-<div class="col-md-6 col-xs-6">
-
-  <!-- IMAGE SECTION -->
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 choice choosen">
-      <% if user_interaction %>
-        <div class="status">
-          <h1><%= interaction_answer_percentage(interaction, answer) %>%</h1>
-        </div>
-      <% end %>
-      <a href="javascript: void(0)" class="thumbnail" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><img src="<%= answer.image(:medium) %>" alt="..."></a>
+<!-- IMAGE SECTION -->
+<div class="row">
+  <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 choice choosen">
+    <div ng-if="interaction_info.user_interaction">
+      <div class="status">
+        <h1>{{answer.percentage}}%</h1>
+      </div>
     </div>
-  </div>
 
-  <!-- VOTE BAR SECTION -->
+    <a href="javascript: void(0)" class="thumbnail" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)"><img src="{{answer.image_medium}}"></a>
+  </div>
+</div>
+<!-- BUTTON SECTION -->
+<div ng-if="interaction_info.user_interaction">
   <div class="row">
     <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-      <div class="vs-level-container" style="margin-top: 5px;">
-        <% if user_interaction %>
-          <div class="vs-level-inner-sx" style="width: <%= interaction_answer_percentage(interaction, answer) %>%;"></div>
-        <% end %>
+      <div ng-if="interaction_info.interaction.resource.one_shot">
+        <a type="button" class="btn btn-block btn-lg {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-primary active' : 'btn-default'}} disabled">{{answer.text}}</a>
+      </div>
+      <div ng-if="!interaction_info.interaction.resource.one_shot">
+        <a type="button" class="btn btn-block btn-lg {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-primary active' : 'btn-default'}}" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
       </div>
     </div>
   </div>
-  
-  <!-- BUTTON SECTION -->
-  <% if user_interaction %>
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-        <% if interaction.resource.one_shot %>
-          <a type="button" class="btn btn-block btn-lg <%= answer.id == user_interaction.answer_id ? "btn-primary active" : "btn-default" %> disabled"><%= answer.text %></a>
-        <% else %>
-          <a type="button" class="btn btn-block btn-lg <%= answer.id == user_interaction.answer_id ? "btn-primary active" : "btn-default" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></a>
-        <% end %>
-      </div>
+</div>
+<div ng-if="!interaction_info.user_interaction">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+      <a type="button" class="btn btn-block btn-lg btn-primary" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
     </div>
-  <% else %>
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-        <a type="button" class="btn btn-block btn-lg btn-primary" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></a>
-      </div>
-    </div>
-  <% end %>
-
+  </div>
 </div>
                                       

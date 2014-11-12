@@ -13,7 +13,7 @@
 //= require angularjs/notice
 //= require angularjs/comment
 //= require angularjs/ranking
-//= require angularjs/stream_calltoaction
+//= require angularjs/ballando_stream_calltoaction_base
 //= require angularjs/ballando_stream_calltoaction
 //= require angularjs/ballando_iframe_calltoaction
 //= require angularjs/eventfilter

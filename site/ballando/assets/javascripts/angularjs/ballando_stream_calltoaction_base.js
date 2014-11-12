@@ -10,7 +10,8 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
-  $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
+  $scope.init = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
+
     $scope.aux = aux;
     $scope.current_user = current_user;
 
@@ -26,7 +27,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.play_event_tracked = {};
     $scope.current_user_answer_response_correct = {};
 
-    $scope.calltoactions = calltoaction_info_list;
+    $scope.calltoactions = calltoactions;
     $scope.calltoactions_during_video_interactions_second = calltoactions_during_video_interactions_second;
     $scope.current_calltoaction = current_calltoaction;
     $scope.calltoactions_count = calltoactions_count;
@@ -75,39 +76,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     localStorage.setItem($scope.aux.tenant, JSON.stringify(anonymous_user));
   };
 
-  function updateUserInteraction(calltoaction_id, interaction_id, user_interaction) {
-    angular.forEach($scope.calltoactions, function(calltoaction_info) {
-      if(calltoaction_info.calltoaction.id == calltoaction_id) {
-        angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
-          if(interaction_info.interaction.id == interaction_id) {
-            interaction_info.user_interaction = user_interaction;
-          }
-        });
-      }
-    });
-  }
-
-  function updateAnswers(calltoaction_id, interaction_id, answers) {
-    angular.forEach($scope.calltoactions, function(calltoaction_info) {
-      if(calltoaction_info.calltoaction.id == calltoaction_id) {
-        angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
-          if(interaction_info.interaction.id == interaction_id) {
-            interaction_info.interaction.resource.answers = answers;
-          }
-        });
-      }
-    });
-  }
-
-  function getCallToActionMediaData(calltoaction_id) {
-    angular.forEach($scope.calltoactions, function(calltoaction_info) {
-      if(calltoaction_info.calltoaction.id == calltoaction_id) {
-        media_data = calltoaction_info.calltoaction.media_data;
-      }
-    });
-    return media_data ? media_data : null;
-  }
-
   //////////////////////// UPDATING AND ADDING PLAYERS AND CALLTOACTIONS METHODS ////////////////////////
 
   $window.updateSecondaryVideoPlayers = function(calltoactions) {
@@ -142,8 +110,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         } else {
           $("#append-other button").show();
         }
-		
-		    updateFiltersMenu(tag_id);
+    
+        updateFiltersMenu(tag_id);
         
       }).error(function() {
         // ERROR.
@@ -151,7 +119,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.updateFiltersMenu = function(tag_id){
-  	$(".home-filter").removeClass("active");
+    $(".home-filter").removeClass("active");
         if(tag_id) {
           $("#home-filter-" + tag_id).addClass("active");
         } else {
@@ -195,7 +163,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
-  $scope.appendCallToAction = function() {
+  $window.appendCallToAction = function() {
     if($scope.calltoactions.length < $scope.calltoactions_count) {
 
       $("#append-other button").attr('disabled', true);
@@ -210,15 +178,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         }
         $scope.calltoactions_during_video_interactions_second = hash_main;
 
+        $("#calltoaction-stream").append(data.html_to_append);
+
         if($scope.calltoactions.length >= $scope.calltoactions_count) {
           $("#append-other button").hide();
         }
 
         updateSecondaryVideoPlayers(data.calltoactions);
 
-        angular.forEach(data.calltoaction_info_list, function(calltoaction_info) {
-          $scope.calltoactions.push(calltoaction_info);
-          appendYTIframe(calltoaction_info);
+        angular.forEach(data.calltoactions, function(calltoaction) {
+          $scope.calltoactions.push(calltoaction);
+          appendYTIframe(calltoaction);
         });
 
         $scope.last_calltoaction_shown_activated_at = $scope.calltoactions[$scope.calltoactions.length - 1].activated_at;
@@ -247,8 +217,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   //////////////////////// SHOWING AND GETTING INTERACTION METHODS ////////////////////////
 
-  $scope.showCallToAction = function(calltoaction_id, calltoaction_media_type) {
-    if(calltoaction_media_type == "IFRAME") {
+  $window.showCallToAction = function(calltoaction_id, calltoaction_media_type) {
+
+    if(calltoaction_media_type == "iframe") {
 
       $(".calltoaction-cover").removeClass("hidden");
       $(".media-iframe").addClass("hidden");
@@ -257,7 +228,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         $(obj).remove();
       });
 
-      $("#iframe-calltoaction-" + calltoaction_id).html(getCallToActionMediaData(calltoaction_id));
+      $("#iframe-calltoaction-" + calltoaction_id).html($scope.video_players[calltoaction_id]);
       $("#iframe-calltoaction-" + calltoaction_id).removeClass("hidden");
 
       $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
@@ -450,20 +421,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
-  $scope.updateAnswer = function(calltoaction_id, interaction_id, params, when_show_interaction) {
-
+  $window.updateAnswer = function(calltoaction_id, interaction_id, params, when_show_interaction) {
     if($scope.current_user || $scope.aux.anonymous_interaction) {
 
       $(".button-inter-" + interaction_id).attr('disabled', true);
       $(".button-inter-" + interaction_id).attr('onclick', "");
 
       enableWaitingAudio("stop");
-  	  $("#fountainG").removeClass("hidden");
-  	  
+      $("#fountainG").removeClass("hidden");
+      
       $http.post("/update_interaction", { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getLocalStorage() })
           .success(function(data) {
-			
-            // GOOGLE ANALYTICS
+      
             if(data.ga) {
               update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
               angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
@@ -475,13 +444,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
               setLocalStorageAttr($scope.aux.main_reward_name, data.main_reward_counter);
             }
 
-            updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-
-            if(data.answers) {
-              updateAnswers(calltoaction_id, interaction_id, data.answers);
-            }
-
-            /*
             if(data.download_interaction_attachment) {
               window.open(data.download_interaction_attachment, '_blank');
             }
@@ -519,7 +481,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             } else {
               updateCallToActionRewardCounter(calltoaction_id, data.winnable_reward_count);
             }
-            */
 
           }).error(function() {
             // ERROR.
@@ -535,8 +496,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
   
   $window.updateVote = function(call_to_action_id, interaction_id, when_show_interaction){
-  	var vote = $("#interaction-"+interaction_id+"-vote-value").val();
-  	updateAnswer(call_to_action_id, interaction_id, vote, when_show_interaction);
+    var vote = $("#interaction-"+interaction_id+"-vote-value").val();
+    updateAnswer(call_to_action_id, interaction_id, vote, when_show_interaction);
   };
 
   //////////////////////// UPDATING VIEW METHODS AFTER USER INTERACTION ////////////////////////

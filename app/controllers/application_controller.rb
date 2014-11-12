@@ -86,6 +86,19 @@ class ApplicationController < ActionController::Base
       CallToAction.active.count
     end
 
+    ########## NEW ANGULAR TEMPLATES ##########
+    unless get_site_from_request(request)["id"] == "ballando"
+      # TODO: BALLANDO
+      @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
+    end
+    ########## NEW ANGULAR TEMPLATES ##########
+
+    @aux = {
+      "tenant" => get_site_from_request(request)["id"],
+      "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
+      "main_reward_name" => MAIN_REWARD_NAME
+    }
+
     @calltoactions_active_interaction = Hash.new
 
     @home = true

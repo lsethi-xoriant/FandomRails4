@@ -3,6 +3,113 @@ require 'digest/md5'
 
 module CallToActionHelper
 
+
+  def get_tag_field_value(tag, name)
+    tag.tag_fields.select { |tf| tf.name == name }.map { |tf| tf.value }.first rescue nil
+  end
+
+  def build_call_to_action_info_list(calltoactions)
+    calltoaction_info_list = Array.new
+    calltoactions.each do |calltoaction|
+
+      miniformat = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
+      
+      calltoaction_info_list << {
+        "calltoaction" => { 
+          "id" => calltoaction.id,
+          "media_type" => calltoaction.media_type,
+          "media_image" => calltoaction.media_image, 
+          "media_data" => calltoaction.media_data, 
+          "thumbnail_url" => calltoaction.thumbnail_url,
+          "interaction_info_list" => build_interaction_info_list(calltoaction)
+        },
+        "miniformat" => {
+          "label_background" => get_tag_field_value(miniformat, "label-background"),
+          "icon" => get_tag_field_value(miniformat, "icon"),
+          "label_color" => get_tag_field_value(miniformat, "label-color"),
+          "title" => get_tag_field_value(miniformat, "title")
+        },
+        "status" => compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction)
+      }
+    
+    end
+
+    return calltoaction_info_list
+
+  end
+
+  def build_interaction_info_list(calltoaction)
+
+    interaction_info_list = Array.new
+    always_shown_interactions(calltoaction).each do |interaction|
+
+      resource = interaction.resource
+      resource_type = interaction.resource_type.downcase
+      if resource_type == "quiz"
+        resource_type = resource.quiz_type.downcase
+        answers = build_answers_for_resource(interaction, resource.answers, resource_type)
+      end
+
+      resource_question = resource.question rescue nil
+      resource_title = resource.title rescue nil
+      resource_one_shot = resource.one_shot rescue false
+
+      if current_user
+        user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)
+        if user_interaction
+          user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
+        end
+      end
+
+      interaction_info_list << {
+        "interaction" => {
+          "id" => interaction.id,
+          "when_show_interaction" => interaction.when_show_interaction,
+          "resource_type" => resource_type,
+          "resource" => {
+            "question" => resource_question,
+            "title" => resource_title,
+            "one_shot" => resource_one_shot,
+            "answers" => answers
+          }
+        },
+        "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction),
+        "user_interaction" => user_interaction_for_interaction_info
+      }
+
+    end
+
+    return interaction_info_list
+
+  end
+
+  def build_user_interaction_for_interaction_info(user_interaction)
+    outcome = JSON.parse(user_interaction.outcome)["win"]["attributes"] rescue nil
+    { 
+      "id" => user_interaction.id,
+      "user_id" => user_interaction.user_id,
+      "outcome" => outcome,
+      "answer" => user_interaction.answer
+    }
+  end
+
+  def build_answers_for_resource(interaction, answers, resource_type)
+    answers_for_resurce = Array.new
+    answers.each do |answer|
+      if resource_type == "versus"
+        percentage = interaction_answer_percentage(interaction, answer)
+      end
+      answers_for_resurce << {
+        "id" => answer.id,
+        "text" => answer.text,
+        "image_medium" => answer.image(:medium),
+        "correct" => answer.correct,
+        "percentage" => percentage
+      }
+    end
+    answers_for_resurce
+  end
+
   def generate_next_interaction_response(calltoaction, interactions_showed = nil, aux = {})
     response = Hash.new  
     interactions = calculate_next_interactions(calltoaction, interactions_showed)

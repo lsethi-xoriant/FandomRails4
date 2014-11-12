@@ -1,62 +1,45 @@
 <!-- MEDIA -->
 <div class="row">
   <div class="col-md-12">
-
     <!-- SECONDARY MEDIA -->
-    <div id="secondary-media-<%= calltoaction.id %>" class="hidden">
-      <div id="secondary-media-video-<%= calltoaction.id %>" class="video flex-video widescreen secondary-media" style="background:#222;"> 
-        <div id="home-stream-video-secondary-<%= calltoaction.id %>" main-calltoaction-media="false" calltoaction-id="<%= calltoaction.id %>"></div>
+    <div id="secondary-media-{{calltoaction_info.calltoaction.id}}" class="hidden">
+      <div id="secondary-media-video-{{calltoaction_info.calltoaction.id}}" class="video flex-video widescreen secondary-media"> 
+        <div id="home-stream-video-secondary-{{calltoaction_info.calltoaction.id}}" main-calltoaction-media="false" calltoaction-id="{{calltoaction_info.calltoaction.id}}"></div>
         <!-- OVERVIDEO AREA -->
-        <div class="home-overvideo-feedback-<%= calltoaction.id %>"></div> 
+        <div class="home-overvideo-feedback-{{calltoaction_info.calltoaction.id}}"></div> 
       </div>
-      <img id="secondary-media-image-<%= calltoaction.id %>" class="secondary-media" src="<%= calltoaction.media_image %>" style="width: 100%;">
+      <img id="secondary-media-image-{{calltoaction_info.calltoaction.id}}" class="secondary-media" src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
     </div>
-
-    <!-- MAIN MEDIA -->
-    <% if calltoaction.media_type == "YOUTUBE" %>
-      <div id="main-media-<%= calltoaction.id %>">
-        <div class="video flex-video widescreen v-center media-youtube" style="background:#222;">             
-          <!-- IFRAME VIDEO -->
-          <div id="home-stream-video-<%= calltoaction.id %>" main-calltoaction-media=true calltoaction-id="<%= calltoaction.id %>" interaction-play-id="<%= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").try(:id) %>"></div>
-          <!-- OVERVIDEO AREA -->
-          <div id="home-overvideo-<%= calltoaction.id %>"></div>                 
-          <!-- OVERVIDEO FEEDBACK -->
-          <div class="home-overvideo-feedback-<%= calltoaction.id %>"></div>
+    <!-- MAIN MEDIA YOUTUBE -->
+    <div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE'" id="main-media-{{calltoaction_info.calltoaction.id}}">
+      <div class="video flex-video widescreen media-youtube" style="background:#222;">             
+        <!-- IFRAME VIDEO -->
+        <div id="home-stream-video-{{calltoaction_info.calltoaction.id}}" main-calltoaction-media=true calltoaction-id="{{calltoaction_info.calltoaction.id}}" interaction-play-id="<%#= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").try(:id) %>"></div>
+        <!-- OVERVIDEO AREA -->
+        <div id="home-overvideo-{{calltoaction_info.calltoaction.id}}"></div>                 
+        <!-- OVERVIDEO FEEDBACK -->
+        <div class="home-overvideo-feedback-{{calltoaction_info.calltoaction.id}}"></div>
+      </div>
+    </div>
+    <!-- MAIN MEDIA IMAGE -->
+    <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
+      <img class="img-responsive" src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+    </div>
+    <!-- IFRAME -->
+    <div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
+      <div id="calltoaction-{{calltoaction_info.calltoaction.id}}-cover" class="calltoaction-cover row text-center">
+        <div class="col-xs-12">
+          <img src="{{calltoaction_info.calltoaction.thumbnail_url}}" class="img-responsive" style="width: 100%;">
+        </div>
+        <div class="col-sm-4 col-sm-offset-4" style="position: absolute; bottom: 10px; z-index: 10;">
+          <button class="btn btn-danger btn-lg btn-block" ng-click="showCallToAction(calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_type)">GUARDA</button>
+        </div>     
+      </div>
+      <!-- IFRAME -->
+      <div id="main-media-{{calltoaction_info.calltoaction.id}}">
+        <div id="iframe-calltoaction-{{calltoaction_info.calltoaction.id}}" class="<%= "iframe-apple-mobile" if request_is_from_apple_mobile_device?(request) %> video flex-video widescreen text-center media-iframe hidden">  
         </div>
       </div>
-    <% elsif calltoaction.media_type == "IMAGE" %>
-      <!-- IMAGE -->
-      <div id="main-media-<%= calltoaction.id %>" class="media-image">
-        <img class="img-responsive" src="<%= calltoaction.media_image(:large) %>" style="width: 100%;">
-      </div>
-    <% elsif calltoaction.media_type == "IFRAME" %>
-      <% if aux && aux[:small_mobile_device] %>
-        <!-- IMAGE -->
-        <div id="main-media-<%= calltoaction.id %>" class="media-image">
-          <img class="img-responsive" src="<%= calltoaction.thumbnail %>" style="width: 100%;">
-        </div>
-      <% else %>
-
-        <div id="calltoaction-<%= calltoaction.id %>-cover" class="calltoaction-cover row text-center" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')" style="position: relative;">
-          <div class="col-xs-12">
-            <img src="<%= calltoaction.thumbnail %>" class="img-responsive" style="width: 100%;">
-          </div>
-          <div class="col-sm-4 col-sm-offset-4" style="position: absolute; bottom: 10px; z-index: 10;">
-            <a class="btn btn-danger btn-lg btn-block" role="button"><%= get_cta_button_label(calltoaction) %></a>
-          </div>     
-        </div>
-
-        <!-- IFRAME -->
-        <div id="main-media-<%= calltoaction.id %>">
-          <div id="iframe-calltoaction-<%= calltoaction.id %>" class="<%= "iframe-apple-mobile " if request_is_from_apple_mobile_device?(request) %>video flex-video widescreen text-center media-iframe hidden">  
-            <% if calltoaction_page %>
-              <%= calltoaction.media_data.html_safe %>
-            <% end %>
-          </div>
-        </div>
-        
-      <% end %>
-    <% end %>
-
+    </div>
   </div>
 </div>

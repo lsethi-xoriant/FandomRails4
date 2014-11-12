@@ -1,15 +1,10 @@
 <div class="row">
 
-  <div class="col-xs-12">
-    <%= render partial: "/call_to_action/undervideo_interactions", locals: { calltoaction: calltoaction, outcome: nil, calltoaction_active_interaction: calltoaction_active_interaction, aux: aux } %>
+  <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list" class="col-xs-12">
+    <div id="home-undervideo-interaction-{{interaction_info.interaction.id}}">
+      <%= render partial: "/call_to_action/undervideo_interaction" %>
+    </div>
   </div>
 
-  <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">
-    <!-- UNDERVIDEO FEEDBACK -->               
-  </div>
-
-  <div class="col-md-12" id="share-footer-<%= calltoaction.id %>">
-    <!-- SHARE FOOTER -->
-  </div>
 </div>
 
