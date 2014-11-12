@@ -35,6 +35,8 @@
 						<tr>
 							<th>Nome</th>
 							<th>Descrizione</th>
+							<th>Inizio validità</th>
+							<th>Fine validità</th>
 							<th>Locked</th>
 							<th>Metadati</th>
 							<th>Azioni</th>
@@ -42,8 +44,30 @@
 					</thead>
 					<% @tags.each do |t| %>
 						<tr>
-							<td><%= t.name %></td>
-							<td><%= t.description %></td>
+							<td>
+								<% if t.valid_to.present? %>
+									<% if t.valid_to.in_time_zone(USER_TIME_ZONE) < DateTime.now %>
+										<s><%= t.name %></s>
+									<% else %>
+										<%= t.name %>
+									<% end %>
+								<% else %>
+									<%= t.name %>
+								<% end %>
+							</td>
+							<td>
+								<% if t.valid_to.present? %>
+									<% if t.valid_to.in_time_zone(USER_TIME_ZONE) < DateTime.now %>
+										<s><%= t.description %></s>
+									<% else %>
+										<%= t.description %>
+									<% end %>
+								<% else %>
+									<%= t.description %>
+								<% end %>
+							</td>
+							<td><%= t.valid_from.present? ? t.valid_from.in_time_zone(USER_TIME_ZONE).strftime('%d/%m/%Y %H:%M') : nil %></td>
+							<td><%= t.valid_to.present? ? t.valid_to.in_time_zone(USER_TIME_ZONE).strftime('%d/%m/%Y %H:%M') : nil %></td>
 							<td>
 								<% if t.locked %>
 									<i class="fa fa-check fa-2"></i>

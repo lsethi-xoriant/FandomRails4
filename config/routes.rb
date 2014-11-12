@@ -45,6 +45,8 @@ Fandom::Application.routes.draw do
           match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
           
           match "/special_guest", :to => "application#redirect_into_special_guest"
+          
+          match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
         end
       end
     end
@@ -89,6 +91,7 @@ Fandom::Application.routes.draw do
     resources :vote_ranking
     
     match "tag/clone/:id", :to => "tag#clone"
+    match "retag", :to => "easyadmin#retag_tag"
     
     match "winner", :to => "easyadmin#index_winner"
     match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"

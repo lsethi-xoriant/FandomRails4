@@ -85,7 +85,7 @@ module CacheKeysHelper
   end
   
   # Profile
-  # ~~~~~
+  # ~~~~~~~
   def get_current_user_key(user_id)
     "current_user_#{user_id}"
   end
@@ -108,6 +108,13 @@ module CacheKeysHelper
   
   def get_superfan_contest_point_key(user_id)
     "superfan_contest_point_user_#{user_id}"
+  end
+  
+  # Gallery
+  # ~~~~~~~
+  
+  def get_gallery_extra_info_key
+    "gallery_tag_metadata"
   end
   
 end

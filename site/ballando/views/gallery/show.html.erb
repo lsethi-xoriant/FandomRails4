@@ -1,0 +1,117 @@
+
+<div class="container-fluid" ng-app="StreamCalltoactionApp" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= [@calltoaction].to_json %>, 1, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
+  
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+		  <%= render partial: "/application/upload_filters", locals: { single_cta: false } %>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+			<div class="panel panel-default panel-shadow" style="border: none; border-radius: 0;">
+      			<div class="panel-body" style="position: relative; padding: 0;">
+					<div class="row special-guest-container">
+						<div class="col-sm-7">
+							<% if @extra_info['header_image'] %>
+								<img src="<%= @extra_info['header_image'].url %>" class="img-responsive" style="width: 100%;">
+							<% elsif @extra_info['header_embed'] %>
+								<%= @extra_info['header_embed'] %>
+							<% end %>
+						</div>
+						<div class="col-sm-5">
+							<div class="row special-guest-list">
+								<div class="col-xs-12">
+									<h4 class="text-center" style="color: green; margin: 0 0 10px 0; line-height: 25px;">
+										<%= @extra_info['description']%>
+									</h4>
+								</div>
+							</div>
+							<% step = 1 %>
+							<% @extra_info['steps'].split("||").each do |text| %>
+							<div class="row special-guest-list">
+								<div class="col-xs-2">
+									<div class="boxed"><%= step %></div>
+								</div>
+								<div class="col-xs-10">
+									<p class="special-guest"><%= text %></p>
+								</div>
+							</div>
+							<% step += 1 %>
+							<% end %>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+  
+  <div class="row" style="background-color: rgba(255, 255, 255, 0.5);">
+		
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-center" style="margin-top: 15px;">
+		
+		 <% if @cloned_cta && @cloned_cta.errors.any? %>
+		 <div class="row">
+		 	<div class="col-sm-8 col-sm-offset-1">
+		 <ul class="text-left">
+		    <% @cloned_cta.errors.full_messages.each do |error_message| %>
+		      <li><%= error_message %></li>
+		    <% end %>
+		  </ul>
+		  </div>
+		  </div>
+		  <% end %>
+		  
+		  <% if flash[:notice] %>
+			  <div class="row">
+			 		<div class="col-sm-9 col-sm-offset-1 text-left">
+			  		<div class="alert alert-success"><%= flash[:notice] %></div>
+			  	</div>
+			  </div>
+		  <% end %>
+		  
+		  <%= render partial: "/gallery/gallery_calltoaction_panel_body", locals: { cloned_cta: @cloned_cta, upload_interaction: @upload_interaction, extra_info: @extra_info } %>
+		  
+		  </div>
+	</div>
+  
+</div>
+
+<script type="text/javascript">
+	function chooseFile(){
+		$("#upload").click();
+	}
+	
+	function uploadDone(video) {
+		if (video.files && video.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				//$("#user-avatar-image").attr('src', e.target.result).width(100).height(100);
+			};
+			//reader.readAsDataURL(image.files[0]);
+			$(".confirm-step.upload-file").html('<i class="fa fa-check" style="font-size: 20px; color: #FFF;"></i>');
+		}
+	}
+	
+	function titleInserted(title) {
+		if( $(title).val() != ''){
+			$(".confirm-step.upload-title").html('<i class="fa fa-check" style="font-size: 20px; color: #FFF;"></i>');
+		}else{
+			$(".confirm-step.upload-title").html('');
+		}	
+	}
+	
+	function goToLogin() {
+		window.location.href = "/redirect_top_with_cookie?connect_from_page=" + top.location + "&redirect_to_page=/upload_interaction/new"; 
+	}
+	
+	function startLoader() {
+		$("#load-button").html('<p class="text-center" style="color: #fff;">Caricamento video in corso ...</p>');
+		$("#form-upload").submit();
+	}
+	
+	$(document).ready(function() {
+	    checkDocumentHeight("fandom");
+	});
+</script>
+

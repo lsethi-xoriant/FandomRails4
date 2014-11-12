@@ -11,11 +11,11 @@ class Easyadmin::TagController < ApplicationController
   def new
     @tag = Tag.new
   end
-  
+
   def create_or_update(template_name, &create_or_update_block)
-    
+
     ActiveRecord::Base.transaction do
-      
+
       begin
         success = yield create_or_update_block
         if !success
@@ -26,7 +26,7 @@ class Easyadmin::TagController < ApplicationController
           flash[:notice] = "Tag generato correttamente"
           redirect_to "/easyadmin/tag/#{ @tag.id }"
         end
-      
+
       rescue
         # TODO: fix error message
         flash[:error] = "Errore hai generato un ciclo nel riferimento tag"

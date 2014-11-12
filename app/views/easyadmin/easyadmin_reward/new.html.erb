@@ -159,12 +159,10 @@
       <h3>TAGGING</h3>
       <hr/>
 
-      <div class="row">
-        <div class="col-sm-6">
-            <%= text_field_tag :tag_list, @tag_list, { id: "s2_tokenization", class: "form-control" } %>
-            <span class="help-block">Per separare i TAG digita virgola</span>
-        </div>
-      </div>
+      <%= render :partial => "easyadmin/easyadmin/tag_box", :locals => {:id_text_field => "tag_list", :instance_text_field => @tag_list, :new_tag_message => "Nuovi tag verranno creati."} %>
+      <span class="help-block">Per separare i TAG digita virgola</span>
+      <p id="tag_list_message"> </p>
+      <hr/>
 
       <h3>Data inizio validità</h3>
       <hr/>
@@ -224,7 +222,7 @@
 </div>
 
 <script type="text/javascript">
-  tl = <%= raw(Tag.select("name").map(&:name).to_json) %>;
+  tl = <%= raw(Tag.select("name").where("valid_to IS NULL OR valid_to > now()").map(&:name).to_json) %>;
   $(document).ready(function() {
     $('#s2_tokenization').select2({
       placeholder: "",

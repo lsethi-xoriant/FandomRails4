@@ -70,8 +70,8 @@
 	    <% end %>
 
 	    <% if can? :manage, :all %>
-	    	<li class="<%= "active" if page == "promocode" %>"><a href="/easyadmin/promocode"><i class="fa fa-ticket"></i>Promocode</a>
-	    	</li>
+	    	<!--<li class="<%= "active" if page == "promocode" %>"><a href="/easyadmin/promocode"><i class="fa fa-ticket"></i>Promocode</a>
+	    	</li>-->
 	    <% end %>
 		<% if can? :manage, :all %>
 		<li class="dropdown <%= "active opened" if page == "prize" %>"><a href="javascript:void(0);"><i class="fa fa-trophy"></i>Rewards<span class="caret"></span></a>
@@ -100,6 +100,11 @@
 		        <li>
 		          <a href="/easyadmin/tag/new">
 		            <i class="fa fa-save"></i>Nuovo
+		          </a>
+		        </li>
+		        <li>
+		          <a href="/easyadmin/retag">
+		            <i class="fa fa-reply-all"></i>Ritagga
 		          </a>
 		        </li>
 		      </ul>
