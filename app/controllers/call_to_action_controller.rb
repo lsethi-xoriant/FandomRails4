@@ -600,31 +600,25 @@ class CallToActionController < ApplicationController
   end
   
   def upload
-    @upload_interaction = Interaction.find(params[:interaction_id])
-    @cloned_cta = create_user_calltoactions(@upload_interaction.resource)
-
-    if @cloned_cta.errors.any?
-      render template: "/upload_interaction/new"
+    upload_interaction = Interaction.find(params[:interaction_id]).resource
+    errors = check_valid_upload(upload_interaction)
+    if errors.any?
+      flash[:error] = errors
     else
-      flash[:notice] = "Caricamento completato con successo"
-      redirect_to "/upload_interaction/new"
+      create_user_calltoactions(upload_interaction)
+      if flash[:error].blank?
+        flash[:notice] = "Upload interaction completata correttamente."
+      end
     end
-
-    #if is_call_to_action_gallery(upload_interaction.call_to_action)
-    #  redirect_to "/gallery/#{params[:cta_id]}"
-    #else
-      #redirect_to "/upload_interaction/new"
-    #end 
+    if is_call_to_action_gallery(upload_interaction.call_to_action)
+      redirect_to "/gallery/#{params[:cta_id]}"
+    else
+      redirect_to "/call_to_action/#{params[:cta_id]}"
+    end
   end
   
   def create_user_calltoactions(upload_interaction)  
-    
-      cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
-      cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)
-      cloned_cta.save
-      cloned_cta
 
-=begin    
     for i in(1 .. upload_interaction.upload_number) do
       if params["upload-#{i}"]
         if params["upload-#{i}"].size <= get_max_upload_size()
@@ -644,7 +638,6 @@ class CallToActionController < ApplicationController
         end
       end
     end
-=end
 
   end
   

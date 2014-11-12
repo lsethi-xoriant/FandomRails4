@@ -40,6 +40,7 @@ Fandom::Application.routes.draw do
           match "/iframe/do_check", :to => "iframe_check#do_check"
 
           match "/upload_interaction/new", :to => "upload_interaction#new"
+          match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
 
           match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
           match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
