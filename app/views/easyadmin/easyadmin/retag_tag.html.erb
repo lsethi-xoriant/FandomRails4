@@ -53,105 +53,27 @@
 
     	<h3>Aggiorna contenuti taggati con:</h3>
 
-    	<div class="row">
-        <div class="col-sm-6">
-            <%= text_field_tag :old_tags_id_list, @old_tags_id_list, { id: "s2_tokenization", class: "form-control" } %>
-            <span class="help-block">Per separare i TAG digita virgola</span>
-        </div>
-      </div>
-      
-      <p id="message"> </p>
-      <hr/>
+      	<%= render :partial => "tag_box", :locals => {:id_text_field => "old_tag_tag_list", :instance_text_field => nil, :new_tag_message => "Attenzione: inseriti tag non esistenti."} %>
+		<span class="help-block">Per separare i TAG digita virgola</span>
 
-      <h3>Nuovo tag</h3>
+      	<p id="old_tag_tag_list_message"> </p>
+      	<hr/>
 
-      <div class="row">
-        <div class="col-sm-6">
-            <%= text_field_tag :new_tag, @new_tag, { id: "s2_tokenization_single", class: "form-control" } %>
-        </div>
-      </div>
+      	<h3>Nuovo tag</h3>
 
-      <p id="message_single"> </p>
-      <hr/>
+      	<%= render :partial => "tag_box", :locals => {:id_text_field => "new_tag_tag_list", :instance_text_field => nil, :new_tag_message => "Nuovi tag verranno creati."} %>
 
-      <br/>
-      <div class="row text-center">
-        <div class="col-sm12">
-          <%= submit_tag 'RITAGGA', class: 'btn btn-primary' %>
-        </div>
-      </div> 
+      	<p id="new_tag_tag_list_message"> </p>
+      	<hr/>
+
+      	<br/>
+      	<div class="row text-center">
+      	  	<div class="col-sm12">
+       	  		<%= submit_tag 'RITAGGA', class: 'btn btn-primary' %>
+      	 	</div>
+     	 </div> 
       
 		<% end %>
 	</div>
 </div>
 
-<script type="text/javascript">
-
-  tl = <%= raw(Tag.select("id, name").where("valid_to IS NULL OR valid_to > now()").map{|t| {id:"#{t.id}", text:"#{t.name}"}}.to_json) %>;
-
-  $(document).ready(function() {
-    $('#s2_tokenization').select2({
-      placeholder: "",
-      tags: tl,
-      tokenSeparators: [","]
-    })
-
-    $('#s2_tokenization_single').select2({
-      placeholder: "",
-      tags: tl,
-      tokenSeparators: [","]
-    })
-  })
-  
-  $("#s2_tokenization").bind("change", show);
-  $("#s2_tokenization_single").bind("change", show);
-
-  function show() {
-  	unactiveTagsName = <%= raw(Tag.where("valid_to < now()").pluck("name").to_json) %>;
-  	allTagsName = <%= raw(Tag.pluck("name").to_json) %>;
-  	allTagsId = <%= raw(Tag.pluck("id").collect{|id| id.to_s }.to_json) %>;
-
-  	val1 = $('#s2_tokenization').select2("val")
-  	val2 = $('#s2_tokenization_single').select2("val")
-
-  	unactiveTagsSelected1 = intersect(val1, unactiveTagsName);
-  	if(unactiveTagsSelected1.length > 0) {
-	  var unactiveTagMsg1 = $(renderAlertDiv("Attenzione: tag '" + unactiveTagsSelected1 + "' non attivo/i"));
-	  var unactiveTagMsgHasChanged1 = true;
-  	}
-  	
-  	unactiveTagsSelected2 = intersect(val2, unactiveTagsName);
-  	if(unactiveTagsSelected2.length > 0) {
-	  var unactiveTagMsg2 = $(renderAlertDiv("Attenzione: tag '" + unactiveTagsSelected2 + "' non attivo/i"));
-	  var unactiveTagMsgHasChanged2 = true;
-  	}
-
-  	existentTagsSelected1 = intersect(val1, allTagsId).concat(intersect(val1, allTagsName));
-  	if((existentTagsSelected1.length != val1.length) & !unactiveTagMsgHasChanged1) {
-  	  var newTagMsg1 = $(renderAlertDiv("Attenzione, sono stati inseriti nomi di tag non esistenti!"));
-  	}
-  	
-  	existentTagsSelected2 = intersect(val2, allTagsId).concat(intersect(val2, allTagsName));
-  	if((existentTagsSelected2.length != val2.length) & !unactiveTagMsgHasChanged2) {
-  	  var newTagMsg2 = $(renderAlertDiv("Nuovi tag verranno creati"));
-  	}
-
-    var unactiveTagMsgHasChanged1 = false;
-    var unactiveTagMsgHasChanged2 = false;
-    $("#message").empty().append(unactiveTagMsg1, newTagMsg1);
-    $("#message_single").empty().append(unactiveTagMsg2, newTagMsg2);
-  };
-
-  function intersect(a, b) {
-    var t;
-    if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
-    return a.filter(function (e) {
-        if (b.indexOf(e) !== -1) return true;
-    });
-  }
-  
-  function renderAlertDiv(str) {
-  	return "<div class='alert alert-info' role='alert'>" + str + "</div>";
-  }
-
-</script>

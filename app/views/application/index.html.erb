@@ -2,7 +2,7 @@
 
 <%= render partial: "/application/home_launchers" %>
 
-<div class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
+<div class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @calltoaction_info_list.to_json %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.to_json %>)">   
 
   <!-- CUSTOM SITE HEADER --> 
   <%#= render partial: "/application/header" %>
@@ -13,20 +13,20 @@
     </div>
   </div>
 
-  <div class="row">
-    <div id="calltoaction-stream" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-        <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions, calltoactions_comment_interaction: @calltoactions_comment_interaction, active_calltoaction_id: nil, calltoactions_active_interaction: @calltoactions_active_interaction, aux: @aux } %>
-      </div>
+  <div ng-repeat="calltoaction_info in calltoactions" class="row">
+    <div id="calltoaction-{{calltoaction_info.calltoaction.id}}" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
+      <%= render partial: "/call_to_action/stream_single_calltoaction" %>
+    </div>
   </div>
 
   <div class="row">      
     <div class="col-sm-6 col-sm-offset-3">
       <div id="append-other" class="text-center" style="margin-bottom: 20px;">
-        <button class="btn btn-default" href="javascript: void(0)" onclick="appendCallToAction();">CARICA ALTRI</button>
+        <button class="btn btn-default" href="javascript: void(0)" ng-click="appendCallToAction();">CARICA ALTRI</button>
       </div>
     </div>
   </div>
 
 </div>
 
-<%#= render partial: "/application/footer" %>
+<%= render partial: "/application/footer" %>

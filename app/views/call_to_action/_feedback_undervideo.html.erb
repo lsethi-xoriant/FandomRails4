@@ -1,25 +1,21 @@
-<% if current_user %>
-  <% if outcome && outcome.reward_name_to_counter[MAIN_REWARD_NAME] && outcome.reward_name_to_counter[MAIN_REWARD_NAME] > 0 %>       
-    <% if interaction.resource_type.downcase != "quiz" || interaction.resource.quiz_type.downcase == "versus" %>
-      <div class="col-sm-10 col-sm-offset-1 text-center">
-        <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
-        <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter[MAIN_REWARD_NAME] %> punti.
-        </div>
-      </div> 
-    <% elsif interaction.resource.quiz_type.downcase.to_sym == "trivia" %>
-      <% if get_user_interaction_from_interaction(interaction, current_user).answer.correct %>
-        <div class="col-sm-10 col-sm-offset-1 text-center">
-          <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
-          <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter[MAIN_REWARD_NAME] %> punti.
-          </div>
-        </div> 
-      <% else %>
-        <div class="col-sm-10 col-sm-offset-1 text-center">
-          <div class="alert alert-danger" style="margin-bottom: 0; margin-top: 15px;">
-          <strong>Risposta errata!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter[MAIN_REWARD_NAME] %> punti.
-          </div>
-        </div> 
-      <% end %>
-    <% end %>
-  <% end %>
-<% end %>
+<div ng-if="interaction_info.user_interaction">
+
+  <div ng-if="interaction_info.interaction.resource_type != 'trivia'" class="col-sm-10 col-sm-offset-1 text-center">
+    <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+    <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+    </div>
+  </div> 
+    
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia' && interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
+    <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+    <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+    </div>
+  </div> 
+
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia' && !interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
+    <div class="alert alert-danger" style="margin-bottom: 0; margin-top: 15px;">
+    <strong>Risposta errata!</strong> Hai guadagnato {{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+    </div>
+  </div> 
+
+</div>

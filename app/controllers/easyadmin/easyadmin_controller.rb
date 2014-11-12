@@ -80,17 +80,17 @@ class Easyadmin::EasyadminController < ApplicationController
   def retag_tag
     if params[:commit] == "RITAGGA"
 
-      if params[:old_tags_id_list].blank?
+      if params[:old_tag_tag_list].blank?
         msg = "Tag da ricercare non inseriti"
         flash.now[:error] = (flash.now[:error] ||= []) << msg
       end
-      if params[:new_tag].blank?
+      if params[:new_tag_tag_list].blank?
         msg = "Nuovo tag non inserito"
         flash.now[:error] = (flash.now[:error] ||= []) << msg
-      elsif params[:new_tag].include? ","
+      elsif params[:new_tag_tag_list].include? ","
         msg = "Inserire un solo nuovo tag"
         flash.now[:error] = (flash.now[:error] ||= []) << msg
-      elsif params[:old_tags_id_list].present? && params[:new_tag].present? 
+      elsif params[:old_tag_tag_list].present? && params[:new_tag_tag_list].present? 
         update_class_tag_table(CallToActionTag, "call_to_action_id", "tag_id")
         update_class_tag_table(RewardTag, "reward_id", "tag_id")
         update_class_tag_table(TagsTag, "tag_id", "other_tag_id")
@@ -102,7 +102,7 @@ class Easyadmin::EasyadminController < ApplicationController
   def update_class_tag_table(class_name, class_id_field, tag_id_field)
     id_objects_to_update = class_name.pluck(class_id_field)
 
-    old_tags_array = params[:old_tags_id_list].split(",").map { |id|
+    old_tags_array = params[:old_tag_tag_list].split(",").map { |id|
       if is_an_integer?(id)
         id.to_i
       else
@@ -117,8 +117,8 @@ class Easyadmin::EasyadminController < ApplicationController
 
     id_objects_to_update.each do |object_id|
       # class_name.delete_all(["#{class_id_field} = ?", object_id]) # uncomment if old tagging must be dismissed
-      new_tag = is_an_integer?(params[:new_tag]) ? Tag.find_by_id(params[:new_tag]) : Tag.find_by_name(params[:new_tag])
-      new_tag = Tag.create(name: params[:new_tag]) unless new_tag
+      new_tag = is_an_integer?(params[:new_tag_tag_list]) ? Tag.find_by_id(params[:new_tag_tag_list]) : Tag.find_by_name(params[:new_tag_tag_list ])
+      new_tag = Tag.create(name: params[:new_tag_tag_list]) unless new_tag
 
       if class_name.where("#{class_id_field} = ? AND #{tag_id_field} = ?", object_id, new_tag.id).count == 0
         object_tag = class_name.new

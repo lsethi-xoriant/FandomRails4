@@ -6,8 +6,6 @@ ballandoStreamCalltoactionModule.controller('BallandoStreamCalltoactionCtrl', Ba
 function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval));
 
-  var COUNTDOWN_TIME = 3;
-
   $scope.initBallando = function(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, request_url, calltoactions_active_interaction, aux) {
     $scope.init(current_user, calltoactions, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux);
     $scope.request_url = request_url;

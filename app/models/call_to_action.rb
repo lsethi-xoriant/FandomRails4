@@ -63,6 +63,10 @@ class CallToAction < ActiveRecord::Base
     media_image.url
   end
 
+  def thumbnail_url
+    thumbnail.url
+  end
+
   def media_type_enum
     MEDIA_TYPES
   end

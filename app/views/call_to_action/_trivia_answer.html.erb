@@ -1,37 +1,21 @@
-<% if user_interaction %>
+<div ng-if="interaction_info.user_interaction">
   <!-- CURRENT USER HAS ALREADY RESPONDED -->
-  <% if interaction.resource.one_shot %>
-    <div class="<%= answer_counter > 2 ? "col-sm-4" : "col-sm-6" %> col-xs-12 text-center" style="margin-bottom: 15px;">
-
-      <% if answer.image.present? %>
-        <a href="javascript: void(0)" class="thumbnail"><img src="<%= answer.image(:medium) %>" alt="..."></a>
-      <% end %>
-
-      <button class="btn btn-block btn-lg <%= answer.correct ? "btn-success" : "btn-danger" %> <%=  user_interaction.answer_id == answer.id ? "active" : "disabled" %>"><%= answer.text %></button>
-
+  <div ng-if="interaction_info.interaction.resource.one_shot">
+    <div class="col-sm-4 col-xs-12 text-center">
+      <button class="btn btn-block btn-lg {{answer.correct ? 'btn-success' : 'btn-danger'}} {{interaction.user_interaction.answer.id == answer.id ? 'active' : 'disabled'}}">{{answer.text}}</button>
     </div>
-  <% else %>
-    <div class="<%= answer_counter > 2 ? "col-sm-4" : "col-sm-6" %> col-xs-12 text-center" style="margin-bottom: 15px;">
-
-      <% if answer.image.present? %>
-        <a href="javascript: void(0)" class="thumbnail" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><img src="<%= answer.image(:medium) %>" alt="..."></a>
-      <% end %>
-
-      <button class="btn btn-block btn-lg <%= user_interaction.answer_id == answer.id ? (answer.correct ? "active btn-success" : "active btn-danger") : "btn-primary" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
-
-    </div>
-  <% end %>
-<% else %>
-  <!-- CURRENT USER HAS NOT RESPONDED -->
-  <div class="<%= answer_counter > 2 ? "col-sm-4" : "col-sm-6" %> col-xs-12 text-center" style="margin-bottom: 15px;">
-
-    <% if answer.image.present? %>
-      <a href="javascript: void(0)" class="thumbnail" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><img src="<%= answer.image(:medium) %>" alt="..."></a>
-    <% end %>
-
-    <button class="btn btn-block btn-lg btn-primary" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
-
   </div>
-<% end %>
+  <div ng-if="!interaction_info.interaction.resource.one_shot">
+    <div class="col-sm-4 col-xs-12 text-center">
+      <button class="btn btn-block btn-lg {{interaction_info.user_interaction.answer.id == answer.id ? (interaction_info.interaction.resource.answer.correct ? 'active btn-success' : 'active btn-danger') : 'btn-primary'}}" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</button>
+    </div>
+  </div>
+</div>
+<div ng-if="!interaction_info.user_interaction">
+  <!-- CURRENT USER HAS NOT RESPONDED -->
+  <div class="col-sm-4 col-xs-12 text-center">
+    <button class="btn btn-block btn-lg btn-primary" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</button>
+  </div>
+</div>
                                       
           
