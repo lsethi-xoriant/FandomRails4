@@ -25,10 +25,16 @@ class CallToActionController < ApplicationController
   end
 
   def append_calltoaction
-    render_calltoactions_str = String.new
+    
     calltoactions = Array.new
-
-    calltoactions_showed_ids = params[:calltoactions_showed].map { |calltoaction| calltoaction["id"] }
+    render_calltoactions_str = String.new
+    
+    if get_site_from_request(request)["id"] == "ballando"
+      # TODO: BALLANDO
+      calltoactions_showed_ids = params[:calltoactions_showed].map { |calltoaction| calltoaction["id"] }
+    else
+      calltoactions_showed_ids = params[:calltoactions_showed].map { |calltoaction_info| calltoaction_info["calltoaction"]["id"] }
+    end
     calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")
 
     if params[:tag_id].present?
@@ -48,7 +54,10 @@ class CallToActionController < ApplicationController
 
     stream_call_to_action_to_render.each do |calltoaction|
       calltoactions << calltoaction
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: nil, calltoaction_active_interaction: Hash.new, aux: nil }, layout: false, formats: :html)
+      if get_site_from_request(request)["id"] == "ballando"
+        # TODO: BALLANDO
+        render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: nil, calltoaction_active_interaction: Hash.new, aux: nil }, layout: false, formats: :html)
+      end
     end
 
     calltoactions_during_video_interactions_second = Hash.new
@@ -66,7 +75,8 @@ class CallToActionController < ApplicationController
     response = {
       calltoactions_during_video_interactions_second: calltoactions_during_video_interactions_second,
       calltoactions: calltoactions,
-      html_to_append: render_calltoactions_str
+      html_to_append: render_calltoactions_str,
+      calltoaction_info_list: build_call_to_action_info_list(calltoactions)
     }
     
     respond_to do |format|
@@ -398,6 +408,7 @@ class CallToActionController < ApplicationController
       if interaction.resource.quiz_type.downcase == "trivia"
         response[:ga][:label] = "#{interaction.resource.quiz_type.downcase}-answer-#{answer.correct ? "right" : "wrong"}"
       else 
+        response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, "versus")
         response[:ga][:label] = interaction.resource.quiz_type.downcase
       end
 
@@ -435,16 +446,18 @@ class CallToActionController < ApplicationController
       response[:ga][:label] = interaction.resource_type.downcase
     end
 
-    if current_user && user_interaction
+    if user_interaction
 
       calltoaction = interaction.call_to_action
       
+      response["user_interaction"] = build_user_interaction_for_interaction_info(user_interaction)
+
       response['outcome'] = outcome
 
       if call_to_action_completed?(calltoaction)
         response["call_to_action_completed"] = true
       else
-        winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
+        winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user_interaction.user)
         response['winnable_reward_count'] = winnable_outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
       end
 
@@ -456,9 +469,13 @@ class CallToActionController < ApplicationController
 
     end
 
-    response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
-    
-    response = setup_update_interaction_response_info(response)
+    if anonymous_user?(current_or_anonymous_user)
+      anonymous_user_main_reward_count = JSON.parse(params["anonymous_user"])[MAIN_REWARD_NAME]
+      response["main_reward_counter"] = anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
+    else
+      response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true) #HERE
+      response = setup_update_interaction_response_info(response)
+    end    
     
     respond_to do |format|
       format.json { render :json => response.to_json }
@@ -600,31 +617,25 @@ class CallToActionController < ApplicationController
   end
   
   def upload
-    @upload_interaction = Interaction.find(params[:interaction_id])
-    @cloned_cta = create_user_calltoactions(@upload_interaction.resource)
-
-    if @cloned_cta.errors.any?
-      render template: "/upload_interaction/new"
+    upload_interaction = Interaction.find(params[:interaction_id]).resource
+    errors = check_valid_upload(upload_interaction)
+    if errors.any?
+      flash[:error] = errors
     else
-      flash[:notice] = "Caricamento completato con successo"
-      redirect_to "/upload_interaction/new"
+      create_user_calltoactions(upload_interaction)
+      if flash[:error].blank?
+        flash[:notice] = "Upload interaction completata correttamente."
+      end
     end
-
-    #if is_call_to_action_gallery(upload_interaction.call_to_action)
-    #  redirect_to "/gallery/#{params[:cta_id]}"
-    #else
-      #redirect_to "/upload_interaction/new"
-    #end 
+    if is_call_to_action_gallery(upload_interaction.call_to_action)
+      redirect_to "/gallery/#{params[:cta_id]}"
+    else
+      redirect_to "/call_to_action/#{params[:cta_id]}"
+    end
   end
   
   def create_user_calltoactions(upload_interaction)  
-    
-      cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
-      cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)
-      cloned_cta.save
-      cloned_cta
 
-=begin    
     for i in(1 .. upload_interaction.upload_number) do
       if params["upload-#{i}"]
         if params["upload-#{i}"].size <= get_max_upload_size()
@@ -644,7 +655,6 @@ class CallToActionController < ApplicationController
         end
       end
     end
-=end
 
   end
   

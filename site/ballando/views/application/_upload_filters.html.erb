@@ -27,10 +27,11 @@
 				                </div>
 				            </li>
 			            <% end %>
+			            <% if is_special_guest_active %>
 				         	<li>
 				                <div class="slide slide-upload active" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= asset_path('special_guest_thumb.jpg') %>');">
 				                    <div class="comment-center">
-				                        <a href="/upload_interaction/new">
+				                        <a href="/gallery/55">
 									      <div class="row">
 									        <div class="col-md-12">
 									          <h2>DIEGO DOMINGUEZ</h2>
@@ -41,6 +42,7 @@
 				                </div>
 				                <div class="triangle"></div>
 				            </li>
+				        <% end %>
 				         </ul>
 				      </div>
 				    </div>
@@ -99,7 +101,11 @@
 	    if ($(window).innerWidth() < 760)
 	        return 2;
 	    else
-	        return 6;
+	    	<% if is_special_guest_active %>
+	        	return 6;
+	        <% else %>
+	        	return 5;
+	        <% end %>
 	}
 	
 	function getItemSize() {

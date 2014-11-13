@@ -38,6 +38,10 @@
 						   <%= uploadform.text_field :upload_number, :class => "form-control" %>
 						</div>
 						<div class="form-group">
+							<label class="text-input">Titolo necessario</label>
+					  		<%= uploadform.check_box :title_needed, {checked: true} %>
+						</div>
+						<div class="form-group">
 							<label class="text-input">Privacy necessaria</label>
 					  		<%= uploadform.check_box :privacy %>
 						</div>

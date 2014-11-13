@@ -9,4 +9,11 @@ module BallandoHelper
     end
   end
   
+  def is_special_guest_active
+    setting = cache_short(get_special_guest_settings_key) do 
+      Setting.find_by_key("ballando_special_guest")
+    end
+    !setting.nil? && setting.value.downcase == "si"
+  end
+  
 end
