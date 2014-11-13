@@ -98,7 +98,15 @@ RailsAdmin.config do |config|
       end
     end
   end
+  
+  config.model Event do
+    hide
+  end
 
+  config.model SyncedLogFile do
+    hide
+  end
+   
   config.model Interaction do
   end
   
