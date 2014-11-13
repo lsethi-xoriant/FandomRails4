@@ -15,7 +15,7 @@ module ConfigUtils
       end
       d    
     rescue
-      puts('deploy settings #{key} not found, using a default value')
+      puts("deploy settings #{key} not found, using a default value")
     end
   end
   
