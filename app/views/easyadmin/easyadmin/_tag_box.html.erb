@@ -7,10 +7,9 @@
 
 <script type="text/javascript">
 
-  tagList = <%= raw(Tag.select("id, name").where("valid_to IS NULL OR valid_to > now()").map{|t| {id:"#{t.id}", text:"#{t.name}"}}.to_json) %>;
+  tagList = <%= raw(Tag.select("name").where("valid_to IS NULL OR valid_to > now()").map(&:name).to_json) %>;
   unactiveTagsName = <%= raw(Tag.where("valid_to < now()").pluck("name").to_json) %>;
   allTagsName = <%= raw(Tag.pluck("name").to_json) %>;
-  allTagsId = <%= raw(Tag.pluck("id").collect{|id| id.to_s }.to_json) %>; 
 
   $("<%= "##{id_text_field}" %>").select2({
     placeholder: "",
@@ -20,7 +19,7 @@
   
   $("<%= "##{id_text_field}" %>").bind("change", function() {
 
-  	values = $("<%= "##{id_text_field}" %>").select2("val")
+  	values = $("<%= "##{id_text_field}" %>").select2("val");
   	console.log(values);
 
   	unactiveTagsSelected = intersect(values, unactiveTagsName);
@@ -29,7 +28,7 @@
 	  var unactiveTagMsgHasChanged = true;
   	}
 
-  	existentTagsSelected = intersect(values, allTagsId).concat(intersect(values, allTagsName));
+  	existentTagsSelected = intersect(values, allTagsName);
   	if((existentTagsSelected.length != values.length) & !unactiveTagMsgHasChanged) {
   	  var newTagMsg = $(renderAlertDiv("<%= "#{new_tag_message}" %>"));
   	}
