@@ -8,7 +8,12 @@ module CacheKeysHelper
   def notification_cache_key(user_id)
     "unread_notifications_#{user_id}"
   end
-
+  
+  # Settings
+  # ~~~~~~~
+  def get_special_guest_settings_key
+    "special_guest_menu_setting"
+  end
 
   # Rewards
   # ~~~~~
@@ -61,7 +66,10 @@ module CacheKeysHelper
   def get_rewards_with_tag_cache_key(tag_name)
     "rewards_with_tag_#{tag_name}"
   end
-
+  
+  def get_ctas_with_tags_cache_key(tags_name)
+    "ctas_with_tags_#{tags_name.join("_")}"
+  end
 
   # Tags
   # ~~~~~
