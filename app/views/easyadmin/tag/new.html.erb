@@ -62,9 +62,9 @@
         <div class="col-sm-6">
           	<div class="form-group">
 	    		<label class="text-input">Tags correlati</label>
-	        	<%= render :partial => "easyadmin/easyadmin/tag_box", :locals => {:id_text_field => "tag_list", :instance_text_field => @tag_list, :new_tag_message => "Nuovi tag verranno creati."} %>
+      			<%= render_html_tag_box("tag_list", @tag_list, "Nuovi tag verranno creati.") %>
       			<span class="help-block">Per separare i TAG digita virgola</span>
-     			<p id="tag_list_message"> </p>
+      			<p id="tag_list_message"> </p>
       			<hr/>
 	        </div>
 			<div class="form-group">								
