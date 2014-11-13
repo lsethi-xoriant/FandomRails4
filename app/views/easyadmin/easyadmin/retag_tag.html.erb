@@ -53,17 +53,18 @@
 
     	<h3>Aggiorna contenuti taggati con:</h3>
 
-      	<%= render :partial => "tag_box", :locals => {:id_text_field => "old_tag_tag_list", :instance_text_field => nil, :new_tag_message => "Attenzione: inseriti tag non esistenti."} %>
+      	<%= render :partial => "tag_box", :locals => {:id_text_field => "old_tag", :instance_text_field => nil, :new_tag_message => "Attenzione: inseriti tag non esistenti."} %>
+      		<!-- <%= render_html_tag_box("old_tag", nil, "Attenzione, inseriti tag non esistenti.") %> -->
 		<span class="help-block">Per separare i TAG digita virgola</span>
 
-      	<p id="old_tag_tag_list_message"> </p>
+      	<p id="old_tag_message"> </p>
       	<hr/>
 
       	<h3>Nuovo tag</h3>
 
-      	<%= render :partial => "tag_box", :locals => {:id_text_field => "new_tag_tag_list", :instance_text_field => nil, :new_tag_message => "Nuovi tag verranno creati."} %>
+      	<%= render :partial => "tag_box", :locals => {:id_text_field => "new_tag", :instance_text_field => nil, :new_tag_message => "Nuovi tag verranno creati."} %>
 
-      	<p id="new_tag_tag_list_message"> </p>
+      	<p id="new_tag_message"> </p>
       	<hr/>
 
       	<br/>
