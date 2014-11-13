@@ -183,27 +183,32 @@ class CallToActionController < ApplicationController
       @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
 
       @calltoactions_active_interaction = Hash.new
-      aux = { show_calltoaction_page: true }
-      @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0], nil, aux)
+      @aux = { 
+        "show_calltoaction_page" => true,
+        "tenant" => get_site_from_request(request)["id"],
+        "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
+        "main_reward_name" => MAIN_REWARD_NAME
+      }
+
+      @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0], nil, @aux)
 
     else
 
       redirect_to "/"
 
-    end
-    
+    end    
 =begin
     if @calltoaction.enable_disqus
-      @disqus_requesturl = request.url
-      comment_disqus = JSON.parse(open("https://disqus.com/api/3.0/posts/list.json?api_key=#{ ENV['DISQUS_PUBLIC_KEY'] }&forum=#{ ENV['DISQUS_SHORTNAME'] }&thread:link=#{ @disqus_requesturl }&limit=2").read)
-      @disqus_cursor = comment_disqus["cursor"]
-      comment_disqus = comment_disqus["response"]
+    @disqus_requesturl = request.url
+    comment_disqus = JSON.parse(open("https://disqus.com/api/3.0/posts/list.json?api_key=#{ ENV['DISQUS_PUBLIC_KEY'] }&forum=#{ ENV['DISQUS_SHORTNAME'] }&thread:link=#{ @disqus_requesturl }&limit=2").read)
+    @disqus_cursor = comment_disqus["cursor"]
+    comment_disqus = comment_disqus["response"]
 
-      @disqus_hash = Hash.new
-      comment_disqus.each do |comm|
-        @disqus_hash[comm["id"]] = { text: comm["message"].html_safe, name: comm["author"]["name"], image: comm["author"]["avatar"]["small"]["permalink"],
-                                                 created_at: comm["createdAt"] }
-      end
+    @disqus_hash = Hash.new
+    comment_disqus.each do |comm|
+    @disqus_hash[comm["id"]] = { text: comm["message"].html_safe, name: comm["author"]["name"], image: comm["author"]["avatar"]["small"]["permalink"],
+    created_at: comm["createdAt"] }
+    end
     end
 =end
 
