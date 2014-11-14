@@ -143,7 +143,7 @@ class Easyadmin::EasyadminController < ApplicationController
     end
 
     id_objects_to_update.each do |object_id|
-      # class_name.delete_all(["#{class_id_field} = ?", object_id]) # uncomment if old tagging must be dismissed
+      # TagsTag.delete_all(["tag_id = ?", object_id]) # uncomment if old tagging must be dismissed
       new_tag = Tag.find_by_name(params[:new_tag])
       new_tag = Tag.create(name: params[:new_tag]) unless new_tag
 
