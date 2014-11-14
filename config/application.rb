@@ -165,7 +165,7 @@ module Fandom
           $db_time = $db_time.nil? ? 0.0 : $db_time / 1000.0
         end
         unless event.payload[:db_runtime].nil? # warning: key?() can't be used because value can be nil
-          $view_time = event.payload[:view_runtime] / 1000.0
+          $view_time = event.payload[:view_runtime]
           $view_time = $view_time.nil? ? 0.0 : $view_time / 1000.0
         end
       end

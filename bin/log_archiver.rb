@@ -27,23 +27,21 @@ def main
   today_timestamp = Date.today.strftime("%Y-%m-%d %H:%M:%S")
 
   begin 
-
-    db_conn = establish_connection_with_db(database_yaml_path, "source")
+    db_config = YAML::load(File.open(database_yaml_path))  
     
-    tenants = get_tenants(db_conn)
-    puts tenants
+    source_db_conn = ActiveRecord::Base.establish_connection(db_config[source_environment])
+    dest_db_conn = ActiveRecord::Base.establish_connection(db_config[dest_environment])
+    
+    tenants = get_tenants(source_db_conn)
+    
+    tenants.each do |tenant|
+      events = get_events(tenant, source_db_conn, today_timestamp)
+      events = filter_events_not_already_archived(events, tenant, dest_db_conn)
+    end
 
     exit
-    sql_query = 
-      "SELECT * FROM #{tenant}.events " +
-      "WHERE timestamp<'#{today_timestamp}' " + 
-      "ORDER BY timestamp ASC " +
-      "LIMIT #{SOURCE_DB_EVENT_CHUNK_SIZE};"
-
-    events = db_conn.connection.execute(sql_query)
 
 =begin
-    events = filter_events_not_already_archived(events, database_yaml_path, tenant)
     event_chunks = make_chunks(events, MAX_INSERT_NUMBER_IN_DB)
     event_chunks.each do |event_chunk|
       columns, values = generate_data_for_sql_insert_query(events)
@@ -83,11 +81,24 @@ def main
 end
 
 def get_tenants(db_conn)
-  db_conn.connection.execute("select table_schema from information_schema.tables where table_name = 'events'").map do |row|
+  tenants = db_conn.connection.execute("select table_schema from information_schema.tables where table_name = 'events'").map do |row|
     row['table_schema']
   end
+  tenants.select { |t| t != 'public' }
 end
 
+def get_events(tenant, db_conn, today_timestamp)
+  sql_query = 
+    "SELECT * FROM #{tenant}.events " +
+    "WHERE timestamp < '#{today_timestamp}' " + 
+    "ORDER BY id ASC " +
+    "LIMIT #{SOURCE_DB_EVENT_CHUNK_SIZE};"
+  db_conn.connection.execute(sql_query)
+end
+
+def filter_events_not_already_archived(events, tenant, dest_db_conn)
+  # TODO: sono arrivato qua
+end
 
 def events_ids_stored(database_yaml_path, current_events_ids, tenant)
   db_conn = establish_connection_with_db(database_yaml_path, "destination")
