@@ -3,39 +3,44 @@ require 'active_record'
 require 'yaml'
 require 'logger'
 
+SOURCE_DB_EVENT_CHUNK_SIZE = 1000
+DEST_DB_INSERT_CHUNK_SIZE = 100
+
 def main
 
-  if ARGV.size != 4
+  if ARGV.size != 3
     puts <<-EOF
-      Usage: #{$0} <tenant> <source_environment> <dest_environment> <rails_root_project>
+      Usage: #{$0} <source_environment> <dest_environment> <rails_project_root>
         <tenant> is the database schema that will be used for the current job.
       EOF
     exit
   end
 
-  tenant = ARGV[0]
-  source_environment = ARGV[1]
-  dest_environment = ARGV[2]
-  rails_root_project = ARGV[3]
-  database_yaml_path = "#{rails_root_project}/config/database.yml"
+  source_environment = ARGV[0]
+  dest_environment = ARGV[1]
+  rails_project_root = ARGV[2]
 
-  logger = Logger.new("#{rails_root_project}/log/log_archiver.log")
+  database_yaml_path = "#{rails_project_root}/config/database.yml"
+
+  logger = Logger.new("#{rails_project_root}/log/log_archiver.log")
 
   today_timestamp = Date.today.strftime("%Y-%m-%d %H:%M:%S")
-  limit_select_events_from_source_db = 1000000
-  max_insert_number_in_db = 100
 
   begin 
 
-    base_db_connection = establish_connection_with_db(database_yaml_path, "source")
+    db_conn = establish_connection_with_db(database_yaml_path, "source")
+    
+    tenants = get_tenants(db_conn)
+    puts tenants
 
+    exit
     sql_query = 
       "SELECT * FROM #{tenant}.events " +
       "WHERE timestamp<'#{today_timestamp}' " + 
       "ORDER BY timestamp ASC " +
-      "LIMIT #{limit_select_events_from_source_db};"
+      "LIMIT #{SOURCE_DB_EVENT_CHUNK_SIZE};"
 
-    events = base_db_connection.connection.execute(sql_query)
+    events = db_conn.connection.execute(sql_query)
 
 =begin
     events = filter_events_not_already_archived(events, database_yaml_path, tenant)
@@ -63,7 +68,7 @@ def main
           index += 1
         end
 
-        if (index != 0 && index % max_insert_number_in_db == 0) || value["id"] == values.last["id"]
+        if (index != 0 && index % DEST_DB_INSERT_CHUNK_SIZE == 0) || value["id"] == values.last["id"]
           store_events_in_db(database_yaml_path, tenant, columns, values_for_next_insert, ids, logger)
           puts "\t#{values_for_next_insert.count} INSERT in destination database"
           values_for_next_insert.clear
@@ -77,29 +82,36 @@ def main
 
 end
 
+def get_tenants(db_conn)
+  db_conn.connection.execute("select table_schema from information_schema.tables where table_name = 'events'").map do |row|
+    row['table_schema']
+  end
+end
+
+
 def events_ids_stored(database_yaml_path, current_events_ids, tenant)
-  base_db_connection = establish_connection_with_db(database_yaml_path, "destination")
+  db_conn = establish_connection_with_db(database_yaml_path, "destination")
   sql_query = "SELECT orig_id FROM #{tenant}.events WHERE orig_id IN (#{current_events_ids.join(', ')}) AND tenant=#{ActiveRecord::Base.connection.quote(tenant)}"
-  ids_stored = base_db_connection.connection.execute(sql_query).map{ |result| result["orig_id"] }
+  ids_stored = db_conn.connection.execute(sql_query).map{ |result| result["orig_id"] }
 end
 
 def store_events_in_db(database_yaml_path, tenant, columns, values_for_next_insert, events_to_insert_ids, logger)
-  base_db_connection = establish_connection_with_db(database_yaml_path, "destination")
-  insert_events_in_db(tenant, columns, values_for_next_insert, base_db_connection, logger)
+  db_conn = establish_connection_with_db(database_yaml_path, "destination")
+  insert_events_in_db(tenant, columns, values_for_next_insert, db_conn, logger)
 
-  base_db_connection = establish_connection_with_db(database_yaml_path, "source")
-  delete_events_from_db(tenant, events_to_insert_ids, base_db_connection)
+  db_conn = establish_connection_with_db(database_yaml_path, "source")
+  delete_events_from_db(tenant, events_to_insert_ids, db_conn)
 end
 
-def delete_events_from_db(tenant, ids, base_db_connection)
+def delete_events_from_db(tenant, ids, db_conn)
   sql_query = "DELETE FROM #{tenant}.events WHERE id IN (#{ids.join(', ')});"
-  base_db_connection.connection.execute(sql_query)
+  db_conn.connection.execute(sql_query)
 end
 
-def insert_events_in_db(tenant, columns, values, base_db_connection, logger)
+def insert_events_in_db(tenant, columns, values, db_conn, logger)
   sql_query = "INSERT INTO #{tenant}.events (#{columns.join(', ')}) VALUES #{values.join(', ')};"
   begin
-    base_db_connection.connection.execute(sql_query)
+    db_conn.connection.execute(sql_query)
   rescue Exception => exception
     logger.error "#{exception}"
   end
