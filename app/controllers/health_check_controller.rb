@@ -7,13 +7,17 @@ require 'sys/proctable'
 # A simple controller not extending ApplicationController to avoid multi tenant management
 class HealthCheckController < ActionController::Base
   def health_check
-    check_log_daemon()
-    render :inline => "Healthy."
+    begin
+      check_log_daemon
+      render text: "Healthy."
+    rescue Exception => ex
+      render text: "Unhealthy.", status: 500
+    end
   end
   
   def check_log_daemon
     unless Sys::ProcTable.ps.any? { |process| process.cmdline.include?("log_daemon") }
-      raise Exception.new("log_daemon seems down")
-    end
+      raise  Exception.new("log_daemon seems down")
+    end 
   end
 end

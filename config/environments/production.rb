@@ -3,7 +3,7 @@ Fandom::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
   
   puts "disabling standard production logs, logs are redirected to the event directory"
-  config.log_level = :error
+  config.log_level = get_deploy_setting('log/level', 'error').to_sym 
   #config.logger = Logger.new('/dev/null')
 
   # Code is not reloaded between requests

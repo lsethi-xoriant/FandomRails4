@@ -161,7 +161,7 @@ def generate_sql_insert_values_for_event(process_file_path, pid)
       end
       event_values.merge!(request_data)
       
-      tenant = event_values["tenant"]
+      tenant = event_values["share_db"].nil? ? event_values["tenant"] : event_values["share_db"]
       (tenant_to_insert_values[tenant] ||= []) << "(#{generate_values_for_event_log_line(event_values)})" 
     end
   end
@@ -195,6 +195,7 @@ def get_request_data(event_values, pid)
     'session_id' => event_values['data']['session_id'],
     'remote_ip' => event_values['data']['remote_ip'],
     'tenant' => event_values['data']['tenant'],
+    'share_db' => event_values['data']['share_db'],
     'user_id' => event_values['data']['user_id'],
     'pid' => pid
   }  

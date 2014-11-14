@@ -5,21 +5,24 @@ require 'logger'
 
 def main
 
-  if ARGV.size < 1
+  if ARGV.size != 4
     puts <<-EOF
-      Usage: #{$0} <tenant>
+      Usage: #{$0} <tenant> <source_environment> <dest_environment> <rails_root_project>
         <tenant> is the database schema that will be used for the current job.
       EOF
     exit
   end
 
   tenant = ARGV[0]
-  database_yaml_path = "database.yml"
+  source_environment = ARGV[1]
+  dest_environment = ARGV[2]
+  rails_root_project = ARGV[3]
+  database_yaml_path = "#{rails_root_project}/config/database.yml"
 
-  logger = Logger.new("log_job.log")
+  logger = Logger.new("#{rails_root_project}/log/log_archiver.log")
 
-  to_yesterday_timestamp = Date.today.strftime("%Y-%m-%d %H:%M:%S")
-  limit_select_events_from_source_db = 2
+  today_timestamp = Date.today.strftime("%Y-%m-%d %H:%M:%S")
+  limit_select_events_from_source_db = 1000000
   max_insert_number_in_db = 100
 
   begin 
@@ -28,11 +31,21 @@ def main
 
     sql_query = 
       "SELECT * FROM #{tenant}.events " +
-      "WHERE timestamp<'#{to_yesterday_timestamp}' " + 
+      "WHERE timestamp<'#{today_timestamp}' " + 
       "ORDER BY timestamp ASC " +
       "LIMIT #{limit_select_events_from_source_db};"
 
     events = base_db_connection.connection.execute(sql_query)
+
+=begin
+    events = filter_events_not_already_archived(events, database_yaml_path, tenant)
+    event_chunks = make_chunks(events, MAX_INSERT_NUMBER_IN_DB)
+    event_chunks.each do |event_chunk|
+      columns, values = generate_data_for_sql_insert_query(events)
+      store_events_in_db(database_yaml_path, tenant, columns, values_for_next_insert, ids, logger)
+      puts "\t#{values_for_next_insert.count} INSERT in destination database"
+    end
+=end
 
     if events.any?
 
@@ -66,7 +79,7 @@ end
 
 def events_ids_stored(database_yaml_path, current_events_ids, tenant)
   base_db_connection = establish_connection_with_db(database_yaml_path, "destination")
-  sql_query = "SELECT orig_id FROM #{tenant}.events WHERE id IN (#{current_events_ids.join(', ')}) AND tenant=#{ActiveRecord::Base.connection.quote(tenant)}"
+  sql_query = "SELECT orig_id FROM #{tenant}.events WHERE orig_id IN (#{current_events_ids.join(', ')}) AND tenant=#{ActiveRecord::Base.connection.quote(tenant)}"
   ids_stored = base_db_connection.connection.execute(sql_query).map{ |result| result["orig_id"] }
 end
 
@@ -99,7 +112,7 @@ def generate_data_for_sql_insert_query(events)
   ids = Array.new
   values = Array.new
   events.each do |event|
-    ids << ActiveRecord::Base.connection.quote(event["id"])
+    ids << event["id"]
     values << event
   end
 

@@ -17,3 +17,4 @@
 //= require bootstrap-notify
 //= require bootstrap-fileupload
 //= require jquery.jplayer
+//= require fandom-utils
