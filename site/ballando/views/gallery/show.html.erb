@@ -48,7 +48,9 @@
 	
 	<% if @extra_info['contest_terms'] %>
 		<div class="row text-center">
-			<p style="color: #fff;"><%= @extra_info['contest_terms'] %></p>
+			<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+				<p style="color: #fff;"><%= @extra_info['contest_terms'] %></p>
+			</div>
 		</div>
 	<% end %>
   
