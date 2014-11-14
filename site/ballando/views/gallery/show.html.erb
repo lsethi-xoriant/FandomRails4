@@ -45,6 +45,12 @@
 			</div>
 		</div>
 	</div>
+	
+	<% if @extra_info['contest_terms'] %>
+		<div class="row text-center">
+			<p style="color: #fff;"><%= @extra_info['contest_terms'] %></p>
+		</div>
+	<% end %>
   
   <div class="row" style="background-color: rgba(255, 255, 255, 0.5);">
 		
@@ -62,6 +68,18 @@
 		  </div>
 		  <% end %>
 		  
+		  <% if @extra_fields_error && @extra_fields_error.any? %>
+			 <div class="row">
+			 	<div class="col-sm-8 col-sm-offset-1">
+			 <ul class="text-left">
+			    <% @extra_fields_error.each do |error_message| %>
+			      <li><%= error_message %></li>
+			    <% end %>
+			  </ul>
+			  </div>
+			  </div>
+		  <% end %>
+		  
 		  <% if flash[:notice] %>
 			  <div class="row">
 			 		<div class="col-sm-9 col-sm-offset-1 text-left">
@@ -70,7 +88,7 @@
 			  </div>
 		  <% end %>
 		  
-		  <%= render partial: "/gallery/gallery_calltoaction_panel_body", locals: { cloned_cta: @cloned_cta, upload_interaction: @upload_interaction, extra_info: @extra_info } %>
+		  <%= render partial: "/gallery/gallery_calltoaction_panel_body", locals: { cloned_cta: @cloned_cta, upload_interaction: @upload_interaction, extra_info: @extra_info, extra_fields: @extra_fields } %>
 		  
 		  </div>
 	</div>
@@ -106,7 +124,7 @@
 	}
 	
 	function startLoader() {
-		$("#load-button").html('<p class="text-center" style="color: #fff;">Caricamento video in corso ...</p>');
+		$("#load-button").html('<p class="text-center" style="color: #fff;">Caricamento in corso ...</p>');
 		$("#form-upload").submit();
 	}
 	

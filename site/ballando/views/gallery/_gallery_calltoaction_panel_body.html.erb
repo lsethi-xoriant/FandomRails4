@@ -8,9 +8,6 @@
 	    	<p class="small" style="margin-top: 10px; color: #fff;"><%= extra_info['file_size_limit_text'] %></p>
 	    	<div class="hidden"><%= file_field_tag "upload", { :onchange => "uploadDone(this)" } %></div>
 	    </div>
-	    <div class="col-xs-12 col-sm-1">
-	    	<div class="confirm-step upload-file" style="margin: 10px auto;"></div>
-	    </div>
 	  </div>
 	  
 	  <% if upload_interaction.resource.title_needed %>
@@ -18,9 +15,6 @@
 		    <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">2. <%= extra_info['upload_step2'] %></label>
 		    <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0">
 		    	<%= text_field_tag :title, (cloned_cta.title if cloned_cta), { class: "form-control", onchange: "titleInserted(this)" } %>
-		    </div>
-		    <div class="col-xs-12 col-sm-1">
-		    	<div class="confirm-step upload-title" style="margin: 10px auto;"></div>
 		    </div>
 		  </div>
 	  <% end %>
@@ -39,6 +33,13 @@
 	        <% end %>
 	  	</div>
 	  </div>
+	  
+	  <% if !extra_fields.blank? %>
+	  	<p style="color: #fff;">INSERISCI LA TUA EMAIL PER ESSERE CONTATTATO DALLA REDAZIONE</p>
+  		<% extra_fields.each do |field| %>
+  			<%= extra_field_to_html(field).html_safe %>
+  		<% end %>
+	  <% end %>
 	  
 	  <div class="row">
 		    <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 text-center" id="load-button">

@@ -23,7 +23,7 @@ class GalleryController < ApplicationController
       end
       extra
     end
-    
+    @extra_fields = JSON.parse(@upload_interaction.resource.aux)['extra_fields']
     @gallery_calltoactions = calltoaction_active_with_tag(@gallery_tag.name, "DESC").where("user_id IS NOT NULL AND approved = true")
   end
   

@@ -202,6 +202,13 @@ module ApplicationHelper
     end
   end
   
+  def get_ctas_with_tags(*tags_name)
+    cache_short get_ctas_with_tags_cache_key(tags_name) do
+      tag_ids = Tag.where("name in (?)", tags_name).pluck(:id)
+      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.id in (?)", tag_ids).to_a
+    end
+  end
+  
   def get_all_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
       CallToAction.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
@@ -638,6 +645,11 @@ module ApplicationHelper
     else
       cta.title
     end
+  end
+  
+  def extra_field_to_html(field)
+    ac = ActionController::Base.new()
+    ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", locals: { label: field['label'], name: field['name']  }, layout: false, formats: :html
   end
   
 end
