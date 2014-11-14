@@ -11,12 +11,14 @@
 		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
 			<div class="panel panel-default panel-shadow" style="border: none; border-radius: 0;">
       			<div class="panel-body" style="position: relative; padding: 0;">
-					<div class="row special-guest-container">
-						<div class="col-sm-7">
+					<div class="row special-guest-container cta-md">
+						<div class="col-sm-7 cta-media">
 							<% if @extra_info['header_image'] %>
 								<img src="<%= @extra_info['header_image'].url %>" class="img-responsive" style="width: 100%;">
 							<% elsif @extra_info['header_embed'] %>
-								<%= @extra_info['header_embed'] %>
+							<div class="video flex-video widescreen text-center v-center media-iframe">
+								<%= @extra_info['header_embed'].html_safe %>
+							</div>
 							<% end %>
 						</div>
 						<div class="col-sm-5">
