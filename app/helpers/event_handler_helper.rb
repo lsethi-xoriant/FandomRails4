@@ -63,6 +63,15 @@ module EventHandlerHelper
   end
 
   def log_string_for_production(msg, data, timestamp, force_saving_in_db, level)
+    if force_saving_in_db
+      # TODO: remove file_name, method_name and line_number
+      Event.create(session_id: $session_id, pid: $pid, message: msg, request_uri: $request_uri, 
+        data: data.to_json, timestamp: timestamp, 
+        level: level, tenant: $tenant, user_id: $user_id)
+
+      data = data.merge("already_synced" => force_saving_in_db)
+    end
+
     logger_production = {
       "message" => msg,
       "level" => level,
@@ -70,16 +79,6 @@ module EventHandlerHelper
       "timestamp" => timestamp,
       "pid" => $pid
     }
-
-    if force_saving_in_db
-      # TODO: remove file_name, method_name and line_number
-      Event.create(session_id: $session_id, pid: $pid, message: msg, request_uri: $request_uri, file_name: "", 
-        method_name: "", line_number: 0, data: data.to_json, timestamp: timestamp, 
-        level: level, tenant: $tenant, user_id: $user_id)
-
-      data = data.merge("already_synced" => force_saving_in_db)
-    end
-
     update_process_log_file(logger_production.to_json)
   end  
 
