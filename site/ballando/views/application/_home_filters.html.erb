@@ -12,7 +12,21 @@
 				        	tag_menu.delete(all_filter)
 				        	tag_menu.unshift(all_filter) 
 				        	%>
-				        	
+				        	<% if is_special_guest_active %>
+				         	<li>
+				                <div class="slide slide-upload" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= special_guest_tag.nil? ? asset_path('special_guest_thumb.jpg') : special_guest_tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                    <div class="comment-center">
+				                        <a href="/gallery/55">
+									      <div class="row">
+									        <div class="col-md-12">
+									          <h2><%= special_guest_tag.nil? ? "SPECIAL GUEST" : special_guest_tag.tag_fields.find_by_name("title").try(:value) %></h2>
+									        </div>
+									      </div>
+									    </a>
+				                    </div>
+				                </div>
+				            </li> 
+				        <% end %>
 				        	<% tag_menu.each do |tag| %>
 				            <li>
 				                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" && !single_cta %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
@@ -29,21 +43,7 @@
 				                <div class="triangle" style="<%= tag.name == "home_filter_all" && !single_cta ? "" : "display: none;" %>"></div>
 				            </li>
 			            <% end %>
-			            <% if is_special_guest_active %>
-				         	<li>
-				                <div class="slide slide-upload" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= special_guest_tag.nil? ? asset_path('special_guest_thumb.jpg') : special_guest_tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
-				                    <div class="comment-center">
-				                        <a href="/gallery/55">
-									      <div class="row">
-									        <div class="col-md-12">
-									          <h2><%= special_guest_tag.nil? ? "SPECIAL GUEST" : special_guest_tag.tag_fields.find_by_name("title").try(:value) %></h2>
-									        </div>
-									      </div>
-									    </a>
-				                    </div>
-				                </div>
-				            </li> 
-				        <% end %>
+			            
 				         </ul>
 				      </div>
 				    </div>

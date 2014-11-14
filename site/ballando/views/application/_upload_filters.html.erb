@@ -12,23 +12,7 @@
 				        	tag_menu.delete(all_filter)
 				        	tag_menu.unshift(all_filter) 
 				        	%>
-				        	
-				        	<% tag_menu.each do |tag| %>
-				            <li>
-				                <div class="slide slide-<%= tag.id %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
-				                    <div class="comment-center">
-				                        <a href="/tag/<%= tag.name %>">
-									      <div class="row">
-									        <div class="col-md-12">
-									          <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
-									        </div>
-									      </div>
-									    </a>
-				                    </div>
-				                </div>
-				            </li>
-			            <% end %>
-			            <% if is_special_guest_active %>
+				        	<% if is_special_guest_active %>
 				         	<li>
 				                <div class="slide slide-upload active" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= special_guest_tag.nil? ? asset_path('special_guest_thumb.jpg') : special_guest_tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
 				                    <div class="comment-center">
@@ -44,6 +28,21 @@
 				                <div class="triangle"></div>
 				            </li>
 				        <% end %>
+				        	<% tag_menu.each do |tag| %>
+				            <li>
+				                <div class="slide slide-<%= tag.id %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                    <div class="comment-center">
+				                        <a href="/tag/<%= tag.name %>">
+									      <div class="row">
+									        <div class="col-md-12">
+									          <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
+									        </div>
+									      </div>
+									    </a>
+				                    </div>
+				                </div>
+				            </li>
+			            <% end %>
 				         </ul>
 				      </div>
 				    </div>
