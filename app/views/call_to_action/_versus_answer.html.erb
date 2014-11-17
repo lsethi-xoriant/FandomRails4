@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <a href="javascript: void(0)" class="thumbnail" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)"><img src="{{answer.image_medium}}"></a>
+    <a href="javascript: void(0)" class="thumbnail" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)"><img src="{{answer.image_medium}}"></a>
   </div>
 </div>
 <!-- BUTTON SECTION -->
@@ -18,7 +18,7 @@
         <a type="button" class="btn btn-block btn-lg {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-primary active' : 'btn-default'}} disabled">{{answer.text}}</a>
       </div>
       <div ng-if="!interaction_info.interaction.resource.one_shot">
-        <a type="button" class="btn btn-block btn-lg {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-primary active' : 'btn-default'}}" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
+        <a type="button" class="btn btn-block btn-lg {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-primary active' : 'btn-default'}}" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@
 <div ng-if="!interaction_info.user_interaction">
   <div class="row">
     <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-      <a type="button" class="btn btn-block btn-lg btn-primary" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
+      <a type="button" class="btn btn-block btn-lg btn-primary" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
     </div>
   </div>
 </div>

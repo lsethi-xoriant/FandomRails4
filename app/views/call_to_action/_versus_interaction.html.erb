@@ -3,6 +3,11 @@
     {{interaction_info.interaction.resource.question}}
   </h3>
 </div>
+<div ng-if="interaction_info.user_interaction && currentUserEmptyAndAnonymousInteractionEnable()" class="row">
+  <div class="col-md-12 text-center">
+    <p>Registrati per fare valere il tuo voto.</p>
+  </div>
+</div>
 <div class="row">
   <div ng-repeat="answer in interaction_info.interaction.resource.answers">
     <div class="col-md-6 col-xs-6">

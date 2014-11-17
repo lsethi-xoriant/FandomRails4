@@ -42,6 +42,15 @@
         <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
         <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
       </div>  
+
+      <div class="panel-footer" ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
+        <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row">
+          <div id="share-interaction-{{interaction_info.interaction.id}}">
+            <%= render partial: "/call_to_action/share_interaction" %>
+          </div>
+        </div>
+      </div>
+
     </div>        
   </div>
 </div>

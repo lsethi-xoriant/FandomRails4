@@ -1,0 +1,22 @@
+<!-- FACEBOOK -->
+<div ng-if="interaction_info.interaction.resource.providers.facebook" class="col-md-6">                    
+  <button ng-if="current_user.facebook" id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-fb btn-block" ng-click="shareWith(interaction_info.interaction.id, 'facebook')">CONDIVIDI CON FACEBOOK</button>
+  <a ng-if="!current_user.facebook" href="/auth/facebook_{{aux.tenant}}" class="btn btn-fb btn-block">ENTRA CON FACEBOOK</a>
+</div>
+<!-- TWITTER -->
+<div ng-if="interaction_info.interaction.resource.providers.twitter" class="col-md-6">                    
+  <button ng-if="current_user.twitter" id="twitter-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-tw btn-block" ng-click="shareWith(interaction_info.interaction.id, 'facebook')">CONDIVIDI CON TWITTER</button>
+  <a ng-if="!current_user.twitter" href="/auth/twitter_{{aux.tenant}}" class="btn btn-tw btn-block">ENTRA CON TWITTER</a>
+</div>
+<!-- EMAIL -->
+<div ng-if="interaction_info.interaction.resource.providers.email" class="col-md-12">
+  <div class="row">
+    <div class="col-md-6" style="margin-top: 10px;"> 
+      <input id="address-interaction-{{interaction_info.interaction.id}}" class="form-control" type="text" placeholder="example@shado.tv" name="address">
+    </div>
+    <div class="col-md-6" style="margin-top: 10px;">
+      <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-default btn-block" ng-click="shareWith(interaction_info.interaction.id, 'facebook')">CONDIVIDI VIA EMAIL</button>
+    </div>
+  </div>
+</div>
+

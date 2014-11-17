@@ -4,7 +4,7 @@
     <!-- SECONDARY MEDIA -->
     <div id="secondary-media-{{calltoaction_info.calltoaction.id}}" class="hidden">
       <div id="secondary-media-video-{{calltoaction_info.calltoaction.id}}" class="video flex-video widescreen secondary-media"> 
-        <div id="home-stream-video-secondary-{{calltoaction_info.calltoaction.id}}" main-calltoaction-media="false" calltoaction-id="{{calltoaction_info.calltoaction.id}}"></div>
+        <div id="home-stream-video-secondary-{{calltoaction_info.calltoaction.id}}" main-media="secondary" calltoaction-id="{{calltoaction_info.calltoaction.id}}"></div>
         <!-- OVERVIDEO AREA -->
         <div class="home-overvideo-feedback-{{calltoaction_info.calltoaction.id}}"></div> 
       </div>
@@ -14,11 +14,17 @@
     <div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE'" id="main-media-{{calltoaction_info.calltoaction.id}}">
       <div class="video flex-video widescreen media-youtube" style="background:#222;">             
         <!-- IFRAME VIDEO -->
-        <div id="home-stream-video-{{calltoaction_info.calltoaction.id}}" main-calltoaction-media=true calltoaction-id="{{calltoaction_info.calltoaction.id}}" interaction-play-id="<%#= find_interaction_for_calltoaction_by_resource_type(calltoaction, "Play").try(:id) %>"></div>
+        <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}"></div>
+
         <!-- OVERVIDEO AREA -->
-        <div id="home-overvideo-{{calltoaction_info.calltoaction.id}}"></div>                 
-        <!-- OVERVIDEO FEEDBACK -->
-        <div class="home-overvideo-feedback-{{calltoaction_info.calltoaction.id}}"></div>
+        <div ng-if="overvideoInteractionsPresent(calltoaction_info.calltoaction.id)" id="overvideo-calltoaction-{{calltoaction_info.calltoaction.id}}">
+          <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterOvervideoDuringInteractions | filter:filterOvervideoDuringActiveInteraction" class="col-xs-12">
+            <div id="overvideo-interaction-{{interaction_info.interaction.id}}">
+              <%= render partial: "/call_to_action/overvideo_interaction" %>
+            </div>
+          </div>
+        </div>  
+
       </div>
     </div>
     <!-- MAIN MEDIA IMAGE -->

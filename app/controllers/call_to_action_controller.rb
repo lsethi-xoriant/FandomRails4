@@ -183,8 +183,14 @@ class CallToActionController < ApplicationController
       @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
 
       @calltoactions_active_interaction = Hash.new
-      aux = { show_calltoaction_page: true }
-      @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0], nil, aux)
+      @aux = { 
+        "show_calltoaction_page" => true,
+        "tenant" => get_site_from_request(request)["id"],
+        "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
+        "main_reward_name" => MAIN_REWARD_NAME
+      }
+
+      @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0], nil, @aux)
 
     else
 
@@ -408,9 +414,10 @@ class CallToActionController < ApplicationController
       if interaction.resource.quiz_type.downcase == "trivia"
         response[:ga][:label] = "#{interaction.resource.quiz_type.downcase}-answer-#{answer.correct ? "right" : "wrong"}"
       else 
-        response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, "versus")
         response[:ga][:label] = interaction.resource.quiz_type.downcase
       end
+
+      response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, interaction.resource.quiz_type.downcase, user_interaction)
 
     elsif interaction.resource_type.downcase == "like"
 
@@ -470,8 +477,10 @@ class CallToActionController < ApplicationController
     end
 
     if anonymous_user?(current_or_anonymous_user)
-      anonymous_user_main_reward_count = JSON.parse(params["anonymous_user"])[MAIN_REWARD_NAME]
-      response["main_reward_counter"] = anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
+      anonymous_user_main_reward_count = params["anonymous_user"][MAIN_REWARD_NAME] || 0
+      response["main_reward_counter"] = {
+        "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME])
+      }
     else
       response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true) #HERE
       response = setup_update_interaction_response_info(response)

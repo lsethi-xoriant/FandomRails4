@@ -7,14 +7,14 @@
   </div>
   <div ng-if="!interaction_info.interaction.resource.one_shot">
     <div class="col-sm-4 col-xs-12 text-center">
-      <button class="btn btn-block btn-lg {{interaction_info.user_interaction.answer.id == answer.id ? (interaction_info.interaction.resource.answer.correct ? 'active btn-success' : 'active btn-danger') : 'btn-primary'}}" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</button>
+      <button class="btn btn-block btn-lg {{interaction_info.user_interaction.answer.id == answer.id ? (interaction_info.interaction.resource.answer.correct ? 'active btn-success' : 'active btn-danger') : 'btn-primary'}}" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</button>
     </div>
   </div>
 </div>
 <div ng-if="!interaction_info.user_interaction">
   <!-- CURRENT USER HAS NOT RESPONDED -->
   <div class="col-sm-4 col-xs-12 text-center">
-    <button class="btn btn-block btn-lg btn-primary" ng-click="updateAnswer(calltoaction_info.calltoaction.id, interaction_info.interaction.id, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</button>
+    <button class="btn btn-block btn-lg btn-primary" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</button>
   </div>
 </div>
                                       

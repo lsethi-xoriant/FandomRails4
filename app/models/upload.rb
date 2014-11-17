@@ -7,4 +7,8 @@ class Upload < ActiveRecord::Base
   
   has_attached_file :watermark, :styles => { :normalized => "200x112#" }
 
+  def one_shot
+    false
+  end
+
 end

@@ -4,4 +4,8 @@ class Share < ActiveRecord::Base
                     :convert_options => { :large => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }
   
   has_one :interaction, as: :resource
+
+  def one_shot
+    false
+  end
 end

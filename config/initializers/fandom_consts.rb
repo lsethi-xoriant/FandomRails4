@@ -67,6 +67,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
 
   REGEX_SPECIAL_CHARS = ["\\", "^", "$", ".", "|", "?", "*", "+", "(", ")", "[", "{"]
 
+  MD5_FANDOM_PREFIX = "f4nd0m"
+
   class CachedNil
   end
 
