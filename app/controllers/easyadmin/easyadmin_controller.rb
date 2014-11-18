@@ -80,20 +80,21 @@ class Easyadmin::EasyadminController < ApplicationController
   def retag_tag
     if params[:commit] == "RITAGGA"
 
-      if params[:old_tag_tag_list].blank?
+      if params[:old_tag].blank?
         msg = "Tag da ricercare non inseriti"
         flash.now[:error] = (flash.now[:error] ||= []) << msg
       end
-      if params[:new_tag_tag_list].blank?
+      if params[:new_tag].blank?
         msg = "Nuovo tag non inserito"
         flash.now[:error] = (flash.now[:error] ||= []) << msg
-      elsif params[:new_tag_tag_list].include? ","
+      elsif params[:new_tag].include? ","
         msg = "Inserire un solo nuovo tag"
         flash.now[:error] = (flash.now[:error] ||= []) << msg
-      elsif params[:old_tag_tag_list].present? && params[:new_tag_tag_list].present? 
+      elsif params[:old_tag].present? && params[:new_tag].present? 
         update_class_tag_table(CallToActionTag, "call_to_action_id", "tag_id")
         update_class_tag_table(RewardTag, "reward_id", "tag_id")
-        update_class_tag_table(TagsTag, "tag_id", "other_tag_id")
+
+        update_tags_tag_table()
       end
 
     end
@@ -102,23 +103,19 @@ class Easyadmin::EasyadminController < ApplicationController
   def update_class_tag_table(class_name, class_id_field, tag_id_field)
     id_objects_to_update = class_name.pluck(class_id_field)
 
-    old_tags_array = params[:old_tag_tag_list].split(",").map { |id|
-      if is_an_integer?(id)
-        id.to_i
-      else
-        Tag.find_by_name(id)
-      end
+    old_tags = params[:old_tag].split(",").map { |name|
+        Tag.find_by_name(name)
     }
 
-    old_tags_array.each do |tag_id|
-      id_objects_tagged = class_name.where("#{tag_id_field} = ?", tag_id).pluck(class_id_field)
+    old_tags.each do |old_tag|
+      id_objects_tagged = class_name.where("#{tag_id_field} = ?", old_tag.id).pluck(class_id_field)
       id_objects_to_update = id_objects_to_update & id_objects_tagged # intersection
     end
 
     id_objects_to_update.each do |object_id|
       # class_name.delete_all(["#{class_id_field} = ?", object_id]) # uncomment if old tagging must be dismissed
-      new_tag = is_an_integer?(params[:new_tag_tag_list]) ? Tag.find_by_id(params[:new_tag_tag_list]) : Tag.find_by_name(params[:new_tag_tag_list ])
-      new_tag = Tag.create(name: params[:new_tag_tag_list]) unless new_tag
+      new_tag = Tag.find_by_name(params[:new_tag])
+      new_tag = Tag.create(name: params[:new_tag]) unless new_tag
 
       if class_name.where("#{class_id_field} = ? AND #{tag_id_field} = ?", object_id, new_tag.id).count == 0
         object_tag = class_name.new
@@ -133,8 +130,34 @@ class Easyadmin::EasyadminController < ApplicationController
     end
   end
 
-  def is_an_integer?(str)
-    !!(str =~ /\A[-+]?[0-9]+\z/)
+  def update_tags_tag_table
+
+    old_tags = params[:old_tag].split(",").map { |name|
+        Tag.find_by_name(name)
+    }
+
+    id_objects_to_update = []
+
+    old_tags.each do |old_tag|
+      id_objects_to_update << old_tag.id
+    end
+
+    id_objects_to_update.each do |object_id|
+      # TagsTag.delete_all(["tag_id = ?", object_id]) # uncomment if old tagging must be dismissed
+      new_tag = Tag.find_by_name(params[:new_tag])
+      new_tag = Tag.create(name: params[:new_tag]) unless new_tag
+
+      if TagsTag.where("tag_id = ? AND other_tag_id = ?", object_id, new_tag.id).count == 0
+        object_tag = TagsTag.new
+        object_tag.tag_id = object_id
+        object_tag.other_tag_id = new_tag.id
+        object_tag.save
+      end
+    end
+
+    if id_objects_to_update.size > 0
+      flash.now[:notice] = (flash.now[:notice] ||= []) << "Tags ritaggati/e"
+    end
   end
 
   def update_tag

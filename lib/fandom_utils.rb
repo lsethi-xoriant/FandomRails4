@@ -46,6 +46,7 @@ module FandomUtils
     site = get_site_from_request!
     if site.nil?
       render template: 'application/url_mistyped'
+      return
     elsif not site.unbranded?
       prepend_view_path "#{Rails.root}/site/#{site.id}/views"
       ActionMailer::Base.prepend_view_path "#{Rails.root}/site/#{site.id}/views"

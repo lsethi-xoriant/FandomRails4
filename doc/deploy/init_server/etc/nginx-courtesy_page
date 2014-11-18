@@ -11,5 +11,6 @@ server {
 
     location /  {
         root   /home/app/public_html/courtesy_page;
+        rewrite ^ /index.html break;        
     }
 }

@@ -196,20 +196,19 @@ class CallToActionController < ApplicationController
 
       redirect_to "/"
 
-    end
-    
+    end    
 =begin
     if @calltoaction.enable_disqus
-      @disqus_requesturl = request.url
-      comment_disqus = JSON.parse(open("https://disqus.com/api/3.0/posts/list.json?api_key=#{ ENV['DISQUS_PUBLIC_KEY'] }&forum=#{ ENV['DISQUS_SHORTNAME'] }&thread:link=#{ @disqus_requesturl }&limit=2").read)
-      @disqus_cursor = comment_disqus["cursor"]
-      comment_disqus = comment_disqus["response"]
+    @disqus_requesturl = request.url
+    comment_disqus = JSON.parse(open("https://disqus.com/api/3.0/posts/list.json?api_key=#{ ENV['DISQUS_PUBLIC_KEY'] }&forum=#{ ENV['DISQUS_SHORTNAME'] }&thread:link=#{ @disqus_requesturl }&limit=2").read)
+    @disqus_cursor = comment_disqus["cursor"]
+    comment_disqus = comment_disqus["response"]
 
-      @disqus_hash = Hash.new
-      comment_disqus.each do |comm|
-        @disqus_hash[comm["id"]] = { text: comm["message"].html_safe, name: comm["author"]["name"], image: comm["author"]["avatar"]["small"]["permalink"],
-                                                 created_at: comm["createdAt"] }
-      end
+    @disqus_hash = Hash.new
+    comment_disqus.each do |comm|
+    @disqus_hash[comm["id"]] = { text: comm["message"].html_safe, name: comm["author"]["name"], image: comm["author"]["avatar"]["small"]["permalink"],
+    created_at: comm["createdAt"] }
+    end
     end
 =end
 
@@ -281,7 +280,7 @@ class CallToActionController < ApplicationController
     comment_resource = interaction.resource
 
     approved = comment_resource.must_be_approved ? nil : true
-    user_text = params[:comment]
+    user_text = params[:comment_info][:user_text]
     
     response = Hash.new
 
@@ -295,8 +294,9 @@ class CallToActionController < ApplicationController
         user_comment.save
       end
       if approved && user_comment.errors.blank?
+        response[:comment] = build_comment_for_comment_info(user_comment, true)
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
-        expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
+        expire_cache_key(get_comments_approved_cache_key(interaction.id))
       end
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
@@ -307,7 +307,7 @@ class CallToActionController < ApplicationController
         end
         if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
-          expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
+          expire_cache_key(get_comments_approved_cache_key(interaction.id))
         end
       end
     end
@@ -326,62 +326,51 @@ class CallToActionController < ApplicationController
     interaction = Interaction.find(interaction_id)
 
     response = Hash.new
-    render_calltoactions_str = String.new
-    comment_to_append_ids = Array.new
+    comments = query_block.call(interaction, response)
 
-    comments_to_show = query_block.call(interaction, response)
-
-    comments_to_show.each do |user_comment|
-      comment_to_append_ids << user_comment.id
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_comment", locals: { user_comment: user_comment, new_comment_class: true }, layout: false, formats: :html)
-    end
-
-    response[:comments_to_append_ids] = comment_to_append_ids
-    response[:comments_to_append] = render_calltoactions_str
+    response[:comments] = comments
 
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
+
   end
 
-  def get_comments_approved_except_ids(user_comments, except_ids)
-    if except_ids
-      comments_showed_id_qmarks = (["?"] * except_ids.count).join(", ")
-      comments_to_show_approved = user_comments.approved.where("id NOT IN (#{comments_showed_id_qmarks})", *except_ids)
+  def get_comments_approved_except_ids(user_comments, except_comments)
+    if except_comments
+      comment_id_qmarks = (["?"] * except_comments.count).join(", ")
+      user_comments.approved.where("id NOT IN (#{comment_id_qmarks})", *(except_comments.map { |comment| comment[:id] }))
     else
       user_comments.approved
     end
   end
 
-  def new_comments_polling
+  def comments_polling
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
 
-      comments_to_show_approved = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comments_shown])
+      comments_without_shown = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comment_info][:comments])
+      first_comment_shown_date = params[:comment_info][:comments].first[:updated_at] rescue Date.yesterday
 
-      if params[:first_comment_shown_date].present?
-        comments_to_show = comments_to_show_approved.where("date_trunc('milliseconds', updated_at) >= ?", params[:first_comment_shown_date]).order("updated_at DESC")
-      else
-        comments_to_show = comments_to_show_approved.order("date_trunc('milliseconds', updated_at) DESC")
-      end
+      comments = comments_without_shown.where("date_trunc('seconds', updated_at) >= ?", first_comment_shown_date).order("updated_at DESC")
       
-      if comments_to_show.any?
-        response[:comments_count] = interaction.resource.user_comment_interactions.approved.count
-        response[:first_comment_shown_date] =  comments_to_show.first.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N")
+      comments_for_comment_info = Array.new
+      comments.each do |comment|
+        comments_for_comment_info << build_comment_for_comment_info(comment, true)
       end
-      comments_to_show
+      comments_for_comment_info
     end
   end
 
   def append_comments
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
-      
-      comments_to_show_approved = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comments_shown])
-      comments_to_show = comments_to_show_approved.where("date_trunc('milliseconds', updated_at) <= ?", params[:last_comment_shown_date]).order("updated_at DESC").limit(10)
-      
-      response[:last_comment_shown_date] = comments_to_show.any? ? comments_to_show.last.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N") : nil
-      response[:comments_to_append_counter] = comments_to_show.count
-      
-      comments_to_show
+      comments_without_shown = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comment_info][:comments])
+      last_comment_shown_date = params[:comment_info][:comments].last[:updated_at]
+      comments = comments_without_shown.where("date_trunc('seconds', updated_at) <= ?", last_comment_shown_date).order("updated_at DESC").limit(10)
+      comments_for_comment_info = Array.new
+      comments.each do |comment|
+        comments_for_comment_info << build_comment_for_comment_info(comment, true)
+      end
+      comments_for_comment_info
     end    
   end
 
@@ -626,31 +615,25 @@ class CallToActionController < ApplicationController
   end
   
   def upload
-    @upload_interaction = Interaction.find(params[:interaction_id])
-    @cloned_cta = create_user_calltoactions(@upload_interaction.resource)
-
-    if @cloned_cta.errors.any?
-      render template: "/upload_interaction/new"
+    upload_interaction = Interaction.find(params[:interaction_id]).resource
+    errors = check_valid_upload(upload_interaction)
+    if errors.any?
+      flash[:error] = errors
     else
-      flash[:notice] = "Caricamento completato con successo"
-      redirect_to "/upload_interaction/new"
+      create_user_calltoactions(upload_interaction)
+      if flash[:error].blank?
+        flash[:notice] = "Upload interaction completata correttamente."
+      end
     end
-
-    #if is_call_to_action_gallery(upload_interaction.call_to_action)
-    #  redirect_to "/gallery/#{params[:cta_id]}"
-    #else
-      #redirect_to "/upload_interaction/new"
-    #end 
+    if is_call_to_action_gallery(upload_interaction.call_to_action)
+      redirect_to "/gallery/#{params[:cta_id]}"
+    else
+      redirect_to "/call_to_action/#{params[:cta_id]}"
+    end
   end
   
   def create_user_calltoactions(upload_interaction)  
-    
-      cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
-      cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)
-      cloned_cta.save
-      cloned_cta
 
-=begin    
     for i in(1 .. upload_interaction.upload_number) do
       if params["upload-#{i}"]
         if params["upload-#{i}"].size <= get_max_upload_size()
@@ -670,7 +653,6 @@ class CallToActionController < ApplicationController
         end
       end
     end
-=end
 
   end
   

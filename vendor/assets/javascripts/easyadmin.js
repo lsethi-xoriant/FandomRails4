@@ -27,3 +27,4 @@
 //= require easyadmin/raphael-2.1.2.min
 //= require easyadmin/morris.min
 //= require bootstrap-datepicker
+//= require fandom-utils

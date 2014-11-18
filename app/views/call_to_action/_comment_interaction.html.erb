@@ -1,0 +1,81 @@
+<div ng-if="interaction_info.interaction.resource.comment_info.open" >
+  <div class="row">
+    <div class="col-md-12">
+      <h4>Lascia un Commento</h4>
+    </div>
+    <div class="col-xs-2">
+      <img src="<%= current_avatar %>" class="img-circle img-responsive img-profile">
+    </div>
+    <div class="col-xs-10">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <textarea ng-model="interaction_info.interaction.resource.comment_info.user_text" class="form-control" style="resize: none;" rows="3" name="text"></textarea>
+        </div>
+        <div class="panel-footer">
+          <div class="row">
+            <div ng-if="!current_user" class="col-sm-8">
+              <div class="row">               
+                <div class="col-md-6">
+                  <img id="captcha-img-{{interaction_info.interaction.id}}" style="width: 180px; height: 40px;">
+                </div>              
+                <div class="col-md-6">
+                  <%= text_field_tag :code, "", id: "user-captcha-{{interaction_info.interaction.id}}", placeholder: "captcha", class: "form-control" %>
+                </div>
+              </div>            
+            </div>
+            <div ng-if="!emptyUserComment(interaction_info)" class="col-sm-4">
+              <button class="btn btn-info btn-md" ng-click="submitComment(interaction_info)">commenta</button>
+            </div> 
+            <div ng-if="emptyUserComment(interaction_info)" class="col-sm-4">
+              <button class="btn btn-info btn-md disabled">commenta</button>
+            </div> 
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments">
+    <div class="row" ng-class="{comment_evidence: comment.evidence }">
+      <div class="col-xs-2 col-sm-1" style="padding-right: 0; width: 40px;">
+        <img src="{{comment.user.avatar}}" alt="user-avatar" class="img-circle img-responsive img-profile">
+      </div>
+      <div class="col-xs-10 col-sm-11 text-left">
+        <h6 style="text-transform: none; margin-bottom: 5px;"><span>{{comment.user.name}}</span> - <span class="comment-text" style="color: #999">{{comment.text}}</span>
+          <br><small>{{comment.updated_at}}</small>
+        </h6>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 text-center">
+      <button class="btn btn-primary" ng-click="appendComments(interaction_info)">CARICA ALTRI</button>
+    </div>
+    <div class="col-md-6 text-center">
+      <button class="btn btn-primary" ng-click="closeCommentInfo(interaction_info)">nascondi</button>
+    </div>
+  </div>
+</div>
+
+<div ng-if="!interaction_info.interaction.resource.comment_info.open">
+  <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments | limitTo:2">
+    <div class="row" ng-class="{comment_evidence: comment.evidence }">
+      <div class="col-xs-2 col-sm-1" style="padding-right: 0; width: 40px;">
+        <img src="{{comment.user.avatar}}" alt="user-avatar" class="img-circle img-responsive img-profile">
+      </div>
+      <div class="col-xs-10 col-sm-11 text-left">
+        <h6 style="text-transform: none; margin-bottom: 5px;"><span>{{comment.user.name}}</span> - <span class="comment-text" style="color: #999">{{comment.text}}</span>
+          <br><small>{{comment.updated_at}}</small>
+        </h6>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <button class="btn btn-primary" ng-click="openCommentInfo(interaction_info)">VEDI</button>
+    </div>
+  </div>
+</div>
+
+
+

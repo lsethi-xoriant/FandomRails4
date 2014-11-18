@@ -45,7 +45,7 @@ else
     ln -nfs $remote_current current
     cd current ; bundle install > /dev/null
     service railsweb restart
-    /etc/init.d/log_daemon restart	
+    /usr/bin/supervisorctl restart log_daemon	
 fi
 
 # release lock

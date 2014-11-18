@@ -15,7 +15,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.current_user = current_user;
     $scope.calltoactions = calltoaction_info_list;
 
-    //alert(JSON.stringify($scope.calltoactions[0]));
+    $scope.ajax_comment_append_in_progress = false;
+
+    $scope.interactions_timeout = new Object();
 
     if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage[$scope.aux.tenant] == null) {
       initAnonymousUserStorage();      
@@ -40,6 +42,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
+    $scope.comments_polling = new Object();
     $scope.youtube_api_ready = false;
 
     var tag = document.createElement('script');
@@ -99,7 +102,25 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       }
     });
     return share_interaction_present;
-  }
+  };
+
+  $scope.openCommentInfo = function(interaction_info) {
+    if($scope.comments_polling.interaction_info) {
+      $scope.comments_polling.interaction_info.interaction.resource.comment_info.open = false;
+      $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments = $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments.slice(0, 5)
+    }
+    interaction_info.interaction.resource.comment_info.open = true;
+    $scope.comments_polling.polling = $interval($scope.commentsPolling, 15000);
+    $scope.comments_polling.interaction_info = interaction_info;
+  };
+
+  $scope.closeCommentInfo = function(interaction_info) {
+    if($scope.comments_polling.interaction_info) {
+      $scope.comments_polling.interaction_info.interaction.resource.comment_info.open = false;
+      $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments = $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments.slice(0, 5)
+      $interval.cancel($scope.comments_polling.polling);
+    }
+  };
 
   $scope.overvideoInteractionsPresent = function(calltoaction_id) {
     overvideo_interaction_present = false;
@@ -110,7 +131,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       }
     });
     return overvideo_interaction_present;
-  }
+  };
 
   function getPlayInteraction(calltoaction_id) {
     play_interaction = null;
@@ -122,6 +143,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     });
     return play_interaction;
   }
+
+  $scope.filterShareInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "share")
+  };
+
+  $scope.filterCommentInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "comment")
+  };
 
   $scope.filterPlayInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "play")
@@ -462,7 +491,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       if(current_video_player_state == 1) {
 
         updateStartVideoInteraction(calltoaction_id);
-        mayStartPooling(calltoaction_id);
+        mayStartpolling(calltoaction_id);
 
       } else if(current_video_player_state == 0) {
 
@@ -789,7 +818,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   //////////////////////// POLLING METHODS ////////////////////////
 
-  $window.mayStartPooling = function(calltoaction_id) {
+  $window.mayStartpolling = function(calltoaction_id) {
     if(!$scope.polling && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
       $scope.polling = $interval(videoPolling, 800);
     }
@@ -886,6 +915,115 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.updateUserRewardInView = function(counter) {
     $(".user-reward-counter").html("+" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
+  };
+
+  //////////////////////// POINTS AND CHECKS FEEDBACK METHODS ////////////////////////
+
+  function unevidenceComments(interaction_info) {
+    $timeout.cancel($scope.interactions_timeout[interaction_info.interaction.id]);
+    angular.forEach(interaction_info.interaction.resource.comment_info.comments, function(comment) {
+      comment.evidence = false;
+    });
+  }
+
+  $scope.emptyUserComment = function(interaction_info) {
+    user_text_from_interaction_info = interaction_info.interaction.resource.comment_info.user_text;
+    return (!user_text_from_interaction_info || user_text_from_interaction_info.length < 1)
+  };
+
+  $scope.submitComment = function(interaction_info) {
+    interaction_id = interaction_info.interaction.id;
+    session_storage_captcha = sessionStorage["captcha" + interaction_id];
+
+    $http.post("/add_comment", { interaction_id: interaction_id, comment_info: interaction_info.interaction.resource.comment_info })
+      .success(function(data) {
+
+        if(data.errors) {
+          /*
+          interaction_info.interaction.resource.comment_info.user_captcha = null;
+          $("#comment-danger-text-" + interaction_id).html(data.errors);
+          $("#comment-danger-" + interaction_id).removeClass("hidden");
+          */
+        } else {
+          interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
+          $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info) }, 5000);
+          /*
+          $("#comment-danger-" + $scope.comment.interaction_id).addClass("hidden");
+
+          if($scope.$parent.current_user) {
+            userFeedbackAfterSubmitComment(data);
+            $("#user-comment-" + $scope.comment.interaction_id).val("");
+          } else {
+            userFeedbackAfterSubmitCommentWithCaptcha(data);
+          }
+
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+          }
+
+          newCommentsPolling();
+          */
+        }
+
+      }).error(function() {
+      });
+  };
+
+  // TODO: ajax_comment_append_in_progress
+
+  $scope.appendComments = function(interaction_info) {
+    if(!$scope.ajax_comment_append_in_progress) {
+      interaction_id = interaction_info.interaction.id;
+      comment_info = interaction_info.interaction.resource.comment_info;
+      $scope.ajax_comment_append_in_progress = true;
+      try {
+        $http.post("/append_comments", { interaction_id: interaction_id, comment_info: comment_info })
+          .success(function(data) {
+
+            comment_info.comments = comment_info.comments.concat(data.comments);
+            $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info) }, 5000);
+            
+            /*
+            $scope.comments_shown = $scope.comments_shown.concat(data.comments_to_append_ids);
+
+            $scope.comment.last_comment_shown_date = data.last_comment_shown_date;
+            $("#comments-" + $scope.comment.interaction_id).append(data.comments_to_append);
+
+            if($scope.comments_shown.length >= $scope.comment.comments_counter) {
+              $("#comment-append-button-" + $scope.comment.interaction_id).hide();
+            } 
+
+            showNewCommentFeedback();    
+            */
+            
+          }).error(function() {
+          });
+      } finally {
+        $scope.ajax_comment_append_in_progress = false;
+      }
+
+    }
+  };
+
+  $scope.commentsPolling = function() {
+    if(!$scope.ajax_comment_append_in_progress) {
+      $scope.ajax_comment_append_in_progress = true;
+      comment_info = $scope.comments_polling.interaction_info.interaction.resource.comment_info;
+      interaction_info = $scope.comments_polling.interaction_info;
+      interaction_id = $scope.comments_polling.interaction_info.interaction.id
+      try {
+        $http.post("/comments_polling", { interaction_id: interaction_id, comment_info: comment_info })
+          .success(function(data) {
+            comment_info.comments = data.comments.concat(comment_info.comments);
+            comment_info.comments_total_count = comment_info.comments_total_count + data.comments.length;
+            $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info) }, 5000);
+          }).error(function() {
+          });
+      } finally {
+        $scope.ajax_comment_append_in_progress = false;
+      }
+
+    }
   };
 
 }

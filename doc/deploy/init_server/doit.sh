@@ -43,7 +43,8 @@ apt-get install vim \
   memcached \
   awscli \
   cloud-utils \
-  default-jdk
+  default-jdk \
+  supervisor      
   
 apt-get build-dep ruby${RUBY_VERSION}
 
@@ -80,6 +81,14 @@ service nginx restart
 cp etc/logrotate-rails /etc/logrotate.d/rails
 
 #
+# Supervisor
+# 
+
+cp etc/supervisor/supervisord.conf /etc/supervisor
+cp etc/supervisor/log_daemon.conf /etc/supervisor/conf
+service supervisor restart
+
+#
 # Setup init scripts
 #
 
@@ -89,8 +98,6 @@ cp etc/railsweb-unicorn.conf /etc/railsweb/unicorn.conf
 chmod a+x etc/init.d/* 
 cp etc/init.d/* /etc/init.d/
 
-update-rc.d log_daemon defaults 40
-update-rc.d wait_for_log_daemon_cleanup stop 45 0 1 6 .
 update-rc.d fandomplay defaults 50
 update-rc.d railsweb defaults 60
 

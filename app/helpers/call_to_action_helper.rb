@@ -57,9 +57,12 @@ module CallToActionHelper
       end
 
       resource_type = interaction.resource_type.downcase
-      if resource_type == "quiz"
+      case resource_type
+      when "quiz"
         resource_type = resource.quiz_type.downcase
         answers = build_answers_for_resource(interaction, resource.answers, resource_type, user_interaction)
+      when "comment"
+        comment_info = build_comments_for_resource(interaction)
       end
 
       interaction_info_list << {
@@ -74,7 +77,8 @@ module CallToActionHelper
             "title" => resource_title,
             "one_shot" => resource_one_shot,
             "answers" => answers,
-            "providers" => resource_providers
+            "providers" => resource_providers,
+            "comment_info" => comment_info
           }
         },
         "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction),
@@ -83,7 +87,7 @@ module CallToActionHelper
 
     end
 
-    return interaction_info_list
+    interaction_info_list
 
   end
 
@@ -112,6 +116,21 @@ module CallToActionHelper
       }
     end
     answers_for_resurce
+  end
+
+    def build_comments_for_resource(interaction)
+    comments, comments_total_count = get_comments_approved(interaction)
+
+    if page_require_captcha?(interaction)
+      captcha_data = generate_captcha_response
+    end
+
+    comments_for_resource = {
+      "comments" => comments,     
+      "comments_total_count" => comments_total_count,  
+      "captcha_data" => captcha_data,
+      "open" => false
+    }
   end
 
   def generate_next_interaction_response(calltoaction, interactions_showed = nil, aux = {})
@@ -204,7 +223,8 @@ module CallToActionHelper
   
   def clone_and_create_cta(upload_interaction, params, watermark)
     calltoaction_template = upload_interaction.call_to_action
-    user_calltoaction = duplicate_user_generated_cta(params, watermark)
+    cta_title = calculate_cloned_cta_title(upload_interaction, calltoaction_template, params)
+    user_calltoaction = duplicate_user_generated_cta(params, watermark, cta_title)
 
     calltoaction_template.interactions.each do |i|
       duplicate_interaction(user_calltoaction, i)
@@ -225,10 +245,20 @@ module CallToActionHelper
     user_calltoaction
   end
   
-  def duplicate_user_generated_cta(params, watermark)
+  def calculate_cloned_cta_title(upload_interaction, calltoaction_template, params)
+    if upload_interaction.title_needed && params[:title].blank?
+      nil
+    elsif upload_interaction.title_needed && params[:title].present?
+      params[:title]
+    else
+      calltoaction_template.title
+    end
+  end
+  
+  def duplicate_user_generated_cta(params, watermark, cta_title)
 
     user_calltoaction = CallToAction.new(
-        title: params[:title], 
+        title: cta_title, 
         name: generate_unique_name(), 
         user_id: current_user.id,
         media_image: params["upload"],

@@ -22,7 +22,9 @@ class EventLoggerMiddleware
     end
     
     if Rails.configuration.domain_to_site.key?(http_host)
-      tenant = Rails.configuration.domain_to_site[http_host].id
+      site = Rails.configuration.domain_to_site[http_host]
+      tenant = site.id
+      share_db = site.share_db
     else
       tenant = "no_tenant"
     end
@@ -53,6 +55,10 @@ class EventLoggerMiddleware
       user_id: $user_id,
       pid: $pid
     }
+    
+    unless share_db.nil?
+      data[:share_db] = share_db
+    end
 
     data    
   end
