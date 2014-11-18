@@ -5,8 +5,10 @@ module Fandom
       title: 'Coin Gift Machine',
       domains: ['coin.fandom.localdomain', 'coin.dev.fandomlab.com', 'coin.stage.fandomlab.com', 'coin.live.fandomlab.com'],
       assets_precompile: ['coin_application.css', 'coin_application.js'],
+      init_ctas: 1,
+      force_landing: true,
       environment: { 
-        'EMAIL_ADDRESS' => 'noreply@ballando.it'
+        'EMAIL_ADDRESS' => 'noreply@coin.it'
       }
     )      
   end

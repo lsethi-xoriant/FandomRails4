@@ -57,6 +57,8 @@ Fandom::Application.routes.draw do
     end
   end
 
+  match "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
+
   match "/file_upload_too_large", to: "application#file_upload_too_large"
 
   match "/redirect_into_iframe_calltoaction/:calltoaction_id", to: "application#redirect_into_iframe_calltoaction"
@@ -197,8 +199,7 @@ Fandom::Application.routes.draw do
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
 
   match "/how_to", :to => "application#how_to"
-  match "/landing", :to => "landing#landing_app"
-  match "/landing_tab", :to => "landing#landing_tab"
+  match "/landing", :to => "landing#index"
 
   match "profile", :to => "profile#index"
   match "profile/levels", :to => "profile#levels"

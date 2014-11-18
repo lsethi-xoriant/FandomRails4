@@ -42,6 +42,8 @@ module ConfigUtils
     attribute :periodicity_kinds, :default => [PERIOD_KIND_DAILY, PERIOD_KIND_WEEKLY, PERIOD_KIND_MONTHLY]
     attribute :required_attrs, :default => []
     attribute :anonymous_interaction, :default => false
+    attribute :init_ctas, :default => 3
+    attribute :force_landing, :default => false
 
     def unbranded?
       self.id == 'fandom'

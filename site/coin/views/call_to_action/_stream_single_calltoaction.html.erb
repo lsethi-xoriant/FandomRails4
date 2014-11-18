@@ -1,0 +1,36 @@
+<div class="call-to-action panel panel-default">
+    
+  <div class="panel-body">  
+    <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
+    <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+    <div class="row">
+      <div class="col-md-5 col-md-offset-1">
+        <button class="btn btn-danger btn-block call-to-action__button" ng-click="nextRandomCallToAction(calltoaction_info.calltoaction.id)">
+          <span class="glyphicon glyphicon-repeat call-to-action__button__repeat"></span>
+          <p class="call-to-action__button__inspire-text">ISPIRAMI ANCORA</p>
+        </button>
+      </div>
+      <div class="col-md-5">
+        <button class="btn btn-block call-to-action__button">
+          <span class="glyphicon glyphicon-heart call-to-action__button__hearth"></span>    
+          <p class="call-to-action__button__gift-text">REGALO PERFETTO</p>
+          <p class="call-to-action__button__with-list-text">METTILO NELLA WISH LIST</p>
+        </button>
+      </div>
+    </div>
+  </div>  
+
+  <div class="panel-footer" ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
+    <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row">
+      <div id="share-interaction-{{interaction_info.interaction.id}}">
+        <%= render partial: "/call_to_action/share_interaction" %>
+      </div>
+    </div>
+    <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
+      <div id="comment-interaction-{{interaction_info.interaction.id}}">
+        <%= render partial: "/call_to_action/comment_interaction" %>
+      </div>
+    </div>
+  </div>
+
+</div>

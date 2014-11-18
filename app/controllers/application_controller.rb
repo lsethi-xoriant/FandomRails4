@@ -63,16 +63,18 @@ class ApplicationController < ActionController::Base
 
     return if cookie_based_redirect?
     
+    init_ctas = request.site.init_ctas
+
     # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
     @tag = get_tag_from_params(params[:name])
     
     if @tag.nil? || params[:name] == "home_filter_all" 
       @calltoactions = cache_short("stream_ctas_init_calltoactions") do
-        CallToAction.active.limit(3).to_a
+        CallToAction.active.limit(init_ctas).to_a
       end
     else
       @calltoactions = cache_short("stream_ctas_init_calltoactions_#{params[:name]}") do
-        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", @tag.id).limit(3)
+        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", @tag.id).limit(init_ctas)
       end
     end
     

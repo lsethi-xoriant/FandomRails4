@@ -15,31 +15,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.current_user = current_user;
     $scope.calltoactions = calltoaction_info_list;
 
+    initAnonymousUser();
+
     $scope.ajax_comment_append_in_progress = false;
-
     $scope.interactions_timeout = new Object();
-
-    if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage[$scope.aux.tenant] == null) {
-      initAnonymousUserStorage();      
-    } else if ($scope.current_user != null && localStorage[$scope.aux.tenant] != null) {
-      clearAnonymousUserStorage();
-    }
-
-    if($scope.current_user == null && $scope.aux.anonymous_interaction) {
-      updateCallToActionInfoWithAnonymousUserStorage();
-    }
-
     $scope.overvideo_interaction_locked = {};
-
     $scope.secondary_video_players = {};
-
     $scope.play_event_tracked = {};
     $scope.current_user_answer_response_correct = {};
-
     $scope.calltoactions_during_video_interactions_second = calltoactions_during_video_interactions_second;
     $scope.current_calltoaction = current_calltoaction;
     $scope.calltoactions_count = calltoactions_count;
-
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
     $scope.comments_polling = new Object();
@@ -61,6 +47,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $("#append-other button").show();
     }
 
+  };
+
+  $scope.nextRandomCallToAction = function(except_calltoaction_id) {
+    $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
+      .success(function(data) { 
+
+        $scope.calltoactions = data.calltoaction_info_list;
+        initAnonymousUser();
+
+      }).error(function() {
+        // ERROR.
+      });
   };
 
   function getOvervideoInteractionAtSeconds(calltoaction_id, seconds) {
@@ -208,6 +206,19 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     anonymous_user = new Object();
     localStorage.setItem($scope.aux.tenant, JSON.stringify(anonymous_user));
   }
+
+  function initAnonymousUser() {
+    if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage[$scope.aux.tenant] == null) {
+      initAnonymousUserStorage();      
+    } else if ($scope.current_user != null && localStorage[$scope.aux.tenant] != null) {
+      clearAnonymousUserStorage();
+    }
+
+    if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+      updateCallToActionInfoWithAnonymousUserStorage();
+    }
+  }
+
 
   function clearAnonymousUserStorage() {
     localStorage.removeItem($scope.aux.tenant);
