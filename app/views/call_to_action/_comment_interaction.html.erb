@@ -38,7 +38,7 @@
   <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments">
     <div class="row" ng-class="{comment_evidence: comment.evidence }">
       <div class="col-xs-2 col-sm-1" style="padding-right: 0; width: 40px;">
-        <img src="{{comment.user.avatar}}" alt="user-avatar" class="img-circle img-responsive img-profile">
+        <img ng-src="{{comment.user.avatar}}" alt="user-avatar" class="img-circle img-responsive img-profile">
       </div>
       <div class="col-xs-10 col-sm-11 text-left">
         <h6 style="text-transform: none; margin-bottom: 5px;"><span>{{comment.user.name}}</span> - <span class="comment-text" style="color: #999">{{comment.text}}</span>
@@ -61,7 +61,7 @@
   <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments | limitTo:2">
     <div class="row" ng-class="{comment_evidence: comment.evidence }">
       <div class="col-xs-2 col-sm-1" style="padding-right: 0; width: 40px;">
-        <img src="{{comment.user.avatar}}" alt="user-avatar" class="img-circle img-responsive img-profile">
+        <img ng-src="{{comment.user.avatar}}" alt="user-avatar" class="img-circle img-responsive img-profile">
       </div>
       <div class="col-xs-10 col-sm-11 text-left">
         <h6 style="text-transform: none; margin-bottom: 5px;"><span>{{comment.user.name}}</span> - <span class="comment-text" style="color: #999">{{comment.text}}</span>
