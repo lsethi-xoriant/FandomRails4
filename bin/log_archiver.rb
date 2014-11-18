@@ -37,10 +37,10 @@ def main
     tenants.each do |tenant|
       loop do
         events = get_events(tenant, source_db_conn, today_timestamp)
-        logger.info("processing #{events.count} events for tenant #{tenant}")
         if events.empty? 
           break
         else
+          logger.info("processing #{events.count} events for tenant #{tenant}")
           not_archived_events, already_moved_ids = filter_events_not_already_archived(events, tenant, dest_db_conn)
           if already_moved_ids.any?
             logger.info("cleaning #{already_moved_ids.count} events that have already been stored")
