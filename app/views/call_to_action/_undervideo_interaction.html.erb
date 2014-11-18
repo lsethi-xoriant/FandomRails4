@@ -1,4 +1,5 @@
 <div id="undervideo-area-{{interaction_info.interaction.id}}">
+
   <div id="undervideo-interaction-{{interaction_info.interaction.id}}" class="row undervideo">
     <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-md-12">
       <%= render partial: "/call_to_action/trivia_interaction" %>
@@ -9,10 +10,29 @@
     <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-md-12">
       <%= render partial: "/call_to_action/check_interaction" %>
     </div>  
+    <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-md-12">
+      <%= render partial: "/call_to_action/share_interaction" %>
+    </div>  
   </div>
 
-  <div ng-if="interaction_info.user_interaction.outcome" id="undervideo-outcome-{{interaction_info.interaction.id}}" class="row undervideo">
-    <%= render partial: "/call_to_action/feedback_undervideo" %>
+  <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" id="undervideo-outcome-{{interaction_info.interaction.id}}" class="row undervideo">
+    <div ng-if="interaction_info.interaction.resource_type != 'trivia'" class="col-sm-10 col-sm-offset-1 text-center">
+      <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+      <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+      </div>
+    </div> 
+      
+    <div ng-if="interaction_info.interaction.resource_type == 'trivia' && interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
+      <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+      <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+      </div>
+    </div> 
+
+    <div ng-if="interaction_info.interaction.resource_type == 'trivia' && !interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
+      <div class="alert alert-danger" style="margin-bottom: 0; margin-top: 15px;">
+      <strong>Risposta errata!</strong> Hai guadagnato {{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+      </div>
+    </div> 
   </div>
 
   <div ng-if="!interaction_info.user_interaction" class="row">

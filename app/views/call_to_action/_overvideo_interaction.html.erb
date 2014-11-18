@@ -1,12 +1,1 @@
-<!-- OVERVIDEO AREA -->
-<% if interaction.resource.answers.any? %>
-  <div class="overvideo overvideo-fluid">
-      <div class="overvideo-canvas">
-          <div class="overvideo-content">
-              <div class="row">
-                <%= render partial: "/call_to_action/#{interaction.resource.quiz_type.downcase}_interaction", locals: { user_interaction: user_interaction, interaction: interaction } %>
-              </div>
-          </div>
-      </div>
-  </div>
-<% end %>
+<%= render partial: "/call_to_action/undervideo_interaction" %>

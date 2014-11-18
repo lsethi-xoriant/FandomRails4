@@ -90,6 +90,13 @@ class ApplicationController < ActionController::Base
     unless get_site_from_request(request)["id"] == "ballando"
       # TODO: BALLANDO
       @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
+      
+      if current_user
+        @current_user_info = {
+          "facebook" => current_user.facebook(request.site.id),
+          "twitter" => current_user.twitter(request.site.id)
+        }
+      end
     end
     ########## NEW ANGULAR TEMPLATES ##########
 

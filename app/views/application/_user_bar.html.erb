@@ -42,12 +42,12 @@
 </header>
 
 <script type="text/javascript">
-  <% if get_site_from_request(request)["anonymous_interaction"] %>
+  <% if !current_user && get_site_from_request(request)["anonymous_interaction"] %>
     anonymous_user = localStorage['<%= get_site_from_request(request)["id"] %>'];
-    if(!(anonymous_user === null)) {
+    if(anonymous_user != null && JSON.parse(anonymous_user)['<%= MAIN_REWARD_NAME %>']) {
       $(".user-reward-counter").html("+" + JSON.parse(anonymous_user)['<%= MAIN_REWARD_NAME %>'] + " <span class=\"glyphicon glyphicon-star\"></span> punti")
     } else {
-      $(".user-reward-counter").html("0 <span class=\"glyphicon glyphicon-star\"></span> punti")
+      $(".user-reward-counter").html("+0 <span class=\"glyphicon glyphicon-star\"></span> punti")
     }
   <% end %>
 </script>

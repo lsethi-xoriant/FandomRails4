@@ -73,12 +73,121 @@ class Sites::Ballando::CallToActionController < CallToActionController
   end
 
   def create_user_calltoactions(upload_interaction)  
-    
-      cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
-      cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)
-      cloned_cta.save
-      cloned_cta
+    cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
+    cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)
+    cloned_cta.save
+    cloned_cta
+  end
 
+  ############### COMMENTS ###############
+
+  def get_comments_approved_except_ids(user_comments, except_ids)
+    if except_ids
+      comments_showed_id_qmarks = (["?"] * except_ids.count).join(", ")
+      comments_to_show_approved = user_comments.approved.where("id NOT IN (#{comments_showed_id_qmarks})", *except_ids)
+    else
+      user_comments.approved
+    end
+  end
+
+  def append_comments
+    append_or_update_comments(params[:interaction_id]) do |interaction, response|
+      
+      comments_to_show_approved = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comments_shown])
+      comments_to_show = comments_to_show_approved.where("date_trunc('milliseconds', updated_at) <= ?", params[:last_comment_shown_date]).order("updated_at DESC").limit(10)
+      
+      response[:last_comment_shown_date] = comments_to_show.any? ? comments_to_show.last.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N") : nil
+      response[:comments_to_append_counter] = comments_to_show.count
+      
+      comments_to_show
+    end    
+  end
+
+  def append_or_update_comments(interaction_id, &query_block)
+    interaction = Interaction.find(interaction_id)
+
+    response = Hash.new
+    render_calltoactions_str = String.new
+    comment_to_append_ids = Array.new
+
+    comments_to_show = query_block.call(interaction, response)
+
+    comments_to_show.each do |user_comment|
+      comment_to_append_ids << user_comment.id
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_comment", locals: { user_comment: user_comment, new_comment_class: true }, layout: false, formats: :html)
+    end
+
+    response[:comments_to_append_ids] = comment_to_append_ids
+    response[:comments_to_append] = render_calltoactions_str
+
+    respond_to do |format|
+      format.json { render :json => response.to_json }
+    end
+  end
+
+  def add_comment
+    interaction = Interaction.find(params[:interaction_id])
+    comment_resource = interaction.resource
+
+    approved = comment_resource.must_be_approved ? nil : true
+    user_text = params[:comment]
+    
+    response = Hash.new
+
+    response[:ga] = Hash.new
+    response[:ga][:category] = "UserCommentInteraction"
+    response[:ga][:action] = "AddComment"
+
+    if current_user
+      user_comment = UserCommentInteraction.new(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+      unless check_profanity_words_in_comment(user_comment).errors.any?
+        user_comment.save
+      end
+      if approved && user_comment.errors.blank?
+        user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
+        expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
+      end
+    elsif 
+      response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
+      if response[:captcha_check]
+        user_comment = UserCommentInteraction.new(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+        unless check_profanity_words_in_comment(user_comment).errors.any?
+          user_comment.save
+        end
+        if approved && user_comment.errors.blank?
+          user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
+          expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
+        end
+      end
+    end
+
+    if user_comment && user_comment.errors.any?
+      response[:errors] = user_comment.errors.full_messages.join(", ")
+    end
+
+    respond_to do |format|
+      format.json { render :json => response.to_json }
+    end
+
+  end
+
+  def new_comments_polling
+    append_or_update_comments(params[:interaction_id]) do |interaction, response|
+
+      comments_to_show_approved = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comments_shown])
+
+      if params[:first_comment_shown_date].present?
+        comments_to_show = comments_to_show_approved.where("date_trunc('milliseconds', updated_at) >= ?", params[:first_comment_shown_date]).order("updated_at DESC")
+      else
+        comments_to_show = comments_to_show_approved.order("date_trunc('milliseconds', updated_at) DESC")
+      end
+      
+      if comments_to_show.any?
+        response[:comments_count] = interaction.resource.user_comment_interactions.approved.count
+        response[:first_comment_shown_date] =  comments_to_show.first.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N")
+      end
+      comments_to_show
+    end
   end
   
 end

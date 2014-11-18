@@ -36,6 +36,10 @@ module CacheKeysHelper
     "calltoaction_#{cta_id}_last_comments"
   end
 
+  def get_comments_approved_cache_key(interaction_id)
+    "interaction_#{interaction_id}_comments_approved"
+  end
+
   def get_interactions_required_to_complete_cache_key(cta_id)
     "interactions_required_to_complete_#{cta_id}"
   end

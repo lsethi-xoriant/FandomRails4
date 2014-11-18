@@ -280,7 +280,7 @@ class CallToActionController < ApplicationController
     comment_resource = interaction.resource
 
     approved = comment_resource.must_be_approved ? nil : true
-    user_text = params[:comment]
+    user_text = params[:comment_info][:user_text]
     
     response = Hash.new
 
@@ -294,8 +294,9 @@ class CallToActionController < ApplicationController
         user_comment.save
       end
       if approved && user_comment.errors.blank?
+        response[:comment] = build_comment_for_comment_info(user_comment, true)
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
-        expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
+        expire_cache_key(get_comments_approved_cache_key(interaction.id))
       end
     elsif 
       response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
@@ -306,7 +307,7 @@ class CallToActionController < ApplicationController
         end
         if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
-          expire_cache_key(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id))
+          expire_cache_key(get_comments_approved_cache_key(interaction.id))
         end
       end
     end
@@ -325,62 +326,51 @@ class CallToActionController < ApplicationController
     interaction = Interaction.find(interaction_id)
 
     response = Hash.new
-    render_calltoactions_str = String.new
-    comment_to_append_ids = Array.new
+    comments = query_block.call(interaction, response)
 
-    comments_to_show = query_block.call(interaction, response)
-
-    comments_to_show.each do |user_comment|
-      comment_to_append_ids << user_comment.id
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_comment", locals: { user_comment: user_comment, new_comment_class: true }, layout: false, formats: :html)
-    end
-
-    response[:comments_to_append_ids] = comment_to_append_ids
-    response[:comments_to_append] = render_calltoactions_str
+    response[:comments] = comments
 
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
+
   end
 
-  def get_comments_approved_except_ids(user_comments, except_ids)
-    if except_ids
-      comments_showed_id_qmarks = (["?"] * except_ids.count).join(", ")
-      comments_to_show_approved = user_comments.approved.where("id NOT IN (#{comments_showed_id_qmarks})", *except_ids)
+  def get_comments_approved_except_ids(user_comments, except_comments)
+    if except_comments
+      comment_id_qmarks = (["?"] * except_comments.count).join(", ")
+      user_comments.approved.where("id NOT IN (#{comment_id_qmarks})", *(except_comments.map { |comment| comment[:id] }))
     else
       user_comments.approved
     end
   end
 
-  def new_comments_polling
+  def comments_polling
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
 
-      comments_to_show_approved = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comments_shown])
+      comments_without_shown = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comment_info][:comments])
+      first_comment_shown_date = params[:comment_info][:comments].first[:updated_at] rescue Date.yesterday
 
-      if params[:first_comment_shown_date].present?
-        comments_to_show = comments_to_show_approved.where("date_trunc('milliseconds', updated_at) >= ?", params[:first_comment_shown_date]).order("updated_at DESC")
-      else
-        comments_to_show = comments_to_show_approved.order("date_trunc('milliseconds', updated_at) DESC")
-      end
+      comments = comments_without_shown.where("date_trunc('seconds', updated_at) >= ?", first_comment_shown_date).order("updated_at DESC")
       
-      if comments_to_show.any?
-        response[:comments_count] = interaction.resource.user_comment_interactions.approved.count
-        response[:first_comment_shown_date] =  comments_to_show.first.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N")
+      comments_for_comment_info = Array.new
+      comments.each do |comment|
+        comments_for_comment_info << build_comment_for_comment_info(comment, true)
       end
-      comments_to_show
+      comments_for_comment_info
     end
   end
 
   def append_comments
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
-      
-      comments_to_show_approved = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comments_shown])
-      comments_to_show = comments_to_show_approved.where("date_trunc('milliseconds', updated_at) <= ?", params[:last_comment_shown_date]).order("updated_at DESC").limit(10)
-      
-      response[:last_comment_shown_date] = comments_to_show.any? ? comments_to_show.last.updated_at.strftime("%Y-%m-%d %H:%M:%S.%6N") : nil
-      response[:comments_to_append_counter] = comments_to_show.count
-      
-      comments_to_show
+      comments_without_shown = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comment_info][:comments])
+      last_comment_shown_date = params[:comment_info][:comments].last[:updated_at]
+      comments = comments_without_shown.where("date_trunc('seconds', updated_at) <= ?", last_comment_shown_date).order("updated_at DESC").limit(10)
+      comments_for_comment_info = Array.new
+      comments.each do |comment|
+        comments_for_comment_info << build_comment_for_comment_info(comment, true)
+      end
+      comments_for_comment_info
     end    
   end
 
@@ -413,9 +403,10 @@ class CallToActionController < ApplicationController
       if interaction.resource.quiz_type.downcase == "trivia"
         response[:ga][:label] = "#{interaction.resource.quiz_type.downcase}-answer-#{answer.correct ? "right" : "wrong"}"
       else 
-        response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, "versus")
         response[:ga][:label] = interaction.resource.quiz_type.downcase
       end
+
+      response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, interaction.resource.quiz_type.downcase, user_interaction)
 
     elsif interaction.resource_type.downcase == "like"
 
@@ -475,8 +466,10 @@ class CallToActionController < ApplicationController
     end
 
     if anonymous_user?(current_or_anonymous_user)
-      anonymous_user_main_reward_count = JSON.parse(params["anonymous_user"])[MAIN_REWARD_NAME]
-      response["main_reward_counter"] = anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
+      anonymous_user_main_reward_count = params["anonymous_user"][MAIN_REWARD_NAME] || 0
+      response["main_reward_counter"] = {
+        "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME])
+      }
     else
       response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true) #HERE
       response = setup_update_interaction_response_info(response)

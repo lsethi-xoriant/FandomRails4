@@ -117,12 +117,16 @@ module ApplicationHelper
     end
 
     if user_interaction
+
       if interaction.resource_type.downcase == "share"
         aux = merge_aux(aux, user_interaction.aux)
       end
 
-      user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
-      UserCounter.update_counters(interaction, user_interaction, user, false) 
+      unless interaction.resource.one_shot
+        user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
+        UserCounter.update_counters(interaction, user_interaction, user, false) 
+      end
+
     else
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, like: like, aux: aux)
   
@@ -390,7 +394,7 @@ module ApplicationHelper
       interaction_answers_count = interaction.user_interactions.count
       
       if interaction_answers_count < 1
-        nil
+        (100 / interaction.resource.answers.count.to_f).round
       else
         interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
         ((interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100).round

@@ -48,6 +48,10 @@ Fandom::Application.routes.draw do
           match "/special_guest", :to => "application#redirect_into_special_guest"
           
           match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+
+          match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
+          match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+          match "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
         end
       end
     end
@@ -265,7 +269,7 @@ Fandom::Application.routes.draw do
   
   match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
   match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
-  match "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
+  match "/comments_polling", :to => "call_to_action#comments_polling", defaults: { format: 'json' }
 
   match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
