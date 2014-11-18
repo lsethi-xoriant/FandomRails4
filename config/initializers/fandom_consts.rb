@@ -64,6 +64,12 @@ unless defined? FILTER_OPERATOR_CONTAINS
   SUPERFAN_CONTEST_REWARD = "contest-point"
   SUPERFAN_CONTEST_POINTS_TO_WIN = 200
   SUPERFAN_CONTEST_ACTIVE = false
+  
+  COIN_GIFT_500 = {"name" => "gift_card_500", "qta" => 1}
+  COIN_GIFT_100 = {"name" => "gift_card_100", "qta" =>10}
+  COIN_GIFT_50 = {"name" => "gift_card_50", "qta" =>24}
+  COIN_CONTEST_START_DATE = "04/12/2014 11:00:00 Rome"
+  COIN_CONTEST_END_DATE = "07/01/2015 17:00:00 Rome"
 
   REGEX_SPECIAL_CHARS = ["\\", "^", "$", ".", "|", "?", "*", "+", "(", ")", "[", "{"]
 
