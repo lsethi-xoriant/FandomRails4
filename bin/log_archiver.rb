@@ -27,11 +27,12 @@ def main
   today_timestamp = Date.today.strftime("%Y-%m-%d %H:%M:%S")
 
   begin 
+    logger.info("archiving process started...")
     db_config = YAML::load(File.open(database_yaml_path))  
     
     source_db_conn = db_connect(db_config[source_environment])
     dest_db_conn = db_connect(db_config[dest_environment])
-    
+
     tenants = get_tenants(source_db_conn)
     tenants.each do |tenant|
       loop do
@@ -62,6 +63,7 @@ def main
         end
       end
     end
+    logger.info("archiving process ended.")
   rescue Exception => exception
     logger.error("toplevel exception: #{exception} - #{exception.backtrace}")
   end
@@ -135,7 +137,7 @@ def generate_data_for_sql_insert_query(db_conn, events)
   values = events.map do |e| 
     tuple = columns.map do |column|
       key = column == 'orig_id'? 'id' : column
-      "'#{db_conn.escape_string(e[key])}'"
+      e[key].nil? ? "null" : "'#{db_conn.escape_string(e[key])}'"      
     end  
     "(#{tuple.join(', ')})"
   end
