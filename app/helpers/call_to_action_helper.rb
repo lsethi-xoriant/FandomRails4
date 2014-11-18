@@ -378,4 +378,12 @@ module CallToActionHelper
     end
   end
   
+  def get_random_cta_by_tag(tag_name)
+    get_ctas_with_tag(tag_name).sample
+  end
+  
+  def get_random_cta_by_tags(*tags_name)
+    get_ctas_with_tags(tags_name).sample
+  end
+  
 end
