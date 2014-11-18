@@ -584,7 +584,6 @@ class CallToActionController < ApplicationController
 
   def update_share_interaction(interaction, provider, address)
     # When this function is called, there is a current user with the current provider anchor
-
     provider_json = JSON.parse(interaction.resource.providers)[provider]
     result = true
 

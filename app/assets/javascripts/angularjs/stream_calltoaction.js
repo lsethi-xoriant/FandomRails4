@@ -601,36 +601,46 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
-  $scope.shareWith = function(interaction_id, provider) {
+  $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
+
+    if(interaction_info.user_interaction) {
+      share_with_email_address = interaction_info.user_interaction.share_to_email;
+    } else {
+      share_with_email_address = null;
+    }
+
+    interaction_id = interaction_info.interaction.id;
+    calltoaction_id = calltoaction_info.calltoaction.id;
 
     button = $("#" + provider + "-interaction-" + interaction_id);
-
     button.attr('disabled', true);
-    button_main_content = button.html();
-    button.html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
+    current_button_html = button.html();
+    button.html("condivisione in corso");
 
-    share_with_email_address = $("#address-interaction-" + interaction_id).val();
+    $http.post("/update_interaction", { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider })
+      .success(function(data) {
 
-    $http.post("/update_interaction", { interaction_id: interaction_id, main_reward_name: MAIN_REWARD_NAME, share_with_email_address: share_with_email_address, provider: provider })
-          .success(function(data) {
+        button.attr('disabled', false);
+        button.html(current_button_html);
 
-          button.attr('disabled', false);
-          button.html(button_main_content);
+        if(!data.share.result) { 
+          alert(data.share.exception);
+          return;
+        }
 
-          if(provider == "email") {
-            $("#address-interaction-" + interaction_id).val();
-          } 
+        updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+        $scope.current_user.main_reward_counter = data.main_reward_counter;   
+          
+        if(provider == "email") {
+          $("#modal-interaction-" + interaction_info.interaction.id).modal('hide');
+        }
 
-          if(!data.share.result) {
-            alert(data.share.exception);
-          } else {
-            if(data.ga) {
-              update_ga_event(data.ga.category, data.ga.action, data.ga.label);
-              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-              });
-            }
-          }
+        if(data.ga) {
+          update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+          angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+            update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+          });
+        }
 
       }).error(function() {
         // ERRORE
@@ -679,6 +689,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
             // Interaction after user response.
             updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+            $scope.current_user.main_reward_counter = data.main_reward_counter;   
 
             if(data.answers) {
               updateAnswersInInteractionInfo(interaction_info, data.answers);

@@ -1,0 +1,41 @@
+<!-- FACEBOOK -->
+<div ng-if="interaction_info.interaction.resource.providers.facebook" class="col-md-6">                    
+  <button ng-if="current_user.facebook" id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-fb btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')">CONDIVIDI CON FACEBOOK</button>
+  <a ng-if="!current_user.facebook" href="/auth/facebook_{{aux.tenant}}" class="btn btn-fb btn-block">ENTRA CON FACEBOOK</a>
+</div>
+<!-- EMAIL -->
+<div ng-if="interaction_info.interaction.resource.providers.email" class="col-md-6">
+  <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}">
+    CONDIVIDI VIA EMAIL
+  </button>
+  <!-- MODAL SHARE INTERACTION -->
+  <div class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">CONDIVIDI</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6" style="margin-top: 10px;"> 
+              <input ng-model="interaction_info.user_interaction.share_to_email" class="form-control" type="text" placeholder="example@shado.tv" name="address">
+            </div>
+            <div class="col-md-6" style="margin-top: 10px;">
+              <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-default btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'email')">CONDIVIDI VIA EMAIL</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">CHIUDI</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" id="undervideo-outcome-{{interaction_info.interaction.id}}" class="col-md-12 text-center" style="margin-top: 15px;">
+  <div class="alert alert-success">
+    <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} biglietti.
+  </div>
+</div>

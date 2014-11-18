@@ -285,13 +285,25 @@ module RewardingSystemHelper
   # Fills the user_rewards argument with all rewards names, with counters set to 0
   def fill_user_rewards(user_rewards)
     get_all_reward_names().each do |name|
-      unless user_rewards.key?(name)
-        user_rewards[name] = MockedUserReward.new({ PERIOD_KIND_TOTAL => 0 })
+      if user_rewards.key?(name)
+        counters = user_rewards[name].counters
+      else
+        counters = {}
+        user_rewards[name] = MockedUserReward.new(counters) 
       end
+      get_all_periodicity_kinds().each do |periodicity_kind|
+        unless counters.key?(periodicity_kind)
+          counters[periodicity_kind] = 0
+        end
+      end
+      user_rewards[name].counters = counters 
     end
     user_rewards
   end
 
+  def get_all_periodicity_kinds()
+    request.site.periodicity_kinds + [PERIOD_KIND_TOTAL]
+  end
   
   def get_correct_answer(user_interaction)
     user_interaction.is_answer_correct?

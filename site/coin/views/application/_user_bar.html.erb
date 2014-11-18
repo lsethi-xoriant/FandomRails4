@@ -1,53 +1,55 @@
-<header class="navbar navbar-default navbar-fixed-top visible-xs" role="navigation">
-  <div class="container-fluid">
-
-    <div class="navbar-header">
-      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-
-      <!-- MOBILE COUNTER -->
-      <% if current_user %>
-        <a style="float: right; font-size: 14px; margin-right: 15px;" class="play-2 visible-xs navbar-brand user-reward-counter" href="javascript: void(0)">+<span class=""><%= get_counter_about_user_reward(MAIN_REWARD_NAME, false) %></span> <span class="glyphicon glyphicon-star"></span> punti</a>
-      <% end %>
-
-      <a style="float: left; padding: 8px 8px 8px 0; margin-left: 15px;" href="http://www.ballandoconlestelle.rai.it/dl/portali/site/articolo/ContentItem-31298c5f-1077-418f-b851-9f90353e4e8b.html" class="navbar-brand visible-xs">
-        <img class="img-circle" src="<%= current_avatar %>" style="height: 100%; border: 1px solid #fff;">
-      </a>
-    </div>
-
-    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
-      <ul class="nav navbar-nav hidden-xs">
-        <li><a href="/">Home</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <% if current_user %>
-          <!-- DESKTOP COUNTER -->
-          <li class="play-2 hidden-xs">
-            <a class="user-reward-counter" href="javascript: void(0)">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME, false) %> <span class="glyphicon glyphicon-star"></span> punti</a>
-          </li>
-        <% elsif get_site_from_request(request)["anonymous_interaction"] %>
-          <li class="play-2 hidden-xs">
-            <a class="user-reward-counter" href="javascript: void(0)"></a>
-          </li>
-        <% end %>
-        <li><a href="/">Home</a></li>
-      </ul>
-    </nav>
-
-  </div>
-</header>
-
 <% if current_user %>
+  <header class="navbar navbar-default navbar-fixed-top visible-xs" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a style="float: right; font-size: 14px; margin-right: 15px;" class="navbar-brand user-reward-counter" href="javascript: void(0)">+<span class="">{{current_user.main_reward_counter.general}}</span> <span class="glyphicon glyphicon-star"></span> punti</a>
+        <a style="float: left; padding: 8px 8px 8px 0; margin-left: 15px;" href="#" class="navbar-brand">
+          <img class="img-circle" src="<%= current_avatar %>" style="height: 100%; border: 1px solid #fff;">
+        </a>
+      </div>
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Home</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
   <div class="row hidden-xs">
     <div class="col-md-12">
       <div class="user-bar panel panel-default">
         <div class="panel-body user-bar__body">
           <img class="user-bar__body__avatar" src="<%= current_avatar %>">
           <p class="user-bar__body__username"><%= "#{current_user.first_name} #{current_user.last_name}" %></p>
+
+          <button type="button" class="btn btn-warning" style="float: right; height: 50px; margin-left: 15px;" data-toggle="modal" data-target="#modal-interaction-instant-win">
+            GIOCA
+          </button>
+
+          <!-- MODAL INSTANT WIN -->
+          <div class="modal fade" id="modal-interaction-instant-win" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                  <h4 class="modal-title">GIOCA</h4>
+                </div>
+                <div class="modal-body">
+                  TMP
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">CHIUDI</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p style="float: right; line-height: 50px; margin: 0;">{{current_user.main_reward_counter.general}} TICKET</p>
         </div>
       </div>
     </div>

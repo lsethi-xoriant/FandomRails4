@@ -96,7 +96,8 @@ class ApplicationController < ActionController::Base
       if current_user
         @current_user_info = {
           "facebook" => current_user.facebook(request.site.id),
-          "twitter" => current_user.twitter(request.site.id)
+          "twitter" => current_user.twitter(request.site.id),
+          "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true)
         }
       end
     end
