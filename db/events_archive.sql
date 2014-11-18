@@ -11,3 +11,7 @@ CREATE TABLE events (
     user_id integer,
     data json
 );
+CREATE INDEX orid_id_idx ON events(orig_id);
+CREATE INDEX message_idx ON events(message);
+CREATE INDEX request_uri_idx ON events(request_uri);
+CREATE INDEX timestamp_idx ON events("timestamp");
