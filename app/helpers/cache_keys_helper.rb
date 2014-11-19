@@ -129,4 +129,15 @@ module CacheKeysHelper
     "gallery_tag_metadata"
   end
   
+  # Instantwin
+  # ~~~~~~~~~~
+  
+  def get_reward_name_for_contest_key(interaction_id)
+    "reward_name_for_contest_#{interaction_id}"
+  end
+  
+  def get_user_already_won_contest(user_id, interaction_id)
+    "user_#{user_id}_already_won_contest_#{interaction_id}"
+  end
+  
 end

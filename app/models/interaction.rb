@@ -2,12 +2,11 @@
 # encoding: utf-8
 
 class Interaction < ActiveRecord::Base
-  attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :calltoaction_id, :resource_attributes,
-    :points, :added_points, :when_show_interaction, :points_type, :property_default_point_id, :required_to_complete
+  attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :call_to_action_id, :resource_attributes,
+    :points, :added_points, :when_show_interaction, :required_to_complete
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
   belongs_to :call_to_action
-  belongs_to :property_default_point
 
   has_many :user_interactions, dependent: :destroy
 

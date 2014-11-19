@@ -6,7 +6,8 @@ class CallToAction < ActiveRecord::Base
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
   					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required,
-            :privacy_required, :privacy, :button_label, :alternative_description, :enable_for_current_user
+            :privacy_required, :privacy, :button_label, :alternative_description, :enable_for_current_user,
+            :valid_from, :valid_to
 
   extend FriendlyId
   friendly_id :title, use: :slugged

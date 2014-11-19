@@ -56,6 +56,10 @@ Fandom::Application.routes.draw do
       end
     end
   end
+  
+  constraints(SiteMatcher.new('coin')) do
+    match "/play", :to => "instantwin#play_ticket"
+  end
 
   match "/file_upload_too_large", to: "application#file_upload_too_large"
 
