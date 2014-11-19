@@ -97,7 +97,8 @@ class ApplicationController < ActionController::Base
         @current_user_info = {
           "facebook" => current_user.facebook(request.site.id),
           "twitter" => current_user.twitter(request.site.id),
-          "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true)
+          "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
+          "registration_fully_completed" => registration_fully_completed?
         }
       end
     end
@@ -112,6 +113,10 @@ class ApplicationController < ActionController::Base
     @calltoactions_active_interaction = Hash.new
 
     @home = true
+  end
+
+  def registration_fully_completed?
+    true
   end
   
   def update_call_to_action_in_page_with_tag

@@ -40,6 +40,18 @@ module ApplicationHelper
     attribute :column_number, type: Integer
   end
 
+  def user_for_registation_form()
+    {
+      "first_name" => current_user.first_name,
+      "last_name" => current_user.last_name,
+      "email" => current_user.email,
+      "day_of_birth" => current_user.day_of_birth,
+      "month_of_birth" => current_user.month_of_birth,
+      "year_of_birth" => current_user.year_of_birth,
+      "province" => current_user.province
+    }
+  end
+
   def order_highlight_calltoactions_by_ordering_meta(meta_ordering, highlight_calltoactions)
     ordered_highlight_calltoaction_names = meta_ordering.value.split(",")
     if ordered_highlight_calltoaction_names.any?         

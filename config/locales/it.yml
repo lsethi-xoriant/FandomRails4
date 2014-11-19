@@ -246,6 +246,8 @@ it:
               accepted: "deve essere accettato"
             password:
               blank: "non può essere lasciata in bianco"
+            birth_date:
+              major: "invalida. Come stabilito dal regolamento devi essere maggiorenne per poter partecipare al concorso"
         authentication:
           attributes:
             uid:

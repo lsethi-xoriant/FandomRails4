@@ -9,9 +9,10 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
-    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url
+    :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url,
+    :major_date
 
-  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :required_attrs
+  attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :required_attrs, :major_date
 
   has_many :authentications, dependent: :destroy
   has_many :user_interactions
@@ -29,6 +30,9 @@ class User < ActiveRecord::Base
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
                     :default_url => "/assets/anon.png"
 
+  validates_presence_of :province, if: Proc.new { |f| required_attr?("province") }
+  validate :presence_of_birth_date, if: Proc.new { |f| required_attr?("birth_date") }
+
   validates_presence_of :first_name, if: Proc.new { |f| required_attr?("first_name") }
   validates_presence_of :last_name, if: Proc.new { |f| required_attr?("last_name") }
   validates :privacy, :acceptance => { :accept => true }
@@ -37,6 +41,31 @@ class User < ActiveRecord::Base
   validates :username, uniqueness: true, if: Proc.new { |f| required_attr?("username") }
 
   validates_presence_of :privacy
+
+  validate :major_date, if: Proc.new { |f| major_date.present? }
+
+  after_initialize :set_attrs
+
+  def set_attrs
+    if !day_of_birth.present? && birth_date
+      self.day_of_birth = birth_date.strftime("%d")
+    end
+
+    if !month_of_birth.present? && birth_date
+      self.month_of_birth = birth_date.strftime("%m")
+    end
+
+    if !year_of_birth.present? && birth_date
+      self.year_of_birth = birth_date.strftime("%Y")
+    end
+  end
+
+
+  def presence_of_birth_date
+    unless (year_of_birth.present? && month_of_birth.present? && day_of_birth.present?) || birth_date.present?
+      errors.add(:birth_date, :blank)
+    end
+  end
 
   def required_attr?(attr_name)
     if required_attrs.present?
@@ -48,7 +77,9 @@ class User < ActiveRecord::Base
 
   def major
     if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present?
-      errors.add(" ", "Come stabilito dal regolamento devi essere maggiorenne per poter partecipare al concorso") if (Time.parse("2014-06-03") - Time.parse("#{self.year_of_birth}-#{self.month_of_birth}-#{self.day_of_birth}"))/1.year < 18
+      if (Time.parse(major_date) - Time.parse("#{self.year_of_birth}-#{self.month_of_birth}-#{self.day_of_birth}"))/1.year < 18
+        errors.add(:birth_date, :major)
+      end
     end
   end
 

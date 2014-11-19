@@ -17,6 +17,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     initAnonymousUser();
 
+    $scope.form_data = {};
+
     $scope.ajax_comment_append_in_progress = false;
     $scope.interactions_timeout = new Object();
     $scope.overvideo_interaction_locked = {};
@@ -58,6 +60,32 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       }).error(function() {
         // ERROR.
+      });
+  };
+
+  $scope.openInstantWinModal = function() {
+    $("#modal-interaction-instant-win").modal("show");
+  };
+
+  $scope.openRegistrationModal = function(user) {
+    $scope.form_data = user;
+    $("#modal-interaction-instant-win-registration").modal("show");
+  };
+
+  $scope.processRegistrationForm = function() {
+    delete $scope.form_data.errors;
+    data = { user: $scope.form_data };
+    $http({ method: 'POST', url: '/profile/complete_for_contest', data: data })
+      .success(function(data) {
+        if(data.errors) {
+          $scope.form_data.errors = data.errors;
+        } else {
+          $('#modal-interaction-instant-win-registration').on('hidden.bs.modal', function () {
+            $scope.openInstantWinModal();
+          });
+          $("#modal-interaction-instant-win-registration").modal("hide");
+          $scope.current_user.registration_fully_completed = true;
+        }
       });
   };
 

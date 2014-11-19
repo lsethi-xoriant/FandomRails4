@@ -6,6 +6,7 @@ module Fandom
       domains: ['coin.fandom.localdomain', 'coin.dev.fandomlab.com', 'coin.stage.fandomlab.com', 'coin.live.fandomlab.com'],
       assets_precompile: ['coin_application.css', 'coin_application.js'],
       periodicity_kinds: [PERIOD_KIND_DAILY],
+      required_attrs: ["first_name", "last_name"],
       init_ctas: 1,
       force_landing: true,
       environment: { 

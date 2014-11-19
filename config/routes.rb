@@ -8,6 +8,14 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
+  constraints(SiteMatcher.new('coin')) do
+    scope module: "sites" do
+      scope module: "coin" do
+        root :to => "application#index"
+      end
+    end
+  end
+
   constraints(SiteMatcher.new('ballando')) do
     match "/profile", :to => "profile#badges"
 
@@ -213,7 +221,7 @@ Fandom::Application.routes.draw do
   match "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
   match "profile/notices/get_recent_notice", :to => "notice#get_user_latest_notices", defaults: { format: 'json' }
   match "profile/remove-provider/:provider", :to => "profile#remove_provider"
-  match "profile/complete_for_contest", :to => "profile#complete_for_contest"
+  match "profile/complete_for_contest", :to => "profile#complete_for_contest", defaults: { format: 'json' }
 
   match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
   match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
