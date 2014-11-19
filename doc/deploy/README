@@ -38,7 +38,7 @@ and, in case of a specific tenant installation, set the hostname of the stage en
 
   STAGE_ENVIRONMENT="app@stage.fandomlab.com"
 
-
+7) consider to activate remote log archiving putting a cron job in app@shado-services
 
 Deploy with Capistrano
 ----------------------
