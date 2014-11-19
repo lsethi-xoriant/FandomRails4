@@ -107,7 +107,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $scope.openCommentInfo = function(interaction_info) {
     if($scope.comments_polling.interaction_info) {
       $scope.comments_polling.interaction_info.interaction.resource.comment_info.open = false;
-      $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments = $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments.slice(0, 5)
+      $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments = $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments.slice(0, 5);
     }
     interaction_info.interaction.resource.comment_info.open = true;
     $scope.comments_polling.polling = $interval($scope.commentsPolling, 15000);
@@ -117,7 +117,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $scope.closeCommentInfo = function(interaction_info) {
     if($scope.comments_polling.interaction_info) {
       $scope.comments_polling.interaction_info.interaction.resource.comment_info.open = false;
-      $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments = $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments.slice(0, 5)
+      $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments = $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments.slice(0, 5);
       $interval.cancel($scope.comments_polling.polling);
     }
   };
@@ -145,35 +145,35 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   }
 
   $scope.filterShareInteractions = function(interaction_info) {
-    return (interaction_info.interaction.resource_type == "share")
+    return (interaction_info.interaction.resource_type == "share");
   };
 
   $scope.filterCommentInteractions = function(interaction_info) {
-    return (interaction_info.interaction.resource_type == "comment")
+    return (interaction_info.interaction.resource_type == "comment");
   };
 
   $scope.filterPlayInteractions = function(interaction_info) {
-    return (interaction_info.interaction.resource_type == "play")
+    return (interaction_info.interaction.resource_type == "play");
   };
 
   $scope.filterOvervideoDuringInteractions = function(interaction_info) {
-    return (interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING")
+    return (interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING");
   };
 
   $scope.filterAlwaysVisibleInteractions = function(interaction_info) {
-    return (interaction_info.interaction.when_show_interaction == "SEMPRE_VISIBILE")
+    return (interaction_info.interaction.when_show_interaction == "SEMPRE_VISIBILE");
   };
 
   $scope.filterOvervideoDuringActiveInteraction = function(interaction_info) {
-    return interaction_info.interaction.overvideo_active
+    return interaction_info.interaction.overvideo_active;
   };
 
   $scope.filterRemoveShareInteractions = function(interaction_info) {
-    return (interaction_info.interaction.resource_type != "share")
+    return (interaction_info.interaction.resource_type != "share");
   };
 
   $scope.filterRemovePlayInteractions = function(interaction_info) {
-    return (interaction_info.interaction.resource_type != "play")
+    return (interaction_info.interaction.resource_type != "play");
   };
 
   $window.update_ga_event = function(category, action, label, value) {
@@ -217,13 +217,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     anonymous_user = getAnonymousUserStorage();
     if(anonymous_user.user_interaction_info_list) {
       angular.forEach(anonymous_user.user_interaction_info_list, function(user_interaction_info) { 
-        updateUserInteraction(user_interaction_info.calltoaction_id, user_interaction_info.interaction_id, user_interaction_info.user_interaction)
+        updateUserInteraction(user_interaction_info.calltoaction_id, user_interaction_info.interaction_id, user_interaction_info.user_interaction);
       });
     }
   }
 
   function updateUserInteraction(calltoaction_id, interaction_id, user_interaction) {
-    calltoaction_info = getCallToActionInfo(calltoaction_id)
+    calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.id == interaction_id) {
         interaction_info.user_interaction = user_interaction;
@@ -236,7 +236,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   }
 
   function getCallToActionMediaData(calltoaction_id) {
-    calltoaction_info = getCallToActionInfo(calltoaction_id)
+    calltoaction_info = getCallToActionInfo(calltoaction_id);
     media_data = null;
     if (calltoaction_info != null) {
       media_data = calltoaction_info.calltoaction.media_data;
@@ -418,7 +418,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     if(overvideo_interaction.user_interaction) {
       $timeout(function() { 
-        removeOvervideoInteraction(youtube_player, calltoaction_id, overvideo_interaction)
+        removeOvervideoInteraction(youtube_player, calltoaction_id, overvideo_interaction);
       }, 3000);
     }
     // remove getOvervideoInteraction
@@ -928,7 +928,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $scope.emptyUserComment = function(interaction_info) {
     user_text_from_interaction_info = interaction_info.interaction.resource.comment_info.user_text;
-    return (!user_text_from_interaction_info || user_text_from_interaction_info.length < 1)
+    return (!user_text_from_interaction_info || user_text_from_interaction_info.length < 1);
   };
 
   $scope.submitComment = function(interaction_info) {
@@ -946,7 +946,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           */
         } else {
           interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
-          $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info) }, 5000);
+          $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info); }, 5000);
           /*
           $("#comment-danger-" + $scope.comment.interaction_id).addClass("hidden");
 
@@ -981,7 +981,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           .success(function(data) {
 
             comment_info.comments = comment_info.comments.concat(data.comments);
-            $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info) }, 5000);
+            $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info); }, 5000);
             
             /*
             $scope.comments_shown = $scope.comments_shown.concat(data.comments_to_append_ids);
@@ -1010,13 +1010,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $scope.ajax_comment_append_in_progress = true;
       comment_info = $scope.comments_polling.interaction_info.interaction.resource.comment_info;
       interaction_info = $scope.comments_polling.interaction_info;
-      interaction_id = $scope.comments_polling.interaction_info.interaction.id
+      interaction_id = $scope.comments_polling.interaction_info.interaction.id;
       try {
         $http.post("/comments_polling", { interaction_id: interaction_id, comment_info: comment_info })
           .success(function(data) {
             comment_info.comments = data.comments.concat(comment_info.comments);
             comment_info.comments_total_count = comment_info.comments_total_count + data.comments.length;
-            $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info) }, 5000);
+            $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info); }, 5000);
           }).error(function() {
           });
       } finally {
