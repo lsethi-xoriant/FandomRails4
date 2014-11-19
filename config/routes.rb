@@ -8,6 +8,14 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
+  constraints(SiteMatcher.new('coin')) do
+    scope module: "sites" do
+      scope module: "coin" do
+        root :to => "application#index"
+      end
+    end
+  end
+
   constraints(SiteMatcher.new('ballando')) do
     match "/profile", :to => "profile#badges"
 
@@ -60,6 +68,8 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('coin')) do
     match "/play", :to => "instantwin#play_ticket"
   end
+
+  match "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
 
   match "/file_upload_too_large", to: "application#file_upload_too_large"
 
@@ -201,8 +211,7 @@ Fandom::Application.routes.draw do
   match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
 
   match "/how_to", :to => "application#how_to"
-  match "/landing", :to => "landing#landing_app"
-  match "/landing_tab", :to => "landing#landing_tab"
+  match "/landing", :to => "landing#index"
 
   match "profile", :to => "profile#index"
   match "profile/levels", :to => "profile#levels"
@@ -216,7 +225,7 @@ Fandom::Application.routes.draw do
   match "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
   match "profile/notices/get_recent_notice", :to => "notice#get_user_latest_notices", defaults: { format: 'json' }
   match "profile/remove-provider/:provider", :to => "profile#remove_provider"
-  match "profile/complete_for_contest", :to => "profile#complete_for_contest"
+  match "profile/complete_for_contest", :to => "profile#complete_for_contest", defaults: { format: 'json' }
 
   match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
   match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"

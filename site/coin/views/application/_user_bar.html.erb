@@ -1,0 +1,44 @@
+<% if current_user %>
+  <header class="navbar navbar-default navbar-fixed-top visible-xs" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a style="float: right; font-size: 14px; margin-right: 15px;" class="navbar-brand user-reward-counter" href="javascript: void(0)">+<span class="">{{current_user.main_reward_counter.general}}</span> <span class="glyphicon glyphicon-star"></span> punti</a>
+        <a style="float: left; padding: 8px 8px 8px 0; margin-left: 15px;" href="#" class="navbar-brand">
+          <img class="img-circle" src="<%= current_avatar %>" style="height: 100%; border: 1px solid #fff;">
+        </a>
+      </div>
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Home</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="row hidden-xs">
+    <div class="col-md-12">
+      <div class="user-bar panel panel-default">
+        <div class="panel-body user-bar__body">
+          <img class="user-bar__body__avatar" src="<%= current_avatar %>">
+          <p class="user-bar__body__username"><%= "#{current_user.first_name} #{current_user.last_name}" %></p>
+
+          <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-warning" style="float: right; height: 50px; margin-left: 15px;" ng-click="openRegistrationModal(<%= user_for_registation_form().to_json %>)">
+            GIOCA
+          </button>
+
+          <button ng-if="current_user.registration_fully_completed" type="button" class="btn btn-warning" style="float: right; height: 50px; margin-left: 15px;" ng-click="openInstantWinModal()">
+            GIOCA
+          </button>
+
+          <%= render partial: "/application/instant_win_form" %>
+          <p style="float: right; line-height: 50px; margin: 0;">{{current_user.main_reward_counter.general}} TICKET</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

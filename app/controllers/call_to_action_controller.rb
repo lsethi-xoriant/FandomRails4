@@ -10,6 +10,25 @@ class CallToActionController < ApplicationController
   include CaptchaHelper
   include CommentHelper
 
+  def random_calltoaction
+    except_calltoaction_id = params["except_calltoaction_id"]
+    
+    calltoaction = nil
+    loop do 
+      calltoaction = get_all_active_ctas().sample
+      break if calltoaction.id != except_calltoaction_id
+    end 
+
+    response = {
+      "calltoaction_info_list" => build_call_to_action_info_list([calltoaction])
+    }
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+
+  end
+
   def facebook_share_page_with_meta
     @calltoaction = CallToAction.active.find(params[:calltoaction_id])
     fb_meta_info = get_fb_meta(@calltoaction)
@@ -565,7 +584,6 @@ class CallToActionController < ApplicationController
 
   def update_share_interaction(interaction, provider, address)
     # When this function is called, there is a current user with the current provider anchor
-
     provider_json = JSON.parse(interaction.resource.providers)[provider]
     result = true
 

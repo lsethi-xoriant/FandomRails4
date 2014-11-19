@@ -15,31 +15,19 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.current_user = current_user;
     $scope.calltoactions = calltoaction_info_list;
 
+    initAnonymousUser();
+
+    $scope.form_data = {};
+
     $scope.ajax_comment_append_in_progress = false;
-
     $scope.interactions_timeout = new Object();
-
-    if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage[$scope.aux.tenant] == null) {
-      initAnonymousUserStorage();      
-    } else if ($scope.current_user != null && localStorage[$scope.aux.tenant] != null) {
-      clearAnonymousUserStorage();
-    }
-
-    if($scope.current_user == null && $scope.aux.anonymous_interaction) {
-      updateCallToActionInfoWithAnonymousUserStorage();
-    }
-
     $scope.overvideo_interaction_locked = {};
-
     $scope.secondary_video_players = {};
-
     $scope.play_event_tracked = {};
     $scope.current_user_answer_response_correct = {};
-
     $scope.calltoactions_during_video_interactions_second = calltoactions_during_video_interactions_second;
     $scope.current_calltoaction = current_calltoaction;
     $scope.calltoactions_count = calltoactions_count;
-
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
     $scope.comments_polling = new Object();
@@ -61,6 +49,44 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       $("#append-other button").show();
     }
 
+  };
+
+  $scope.nextRandomCallToAction = function(except_calltoaction_id) {
+    $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
+      .success(function(data) { 
+
+        $scope.calltoactions = data.calltoaction_info_list;
+        initAnonymousUser();
+
+      }).error(function() {
+        // ERROR.
+      });
+  };
+
+  $scope.openInstantWinModal = function() {
+    $("#modal-interaction-instant-win").modal("show");
+  };
+
+  $scope.openRegistrationModal = function(user) {
+    $scope.form_data = user;
+    $("#modal-interaction-instant-win-registration").modal("show");
+  };
+
+  $scope.processRegistrationForm = function() {
+    delete $scope.form_data.errors;
+    data = { user: $scope.form_data };
+    $http({ method: 'POST', url: '/profile/complete_for_contest', data: data })
+      .success(function(data) {
+        if(data.errors) {
+          $scope.form_data.errors = data.errors;
+        } else {
+          $('#modal-interaction-instant-win-registration').on('hidden.bs.modal', function () {
+            $scope.openInstantWinModal();
+          });
+          $("#modal-interaction-instant-win-registration").modal("hide");
+          $scope.current_user.registration_fully_completed = true;
+        }
+      });
   };
 
   function getOvervideoInteractionAtSeconds(calltoaction_id, seconds) {
@@ -208,6 +234,19 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     anonymous_user = new Object();
     localStorage.setItem($scope.aux.tenant, JSON.stringify(anonymous_user));
   }
+
+  function initAnonymousUser() {
+    if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage[$scope.aux.tenant] == null) {
+      initAnonymousUserStorage();      
+    } else if ($scope.current_user != null && localStorage[$scope.aux.tenant] != null) {
+      clearAnonymousUserStorage();
+    }
+
+    if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+      updateCallToActionInfoWithAnonymousUserStorage();
+    }
+  }
+
 
   function clearAnonymousUserStorage() {
     localStorage.removeItem($scope.aux.tenant);
@@ -590,36 +629,46 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
-  $scope.shareWith = function(interaction_id, provider) {
+  $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
+
+    if(interaction_info.user_interaction) {
+      share_with_email_address = interaction_info.user_interaction.share_to_email;
+    } else {
+      share_with_email_address = null;
+    }
+
+    interaction_id = interaction_info.interaction.id;
+    calltoaction_id = calltoaction_info.calltoaction.id;
 
     button = $("#" + provider + "-interaction-" + interaction_id);
-
     button.attr('disabled', true);
-    button_main_content = button.html();
-    button.html("<img src=\"/assets/loading.gif\" style=\"width: 15px;\">");
+    current_button_html = button.html();
+    button.html("condivisione in corso");
 
-    share_with_email_address = $("#address-interaction-" + interaction_id).val();
+    $http.post("/update_interaction", { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider })
+      .success(function(data) {
 
-    $http.post("/update_interaction", { interaction_id: interaction_id, main_reward_name: MAIN_REWARD_NAME, share_with_email_address: share_with_email_address, provider: provider })
-          .success(function(data) {
+        button.attr('disabled', false);
+        button.html(current_button_html);
 
-          button.attr('disabled', false);
-          button.html(button_main_content);
+        if(!data.share.result) { 
+          alert(data.share.exception);
+          return;
+        }
 
-          if(provider == "email") {
-            $("#address-interaction-" + interaction_id).val();
-          } 
+        updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+        $scope.current_user.main_reward_counter = data.main_reward_counter;   
+          
+        if(provider == "email") {
+          $("#modal-interaction-" + interaction_info.interaction.id).modal('hide');
+        }
 
-          if(!data.share.result) {
-            alert(data.share.exception);
-          } else {
-            if(data.ga) {
-              update_ga_event(data.ga.category, data.ga.action, data.ga.label);
-              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-              });
-            }
-          }
+        if(data.ga) {
+          update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+          angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+            update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+          });
+        }
 
       }).error(function() {
         // ERRORE
@@ -668,6 +717,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
             // Interaction after user response.
             updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+            $scope.current_user.main_reward_counter = data.main_reward_counter;   
 
             if(data.answers) {
               updateAnswersInInteractionInfo(interaction_info, data.answers);

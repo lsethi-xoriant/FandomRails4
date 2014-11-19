@@ -8,7 +8,7 @@
         <!-- OVERVIDEO AREA -->
         <div class="home-overvideo-feedback-{{calltoaction_info.calltoaction.id}}"></div> 
       </div>
-      <img id="secondary-media-image-{{calltoaction_info.calltoaction.id}}" class="secondary-media" src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+      <img id="secondary-media-image-{{calltoaction_info.calltoaction.id}}" class="secondary-media" style="width: 100%;">
     </div>
     <!-- MAIN MEDIA YOUTUBE -->
     <div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE'" id="main-media-{{calltoaction_info.calltoaction.id}}">
@@ -29,13 +29,13 @@
     </div>
     <!-- MAIN MEDIA IMAGE -->
     <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
-      <img class="img-responsive" src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+      <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
     </div>
     <!-- IFRAME -->
     <div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
       <div id="calltoaction-{{calltoaction_info.calltoaction.id}}-cover" class="calltoaction-cover row text-center">
         <div class="col-xs-12">
-          <img src="{{calltoaction_info.calltoaction.thumbnail_url}}" class="img-responsive" style="width: 100%;">
+          <img ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" class="img-responsive" style="width: 100%;">
         </div>
         <div class="col-sm-4 col-sm-offset-4" style="position: absolute; bottom: 10px; z-index: 10;">
           <button class="btn btn-danger btn-lg btn-block" ng-click="showCallToAction(calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_type)">GUARDA</button>

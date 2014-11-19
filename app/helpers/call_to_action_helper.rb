@@ -3,7 +3,6 @@ require 'digest/md5'
 
 module CallToActionHelper
 
-
   def get_tag_field_value(tag, name)
     tag.tag_fields.select { |tf| tf.name == name }.map { |tf| tf.value }.first rescue nil
   end

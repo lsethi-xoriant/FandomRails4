@@ -75,6 +75,10 @@ module CacheKeysHelper
     "ctas_with_tags_#{tags_name.join("_")}"
   end
 
+  def get_all_active_ctas_cache_key()
+    "active_ctas_cache_key"
+  end
+
   # Tags
   # ~~~~~
   

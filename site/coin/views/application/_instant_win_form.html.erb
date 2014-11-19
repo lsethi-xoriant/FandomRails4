@@ -1,0 +1,220 @@
+<div class="modal fade" id="modal-interaction-instant-win-registration" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Completa il tuo profilo e scopri se hai vinto</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" onsubmit="return false;" ng-submit="processRegistrationForm()" method="post" action="" accept-charset="UTF-8">
+          <div ng-if="form_data.errors" class="row">
+            <div class="col-md-12">
+              <ul>
+                <p>Errori nell'inserimento dei dati:</p>
+                <li ng-repeat="error in form_data.errors">{{error}}</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-4 control-label text-right">Nome</label>
+            <div class="col-sm-8">
+              <input class="form-control" type="text" ng-model="form_data.first_name" name="user[first_name]">
+            </div>
+          </div>
+
+          <div class="form-group text-left">
+            <label class="col-sm-4 control-label text-right">Cognome</label>
+            <div class="col-sm-8">
+              <input class="form-control" type="text" ng-model="form_data.last_name" name="user[last_name]">
+            </div>
+          </div>
+
+          <div class="form-group text-left">
+            <label class="col-sm-4 control-label text-right">Email</label>
+            <div class="col-sm-8">
+              <input class="form-control" type="text" ng-model="form_data.email" name="user[email]" readonly>
+            </div>
+          </div>
+
+          <div class="row form-group text-left">
+            <label class="col-sm-4 control-label text-right">Provincia</label>    
+            <div class="col-sm-8">    
+              <select ng-model="form_data.province" name="user[province]" class="form-control">
+                <option selected="selected" value="">Provincia</option>
+                <option value="Agrigento">Agrigento</option>
+                <option value="Alessandria">Alessandria</option>
+                <option value="Ancona">Ancona</option>
+                <option value="Aosta">Aosta</option>
+                <option value="L'Aquila">L'Aquila</option>
+                <option value="Arezzo">Arezzo</option>
+                <option value="Ascoli Piceno">Ascoli Piceno</option>
+                <option value="Asti">Asti</option>
+                <option value="Avellino">Avellino</option>
+                <option value="Bari">Bari</option>
+                <option value="Barletta-Andria-Trani">Barletta-Andria-Trani</option>
+                <option value="Belluno">Belluno</option>
+                <option value="Benevento">Benevento</option>
+                <option value="Bergamo">Bergamo</option>
+                <option value="Biella">Biella</option>
+                <option value="Bologna">Bologna</option>
+                <option value="Bolzano">Bolzano</option>
+                <option value="Brescia">Brescia</option>
+                <option value="Brindisi">Brindisi</option>
+                <option value="Cagliari">Cagliari</option>
+                <option value="Caltanissetta">Caltanissetta</option>
+                <option value="Campobasso">Campobasso</option>
+                <option value="Carbonia-Iglesias">Carbonia-Iglesias</option>
+                <option value="Caserta">Caserta</option>
+                <option value="Catania">Catania</option>
+                <option value="Catanzano">Catanzaro</option>
+                <option value="Chieti">Chieti</option>
+                <option value="Como">Como</option>
+                <option value="Cosenza">Cosenza</option>
+                <option value="Cremona">Cremona</option>
+                <option value="Crotone">Crotone</option>
+                <option value="Cuneo">Cuneo</option>
+                <option value="Enna">Enna</option>
+                <option value="Fermo">Fermo</option>
+                <option value="Ferrara">Ferrara</option>
+                <option value="Firenze">Firenze</option>
+                <option value="Foggia">Foggia</option>
+                <option value="Forlì-Cesena">Forlì-Cesena</option>
+                <option value="Frosinone">Frosinone</option>
+                <option value="Genova">Genova</option>
+                <option value="Gorizia">Gorizia</option>
+                <option value="Grosseto">Grosseto</option>
+                <option value="Imperia">Imperia</option>
+                <option value="Isemia">Isemia</option>
+                <option value="Latina">Latina</option>
+                <option value="Lecce">Lecce</option>
+                <option value="Lecco">Lecco</option>
+                <option value="Livorno">Livorno</option>
+                <option value="Lodi">Lodi</option>
+                <option value="Lucca">Lucca</option>
+                <option value="Macerata">Macerata</option>
+                <option value="Mantova">Mantova</option>
+                <option value="Massa Carrara">Massa Carrara</option>
+                <option value="Matera">Matera</option>
+                <option value="Medio Campidano">Medio Campidano</option>
+                <option value="Messina">Messina</option>
+                <option value="Milano">Milano</option>
+                <option value="Modena">Modena</option>
+                <option value="Monza Brianza">Monza Brianza</option>
+                <option value="Napoli">Napoli</option>
+                <option value="Novara">Novara</option>
+                <option value="Nuoro">Nuoro</option>
+                <option value="Ogliastra">Ogliastra</option>
+                <option value="Olbia - Tempio">Olbia - Tempio</option>
+                <option value="Oristano">Oristano</option>
+                <option value="Padova">Padova</option>
+                <option value="Palermo">Palermo</option>
+                <option value="Parma">Parma</option>
+                <option value="Pavia">Pavia</option>
+                <option value="Perugia">Perugia</option>
+                <option value="Pesaro e Urbino">Pesaro e Urbino</option>
+                <option value="Pescara">Pescara</option>
+                <option value="Piacenza">Piacenza</option>
+                <option value="Pisa">Pisa</option>
+                <option value="Pistoia">Pistoia</option>
+                <option value="Pordenone">Pordenone</option>
+                <option value="Potenza">Potenza</option>
+                <option value="Prato">Prato</option>
+                <option value="Ragusa">Ragusa</option>
+                <option value="Ravenna">Ravenna</option>
+                <option value="Reggio Calabria">Reggio Calabria</option>
+                <option value="Reggio Emilia">Reggio Emilia</option>
+                <option value="Rieti">Rieti</option>
+                <option value="Rimini">Rimini</option>
+                <option value="Roma">Roma</option>
+                <option value="Rovigo">Rovigo</option>
+                <option value="Salerno">Salerno</option>
+                <option value="Sassari">Sassari</option>
+                <option value="Savona">Savona</option>
+                <option value="Siena">Siena</option>
+                <option value="Siracusa">Siracusa</option>
+                <option value="Sondrio">Sondrio</option>
+                <option value="La Spezia">La Spezia</option>
+                <option value="Taranto">Taranto</option>
+                <option value="Teramo">Teramo</option>
+                <option value="Terni">Terni</option>
+                <option value="Torino">Torino</option>
+                <option value="Trapani">Trapani</option>
+                <option value="Trento">Trento</option>
+                <option value="Treviso">Treviso</option>
+                <option value="Trieste">Trieste</option>
+                <option value="Udine">Udine</option>
+                <option value="Varese">Varese</option>
+                <option value="Venezia">Venezia</option>
+                <option value="Verbania-Cusio-Ossola">Verbania-Cusio-Ossola</option>
+                <option value="Vercelli">Vercelli</option>
+                <option value="Verona">Verona</option>
+                <option value="Vibo Valentia">Vibo Valentia</option>
+                <option value="Vicenza">Vicenza</option>
+                <option value="Viterbo">Viterbo</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-4 control-label text-right">Data di nascita</label>         
+            <div class="col-sm-8">
+              <div class="row">
+                <div class="col-sm-4 margin-top-15-mobile">
+                  <% date_array = (1..31).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Giorno", ""] %>
+                  <%= select_tag(:day_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.day_of_birth") %>
+                </div>
+
+                <div class="col-sm-4 margin-top-15-mobile">
+                  <% date_array = (1..12).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Mese", ""] %>
+                  <%= select_tag(:month_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.month_of_birth") %>
+                </div>
+
+                <div class="col-sm-4 margin-top-15-mobile">
+                  <% date_array = (1900..2020).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Anno", ""] %>
+                  <%= select_tag(:year_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.year_of_birth") %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-8 col-sm-offset-4">
+              <p>LINK REGOLAMENTO DA INSERIRE</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+              <button type="submit" class="btn btn-info btn-lg btn-block">COMPLETA</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">CHIUDI</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-interaction-instant-win" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">GIOCA</h4>
+      </div>
+      <div class="modal-body">
+        TMP
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">CHIUDI</button>
+      </div>
+    </div>
+  </div>
+</div>

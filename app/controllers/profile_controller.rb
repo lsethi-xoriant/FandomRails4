@@ -17,6 +17,25 @@ class ProfileController < ApplicationController
     end
   end
 
+  def complete_for_contest
+    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date"]
+
+    user_params = params[:user]
+
+    user_params = user_params.merge(required_attrs: required_attrs)
+    user_params = user_params.merge(major_date: COIN_CONTEST_START_DATE)
+    user_params.delete(:email)
+
+    response = {}
+    unless current_user.update_attributes(user_params)
+      response[:errors] = current_user.errors.full_messages
+    end
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+  end
+
   def index
   end
 
