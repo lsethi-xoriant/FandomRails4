@@ -46,7 +46,7 @@ namespace :instant_win_coin do
       valid_to: Time.parse(COIN_CONTEST_END_DATE)
     )
     instantwin_interaction = InstantwinInteraction.create(
-      reward_id: ticket.id
+      reward_id: point.id
     )
     interaction = Interaction.new(
       name: "instantwin_interaction",
