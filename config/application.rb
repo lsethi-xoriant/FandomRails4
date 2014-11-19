@@ -84,7 +84,7 @@ module Fandom
       puts "reading deploy configuration from AWS user data..."
       user_data_buf = HTTParty.get(aws_get_user_data_url)
       user_data = JSON.parse(user_data_buf)
-      settings = user_data['deploy_settings']
+      settings = user_data.fetch('deploy_settings', {})
       puts "... AWS user data: #{settings}"
       config.deploy_settings.merge!(settings)
     end
