@@ -17,6 +17,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     # Aggancio i dati del provider se arrivo da un oauth non andato a buon fine.
     append_provider(resource) if session["oauth"] && session["oauth"]["params"]
+    resource.required_attrs = get_site_from_request(request)["required_attrs"]
 
     if resource.save
       yield resource if block_given?
@@ -40,6 +41,8 @@ class RegistrationsController < Devise::RegistrationsController
           end
         end
 
+        setUpAccount()
+
         respond_with resource, :location => after_sign_up_path_for(resource)
       else
         set_flash_message :notice, :"signed_up_but_#{resource.inactive_message}"
@@ -51,6 +54,10 @@ class RegistrationsController < Devise::RegistrationsController
       respond_with resource
     end
   end	
+
+  def setUpAccount()
+    SystemMailer.welcome_mail(current_user).deliver
+  end
 
   protected
 
@@ -68,12 +75,12 @@ class RegistrationsController < Devise::RegistrationsController
         oauth_token: omniauth["credentials"]["token"],
         oauth_secret: (provider == "twitter" ? omniauth["credentials"]["secret"] : ""),
         oauth_expires_at: (provider == "facebook" ? Time.at(omniauth["credentials"]["expires_at"]) : ""),
-        provider: provider
+        provider: provider,
+        aux: session["oauth"]["params"].to_json
     )
   end
 
   def after_sign_up_path_for(resource)
-    SystemMailer.welcome_mail(current_user).deliver
     flash[:notice] = "from_registration"
 
     if cookies[:connect_from_page].blank?

@@ -12,6 +12,10 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "coin" do
         root :to => "application#index"
+        devise_scope :user do
+          post "/users", :to => "registrations#create"
+          match 'auth/:provider/callback', :to => 'sessions#create'
+        end
       end
     end
   end

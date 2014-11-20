@@ -1480,7 +1480,8 @@ CREATE TABLE users (
     birth_date date,
     username character varying(255),
     newsletter boolean DEFAULT false,
-    avatar_selected_url character varying(255)
+    avatar_selected_url character varying(255),
+    aux json
 );
 
 
@@ -3021,7 +3022,8 @@ CREATE TABLE users (
     birth_date date,
     username character varying(255),
     newsletter boolean DEFAULT false,
-    avatar_selected_url character varying(255)
+    avatar_selected_url character varying(255),
+    aux json
 );
 
 
@@ -4562,7 +4564,8 @@ CREATE TABLE users (
     birth_date date,
     username character varying(255),
     newsletter boolean DEFAULT false,
-    avatar_selected_url character varying(255)
+    avatar_selected_url character varying(255),
+    aux json
 );
 
 
@@ -6103,7 +6106,8 @@ CREATE TABLE users (
     birth_date date,
     username character varying(255),
     newsletter boolean DEFAULT false,
-    avatar_selected_url character varying(255)
+    avatar_selected_url character varying(255),
+    aux json
 );
 
 
@@ -7644,7 +7648,8 @@ CREATE TABLE users (
     birth_date date,
     username character varying(255),
     newsletter boolean DEFAULT false,
-    avatar_selected_url character varying(255)
+    avatar_selected_url character varying(255),
+    aux json
 );
 
 
@@ -9185,7 +9190,9 @@ CREATE TABLE users (
     birth_date date,
     username character varying(255),
     newsletter boolean DEFAULT false,
-    avatar_selected_url character varying(255)
+    avatar_selected_url character varying(255),
+    aux json,
+    gender character varying(255)
 );
 
 
@@ -14671,3 +14678,7 @@ INSERT INTO schema_migrations (version) VALUES ('20141118105612');
 INSERT INTO schema_migrations (version) VALUES ('20141118135727');
 
 INSERT INTO schema_migrations (version) VALUES ('20141118162728');
+
+INSERT INTO schema_migrations (version) VALUES ('20141120111044');
+
+INSERT INTO schema_migrations (version) VALUES ('20141120142856');

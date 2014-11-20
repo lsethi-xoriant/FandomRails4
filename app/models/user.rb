@@ -142,60 +142,6 @@ class User < ActiveRecord::Base
     return self
   end
 
-  # Metodo statico (User.not_logged_from_omniauth).
-  def self.not_logged_from_omniauth auth, provider  
-    user_auth =  Authentication.find_by_provider_and_uid(provider, auth.uid);
-    if user_auth
-      # Ho gia' agganciato questo PROVIDER, mi basta recuperare l'utente per poi aggiornarlo.
-      # Da tenere conto che vengono salvate informazioni differenti a seconda del PROVIDER di provenienza.
-      user = user_auth.user
-      user_auth.update_attributes(
-          uid: auth.uid,
-          name: auth.info.name,
-          oauth_token: auth.credentials.token,
-          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-          avatar: auth.info.image,
-      )
-
-      from_registration = false
-
-    else
-      # Verifico se esiste l'utente con l'email del provider selezionato.
-      unless auth.info.email && (user = User.find_by_email(auth.info.email))
-        password = Devise.friendly_token.first(8)
-        user = User.new(
-          password: password,
-          password_confirmation: password,
-          first_name: auth.info.first_name,
-          last_name: auth.info.last_name,
-          email: auth.info.email,
-          avatar_selected: provider,
-          privacy: true
-          )
-        from_registration = true
-      else
-        from_registration = false
-      end 
-
-      # Recupero l'autenticazione associata al provider selezionato.
-      # Da tenere conto che vengono salvate informazioni differenti a seconda del provider di provenienza.
-      user.authentications.build(
-          uid: auth.uid,
-          name: auth.info.name,
-          oauth_token: auth.credentials.token,
-          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-          provider: provider,
-          avatar: auth.info.image
-      )
-
-      user.save
-    end 
-    
-    return user, from_registration
-  end
-
   # Update the user without ask the account password again.
   def update_with_password(params={}) 
     if params[:password].blank? 
