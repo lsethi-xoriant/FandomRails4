@@ -182,6 +182,14 @@
           </div>
 
           <div class="form-group">
+            <label class="col-sm-4 control-label text-right">Store</label>         
+            <div class="col-sm-8">
+              <% date_array = storeLocations().map { |location| [location, location] } %>
+              <%= select_tag(:location, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.location") %>
+            </div>
+          </div>
+
+          <div class="form-group">
             <label class="col-sm-4 control-label text-right">Sesso</label>   
             <div class="col-sm-8">
               <label class="radio-inline">

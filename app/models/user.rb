@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
                     :default_url => "/assets/anon.png"
 
+  validates_presence_of :location, if: Proc.new { |f| required_attr?("location") }
   validates_presence_of :gender, if: Proc.new { |f| required_attr?("gender") }
   validates_presence_of :province, if: Proc.new { |f| required_attr?("province") }
   validate :presence_of_birth_date, if: Proc.new { |f| required_attr?("birth_date") }
@@ -39,7 +40,7 @@ class User < ActiveRecord::Base
   validates_presence_of :username, if: Proc.new { |f| required_attr?("username") }
   validates :username, uniqueness: true, if: Proc.new { |f| required_attr?("username") }
   validates_presence_of :privacy
-  validate :major_date, if: Proc.new { |f| major_date.present? }
+  validate :major, if: Proc.new { |f| major_date.present? }
 
   after_initialize :set_attrs
 
@@ -73,10 +74,9 @@ class User < ActiveRecord::Base
   end
 
   def major
-    if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present?
-      if (Time.parse(major_date) - Time.parse("#{self.year_of_birth}-#{self.month_of_birth}-#{self.day_of_birth}"))/1.year < 18
-        errors.add(:birth_date, :major)
-      end
+    if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present? &&
+       (Time.parse(major_date) - Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}"))/1.year < 18
+      errors.add(:birth_date, :major)
     end
   end
 

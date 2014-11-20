@@ -12,4 +12,11 @@ module CoinHelper
     SystemMailer.welcome_mail(current_user).deliver
   end
 
+  def storeLocations()
+    locations = cache_short(get_coin_locations_cache_key()) do
+      Setting.find_by_key("coin.locations") || CACHED_NIL
+    end
+    cached_nil?(locations) ? nil : locations.value.split(",")
+  end
+
 end

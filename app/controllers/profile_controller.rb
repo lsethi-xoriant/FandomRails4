@@ -18,14 +18,14 @@ class ProfileController < ApplicationController
   end
 
   def complete_for_contest
-    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date", "gender"]
+    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date", "gender", "location"]
 
     user_params = params[:user]
 
     user_params = user_params.merge(required_attrs: required_attrs)
     user_params = user_params.merge(major_date: COIN_CONTEST_START_DATE)
     user_params.delete(:email)
-
+debugger
     response = {}
     unless current_user.update_attributes(user_params)
       response[:errors] = current_user.errors.full_messages

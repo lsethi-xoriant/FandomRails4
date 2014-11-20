@@ -147,5 +147,12 @@ module CacheKeysHelper
   def get_user_already_won_contest(user_id, interaction_id)
     "user_#{user_id}_already_won_contest_#{interaction_id}"
   end
+
+  # COIN
+  # ~~~~~~~~~~
+
+  def get_coin_locations_cache_key()
+    "coin_locations"
+  end
   
 end

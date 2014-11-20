@@ -49,7 +49,8 @@ module ApplicationHelper
       "month_of_birth" => current_user.month_of_birth,
       "year_of_birth" => current_user.year_of_birth,
       "province" => current_user.province,
-      "gender" => current_user.gender
+      "gender" => current_user.gender,
+      "location" => current_user.location
     }
   end
 
