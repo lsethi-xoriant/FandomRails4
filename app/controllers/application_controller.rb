@@ -104,15 +104,19 @@ class ApplicationController < ActionController::Base
     end
     ########## NEW ANGULAR TEMPLATES ##########
 
-    @aux = {
-      "tenant" => get_site_from_request(request)["id"],
-      "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
-      "main_reward_name" => MAIN_REWARD_NAME
-    }
+    @aux = init_aux()
 
     @calltoactions_active_interaction = Hash.new
 
     @home = true
+  end
+
+  def init_aux()
+    {
+      "tenant" => get_site_from_request(request)["id"],
+      "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
+      "main_reward_name" => MAIN_REWARD_NAME
+    }
   end
 
   def registration_fully_completed?

@@ -63,22 +63,38 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
+  $scope.playInstantWin = function() {
+    $scope.aux.instant_win_info.in_progress = true;
+    delete $scope.aux.instant_win_info.info;
+    $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
+      .success(function(data) { 
+        $timeout(function() { 
+          if(!data.prize) {
+            $scope.aux.instant_win_info.in_progress = false;
+          }
+          $scope.aux.instant_win_info.info = data.message;
+        }, 3000);
+      }).error(function() {
+        // ERROR.
+      });
+  };
+
   $scope.openInstantWinModal = function() {
     $("#modal-interaction-instant-win").modal("show");
   };
 
-  $scope.openRegistrationModal = function(user) {
-    $scope.form_data = user;
+  $scope.openRegistrationModalForInstantWin = function(user) {
+    $scope.form_data.current_user = user;
     $("#modal-interaction-instant-win-registration").modal("show");
   };
 
   $scope.processRegistrationForm = function() {
-    delete $scope.form_data.errors;
-    data = { user: $scope.form_data };
+    delete $scope.form_data.current_user.errors;
+    data = { user: $scope.form_data.current_user };
     $http({ method: 'POST', url: '/profile/complete_for_contest', data: data })
       .success(function(data) {
         if(data.errors) {
-          $scope.form_data.errors = data.errors;
+          $scope.form_data.current_user.errors = data.errors;
         } else {
           $('#modal-interaction-instant-win-registration').on('hidden.bs.modal', function () {
             $scope.openInstantWinModal();

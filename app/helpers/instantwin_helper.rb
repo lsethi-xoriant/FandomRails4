@@ -1,6 +1,18 @@
 module InstantwinHelper
 	
 	DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+  def get_instant_win_coin_interaction_id()
+    interaction_id = cache_short(get_instant_win_coin_interaction_id_cache_key()) do
+      begin
+        CallToAction.valid.find_by_name("coin_contest").interactions.first.id
+      rescue Exception => exception
+        CACHED_NIL
+      end
+    end
+
+    cached_nil?(interaction_id) ? nil : interaction_id
+  end
 	
 	# Returns days in a month
   #
@@ -19,7 +31,7 @@ module InstantwinHelper
 	#
 	def has_tickets(interaction_id)
 	  reward_name = get_reward_name_for_contest(interaction_id)
-	  tickets = get_counter_about_user_reward(reward_name)
+	  tickets = get_counter_about_user_reward(reward_name) || 0
 	  tickets > 0
 	end
 	

@@ -32,6 +32,10 @@ module CacheKeysHelper
   # CTA
   # ~~~~~
 
+  def get_instant_win_coin_interaction_id_cache_key()
+    "instant_win_coin_interaction_id"
+  end
+
   def get_calltoaction_last_comments_cache_key(cta_id)
     "calltoaction_#{cta_id}_last_comments"
   end

@@ -66,7 +66,7 @@ Fandom::Application.routes.draw do
   end
   
   constraints(SiteMatcher.new('coin')) do
-    match "/play", :to => "instantwin#play_ticket"
+    match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
   end
 
   match "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
