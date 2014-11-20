@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
     :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url,
-    :major_date
+    :major_date, :gender
 
   attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :required_attrs, :major_date
 
@@ -30,18 +30,15 @@ class User < ActiveRecord::Base
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
                     :default_url => "/assets/anon.png"
 
+  validates_presence_of :gender, if: Proc.new { |f| required_attr?("gender") }
   validates_presence_of :province, if: Proc.new { |f| required_attr?("province") }
   validate :presence_of_birth_date, if: Proc.new { |f| required_attr?("birth_date") }
-
   validates_presence_of :first_name, if: Proc.new { |f| required_attr?("first_name") }
   validates_presence_of :last_name, if: Proc.new { |f| required_attr?("last_name") }
   validates :privacy, :acceptance => { :accept => true }
-
   validates_presence_of :username, if: Proc.new { |f| required_attr?("username") }
   validates :username, uniqueness: true, if: Proc.new { |f| required_attr?("username") }
-
   validates_presence_of :privacy
-
   validate :major_date, if: Proc.new { |f| major_date.present? }
 
   after_initialize :set_attrs
