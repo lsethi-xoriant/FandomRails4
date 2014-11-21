@@ -1,31 +1,45 @@
 <div class="call-to-action panel panel-default">
     
   <div class="panel-body">  
-    <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
-    <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+  
     <div class="row">
-      <div class="col-md-5 col-md-offset-1">
-        <button class="btn btn-danger btn-block call-to-action__button" ng-click="nextRandomCallToAction(calltoaction_info.calltoaction.id)">
-          <span class="glyphicon glyphicon-repeat call-to-action__button__repeat"></span>
-          <p class="call-to-action__button__inspire-text">ISPIRAMI ANCORA</p>
-        </button>
+      <div class="col-md-6">
+        <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
       </div>
-      <div class="col-md-5">
-        <button class="btn btn-block call-to-action__button">
-          <span class="glyphicon glyphicon-heart call-to-action__button__hearth"></span>    
-          <p class="call-to-action__button__gift-text">REGALO PERFETTO</p>
-          <p class="call-to-action__button__with-list-text">METTILO NELLA WISH LIST</p>
-        </button>
+      <div class="col-md-6">
+        <h2>{{calltoaction_info.calltoaction.title}}</h2>
+      </div>
+      <div class="col-md-8">
+        <p class="call-to-action__description">{{calltoaction_info.calltoaction.description}}</p>
+      </div>
+      <div class="col-md-4 text-right">
+        <button class="btn btn-default"><span class="glyphicon glyphicon-gift call-to-action__button__gift"></span>lo voglio!</button>
       </div>
     </div>
-  </div>  
 
-  <div class="panel-footer" ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
-    <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row">
-      <div id="share-interaction-{{interaction_info.interaction.id}}">
-        <%= render partial: "/call_to_action/share_interaction" %>
+     <%#= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+
+    <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row">
+        <div id="share-interaction-{{interaction_info.interaction.id}}">
+          <%= render partial: "/call_to_action/share_interaction" %>
+        </div>
       </div>
     </div>
-  </div>
+
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <button class="btn btn-danger btn-block call-to-action__button" ng-click="nextRandomCallToAction(calltoaction_info.calltoaction.id)">
+          <div class="row">
+            <div class="col-md-12">
+              <span class="glyphicon glyphicon-repeat call-to-action__button__repeat-icon"></span>
+              <p class="call-to-action__button__inspire-text">ISPIRAMI ANCORA</p>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+  </div>  
 
 </div>

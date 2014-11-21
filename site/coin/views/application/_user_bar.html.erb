@@ -24,7 +24,7 @@
     <div class="col-md-12">
       <div class="user-bar panel panel-default">
         <div class="panel-body user-bar__body">
-          <img class="user-bar__body__avatar" src="<%= current_avatar %>">
+          <img class="user-bar__body__avatar img-circle" src="<%= current_avatar %>">
           <p class="user-bar__body__username"><%= "#{current_user.first_name} #{current_user.last_name}" %></p>
 
           <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-warning" style="float: right; height: 50px; margin-left: 15px;" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
