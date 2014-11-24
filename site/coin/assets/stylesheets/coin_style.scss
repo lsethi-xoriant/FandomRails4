@@ -11,7 +11,7 @@ $container-lg:                 $container-desktop !default;
 
 body {
   padding-top: 15px;
-  background-color: #ccc;
+  background-image: url("/assets/coin/bg.jpg");
   font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
 }
 
@@ -19,6 +19,37 @@ body {
   -webkit-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
   box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
+}
+
+.header-row {
+  margin-bottom: 15px;
+}
+
+/********************* LANDING *********************/
+
+.landing__text {
+  margin-top: 50px;
+  font-weight:  700;
+  font-size: 18px;
+}
+
+.landing__button {
+  margin-top: 50px;
+  font-weight:  700;
+  font-size: 18px;
+}
+
+.landing__button__facebook-icon {
+  margin-right: 15px;
+}
+
+.landing__sign-up {
+  margin-top: 10px;
+}
+
+.landing__sale-img {
+  position: absolute; 
+  top: 90px;
 }
 
 /********************* CALLTOACTION *********************/
@@ -65,10 +96,10 @@ body {
 
 .call-to-action__share-and-win__title {
   font-size: 18px; 
-  font-weight: bold; 
   margin: 0; 
   padding-left: 85px;
-  font-family: 'Source Sans Pro 700', helvetica, arial, sans-serif;
+  font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
+  font-weight:  700;
 }
 
 .call-to-action__share-and-win__description {
@@ -79,7 +110,8 @@ body {
 }
 
 .call-to-action__media__description-bold {
-  font-weight: bold;
+  font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
+  font-weight:  700;
 }
 
 .call-to-action__media__button__gift-icon {
@@ -89,19 +121,18 @@ body {
 
 .call-to-action__button__inspire {
   margin-top: 15px;
-  padding-left: 40px;
-  padding-right: 40px;
 }
 
 .call-to-action__button__repeat-icon {
   font-size: 50px; 
-  top: 4px;
+  top: 6px;
 }
 
 .call-to-action__button__inspire-text {
   display: inline;
   font-size: 23px; 
-  font-weight: bold; 
+  font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
+  font-weight:  700;
   margin: 0 0 0 15px;
   position: relative;
   bottom: 11px;
@@ -120,7 +151,8 @@ body {
   position: relative;
   top: 3px;
   font-size: 12px;
-  font-family: 'Source Sans Pro 700', helvetica, arial, sans-serif;
+  font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
+  font-weight:  700;
   color: #959595;
 }
 
@@ -143,22 +175,119 @@ body {
   margin-top: 5px;
 }
 
+.call-to-action__button__inspire.btn-primary:active, 
+.call-to-action__button__inspire.btn-primary.active, 
+.call-to-action__button__inspire.open .dropdown-toggle.btn-primary { 
+  position: relative;
+  top: 5px;
+  box-shadow: none;
+} 
+
+.call-to-action__button__inspire.btn-primary {
+  -webkit-box-shadow: 0px 5px 0px 0px #5e0409;
+  -moz-box-shadow: 0px 5px 0px 0px #5e0409;
+  box-shadow: 0px 5px 0px 0px #5e0409;
+  border-radius: 7px;
+}
+
 /********************* USER BAR *********************/
 
 .user-bar__body__avatar {
   float: left; 
   width: 50px; 
   margin-right: 15px;
+  border: 3px solid #9b917d;
 }
 
 .user-bar__body__username {
   float: left;
   margin: 0;
   line-height: 50px; 
-  font-weight: bold;
+  font-size: 18px;
+  color: #959595;
 }
 
-.user-bar__body {
+.panel-body-user-bar {
+  background: -webkit-linear-gradient(#fbfbfb, #dddddd);
+  background: -o-linear-gradient(#fbfbfb, #dddddd);
+  background: -moz-linear-gradient(#fbfbfb, #dddddd);
+  background: linear-gradient(#fbfbfb, #dddddd);
+}
+
+.user-bar__button.btn-primary {
+  -webkit-box-shadow: 0px 3px 0px 0px #5e0409;
+  -moz-box-shadow: 0px 3px 0px 0px #5e0409;
+  box-shadow: 0px 3px 0px 0px #5e0409;
+  margin-top: 6px;
+  font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
+  font-weight:  700;
+}
+
+.user-bar__button.btn-primary:active, 
+.user-bar__button.btn-primary.active, 
+.user-bar__button.open .dropdown-toggle.btn-primary { 
+  position: relative;
+  top: 3px;
+  box-shadow: none;
+} 
+
+.user-bar__ticket-column {
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.user-bar__ticket-panel {
+  margin-bottom: 0;
+  background: -webkit-linear-gradient(#cecece, #e3e3e3);
+  background: -o-linear-gradient(#cecece, #e3e3e3);
+  background: -moz-linear-gradient(#cecece, #e3e3e3);
+  background: linear-gradient(#cecece, #e3e3e3);
+  -webkit-box-shadow: inset 0px 4px 10px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: inset 0px 4px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 4px 10px 0px rgba(0, 0, 0, 0.5);
+  border-color: #afafaf;
+  height: 50px;
+}
+
+.user-bar__ticket-panel-body {
+  padding: 0 0 0 5px;
+}
+
+.user-bar__ticket-pre {
+  padding-right: 0;
+}
+
+.user-bar__ticket-pre-text {
+  line-height: 50px;
+  margin: 0;
+  color: #959595;
+  font-size: 16px;
+}
+
+.user-bar__ticket-post {
+  padding-left: 0;
+}
+
+.user-bar__ticket-post-text {
+  line-height: 50px;
+  margin: 0;
+  color: #959595;
+  font-size: 16px;
+}
+
+.user-bar__ticket-value {
+  color: #ad6600;
+  font-size: 33px;
+  font-weight:  700;
+  line-height: 50px;
+  margin-right: 10px;
+}
+
+.user-bar__ticket-img {
+  float: right;
+  height: 35px;
+  margin-right: 10px;
+  margin-top: 7px;
 }
 
 /********************* BTN PRIMARY *********************/
@@ -170,10 +299,6 @@ body {
   background: -moz-linear-gradient(#e73141, #BF0C19);
   background: linear-gradient(#e73141, #BF0C19);
   border-color: #5e0409; 
-  border-radius: 7px;
-  -webkit-box-shadow: 0px 5px 0px 0px #5e0409;
-  -moz-box-shadow: 0px 5px 0px 0px #5e0409;
-  box-shadow: 0px 5px 0px 0px #5e0409;
 } 
  
 .btn-primary:hover, 
@@ -190,8 +315,6 @@ body {
 .btn-primary.active, 
 .open .dropdown-toggle.btn-primary { 
   background-image: none; 
-  position: relative;
-  top: 5px;
 } 
  
 .btn-primary.disabled, 
@@ -269,6 +392,67 @@ fieldset[disabled] .btn-gift.active {
   background-color: #ffffff; 
 }
 
+/********************* BTN FACEBOOK *********************/
+
+.btn-facebook { 
+  color: #ffffff; 
+  border-color: #2C4172; 
+  background: -webkit-linear-gradient(#566fa9, #364E89);
+  background: -o-linear-gradient(#566fa9, #364E89);
+  background: -moz-linear-gradient(#566fa9, #364E89);
+  background: linear-gradient(#566fa9, #364E89);
+  -webkit-box-shadow: 0px 5px 0px 0px #2C4172;
+  -moz-box-shadow: 0px 5px 0px 0px #2C4172;
+  box-shadow: 0px 5px 0px 0px #2C4172;
+} 
+ 
+.btn-facebook:hover, 
+.btn-facebook:focus, 
+.btn-facebook:active, 
+.btn-facebook.active, 
+.open .dropdown-toggle.btn-facebook { 
+  color: #ffffff; 
+  background-color: #3F5EAB; 
+  border-color: #2C4172; 
+} 
+ 
+.btn-facebook:active, 
+.btn-facebook.active, 
+.open .dropdown-toggle.btn-facebook { 
+  background-image: none; 
+} 
+ 
+.btn-facebook.disabled, 
+.btn-facebook[disabled], 
+fieldset[disabled] .btn-facebook, 
+.btn-facebook.disabled:hover, 
+.btn-facebook[disabled]:hover, 
+fieldset[disabled] .btn-facebook:hover, 
+.btn-facebook.disabled:focus, 
+.btn-facebook[disabled]:focus, 
+fieldset[disabled] .btn-facebook:focus, 
+.btn-facebook.disabled:active, 
+.btn-facebook[disabled]:active, 
+fieldset[disabled] .btn-facebook:active, 
+.btn-facebook.disabled.active, 
+.btn-facebook[disabled].active, 
+fieldset[disabled] .btn-facebook.active { 
+  background-color: #364E89; 
+  border-color: #2C4172; 
+} 
+ 
+.btn-facebook .badge { 
+  color: #364E89; 
+  background-color: #ffffff; 
+}
+
+.btn-facebook:active, 
+.btn-facebook.active, 
+.open .dropdown-toggle.btn-facebook { 
+  position: relative;
+  top: 5px;
+  box-shadow: none;
+} 
 
 /********************* MOBILE *********************/
 
@@ -280,7 +464,8 @@ fieldset[disabled] .btn-gift.active {
   .call-to-action__button__inspire-text {
     display: inline;
     font-size: 18px; 
-    font-weight: bold; 
+    font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
+    font-weight:  700;
     margin: 0 0 0 15px;
     position: relative;
     bottom: 15px;

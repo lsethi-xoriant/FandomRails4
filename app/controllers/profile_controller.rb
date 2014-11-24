@@ -25,7 +25,7 @@ class ProfileController < ApplicationController
     user_params = user_params.merge(required_attrs: required_attrs)
     user_params = user_params.merge(major_date: COIN_CONTEST_START_DATE)
     user_params.delete(:email)
-debugger
+
     response = {}
     unless current_user.update_attributes(user_params)
       response[:errors] = current_user.errors.full_messages
