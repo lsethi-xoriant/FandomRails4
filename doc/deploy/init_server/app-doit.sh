@@ -39,11 +39,13 @@ cp etc/database.yml ~/railsapps/Fandom/shared/config/
 #
 # install RVM and the base gems 
 #
+gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+
 \curl -sSL https://get.rvm.io | bash -s -- --version latest
 
 source "$HOME/.rvm/scripts/rvm"
 
-rvm install 1.9.3
+rvm install 1.9.3 --autolibs=disabled
 gem install bundler
 gem install rmagick -v '2.13.2'
 gem install rails -v 3.2.17
