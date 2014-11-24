@@ -494,6 +494,8 @@ class CallToActionController < ApplicationController
       response = setup_update_interaction_response_info(response)
     end    
     
+    response["interaction_status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
+
     respond_to do |format|
       format.json { render :json => response.to_json }
     end

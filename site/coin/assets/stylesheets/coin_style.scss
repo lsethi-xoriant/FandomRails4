@@ -12,18 +12,85 @@ $container-lg:                 $container-desktop !default;
 body {
   padding-top: 15px;
   background-color: #ccc;
+  font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
+}
+
+.panel-shadow {
+  -webkit-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
 }
 
 /********************* CALLTOACTION *********************/
 
-.call-to-action {
-  -webkit-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-  -moz-box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
-  box-shadow: 0px 15px 5px -10px rgba(50, 50, 50, 0.75);
+.fa-envelope {
+  color: #49a8d2;
 }
 
-.call-to-action__button {
+.panel-body-call-to-action {
+  padding-bottom: 5px;
+}
+
+.call-to-action__share-and-win {
+  margin-top: 7px;
+}
+
+.call-to-action__footer {
+  padding: 0 15px 18px;
+  background: -webkit-linear-gradient(#f7f6f1, #d6d5d1);
+  background: -o-linear-gradient(#f7f6f1, #d6d5d1);
+  background: -moz-linear-gradient(#f7f6f1, #d6d5d1);
+  background: linear-gradient(#f7f6f1, #d6d5d1);
+  border-top: 0;
+}
+
+.call-to-action__media__description {
+  padding: 0 0 10px 10px;
+  text-transform: uppercase;
+  margin: 0;
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+}
+
+.call-to-action__media__button__gift {
+  position: absolute;
+  bottom: 10px;
+  right: 25px;
+}
+
+.call-to-action__media {
+  width: 100%;
+}
+
+.call-to-action__share-and-win__title {
+  font-size: 18px; 
+  font-weight: bold; 
+  margin: 0; 
+  padding-left: 85px;
+  font-family: 'Source Sans Pro 700', helvetica, arial, sans-serif;
+}
+
+.call-to-action__share-and-win__description {
+  font-size: 12px; 
+  margin: 0; 
+  padding-left: 85px;
+  color: #959595;
+}
+
+.call-to-action__media__description-bold {
+  font-weight: bold;
+}
+
+.call-to-action__media__button__gift-icon {
+  margin-right: 5px;
+  color: #fecb30;
+}
+
+.call-to-action__button__inspire {
   margin-top: 15px;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
 .call-to-action__button__repeat-icon {
@@ -33,20 +100,47 @@ body {
 
 .call-to-action__button__inspire-text {
   display: inline;
-  font-size: 18px; 
+  font-size: 23px; 
   font-weight: bold; 
   margin: 0 0 0 15px;
   position: relative;
-  bottom: 15px;
+  bottom: 11px;
 }
 
-.call-to-action__description {
-  margin: 0;
-  line-height: 34px;
-}
-
-.call-to-action__button__gift {
+.call-to-action__share__button-facebook {
   margin-right: 5px;
+}
+
+.call-to-action__share__button-email {
+}
+
+.call-to-action__share__text {
+  display: inline;
+  margin: 0 5px 0 0;
+  position: relative;
+  top: 3px;
+  font-size: 12px;
+  font-family: 'Source Sans Pro 700', helvetica, arial, sans-serif;
+  color: #959595;
+}
+
+.call-to-action__reward-status-images {
+  display: inline;
+}
+
+.call-to-action_reward-value {
+  margin-right: 5px;
+  position: relative;
+  top: 3px;
+  color: #959595;
+}
+
+.call-to-action_reward-value.active {
+  color: #ad6600;
+}
+
+.call-to-action__share-column {
+  margin-top: 5px;
 }
 
 /********************* USER BAR *********************/
@@ -67,10 +161,133 @@ body {
 .user-bar__body {
 }
 
+/********************* BTN PRIMARY *********************/
+
+.btn-primary { 
+  color: #ffffff; 
+  background: -webkit-linear-gradient(#e73141, #BF0C19);
+  background: -o-linear-gradient(#e73141, #BF0C19);
+  background: -moz-linear-gradient(#e73141, #BF0C19);
+  background: linear-gradient(#e73141, #BF0C19);
+  border-color: #5e0409; 
+  border-radius: 7px;
+  -webkit-box-shadow: 0px 5px 0px 0px #5e0409;
+  -moz-box-shadow: 0px 5px 0px 0px #5e0409;
+  box-shadow: 0px 5px 0px 0px #5e0409;
+} 
+ 
+.btn-primary:hover, 
+.btn-primary:focus, 
+.btn-primary:active, 
+.btn-primary.active, 
+.open .dropdown-toggle.btn-primary { 
+  color: #ffffff; 
+  background-color: #DB232F; 
+  border-color: #88060f; 
+} 
+ 
+.btn-primary:active, 
+.btn-primary.active, 
+.open .dropdown-toggle.btn-primary { 
+  background-image: none; 
+  position: relative;
+  top: 5px;
+} 
+ 
+.btn-primary.disabled, 
+.btn-primary[disabled], 
+fieldset[disabled] .btn-primary, 
+.btn-primary.disabled:hover, 
+.btn-primary[disabled]:hover, 
+fieldset[disabled] .btn-primary:hover, 
+.btn-primary.disabled:focus, 
+.btn-primary[disabled]:focus, 
+fieldset[disabled] .btn-primary:focus, 
+.btn-primary.disabled:active, 
+.btn-primary[disabled]:active, 
+fieldset[disabled] .btn-primary:active, 
+.btn-primary.disabled.active, 
+.btn-primary[disabled].active, 
+fieldset[disabled] .btn-primary.active { 
+  background-color: #BF0C19; 
+  border-color: #88060f; 
+} 
+ 
+.btn-primary .badge { 
+  color: #BF0C19; 
+  background-color: #ffffff; 
+}
+
+/********************* BTN GIFT *********************/
+
+.btn-gift { 
+  color: #ffffff; 
+  background-color: #464646; 
+  border-color: #170001; 
+  -webkit-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);
+} 
+ 
+.btn-gift:hover, 
+.btn-gift:focus, 
+.btn-gift:active, 
+.btn-gift.active, 
+.open .dropdown-toggle.btn-gift { 
+  color: #ffffff; 
+  background-color: #5C5C5C; 
+  border-color: #170001; 
+} 
+ 
+.btn-gift:active, 
+.btn-gift.active, 
+.open .dropdown-toggle.btn-gift { 
+  background-image: none; 
+} 
+ 
+.btn-gift.disabled, 
+.btn-gift[disabled], 
+fieldset[disabled] .btn-gift, 
+.btn-gift.disabled:hover, 
+.btn-gift[disabled]:hover, 
+fieldset[disabled] .btn-gift:hover, 
+.btn-gift.disabled:focus, 
+.btn-gift[disabled]:focus, 
+fieldset[disabled] .btn-gift:focus, 
+.btn-gift.disabled:active, 
+.btn-gift[disabled]:active, 
+fieldset[disabled] .btn-gift:active, 
+.btn-gift.disabled.active, 
+.btn-gift[disabled].active, 
+fieldset[disabled] .btn-gift.active { 
+  background-color: #464646; 
+  border-color: #170001; 
+} 
+ 
+.btn-gift .badge { 
+  color: #464646; 
+  background-color: #ffffff; 
+}
+
+
 /********************* MOBILE *********************/
 
 @media (max-width: $screen-sm-min) { 
   body {
     padding-top: 60px;
   }
+
+  .call-to-action__button__inspire-text {
+    display: inline;
+    font-size: 18px; 
+    font-weight: bold; 
+    margin: 0 0 0 15px;
+    position: relative;
+    bottom: 15px;
+  }
+
+  .call-to-action__media__button__gift-column {
+    position: inherit;
+  }
+
 }

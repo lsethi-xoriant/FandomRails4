@@ -1,35 +1,44 @@
-<div class="call-to-action panel panel-default">
+<div class="call-to-action panel panel-default panel-shadow">
     
-  <div class="panel-body">  
+  <div class="panel-body panel-body-call-to-action">  
   
     <div class="row">
-      <div class="col-md-6">
-        <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
-      </div>
-      <div class="col-md-6">
-        <h2>{{calltoaction_info.calltoaction.title}}</h2>
-      </div>
-      <div class="col-md-8">
-        <p class="call-to-action__description">{{calltoaction_info.calltoaction.description}}</p>
-      </div>
-      <div class="col-md-4 text-right">
-        <button class="btn btn-default"><span class="glyphicon glyphicon-gift call-to-action__button__gift"></span>lo voglio!</button>
+      <div class="col-md-12">
+        <img class="call-to-action__media" ng-src="{{calltoaction_info.calltoaction.media_image}}">
       </div>
     </div>
 
-     <%#= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+    <div class="row">
+      <div class="col-md-9 col-xs-12">
+        <p class="call-to-action__media__description" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></p>
+      </div>
+      <div class="col-md-3 col-xs-12 text-right">
+        <a href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__button__gift"><span class="glyphicon glyphicon-gift call-to-action__media__button__gift-icon"></span>LO VOGLIO!</a>
+      </div> 
+    </div>
 
-    <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
-      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row">
-        <div id="share-interaction-{{interaction_info.interaction.id}}">
-          <%= render partial: "/call_to_action/share_interaction" %>
+    <div class="row call-to-action__share-and-win">
+      <div class="col-md-8">
+        <img src="<%= asset_path("coin/ticket.png") %>" style="float: left;">
+        <p class="call-to-action__share-and-win__title">Condividi e vinci subito</p>
+        <p class="call-to-action__share-and-win__description">Condividi ogni giorno e ottieni +1 ticket per vincere 35 Gift Card Coin</p>
+      </div>
+      <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
+        <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+          <div id="share-interaction-{{interaction_info.interaction.id}}">
+            <%= render partial: "/call_to_action/share_interaction" %>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-10 col-md-offset-1">
-        <button class="btn btn-danger btn-block call-to-action__button" ng-click="nextRandomCallToAction(calltoaction_info.calltoaction.id)">
+  </div>
+
+  <div class="panel-footer call-to-action__footer">  
+
+    <div class="row text-center">
+      <div class="col-md-12">
+        <button class="btn btn-primary call-to-action__button__inspire" ng-click="nextRandomCallToAction(calltoaction_info.calltoaction.id)">
           <div class="row">
             <div class="col-md-12">
               <span class="glyphicon glyphicon-repeat call-to-action__button__repeat-icon"></span>

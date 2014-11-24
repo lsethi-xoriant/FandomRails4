@@ -673,7 +673,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         }
 
         updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-        $scope.current_user.main_reward_counter = data.main_reward_counter;   
+        $scope.current_user.main_reward_counter = data.main_reward_counter;  
+        interaction_info.status = data.interaction_status;
           
         if(provider == "email") {
           $("#modal-interaction-" + interaction_info.interaction.id).modal('hide');

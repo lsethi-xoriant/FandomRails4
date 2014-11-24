@@ -239,6 +239,8 @@ Fandom::Application.routes.draw do
   match "/playticket", :to => "instantwin#play_ticket_mb"
   match "/winners", :to => "instantwin#show_winners"
 
+  match "/anchor_provider_from_calltoaction/:calltoaction_id", to: "application#anchor_provider_from_calltoaction"
+
   devise_for :users, :controllers => { :registrations => "registrations", :sessions => "sessions", :passwords => "passwords" }
 
   devise_scope :user do

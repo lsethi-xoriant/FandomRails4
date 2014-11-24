@@ -16,7 +16,13 @@ class SessionsController < Devise::SessionsController
     if site.force_facebook_tab && !request_is_from_mobile_device?(request)
       redirect_to site.force_facebook_tab
     else
-      redirect_to "/"
+      if cookies[:calltoaction_id]
+        connect_from_calltoaction = cookies[:calltoaction_id]
+        cookies.delete(:calltoaction_id)
+        redirect_to "/?calltoaction_id=#{connect_from_calltoaction}"
+      else
+        redirect_to "/"
+      end
     end
   end
 
