@@ -49,6 +49,7 @@ server {
     # this probably needs some work with Rails 3.1's asset pipe_line
     location ~ ^/(images|javascripts|stylesheets|system|fonts)/  {
         root /home/app/railsapps/Fandom/current/public;
+        add_header Access-Control-Allow-Origin *;
         expires max;
         break;
     }
@@ -56,6 +57,7 @@ server {
     location ~ ^/assets/ {
       root /home/app/railsapps/Fandom/current/public;
         expires max;
+        add_header Access-Control-Allow-Origin *;        
         add_header Cache-Control public;
         add_header ETag "";
         break;
