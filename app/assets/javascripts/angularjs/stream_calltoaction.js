@@ -649,8 +649,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     if(interaction_info.user_interaction) {
       share_with_email_address = interaction_info.user_interaction.share_to_email;
+      facebook_message = interaction_info.user_interaction.facebook_message;
     } else {
       share_with_email_address = null;
+      facebook_message = null;
     }
 
     interaction_id = interaction_info.interaction.id;
@@ -661,24 +663,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     current_button_html = button.html();
     button.html("condivisione in corso");
 
-    $http.post("/update_interaction", { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider })
+    $http.post("/update_interaction", { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider, facebook_message: facebook_message })
       .success(function(data) {
 
         button.attr('disabled', false);
         button.html(current_button_html);
 
         if(!data.share.result) { 
-          alert(data.share.exception);
+          interaction_info.user_interaction.errors = data.share.exception;
           return;
         }
 
         updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
         $scope.current_user.main_reward_counter = data.main_reward_counter;  
         interaction_info.status = data.interaction_status;
-          
-        if(provider == "email") {
-          $("#modal-interaction-" + interaction_info.interaction.id).modal('hide');
-        }
+        
+        $scope.aux.share_interaction_daily_done = true;
+
+        $("#modal-interaction-" + interaction_id + "-" + provider).modal("hide");
 
         if(data.ga) {
           update_ga_event(data.ga.category, data.ga.action, data.ga.label);

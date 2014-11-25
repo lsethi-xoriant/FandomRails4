@@ -39,7 +39,7 @@ body {
   font-size: 18px;
 }
 
-.landing__button__facebook-icon {
+.landing__button__facebook-icon, .call-to-action__share__modal-facebook-icon {
   margin-right: 15px;
 }
 
@@ -56,6 +56,27 @@ body {
 
 .fa-envelope {
   color: #49a8d2;
+}
+
+.call-to-action__share__modal-facebook-button {
+  margin-bottom: 15px;
+}
+
+.call-to-action__share__modal-panel {
+  margin-bottom: 0;
+}
+
+.call-to-action__share__modal-panel-body {
+  background: -webkit-linear-gradient(#ffffff, #e5e5e5);
+  background: -o-linear-gradient(#ffffff, #e5e5e5);
+  background: -moz-linear-gradient(#ffffff, #e5e5e5);
+  background: linear-gradient(#ffffff, #e5e5e5);
+}
+
+.call-to-action__share__modal-title {
+  color: red;
+  font-weight: 700;
+  font-size: 22px;
 }
 
 .panel-body-call-to-action {
@@ -175,20 +196,49 @@ body {
   margin-top: 5px;
 }
 
+.call-to-action__share__modal-button {
+  margin-bottom: 15px;
+}
+
 .call-to-action__button__inspire.btn-primary:active, 
 .call-to-action__button__inspire.btn-primary.active, 
-.call-to-action__button__inspire.open .dropdown-toggle.btn-primary { 
+.call-to-action__button__inspire.open .dropdown-toggle.btn-primary,
+.call-to-action__share__modal-button:active,
+.call-to-action__share__modal-button.active,
+.call-to-action__share__modal-button.open .dropdown-toggle.btn-primary { 
   position: relative;
   top: 5px;
   box-shadow: none;
 } 
 
-.call-to-action__button__inspire.btn-primary {
+.call-to-action__button__inspire.btn-primary, .call-to-action__share__modal-button {
   -webkit-box-shadow: 0px 5px 0px 0px #5e0409;
   -moz-box-shadow: 0px 5px 0px 0px #5e0409;
   box-shadow: 0px 5px 0px 0px #5e0409;
   border-radius: 7px;
 }
+
+.call-to-action__share__modal-button.btn-primary.disabled, 
+.call-to-action__share__modal-button.btn-primary[disabled], 
+fieldset[disabled] .call-to-action__share__modal-button.btn-primary, 
+.call-to-action__share__modal-button.btn-primary.disabled:hover, 
+.call-to-action__share__modal-button.btn-primary[disabled]:hover, 
+fieldset[disabled] .call-to-action__share__modal-button.btn-primary:hover, 
+.call-to-action__share__modal-button.btn-primary.disabled:focus, 
+.call-to-action__share__modal-button.btn-primary[disabled]:focus, 
+fieldset[disabled] .call-to-action__share__modal-button.btn-primary:focus, 
+.call-to-action__share__modal-button.btn-primary.disabled:active, 
+.call-to-action__share__modal-button.btn-primary[disabled]:active, 
+fieldset[disabled] .call-to-action__share__modal-button.btn-primary:active, 
+.call-to-action__share__modal-button.btn-primary.disabled.active, 
+.call-to-action__share__modal-button.btn-primary[disabled].active, 
+fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active { 
+  background-color: #BF0C19; 
+  border-color: #88060f; 
+  -webkit-box-shadow: 0px 5px 0px 0px #5e0409;
+  -moz-box-shadow: 0px 5px 0px 0px #5e0409;
+  box-shadow: 0px 5px 0px 0px #5e0409;
+} 
 
 /********************* USER BAR *********************/
 
@@ -439,6 +489,9 @@ fieldset[disabled] .btn-facebook:active,
 fieldset[disabled] .btn-facebook.active { 
   background-color: #364E89; 
   border-color: #2C4172; 
+  -webkit-box-shadow: 0px 5px 0px 0px #2C4172;
+  -moz-box-shadow: 0px 5px 0px 0px #2C4172;
+  box-shadow: 0px 5px 0px 0px #2C4172;
 } 
  
 .btn-facebook .badge { 
