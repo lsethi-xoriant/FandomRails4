@@ -21,7 +21,7 @@ class CallToAction < ActiveRecord::Base
   validates_presence_of :media_image, if: Proc.new { |c| user_id.present? }
   validates_associated :releasing_file, if: Proc.new { |c| release_required }
   validate :interaction_resource
-  validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" }
+  validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" || media_type == "KALTURA" }
   validates_associated :interactions
   validates :privacy, :acceptance => { :accept => true }, if: Proc.new { |c| privacy_required }
 
