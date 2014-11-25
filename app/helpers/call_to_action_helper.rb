@@ -16,11 +16,14 @@ module CallToActionHelper
       calltoaction_info_list << {
         "calltoaction" => { 
           "id" => calltoaction.id,
+          "title" => calltoaction.title,
+          "description" => calltoaction.description,
           "media_type" => calltoaction.media_type,
           "media_image" => calltoaction.media_image, 
           "media_data" => calltoaction.media_data, 
           "thumbnail_url" => calltoaction.thumbnail_url,
-          "interaction_info_list" => build_interaction_info_list(calltoaction)
+          "interaction_info_list" => build_interaction_info_list(calltoaction),
+          "aux" => JSON.parse(calltoaction.aux)
         },
         "miniformat" => {
           "label_background" => get_tag_field_value(miniformat, "label-background"),

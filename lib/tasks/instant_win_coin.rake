@@ -9,13 +9,13 @@ namespace :instant_win_coin do
   
   def initContest
     Apartment::Database.switch("coin")
-    ticket = Reward.create(
-      title: "ticket", 
-      short_description: "ticket reward per giocare agli instantwin", 
+    point = Reward.create(
+      title: "point", 
+      short_description: "Ticket reward per giocare agli instantwin", 
       button_label: "Gioca e vinci", 
       media_type: "DIGITALE", 
       countable: true, 
-      name: "ticket"
+      name: "point"
     )
     gift_500 = Reward.create(
       title: "Gift Card Coin 500 Euro", 
@@ -46,7 +46,7 @@ namespace :instant_win_coin do
       valid_to: Time.parse(COIN_CONTEST_END_DATE)
     )
     instantwin_interaction = InstantwinInteraction.create(
-      reward_id: ticket.id
+      reward_id: point.id
     )
     interaction = Interaction.new(
       name: "instantwin_interaction",

@@ -1,41 +1,112 @@
-<!-- FACEBOOK -->
-<div ng-if="interaction_info.interaction.resource.providers.facebook" class="col-md-6">                    
-  <button ng-if="current_user.facebook" id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-fb btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')">CONDIVIDI CON FACEBOOK</button>
-  <a ng-if="!current_user.facebook" href="/auth/facebook_{{aux.tenant}}" class="btn btn-fb btn-block">ENTRA CON FACEBOOK</a>
-</div>
-<!-- EMAIL -->
-<div ng-if="interaction_info.interaction.resource.providers.email" class="col-md-6">
-  <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}">
-    CONDIVIDI VIA EMAIL
+<div class="col-md-4 text-right call-to-action__share-column">
+
+  <p class="call-to-action__share__text">CONDIVIDI</p>
+
+  <!-- EMAIL -->
+  <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default btn-sm call-to-action__share__button-email" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email">
+    <span class="fa fa-envelope"></span>
   </button>
+
   <!-- MODAL SHARE INTERACTION -->
-  <div class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}" role="dialog" aria-hidden="true">
+  <div ng-if="interaction_info.interaction.resource.providers.email" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-email" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title">CONDIVIDI</h4>
-        </div>
+      <div class="modal-content text-center">
         <div class="modal-body">
+
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
           <div class="row">
-            <div class="col-md-6" style="margin-top: 10px;"> 
-              <input ng-model="interaction_info.user_interaction.share_to_email" class="form-control" type="text" placeholder="example@shado.tv" name="address">
+
+            <div class="col-md-12" style="margin-top: 10px;"> 
+              <p class="call-to-action__share__modal-title">Condividi questo regalo con un amico</p>
             </div>
-            <div class="col-md-6" style="margin-top: 10px;">
-              <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-default btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'email')">CONDIVIDI VIA EMAIL</button>
+
+            <div class="col-md-12">
+              <div class="call-to-action__share__modal-panel panel panel-default">
+                <div class="panel-body call-to-action__share__modal-panel-body"> 
+                  <img style="width: 100%" ng-src="{{calltoaction_info.calltoaction.media_image}}">
+                </div>
+              </div>
+              <img class="hidden-xs" src="<%= asset_path("coin/paper-shadow.png") %>" style="width: 100%;">
             </div>
+
+            <div ng-if="interaction_info.user_interaction.errors" class="col-md-12"> 
+              <p>{{interaction_info.user_interaction.errors}}</p>
+            </div>
+
+            <div ng-if="interaction_info.user_interaction.success" class="col-md-12"> 
+              <p>{{interaction_info.user_interaction.success}}</p>
+            </div>
+
+            <div class="col-md-12"> 
+              <input ng-model="interaction_info.user_interaction.share_to_email" class="form-control" type="text" placeholder="mario@rossi.it" name="address">
+            </div>
+            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;">
+              <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-primary btn-block call-to-action__share__modal-button" ng-click="shareWith(calltoaction_info, interaction_info, 'email')">CONDIVIDI</button>
+            </div>
+
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">CHIUDI</button>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" id="undervideo-outcome-{{interaction_info.interaction.id}}" class="col-md-12 text-center" style="margin-top: 15px;">
-  <div class="alert alert-success">
-    <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} biglietti.
+  <!-- FACEBOOK -->   
+
+  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-fb btn-sm call-to-action__share__button-facebook" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-facebook"><span class="fa fa-facebook"></span></button>             
+
+  <!-- MODAL SHARE INTERACTION -->
+  <div ng-if="interaction_info.interaction.resource.providers.facebook" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-facebook" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content text-center">
+        <div class="modal-body">
+
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+          <div class="row">
+  
+            <div class="col-md-12" style="margin-top: 10px;"> 
+              <p class="call-to-action__share__modal-title">Condividi questo regalo con un amico</p>
+            </div>
+
+            <div class="col-md-12">
+              <div class="call-to-action__share__modal-panel panel panel-default">
+                <div class="panel-body call-to-action__share__modal-panel-body"> 
+                  <img style="width: 100%" ng-src="{{calltoaction_info.calltoaction.media_image}}">
+                </div>
+              </div>
+              <img class="hidden-xs" src="<%= asset_path("coin/paper-shadow.png") %>" style="width: 100%;">
+            </div>
+
+            <div ng-if="interaction_info.interaction.resource.providers.facebook && !current_user.facebook" class="col-md-6 col-md-offset-3"> 
+              <a href="/anchor_provider_from_calltoaction/{{calltoaction_info.calltoaction.id}}" class="btn btn-facebook btn-block call-to-action__share__modal-facebook-button"><span class="fa fa-facebook call-to-action__share__modal-facebook-icon"></span> CONNETTI CON FACEBOOK</a>
+            </div>
+
+            <div class="col-md-12" ng-if="interaction_info.interaction.resource.providers.facebook && current_user.facebook"> 
+              <input ng-model="interaction_info.user_interaction.facebook_message" class="form-control" type="text" placeholder="Testo della condivisione" name="address">
+            </div>
+            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook && current_user.facebook">
+              <button id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-facebook btn-block call-to-action__share__modal-button" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')">CONDIVIDI</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!--
+  <div class="call-to-action__reward-status-images" ng-if="reward_status_image in interaction_info.status.reward_status_images">
+    <span class="call-to-action_reward-value" ng-class="{ 'active': interaction_info.user_interaction && interaction_info.user_interaction.outcome}">+1</span><img style="height: 35px;" ng-src="{{reward_status_image}}">
+  </div>
+  -->
+
+  <div ng-if="aux.share_interaction_daily_done" class="call-to-action__reward-status-images">
+    <span class="call-to-action_reward-value active">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket.png")%>">
+  </div>
+
+  <div ng-if="!aux.share_interaction_daily_done" class="call-to-action__reward-status-images">
+    <span class="call-to-action_reward-value">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket-gray.png")%>">
+  </div>
+
 </div>

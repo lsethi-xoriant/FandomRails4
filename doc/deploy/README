@@ -38,7 +38,11 @@ and, in case of a specific tenant installation, set the hostname of the stage en
 
   STAGE_ENVIRONMENT="app@stage.fandomlab.com"
 
+7) consider to activate remote log archiving putting a cron job in app@shado-services
 
+8) consider to change the app prompt putting the AWS name in it; add to ~/.bashrc:
+
+  export PS1='\[\e[1;36m\]\u@AWS-NAME:\w\$\[\e[0m\] '
 
 Deploy with Capistrano
 ----------------------

@@ -18,7 +18,7 @@ class ProfileController < ApplicationController
   end
 
   def complete_for_contest
-    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date"]
+    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date", "gender", "location"]
 
     user_params = params[:user]
 

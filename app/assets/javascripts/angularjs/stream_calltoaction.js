@@ -15,6 +15,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.current_user = current_user;
     $scope.calltoactions = calltoaction_info_list;
 
+    if($scope.aux.from_registration) {
+      $("#registration-modal").modal("show");
+    }
+
     initAnonymousUser();
 
     $scope.form_data = {};
@@ -72,22 +76,38 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
+  $scope.playInstantWin = function() {
+    $scope.aux.instant_win_info.in_progress = true;
+    delete $scope.aux.instant_win_info.info;
+    $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
+      .success(function(data) { 
+        $timeout(function() { 
+          if(!data.prize) {
+            $scope.aux.instant_win_info.in_progress = false;
+          }
+          $scope.aux.instant_win_info.info = data.message;
+        }, 3000);
+      }).error(function() {
+        // ERROR.
+      });
+  };
+
   $scope.openInstantWinModal = function() {
     $("#modal-interaction-instant-win").modal("show");
   };
 
-  $scope.openRegistrationModal = function(user) {
-    $scope.form_data = user;
+  $scope.openRegistrationModalForInstantWin = function(user) {
+    $scope.form_data.current_user = user;
     $("#modal-interaction-instant-win-registration").modal("show");
   };
 
   $scope.processRegistrationForm = function() {
-    delete $scope.form_data.errors;
-    data = { user: $scope.form_data };
+    delete $scope.form_data.current_user.errors;
+    data = { user: $scope.form_data.current_user };
     $http({ method: 'POST', url: '/profile/complete_for_contest', data: data })
       .success(function(data) {
         if(data.errors) {
-          $scope.form_data.errors = data.errors;
+          $scope.form_data.current_user.errors = data.errors;
         } else {
           $('#modal-interaction-instant-win-registration').on('hidden.bs.modal', function () {
             $scope.openInstantWinModal();
@@ -768,8 +788,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     if(interaction_info.user_interaction) {
       share_with_email_address = interaction_info.user_interaction.share_to_email;
+      facebook_message = interaction_info.user_interaction.facebook_message;
     } else {
       share_with_email_address = null;
+      facebook_message = null;
     }
 
     interaction_id = interaction_info.interaction.id;
@@ -780,23 +802,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     current_button_html = button.html();
     button.html("condivisione in corso");
 
-    $http.post("/update_interaction", { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider })
+    $http.post("/update_interaction", { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider, facebook_message: facebook_message })
       .success(function(data) {
 
         button.attr('disabled', false);
         button.html(current_button_html);
 
         if(!data.share.result) { 
-          alert(data.share.exception);
+          interaction_info.user_interaction.errors = data.share.exception;
           return;
         }
 
         updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-        $scope.current_user.main_reward_counter = data.main_reward_counter;   
-          
-        if(provider == "email") {
-          $("#modal-interaction-" + interaction_info.interaction.id).modal('hide');
-        }
+        $scope.current_user.main_reward_counter = data.main_reward_counter;  
+        interaction_info.status = data.interaction_status;
+        
+        $scope.aux.share_interaction_daily_done = true;
+
+        $("#modal-interaction-" + interaction_id + "-" + provider).modal("hide");
 
         if(data.ga) {
           update_ga_event(data.ga.category, data.ga.action, data.ga.label);

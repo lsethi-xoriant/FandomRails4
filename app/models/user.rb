@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
     :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url,
-    :major_date
+    :major_date, :gender
 
   attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :required_attrs, :major_date
 
@@ -30,19 +30,17 @@ class User < ActiveRecord::Base
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
                     :default_url => "/assets/anon.png"
 
+  validates_presence_of :location, if: Proc.new { |f| required_attr?("location") }
+  validates_presence_of :gender, if: Proc.new { |f| required_attr?("gender") }
   validates_presence_of :province, if: Proc.new { |f| required_attr?("province") }
   validate :presence_of_birth_date, if: Proc.new { |f| required_attr?("birth_date") }
-
   validates_presence_of :first_name, if: Proc.new { |f| required_attr?("first_name") }
   validates_presence_of :last_name, if: Proc.new { |f| required_attr?("last_name") }
   validates :privacy, :acceptance => { :accept => true }
-
   validates_presence_of :username, if: Proc.new { |f| required_attr?("username") }
   validates :username, uniqueness: true, if: Proc.new { |f| required_attr?("username") }
-
   validates_presence_of :privacy
-
-  validate :major_date, if: Proc.new { |f| major_date.present? }
+  validate :major, if: Proc.new { |f| major_date.present? }
 
   after_initialize :set_attrs
 
@@ -76,10 +74,9 @@ class User < ActiveRecord::Base
   end
 
   def major
-    if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present?
-      if (Time.parse(major_date) - Time.parse("#{self.year_of_birth}-#{self.month_of_birth}-#{self.day_of_birth}"))/1.year < 18
-        errors.add(:birth_date, :major)
-      end
+    if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present? &&
+       (Time.parse(major_date) - Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}"))/1.year < 18
+      errors.add(:birth_date, :major)
     end
   end
 
@@ -140,60 +137,6 @@ class User < ActiveRecord::Base
 
     self.save
     return self
-  end
-
-  # Metodo statico (User.not_logged_from_omniauth).
-  def self.not_logged_from_omniauth auth, provider  
-    user_auth =  Authentication.find_by_provider_and_uid(provider, auth.uid);
-    if user_auth
-      # Ho gia' agganciato questo PROVIDER, mi basta recuperare l'utente per poi aggiornarlo.
-      # Da tenere conto che vengono salvate informazioni differenti a seconda del PROVIDER di provenienza.
-      user = user_auth.user
-      user_auth.update_attributes(
-          uid: auth.uid,
-          name: auth.info.name,
-          oauth_token: auth.credentials.token,
-          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-          avatar: auth.info.image,
-      )
-
-      from_registration = false
-
-    else
-      # Verifico se esiste l'utente con l'email del provider selezionato.
-      unless auth.info.email && (user = User.find_by_email(auth.info.email))
-        password = Devise.friendly_token.first(8)
-        user = User.new(
-          password: password,
-          password_confirmation: password,
-          first_name: auth.info.first_name,
-          last_name: auth.info.last_name,
-          email: auth.info.email,
-          avatar_selected: provider,
-          privacy: true
-          )
-        from_registration = true
-      else
-        from_registration = false
-      end 
-
-      # Recupero l'autenticazione associata al provider selezionato.
-      # Da tenere conto che vengono salvate informazioni differenti a seconda del provider di provenienza.
-      user.authentications.build(
-          uid: auth.uid,
-          name: auth.info.name,
-          oauth_token: auth.credentials.token,
-          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-          provider: provider,
-          avatar: auth.info.image
-      )
-
-      user.save
-    end 
-    
-    return user, from_registration
   end
 
   # Update the user without ask the account password again.

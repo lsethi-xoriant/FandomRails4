@@ -16,7 +16,13 @@ class SessionsController < Devise::SessionsController
     if site.force_facebook_tab && !request_is_from_mobile_device?(request)
       redirect_to site.force_facebook_tab
     else
-      redirect_to "/"
+      if cookies[:calltoaction_id]
+        connect_from_calltoaction = cookies[:calltoaction_id]
+        cookies.delete(:calltoaction_id)
+        redirect_to "/?calltoaction_id=#{connect_from_calltoaction}"
+      else
+        redirect_to "/"
+      end
     end
   end
 
@@ -41,14 +47,16 @@ class SessionsController < Devise::SessionsController
 
   # Authenticates and log in the user from the an OAuth service
   def create_from_oauth
-    user, from_registration = User.not_logged_from_omniauth env["omniauth.auth"], params[:provider]
+    user, from_registration = not_logged_from_omniauth(env["omniauth.auth"], params[:provider])
     if user.errors.any?
       redirect_to_registration_page(user)
     else
       sign_in(user)
       fandom_play_login(user)
     
-      flash[:notice] = "from_registration" if from_registration
+      setUpAccount()
+
+      cookies[:from_registration] = true if from_registration
     
       if request.site.force_facebook_tab && !request_is_from_mobile_device?(request)
         redirect_to request.site.force_facebook_tab
@@ -56,6 +64,10 @@ class SessionsController < Devise::SessionsController
         redirect_after_successful_login()
       end
     end
+  end
+
+  def setUpAccount()
+    SystemMailer.welcome_mail(current_user).deliver
   end
   
   def redirect_after_successful_login
@@ -74,8 +86,9 @@ class SessionsController < Devise::SessionsController
   
   def redirect_to_registration_page(user)
     session["oauth"] ||= {}
-    session["oauth"]["params"] = env["omniauth.auth"].except("extra") # "extra" is removed to prevent cookie overflow
+    session["oauth"]["params"] = env["omniauth.auth"] #.except("extra") to prevent cookie overflow
     session["oauth"]["params"]["provider"] = params[:provider]
+    flash[:from_provider] = params[:provider]
     render template: "/devise/registrations/new", :locals => { resource: user }   
   end
 

@@ -12,6 +12,11 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "coin" do
         root :to => "application#index"
+        match '/privacy_policy', :to => 'application#show_privacy_policy'
+        devise_scope :user do
+          post "/users", :to => "registrations#create"
+          match 'auth/:provider/callback', :to => 'sessions#create'
+        end
       end
     end
   end
@@ -66,7 +71,7 @@ Fandom::Application.routes.draw do
   end
   
   constraints(SiteMatcher.new('coin')) do
-    match "/play", :to => "instantwin#play_ticket"
+    match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
   end
 
   match "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
@@ -233,6 +238,8 @@ Fandom::Application.routes.draw do
   
   match "/playticket", :to => "instantwin#play_ticket_mb"
   match "/winners", :to => "instantwin#show_winners"
+
+  match "/anchor_provider_from_calltoaction/:calltoaction_id", to: "application#anchor_provider_from_calltoaction"
 
   devise_for :users, :controllers => { :registrations => "registrations", :sessions => "sessions", :passwords => "passwords" }
 

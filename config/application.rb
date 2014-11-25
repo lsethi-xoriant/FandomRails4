@@ -84,7 +84,7 @@ module Fandom
       puts "reading deploy configuration from AWS user data..."
       user_data_buf = HTTParty.get(aws_get_user_data_url)
       user_data = JSON.parse(user_data_buf)
-      settings = user_data['deploy_settings']
+      settings = user_data.fetch('deploy_settings', {})
       puts "... AWS user data: #{settings}"
       config.deploy_settings.merge!(settings)
     end
@@ -135,7 +135,7 @@ module Fandom
       
       config.action_mailer.perform_deliveries = mailer_conf.fetch("perform_deliveries", true)
   
-      config.action_mailer.default_url_options = { :host => mailer_conf.fetch("devise_host", true) }
+      config.action_mailer.default_url_options = { :host => mailer_conf.fetch("devise_host", "localhost") }
     
       config.action_mailer.raise_delivery_errors = mailer_conf.fetch("raise_delivery_errors", false)
       

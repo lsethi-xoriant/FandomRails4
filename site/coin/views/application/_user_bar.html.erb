@@ -22,21 +22,36 @@
   </header>
   <div class="row hidden-xs">
     <div class="col-md-12">
-      <div class="user-bar panel panel-default">
-        <div class="panel-body user-bar__body">
-          <img class="user-bar__body__avatar" src="<%= current_avatar %>">
-          <p class="user-bar__body__username"><%= "#{current_user.first_name} #{current_user.last_name}" %></p>
+      <div class="user-bar panel panel-default panel-shadow">
+        <div class="panel-body panel-body-user-bar">
+          <div class="row">
+            <div class="col-md-6">
+              <img class="user-bar__body__avatar img-circle" src="<%= current_avatar %>">
+              <p class="user-bar__body__username">Ciao, <%= "#{current_user.first_name} #{current_user.last_name}" %></p>
+            </div>
+            <div class="col-md-1 text-right user-bar__ticket-pre"><p class="user-bar__ticket-pre-text">Hai</p></div>
+            <div class="col-md-2 user-bar__ticket-column">
+              <div class="panel panel-default user-bar__ticket-panel">
+                <div class="panel-body user-bar__ticket-panel-body text-right">
+                  <span class="user-bar__ticket-value">{{current_user.main_reward_counter.general}}</span><img class="user-bar__ticket-img" src="<%= asset_path("coin/reward-ticket.png") %>">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1 text-left user-bar__ticket-post"><p class="user-bar__ticket-post-text">biglietti</p></div>
+            <div class="col-md-2">
+              <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-left: 15px;" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+                GIOCA
+              </button>
 
-          <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-warning" style="float: right; height: 50px; margin-left: 15px;" ng-click="openRegistrationModal(<%= user_for_registation_form().to_json %>)">
-            GIOCA
-          </button>
+              <button ng-if="current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-left: 15px;" ng-click="openInstantWinModal()">
+                GIOCA
+              </button>
+            </div>
 
-          <button ng-if="current_user.registration_fully_completed" type="button" class="btn btn-warning" style="float: right; height: 50px; margin-left: 15px;" ng-click="openInstantWinModal()">
-            GIOCA
-          </button>
 
-          <%= render partial: "/application/instant_win_form" %>
-          <p style="float: right; line-height: 50px; margin: 0;">{{current_user.main_reward_counter.general}} TICKET</p>
+            <%= render partial: "/application/instant_win_form" %>
+
+          </div>
         </div>
       </div>
     </div>

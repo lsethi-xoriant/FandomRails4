@@ -6,12 +6,6 @@ include ApplicationHelper
 include CacheHelper
 
 class InstantwinController < ApplicationController
-
-  before_filter :authorize_user, except: :show_winners
-
-  def authorize_user
-    authorize! :play, :contest
-  end
   
   def show_winners
     @winners = Array.new
@@ -30,7 +24,7 @@ class InstantwinController < ApplicationController
   
   def play_ticket
     response = Hash.new
-    
+
     if current_user
       interaction = Interaction.find(params[:interaction_id])
       if has_tickets(interaction.id) && !user_already_won(interaction.id)

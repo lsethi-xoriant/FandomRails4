@@ -1,0 +1,96 @@
+<div class="container">
+
+  <%= render partial: "/application/header" %>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">      
+            <div class="col-md-12 text-center">
+              <% if flash[:from_provider] %>
+                <p class="registration__title">Completa la registrazione</p>
+              <% else %>
+                <p class="registration__title">Registrati per partecipare</p>
+              <% end %>
+            </div>
+            <div class="col-md-10 col-md-offset-1">
+              <%= form_for resource, :url => user_registration_path, html: { class: "form-horizontal" } do |f| %> 
+
+                <% if resource.errors.any? %>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <ul class="list-unstyled">
+                        <p>Errori nella compilazione del modulo:</p>
+                        <% resource.errors.full_messages.each do |error_message| %>
+                            <li><%= error_message %></li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  </div>
+                <% end %>
+
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <%= f.text_field :first_name, :class => "form-control", :placeholder => "Nome" %>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <%= f.text_field :last_name, :class => "form-control", :placeholder => "Cognome" %>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <%= f.text_field :email, :class => "form-control", :placeholder => "Email" %>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <%= f.select(:province, [["Provincia",""], ["Agrigento", "Agrigento"], ["Alessandria", "Alessandria"], ["Ancona", "Ancona"], ["Aosta", "Aosta"], ["L'Aquila", "L'Aquila"], ["Arezzo", "Arezzo"], ["Ascoli Piceno", "Ascoli Piceno"], ["Asti", "Asti"], ["Avellino", "Avellino"], ["Bari", "Bari"], ["Barletta-Andria-Trani", "Barletta-Andria-Trani"], ["Belluno", "Belluno"], ["Benevento", "Benevento"], ["Bergamo", "Bergamo"], ["Biella", "Biella"], ["Bologna", "Bologna"], ["Bolzano", "Bolzano"], ["Brescia", "Brescia"], ["Brindisi", "Brindisi"], ["Cagliari", "Cagliari"], ["Caltanissetta", "Caltanissetta"], ["Campobasso", "Campobasso"], ["Carbonia-Iglesias", "Carbonia-Iglesias"], ["Caserta", "Caserta"], ["Catania", "Catania"], ["Catanzaro", "Catanzano"], ["Chieti", "Chieti"], ["Como", "Como"], ["Cosenza", "Cosenza"], ["Cremona", "Cremona"], ["Crotone", "Crotone"], ["Cuneo", "Cuneo"], ["Enna", "Enna"], ["Fermo", "Fermo"], ["Ferrara", "Ferrara"], ["Firenze", "Firenze"], ["Foggia", "Foggia"], ["Forlì-Cesena", "Forlì-Cesena"], ["Frosinone", "Frosinone"], ["Genova", "Genova"], ["Gorizia", "Gorizia"], ["Grosseto", "Grosseto"], ["Imperia", "Imperia"], ["Isemia", "Isemia"], ["Latina", "Latina"], ["Lecce", "Lecce"], ["Lecco", "Lecco"], ["Livorno", "Livorno"], ["Lodi", "Lodi"], ["Lucca", "Lucca"], ["Macerata", "Macerata"], ["Mantova", "Mantova"], ["Massa Carrara", "Massa Carrara"], ["Matera", "Matera"], ["Medio Campidano", "Medio Campidano"], ["Messina", "Messina"], ["Milano", "Milano"], ["Modena", "Modena"], ["Monza Brianza", "Monza Brianza"], ["Napoli", "Napoli"], ["Novara", "Novara"], ["Nuoro", "Nuoro"], ["Ogliastra", "Ogliastra"], ["Olbia - Tempio", "Olbia - Tempio"], ["Oristano", "Oristano"], ["Padova", "Padova"], ["Palermo", "Palermo"], ["Parma", "Parma"], ["Pavia", "Pavia"], ["Perugia", "Perugia"], ["Pesaro e Urbino", "Pesaro e Urbino"], ["Pescara", "Pescara"], ["Piacenza", "Piacenza"], ["Pisa", "Pisa"], ["Pistoia", "Pistoia"], ["Pordenone", "Pordenone"], ["Potenza", "Potenza"], ["Prato", "Prato"], ["Ragusa", "Ragusa"], ["Ravenna", "Ravenna"], ["Reggio Calabria", "Reggio Calabria"], ["Reggio Emilia", "Reggio Emilia"], ["Rieti", "Rieti"], ["Rimini", "Rimini"], ["Roma", "Roma"], ["Rovigo", "Rovigo"], ["Salerno", "Salerno"], ["Sassari", "Sassari"], ["Savona", "Savona"], ["Siena", "Siena"], ["Siracusa", "Siracusa"], ["Sondrio", "Sondrio"], ["La Spezia", "La Spezia"], ["Taranto", "Taranto"], ["Teramo", "Teramo"], ["Terni", "Terni"], ["Torino", "Torino"], ["Trapani", "Trapani"], ["Trento", "Trento"], ["Treviso", "Treviso"], ["Trieste", "Trieste"], ["Udine", "Udine"], ["Varese", "Varese"], ["Venezia", "Venezia"], ["Verbania-Cusio-Ossola", "Verbania-Cusio-Ossola"], ["Vercelli", "Vercelli"], ["Verona", "Verona"], ["Vibo Valentia", "Vibo Valentia"], ["Vicenza", "Vicenza"], ["Viterbo", "Viterbo"]], {}, class: "form-control") %>
+                  </div>
+                </div>
+
+                <% unless flash[:from_provider] %>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <%= f.password_field :password, :class => "form-control", :placeholder => "Password" %>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <%= f.password_field :password_confirmation, :class => "form-control", :placeholder => "Conferma password" %>
+                    </div>
+                  </div>
+                <% end %>
+           
+                <div class="checkbox">
+                  <label><%= f.check_box :privacy %> Accetto i <a href="#">termini d'uso</a></label>
+                </div>
+          
+                <div class="checkbox">
+                  <label><%= f.check_box :newsletter %> Acconsento al trattamento dei dati</label>
+                </div>
+         
+                <p class="registration__newsletter">Ai sensi degli artt. 23 e 130 D.lgs. 30.06.2003 n. 196, autorizzo il trattamento dei miei dati personali al fine di contattarmi - via telefono, posta, e-mail, sms, mms – per comunicazioni pubblicitarie o commerciali relative a vantaggi esclusivi che Gruppo Coin e i suoi Partner commerciali riservano agli iscritti, nonché per conoscere il mio grado di soddisfazione in ordine ai vostri servizi.</p>
+        
+                <%= hidden_field_tag :user_interaction_info_list %>
+                <div class="form-group">
+                  <div class="col-sm-4 col-md-offset-8">
+                    <button type="submit" class="btn btn-primary btn-block registration__button">INVIA</button>
+                  </div>
+                </div>
+
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
