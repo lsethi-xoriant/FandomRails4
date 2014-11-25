@@ -12,6 +12,7 @@ $container-lg:                 $container-desktop !default;
 body {
   padding-top: 15px;
   background-image: url("/assets/coin/bg.jpg");
+  background-attachment: fixed;
   font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
 }
 
@@ -35,7 +36,7 @@ body {
 
 .landing__button {
   margin-top: 50px;
-  font-weight:  700;
+  font-weight: 700;
   font-size: 18px;
 }
 
@@ -52,10 +53,29 @@ body {
   top: 90px;
 }
 
-/********************* REGISTRATION MODAL *********************/
+/********************* REGISTRATION *********************/
 
 .registration-modal__button {
   margin-bottom: 15px;
+}
+
+.registration__title {
+  color: #d21020; // red
+  font-weight: 700;
+  font-size: 22px;
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+.registration__newsletter {
+  font-size: 12px;
+  color: #959595;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.registration__button {
+  font-weight: 700;
 }
 
 /********************* CALLTOACTION *********************/
@@ -80,7 +100,7 @@ body {
 }
 
 .call-to-action__share__modal-title {
-  color: red;
+  color: d21020; // red
   font-weight: 700;
   font-size: 22px;
 }
@@ -210,6 +230,9 @@ body {
   margin-bottom: 15px;
 }
 
+.registration__button.btn-primary:active, 
+.registration__button.btn-primary.active, 
+.registration__button.open .dropdown-toggle.btn-primary,
 .call-to-action__button__inspire.btn-primary:active, 
 .call-to-action__button__inspire.btn-primary.active, 
 .call-to-action__button__inspire.open .dropdown-toggle.btn-primary,
@@ -221,7 +244,7 @@ body {
   box-shadow: none;
 } 
 
-.call-to-action__button__inspire.btn-primary, .call-to-action__share__modal-button {
+.call-to-action__button__inspire.btn-primary, .call-to-action__share__modal-button, .registration__button {
   -webkit-box-shadow: 0px 5px 0px 0px #5e0409;
   -moz-box-shadow: 0px 5px 0px 0px #5e0409;
   box-shadow: 0px 5px 0px 0px #5e0409;
@@ -367,7 +390,7 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
 .btn-primary.active, 
 .open .dropdown-toggle.btn-primary { 
   color: #ffffff; 
-  background-color: #DB232F; 
+  background: #DB232F; 
   border-color: #88060f; 
 } 
  
@@ -392,20 +415,20 @@ fieldset[disabled] .btn-primary:active,
 .btn-primary.disabled.active, 
 .btn-primary[disabled].active, 
 fieldset[disabled] .btn-primary.active { 
-  background-color: #BF0C19; 
-  border-color: #88060f; 
+  background: #BF0C19; 
+  border-color: #88060f;
 } 
  
 .btn-primary .badge { 
   color: #BF0C19; 
-  background-color: #ffffff; 
+  background: #ffffff; 
 }
 
 /********************* BTN GIFT *********************/
 
 .btn-gift { 
   color: #ffffff; 
-  background-color: #464646; 
+  background: #464646; 
   border-color: #170001; 
   -webkit-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);
@@ -418,7 +441,7 @@ fieldset[disabled] .btn-primary.active {
 .btn-gift.active, 
 .open .dropdown-toggle.btn-gift { 
   color: #ffffff; 
-  background-color: #5C5C5C; 
+  background: #5C5C5C; 
   border-color: #170001; 
 } 
  
@@ -443,13 +466,13 @@ fieldset[disabled] .btn-gift:active,
 .btn-gift.disabled.active, 
 .btn-gift[disabled].active, 
 fieldset[disabled] .btn-gift.active { 
-  background-color: #464646; 
+  background: #464646; 
   border-color: #170001; 
 } 
  
 .btn-gift .badge { 
   color: #464646; 
-  background-color: #ffffff; 
+  background: #ffffff; 
 }
 
 /********************* BTN FACEBOOK *********************/
@@ -472,7 +495,7 @@ fieldset[disabled] .btn-gift.active {
 .btn-facebook.active, 
 .open .dropdown-toggle.btn-facebook { 
   color: #ffffff; 
-  background-color: #3F5EAB; 
+  background: #3F5EAB; 
   border-color: #2C4172; 
 } 
  
@@ -497,7 +520,7 @@ fieldset[disabled] .btn-facebook:active,
 .btn-facebook.disabled.active, 
 .btn-facebook[disabled].active, 
 fieldset[disabled] .btn-facebook.active { 
-  background-color: #364E89; 
+  background: #364E89; 
   border-color: #2C4172; 
   -webkit-box-shadow: 0px 5px 0px 0px #2C4172;
   -moz-box-shadow: 0px 5px 0px 0px #2C4172;
@@ -506,7 +529,7 @@ fieldset[disabled] .btn-facebook.active {
  
 .btn-facebook .badge { 
   color: #364E89; 
-  background-color: #ffffff; 
+  background: #ffffff; 
 }
 
 .btn-facebook:active, 

@@ -69,6 +69,10 @@ class RegistrationsController < Devise::RegistrationsController
     omniauth = session["oauth"]["params"]
     provider = session["oauth"]["params"]["provider"]
 
+    password = Devise.friendly_token.first(8)
+    resource.password = password
+    resource.password_confirmation = password
+
     resource.authentications.build(
         uid: omniauth['uid'],
         name: omniauth["info"]["name"],
@@ -78,6 +82,9 @@ class RegistrationsController < Devise::RegistrationsController
         provider: provider,
         aux: session["oauth"]["params"].to_json
     )
+
+    flash[:from_provider] = provider
+
   end
 
   def after_sign_up_path_for(resource)
