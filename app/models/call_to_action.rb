@@ -7,13 +7,13 @@ class CallToAction < ActiveRecord::Base
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
   					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required,
             :privacy_required, :privacy, :button_label, :alternative_description, :enable_for_current_user,
-            :valid_from, :valid_to
+            :valid_from, :valid_to, :shop_url
 
   extend FriendlyId
   friendly_id :title, use: :slugged
 
   attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required,
-            :button_label, :alternative_description, :enable_for_current_user
+            :button_label, :alternative_description, :enable_for_current_user, :shop_url
 
   validates_presence_of :title
   validates_presence_of :name
@@ -136,7 +136,8 @@ class CallToAction < ActiveRecord::Base
     write_attribute :aux, { 
         button_label: button_label, 
         alternative_description: alternative_description,
-        enable_for_current_user: enable_for_current_user
+        enable_for_current_user: enable_for_current_user,
+        shop_url: shop_url
       }.to_json
   end
 
