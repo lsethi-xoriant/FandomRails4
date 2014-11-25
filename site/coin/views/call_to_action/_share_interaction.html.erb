@@ -27,7 +27,7 @@
                   <img style="width: 100%" ng-src="{{calltoaction_info.calltoaction.media_image}}">
                 </div>
               </div>
-              <img src="<%= asset_path("coin/paper-shadow.png") %>" style="width: 100%;">
+              <img class="hidden-xs" src="<%= asset_path("coin/paper-shadow.png") %>" style="width: 100%;">
             </div>
 
             <div ng-if="interaction_info.user_interaction.errors" class="col-md-12"> 
@@ -75,7 +75,7 @@
                   <img style="width: 100%" ng-src="{{calltoaction_info.calltoaction.media_image}}">
                 </div>
               </div>
-              <img src="<%= asset_path("coin/paper-shadow.png") %>" style="width: 100%;">
+              <img class="hidden-xs" src="<%= asset_path("coin/paper-shadow.png") %>" style="width: 100%;">
             </div>
 
             <div ng-if="interaction_info.interaction.resource.providers.facebook && !current_user.facebook" class="col-md-6 col-md-offset-3"> 

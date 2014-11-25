@@ -15,6 +15,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.current_user = current_user;
     $scope.calltoactions = calltoaction_info_list;
 
+    if($scope.aux.from_registration) {
+      $("#registration-modal").modal("show");
+    }
+
     initAnonymousUser();
 
     $scope.form_data = {};

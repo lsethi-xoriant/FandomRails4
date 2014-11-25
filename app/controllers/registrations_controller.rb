@@ -81,7 +81,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def after_sign_up_path_for(resource)
-    flash[:notice] = "from_registration"
+    cookies[:from_registration] = true
 
     if cookies[:connect_from_page].blank?
       "/"

@@ -56,7 +56,7 @@ class SessionsController < Devise::SessionsController
     
       setUpAccount()
 
-      flash[:notice] = "from_registration" if from_registration
+      cookies[:from_registration] = true if from_registration
     
       if request.site.force_facebook_tab && !request_is_from_mobile_device?(request)
         redirect_to request.site.force_facebook_tab
