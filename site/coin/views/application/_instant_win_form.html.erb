@@ -225,8 +225,31 @@
 <div class="modal fade" id="modal-interaction-instant-win" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+
+      <div id="instant-win-spinner-container" ng-class="{ 'hidden': !aux.instant_win_info.in_progress }">
+        <div id="instant-win-spinner">
+          <div class="f_circleG" id="frotateG_01">
+          </div>
+          <div class="f_circleG" id="frotateG_02">
+          </div>
+          <div class="f_circleG" id="frotateG_03">
+          </div>
+          <div class="f_circleG" id="frotateG_04">
+          </div>
+          <div class="f_circleG" id="frotateG_05">
+          </div>
+          <div class="f_circleG" id="frotateG_06">
+          </div>
+          <div class="f_circleG" id="frotateG_07">
+          </div>
+          <div class="f_circleG" id="frotateG_08">
+          </div>
+        </div>
+      </div>
+
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
         <div class="row">
           <div class="col-md-12 text-center"> 
             <p class="instant-win__modal-title">Gioca e vinci</p>
@@ -234,6 +257,15 @@
           <div ng-if="aux.instant_win_info.info" class="col-md-12">
             {{aux.instant_win_info.info}}
           </div>
+          <div class="col-md-1 col-md-offset-3 text-right instant-win__ticket-pre"><p class="instant-win__ticket-pre-text">Hai</p></div>
+          <div class="col-md-4 instant-win__ticket-column">
+            <div class="panel panel-default instant-win__ticket-panel">
+              <div class="panel-body instant-win__ticket-panel-body text-right">
+                <span class="instant-win__ticket-value">{{current_user.main_reward_counter.general}}</span><img class="instant-win__ticket-img" src="<%= asset_path("coin/reward-ticket.png") %>">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1 text-left instant-win__ticket-post"><p class="instant-win__ticket-post-text">biglietti</p></div>
           <div ng-if="!aux.instant_win_info.won && aux.instant_win_info.interaction_id" class="col-md-12 text-center">
             <a class="btn btn-primary instant-win__button btn-lg" ng-class="{disabled: aux.instant_win_info.in_progress}" href="javascript:void(0)" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</a>
           </div>

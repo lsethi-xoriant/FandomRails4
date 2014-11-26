@@ -87,6 +87,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
       .success(function(data) { 
         $timeout(function() { 
+          updateUserRewardInView(data.main_reward_counter.general);
           if(!data.prize) {
             $scope.aux.instant_win_info.in_progress = false;
           }
@@ -1134,7 +1135,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.updateUserRewardInView = function(counter) {
-    $(".user-reward-counter").html("+" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
+    $scope.current_user.main_reward_counter.general = counter;
+    //$(".user-reward-counter").html("+" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
   };
 
   //////////////////////// POINTS AND CHECKS FEEDBACK METHODS ////////////////////////

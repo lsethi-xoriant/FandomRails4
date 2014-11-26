@@ -29,6 +29,7 @@
               <img class="user-bar__body__avatar img-circle" src="<%= current_avatar %>">
               <p class="user-bar__body__username">Ciao, <%= "#{current_user.first_name} #{current_user.last_name}" %></p>
             </div>
+            
             <div class="col-md-1 text-right user-bar__ticket-pre"><p class="user-bar__ticket-pre-text">Hai</p></div>
             <div class="col-md-2 user-bar__ticket-column">
               <div class="panel panel-default user-bar__ticket-panel">
@@ -38,6 +39,7 @@
               </div>
             </div>
             <div class="col-md-1 text-left user-bar__ticket-post"><p class="user-bar__ticket-post-text">biglietti</p></div>
+            
             <div class="col-md-2">
               <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-left: 15px;" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
                 GIOCA
