@@ -128,6 +128,7 @@ module ApplicationHelper
 
     unless anonymous_user?(user)
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
+      expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
     end
 
     if user_interaction
