@@ -1,6 +1,6 @@
-var streamCalltoactionModule = angular.module('StreamCalltoactionModule', ['ngRoute']);
+var streamCalltoactionModule = angular.module('StreamCalltoactionModule', ['ngRoute', 'ngSanitize']);
 
-StreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval'];
+StreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce'];
 streamCalltoactionModule.controller('StreamCalltoactionCtrl', StreamCalltoactionCtrl);
 
 // Gestione del csrf-token nelle chiamate ajax.
@@ -9,6 +9,10 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
 }]);
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
+
+  $scope.unsafe = function(value) {
+     return $sce.trustAsHtml(value);
+  }
 
   $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux, kaltura_params) {
     $scope.aux = aux;
@@ -36,20 +40,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.polling = false;
     $scope.comments_polling = new Object();
     $scope.youtube_api_ready = false;
-    $scope.kaltura_params = kaltura_params;
 
     var tag = document.createElement('script');
     tag.src = "//www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     
-    kaltura_api_link = "http://cdnapi.kaltura.com/p/"+kaltura_params.partner_id+"/sp/"+kaltura_params.partner_id+"00/embedIframeJs/uiconf_id/"+kaltura_params.uiconf_id+"/partner_id/"+kaltura_params.partner_id;
-    var tag = document.createElement('script');
-    tag.src = kaltura_api_link;
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    
-    initKalturaApi();
+    if(kaltura_params) {
+      $scope.kaltura_params = kaltura_params;
+      kaltura_api_link = "http://cdnapi.kaltura.com/p/" + kaltura_params.partner_id + "/sp/" + kaltura_params.partner_id + "00/embedIframeJs/uiconf_id/" + kaltura_params.uiconf_id + "/partner_id/" + kaltura_params.partner_id;
+      var tag = document.createElement('script');
+      tag.src = kaltura_api_link;
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      initKalturaApi();
+    }
 
     initQuizWaitingAudio();
 
