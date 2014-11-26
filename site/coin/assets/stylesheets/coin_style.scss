@@ -26,11 +26,48 @@ body {
   margin-bottom: 15px;
 }
 
+/********************* INSTANT WIN *********************/
+
+.instant-win__modal-footer {
+  background: -webkit-linear-gradient(#f6f2e2, #d4d1c5);
+  background: -o-linear-gradient(#f6f2e2, #d4d1c5);
+  background: -moz-linear-gradient(#f6f2e2, #d4d1c5);
+  background: linear-gradient(#f6f2e2, #d4d1c5);
+  border-radius: 5px;
+}
+
+.instant-win__footer__text-column { 
+  margin-top: 10px;
+}
+
+.instant-win__footer__text-1 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.instant-win__footer__text-2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #d21020;
+  margin: 0;
+}
+
+.instant-win__footer__text-3 {
+  font-size: 12px;
+  color: #959595;
+  margin: 0;
+}
+
+.instant-win__button {
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
 /********************* LANDING *********************/
 
 .landing__text {
   margin-top: 50px;
-  font-weight:  700;
+  font-weight: 700;
   font-size: 18px;
 }
 
@@ -69,7 +106,7 @@ body {
 
 .registration__newsletter {
   font-size: 12px;
-  color: #959595;
+  color: #959595; // gray
   margin-top: 5px;
   margin-bottom: 15px;
 }
@@ -99,14 +136,14 @@ body {
   background: linear-gradient(#ffffff, #e5e5e5);
 }
 
-.call-to-action__share__modal-title {
-  color: d21020; // red
+.call-to-action__share__modal-title, .instant-win__modal-title {
+  color: #d21020; // red
   font-weight: 700;
   font-size: 22px;
 }
 
 .call-to-action__share__modal-description {
-  color: #959595;
+  color: #959595; // gray
   font-size: 16px;
 }
 
@@ -158,11 +195,11 @@ body {
   font-size: 12px; 
   margin: 0; 
   padding-left: 85px;
-  color: #959595;
+  color: #959595; // gray
 }
 
 .call-to-action__media__description-bold {
-  font-weight:  700;
+  font-weight: 700;
 }
 
 .call-to-action__media__button__gift-icon {
@@ -204,7 +241,7 @@ body {
   font-size: 12px;
   font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
   font-weight:  700;
-  color: #959595;
+  color: #959595; // gray
 }
 
 .call-to-action__reward-status-images {
@@ -215,7 +252,7 @@ body {
   margin-right: 5px;
   position: relative;
   top: 3px;
-  color: #959595;
+  color: #959595; // gray
 }
 
 .call-to-action_reward-value.active {
@@ -230,6 +267,9 @@ body {
   margin-bottom: 15px;
 }
 
+.instant-win__button.btn-primary:active, 
+.instant-win__button.btn-primary.active, 
+.instant-win__button.open .dropdown-toggle.btn-primary,
 .registration__button.btn-primary:active, 
 .registration__button.btn-primary.active, 
 .registration__button.open .dropdown-toggle.btn-primary,
@@ -244,7 +284,7 @@ body {
   box-shadow: none;
 } 
 
-.call-to-action__button__inspire.btn-primary, .call-to-action__share__modal-button, .registration__button {
+.call-to-action__button__inspire.btn-primary, .call-to-action__share__modal-button, .registration__button, .instant-win__button {
   -webkit-box-shadow: 0px 5px 0px 0px #5e0409;
   -moz-box-shadow: 0px 5px 0px 0px #5e0409;
   box-shadow: 0px 5px 0px 0px #5e0409;
@@ -287,7 +327,7 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
   margin: 0;
   line-height: 50px; 
   font-size: 18px;
-  color: #959595;
+  color: #959595; // gray
 }
 
 .panel-body-user-bar {
@@ -343,7 +383,7 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
 .user-bar__ticket-pre-text {
   line-height: 50px;
   margin: 0;
-  color: #959595;
+  color: #959595; // gray
   font-size: 16px;
 }
 
@@ -354,7 +394,7 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
 .user-bar__ticket-post-text {
   line-height: 50px;
   margin: 0;
-  color: #959595;
+  color: #959595; // gray
   font-size: 16px;
 }
 
@@ -543,8 +583,13 @@ fieldset[disabled] .btn-facebook.active {
 /********************* MOBILE *********************/
 
 @media (max-width: $screen-sm-min) { 
+
   body {
     padding-top: 60px;
+  }
+
+  .instant-win__footer__text-column { 
+    margin-top: 0px;
   }
 
   .call-to-action__share__modal-panel {

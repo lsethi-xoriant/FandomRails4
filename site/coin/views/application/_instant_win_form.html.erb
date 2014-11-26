@@ -225,17 +225,17 @@
 <div class="modal fade" id="modal-interaction-instant-win" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title">GIOCA</h4>
-      </div>
-      <div ng-if="!aux.instant_win_info.won && aux.instant_win_info.interaction_id" class="modal-body">
         <div class="row">
+          <div class="col-md-12 text-center"> 
+            <p class="instant-win__modal-title">Gioca e vinci</p>
+          </div>
           <div ng-if="aux.instant_win_info.info" class="col-md-12">
             {{aux.instant_win_info.info}}
           </div>
-          <div class="col-md-12 text-center">
-            <a class="btn btn-danger btn-lg" ng-class="{disabled: aux.instant_win_info.in_progress}" href="javascript:void(0)" ng-click="playInstantWin();">GIOCA ADESSO</a>
+          <div ng-if="!aux.instant_win_info.won && aux.instant_win_info.interaction_id" class="col-md-12 text-center">
+            <a class="btn btn-primary instant-win__button btn-lg" ng-class="{disabled: aux.instant_win_info.in_progress}" href="javascript:void(0)" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</a>
           </div>
         </div>
       </div>
@@ -253,8 +253,17 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">CHIUDI</button>
+      <div class="modal-footer instant-win__modal-footer">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-1">
+            <img style="width: 100%" src="<%= asset_path("coin/gift-instant-win.png") %>">
+          </div>
+          <div class="col-md-6 text-left instant-win__footer__text-column">
+            <p class="instant-win__footer__text-1">Oggi in palio...</p>
+            <p class="instant-win__footer__text-2">GIFT CARD €100</p>
+            <p class="instant-win__footer__text-3">Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum....</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
