@@ -19,4 +19,8 @@ module CoinHelper
     cached_nil?(locations) ? nil : locations.value.split(",")
   end
 
+  def assignRegistrationReward()
+    assign_reward(current_user, MAIN_REWARD_NAME, 1, request.site)
+  end
+
 end
