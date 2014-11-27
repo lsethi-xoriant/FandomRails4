@@ -18,3 +18,4 @@
 //= require bootstrap-fileupload
 //= require jquery.jplayer
 //= require fandom-utils
+//= require flowplayer.min
