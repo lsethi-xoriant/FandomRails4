@@ -406,13 +406,6 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
 
 /********************* USER BAR *********************/
 
-.user-bar__avatar-mobile {
-  border: 1px solid #fff;
-  height: 45px;
-  margin-left: 3px;
-  margin-top: 3px;
-}
-
 .user-bar__body__avatar {
   float: left; 
   width: 50px; 
@@ -933,5 +926,13 @@ fieldset[disabled] .btn-facebook.active {
   .user-bar__ticket-img {
     margin-top: 3px;
   }
+
+  .user-bar__avatar-mobile {
+    border: 1px solid #fff;
+    height: 45px;
+    margin-left: 15px;
+    margin-top: 3px;
+  }
+
 
 }
