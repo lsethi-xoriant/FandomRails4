@@ -14,6 +14,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
      return $sce.trustAsHtml(value);
   }
 
+  $scope.sanitizeText = function(text) {
+    return String(text).replace(/<[^>]+>/gm, '');
+  }
+
   $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux, kaltura_params) {
     $scope.aux = aux;
     $scope.current_user = current_user;

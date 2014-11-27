@@ -9,19 +9,20 @@
     </div>
 
     <div class="row">
-      <div class="col-md-9 col-xs-12">
-        <p class="call-to-action__media__description" ng-bind-html="calltoaction_info.calltoaction.description"></p>
+      <div class="col-md-9 col-xs-7">
+        <p class="call-to-action__media__description hidden-xs" ng-bind-html="calltoaction_info.calltoaction.description"></p>
+        <p class="call-to-action__media__description-mobile visible-xs">{{sanitizeText(calltoaction_info.calltoaction.description)}}</p>
       </div>
-      <div class="col-md-3 col-xs-12 text-right">
+      <div class="col-md-3 col-xs-5 text-right">
         <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__button__gift"><span class="glyphicon glyphicon-gift call-to-action__media__button__gift-icon"></span>LO VOGLIO!</a>
       </div> 
     </div>
 
     <div class="row call-to-action__share-and-win">
-      <div class="col-md-8">
-        <img src="<%= asset_path("coin/coin-ticket.png") %>" style="float: left;">
+      <div class="col-md-8 col-xs-5">
+        <img class="call-to-action__share-and-win__ticket-img hidden-xs" src="<%= asset_path("coin/coin-ticket.png") %>">
         <p class="call-to-action__share-and-win__title">Condividi e vinci subito</p>
-        <p class="call-to-action__share-and-win__description">Condividi ogni giorno e ottieni +1 biglietto per vincere 35 Gift Card Coin</p>
+        <p class="call-to-action__share-and-win__description hidden-xs">Condividi ogni giorno e ottieni +1 biglietto per vincere 35 Gift Card Coin</p>
       </div>
       <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
         <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">

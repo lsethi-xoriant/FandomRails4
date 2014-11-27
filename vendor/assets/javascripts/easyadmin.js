@@ -2,6 +2,7 @@
 //= require jquery_ujs
 //= require angular
 //= require angular-resource
+//= require angular-sanitize
 //= require angular-route
 //= require angularjs/fandom
 //= require angularjs/ng-table

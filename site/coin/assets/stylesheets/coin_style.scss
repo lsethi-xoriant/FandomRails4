@@ -30,6 +30,10 @@ body {
   margin-bottom: 15px;
 }
 
+.header__logo {
+  margin-top: 15px;
+}
+
 /********************* INSTANT WIN *********************/
 
 .instant-win__modal-footer {
@@ -222,6 +226,10 @@ body {
   margin-top: 7px;
 }
 
+.call-to-action__share-and-win__ticket-img {
+  float: left;
+}
+
 .call-to-action__footer {
   padding: 0 15px 18px;
   background: -webkit-linear-gradient(#f7f6f1, #d6d5d1);
@@ -397,6 +405,13 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
 } 
 
 /********************* USER BAR *********************/
+
+.user-bar__avatar-mobile {
+  border: 1px solid #fff;
+  height: 45px;
+  margin-left: 3px;
+  margin-top: 3px;
+}
 
 .user-bar__body__avatar {
   float: left; 
@@ -857,8 +872,23 @@ fieldset[disabled] .btn-facebook.active {
     background-image: none;
   }
 
+  .header__logo {
+    max-width: 150px;
+  }
+
   .instant-win__footer__text-column { 
     margin-top: 0px;
+  }
+
+  .call-to-action__media__description-mobile {
+    padding: 15px 0 0 0;
+    font-size: 11px;
+  }
+
+  .call-to-action__share-and-win {
+    border-top: 1px solid #959595;
+    margin-top: 0;
+    padding-top: 10px;
   }
 
   .call-to-action__share__modal-panel {
@@ -872,15 +902,36 @@ fieldset[disabled] .btn-facebook.active {
   .call-to-action__button__inspire-text {
     display: inline;
     font-size: 18px; 
-    font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
-    font-weight:  700;
+    font-weight: 700;
     margin: 0 0 0 15px;
     position: relative;
     bottom: 15px;
   }
 
-  .call-to-action__media__button__gift-column {
-    position: inherit;
+  .call-to-action__media__button__gift {
+    position: static;
+    margin-top: 14px;
+    font-size: 11px;
+  }
+
+  .call-to-action__share-and-win__title {
+    font-size: 16px; 
+    padding-left: 0;
+  }
+
+  .user-bar__ticket-panel {
+    height: 40px;
+    margin-top: 5px;
+    margin-left: auto;
+    width: 105px;
+  }
+
+  .user-bar__ticket-value {
+    line-height: 40px;
+  }
+
+  .user-bar__ticket-img {
+    margin-top: 3px;
   }
 
 }
