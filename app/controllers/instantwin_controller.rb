@@ -76,8 +76,8 @@ class InstantwinController < ApplicationController
   end
 
   def send_winner_email(time_to_win, price)
-    SystemMailer.win_mail(current_user, price, time_to_win).deliver
-    SystemMailer.win_admin_notice_mail(current_user, price, time_to_win).deliver
+    SystemMailer.win_mail(current_user, price, time_to_win, request).deliver
+    SystemMailer.win_admin_notice_mail(current_user, price, time_to_win, request).deliver
   end
 
 end
