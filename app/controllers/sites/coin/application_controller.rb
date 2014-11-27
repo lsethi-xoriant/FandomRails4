@@ -12,6 +12,9 @@ class Sites::Coin::ApplicationController < ApplicationController
     end
 
     instant_win_interaction_id = get_instant_win_coin_interaction_id()
+    user_win_info = user_already_won(instant_win_interaction_id)
+    user_win = user_win_info[:win] ? user_win_info[:win] : nil
+
     {
       "tenant" => get_site_from_request(request)["id"],
       "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
@@ -20,7 +23,8 @@ class Sites::Coin::ApplicationController < ApplicationController
       "from_registration" => from_registration,
       "instant_win_info" => {
         "interaction_id" => instant_win_interaction_id,
-        "won" => user_already_won(instant_win_interaction_id),
+        "win" => user_win,
+        "message" => user_win_info[:message],
         "in_progress" => false
       }
     }

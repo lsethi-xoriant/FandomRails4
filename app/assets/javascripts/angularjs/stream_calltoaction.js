@@ -87,15 +87,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $scope.playInstantWin = function() {
     $scope.aux.instant_win_info.in_progress = true;
-    delete $scope.aux.instant_win_info.info;
+    delete $scope.aux.instant_win_info.win;
     $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
       .success(function(data) { 
         $timeout(function() { 
           updateUserRewardInView(data.main_reward_counter.general);
-          if(!data.prize) {
-            $scope.aux.instant_win_info.in_progress = false;
-          }
-          $scope.aux.instant_win_info.info = data.message;
+          $scope.aux.instant_win_info.in_progress = false;
+          $scope.aux.instant_win_info.message = data.message;
+          $scope.aux.instant_win_info.win = data.win;
         }, 3000);
       }).error(function() {
         // ERROR.
