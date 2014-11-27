@@ -6,8 +6,9 @@ module Fandom
       domains: ['coin.fandom.localdomain', 'coin.dev.fandomlab.com', 'coin.stage.fandomlab.com', 'coin.live.fandomlab.com'],
       assets_precompile: ['coin_application.css', 'coin_application.js'],
       periodicity_kinds: [PERIOD_KIND_DAILY],
-      required_attrs: ["first_name", "last_name"],
+      required_attrs: ["first_name", "last_name", "province"],
       init_ctas: 1,
+      public_pages: Set.new(["sites/coin/application#show_privacy_policy"]),
       force_landing: true,
       environment: { 
         'EMAIL_ADDRESS' => 'noreply@coin.it'

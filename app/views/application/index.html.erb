@@ -2,7 +2,7 @@
 
 <%= render partial: "/application/home_launchers" %>
 
-<div class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.to_json %>, <%= @calltoaction_info_list.to_json %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.to_json %>)">   
+<div id="StreamCallToAction" class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.to_json %>, <%= @calltoaction_info_list.to_json %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.to_json %>, <%= get_deploy_setting("sites/#{request.site.id}/kaltura", nil).to_json %>)">   
 
   <!-- CUSTOM SITE HEADER --> 
   <%#= render partial: "/application/header" %>

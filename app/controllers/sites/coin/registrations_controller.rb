@@ -7,6 +7,7 @@ class Sites::Coin::RegistrationsController < RegistrationsController
 
   def setUpAccount()
     assignPromocode()
+    assignRegistrationReward()
   end
 
 end

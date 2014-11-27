@@ -128,6 +128,7 @@ module ApplicationHelper
 
     unless anonymous_user?(user)
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
+      expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
     end
 
     if user_interaction
@@ -574,20 +575,22 @@ module ApplicationHelper
   
   def compute_save_and_notify_outcome(user_interaction)
     outcome = compute_and_save_outcome(user_interaction)
+    notify_outcome(user_interaction.user_id, outcome)
+    outcome
+  end
+
+  def notify_outcome(user_id, outcome)
     to_be_notified_reward_names = get_to_be_notified_reward_names
-    
     outcome.reward_name_to_counter.each do |r|
       reward_name = r.first
       if to_be_notified_reward_names.include?(reward_name)
         reward = get_reward_by_name(reward_name)
         html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { reward: reward }, layout: false, formats: :html
-        notice = create_notice(:user_id => user_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+        notice = create_notice(:user_id => user_id, :html_notice => html_notice, :viewed => false, :read => false)
         # notice.send_to_user(request)
-        expire_cache_key(notification_cache_key(user_interaction.user_id))
+        expire_cache_key(notification_cache_key(user_id))
       end
     end
-    
-    outcome
   end
 
   # Assigns (or unlocks) rewards to an user based just on his/her other rewards, not on an interaction done

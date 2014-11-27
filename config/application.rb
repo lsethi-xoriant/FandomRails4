@@ -135,7 +135,7 @@ module Fandom
       
       config.action_mailer.perform_deliveries = mailer_conf.fetch("perform_deliveries", true)
   
-      config.action_mailer.default_url_options = { :host => mailer_conf.fetch("devise_host", true) }
+      config.action_mailer.default_url_options = { :host => mailer_conf.fetch("devise_host", "localhost") }
     
       config.action_mailer.raise_delivery_errors = mailer_conf.fetch("raise_delivery_errors", false)
       

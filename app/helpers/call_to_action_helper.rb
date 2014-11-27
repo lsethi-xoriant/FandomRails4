@@ -23,7 +23,7 @@ module CallToActionHelper
           "media_data" => calltoaction.media_data, 
           "thumbnail_url" => calltoaction.thumbnail_url,
           "interaction_info_list" => build_interaction_info_list(calltoaction),
-          "aux" => calltoaction.aux
+          "aux" => JSON.parse(calltoaction.aux)
         },
         "miniformat" => {
           "label_background" => get_tag_field_value(miniformat, "label-background"),
