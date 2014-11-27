@@ -2,22 +2,48 @@
   <header class="navbar navbar-default navbar-fixed-top visible-xs" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
+        <!--
         <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a style="float: right; font-size: 14px; margin-right: 15px;" class="navbar-brand user-reward-counter" href="javascript: void(0)">+<span class="">{{current_user.main_reward_counter.general}}</span> <span class="glyphicon glyphicon-star"></span> punti</a>
-        <a style="float: left; padding: 8px 8px 8px 0; margin-left: 15px;" href="#" class="navbar-brand">
-          <img class="img-circle" src="<%= current_avatar %>" style="height: 100%; border: 1px solid #fff;">
-        </a>
+        -->
+        <div class="row">
+
+          <div class="col-xs-2">
+             <img class="img-circle user-bar__avatar-mobile" src="<%= current_avatar %>">
+          </div>
+
+          <div class="col-xs-5 col-xs-offset-1">
+            <div class="panel panel-default user-bar__ticket-panel">
+              <div class="panel-body user-bar__ticket-panel-body text-right">
+                <span class="user-bar__ticket-value">{{current_user.main_reward_counter.general}}</span><img class="user-bar__ticket-img" src="<%= asset_path("coin/reward-ticket.png") %>">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-4">
+            <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-right: 15px;" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+              GIOCA
+            </button>
+
+            <button ng-if="current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-right: 15px;" ng-click="openInstantWinModal()">
+              GIOCA
+            </button>
+          </div>
+
+        </div>
+
       </div>
+      <!--
       <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/">Home</a></li>
         </ul>
       </nav>
+      -->
     </div>
   </header>
   <div class="row hidden-xs">
@@ -29,6 +55,7 @@
               <img class="user-bar__body__avatar img-circle" src="<%= current_avatar %>">
               <p class="user-bar__body__username">Ciao, <%= "#{current_user.first_name} #{current_user.last_name}" %></p>
             </div>
+            
             <div class="col-md-1 text-right user-bar__ticket-pre"><p class="user-bar__ticket-pre-text">Hai</p></div>
             <div class="col-md-2 user-bar__ticket-column">
               <div class="panel panel-default user-bar__ticket-panel">
@@ -38,6 +65,7 @@
               </div>
             </div>
             <div class="col-md-1 text-left user-bar__ticket-post"><p class="user-bar__ticket-post-text">biglietti</p></div>
+            
             <div class="col-md-2">
               <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-left: 15px;" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
                 GIOCA

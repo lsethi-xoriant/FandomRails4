@@ -1,6 +1,6 @@
-<div class="col-md-4 text-right call-to-action__share-column">
+<div class="col-md-4 col-xs-7 text-right call-to-action__share-column">
 
-  <p class="call-to-action__share__text">CONDIVIDI</p>
+  <p class="call-to-action__share__text hidden-xs">CONDIVIDI</p>
 
   <!-- EMAIL -->
   <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default btn-sm call-to-action__share__button-email" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email">
@@ -102,11 +102,11 @@
   -->
 
   <div ng-if="aux.share_interaction_daily_done" class="call-to-action__reward-status-images">
-    <span class="call-to-action_reward-value active">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket.png")%>">
+    <span class="call-to-action_reward-value active">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket-gray.png")%>">
   </div>
 
   <div ng-if="!aux.share_interaction_daily_done" class="call-to-action__reward-status-images">
-    <span class="call-to-action_reward-value">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket-gray.png")%>">
+    <span class="call-to-action_reward-value">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket.png")%>">
   </div>
 
 </div>

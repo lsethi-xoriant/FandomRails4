@@ -69,7 +69,7 @@ class SessionsController < Devise::SessionsController
   def setUpAccount()
     SystemMailer.welcome_mail(current_user).deliver
   end
-  
+
   def redirect_after_successful_login
     if cookies[:connect_from_page].blank?
       redirect_to "/"
