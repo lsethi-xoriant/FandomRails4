@@ -116,12 +116,17 @@ Fandom::Application.routes.draw do
     
     match "tag/clone/:id", :to => "tag#clone"
     match "retag", :to => "easyadmin#retag_tag"
-    
+
+    # USER
+    match "user", :to => "easyadmin#index_user"
+    match "export_users", :to => "easyadmin#export_users"
+    match "user/show/:id", :to => "easyadmin#show_user"
+
+    # WINNER
     match "winner", :to => "easyadmin#index_winner"
     match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
 
-    match "user/show/:id", :to => "easyadmin#show_user"
-
+    # CALL TO ACTION
     match "cta", :to => "call_to_action#index_cta"
     match "cta/template", :to => "call_to_action#index_cta_template"
     match "cta_user", :to => "call_to_action#index_user_generated_cta"
@@ -138,9 +143,11 @@ Fandom::Application.routes.draw do
     match "cta/hide/:id", :to => "call_to_action#hide_cta"
     match "cta/clone/:id", :to => "call_to_action#clone"
 
+    # TAG CTA
     match "cta/tag/:id", :to => "easyadmin#tag_cta"
     match "cta/tag/:id/update", :to => "easyadmin#tag_cta_update"
 
+    # PROMOCODE
     match "promocode", :to => "easyadmin#index_promocode"
     match "promocode/new_promocode", :to => "easyadmin#new_promocode"
     match "promocode/create_promocode", :to => "easyadmin#create_promocode"
