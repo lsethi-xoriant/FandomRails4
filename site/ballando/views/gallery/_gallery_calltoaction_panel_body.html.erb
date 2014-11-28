@@ -1,3 +1,5 @@
+<% setting = Setting.find_by_key("upload-ugc") %>
+<% if setting.nil? || setting.value == "true" %> 
 <div class="row">
 	<%= form_tag "/upload_interaction/create/#{ @upload_interaction.id }", multipart: true, id: "form-upload" do %>
 	<div class="col-sm-12">
@@ -64,3 +66,4 @@
 	  </div>
 	  <% end %>
 	</div>
+<% end %>
