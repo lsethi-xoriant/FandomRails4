@@ -1,0 +1,72 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "user" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1>Elenco UTENTI</h1>
+    </div> <!-- #content-header --> 
+
+    	<div id="content-container">
+
+    	<% if flash[:notice] %>
+	    	<div class="row">
+		      <div class="col-md-12">         
+		          <div class="row">
+		            <div class="col-lg-12">
+		              <div class="alert alert-success"><%= flash[:notice] %></div>
+		            </div>
+		          </div>
+		        
+		      </div>
+		    </div>
+	    <% end %>
+	    
+	  	<div class="row text-right">
+	    	<div class="col-md-12">
+	    		<a href="/easyadmin/export_users"><button type="button" class="btn btn-primary">ESPORTA CSV</button></a>
+	    	</div>
+	    </div>
+
+		<div class="row">
+			<div class="col-md-12"> 
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Username</th>
+							<th>Email</th>
+							<th>Città</th>
+							<th>Azioni</th>
+						</tr>
+					</thead>
+					<% @user_list.each do |u| %>
+						<tr>
+							<td><%= "#{u.first_name} #{u.last_name}" %></td>
+							<td><%= u.username %></td>
+							<td><%= u.email %></td>
+							<td><%= "#{u.location}, (#{u.province})" if u.location.present? %></td>
+
+							<td>
+								<div class="row">
+
+									<div class="col-sm-1" style="margin: 0;">
+										<a href="user/show/<%= u.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+									</div>
+
+								</div>
+							</td>
+
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-8">
+				<%= render partial: "pagination" %>
+			</div>
+		</div>
+
+	</div>
+</div>

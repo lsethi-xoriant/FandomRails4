@@ -23,16 +23,28 @@
 		      </ul>
 		    </li>
 		   <% end %>
+		   
+		   <% if can? :manage, :all %>
+		    <li class="dropdown <%= "active opened" if page == "user" %>"><a href="javascript:void(0);"><i class="fa fa-users"></i>Utenti<span class="caret"></span></a>
+		  	  <ul class="sub-nav">
+		        <li>
+		          <a href="/easyadmin/user">
+		            <i class="fa fa-list"></i>Tutti
+		          </a>
+		        </li>
+		        <li>
+		          <a href="/easyadmin/winner">
+		            <i class="fa fa-ticket"></i>Vincitori concorso
+		          </a>
+		        </li>
+		      </ul>
+		    </li>
+		   <% end %>
 
 	    <% if can? :manage, :all %>
 		    <li class="<%= "active" if page == "pubblished" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>
 		    </li>
 	    <% end %>
-
-	    <!--
-	    <li class="<%= "active" if page == "winner" %>"><a href="/easyadmin/winner"><i class="fa fa-ticket"></i>Vincitori concorso</a>
-	    </li>
-	    -->
 
 	    <% if can? :manage, :all %>
 		    <li class="dropdown <%= "active opened" if page == "carousel" %>"><a href="javascript:void(0);"><i class="fa fa-flag"></i>Carosello<span class="caret"></span></a>
@@ -70,8 +82,8 @@
 	    <% end %>
 
 	    <% if can? :manage, :all %>
-	    	<!--<li class="<%= "active" if page == "promocode" %>"><a href="/easyadmin/promocode"><i class="fa fa-ticket"></i>Promocode</a>
-	    	</li>-->
+	    	<li class="<%= "active" if page == "promocode" %>"><a href="/easyadmin/promocode"><i class="fa fa-ticket"></i>Promocode</a>
+	    	</li>
 	    <% end %>
 		<% if can? :manage, :all %>
 		<li class="dropdown <%= "active opened" if page == "prize" %>"><a href="javascript:void(0);"><i class="fa fa-trophy"></i>Rewards<span class="caret"></span></a>
