@@ -55,7 +55,8 @@ class Tag < ActiveRecord::Base
       long_description = ""
     end
     header_image = tag_fields.find_by_name("header_image").upload.url if tag_fields.find_by_name("header_image")
-    icon = tag_fields.find_by_name("icon").upload.url if tag_fields.find_by_name("icon")
+    icon = tag_fields.find_by_name("icon") if tag_fields.find_by_name("icon")
+    category_icon = tag_fields.find_by_name("category_icon").upload.url if tag_fields.find_by_name("category_icon")
     BrowseCategory.new(
       id: id,
       has_thumb: has_thumb, 
@@ -66,7 +67,8 @@ class Tag < ActiveRecord::Base
       detail_url: "/browse/category/#{id}",
       created_at: created_at.to_time.to_i,
       header_image_url: header_image,
-      icon_url: icon
+      icon: icon,
+      category_icon: category_icon
     )
   end
 
