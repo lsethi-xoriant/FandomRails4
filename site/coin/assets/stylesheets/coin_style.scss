@@ -171,6 +171,10 @@ body {
   font-size: 18px;
 }
 
+.landing__gift-img, .landing__logo-img {
+  margin-top: 15px;
+}
+
 .landing__button {
   margin-top: 50px;
   font-weight: 700;
@@ -258,6 +262,7 @@ body {
 
 .call-to-action__share-and-win__ticket-img {
   float: left;
+  width: 64px;
 }
 
 .call-to-action__footer {
@@ -434,6 +439,18 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
   -moz-box-shadow: 0px 5px 0px 0px #5e0409;
   box-shadow: 0px 5px 0px 0px #5e0409;
 } 
+
+/********************* FOOTER *********************/
+
+.footer__column {
+  margin-top: 30px;
+}
+
+.footer__description {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
 
 /********************* USER BAR *********************/
 
@@ -895,6 +912,10 @@ fieldset[disabled] .btn-facebook.active {
     background-image: none;
   }
 
+  .body-landing {
+    padding-top: 0;
+  }
+
   #fountainG {
     top: 30px;
   }
@@ -973,6 +994,28 @@ fieldset[disabled] .btn-facebook.active {
     max-width: 175px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .footer__column {
+    margin-top: 5px;
+  }
+
+  .footer__description {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .call-to-action__share__modal-title {
+    font-size: 14px;
+  }
+
+  .landing__gift-img {
+    max-width: 120px;
+  }
+
+  .landing__logo-img {
+    max-width: 220px;
   }
 
 }
