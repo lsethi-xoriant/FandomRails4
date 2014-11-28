@@ -12,11 +12,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $scope.unsafe = function(value) {
      return $sce.trustAsHtml(value);
-  }
+  };
 
   $scope.sanitizeText = function(text) {
     return String(text).replace(/<[^>]+>/gm, '');
-  }
+  };
 
   $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux, kaltura_params) {
     $scope.aux = aux;
@@ -59,6 +59,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       initKalturaApi();
     }
+    
+    $(function(){ flowplayerReady(); });
 
     initQuizWaitingAudio();
 
@@ -137,6 +139,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       }
     });
     return overvideo_interaction;
+  }
+  
+  function getOvervideoInteractions(calltoaction_id) {
+    overvideo_interactions = [];
+    calltoaction_info = getCallToActionInfo(calltoaction_id);
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING") {
+        overvideo_interactions.push( { time: interaction_info.interaction.seconds, interaction: interaction_info});
+      }
+    });
+    return overvideo_interactions;
   }
 
   $scope.currentUserEmptyAndAnonymousInteractionEnable = function() {
@@ -486,6 +499,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   function executeInteraction(player, calltoaction_id, overvideo_interaction) { 
+  	console.log(player);
     $scope.overvideo_interaction_locked[calltoaction_id] = true;
     overvideo_interaction.interaction.overvideo_active = true;
     player.pause();
@@ -708,6 +722,75 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     if(calltoaction_info.calltoaction.media_type == "KALTURA" && $scope.kaltura_api_ready) {
       
       player = new kalturaPlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_data);
+      calltoaction_info.calltoaction["player"] = player;
+
+      $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
+      $scope.current_user_answer_response_correct[calltoaction_info.calltoaction.id] = false;
+
+    }
+  };
+  
+  //////////////////////// FLOWPLAYER API /////////////////////////////
+  
+  function flowplayerPlayer(playerId, media_data) {
+  	this.playerManager = null;
+  	this.playerId = playerId;
+	this.calltoaction_id = $("#" + playerId).attr("calltoaction-id");
+  	this.media_data = media_data;
+
+	this.cuepoints = getOvervideoInteractions(this.calltoaction_id);
+  	fplayer = this;
+  	
+	$("#"+playerId).flowplayer({
+        playlist: [
+           [
+              {mp4: fplayer.media_data}
+           ]
+        ],
+        swf: "/assets/flowplayer.swf",
+        cuepoints: fplayer.cuepoints,
+     }).bind("ready", function(e, api){
+     	//start interaction
+     	fplayer.playerManager = api;
+     	
+     }).bind("resume", function(e, api){
+     	calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
+	    calltoaction_media_priority = $("#" + player.playerId).attr("main-media");
+	
+	    if(calltoaction_media_priority == "main") {
+	
+	      updateStartVideoInteraction(calltoaction_id);
+	
+	    } else {
+			//secondary media hendler
+	    }
+     
+     }).bind("cuepoint", function(e, api, cuepoint){
+     	$scope.$apply(function(){
+     		executeInteraction(fplayer, fplayer.calltoaction_id, cuepoint.interaction);
+     	});
+     });
+     
+     this.play = function(){
+     	this.playerManager.resume();
+     };
+     
+     this.pause = function(){
+     	this.playerManager.pause();
+     };
+   
+  }
+  
+  $window.flowplayerReady = function() {
+    angular.forEach($scope.calltoactions, function(calltoaction_info) {
+      appendFlowplayerframe(calltoaction_info);
+    });
+  };
+  
+  $window.appendFlowplayerframe = function(calltoaction_info) {
+    if(calltoaction_info.calltoaction.media_type == "FLOWPLAYER") {
+      
+      player = new flowplayerPlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_data);
       calltoaction_info.calltoaction["player"] = player;
 
       $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
