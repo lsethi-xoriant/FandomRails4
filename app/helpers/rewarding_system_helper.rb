@@ -70,7 +70,6 @@ module RewardingSystemHelper
     include ActiveAttr::MassAssignment
     include ActiveAttr::AttributeDefaults
 
-    attribute :request #, type: RulesCollector
     attribute :user #, type: User
     attribute :interaction #, type: Interaction
     attribute :cta #, type: CallToAction
@@ -215,7 +214,6 @@ module RewardingSystemHelper
     end
     if user.mocked?
       Context.new(
-        request: request,
         user: user,
         user_rewards: {},
         cta: cta,
@@ -230,7 +228,6 @@ module RewardingSystemHelper
       user_reward_info = UserReward.get_rewards_info(user_interaction.user, get_current_periodicities)
       user_rewards, uncountable_user_reward_names, user_unlocked_names = get_user_reward_data(user_reward_info)
       Context.new(
-        request: request,
         user: user,
         user_rewards: user_rewards,
         cta: cta,
@@ -302,7 +299,7 @@ module RewardingSystemHelper
   end
 
   def get_all_periodicity_kinds()
-    request.site.periodicity_kinds + [PERIOD_KIND_TOTAL]
+    $site.periodicity_kinds + [PERIOD_KIND_TOTAL]
   end
   
   def get_correct_answer(user_interaction)
@@ -371,7 +368,7 @@ module RewardingSystemHelper
 
       user = user_interaction.user
       outcome.reward_name_to_counter.each do |reward_name, reward_counter|
-        assign_reward(user, reward_name, reward_counter, request.site)
+        assign_reward(user, reward_name, reward_counter, $site)
         clear_cache_reward_points(reward_name, user)
       end          
       outcome.unlocks.each do |reward_name|
