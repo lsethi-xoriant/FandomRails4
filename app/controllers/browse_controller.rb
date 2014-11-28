@@ -54,7 +54,7 @@ class BrowseController < ApplicationController
     contents = get_contents_by_category(category)
     browse_section = ContentSection.new(
       key: category.name,
-      title: category.tag_fields.find_by_name("title").value,
+      title: category.tag_fields.present? ? category.tag_fields.find_by_name("title").value : category.name,
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
       column_number: 12/6
@@ -62,8 +62,8 @@ class BrowseController < ApplicationController
   end
   
   def get_contents_by_category(category)
-    tags = get_tags_with_tag(category.name).order("tags.created_at DESC")
-    ctas = get_ctas_with_tag(category.name).order("call_to_actions.created_at DESC")
+    tags = get_tags_with_tag(category.name).sort_by { |tag| tag.created_at }
+    ctas = get_ctas_with_tag(category.name).sort_by { |cta| cta.created_at }
     contents = merge_contents(ctas, tags)
   end
 
@@ -87,9 +87,7 @@ class BrowseController < ApplicationController
   
   def view_all
     @tag = Tag.find(params[:id_cat])
-    tags = get_tags_with_tag(@tag.name).order("tags.created_at DESC")
-    ctas = get_ctas_with_tag(@tag.name).order("call_to_actions.created_at DESC")
-    @contents = merge_contents(ctas,tags)
+    @contents = get_contents_by_category(@tag)
   end
   
   def merge_contents(ctas,tags)
