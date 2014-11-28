@@ -1,5 +1,15 @@
 <div class="row header-row">
-  <div class="col-md-4 hidden-xs"><img src="<%= asset_path("coin/gift-header.png") %>"></div>
+  <div class="col-md-4 hidden-xs">
+    <div class="row">
+      <div class="col-md-7"> 
+        <img class="header__ticket-img" src="<%= asset_path("coin/coin-ticket-header.png") %>">
+      </div>
+      <div class="col-md-5 header__ticket-text-column">
+        <p class="header__ticket-title">Condividi<br>& Vinci</p>
+        <p class="header__ticket-description">fino a €500</p>
+      </div>
+    </div>
+  </div>
   <div class="col-md-4 col-xs-12 text-center"><img class="header__logo" src="<%= asset_path("coin/logo.png") %>"></div>
   <div class="col-md-4"></div>
 </div>
