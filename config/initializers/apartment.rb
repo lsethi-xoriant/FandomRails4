@@ -41,7 +41,9 @@ end
 module Fandom
   class Application < Rails::Application    
     config.middleware.use 'Apartment::Elevators::Generic', Proc.new { |request| 
-      if $site.share_db.nil?
+      if $site.nil?
+        'fandom'
+      elsif $site.share_db.nil?
         $site.id
       else
         $site.share_db

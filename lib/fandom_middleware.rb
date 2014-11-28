@@ -127,11 +127,13 @@ class FandomMiddleware
   #
 
   def handle_multi_tenancy
-    configure_view_paths_for_site($site)
-    configure_mailer_for_site($site, Devise::Mailer)
-    configure_mailer_for_site($site, SystemMailer)
-    configure_environment_for_site($site)
-    configure_omniauth_for_site($site)
+    unless $site.nil?
+      configure_view_paths_for_site($site)
+      configure_mailer_for_site($site, Devise::Mailer)
+      configure_mailer_for_site($site, SystemMailer)
+      configure_environment_for_site($site)
+      configure_omniauth_for_site($site)
+    end
   end
 
   def configure_view_paths_for_site(site)
