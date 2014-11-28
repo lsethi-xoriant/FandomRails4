@@ -16,4 +16,19 @@ module BallandoHelper
     !setting.nil? && setting.value.downcase == "si"
   end
   
+  def expire_gigya_url_cache_key
+    expire_cache_key 'gigya.url'
+  end
+  
+  def gigya_url
+    cache_short 'gigya.url' do
+      rows = Setting.where(key: 'gigya.url').select('value')
+      if rows.count > 0 && rows[0].value.strip.length > 0
+        rows[0].value
+      else
+        "http://cdn.gigya.com/js/socialize.js"
+      end
+    end
+  end
+  
 end
