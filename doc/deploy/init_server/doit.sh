@@ -44,7 +44,8 @@ apt-get install vim \
   awscli \
   cloud-utils \
   default-jdk \
-  supervisor      
+  supervisor \
+  traceroute
   
 apt-get build-dep ruby${RUBY_VERSION}
 

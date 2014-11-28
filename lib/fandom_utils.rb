@@ -5,6 +5,7 @@ module FandomUtils
   # These are mostly used by the event logging system
   def init_global_variables
     $pid = Process.pid
+    $site = nil
     $request_uri = "unknown"
     $method = "unknown"
     $http_referer = "unknown"
@@ -21,43 +22,28 @@ module FandomUtils
     $view_time = nil
   end
 
-  # Returns the Site class defined for the requested domain. 
-  # The request variable is taken by dynamic scoping, and the Site is set in the request itself.
-  def get_site_from_request!
-    site = Rails.configuration.domain_to_site[request.host]
-    def request.site=(site)
-      @site = site
-    end
-    def request.site
-      @site
-    end
-    request.site = site
-    return site
-  end
-
-  # Returns the Site class defined for the requested domain.
+  # Deprecated: tenant information can now be obtained by the global variable $site
   def get_site_from_request(request)
-    Rails.configuration.domain_to_site[request.host]
+    $site
   end
   
   # A filter that shall be included in all top-level controllers; it handles the uri hostname to site mapping,
   # showing a message to the user if the hostname has not been recognized
   def fandom_before_filter
-    site = get_site_from_request!
-    if site.nil?
+    # Deprecated: tenant information can now be obtained by the global variable $site
+    def request.site
+      $site
+    end
+  
+    if $site.nil?
       render template: 'application/url_mistyped'
       return
-    elsif not site.unbranded?
-      prepend_view_path "#{Rails.root}/site/#{site.id}/views"
-      ActionMailer::Base.prepend_view_path "#{Rails.root}/site/#{site.id}/views"
     end
-    configure_environment_for_site(site)
-    configure_omniauth_for_site(site)
-
-    unless site.enable_x_frame_options_header
+    
+    unless $site.enable_x_frame_options_header
       response.headers.except! 'X-Frame-Options'      
     end
-    if site.force_ssl
+    if $site.force_ssl
       force_ssl()
     end
 
@@ -66,7 +52,7 @@ module FandomUtils
       session.delete(:redirect_path)
       redirect_to session_redirect_path
     else
-      may_redirect_to_landing if site.force_landing
+      may_redirect_to_landing if $site.force_landing
     end
 
   end
@@ -77,20 +63,6 @@ module FandomUtils
     end
   end
 
-  def configure_environment_for_site(site)
-    ENV.update(site.environment)
-    begin
-      ENV.update(Rails.configuration.deploy_settings['development']['sites'][site.id]['environment'])
-    rescue
-      # pass
-    end
-  end
-  
-  def configure_omniauth_for_site(site)
-    # TODO: 
-  end 
-
-  
   # Can be used as a constrains in routes.rb to define site-specific routes.
   class SiteMatcher
     include FandomUtils
@@ -100,8 +72,7 @@ module FandomUtils
     end
     
     def matches?(request)
-      site = get_site_from_request(request)
-      @site_ids.include?(site.id)  
+      @site_ids.include?($site.id)  
     end
   end
   
