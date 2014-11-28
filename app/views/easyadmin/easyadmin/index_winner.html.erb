@@ -1,4 +1,4 @@
-<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "winner" } %>
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "user" } %>
  
   <div id="content">    
     
@@ -27,30 +27,31 @@
           <thead>
             <tr>
               <th>Nome</th>
-              <th>Cognome</th>
               <th>Email</th>
               <th>Premio</th>
-              <th>Giorno di vincita</th>
+              <th>Data di vincita</th>
+              <th>Giocato in data</th>
               <th>Azioni</th>
             </tr>
           </thead>
-          <% @playticket_events.each do |playticket_event| %>
+          <% @instantwin_user_interactions.each do |instantwin_user_interaction| %>
+          <% user = User.where(:id => instantwin_user_interaction.user_id).first %>
+          <% reward_id = JSON.parse(instantwin_user_interaction.aux)["reward_id"] %>
+          <% reward = Reward.where(:id => reward_id).first %>
+          <% instantwin = Instantwin.find(JSON.parse(instantwin_user_interaction.aux)["instant_win_id"]) %>
             <tr>
-              <td><%= playticket_event.user.first_name %></td>
-              <td><%= playticket_event.user.last_name %></td>
-              <td><%= playticket_event.user.email %></td>
-              <td><%= playticket_event.contest_periodicity.title %></td>
-              <td><%= playticket_event.instantwin.time_to_win_start.strftime("%d/%m/%Y") %></td>
+              <td><%= "#{user.first_name} #{user.last_name}" %></td>
+              <td><%= user.email %></td>
+              <td><%= reward.title %></td>
+              <td><%= instantwin.valid_from.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") %></td>
+              <td><%= instantwin_user_interaction.created_at.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") %></td>
+
               <td>
                 <div class="col-sm-1" style="margin: 0;">
-                  <a href="/easyadmin/user/show/<%= playticket_event.user.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+                  <a href="/easyadmin/user/show/<%= user.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
                 </div>
-
-                <div class="col-sm-2" style="margin: 0;">
-                  <a onclick="send_email_to_winner(<%= playticket_event.id %>)" href="javascript: void(0)" id="playticket-event-<%= playticket_event.id %>"><i class="fa fa-envelope" style="color: red"></i></a>
-                </div>
-                
               </td>
+
             </tr>
           <% end %>
         </table>

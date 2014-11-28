@@ -1,4 +1,6 @@
 <% if current_user %>
+  <%= render partial: "/application/instant_win_form" %>
+  
   <header class="navbar navbar-default navbar-fixed-top visible-xs" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
@@ -75,9 +77,6 @@
                 GIOCA
               </button>
             </div>
-
-
-            <%= render partial: "/application/instant_win_form" %>
 
           </div>
         </div>

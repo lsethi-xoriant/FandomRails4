@@ -14,7 +14,22 @@
   <%= stylesheet_link_tag "coin_application", :media => "all" %>
   <%= javascript_include_tag "coin_application" %>
 
-  <!--[if lte IE 9]>
+  <!--[if lt IE 10]>
+    <script type="text/javascript">
+        $('[placeholder]').focus(function() {
+          var input = $(this);
+          if (input.val() == input.attr('placeholder')) {
+            input.val('');
+            input.removeClass('placeholder');
+          }
+        }).blur(function() {
+          var input = $(this);
+          if (input.val() == '' || input.val() == input.attr('placeholder')) {
+            input.addClass('placeholder');
+            input.val(input.attr('placeholder'));
+          }
+        }).blur();
+    </script>
   <![endif]-->
 
   <%= csrf_meta_tags %>

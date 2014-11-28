@@ -14,20 +14,22 @@ class SystemMailer < ActionMailer::Base
     mail(to: user.email, subject: "Benvenuto!")
   end  
 
-  def win_mail(user, price, time_to_win)
-    @price = price
+  def win_mail(user, reward, time_to_win, request)
+    subject = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["title"]
+    @reward = reward
   	@cuser = user
   	@ticket_id = time_to_win
   	
-  	mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – Hai vinto #{ @price.title }")
+  	mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "#{subject} - #{@reward.title}")
   end
 
-  def win_admin_notice_mail(user, price, time_to_win)
-    @price = price
+  def win_admin_notice_mail(user, reward, time_to_win, request)
+    subject = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["title"]
+    @reward = reward
   	@cuser = user
   	@ticket_id = time_to_win
-  	
-  	mail(to: [ "", "maxibon@shado.tv" ], subject: "MAXIBON - PARCO DIVERTIMENTI AQUAFAN 2014 – Un utente ha vinto #{ @price.title }")
+  
+  	mail(to: [ "", "concorsi@shado.tv" ], subject: "#{subject} - #{@reward.title}")
   end
   
   def notification_mail(email, html_message, subject)
