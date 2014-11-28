@@ -212,6 +212,8 @@ class FandomMiddleware
         headers.delete 'raw-set-cookie'
       end
       [status, headers, body]
+    else
+      call_result
     end
   end
 
