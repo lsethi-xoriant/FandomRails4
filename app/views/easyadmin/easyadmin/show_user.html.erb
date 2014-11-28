@@ -1,4 +1,4 @@
-<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "winner" } %>
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "user" } %>
 
 <div id="content">   
 
@@ -45,23 +45,32 @@
       </div>
 
     </div>
-
-    <h3>Dati vincita</h3>
-    <hr>
     
-    <div class="row">
-      <div class="col-lg-4">
-          <dl class="dl-horizontal">
-            <% playticket_event = @user.playticket_event.find_by_winner("true") %>
-            <% if playticket_event %>
-              <dt>Premio</dt><dd><p><%= playticket_event.contest_periodicity.title %></p></dd>
-              <dt>Data di vincita</dt><dd><p><%= playticket_event.instantwin.time_to_win_start.strftime("%d/%m/%Y") %></p></dd>
-              <dt>Codice</dt><dd><p><%= playticket_event.instantwin.unique_id %></p></dd>
-            <% end %>
-          </dl>
-      </div>
-    </div>
+    <% user_wins_user_interactions = UserInteraction.where("cast(\"aux\"->>'instant_win_id' AS int) IS NOT NULL AND user_id = #{@user.id}").order("created_at ASC") %>
+    <% if user_wins_user_interactions.first %>
 
+		<h3>Dati vincite</h3>
+    	<hr>
+
+    	<div class="row">
+			<div class="col-md-8"> 
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Premio</th>
+							<th>Data di vincita</th>
+						</tr>
+					</thead>
+            			<% user_wins_user_interactions.each do |win| %>						<tr>
+							<td><%= Reward.where(:id => JSON.parse(win.aux)["reward_id"]).first.title %></td>
+							<td><%= win.created_at.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") %></td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		</div>
+
+	<% end %>
 
   </div>
 </div>

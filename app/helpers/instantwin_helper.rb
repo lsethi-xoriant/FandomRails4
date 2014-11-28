@@ -48,10 +48,20 @@ module InstantwinHelper
 	# interaction_id - id of interaction instantwin
 	#
 	def user_already_won(interaction_id)
-	  winner = cache_short(get_user_already_won_contest(current_user.id, interaction_id)) do
+	  user_interactions = cache_short(get_user_already_won_contest(current_user.id, interaction_id)) do
 	    UserInteraction.where("interaction_id = ? AND user_id = ? AND (aux->>'instant_win_id') IS NOT NULL", interaction_id, current_user.id).to_a
 	  end
-	  winner.count > 0
+    
+    if user_interactions.any?
+      reward_id = JSON.parse(user_interactions.first.aux)["reward_id"]
+      reward_title = Reward.find_by_id(reward_id).title
+    end
+
+	 {
+      win: user_interactions.any?,
+      message: reward_title
+    }
+
 	end
 
   def deduct_ticket(reward_name)

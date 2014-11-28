@@ -16,7 +16,11 @@ module CoinHelper
     locations = cache_short(get_coin_locations_cache_key()) do
       Setting.find_by_key("coin.locations") || CACHED_NIL
     end
-    cached_nil?(locations) ? nil : locations.value.split(",")
+    cached_nil?(locations) ? nil : locations.value.split(";")
+  end
+
+  def assignRegistrationReward()
+    assign_reward(current_user, MAIN_REWARD_NAME, 1, request.site)
   end
 
 end

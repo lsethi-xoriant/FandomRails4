@@ -27,7 +27,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   BROWSE_SETTINGS_KEY = 'browse.setting'
   RANKING_SETTINGS_KEY = 'ranking.setting'
   
-  MEDIA_TYPES = ["VOID", "IMAGE", "YOUTUBE", "IFRAME"]
+  MEDIA_TYPES = ["VOID", "IMAGE", "YOUTUBE", "KALTURA", "FLOWPLAYER", "IFRAME"]
   PERIOD_TYPES = ["GIORNALIERA", "SETTIMANALE", "MENSILE", "GLOBALE"]
   RANKING_TYPES = {"full" => "Top10", "my_position" => "La mia posizione", "trirank" => "Triclassifica", "full_compressed" => "Triclassifica (smart)"}
   RANKING_USER_FILTER = {"all" => "Tutti", "fb_friends" => "Amici di facebook"}
@@ -66,8 +66,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
   SUPERFAN_CONTEST_ACTIVE = false
   
   COIN_GIFT_500 = {"name" => "gift_card_500", "qta" => 1}
-  COIN_GIFT_100 = {"name" => "gift_card_100", "qta" =>10}
-  COIN_GIFT_50 = {"name" => "gift_card_50", "qta" =>24}
+  COIN_GIFT_100 = {"name" => "gift_card_100", "qta" => 10}
+  COIN_GIFT_50 = {"name" => "gift_card_50", "qta" => 24}
   COIN_PRIZES_LIST = [COIN_GIFT_500, COIN_GIFT_100, COIN_GIFT_50]
   COIN_CONTEST_START_DATE = "04/12/2014 11:00:00 Rome"
   COIN_CONTEST_END_DATE = "07/01/2015 17:00:00 Rome"
@@ -75,7 +75,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   REGEX_SPECIAL_CHARS = ["\\", "^", "$", ".", "|", "?", "*", "+", "(", ")", "[", "{"]
 
   MD5_FANDOM_PREFIX = "f4nd0m"
-
+  
   class CachedNil
   end
 

@@ -10,11 +10,11 @@
       </div>
       <img id="secondary-media-image-{{calltoaction_info.calltoaction.id}}" class="secondary-media" style="width: 100%;">
     </div>
-    <!-- MAIN MEDIA YOUTUBE -->
-    <div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE'" id="main-media-{{calltoaction_info.calltoaction.id}}">
+    <!-- MAIN MEDIA -->
+    <div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA' || calltoaction_info.calltoaction.media_type == 'FLOWPLAYER'" id="main-media-{{calltoaction_info.calltoaction.id}}">
       <div class="video flex-video widescreen media-youtube" style="background:#222;">             
         <!-- IFRAME VIDEO -->
-        <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}"></div>
+        <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" style="height: 350px; width: 450px;"></div>
 
         <!-- OVERVIDEO AREA -->
         <div ng-if="overvideoInteractionsPresent(calltoaction_info.calltoaction.id)" id="overvideo-calltoaction-{{calltoaction_info.calltoaction.id}}">
@@ -27,6 +27,7 @@
 
       </div>
     </div>
+
     <!-- MAIN MEDIA IMAGE -->
     <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
       <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">

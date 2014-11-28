@@ -3,6 +3,7 @@
 //= require jquery-ui-1.10.4.custom
 //= require angular
 //= require angular-resource
+//= require angular-sanitize
 //= require angular-route
 //= require angularjs/ng-table
 //= require angularjs/fandom
@@ -18,3 +19,4 @@
 //= require bootstrap-fileupload
 //= require jquery.jplayer
 //= require fandom-utils
+//= require flowplayer.min

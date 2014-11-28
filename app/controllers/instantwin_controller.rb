@@ -27,14 +27,16 @@ class InstantwinController < ApplicationController
 
     if current_user
       interaction = Interaction.find(params[:interaction_id])
-      if has_tickets(interaction.id) && !user_already_won(interaction.id)
+      if has_tickets(interaction.id) && !user_already_won(interaction.id)[:win]
         time = Time.now.utc
         instantwin, prize  = check_win(interaction, time)
         if instantwin.nil?
-          response['message'] = "Peccato non hai vinto. Ritenta!"
+          response[:win] = false
+          response['message'] = "Non hai vinto, gioca ancora."
           aux = {"instant_win_id" => nil, "reward_id" => nil}
         else
-          response['message'] = "Complimenti hai vinto! #{prize.title}"
+          response[:win] = true
+          response['message'] = prize.title
           aux = {"instant_win_id" => instantwin.id, "reward_id" => prize.id}
           send_winner_email(JSON.parse(instantwin.reward_info)['prize_code'],prize)
           expire_cache_key(get_user_already_won_contest(current_user.id, interaction.id))
@@ -46,11 +48,15 @@ class InstantwinController < ApplicationController
         
       elsif !has_tickets(interaction.id)
         response['message'] = "Hai esaurito i biglietti"
+        response[:win] = false
       else
         response['message'] = "Hai già vinto un premio"
+        response[:win] = false
       end 
       
     end
+
+    response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
     
     respond_to do |format|
       format.json { render :json => response.to_json }
@@ -70,8 +76,8 @@ class InstantwinController < ApplicationController
   end
 
   def send_winner_email(time_to_win, price)
-    SystemMailer.win_mail(current_user, price, time_to_win).deliver
-    SystemMailer.win_admin_notice_mail(current_user, price, time_to_win).deliver
+    SystemMailer.win_mail(current_user, price, time_to_win, request).deliver
+    SystemMailer.win_admin_notice_mail(current_user, price, time_to_win, request).deliver
   end
 
 end

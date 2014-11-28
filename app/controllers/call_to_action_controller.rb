@@ -439,7 +439,7 @@ class CallToActionController < ApplicationController
 
     elsif interaction.resource_type.downcase == "share"
       provider = params[:provider]
-      result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address])
+      result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address], params[:facebook_message])
       if result
         aux = { "#{provider}" => 1 }
         user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
@@ -494,6 +494,8 @@ class CallToActionController < ApplicationController
       response = setup_update_interaction_response_info(response)
     end    
     
+    response["interaction_status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
+
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
@@ -582,7 +584,7 @@ class CallToActionController < ApplicationController
     response
   end
 
-  def update_share_interaction(interaction, provider, address)
+  def update_share_interaction(interaction, provider, address, facebook_message = " ")
     # When this function is called, there is a current user with the current provider anchor
     provider_json = JSON.parse(interaction.resource.providers)[provider]
     result = true
@@ -591,10 +593,10 @@ class CallToActionController < ApplicationController
 
       begin
         if Rails.env == "production"
-          current_user.facebook(request.site.id).put_wall_post(" ", 
+          current_user.facebook(request.site.id).put_wall_post(facebook_message, 
             { name: provider_json["message"], description: provider_json["description"], link: provider_json["link"], picture: "#{interaction.resource.picture.url}" })
         else
-          current_user.facebook(request.site.id).put_wall_post(" ", 
+          current_user.facebook(request.site.id).put_wall_post(facebook_message, 
             { name: provider_json["message"], description: provider_json["description"], link: "http://entertainment.shado.tv/" })
         end  
       rescue Exception => exception
@@ -622,7 +624,7 @@ class CallToActionController < ApplicationController
         SystemMailer.share_interaction(current_user, address, interaction.call_to_action).deliver
       else
         result = false
-        error = "invalid format"
+        error = "Formato non valido"
       end
 
     else

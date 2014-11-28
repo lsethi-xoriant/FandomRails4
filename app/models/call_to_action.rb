@@ -7,13 +7,13 @@ class CallToAction < ActiveRecord::Base
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
   					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required,
             :privacy_required, :privacy, :button_label, :alternative_description, :enable_for_current_user,
-            :valid_from, :valid_to
+            :valid_from, :valid_to, :shop_url
 
   extend FriendlyId
   friendly_id :title, use: :slugged
 
   attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required,
-            :button_label, :alternative_description, :enable_for_current_user
+            :button_label, :alternative_description, :enable_for_current_user, :shop_url
 
   validates_presence_of :title
   validates_presence_of :name
@@ -21,7 +21,7 @@ class CallToAction < ActiveRecord::Base
   validates_presence_of :media_image, if: Proc.new { |c| user_id.present? }
   validates_associated :releasing_file, if: Proc.new { |c| release_required }
   validate :interaction_resource
-  validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" }
+  validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" || media_type == "KALTURA" || media_type == "FLOWPLAYER" }
   validates_associated :interactions
   validates :privacy, :acceptance => { :accept => true }, if: Proc.new { |c| privacy_required }
 
@@ -136,7 +136,8 @@ class CallToAction < ActiveRecord::Base
     write_attribute :aux, { 
         button_label: button_label, 
         alternative_description: alternative_description,
-        enable_for_current_user: enable_for_current_user
+        enable_for_current_user: enable_for_current_user,
+        shop_url: shop_url
       }.to_json
   end
 
