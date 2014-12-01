@@ -114,8 +114,8 @@
 
 <script type="text/javascript">
   $( document ).ready(function() {
-    $("#privacy-<%= resource.privacy || false %>").prop("checked", true)
-    $("#newsletter-<%= resource.newsletter || false %>").prop("checked", true)
+    $("#privacy-<%= resource.privacy %>").prop("checked", true)
+    $("#newsletter-<%= resource.newsletter %>").prop("checked", true)
   });
 </script>
 
