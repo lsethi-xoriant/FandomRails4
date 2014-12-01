@@ -6,8 +6,14 @@ class Sites::Coin::RegistrationsController < RegistrationsController
   include CoinHelper
 
   def create
-    params[:user][:privacy] = params[:user][:privacy] == "true"
-    params[:user][:newsletter] = params[:user][:newsletter] == "true"
+    if !params[:user][:privacy].nil?
+      params[:user][:privacy] = params[:user][:privacy] == "true"
+    end
+
+    if !params[:user][:newsletter].nil?
+      params[:user][:newsletter] = params[:user][:newsletter] == "true"
+    end
+
     super
   end
 
