@@ -41,16 +41,22 @@ module ApplicationHelper
   end
 
   def user_for_registation_form()
+    if current_user.aux
+      aux = JSON.parse(current_user.aux)
+      contest = aux[:contest]
+      role = aux[:role]
+    end
+
     {
-      "first_name" => current_user.first_name,
-      "last_name" => current_user.last_name,
-      "email" => current_user.email,
       "day_of_birth" => current_user.day_of_birth,
       "month_of_birth" => current_user.month_of_birth,
       "year_of_birth" => current_user.year_of_birth,
-      "province" => current_user.province,
       "gender" => current_user.gender,
-      "location" => current_user.location
+      "location" => current_user.location,
+      "aux" => { 
+        "contest" => contest,
+        "terms" => role
+      }
     }
   end
 

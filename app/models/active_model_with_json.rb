@@ -3,5 +3,9 @@ class ActiveModelWithJSON
   include ActiveModel::Validations
   include ActiveModel::Conversion
   extend ActiveModelOrRecordWithJSONUtils
+
+  def initialize(attributes)
+    @attributes = attributes
+  end
   
 end

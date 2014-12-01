@@ -2,8 +2,30 @@
 <html>
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      body {
+        font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
+      }
+
+      .bold {
+        font-weight: 700;
+      }
+
+      .img-center {
+        margin-left: auto; margin-right: auto;
+      }
+    </style>
   </head>
   <body>
-    <p>TODO</p>
+    <div>
+      <img class="img-center" src="https://s3-eu-west-1.amazonaws.com/coin.live.fandomlab.com/newsletters_assets/logo.png">
+      <p class="bold">Complimenti!</p>
+      <p>Hai vinto una <%= @reward.title %>!</p>
+      <p>Hai scelto di spendere la tua Gift Card su <%= @cuser.location %>.</p>
+      <p>Hai 10 giorni di tempo per accettare il premio e confermare il negozio prescelto in fase di registrazione.</p>
+      <p>Per farlo ti basterà rispondere a questa mail inviandoci la liberatoria firmata, unitamente alla scansione di un tuo valido documento d'identità.</p>
+      <p>Ricevuta la liberatoria e la scansione di un tuo documento valido di identità, provvederemo ad inviarti via email un codice sconto, del valore corrispondente all'importo della Gift Card vinta.</p>
+    </div>
   </body>
 </html>

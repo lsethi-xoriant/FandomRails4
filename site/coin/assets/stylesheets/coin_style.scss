@@ -26,6 +26,15 @@ body {
   box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
 }
 
+.instant-win__shop-label {
+}
+
+.instant-win__terms-a {
+  font-weight: 400;
+  color: #000;
+  text-decoration: underline;
+}
+
 /********************* HEADER *********************/
 
 .header-row {
@@ -1088,29 +1097,3 @@ fieldset[disabled] .btn-facebook.active {
   }
 
 }
-
-.call-to-action__media {
-   -webkit-transition: opacity 1s ease-in-out;
-  -moz-transition: opacity 1s ease-in-out;
-  -o-transition: opacity 1s ease-in-out;
-  transition: opacity 1s ease-in-out;
-}
-
-@keyframes ease-in-out {
-  0% {
-    opacity:1;
-  }
-  17% {
-    opacity:1;
-  }
-  25% {
-    opacity:0;
-  }
-  92% {
-    opacity:0;
-  }
-  100% {
-    opacity:1;
-  }
-}
-
