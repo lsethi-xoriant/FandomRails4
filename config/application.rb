@@ -126,6 +126,28 @@ module Fandom
     
     config.active_record.schema_format = :sql
 
+    class MailLogger
+      def info(msg)
+        debugger
+        log_info('email sent', { data: msg.strip })
+      end
+      def error(msg)
+        debugger
+        log_error('email sent', { data: msg.strip })
+      end
+      def debug(msg)
+        debugger
+      end
+      def fatal(msg)
+        debugger
+        log_error('email sent', { data: msg.strip })
+      end
+      def log(msg)
+        debugger
+        log_info('email sent', { data: msg.strip })
+      end
+    end
+    config.action_mailer.logger = MailLogger.new
     config.action_mailer.perform_deliveries = false
     config.action_mailer.raise_delivery_errors = true
 
