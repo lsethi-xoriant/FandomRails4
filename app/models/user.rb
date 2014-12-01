@@ -12,7 +12,7 @@ class User < ActiveRecordWithJSON
     :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url,
     :major_date, :gender, :aux
 
-  json_attributes [[:aux, UserAux]]
+  json_attributes [[:aux, EmptyAux]]
 
   attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :required_attrs, :major_date
 
