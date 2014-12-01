@@ -70,15 +70,18 @@ def main
 end
 
 def db_connect(config)
-  pg_config = { 
-    host: config['host'],
-    dbname: config['database']
+  field_map = {
+    host: 'host',
+    dbname: 'database',
+    user: 'username',
+    password: 'password',
+    port: 'port'
   }
-  unless config['username'].nil?
-    pg_config['user'] = config['username']
-  end
-  unless config['password'].nil?
-    pg_config['password'] = config['password']
+  pg_config = {}
+  field_map.each do |k, v|
+    if config.key? v
+      pg_config[k] = config[v]
+    end
   end
   PG::Connection.new(pg_config)
 end
