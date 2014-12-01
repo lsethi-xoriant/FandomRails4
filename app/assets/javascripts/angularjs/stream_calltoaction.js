@@ -76,6 +76,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $scope.nextRandomCallToAction = function(except_calltoaction_id) {
+    update_ga_event("UpdateCallToAction", "nextRandom", "nextRandom", 1);
     $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
       .success(function(data) { 
 
