@@ -30,6 +30,9 @@ class Sites::Coin::ApplicationController < ApplicationController
     }
   end
 
+  def show_stores
+  end
+
   def registration_fully_completed?
     if current_user.aux.present?
       aux = JSON.parse(current_user.aux)
