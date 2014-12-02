@@ -49,6 +49,7 @@ class SessionsController < Devise::SessionsController
   def create_from_oauth
     user, from_registration = not_logged_from_omniauth(env["omniauth.auth"], params[:provider])
     if user.errors.any?
+      user.privacy = nil
       redirect_to_registration_page(user)
     else
       sign_in(user)

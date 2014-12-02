@@ -13,7 +13,7 @@
             <form class="form-horizontal" onsubmit="return false;" ng-submit="processRegistrationForm()" method="post" action="" accept-charset="UTF-8">
               <div ng-if="form_data.current_user.errors" class="row">
                 <div class="col-md-12">
-                  <ul>
+                  <ul class="list-unstyled form-error">
                     <p>Errori nell'inserimento dei dati:</p>
                     <li ng-repeat="error in form_data.current_user.errors">{{error}}</li>
                   </ul>
