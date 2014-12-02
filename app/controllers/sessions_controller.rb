@@ -56,6 +56,7 @@ class SessionsController < Devise::SessionsController
       fandom_play_login(user)
     
       setUpAccount()
+      log_audit("registration from oauth", { 'form_data' => env["omniauth.auth"], 'user_id' => current_user.id })
 
       cookies[:from_registration] = true if from_registration
     

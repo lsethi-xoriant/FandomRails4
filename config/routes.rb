@@ -14,6 +14,7 @@ Fandom::Application.routes.draw do
         root :to => "application#index"
         match '/privacy_policy', :to => 'application#show_privacy_policy'
         match '/stores', :to => 'application#show_stores'
+        match "profile/complete_for_contest", :to => "application#complete_for_contest", defaults: { format: 'json' }
         devise_scope :user do
           post "/users", :to => "registrations#create"
           match 'auth/:provider/callback', :to => 'sessions#create'
