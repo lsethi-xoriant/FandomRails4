@@ -25,6 +25,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     if($scope.aux.from_registration) {
       $("#registration-modal").modal("show");
+      ga('send', 'event', "Registration", "Registration", "Registration", 1, true);
     }
 
     initAnonymousUser();
