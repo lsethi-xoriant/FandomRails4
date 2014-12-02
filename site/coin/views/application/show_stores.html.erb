@@ -13,7 +13,9 @@
               <div class="col-md-10 col-md-offset-1 privacy-policy__text">
                 <ol>
                   <% storeLocations().each do |store| %>
-                    <li><%= store %></li>
+                    <% unless store.include?("http://www.coincasa.it/")%>
+                      <li><%= store %></li>
+                    <% end %>
                   <% end %>
                 </ol>
               </div>
