@@ -19,19 +19,21 @@
 
   <!--[if lt IE 10]>
     <script type="text/javascript">
-        $('[placeholder]').focus(function() {
-          var input = $(this);
-          if (input.val() == input.attr('placeholder')) {
-            input.val('');
-            input.removeClass('placeholder');
-          }
-        }).blur(function() {
-          var input = $(this);
-          if (input.val() == '' || input.val() == input.attr('placeholder')) {
-            input.addClass('placeholder');
-            input.val(input.attr('placeholder'));
-          }
-        }).blur();
+        $(document).ready(function() {
+          $('[placeholder]').focus(function() {
+            var input = $(this);
+            if (input.val() == input.attr('placeholder')) {
+              input.val('');
+              input.removeClass('placeholder');
+            }
+          }).blur(function() {
+            var input = $(this);
+            if (input.val() == '' || input.val() == input.attr('placeholder')) {
+              input.addClass('placeholder');
+              input.val(input.attr('placeholder'));
+            }
+          }).blur();
+        });
     </script>
   <![endif]-->
 
@@ -48,9 +50,7 @@
   <%= render partial: "/application/registration-modal" %>
   <%= render partial: "/application/terms-modal" %>
 
-  <div class="container">
-    <%#= render partial: "/application/footer" %>
-  </div>
+  <%#= render partial: "/application/footer" %>
 
 </body>
 </html>
