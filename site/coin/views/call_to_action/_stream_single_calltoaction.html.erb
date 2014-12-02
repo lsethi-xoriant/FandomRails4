@@ -24,8 +24,11 @@
     <div class="row call-to-action__share-and-win">
       <div class="col-sm-8 col-xs-5">
         <img class="call-to-action__share-and-win__ticket-img hidden-xs" src="<%= asset_path("coin/coin-ticket.png") %>">
-        <p class="call-to-action__share-and-win__title">Condividi e vinci <span class="hidden-xs">subito</span></p>
-        <p class="call-to-action__share-and-win__description hidden-xs">Condividi ogni giorno e ottieni +1 biglietto per vincere 35 Gift Card Coin</p>
+        <p ng-if="!aux.share_interaction_daily_done" class="call-to-action__share-and-win__title hidden-xs">Condividi e vinci subito</p>
+        <p ng-if="aux.share_interaction_daily_done" class="call-to-action__share-and-win__title hidden-xs">Hai ottenuto +1 biglietto</p>
+        <p ng-if="!aux.share_interaction_daily_done" class="call-to-action__share-and-win__description hidden-xs">Puoi giocare una volta al giorno. Invita i tuoi amici a giocare per guadagnare un'opportunità in più di vincere.</p>
+        <p ng-if="aux.share_interaction_daily_done" class="call-to-action__share-and-win__description hidden-xs">Hai già fatto la prima condivisione del giorno. Per ottenere altri biglietti torna domani.</p>
+        <p class="call-to-action__share-and-win__title visible-xs">Condividi e vinci!</p>
       </div>
       <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
         <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
