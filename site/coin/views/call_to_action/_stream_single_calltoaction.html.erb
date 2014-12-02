@@ -24,7 +24,7 @@
     <div class="row call-to-action__share-and-win">
       <div class="col-sm-8 col-xs-5">
         <img class="call-to-action__share-and-win__ticket-img hidden-xs" src="<%= asset_path("coin/coin-ticket.png") %>">
-        <p class="call-to-action__share-and-win__title">Condividi e vinci subito</p>
+        <p class="call-to-action__share-and-win__title">Condividi e vinci <span class="hidden-xs">subito</span></p>
         <p class="call-to-action__share-and-win__description hidden-xs">Condividi ogni giorno e ottieni +1 biglietto per vincere 35 Gift Card Coin</p>
       </div>
       <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
@@ -40,7 +40,7 @@
 
   <div class="panel-footer call-to-action__footer">  
     <div class="row text-center">
-      <div class="col-sm-6 col-md-offset-3">
+      <div class="col-sm-6 col-sm-offset-3">
         <button class="btn btn-primary btn-block call-to-action__button__inspire" ng-click="nextRandomCallToAction(calltoaction_info.calltoaction.id)">
           <div class="row">
             <div class="col-sm-12">
