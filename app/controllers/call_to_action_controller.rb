@@ -590,7 +590,6 @@ class CallToActionController < ApplicationController
     result = true
 
     if provider == "facebook"
-
       begin
         link = provider_json["link"].present? ? provider_json["link"] : "#{root_url}?calltoaction_id=#{interaction.call_to_action_id}"
         current_user.facebook(request.site.id).put_wall_post(facebook_message, 
