@@ -86,7 +86,7 @@ cp etc/logrotate-rails /etc/logrotate.d/rails
 # 
 
 cp etc/supervisor/supervisord.conf /etc/supervisor
-cp etc/supervisor/log_daemon.conf /etc/supervisor/conf
+cp etc/supervisor/log_daemon.conf /etc/supervisor/conf.d
 service supervisor restart
 
 #
