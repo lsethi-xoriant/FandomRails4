@@ -29,3 +29,9 @@
     </div>
   </div>
 </div>
+
+<% unless cookies[:user_cookies] %>
+  <div id="cookies-bar" class="navbar navbar-fixed-bottom" style="background: rgba(210, 16, 32, 0.6); color: #fff; min-height: 0;">
+    <p style="line-height: 40px; padding: 0 0 0 10px; margin: 0;">LOREM IPSUM LOREM IPSUM LOREM IPSUM LOREM IPSUM <a href="javascript: void(0)" ng-click="acceptCookies()">LOREM IPSUM</a></p>
+  </div>
+<% end %>

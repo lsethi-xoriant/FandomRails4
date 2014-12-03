@@ -76,6 +76,8 @@ Fandom::Application.routes.draw do
     match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
   end
 
+  match "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
+
   match "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
 
   match "/file_upload_too_large", to: "application#file_upload_too_large"
