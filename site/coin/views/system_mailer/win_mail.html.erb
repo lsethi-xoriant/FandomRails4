@@ -3,188 +3,37 @@
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900' rel='stylesheet' type='text/css'>
-    <style type="text/css">
-      body {
-        font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
-        background: #857e6b;
-      }
-
-      .footer_1 {
-        margin-bottom: 15px;
-      }
-
-      .logo {
-        max-width: 600px;
-        margin-top: -6px;
-        margin-bottom: -4px;
-        width: 100%;
-      }
-
-      .no-decoration {
-        text-decoration: none;
-      }
-
-      .line {
-        margin-top: 15px;
-        margin-bottom: 15px; 
-        height: 1px; 
-        border-top: 1px solid #ccc;
-      }
-
-      .bold {
-        font-weight: 700;
-      }
-
-      .custom-a {
-        color: #000;
-      }
-
-      .congratulation {
-        font-weight: 700;
-        color: #d21020;
-      }
-
-      .text-center {
-        text-align: center;
-      }
-
-      .container {
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .panel {
-        font-size: 14px;
-        padding: 15px;
-        margin: 0 5px;
-        background: #fff;
-        border-radius: 5px;
-      }
-
-      .shadow {
-        -webkit-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
-        -moz-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
-        box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
-      }
-
-      .btn {  
-        display: inline-block;  
-        padding: 6px 12px;  
-        margin-bottom: 15px; 
-        margin-top: 15px; 
-        font-size: 14px;  
-        font-weight: normal;  
-        line-height: 1.428571429;  
-        text-align: center;  
-        white-space: nowrap;  
-        vertical-align: middle;  
-        cursor: pointer;  
-        background-image: none;  
-        border: 1px solid transparent;  
-        border-radius: 4px;  
-        text-decoration: none;
-        -webkit-user-select: none;  
-        -moz-user-select: none;  
-        -ms-user-select: none;  
-        -o-user-select: none;  
-        user-select: none;  
-      }  
-
-      .btn-primary { 
-        color: #ffffff; 
-        background: #BF0C19;
-        background: -webkit-linear-gradient(#e73141, #BF0C19);
-        background: -o-linear-gradient(#e73141, #BF0C19);
-        background: -moz-linear-gradient(#e73141, #BF0C19);
-        background: linear-gradient(#e73141, #BF0C19);
-        border-color: #5e0409; 
-        -webkit-box-shadow: 0px 3px 0px 0px #5e0409;
-        -moz-box-shadow: 0px 3px 0px 0px #5e0409;
-        box-shadow: 0px 3px 0px 0px #5e0409;
-      } 
-       
-      .btn-primary:hover, 
-      .btn-primary:focus, 
-      .btn-primary:active, 
-      .btn-primary.active, 
-      .open .dropdown-toggle.btn-primary { 
-        color: #ffffff; 
-        background: #DB232F; 
-        border-color: #88060f; 
-      } 
-       
-      .btn-primary:active, 
-      .btn-primary.active, 
-      .open .dropdown-toggle.btn-primary { 
-        background-image: none; 
-      } 
-       
-      .btn-primary.disabled, 
-      .btn-primary[disabled], 
-      fieldset[disabled] .btn-primary, 
-      .btn-primary.disabled:hover, 
-      .btn-primary[disabled]:hover, 
-      fieldset[disabled] .btn-primary:hover, 
-      .btn-primary.disabled:focus, 
-      .btn-primary[disabled]:focus, 
-      fieldset[disabled] .btn-primary:focus, 
-      .btn-primary.disabled:active, 
-      .btn-primary[disabled]:active, 
-      fieldset[disabled] .btn-primary:active, 
-      .btn-primary.disabled.active, 
-      .btn-primary[disabled].active, 
-      fieldset[disabled] .btn-primary.active { 
-        background: #BF0C19; 
-        border-color: #88060f;
-      } 
-
-      .btn-primary:active, 
-      .btn-primary.active, 
-      .open .dropdown-toggle.btn-primary { 
-        position: relative;
-        top: 3px;
-        box-shadow: none;
-      } 
-
-      @media (max-width: 400px) {
-        .panel {
-          font-size: 12px;
-        } 
-      }
-
-    </style>
   </head>
-  <body>
+  <body style="font-family: 'Source Sans Pro', helvetica, arial, sans-serif; background: #857e6b;">
     <div>
-      <div class="container">
-        <div class="text-center">
-          <img class="logo" src="https://s3-eu-west-1.amazonaws.com/coin.live.fandomlab.com/newsletters_assets/logo.jpg">
+      <div style="max-width: 600px; margin-left: auto; margin-right: auto;">
+        <div style="text-align: center;">
+          <img style="max-width: 600px; margin-top: -6px; margin-bottom: -4px; width: 100%;" src="https://s3-eu-west-1.amazonaws.com/coin.live.fandomlab.com/newsletters_assets/logo.jpg">
         </div>
-        <div class="panel shadow">
-          <% if @cuser.location.include?("http://www.coincasa.it/")%>       
-            <p><span class="congratulation">Complimenti!</span></p>
-            <p>Hai vinto una <span class="bold"><%= @reward.title %></span>!</p>
+        <div style="font-size: 14px; padding: 15px; margin: 0 5px; background: #fff; border-radius: 5px; -webkit-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5); -moz-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5); box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);">
+          <% if @cuser.location.include?("http://www.coincasa.it/") %>       
+            <p><span style="font-weight: 700; color: #d21020;">Complimenti!</span></p>
+            <p>Hai vinto una <span style="font-weight: 700;"><%= @reward.title %></span>!</p>
             <p>Hai scelto di spendere la tua Giftcard su e-boutique Coincasa.it.</p>
-            <p>Hai <span class="bold">10 giorni di tempo</span> per accettare il premio e confermare il negozio prescelto in fase di registrazione.</p>
-            <p>Per farlo ti basterà rispondere a questa mail inviandoci la <span class="bold">liberatoria firmata</span>, unitamente alla scansione di un tuo valido <span class="bold">documento d'identità</span>.</p>
+            <p>Hai <span style="font-weight: 700;">10 giorni di tempo</span> per accettare il premio e confermare il negozio prescelto in fase di registrazione.</p>
+            <p>Per farlo ti basterà rispondere a questa mail inviandoci la <span style="font-weight: 700;">liberatoria firmata</span>, unitamente alla scansione di un tuo valido <span style="font-weight: 700;">documento d'identità</span>.</p>
             <p>Ricevuta la liberatoria e la scansione di un tuo documento valido di identità, provvederemo ad inviarti via email un codice sconto, del valore corrispondente all'importo della Giftcard vinta.</p>
-            <div class="text-center">
-              <a target="_blank" class="btn btn-primary" href="http://coin.live.fandomlab.com.s3.amazonaws.com/terms/liberatoria.pdf">SCARICA QUI LA LIBERATORIA</a>
+            <div style="text-align: center;">
+              <a target="_blank" style="display: inline-block; padding: 6px 12px; margin-bottom: 15px; margin-top: 15px; font-size: 14px; font-weight: normal; line-height: 1.428571429; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; background-image: none; border: 1px solid transparent; border-radius: 4px; text-decoration: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none; color: #ffffff; background: #BF0C19; background: -webkit-linear-gradient(#e73141, #BF0C19); background: -o-linear-gradient(#e73141, #BF0C19); background: -moz-linear-gradient(#e73141, #BF0C19); background: linear-gradient(#e73141, #BF0C19); border-color: #5e0409; -webkit-box-shadow: 0px 3px 0px 0px #5e0409; -moz-box-shadow: 0px 3px 0px 0px #5e0409; box-shadow: 0px 3px 0px 0px #5e0409;" href="http://coin.live.fandomlab.com.s3.amazonaws.com/terms/liberatoria.pdf">SCARICA QUI LA LIBERATORIA</a>
             </div>
           <% else %>
             <p><span class="congratulation">Complimenti!</span></p>
-            <p>Hai vinto una <span class="bold"><%= @reward.title %></span>!</p>
+            <p>Hai vinto una <span style="font-weight: 700;"><%= @reward.title %></span>!</p>
             <p>Hai scelto di spendere la tua Giftcard nel negozio Coin di <%= @cuser.location %>.</p>
-            <p>Hai <span class="bold">10 giorni di tempo</span> per accettare il premio e confermare il negozio prescelto in fase di registrazione.</p>
-            <p>Per farlo ti basterà rispondere a questa mail confermando la tua scelta o indicandoci il nuovo negozio Coin in cui spendere la tua Giftcard vinta tra quelli presenti <a target="_blank" class="custom-a bold" href="http://concorsi.coin.it/stores">in questa lista</a>.</p>
+            <p>Hai <span style="font-weight: 700;">10 giorni di tempo</span> per accettare il premio e confermare il negozio prescelto in fase di registrazione.</p>
+            <p>Per farlo ti basterà rispondere a questa mail confermando la tua scelta o indicandoci il nuovo negozio Coin in cui spendere la tua Giftcard vinta tra quelli presenti <a target="_blank" style="color: #000;" style="font-weight: 700;" href="http://concorsi.coin.it/stores">in questa lista</a>.</p>
             <p>Ricevuta una tua conferma, provvederemo ad inviarti la liberatoria valida per il ritiro della Giftcard; dovrai consegnarla in negozio, unitamente ad un tuo documento di identità valido.</p>
           <% end %>
-          <div class="line"></div>
-          <div class="text-center footer_1">
-            <a class="custom-a no-decoration" target="_blank" href="http://www.coin.it/contacts">SERVIZIO CLIENTI</a> | <a class="custom-a no-decoration" target="_blank" href="http://concorsi.coin.it/privacy_policy">PRIVACY</a> | <a class="custom-a no-decoration" target="_blank" href="https://s3-eu-west-1.amazonaws.com/coin.live.fandomlab.com/terms/regolamento.pdf">REGOLAMENTO</a>
+          <div style="margin-top: 15px; margin-bottom: 15px; height: 1px; border-top: 1px solid #ccc;"></div>
+          <div style="margin-bottom: 15px; text-align: center;">
+            <a style="text-decoration: none; color: #000;" target="_blank" href="http://www.coin.it/contacts">SERVIZIO CLIENTI</a> | <a style="text-decoration: none; color: #000;" target="_blank" href="http://concorsi.coin.it/privacy_policy">PRIVACY</a> | <a style="text-decoration: none; color: #000;" target="_blank" href="https://s3-eu-west-1.amazonaws.com/coin.live.fandomlab.com/terms/regolamento.pdf">REGOLAMENTO</a>
           </div> 
-          <div class="text-center footer_2">
+          <div style="text-align: center;">
             <a target="_blank" href="https://www.facebook.com/coinstore"><img src="http://coin.live.fandomlab.com.s3.amazonaws.com/newsletters_assets/facebook.png"></a>
             <a target="_blank" href="https://twitter.com/coinstore"><img src="http://coin.live.fandomlab.com.s3.amazonaws.com/newsletters_assets/twitter.png"></a>
             <a target="_blank" href="https://www.youtube.com/user/CoinVideo"><img src="http://coin.live.fandomlab.com.s3.amazonaws.com/newsletters_assets/youtube.png"></a>

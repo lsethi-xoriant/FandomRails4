@@ -713,7 +713,7 @@ module ApplicationHelper
           last_name: auth.info.last_name,
           email: auth.info.email,
           avatar_selected: provider,
-          privacy: true
+          privacy: nil # TODO: TENANT
           )
         from_registration = true
       else
