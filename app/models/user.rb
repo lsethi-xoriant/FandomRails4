@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class User < ActiveRecord::Base
+class User < ActiveRecordWithJSON
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -10,7 +10,9 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
     :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url,
-    :major_date, :gender
+    :major_date, :gender, :aux
+
+  json_attributes [[:aux, EmptyAux]]
 
   attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :required_attrs, :major_date
 
@@ -47,14 +49,20 @@ class User < ActiveRecord::Base
   def set_attrs
     if !day_of_birth.present? && birth_date
       self.day_of_birth = birth_date.strftime("%d")
+    else
+      self.day_of_birth = ""
     end
 
     if !month_of_birth.present? && birth_date
       self.month_of_birth = birth_date.strftime("%m")
+    else
+      self.month_of_birth = ""
     end
 
     if !year_of_birth.present? && birth_date
       self.year_of_birth = birth_date.strftime("%Y")
+    else
+      self.year_of_birth = ""
     end
   end
 

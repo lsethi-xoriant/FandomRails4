@@ -7,6 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 
+  <meta property="og:title" content="Coin Gift Machine" />
+  <meta property="og:description" content="" />
+
   <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
   
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900' rel='stylesheet' type='text/css'>
@@ -16,19 +19,21 @@
 
   <!--[if lt IE 10]>
     <script type="text/javascript">
-        $('[placeholder]').focus(function() {
-          var input = $(this);
-          if (input.val() == input.attr('placeholder')) {
-            input.val('');
-            input.removeClass('placeholder');
-          }
-        }).blur(function() {
-          var input = $(this);
-          if (input.val() == '' || input.val() == input.attr('placeholder')) {
-            input.addClass('placeholder');
-            input.val(input.attr('placeholder'));
-          }
-        }).blur();
+        $(document).ready(function() {
+          $('[placeholder]').focus(function() {
+            var input = $(this);
+            if (input.val() == input.attr('placeholder')) {
+              input.val('');
+              input.removeClass('placeholder');
+            }
+          }).blur(function() {
+            var input = $(this);
+            if (input.val() == '' || input.val() == input.attr('placeholder')) {
+              input.addClass('placeholder');
+              input.val(input.attr('placeholder'));
+            }
+          }).blur();
+        });
     </script>
   <![endif]-->
 
@@ -43,6 +48,9 @@
 
   <%= render partial: "/application/ga" %>
   <%= render partial: "/application/registration-modal" %>
+  <%= render partial: "/application/terms-modal" %>
+
+  <%#= render partial: "/application/footer" %>
 
 </body>
 </html>

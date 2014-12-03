@@ -6,25 +6,36 @@ require 'set'
 SOURCE_DB_EVENT_CHUNK_SIZE = 10000
 DEST_DB_INSERT_CHUNK_SIZE = 1000
 
+def help_and_die
+  puts <<-EOF
+    Usage: #{$0} <source_environment> <dest_environment> <rails_project_root> <events_up_to>
+      <events_up_to> determines the moment up to which events are processed; possible values are: yesterday|now
+    EOF
+  exit
+end  
 
 def main
-  if ARGV.size != 3
-    puts <<-EOF
-      Usage: #{$0} <source_environment> <dest_environment> <rails_project_root>
-        <tenant> is the database schema that will be used for the current job.
-      EOF
-    exit
+  if ARGV.size != 4
+    help_and_die
   end
 
   source_environment = ARGV[0]
   dest_environment = ARGV[1]
   rails_project_root = ARGV[2]
+  events_up_to = ARGV[3]
+
+  case events_up_to
+  when 'yesterday'
+    max_timestamp = Date.today.strftime("%Y-%m-%d %H:%M:%S")
+  when 'now'
+    max_timestamp = Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")
+  else
+    help_and_die
+  end
 
   database_yaml_path = "#{rails_project_root}/config/database.yml"
 
   logger = Logger.new("#{rails_project_root}/log/log_archiver.log")
-
-  today_timestamp = Date.today.strftime("%Y-%m-%d %H:%M:%S")
 
   begin 
     logger.info("archiving process started...")
@@ -36,7 +47,7 @@ def main
     tenants = get_tenants(source_db_conn)
     tenants.each do |tenant|
       loop do
-        events = get_events(tenant, source_db_conn, today_timestamp)
+        events = get_events(tenant, source_db_conn, max_timestamp)
         if events.empty? 
           break
         else
@@ -70,15 +81,18 @@ def main
 end
 
 def db_connect(config)
-  pg_config = { 
-    host: config['host'],
-    dbname: config['database']
+  field_map = {
+    host: 'host',
+    dbname: 'database',
+    user: 'username',
+    password: 'password',
+    port: 'port'
   }
-  unless config['username'].nil?
-    pg_config['user'] = config['username']
-  end
-  unless config['password'].nil?
-    pg_config['password'] = config['password']
+  pg_config = {}
+  field_map.each do |k, v|
+    if config.key? v
+      pg_config[k] = config[v]
+    end
   end
   PG::Connection.new(pg_config)
 end
@@ -90,10 +104,10 @@ def get_tenants(db_conn)
   tenants.select { |t| t != 'public' }
 end
 
-def get_events(tenant, db_conn, today_timestamp)
+def get_events(tenant, db_conn, max_timestamp)
   sql_query = 
     "SELECT * FROM #{tenant}.events " +
-    "WHERE timestamp < '#{today_timestamp}' " + 
+    "WHERE timestamp < '#{max_timestamp}' " + 
     "ORDER BY id ASC " +
     "LIMIT #{SOURCE_DB_EVENT_CHUNK_SIZE};"
   db_conn.exec(sql_query).to_a

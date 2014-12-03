@@ -42,6 +42,7 @@ class RegistrationsController < Devise::RegistrationsController
         end
 
         setUpAccount()
+        log_audit("registration", { 'form_data' => sign_up_params, 'user_id' => current_user.id })
 
         respond_with resource, :location => after_sign_up_path_for(resource)
       else

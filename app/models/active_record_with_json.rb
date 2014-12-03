@@ -14,7 +14,7 @@ class ActiveRecordWithJSON < ActiveRecord::Base
   def handle_json
     self.class.json_attrs.each do |attr_name, attr_class|
       value = self.send(attr_name)
-      unless value.is_a? String
+      if !(value.nil? || value.is_a?(String))
         self.send("#{attr_name}=", value.to_json)
       end
     end

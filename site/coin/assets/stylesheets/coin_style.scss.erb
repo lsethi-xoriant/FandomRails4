@@ -11,12 +11,12 @@ $container-lg:                 $container-desktop !default;
 
 body {
   padding-top: 15px;
-  background-image: url("/assets/coin/bg.jpg");
+  background-image: url("<%= asset_path("coin/bg.jpg") %>");
   background-size: 100% auto;
   background-position: top center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-color: #9c806a;
+  background-color: #857e6b;
   font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
 }
 
@@ -24,6 +24,45 @@ body {
   -webkit-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
   box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
+}
+
+.coin-footer {
+  background: #fff;
+}
+
+.coin-footer__a {
+  color: #000;
+}
+
+.coin-footer__text {
+  font-size: 12px;
+  padding: 5px 0 5px 0;
+  margin: 0;
+}
+
+.instant-win__shop-label {
+}
+
+.instant-win__terms-a {
+  font-weight: 400;
+  color: #000;
+  text-decoration: underline;
+}
+
+.form-error {
+  color: #d21020;
+}
+
+/********************* TERMS MODAL *********************/
+
+.terms-modal__title {
+  color: #d21020; // red
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.terms-modal__description {
+  padding: 0;
 }
 
 /********************* HEADER *********************/
@@ -72,13 +111,32 @@ body {
   margin-top: 10px;
 }
 
+.instant-win__win-row {
+  margin-top: 25px;
+}
+
+.instant-win__win-text-title {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 18px;
+  color: #d21020; // red
+}
+
+.instant-win__win-text-description {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 28px;
+  color: #000;
+}
+
 .instant-win__footer__text-1 {
   font-size: 14px;
   margin: 0;
 }
 
 .instant-win__footer__text-2 {
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 700;
   color: #d21020;
   margin: 0;
@@ -91,7 +149,7 @@ body {
 }
 
 .instant-win__button {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   font-weight: 700;
 }
 
@@ -467,6 +525,10 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
 
 .footer__text-row {
   margin-top: 65px;
+}
+
+.footer__row {
+  margin-top: 30px;
 }
 
 .footer__img-column {
@@ -946,7 +1008,6 @@ fieldset[disabled] .btn-facebook.active {
   }
 }
 
-
 /********************* MOBILE *********************/
 
 @media (max-width: $screen-sm-min) { 
@@ -954,10 +1015,10 @@ fieldset[disabled] .btn-facebook.active {
   body {
     padding-top: 60px;
     background-image: none;
-    background: -webkit-linear-gradient(#bdaa9c, #9c806a) fixed;
-    background: -o-linear-gradient(#bdaa9c, #9c806a) fixed;
-    background: -moz-linear-gradient(#bdaa9c, #9c806a) fixed;
-    background: linear-gradient(#bdaa9c, #9c806a) fixed;
+    background: -webkit-linear-gradient(#bbb7ac, #857e6b) fixed;
+    background: -o-linear-gradient(#bbb7ac, #857e6b) fixed;
+    background: -moz-linear-gradient(#bbb7ac, #857e6b) fixed;
+    background: linear-gradient(#bbb7ac, #857e6b) fixed;
   }
 
   .body-landing {
@@ -968,12 +1029,8 @@ fieldset[disabled] .btn-facebook.active {
     font-size: 10px;
   }
 
-  .call-to-action__share-and-win {
-    background: #f7f6f1;
-  }
-
   .panel-body-call-to-action {
-    padding-bottom: 0;
+    padding: 5px;
   }
 
   #fountainG {
@@ -992,14 +1049,9 @@ fieldset[disabled] .btn-facebook.active {
     min-height: 0;
   }
 
-  .call-to-action__media__description-mobile {
-    padding: 15px 0 0 0;
-    font-size: 11px;
-  }
-
   .call-to-action__share-and-win {
     margin-top: 0;
-    padding-top: 10px;
+    padding-top: 0;
   }
 
   .call-to-action__share__modal-panel {
@@ -1016,7 +1068,12 @@ fieldset[disabled] .btn-facebook.active {
     font-weight: 700;
     margin: 0 0 0 15px;
     position: relative;
-    bottom: 15px;
+    bottom: 7px; /* bottom: 15px; */
+  }
+
+  .call-to-action__button__repeat-icon {
+    font-size: 35px; 
+    top: 4px;
   }
 
   .call-to-action__media__button__gift {
@@ -1027,11 +1084,10 @@ fieldset[disabled] .btn-facebook.active {
   }
 
   .call-to-action__share-and-win__title {
-    font-size: 16px; 
+    font-size: 14px; 
     padding-left: 0;
-    color: #d21020;
-    line-height: 18px;
-    margin-top: 4px;
+    padding-top: 13px;
+    font-weight: 400;
   }
 
   .user-bar__ticket-panel {
@@ -1067,7 +1123,7 @@ fieldset[disabled] .btn-facebook.active {
   }
 
   .landing__gift-img {
-    max-width: 190px;
+    max-width: 220px;
   }
 
   .landing__logo-img {
@@ -1079,6 +1135,11 @@ fieldset[disabled] .btn-facebook.active {
     margin-bottom: 15px;
   }
 
+  .footer__row {
+    text-align: center;
+    margin-top: 0;
+  }
+
   .footer__img {
     width: 250px;
   }
@@ -1087,30 +1148,22 @@ fieldset[disabled] .btn-facebook.active {
     text-align: center;
   }
 
-}
+  .instant-win__win-text-description {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 22px;
+    color: #000;
+  }
 
-.call-to-action__media {
-   -webkit-transition: opacity 1s ease-in-out;
-  -moz-transition: opacity 1s ease-in-out;
-  -o-transition: opacity 1s ease-in-out;
-  transition: opacity 1s ease-in-out;
-}
+  .call-to-action__media__description-mobile {
+    margin: 0;
+    position: absolute;
+    bottom: 10px;
+    left: 25px;
+  }
 
-@keyframes ease-in-out {
-  0% {
-    opacity:1;
+  .call-to-action__media__button__gift-icon {
+    margin-right: 0;
   }
-  17% {
-    opacity:1;
-  }
-  25% {
-    opacity:0;
-  }
-  92% {
-    opacity:0;
-  }
-  100% {
-    opacity:1;
-  }
-}
 
+}

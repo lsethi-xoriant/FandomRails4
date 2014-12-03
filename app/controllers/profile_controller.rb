@@ -18,16 +18,18 @@ class ProfileController < ApplicationController
   end
 
   def complete_for_contest
-    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date", "gender", "location"]
-
     user_params = params[:user]
-
+    
+    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date", "gender", "location"]
     user_params = user_params.merge(required_attrs: required_attrs)
-    user_params = user_params.merge(major_date: COIN_CONTEST_START_DATE)
-    user_params.delete(:email)
+    user_params[:aux][:$validating_model] = "UserAux"  
+    user_params[:major_date] = CONTEST_START_DATE
+
     response = {}
-    unless current_user.update_attributes(user_params)
+    if !current_user.update_attributes(user_params)
       response[:errors] = current_user.errors.full_messages
+    else
+      log_audit("registration completion", { 'form_data' => params[:user], 'user_id' => current_user.id })
     end
 
     respond_to do |format|

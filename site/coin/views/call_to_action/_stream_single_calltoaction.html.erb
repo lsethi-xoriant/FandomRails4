@@ -3,17 +3,20 @@
   <div class="panel-body panel-body-call-to-action">  
   
     <div class="row">
-      <div class="col-md-12">
-        <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}"><img class="call-to-action__media" ng-src="{{calltoaction_info.calltoaction.media_image}}"></a>
+      <div class="col-sm-12">
+        <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}">
+          <img class="call-to-action__media hidden-xs" ng-src="{{calltoaction_info.calltoaction.media_image}}">
+          <img class="call-to-action__media visible-xs" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}">
+        </a>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-9 col-xs-7">
-        <p class="call-to-action__media__description hidden-xs" ng-bind-html="calltoaction_info.calltoaction.description"></p>
-        <p class="call-to-action__media__description-mobile visible-xs">{{sanitizeText(calltoaction_info.calltoaction.description)}}</p>
+      <div class="col-sm-9 col-xs-7">
+        <p class="call-to-action__media__description hidden-xs fade-in" ng-bind-html="calltoaction_info.calltoaction.description"></p>
+        <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__description-mobile visible-xs"><span class="glyphicon glyphicon-shopping-cart call-to-action__media__button__gift-icon"></span></a>
       </div>
-      <div class="col-md-3 col-xs-5 text-right">
+      <div class="col-sm-3 col-xs-5 text-right hidden-xs">
         <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__button__gift"><span class="glyphicon glyphicon-gift call-to-action__media__button__gift-icon"></span>LO VOGLIO!</a>
       </div> 
     </div>
@@ -21,8 +24,11 @@
     <div class="row call-to-action__share-and-win">
       <div class="col-sm-8 col-xs-5">
         <img class="call-to-action__share-and-win__ticket-img hidden-xs" src="<%= asset_path("coin/coin-ticket.png") %>">
-        <p class="call-to-action__share-and-win__title">Condividi e vinci subito</p>
-        <p class="call-to-action__share-and-win__description hidden-xs">Condividi ogni giorno e ottieni +1 biglietto per vincere 35 Gift Card Coin</p>
+        <p ng-if="!aux.share_interaction_daily_done" class="call-to-action__share-and-win__title hidden-xs">Condividi e vinci subito</p>
+        <p ng-if="aux.share_interaction_daily_done" class="call-to-action__share-and-win__title hidden-xs">Hai ottenuto +1 biglietto</p>
+        <p ng-if="!aux.share_interaction_daily_done" class="call-to-action__share-and-win__description hidden-xs">Puoi giocare una volta al giorno. Invita i tuoi amici a giocare per guadagnare un'opportunità in più di vincere.</p>
+        <p ng-if="aux.share_interaction_daily_done" class="call-to-action__share-and-win__description hidden-xs">Hai già fatto la prima condivisione del giorno. Per ottenere altri biglietti torna domani.</p>
+        <p class="call-to-action__share-and-win__title visible-xs">Condividi e vinci!</p>
       </div>
       <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
         <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
@@ -37,10 +43,10 @@
 
   <div class="panel-footer call-to-action__footer">  
     <div class="row text-center">
-      <div class="col-md-6 col-md-offset-3">
+      <div class="col-sm-6 col-sm-offset-3">
         <button class="btn btn-primary btn-block call-to-action__button__inspire" ng-click="nextRandomCallToAction(calltoaction_info.calltoaction.id)">
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-sm-12">
               <span class="glyphicon glyphicon-repeat call-to-action__button__repeat-icon"></span>
               <p class="call-to-action__button__inspire-text">ISPIRAMI ANCORA</p>
             </div>

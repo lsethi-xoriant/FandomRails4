@@ -27,16 +27,16 @@ class FandomMiddleware
   def call(env)
     log_data = init_data(env)
     
+    if Rails.env == "production"
+      open_process_log_file()
+    end
+    
     log_info(
       "http request start",
       log_data
     )
 
     handle_multi_tenancy()
-    
-    if Rails.env == "production"
-      open_process_log_file()
-    end
     
     msg = "http request end"
     begin
@@ -80,11 +80,11 @@ class FandomMiddleware
     
     if Rails.configuration.domain_to_site.key?(http_host)
       $site = Rails.configuration.domain_to_site[http_host]
-      tenant = $site.id
+      $tenant = $site.id
       share_db = $site.share_db
     else
       $site = nil
-      tenant = "no_tenant"
+      $tenant = "no_tenant"
     end
     
     $request_uri = "#{env["REQUEST_URI"]}"
@@ -95,7 +95,6 @@ class FandomMiddleware
     app_server = Socket.gethostname 
     $session_id = "#{env["rack.session"]["session_id"]}"
     $remote_ip = "#{env["action_dispatch.remote_ip"]}"
-    $tenant = tenant
     $user_id = user_id
     $cache_hits = 0
     $cache_misses = 0
@@ -127,11 +126,13 @@ class FandomMiddleware
   #
 
   def handle_multi_tenancy
-    configure_view_paths_for_site($site)
-    configure_mailer_for_site($site, Devise::Mailer)
-    configure_mailer_for_site($site, SystemMailer)
-    configure_environment_for_site($site)
-    configure_omniauth_for_site($site)
+    unless $site.nil?
+      configure_view_paths_for_site($site)
+      configure_mailer_for_site($site, Devise::Mailer)
+      configure_mailer_for_site($site, SystemMailer)
+      configure_environment_for_site($site)
+      configure_omniauth_for_site($site)
+    end
   end
 
   def configure_view_paths_for_site(site)

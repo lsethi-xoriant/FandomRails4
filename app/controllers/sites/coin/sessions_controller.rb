@@ -6,7 +6,6 @@ class Sites::Coin::SessionsController < SessionsController
   include CoinHelper
 
   def setUpAccount()
-    assignPromocode()
     assignRegistrationReward()
   end
 

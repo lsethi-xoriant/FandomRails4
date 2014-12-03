@@ -25,6 +25,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     if($scope.aux.from_registration) {
       $("#registration-modal").modal("show");
+      ga('send', 'event', "Registration", "Registration", "Registration", 1, true);
     }
 
     initAnonymousUser();
@@ -76,6 +77,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $scope.nextRandomCallToAction = function(except_calltoaction_id) {
+    update_ga_event("UpdateCallToAction", "nextRandom", "nextRandom", 1);
     $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
       .success(function(data) { 
 
