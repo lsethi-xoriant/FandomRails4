@@ -34,11 +34,11 @@ module ActiveModelOrRecordWithJSONUtils
     validates_each json_attr_name do |record, json_attr_name, value|
       value = {} if value.nil?
       if value.key? :$validating_model
-        json_attr_class = value.delete(:$validating_model).constantize
+        value = value.delete(:$validating_model).constantize.new(value)
+      else
+        value = json_attr_class.new(value)
       end
       
-      value = json_attr_class.new(value)
- 
       result = value.valid?
       handle_validation_errors(value.errors, record)
       result
