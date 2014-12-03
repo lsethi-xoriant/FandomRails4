@@ -20,7 +20,7 @@ class ProfileController < ApplicationController
   def complete_for_contest
     user_params = params[:user]
     
-    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date", "gender", "location", "contest", "role"]
+    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date", "gender", "location"]
     user_params = user_params.merge(required_attrs: required_attrs)
     user_params[:aux][:$validating_model] = "UserAux"  
     user_params[:major_date] = CONTEST_START_DATE
