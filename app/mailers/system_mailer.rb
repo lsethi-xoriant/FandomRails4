@@ -21,7 +21,7 @@ class SystemMailer < ActionMailer::Base
   	@cuser = user
   	@ticket_id = time_to_win
   	
-  	mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "#{subject} - #{@reward.title}")
+  	mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "#{subject} - Hai vinto #{@reward.title}")
   end
 
   def win_admin_notice_mail(user, reward, time_to_win, request)
