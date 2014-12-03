@@ -6,44 +6,30 @@
   </head>
   <body style="font-family: 'Source Sans Pro', helvetica, arial, sans-serif; background: #857e6b;">
     <div>
-      <div style="width: 600px; margin-left: auto; margin-right: auto;">
+      <div style="max-width: 600px; margin-left: auto; margin-right: auto;">
         <div style="text-align: center;">
-          <img style="width: 600px; margin-top: -6px; margin-bottom: -4px;" src="https://s3-eu-west-1.amazonaws.com/coin.live.fandomlab.com/newsletters_assets/logo.jpg">
+          <img style="max-width: 600px; margin-top: -6px; margin-bottom: -4px; width: 100%;" src="https://s3-eu-west-1.amazonaws.com/coin.live.fandomlab.com/newsletters_assets/logo.jpg">
         </div>
-        <div style="font-size: 14px; padding: 15px; margin: 0 5px; background: #fff; border-radius: 5px; -webkit-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5); -moz-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5); box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);">     
-          <p><span style="font-weight: 700; font-size: 18px; color: #d21020;">Benvenuto!</span></p>
-          <p>Grazie per esserti registrato a <span style="font-weight: 700;">Gift Machine Christmas edition</span>.</p>
-          <p>Per te, uno sconto esclusivo sul tuo shopping Coincasa da utilizzare entro l'11 gennaio 2015.</p>
-          <div style="text-align: right; height: 60px;">
-            <div style="float: left; width: 60px; margin-top: 29px; margin-bottom: 15px; height: 1px; border-top: 1px solid #ccc;"></div>
-            <div style="float: left; width: 440px; text-align: center;">
-              <p style="font-weight: 700; font-size: 18px; color: #d21020; padding: 0 10px;">DUE MODI PER AVERE LO SCONTO A TE DEDICATO<p>
+        <div style="font-size: 14px; padding: 15px; margin: 0 5px; background: #fff; border-radius: 5px; -webkit-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5); -moz-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5); box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);">
+          <% if @cuser.location.include?("http://www.coincasa.it/") %>       
+            <p><span style="font-weight: 700; color: #d21020;">Complimenti!</span></p>
+            <p>Hai vinto una <span style="font-weight: 700;"><%= @reward.title %></span>!</p>
+            <p>Hai scelto di spendere la tua Giftcard su e-boutique Coincasa.it.</p>
+            <p>Hai <span style="font-weight: 700;">10 giorni di tempo</span> per accettare il premio e confermare il negozio prescelto in fase di registrazione.</p>
+            <p>Per farlo ti basterà rispondere a questa mail inviandoci la <span style="font-weight: 700;">liberatoria firmata</span>, unitamente alla scansione di un tuo valido <span style="font-weight: 700;">documento d'identità</span>.</p>
+            <p>Ricevuta la liberatoria e la scansione di un tuo documento valido di identità, provvederemo ad inviarti via email un codice sconto, del valore corrispondente all'importo della Giftcard vinta.</p>
+            <div style="text-align: center;">
+              <a target="_blank" style="display: inline-block; padding: 6px 12px; margin-bottom: 15px; margin-top: 15px; font-size: 14px; font-weight: normal; line-height: 1.428571429; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; background-image: none; border: 1px solid transparent; border-radius: 4px; text-decoration: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none; color: #ffffff; background: #BF0C19; background: -webkit-linear-gradient(#e73141, #BF0C19); background: -o-linear-gradient(#e73141, #BF0C19); background: -moz-linear-gradient(#e73141, #BF0C19); background: linear-gradient(#e73141, #BF0C19); border-color: #5e0409; -webkit-box-shadow: 0px 3px 0px 0px #5e0409; -moz-box-shadow: 0px 3px 0px 0px #5e0409; box-shadow: 0px 3px 0px 0px #5e0409;" href="http://coin.live.fandomlab.com.s3.amazonaws.com/terms/liberatoria.pdf">SCARICA QUI LA LIBERATORIA</a>
             </div>
-            <div style="float: left; width: 60px; margin-top: 29px; margin-bottom: 15px; height: 1px; border-top: 1px solid #ccc;"></div>
-          </div>
-          <div style="text-align: right; border: 1px solid #ccc; padding-bottom: 10px; padding-top: 10px; margin-top: 10px; height: 135px;">
-            <div style="float: left; text-align: center;">
-              <img style="margin-left: auto; margin-right: auto;" src="http://coin.live.fandomlab.com.s3.amazonaws.com/newsletters_assets/computer.png">
-            </div>
-            <div style="float: left; padding: 5px; text-align: center; max-width: 360px;">
-              <div>Acquista su <span style="font-weight: 700;">COINCASA.IT</span> e inserisci nel carrello il codice riportato sotto per ricevere uno sconto di <span style="font-weight: 700;">10 euro</span> su un acquisto minimo di 50 euro.</div>
-              <div style="margin-top: 15px; margin-left: auto; margin-right: auto; padding: 5px; background: #857e6b; color: #fff; font-size: 22px; width: 200px; border-radius: 5px;">NATALE14</div>
-              <div style="font-size: 12px; margin-top: 10px;">IL CODICE VALE PER UNO SHOPPING</div>
-            </div>
-          </div>
-          <div style="text-align: right; border: 1px solid #ccc; padding-bottom: 10px; padding-top: 10px; margin-top: 10px; height: 190px;">
-            <div style="float: left; width: 35%; text-align: center;">
-              <img style="max-width: 150px" src="http://coin.live.fandomlab.com.s3.amazonaws.com/newsletters_assets/storecoin.png">
-            </div>
-            <div style="width: 60%; float: left; padding: 5px; text-align: center;">
-              <div><span style="font-weight: 700;">Stampa</span> e presenta questa comunicazione alle casse di uno dei negozi Coin <a style="color: #000;" target="_blank" href="http://concorsi.coin.it/stores">qui riportati</a>.</div>
-              <div style="margin-top: 10px;">
-                Per te subito <span style="font-weight: 700;">10 euro</span> di sconto su un acquisto minimo di 100 euro.
-              </div>
-              <img style="max-width: 260px; margin-top: 15px;" src="http://coin.live.fandomlab.com.s3.amazonaws.com/newsletters_assets/19500000010002.jpg">
-            </div>
-          </div>
-          <div style="margin-top: 25px; margin-bottom: 15px; height: 1px; border-top: 1px solid #ccc;"></div>
+          <% else %>
+            <p><span class="congratulation">Complimenti!</span></p>
+            <p>Hai vinto una <span style="font-weight: 700;"><%= @reward.title %></span>!</p>
+            <p>Hai scelto di spendere la tua Giftcard nel negozio Coin di <%= @cuser.location %>.</p>
+            <p>Hai <span style="font-weight: 700;">10 giorni di tempo</span> per accettare il premio e confermare il negozio prescelto in fase di registrazione.</p>
+            <p>Per farlo ti basterà rispondere a questa mail confermando la tua scelta o indicandoci il nuovo negozio Coin in cui spendere la tua Giftcard vinta tra quelli presenti <a target="_blank" style="color: #000;" style="font-weight: 700;" href="http://concorsi.coin.it/stores">in questa lista</a>.</p>
+            <p>Ricevuta una tua conferma, provvederemo ad inviarti la liberatoria valida per il ritiro della Giftcard; dovrai consegnarla in negozio, unitamente ad un tuo documento di identità valido.</p>
+          <% end %>
+          <div style="margin-top: 15px; margin-bottom: 15px; height: 1px; border-top: 1px solid #ccc;"></div>
           <div style="margin-bottom: 15px; text-align: center;">
             <a style="text-decoration: none; color: #000;" target="_blank" href="http://www.coin.it/contacts">SERVIZIO CLIENTI</a> | <a style="text-decoration: none; color: #000;" target="_blank" href="http://concorsi.coin.it/privacy_policy">PRIVACY</a> | <a style="text-decoration: none; color: #000;" target="_blank" href="https://s3-eu-west-1.amazonaws.com/coin.live.fandomlab.com/terms/regolamento.pdf">REGOLAMENTO</a>
           </div> 
