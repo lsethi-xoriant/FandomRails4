@@ -253,6 +253,7 @@ Fandom::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => "registrations", :sessions => "sessions", :passwords => "passwords" }
 
   devise_scope :user do
+    match "/password_feedback", :to => "passwords#feedback"
     match '/users/sign_in', :to => 'sessions#create', :as => 'user_sign_in'
     match '/users/sign_out', :to => 'sessions#destroy'
     match 'auth/:provider/callback', :to => 'sessions#create'
