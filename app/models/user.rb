@@ -38,13 +38,21 @@ class User < ActiveRecordWithJSON
   validate :presence_of_birth_date, if: Proc.new { |f| required_attr?("birth_date") }
   validates_presence_of :first_name, if: Proc.new { |f| required_attr?("first_name") }
   validates_presence_of :last_name, if: Proc.new { |f| required_attr?("last_name") }
-  validates :privacy, :acceptance => { :accept => true }
+  validate :privacy_accepted
+  validate :newsletter_acceptance, if: Proc.new { |f| required_attr?("newsletter") }
   validates_presence_of :username, if: Proc.new { |f| required_attr?("username") }
   validates :username, uniqueness: true, if: Proc.new { |f| required_attr?("username") }
-  validates_presence_of :privacy
   validate :major, if: Proc.new { |f| major_date.present? }
 
   after_initialize :set_attrs
+
+  def newsletter_acceptance
+    errors.add(:newsletter, :accepted) unless newsletter
+  end
+
+  def privacy_accepted
+    errors.add(:privacy, :accepted) unless privacy
+  end
 
   def set_attrs
     if !day_of_birth.present? && birth_date
