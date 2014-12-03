@@ -114,7 +114,7 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <div class="row">
-          <div ng-if="aux.instant_win_info.win == null" class="col-md-8 col-md-offset-2 text-center">         
+          <div ng-if="aux.instant_win_info.win == null && current_user.main_reward_counter.general > 0" class="col-md-8 col-md-offset-2 text-center">         
             <p ng-if="!aux.instant_win_info.in_progress" class="instant-win__modal-title-with-result">Gioca e vinci</p>
             <p ng-if="aux.instant_win_info.in_progress" class="instant-win__modal-title-with-result">&nbsp;</p>
             <div ng-if="aux.instant_win_info.in_progress" id="fountainG">
@@ -137,7 +137,11 @@
             </div>
           </div>
           <div ng-if="aux.instant_win_info.win == false" class="col-md-8 col-md-offset-2 text-center">
-            <p class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">{{aux.instant_win_info.message}}</span></p>
+            <p ng-if="current_user.main_reward_counter.general > 0" class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">{{aux.instant_win_info.message}}</span></p>
+            <p ng-if="current_user.main_reward_counter.general < 1" class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">Torna domani o condividi per ottenere un nuovo biglietto</span></p>
+          </div>
+          <div ng-if="aux.instant_win_info.win == null && current_user.main_reward_counter.general < 1" class="col-md-8 col-md-offset-2 text-center">
+            <p class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">Torna domani o condividi per ottenere un nuovo biglietto</span></p>
           </div>
           <div class="col-md-1 col-md-offset-3 text-right instant-win__ticket-pre hidden-xs"><p class="instant-win__ticket-pre-text">Hai</p></div>
           <div class="col-md-4 col-xs-12 instant-win__ticket-column">
