@@ -1,3 +1,6 @@
+#!/bin/env ruby
+# encoding: utf-8
+
 namespace :instant_win_coin do
   #require 'digest/md5'
   DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
