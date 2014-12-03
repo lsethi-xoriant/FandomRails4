@@ -18,20 +18,20 @@ namespace :instant_win_coin do
       name: "point"
     )
     gift_500 = Reward.create(
-      title: "Gift Card Coin 500 Euro", 
-      short_description: "1 Gift Card Coin 500 Euro", 
+      title: "GIFTCARD Coin €500", 
+      short_description: "1 GIFTCARD Coin €500", 
       media_type: "DIGITALE", 
       name: COIN_GIFT_500['name']
     )
     gift_100 = Reward.create(
-      title: "Gift Card Coin 100 Euro", 
-      short_description: "1 Gift Card Coin 100 Euro", 
+      title: "GIFTCARD Coin €100", 
+      short_description: "1 GIFTCARD Coin €100", 
       media_type: "DIGITALE", 
       name: COIN_GIFT_100['name']
     )
     gift_50 = Reward.create(
-      title: "Gift Card Coin 50 Euro", 
-      short_description: "1 Gift Card Coin 50 Euro", 
+      title: "GIFTCARD Coin €50", 
+      short_description: "1 GIFTCARD Coin €50", 
       media_type: "DIGITALE", 
       name: COIN_GIFT_50['name']
     )
