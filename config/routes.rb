@@ -84,9 +84,11 @@ Fandom::Application.routes.draw do
 
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
   match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
+  match "/upload", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
   match "/browse/search", :to => "browse#search"
+  match "/browse/full_search", :to => "browse#full_search"
   match "/browse/fullscreen", :to => "browse#index_fullscreen"
   match "/browse/view_all/:id_cat", :to => "browse#view_all"
   match "/browse/category/:id", :to => "browse#index_category"
