@@ -3,7 +3,7 @@
 
 class SystemMailer < ActionMailer::Base
   
-  def share_interaction(user, address_to_send, calltoaction)
+  def share_interaction(user, address_to_send, calltoaction, request)
     subject = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["title"]
     @cuser = user
     @calltoaction = calltoaction
