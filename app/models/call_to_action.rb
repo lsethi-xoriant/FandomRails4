@@ -136,8 +136,8 @@ class CallToAction < ActiveRecord::Base
     write_attribute :aux, { 
         button_label: button_label, 
         alternative_description: alternative_description,
-        enable_for_current_user: enable_for_current_user,
-        shop_url: shop_url
+        shop_url: shop_url,
+        enable_for_current_user: enable_for_current_user
       }.to_json
   end
 
