@@ -17,6 +17,11 @@
   <%= stylesheet_link_tag "coin_application", :media => "all" %>
   <%= javascript_include_tag "coin_application" %>
 
+  <!--[if lte IE 9]>
+    <link href="<%= asset_path("coin_application.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
+    <script src="<%= asset_path("coin_application.js").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" type="text/javascript"></script>  
+  <![endif]-->
+
   <!--[if lt IE 10]>
     <script type="text/javascript">
         $(document).ready(function() {
