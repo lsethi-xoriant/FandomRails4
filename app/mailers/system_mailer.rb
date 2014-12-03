@@ -4,6 +4,7 @@
 class SystemMailer < ActionMailer::Base
   
   def share_interaction(user, address_to_send, calltoaction)
+    @cuser = user
     @calltoaction = calltoaction
     mail(to: address_to_send, subject: "")
   end
