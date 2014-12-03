@@ -1,4 +1,4 @@
-var streamCalltoactionModule = angular.module('StreamCalltoactionModule', ['ngRoute', 'ngSanitize']);
+var streamCalltoactionModule = angular.module('StreamCalltoactionModule', ['ngRoute', 'ngSanitize', 'ngAnimate']);
 
 StreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce'];
 streamCalltoactionModule.controller('StreamCalltoactionCtrl', StreamCalltoactionCtrl);
@@ -7,6 +7,30 @@ streamCalltoactionModule.controller('StreamCalltoactionCtrl', StreamCalltoaction
 streamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
+
+streamCalltoactionModule.animation('.slide-left', function() {
+  return {
+    // you can also capture these animation events
+    addClass : function(element, className, done) {
+    	$(element).hide('slide', {direction: 'left'}, 1000);
+    },
+    removeClass : function(element, className, done) {
+    	$(element).show('slide', {direction: 'left'}, 1000);
+    }
+  };
+});
+
+streamCalltoactionModule.animation('.slide-right', function() {
+  return {
+    // you can also capture these animation events
+    addClass : function(element, className, done) {
+    	$(element).effect( "fade", {}, 1000);
+    },
+    removeClass : function(element, className, done) {
+    	$(element).effect( "fade", {}, 1000);
+    }
+  };
+});
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
@@ -31,6 +55,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     initAnonymousUser();
 
     $scope.form_data = {};
+    
+    $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION = "slide-right";
+    $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION = "";
+    $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION = "call-to-action__media__description hidden-xs slide-left";
+    $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION = "call-to-action__media__description hidden-xs";
 
     $scope.ajax_comment_append_in_progress = false;
     $scope.interactions_timeout = new Object();
@@ -45,7 +74,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.polling = false;
     $scope.comments_polling = new Object();
     $scope.youtube_api_ready = false;
-
+    $scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION;
+    $scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
+    
     var tag = document.createElement('script');
     tag.src = "//www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -63,8 +94,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     
     $(function(){ flowplayerReady(); });
 
-    initQuizWaitingAudio();
-
     updateSecondaryVideoPlayers($scope.calltoactions);
 
     $("#append-other button").attr('disabled', false);
@@ -73,20 +102,54 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     } else {
       $("#append-other button").show();
     }
-
+    
+  };
+  
+  $window.playSound = function(element){
+  	element.load();
+  	element.play();
   };
 
   $scope.nextRandomCallToAction = function(except_calltoaction_id) {
     update_ga_event("UpdateCallToAction", "nextRandom", "nextRandom", 1);
-    $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
-      .success(function(data) { 
 
-        $scope.calltoactions = data.calltoaction_info_list;
-        initAnonymousUser();
-
-      }).error(function() {
-        // ERROR.
-      });
+    	//playSound($(".click-sound")[0]);
+		
+	    $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
+	      .success(function(data) { 
+    		$scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION;
+    		$scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION;
+			
+			$(".cta-media img.hidden-xs").fadeOut(1500);
+			setTimeout(function(){
+				$("#loader").removeClass("hidden");
+				playSound($(".roll-sound")[0]);
+			}, 1000);
+			
+			setTimeout(function(){
+				$(".cta-media img.hidden-xs").attr("src",data.calltoaction_info_list[0].calltoaction.media_image);
+				$("#loader").addClass("hidden");
+				$(".cta-media img.hidden-xs").fadeIn(1500);
+				playSound($(".blink-sound")[0]);
+			}, 3000);
+				
+	        setTimeout(function() {
+	        	$scope.$apply(function(){
+	        		console.log(data.calltoaction_info_list[0]);
+	        		$scope.calltoactions[0].calltoaction.description = data.calltoaction_info_list[0].calltoaction.description;
+	        		$scope.calltoactions[0].calltoaction.aux.shop_url = data.calltoaction_info_list[0].calltoaction.aux.shop_url;
+	    			$scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION;
+    				$scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
+					setTimeout(function(){
+	        			$scope.calltoactions = data.calltoaction_info_list;
+	       			}, 1000);
+    			});
+	    		initAnonymousUser();
+	        }, 4000);
+	        
+	      }).error(function() {
+	        // ERROR.
+	      });
   };
 
   $scope.playInstantWin = function() {
@@ -106,10 +169,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $scope.openInstantWinModal = function() {
+  	$(".click-sound").trigger("play");
     $("#modal-interaction-instant-win").modal("show");
   };
 
   $scope.openRegistrationModalForInstantWin = function(user) {
+  	$(".click-sound").trigger("play");
     $scope.form_data.current_user = user;
     $("#modal-interaction-instant-win-registration").modal("show");
   };
@@ -1170,7 +1235,68 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   //////////////////////// AUDIO EFFECTS METHODS ////////////////////////
-
+  
+  $window.initClickAudio = function() {
+    $("#click-audio").jPlayer({
+      ready: function (event) {
+        $(this).jPlayer("setMedia", {
+          mp3: "/assets/click.mp3"
+        });
+      },
+      ended: function() {
+      },
+      supplied: "mp3",
+      volume: 0.4,
+      smoothPlayBar: false,
+      keyEnabled: false
+    });
+  };
+  
+  $window.enableClickAudio = function(status) {
+    $("#click-audio").jPlayer(status);
+  };
+  
+  $window.initRollAudio = function() {
+    $("#roll-audio").jPlayer({
+      ready: function (event) {
+        $(this).jPlayer("setMedia", {
+          mp3: "/assets/roll.mp3"
+        });
+      },
+      ended: function() {
+      	$(this).jPlayer("play");
+      },
+      supplied: "mp3",
+      volume: 0.4,
+      smoothPlayBar: false,
+      keyEnabled: false
+    });
+  };
+  
+  $window.enableRollAudio = function(status) {
+    $("#roll-audio").jPlayer(status);
+  };
+  
+  $window.initBlinkAudio = function() {
+    $("#blink-audio").jPlayer({
+      ready: function (event) {
+        $(this).jPlayer("setMedia", {
+          mp3: "/assets/blink.mp3"
+        });
+      },
+      ended: function() {
+      },
+      supplied: "mp3",
+      volume: 0.4,
+      smoothPlayBar: false,
+      keyEnabled: false
+    });
+  };
+  
+  $window.enableBlinkAudio = function(status) {
+    $("#blink-audio").jPlayer(status);
+  };
+  
   $window.initQuizWaitingAudio = function() {
     $("#quiz-waiting-audio").jPlayer({
       ready: function (event) {
