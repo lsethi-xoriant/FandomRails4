@@ -383,9 +383,9 @@ module ApplicationHelper
         reward_points = Hash.new
         get_reward_with_periods(reward_name).each do |user_reward|
           if user_reward.period.blank?
-            reward_points[:general] = user_reward.counter
+            reward_points[:general] = user_reward.counter || 0
           else
-            reward_points[user_reward.period.kind] = user_reward.counter
+            reward_points[user_reward.period.kind] = user_reward.counter || 0
           end
         end 
         reward_points     
