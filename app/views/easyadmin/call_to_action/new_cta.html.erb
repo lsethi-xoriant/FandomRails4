@@ -78,8 +78,49 @@
           <%= render partial: "media_type-form", locals: { f: f } %>
         </div>
       </div>
-      
-      <%= render partial: "/easyadmin/call_to_action/aux", locals: { f: f } %>
+
+	  <div class="row">
+	  	<div class="col-md-10"><h3>ATTRIBUTI CAMPO AUX</h3></div>
+        <div class="col-md-2">
+	  		<input type='button' value='AGGIUNGI CAMPO' id='add-button-for-aux-fields' class='btn btn-primary'>
+	  	</div>
+	  </div>
+	  	<div class="row">
+	  	<div id='text-boxes-for-aux-fields' class="col-lg-6">
+	  		<div id="extra-fields-name-for-aux-button_label" class="form-group">
+	  			<label class="text-input">Nome</label>
+	  			<input type="text" id="name-for-aux-field-button_label" name="name-for-aux-field-button_label" class="form-control" value="button_label" readonly="true">
+	  		</div>
+	  		<div id="extra-fields-value-for-aux-button_label" class="form-group">
+	  			<label class="text-input">Valore</label>
+	  			<input type="text" id="value-for-aux-field-button_label" name="call_to_action[[aux][button_label]]" class="form-control">
+	  		</div>
+	  		<div id="extra-fields-name-for-aux-alternative_description" class="form-group">
+	  			<label class="text-input">Nome</label>
+	  			<input type="text" id="name-for-aux-field-alternative_description" name="name-for-aux-field-alternative_description" class="form-control" value="alternative_description" readonly="true">
+	  		</div>
+	  		<div id="extra-fields-value-for-aux-alternative_description" class="form-group">
+	  			<label class="text-input">Valore</label>
+	  			<input type="text" id="value-for-aux-field-alternative_description" name="call_to_action[[aux][alternative_description]]" class="form-control">
+	  		</div>
+	  		<div id="extra-fields-name-for-aux-enable_for_current_user" class="form-group">
+	  			<label class="text-input">Nome</label>
+	  			<input type="text" id="name-for-aux-field-enable_for_current_user" name="name-for-aux-field-enable_for_current_user" class="form-control" value="enable_for_current_user" readonly="true">
+	  		</div>
+	  		<div id="extra-fields-value-for-aux-enable_for_current_user" class="form-group">
+	  			<label class="text-input">Valore</label>
+	  			<input type="text" id="value-for-aux-field-enable_for_current_user" name="call_to_action[[aux][enable_for_current_user]]" class="form-control">
+	  		</div>
+	  		<div id="extra-fields-name-for-aux-shop_url" class="form-group">
+	  			<label class="text-input">Nome</label>
+	  			<input type="text" id="name-for-aux-field-shop_url" name="name-for-aux-field-shop_url" class="form-control" value="shop_url" readonly="true">
+	  		</div>
+	  		<div id="extra-fields-value-for-aux-shop_url" class="form-group">
+	  			<label class="text-input">Valore</label>
+	  			<input type="text" id="value-for-aux-field-shop_url" name="call_to_action[[aux][shop_url]]" class="form-control">
+	  		</div>
+	  	</div>
+	  	</div>
 
       <div class="row">
         <div class="col-md-10"><h3>TRIVIA</h3></div>
@@ -290,6 +331,16 @@
     }
   }
 
+  function add_cta_fields(link, association, content) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-ctafield-add").prepend(content.replace(regexp, new_id));
+  }
+
+  function remove_cta_fields(link) {
+    $(link).parent().parent().parent().remove();
+  }
+
   var like_counter = false; 
   function add_like_fields(link, association, content) {
     if(!like_counter) {
@@ -442,5 +493,9 @@
     $(link).parent().parent().parent().remove();
     vote_counter = false;
   }
+
+  $(document).ready(function(){
+  	addButtonHandlerForJsonFields("call_to_action", "aux");
+  });
 
 </script>
