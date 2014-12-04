@@ -19,30 +19,12 @@
           <img class="call-to-action__media visible-xs" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}">
         </a>
         <img id="loader" class="call-to-action__media hidden" style="width: 100%; position: absolute; top:0; max-width: 688px;" src="<%= asset_path("coin/slot.gif") %>">
-        <div class="fountainG-container hidden" style="margin: 70px auto;">
-          <div id="fountainG_1" class="fountainG">
-          </div>
-          <div id="fountainG_2" class="fountainG">
-          </div>
-          <div id="fountainG_3" class="fountainG">
-          </div>
-          <div id="fountainG_4" class="fountainG">
-          </div>
-          <div id="fountainG_5" class="fountainG">
-          </div>
-          <div id="fountainG_6" class="fountainG">
-          </div>
-          <div id="fountainG_7" class="fountainG">
-          </div>
-          <div id="fountainG_8" class="fountainG">
-          </div>
-        </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-sm-9 col-xs-7">
-        <p id="product-title" ng-class="title_product_class" ng-bind-html="calltoaction_info.calltoaction.description" style="min-width: 200px;"></p>
+        <p id="product-title" ng-class="title_product_class" ng-bind-html="calltoaction_info.calltoaction.description" style="min-width: 400px;"></p>
         <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__description-mobile visible-xs"><span class="glyphicon glyphicon-shopping-cart call-to-action__media__button__gift-icon"></span></a>
       </div>
       <div ng-class="buy_product_class" class="col-sm-3 col-xs-5 text-right hidden-xs">
