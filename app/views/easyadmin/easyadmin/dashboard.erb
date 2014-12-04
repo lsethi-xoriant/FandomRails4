@@ -66,8 +66,6 @@
     </div> <!-- /.row -->
 
     <br/>
-	<h3>Statistiche</h3>
-    <hr/>
     
     <div class="row">
     	<div class="col-md-6">
@@ -86,30 +84,34 @@
             <div class="details">
               <span class="content">REGISTRATI TOTALI</span>
               <span class="value"><%= total_users = User.where(:created_at => @from_date..@to_date).count %></span>
-            </div> <!-- /.details -->
+            </div>
             <div class="visual">
             	<i class="fa fa-user"></i>
             </div>
-          </div><hr/> <!-- /.dashboard-stat -->
-          <div class="dashboard-stat primary">
+          </div><hr/>
+          <div class="dashboard-stat secondary">
             <div class="details">
               <span class="content">UTENTI REGISTRATI CON SOCIAL</span>
               <span class="value"><%= social_reg_users = User.where(:created_at => @from_date..@to_date).includes(:authentications).where("authentications.user_id IS NOT NULL").count %></span>
-            </div> <!-- /.details -->
+            </div>
             <div class="visual">
-            	<i class="fa fa-user"></i>
+            	<i class="fa fa-group"></i>
             </div>
-          </div><hr/> <!-- /.dashboard-stat -->
-          <!--<div class="dashboard-stat tertiary">
-            <div class="details">
-              <span class="content">UTENTI CON PROFILO COMPLETO</span>
-              <span class="value"><%= complete_profile_users = User.where(:created_at => @from_date..@to_date, :rule => true).count %></span>
+          </div><hr/>
+
+          <% if get_site_from_request(request)["id"] == "coin" %>
+            <% interaction_id = get_instant_win_coin_interaction_id() %>
+            <div class="dashboard-stat primary" style="background: #6ECCA0;">
+              <div class="details">
+                <span class="content">BIGLIETTI GIOCATI</span>
+                <span class="value"><%= UserInteraction.where("interaction_id = ?", interaction_id).sum(:counter) %></span>
+              </div>
               <div class="visual">
-            	<i class="fa fa-user"></i>
-            </div>
-            </div>
-          </div> -->
-      </div> <!-- /.col-md-3 -->
+                <i class="fa fa-ticket" style="color: #30B376;"></i>
+              </div>
+            </div><hr/>
+          <% end %>
+      </div>
       <div class="col-md-3">
         <div class="portlet">
           <div class="portlet-header">
@@ -123,9 +125,18 @@
           </div> <!-- /.portlet-content -->
         </div> <!-- /.portlet -->
       </div> <!-- /.col -->
-      
+
       <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat primary" style="background-color: #43609c">
+          <div class="dashboard-stat primary" style="background-color: #ccc;">
+            <div class="details">
+              <span class="content">SHARE EMAIL</span>
+              <span class="value"><%= email_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'email')::int") %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-envelope" style="color: #FFF"></i>
+            </div>
+          </div><hr/> <!-- /.dashboard-stat -->
+          <div class="dashboard-stat primary" style="background-color: #43609c;">
             <div class="details">
               <span class="content">SHARE FACEBOOK</span>
               <span class="value"><%= fb_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'facebook')::int") %></span>
@@ -134,7 +145,7 @@
             	<i class="fa fa-facebook" style="color: #FFF"></i>
             </div>
           </div><hr/> <!-- /.dashboard-stat -->
-          <div class="dashboard-stat primary" style="background-color: #5eaade">
+          <div class="dashboard-stat primary" style="background-color: #5eaade;">
             <div class="details">
               <span class="content">SHARE TWITTER</span>
               <span class="value"><%= twitter_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'twitter')::int") %></span>
@@ -142,7 +153,7 @@
             <div class="visual">
             	<i class="fa fa-twitter" style="color: #FFF"></i>
             </div>
-          </div> <!-- /.dashboard-stat -->
+          </div><hr> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
       <div class="col-md-3">
         <div class="portlet">
@@ -160,85 +171,101 @@
     </div> <!-- /.row -->
     
     <hr/>
-    
-    <div class="row">
-    	<div class="col-md-6">
-    		<h4>Trivia</h4>
-   			<hr/>
-   		</div>
-   		<div class="col-md-6">
-    		<h4>Versus / Check</h4>
-   			<hr/>
-   		</div>
-    </div> <!-- /.row -->
 
-    <div class="row">
-    	<div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat">
-            <div class="details">
-              <span class="content">TRIVIA RISPOSTI</span>
-              <span class="value"><%= all_trivia = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_TRIVIA')::int") %></span>
-            </div> <!-- /.details -->
-            <div class="visual">
-            	<i class="fa fa-question"></i>
+    <% all_trivia = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_TRIVIA')::int").to_i %>
+    <% correct_answers_trivia = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_TRIVIA_CORRECT_ANSWER')::int").to_i %>
+
+    <% all_versus = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_VERSUS')::int").to_i %>
+
+    <% all_check = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_CHECK')::int").to_i %>
+
+    <% if all_trivia > 0 || all_versus > 0 || all_check > 0 %>
+      <div class="row">
+        <% if all_trivia > 0 %>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-12">
+                <h4>Trivia</h4>
+              </div>
+            	<div class="col-md-6">
+                <div class="dashboard-stat">
+                  <div class="details">
+                    <span class="content">TRIVIA RISPOSTI</span>
+                    <span class="value"><%= all_trivia %></span>
+                  </div>
+                  <div class="visual">
+                  	<i class="fa fa-question"></i>
+                  </div>
+                </div><hr/>
+                <div class="dashboard-stat">
+                  <div class="details">
+                    <span class="content">TRIVIA RISPOSTI CORRETTAMENTE</span>
+                    <span class="value"><%= correct_answers_trivia %></span>
+                  </div>
+                  <div class="visual">
+                  	<i class="fa fa-question"></i>
+                  </div>
+                </div> 
+              </div>
+              <div class="col-md-6">
+                <div class="portlet">
+                  <div class="portlet-header">
+                    <h3>
+                      <i class="fa fa-bar-chart-o"></i>
+                      TRIVIA
+                    </h3>
+                  </div>
+                  <div class="portlet-content">
+                    <div id="trivia-donut-chart" class="chart-holder"></div>
+                  </div>
+                </div>
+              </div> 
             </div>
-          </div><hr/> <!-- /.dashboard-stat -->
-          <div class="dashboard-stat">
-            <div class="details">
-              <span class="content">TRIVIA RISPOSTI CORRETTAMENTE</span>
-              <span class="value"><%= correct_answers_trivia = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_TRIVIA_CORRECT_ANSWER')::int") %></span>
-            </div> <!-- /.details -->
-            <div class="visual">
-            	<i class="fa fa-question"></i>
+          </div>
+
+        <% end %>
+        <% if all_versus > 0 %>
+          <div class="col-md-6">
+            <div class="row">    
+              <div class="col-md-12">
+                <h4>Versus</h4>
+              </div>       
+              <div class="col-md-6">
+                <div class="dashboard-stat secondary">
+                  <div class="details">
+                    <span class="content">VERSUS RISPOSTI</span>
+                    <span class="value"><%= all_versus %></span>
+                  </div>
+                  <div class="visual">
+                  	<i class="fa fa-thumbs-o-up"></i>
+                  </div>
+                </div><hr/>
+              </div>
             </div>
-          </div> <!-- /.dashboard-stat -->
-          <!--<div class="dashboard-stat secondary">
-            <div class="details">
-              <span class="content">% RISPOSTE CORRETTE TRIVIA</span>
-              <span class="value"><%= "#{all_trivia.to_i != 0 ? ((correct_answers_trivia.to_i * 100).to_f / all_trivia.to_i).round(2) : 'Nessuna '}\%" %></span>
+          </div>
+        <% end %>
+        <% if all_check > 0 %>
+          <div class="col-md-6">
+            <div class="row">    
+              <div class="col-md-12">
+                <h4>Check</h4>
+              </div>       
+              <div class="col-md-6">
+               <div class="dashboard-stat secondary">
+                  <div class="details">
+                    <span class="content">CHECK RISPOSTI</span>
+                    <span class="value"><%= all_check %></span>
+                  </div>
+                  <div class="visual">
+                    <i class="fa fa-check"></i>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="visual">
-            	<i class="fa fa-question"></i>
-            </div>
-          </div> -->
-      </div> <!-- /.col-md-3 -->
-      <div class="col-md-3">
-        <div class="portlet">
-          <div class="portlet-header">
-            <h3>
-              <i class="fa fa-bar-chart-o"></i>
-              TRIVIA
-            </h3>
-          </div> <!-- /.portlet-header -->
-          <div class="portlet-content">
-            <div id="trivia-donut-chart" class="chart-holder"></div>
-          </div> <!-- /.portlet-content -->
-        </div> <!-- /.portlet -->
-      </div> <!-- /.col -->
-      
-      <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat secondary">
-            <div class="details">
-              <span class="content">VERSUS RISPOSTI</span>
-              <span class="value"><%= all_versus = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_VERSUS')::int") %></span>
-            </div> <!-- /.details -->
-            <div class="visual">
-            	<i class="fa fa-thumbs-o-up"></i>
-            </div>
-          </div><hr/> <!-- /.dashboard-stat -->
-          <div class="dashboard-stat secondary">
-            <div class="details">
-              <span class="content">CHECK RISPOSTI</span>
-              <span class="value"><%= all_check = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_CHECK')::int") %></span>
-            </div> <!-- /.details -->
-            <div class="visual">
-            	<i class="fa fa-check"></i>
-            </div>
-          </div> <!-- /.dashboard-stat -->
-      </div> <!-- /.col-md-3 -->
-      <div class="col-md-3">
-      </div> <!-- /.col -->
-    </div> <!-- /.row -->
+          </div>
+        <% end %>
+      </div>
+    <% end %>
 
   </div>
 </div>
@@ -247,11 +274,12 @@
   
   total_users = <%= total_users %>;
   social_reg_users = <%= social_reg_users %>;
-  all_trivia = <%= all_trivia %>
-  correct_answers_trivia = <%= correct_answers_trivia %>
-  fb_share = <%= fb_share %>
-  twitter_share = <%= twitter_share %>
-  total_share = fb_share + twitter_share
+  all_trivia = <%= all_trivia %>;
+  correct_answers_trivia = <%= correct_answers_trivia %>;
+  fb_share = <%= fb_share %>;
+  email_share = <%= email_share %>;
+  twitter_share = <%= twitter_share %>;
+  total_share = fb_share + twitter_share + email_share;
     
   $(document).ready(function() {
     buildDonut();
@@ -271,7 +299,7 @@
                 { label: 'Registrazioni via mail', value: Math.round((((total_users - social_reg_users) * 100)/total_users)) }
             ],
             hideHover: true,
-            colors: ["#f18c09", "#0b62a4"],
+            colors: ["#f0ad4e", "#e5412d"],
             formatter: function (y) { return y + "%" }
       });
     }
@@ -292,10 +320,11 @@
 			element: 'share-donut-chart',
             data: [
                 { label: 'Share su Facebook', value: Math.round(((fb_share * 100)/total_share)) },
-                { label: 'Share su Twitter', value: Math.round((((total_share - fb_share) * 100)/total_share)) }
+                { label: 'Share su Twitter', value: Math.round(((twitter_share * 100)/total_share)) },
+                { label: 'Share su Email', value: Math.round(((email_share * 100)/total_share)) }
             ],
             hideHover: true,
-            colors: ["#f18c09", "#0b62a4"],
+            colors: ["#43609c", "#5eaade", "#ccc"],
             formatter: function (y) { return y + "%" }
       });
     }
@@ -323,7 +352,7 @@
         xkey: 'time',
         ykeys: ['tot', 'provider', 'simple'],
         labels: ['Registrati totali', 'Registrati via social', 'Registrati via email'],
-        lineColors: ["black", "#0b62a4", "#f18c09"]
+        lineColors: ["#000", "#f0ad4e", "#e5412d"]
       });
 
   } 
