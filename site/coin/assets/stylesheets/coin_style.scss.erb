@@ -1033,6 +1033,11 @@ fieldset[disabled] .btn-facebook.active {
 
 /********************* MOBILE *********************/
 
+@media (min-width: $screen-sm-min) {
+	.gift-container{
+		min-height: 296px;	
+	}
+} 
 @media (max-width: $screen-sm-min) { 
 
   body {
@@ -1043,7 +1048,12 @@ fieldset[disabled] .btn-facebook.active {
     background: -moz-linear-gradient(#bbb7ac, #857e6b) fixed;
     background: linear-gradient(#bbb7ac, #857e6b) fixed;
   }
-
+  
+  .gift-container{
+  	overflow: hidden;
+  	position: relative;
+  }
+  
   .body-landing {
     padding-top: 0;
   }

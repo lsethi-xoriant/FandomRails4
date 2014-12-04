@@ -133,18 +133,20 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     		$scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION;
     		$scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION;
   		
-  			$(".cta-media img.hidden-xs").fadeOut(1500);
+  			
+  			$(".gift-image").fadeTo(1500,0);
   			setTimeout(function(){
   				$(".loader").removeClass("hidden");
   				playSound($(".roll-sound")[0]);
   			}, 1000);
-  			
+
   			setTimeout(function(){
   				$(".cta-media img.hidden-xs").attr("src",data.calltoaction_info_list[0].calltoaction.media_image);
+  				$(".cta-media img.mobile").attr("src",data.calltoaction_info_list[0].calltoaction.thumbnail_url);
   				$(".loader").addClass("hidden");
-  				$(".cta-media img.hidden-xs").fadeIn(1500);
+  				$(".gift-image").fadeTo(1500,1);
   				playSound($(".blink-sound")[0]);
-  			}, 3000);
+  			}, 4500);
 			
         setTimeout(function() {
         	$scope.$apply(function() {
@@ -158,10 +160,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         			  $scope.calltoactions = data.calltoaction_info_list;
                 $scope.animation_in_progress = false;
               });
-       			}, 1000);
+       			}, 1500);
     			});
 	    		initAnonymousUser();
-        }, 4000);
+        }, 6000);
         
       }).error(function() {
         // ERROR.
