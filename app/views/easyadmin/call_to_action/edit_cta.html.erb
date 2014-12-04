@@ -75,14 +75,22 @@
           <%= render partial: "media_type-form", locals: { f: f } %>
         </div>
       </div>
-      
-      <%= render partial: "/easyadmin/call_to_action/aux", locals: { f: f } %>
+
+	  <div class="row">
+	  	<div class="col-md-10"><h3>ATTRIBUTI CAMPO AUX</h3></div>
+        <div class="col-md-2">
+	  		<input type='button' value='AGGIUNGI CAMPO' id='add-button-for-aux-fields' class='btn btn-primary'>
+	  	</div>
+	  </div>
+	  	<div class="row">
+	  	<div id='text-boxes-for-aux-fields' class="col-lg-6"></div>
+	  </div>
 
       <div class="row">
         <div class="col-md-10"><h3>TRIVIA</h3></div>
         <div class="col-md-2"><%= link_to_add_quiz_fields "AGGIUNGI TRIVIA", f, :interactions %></div>
       </div>
-              
+
       <div id="tmp-quiz-add"></div>
 
       <%= f.fields_for :interactions do |builder| %>
@@ -440,5 +448,22 @@
       $(element).html("sgancia");
     }
   }
+
+  $(document).ready(function(){
+  	addButtonHandlerForJsonFields("call_to_action", "aux");
+
+	<% aux = CallToAction.where(:id => @cta.id).pluck(:aux).first %>
+
+    <% unless aux.nil? %>
+		<% aux_hash = JSON.parse(aux) %>
+  		<% aux_hash.each_with_index do |(name, value), index| %>
+            $('#text-boxes-for-aux-fields').append('<input type="hidden" id="value-for-aux-field-0" name="call_to_action[aux]" value="{}">');
+  			$('#add-button-for-aux-fields').trigger('click');
+        	$('#name-for-aux-field-' + <%= (index + 1).to_s %>).val('<%= name %>');
+        	$('#name-for-aux-field-' + <%= (index + 1).to_s %>).trigger('keyup');
+        	$('#value-for-aux-field-' + <%= (index + 1).to_s %>).val('<%= value %>');
+        <% end %>
+  	<% end %>
+  });
 
 </script>

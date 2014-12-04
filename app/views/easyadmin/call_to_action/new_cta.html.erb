@@ -78,8 +78,16 @@
           <%= render partial: "media_type-form", locals: { f: f } %>
         </div>
       </div>
-      
-      <%= render partial: "/easyadmin/call_to_action/aux", locals: { f: f } %>
+
+	  <div class="row">
+	  	<div class="col-md-10"><h3>ATTRIBUTI CAMPO AUX</h3></div>
+        <div class="col-md-2">
+	  		<input type='button' value='AGGIUNGI CAMPO' id='add-button-for-aux-fields' class='btn btn-primary'>
+	  	</div>
+	  </div>
+	  	<div class="row">
+	  	<div id='text-boxes-for-aux-fields' class="col-lg-6"></div>
+	  </div>
 
       <div class="row">
         <div class="col-md-10"><h3>TRIVIA</h3></div>
@@ -289,6 +297,16 @@
     }
   }
 
+  function add_cta_fields(link, association, content) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-ctafield-add").prepend(content.replace(regexp, new_id));
+  }
+
+  function remove_cta_fields(link) {
+    $(link).parent().parent().parent().remove();
+  }
+
   var like_counter = false; 
   function add_like_fields(link, association, content) {
     if(!like_counter) {
@@ -441,5 +459,9 @@
     $(link).parent().parent().parent().remove();
     vote_counter = false;
   }
+
+  $(document).ready(function(){
+  	addButtonHandlerForJsonFields("call_to_action", "aux");
+  });
 
 </script>

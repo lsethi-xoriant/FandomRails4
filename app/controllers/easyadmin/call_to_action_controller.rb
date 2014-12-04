@@ -18,10 +18,7 @@ class Easyadmin::CallToActionController < ApplicationController
 
   def restore_from_aux(calltoaction)
     if calltoaction.aux.present?
-      aux = JSON.parse(calltoaction.aux)
-      calltoaction.button_label = aux["button_label"]
-      calltoaction.alternative_description = aux["alternative_description"]
-      calltoaction.enable_for_current_user = aux["enable_for_current_user"]
+      calltoaction.aux = JSON.parse(calltoaction.aux)
     end
     calltoaction
   end
@@ -34,7 +31,6 @@ class Easyadmin::CallToActionController < ApplicationController
       
       render template: "/easyadmin/call_to_action/new_cta"     
     else
-
       tag_list = params[:tag_list].split(",")
       @cta.call_to_action_tags.delete_all
       tag_list.each do |t|
@@ -53,7 +49,7 @@ class Easyadmin::CallToActionController < ApplicationController
     unless @cta.update_attributes(params[:call_to_action])
       @tag_list = params[:tag_list].split(",")
       @extra_options = params[:extra_options]
-      render template: "/easyadmin/call_to_action/edit_cta"   
+      render template: "/easyadmin/call_to_action/edit_cta"
     else
       tag_list = params[:tag_list].split(",")
       @cta.call_to_action_tags.delete_all

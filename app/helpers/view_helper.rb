@@ -13,6 +13,11 @@ module ViewHelper
     options[:id] = "#{form.object_name}_#{parts.join('_')}"
     name = get_json_field_name(parts) 
     start_value = form.object.send(parts[0])
+
+    if start_value.nil?
+      start_value = {}
+      form.object.send("#{parts[0]}=", start_value)
+    end
     set_json_field_value(options, start_value, parts)
     form.text_field name, options
   end
@@ -20,7 +25,7 @@ module ViewHelper
   def get_json_field_name(path_parts)
     # handles the array indexes in path
     parts_without_indexes = path_parts.map { |x| digit?(x[0]) ? '' : x }
-    "#{parts_without_indexes.join('][')}"
+    "[#{parts_without_indexes.join('][')}]"
   end
 
   def set_json_field_value(options, start_value, parts)
