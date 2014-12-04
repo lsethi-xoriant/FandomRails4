@@ -55,6 +55,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     initAnonymousUser();
 
     $scope.form_data = {};
+    $scope.animation_in_progress = false;
     
     $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION = "slide-right";
     $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION = "";
@@ -119,45 +120,51 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       });
   };
 
-  $scope.nextRandomCallToAction = function(except_calltoaction_id) {
+  $scope.nextRandomCallToAction = function(current_calltoaction_info) {
     update_ga_event("UpdateCallToAction", "nextRandom", "nextRandom", 1);
+      except_calltoaction_id = calltoaction_info.calltoaction.id;
+      $scope.animation_in_progress = true;
 
     	//playSound($(".click-sound")[0]);
 		
 	    $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
 	      .success(function(data) { 
-    		$scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION;
-    		$scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION;
-			
-			$(".cta-media img.hidden-xs").fadeOut(1500);
-			setTimeout(function(){
-				$("#loader").removeClass("hidden");
-				playSound($(".roll-sound")[0]);
-			}, 1000);
-			
-			setTimeout(function(){
-				$(".cta-media img.hidden-xs").attr("src",data.calltoaction_info_list[0].calltoaction.media_image);
-				$("#loader").addClass("hidden");
-				$(".cta-media img.hidden-xs").fadeIn(1500);
-				playSound($(".blink-sound")[0]);
-			}, 3000);
+      		$scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION;
+      		$scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION;
+    		
+    			$(".cta-media img.hidden-xs").fadeOut(1500);
+    			setTimeout(function(){
+    				$("#loader").removeClass("hidden");
+    				playSound($(".roll-sound")[0]);
+    			}, 1000);
+    			
+    			setTimeout(function(){
+    				$(".cta-media img.hidden-xs").attr("src",data.calltoaction_info_list[0].calltoaction.media_image);
+    				$("#loader").addClass("hidden");
+    				$(".cta-media img.hidden-xs").fadeIn(1500);
+    				playSound($(".blink-sound")[0]);
+    			}, 3000);
 				
 	        setTimeout(function() {
-	        	$scope.$apply(function(){
-	        		console.log(data.calltoaction_info_list[0]);
+	        	$scope.$apply(function() {
+	        		//console.log(data.calltoaction_info_list[0]);
 	        		$scope.calltoactions[0].calltoaction.description = data.calltoaction_info_list[0].calltoaction.description;
 	        		$scope.calltoactions[0].calltoaction.aux.shop_url = data.calltoaction_info_list[0].calltoaction.aux.shop_url;
-	    			$scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION;
-    				$scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
-					setTimeout(function(){
-	        			$scope.calltoactions = data.calltoaction_info_list;
+	    			  $scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION;
+    				  $scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
+					    setTimeout(function() {
+                $scope.$apply(function() {
+	        			  $scope.calltoactions = data.calltoaction_info_list;
+                  $scope.animation_in_progress = false;
+                });
 	       			}, 1000);
-    			});
-	    		initAnonymousUser();
+      			});
+  	    		initAnonymousUser();
 	        }, 4000);
 	        
 	      }).error(function() {
-	        // ERROR.
+          // ERROR.
+          $scope.animation_in_progress = false;
 	      });
   };
 
