@@ -22,6 +22,7 @@ class Easyadmin::CallToActionController < ApplicationController
       calltoaction.button_label = aux["button_label"]
       calltoaction.alternative_description = aux["alternative_description"]
       calltoaction.enable_for_current_user = aux["enable_for_current_user"]
+      calltoaction.shop_url = aux["shop_url"]
     end
     calltoaction
   end

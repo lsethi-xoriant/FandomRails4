@@ -12,10 +12,13 @@ class PasswordsController < Devise::PasswordsController
 
     if successfully_sent?(resource)
       flash[:alert] = "Ti è stata spedita un'email con le istruzioni per la configurazione della nuova password."
-      redirect_to "/users/sign_in"
+      redirect_to "/password_feedback"
     else
       respond_with(resource)
     end
+  end
+
+  def feedback
   end
 
 end

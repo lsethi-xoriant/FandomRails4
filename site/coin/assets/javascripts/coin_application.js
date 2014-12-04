@@ -20,3 +20,5 @@
 //= require bootstrap-fileupload
 //= require jquery.jplayer
 //= require fandom-utils
+//= require fastclick
+//= require respond.min

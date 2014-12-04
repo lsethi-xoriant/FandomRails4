@@ -110,6 +110,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   	element.play();
   };
 
+  $scope.acceptCookies = function() {
+    $http.post("/user_cookies")
+      .success(function(data) { 
+        $("#cookies-bar").fadeOut("slow");
+      }).error(function() {
+        // ERROR.
+      });
+  };
+
   $scope.nextRandomCallToAction = function(except_calltoaction_id) {
     update_ga_event("UpdateCallToAction", "nextRandom", "nextRandom", 1);
 

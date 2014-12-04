@@ -29,3 +29,16 @@
     </div>
   </div>
 </div>
+
+<% unless cookies[:user_cookies] %>
+  <div id="cookies-bar" class="navbar navbar-fixed-bottom cookies-footer">
+    <div class="row">
+      <div class="col-sm-11">
+        <p class="cookies-footer__description">COIN usa i cookie per offrirti la migliore esperienza possible su questo sito.  Procedendo con la navigazione sul sito, ci autorizzi a memorizzare e ad accedere ai cookie sul tuo dispositivo.<br>Per leggere la nostra politica in materia di cookie, <a class="cookies-footer__link" href="/cookies_policy">clicca qui</a>.</p>
+      </div>
+      <div class="col-sm-1 text-right">
+        <a class="btn btn-default btn-xs btn-block" href="javascript: void(0)" ng-click="acceptCookies()">CHIUDI</a>
+      </div>
+    </div>
+  </div>
+<% end %>

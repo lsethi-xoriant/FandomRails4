@@ -63,6 +63,9 @@ class Sites::Coin::ApplicationController < ApplicationController
     end
   end
 
+  def show_cookies_policy
+  end
+
   def show_privacy_policy
   end
 

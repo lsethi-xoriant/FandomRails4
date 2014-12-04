@@ -3,9 +3,11 @@
 
 class SystemMailer < ActionMailer::Base
   
-  def share_interaction(user, address_to_send, calltoaction)
+  def share_interaction(user, address_to_send, calltoaction, request)
+    subject = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["title"]
+    @cuser = user
     @calltoaction = calltoaction
-    mail(to: address_to_send, subject: "")
+    mail(to: address_to_send, subject: "#{subject} - Un tuo amico di ha condiviso un contenuto")
   end
 
   def welcome_mail(user)
@@ -19,7 +21,7 @@ class SystemMailer < ActionMailer::Base
   	@cuser = user
   	@ticket_id = time_to_win
   	
-  	mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "#{subject} - #{@reward.title}")
+  	mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "#{subject} - Hai vinto #{@reward.title}")
   end
 
   def win_admin_notice_mail(user, reward, time_to_win, request)
