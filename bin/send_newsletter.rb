@@ -1,15 +1,21 @@
 require('csv')
 require('aws/ses')
+require_relative('../lib/config_utils')
+include ConfigUtils
 
 # Sends a newsletter to the users listed in a CSV. 
 # For further information please see the documentation of the command line tool.
-def send_newsletter(csv_path, html_template_path, ses_access_key_id, ses_secret_key, from_email, subject)
+def send_newsletter(rails_app_dir, tenant, html_template_path, csv_path, from_email, subject)
+  settings = YAML.load_file("#{rails_app_dir}/config/deploy_settings.yml")
+
+  ses = AWS::SES::Base.new(
+    :access_key_id     => get_from_hash_by_path(settings, "sites/#{tenant}/mailer/ses/:access_key_id", nil),
+    :secret_access_key => get_from_hash_by_path(settings, "sites/#{tenant}/mailer/ses/:secret_access_key", nil),
+    :server => get_from_hash_by_path(settings, "sites/#{tenant}/mailer/ses/:server", nil)
+  )
+
   csv = CSV.read(csv_path, :col_sep => "\t")
   html_template = open(html_template_path).read
-  ses = AWS::SES::Base.new(
-    :access_key_id     => ses_access_key_id, 
-    :secret_access_key => ses_secret_key
-  )
   
   keys = csv[0]
   users = get_users(csv[1 .. -1], keys)
@@ -50,24 +56,24 @@ end
 
 # Script entry point.
 def main
-  if ARGV.size < 6
+  if ARGV.size != 6
     puts <<-EOF
-Usage: #{$0} <html_template> <csv> <ses_access_key_id> <ses_secret_key> <from_email> <subject>
+Usage: #{$0} <rails_app_dir> <tenant> <html_template> <csv> <from_email> <subject>
   Send a newsletter to every used listed in <csv>.
-  The csv separator is TAB, the header line is mandatory and a the newsletter 
-  is sent to every used listed in the email column.
+  The csv separator is TAB, the header line is mandatory and a the newsletter is sent to every used listed in the 'email' column.
+  The rails_app_dir and the tenant are used to set the smtp configuration.
 EOF
     exit
   end
   
-  html_template_path = ARGV[0]
-  csv_path = ARGV[1]
-  ses_access_key_id  = ARGV[2]
-  ses_secret_key = ARGV[3]
+  rails_app_dir  = ARGV[0]
+  tenant  = ARGV[1]
+  html_template_path = ARGV[2]
+  csv_path = ARGV[3]
   from_email = ARGV[4]
   subject = ARGV[5]
   
-  send_newsletter(csv_path, html_template_path, ses_access_key_id, ses_secret_key, from_email, subject)
+  send_newsletter(rails_app_dir, tenant, html_template_path, csv_path, from_email, subject)
 end
 
 main()
