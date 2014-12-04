@@ -99,12 +99,7 @@ body {
 }
 
 .header__ticket-img {
-  width: 130px;
-  margin-top: 20px;
-}
-
-.header__ticket-text-column {
-  padding-left: 0;
+  width: 200px;
 }
 
 .header__ticket-title {
@@ -551,31 +546,28 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
 /********************* FOOTER *********************/
 
 .footer__text-row {
-  margin-top: 65px;
+  margin-top: 15px;
 }
 
 .footer__row {
   margin-top: 30px;
-}
-
-.footer__img-column {
-  text-align: right;
+  background: #c7c0b0;
 }
 
 .footer__img {
-  width: 350px;
+  width: 370px;
 }
 
 .footer__title {
-  font-size: 18px;
-  line-height: 18px;
+  font-size: 22px;
+  line-height: 24px;
   font-weight: 700;
   margin: 0;
 }
 
 .footer__description {
   font-size: 20px;
-  line-height: 20px;
+  line-height: 22px;
   margin: 0;
 }
 
@@ -583,6 +575,7 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
   font-size: 12px;
   line-height: 14px;
   margin-top: 15px;
+  text-transform: uppercase;
 }
 
 /********************* USER BAR *********************/
@@ -600,6 +593,11 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
   line-height: 50px; 
   font-size: 18px;
   color: #959595; // gray
+}
+
+.user-bar__body__sign-out {
+  font-size: 13px; padding-left: 5px;
+  color: #959595;
 }
 
 .panel-body-user-bar {
@@ -1043,6 +1041,7 @@ fieldset[disabled] .btn-facebook.active {
 		position: relative;
 	}
 } 
+
 @media (max-width: $screen-sm-min) { 
 
   body {
@@ -1054,12 +1053,12 @@ fieldset[disabled] .btn-facebook.active {
     background: linear-gradient(#bbb7ac, #857e6b) fixed;
   }
   
-  .gift-container{
+  .gift-container {
   	overflow: hidden;
   	position: relative;
   }
   
-  .body-landing {
+  .body-landing, .body-registration {
     padding-top: 0;
   }
 
@@ -1173,6 +1172,11 @@ fieldset[disabled] .btn-facebook.active {
     margin-bottom: 15px;
   }
 
+  .footer__title {
+    font-size: 18px;
+    line-height: 20px;
+  }
+
   .footer__row {
     text-align: center;
     margin-top: 0;
@@ -1180,10 +1184,6 @@ fieldset[disabled] .btn-facebook.active {
 
   .footer__img {
     width: 250px;
-  }
-
-  .footer__img-column {
-    text-align: center;
   }
 
   .instant-win__win-text-description {

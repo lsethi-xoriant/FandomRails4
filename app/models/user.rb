@@ -125,7 +125,7 @@ class User < ActiveRecordWithJSON
     end 
   end
 
-  def logged_from_omniauth auth, provider
+  def logged_from_omniauth(auth, provider)
     # Se il PROVIDER era agganciato ad un altro utente lo sgancio e lo attacco all'utente corrente.
     user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid);
     if user_auth
@@ -151,6 +151,7 @@ class User < ActiveRecordWithJSON
       )
     end 
 
+    self.aux = JSON.parse(self.aux)
     self.save
     return self
   end
