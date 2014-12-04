@@ -19,6 +19,12 @@ class Easyadmin::CallToActionController < ApplicationController
   def restore_from_aux(calltoaction)
     if calltoaction.aux.present?
       calltoaction.aux = JSON.parse(calltoaction.aux)
+      # TODO Ale
+      aux = calltoaction.aux
+      calltoaction.button_label = aux["button_label"]
+      calltoaction.alternative_description = aux["alternative_description"]
+      calltoaction.enable_for_current_user = aux["enable_for_current_user"]
+      calltoaction.shop_url = aux["shop_url"]
     end
     calltoaction
   end

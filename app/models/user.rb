@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class User < ActiveRecord::Base
+class User < ActiveRecordWithJSON
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -10,7 +10,9 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
     :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url,
-    :major_date, :gender
+    :major_date, :gender, :aux
+
+  json_attributes [[:aux, EmptyAux]]
 
   attr_accessor :day_of_birth, :month_of_birth, :year_of_birth, :required_attrs, :major_date
 
@@ -36,25 +38,39 @@ class User < ActiveRecord::Base
   validate :presence_of_birth_date, if: Proc.new { |f| required_attr?("birth_date") }
   validates_presence_of :first_name, if: Proc.new { |f| required_attr?("first_name") }
   validates_presence_of :last_name, if: Proc.new { |f| required_attr?("last_name") }
-  validates :privacy, :acceptance => { :accept => true }
+  validate :privacy_accepted
+  validate :newsletter_acceptance, if: Proc.new { |f| required_attr?("newsletter") }
   validates_presence_of :username, if: Proc.new { |f| required_attr?("username") }
   validates :username, uniqueness: true, if: Proc.new { |f| required_attr?("username") }
-  validates_presence_of :privacy
   validate :major, if: Proc.new { |f| major_date.present? }
 
   after_initialize :set_attrs
 
+  def newsletter_acceptance
+    errors.add(:newsletter, :accepted) unless newsletter
+  end
+
+  def privacy_accepted
+    errors.add(:privacy, :accepted) unless privacy
+  end
+
   def set_attrs
     if !day_of_birth.present? && birth_date
       self.day_of_birth = birth_date.strftime("%d")
+    else
+      self.day_of_birth = ""
     end
 
     if !month_of_birth.present? && birth_date
       self.month_of_birth = birth_date.strftime("%m")
+    else
+      self.month_of_birth = ""
     end
 
     if !year_of_birth.present? && birth_date
       self.year_of_birth = birth_date.strftime("%Y")
+    else
+      self.year_of_birth = ""
     end
   end
 
@@ -109,7 +125,7 @@ class User < ActiveRecord::Base
     end 
   end
 
-  def logged_from_omniauth auth, provider
+  def logged_from_omniauth(auth, provider)
     # Se il PROVIDER era agganciato ad un altro utente lo sgancio e lo attacco all'utente corrente.
     user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid);
     if user_auth
@@ -135,6 +151,7 @@ class User < ActiveRecord::Base
       )
     end 
 
+    self.aux = JSON.parse(self.aux)
     self.save
     return self
   end

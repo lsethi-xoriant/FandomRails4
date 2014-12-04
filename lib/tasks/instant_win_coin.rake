@@ -1,3 +1,6 @@
+#!/bin/env ruby
+# encoding: utf-8
+
 namespace :instant_win_coin do
   #require 'digest/md5'
   DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -9,52 +12,59 @@ namespace :instant_win_coin do
   
   def initContest
     Apartment::Database.switch("coin")
-    point = Reward.create(
-      title: "point", 
-      short_description: "Ticket reward per giocare agli instantwin", 
-      button_label: "Gioca e vinci", 
-      media_type: "DIGITALE", 
-      countable: true, 
-      name: "point"
-    )
+    point = Reward.find_by_name("point")
+    #Reward.create(
+    #  title: "point", 
+    #  short_description: "Ticket reward per giocare agli instantwin", 
+    #  button_label: "Gioca e vinci", 
+    #  media_type: "DIGITALE", 
+    #  countable: true, 
+    #  name: "point"
+    #)
+=begin
     gift_500 = Reward.create(
-      title: "Gift Card Coin 500 Euro", 
-      short_description: "1 Gift Card Coin 500 Euro", 
+      title: "GIFTCARD Coin €500", 
+      short_description: "1 GIFTCARD Coin €500", 
       media_type: "DIGITALE", 
       name: COIN_GIFT_500['name']
     )
     gift_100 = Reward.create(
-      title: "Gift Card Coin 100 Euro", 
-      short_description: "1 Gift Card Coin 100 Euro", 
+      title: "GIFTCARD Coin €100", 
+      short_description: "1 GIFTCARD Coin €100", 
       media_type: "DIGITALE", 
       name: COIN_GIFT_100['name']
     )
     gift_50 = Reward.create(
-      title: "Gift Card Coin 50 Euro", 
-      short_description: "1 Gift Card Coin 50 Euro", 
+      title: "GIFTCARD Coin €50", 
+      short_description: "1 GIFTCARD Coin €50", 
       media_type: "DIGITALE", 
       name: COIN_GIFT_50['name']
     )
+=end
     
     contest_prize_list = create_contest_prize_list()
     
-    contest = CallToAction.create(
-      name: "coin_contest",
-      title: "Concorso Coin",
-      description: "Il concorso di Coin",
-      valid_from: Time.parse(COIN_CONTEST_START_DATE),
-      valid_to: Time.parse(COIN_CONTEST_END_DATE)
-    )
-    instantwin_interaction = InstantwinInteraction.create(
-      reward_id: point.id
-    )
-    interaction = Interaction.new(
-      name: "instantwin_interaction",
-      when_show_interaction: "SEMPRE_VISIBILE",
-      call_to_action_id: contest.id
-    )
-    interaction.resource = instantwin_interaction
-    interaction.save
+    contest = CallToAction.find_by_name('coin_contest')
+    instantwin_interaction = contest.interactions.first
+
+    #CallToAction.create(
+    #  name: "coin_contest",
+    #  title: "Concorso Coin",
+    #  description: "Il concorso di Coin",
+    #  valid_from: Time.parse(COIN_CONTEST_START_DATE),
+    #  valid_to: Time.parse(COIN_CONTEST_END_DATE)
+    #)
+
+    #instantwin_interaction = InstantwinInteraction.create(
+    #  reward_id: point.id
+    #)
+    #interaction = Interaction.new(
+    #  name: "instantwin_interaction",
+    #  when_show_interaction: "SEMPRE_VISIBILE",
+    #  call_to_action_id: contest.id
+    #)
+    #interaction.resource = instantwin_interaction
+    #interaction.save
     
     [contest_prize_list, instantwin_interaction, contest]
     

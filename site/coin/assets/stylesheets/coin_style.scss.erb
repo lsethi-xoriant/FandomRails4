@@ -11,12 +11,12 @@ $container-lg:                 $container-desktop !default;
 
 body {
   padding-top: 15px;
-  background-image: url("/assets/coin/bg.jpg");
+  background-image: url("<%= asset_path("coin/bg.jpg") %>");
   background-size: 100% auto;
   background-position: top center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-color: #9c806a;
+  background-color: #857e6b;
   font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
 }
 
@@ -26,6 +26,70 @@ body {
   box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
 }
 
+.bold {
+  font-weight: 700;
+}
+
+.coin-footer {
+  background: #fff;
+}
+
+.coin-footer__a {
+  color: #000;
+}
+
+.coin-footer__text {
+  font-size: 12px;
+  padding: 5px 0 5px 0;
+  margin: 0;
+}
+
+.instant-win__shop-label {
+}
+
+.instant-win__terms-a {
+  font-weight: 400;
+  color: #000;
+  text-decoration: underline;
+}
+
+.form-error {
+  color: #d21020;
+}
+
+/********************* COOKIES FOOTER *********************/
+
+.cookies-footer {
+  background: rgba(0, 0, 0, 0.6); 
+  color: #fff; 
+  min-height: 0; 
+  padding: 10px;
+}
+
+.cookies-footer__description {
+  margin: 0; 
+  font-size: 11px;
+}
+
+.cookies-footer__link {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/********************* TERMS MODAL *********************/
+
+.terms-modal__title {
+  color: #d21020; // red
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.terms-modal__description {
+  padding: 0;
+}
+
+/********************* HEADER *********************/
+
 .header-row {
   margin-bottom: 15px;
 }
@@ -34,9 +98,26 @@ body {
   margin-top: 15px;
 }
 
+.header__ticket-img {
+  width: 200px;
+}
+
+.header__ticket-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 16px;
+  margin: 50px 0 0;
+}
+
+.header__ticket-description {
+  font-size: 12px; 
+  line-height: 12px;
+}
+
 /********************* INSTANT WIN *********************/
 
 .instant-win__modal-footer {
+  background: #d4d1c5;
   background: -webkit-linear-gradient(#f6f2e2, #d4d1c5);
   background: -o-linear-gradient(#f6f2e2, #d4d1c5);
   background: -moz-linear-gradient(#f6f2e2, #d4d1c5);
@@ -48,13 +129,32 @@ body {
   margin-top: 10px;
 }
 
+.instant-win__win-row {
+  margin-top: 25px;
+}
+
+.instant-win__win-text-title {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 18px;
+  color: #d21020; // red
+}
+
+.instant-win__win-text-description {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 28px;
+  color: #000;
+}
+
 .instant-win__footer__text-1 {
   font-size: 14px;
   margin: 0;
 }
 
 .instant-win__footer__text-2 {
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 700;
   color: #d21020;
   margin: 0;
@@ -67,7 +167,7 @@ body {
 }
 
 .instant-win__button {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   font-weight: 700;
 }
 
@@ -78,6 +178,7 @@ body {
 
 .instant-win__ticket-panel {
   margin-bottom: 30px;
+  background: #e3e3e3;
   background: -webkit-linear-gradient(#cecece, #e3e3e3);
   background: -o-linear-gradient(#cecece, #e3e3e3);
   background: -moz-linear-gradient(#cecece, #e3e3e3);
@@ -163,24 +264,32 @@ body {
 
 /********************* LANDING *********************/
 
+.registration__button__landing {
+  font-weight: 400 !important;
+  border-radius: 4px !important;
+}
+
 .landing__text {
-  margin-top: 50px;
+  margin-top: 30px;
   font-weight: 700;
   font-size: 18px;
 }
 
-.landing__button {
-  margin-top: 50px;
-  font-weight: 700;
-  font-size: 18px;
+.landing__gift-img, .landing__logo-img {
+  margin-top: 15px;
+}
+
+.landing__buttons {
+  margin-top: 30px;
 }
 
 .landing__button__facebook-icon, .call-to-action__share__modal-facebook-icon {
   margin-right: 15px;
 }
 
-.landing__sign-up {
+.landing__sign-in {
   margin-top: 10px;
+  color: #fff;
 }
 
 .landing__sale-img {
@@ -228,6 +337,7 @@ body {
 }
 
 .call-to-action__share__modal-panel-body {
+  background: #e5e5e5;
   background: -webkit-linear-gradient(#ffffff, #e5e5e5);
   background: -o-linear-gradient(#ffffff, #e5e5e5);
   background: -moz-linear-gradient(#ffffff, #e5e5e5);
@@ -247,6 +357,7 @@ body {
 
 .panel-body-call-to-action {
   padding-bottom: 5px;
+  min-height: 370px;
 }
 
 .call-to-action__share-and-win {
@@ -255,10 +366,12 @@ body {
 
 .call-to-action__share-and-win__ticket-img {
   float: left;
+  width: 64px;
 }
 
 .call-to-action__footer {
   padding: 0 15px 18px;
+  background: #d6d5d1;
   background: -webkit-linear-gradient(#f7f6f1, #d6d5d1);
   background: -o-linear-gradient(#f7f6f1, #d6d5d1);
   background: -moz-linear-gradient(#f7f6f1, #d6d5d1);
@@ -270,7 +383,7 @@ body {
   padding: 0 0 10px 10px;
   text-transform: uppercase;
   margin: 0;
-  color: #fff;
+  color: #000;
   position: absolute;
   bottom: 0;
 }
@@ -289,7 +402,6 @@ body {
   font-size: 18px; 
   margin: 0; 
   padding-left: 85px;
-  font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
   font-weight:  700;
 }
 
@@ -424,12 +536,47 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary:active,
 .call-to-action__share__modal-button.btn-primary.disabled.active, 
 .call-to-action__share__modal-button.btn-primary[disabled].active, 
 fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active { 
-  background-color: #BF0C19; 
+  background: #BF0C19; 
   border-color: #88060f; 
   -webkit-box-shadow: 0px 5px 0px 0px #5e0409;
   -moz-box-shadow: 0px 5px 0px 0px #5e0409;
   box-shadow: 0px 5px 0px 0px #5e0409;
 } 
+
+/********************* FOOTER *********************/
+
+.footer__text-row {
+  margin-top: 15px;
+}
+
+.footer__row {
+  margin-top: 30px;
+  background: #c7c0b0;
+}
+
+.footer__img {
+  width: 370px;
+}
+
+.footer__title {
+  font-size: 22px;
+  line-height: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.footer__description {
+  font-size: 20px;
+  line-height: 22px;
+  margin: 0;
+}
+
+.footer__description-small {
+  font-size: 12px;
+  line-height: 14px;
+  margin-top: 15px;
+  text-transform: uppercase;
+}
 
 /********************* USER BAR *********************/
 
@@ -448,7 +595,13 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
   color: #959595; // gray
 }
 
+.user-bar__body__sign-out {
+  font-size: 13px; padding-left: 5px;
+  color: #959595;
+}
+
 .panel-body-user-bar {
+  background: #dddddd;
   background: -webkit-linear-gradient(#fbfbfb, #dddddd);
   background: -o-linear-gradient(#fbfbfb, #dddddd);
   background: -moz-linear-gradient(#fbfbfb, #dddddd);
@@ -479,6 +632,7 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
 
 .user-bar__ticket-panel {
   margin-bottom: 0;
+  background: #e3e3e3;
   background: -webkit-linear-gradient(#cecece, #e3e3e3);
   background: -o-linear-gradient(#cecece, #e3e3e3);
   background: -moz-linear-gradient(#cecece, #e3e3e3);
@@ -535,6 +689,7 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
 
 .btn-primary { 
   color: #ffffff; 
+  background: #BF0C19;
   background: -webkit-linear-gradient(#e73141, #BF0C19);
   background: -o-linear-gradient(#e73141, #BF0C19);
   background: -moz-linear-gradient(#e73141, #BF0C19);
@@ -638,6 +793,7 @@ fieldset[disabled] .btn-gift.active {
 .btn-facebook { 
   color: #ffffff; 
   border-color: #2C4172; 
+  background: #364E89;
   background: -webkit-linear-gradient(#566fa9, #364E89);
   background: -o-linear-gradient(#566fa9, #364E89);
   background: -moz-linear-gradient(#566fa9, #364E89);
@@ -700,7 +856,7 @@ fieldset[disabled] .btn-facebook.active {
 
 /********************* SPINNER *********************/
 
-#fountainG {
+.fountainG-container {
   width: 130px;
   height: 16px;
   z-index: 9999;
@@ -877,14 +1033,41 @@ fieldset[disabled] .btn-facebook.active {
   }
 }
 
-
 /********************* MOBILE *********************/
+
+@media (min-width: $screen-sm-min) {
+	.gift-container{
+		min-height: 296px;
+		position: relative;
+	}
+} 
 
 @media (max-width: $screen-sm-min) { 
 
   body {
-    padding-top: 60px;
+    padding-top: 42px;
     background-image: none;
+    background: -webkit-linear-gradient(#bbb7ac, #857e6b) fixed;
+    background: -o-linear-gradient(#bbb7ac, #857e6b) fixed;
+    background: -moz-linear-gradient(#bbb7ac, #857e6b) fixed;
+    background: linear-gradient(#bbb7ac, #857e6b) fixed;
+  }
+  
+  .gift-container {
+  	overflow: hidden;
+  	position: relative;
+  }
+  
+  .body-landing, .body-registration {
+    padding-top: 0;
+  }
+
+  .privacy-policy__text {
+    font-size: 10px;
+  }
+
+  .panel-body-call-to-action {
+    padding: 5px;
   }
 
   #fountainG {
@@ -899,15 +1082,13 @@ fieldset[disabled] .btn-facebook.active {
     margin-top: 0px;
   }
 
-  .call-to-action__media__description-mobile {
-    padding: 15px 0 0 0;
-    font-size: 11px;
+  .panel-body-call-to-action {
+    min-height: 0;
   }
 
   .call-to-action__share-and-win {
-    border-top: 1px solid #959595;
     margin-top: 0;
-    padding-top: 10px;
+    padding-top: 0;
   }
 
   .call-to-action__share__modal-panel {
@@ -924,7 +1105,12 @@ fieldset[disabled] .btn-facebook.active {
     font-weight: 700;
     margin: 0 0 0 15px;
     position: relative;
-    bottom: 15px;
+    bottom: 7px; /* bottom: 15px; */
+  }
+
+  .call-to-action__button__repeat-icon {
+    font-size: 35px; 
+    top: 4px;
   }
 
   .call-to-action__media__button__gift {
@@ -935,8 +1121,10 @@ fieldset[disabled] .btn-facebook.active {
   }
 
   .call-to-action__share-and-win__title {
-    font-size: 16px; 
+    font-size: 13px; 
     padding-left: 0;
+    padding-top: 15px;
+    font-weight: 400;
   }
 
   .user-bar__ticket-panel {
@@ -965,6 +1153,81 @@ fieldset[disabled] .btn-facebook.active {
     max-width: 175px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .call-to-action__share__modal-title {
+    font-size: 14px;
+  }
+
+  .landing__gift-img {
+    max-width: 220px;
+  }
+
+  .landing__logo-img {
+    max-width: 220px;
+  }
+
+  .footer__text-row {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .footer__title {
+    font-size: 18px;
+    line-height: 20px;
+  }
+
+  .footer__row {
+    text-align: center;
+    margin-top: 0;
+  }
+
+  .footer__img {
+    width: 250px;
+  }
+
+  .instant-win__win-text-description {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 22px;
+    color: #000;
+  }
+
+  .call-to-action__media__description-mobile {
+    margin: 0;
+    position: absolute;
+    bottom: 10px;
+    left: 25px;
+  }
+
+  .call-to-action__media__button__gift-icon {
+    margin-right: 0;
+  }
+
+  .header-row {
+    margin-bottom: 5px;
+  }
+
+  .cookies-footer__description {
+    margin-bottom: 15px;
+  }
+
+  .landing__logo-img {
+    max-width: 150px;
+  }
+
+  .landing__gift-img {
+    max-width: 260px;
+  }
+
+  .landing__text {
+    margin-top: 0;
+    font-weight: 400;
+    font-size: 13px;
+  }
+
+  .landing__buttons {
+    margin-top: 0;
   }
 
 }

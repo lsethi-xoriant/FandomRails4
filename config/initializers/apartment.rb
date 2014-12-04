@@ -41,11 +41,12 @@ end
 module Fandom
   class Application < Rails::Application    
     config.middleware.use 'Apartment::Elevators::Generic', Proc.new { |request| 
-      site = config.domain_to_site.fetch(request.host, config.unbranded_site)
-      if site.share_db.nil?
-        site.id
+      if $site.nil?
+        'fandom'
+      elsif $site.share_db.nil?
+        $site.id
       else
-        site.share_db
+        $site.share_db
       end
     }
   end

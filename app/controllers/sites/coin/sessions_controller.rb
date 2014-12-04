@@ -6,8 +6,8 @@ class Sites::Coin::SessionsController < SessionsController
   include CoinHelper
 
   def setUpAccount()
-    assignPromocode()
     assignRegistrationReward()
+    SystemMailer.welcome_mail(current_user).deliver
   end
 
 end

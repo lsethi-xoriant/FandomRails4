@@ -41,7 +41,6 @@ module CacheHelper
   end
 
   def get_cache_key(key = nil)
-    site = get_site_from_request!
     if key.nil?
       # WARNING: this statement assumes that get_cache_key is used at a certain call stack depth. 
       # Refactoring the code without changing this line might corrupt the cache!
@@ -50,16 +49,15 @@ module CacheHelper
       part = parts[0].split('/')[-1]
       key = "#{part}:#{parts[1]}"
     end
-    result = "f:#{site.id}:#{key}"
+    result = "f:#{$site.id}:#{key}"
     result
   end
   
   def may_get_template_cache_key(key)
-    site = get_site_from_request!
     if key.is_a? String
-      [site.id, key]
+      [$site.id, key]
     elsif key.is_a? Array
-      [site.id] + key
+      [$site.id] + key
     else
       log_error("bad cache key", { key: key.to_s, key_class: key.class })
       nil

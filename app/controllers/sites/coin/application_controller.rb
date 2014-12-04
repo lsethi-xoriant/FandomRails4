@@ -1,6 +1,26 @@
 
 class Sites::Coin::ApplicationController < ApplicationController
 
+  def complete_for_contest
+    user_params = params[:user]
+    
+    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date", "location", "contest", "role"]
+    user_params = user_params.merge(required_attrs: required_attrs)
+    user_params[:aux][:$validating_model] = "UserAux"  
+    user_params[:major_date] = COIN_CONTEST_START_DATE
+
+    response = {}
+    if !current_user.update_attributes(user_params)
+      response[:errors] = current_user.errors.full_messages
+    else
+      log_audit("registration completion", { 'form_data' => params[:user], 'user_id' => current_user.id })
+    end
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+  end
+
   def init_aux
 
     if cookies[:from_registration].blank?
@@ -30,8 +50,20 @@ class Sites::Coin::ApplicationController < ApplicationController
     }
   end
 
+  def show_stores
+  end
+
   def registration_fully_completed?
-    current_user.province.present? && current_user.birth_date.present?
+    if current_user.aux.present?
+      aux = JSON.parse(current_user.aux)
+      aux_validate = aux["contest"] == "true" && aux["terms"] == "true"
+      current_user.province.present? && current_user.birth_date.present? && aux_validate
+    else
+      false
+    end
+  end
+
+  def show_cookies_policy
   end
 
   def show_privacy_policy

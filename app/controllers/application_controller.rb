@@ -22,6 +22,13 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
+  def user_cookies
+    cookies[:user_cookies] = { value: true, expires: 1.year.from_now }
+    respond_to do |format|
+      format.json { render json: {}.to_json }
+    end
+  end
+
   def file_upload_too_large
   end
 

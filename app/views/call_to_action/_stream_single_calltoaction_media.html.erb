@@ -11,7 +11,7 @@
       <img id="secondary-media-image-{{calltoaction_info.calltoaction.id}}" class="secondary-media" style="width: 100%;">
     </div>
     <!-- MAIN MEDIA -->
-    <div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA'" id="main-media-{{calltoaction_info.calltoaction.id}}">
+    <div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA' || calltoaction_info.calltoaction.media_type == 'FLOWPLAYER'" id="main-media-{{calltoaction_info.calltoaction.id}}">
       <div class="video flex-video widescreen media-youtube" style="background:#222;">             
         <!-- IFRAME VIDEO -->
         <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" style="height: 350px; width: 450px;"></div>

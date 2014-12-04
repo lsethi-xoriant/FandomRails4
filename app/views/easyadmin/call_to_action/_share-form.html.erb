@@ -39,7 +39,7 @@
 				   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["MAI_VISIBILE", "MAI_VISIBILE"]], {}, { :class => "form-control" }) %>
 				</div>
 
-				<div class="form-group hidden">
+				<div class="form-group ">
           <label class="text-input">JSON</label>
 					<%= shareform.text_area :providers, class: "form-control provider-json", rows: 4, readonly: true, style: "font-size: 10px;" %>
 				</div>
@@ -180,6 +180,7 @@
 	function updateProviderJson(element) {
 		facebook_share = $(element).parent().parent().parent().find(".facebook-share");
 		twitter_share = $(element).parent().parent().parent().find(".twitter-share");
+		email_checkbox = $(element).parent().parent().parent().parent().find(".email-checkbox")[0];
 
 		json = {};
 
@@ -197,6 +198,10 @@
 			json.twitter = {};
 			json.twitter.message = twitter_share.find(".twitter-message").val(); 
 			json.twitter.link = twitter_share.find(".twitter-link").val(); 
+		}
+
+		if(email_checkbox.checked) { 
+			json.email = {};
 		}
 
 		json_div = $(element).parent().parent().parent().parent().find(".provider-json").val(JSON.stringify(json));

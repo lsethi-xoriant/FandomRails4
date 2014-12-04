@@ -1,4 +1,4 @@
-var streamCalltoactionModule = angular.module('StreamCalltoactionModule', ['ngRoute', 'ngSanitize']);
+var streamCalltoactionModule = angular.module('StreamCalltoactionModule', ['ngRoute', 'ngSanitize', 'ngAnimate']);
 
 StreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce'];
 streamCalltoactionModule.controller('StreamCalltoactionCtrl', StreamCalltoactionCtrl);
@@ -8,15 +8,39 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
+streamCalltoactionModule.animation('.slide-left', function() {
+  return {
+    // you can also capture these animation events
+    addClass : function(element, className, done) {
+    	$(element).hide('slide', {direction: 'left'}, 1000);
+    },
+    removeClass : function(element, className, done) {
+    	$(element).show('slide', {direction: 'left'}, 1000);
+    }
+  };
+});
+
+streamCalltoactionModule.animation('.slide-right', function() {
+  return {
+    // you can also capture these animation events
+    addClass : function(element, className, done) {
+    	$(element).effect( "fade", {}, 1000);
+    },
+    removeClass : function(element, className, done) {
+    	$(element).effect( "fade", {}, 1000);
+    }
+  };
+});
+
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $scope.unsafe = function(value) {
      return $sce.trustAsHtml(value);
-  }
+  };
 
   $scope.sanitizeText = function(text) {
     return String(text).replace(/<[^>]+>/gm, '');
-  }
+  };
 
   $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux, kaltura_params) {
     $scope.aux = aux;
@@ -25,11 +49,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     if($scope.aux.from_registration) {
       $("#registration-modal").modal("show");
+      ga('send', 'event', "Registration", "Registration", "Registration", 1, true);
     }
 
     initAnonymousUser();
 
     $scope.form_data = {};
+    $scope.animation_in_progress = false;
+    
+    $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION = "slide-right";
+    $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION = "";
+    $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION = "call-to-action__media__description hidden-xs slide-left";
+    $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION = "call-to-action__media__description hidden-xs";
 
     $scope.ajax_comment_append_in_progress = false;
     $scope.interactions_timeout = new Object();
@@ -44,7 +75,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.polling = false;
     $scope.comments_polling = new Object();
     $scope.youtube_api_ready = false;
-
+    $scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION;
+    $scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
+    
     var tag = document.createElement('script');
     tag.src = "//www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -59,8 +92,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       initKalturaApi();
     }
-
-    initQuizWaitingAudio();
+    
+    $(function(){ flowplayerReady(); });
 
     updateSecondaryVideoPlayers($scope.calltoactions);
 
@@ -70,22 +103,76 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     } else {
       $("#append-other button").show();
     }
-
+    
+  };
+  
+  $window.playSound = function(element){
+  	element.load();
+  	element.play();
   };
 
-  $scope.nextRandomCallToAction = function(except_calltoaction_id) {
-    $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
+  $scope.acceptCookies = function() {
+    $http.post("/user_cookies")
       .success(function(data) { 
-
-        $scope.calltoactions = data.calltoaction_info_list;
-        initAnonymousUser();
-
+        $("#cookies-bar").fadeOut("slow");
       }).error(function() {
         // ERROR.
       });
   };
 
+  $scope.nextRandomCallToAction = function(current_calltoaction_info) {
+    update_ga_event("UpdateCallToAction", "nextRandom", "nextRandom", 1);
+
+    except_calltoaction_id = calltoaction_info.calltoaction.id;
+    $scope.animation_in_progress = true;
+
+  	//playSound($(".click-sound")[0]);
+	
+    $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
+      .success(function(data) { 
+    		$scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION;
+    		$scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION;
+  		
+  			
+  			$(".gift-image").fadeTo(1500,0);
+  			setTimeout(function(){
+  				$(".loader").removeClass("hidden");
+  				playSound($(".roll-sound")[0]);
+  			}, 1000);
+
+  			setTimeout(function(){
+  				$(".cta-media img.hidden-xs").attr("src",data.calltoaction_info_list[0].calltoaction.media_image);
+  				$(".cta-media img.mobile").attr("src",data.calltoaction_info_list[0].calltoaction.thumbnail_url);
+  				$(".loader").addClass("hidden");
+  				$(".gift-image").fadeTo(1500,1);
+  				playSound($(".blink-sound")[0]);
+  			}, 4500);
+			
+        setTimeout(function() {
+        	$scope.$apply(function() {
+        		//console.log(data.calltoaction_info_list[0]);
+        		$scope.calltoactions[0].calltoaction.description = data.calltoaction_info_list[0].calltoaction.description;
+        		$scope.calltoactions[0].calltoaction.aux.shop_url = data.calltoaction_info_list[0].calltoaction.aux.shop_url;
+    			  $scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION;
+  				  $scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
+				    setTimeout(function() {
+              $scope.$apply(function() {
+        			  $scope.calltoactions = data.calltoaction_info_list;
+                $scope.animation_in_progress = false;
+              });
+       			}, 1500);
+    			});
+	    		initAnonymousUser();
+        }, 6000);
+        
+      }).error(function() {
+        // ERROR.
+        $scope.animation_in_progress = false;
+      });
+  };
+
   $scope.playInstantWin = function() {
+    update_ga_event("PlayInstantWin", "PlayInstantWin", "PlayInstantWin", 1);
     $scope.aux.instant_win_info.in_progress = true;
     delete $scope.aux.instant_win_info.win;
     $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
@@ -102,10 +189,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $scope.openInstantWinModal = function() {
+  	$(".click-sound").trigger("play");
     $("#modal-interaction-instant-win").modal("show");
   };
 
   $scope.openRegistrationModalForInstantWin = function(user) {
+  	$(".click-sound").trigger("play");
     $scope.form_data.current_user = user;
     $("#modal-interaction-instant-win-registration").modal("show");
   };
@@ -136,6 +225,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       }
     });
     return overvideo_interaction;
+  }
+  
+  function getOvervideoInteractions(calltoaction_id) {
+    overvideo_interactions = [];
+    calltoaction_info = getCallToActionInfo(calltoaction_id);
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING") {
+        overvideo_interactions.push( { time: interaction_info.interaction.seconds, interaction: interaction_info});
+      }
+    });
+    return overvideo_interactions;
   }
 
   $scope.currentUserEmptyAndAnonymousInteractionEnable = function() {
@@ -485,6 +585,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   function executeInteraction(player, calltoaction_id, overvideo_interaction) { 
+  	console.log(player);
     $scope.overvideo_interaction_locked[calltoaction_id] = true;
     overvideo_interaction.interaction.overvideo_active = true;
     player.pause();
@@ -707,6 +808,75 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     if(calltoaction_info.calltoaction.media_type == "KALTURA" && $scope.kaltura_api_ready) {
       
       player = new kalturaPlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_data);
+      calltoaction_info.calltoaction["player"] = player;
+
+      $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
+      $scope.current_user_answer_response_correct[calltoaction_info.calltoaction.id] = false;
+
+    }
+  };
+  
+  //////////////////////// FLOWPLAYER API /////////////////////////////
+  
+  function flowplayerPlayer(playerId, media_data) {
+  	this.playerManager = null;
+  	this.playerId = playerId;
+	this.calltoaction_id = $("#" + playerId).attr("calltoaction-id");
+  	this.media_data = media_data;
+
+	this.cuepoints = getOvervideoInteractions(this.calltoaction_id);
+  	fplayer = this;
+  	
+	$("#"+playerId).flowplayer({
+        playlist: [
+           [
+              {mp4: fplayer.media_data}
+           ]
+        ],
+        swf: "/assets/flowplayer.swf",
+        cuepoints: fplayer.cuepoints,
+     }).bind("ready", function(e, api){
+     	//start interaction
+     	fplayer.playerManager = api;
+     	
+     }).bind("resume", function(e, api){
+     	calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
+	    calltoaction_media_priority = $("#" + player.playerId).attr("main-media");
+	
+	    if(calltoaction_media_priority == "main") {
+	
+	      updateStartVideoInteraction(calltoaction_id);
+	
+	    } else {
+			//secondary media hendler
+	    }
+     
+     }).bind("cuepoint", function(e, api, cuepoint){
+     	$scope.$apply(function(){
+     		executeInteraction(fplayer, fplayer.calltoaction_id, cuepoint.interaction);
+     	});
+     });
+     
+     this.play = function(){
+     	this.playerManager.resume();
+     };
+     
+     this.pause = function(){
+     	this.playerManager.pause();
+     };
+   
+  }
+  
+  $window.flowplayerReady = function() {
+    angular.forEach($scope.calltoactions, function(calltoaction_info) {
+      appendFlowplayerframe(calltoaction_info);
+    });
+  };
+  
+  $window.appendFlowplayerframe = function(calltoaction_info) {
+    if(calltoaction_info.calltoaction.media_type == "FLOWPLAYER") {
+      
+      player = new flowplayerPlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_data);
       calltoaction_info.calltoaction["player"] = player;
 
       $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
@@ -1085,7 +1255,68 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   //////////////////////// AUDIO EFFECTS METHODS ////////////////////////
-
+  
+  $window.initClickAudio = function() {
+    $("#click-audio").jPlayer({
+      ready: function (event) {
+        $(this).jPlayer("setMedia", {
+          mp3: "/assets/click.mp3"
+        });
+      },
+      ended: function() {
+      },
+      supplied: "mp3",
+      volume: 0.4,
+      smoothPlayBar: false,
+      keyEnabled: false
+    });
+  };
+  
+  $window.enableClickAudio = function(status) {
+    $("#click-audio").jPlayer(status);
+  };
+  
+  $window.initRollAudio = function() {
+    $("#roll-audio").jPlayer({
+      ready: function (event) {
+        $(this).jPlayer("setMedia", {
+          mp3: "/assets/roll.mp3"
+        });
+      },
+      ended: function() {
+      	$(this).jPlayer("play");
+      },
+      supplied: "mp3",
+      volume: 0.4,
+      smoothPlayBar: false,
+      keyEnabled: false
+    });
+  };
+  
+  $window.enableRollAudio = function(status) {
+    $("#roll-audio").jPlayer(status);
+  };
+  
+  $window.initBlinkAudio = function() {
+    $("#blink-audio").jPlayer({
+      ready: function (event) {
+        $(this).jPlayer("setMedia", {
+          mp3: "/assets/blink.mp3"
+        });
+      },
+      ended: function() {
+      },
+      supplied: "mp3",
+      volume: 0.4,
+      smoothPlayBar: false,
+      keyEnabled: false
+    });
+  };
+  
+  $window.enableBlinkAudio = function(status) {
+    $("#blink-audio").jPlayer(status);
+  };
+  
   $window.initQuizWaitingAudio = function() {
     $("#quiz-waiting-audio").jPlayer({
       ready: function (event) {

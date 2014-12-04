@@ -1,7 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
-require_relative '../lib/raw_cookie_middleware'
 require_relative '../lib/config_utils'
 include ConfigUtils
 
@@ -121,42 +120,31 @@ module Fandom
     enabled_sites = enabled_sites.split(',').map { |s| s.strip }
     load_site_configs(enabled_sites)
     
-    config.fandom_play_enabled = config.deploy_settings.key? 'fandom_play'
-    if config.fandom_play_enabled
-      config.middleware.insert_before "Rack::Lock", SetRawCookieMiddleware
-    end
+    config.fandom_play_enabled = config.deploy_settings.fetch('fandom_play', false)
 
-    config.middleware.use "EventLoggerMiddleware"
+    config.middleware.use "FandomMiddleware"
     
     config.active_record.schema_format = :sql
 
-    if config.deploy_settings.key?("mailer")
-      mailer_conf = config.deploy_settings["mailer"]
-      
-      config.action_mailer.perform_deliveries = mailer_conf.fetch("perform_deliveries", true)
-  
-      config.action_mailer.default_url_options = { :host => mailer_conf.fetch("devise_host", "localhost") }
-    
-      config.action_mailer.raise_delivery_errors = mailer_conf.fetch("raise_delivery_errors", false)
-      
-      if mailer_conf.key?("ses")
-        ses_conf = config.deploy_settings["mailer"]["ses"]
-        ActionMailer::Base.add_delivery_method :ses, AWS::SES::Base, ses_conf
-        config.action_mailer.delivery_method = :ses
-      end  
-    
-      if mailer_conf.key?("smtp")
-        unless config.action_mailer.delivery_method.nil?
-          Rails.logger.error("'mailer' has been misconfigured in deploy_settings!")
-        end
-        
-        config.action_mailer.delivery_method = :smtp
-        smtp_conf = config.deploy_settings["mailer"]["smtp"] 
-        config.action_mailer.smtp_settings = smtp_conf
-      end  
-    else
-      config.action_mailer.perform_deliveries = false
+    class MailLogger
+      def info(msg)
+        log_info('email sent', { data: msg.strip })
+      end
+      def error(msg)
+        log_error('email sent', { data: msg.strip })
+      end
+      def debug(msg)
+      end
+      def fatal(msg)
+        log_error('email sent', { data: msg.strip })
+      end
+      def log(msg)
+        log_info('email sent', { data: msg.strip })
+      end
     end
+    config.action_mailer.logger = MailLogger.new
+    config.action_mailer.perform_deliveries = false
+    config.action_mailer.raise_delivery_errors = true
 
     class LogSubscriber < ActiveSupport::LogSubscriber
       def process_action event

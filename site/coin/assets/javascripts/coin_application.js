@@ -4,6 +4,7 @@
 //= require angular
 //= require angular-resource
 //= require angular-sanitize
+//= require angular-animate
 //= require angular-route
 //= require angularjs/ng-table
 //= require angularjs/fandom
@@ -19,3 +20,5 @@
 //= require bootstrap-fileupload
 //= require jquery.jplayer
 //= require fandom-utils
+//= require fastclick
+//= require respond.min

@@ -6,14 +6,16 @@ class CallToAction < ActiveRecordWithJSON
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
   					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required,
-            :privacy_required, :privacy, :valid_from, :valid_to, :aux
+            :privacy_required, :privacy, :valid_from, :valid_to, :aux,
+            :button_label, :alternative_description, :enable_for_current_user, :shop_url
 
   json_attributes [[:aux, CallToActionAux]]
 
   extend FriendlyId
   friendly_id :title, use: :slugged
 
-  attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required
+  attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required,
+                  :button_label, :alternative_description, :enable_for_current_user, :shop_url
 
   validates_presence_of :title
   validates_presence_of :name
@@ -21,7 +23,7 @@ class CallToAction < ActiveRecordWithJSON
   validates_presence_of :media_image, if: Proc.new { |c| user_id.present? }
   validates_associated :releasing_file, if: Proc.new { |c| release_required }
   validate :interaction_resource
-  validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" || media_type == "KALTURA" }
+  validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" || media_type == "KALTURA" || media_type == "FLOWPLAYER" }
   validates_associated :interactions
   validates :privacy, :acceptance => { :accept => true }, if: Proc.new { |c| privacy_required }
 
@@ -29,7 +31,13 @@ class CallToAction < ActiveRecordWithJSON
   #before_save :set_extra_options
   
   has_attached_file :media_image,
-    processors: [:watermark],
+    processors: lambda { |calltoaction|
+      if calltoaction.media_image_content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
+        [:watermark]
+      else
+        [:ffmpeg] #libav
+      end
+    },
     styles: lambda { |image| 
         if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
           {
@@ -40,7 +48,10 @@ class CallToAction < ActiveRecordWithJSON
             :thumb => { :geometry => '100x100#', :quality => 60 }
           }
         else
-          {}
+          {
+          :medium => { :geometry => "640x480", :format => 'mp4' },
+          :thumb => { :geometry => "300x300#", :format => 'jpg', :time => 1 }
+          }
         end
      },
      default_url: "/assets/media-image-default.jpg"
@@ -111,14 +122,15 @@ class CallToAction < ActiveRecordWithJSON
     end
   end
   
-  def to_category
+  # parameter populate_desc used to improve performance of search avoiding long kb of text unused in search
+  def to_category(populate_desc = true)
     BrowseCategory.new(
       id: id, 
-      has_thumb: media_image.present?, 
-      thumb_url: media_image.url, 
+      has_thumb: thumbnail.present?, 
+      thumb_url: thumbnail.url, 
       title: title, 
-      description: truncate(description, :length => 150, :separator => ' '),
-      long_description: description,
+      description: populate_desc ? truncate(description, :length => 150, :separator => ' ') : nil,
+      long_description: populate_desc ? description : nil,
       detail_url: "/call_to_action/#{id}",
       created_at: created_at.to_time.to_i
     )
@@ -136,8 +148,8 @@ class CallToAction < ActiveRecordWithJSON
     write_attribute :aux, { 
         button_label: button_label, 
         alternative_description: alternative_description,
-        enable_for_current_user: enable_for_current_user,
-        shop_url: shop_url
+        shop_url: shop_url,
+        enable_for_current_user: enable_for_current_user
       }.to_json
   end
 

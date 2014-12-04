@@ -1,6 +1,6 @@
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui-1.10.4.custom
+//= require jquery-ui-1.11.2.min
 //= require angular
 //= require angular-resource
 //= require angular-sanitize
@@ -19,3 +19,4 @@
 //= require bootstrap-fileupload
 //= require jquery.jplayer
 //= require fandom-utils
+//= require flowplayer.min

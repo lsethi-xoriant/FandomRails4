@@ -1,0 +1,29 @@
+<div class="container">
+  <%= render partial: "/application/header" %>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="row">  
+              <div class="col-md-12 text-center">
+                <p class="registration__title">Elenco dei negozi</p>
+              </div>    
+              <div class="col-md-10 col-md-offset-1 privacy-policy__text">
+                <ol>
+                  <% storeLocations().each do |store| %>
+                    <% unless store.include?("http://www.coincasa.it/")%>
+                      <li><%= store %></li>
+                    <% end %>
+                  <% end %>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

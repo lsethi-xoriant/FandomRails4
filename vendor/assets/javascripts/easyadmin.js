@@ -29,3 +29,4 @@
 //= require easyadmin/morris.min
 //= require bootstrap-datepicker
 //= require fandom-utils
+//= require angular-animate

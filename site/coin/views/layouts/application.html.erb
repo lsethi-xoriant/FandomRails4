@@ -3,32 +3,45 @@
 <head>
 
   <meta charset="utf-8">
-  <title>Coin Gift Machine</title>
+  <title>Fatti ispirare dalla COIN GIFT MACHINE</title>
+  <meta name="description" content="Servono idee regalo? Fatti ispirare dalla COIN GIFT MACHINE. Registrati e scopri tante idee regalo. Avrai subito uno sconto e potrai vincere ogni giorno fino a 500 euro.">
+  <meta name="keywords" content="regalo, regali, idee regalo, coin gift machine, gift machine, gift, natale, regali di natale">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 
-  <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
+  <meta property="og:title" content="Fatti ispirare dalla COIN GIFT MACHINE" />
+  <meta property="og:description" content="Servono idee regalo? Fatti ispirare dalla COIN GIFT MACHINE. Registrati e scopri tante idee regalo. Avrai subito uno sconto e potrai vincere ogni giorno fino a 500 euro." />
+  <meta property="og:image" content="<%= asset_path("coin/meta-logo.jpg") %>" />
+
+  <link rel="shortcut icon" href="<%= asset_path('coin/favicon.ico') %>">
   
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900' rel='stylesheet' type='text/css'>
 
   <%= stylesheet_link_tag "coin_application", :media => "all" %>
   <%= javascript_include_tag "coin_application" %>
 
+  <!--[if lte IE 9]>
+    <link href="<%= asset_path("coin_application.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
+    <script src="<%= asset_path("coin_application.js").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" type="text/javascript"></script>  
+  <![endif]-->
+
   <!--[if lt IE 10]>
     <script type="text/javascript">
-        $('[placeholder]').focus(function() {
-          var input = $(this);
-          if (input.val() == input.attr('placeholder')) {
-            input.val('');
-            input.removeClass('placeholder');
-          }
-        }).blur(function() {
-          var input = $(this);
-          if (input.val() == '' || input.val() == input.attr('placeholder')) {
-            input.addClass('placeholder');
-            input.val(input.attr('placeholder'));
-          }
-        }).blur();
+        $(document).ready(function() {
+          $('[placeholder]').focus(function() {
+            var input = $(this);
+            if (input.val() == input.attr('placeholder')) {
+              input.val('');
+              input.removeClass('placeholder');
+            }
+          }).blur(function() {
+            var input = $(this);
+            if (input.val() == '' || input.val() == input.attr('placeholder')) {
+              input.addClass('placeholder');
+              input.val(input.attr('placeholder'));
+            }
+          }).blur();
+        });
     </script>
   <![endif]-->
 
@@ -37,12 +50,20 @@
   <%= yield (:fb_meta_tags) %>
   
 </head>
-<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>">
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.present? ? @current_user_info.to_json : {} %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.present? ? @aux.to_json : {} %>, null)">
 
   <%= yield %>
 
   <%= render partial: "/application/ga" %>
   <%= render partial: "/application/registration-modal" %>
+  <%= render partial: "/application/terms-modal" %>
+  <%= render partial: "/application/footer" %>
+
+  <script type="text/javascript">
+    $(function() {
+      FastClick.attach(document.body);
+    });
+  </script>
 
 </body>
 </html>

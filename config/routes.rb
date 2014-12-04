@@ -13,6 +13,9 @@ Fandom::Application.routes.draw do
       scope module: "coin" do
         root :to => "application#index"
         match '/privacy_policy', :to => 'application#show_privacy_policy'
+        match '/cookies_policy', :to => 'application#show_cookies_policy'
+        match '/stores', :to => 'application#show_stores'
+        match "profile/complete_for_contest", :to => "application#complete_for_contest", defaults: { format: 'json' }
         devise_scope :user do
           post "/users", :to => "registrations#create"
           match 'auth/:provider/callback', :to => 'sessions#create'
@@ -74,6 +77,8 @@ Fandom::Application.routes.draw do
     match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
   end
 
+  match "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
+
   match "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
 
   match "/file_upload_too_large", to: "application#file_upload_too_large"
@@ -84,9 +89,11 @@ Fandom::Application.routes.draw do
 
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
   match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
+  match "/upload", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
   match "/browse/search", :to => "browse#search"
+  match "/browse/full_search", :to => "browse#full_search"
   match "/browse/fullscreen", :to => "browse#index_fullscreen"
   match "/browse/view_all/:id_cat", :to => "browse#view_all"
   match "/browse/category/:id", :to => "browse#index_category"
@@ -251,6 +258,7 @@ Fandom::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => "registrations", :sessions => "sessions", :passwords => "passwords" }
 
   devise_scope :user do
+    match "/password_feedback", :to => "passwords#feedback"
     match '/users/sign_in', :to => 'sessions#create', :as => 'user_sign_in'
     match '/users/sign_out', :to => 'sessions#destroy'
     match 'auth/:provider/callback', :to => 'sessions#create'

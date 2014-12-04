@@ -32,7 +32,13 @@ module ActiveModelOrRecordWithJSONUtils
 
   def validate_single_attr(json_attr_name, json_attr_class)
     validates_each json_attr_name do |record, json_attr_name, value|
-      value = json_attr_class.new(value)
+      value = {} if value.nil?
+      if value.key? :$validating_model
+        value = value.delete(:$validating_model).constantize.new(value)
+      else
+        value = json_attr_class.new(value)
+      end
+      
       result = value.valid?
       handle_validation_errors(value.errors, record)
       result

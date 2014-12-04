@@ -83,7 +83,40 @@
 	  	</div>
 	  </div>
 	  	<div class="row">
-	  	<div id='text-boxes-for-aux-fields' class="col-lg-6"></div>
+	  	<div id='text-boxes-for-aux-fields' class="col-lg-6">
+	  		<div id="extra-fields-name-for-aux-button_label" class="form-group">
+	  			<label class="text-input">Nome</label>
+	  			<input type="text" id="name-for-aux-field-button_label" name="name-for-aux-field-button_label" class="form-control" value="button_label" readonly="true">
+	  		</div>
+	  		<div id="extra-fields-value-for-aux-button_label" class="form-group">
+	  			<label class="text-input">Valore</label>
+	  			<input type="text" id="value-for-aux-field-button_label" name="call_to_action[[aux][button_label]]" class="form-control">
+	  		</div>
+	  		<div id="extra-fields-name-for-aux-alternative_description" class="form-group">
+	  			<label class="text-input">Nome</label>
+	  			<input type="text" id="name-for-aux-field-alternative_description" name="name-for-aux-field-alternative_description" class="form-control" value="alternative_description" readonly="true">
+	  		</div>
+	  		<div id="extra-fields-value-for-aux-alternative_description" class="form-group">
+	  			<label class="text-input">Valore</label>
+	  			<input type="text" id="value-for-aux-field-alternative_description" name="call_to_action[[aux][alternative_description]]" class="form-control">
+	  		</div>
+	  		<div id="extra-fields-name-for-aux-enable_for_current_user" class="form-group">
+	  			<label class="text-input">Nome</label>
+	  			<input type="text" id="name-for-aux-field-enable_for_current_user" name="name-for-aux-field-enable_for_current_user" class="form-control" value="enable_for_current_user" readonly="true">
+	  		</div>
+	  		<div id="extra-fields-value-for-aux-enable_for_current_user" class="form-group">
+	  			<label class="text-input">Valore</label>
+	  			<input type="text" id="value-for-aux-field-enable_for_current_user" name="call_to_action[[aux][enable_for_current_user]]" class="form-control">
+	  		</div>
+	  		<div id="extra-fields-name-for-aux-shop_url" class="form-group">
+	  			<label class="text-input">Nome</label>
+	  			<input type="text" id="name-for-aux-field-shop_url" name="name-for-aux-field-shop_url" class="form-control" value="shop_url" readonly="true">
+	  		</div>
+	  		<div id="extra-fields-value-for-aux-shop_url" class="form-group">
+	  			<label class="text-input">Valore</label>
+	  			<input type="text" id="value-for-aux-field-shop_url" name="call_to_action[[aux][shop_url]]" class="form-control">
+	  		</div>
+	  	</div>
 	  </div>
 
       <div class="row">
@@ -272,6 +305,7 @@
     switch(media_type) {
       case "YOUTUBE":
       case "KALTURA":
+      case "FLOWPLAYER":
         container.find($(".media-data-label")).html("V CODE");
         container.find($(".media_data-form-group")).show();
         container.find($(".play-interaction")).show();
@@ -457,11 +491,13 @@
     <% unless aux.nil? %>
 		<% aux_hash = JSON.parse(aux) %>
   		<% aux_hash.each_with_index do |(name, value), index| %>
-            //$('#text-boxes-for-aux-fields').append('<input type="hidden" id="value-for-aux-field-0" name="call_to_action[aux]" value="{}">');
-  			$('#add-button-for-aux-fields').trigger('click');
-        	$('#name-for-aux-field-' + <%= (index + 1).to_s %>).val('<%= name %>');
-        	$('#name-for-aux-field-' + <%= (index + 1).to_s %>).trigger('keyup');
-        	$('#value-for-aux-field-' + <%= (index + 1).to_s %>).val('<%= value %>');
+  			<% if name == "button_label" || "alternative_description" || "enable_for_current_user" || "shop_url" %>
+        		$('#value-for-aux-field-<%= name.to_s %>').val('<%= value %>');
+        	<% else %>
+  				$('#add-button-for-aux-fields').trigger('click');
+        		$('#name-for-aux-field-' + <%= (index + 1).to_s %>).val('<%= name %>');
+        		$('#name-for-aux-field-' + <%= (index + 1).to_s %>).trigger('keyup');
+        		$('#value-for-aux-field-' + <%= (index + 1).to_s %>).val('<%= value %>');        	<% end %>
         <% end %>
   	<% end %>
 
