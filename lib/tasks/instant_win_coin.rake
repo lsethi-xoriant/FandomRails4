@@ -12,14 +12,15 @@ namespace :instant_win_coin do
   
   def initContest
     Apartment::Database.switch("coin")
-    point = Reward.create(
-      title: "point", 
-      short_description: "Ticket reward per giocare agli instantwin", 
-      button_label: "Gioca e vinci", 
-      media_type: "DIGITALE", 
-      countable: true, 
-      name: "point"
-    )
+    point = Reward.find_by_name("point")
+    #Reward.create(
+    #  title: "point", 
+    #  short_description: "Ticket reward per giocare agli instantwin", 
+    #  button_label: "Gioca e vinci", 
+    #  media_type: "DIGITALE", 
+    #  countable: true, 
+    #  name: "point"
+    #)
     gift_500 = Reward.create(
       title: "GIFTCARD Coin €500", 
       short_description: "1 GIFTCARD Coin €500", 
@@ -41,23 +42,27 @@ namespace :instant_win_coin do
     
     contest_prize_list = create_contest_prize_list()
     
-    contest = CallToAction.create(
-      name: "coin_contest",
-      title: "Concorso Coin",
-      description: "Il concorso di Coin",
-      valid_from: Time.parse(COIN_CONTEST_START_DATE),
-      valid_to: Time.parse(COIN_CONTEST_END_DATE)
-    )
-    instantwin_interaction = InstantwinInteraction.create(
-      reward_id: point.id
-    )
-    interaction = Interaction.new(
-      name: "instantwin_interaction",
-      when_show_interaction: "SEMPRE_VISIBILE",
-      call_to_action_id: contest.id
-    )
-    interaction.resource = instantwin_interaction
-    interaction.save
+    contest = CallToAction.find_by_name(coin_contest)
+    instantwin_interaction = contest.interactions.first
+
+    #CallToAction.create(
+    #  name: "coin_contest",
+    #  title: "Concorso Coin",
+    #  description: "Il concorso di Coin",
+    #  valid_from: Time.parse(COIN_CONTEST_START_DATE),
+    #  valid_to: Time.parse(COIN_CONTEST_END_DATE)
+    #)
+
+    #instantwin_interaction = InstantwinInteraction.create(
+    #  reward_id: point.id
+    #)
+    #interaction = Interaction.new(
+    #  name: "instantwin_interaction",
+    #  when_show_interaction: "SEMPRE_VISIBILE",
+    #  call_to_action_id: contest.id
+    #)
+    #interaction.resource = instantwin_interaction
+    #interaction.save
     
     [contest_prize_list, instantwin_interaction, contest]
     
