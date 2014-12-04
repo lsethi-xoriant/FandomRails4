@@ -48,6 +48,25 @@
   <%= csrf_meta_tags %>
 
   <%= yield (:fb_meta_tags) %>
+
+  <% if @aux && @aux["from_registration"] %>
+    <!-- Facebook Conversion Code for Coin - Gift Machine -->
+    <script>(function() {
+      var _fbq = window._fbq || (window._fbq = []);
+      if (!_fbq.loaded) {
+        var fbds = document.createElement('script');
+        fbds.async = true;
+        fbds.src = '//connect.facebook.net/en_US/fbds.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(fbds, s);
+        _fbq.loaded = true;
+      }
+    })();
+    window._fbq = window._fbq || [];
+    window._fbq.push(['track', '6017016415865', {'value':'0.00','currency':'EUR'}]);
+    </script>
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6017016415865&amp;cd[value]=0.00&amp;cd[currency]=EUR&amp;noscript=1" /></noscript>
+  <% end %>
   
 </head>
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.present? ? @current_user_info.to_json : {} %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.present? ? @aux.to_json : {} %>, null)">
