@@ -29,7 +29,13 @@ class CallToAction < ActiveRecord::Base
   before_save :set_extra_options
   
   has_attached_file :media_image,
-    processors: [:watermark],
+    processors: lambda { |calltoaction|
+      if calltoaction.media_image_content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
+        [:watermark]
+      else
+        [:ffmpeg] #libav
+      end
+    },
     styles: lambda { |image| 
         if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
           {
@@ -40,7 +46,10 @@ class CallToAction < ActiveRecord::Base
             :thumb => { :geometry => '100x100#', :quality => 60 }
           }
         else
-          {}
+          {
+          :medium => { :geometry => "640x480", :format => 'mp4' },
+          :thumb => { :geometry => "300x300#", :format => 'jpg', :time => 1 }
+          }
         end
      },
      default_url: "/assets/media-image-default.jpg"
@@ -111,14 +120,15 @@ class CallToAction < ActiveRecord::Base
     end
   end
   
-  def to_category
+  # parameter populate_desc used to improve performance of search avoiding long kb of text unused in search
+  def to_category(populate_desc = true)
     BrowseCategory.new(
       id: id, 
-      has_thumb: media_image.present?, 
-      thumb_url: media_image.url, 
+      has_thumb: thumbnail.present?, 
+      thumb_url: thumbnail.url, 
       title: title, 
-      description: truncate(description, :length => 150, :separator => ' '),
-      long_description: description,
+      description: populate_desc ? truncate(description, :length => 150, :separator => ' ') : nil,
+      long_description: populate_desc ? description : nil,
       detail_url: "/call_to_action/#{id}",
       created_at: created_at.to_time.to_i
     )

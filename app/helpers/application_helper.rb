@@ -24,7 +24,8 @@ module ApplicationHelper
     attribute :detail_url, type: String
     attribute :created_at, type: Integer
     attribute :header_image_url, type: String
-    attribute :icon_url, type: String
+    attribute :icon, type: String
+    attribute :category_icon, type: String
   end
 
   class ContentSection
@@ -214,16 +215,40 @@ module ApplicationHelper
       Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).to_a
     end
   end
+  
+  def construct_conditions_from_query(query, field)
+    conditions = Array.new
+    query.split(" ").each do |elem|
+      conditions << "#{field} ILIKE '%#{elem}%'"
+    end
+    conditions.join(" OR ")
+  end
 
   def get_tags_with_tag(tag_name)
     cache_short get_tags_with_tag_cache_key(tag_name) do
-      Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ?", tag_name).to_a
+        Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ?", tag_name).to_a
+    end
+  end
+  
+  def get_tags_with_tag_with_match(tag_name, query = "")
+    cache_short get_tags_with_tag_with_match_cache_key(tag_name) do
+      debugger
+        conditions = construct_conditions_from_query(query, "value")
+        ids = TagField.where("name = 'title' AND (#{conditions})").uniq.pluck(:tag_id)
+        Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND tags.id IN (?)", tag_name, ids).to_a
     end
   end
   
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
       CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
+    end
+  end
+  
+  def get_ctas_with_tag_with_match(tag_name, query = "")
+    cache_short get_ctas_with_tag_with_match_cache_key(tag_name) do
+      conditions = construct_conditions_from_query(query, "title")
+      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND (#{conditions})", tag_name).to_a
     end
   end
   
