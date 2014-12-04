@@ -11,14 +11,14 @@
     <div class="col-md-12 text-center">
       <img class="landing__logo-img" src="<%= asset_path("coin/logo-landing.png") %>">
     </div>
-    <div class="col-md-12 text-center" style="margin-top: 15px;">
-      <h3>COMING SOON</h3>
+    <div class="col-md-4 col-md-offset-2 text-center">
+      <a style="margin-top: 15px;" href="/auth/facebook_<%= request.site.id %>" class="btn btn-facebook btn-block"><span class="fa fa-facebook landing__button__facebook-icon"></span> ENTRA CON FACEBOOK</a>
     </div>
-    <!--
-    <div class="col-md-12 text-center" style="margin-top: 15px;">
-      <a  href="/auth/facebook_<%= request.site.id %>" class="btn btn-facebook landing__button"><span class="fa fa-facebook landing__button__facebook-icon"></span> ENTRA CON FACEBOOK</a>
-      <p class="landing__sign-up">oppure <a href="/users/sign_up">registrati</a></p>
+     <div style="margin-top: 15px;" class="col-md-4 text-center">
+      <a  href="/users/sign_up" class="btn btn-primary registration__button registration__button__landing btn-block">REGISTRATI</a>
     </div>
-    -->
+    <div class="col-md-12 text-center">
+      <p class="landing__sign-in">se sei già registrato fai <a style="color: #fff; text-decoration: underline;" href="/users/sign_in">login</a></p>
+    </div>
   </div>
 </div>

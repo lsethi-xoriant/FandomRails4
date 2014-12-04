@@ -21,6 +21,7 @@ namespace :instant_win_coin do
     #  countable: true, 
     #  name: "point"
     #)
+=begin
     gift_500 = Reward.create(
       title: "GIFTCARD Coin €500", 
       short_description: "1 GIFTCARD Coin €500", 
@@ -39,10 +40,11 @@ namespace :instant_win_coin do
       media_type: "DIGITALE", 
       name: COIN_GIFT_50['name']
     )
+=end
     
     contest_prize_list = create_contest_prize_list()
     
-    contest = CallToAction.find_by_name(coin_contest)
+    contest = CallToAction.find_by_name('coin_contest')
     instantwin_interaction = contest.interactions.first
 
     #CallToAction.create(
