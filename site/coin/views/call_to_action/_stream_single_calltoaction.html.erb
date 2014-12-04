@@ -18,7 +18,8 @@
           <img class="call-to-action__media hidden-xs" ng-src="{{calltoaction_info.calltoaction.media_image}}">
           <img class="call-to-action__media visible-xs" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}">
         </a>
-        <img id="loader" class="call-to-action__media hidden" style="width: 100%; position: absolute; top:0; max-width: 688px;" src="<%= asset_path("coin/slot.gif") %>">
+        <img class="call-to-action__media loader hidden hidden-xs" style="width: 100%; position: absolute; top:0; max-width: 688px;" src="<%= asset_path("coin/slot.gif") %>">
+        <img class="call-to-action__media loader hidden visible-xs" style="position: absolute; top: 1px; left: 16px; max-width: 407px;" src="<%= asset_path("coin/slot-mobile.gif") %>">
       </div>
     </div>
 

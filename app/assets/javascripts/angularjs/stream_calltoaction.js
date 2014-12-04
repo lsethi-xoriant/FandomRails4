@@ -135,13 +135,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   		
   			$(".cta-media img.hidden-xs").fadeOut(1500);
   			setTimeout(function(){
-  				$("#loader").removeClass("hidden");
+  				$(".loader").removeClass("hidden");
   				playSound($(".roll-sound")[0]);
   			}, 1000);
   			
   			setTimeout(function(){
   				$(".cta-media img.hidden-xs").attr("src",data.calltoaction_info_list[0].calltoaction.media_image);
-  				$("#loader").addClass("hidden");
+  				$(".loader").addClass("hidden");
   				$(".cta-media img.hidden-xs").fadeIn(1500);
   				playSound($(".blink-sound")[0]);
   			}, 3000);
