@@ -188,34 +188,31 @@ class CallToActionController < ApplicationController
   end
 
   def show
-
     calltoaction_id = params[:id].to_i
     calltoaction = CallToAction.includes(:interactions).active.find_by_id(calltoaction_id)
 
     if calltoaction
 
-      calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
+      #calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
+      @calltoactions_with_current = [calltoaction] # + calltoactions
+      @calltoaction_info_list = build_call_to_action_info_list(@calltoactions_with_current)
       
-      @calltoactions_with_current = [calltoaction] + calltoactions
+      if current_user
+        @current_user_info = {
+          "facebook" => current_user.facebook(request.site.id),
+          "twitter" => current_user.twitter(request.site.id),
+          "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
+          "registration_fully_completed" => registration_fully_completed?
+        }
+      end
 
-      @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@calltoactions_with_current)
-      @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
-
-      @calltoactions_active_interaction = Hash.new
-      @aux = { 
-        "show_calltoaction_page" => true,
-        "tenant" => get_site_from_request(request)["id"],
-        "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
-        "main_reward_name" => MAIN_REWARD_NAME
-      }
-
-      @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0], nil, @aux)
-
+      @aux = init_aux()
     else
 
       redirect_to "/"
 
-    end    
+    end   
+
 =begin
     if @calltoaction.enable_disqus
     @disqus_requesturl = request.url

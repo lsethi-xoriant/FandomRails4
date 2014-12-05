@@ -189,5 +189,34 @@ class Sites::Ballando::CallToActionController < CallToActionController
       comments_to_show
     end
   end
+
+    def show
+      calltoaction_id = params[:id].to_i
+      calltoaction = CallToAction.includes(:interactions).active.find_by_id(calltoaction_id)
+
+      if calltoaction
+
+        calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
+        
+        @calltoactions_with_current = [calltoaction] + calltoactions
+
+        @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@calltoactions_with_current)
+        @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions_with_current)
+
+        @calltoactions_active_interaction = Hash.new
+        @aux = { 
+          "show_calltoaction_page" => true,
+          "tenant" => get_site_from_request(request)["id"],
+          "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
+          "main_reward_name" => MAIN_REWARD_NAME
+        }
+
+        @calltoactions_active_interaction[@calltoactions_with_current[0].id] = generate_next_interaction_response(@calltoactions_with_current[0], nil, @aux)
+
+      else
+        redirect_to "/"
+      end    
+
+    end
   
 end
