@@ -47,7 +47,12 @@
           <div class="row">
             <div class="col-sm-6">
               <img class="user-bar__body__avatar img-circle" src="<%= current_avatar %>">
-              <p class="user-bar__body__username">Ciao, <%= "#{current_user.first_name} #{current_user.last_name}" %> <a class="glyphicon glyphicon-off user-bar__body__sign-out" href="/users/sign_out"></a></p>
+              <p class="user-bar__body__username">
+                Ciao, <%= "#{current_user.first_name} #{current_user.last_name}" %><a class="glyphicon glyphicon-off user-bar__body__sign-out" href="/users/sign_out"></a>
+                <% if can? :access, :easyadmin %>
+                  <a class="glyphicon glyphicon-tasks user-bar__body__sign-out" href="/easyadmin"></a>
+                <% end %>
+              </p>
             </div>
             
             <div class="col-sm-1 text-right user-bar__ticket-pre"><p class="user-bar__ticket-pre-text">Hai</p></div>

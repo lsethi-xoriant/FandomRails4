@@ -25,6 +25,7 @@ class User < ActiveRecordWithJSON
   has_many :call_to_actions
 
   before_save :set_date_of_birth
+  before_save :set_username_if_not_required
   before_update :set_current_avatar
   before_create :default_values
 
@@ -45,6 +46,12 @@ class User < ActiveRecordWithJSON
   validate :major, if: Proc.new { |f| major_date.present? }
 
   after_initialize :set_attrs
+
+  def set_username_if_not_required
+    unless required_attr?("username")
+      self.username = email
+    end
+  end
 
   def newsletter_acceptance
     errors.add(:newsletter, :accepted) unless newsletter

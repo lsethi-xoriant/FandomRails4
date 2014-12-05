@@ -3,47 +3,54 @@
   <div id="content">    
     
   <div id="content-header">
-    <h1>Grafici</h1>
+    <h1>Statistiche generali</h1>
   </div> <!-- #content-header --> 
 
   <div id="content-container">
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
     	<h3>Registrazioni</h3>
     	<hr/>
     </div>
+  </div>
+  <div class="row">
 
     <div class="col-md-2">
     	<%= form_tag :method => 'post' do %>
         	<div class="form-group">
             	<label class="text-input">DAL GIORNO</label></br>
-              	<%= text_field_tag :datepicker_from_date, @from_date_string %>
+              	<%= text_field_tag :datepicker_from_date, @from_date_string, :class => "form-control" %>
             </div>
      </div>
      <div class="col-md-2">
           	<div class="form-group">
               <label class="text-input">AL GIORNO</label></br>
-              <%= text_field_tag :datepicker_to_date, @to_date_string %>
+              <%= text_field_tag :datepicker_to_date, @to_date_string, :class => "form-control" %>
             </div>
      </div>
      <div class="col-md-2">
-          	<div>
-              <label class="text-input">GRAFICO</label></br>
-              <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
-              <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
+      	<div>
+          <label class="text-input">PERIODO</label></br>
+          <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
+          <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
+        </div>
+      </div>
+      <div class="col-md-2">
+          	<div class="form-group">
+                </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
             </div>
       </div>
-      <div class="col-md-1">
-          	<div class="form-group">
-                </br><%= submit_tag 'Filtra', class: 'btn btn-primary' %>
-            </div>
+      <div class="col-md-2">
+      	<div class="form-group">
+            </br><%= submit_tag 'RESET', class: 'btn btn-primary btn-block' %>
+  	    <% end %>
+        </div>
       </div>
-      <div class="col-md-1">
-          	<div class="form-group">
-                </br><%= submit_tag 'Reset', class: 'btn btn-primary' %>
-		  	    <% end %>
-            </div>
+      <div class="col-md-2">
+        <div class="form-group">
+            </br><a href="/easyadmin/export_users" class="btn btn-primary btn-block">ESPORTA CSV</a>
+        </div>
       </div>
     </div> <!-- /.row -->
 
