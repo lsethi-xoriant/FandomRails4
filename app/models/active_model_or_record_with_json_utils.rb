@@ -33,8 +33,10 @@ module ActiveModelOrRecordWithJSONUtils
   def validate_single_attr(json_attr_name, json_attr_class)
     validates_each json_attr_name do |record, json_attr_name, value|
       if value.nil?
+        # A JSON field is nil if it is not properly initialized with an empty hash
         value = {} 
       elsif value.is_a? String  
+        # A JSON field is a string when it has yet to be parsed into an hash
         value = JSON.parse(value)
       end
 
