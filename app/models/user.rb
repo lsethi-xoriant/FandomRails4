@@ -151,7 +151,7 @@ class User < ActiveRecordWithJSON
       )
     end 
 
-    self.aux = JSON.parse(self.aux)
+    self.aux = JSON.parse(self.aux) if self.aux.present?
     self.save
     return self
   end

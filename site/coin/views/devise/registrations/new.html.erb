@@ -23,7 +23,9 @@
                   <div class="form-group">
                     <div class="col-sm-12">
                       <ul class="list-unstyled form-error">
-                        <p>Errori nella compilazione del modulo:</p>
+                        <% unless flash[:from_provider] %>
+                          <p>Errori nella compilazione del modulo:</p>
+                        <% end %>
                         <% resource.errors.full_messages.each do |error_message| %>
                             <li><%= error_message %></li>
                         <% end %>

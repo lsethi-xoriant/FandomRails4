@@ -759,6 +759,7 @@ module ApplicationHelper
       )
 
       user.required_attrs = get_site_from_request(request)["required_attrs"]
+      user.aux = JSON.parse(user.aux) if user.aux.present?
       user.save
     end 
     
