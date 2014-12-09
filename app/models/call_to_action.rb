@@ -1,6 +1,8 @@
 class CallToAction < ActiveRecord::Base
 
   include ActionView::Helpers::TextHelper
+  include CallToActionHelper
+  include ApplicationHelper
   include DateMethods
   
   attr_accessible :title, :media_data, :media_image, :media_type, :activated_at, :interactions_attributes,
@@ -118,20 +120,6 @@ class CallToAction < ActiveRecord::Base
     else
       nil
     end
-  end
-  
-  # parameter populate_desc used to improve performance of search avoiding long kb of text unused in search
-  def to_category(populate_desc = true)
-    BrowseCategory.new(
-      id: id, 
-      has_thumb: thumbnail.present?, 
-      thumb_url: thumbnail.url, 
-      title: title, 
-      description: populate_desc ? truncate(description, :length => 150, :separator => ' ') : nil,
-      long_description: populate_desc ? description : nil,
-      detail_url: "/call_to_action/#{id}",
-      created_at: created_at.to_time.to_i
-    )
   end
 
   def enable_for_current_user?

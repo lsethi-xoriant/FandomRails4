@@ -12,7 +12,6 @@ class TagField < ActiveRecord::Base
   # TODO: ultimate validation name function
   def validate_name
     tags_tags = TagsTag.where("other_tag_id IS NOT NULL")
-    
   end
   
 end

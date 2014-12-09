@@ -44,6 +44,7 @@ module ConfigUtils
     attribute :anonymous_interaction, :default => false
     attribute :init_ctas, :default => 3
     attribute :force_landing, :default => false
+    attribute :search_results_per_page, :default => 5
 
     def unbranded?
       self.id == 'fandom'
