@@ -1,28 +1,28 @@
 <div id="sidebar-wrapper" class="collapse sidebar-collapse">
 	<nav id="sidebar">       
 	  <ul id="main-nav" class="open-active">      
-	    
-	    <% if can? :manage, :all %>
-		    <li class="dropdown <%= "active opened" if page == "dashboard" %>"><a href="javascript:void(0);"><i class="fa fa-th-large"></i>Dashboard<span class="caret"></span></a>
-		  	  <ul class="sub-nav">
-		        <li>
-		          <a href="/easyadmin/dashboard">
-		            <i class="fa fa-pie-chart"></i>Grafici
-		          </a>
-		        </li>
-		        <li>
-		          <a href="/easyadmin/most_clicked_interactions">
-		            <i class="fa fa-hand-o-up"></i>Più cliccate
-		          </a>
-		        </li>
+	      
+	    <li class="dropdown <%= "active opened" if page == "dashboard" %>"><a href="javascript:void(0);"><i class="fa fa-th-large"></i>Dashboard<span class="caret"></span></a>
+	  	  <ul class="sub-nav">
+	        <li>
+	          <a href="/easyadmin/dashboard">
+	            <i class="fa fa-pie-chart"></i>Statistiche generali
+	          </a>
+	        </li>
+	        <li>
+	          <a href="/easyadmin/most_clicked_interactions">
+	            <i class="fa fa-hand-o-up"></i>Statistiche contenuti
+	          </a>
+	        </li>
+	        <% if can? :manage, :all %>
 		        <li>
 		          <a href="/easyadmin/reward_cta_unlocked">
 		            <i class="fa fa-trophy"></i>CTA reward sbloccate
 		          </a>
 		        </li>
-		      </ul>
-		    </li>
-		   <% end %>
+	        <% end %>
+	      </ul>
+	    </li>
 		   
 		   <% if can? :manage, :all %>
 		    <li class="dropdown <%= "active opened" if page == "user" %>"><a href="javascript:void(0);"><i class="fa fa-users"></i>Utenti<span class="caret"></span></a>

@@ -4,21 +4,28 @@ require_relative '../config/initializers/fandom_consts'
 module ConfigUtils
 
   # Get a deploy setting.
-  # key     - a "path", i.e. a sequence of words separated by a slash, to index the configuration file
-  # default - the value to return in case the key has not been defined
+  #   key     - a "path", i.e. a sequence of words separated by a slash, to index the configuration file; 
+  #             if a word starts with ":", the word is treated as a symbol
+  #   default - the value to return in case the key has not been defined
   def get_deploy_setting(key, default)
-    d = Rails.configuration.deploy_settings
+    get_from_hash_by_path(Rails.configuration.deploy_settings, key, default)
+  end
+  
+  def get_from_hash_by_path(hash, key, default)
+    x = hash
     begin
       key_parts = key.split('/')
-      key_parts.each do |part| 
-        d = d[part]
+      key_parts.each do |part|
+        if part.start_with? ':'
+          part = part[1..-1].to_sym
+        end 
+        x = x[part]
       end
-      d    
+      x
     rescue
-      puts("deploy settings #{key} not found, using a default value")
       default
     end
-  end
+  end 
   
   # Options and configurations related to a specific Fandom site. They are initialized at startup.
   class FandomSite

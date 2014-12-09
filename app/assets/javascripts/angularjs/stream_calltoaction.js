@@ -133,18 +133,19 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     		$scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION;
     		$scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION;
   		
-  			
+        $(".call-to-action__share-and-win-animation").fadeTo(1500,0);  			
   			$(".gift-image").fadeTo(1500,0);
   			setTimeout(function(){
   				$(".loader").removeClass("hidden");
   				playSound($(".roll-sound")[0]);
-  			}, 1000);
+  			}, 1500);
 
   			setTimeout(function(){
   				$(".cta-media img.hidden-xs").attr("src",data.calltoaction_info_list[0].calltoaction.media_image);
   				$(".cta-media img.mobile").attr("src",data.calltoaction_info_list[0].calltoaction.thumbnail_url);
   				$(".loader").addClass("hidden");
   				$(".gift-image").fadeTo(1500,1);
+          $(".call-to-action__share-and-win-animation").fadeTo(1500,1);
   				playSound($(".blink-sound")[0]);
   			}, 4500);
 			

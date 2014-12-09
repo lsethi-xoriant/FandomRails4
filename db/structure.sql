@@ -1479,7 +1479,7 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean DEFAULT false,
+    newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
     gender character varying(255)
@@ -3022,7 +3022,7 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean DEFAULT false,
+    newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
     gender character varying(255)
@@ -4565,7 +4565,7 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean DEFAULT false,
+    newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
     gender character varying(255)
@@ -6108,7 +6108,7 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean DEFAULT false,
+    newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
     gender character varying(255)
@@ -7651,7 +7651,7 @@ CREATE TABLE users (
     rule boolean,
     birth_date date,
     username character varying(255),
-    newsletter boolean DEFAULT false,
+    newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
     gender character varying(255)
@@ -13535,13 +13535,6 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 
 --
--- Name: index_users_on_username; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
-
-
---
 -- Name: unique_schema_migrations; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -13750,7 +13743,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: index_users_on_username; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+CREATE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
@@ -13962,7 +13955,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: index_users_on_username; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+CREATE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
@@ -14174,7 +14167,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: index_users_on_username; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+CREATE INDEX index_users_on_username ON users USING btree (username);
 
 
 --

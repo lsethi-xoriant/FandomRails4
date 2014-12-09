@@ -3,7 +3,7 @@
   <p class="call-to-action__share__text hidden-xs">CONDIVIDI</p>
 
   <!-- EMAIL -->
-  <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default btn-sm call-to-action__share__button-email" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email">
+  <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default btn-sm call-to-action__share__button-email" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email" ng-class="{'disabled': animation_in_progress}">
     <span class="fa fa-envelope"></span>
   </button>
 
@@ -53,7 +53,7 @@
 
   <!-- FACEBOOK -->   
 
-  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-fb btn-sm call-to-action__share__button-facebook" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-facebook"><span class="fa fa-facebook"></span></button>             
+  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-fb btn-sm call-to-action__share__button-facebook" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-facebook" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-facebook"></span></button>             
 
   <!-- MODAL SHARE INTERACTION -->
   <div ng-if="interaction_info.interaction.resource.providers.facebook" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-facebook" role="dialog" aria-hidden="true">

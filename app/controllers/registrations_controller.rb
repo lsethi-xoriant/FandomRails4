@@ -80,9 +80,13 @@ class RegistrationsController < Devise::RegistrationsController
         oauth_token: omniauth["credentials"]["token"],
         oauth_secret: (provider == "twitter" ? omniauth["credentials"]["secret"] : ""),
         oauth_expires_at: (provider == "facebook" ? Time.at(omniauth["credentials"]["expires_at"]) : ""),
+        avatar: omniauth["info"]["image"],
         provider: provider,
         aux: session["oauth"]["params"].to_json
     )
+
+    resource.avatar_selected_url = omniauth["info"]["image"]
+    resource.avatar_selected = provider
 
     flash[:from_provider] = provider
 

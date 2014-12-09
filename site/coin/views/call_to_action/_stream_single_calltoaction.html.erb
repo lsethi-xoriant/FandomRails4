@@ -14,13 +14,13 @@
   
     <div class="row">
       <div class="col-sm-12 gift-container">
-        <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="cta-media">
+        <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}?utm_source=link&utm_medium=giftmachine&utm_campaign=giftmachine" class="cta-media">
           <img class="call-to-action__media gift-image hidden-xs" ng-src="{{calltoaction_info.calltoaction.media_image}}">
           <img class="call-to-action__media gift-image hidden-lg hidden-sm hidden-md mobile" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}">
         </a>
-        <img class="call-to-action__media loader hidden hidden-xs" style="width: 100%; position: absolute; top:0; left:15px; max-width: 688px;" src="<%= asset_path("coin/slot.gif") %>">
+        <img class="call-to-action__media loader hidden hidden-xs" style="width: 100%; position: absolute; top: 25px; left:15px; max-width: 688px;" src="<%= asset_path("coin/slot.gif") %>">
         <div class="visible-xs" style="position: absolute; top: 0px; left: 5%; width: 100%;">
-        	<img class="call-to-action__media loader hidden hidden-lg hidden-sm hidden-md" style="width: 90%; margin: -40px auto 0 auto;" src="<%= asset_path("coin/slot-mobile.gif") %>">
+        	<img class="call-to-action__media loader hidden hidden-lg hidden-sm hidden-md" style="width: 90%; margin: -20px auto 0 auto;" src="<%= asset_path("coin/slot-mobile.gif") %>">
         </div>
       </div>
     </div>
@@ -28,18 +28,18 @@
     <div class="row">
       <div class="col-sm-9 col-xs-7">
         <p id="product-title" ng-class="title_product_class" ng-bind-html="calltoaction_info.calltoaction.description" style="min-width: 400px;"></p>
-        <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__description-mobile visible-xs"><span class="glyphicon glyphicon-shopping-cart call-to-action__media__button__gift-icon"></span></a>
+        <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__description-mobile visible-xs call-to-action__share-and-win-animation"><span class="glyphicon glyphicon-shopping-cart call-to-action__media__button__gift-icon"></span></a>
       </div>
       <div ng-class="buy_product_class" class="col-sm-3 col-xs-5 text-right hidden-xs">
-        <a id="product-buy" target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__button__gift"><span class="glyphicon glyphicon-gift call-to-action__media__button__gift-icon"></span>LO VOGLIO!</a>
+        <a id="product-buy" target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}?utm_source=link&utm_medium=giftmachine&utm_campaign=giftmachine" class="btn btn-gift call-to-action__media__button__gift"><span class="glyphicon glyphicon-gift call-to-action__media__button__gift-icon"></span>ACQUISTA</a>
       </div> 
     </div>
 
-    <div class="row call-to-action__share-and-win">
+    <div class="row call-to-action__share-and-win call-to-action__share-and-win-animation">
       <div class="col-sm-8 col-xs-5">
         <img class="call-to-action__share-and-win__ticket-img hidden-xs" src="<%= asset_path("coin/coin-ticket.png") %>">
         <p ng-if="!aux.share_interaction_daily_done" class="call-to-action__share-and-win__title hidden-xs">Condividi e vinci subito</p>
-        <p ng-if="aux.share_interaction_daily_done" class="call-to-action__share-and-win__title hidden-xs">Hai ottenuto +1 biglietto</p>
+        <p ng-if="aux.share_interaction_daily_done" class="call-to-action__share-and-win__title hidden-xs">Torna domani per ottenere un nuovo biglietto</p>
         <p ng-if="!aux.share_interaction_daily_done" class="call-to-action__share-and-win__description hidden-xs">Puoi giocare una volta al giorno. Invita i tuoi amici a giocare per guadagnare un'opportunità in più di vincere.</p>
         <p ng-if="aux.share_interaction_daily_done" class="call-to-action__share-and-win__description hidden-xs">Hai già fatto la prima condivisione del giorno. Per ottenere altri biglietti torna domani.</p>
         <p class="call-to-action__share-and-win__title visible-xs">Condividi e vinci!</p>

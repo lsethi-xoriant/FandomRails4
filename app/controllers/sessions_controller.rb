@@ -9,7 +9,7 @@ class SessionsController < Devise::SessionsController
 
   def anchor_provider_to_current_user
     # Assign the provier at the current user.
-    current_user.logged_from_omniauth env["omniauth.auth"], params[:provider]
+    current_user.logged_from_omniauth(env["omniauth.auth"], params[:provider])
     flash[:notice] = "Agganciato #{ params[:provider] } all'utente"
 
     site = get_site_from_request(request)
@@ -54,10 +54,12 @@ class SessionsController < Devise::SessionsController
       sign_in(user)
       fandom_play_login(user)
     
-      setUpAccount()
       log_audit("registration from oauth", { 'form_data' => env["omniauth.auth"], 'user_id' => current_user.id })
 
-      cookies[:from_registration] = true if from_registration
+      if from_registration
+        setUpAccount()
+        cookies[:from_registration] = true 
+      end
     
       if request.site.force_facebook_tab && !request_is_from_mobile_device?(request)
         redirect_to request.site.force_facebook_tab

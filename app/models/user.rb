@@ -25,6 +25,7 @@ class User < ActiveRecordWithJSON
   has_many :call_to_actions
 
   before_save :set_date_of_birth
+  before_save :set_username_if_not_required
   before_update :set_current_avatar
   before_create :default_values
 
@@ -45,6 +46,12 @@ class User < ActiveRecordWithJSON
   validate :major, if: Proc.new { |f| major_date.present? }
 
   after_initialize :set_attrs
+
+  def set_username_if_not_required
+    unless required_attr?("username")
+      self.username = email
+    end
+  end
 
   def newsletter_acceptance
     errors.add(:newsletter, :accepted) unless newsletter
@@ -125,7 +132,7 @@ class User < ActiveRecordWithJSON
     end 
   end
 
-  def logged_from_omniauth auth, provider
+  def logged_from_omniauth(auth, provider)
     # Se il PROVIDER era agganciato ad un altro utente lo sgancio e lo attacco all'utente corrente.
     user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid);
     if user_auth
@@ -151,6 +158,7 @@ class User < ActiveRecordWithJSON
       )
     end 
 
+    self.aux = JSON.parse(self.aux) if self.aux.present?
     self.save
     return self
   end

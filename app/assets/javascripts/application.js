@@ -4,6 +4,7 @@
 //= require angular
 //= require angular-resource
 //= require angular-sanitize
+//= require angular-animate
 //= require angular-route
 //= require angular-animate
 //= require angularjs/ng-table

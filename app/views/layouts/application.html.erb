@@ -18,7 +18,7 @@
   <%= csrf_meta_tags %>
 
 </head>
-<body ng-app="FandomApp" class="bg-fluid" style="background-color: #FAFAFA;">
+<body ng-app="FandomApp" class="bg-fluid" style="background-color: #FAFAFA;" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.to_json %>, <%= @calltoaction_info_list.to_json %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.to_json %>, <%= get_deploy_setting("sites/#{request.site.id}/kaltura", nil).to_json %>)">
 
   <div id="quiz-waiting-audio"></div>
 
