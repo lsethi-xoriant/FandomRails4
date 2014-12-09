@@ -30,16 +30,38 @@
   	return "<div class='alert alert-info' role='alert'>" + str + "</div>";
   };
 
+
+function getButtonHandlerForJsonFieldsName(fieldName) {
+    return  'text-boxes-for-' + fieldName + '-fields';	
+}
+
 function addButtonHandlerForJsonFields(modelName, fieldName) {
-  	var counter = 1;
+	var elementRemoved = 0;
 
 	$('#add-button-for-' + fieldName + '-fields').click(function (e) {
 		e.preventDefault();
+		var counter = $('#text-boxes-for-' + fieldName + '-fields').children().length + 1 + elementRemoved;
+		addFieldElements(modelName, fieldName, counter, true);
+	});
 
-		jQuery('<div/>', {
+	$('#text-boxes-for-' + fieldName + '-fields').on('click','.btn', function(e){
+	  e.preventDefault();
+	  $(this).parent().remove();
+	  elementRemoved++;
+    });
+  };
+
+function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
+  	var containerDivId = getButtonHandlerForJsonFieldsName(fieldName);
+
+  		jQuery('<div/>', {
+  			id: 'extra-fields-for-' + fieldName + '-' + counter
+  		}).appendTo('#' + containerDivId);
+
+  		jQuery('<div/>', {
 			id: 'extra-fields-name-for-' + fieldName + '-' + counter,
-			class: 'form-group'
-		}).appendTo('#text-boxes-for-' + fieldName + '-fields');
+			class: 'form-group col-lg-5'
+		}).appendTo('#extra-fields-for-' + fieldName + '-' + counter);
 
 		jQuery('<label/>', {
 			class: 'text-input',
@@ -56,8 +78,8 @@ function addButtonHandlerForJsonFields(modelName, fieldName) {
 
 		jQuery('<div/>', {
 			id: 'extra-fields-value-for-' + fieldName + '-' + counter,
-			class: 'form-group'
-		}).appendTo('#text-boxes-for-' + fieldName + '-fields');
+			class: 'form-group col-lg-5'
+		}).appendTo('#extra-fields-for-' + fieldName + '-' + counter);
 
 		jQuery('<label/>', {
 			class: 'text-input',
@@ -71,20 +93,11 @@ function addButtonHandlerForJsonFields(modelName, fieldName) {
 		    class: 'form-control',
 		}).appendTo('#extra-fields-value-for-' + fieldName + '-' + counter);
 
-		$('#extra-fields-value-for-' + fieldName + '-' + counter).append('<br><a id = "remove-link-for-' + fieldName + '-field-' + counter + '" href="#" class="btn btn-primary btn-xs">Rimuovi</a>');
-
-		counter++;
-	});
-
-	$('#text-boxes-for-' + fieldName + '-fields').on('click','.btn', function(e){
-	  e.preventDefault();
-	  id = $(this).attr('id').replace('remove-link-for-' + fieldName + '-field-','');
-	  $('#extra-fields-name-for-' + fieldName + '-' + id).remove();
-	  $('#extra-fields-value-for-' + fieldName + '-' + id).remove();
-	  $(this).remove();
-    });
-
-  };
+		if(addRemoveButton != false) {
+			$('#extra-fields-for-' + fieldName + '-' + counter).append('<label id ="remove-button-label-for-' + fieldName + '-field-' + counter + '" class="col-lg-2">Elimina</label>');
+			$('#extra-fields-for-' + fieldName + '-' + counter).append('<a id = "remove-link-for-' + fieldName + '-field-' + counter + '" href="#" class="col-lg-1 btn btn-primary btn-xs">Rimuovi</a>');
+  		}
+};
 
 function updateValueElementName(elementName, modelName, fieldName) {
 	id = '#value-for-' + fieldName + '-field-' + elementName.attr('id').replace('name-for-' + fieldName + '-field-','');
@@ -97,4 +110,51 @@ function updateValueElementName(elementName, modelName, fieldName) {
 	}
 
 	relatedValueElement.attr('name', modelName + '[[' + fieldName + '][' + fieldValue + ']]');
-  };
+};
+  
+function populateTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName) {
+	var index = 0;
+	addMandatoryFieldsElements(mandatory_fields, modelName, fieldName);
+
+	Object.keys(json_field).forEach(function (key) { 
+		var value = json_field[key];
+	  	if (mandatory_fields != null && mandatory_fields.indexOf(key) >= 0) {
+	    	$('#value-for-' + fieldName + '-field-' + key).val(value);
+	    }
+	    else {
+	        index++;
+	  		addFieldElements(modelName, fieldName, index, true);
+	        $('#name-for-' + fieldName + '-field-' + index).val(key);
+	        updateValueElementName($("#name-for-" + fieldName + "-field-" + index), modelName, fieldName);
+	        $('#value-for-' + fieldName + '-field-' + index).val(value);
+	    }
+	});
+    addButtonHandlerForJsonFields(modelName, fieldName);
+    
+    $('#' + formName).submit(function (){
+        if($('input[name^=' + modelName + '\\[\\[' + fieldName + '\\]]').length == 0)
+        	$('#text-boxes-for-' + fieldName + '-fields').append('<input type="hidden" id="value-for-' + fieldName + '-field-0" name="' + modelName + '[' + fieldName + ']" value="{}">');
+    });
+};
+
+function initializeTextbox(mandatory_fields, formName, modelName, fieldName) {
+	addMandatoryFieldsElements(mandatory_fields, modelName, fieldName);
+    addButtonHandlerForJsonFields(modelName, fieldName);
+    
+    $('#' + formName).submit(function (){
+        if($('input[name^=' + modelName + '\\[\\[' + fieldName + '\\]]').length == 0)
+        	$('#text-boxes-for-' + fieldName + '-fields').append('<input type="hidden" id="value-for-' + fieldName + '-field-0" name="' + modelName + '[' + fieldName + ']" value="{}">');
+    });
+};
+
+function addMandatoryFieldsElements(mandatory_fields, modelName, fieldName) {
+	if (mandatory_fields == null)
+		return;
+
+	mandatory_fields.forEach(function(mandatory_field) {
+			addFieldElements(modelName, fieldName, mandatory_field, false);
+	        	$('#name-for-' + fieldName + '-field-' + mandatory_field).val(mandatory_field).attr('readonly', true);
+	        	updateValueElementName($("#name-for-" + fieldName + "-field-" + mandatory_field), modelName, fieldName);
+	        	$('#value-for-' + fieldName + '-field-' + mandatory_field).val(null);
+	});
+};
