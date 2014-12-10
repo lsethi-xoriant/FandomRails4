@@ -86,40 +86,7 @@
 	  	</div>
 	  </div>
 	  	<div class="row">
-	  	<div id='text-boxes-for-aux-fields' class="col-lg-6">
-	  		<div id="extra-fields-name-for-aux-button_label" class="form-group">
-	  			<label class="text-input">Nome</label>
-	  			<input type="text" id="name-for-aux-field-button_label" name="name-for-aux-field-button_label" class="form-control" value="button_label" readonly="true">
-	  		</div>
-	  		<div id="extra-fields-value-for-aux-button_label" class="form-group">
-	  			<label class="text-input">Valore</label>
-	  			<input type="text" id="value-for-aux-field-button_label" name="call_to_action[[aux][button_label]]" class="form-control">
-	  		</div>
-	  		<div id="extra-fields-name-for-aux-alternative_description" class="form-group">
-	  			<label class="text-input">Nome</label>
-	  			<input type="text" id="name-for-aux-field-alternative_description" name="name-for-aux-field-alternative_description" class="form-control" value="alternative_description" readonly="true">
-	  		</div>
-	  		<div id="extra-fields-value-for-aux-alternative_description" class="form-group">
-	  			<label class="text-input">Valore</label>
-	  			<input type="text" id="value-for-aux-field-alternative_description" name="call_to_action[[aux][alternative_description]]" class="form-control">
-	  		</div>
-	  		<div id="extra-fields-name-for-aux-enable_for_current_user" class="form-group">
-	  			<label class="text-input">Nome</label>
-	  			<input type="text" id="name-for-aux-field-enable_for_current_user" name="name-for-aux-field-enable_for_current_user" class="form-control" value="enable_for_current_user" readonly="true">
-	  		</div>
-	  		<div id="extra-fields-value-for-aux-enable_for_current_user" class="form-group">
-	  			<label class="text-input">Valore</label>
-	  			<input type="text" id="value-for-aux-field-enable_for_current_user" name="call_to_action[[aux][enable_for_current_user]]" class="form-control">
-	  		</div>
-	  		<div id="extra-fields-name-for-aux-shop_url" class="form-group">
-	  			<label class="text-input">Nome</label>
-	  			<input type="text" id="name-for-aux-field-shop_url" name="name-for-aux-field-shop_url" class="form-control" value="shop_url" readonly="true">
-	  		</div>
-	  		<div id="extra-fields-value-for-aux-shop_url" class="form-group">
-	  			<label class="text-input">Valore</label>
-	  			<input type="text" id="value-for-aux-field-shop_url" name="call_to_action[[aux][shop_url]]" class="form-control">
-	  		</div>
-	  	</div>
+	  	<div id='text-boxes-for-aux-fields' class="col-lg-12"></div>
 	  	</div>
 
       <div class="row">
@@ -495,7 +462,13 @@
   }
 
   $(document).ready(function(){
-  	addButtonHandlerForJsonFields("call_to_action", "aux");
+
+  	var mandatory_fields = ["button_label", "alternative_description", "enable_for_current_user", "shop_url"];
+  	var formName = "new_call_to_action"
+  	var modelName = "call_to_action";
+	var fieldName = "aux";
+
+  	initializeTextbox(mandatory_fields, formName, modelName, fieldName);
   });
 
 </script>
