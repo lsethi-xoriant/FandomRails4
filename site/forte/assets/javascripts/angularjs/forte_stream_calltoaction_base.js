@@ -36,10 +36,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.polling = false;
     $scope.youtube_api_ready = false;
 
+    /* YOUTUBE DISABLED */
+    /*
     var tag = document.createElement('script');
     tag.src = "//www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    */
 
     initQuizWaitingAudio();
 
@@ -189,6 +192,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         angular.forEach(data.calltoactions, function(calltoaction) {
           $scope.calltoactions.push(calltoaction);
           appendYTIframe(calltoaction);
+        });
+
+        angular.forEach(data.calltoactions_reward, function(value, id) {
+          $scope.aux.calltoactions_reward[id] = value;
         });
 
         $scope.last_calltoaction_shown_activated_at = $scope.calltoactions[$scope.calltoactions.length - 1].activated_at;

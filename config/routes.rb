@@ -85,6 +85,10 @@ Fandom::Application.routes.draw do
 
           resources :call_to_action
 
+          match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+
+          match "/update_reward_calltoactions_in_page", to: "call_to_action#update_reward_calltoactions_in_page", defaults: { format: 'json' }
+
           match "/", :to => "application#index"
 
           match "/redirect_top_with_cookie", :to => "application#redirect_top_with_cookie"

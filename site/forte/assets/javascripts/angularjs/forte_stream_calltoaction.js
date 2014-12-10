@@ -43,8 +43,8 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       .success(function(data) {
         if(data.outcome.attributes.reward_name_to_counter.point == null){
       		afterShareAjaxWithoutPoint(data);
-      	}else{
-      		updateUserRewardInView(data.main_reward_counter.weekly);
+      	} else {
+      		updateUserRewardInView(data.main_reward_counter.general);
       		//updateUserRewardInView(data.contest_points_counter);
       		afterShareAjax(data,ctaId);
       	}
@@ -61,7 +61,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       	if(data.outcome.attributes.reward_name_to_counter.point == null) {
       		afterShareAjaxWithoutPoint(data);
       	} else {
-      		updateUserRewardInView(data.main_reward_counter.weekly);
+      		updateUserRewardInView(data.main_reward_counter.general);
       		//updateUserRewardInView(data.contest_points_counter);
       		afterShareAjax(data,ctaId);
       	}	
@@ -223,7 +223,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
     
     showMarkerNearInteraction(interaction_id);
-    updateUserRewardInView(data.main_reward_counter.weekly);
+    updateUserRewardInView(data.main_reward_counter.general);
     //updateUserRewardInView(data.contest_points_counter);
 
     $("#undervideo-area-" + interaction_id).html(data.feedback); 
@@ -269,6 +269,7 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.updateUserRewardInView = function(counter) {
+    updateCallToActionsRewardInPage(counter);
     // Custom calltoaction user bar
     $(".user-reward-counter").html("+" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
     try {
@@ -276,6 +277,28 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
       window.parent.updateIframeProfileWidget("+" + counter + "<span class=\"glyphicon glyphicon-star\"></span>");
     } catch(err) { }
   };
+
+  function updateCallToActionsRewardInPage(counter) {
+    unlock_calltoactions = [];
+    angular.forEach($scope.aux.calltoactions_reward, function(value, id) {
+      value = Math.max(value - counter, 0);
+      if(value < 1) {
+        unlock_calltoactions.push(id);
+        delete $scope.aux.calltoactions_reward[id];
+      }
+      $(".calltoaction-" + id + "-lock-value").html(value);
+    });
+    if(unlock_calltoactions.length > 0) {
+      $http.post("/update_reward_calltoactions_in_page", { unlock_calltoactions: unlock_calltoactions })
+        .success(function(data) {
+          angular.forEach(data, function(value, id) {
+            $("#calltoaction-"+ id).replaceWith(value);
+          });
+        }).error(function() {
+          // ERROR.
+        });
+    }
+  }
 
   $window.updateFiltersMenu = function(tag_id) {
   	$(".filter-home-menu .slide").removeClass("active");

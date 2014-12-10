@@ -1,9 +1,64 @@
 
 class Sites::Forte::CallToActionController < CallToActionController
 
-  def setup_update_interaction_response_info(response) 
-    response["contest_points_counter"] = [SUPERFAN_CONTEST_POINTS_TO_WIN - (get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD, false) || 0), 0].max
-    response
+    def append_calltoaction
+    
+    calltoactions = Array.new
+    render_calltoactions_str = String.new
+    
+    calltoactions_showed_ids = params[:calltoactions_showed].map { |calltoaction| calltoaction["id"] }
+    calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")
+
+    if params[:tag_id].present?
+      stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", params[:tag_id]).active
+      if params[:current_calltoaction].present?
+        stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
+      end
+    else
+      stream_call_to_action_to_render = CallToAction.active
+      if params[:current_calltoaction].present?
+        stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
+      end
+    end
+
+    stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id NOT IN (#{calltoactions_showed_id_qmarks})", *calltoactions_showed_ids).limit(3)
+    calltoactions_comment_interaction = init_calltoactions_comment_interaction(stream_call_to_action_to_render)
+
+    stream_call_to_action_to_render.each do |calltoaction|
+      calltoactions << calltoaction
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: nil, calltoaction_active_interaction: Hash.new, aux: nil }, layout: false, formats: :html)
+    end
+
+=begin
+    calltoactions_during_video_interactions_second = Hash.new
+    calltoactions.each do |calltoaction|
+      interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")
+      if(interactions_overvideo_during.any?)
+        calltoactions_during_video_interactions_second[calltoaction.id] = Hash.new
+        interactions_overvideo_during.each do |interaction|
+          calltoactions_during_video_interactions_second[calltoaction.id][interaction.id] = interaction.seconds
+        end
+      end
+    end
+=end
+
+    response = Hash.new
+    response = {
+      #calltoactions_during_video_interactions_second: calltoactions_during_video_interactions_second,
+      calltoactions: calltoactions,
+      html_to_append: render_calltoactions_str,
+      calltoaction_info_list: build_call_to_action_info_list(calltoactions),
+      calltoactions_reward: Hash.new
+    }
+
+    calltoactions.each do |calltoaction|
+      response[:calltoactions_reward][calltoaction.id] = calltoaction.rewards.first.cost if cta_locked?(calltoaction)
+    end
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+    
   end
 
   def get_extra_info(gallery_tag)
@@ -17,6 +72,24 @@ class Sites::Forte::CallToActionController < CallToActionController
         end
       end
       extra
+    end
+  end
+
+  def update_reward_calltoactions_in_page
+    unlock_calltoactions_ids = params[:unlock_calltoactions]
+    unlock_calltoactions_id_qmarks = (["?"] * unlock_calltoactions_ids.count).join(", ")
+    unlock_calltoactions = CallToAction.active.where("id IN (#{unlock_calltoactions_id_qmarks})", *(unlock_calltoactions_ids.map { |id| id }))
+  
+    response = {}
+    calltoactions_comment_interaction = init_calltoactions_comment_interaction(unlock_calltoactions)
+    unlock_calltoactions.each do |calltoaction|
+      unless cta_locked?(calltoaction)
+        response[calltoaction.id] = render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: nil, calltoaction_active_interaction: Hash.new, aux: nil }, layout: false, formats: :html
+      end
+    end
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
     end
   end
   
