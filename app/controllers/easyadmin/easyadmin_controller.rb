@@ -32,12 +32,12 @@ class Easyadmin::EasyadminController < ApplicationController
   end
   
 def export_users
- csv = "id;email;encrypted_password;reset_password_token;reset_password_sent_at;remember_created_at;sign_in_count;current_sign_in_at;last_sign_in_at;"+
+ csv = "id;email;remember_created_at;sign_in_count;current_sign_in_at;last_sign_in_at;"+
        "current_sign_in_ip;last_sign_in_ip;first_name;last_name;avatar_selected;swid;privacy;confirmation_token;confirmed_at;confirmation_sent_at;"+
        "unconfirmed_email;role;authentication_token;created_at;updated_at;avatar_file_name;avatar_content_type;avatar_file_size;avatar_updated_at;"+
        "cap;location;province;address;phone;number;rule;birth_date;username;newsletter;avatar_selected_url;aux;gender\n"
   User.all.each do |user|
-    csv << "#{user.id};#{user.email};#{user.encrypted_password};#{user.reset_password_token};#{user.reset_password_sent_at};#{user.remember_created_at};"+
+    csv << "#{user.id};#{user.email};#{user.remember_created_at};"+
             "#{user.sign_in_count};#{user.current_sign_in_at};#{user.last_sign_in_at};#{user.current_sign_in_ip};#{user.last_sign_in_ip};#{user.first_name};"+
             "#{user.last_name};#{user.avatar_selected};#{user.swid};#{user.privacy};#{user.confirmation_token};#{user.confirmed_at};#{user.confirmation_sent_at};"+
             "#{user.unconfirmed_email};#{user.role};#{user.authentication_token};#{user.created_at};#{user.updated_at};#{user.avatar_file_name};"+

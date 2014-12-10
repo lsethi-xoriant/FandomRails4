@@ -42,6 +42,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     return String(text).replace(/<[^>]+>/gm, '');
   };
 
+  angular.element(document).ready(function () {
+    if(window.name != "iframe_canvas_fb_https") {
+      document.cookie = "oauth_connect_from_page=; expires=Thu, 01 Jan 1970 00:00:00 UTC"; 
+    }
+  });
+
   $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux, kaltura_params) {
     $scope.aux = aux;
     $scope.current_user = current_user;

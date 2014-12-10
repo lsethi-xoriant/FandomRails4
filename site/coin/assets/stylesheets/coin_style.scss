@@ -11,7 +11,7 @@ $container-lg:                 $container-desktop !default;
 
 body {
   padding-top: 15px;
-  background-image: url("<%= asset_path("coin/bg.jpg") %>");
+  background-image: url("coin/bg.jpg");
   background-size: 100% auto;
   background-position: top center;
   background-repeat: no-repeat;
@@ -288,8 +288,10 @@ body {
 }
 
 .landing__sign-in {
-  margin-top: 10px;
+  margin-top: 20px;
+  margin-bottom: 15px;
   color: #fff;
+  font-size: 16px;
 }
 
 .landing__sale-img {
