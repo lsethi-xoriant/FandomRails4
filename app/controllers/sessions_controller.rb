@@ -106,6 +106,9 @@ class SessionsController < Devise::SessionsController
     session["oauth"]["params"] = env["omniauth.auth"] #.except("extra") to prevent cookie overflow
     session["oauth"]["params"]["provider"] = params[:provider]
     flash[:from_provider] = params[:provider]
+    if cookies[:oauth_connect_from_page].present?
+      cookies[:connect_from_page] = cookies[:oauth_connect_from_page]
+    end
     render template: "/devise/registrations/new", :locals => { resource: user }   
   end
 
