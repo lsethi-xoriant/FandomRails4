@@ -147,8 +147,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   			}, 1500);
 
   			setTimeout(function(){
-  				$(".cta-media img.hidden-xs").attr("src",data.calltoaction_info_list[0].calltoaction.media_image);
-  				$(".cta-media img.mobile").attr("src",data.calltoaction_info_list[0].calltoaction.thumbnail_url);
+          $(".call-to-action__mobile-description").html(data.calltoaction_info_list[0].calltoaction.description)
+  				$(".cta-media img.hidden-xs").attr("src", data.calltoaction_info_list[0].calltoaction.media_image);
+  				$(".cta-media img.mobile").attr("src", data.calltoaction_info_list[0].calltoaction.thumbnail_url);
   				$(".loader").addClass("hidden");
   				$(".gift-image").fadeTo(1500,1);
           $(".call-to-action__share-and-win-animation").fadeTo(1500,1);

@@ -38,11 +38,9 @@ class Sites::Forte::ApplicationController < ApplicationController
     end
 
     @calltoactions_reward = Hash.new
-    debugger
     @calltoactions.each do |calltoaction|
-      @calltoactions_reward[calltoaction.id] = @calltoactions.first.rewards.first.cost if cta_locked?(cta)
+      @calltoactions_reward[calltoaction.id] = @calltoactions.first.rewards.first.cost if cta_locked?(calltoaction)
     end
-
 
     @aux = init_aux()
 

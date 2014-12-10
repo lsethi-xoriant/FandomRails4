@@ -1196,11 +1196,34 @@ fieldset[disabled] .btn-facebook.active {
     color: #000;
   }
 
-  .call-to-action__media__description-mobile {
+
+  .call-to-action__media__button__gift-mobile {
+    width: 40px;
+    margin: 0 5px 5px auto;
+    box-shadow: none;
+    /*
     margin: 0;
     position: absolute;
     bottom: 10px;
     left: 25px;
+    */
+  }
+
+  .call-to-action__description-row {
+    position: relative;
+  }
+
+  .call-to-action__mobile-description-col {
+    position: absolute; 
+    bottom: 0;
+  }
+
+  .call-to-action__mobile-description {
+    margin: 0;
+    margin-left: 5px;
+    line-height: 13px;
+    font-size: 13px;
+    padding-top: 5px;
   }
 
   .call-to-action__media__button__gift-icon {
