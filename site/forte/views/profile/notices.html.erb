@@ -1,0 +1,71 @@
+<div class="container-fluid profile-container">
+  
+  <div class="row">
+    <div class="col-md-12">
+          <%= render partial: "profile/profile_header" %>
+          
+          <div class="hidden-xs">
+          
+          <%= render partial: "profile/profile_navbar", locals: { page: "notices" } %>
+          <div class="row">
+            <div class="col-md-12">
+              <% if @notices_list.blank? %>
+              	<h3 class="text-center">Non hai nessuna notifica al momento</h3>
+              <% end %>
+              <% @notices_list.each do |date, nl| %>
+              <h5><%= date %></h5>
+              <ul class="list-group">
+              	<% nl.each do |n| %>
+                <li id="<%= n.id %>" class="list-group-item <%= "list-group-item-warning" if !n.read %>">
+                  <div class="row">
+                  	<div class="col-sm-11">
+                  		<%= n.html_notice.html_safe %>
+                  	</div>
+                  	<div class="col-sm-1">
+                  			<% if n.read %>
+                  				<i class="fa fa-circle" style="float: right;"></i>
+                  			<% else %>
+                  			<a href="javascript:void(0)" onclick="mark_as_read(<%= n.id %>);" style="float: right; color: black;">
+                  				<i class="fa fa-circle-o"></i>
+                  			</a>
+                  			<% end %>
+                  	</div>
+                  </div>
+                </li>
+                <% end %>
+              </ul>
+              <% end %>
+            </div>
+          </div>
+          
+          </div>
+            
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+	function mark_as_read(id){
+		$.ajax({
+	      type: "POST",
+	      url: "/profile/notices/mark_as_read",
+	      data: { notice_id: id },
+	      beforeSend: function(jqXHR, settings) {
+	        jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+	      },
+	      success: function(data) {
+	        if(data.success){
+	        	$("li#"+id).removeClass("list-group-item-warning");
+	        	$("li#"+id+" i.fa").removeClass("fa-circle-o").addClass("fa-circle");
+	        }else{
+	        	alert(data.message);
+	        }
+	      } // success AJAX
+      	});
+	}
+
+  $(document).ready(function() {
+    checkDocumentHeight("fandom");
+  });
+</script>

@@ -1,0 +1,114 @@
+<% tag_menu = get_tags_with_tag("menu") %>
+<% special_guest_tag = Tag.find_by_name("special-guest") %>
+<% if tag_menu.any? %>
+	<div class=" row menu-area">
+		<div class="container-menu" style="background-color: rgba(0, 0, 0, 0.6); float: left; width: 100%; padding: 10px 0 0 0;">
+			<div class="submenu">
+				    <div class="col-xs-12 filter-menu-tag">
+				      <div class="flexslider">
+				        <ul class="slides filter-home-menu">
+				        	<% 			        	
+				        	all_filter = tag_menu.detect{ |tm| tm.name == "home_filter_all" }
+				        	tag_menu.delete(all_filter)
+				        	tag_menu.unshift(all_filter) 
+				        	%>
+				        	<% if is_special_guest_active %>
+				         	<li>
+				                <div class="slide slide-upload active" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= special_guest_tag.nil? ? asset_path('special_guest_thumb.jpg') : special_guest_tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                    <div class="comment-center">
+				                        <a href="/gallery/55">
+									      <div class="row">
+									        <div class="col-md-12">
+									          <h2><%= special_guest_tag.nil? ? "SPECIAL GUEST" : special_guest_tag.tag_fields.find_by_name("title").try(:value) %></h2>
+									        </div>
+									      </div>
+									    </a>
+				                    </div>
+				                </div>
+				                <div class="triangle"></div>
+				            </li>
+				        <% end %>
+				        	<% tag_menu.each do |tag| %>
+				            <li>
+				                <div class="slide slide-<%= tag.id %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                    <div class="comment-center">
+				                        <a href="/tag/<%= tag.name %>">
+									      <div class="row">
+									        <div class="col-md-12">
+									          <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
+									        </div>
+									      </div>
+									    </a>
+				                    </div>
+				                </div>
+				            </li>
+			            <% end %>
+				         </ul>
+				      </div>
+				    </div>
+		
+			</div>
+		</div>
+		
+		<div class="menu-info-extra hidden-xs">
+			<div class="extra-info" style="display: block;">
+				<img class="extra-info-img" src="<%= special_guest_tag.nil? ? asset_path("special_guest.jpg") : special_guest_tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload }.first %>" />
+				<div id="banner-rai" class="hidden-xs" style="position: absolute; right: 25px; bottom: 15px; width: 300px; height: 250px;"></div>
+			</div>
+		</div>
+		
+	</div>
+	
+<% end %>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $('.filter-menu-tag .flexslider').flexslider({
+	        animation: "slide",
+	        controlNav: false,
+	        directionNav: true,
+	        slideshow: false,
+	        itemWidth: getItemSize(),
+	        itemMargin: 10,
+	        minItems: 1,
+	        maxItems: 6
+	    });
+	    
+	    $(window).resize(function() {
+	
+	        $('.filter-menu-tag .flexslider').flexslider({
+	            animation: "slide",
+	            directionNav: true,
+	            prevText: "",
+	            nextText: "",
+	            slideshow: false,
+	            itemWidth: getItemSize(),
+	            itemMargin: 20,
+	            minItems: getGridSize(),
+	            move: getGridSize()
+	        });
+	        $('.filter-menu-tag .flexslider .slides li').css('width', getItemSize()+'px');
+		});
+		
+		 
+	    $(".iframe-apple-mobile iframe").css("height", $(".iframe-apple-mobile").innerHeight());
+	    $(".iframe-apple-mobile iframe").css("width", $(".iframe-apple-mobile").innerWidth());
+		
+	});
+
+	function getGridSize() {
+	    if ($(window).innerWidth() < 760)
+	        return 2;
+	    else
+	    	<% if is_special_guest_active %>
+	        	return 6;
+	        <% else %>
+	        	return 5;
+	        <% end %>
+	}
+	
+	function getItemSize() {
+		return ($(".flexslider").innerWidth() / getGridSize()) - 10;
+	}
+</script>

@@ -1,0 +1,41 @@
+<div class="container-fluid profile-container">
+  
+  <div class="row">
+    <div class="col-md-12">
+	  <%= render partial: "profile/profile_header" %>
+	  
+	  
+	  <div class="hidden-xs">
+	  
+      <%= render partial: "profile/profile_navbar", locals: { page: "badges" } %>
+      <% rewards = order_rewards(@rewards_to_show.to_a, REWARD_SORT_BY_VALIDITY_END) %>
+      <% if @are_properties_used %>
+        <% rewards.each do |property, rewards| %>
+          <div class="row badges text-center">
+            <% rewards.each do |reward| %>
+              <%= render partial: "/profile/badge", locals: { reward: reward } %>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="row badges text-center">
+          <% rewards.each do |reward| %>
+            <%= render partial: "/profile/badge", locals: { reward: reward } %>
+          <% end %>
+        </div>
+      <% end %>
+      
+     </div>
+      
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    checkDocumentHeight("fandom-profile");
+  });
+
+</script>

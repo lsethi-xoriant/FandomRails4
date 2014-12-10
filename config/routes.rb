@@ -9,6 +9,7 @@ Fandom::Application.routes.draw do
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   constraints(SiteMatcher.new('coin')) do
+    match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
     scope module: "sites" do
       scope module: "coin" do
         root :to => "application#index"
@@ -74,9 +75,58 @@ Fandom::Application.routes.draw do
       end
     end
   end
+
+   constraints(SiteMatcher.new('forte')) do
+    match "/profile", :to => "profile#badges"
+
+    devise_scope :user do
+      scope module: "sites" do
+        scope module: "forte" do
+
+          resources :call_to_action
+
+          match "/", :to => "application#index"
+
+          match "/redirect_top_with_cookie", :to => "application#redirect_top_with_cookie"
+
+          match '/users/sign_in', :to => 'sessions#forte_new', :as => 'user_sign_in'
+
+          match "/users/gigya_socialize_redirect", :to => "application#gigya_socialize_redirect"
+
+          match "/custom_call_to_action/:id/next", :to => "custom_call_to_action#show_next_calltoaction"
+          match "/custom_call_to_action/:id", :to => "custom_call_to_action#show"
+
+          match "/refresh_top_window", :to => "application#refresh_top_window"
   
-  constraints(SiteMatcher.new('coin')) do
-    match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
+          match "/users/rai/sign_out", :to => "sessions#forte_destroy"
+          match "/users/rai/sign_up/create", :to => "registrations#forte_create"
+          match "/users/rai/sign_in/create", :to => "sessions#forte_create"
+          match "/users/rai/sign_in_from_provider/create", :to => "sessions#forte_create_from_provider", defaults: { format: 'json' }
+  
+          match "/profile/widget", :to => "iframe_profile#show"
+          match "/carousel/widget", :to => "iframe_carousel#main"
+          match "/carousel_footer/widget", :to => "iframe_carousel#footer"
+          
+          match "/iframe/check", :to => "iframe_check#show"
+          match "/iframe/get_check", :to => "iframe_check#get_check_template"
+          match "/iframe/do_check", :to => "iframe_check#do_check"
+
+          match "/upload_interaction/new", :to => "upload_interaction#new"
+          match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
+
+          match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
+          match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
+          
+          match "/special_guest", :to => "application#redirect_into_special_guest"
+          
+          match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+
+          match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
+          match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+          match "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
+        end
+      end
+    end
   end
 
   match "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
@@ -216,6 +266,8 @@ Fandom::Application.routes.draw do
     match "settings/ranking", :to => "settings#ranking_settings"
     match "settings/ranking/save", :to => "settings#save_ranking_settings"
   end
+
+  match '/facebook_app', to: "application#facebook_app"
 
   match '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }
   match '/check_next_interaction', to: "call_to_action#check_next_interaction", defaults: { format: 'json' }

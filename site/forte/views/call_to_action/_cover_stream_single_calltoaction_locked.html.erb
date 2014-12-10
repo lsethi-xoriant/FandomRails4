@@ -1,0 +1,25 @@
+<div id="calltoaction-<%= calltoaction.id %>-cover" class="calltoaction-cover locked" style="background-image: url('<%= calltoaction.thumbnail %>')">
+      <div class="cover-grid-locked"></div>
+        
+      <div class="row top text-right">
+        <div class="col-xs-12">
+          <h4 style="color: #fff;">
+          	<span style="font-size: 13px; text-transform: uppercase;">Ti mancano</span>
+              <span class="label label-danger" style="padding-top: 5px;">- <%= calltoaction.rewards.first.cost.to_i - get_counter_about_user_reward(MAIN_REWARD_NAME).to_i %>
+                <span class="glyphicon glyphicon-star"></span>
+              </span>
+          </h4>
+        </div>
+      </div>
+      
+      <div class="row center text-center">
+      	<i class="fa fa-gift fa-8" style="font-size: 80px; color: #fff;"></i>
+      </div>
+
+      <div class="row bottom">
+        <div class="col-md-10 col-sm-9 col-xs-12">
+          <%= render partial: "/call_to_action/cover_stream_single_calltoaction_text", locals: { calltoaction: calltoaction } %>
+        </div>
+      </div>
+    
+</div>
