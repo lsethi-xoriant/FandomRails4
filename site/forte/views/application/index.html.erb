@@ -3,15 +3,11 @@
 	<div class="container" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= @calltoactions_active_count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, '<%= "#{request.protocol}#{request.host}/" %>', null, <%= @aux.to_json %>)">   
 	
 	  <div class="row">
-	    <div class="col-sm-12">
-	      <%= render partial: "/application/home_filters", locals: { single_cta: false } %>
-	    </div>
+	    <%= render partial: "/application/home_filters", locals: { single_cta: false } %>
 	  </div>
 	  
-	  <div class="row">
-	    <div id="calltoaction-stream" class="col-sm-12">
-	      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions, calltoactions_comment_interaction: @calltoactions_comment_interaction, active_calltoaction_id: nil, calltoactions_active_interaction: @calltoactions_active_interaction, aux: @aux } %>
-	    </div>
+	  <div id="calltoaction-stream" class="row">
+	     <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @calltoactions, calltoactions_comment_interaction: @calltoactions_comment_interaction, active_calltoaction_id: nil, calltoactions_active_interaction: @calltoactions_active_interaction, aux: @aux } %>
 	  </div>
 	
 	  <div class="row">      
