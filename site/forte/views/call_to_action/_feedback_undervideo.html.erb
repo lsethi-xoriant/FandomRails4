@@ -7,7 +7,7 @@
           <% if user_interaction.answer.correct %>
             <h3 style="margin-top: 50px; margin-bottom: 0; font-weight: bold; color: green;">Risposta<br>corretta!</h3>
           <% else %>
-            <h3 style="margin-top: 50px; margin-bottom: 0; font-weight: bold; color: red;">Risposta<br>sbagliata!</h3>
+            <h3 style="margin-top: 50px; margin-bottom: 0; font-weight: bold; color: #5e0409;">Risposta<br>sbagliata!</h3>
           <% end %>
         <% elsif user_interaction.interaction.resource_type.downcase == "quiz" && user_interaction.interaction.resource.quiz_type.downcase == "versus" %>
           <h2 style="margin-top: 50px; margin-bottom: 0; font-weight: bold;">Versus<br>fatto!</h2>
@@ -24,7 +24,7 @@
         <% end %>
       </div>
 
-      <div class="col-sm-12" style="padding-top: 25px;">
+      <div class="col-sm-12" style="padding-top: 25px; color: #524e49;">
         <h4>Hai ottenuto<br>+<%= interaction_reward_status[:win_reward_count] %> punti</h4>
       </div>
 

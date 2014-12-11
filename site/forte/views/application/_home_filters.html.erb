@@ -13,7 +13,7 @@
 	          <li id="tag-<%= tag.id %>" class="text-center flexslider-desktop-item" style="background-color: <%= background %>;">
 	          	<div class="flexslider-item-active hidden"></div>
 	          	<p><span class="<%= icon %>" style="color: #fff; font-size: 42px; margin-top:10px"></span></p>
-	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase;"><%= title %></p>
+	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;"><%= title %></p>
 	          	<!--<img src="<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>">-->
 	          </li>
 	        <% end %>
@@ -30,7 +30,7 @@
 	          <li class="text-center flexslider-mobile-item tag-<%= tag.id %>" style="background-color: <%= background %>;">
 	          	<div class="flexslider-item-active hidden"></div>
 	          	<p><span class="<%= icon %>" style="color: #fff; font-size: 42px; margin-top:10px"></span></p>
-	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase;"><%= title %></p>
+	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;"><%= title %></p>
 	          	<!--<img src="<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>">-->
 	          </li>
 	        <% end %>
@@ -38,7 +38,7 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 hidden-xs" style="margin-top: 15px;">
+		<div class="col-sm-12 hidden-xs" style="margin-bottom: 15px;">
 			<% tag_menu.each do |tag| %>
 				<img id="tag-img-<%= tag.id %>" class="tag-img hidden" style="width: 100%;" src="<%= tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload.url }.first %>">
 			<% end %>

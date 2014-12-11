@@ -6,52 +6,12 @@
       <div class="row">
         <div class="col-xs-12" style="margin-bottom: 5px; padding-right: 0; padding-left: 45px; postione: relative;">
           <% if user_interaction.answer_id == answer.id %>
-            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
-              <div class="baloon baloon-right"> 
-                <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
-              </div>
-            </div>
+            <img src="<%= current_avatar %>" class="pin-avatar">
           <% else %>
-            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
-              <div class="baloon baloon-right square unchosen"> 
-                <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
-              </div>
-            </div>
+            <div class="pin-empty"></div>
           <% end %>
 
-          <% if user_interaction.answer_id == answer.id %>
-            <a class="button-inter-<%= interaction.id %> btn-2 btn-2-default  btn-2-default-<%= answer.correct ? "success" : "danger" %> active"><%= answer.text %></a>
-          <% else %>
-            <a class="button-inter-<%= interaction.id %> btn-2 btn-2-default <%= "btn-2-default-success" if answer.correct %> inactive"><%= answer.text %></a>
-          <% end %>
-        </div>
-      </div>
-
-    </div>
-  <% else %>
-    <div id="answer-<%= answer.id %>" class="col-xs-12 answer-interaction-<%= interaction.id %>">
-
-      <div class="row">
-        <div class="col-xs-12" style="margin-bottom: 5px; padding-right: 0; padding-left: 45px; postione: relative;">
-          <% if user_interaction.answer_id == answer.id %>
-            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
-              <div class="baloon baloon-right"> 
-                <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
-              </div>
-            </div>
-          <% else %>
-            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
-              <div class="baloon baloon-right square unchosen"> 
-                <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px; position: absolute;">
-              </div>
-            </div>
-          <% end %>
-
-          <% if user_interaction.answer_id == answer.id %>
-            <a class="button-inter-<%= interaction.id %> btn-2 btn-2-default btn-2-default-<%= answer.correct ? "success" : "danger" %> active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><%= answer.text %></a>
-          <% else %>
-            <a class="button-inter-<%= interaction.id %> btn-2 btn-2-default" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><%= answer.text %></a>
-          <% end %>
+          <a class="button-inter-<%= interaction.id %> btn btn-block <%= answer.correct ? "btn-success" : "btn-primary btn-primary-interaction" %>"><%= answer.text %></a>
         </div>
       </div>
 
@@ -63,12 +23,8 @@
 
     <div class="row">
       <div class="col-xs-12" style="margin-bottom: 5px; padding-right: 0; padding-left: 45px; postione: relative;">
-        <div class="interaction-baloon" style="width: 33px; position: absolute; left: 0;"> 
-          <div class="baloon baloon-right square unchosen"> 
-            <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
-          </div>
-        </div>
-        <a class="button-inter-<%= interaction.id %> btn-2 btn-2-default" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><%= answer.text %></a>
+        <div class="pin-empty"></div>
+        <a class="button-inter-<%= interaction.id %> btn btn-default btn-block" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></a>
       </div>
     </div>
 

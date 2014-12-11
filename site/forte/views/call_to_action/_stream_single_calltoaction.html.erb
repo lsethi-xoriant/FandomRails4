@@ -1,7 +1,7 @@
 <% shown_interactions = always_shown_interactions(calltoaction) %>
 <div id="calltoaction-<%= calltoaction.id %>" class="col-sm-12 ">
-  <div class="panel panel-default cta-page cta-stream panel-shadow" style="border: none;">
-    <div class="panel-body" style="position: relative; padding: 0; min-height: 397px;">
+  <div class="panel panel-default cta-page cta-stream panel-shadow">
+    <div class="panel-body cta-stream" style="position: relative; padding: 0; background: #2c2925">
       
       <% if cta_locked?(calltoaction) %>
         <%= render partial: "/call_to_action/cover_stream_single_calltoaction_locked", locals: { calltoaction: calltoaction } %>
@@ -31,26 +31,18 @@
           <div class="col-xs-7 col-sm-3" id="bottom-feedback-share-<%= calltoaction.id %>">       
             <% if interaction %>
               <% if user_interaction %>
-                <button type="button" class="btn-2 btn-2-fb" onclick="doFbShare(<%= calltoaction.id %>, <%= interaction.id %>);" style="width: 30px; height: 30px; margin-right: 2px;">
-  				<i class="fa fa-facebook" style="font-size: 14px;"></i>
-  			  </button>
-  			  <button class="btn-2 btn-2-tt" onclick="doTwShare(<%= calltoaction.id %>, <%= interaction.id %>, '<%=j get_twitter_title_for_share(calltoaction) %>');" style="width: 30px; height: 30px; margin-right: 2px;">
-  				<i class="fa fa-twitter" style="font-size: 14px;"></i>
-  			  </button>
-                <span id="feedback-label-share" class="label label-success" style="padding-top: 3px;margin-top: 5px;">Fatto <span class="glyphicon glyphicon-ok"></span></span>
+                <button type="button" class="btn btn-facebook-rounded" onclick="doFbShare(<%= calltoaction.id %>, <%= interaction.id %>);" ><i class="fa fa-facebook"></i></button>
+  			        <button class="btn btn-tt-rounded" onclick="doTwShare(<%= calltoaction.id %>, <%= interaction.id %>, '<%=j get_twitter_title_for_share(calltoaction) %>');"><i class="fa fa-twitter"></i></button>
+                <span id="feedback-label-share" class="label label-success label-footer">Fatto <span class="glyphicon glyphicon-ok"></span></span>
               <% else %>
-			  <button type="button" class="btn-2 btn-2-fb" onclick="doFbShare(<%= calltoaction.id %>, <%= interaction.id %>);" style="width: 30px; height: 30px; margin-right: 2px;">
-  				<i class="fa fa-facebook" style="font-size: 14px;"></i>
-  			  </button>
-  			  <button class="btn-2 btn-2-tt" onclick="doTwShare(<%= calltoaction.id %>, <%= interaction.id %>, '<%=j get_twitter_title_for_share(calltoaction) %>');" style="width: 30px; height: 30px; margin-right: 2px;">
-  				<i class="fa fa-twitter" style="font-size: 14px;"></i>
-  			  </button>
-                <span id="feedback-label-share" class="label label-warning" style="padding-top: 3px;margin-top: 5px;">+3 <span class="glyphicon glyphicon-star"></span></span>
+			          <button type="button" class="btn btn-facebook-rounded" onclick="doFbShare(<%= calltoaction.id %>, <%= interaction.id %>);"><i class="fa fa-facebook"></i></button>
+  			        <button class="btn btn-tt-rounded" onclick="doTwShare(<%= calltoaction.id %>, <%= interaction.id %>, '<%=j get_twitter_title_for_share(calltoaction) %>');"><i class="fa fa-twitter"></i></button>
+                <span id="feedback-label-share" class="label label-warning label-footer">+3 <span class="glyphicon glyphicon-star"></span></span>
               <% end %>
             <% end %>
           </div> 
           <div class="col-xs-5 col-sm-3 col-sm-offset-6 text-right">
-            <h6 style="display: inline-block; margin-top: 12px;"><%= get_cta_date(calltoaction.activated_at) %></h6>
+            <p class="footer-date"><%= get_cta_date(calltoaction.activated_at) %></p>
             <% if calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
               <!--a href="/call_to_action/<%= calltoaction.id %>" class="comment-preview"><span class="glyphicon glyphicon-comment"></span> <span id="interaction-<%= calltoaction_comment_interaction[:interaction].id %>-comment-counter"><%= calltoaction_comment_interaction[:comments_count] %></span> commenti</a-->
             <% end %>           
