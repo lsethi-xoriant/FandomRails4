@@ -1,0 +1,29 @@
+<div class="container-fluid profile-container" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(get_ranking_settings).to_json %>, <%= current_user.to_json %>);">
+
+
+<%= render partial: "profile/profile_header" %>
+	<div class="hidden-xs">
+		<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
+		<div class="row">
+			
+			<% get_ranking_settings.each do |rs| %>
+				<% if rs == "my_position_general" %>
+					<% if get_my_general_position %>
+						<%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
+					<% end %>
+				<% else %>
+					<%= render partial: "/ranking/rank", locals: { rankings: "rankings.#{rs}" } %>
+				<% end %>
+			<% end %>
+			
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    checkDocumentHeight("fandom-profile");
+  });
+
+</script>

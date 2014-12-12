@@ -1,0 +1,54 @@
+<% if current_user && user_interaction %>
+  <div class="col-xs-12 text-center undervideo-feedback">
+    <div class="panel panel-default panel-feedback" style="margin-bottom: 10px;">
+      <div class="panel-body" style="padding: 5px;">
+        <% if interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia" %>
+          <% if user_interaction.answer.correct %>
+            <p style="font-size: 12px; display: inline; margin-right: 5px;"><span style="color: green;" class="glyphicon glyphicon-ok-sign"></span> CORRETTO! +<%= interaction_reward_status[:win_reward_count] %> punti</p>
+          <% else %>
+            <p style="font-size: 12px; display: inline; margin-right: 5px;"><span style="color: red;" class="glyphicon glyphicon glyphicon-remove-sign"></span> SBAGLIATO! +<%= interaction_reward_status[:win_reward_count] %> punti</p>
+          <% end %>
+        <% else %>
+          <p style="font-size: 12px; display: inline; margin-right: 5px;"><span style="color: green;" class="glyphicon glyphicon-ok-sign"></span> BRAVO! +<%= interaction_reward_status[:win_reward_count] %> punti</p>
+        <% end %>
+        <% unless interaction_reward_status[:reward].numeric_display %>    
+          <% interaction_reward_status[:reward_status_images].each do |reward| %>
+            <img src="<%= reward %>" style="max-width: 15px; margin-bottom: 5px;">
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <% if aux && aux[:show_calltoaction_page] %>
+
+      <% if aux[:show_next_calltoaction_button] %>
+        <% if aux[:next_interaction_present] %>
+          <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn btn-yellow go-on <%= "btn-2-small-desktop" if aux[:show_next_calltoaction_button] %>" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
+        <% else %>
+          <!-- NEXT CALLTOACTION -->
+          <a class="btn btn-yellow go-on" role="button" href="/custom_call_to_action/<%= interaction.call_to_action_id %>/next" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
+        <% end %>
+      <% else %>
+        <!-- NEXT INTERACTION -->
+        <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn btn-yellow go-on <%= "hidden" unless aux[:next_interaction_present] %>" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
+      <% end %>
+
+    <% else %>
+
+      <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn btn-yellow go-on hidden" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px;">VAI AVANTI</a>
+      
+    <% end %>
+
+  </div>
+<% else %>
+  <div class="col-xs-12 text-center undervideo-feedback">
+    <h6 style="margin-bottom: 0;">Ottieni fino a +<%= interaction_reward_status[:winnable_reward_count] %> punti</h6>
+    <% unless interaction_reward_status[:reward].numeric_display %>  
+      <div class="col-sm-12 text-center" style="margin-bottom: 10px;">  
+        <% interaction_reward_status[:reward_status_images].each do |reward| %>
+            <img src="<%= reward %>" style="width: 15px;">
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,110 @@
+<% content_for :body_class, "footer-carousel" %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+
+      <% if @calltoactions.any? %>
+
+          <div id="footer-carousel-mobile" class="carousel slide" data-ride="carousel">
+
+            <ol class="carousel-indicators" style="bottom: 0;">
+              <% if @calltoactions[0..3].count > 1 %>
+                <% @calltoactions[0..3].count.times do |i| %>
+                  <li data-target="#footer-carousel-mobile" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
+                <% end %>
+              <% end %>
+            </ol>
+
+            <div class="carousel-inner">
+              <% @calltoactions[0..3].each_with_index do |calltoaction, i| %>
+                <div class="item <%= "active" if i == 0 %>">
+                  <div class="row">  
+                    <div class="col-xs-12">
+                      <a href="/redirect_into_iframe_calltoaction/<%= calltoaction.id %>" target="_top">
+                        <div class="calltoaction-thumbnail-container" style="background-image: url('<%= calltoaction.thumbnail.url %>');">
+                        </div>
+                      </a> 
+                      <h4 style="position: absolute; top: 0; right: 22px;">
+                        <% if @calltoaction_reward_status[calltoaction.id].present? %>  
+                          <% if @calltoaction_reward_status[calltoaction.id]["winnable_reward_count"] > 0 %>
+                            <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= @calltoaction_reward_status[calltoaction.id]["winnable_reward_count"] %>
+                              <span class="glyphicon glyphicon-star"></span>
+                            </span>
+                          <% end %>
+                        <% else %>
+                          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
+                            FATTO <span class="glyphicon glyphicon-ok"></span>
+                          </span>
+                        <% end %>
+                      </h4>
+                      <div style="min-height: 60px;">
+                      <h5 style="font-weight: bold;"><%= calltoaction.title %></h5>
+                      <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%m/%Y") %></h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>                  
+            </div>
+          </div>
+
+          <div id="footer-carousel" class="carousel slide" data-ride="carousel">
+
+            <ol class="carousel-indicators">
+              <% if @calltoaction_pages > 1 %>
+                <% @calltoaction_pages.times do |i| %>
+                  <li data-target="#footer-carousel" data-slide-to="<%= i %>" class="<%= "active" if i == 0 %>"></li>
+                <% end %>
+              <% end %>
+            </ol>
+
+            <div class="carousel-inner">
+
+              <div class="item active">
+                <div class="row">
+                  <% @calltoactions.each_with_index do |calltoaction, i| %>
+                        
+                    <div class="col-xs-3">
+                      <a href="/redirect_into_iframe_calltoaction/<%= calltoaction.id %>" target="_top">
+                        <div class="calltoaction-thumbnail-container" style="background-image: url('<%= calltoaction.thumbnail.url %>');">
+                        </div>
+                      </a> 
+                      <h4 style="position: absolute; top: 0; right: 22px;">
+                        <% if @calltoaction_reward_status[calltoaction.id].present? %>
+                          <% if @calltoaction_reward_status[calltoaction.id]["winnable_reward_count"] > 0 %>
+                            <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= @calltoaction_reward_status[calltoaction.id]["winnable_reward_count"] %>
+                              <span class="glyphicon glyphicon-star"></span>
+                            </span>
+                          <% end %>
+                        <% else %>
+                          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
+                            FATTO <span class="glyphicon glyphicon-ok"></span>
+                          </span>
+                        <% end %>
+                      </h4>
+                      <h5 style="font-weight: bold;"><%= calltoaction.title %></h5>
+                      <h6 style="margin-top: 0; margin-bottom: 0; color: #333;"><%= calltoaction.activated_at.strftime("%d/%m/%Y") %></h6>
+                    </div>
+                    <% if i != 0 && i != @calltoaction_count - 1 && (i % @calltoactions_for_page) == (@calltoactions_for_page - 1) %>
+                      </div><!-- ROW --></div><!-- ITEM --><div class="item"><div class="row">
+                    <% end %>
+                  <% end %>                   
+                </div>
+              </div>
+            </div>
+          </div>
+ 
+      <% end %>
+        
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  
+  $(document).ready(function() {
+    checkDocumentHeight("fandom-footer-widget");
+  });
+
+</script>

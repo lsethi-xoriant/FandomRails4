@@ -4,7 +4,7 @@
 require 'fandom_utils'
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery except: :instagram_verify_token_callback, :if => proc {|c| Rails.configuration.deploy_settings.fetch('forgery_protection', true) }
+  protect_from_forgery except: [:instagram_verify_token_callback, :facebook_app], :if => proc {|c| Rails.configuration.deploy_settings.fetch('forgery_protection', true) }
   include FandomUtils
   include ApplicationHelper
   include EventHandlerHelper
@@ -19,6 +19,11 @@ class ApplicationController < ActionController::Base
   
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = "Access denied!"
+    redirect_to "/"
+  end
+
+  def facebook_app
+    cookies[:oauth_connect_from_page] = Rails.configuration.deploy_settings["sites"][get_site_from_request(request).id]["authentications"]["facebook"]["app"]
     redirect_to "/"
   end
 
@@ -230,7 +235,7 @@ class ApplicationController < ActionController::Base
   end
 
   def sign_in_fb_from_page
-    cookies[:connect_from_page] = request.referrer
+    cookies["redirect_to_page"] = request.referrer
     redirect_to "/auth/facebook_#{request.site.id}"
   end
 

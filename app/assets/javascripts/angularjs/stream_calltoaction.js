@@ -42,6 +42,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     return String(text).replace(/<[^>]+>/gm, '');
   };
 
+  angular.element(document).ready(function () {
+    if(window.name != "iframe_canvas_fb_https") {
+      document.cookie = "oauth_connect_from_page=; expires=Thu, 01 Jan 1970 00:00:00 UTC"; 
+    }
+  });
+
   $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux, kaltura_params) {
     $scope.aux = aux;
     $scope.current_user = current_user;
@@ -141,8 +147,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   			}, 1500);
 
   			setTimeout(function(){
-  				$(".cta-media img.hidden-xs").attr("src",data.calltoaction_info_list[0].calltoaction.media_image);
-  				$(".cta-media img.mobile").attr("src",data.calltoaction_info_list[0].calltoaction.thumbnail_url);
+          $(".call-to-action__mobile-description").html(data.calltoaction_info_list[0].calltoaction.description)
+  				$(".cta-media img.hidden-xs").attr("src", data.calltoaction_info_list[0].calltoaction.media_image);
+  				$(".cta-media img.mobile").attr("src", data.calltoaction_info_list[0].calltoaction.thumbnail_url);
   				$(".loader").addClass("hidden");
   				$(".gift-image").fadeTo(1500,1);
           $(".call-to-action__share-and-win-animation").fadeTo(1500,1);

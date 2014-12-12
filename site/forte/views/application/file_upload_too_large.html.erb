@@ -1,0 +1,15 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+      <%= render partial: "/application/home_filters", locals: { single_cta: true } %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 text-center" style="margin-top: 15px; margin-bottom: 15px;">
+      <h3 style="color: #fff;">Il file caricato è superiore ai 40 Mb consentiti</h3>
+    </div>
+    <div class="col-sm-2 col-sm-offset-5">
+      <button class="btn-2" onclick="window.history.back();">RIPROVA</button>
+    </div>
+  </div>  
+</div>

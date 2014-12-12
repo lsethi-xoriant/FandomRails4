@@ -1,0 +1,10 @@
+<div class="col-xs-6 col-sm-3 col-md-2 profile-badge text-center">
+  <img class="img-circle" src="<%= get_reward_image_for_status(reward) %>" alt="...">
+  <h4 style="margin: 0; text-transform: uppercase; font-weight: bold;"><%= reward.title %></h4>
+  <p style="margin: 0; padding: 0 20px; color: #858585;"><%= reward.short_description %></p>
+  <% if reward.is_published && !reward.cost.blank? %>
+	  <div class="progress" style="margin: 10px auto; width: 65%;">
+		<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: <%= (get_reward_points_in_period(PERIOD_KIND_WEEKLY, MAIN_REWARD_NAME) * 100) / reward.cost %>%;"></div>
+	  </div>
+  <% end %>
+</div>

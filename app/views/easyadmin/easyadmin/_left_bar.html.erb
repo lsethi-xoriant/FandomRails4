@@ -24,22 +24,20 @@
 	      </ul>
 	    </li>
 		   
-		   <% if can? :manage, :all %>
-		    <li class="dropdown <%= "active opened" if page == "user" %>"><a href="javascript:void(0);"><i class="fa fa-users"></i>Utenti<span class="caret"></span></a>
-		  	  <ul class="sub-nav">
-		        <li>
-		          <a href="/easyadmin/user">
-		            <i class="fa fa-list"></i>Tutti
-		          </a>
-		        </li>
-		        <li>
-		          <a href="/easyadmin/winner">
-		            <i class="fa fa-ticket"></i>Vincitori concorso
-		          </a>
-		        </li>
-		      </ul>
-		    </li>
-		   <% end %>
+	    <li class="dropdown <%= "active opened" if page == "user" %>"><a href="javascript:void(0);"><i class="fa fa-users"></i>Utenti<span class="caret"></span></a>
+	  	  <ul class="sub-nav">
+	        <li>
+	          <a href="/easyadmin/user">
+	            <i class="fa fa-list"></i>Tutti
+	          </a>
+	        </li>
+	        <li>
+	          <a href="/easyadmin/winner">
+	            <i class="fa fa-ticket"></i>Vincitori concorso
+	          </a>
+	        </li>
+	      </ul>
+	    </li>
 
 	    <% if can? :manage, :all %>
 		    <li class="<%= "active" if page == "pubblished" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>

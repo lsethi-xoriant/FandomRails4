@@ -13,6 +13,9 @@
     <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-md-12">
       <%= render partial: "/call_to_action/share_interaction" %>
     </div>  
+    <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-md-12">
+      <%= render partial: "/call_to_action/upload_interaction" %>
+    </div>  
   </div>
 
   <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" id="undervideo-outcome-{{interaction_info.interaction.id}}" class="row undervideo">

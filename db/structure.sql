@@ -38,6 +38,13 @@ CREATE SCHEMA fandom;
 
 
 --
+-- Name: forte; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA forte;
+
+
+--
 -- Name: maxibon; Type: SCHEMA; Schema: -; Owner: -
 --
 
@@ -13535,6 +13542,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 
 --
+-- Name: index_users_on_username; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -13743,7 +13757,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: index_users_on_username; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_users_on_username ON users USING btree (username);
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
@@ -13955,7 +13969,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: index_users_on_username; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_users_on_username ON users USING btree (username);
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
@@ -14167,7 +14181,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: index_users_on_username; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_users_on_username ON users USING btree (username);
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --

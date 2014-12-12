@@ -15,6 +15,10 @@ class SessionsController < Devise::SessionsController
     site = get_site_from_request(request)
     if site.force_facebook_tab && !request_is_from_mobile_device?(request)
       redirect_to site.force_facebook_tab
+    elsif cookies[:oauth_connect_from_page].present?
+      oauth_connect_from_page = cookies[:oauth_connect_from_page]
+      cookies.delete(:oauth_connect_from_page)
+      redirect_to oauth_connect_from_page
     else
       if cookies[:calltoaction_id]
         connect_from_calltoaction = cookies[:calltoaction_id]
@@ -64,7 +68,7 @@ class SessionsController < Devise::SessionsController
       if request.site.force_facebook_tab && !request_is_from_mobile_device?(request)
         redirect_to request.site.force_facebook_tab
       else
-        redirect_after_successful_login()
+        redirect_after_oauth_successful_login()
       end
     end
   end
@@ -72,6 +76,16 @@ class SessionsController < Devise::SessionsController
   def setUpAccount()
     SystemMailer.welcome_mail(current_user).deliver
   end
+
+  def redirect_after_oauth_successful_login()
+    if cookies[:oauth_connect_from_page].present?
+      oauth_connect_from_page = cookies[:oauth_connect_from_page]
+      cookies.delete(:oauth_connect_from_page)
+      redirect_to oauth_connect_from_page
+    else
+      redirect_after_successful_login()
+    end
+  end  
 
   def redirect_after_successful_login
     if cookies[:connect_from_page].blank?
@@ -92,6 +106,9 @@ class SessionsController < Devise::SessionsController
     session["oauth"]["params"] = env["omniauth.auth"] #.except("extra") to prevent cookie overflow
     session["oauth"]["params"]["provider"] = params[:provider]
     flash[:from_provider] = params[:provider]
+    if cookies[:oauth_connect_from_page].present?
+      cookies[:connect_from_page] = cookies[:oauth_connect_from_page]
+    end
     render template: "/devise/registrations/new", :locals => { resource: user }   
   end
 

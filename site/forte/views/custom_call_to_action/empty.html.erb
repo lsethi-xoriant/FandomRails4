@@ -1,0 +1,29 @@
+<% content_for :body_class, "custom-calltoaction" %>
+
+<%= render partial: "/application/user_bar" %>
+
+<div class="container-fluid">   
+  <div class="row text-center" style="margin-top: 15px;">
+    <div id="calltoaction-stream" class="col-xs-6 col-xs-offset-3 col-md-12 col-md-offset-0">
+      <img src="<%= asset_path("ballando_logo.png") %>" style="width: 100%; max-width: 245px; margin-bottom: 15px;">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-shadow" style="border: none; border-radius: 0;">
+        <div class="panel-body">
+          <div class="row text-center">
+            <div class="col-xs-12">
+              <h4>Contenuto non disponibile</h4>
+            </div>
+            <div class="col-xs-12">
+              <a class="btn btn-yellow go-on" role="button" href="/custom_call_to_action/<%= @calltoaction_id %>/next" style="margin-bottom: 15px; margin-top: 15px; width: 50%;">VAI AVANTI</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

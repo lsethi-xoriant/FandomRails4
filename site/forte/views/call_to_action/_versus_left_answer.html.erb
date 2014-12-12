@@ -1,0 +1,86 @@
+<% if answer.image.present? %>
+  <div class="row">
+
+    <% if answer.text.present? %>
+      <div class="col-xs-12 text-center" style="min-height: 25px;">
+        <div class="versus-text-container-left">
+          <p><%= answer.text %></p>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="col-xs-12">
+
+      <!-- PROGRESS BAR -->
+      <div class="progress vertical bottom progress-square versus-progress-bar-container-left">
+        <% if current_user && user_interaction %>
+          <div class="progress-bar <%= user_answer ? "progress-bar-warning" : "inactive" %>" role="progressbar" style="height: <%= percent %>%;"></div>
+        <% else %>
+          <div class="progress-bar progress-bar-warning inactive" role="progressbar" style="height: 0%;"></div>
+        <% end %>
+      </div>
+
+      <div class="versus-img-container-left <%= "active" if user_answer %>">
+        <% if interaction.resource.one_shot && current_user && user_interaction %>
+          <!-- IMAGE INACTIVE -->
+          <a href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %>">
+            <img src="<%= answer.image(:medium) %>" style="width: 100%;">
+          </a>
+        <% else %>
+          <!-- IMAGE ACTIVE -->
+          <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer && current_user %>" class="button-inter-<%= interaction.id %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')">
+            <img src="<%= answer.image(:medium) %>" style="width: 100%;">
+          </a>
+        <% end %>
+      </div>     
+    </div>
+    <div class="col-xs-12 text-center">
+      <% if user_answer %>
+        <img src="<%= current_avatar %>" style="left: 10px;" class="pin-avatar">
+      <% else %>
+        <div class="pin-empty" style="left: 10px;"></div>
+      <% end %>
+      <div class="versus-text-percent-container-left">
+        <p><%= percent && current_user && user_interaction ? "#{percent}%" : "&nbsp;".html_safe %></p>
+      </div>
+    </div>
+
+  </div>
+<% else %>
+    <div class="row">
+
+    <div class="col-xs-12">
+
+      <!-- PROGRESS BAR -->
+      <div class="progress vertical bottom progress-square versus-progress-bar-container-left">
+        <% if current_user && user_interaction %>
+          <div class="progress-bar <%= user_answer ? "progress-bar-warning" : "inactive" %>" role="progressbar" style="height: <%= percent %>%;"></div>
+        <% else %>
+          <div class="progress-bar progress-bar-warning inactive" role="progressbar" style="height: 0%;"></div>
+        <% end %>
+      </div>
+
+      <% if interaction.resource.one_shot && current_user && user_interaction %>
+        <button class="versus-btn-container-left btn btn-default button-inter-<%= interaction.id %> active <%= user_answer ? "btn-yellow" : "btn-gray" %>" ><%= answer.text %></button>
+      <% else %>
+        <button class="versus-btn-container-left btn btn-default hover-yellow button-inter-<%= interaction.id %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
+        <!--
+        <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer && current_user %>" class="button-inter-<%= interaction.id %>" >
+          <img src="<%= answer.image(:medium) %>" style="width: 100%;">
+        </a>
+        -->
+      <% end %>    
+    </div>
+    <div class="col-xs-12 text-center">
+      <% if user_answer %>
+        <img src="<%= current_avatar %>" style="left: 10px;" class="pin-avatar">
+      <% else %>
+        <div class="pin-empty" style="left: 10px;"></div>
+      <% end %>
+      <div class="versus-text-percent-container-left">
+        <p><%= percent && current_user && user_interaction ? "#{percent}%" : "&nbsp;".html_safe %></p>
+      </div>
+    </div>
+
+  </div>
+<% end %>

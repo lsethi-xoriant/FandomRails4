@@ -1,0 +1,95 @@
+<% tag_menu = get_tags_with_tag("miniformat") %>
+<% special_guest_tag = Tag.find_by_name("special-guest") %>
+<% if tag_menu.any? %>
+
+		<div class="col-sm-12 mobile-menu" style="margin-top: 15px;">
+			<div class="flexslider flexslider-desktop hidden-xs">
+				<div class="flex-viewport-shadow"></div>
+			  <ul class="slides">
+			    <% tag_menu.each do |tag| %>
+			    	<% background = tag.tag_fields.select { |tf| tf.name == "label-background" }.map { |tf| tf.value }.first %>
+			    	<% icon = tag.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>
+			    	<% title = tag.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
+	          <li id="tag-<%= tag.id %>" class="text-center flexslider-desktop-item" style="background-color: <%= background %>;" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
+	          	<div class="flexslider-item-active hidden"></div>
+	          	<p><span class="<%= icon %>" style="color: #fff; font-size: 42px; margin-top:10px"></span></p>
+	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;"><%= title %></p>
+	          	<!--<img src="<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>">-->
+	          </li>
+	        <% end %>
+			  </ul>
+			</div>
+
+			<div class="flexslider flexslider-mobile visible-xs">
+				<!--<div class="flex-viewport-shadow"></div>-->
+			  <ul class="slides">
+			    <% tag_menu.each do |tag| %>
+			    	<% background = tag.tag_fields.select { |tf| tf.name == "label-background" }.map { |tf| tf.value }.first %>
+			    	<% icon = tag.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>
+			    	<% title = tag.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
+	          <li class="text-center flexslider-mobile-item tag-<%= tag.id %>" style="background-color: <%= background %>;" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
+	          	<div class="flexslider-item-active hidden"></div>
+	          	<p><span class="<%= icon %>" style="color: #fff; font-size: 42px; margin-top:10px"></span></p>
+	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;"><%= title %></p>
+	          	<!--<img src="<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>">-->
+	          </li>
+	        <% end %>
+			  </ul>
+			</div>
+		</div>
+
+		<div class="col-sm-12 hidden-xs" style="margin-bottom: 15px;">
+			<% tag_menu.each do |tag| %>
+				<img id="tag-img-<%= tag.id %>" class="tag-img hidden" style="width: 100%;" src="<%= tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload.url }.first %>">
+			<% end %>
+		</div>
+
+<% end %>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	  $('.flexslider-desktop').flexslider({
+	    animation: "slide",
+	    slideshow: false,
+	    animationLoop: false,
+	    touch: true,
+	    itemWidth: 150,
+	    itemMargin: 8,
+	    controlNav: false,
+	    prevText: "",
+			nextText: ""
+		});
+
+		$(".flexslider-desktop-item").first().find(".flexslider-item-active").removeClass("hidden");
+		$(".tag-img").first().removeClass("hidden");
+
+		$(".flexslider-desktop-item").bind("click", function() {
+			$(".flexslider-desktop-item").find(".flexslider-item-active").addClass("hidden");
+			$(this).find(".flexslider-item-active").removeClass("hidden");
+			$(".tag-img").addClass("hidden");
+			$($(this).attr("id").replace("tag-", "#tag-img-")).removeClass("hidden");
+		});
+
+		$(".flexslider-mobile-item").first().find(".flexslider-item-active").removeClass("hidden");
+
+		$(".flexslider-mobile-item").bind("click", function() {
+			$(".flexslider-mobile-item").find(".flexslider-item-active").addClass("hidden");
+			$(this).find(".flexslider-item-active").removeClass("hidden");
+		});
+
+		$('.flexslider-mobile').flexslider({
+	    animation: "slide",
+	    slideshow: false,
+	    animationLoop: false,
+	    touch: true,
+	    itemWidth: 130,
+	    itemMargin: 8,
+	    controlNav: false,
+	    prevText: "",
+			nextText: ""
+		});
+	});
+
+	
+</script>

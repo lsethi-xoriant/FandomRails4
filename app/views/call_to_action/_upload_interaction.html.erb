@@ -6,40 +6,38 @@
   	<%= form_tag({controller: "call_to_action", action: "upload", method: "post"}, multipart: true) do %>
   	<div class="col-sm-12">
   		<div class="row form-group">
-  		<% for i in (1..interaction.resource.upload_number) do %>
-  			<%= hidden_field_tag "template_cta_id", interaction.resource.call_to_action_id %>
-  			<%= hidden_field_tag "interaction_id", interaction.id %>
-  			<%= hidden_field_tag "cta_id", cta_id %>
-  			<%= hidden_field_tag "upload_number", interaction.resource.upload_number %> 
-  			<label><%= i %>° Upload:</label>
-  			<%= file_field_tag "upload-#{i}" %>
-  		<% end %>
+  			<input type="hidden" name="template_cta_id" id="template_cta_id" ng-model="interaction_info.interaction.upload_info.template_cta_id" />
+  			<input type="hidden" name="interaction_id" id="interaction_id" ng-model="interaction_info.interaction.id" />
+  			<input type="hidden" name="cta_id" id="interaction_id" ng-model="calltoaction_info.calltoaction.id" />
+  			<input type="hidden" name="interaction_id" id="interaction_id" ng-model="interaction_info.interaction.id" />
+  			<input type="hidden" name="upload_number" id="interaction_id" ng-model="interaction_info.interaction.upload_info.upload_number" />
+  			<div ng-repeat="i in interaction_info.interaction.upload_info.upload_number track by $index">
+  				<label>{{$index}}° Upload:</label>
+  				<input id="upload-{{$index}}" name="upload-{{$index}}" onchange="" type="file">
+  			</div>
 		<hr />
 		</div>
-  		<div class="row form-group">
-	  		<% if interaction.resource.privacy? %>
+  		<div class="row form-group" ng-if="interaction_info.interaction.upload_info.privacy.required">
 	  			<%= check_box_tag "privacy" %>
+	  			<input id="privacy" name="privacy" type="checkbox" value="1">
 	  			<label>Accettazione privacy</label>
-	  			<p class="small"><%= interaction.resource.privacy_description %></p>
+	  			<p class="small">{{interaction_info.interaction.upload_info.privacy.description}}</p>
 	  			<hr />
-	  		<% end %>
-	  		
-	  		<% if interaction.resource.releasing? %>
+	  	</div>
+	  	<div class="row form-group" ng-if="interaction_info.interaction.upload_info.releasing.required">
 	  			<label>Liberatoria</label>
-	  			<p class="small"><%= interaction.resource.releasing_description %></p>
-	  			<p class="text-center"><%= file_field_tag 'releasing' %></p>
+	  			<p class="small">{{interaction_info.interaction.upload_info.releasing.description}}</p>
+	  			<p class="text-center">
+	  				<input id="releasing" name="releasing" onchange="" type="file">
+	  			</p>
 	  			<hr />
-	  		<% end %>
   		</div>
   	</div>
   </div>
   <div class="row">
     <div class="col-sm-12 text-center">
-    	<% if current_user %>
-        	<button type="submit" class="btn btn-primary">CARICA</button>
-        <% else %>
-			<button class="btn btn-primary" data-toggle="modal" data-target="#login">CARICA</button>
-        <% end %>
+        <button type="submit" class="btn btn-primary" ng-if="current_user != undefined">CARICA</button>
+		<button class="btn btn-primary" data-toggle="modal" data-target="#login" ng-if="current_user == undefined">CARICA</button>
     </div>
   </div>
   <% end %>

@@ -1,0 +1,33 @@
+<div class="col-sm-12">
+  <div class="row text-center cta-stream-heading">
+    <div class="col-xs-12 text-center question">
+      <% if shown_interactions_count %>
+        <h6 id="index-interaction-<%= interaction.id %>">Domanda <%= index_current_interaction %> di <%= shown_interactions_count %></h6>
+      <% end %>
+      <p><%= interaction.resource.description %></p>
+    </div>
+
+    <div id="interaction-<%= interaction.id %>" class="col-xs-12">
+
+      <% if current_user && user_interaction %>
+        <div class="row">
+          <div class="col-xs-12" style="padding-left: 50px; postione: relative; padding-top: 0;">
+            <img src="<%= current_avatar %>" class="pin-avatar" style="left: 10px; top: 10px">
+            <button class="button-inter-<%= interaction.id %> btn btn-yellow btn-block active"><%= interaction.resource.title %></button>
+          </div>
+        </div>
+      <% else %>
+        <div class="row">
+          <div class="col-xs-12" style="padding-left: 50px; padding-top: 0">
+            <div class="pin-empty" style="left: 10px; top: 10px"></div>
+            <button class="button-inter-<%= interaction.id %> btn btn-default hover-yellow btn-block" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, null, '<%= interaction.when_show_interaction %>')"><%= interaction.resource.title %></button>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <%= render partial: "/call_to_action/feedback_small_undervideo", locals: { interaction_reward_status: interaction_reward_status, user_interaction: user_interaction, interaction: interaction, calltoaction_id: calltoaction_id, aux: aux } %>
+
+  </div>
+</div>

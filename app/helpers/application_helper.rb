@@ -7,6 +7,7 @@ module ApplicationHelper
   include CacheHelper
   include RewardingSystemHelper
   include NoticeHelper
+  include ActionView::Helpers::TextHelper
   
   class BrowseCategory
     include ActiveAttr::TypecastedAttributes
@@ -17,6 +18,7 @@ module ApplicationHelper
     attribute :title, type: String
     # html id of this field
     attribute :id, type: String
+    attribute :type, type: String
     attribute :has_thumb, type: Boolean
     attribute :thumb_url, type: String
     attribute :description, type: String
@@ -26,6 +28,10 @@ module ApplicationHelper
     attribute :header_image_url, type: String
     attribute :icon, type: String
     attribute :category_icon, type: String
+    attribute :status, type: String
+    attribute :likes, type: Integer
+    attribute :comments, type: Integer
+    attribute :tags
   end
 
   class ContentSection
@@ -40,7 +46,75 @@ module ApplicationHelper
     attribute :view_all_link, type: String
     attribute :column_number, type: Integer
   end
-
+  
+  def tag_to_category(tag, populate_desc = true)
+    has_thumb = tag.tag_fields.find_by_name("thumbnail") && tag.tag_fields.find_by_name("thumbnail").upload.present?
+    thumb_url = tag.tag_fields.find_by_name("thumbnail").upload.url if tag.tag_fields.find_by_name("thumbnail")
+    if tag.tag_fields.find_by_name("description")
+      description = truncate(tag.tag_fields.find_by_name("description").value, :length => 150, :separator => ' ')
+      long_description = tag.tag_fields.find_by_name("description").value
+    else
+      description = ""
+      long_description = ""
+    end
+    header_image = tag.tag_fields.find_by_name("header_image").upload.url if tag.tag_fields.find_by_name("header_image")
+    icon = tag.tag_fields.find_by_name("icon") if tag.tag_fields.find_by_name("icon")
+    category_icon = tag.tag_fields.find_by_name("category_icon").upload.url if tag.tag_fields.find_by_name("category_icon")
+    BrowseCategory.new(
+      type: "tag",
+      id: tag.id,
+      has_thumb: has_thumb, 
+      thumb_url: thumb_url,
+      title: tag.tag_fields.find_by_name("title").try(:value),
+      long_description: populate_desc ? long_description : nil,
+      description: populate_desc ? description : nil,  
+      detail_url: "/browse/category/#{tag.id}",
+      created_at: tag.created_at.to_time.to_i,
+      header_image_url: header_image,
+      icon: icon,
+      category_icon: category_icon,
+      tags: get_tag_ids_for_tag(tag)
+    )
+  end
+  
+  def cta_to_category(cta, populate_desc = true)
+    BrowseCategory.new(
+      type: "cta",
+      id: cta.id, 
+      has_thumb: cta.thumbnail.present?, 
+      thumb_url: cta.thumbnail.url, 
+      title: cta.title, 
+      description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
+      long_description: populate_desc ? cta.description : nil,
+      detail_url: "/call_to_action/#{cta.id}",
+      created_at: cta.created_at.to_time.to_i,
+      comments: get_number_of_commtents_for_cta(cta),
+      likes: get_number_of_likes_for_cta(cta),
+      status: compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, cta),
+      tags: get_tag_ids_for_cta(cta)
+    )
+  end
+  
+  def get_tag_ids_for_cta(cta)
+    cache_short(get_tag_names_for_cta_key(cta.id)) do
+      tags = {}
+      cta.call_to_action_tags.includes(:tag).each do |t|
+        tags[t.tag.id] = t.tag.id
+      end
+      tags
+    end
+  end
+  
+  def get_tag_ids_for_tag(tag)
+    cache_short(get_tag_names_for_tag_key(tag.id)) do
+      tags = {}
+      tag.tags_tags.each do |t| 
+        tags[Tag.find(t.other_tag_id).id] = Tag.find(t.other_tag_id).id
+      end
+      tags  
+    end
+  end
+  
   def user_for_registation_form()
     if current_user.aux
       aux = JSON.parse(current_user.aux)
@@ -231,12 +305,9 @@ module ApplicationHelper
   end
   
   def get_tags_with_tag_with_match(tag_name, query = "")
-    cache_short get_tags_with_tag_with_match_cache_key(tag_name) do
-      debugger
-        conditions = construct_conditions_from_query(query, "value")
-        ids = TagField.where("name = 'title' AND (#{conditions})").uniq.pluck(:tag_id)
-        Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND tags.id IN (?)", tag_name, ids).to_a
-    end
+    conditions = construct_conditions_from_query(query, "value")
+    ids = TagField.where("name = 'title' AND (#{conditions})").uniq.pluck(:tag_id)
+    Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND tags.id IN (?)", tag_name, ids).to_a
   end
   
   def get_ctas_with_tag(tag_name)
@@ -246,10 +317,8 @@ module ApplicationHelper
   end
   
   def get_ctas_with_tag_with_match(tag_name, query = "")
-    cache_short get_ctas_with_tag_with_match_cache_key(tag_name) do
-      conditions = construct_conditions_from_query(query, "title")
-      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND (#{conditions})", tag_name).to_a
-    end
+    conditions = construct_conditions_from_query(query, "title")
+    CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND (#{conditions})", tag_name).to_a
   end
   
   def get_ctas_with_tags(*tags_name)

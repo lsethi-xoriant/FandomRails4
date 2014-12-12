@@ -13,6 +13,7 @@
 //= require angularjs/stream_calltoaction
 //= require angularjs/browse
 //= require angularjs/ranking
+//= require angularjs/search
 //= require bootstrap
 //= require bootstrap-notify
 //= require easyadmin/jquery-ui-1.9.2.custom.min
@@ -30,3 +31,4 @@
 //= require bootstrap-datepicker
 //= require fandom-utils
 //= require angular-animate
+//= require ui-bootstrap-0.12.min

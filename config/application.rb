@@ -160,5 +160,17 @@ module Fandom
     end
     LogSubscriber.attach_to :action_controller
 
+    Paperclip.options[:command_path] = "/usr/local/bin"
+    if config.deploy_settings.key?('paperclip')
+      config.paperclip_defaults = config.deploy_settings['paperclip']
+      config.paperclip_defaults[:bucket] = lambda do |attachment| 
+        bucket_name = get_deploy_setting("sites/#{$site.id}/paperclip/:bucket", nil)
+        if bucket_name.nil?
+          log_error("missing paperclip bucket configuration for tenant", { site: $site.id })
+        end
+        bucket_name
+      end
+    end
+
   end
 end

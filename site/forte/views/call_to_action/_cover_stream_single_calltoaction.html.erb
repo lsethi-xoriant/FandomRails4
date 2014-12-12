@@ -1,0 +1,36 @@
+<div id="calltoaction-<%= calltoaction.id %>-cover" class="calltoaction-cover <%= "hidden" if hidden %>" style="background-image: url('<%= calltoaction.thumbnail %>')" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')">
+  <div class="cover-grid"></div>
+  <%= render partial: "/call_to_action/cover_stream_single_calltoaction_flag", locals: { calltoaction: calltoaction } %>
+  <a href="javascript:void(0);" onclick="showCallToAction(<%= calltoaction.id %>, '<%= calltoaction.media_type.downcase %>')" style="position: absolute; display: block; width:100%; height: 100%;"></a>  
+  <div class="row top text-right">
+    <div class="col-xs-12">
+      <h4>
+        <% current_call_to_action_reward_status = compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction) %>
+        <% if current_call_to_action_reward_status.present? %>
+          <% if current_call_to_action_reward_status["winnable_reward_count"] > 0 %>
+            <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 5px;">+<%= current_call_to_action_reward_status["winnable_reward_count"] %>
+              <span class="glyphicon glyphicon-star"></span>
+            </span>
+          <% end %>
+        <% else %>        
+          <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 5px;">
+            FATTO <span class="glyphicon glyphicon-ok"></span>
+          </span>
+        <% end %>
+      </h4>
+    </div>
+  </div>
+
+  <div class="row bottom">
+    <div class="col-xs-8 text-left">
+      <%= render partial: "/call_to_action/cover_stream_single_calltoaction_text", locals: { calltoaction: calltoaction } %>   
+    </div>
+    <div class="col-xs-4 text-right hidden-xs">
+      <a class="btn btn-primary btn-cover" role="button"><%= get_cta_button_label(calltoaction) %></a> 
+    </div>
+    <div class="col-xs-12 text-left visible-xs">
+      <a class="btn btn-primary btn-block" style="margin-top: 15px;" role="button"><%= get_cta_button_label(calltoaction) %></a> 
+    </div>
+  </div>
+    
+</div>

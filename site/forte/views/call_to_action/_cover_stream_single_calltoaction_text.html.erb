@@ -1,0 +1,14 @@
+<div class="cover-description">
+  <p>
+    <% tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat") %>
+    <% if tags_with_miniformat_in_calltoaction.any? %>
+      <span class="label label-default description-label" style="background-color: <%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "label-background" }.map { |tf| tf.value }.first %>; color: <%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "label-color" }.map { |tf| tf.value }.first %>;">
+        <span class="<%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>"></span>
+        <%= tags_with_miniformat_in_calltoaction.first.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
+      </span>
+    <% else %>
+      &nbsp;
+    <% end %>
+  </p>      
+  <p class="text-with-shadow description-title"><%= calltoaction.title %></p>
+</div>

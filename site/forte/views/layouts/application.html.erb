@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <title>BALLANDO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+  <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
+  
+  <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" rel="stylesheet" type="text/css" />
+  <link href="http://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet" type="text/css" />
+
+  <%= stylesheet_link_tag "forte_application", :media => "all" %>
+  <%= javascript_include_tag "forte_application" %>
+
+  <!--[if lte IE 9]>
+    <link href="<%= asset_path("forte_application.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
+    <script src="<%= asset_path("forte_application.js").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" type="text/javascript"></script>  
+  <![endif]-->
+
+  <%= csrf_meta_tags %>
+
+  <script type="text/javascript" src="http://www.ballandoconlestelle.rai.it/dl/js/common.js"></script>
+  <script type="text/javascript" src="http://ad2.neodatagroup.com/uploads/js/sid49jq.js"></script>
+  <meta property="og:site_name" content="Forte forte forte"/>
+
+  <!-- UPDATE FOR FORTE -->
+  <script type="text/javascript" src="<%= gigya_url %>?apiKey=3_y7zC1MAf5AXquxPyEwA0Weug-iSRX5yQVm8Z-M6XcvYFGPBNkdMk2R-aY0Dlz5FO">
+    { connectWithoutLoginBehavior: 'alwaysLogin' }
+  </script>
+
+  <%= yield (:fb_meta_tags) %>
+  
+</head>
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>">
+
+  <%= render partial: "/application/share_modals" %>
+
+  <%= yield %>
+
+  <%= render partial: "/application/ga" %>
+
+  <script type="text/javascript">
+
+    <% if @registration_ga %>
+      ga('send', 'event', "Registration", "Registration", "registered_user", 1, true);
+    <% end %>
+
+    window.addEventListener("orientationchange", function() {
+      window.parent.containerResize();
+    }, false);
+
+    function gigyaSocializeLogin(provider) {
+      var current_window_location_origin = 'http://www.live.community.ballando.rai.it';
+      $("#waiting-registration-layer").removeClass("hidden");
+      gigya.socialize.login({
+        provider: provider,
+        authFlow: "redirect",
+        redirectURL: current_window_location_origin + "/users/gigya_socialize_redirect",
+      });
+    }
+
+    /* RAI BANNER
+  	var adagioFormat=''; var adagioJsVar=''; var adagioKw = '';
+  	Banners.vars.push({ 
+  		s: "#banner-rai",
+  		v: "rai_uno^rai_uno_ballando_medium_box_var^300x250^",
+  		hideEmpty: true
+  	});
+  	Banners.reloadAll();
+    */
+  	
+  	$(function() {
+  		FastClick.attach(document.body);
+  	});
+
+	</script>
+</body>
+</html>

@@ -58,7 +58,7 @@ module FandomUtils
   end
 
   def may_redirect_to_landing
-    if !current_user && !((self.is_a? DeviseController) || (self.is_a? LandingController) || ("application#user_cookies").include?("#{params[:controller]}##{params[:action]}") || ("application#redirect_into_iframe_path").include?("#{params[:controller]}##{params[:action]}") || request.site.public_pages.include?("#{params[:controller]}##{params[:action]}"))
+    if !current_user && !((self.is_a? DeviseController) || ("application#facebook_app").include?("#{params[:controller]}##{params[:action]}") || (self.is_a? LandingController) || ("application#user_cookies").include?("#{params[:controller]}##{params[:action]}") || ("application#redirect_into_iframe_path").include?("#{params[:controller]}##{params[:action]}") || request.site.public_pages.include?("#{params[:controller]}##{params[:action]}"))
       redirect_to "/landing"
     end
   end

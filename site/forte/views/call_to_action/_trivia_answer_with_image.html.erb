@@ -1,0 +1,70 @@
+<% if current_user && user_interaction %>
+  <% user_answer = user_interaction.answer_id == answer.id %>
+  <!-- CURRENT USER HAS ALREADY RESPONDED -->
+  <% if interaction.resource.one_shot %>
+    <div id="answer-<%= answer.id %>" class="col-xs-6 text-center answer-interaction-<%= interaction.id %>" style="margin-bottom: 15px;">
+
+        <div class="row">
+
+          <% if position % 2 == 0 %>
+            <div class="col-xs-12 text-left">
+              <% if user_answer %>
+                <img src="<%= current_avatar %>" class="pin-avatar trivia-pin">
+              <% else %>
+                <div class="pin-empty trivia-pin" ></div>
+              <% end %>
+              <div class="trivia-img-container-left <%= answer.correct ? "trivia-img-correct" : (user_answer ? "trivia-img-wrong" : "trivia-img-active") %>">
+                <a href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %>">
+                  <img src="<%= answer.image(:medium) %>" style="width: 100%;">
+                </a>
+              </div>
+            </div>
+          <% end %>
+          <% if position % 2 != 0 %>
+            <div class="col-xs-12 text-right">
+              <div class="trivia-img-container-right <%= answer.correct ? "trivia-img-correct" : (user_answer ? "trivia-img-wrong" : "trivia-img-active") %>">
+                <a href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %>">
+                  <img src="<%= answer.image(:medium) %>" style="width: 100%;">
+                </a>
+              </div>
+              <% if user_answer %>
+                <img src="<%= current_avatar %>" style="right:0; left: auto;" class="pin-avatar trivia-pin">
+              <% else %>
+                <div class="pin-empty trivia-pin" style="right:0; left: auto;"></div>
+              <% end %>
+            </div>
+          <% end %>
+
+        </div>
+
+    </div>
+  <% end %>
+<% else %>
+  <!-- CURRENT USER HAS NOT RESPONDED -->
+  <div id="answer-<%= answer.id %>" class="col-xs-6 text-center answer-interaction-<%= interaction.id %>" style="margin-bottom: 15px;">
+
+    <div class="row">
+      <% if position % 2 == 0 %>
+        <div class="col-xs-12 text-left">
+          <div class="pin-empty trivia-pin"></div>
+          <div class="trivia-img-container-left">
+            <a href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')">
+              <img src="<%= answer.image(:medium) %>" style="width: 100%;">
+            </a>
+          </div>
+        </div>
+      <% elsif position % 2 != 0 %>
+        <div class="col-xs-12 text-right">
+          <div class="trivia-img-container-right">
+            <a href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')">
+              <img src="<%= answer.image(:medium) %>" style="width: 100%;">
+            </a>
+          </div>
+          <div class="pin-empty trivia-pin" style="right:0; left: auto;"></div>
+        </div>
+      <% end %>
+
+    </div>
+
+  </div>
+<% end %>

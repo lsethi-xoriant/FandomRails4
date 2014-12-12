@@ -1,0 +1,43 @@
+  <div class="row">
+    <div class="col-xs-3 col-xxs-12 text-left" style="padding: 20px 10px 0 10px;">
+      <a href="javascript: void(0)" onclick="profilePageWithRedirectCookie()" target="_top">
+        <img src="<%= current_avatar %>" class="img-responsive img-circle iframe-profile-avatar">
+      </a>
+        <a href="<%= profile_url %>" target="_top">
+          <div class="text-center iframe-notice-baloon hidden-xxs <%= "hidden" if notices_count < 1 %>">
+            <span><%= notices_count %></span>
+          </div>
+        </a>
+    </div>
+
+    <div class="col-xs-8 hidden-xxs" style="padding-left: 0;">
+      <h4 style="padding-top: 15px; color: #fff; margin-bottom: 5px;">
+        <b>
+	   		<a href="<%= profile_url %>" target="_top" style="color: #fff; text-decoration: none;"><%= extract_name_or_username(current_user) %></a> <a href="/users/rai/sign_out" target="_top"><span class="glyphicon glyphicon-off" style="font-size: 13px; padding-left: 5px; color: #fff;"></span></a> 
+        </b>
+      </h4>
+      <% if SUPERFAN_CONTEST_ACTIVE %>
+	      	<% superfan_points_to_achieve = get_superfan_points_gap %>
+	      	<% if superfan_points_to_achieve > 0 %>
+		        <h5 style="color: #fff; text-transform: none;"> PASS SUPERFAN              
+		          <span id="iframe-profile-main-reward" class="label label-warning" style="padding: 2px; margin: 0 3px; font-size: 11px; font-weight: bold;">
+		          	- <%= superfan_points_to_achieve %> <span class="glyphicon glyphicon-star"></span>
+		          </span> pt
+		        </h5>
+		    <% else %>
+		    	<h5>
+		    		<span style="color: #fff;"> Pass Superfan</span> <span style="color: green; font-size: 18px;" class="glyphicon glyphicon-ok"></span></span>
+		    	</h5>
+		    <% end %>
+	  <% else %>
+	  		<h5 style="color: #fff; text-transform: none;"> Hai fatto              
+	          <span id="iframe-profile-main-reward" class="label label-warning">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME, true)[PERIOD_KIND_WEEKLY] || 0 %>
+	            <span class="glyphicon glyphicon-star"></span>
+	          </span>
+	          <span style="margin-left: 7px;">di 100 <span class="glyphicon glyphicon-star"></span></span>
+	        </h5>
+	  <% end %>
+    </div>
+
+  </div>
+</div>

@@ -4,6 +4,10 @@ body {
   padding-top: 60px;
 }
 
+.disabled{
+  background-color: grey !important;
+}
+
 .comment_evidence {
     -webkit-animation: comment_evidence_animation 5s; /* Chrome, Safari, Opera */
     animation: comment_evidence_animation 3s;

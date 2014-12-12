@@ -11,7 +11,7 @@ $container-lg:                 $container-desktop !default;
 
 body {
   padding-top: 15px;
-  background-image: url("<%= asset_path("coin/bg.jpg") %>");
+  background-image: url("coin/bg.jpg");
   background-size: 100% auto;
   background-position: top center;
   background-repeat: no-repeat;
@@ -288,8 +288,10 @@ body {
 }
 
 .landing__sign-in {
-  margin-top: 10px;
+  margin-top: 20px;
+  margin-bottom: 15px;
   color: #fff;
+  font-size: 16px;
 }
 
 .landing__sale-img {
@@ -1194,11 +1196,34 @@ fieldset[disabled] .btn-facebook.active {
     color: #000;
   }
 
-  .call-to-action__media__description-mobile {
+
+  .call-to-action__media__button__gift-mobile {
+    width: 40px;
+    margin: 0 5px 5px auto;
+    box-shadow: none;
+    /*
     margin: 0;
     position: absolute;
     bottom: 10px;
     left: 25px;
+    */
+  }
+
+  .call-to-action__description-row {
+    position: relative;
+  }
+
+  .call-to-action__mobile-description-col {
+    position: absolute; 
+    bottom: 0;
+  }
+
+  .call-to-action__mobile-description {
+    margin: 0;
+    margin-left: 5px;
+    line-height: 13px;
+    font-size: 13px;
+    padding-top: 5px;
   }
 
   .call-to-action__media__button__gift-icon {

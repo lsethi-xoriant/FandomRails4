@@ -1,0 +1,9 @@
+<% content_for :fb_meta_tags, @fb_meta_tags %>
+
+<script type="text/javascript">
+  <% if small_mobile_device? %>
+    location.href = "/custom_call_to_action/<%= @calltoaction.id %>";
+  <% else %>
+    location.href = "/redirect_into_iframe_calltoaction/<%= @calltoaction.id %>";
+  <% end %>
+</script>
