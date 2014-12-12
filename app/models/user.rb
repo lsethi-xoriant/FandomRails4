@@ -89,8 +89,8 @@ class User < ActiveRecordWithJSON
   end
 
   def required_attr?(attr_name)
-    if required_attrs.present?
-      required_attrs.include?(attr_name)
+    if $site.required_attrs.present?
+      $site.required_attrs.include?(attr_name)
     else
       false
     end
