@@ -12,7 +12,6 @@ searchModule.controller('searchCtrl', SearchCtrl);
 function SearchCtrl($scope, $window, $filter, $http) {
 	
 	$scope.init = function(browseSections) {
-		console.log(browseSections);
 		$scope.sections = browseSections;
 	};
 	

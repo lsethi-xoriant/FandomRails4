@@ -31,6 +31,7 @@ module ApplicationHelper
     attribute :status, type: String
     attribute :likes, type: Integer
     attribute :comments, type: Integer
+    attribute :tags
   end
 
   class ContentSection
@@ -71,7 +72,8 @@ module ApplicationHelper
       created_at: tag.created_at.to_time.to_i,
       header_image_url: header_image,
       icon: icon,
-      category_icon: category_icon
+      category_icon: category_icon,
+      tags: get_tag_ids_for_tag(tag)
     )
   end
   
@@ -88,10 +90,31 @@ module ApplicationHelper
       created_at: cta.created_at.to_time.to_i,
       comments: get_number_of_commtents_for_cta(cta),
       likes: get_number_of_likes_for_cta(cta),
-      status: compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, cta)
+      status: compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, cta),
+      tags: get_tag_ids_for_cta(cta)
     )
   end
-
+  
+  def get_tag_ids_for_cta(cta)
+    cache_short(get_tag_names_for_cta_key(cta.id)) do
+      tags = {}
+      cta.call_to_action_tags.includes(:tag).each do |t|
+        tags[t.tag.id] = t.tag.id
+      end
+      tags
+    end
+  end
+  
+  def get_tag_ids_for_tag(tag)
+    cache_short(get_tag_names_for_tag_key(tag.id)) do
+      tags = {}
+      tag.tags_tags.each do |t| 
+        tags[Tag.find(t.other_tag_id).id] = Tag.find(t.other_tag_id).id
+      end
+      tags  
+    end
+  end
+  
   def user_for_registation_form()
     if current_user.aux
       aux = JSON.parse(current_user.aux)

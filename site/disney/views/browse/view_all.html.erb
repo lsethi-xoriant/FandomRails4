@@ -1,0 +1,40 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container" ng-controller="BrowseCtrl" ng-init="init(<%= @contents.to_json %>)">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="page-header">
+            <h3>
+            	<%= @tag.name %>
+            	<div class="btn-group" style="float: right;">
+				  <button type="button" class="btn btn-primary">Ordina per</button>
+				  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+				    <span class="caret"></span>
+				    <span class="sr-only">Toggle Dropdown</span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li><a href="javascript:void(0);" ng-click="order('created_at',false)">Piu recenti</a></li>
+				    <li><a href="javascript:void(0);" ng-click="order('title',false)">Titolo</a></li>
+				  </ul>
+				</div>
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="row brws-item">
+      		<div class="col-xs-6 col-md-4" ng-repeat="content in contents">
+			<div class="thumbnail">
+				<a href="{{ content.detail_url }}">
+				<img class="img-responsive" ng-src="{{ content.thumb_url }}" alt="..." ng-if="content.has_thumb">
+				<img class="img-responsive" src="http://placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
+				</a>
+				<div class="caption">
+					<h4>{{ content.title }}</h4>
+					<p>{{ content.description }}</p>
+				</div>
+			</div>
+		</div>
+      </div>
+</div>
+
+<%= render partial: "/application/footer" %>
