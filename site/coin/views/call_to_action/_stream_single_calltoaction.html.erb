@@ -19,20 +19,32 @@
           <img class="call-to-action__media gift-image hidden-lg hidden-sm hidden-md mobile" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}">
         </a>
         <img class="call-to-action__media loader hidden hidden-xs" style="width: 100%; position: absolute; top: 25px; left:15px; max-width: 688px;" src="<%= asset_path("coin/slot.gif") %>">
-        <div class="visible-xs" style="position: absolute; top: 0px; left: 5%; width: 100%;">
+        <div class="visible-xs" style="position: absolute; top: 40px; left: 5%; width: 100%;">
         	<img class="call-to-action__media loader hidden hidden-lg hidden-sm hidden-md" style="width: 90%; margin: -20px auto 0 auto;" src="<%= asset_path("coin/slot-mobile.gif") %>">
         </div>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row call-to-action__description-row">
       <div class="col-sm-9 col-xs-7">
         <p id="product-title" ng-class="title_product_class" ng-bind-html="calltoaction_info.calltoaction.description" style="min-width: 400px;"></p>
-        <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__description-mobile visible-xs call-to-action__share-and-win-animation"><span class="glyphicon glyphicon-shopping-cart call-to-action__media__button__gift-icon"></span></a>
+        <!--
+        <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__button__gift-mobile visible-xs call-to-action__share-and-win-animation"><span class="glyphicon glyphicon-shopping-cart call-to-action__media__button__gift-icon"></span></a>
+        -->
       </div>
       <div ng-class="buy_product_class" class="col-sm-3 col-xs-5 text-right hidden-xs">
         <a id="product-buy" target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}?utm_source=link&utm_medium=giftmachine&utm_campaign=giftmachine" class="btn btn-gift call-to-action__media__button__gift"><span class="glyphicon glyphicon-gift call-to-action__media__button__gift-icon"></span>ACQUISTA</a>
-      </div> 
+      </div>
+      <div class="col-xs-12 visible-xs call-to-action__share-and-win-animation call-to-action__mobile-description-col">
+        <div class="row">
+          <div class="col-xs-8">
+            <p class="visible-xs call-to-action__mobile-description">{{calltoaction_info.calltoaction.description}}</p>
+          </div> 
+          <div class="col-xs-4 text-right">
+            <a target="_blank" href="{{calltoaction_info.calltoaction.aux.shop_url}}" class="btn btn-gift call-to-action__media__button__gift-mobile visible-xs call-to-action__share-and-win-animation"><span class="glyphicon glyphicon-shopping-cart call-to-action__media__button__gift-icon"></span></a>
+          </div>
+        </div>
+      </div>   
     </div>
 
     <div class="row call-to-action__share-and-win call-to-action__share-and-win-animation">

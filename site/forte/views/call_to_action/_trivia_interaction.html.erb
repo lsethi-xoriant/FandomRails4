@@ -1,0 +1,18 @@
+<div class="row text-center cta-stream-heading">
+  <div class="col-xs-12 text-center question">
+    <% if shown_interactions_count %>
+      <h6 id="index-interaction-<%= interaction.id %>">Domanda <%= index_current_interaction %> di <%= shown_interactions_count %></h6>
+    <% end %>
+    <p><%= interaction.resource.question %></p>
+  </div>
+  <div class="col-sm-12 text-center">
+    <% position = 0 %>
+    <% interaction.resource.answers.each do |answer|%>
+      <%= render partial: "/call_to_action/trivia_answer", locals: { user_interaction: user_interaction, answer: answer, interaction: interaction, answer_counter: interaction.resource.answers.count, position: position } %>
+      <% position += 1 %>
+    <% end %>
+  </div>
+
+  <%= render partial: "/call_to_action/feedback_small_undervideo", locals: { interaction_reward_status: interaction_reward_status, user_interaction: user_interaction, interaction: interaction, calltoaction_id: calltoaction_id, aux: aux } %>
+
+</div>

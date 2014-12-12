@@ -1,0 +1,23 @@
+<div class="row cta-stream-heading">
+  <div class="col-xs-12 text-center question">
+    <% if shown_interactions_count %>
+      <h6 id="index-interaction-<%= interaction.id %>">Domanda <%= index_current_interaction %> di <%= shown_interactions_count %></h6>
+    <% end %>
+    <h4>
+      <%= interaction.resource.question %>
+    </h4>
+  </div>
+
+  <div class="col-sm-12 col-sm-offset-0 text-center">
+    <div class="row cta-stream-heading-versus">
+      <% position = 0 %>
+      <% interaction.resource.answers.each do |answer|%>
+        <%= render partial: "/call_to_action/versus_answer", locals: { user_interaction: user_interaction, interaction: interaction, answer: answer, position: position, user_interaction: user_interaction } %>
+        <% position += 1 %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render partial: "/call_to_action/feedback_small_undervideo", locals: { interaction_reward_status: interaction_reward_status, user_interaction: user_interaction, interaction: interaction, calltoaction_id: calltoaction_id, aux: aux } %>
+
+</div>

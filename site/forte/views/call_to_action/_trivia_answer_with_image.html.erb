@@ -1,0 +1,123 @@
+<% if current_user && user_interaction %>
+  <!-- CURRENT USER HAS ALREADY RESPONDED -->
+  <% if interaction.resource.one_shot %>
+    <div id="answer-<%= answer.id %>" class="col-xs-6 text-center answer-interaction-<%= interaction.id %>">
+
+        <div class="row">
+
+          <% if position % 2 == 0 %>
+            <div class="col-xs-2 no-pad interaction-baloon" style="margin-top: 20%;">
+              <% if user_interaction.answer_id == answer.id %>
+                <div class="baloon baloon-right">
+                  <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
+                </div>
+              <% else %>  
+                <div class="baloon baloon-right square unchosen"> 
+                  <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+                </div>
+              <% end %> 
+            </div>
+          <% end %>
+
+          <div class="col-xs-10">
+            <% if answer.correct %>
+              <a href="javascript: void(0)" class="thumbnail right"><img src="<%= answer.image(:medium) %>" alt="current_user"></a>
+            <% else %>
+              <a href="javascript: void(0)" class="thumbnail <%= "wrong" if user_interaction.answer_id == answer.id %>"><img src="<%= answer.image(:medium) %>" alt="current_user"></a>
+            <% end %>
+          </div>
+
+          <% if position % 2 != 0 %>
+            <div class="col-xs-2 no-pad interaction-baloon" style="margin-top: 20%;">
+              <% if user_interaction.answer_id == answer.id %>
+                <div class="baloon baloon-left small">
+                  <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
+                </div>
+              <% else %>  
+                <div class="baloon baloon-left small square unchosen"> 
+                  <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+                </div>
+              <% end %> 
+            </div>
+          <% end %>
+
+        </div>
+
+    </div>
+  <% else %>
+    <div id="answer-<%= answer.id %>" class="col-xs-6text-center answer-interaction-<%= interaction.id %>">
+
+        <div class="row">
+
+          <% if position % 2 == 0 %>
+            <div class="col-xs-2 no-pad interaction-baloon" style="margin-top: 20%;">
+              <% if user_interaction.answer_id == answer.id %>
+                <div class="baloon baloon-right">
+                  <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
+                </div>
+              <% else %>  
+                <div class="baloon baloon-right square unchosen"> 
+                  <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+                </div>
+              <% end %> 
+            </div>
+          <% end %>
+
+          <div class="col-xs-10">
+
+            <% if user_interaction.answer_id == answer.id %>
+
+              <a href="javascript: void(0)" class="button-inter-<%= interaction.id %> thumbnail active <%= answer.correct ? "right" : "wrong" %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><img src="<%= answer.image(:medium) %>" alt="..."></a>
+
+            <% else %>
+
+              <a href="javascript: void(0)" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><img src="<%= answer.image(:medium) %>" alt="..."></a>
+
+            <% end %>
+
+          </div>
+
+          <% if position % 2 != 0 %>
+            <div class="col-xs-2 no-pad interaction-baloon" style="margin-top: 20%;">
+              <% if user_interaction.answer_id == answer.id %>
+                <div class="baloon baloon-left small">
+                  <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
+                </div>
+              <% else %>  
+                <div class="baloon baloon-left small square unchosen"> 
+                  <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+                </div>
+              <% end %> 
+            </div>
+          <% end %>
+
+        </div>
+
+    </div>
+  <% end %>
+<% else %>
+  <!-- CURRENT USER HAS NOT RESPONDED -->
+  <div id="answer-<%= answer.id %>" class="col-xs-6 text-center answer-interaction-<%= interaction.id %>">
+
+    <div class="row">
+
+      <% if position % 2 == 0 %>
+        <div class="col-xs-2 no-pad interaction-baloon" style="margin-top: 20%;">
+          <div class="baloon baloon-right small square unchosen"><img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;"></div>
+        </div>
+      <% end %>
+
+      <div class="col-xs-10">
+        <a href="javascript: void(0)" class="button-inter-<%= interaction.id %> thumbnail active" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, <%= answer.id %>)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, <%= answer.id %>)" <% end %>><img src="<%= answer.image(:medium) %>" alt="..."></a>
+      </div>
+
+      <% if position % 2 != 0 %>
+        <div class="col-xs-2 no-pad interaction-baloon" style="margin-top: 20%;">
+          <div class="baloon baloon-left small square unchosen"><img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;"></div>
+        </div>
+      <% end %>
+
+    </div>
+
+  </div>
+<% end %>

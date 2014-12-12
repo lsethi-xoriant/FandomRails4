@@ -1,0 +1,5 @@
+<% if answer.image.present? %>
+  <%= render partial: "/call_to_action/trivia_answer_with_image", locals: { user_interaction: user_interaction, answer: answer, interaction: interaction, answer_counter: answer_counter, position: position } %>
+<% else %>
+  <%= render partial: "/call_to_action/trivia_answer_with_text", locals: { user_interaction: user_interaction, answer: answer, interaction: interaction, answer_counter: answer_counter } %>
+<% end %>

@@ -1,0 +1,15 @@
+<% content_for :body_class, "iframe-profile" %>
+
+<div class="container-fluid" style="position: relative;">
+	<% if current_user %>
+		<%= render partial: "/iframe_profile/profile_logged", locals: { profile_url: @profile_url, notices_count: @notices_count } %>
+	<% else %>
+		<%= render partial: "/iframe_profile/profile_not_logged" %>
+	<% end %>
+</div>
+
+<script type="text/javascript">
+  function profilePageWithRedirectCookie() {
+    top.location = "<%= Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"] %>";
+  }
+</script>

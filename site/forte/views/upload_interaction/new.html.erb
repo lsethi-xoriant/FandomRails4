@@ -1,0 +1,176 @@
+
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+		  <%= render partial: "/application/upload_filters", locals: { single_cta: false } %>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+			<div class="panel panel-default panel-shadow" style="border: none; border-radius: 0;">
+      			<div class="panel-body" style="position: relative; padding: 0;">
+					<div class="row special-guest-container">
+						<div class="col-sm-7">
+							<img src="<%= asset_path("diego.jpg") %>" class="img-responsive" style="width: 100%;">
+						</div>
+						<div class="col-sm-5">
+							<div class="row special-guest-list">
+								<div class="col-xs-12">
+									<h4 class="text-center" style="color: green; margin: 0 0 10px 0; line-height: 25px;">
+										Vorresti far vedere a Diego una tua foto durante la diretta di Ballando con le Stelle?<br />
+										Invia il tuo selfie #QuandoPensiADiego e le 3 foto più originali verranno date a Diego durante la diretta!
+									</h4>
+								</div>
+							</div>
+							<div class="row special-guest-list">
+								<div class="col-xs-2">
+									<div class="boxed">1</div>
+								</div>
+								<div class="col-xs-10">
+									<p class="special-guest">Scatta il tuo selfie</p>
+								</div>
+							</div>
+							<div class="row special-guest-list">
+								<div class="col-xs-2">
+									<div class="boxed">2</div>
+								</div>
+								<div class="col-xs-10">
+									<p class="special-guest">Se sei stata originale, Diego vedrà la tua foto</p>
+								</div>
+							</div>
+							<div class="row special-guest-list">
+								<div class="col-xs-2">
+									<div class="boxed">3</div>
+								</div>
+								<div class="col-xs-10">
+									<p class="special-guest">Caricalo qui sotto</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row" style="background-color: rgba(255, 255, 255, 0.5);">
+		
+		<div class="col-md-10 col-md-offset-1 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-center" style="margin-top: 15px;">
+		
+		 <% if @cloned_cta && @cloned_cta.errors.any? %>
+		 <div class="row">
+		 	<div class="col-sm-8 col-sm-offset-1">
+		 <ul class="text-left">
+		    <% @cloned_cta.errors.full_messages.each do |error_message| %>
+		      <li><%= error_message %></li>
+		    <% end %>
+		  </ul>
+		  </div>
+		  </div>
+		  <% end %>
+		  
+		  <% if flash[:notice] %>
+			  <div class="row">
+			 		<div class="col-sm-9 col-sm-offset-1 text-left">
+			  		<div class="alert alert-success"><%= flash[:notice] %></div>
+			  	</div>
+			  </div>
+		  <% end %>
+		
+		  <div class="row">
+		    <%= form_tag "/upload_interaction/create/#{ @upload_interaction.id }", multipart: true, id: "form-upload" do %>
+		    <div class="col-sm-12">
+		      <div class="row form-group">
+		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">1. Invia la tua foto</label>
+		        <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 text-left">
+		        	<a type="button" class="btn-2" onclick="chooseFile();" style="display: inline-block; width: 100%;">CARICA LA TUA FOTO</a>
+		        	<p class="small" style="margin-top: 10px; color: #fff;">I file non devono superare i 40 Mb</p>
+		        	<div class="hidden"><%= file_field_tag "upload", { :onchange => "uploadDone(this)" } %></div>
+		        </div>
+		        <div class="col-xs-12 col-sm-1">
+		        	<div class="confirm-step upload-file" style="margin: 10px auto;"></div>
+		        </div>
+		      </div>
+		
+		      <div class="row form-group">
+		        <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;">2. Dai un titolo</label>
+		        <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0">
+		        	<%= text_field_tag :title, (@cloned_cta.title if @cloned_cta), { class: "form-control", onchange: "titleInserted(this)" } %>
+		        </div>
+		        <div class="col-xs-12 col-sm-1">
+		        	<div class="confirm-step upload-title" style="margin: 10px auto;"></div>
+		        </div>
+		      </div>
+		      
+		      <div class="row form-group">
+		      	<div class="col-sm-12 text-center">
+		      		<% if @upload_interaction.resource.privacy? %>
+			          <%= check_box_tag "privacy" %>
+			          <label style="color: #fff;">Accetto i <a style="text-decoration: underline; color: #fff;" href="http://ballando.live.fandomlab.com.s3.amazonaws.com/terms/termini_uso_ballando.pdf" target="_blank" style="color: #fff;">termini d'uso</a></label>
+			        <% end %>
+			
+			        <% if @upload_interaction.resource.releasing? %>
+			          <label>Liberatoria</label>
+			          <p class="small"><%= @upload_interaction.resource.releasing_description %></p>
+			          <p class="text-center"><%= file_field_tag 'releasing' %></p>
+			        <% end %>
+		      	</div>
+		      </div>
+			  
+			  <div class="row">
+				    <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 text-center" id="load-button">
+				      <% if current_user %>
+				        <button type="button" class="btn-2" onclick="startLoader();">CARICA</button>
+				      <% else %>
+				      	<button type="button" class="btn-2" onclick="goToLogin();">CARICA</button>
+				      <% end %>
+				      <p>&nbsp;</p>
+				    </div>
+			  </div>
+				  
+			  </div>
+			  <% end %>
+		    </div>
+		  </div>
+	</div>
+</div>
+		
+<script type="text/javascript">
+	function chooseFile(){
+		$("#upload").click();
+	}
+	
+	function uploadDone(video) {
+		if (video.files && video.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				//$("#user-avatar-image").attr('src', e.target.result).width(100).height(100);
+			};
+			//reader.readAsDataURL(image.files[0]);
+			$(".confirm-step.upload-file").html('<i class="fa fa-check" style="font-size: 20px; color: #FFF;"></i>');
+		}
+	}
+	
+	function titleInserted(title) {
+		if( $(title).val() != ''){
+			$(".confirm-step.upload-title").html('<i class="fa fa-check" style="font-size: 20px; color: #FFF;"></i>');
+		}else{
+			$(".confirm-step.upload-title").html('');
+		}	
+	}
+	
+	function goToLogin() {
+		window.location.href = "/redirect_top_with_cookie?connect_from_page=" + top.location + "&redirect_to_page=/upload_interaction/new"; 
+	}
+	
+	function startLoader() {
+		$("#load-button").html('<p class="text-center" style="color: #fff;">Caricamento video in corso ...</p>');
+		$("#form-upload").submit();
+	}
+	
+	$(document).ready(function() {
+	    checkDocumentHeight("fandom");
+	});
+</script>

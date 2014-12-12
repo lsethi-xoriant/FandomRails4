@@ -1,0 +1,108 @@
+<div class="col-sm-8 col-sm-offset-2">
+		
+
+    <div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'full' || <%= rankings %>.rank_type == 'trirank'">
+      <h2 class="text-center" style="font-size: 24px; padding-bottom: 5px;">{{<%= rankings %>.ranking.title}}</h2>
+      <ul class="list-group">
+          <li ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'list-group-item': true, 'list-group-item-warning': rank_user.user_id == user.id }">
+            <div class="row">
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{rank_user.position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{rank_user.avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{rank_user.user}}</h4></div>
+              <div class="col-sm-3 col-xs-4 text-right">
+              	<h4 class="no-margin">
+              	<span class="label label-warning" style="padding-top: 7px;">{{rank_user.counter}}
+                    <span class="glyphicon glyphicon-star"></span>
+                </span>
+                </h4>
+              </div>
+            </div>
+          </li>
+      </ul>
+      <div class="text-center" ng-if="<%= rankings %>.rank_type == 'full'">
+      	<ul class="pagination">
+	      <li ng-class="{'disabled': <%= rankings %>.current_page == 1 }">
+	      	<a href="javascript:void(0);" ng-click="prev_page(<%= rankings %>.current_page, <%= rankings %>)">&lt;</a>
+	      </li>
+	      <li>
+	      	<a href="javascript:void(0);">Pagina {{<%= rankings %>.current_page}} di {{<%= rankings %>.number_of_pages}}</a>
+	      </li>
+	      <li ng-class="{'disabled': <%= rankings %>.current_page >= <%= rankings %>.number_of_pages }">
+	      	<a href="javascript:void(0);" ng-click="next_page(<%= rankings %>.current_page, <%= rankings %>)">&gt;</a>
+	      </li>
+	    </ul>
+      </div>
+      
+    </div>
+    
+    <div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'my_position'">
+        <h2 class="text-center" style="font-size: 24px; padding-bottom: 5px;">{{<%= rankings %>.ranking.title}}</h2>
+	      <ul class="list-group">
+	          <li ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'list-group-item': true, 'list-group-item-warning': rank_user.user_id == user.id }" >
+	            <div class="row">
+	              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{rank_user.position}}</h4></div>
+	              <div class="col-sm-2 hidden-xs"><img ng-src="{{rank_user.avatar}}" class="img-circle img-responsive img-rank"></div>
+	              <div class="col-sm-5 col-xs-6"><h4>{{rank_user.user}}</h4></div>
+	              <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
+	              	<span class="label label-warning" style="padding-top: 7px;">{{rank_user.counter}}
+	                    <span class="glyphicon glyphicon-star"></span>
+	                </span>
+	              	</h4></div>
+	            </div>
+	          </li>
+	      </ul>
+    </div>
+    
+    <div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'full_compressed'">
+        <h2 class="text-center" style="font-size: 24px; padding-bottom: 5px;">{{<%= rankings %>.ranking.title}}</h2>
+      <ul class="list-group">
+          <li ng-class="{'list-group-item': true, 'list-group-item-warning': <%= rankings %>.my_position == 1}">
+            <div class="row">
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[0].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[0].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[0].user}}</h4></div>
+              <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[0].counter}}
+                  <span class="glyphicon glyphicon-star"></span>
+                </span>
+              	</h4></div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row text-center">
+              .<br />.<br />.<br />
+            </div>
+          </li>
+          <li class="list-group-item list-group-item-warning" ng-if="<%= rankings %>.my_position != 1">
+            <div class="row">
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].user}}</h4></div>
+              <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].counter}}
+                  <span class="glyphicon glyphicon-star"></span>
+                </span>
+              	</h4></div>
+            </div>
+          </li>
+          <li class="list-group-item" ng-if="<%= rankings %>.my_position != 1 && <%= rankings %>.my_position != <%= rankings %>.total">
+            <div class="row text-center">
+              .<br />.<br />.<br />
+            </div>
+          </li>
+          <li class="list-group-item" ng-if="<%= rankings %>.my_position != <%= rankings %>.total">
+            <div class="row">
+              <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.total - 1].position}}</h4></div>
+              <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.total - 1].avatar}}" class="img-circle img-responsive img-rank"></div>
+              <div class="col-sm-5 col-xs-6"><h4>{{<%= rankings %>.rank_list[<%= rankings %>.total - 1].user}}</h4></div>
+              <div class="col-sm-3 col-xs-4 text-right"><h4 class="no-margin">
+              	<span class="label label-warning" style="padding-top: 7px;">{{<%= rankings %>.rank_list[<%= rankings %>.total - 1].counter}}
+                  <span class="glyphicon glyphicon-star"></span>
+                </span>
+              	</h4></div>
+            </div>
+          </li>
+      </ul>
+    </div>
+
+</div>

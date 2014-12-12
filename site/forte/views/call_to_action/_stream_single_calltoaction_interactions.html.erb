@@ -1,0 +1,39 @@
+<div class="col-md-4 col-sm-4 yes-pad cta-content">
+
+  <div class="row">
+    <div class="row">
+      <div class="col-xs-12">
+        <% if shown_interactions.any? %>
+          <div id="home-undervideo-calltoaction-<%= calltoaction.id %>" class="home-undervideo-calltoaction">
+            <% if calltoaction_active_interaction && !calltoaction_active_interaction.empty? %>
+              <%= calltoaction_active_interaction[:next_interaction][:render_interaction_str].html_safe %>
+            <% end %>
+          </div>
+        <% else %>
+        	<% extra_options = JSON.parse(calltoaction.aux) %>
+      		<div class="row cta-stream-heading">
+			      <div class="col-xs-12 text-center question">
+   					  <h4 class="alternative-description"><%= extra_options['alternative_description'] %></h4>
+				    </div>
+            <div class="col-xs-12 text-center undervideo-feedback">  
+              <% if aux && aux[:show_next_calltoaction_button] %>
+                <!-- NEXT CALLTOACTION -->
+                <a class="btn-2 btn-2-small btn-2-small-desktop go-on" role="button" href="/custom_call_to_action/<%= calltoaction.id %>/next" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
+              <% end %>
+            </div>
+		      </div>
+        <% end %>
+      </div>
+
+      <div class="col-sm-12 text-center" id="home-undervideo-<%= calltoaction.id %>">
+        <!-- UNDERVIDEO FEEDBACK -->               
+      </div>
+
+      <div class="col-md-12" id="share-footer-<%= calltoaction.id %>">
+        <!-- SHARE FOOTER -->
+      </div>
+
+    </div>
+  </div>
+
+</div>

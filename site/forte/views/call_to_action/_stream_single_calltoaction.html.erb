@@ -1,0 +1,66 @@
+<% shown_interactions = always_shown_interactions(calltoaction) %>
+<div id="calltoaction-<%= calltoaction.id %>" class="col-sm-12 ">
+  <div class="panel panel-default cta-page cta-stream panel-shadow">
+    <div class="panel-body cta-stream" style="position: relative; padding: 0; background: #2c2925">
+      
+      <% if cta_locked?(calltoaction) %>
+        <%= render partial: "/call_to_action/cover_stream_single_calltoaction_locked", locals: { calltoaction: calltoaction } %>
+      <% elsif (calltoaction.enable_for_current_user? && !current_user) %>
+        <%= render partial: "/call_to_action/cover_stream_single_calltoaction_user_not_logged", locals: { calltoaction: calltoaction } %>
+      <% else %>
+        <%= render partial: "/call_to_action/cover_stream_single_calltoaction", locals: { calltoaction: calltoaction, hidden: (active_calltoaction_id == calltoaction.id) } %>
+      <% end %> 
+
+      <div class="panel-body panel-card">   
+        <div class="row cta-md">
+          <% if !cta_locked?(calltoaction) && ((calltoaction.enable_for_current_user? && current_user) || !calltoaction.enable_for_current_user?) %>
+            <!-- LEFT COLUMN WITH IMAGE -->
+            <%= render partial: "/call_to_action/stream_single_calltoaction_media", locals: { calltoaction: calltoaction, calltoaction_page: (active_calltoaction_id == calltoaction.id), aux: aux } %>
+            <!-- RIGHT COLUMN WITH NAME AND DESCRIPTION -->
+            <%= render partial: "/call_to_action/stream_single_calltoaction_interactions", locals: { calltoaction: calltoaction, shown_interactions: shown_interactions, calltoaction_active_interaction: calltoaction_active_interaction, aux: aux } %>
+          <% end %>
+        </div>
+      </div>   
+      
+    </div>    
+    
+    <% user_interaction, interaction = has_done_share_interaction(calltoaction) %>
+    <% if interaction || (!active_calltoaction_id && calltoaction_comment_interaction && !calltoaction_comment_interaction.empty?) %>
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-xs-7 col-sm-3" id="bottom-feedback-share-<%= calltoaction.id %>">       
+            <% if interaction %>
+              <% if user_interaction %>
+                <button type="button" class="btn btn-facebook-rounded" onclick="doFbShare(<%= calltoaction.id %>, <%= interaction.id %>);" ><i class="fa fa-facebook"></i></button>
+  			        <button class="btn btn-tt-rounded" onclick="doTwShare(<%= calltoaction.id %>, <%= interaction.id %>, '<%=j get_twitter_title_for_share(calltoaction) %>');"><i class="fa fa-twitter"></i></button>
+                <span id="feedback-label-share" class="label label-success label-footer">Fatto <span class="glyphicon glyphicon-ok"></span></span>
+              <% else %>
+			          <button type="button" class="btn btn-facebook-rounded" onclick="doFbShare(<%= calltoaction.id %>, <%= interaction.id %>);"><i class="fa fa-facebook"></i></button>
+  			        <button class="btn btn-tt-rounded" onclick="doTwShare(<%= calltoaction.id %>, <%= interaction.id %>, '<%=j get_twitter_title_for_share(calltoaction) %>');"><i class="fa fa-twitter"></i></button>
+                <span id="feedback-label-share" class="label label-warning label-footer">+3 <span class="glyphicon glyphicon-star"></span></span>
+              <% end %>
+            <% end %>
+          </div> 
+          <div class="col-xs-5 col-sm-3 col-sm-offset-6 text-right">
+            <p class="footer-date"><%= get_cta_date(calltoaction.activated_at) %></p>
+            <% if calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
+              <!--a href="/call_to_action/<%= calltoaction.id %>" class="comment-preview"><span class="glyphicon glyphicon-comment"></span> <span id="interaction-<%= calltoaction_comment_interaction[:interaction].id %>-comment-counter"><%= calltoaction_comment_interaction[:comments_count] %></span> commenti</a-->
+            <% end %>           
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if calltoaction_comment_interaction && !calltoaction_comment_interaction.empty? %>
+      <% if active_calltoaction_id && active_calltoaction_id == calltoaction.id  %>
+        <hr class="no-margin">
+        <div class="panel-footer">
+          <%= render partial: "/call_to_action/stream_comment_with_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction] } %>
+        </div> 
+      <% else %>
+        <%= render partial: "/call_to_action/stream_comment_without_form", locals: { calltoaction_comment_interaction: calltoaction_comment_interaction, comment_interaction: calltoaction_comment_interaction[:interaction], calltoaction_id: calltoaction.id } %>
+      <% end %>
+    <% end %>
+  </div>
+  
+</div>

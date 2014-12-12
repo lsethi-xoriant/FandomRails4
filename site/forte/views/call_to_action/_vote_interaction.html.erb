@@ -1,0 +1,83 @@
+<div class="col-sm-12">
+  <div class="row text-center cta-stream-heading">
+    <div class="col-xs-12 text-center question">
+      <% if shown_interactions_count %>
+      <h6 id="index-interaction-<%= interaction.id %>">Domanda <%= index_current_interaction %> di <%= shown_interactions_count %></h6>
+    <% end %>
+      <h4>
+        <%= interaction.resource.title %>
+      </h4>
+    </div>
+
+    <div id="interaction-<%= interaction.id %>" class="col-xs-12">
+
+      <% if user_interaction %>
+        <div class="row">
+          <div class="col-xs-12" style="margin-bottom: 5px; padding-left: 60px; postione: relative;">
+            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 15px;"> 
+              <div class="baloon baloon-right"> 
+                <img src="<%= current_avatar %>" class="img-responsive" style="width: 100%; border-radius: 3px;">
+              </div>
+            </div>
+
+            <% if interaction.resource.oneshot %>
+
+              <% vote = JSON.parse(current_user.user_interactions.find_by_interaction_id(interaction.id).aux)['vote'] %>
+
+              <select id="interaction-<%= interaction.id %>-vote-value" class="form-control" style="margin-bottom: 10px;" disabled>
+                <% (interaction.resource.vote_min..interaction.resource.vote_max).each do |i| %>
+                  <% if vote.to_i == i %>
+                    <option value="<%= i %>" selected="selected"><%= i %></option>
+                  <% else %>
+                    <option value="<%= i %>"><%= i %></option>
+                  <% end %>
+                <% end %>
+              </select>
+
+              <button class="btn-2 btn-2-default btn-2-default-orange active"><%= interaction.resource.title %></button>
+
+            <% else %>
+
+              <% vote = JSON.parse(current_user.user_interactions.find_by_interaction_id(interaction.id).aux)['vote'] %>
+
+              <select id="interaction-<%= interaction.id %>-vote-value" class="form-control" style="margin-bottom: 10px;">
+                <% (interaction.resource.vote_min..interaction.resource.vote_max).each do |i| %>
+                  <% if vote.to_i == i %>
+                    <option value="<%= i %>" selected="selected"><%= i %></option>
+                  <% else %>
+                    <option value="<%= i %>"><%= i %></option>
+                  <% end %>
+                <% end %>
+              </select>
+
+              <button class="btn-2 btn-2-default" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" <% end %> onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')" ><%= interaction.resource.title %></button>
+
+            <% end %>
+
+          </div>
+        </div>
+      <% else %>
+        <div class="row">
+          <div class="col-xs-12" style="margin-bottom: 5px; padding-left: 60px; postione: relative;">
+            <div class="interaction-baloon" style="width: 33px; position: absolute; left: 15px;"> 
+              <div class="baloon baloon-right square unchosen"> 
+                <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+              </div>
+            </div>
+
+            <select id="interaction-<%= interaction.id %>-vote-value" class="form-control" style="margin-bottom: 10px;">
+              <% (interaction.resource.vote_min..interaction.resource.vote_max).each do |i| %>
+                <option value="<%= i %>"><%= i %></option>
+              <% end %>
+            </select>
+
+            <button class="btn-2 btn-2-default" onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" <% end %>><%= interaction.resource.title %></button>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <%= render partial: "/call_to_action/feedback_small_undervideo", locals: { interaction_reward_status: interaction_reward_status, user_interaction: user_interaction, interaction: interaction, calltoaction_id: calltoaction_id, aux: aux } %>
+
+</div>

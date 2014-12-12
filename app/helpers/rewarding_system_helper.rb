@@ -130,7 +130,6 @@ module RewardingSystemHelper
       if rule_should_be_evaluated(rule, user_interaction, outcome)
         begin
           if !rule.options.key?(:condition) || eval(rule.options[:condition])
-            outcome.info << ["rule evaluation", { rule_name: rule.name, value: true }] 
             outcome.matching_rules << rule.name
             Outcome.merge_rewards(outcome.reward_name_to_counter, rule.normalized_rewards)          
             merge_user_rewards(self.user_rewards, rule.normalized_rewards)

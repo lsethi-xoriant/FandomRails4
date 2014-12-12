@@ -1,0 +1,157 @@
+<% tag_menu = get_tags_with_tag("miniformat") %>
+<% special_guest_tag = Tag.find_by_name("special-guest") %>
+<% if tag_menu.any? %>
+
+		<div class="col-sm-12" style="margin-top: 15px;">
+			<div class="flexslider flexslider-desktop hidden-xs">
+				<div class="flex-viewport-shadow"></div>
+			  <ul class="slides">
+			    <% tag_menu.each do |tag| %>
+			    	<% background = tag.tag_fields.select { |tf| tf.name == "label-background" }.map { |tf| tf.value }.first %>
+			    	<% icon = tag.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>
+			    	<% title = tag.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
+	          <li id="tag-<%= tag.id %>" class="text-center flexslider-desktop-item" style="background-color: <%= background %>;">
+	          	<div class="flexslider-item-active hidden"></div>
+	          	<p><span class="<%= icon %>" style="color: #fff; font-size: 42px; margin-top:10px"></span></p>
+	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;"><%= title %></p>
+	          	<!--<img src="<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>">-->
+	          </li>
+	        <% end %>
+			  </ul>
+			</div>
+
+			<div class="flexslider flexslider-mobile visible-xs">
+				<div class="flex-viewport-shadow"></div>
+			  <ul class="slides">
+			    <% tag_menu.each do |tag| %>
+			    	<% background = tag.tag_fields.select { |tf| tf.name == "label-background" }.map { |tf| tf.value }.first %>
+			    	<% icon = tag.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>
+			    	<% title = tag.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
+	          <li class="text-center flexslider-mobile-item tag-<%= tag.id %>" style="background-color: <%= background %>;">
+	          	<div class="flexslider-item-active hidden"></div>
+	          	<p><span class="<%= icon %>" style="color: #fff; font-size: 42px; margin-top:10px"></span></p>
+	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;"><%= title %></p>
+	          	<!--<img src="<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>">-->
+	          </li>
+	        <% end %>
+			  </ul>
+			</div>
+		</div>
+
+		<div class="col-sm-12 hidden-xs" style="margin-bottom: 15px;">
+			<% tag_menu.each do |tag| %>
+				<img id="tag-img-<%= tag.id %>" class="tag-img hidden" style="width: 100%;" src="<%= tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload.url }.first %>">
+			<% end %>
+		</div>
+
+    <!--
+		<div class="container-menu" style="background-color: rgba(0, 0, 0, 0.6); float: left; width: 100%; padding: 10px 0 0 0;">
+			<div class="submenu">
+				  <div class="col-xs-12 filter-menu-tag">
+				      <div class="flexslider">
+				        <ul class="slides filter-home-menu">
+				        	<% 			        	
+				        	all_filter = tag_menu.detect{ |tm| tm.name == "home_filter_all" }
+				        	tag_menu.delete(all_filter)
+				        	tag_menu.unshift(all_filter) 
+				        	%>
+				        	<% if is_special_guest_active %>
+				         	<li>
+				                <div class="slide slide-upload" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= special_guest_tag.nil? ? asset_path('special_guest_thumb.jpg') : special_guest_tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                    <div class="comment-center">
+				                        <a href="/gallery/55">
+									      <div class="row">
+									        <div class="col-md-12">
+									          <h2><%= special_guest_tag.nil? ? "SPECIAL GUEST" : special_guest_tag.tag_fields.find_by_name("title").try(:value) %></h2>
+									        </div>
+									      </div>
+									    </a>
+				                    </div>
+				                </div>
+				            </li> 
+				        <% end %>
+				        	<% tag_menu.each do |tag| %>
+				            <li>
+				                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" && !single_cta %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                    <div class="comment-center">
+				                        <a href="javascript: void(0)" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
+									      <div class="row">
+									        <div class="col-md-12">
+									          <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
+									        </div>
+									      </div>
+									    </a>
+				                    </div>
+				                </div>
+				                <div class="triangle" style="<%= tag.name == "home_filter_all" && !single_cta ? "" : "display: none;" %>"></div>
+				            </li>
+			            <% end %>
+			            
+				         </ul>
+				      </div>
+				    </div>
+		
+			</div>
+		</div>
+		<% unless single_cta %>
+		<div class="menu-info-extra hidden-xs">
+			<% get_tags_with_tag("menu").each do |tag| %>
+				<div class="extra-info extra-info-<%= tag.id %> <%= "extra-info-all" if tag.name == "home_filter_all" %>">
+					<img class="extra-info-img" src="<%= tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload }.first %>" />
+					<span class="extra-info-description text-with-shadow"><%= tag.tag_fields.select { |tf| tf.name == "description" }.map { |tf| tf.value }.first %></span>
+					<div id="banner-rai" class="hidden-xs" style="position: absolute; right: 25px; bottom: 15px; width: 300px; height: 250px;"></div>
+				</div>
+			<% end %>
+		</div>
+		<% end %>
+		-->
+
+<% end %>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	  $('.flexslider-desktop').flexslider({
+	    animation: "slide",
+	    slideshow: false,
+	    animationLoop: false,
+	    touch: true,
+	    itemWidth: 160,
+	    itemMargin: 8,
+	    controlNav: false,
+	    prevText: "",
+			nextText: "",
+		});
+
+		$(".flexslider-desktop-item").first().find(".flexslider-item-active").removeClass("hidden");
+		$(".tag-img").first().removeClass("hidden");
+
+		$(".flexslider-desktop-item").bind("click", function() {
+			$(".flexslider-desktop-item").find(".flexslider-item-active").addClass("hidden");
+			$(this).find(".flexslider-item-active").removeClass("hidden");
+			$(".tag-img").addClass("hidden");
+			$($(this).attr("id").replace("tag-", "#tag-img-")).removeClass("hidden");
+		});
+
+		$(".flexslider-mobile-item").first().find(".flexslider-item-active").removeClass("hidden");
+
+		$(".flexslider-mobile-item").bind("click", function() {
+			$(".flexslider-mobile-item").find(".flexslider-item-active").addClass("hidden");
+			$(this).find(".flexslider-item-active").removeClass("hidden");
+		});
+
+		$('.flexslider-mobile').flexslider({
+	    animation: "slide",
+	    slideshow: false,
+	    animationLoop: false,
+	    touch: true,
+	    itemWidth: 170,
+	    itemMargin: 8,
+	    controlNav: false,
+	    prevText: "",
+			nextText: ""
+		});
+	});
+
+	
+</script>

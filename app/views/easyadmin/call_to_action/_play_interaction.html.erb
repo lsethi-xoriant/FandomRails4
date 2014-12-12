@@ -15,6 +15,8 @@
         <% if builder.object.resource_type == "Play" %>
           <%= render 'play-form', :f => builder %>
         <% end %>
+        <label class="text-input">Visibile</label>
+        <%= builder.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
       <% end %>
     </div>
   </div>

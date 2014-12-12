@@ -1,0 +1,17 @@
+<div id="iframe-interaction" class="col-xs-4" style="position: relative; padding-left: 60px; margin-top: 23px;">
+  <div class="interaction-baloon" style="width: 33px; position: absolute; left: 15px;"> 
+    <div class="baloon baloon-right square unchosen"> 
+      <img src="<%= current_avatar %>" class="img-responsive hidden" style="width: 100%; border-radius: 3px;">
+    </div>
+  </div>
+
+  <button class="button-inter-check btn-2 ho-visto" <% unless mobile_device?() %> onmouseenter="onEnterInteraction(<%= interaction.id %>, null)" onmouseleave="onLeaveInteraction(<%= interaction.id %>, null)" <% end %> onclick="showRegistrateView()"><%= interaction.resource.title %></button>
+
+</div>
+<div class="col-xs-1 no-pad" style="margin-top: 18px;">
+  <h4>
+    <span class="label label-warning" style="padding-top: 7px;">+1
+      <span class="glyphicon glyphicon-star"></span>
+    </span>
+  </h4>
+</div>

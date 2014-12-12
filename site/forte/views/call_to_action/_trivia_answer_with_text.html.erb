@@ -1,0 +1,32 @@
+<% if current_user && user_interaction %>
+  <!-- CURRENT USER HAS ALREADY RESPONDED -->
+  <% if interaction.resource.one_shot %>
+    <div id="answer-<%= answer.id %>" class="col-xs-12 answer-interaction-<%= interaction.id %>">
+
+      <div class="row">
+        <div class="col-xs-12" style="margin-bottom: 5px; padding-right: 0; padding-left: 45px; postione: relative;">
+          <% if user_interaction.answer_id == answer.id %>
+            <img src="<%= current_avatar %>" class="pin-avatar">
+          <% else %>
+            <div class="pin-empty"></div>
+          <% end %>
+
+          <a class="button-inter-<%= interaction.id %> btn btn-block <%= answer.correct ? "btn-success" : "btn-primary btn-primary-interaction" %>"><%= answer.text %></a>
+        </div>
+      </div>
+
+    </div>
+  <% end %>
+<% else %>
+  <!-- CURRENT USER HAS NOT RESPONDED -->
+  <div id="answer-<%= answer.id %>" class="col-xs-12 answer-interaction-<%= interaction.id %>">
+
+    <div class="row">
+      <div class="col-xs-12" style="margin-bottom: 5px; padding-right: 0; padding-left: 45px; postione: relative;">
+        <div class="pin-empty"></div>
+        <a class="button-inter-<%= interaction.id %> btn btn-default btn-block" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></a>
+      </div>
+    </div>
+
+  </div>
+<% end %>
