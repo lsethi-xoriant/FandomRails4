@@ -33,10 +33,10 @@ class Easyadmin::EasyadminRewardController < ApplicationController
 
   def edit
     @reward = Reward.find(params[:id])
-    if @reward.aux.blank?
+    if @reward.extra_fields.blank?
       @extra_options = {}
     else
-      @extra_options = JSON.parse(@reward.aux)
+      @extra_options = JSON.parse(@reward.extra_fields)
     end
     @currency_rewards = Reward.where("spendable = TRUE")
     @tag_list = get_reward_tag_list(@reward)

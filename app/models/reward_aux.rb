@@ -1,3 +1,0 @@
-class RewardAux < ActiveModelWithJSON
-  
-end
