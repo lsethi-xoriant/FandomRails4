@@ -23,3 +23,4 @@
 //= require fandom-utils
 //= require fastclick
 //= require respond.min
+//= require ui-bootstrap-0.12.min
