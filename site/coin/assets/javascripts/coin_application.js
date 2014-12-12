@@ -11,6 +11,7 @@
 //= require angularjs/notice
 //= require angularjs/comment
 //= require angularjs/ranking
+//= require angularjs/search
 //= require config
 //= require angularjs/stream_calltoaction
 //= require angularjs/eventfilter
@@ -22,3 +23,4 @@
 //= require fandom-utils
 //= require fastclick
 //= require respond.min
+//= require ui-bootstrap-0.12.min

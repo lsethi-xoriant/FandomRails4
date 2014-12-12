@@ -63,10 +63,4 @@ Fandom::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
-  Paperclip.options[:command_path] = "/usr/local/bin"
-
-  # config/environments/production.rb
-  if config.deploy_settings.key?('paperclip')
-    config.paperclip_defaults = config.deploy_settings['paperclip']
-  end
 end
