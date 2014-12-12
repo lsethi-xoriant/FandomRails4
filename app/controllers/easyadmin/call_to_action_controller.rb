@@ -34,7 +34,6 @@ class Easyadmin::CallToActionController < ApplicationController
     if @cta.errors.any?
       @tag_list = params[:tag_list].split(",")
       @extra_options = params[:extra_options]
-      
       render template: "/easyadmin/call_to_action/new_cta"     
     else
       tag_list = params[:tag_list].split(",")
