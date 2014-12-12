@@ -51,6 +51,22 @@ module CacheKeysHelper
   def get_interaction_for_calltoaction_by_resource_type_cache_key(calltoaction_id, resource_type)
     "interaction_for_calltoaction_#{calltoaction_id}_by_resource_type_#{resource_type}"
   end
+  
+  def get_comments_count_for_cta_key(cta_id)
+    "comments_count_for_cta_#{cta_id}"
+  end
+  
+  def get_likes_count_for_cta_key(cta_id)
+    "comments_likes_for_cta_#{cta_id}"
+  end
+  
+  def get_tag_names_for_cta_key(cta_id)
+    "tag_names_for_cta_key_#{cta_id}"
+  end
+  
+  def get_tag_names_for_tag_key(tag_id)
+    "tag_names_for_tag_key_#{tag_id}"
+  end
 
   # CTA and tags
   # ~~~~~
@@ -65,6 +81,10 @@ module CacheKeysHelper
 
   def get_ctas_with_tag_cache_key(tag_name)
     "ctas_with_tag_#{tag_name}"
+  end
+  
+  def get_ctas_with_tag_with_match_cache_key(tag_name)
+    "ctas_with_tag_with_match_#{tag_name}"
   end
   
   def get_rewards_with_tag_cache_key(tag_name)
@@ -85,7 +105,11 @@ module CacheKeysHelper
   def get_tags_with_tag_cache_key(tag_name)
     "tags_with_tag_#{tag_name}"
   end
-
+  
+  def get_tags_with_tag_with_match_cache_key(tag_name, query)
+    "tags_with_tag_with_match_#{tag_name}_#{query}"
+  end
+  
   # Rankings
   # ~~~~~
   def get_general_position_key(user_id)
@@ -142,6 +166,13 @@ module CacheKeysHelper
   
   def get_user_already_won_contest(user_id, interaction_id)
     "user_#{user_id}_already_won_contest_#{interaction_id}"
+  end
+  
+  # BROWSE
+  # ~~~~~~
+  
+  def get_browse_search_results_key(term)
+    "browse_search_result_#{term}"
   end
 
   # COIN

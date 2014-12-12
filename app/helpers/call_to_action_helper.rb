@@ -65,6 +65,8 @@ module CallToActionHelper
         answers = build_answers_for_resource(interaction, resource.answers, resource_type, user_interaction)
       when "comment"
         comment_info = build_comments_for_resource(interaction)
+      when "upload"
+        upload_info = build_uploads_for_resource(interaction)
       end
 
       interaction_info_list << {
@@ -80,7 +82,8 @@ module CallToActionHelper
             "one_shot" => resource_one_shot,
             "answers" => answers,
             "providers" => resource_providers,
-            "comment_info" => comment_info
+            "comment_info" => comment_info,
+            "upload_info" => upload_info
           }
         },
         "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction),
@@ -132,6 +135,30 @@ module CallToActionHelper
       "comments_total_count" => comments_total_count,  
       "captcha_data" => captcha_data,
       "open" => false
+    }
+  end
+  
+  def build_uploads_for_resource(interaction)
+    upload_interaction = interaction.resource
+    uploads_for_resource = {
+      "template_cta_id" => upload_interaction.call_to_action_id,
+      "upload_number" => upload_interaction.upload_number,
+      "privacy" => get_privacy_info(upload_interaction),
+      "releasing" => get_releasing_info(upload_interaction)
+    }
+  end
+  
+  def get_privacy_info(upload)
+    privacy_info = {
+      "required" => upload.privacy?,
+      "description" => upload.privacy_description
+    }
+  end
+  
+  def get_releasing_info(upload)
+    privacy_info = {
+      "required" => upload.releasing?,
+      "description" => upload.releasing_description
     }
   end
 
@@ -187,12 +214,13 @@ module CallToActionHelper
         aux[:shown_interactions_count] = shown_interactions_count
       end
       aux[:next_interaction_present] = (interactions.count > 1)
-      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: outcome, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux }, layout: false, formats: :html
+      #render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: outcome, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux }, layout: false, formats: :html
       interaction_id = next_quiz_interaction.id
     else
-      render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: interactions, calltoaction: calltoaction, aux: aux }, layout: false, formats: :html
+      #render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: interactions, calltoaction: calltoaction, aux: aux }, layout: false, formats: :html
     end
-
+    
+    render_interaction_str = ""
     response = Hash.new
     response = {
       next_quiz_interaction: (interactions.count > 1),
@@ -414,6 +442,26 @@ module CallToActionHelper
   
   def get_random_cta_by_tags(*tags_name)
     get_ctas_with_tags(tags_name).sample
+  end
+  
+  def get_number_of_commtents_for_cta(cta)
+    cache_short(get_comments_count_for_cta_key(cta.id)) do
+      comment_interaction = cta.interactions.find_by_resource_type("Comment")
+      if comment_interaction
+        comment_interaction.resource.user_comment_interactions.where("approved = true").count
+      else
+        -1
+      end
+    end
+  end
+  
+  def get_number_of_likes_for_cta(cta)
+    like_interaction = cta.interactions.find_by_resource_type("like")
+    if like_interaction
+      like_interaction.user_interactions.where("(aux->>'like') = true").count
+    else
+      -1
+    end
   end
   
 end

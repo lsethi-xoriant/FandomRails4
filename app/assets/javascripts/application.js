@@ -6,11 +6,13 @@
 //= require angular-sanitize
 //= require angular-animate
 //= require angular-route
+//= require angular-animate
 //= require angularjs/ng-table
 //= require angularjs/fandom
 //= require angularjs/notice
 //= require angularjs/comment
 //= require angularjs/ranking
+//= require angularjs/search
 //= require config
 //= require angularjs/stream_calltoaction
 //= require angularjs/eventfilter
@@ -21,3 +23,4 @@
 //= require jquery.jplayer
 //= require fandom-utils
 //= require flowplayer.min
+//= require ui-bootstrap-0.12.min

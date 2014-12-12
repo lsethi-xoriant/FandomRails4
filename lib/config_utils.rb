@@ -51,11 +51,18 @@ module ConfigUtils
     attribute :anonymous_interaction, :default => false
     attribute :init_ctas, :default => 3
     attribute :force_landing, :default => false
+    attribute :search_results_per_page, :default => 5
 
     def unbranded?
       self.id == 'fandom'
     end
   end
+  
+  # this can be used to initialize $site in rails console
+  TEST_SITE = FandomSite.new(
+    id: 'test-tenant', 
+    title: 'Test Tenant',
+    domains: 'test.fandomlab.com')
 
   # Registers some new site, with client-specific configuration data and options, in Fandom.
   #
