@@ -10,7 +10,7 @@
 			    	<% background = tag.tag_fields.select { |tf| tf.name == "label-background" }.map { |tf| tf.value }.first %>
 			    	<% icon = tag.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>
 			    	<% title = tag.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
-	          <li id="tag-<%= tag.id %>" class="text-center flexslider-desktop-item" style="background-color: <%= background %>;">
+	          <li id="tag-<%= tag.id %>" class="text-center flexslider-desktop-item" style="background-color: <%= background %>;" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
 	          	<div class="flexslider-item-active hidden"></div>
 	          	<p><span class="<%= icon %>" style="color: #fff; font-size: 42px; margin-top:10px"></span></p>
 	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;"><%= title %></p>
@@ -27,7 +27,7 @@
 			    	<% background = tag.tag_fields.select { |tf| tf.name == "label-background" }.map { |tf| tf.value }.first %>
 			    	<% icon = tag.tag_fields.select { |tf| tf.name == "icon" }.map { |tf| tf.value }.first %>
 			    	<% title = tag.tag_fields.select { |tf| tf.name == "title" }.map { |tf| tf.value }.first %>
-	          <li class="text-center flexslider-mobile-item tag-<%= tag.id %>" style="background-color: <%= background %>;">
+	          <li class="text-center flexslider-mobile-item tag-<%= tag.id %>" style="background-color: <%= background %>;" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
 	          	<div class="flexslider-item-active hidden"></div>
 	          	<p><span class="<%= icon %>" style="color: #fff; font-size: 42px; margin-top:10px"></span></p>
 	          	<p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;"><%= title %></p>

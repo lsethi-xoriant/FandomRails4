@@ -61,9 +61,9 @@
       </div>
 
       <% if interaction.resource.one_shot && current_user && user_interaction %>
-        <button class="versus-btn-container-left btn btn-default button-inter-<%= interaction.id %> <%= "active" if user_answer %>" ><%= answer.text %></button>
+        <button class="versus-btn-container-left btn btn-default button-inter-<%= interaction.id %> active <%= user_answer ? "btn-yellow" : "btn-gray" %>" ><%= answer.text %></button>
       <% else %>
-        <button class="versus-btn-container-left btn btn-default button-inter-<%= interaction.id %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
+        <button class="versus-btn-container-left btn btn-default hover-yellow button-inter-<%= interaction.id %>" onclick="updateAnswer(<%= interaction.call_to_action.id %>, <%= interaction.id %>, <%= answer.id %>, '<%= interaction.when_show_interaction %>')"><%= answer.text %></button>
         <!--
         <a href="javascript: void(0)" style="margin-bottom: 0; <%= "background-color: orange;" if user_answer && current_user %>" class="button-inter-<%= interaction.id %>" >
           <img src="<%= answer.image(:medium) %>" style="width: 100%;">

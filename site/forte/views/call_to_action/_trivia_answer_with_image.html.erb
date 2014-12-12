@@ -2,7 +2,7 @@
   <% user_answer = user_interaction.answer_id == answer.id %>
   <!-- CURRENT USER HAS ALREADY RESPONDED -->
   <% if interaction.resource.one_shot %>
-    <div id="answer-<%= answer.id %>" class="col-xs-6 text-center answer-interaction-<%= interaction.id %>">
+    <div id="answer-<%= answer.id %>" class="col-xs-6 text-center answer-interaction-<%= interaction.id %>" style="margin-bottom: 15px;">
 
         <div class="row">
 
@@ -13,7 +13,7 @@
               <% else %>
                 <div class="pin-empty trivia-pin" ></div>
               <% end %>
-              <div class="trivia-img-container-left <%= answer.correct ? "trivia-img-correct" : "trivia-img-wrong" %>">
+              <div class="trivia-img-container-left <%= answer.correct ? "trivia-img-correct" : (user_answer ? "trivia-img-wrong" : "trivia-img-active") %>">
                 <a href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %>">
                   <img src="<%= answer.image(:medium) %>" style="width: 100%;">
                 </a>
@@ -22,7 +22,7 @@
           <% end %>
           <% if position % 2 != 0 %>
             <div class="col-xs-12 text-right">
-              <div class="trivia-img-container-right <%= answer.correct ? "trivia-img-correct" : "trivia-img-wrong" %>">
+              <div class="trivia-img-container-right <%= answer.correct ? "trivia-img-correct" : (user_answer ? "trivia-img-wrong" : "trivia-img-active") %>">
                 <a href="javascript: void(0)" style="margin-bottom: 0;" class="button-inter-<%= interaction.id %>">
                   <img src="<%= answer.image(:medium) %>" style="width: 100%;">
                 </a>
@@ -41,7 +41,7 @@
   <% end %>
 <% else %>
   <!-- CURRENT USER HAS NOT RESPONDED -->
-  <div id="answer-<%= answer.id %>" class="col-xs-6 text-center answer-interaction-<%= interaction.id %>">
+  <div id="answer-<%= answer.id %>" class="col-xs-6 text-center answer-interaction-<%= interaction.id %>" style="margin-bottom: 15px;">
 
     <div class="row">
       <% if position % 2 == 0 %>
