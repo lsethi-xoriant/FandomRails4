@@ -317,7 +317,6 @@ h1, h2, h3 {
     background: none repeat scroll 0 0 #ff9d00;
     color: #000;
     cursor: pointer;
-    line-height: 35px;
     margin-left: -22px;
     margin-right: -25px;
 }
@@ -673,8 +672,13 @@ h1, h2, h3 {
 }
 
 body {
+    padding-top: 40px;
     background-color: rgba(0, 0, 0, 0);
     background-image: url("forte/bg.jpg");
+    background-size: 100% auto;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
     font-family: 'Roboto Condensed', helvetica, arial, sans-serif;
 }
@@ -1759,10 +1763,6 @@ body {
         min-height: 0;
     }
 
-    .cta-stream-heading {
-        min-height: 0;
-    }
-
     .cover-countdown {
         position: static; 
         z-index: 0;
@@ -1773,9 +1773,21 @@ body {
         background-size: auto 100%;
     }
 
+    .cta-stream-heading {
+        min-height: 0;
+    }
+
+    .cta-stream {
+        min-height: 395px;
+    }
+
     .undervideo-feedback {
         position: static;
         margin-top: 30px; 
+    }
+
+    .undervideo-feedback {
+        margin-top: 15px; 
     }
 
     .cta-stream-heading.feedback {
@@ -1830,10 +1842,6 @@ body {
     .go-init {
         margin-left: -14px;
         margin-right: -14px;
-    }
-
-    .undervideo-feedback {
-        margin-top: 15px; 
     }
     
     /*
@@ -2200,6 +2208,20 @@ p {
     border: 4px solid #ccc;
 }
 
+.versus-btn-container-left {
+    height: 96px; 
+    width: 100px; 
+    margin: 0 !important; 
+    white-space: normal;
+}
+
+.versus-btn-container-right {
+    height: 96px; 
+    width: 100px; 
+    margin: 0 !important; 
+    white-space: normal;
+}
+
 .versus-progress-bar-container-left {
     height: 100px !important; 
     width: 10px !important; 
@@ -2230,7 +2252,8 @@ p {
     bottom: 0;
 }
 
-.versus-img-container-left:hover, .versus-img-container-left.active {
+.versus-img-container-left:hover, .versus-img-container-left.active,
+.trivia-img-container-left:hover, .trivia-img-container-left.active {
     border: 4px solid #E8BE31;
 }
 
@@ -2275,11 +2298,47 @@ p {
     bottom: 0;
 }
 
-.versus-img-container-right:hover, .versus-img-container-right.active {
+.trivia-img-container-left {
+    height: 80px; 
+    width: 80px; 
+    margin-left: 20px; 
+    border: 4px solid #ccc;
+}
+
+.trivia-img-container-right {
+    height: 80px; 
+    width: 80px; 
+    margin-right: 20px; 
+    margin-left: auto;
+    border: 4px solid #ccc;
+}
+
+.trivia-pin {
+    margin-top: 19px;
+}
+
+.versus-img-container-right:hover, .versus-img-container-right.active,
+.trivia-img-container-right:hover, .trivia-img-container-right.active  {
     border: 4px solid #E8BE31;
 }
 
 @media (max-width: $screen-md-min) and (min-width: $screen-sm-min) { 
+    .trivia-img-container-left {
+        height: 55px; 
+        width: 55px; 
+        margin-left: 20px; 
+        border: 2px solid #ccc;
+    }
+    .trivia-img-container-right {
+        height: 55px; 
+        width: 55px; 
+        margin-right: 20px; 
+        margin-left: auto;
+        border: 2px solid #ccc;
+    }
+    .trivia-pin {
+        margin-top: 9px;
+    }
     .versus-img-container-left {
         height: 70px; 
         width: 70px; 
@@ -2332,20 +2391,75 @@ p {
             margin-top: 5px;
         }
     }
+    .versus-btn-container-left {
+        height: 66px; 
+        width: 70px; 
+        margin: 0 !important; 
+        white-space: normal;
+    }
+
+    .versus-btn-container-right {
+        height: 66px; 
+        width: 70px; 
+        margin: 0 !important; 
+        white-space: normal;
+    }
+}
+
+.mobile-menu {
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+}
+
+.trivia-img-correct {
+    border-color: green;
+}
+
+.trivia-img-wrong {
+    border-color: red;
 }
 
 @media (max-width: $screen-sm-min) { 
+    body {
+        background-image: none;
+        background-color: #1b2531;
+    }
+    .trivia-img-container-left {
+        height: 70px; 
+        width: 70px; 
+        margin-left: 20px; 
+        border: 4px solid #ccc;
+    }
+    .trivia-img-container-right {
+        height: 70px; 
+        width: 70px; 
+        margin-right: 20px; 
+        margin-left: auto;
+        border: 4px solid #ccc;
+    }
+    .trivia-pin {
+        margin-top: 15px;
+    }
+    .mobile-menu {
+        padding-left: 0 !important; 
+        padding-right: 0 !important;
+    }
     .flex-direction-nav a {
         margin: -20px 0 0 !important;
     }
     .cta-stream {
-        min-height: 430px;
+        min-height: 350px;
     }
     .question {
         font-size: 14px;
         font-weight: normal;
         padding-top: 0;
         padding-bottom: 10px;
+    }
+    .cta-stream-heading-trivia {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 295px;
     }
     .cta-stream-heading-versus {
         margin-left: auto;
@@ -2403,6 +2517,19 @@ p {
             font-size: 20px; 
             margin-top: 5px;
         }
+    }
+    .versus-btn-container-left {
+        height: 76px; 
+        width: 80px; 
+        margin: 0 !important; 
+        white-space: normal;
+    }
+
+    .versus-btn-container-right {
+        height: 76px; 
+        width: 80px; 
+        margin: 0 !important; 
+        white-space: normal;
     }
 }
 
@@ -2793,5 +2920,11 @@ fieldset[disabled] .btn-success.active {
     width: 30px;
 }
 
+.cta-page {
+    border-width: 3px !important;
+    border-color: whitesmoke !important; 
+}
 
-
+.calltoaction-footer {
+    padding-bottom: 6px;
+}

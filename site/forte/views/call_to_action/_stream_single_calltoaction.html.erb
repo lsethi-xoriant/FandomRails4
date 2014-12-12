@@ -26,7 +26,7 @@
     
     <% user_interaction, interaction = has_done_share_interaction(calltoaction) %>
     <% if interaction || (!active_calltoaction_id && calltoaction_comment_interaction && !calltoaction_comment_interaction.empty?) %>
-      <div class="panel-footer">
+      <div class="panel-footer calltoaction-footer">
         <div class="row">
           <div class="col-xs-7 col-sm-3" id="bottom-feedback-share-<%= calltoaction.id %>">       
             <% if interaction %>

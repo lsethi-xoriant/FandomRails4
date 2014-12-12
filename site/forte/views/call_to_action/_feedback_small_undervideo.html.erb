@@ -23,10 +23,10 @@
 
       <% if aux[:show_next_calltoaction_button] %>
         <% if aux[:next_interaction_present] %>
-          <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn-2 btn-2-small go-on <%= "btn-2-small-desktop" if aux[:show_next_calltoaction_button] %>" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
+          <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn btn-primary go-on <%= "btn-2-small-desktop" if aux[:show_next_calltoaction_button] %>" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
         <% else %>
           <!-- NEXT CALLTOACTION -->
-          <a class="btn-2 btn-2-small btn-2-small-desktop go-on" role="button" href="/custom_call_to_action/<%= interaction.call_to_action_id %>/next" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
+          <a class="btn btn-primary go-on" role="button" href="/custom_call_to_action/<%= interaction.call_to_action_id %>/next" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
         <% end %>
       <% else %>
         <!-- NEXT INTERACTION -->
@@ -35,7 +35,7 @@
 
     <% else %>
 
-      <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn-2 btn-2-small go-on hidden" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px; width: 50%;">VAI AVANTI</a>
+      <a href="javascript:void(0);" id="interaction-<%= interaction.id %>-next" class="btn btn-primary go-on hidden" role="button" onclick="nextInteraction(<%= calltoaction_id %>)" style="margin-bottom: 15px;">VAI AVANTI</a>
       
     <% end %>
 

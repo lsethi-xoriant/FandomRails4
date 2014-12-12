@@ -2,7 +2,7 @@
 <% special_guest_tag = Tag.find_by_name("special-guest") %>
 <% if tag_menu.any? %>
 
-		<div class="col-sm-12" style="margin-top: 15px;">
+		<div class="col-sm-12 mobile-menu" style="margin-top: 15px;">
 			<div class="flexslider flexslider-desktop hidden-xs">
 				<div class="flex-viewport-shadow"></div>
 			  <ul class="slides">
@@ -21,7 +21,7 @@
 			</div>
 
 			<div class="flexslider flexslider-mobile visible-xs">
-				<div class="flex-viewport-shadow"></div>
+				<!--<div class="flex-viewport-shadow"></div>-->
 			  <ul class="slides">
 			    <% tag_menu.each do |tag| %>
 			    	<% background = tag.tag_fields.select { |tf| tf.name == "label-background" }.map { |tf| tf.value }.first %>
@@ -116,11 +116,11 @@
 	    slideshow: false,
 	    animationLoop: false,
 	    touch: true,
-	    itemWidth: 160,
+	    itemWidth: 150,
 	    itemMargin: 8,
 	    controlNav: false,
 	    prevText: "",
-			nextText: "",
+			nextText: ""
 		});
 
 		$(".flexslider-desktop-item").first().find(".flexslider-item-active").removeClass("hidden");
@@ -145,7 +145,7 @@
 	    slideshow: false,
 	    animationLoop: false,
 	    touch: true,
-	    itemWidth: 170,
+	    itemWidth: 130,
 	    itemMargin: 8,
 	    controlNav: false,
 	    prevText: "",
