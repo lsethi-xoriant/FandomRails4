@@ -153,8 +153,8 @@ function addMandatoryFieldsElements(mandatory_fields, modelName, fieldName) {
 
 	mandatory_fields.forEach(function(mandatory_field) {
 			addFieldElements(modelName, fieldName, mandatory_field, false);
-	        	$('#name-for-' + fieldName + '-field-' + mandatory_field).val(mandatory_field).attr('readonly', true);
-	        	updateValueElementName($("#name-for-" + fieldName + "-field-" + mandatory_field), modelName, fieldName);
-	        	$('#value-for-' + fieldName + '-field-' + mandatory_field).val(null);
+	        $('#name-for-' + fieldName + '-field-' + mandatory_field).val(mandatory_field).attr('readonly', true);
+	        updateValueElementName($("#name-for-" + fieldName + "-field-" + mandatory_field), modelName, fieldName);
+	        $('#value-for-' + fieldName + '-field-' + mandatory_field).val(null);
 	});
 };

@@ -1,4 +1,4 @@
-class Reward < ActiveRecord::Base
+class Reward < ActiveRecordWithJSON
   include DateMethods
 
   attr_accessible :name,
@@ -25,9 +25,13 @@ class Reward < ActiveRecord::Base
     :countable,
     :numeric_display,
     :call_to_action_id,
-    :reward_tag_ids
+    :reward_tag_ids,
+    :aux,
+    :extra_fields
 
   attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time # Accessor attributes for easyadmin.
+
+  json_attributes [[:aux, EmptyAux], [:extra_fields, EmptyAux]]
 
   validates_presence_of :title
   validates_presence_of :name

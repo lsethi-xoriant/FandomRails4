@@ -35,17 +35,9 @@ Fandom::Application.configure do
   # Do not compress assets
   config.assets.compress = false
 
-  Paperclip.options[:command_path] = "/usr/local/bin"
-
   if config.deploy_settings.key?('asset_host')
     puts "using asset_host: #{config.deploy_settings['asset_host']}"
     config.action_controller.asset_host = config.deploy_settings['asset_host']
   end
 
-  # config/environments/production.rb
-  if config.deploy_settings.key?('paperclip')
-    config.paperclip_defaults = config.deploy_settings['paperclip']
-  end
-
-  
 end

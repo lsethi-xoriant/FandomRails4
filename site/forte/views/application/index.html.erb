@@ -1,5 +1,7 @@
 <% template_cache_short('index', !user_signed_in?) do %>
 	
+	<%= render partial: "/application/user_bar" %>
+		
 	<div class="container" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= !current_user.blank? %>, <%= @calltoactions.to_json %>, '<%= @calltoactions_active_count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, '<%= "#{request.protocol}#{request.host}/" %>', null, <%= @aux.to_json %>)">   
 	
 	  <div class="row">
@@ -13,7 +15,7 @@
 	  <div class="row">      
 	    <div class="col-sm-6 col-sm-offset-3">
 	      <div id="append-other" class="text-center" style="margin-bottom: 20px;">
-	        <button class="btn btn-append" href="javascript: void(0)" onclick="appendCallToAction();"><i class="fa fa-plus-circle"></i> CARICA ALTRI</button>
+	        <button class="btn btn-append" href="javascript: void(0)" onclick="appendCallToAction();">CARICA ALTRI</button>
 	      </div>
 	    </div>
 	  </div>
@@ -23,7 +25,9 @@
 	<script type="text/javascript">
 	
 	  $(document).ready(function() {
-	    checkDocumentHeight("fandom");
+	  	if(isIframe()) {
+	    	checkDocumentHeight("fandom");
+	  	}
 	    
 	    <% if @tag.present? %>
 				updateFiltersMenu(<%= @tag.id %>)

@@ -66,6 +66,8 @@
 	}
 
   $(document).ready(function() {
-    checkDocumentHeight("fandom");
+    if(isIframe()) {
+      checkDocumentHeight("fandom");
+    }
   });
 </script>

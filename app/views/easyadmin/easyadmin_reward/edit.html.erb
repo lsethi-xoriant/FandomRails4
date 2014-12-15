@@ -159,6 +159,16 @@
           	</div>
           </div>
       </div>
+      
+      <div class="row">
+	  	<div class="col-md-10"><h3>CAMPI EXTRA</h3></div>
+        <div class="col-md-2">
+	  		<input type='button' value='AGGIUNGI CAMPO' id='add-button-for-extra_fields-fields' class='btn btn-primary'>
+	  	</div>
+	  </div>
+	  	<div class="row">
+	  	<div id='text-boxes-for-extra_fields-fields' class="col-lg-12"></div>
+	  	</div>
 
       <h3>TAGGING</h3>
       <hr />
@@ -227,6 +237,7 @@
 </div>
 
 <script type="text/javascript">
+
   tl = <%= raw(Tag.select("name").where("valid_to IS NULL OR valid_to > now()").map(&:name).to_json) %>;
   $(document).ready(function() {
     $('#s2_tokenization').select2({
@@ -234,5 +245,17 @@
       tags: tl,
       tokenSeparators: [","]
     })
+  });
+
+  $(document).ready(function() {
+
+	var json_field = <%= @extra_options.to_json.html_safe %>;
+	var mandatory_fields = null;
+  	var formName = 'edit_reward_' + <%= @reward.id.to_s %>
+    var modelName = "reward";
+	var fieldName = "extra_fields";
+
+	populateTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName);
+
   });
 </script>

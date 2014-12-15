@@ -23,6 +23,7 @@ class Easyadmin::EasyadminRewardController < ApplicationController
     tag_list = params[:tag_list].split(",")
     if @reward.errors.any?
       @tag_list = tag_list
+      @extra_options = params[:extra_options]
       render template: "/easyadmin/easyadmin_reward/new"
     else
       @reward.update_attribute(:currency_id,params[:currency_id])
@@ -32,6 +33,11 @@ class Easyadmin::EasyadminRewardController < ApplicationController
 
   def edit
     @reward = Reward.find(params[:id])
+    if @reward.extra_fields.blank?
+      @extra_options = {}
+    else
+      @extra_options = JSON.parse(@reward.extra_fields)
+    end
     @currency_rewards = Reward.where("spendable = TRUE")
     @tag_list = get_reward_tag_list(@reward)
   end
@@ -41,6 +47,7 @@ class Easyadmin::EasyadminRewardController < ApplicationController
     tag_list = params[:tag_list].split(",")
     unless @reward.update_attributes(params[:reward])
       @tag_list = tag_list
+      @extra_options = params[:extra_options]
       render template: "/easyadmin/easyadmin/edit_reward"   
     else
       @reward.update_attribute(:currency_id,params[:currency_id])

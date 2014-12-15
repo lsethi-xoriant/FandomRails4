@@ -214,13 +214,12 @@ module CallToActionHelper
         aux[:shown_interactions_count] = shown_interactions_count
       end
       aux[:next_interaction_present] = (interactions.count > 1)
-      #render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: outcome, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux }, layout: false, formats: :html
+      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: outcome, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux }, layout: false, formats: :html
       interaction_id = next_quiz_interaction.id
     else
-      #render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: interactions, calltoaction: calltoaction, aux: aux }, layout: false, formats: :html
+      render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: interactions, calltoaction: calltoaction, aux: aux }, layout: false, formats: :html
     end
     
-    render_interaction_str = ""
     response = Hash.new
     response = {
       next_quiz_interaction: (interactions.count > 1),

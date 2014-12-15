@@ -57,6 +57,12 @@ module ConfigUtils
       self.id == 'fandom'
     end
   end
+  
+  # this can be used to initialize $site in rails console
+  TEST_SITE = FandomSite.new(
+    id: 'test-tenant', 
+    title: 'Test Tenant',
+    domains: 'test.fandomlab.com')
 
   # Registers some new site, with client-specific configuration data and options, in Fandom.
   #

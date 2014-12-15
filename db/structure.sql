@@ -38,13 +38,6 @@ CREATE SCHEMA fandom;
 
 
 --
--- Name: forte; Type: SCHEMA; Schema: -; Owner: -
---
-
-CREATE SCHEMA forte;
-
-
---
 -- Name: maxibon; Type: SCHEMA; Schema: -; Owner: -
 --
 
@@ -218,7 +211,8 @@ CREATE TABLE call_to_actions (
     user_id integer,
     aux json,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -350,10 +344,10 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
+    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -371,10 +365,22 @@ CREATE SEQUENCE events_id_seq
 
 
 --
--- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+-- Name: events_id_seq1; Type: SEQUENCE; Schema: ballando; Owner: -
 --
 
-ALTER SEQUENCE events_id_seq OWNED BY events.id;
+CREATE SEQUENCE events_id_seq1
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_id_seq1; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+--
+
+ALTER SEQUENCE events_id_seq1 OWNED BY events.id;
 
 
 --
@@ -996,7 +1002,9 @@ CREATE TABLE rewards (
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
     not_winnable_image_updated_at timestamp without time zone,
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -1174,7 +1182,8 @@ CREATE TABLE tags (
     description text,
     locked boolean,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -1761,7 +1770,8 @@ CREATE TABLE call_to_actions (
     user_id integer,
     aux json,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -2539,7 +2549,9 @@ CREATE TABLE rewards (
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
     not_winnable_image_updated_at timestamp without time zone,
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -2717,7 +2729,8 @@ CREATE TABLE tags (
     description text,
     locked boolean,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -3304,7 +3317,8 @@ CREATE TABLE call_to_actions (
     user_id integer,
     aux json,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -4082,7 +4096,9 @@ CREATE TABLE rewards (
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
     not_winnable_image_updated_at timestamp without time zone,
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -4260,7 +4276,8 @@ CREATE TABLE tags (
     description text,
     locked boolean,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -4847,7 +4864,8 @@ CREATE TABLE call_to_actions (
     user_id integer,
     aux json,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -4979,7 +4997,7 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    "timestamp" timestamp without time zone,
+    "timestamp" character varying(255),
     level character varying(255),
     tenant character varying(255),
     user_id integer,
@@ -5359,7 +5377,9 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    text_before character varying(255),
+    text_after character varying(255)
 );
 
 
@@ -5625,7 +5645,9 @@ CREATE TABLE rewards (
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
     not_winnable_image_updated_at timestamp without time zone,
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -5803,7 +5825,8 @@ CREATE TABLE tags (
     description text,
     locked boolean,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -6390,7 +6413,8 @@ CREATE TABLE call_to_actions (
     user_id integer,
     aux json,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -7168,7 +7192,9 @@ CREATE TABLE rewards (
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
     not_winnable_image_updated_at timestamp without time zone,
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -7346,7 +7372,8 @@ CREATE TABLE tags (
     description text,
     locked boolean,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -7832,6 +7859,40 @@ ALTER SEQUENCE answers_id_seq OWNED BY answers.id;
 
 
 --
+-- Name: attachments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE attachments (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data_file_name character varying(255),
+    data_content_type character varying(255),
+    data_file_size integer,
+    data_updated_at timestamp without time zone
+);
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE attachments_id_seq OWNED BY attachments.id;
+
+
+--
 -- Name: authentications; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -7933,7 +7994,8 @@ CREATE TABLE call_to_actions (
     user_id integer,
     aux json,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -8711,7 +8773,9 @@ CREATE TABLE rewards (
     not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
     not_winnable_image_updated_at timestamp without time zone,
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -8889,7 +8953,8 @@ CREATE TABLE tags (
     description text,
     locked boolean,
     valid_from timestamp without time zone,
-    valid_to timestamp without time zone
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -9382,7 +9447,7 @@ ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq
 -- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
 --
 
-ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
+ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq1'::regclass);
 
 
 --
@@ -10814,6 +10879,13 @@ SET search_path = public, pg_catalog;
 --
 
 ALTER TABLE ONLY answers ALTER COLUMN id SET DEFAULT nextval('answers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY attachments ALTER COLUMN id SET DEFAULT nextval('attachments_id_seq'::regclass);
 
 
 --
@@ -12804,6 +12876,14 @@ ALTER TABLE ONLY answers
 
 
 --
+-- Name: attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY attachments
+    ADD CONSTRAINT attachments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: authentications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -13173,27 +13253,6 @@ CREATE UNIQUE INDEX index_call_to_actions_on_name ON call_to_actions USING btree
 --
 
 CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
-
-
---
--- Name: index_events_on_message; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_events_on_message ON events USING btree (message);
-
-
---
--- Name: index_events_on_request_uri; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
-
-
---
--- Name: index_events_on_timestamp; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
 
 
 --
@@ -14696,3 +14755,15 @@ INSERT INTO schema_migrations (version) VALUES ('20141120111044');
 INSERT INTO schema_migrations (version) VALUES ('20141120142856');
 
 INSERT INTO schema_migrations (version) VALUES ('20141201165859');
+
+INSERT INTO schema_migrations (version) VALUES ('20141211113833');
+
+INSERT INTO schema_migrations (version) VALUES ('20141212114607');
+
+INSERT INTO schema_migrations (version) VALUES ('20141212114624');
+
+INSERT INTO schema_migrations (version) VALUES ('20141212114640');
+
+INSERT INTO schema_migrations (version) VALUES ('20141215101145');
+
+INSERT INTO schema_migrations (version) VALUES ('20141215102204');

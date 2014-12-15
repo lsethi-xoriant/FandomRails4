@@ -1,18 +1,20 @@
-<div class="container-fluid login-page">
-  <div class="container" style="padding-top: 20px;">
+<div class="container login-page">
+  <div class="container">
+
+    <%= render partial: "/application/user_bar" %>
 
     <div class="row">
 
       <div class="col-sm-5 col-sm-offset-1 visible-xs">
         <div class="row" style="margin-bottom: 15px;">
           <div class="col-sm-12">
-            <p class="text-center">Accedi con il tuo profilo social</p>
+            <p class="text-center" style="margin-bottom: 15px;">Accedi con il tuo profilo social</p>
               <div class="facebook-connect">
                 <div class="form-group text-left">
-                  <button type="button" class="btn-2 btn-2-fb" onclick="gigyaSocializeLogin('facebook')"><i class="fa fa-facebook"></i> | CONNECT</button>
+                  <button type="button" class="btn btn-facebook btn-block" onclick="gigyaSocializeLogin('facebook')"><i class="fa fa-facebook"></i> | CONNECT</button>
                 </div>
                 <div class="form-group text-left">
-                  <button class="btn-2 btn-2-tt" onclick="gigyaSocializeLogin('twitter')"><i class="fa fa-twitter"></i> | CONNECT</button>
+                  <button class="btn btn-twitter btn-block" onclick="gigyaSocializeLogin('twitter')"><i class="fa fa-twitter"></i> | CONNECT</button>
                 </div>
             </div>
           </div>
@@ -23,7 +25,7 @@
         <div class="row">      
           <%= form_for resource, :url => "/users/rai/sign_in/create" do |f| %>
             <div class="col-sm-12">
-              <p>Accedi con il tuo profilo <img src="/assets/rai-tv.png" class="img-responsive" style="display: inline-block" /></p>
+              <p style="margin-bottom: 15px;">Accedi con il tuo profilo <img src="/assets/rai-tv.png" class="img-responsive" style="display: inline-block" /></p>
               <p id="form-errors" style="color: #DA1500;"><%= flash[:error] %></p>
               <div class="form-group text-left">
                 <!--<label for="exampleInputEmail1">Email address</label>-->
@@ -35,7 +37,7 @@
               </div>
               <p><a href="http://www.rai.tv/dl/RaiTV/MyRaiTV/iscrizione.html#PasswordRecovery" target="_blank">Hai dimenticato la Password?</a></p>
               <div class="form-group text-left">
-                <button type="submit" class="btn-2 btn-2-login">Login</button>
+                <button type="submit" class="btn btn-primary btn-block btn-primary-interaction">Login</button>
 			        </div>
       		    <div class="checkbox text-left">
                 <label> <input type="checkbox" name="user[remember_me]" value="1" /> Ricordati di me</label>
@@ -50,13 +52,13 @@
       <div class="col-sm-5 col-sm-offset-1 hidden-xs">
 	      <div class="row">
 	      	<div class="col-sm-12">
-	      		<p class="text-center">Oppure accedi con il tuo profilo social</p>
+	      		<p class="text-center" style="margin-bottom: 15px;">Oppure accedi con il tuo profilo social</p>
 	            <div class="facebook-connect">
 	  					  <div class="form-group text-left">
-	                <button type="button" class="btn-2 btn-2-fb" onclick="gigyaSocializeLogin('facebook')"><i class="fa fa-facebook"></i> | CONNECT</button>
+	                <button type="button" class="btn btn-facebook btn-block" onclick="gigyaSocializeLogin('facebook')"><i class="fa fa-facebook"></i> | CONNECT</button>
 	              </div>
 	              <div class="form-group text-left">
-	                <button class="btn-2 btn-2-tt" onclick="gigyaSocializeLogin('twitter')"><i class="fa fa-twitter"></i> | CONNECT</button>
+	                <button class="btn btn-twitter btn-block" onclick="gigyaSocializeLogin('twitter')"><i class="fa fa-twitter"></i> | CONNECT</button>
 	                
 	              </div>
 	      		</div>
@@ -114,38 +116,9 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    checkDocumentHeight("fandom-profile");
-    <% if @gigya_socialize_user %>
-      $("#waiting-registration-layer").removeClass("hidden");
-      loginSocialBallando(<%= raw(@gigya_socialize_user) %>);
-    <% end %>
+    if(isIframe()) {
+      checkDocumentHeight("fandom-profile");
+    }
   });
-
-  function loginSocialBallando(getUserInfoResult) {
-    $.ajax({
-      type: "POST",
-      url: "http://www.rai.tv/MyRaiTv/loginSocialBallando.do",
-      data: { userObject: JSON.stringify(getUserInfoResult) },
-      success: function(data) {
-        generateUserFromProvider(data);
-      }
-    });
-  }
-
-  function generateUserFromProvider(user) {
-    $.ajax({
-      type: "POST",
-      url: "/users/rai/sign_in_from_provider/create",
-      data: { user: user },
-      success: function(data) {
-        if(data.errors) {
-          $("#form-errors").html(data.errors);
-          $("#waiting-registration-layer").addClass("hidden");
-        } else {
-          window.top.location.href = data.connect_from_page;
-        }
-      }
-    });
-  }
 
 </script>

@@ -37,6 +37,7 @@
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>">
 
   <%= render partial: "/application/share_modals" %>
+  <%= render partial: "/application/registrate_modal" %>
 
   <%= yield %>
 
@@ -48,10 +49,6 @@
       ga('send', 'event', "Registration", "Registration", "registered_user", 1, true);
     <% end %>
 
-    window.addEventListener("orientationchange", function() {
-      window.parent.containerResize();
-    }, false);
-
     function gigyaSocializeLogin(provider) {
       var current_window_location_origin = 'http://www.live.community.ballando.rai.it';
       $("#waiting-registration-layer").removeClass("hidden");
@@ -59,6 +56,58 @@
         provider: provider,
         authFlow: "redirect",
         redirectURL: current_window_location_origin + "/users/gigya_socialize_redirect",
+      });
+    }
+
+    function isIframe() {
+      try {
+        return(window.self !== window.top);
+      } catch (e) {
+        retun(true);
+      }
+    }
+
+    $(document).ready(function() {
+      if(isIframe()) {
+        $("#user-bar").hide(); // IFRAME LAYOUT
+        $("body").addClass("iframe"); // IFRAME LAYOUT
+        window.addEventListener("orientationchange", function() {
+          window.parent.containerResize();
+        }, false);
+      }  
+    });
+
+    $(document).ready(function() {
+      <% if @gigya_socialize_user %>
+        $("#waiting-registration-layer").removeClass("hidden");
+        loginSocialBallando(<%= raw(@gigya_socialize_user) %>);
+      <% end %>
+    });
+
+    function loginSocialBallando(getUserInfoResult) {
+      $.ajax({
+        type: "POST",
+        url: "http://www.rai.tv/MyRaiTv/loginSocialBallando.do",
+        data: { userObject: JSON.stringify(getUserInfoResult) },
+        success: function(data) {
+          generateUserFromProvider(data);
+        }
+      });
+    }
+
+    function generateUserFromProvider(user) {
+      $.ajax({
+        type: "POST",
+        url: "/users/rai/sign_in_from_provider/create",
+        data: { user: user },
+        success: function(data) {
+          if(data.errors) {
+            $("#form-errors").html(data.errors);
+            $("#waiting-registration-layer").addClass("hidden");
+          } else {
+            window.top.location.href = data.connect_from_page;
+          }
+        }
       });
     }
 
