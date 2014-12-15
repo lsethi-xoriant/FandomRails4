@@ -16,15 +16,15 @@ class Easyadmin::CallToActionController < ApplicationController
     clone_cta(params)
   end
 
-  def restore_from_aux(calltoaction)
-    if calltoaction.aux.present?
-      calltoaction.aux = JSON.parse(calltoaction.aux)
+  def restore_from_extra_fields(calltoaction)
+    if calltoaction.extra_fields.present?
+      calltoaction.extra_fields = JSON.parse(calltoaction.extra_fields)
       # TODO Ale
-      aux = calltoaction.aux
-      calltoaction.button_label = aux["button_label"]
-      calltoaction.alternative_description = aux["alternative_description"]
-      calltoaction.enable_for_current_user = aux["enable_for_current_user"]
-      calltoaction.shop_url = aux["shop_url"]
+      extra_fields = calltoaction.extra_fields
+      calltoaction.button_label = extra_fields["button_label"]
+      calltoaction.alternative_description = extra_fields["alternative_description"]
+      calltoaction.enable_for_current_user = extra_fields["enable_for_current_user"]
+      calltoaction.shop_url = extra_fields["shop_url"]
     end
     calltoaction
   end
@@ -208,16 +208,16 @@ class Easyadmin::CallToActionController < ApplicationController
 
   def edit_cta
     @cta = CallToAction.find(params[:id])
-    if @cta.aux.blank?
+    if @cta.extra_fields.blank?
       @extra_options = {}
     else
-      @extra_options = JSON.parse(@cta.aux)
+      @extra_options = JSON.parse(@cta.extra_fields)
     end
     @tag_list_arr = Array.new
     @cta.call_to_action_tags.each { |t| @tag_list_arr << t.tag.name }
     @tag_list = @tag_list_arr.join(",")
 
-    @cta = restore_from_aux(@cta)
+    @cta = restore_from_extra_fields(@cta)
   end
 
   def hide_cta
