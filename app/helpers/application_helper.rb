@@ -49,7 +49,7 @@ module ApplicationHelper
   
   def tag_to_category(tag, populate_desc = true)
     has_thumb = tag.tag_fields.find_by_name("thumbnail") && tag.tag_fields.find_by_name("thumbnail").upload.present?
-    thumb_url = tag.tag_fields.find_by_name("thumbnail").upload.url if tag.tag_fields.find_by_name("thumbnail")
+    thumb_url = tag.tag_fields.find_by_name("thumbnail").upload(:thumb).url if tag.tag_fields.find_by_name("thumbnail")
     if tag.tag_fields.find_by_name("description")
       description = truncate(tag.tag_fields.find_by_name("description").value, :length => 150, :separator => ' ')
       long_description = tag.tag_fields.find_by_name("description").value
@@ -82,7 +82,7 @@ module ApplicationHelper
       type: "cta",
       id: cta.id, 
       has_thumb: cta.thumbnail.present?, 
-      thumb_url: cta.thumbnail.url, 
+      thumb_url: cta.thumbnail(:thumb).url, 
       title: cta.title, 
       description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
       long_description: populate_desc ? cta.description : nil,

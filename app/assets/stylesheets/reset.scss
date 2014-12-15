@@ -13,6 +13,10 @@ body {
     animation: comment_evidence_animation 3s;
 }
 
+.spacer{
+  margin: 20px 0;
+}
+
 @-webkit-keyframes comment_evidence_animation { /* Chrome, Safari, Opera */
   0% { background: transparent; }
   50% { background: yellow; }
