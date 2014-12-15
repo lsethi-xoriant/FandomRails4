@@ -25,11 +25,21 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
   };
 
   $window.showRegistrateView = function() {
-    redirect_top_with_cookie = "http://www.live.community.ballando.rai.it/redirect_top_with_cookie?connect_from_page=" + top.location;
-    if($scope.current_calltoaction) {
-      redirect_top_with_cookie += "&redirect_to_page=/call_to_action/" + $scope.current_calltoaction;  
+
+    if(isIframe()) {
+      redirect_top_with_cookie = "http://www.live.community.ballando.rai.it/redirect_top_with_cookie?connect_from_page=" + top.location;
+      if($scope.current_calltoaction) {
+        redirect_top_with_cookie += "&redirect_to_page=/call_to_action/" + $scope.current_calltoaction;  
+      }
+      window.location.href = redirect_top_with_cookie;
+    } else {
+      redirect_top_with_cookie = "/redirect_top_with_cookie?connect_from_page=" + top.location;
+      if($scope.current_calltoaction) {
+        redirect_top_with_cookie += "&redirect_to_page=/call_to_action/" + $scope.current_calltoaction;  
+      }
+      $(".to-reg").attr("href", redirect_top_with_cookie)
+      $("#registrate-modal").modal("show");
     }
-    window.location.href = redirect_top_with_cookie;
   };
 
   //////////////////////// SHARE WITH DEFAULT SOCIAL MODAL ////////////////////////
@@ -85,10 +95,16 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
         update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
       });
     }
-    
-    positiontop = $('#bottom-feedback-share-'+ctaId).offset().top - 300;
+
+    if(isIframe()) {
+      positiontop = $('#bottom-feedback-share-' + ctaId).offset().top - 300;
+    }
+
     $('#facebook-share-modal-done').modal('show');
-    $('#facebook-share-modal-done').css({ "top": positiontop + "px" });
+
+    if(isIframe()) {
+      $('#facebook-share-modal-done').css({ "top": positiontop + "px" });
+    }
 
     $('#bottom-feedback-share-' + ctaId + ' #feedback-label-share').html('Fatto <span class="glyphicon glyphicon-ok"></span>');
     $('#bottom-feedback-share-' + ctaId + ' #feedback-label-share').removeClass("label-warning").addClass("label-success");
@@ -108,35 +124,34 @@ function BallandoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $inter
 	
 	$window.openCtaShareModal = function (modalId, elem, ctaId, interactionId, alreadyDone, calltoaction_title){
 		if($scope.current_user) {
-			var positionTop = $(elem).offset().top;
-			var modalHeight, modalObj, innerModalObj;
+      if(isIframe()) {
+			  positionTop = $(elem).offset().top;
+        position = positionTop - 350;
+      }
 			modalObj = $("#" + modalId);
-			position = positionTop - 350;
-			if(alreadyDone)
+			if(alreadyDone) {
 				$("#" + modalId + " .feedback-point").html('<span style="color: green;" class="glyphicon glyphicon-ok-sign"></span> BRAVO! Hai già ottenuto +3 punti');
+      }
 			modalObj.modal('show');
-			modalObj.css({
-				"top": position + "px"
-			});
-
+      if(isIframe()) {
+  			modalObj.css({ "top": position + "px" });
+      }
 			$scope.ctaShareId = ctaId;
 			$scope.interactionShareId = interactionId;
       $scope.ctaShareTitle = calltoaction_title;
-
 		} else {
     	showRegistrateView();
   	}
 	};
 	
 	$window.openShareDoneModal = function (modalId, elem){
-		var positionTop = $(elem).offset().top;
-		var modalHeight, modalObj, innerModalObj;
 		modalObj = $("#" + modalId);
-		position = positionTop - 400;
 		modalObj.modal('show');
-		modalObj.css({
-			"top": position + "px"
-		});
+    if(isIframe()) {
+      positionTop = $(elem).offset().top;
+      position = positionTop - 400;
+		  modalObj.css({ "top": position + "px" });
+    }
 	};
   
   $window.adjustAppleMobileIframes = function() {

@@ -91,7 +91,9 @@
 <script type="text/javascript">
   
   $(document).ready(function() {
-    checkDocumentHeight("fandom-carousel-widget");
+    if(isIframe()) {
+      checkDocumentHeight("fandom-carousel-widget");
+    }
   });
 
 </script>

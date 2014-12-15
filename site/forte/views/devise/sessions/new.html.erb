@@ -116,38 +116,9 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    checkDocumentHeight("fandom-profile");
-    <% if @gigya_socialize_user %>
-      $("#waiting-registration-layer").removeClass("hidden");
-      loginSocialBallando(<%= raw(@gigya_socialize_user) %>);
-    <% end %>
+    if(isIframe()) {
+      checkDocumentHeight("fandom-profile");
+    }
   });
-
-  function loginSocialBallando(getUserInfoResult) {
-    $.ajax({
-      type: "POST",
-      url: "http://www.rai.tv/MyRaiTv/loginSocialBallando.do",
-      data: { userObject: JSON.stringify(getUserInfoResult) },
-      success: function(data) {
-        generateUserFromProvider(data);
-      }
-    });
-  }
-
-  function generateUserFromProvider(user) {
-    $.ajax({
-      type: "POST",
-      url: "/users/rai/sign_in_from_provider/create",
-      data: { user: user },
-      success: function(data) {
-        if(data.errors) {
-          $("#form-errors").html(data.errors);
-          $("#waiting-registration-layer").addClass("hidden");
-        } else {
-          window.top.location.href = data.connect_from_page;
-        }
-      }
-    });
-  }
 
 </script>

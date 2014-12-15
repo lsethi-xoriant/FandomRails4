@@ -104,7 +104,9 @@
 <script type="text/javascript">
   
   $(document).ready(function() {
-    checkDocumentHeight("fandom-footer-widget");
+    if(isIframe()) {
+      checkDocumentHeight("fandom-footer-widget");
+    }
   });
 
 </script>

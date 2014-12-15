@@ -25,7 +25,9 @@
 	<script type="text/javascript">
 	
 	  $(document).ready(function() {
-	    checkDocumentHeight("fandom");
+	  	if(isIframe()) {
+	    	checkDocumentHeight("fandom");
+	  	}
 	    
 	    <% if @tag.present? %>
 				updateFiltersMenu(<%= @tag.id %>)
