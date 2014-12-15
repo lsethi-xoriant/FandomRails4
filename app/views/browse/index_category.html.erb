@@ -1,54 +1,61 @@
 <%= render partial: "/application/user_bar" %>
 
 <div class="container" ng-controller="BrowseCtrl" ng-init="init(<%= @category.to_json %>, <%= @contents.to_json %>, <%= @tags.to_json %>)">
-	<div class="row">
-        <div class="col-xs-12">
-          <div class="page-header-browse">
-          	<img ng-src="{{category.header_image_url}}" class="img-responsive" />
-          	<div class="category-icon" ng-if="category.category_icon != undefined">
-          		<img ng-src="{{category.category_icon}}" />
-          	</div>
-          </div>
-        </div>
-      </div>
+	<div class="row category-header">
+    	<img ng-src="{{category.header_image_url}}" class="img-responsive" />
+    	<h1 class="category-header__title">{{category.title}}</h1>
+    	<div class="category-header__filter-area"><button class="btn btn-primary" ng-click="isTagFilterOpen = !isTagFilterOpen"><span class="caret"></span> Filtra</button></div>
+    </div>
       <div class="row text-center">
-      	<button class="btn btn-primary" ng-click="isTagFilterOpen = !isTagFilterOpen">Filtra</button>
-		<hr>
-		<div collapse="!isTagFilterOpen" class="row">
-			<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-md-1 col-xs-3">
-				<button ng-class="{'btn btn-default btn-xs': true, 'disabled': tagsEnabled[tag_id] == undefined, 'btn-primary': activeTags[tag_id] != undefined}" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">{{tag_name}}</button>
-			</div> 
+      	<div class="col-xs-12">
+			<div collapse="!isTagFilterOpen" class="row category-filter">
+				<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-md-1 col-xs-3">
+					<button ng-class="{'btn btn-default btn-xs': true, 'disabled': tagsEnabled[tag_id] == undefined, 'btn-primary': activeTags[tag_id] != undefined}" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">{{tag_name}}</button>
+				</div> 
+			</div>
 		</div>
       </div>
       <div class="row">
-      	<div class="col-xs-10 col-xs-offset-1">
-      	  <h2>{{category.title}}
-      	  	<div class="btn-group" style="float: right;">
-				  <button type="button" class="btn btn-primary">Ordina per</button>
-				  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-				    <span class="caret"></span>
-				    <span class="sr-only">Toggle Dropdown</span>
-				  </button>
-				  <ul class="dropdown-menu" role="menu">
-				    <li><a href="javascript:void(0);" ng-click="order('created_at',false)">Piu recenti</a></li>
-				    <li><a href="javascript:void(0);" ng-click="order('title',false)">Titolo</a></li>
-				  </ul>
-				</div>
-      	  </h2>
+      	<div class="col-xs-12">
+      		<div class="row">
+      			<div class="col-sm-7"></div>
+      			<div class="col-sm-5">
+      				<div class="btn-group" style="float: right;">
+						<button type="button" class="btn btn-primary">Ordina per</button>
+						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+						    <span class="sr-only">Toggle Dropdown</span>
+						</button>
+					  	<ul class="dropdown-menu" role="menu">
+					    	<li><a href="javascript:void(0);" ng-click="order('created_at',false)">Piu recenti</a></li>
+					    	<li><a href="javascript:void(0);" ng-click="order('title',false)">Titolo</a></li>
+					  	</ul>
+					</div>
+      			</div>
+      		</div>
       	  <p>{{category.long_description}}</p>
 	      <div class="row brws-item">
-	      		<div class="col-xs-6 col-md-4" ng-repeat="content in visibleElements">
-				<div class="thumbnail">
-					<a href="{{ content.detail_url }}">
-					<img class="img-responsive" ng-src="{{ content.thumb_url }}" alt="..." ng-if="content.has_thumb">
-					<img class="img-responsive" src="http://placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
-					</a>
-					<div class="caption">
-						<h4>{{ content.title }}</h4>
-						<p>{{ content.description }}</p>
+	      		<div class="col-xs-12 col-sm-4 col-md-3" ng-repeat="content in visibleElements">
+					<div class="cta-preview">
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="cta-preview__thumbnail">
+									<a href="{{ content.detail_url }}">
+										<img class="img-responsive cta-preview__image" ng-src="{{ content.thumb_url }}" alt="..." ng-if="content.has_thumb">
+										<img class="img-responsive cta-preview__image" src="http://placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
+									</a>
+								</div>
+							</div>
+							<div class="col-xs-12">
+								<h3 class="cta-preview__title">{{ content.title }}</h3>
+							</div>
+						</div>
+						<div class="row cta-preview__counter">
+							<div class="cta-preview__like col-xs-3">1000</div>
+							<div class="cta-preview__comments col-xs-3">1000</div>	
+						</div>
 					</div>
 				</div>
-			</div>
 	      </div>
 	     </div>
       </div>
