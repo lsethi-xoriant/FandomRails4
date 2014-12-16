@@ -58,8 +58,19 @@ class CallToAction < ActiveRecordWithJSON
      },
      default_url: "/assets/media-image-default.jpg"
 
-  has_attached_file :thumbnail, :styles => { :original => "100%", :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }, 
-                    :convert_options => { :original => '-quality 60', :large => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }
+  has_attached_file :thumbnail, 
+    :styles => { 
+      :original => "100%", 
+      :carousel => "1024x320^", 
+      :medium => "524x393^", 
+      :thumb => "262x147^" 
+    }, 
+    :convert_options => { 
+      :original => " -quality 60", 
+      :carousel => " -gravity center -crop '1024x320+0+0' -quality 60", 
+      :medium => " -gravity center -crop '524x393+0+0' -quality 60", 
+      :thumb => " -gravity center -crop '262x147+0+0' -quality 60" 
+    }
 
   has_many :interactions, dependent: :destroy
   has_many :call_to_action_tags, dependent: :destroy

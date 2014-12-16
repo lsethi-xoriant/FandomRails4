@@ -4,7 +4,7 @@
 *= require ./easyadmin/bootstrap-timepicker
 *= require ./easyadmin/datepicker
 *= require ./easyadmin/fullcalendar
-*= require easyadmin/font-awesome
+*= require typography/font-awesome
 *= require ./easyadmin/app
 *= require ./easyadmin/custom
 *= require ./easyadmin/select2

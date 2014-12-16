@@ -1,0 +1,69 @@
+/* TRIVIA */
+.trivia-interaction {
+  background: rgba(0, 0, 0, 0.6);
+  height: 9999px;
+}
+
+.trivia-interaction__question--overvideo {
+  font-size: 22px;
+  color: #fff;
+  margin: 20px 15px 5px 15px;
+}
+
+.trivia-interaction__answer--overvideo {
+  margin-top: 15px;
+  position: relative;
+  left: -150%;
+  opacity: 0;
+}
+
+.trivia-interaction__answer--visible {
+  left: 0%;
+  opacity: 1;
+}
+
+.trivia-interaction__answer-slide-in {
+  -webkit-animation: triviaAnswerSlideIn 0.5s forwards, triviaAnswerFadeIn 0.5s forwards;
+  animation: triviaAnswerSlideIn 0.5s forwards, triviaAnswerFadeIn 0.5s forwards;
+  -webkit-animation-delay: 0s, 0s;
+  animation-delay: 0s, 0s; 
+}
+
+@-webkit-keyframes triviaAnswerSlideIn {
+    100% { left: 0; }
+}
+
+@keyframes triviaAnswerSlideIn {
+    100% { left: 0; }
+}
+
+@-webkit-keyframes triviaAnswerFadeIn {
+    100% { opacity: 1; }
+}
+
+@keyframes triviaAnswerFadeIn {
+    100% { opacity: 1; }
+}
+
+.trivia-interaction__answer-slide-out {
+  -webkit-animation: triviaAnswerSlideOut 0.5s forwards, triviaAnswerFadeOut 0.5s forwards;
+  animation: triviaAnswerSlideOut 0.5s forwards, triviaAnswerFadeOut 0.5s forwards;
+  -webkit-animation-delay: 0s, 0s;
+  animation-delay: 0s, 0s; 
+}
+
+@-webkit-keyframes triviaAnswerSlideOut {
+    100% { left: -150%; }
+}
+
+@keyframes triviaAnswerSlideOut {
+    100% { left: -150%; }
+}
+
+@-webkit-keyframes triviaAnswerFadeOut {
+    100% { opacity: 0; }
+}
+
+@keyframes triviaAnswerFadeOut {
+    100% { opacity: 0; }
+}

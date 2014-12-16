@@ -9399,6 +9399,40 @@ ALTER SEQUENCE answers_id_seq OWNED BY answers.id;
 
 
 --
+-- Name: attachments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE attachments (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data_file_name character varying(255),
+    data_content_type character varying(255),
+    data_file_size integer,
+    data_updated_at timestamp without time zone
+);
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE attachments_id_seq OWNED BY attachments.id;
+
+
+--
 -- Name: authentications; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -12687,6 +12721,13 @@ ALTER TABLE ONLY answers ALTER COLUMN id SET DEFAULT nextval('answers_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY attachments ALTER COLUMN id SET DEFAULT nextval('attachments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentications_id_seq'::regclass);
 
 
@@ -15009,6 +15050,14 @@ ALTER TABLE ONLY answers
 
 
 --
+-- Name: attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY attachments
+    ADD CONSTRAINT attachments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: authentications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -17121,3 +17170,7 @@ INSERT INTO schema_migrations (version) VALUES ('20141212114607');
 INSERT INTO schema_migrations (version) VALUES ('20141212114624');
 
 INSERT INTO schema_migrations (version) VALUES ('20141212114640');
+
+INSERT INTO schema_migrations (version) VALUES ('20141215101145');
+
+INSERT INTO schema_migrations (version) VALUES ('20141215102204');

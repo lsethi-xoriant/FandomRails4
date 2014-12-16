@@ -1,26 +1,14 @@
+@font-face {
+  font-family: 'TrebuchetMS';
+  src: url('TrebuchetMS.ttf');
+}
+
 @import "bootstrap/bootstrap";
+@import "blocks/**/*";
+@import "typography/**/*";
+@import "buttons/**/*";
+@import "reset";
 
-body {
-  padding-top: 60px;
+a, p, button {
+  font-family: 'TrebuchetMS';
 }
-
-.disabled{
-  background-color: grey !important;
-}
-
-.comment_evidence {
-    -webkit-animation: comment_evidence_animation 5s; /* Chrome, Safari, Opera */
-    animation: comment_evidence_animation 3s;
-}
-
-@-webkit-keyframes comment_evidence_animation { /* Chrome, Safari, Opera */
-  0% { background: transparent; }
-  50% { background: yellow; }
-  100% { background: transparent; }
-}
-
-@keyframes comment_evidence_animation { /* Standard syntax */
-  0% { background: transparent; }
-  50% { background: yellow; }
-  100% { background: transparent; }
-} 

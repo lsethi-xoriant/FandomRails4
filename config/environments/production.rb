@@ -52,7 +52,7 @@ Fandom::Application.configure do
   end
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += ['application.css.scss', 'easyadmin.css', 'easyadmin.js', 'jquery.jcarousel.js', 'jcarousel.responsive.js']
+  config.assets.precompile += ['application.scss', 'easyadmin.css', 'easyadmin.js']
 
     # Enable threaded mode
   # config.threadsafe!

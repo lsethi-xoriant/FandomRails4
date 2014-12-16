@@ -1,0 +1,22 @@
+/* CATEGORY HEADER BLOCK */
+
+.category-header{
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.category-header__image{}
+
+.category-header__title{
+  position: absolute;
+  bottom: 15px;
+  left: 30px;
+  color: #fff;
+}
+
+.category-header__filter-area{
+  position: absolute;
+  right: 30px;
+  bottom: 15px;
+}
