@@ -1,0 +1,30 @@
+/* PROFILE MENU */
+
+.profile-menu-block{
+  background-color: #1478e8;
+}
+
+.profile-menu-block__menu{
+  list-style-type: none;
+  display: inline-block;
+  margin: 0;
+}
+
+.profile-menu-block__item{
+  display: inline-block;
+  background: transparent; 
+  height: 100%;
+  margin: 0 5px;
+}
+
+.profile-menu-block__item--active{
+  background-color: #0e54a2;
+}
+
+.profile-menu-block__item-link, .profile-menu-block__item-link:hover{
+  color: #fff;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 100%;
+  padding: 10px;
+}

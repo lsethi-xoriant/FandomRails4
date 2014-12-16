@@ -18,11 +18,11 @@
       <div class="row">
       	<div class="col-xs-12">
       		<div class="row spacer">
-      			<div class="col-sm-9">
+      			<div class="col-sm-8">
       				<p>{{category.long_description}}</p>
       			</div>
-      			<div class="col-sm-2 col-sm-offset-1">
-      				<div class="btn-group">
+      			<div class="col-sm-3 col-sm-offset-1">
+      				<div class="btn-group" style="float: right;">
 						<button type="button" class="btn btn-primary">Ordina per</button>
 						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
 							<span class="caret"></span>
@@ -37,25 +37,41 @@
       		</div>
 	      <div class="row brws-item">
 	      		<div class="col-xs-12 col-sm-4 col-md-3" ng-repeat="content in visibleElements">
-					<div class="cta-preview">
+					<div class="cta-preview" ng-if="content.type == 'cta'">
 						<div class="row">
 							<div class="col-xs-12">
 								<div class="cta-preview__thumbnail">
-									<a href="{{ content.detail_url }}">
-										<img class="img-responsive cta-preview__image" ng-src="{{ content.thumb_url }}" alt="..." ng-if="content.has_thumb">
+									<a href="{{content.detail_url}}">
+										<img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}" alt="..." ng-if="content.has_thumb">
 										<img class="img-responsive cta-preview__image" src="http://placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
 									</a>
+									<div class="label label-warning cta-preview__points" ng-if="content.status != undefined">+ {{content.status.winnable_reward_count}}</div>
 								</div>
 							</div>
 							<div class="col-xs-12">
-								<h3 class="cta-preview__title">{{ content.title }}</h3>
+								<h3 class="cta-preview__title">{{content.title}}</h3>
 							</div>
 						</div>
 						<div class="row cta-preview__counter">
-							<div class="cta-preview__like col-xs-3">1000</div>
-							<div class="cta-preview__comments col-xs-3">1000</div>	
+							<div class="cta-preview__like col-xs-3" ng-if="content.attributes.likes >= 0">{{content.likes}}</div>
+							<div class="cta-preview__comments col-xs-3" ng-if="content.attributes.comments >= 0">{{content.comments}}</div>	
 						</div>
 					</div>
+					
+					<div class="cta-preview cta-preview--category" ng-if="content.type == 'tag'">
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="cta-preview__thumbnail cta-preview__thumbnail--category">
+									<a href="{{content.detail_url}}">
+										<img class="cta-preview__image cta-preview__image--category" ng-src="{{content.thumb_url}}" alt="..." ng-if="content.has_thumb">
+										<img class="cta-preview__image cta-preview__image--category" src="http://placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
+									</a>
+								</div>
+							</div>
+						</div>
+						<h3 class="cta-preview__title cta-preview__title--category">{{content.title}}</h3>
+					</div>
+					
 				</div>
 	      </div>
 	     </div>

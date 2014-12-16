@@ -19,6 +19,7 @@ class Easyadmin::EasyadminRewardController < ApplicationController
 
   def save
     @currency_rewards = Reward.where("spendable = TRUE")
+    create_and_link_attachment(params, nil)
     @reward = Reward.create(params[:reward])
     tag_list = params[:tag_list].split(",")
     if @reward.errors.any?
@@ -44,14 +45,37 @@ class Easyadmin::EasyadminRewardController < ApplicationController
   
   def update
     @reward = Reward.find(params[:id])
+    create_and_link_attachment(params, @reward)
     tag_list = params[:tag_list].split(",")
     unless @reward.update_attributes(params[:reward])
       @tag_list = tag_list
       @extra_options = params[:extra_options]
       render template: "/easyadmin/easyadmin/edit_reward"   
     else
-      @reward.update_attribute(:currency_id,params[:currency_id])
+      @reward.update_attribute(:currency_id, params[:currency_id])
       update_and_redirect(tag_list, "Reward aggiornato correttamente", @reward)
+    end
+  end
+
+  def create_and_link_attachment(params, reward)
+    if params[:reward][:extra_fields].present?
+      params[:reward][:extra_fields].each do |extra_field_name, extra_field_value|
+        if extra_field_value[:type] == 'string'
+          params[:reward][:extra_fields][extra_field_name] = extra_field_value[:value]
+        else
+          if extra_field_value[:value].present?
+            attachment = Attachment.create(data: extra_field_value[:value])
+            extra_field_value[:attachment_id] = attachment.id
+            extra_field_value[:url] = attachment.data.url
+            extra_field_value.delete :value
+          else
+            value_of_extra_field = JSON.parse(reward.extra_fields)[extra_field_name]
+            extra_field_value[:type] = value_of_extra_field['type']
+            extra_field_value[:attachment_id] = value_of_extra_field['attachment_id']
+            extra_field_value[:url] = value_of_extra_field['url']
+          end
+        end
+      end
     end
   end
 

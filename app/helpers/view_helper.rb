@@ -46,4 +46,21 @@ module ViewHelper
     x =~ /[[:digit:]]/ 
   end
 
+
+  # an efficient variant of link_to that support $context_root
+  def light_link_to(url, options = nil, html_options = nil, &block)
+    html_options, options = options, block if block_given?
+    options ||= {}
+
+    html_options = convert_options_to_data_attributes(options, html_options)
+    
+    unless $context_root.nil?
+      url = "/#{$context_root}#{url}"
+    end
+
+    html_options['href'] ||= url
+
+    content_tag(:a, url, html_options, &block)
+  end
+  
 end

@@ -20,6 +20,7 @@ module FandomUtils
     $process_file_descriptor = nil
     $db_time = nil
     $view_time = nil
+    $context_root = nil
   end
 
   # Deprecated: tenant information can now be obtained by the global variable $site
