@@ -385,10 +385,10 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
+    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
-    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -406,22 +406,10 @@ CREATE SEQUENCE events_id_seq
 
 
 --
--- Name: events_id_seq1; Type: SEQUENCE; Schema: ballando; Owner: -
+-- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
 --
 
-CREATE SEQUENCE events_id_seq1
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: events_id_seq1; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
---
-
-ALTER SEQUENCE events_id_seq1 OWNED BY events.id;
+ALTER SEQUENCE events_id_seq OWNED BY events.id;
 
 
 --
@@ -1224,8 +1212,7 @@ CREATE TABLE tags (
     locked boolean,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -2806,8 +2793,7 @@ CREATE TABLE tags (
     locked boolean,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -4388,8 +4374,7 @@ CREATE TABLE tags (
     locked boolean,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -5143,7 +5128,7 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    "timestamp" character varying(255),
+    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
@@ -5523,9 +5508,7 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    text_before character varying(255),
-    text_after character varying(255)
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -5972,8 +5955,7 @@ CREATE TABLE tags (
     locked boolean,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -7554,8 +7536,7 @@ CREATE TABLE tags (
     locked boolean,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -9136,8 +9117,7 @@ CREATE TABLE tags (
     locked boolean,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -11219,7 +11199,7 @@ ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq
 -- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
 --
 
-ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq1'::regclass);
+ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
 
 --
@@ -15742,6 +15722,27 @@ CREATE UNIQUE INDEX index_call_to_actions_on_name ON call_to_actions USING btree
 --
 
 CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
+
+
+--
+-- Name: index_events_on_message; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_message ON events USING btree (message);
+
+
+--
+-- Name: index_events_on_request_uri; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
+
+
+--
+-- Name: index_events_on_timestamp; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
 
 
 --
