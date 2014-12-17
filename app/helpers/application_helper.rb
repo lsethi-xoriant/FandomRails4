@@ -7,7 +7,6 @@ module ApplicationHelper
   include CacheHelper
   include RewardingSystemHelper
   include NoticeHelper
-  include ActionView::Helpers::TextHelper
   
   class BrowseCategory
     include ActiveAttr::TypecastedAttributes
@@ -45,6 +44,13 @@ module ApplicationHelper
     attribute :contents
     attribute :view_all_link, type: String
     attribute :column_number, type: Integer
+  end
+  
+  # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
+  # is redefined in TextHelper
+  class TextHelperNamespace ; include ActionView::Helpers::TextHelper ; end
+  def truncate(*args)
+    TextHelperNamespace.new.truncate(*args)
   end
   
   def tag_to_category(tag, populate_desc = true)
