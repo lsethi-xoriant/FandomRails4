@@ -36,7 +36,7 @@ class FandomMiddleware
       log_data
     )
 
-    handle_multi_tenancy()
+    handle_multi_tenancy(env)
     
     msg = "http request end"
     begin
@@ -51,6 +51,9 @@ class FandomMiddleware
       log_data[:db_time] = $db_time
       log_data[:view_time] = $view_time
       log_data[:time] = (Time.now - start).to_s
+      unless $context_root.nil?
+        log_data[:context_root] = $context_root
+      end
       log_info(msg, log_data)
       close_process_log_file()
       [status, headers, response]
@@ -125,13 +128,29 @@ class FandomMiddleware
   # Multi tenancy
   #
 
-  def handle_multi_tenancy
+  def handle_multi_tenancy(env)
     unless $site.nil?
+      configure_context_root($site, env)
       configure_view_paths_for_site($site)
       configure_mailer_for_site($site, Devise::Mailer)
       configure_mailer_for_site($site, SystemMailer)
       configure_environment_for_site($site)
       configure_omniauth_for_site($site)
+    end
+  end
+
+  # Configures a $context_root global variable if the client called the tenant through one of the allowed context roots
+  def configure_context_root(site, env)
+    parts = env['PATH_INFO'].split('/')
+    expected_context_root = parts[1]
+    if site.allowed_context_roots.include? expected_context_root
+      $context_root = expected_context_root
+      env['PATH_INFO'].sub!(/^\/#{$context_root}/, '')
+      env['REQUEST_PATH'].sub!(/^\/#{$context_root}/, '')
+      env['ORIGINAL_FULLPATH'].sub!(/^\/#{$context_root}/, '')
+      env['REQUEST_URI'].sub!(/(\w+:\/+[^\/]+)\/#{$context_root}/, '\1')
+    else
+      $context_root = nil
     end
   end
 

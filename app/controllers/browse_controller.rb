@@ -51,7 +51,7 @@ class BrowseController < ApplicationController
       title: featured.tag_fields.find_by_name("title").value,
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
-      column_number: 12/featured_contents.count
+      column_number: 12/4 #featured_contents.count
     )
   end
   
@@ -62,7 +62,7 @@ class BrowseController < ApplicationController
       title: featured.tag_fields.find_by_name("title").value,
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
-      column_number: 12/featured_contents.count
+      column_number: 12/4 #featured_contents.count
     )
   end
   
@@ -73,7 +73,7 @@ class BrowseController < ApplicationController
       title: featured.tag_fields.find_by_name("title").value,
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
-      column_number: 12/featured_contents.count
+      column_number: 12/4 #featured_contents.count
     )
   end
   
@@ -85,7 +85,7 @@ class BrowseController < ApplicationController
       title: "I piu recenti",
       contents: recent_contents,
       view_all_link: "/browse/view_recent",
-      column_number: 12/6
+      column_number: 12/4
     )
   end
   
@@ -96,7 +96,7 @@ class BrowseController < ApplicationController
       title: category.tag_fields.present? ? category.tag_fields.find_by_name("title").value : category.name,
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
-      column_number: 12/6
+      column_number: 12/4
     )
   end
   

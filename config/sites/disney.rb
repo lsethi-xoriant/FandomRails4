@@ -4,7 +4,8 @@ module Fandom
       id: 'disney', 
       domains: ['disney.fandom.localdomain', 'disney.stage.fandomlab.com', 'disney.live.fandomlab.com', 'disney.dev.fandomlab.com'],
       assets_precompile: ['disney_application.css', 'disney_application.js'],
-      twitter_integration: true
+      twitter_integration: true,
+      allowed_context_roots: ["violetta"]
     )      
   end
 end
