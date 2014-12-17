@@ -20,7 +20,10 @@ EOF
     <script type="text/javascript">
 
       $("##{id_text_field}").select2({ placeholder: "", tags: #{tag_list}, tokenSeparators: [","] });
-      $("##{id_text_field}").bind("change", function() {
+      $("##{id_text_field}").bind("change", function(e) {
+        if(typeof e.added !== 'undefined') {
+          $("##{id_text_field}").select2("val", $.map(e.val, function(tag,i) { return tag.toLowerCase(); } ));
+        }
         showTagboxAlert("##{id_text_field}", #{unactive_tags_name}, #{all_tags_name}, "#{new_tag_message}");
       });
     </script>
