@@ -9,6 +9,14 @@ module CallToActionHelper
     calltoactions.each do |calltoaction|
 
       miniformat = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
+      if miniformat 
+        miniformat_info = {
+          "label_background" => get_extra_fields!(miniformat)["label-background"],
+          "icon" => get_extra_fields!(miniformat)["icon"],
+          "label_color" => get_extra_fields!(miniformat)["label-color"],
+          "title" => get_extra_fields!(miniformat)["title"]
+        }
+      end
       
       calltoaction_info_list << {
         "calltoaction" => { 
@@ -24,12 +32,7 @@ module CallToActionHelper
           "interaction_info_list" => build_interaction_info_list(calltoaction),
           "aux" => (JSON.parse(calltoaction.aux) if calltoaction.aux.present?)
         },
-        "miniformat" => {
-          "label_background" => get_extra_fields!(miniformat)["label-background"],
-          "icon" => get_extra_fields!(miniformat)["icon"],
-          "label_color" => get_extra_fields!(miniformat)["label-color"],
-          "title" => get_extra_fields!(miniformat)["title"]
-        },
+        "miniformat" => miniformat_info,
         "status" => compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction)
       }
     
