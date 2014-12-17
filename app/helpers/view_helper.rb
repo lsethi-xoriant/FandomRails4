@@ -63,4 +63,18 @@ module ViewHelper
     content_tag(:a, url, html_options, &block)
   end
   
+  # Returns the extra_fields field, converting it to hash if it has not been parsed.
+  #
+  #   element - any element supporting extra fields (CallToAction, Reward, Tag, ...)   
+  #
+  # Please note that this method sets extra_fields on the container by side-effect (hence the "bang" in the method name)
+  def get_extra_fields!(element)
+    if element.extra_fields.is_a? String
+      element.extra_fields = JSON.parse(element.extra_fields)
+      element.extra_fields
+    else
+      element.extra_fields
+    end
+  end
+  
 end
