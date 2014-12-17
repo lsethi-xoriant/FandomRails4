@@ -2,7 +2,7 @@ namespace :tag_fields do
 
   desc "Migrates the tag_fields table to the tag.extra_field JSON."
   task :migrate => :environment do
-    tenants = ['ballando']
+    tenants = Rails.configuration.sites.select {|s| s.share_db.nil? }.map { |s| s.id }
     tenants.each do |tenant|
       migrate(tenant)
     end
