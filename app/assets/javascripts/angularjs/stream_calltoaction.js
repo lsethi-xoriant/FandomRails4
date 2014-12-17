@@ -48,7 +48,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     }
   });
 
-  $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux, kaltura_params) {
+  $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
     $scope.aux = aux;
     $scope.current_user = current_user;
     $scope.calltoactions = calltoaction_info_list;
@@ -89,9 +89,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     
-    if(kaltura_params) {
-      $scope.kaltura_params = kaltura_params;
-      kaltura_api_link = "http://cdnapi.kaltura.com/p/" + kaltura_params.partner_id + "/sp/" + kaltura_params.partner_id + "00/embedIframeJs/uiconf_id/" + kaltura_params.uiconf_id + "/partner_id/" + kaltura_params.partner_id;
+    if($scope.aux.kaltura) {
+      kaltura_api_link = "http://cdnapi.kaltura.com/p/" + $scope.aux.kaltura.partner_id + "/sp/" + $scope.aux.kaltura.partner_id + "00/embedIframeJs/uiconf_id/" + $scope.aux.kaltura.uiconf_id + "/partner_id/" + $scope.aux.kaltura.partner_id;
       var tag = document.createElement('script');
       tag.src = kaltura_api_link;
       var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -298,12 +297,23 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     overvideo_interaction_present = false;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
-      if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING") {
+      if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING" || interaction_info.interaction.when_show_interaction == "OVERVIDEO_END") {
         overvideo_interaction_present = true;
       }
     });
     return overvideo_interaction_present;
   };
+
+  function getOvervideoEndInteractionInfo(calltoaction_id) {
+    overvideo_end_interaction = null;
+    calltoaction_info = getCallToActionInfo(calltoaction_id);
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_END") {
+        overvideo_end_interaction = interaction_info;
+      }
+    });
+    return overvideo_end_interaction;
+  }
 
   function getPlayInteraction(calltoaction_id) {
     play_interaction = null;
@@ -329,7 +339,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $scope.filterOvervideoDuringInteractions = function(interaction_info) {
-    return (interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING");
+    return (interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING" || interaction_info.interaction.when_show_interaction == "OVERVIDEO_END");
   };
 
   $scope.filterAlwaysVisibleInteractions = function(interaction_info) {
@@ -592,10 +602,34 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $("#registrate-modal").modal('show');
   };
 
+  function animateInInteraction(interaction) {
+    if(interaction.resource_type == "trivia") {
+      time = 0;
+      angular.forEach(interaction.resource.answers, function(answer) {
+        $timeout(function() { 
+          answer.class = "trivia-interaction__answer-slide-in";
+        }, time);
+        time += 300;
+      });
+    } else if(interaction.resource_type == "versus") {
+      index = 0;
+      angular.forEach(interaction.resource.answers, function(answer) {
+        if(index % 2 == 0) {
+          answer.class = "versus-interaction__answer-slide-in-left";
+        } else {
+          answer.class = "versus-interaction__answer-slide-in-right";
+        }
+        index += 1;
+      });
+    }
+  }
+
   function executeInteraction(player, calltoaction_id, overvideo_interaction) { 
-  	console.log(player);
     $scope.overvideo_interaction_locked[calltoaction_id] = true;
     overvideo_interaction.interaction.overvideo_active = true;
+
+    animateInInteraction(overvideo_interaction.interaction);
+
     player.pause();
 
     if(overvideo_interaction.user_interaction) {
@@ -607,9 +641,45 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   }
 
   function removeOvervideoInteraction(player, calltoaction_id, overvideo_interaction) {
-    player.play();
-    overvideo_interaction.interaction.overvideo_active = false;
-    $timeout(function() { $scope.overvideo_interaction_locked[calltoaction_id] = false; }, 1000);
+
+    if(overvideo_interaction.interaction.resource_type == "trivia") {
+      angular.forEach(overvideo_interaction.interaction.resource.answers, function(answer) {
+        $timeout(function() { 
+          answer.class = "trivia-interaction__answer--visible trivia-interaction__answer-slide-out";
+        }, time);
+        time += 300;
+      });
+    } else if(overvideo_interaction.interaction.resource_type == "versus") {
+      index = 0;
+      angular.forEach(overvideo_interaction.interaction.resource.answers, function(answer) {
+        if(index % 2 == 0) {
+          answer.class = "versus-interaction__answer--visible-left versus-interaction__answer-slide-out-left";
+        } else {
+          answer.class = "versus-interaction__answer--visible-right versus-interaction__answer-slide-out-right";
+        }
+        index += 1;
+      });
+    }
+
+    $timeout(function() {
+      if(overvideo_interaction.interaction.when_show_interaction == "OVERVIDEO_DURING") {
+        player.play();
+      }
+      overvideo_interaction.interaction.overvideo_active = false;
+      $timeout(function() { 
+
+        $scope.overvideo_interaction_locked[calltoaction_id] = false; 
+        angular.forEach(overvideo_interaction.interaction.resource.answers, function(answer) {
+          answer.class = "";
+        });
+
+        if(overvideo_interaction.interaction.when_show_interaction == "OVERVIDEO_END") {
+          getCallToActionInfo(calltoaction_id).active_end_interaction = true;//HERE
+        }
+
+      }, 1000);
+    }, 2000);
+
   }
 
   // TODO: delete this, replaced in executeInteraction and removeOvervideoInteraction
@@ -701,7 +771,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       } else if(current_video_player_state == 0) {
 
-        updateEndVideoInteraction(calltoaction_id);
+        updateEndVideoInteraction(current_video_player, calltoaction_id);
         mayStopPolling();
 
       } else {
@@ -728,8 +798,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   	player = this;
 	kWidget.embed({
 		'targetId': this.playerId,
-		'wid': '_'+$scope.kaltura_params.partner_id,
-		'uiconf_id' : $scope.kaltura_params.uiconf_id,
+		'wid': '_'+$scope.aux.kaltura.partner_id,
+		'uiconf_id' : $scope.aux.kaltura.uiconf_id,
 		'entry_id' : media_data,
 		'flashvars':{ // flashvars allows you to set runtime uiVar configuration overrides. 
 			'autoPlay': false
@@ -779,8 +849,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.onKalturaPlayEvent = function(idPlayer) {  
-    calltoaction_id = $("#" + idPlayer).attr("calltoaction-id");
-    calltoaction_media_priority = $("#" + idPlayer).attr("main-media");
+    aux = idPlayer.split("-");
+    calltoaction_id = aux[aux.length - 1];
 
     if(calltoaction_media_priority == "main") {
 
@@ -791,9 +861,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     }
   };
   
-  $window.onKalturaVideoEnded = function(data, idPlayer){
-  	calltoaction_id = $("#" + idPlayer).attr("calltoaction-id");
-  	updateEndVideoInteraction(calltoaction_id);
+  $window.onKalturaVideoEnded = function(idPlayer){
+  	aux = idPlayer.split("-");
+    calltoaction_id = aux[aux.length - 1];
+    console.log($("#" + idPlayer));
+    $scope.$apply(function() {
+      updateEndVideoInteraction(calltoaction_id);
+    });
   };
   
   $window.kalturaCheckInteraction = function(data, idPlayer) {
@@ -897,12 +971,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.updateEndVideoInteraction = function(calltoaction_id) {
     $scope.play_event_tracked[calltoaction_id] = false;
-    $http.post("/calltoaction_overvideo_end", { calltoaction_id: calltoaction_id, right_answer_response: $scope.current_user_answer_response_correct[key] })
-      .success(function(data) {
-        $("#home-overvideo-" + calltoaction_id).html(data.overvideo);
-      }).error(function() {
-        // ERROR.
-      });
+    interaction_info = getOvervideoEndInteractionInfo(calltoaction_id);//HERE
+    if(interaction_info) {
+      interaction_info.interaction.overvideo_active = true;
+      animateInInteraction(interaction_info.interaction);
+      if(interaction_info.user_interaction) {
+        $timeout(function() { 
+          removeOvervideoInteraction(null, calltoaction_id, interaction_info);
+        }, 3000);
+      }
+    } else {
+      getCallToActionInfo(calltoaction_id).active_end_interaction = true;
+    }
   };
 
   $window.updateStartVideoInteraction = function(calltoaction_id, interaction_id) {
@@ -1027,11 +1107,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       calltoaction_id = calltoaction_info.calltoaction.id;
       interaction_id = interaction_info.interaction.id;
 
-      $(".button-inter-" + interaction_id).attr('disabled', true);
-      $(".button-inter-" + interaction_id).attr('onclick', "");
-
       enableWaitingAudio("stop");
-  	  $("#fountainG").removeClass("hidden");
   	  
       $http.post("/update_interaction", { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getAnonymousUserStorage() })
           .success(function(data) {
@@ -1068,10 +1144,26 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
               updateAnswersInInteractionInfo(interaction_info, data.answers);
             }
             
-            if(when_show_interaction == "OVERVIDEO_DURING") {
+            if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
+              if(interaction_info.interaction.resource_type == "trivia") {
+                angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
+                  answer.class = "trivia-interaction__answer--visible";
+                });
+              } else if(interaction_info.interaction.resource_type == "versus") {
+                index = 0;
+                angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
+                  if(index % 2 == 0) {
+                    answer.class = "versus-interaction__answer--visible-left";
+                  } else {
+                    answer.class = "versus-interaction__answer--visible-right";
+                  }
+                  index += 1;
+                });
+              }
+
             	$timeout(function() { 
-			        removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
-			    }, 3000);
+    			      removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
+    			    }, 3000);
             }
 
             /*

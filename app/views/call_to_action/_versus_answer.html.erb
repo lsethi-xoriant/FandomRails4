@@ -1,33 +1,36 @@
 <!-- IMAGE SECTION -->
-<div class="row">
-  <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 choice choosen">
+<div class="row versus-interaction__answer--{{ $index % 2 == 0 ? 'left' : 'right' }} {{answer.class}}">
+  <div class="col-sm-12">
+    <!--
     <div ng-if="interaction_info.user_interaction">
-      <div class="status">
+      <div>
         <h1>{{answer.percentage}}%</h1>
       </div>
     </div>
+    -->
 
-    <a href="javascript: void(0)" class="thumbnail" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)"><img ng-src="{{answer.image_medium}}"></a>
-  </div>
-</div>
-<!-- BUTTON SECTION -->
-<div ng-if="interaction_info.user_interaction">
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-      <div ng-if="interaction_info.interaction.resource.one_shot">
-        <a type="button" class="btn btn-block btn-lg {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-primary active' : 'btn-default'}} disabled">{{answer.text}}</a>
-      </div>
-      <div ng-if="!interaction_info.interaction.resource.one_shot">
-        <a type="button" class="btn btn-block btn-lg {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-primary active' : 'btn-default'}}" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
+    <div class="progress bottom vertical versus-interaction__progress-bar versus-interaction__progress-bar--{{ $index % 2 == 0 ? 'left' : 'right' }}">
+      <div class="progress-bar progress-bar-warning" role="progressbar" style="height: {{answer.percentage}}%;"></div>
+    </div>
+
+    <img class="versus-interaction__img versus-interaction__img--{{ $index % 2 == 0 ? 'left' : 'right' }}" ng-src="{{answer.image_medium}}" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">
+
+    <!-- BUTTON SECTION -->
+    <div class="row" ng-if="interaction_info.user_interaction">
+      <div class="col-sm-12">
+        <div ng-if="interaction_info.interaction.resource.one_shot">
+          <a type="button" class="versus-interaction__button versus-interaction__button--{{ $index % 2 == 0 ? 'left' : 'right' }} active btn {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-green' : 'btn-blue'}} btn-block">{{answer.text}}</a>
+        </div>
+        <div ng-if="!interaction_info.interaction.resource.one_shot">
+          <a type="button" class="versus-interaction__button versus-interaction__button--{{ $index % 2 == 0 ? 'left' : 'right' }} btn {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-green' : 'btn-blue'}}" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-<div ng-if="!interaction_info.user_interaction">
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-      <a type="button" class="btn btn-block btn-lg btn-primary" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
+    <div class="row" ng-if="!interaction_info.user_interaction">
+      <div class="col-sm-12">
+        <a type="button" class="versus-interaction__button versus-interaction__button--{{ $index % 2 == 0 ? 'left' : 'right' }} btn btn-blue btn-block" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">{{answer.text}}</a>
+      </div>
     </div>
+         
   </div>
-</div>
-                                      
+</div>                               
