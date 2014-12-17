@@ -14,7 +14,7 @@
 				        	%>
 				        	<% if is_special_guest_active %>
 				         	<li>
-				                <div class="slide slide-upload" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= special_guest_tag.nil? ? asset_path('special_guest_thumb.jpg') : special_guest_tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                <div class="slide slide-upload" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= special_guest_tag.nil? ? asset_path('special_guest_thumb.jpg') : get_extra_fields!(special_guest_tag)["thumbnail"]["url"] %>');">
 				                    <div class="comment-center">
 				                        <a href="/gallery/55">
 									      <div class="row">
@@ -29,7 +29,7 @@
 				        <% end %>
 				        	<% tag_menu.each do |tag| %>
 				            <li>
-				                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" && !single_cta %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" && !single_cta %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= get_extra_fields!(tag)["thumbnail"]["url"] %>');">
 				                    <div class="comment-center">
 				                        <a href="javascript: void(0)" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
 									      <div class="row">
