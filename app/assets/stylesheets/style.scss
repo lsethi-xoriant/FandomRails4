@@ -7,6 +7,8 @@ $container-md:                 $container-desktop !default;
 $container-large-desktop:      $container-desktop !default;
 $container-lg:                 $container-desktop !default;
 
+$panel-border-radius:          0px !default;
+
 @font-face {
   font-family: 'TrebuchetMS';
   src: url('TrebuchetMS.ttf');

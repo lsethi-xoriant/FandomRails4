@@ -1,3 +1,19 @@
+.cta-cover__card {
+  -webkit-box-shadow: 0px 4px 3px -1px #ccc;
+  -moz-box-shadow: 0px 4px 3px -1px #ccc;
+  box-shadow: 0px 4px 3px -1px #ccc;
+}
+
+.cta-cover__card__footer {
+  -webkit-box-shadow: inset 0px 6px 6px -5px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 6px 6px -5px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0px 6px 6px -5px rgba(0, 0, 0, 0.4);
+}
+
+.cta-cover__card__body {
+  padding-top: 0;
+}
+
 .cta-cover__thumbnail-row {
   height: 250px; 
   overflow: hidden;
@@ -5,4 +21,11 @@
 
 .cta-cover__thumbnail-column {
   padding-top: 56.25%; 
+}
+
+.cta-cover__thumbnail {
+  width: 100%; 
+  position: absolute; 
+  top: 0; 
+  left: 0;
 }

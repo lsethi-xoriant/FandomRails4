@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default cta-cover__card">
 
   <div class="panel-heading hidden">
     <div class="row">
@@ -35,15 +35,15 @@
     </div>
   </div>
     
-  <div class="panel-body" style="padding-top: 0;">  
-    <div class="row cta-cover-thumbnail-row">
+  <div class="panel-body cta-cover__card__body">  
+    <div class="row cta-cover__thumbnail-row">
       <div class="col-sm-12 cta-cover__thumbnail-column">
-        <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" style="width: 100%; position: absolute; top: 0; left: 0;">
+        <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
       </div>    
     </div>
   </div>  
 
-  <div class="panel-footer" ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
+  <div class="panel-footer cta-cover__card__footer">
     <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row">
       <div id="share-interaction-{{interaction_info.interaction.id}}">
         <%= render partial: "/call_to_action/share_interaction" %>
@@ -51,7 +51,7 @@
     </div>
     <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
       <div id="comment-interaction-{{interaction_info.interaction.id}}">
-        <%= render partial: "/call_to_action/comment_interaction" %>
+        <%= render partial: "/call_to_action/cover_comment_interaction" %>
       </div>
     </div>
   </div>
