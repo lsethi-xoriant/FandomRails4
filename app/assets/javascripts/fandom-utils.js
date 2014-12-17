@@ -28,23 +28,23 @@ function renderTagboxAlertDiv(str) {
     return "<div class='alert alert-info' role='alert'>" + str + "</div>";
 };
 
-function fillInputWithSlug(srcInputId, destInputId) {
+function fillInputWithSlug(srcInputElement, destInputElement) {
     var nameManuallyModified = false;
-    srcInputId.keyup(function() {
+    srcInputElement.keyup(function() {
         if (!nameManuallyModified) {
             var text = this.value;
             text = text.toLowerCase();
             text = text.replace(/[^a-zA-Z0-9]+/g,'-').replace(/-+/g,'-').replace(/-$/g,'').replace(/^-/g,'');
-            destInputId.val(text);
+            destInputElement.val(text);
         }
     });
 
-    destInputId.keyup(function() {
+    destInputElement.keyup(function() {
         nameManuallyModified = true;
-        if (destInputId.val() == "")
+        if (destInputElement.val() == "")
             nameManuallyModified = false;
     });
-}
+};
 
 function getButtonHandlerForJsonFieldsName(fieldName) {
     return  'text-boxes-for-' + fieldName + '-fields';	

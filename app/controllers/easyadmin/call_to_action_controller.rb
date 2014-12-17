@@ -125,12 +125,12 @@ class Easyadmin::CallToActionController < ApplicationController
         if extra_field_value[:type] == 'string'
           params[:call_to_action][:extra_fields][extra_field_name] = extra_field_value[:value]
         else
-          if extra_field_value[:value].present?
+          if extra_field_value[:value].present? # new
             attachment = Attachment.create(data: extra_field_value[:value])
             extra_field_value[:attachment_id] = attachment.id
             extra_field_value[:url] = attachment.data.url
             extra_field_value.delete :value
-          else
+          else # edit
             value_of_extra_field = JSON.parse(cta.extra_fields)[extra_field_name]
             extra_field_value[:type] = value_of_extra_field['type']
             extra_field_value[:attachment_id] = value_of_extra_field['attachment_id']
