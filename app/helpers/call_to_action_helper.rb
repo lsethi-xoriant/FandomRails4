@@ -2,10 +2,7 @@ require 'fandom_utils'
 require 'digest/md5'
 
 module CallToActionHelper
-
-  def get_tag_field_value(tag, name)
-    tag.tag_fields.select { |tf| tf.name == name }.map { |tf| tf.value }.first rescue nil
-  end
+  include ViewHelper
 
   def build_call_to_action_info_list(calltoactions)
     calltoaction_info_list = Array.new
@@ -22,14 +19,16 @@ module CallToActionHelper
           "media_image" => calltoaction.media_image, 
           "media_data" => calltoaction.media_data, 
           "thumbnail_url" => calltoaction.thumbnail_url,
+          "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
+          "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
           "interaction_info_list" => build_interaction_info_list(calltoaction),
           "aux" => (JSON.parse(calltoaction.aux) if calltoaction.aux.present?)
         },
         "miniformat" => {
-          "label_background" => get_tag_field_value(miniformat, "label-background"),
-          "icon" => get_tag_field_value(miniformat, "icon"),
-          "label_color" => get_tag_field_value(miniformat, "label-color"),
-          "title" => get_tag_field_value(miniformat, "title")
+          "label_background" => get_extra_fields!(miniformat)["label-background"],
+          "icon" => get_extra_fields!(miniformat)["icon"],
+          "label_color" => get_extra_fields!(miniformat)["label-color"],
+          "title" => get_extra_fields!(miniformat)["title"]
         },
         "status" => compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction)
       }
