@@ -34,6 +34,7 @@
 					<thead>
 						<tr>
 							<th>Nome</th>
+							<th>Titolo</th>
 							<th>Descrizione</th>
 							<th>Inizio validità</th>
 							<th>Fine validità</th>
@@ -47,23 +48,30 @@
 							<td>
 								<% if t.valid_to.present? %>
 									<% if t.valid_to.in_time_zone(USER_TIME_ZONE) < DateTime.now %>
-										<s><%= t.name %></s>
+										  <s><%= t.name %></s>
+										</td>
+										<td>
+										    <s><%= t.title %></s>
+										</td>
+                                        <td>
+                                            <s><%= t.description %></s>
 									<% else %>
-										<%= t.name %>
+										  <%= t.name %>
+                                        </td>
+                                        <td>
+                                            <%= t.title %>
+                                        </td>
+                                        <td>
+                                            <%= t.description %>
 									<% end %>
 								<% else %>
-									<%= t.name %>
-								<% end %>
-							</td>
-							<td>
-								<% if t.valid_to.present? %>
-									<% if t.valid_to.in_time_zone(USER_TIME_ZONE) < DateTime.now %>
-										<s><%= t.description %></s>
-									<% else %>
-										<%= t.description %>
-									<% end %>
-								<% else %>
-									<%= t.description %>
+									   <%= t.name %>
+                                    </td>
+                                    <td>
+                                        <%= t.title %>
+                                    </td>
+                                    <td>
+                                        <%= t.description %>
 								<% end %>
 							</td>
 							<td><%= t.valid_from.present? ? t.valid_from.in_time_zone(USER_TIME_ZONE).strftime('%d/%m/%Y %H:%M') : nil %></td>
