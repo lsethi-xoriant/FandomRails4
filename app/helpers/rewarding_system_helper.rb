@@ -86,14 +86,14 @@ module RewardingSystemHelper
       user_interaction.counter == 1
     end
 
-    def get_interaction_rules(interaction_id)
-      result = rules_collector.interaction_id_by_rules[interaction_id]
+    def get_interaction_rules(interaction)
+      result = rules_collector.interaction_id_by_rules[interaction.id]
       if result.nil?
         # refresh rules_collector
-        rules_collector = get_rules_collector()
-        result = rules_collector.interaction_id_by_rules[interaction_id]
+        rules_collector = get_rules_collector(interaction.call_to_action)
+        result = rules_collector.interaction_id_by_rules[interaction.id]
         if result.nil?
-          log_error("cannot find interaction in rules collector", { interaction: interaction_id })
+          log_error("cannot find interaction in rules collector", { interaction: interaction.id })
           return []
         end
       end
@@ -104,7 +104,7 @@ module RewardingSystemHelper
     def compute_outcome(user_interaction, just_rules_applying_to_interaction = false)
       outcome = Outcome.new()
       unless (user_interaction.mocked? && user_interaction.there_is_no_interaction?)
-        interaction_rules = get_interaction_rules(user_interaction.interaction.id)
+        interaction_rules = get_interaction_rules(user_interaction.interaction)
         interaction_rules.each do |rule|
           evaluate_rule(rule, outcome, user_interaction)
         end
@@ -329,7 +329,7 @@ module RewardingSystemHelper
 
   def prepare_rules_and_context(user_interaction, rules_collector = nil)
     if rules_collector.nil?
-      rules_collector = get_rules_collector()
+      rules_collector = get_rules_collector(user_interaction.interaction.call_to_action)
     end
     context = new_context(user_interaction, rules_collector)
     context        
@@ -340,14 +340,13 @@ module RewardingSystemHelper
     check_rules_aux(buffer)
   end
   
-  def get_rules_collector()
-    cache_short('rewarding_rules_collector') do 
+  def get_rules_collector(call_to_action)
+    cache_short(get_rewarding_rules_collector_cache_key(call_to_action.id)) do 
       rules_buffer = Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY).value
       rules_collector = RulesCollector.new
       # WARNING: instance_eval
       rules_collector.instance_eval(rules_buffer)
-      interactions = Interaction.includes(:call_to_action).all
-      rules_collector.set_interaction_id_by_rules(interactions, self)
+      rules_collector.set_interaction_id_by_rules(call_to_action.interactions, self)
       rules_collector
     end
   end
