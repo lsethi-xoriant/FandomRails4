@@ -89,6 +89,10 @@ module RewardingSystemHelper
     def get_interaction_rules(interaction)
       result = rules_collector.interaction_id_by_rules[interaction.id]
       if result.nil?
+        if interaction.is_a? MockedInteraction
+          return []
+        end
+        
         # refresh rules_collector
         rules_collector = get_rules_collector(interaction.call_to_action)
         result = rules_collector.interaction_id_by_rules[interaction.id]
@@ -407,6 +411,27 @@ module RewardingSystemHelper
   end
   MOCKED_USER = MockedUser.new
 
+  class MockedCallToAction
+    def id
+      0
+    end
+    
+    def interactions
+      []
+    end
+  end
+  
+  class MockedInteraction
+    attr_accessor :call_to_action
+    def initialize()
+      @call_to_action = MockedCallToAction.new
+    end
+    
+    def id
+      0
+    end
+  end
+  
   # Simulate an user interaction where the correctness of an answer/interaction can be set in advance.
   # It is used to predict the outcome of an interaction.
   class MockedUserInteraction
@@ -477,6 +502,7 @@ module RewardingSystemHelper
         other_interactions = sorted_interactions[1 .. -1]
     
         user_interaction = get_mocked_user_interaction(first_interaction, user, true)
+
         context = prepare_rules_and_context(user_interaction, nil)  
         first_outcome = context.compute_outcome_just_for_interaction(user_interaction)
 
