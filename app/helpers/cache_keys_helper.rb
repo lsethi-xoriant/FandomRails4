@@ -91,6 +91,10 @@ module CacheKeysHelper
     "rewards_with_tag_#{tag_name}"
   end
   
+  def get_last_rewards_for_tag(tag_name, user_id)
+    "last_rewards_with_tag_#{tag_name}_user_#{user_id}"
+  end
+  
   def get_ctas_with_tags_cache_key(tags_name)
     "ctas_with_tags_#{tags_name.join("_")}"
   end
@@ -148,6 +152,10 @@ module CacheKeysHelper
   
   def get_superfan_contest_point_key(user_id)
     "superfan_contest_point_user_#{user_id}"
+  end
+  
+  def get_max_reward_key(reward_name, user_id)
+    "max_reward_#{reward_name}_user_#{user_id}_key"
   end
   
   # Gallery

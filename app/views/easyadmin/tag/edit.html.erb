@@ -71,6 +71,22 @@
 
       </div>
 
+
+      <div class="row">
+        <div class="col-md-10">
+            <div class="form-group">
+                <h3>CAMPI EXTRA</h3>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <input type='button' value='AGGIUNGI CAMPO' id='add-button-for-extra_fields-fields' class='btn btn-primary'>
+        </div>
+      </div>
+        <div class="row">
+      <div id='text-boxes-for-extra_fields-fields' class="col-lg-12">
+        <div id="extra-fields-for-extra_fields-button_label"></div>
+      </div>
+
       <div class="row">
       	<div class="col-lg-12">
             <label>METADATI</label>
@@ -168,6 +184,13 @@
     <% if @cloning %>
     	$("#tag_name").focus();
     <% end %>
+
+    var json_field = <%= @extra_options.to_json.html_safe %>;
+    var formName = 'edit_tag_' + <%= @tag.id.to_s %>
+    var modelName = "tag";
+    var fieldName = "extra_fields";
+
+    populateTextboxWithJsonField(json_field, null, formName, modelName, fieldName);
     
   });
 

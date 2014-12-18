@@ -24,4 +24,6 @@
 //= require fandom-utils
 //= require flowplayer.min
 //= require ui-bootstrap-0.12.min
+//= require jquery.jcarousel
 //= require jquery.flexslider
+

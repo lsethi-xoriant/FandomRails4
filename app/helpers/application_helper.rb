@@ -7,7 +7,6 @@ module ApplicationHelper
   include CacheHelper
   include RewardingSystemHelper
   include NoticeHelper
-  include ActionView::Helpers::TextHelper
   
   class BrowseCategory
     include ActiveAttr::TypecastedAttributes
@@ -45,6 +44,13 @@ module ApplicationHelper
     attribute :contents
     attribute :view_all_link, type: String
     attribute :column_number, type: Integer
+  end
+  
+  # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
+  # is redefined in TextHelper
+  class TextHelperNamespace ; include ActionView::Helpers::TextHelper ; end
+  def truncate(*args)
+    TextHelperNamespace.new.truncate(*args)
   end
   
   def tag_to_category(tag, populate_desc = true)
@@ -269,6 +275,21 @@ module ApplicationHelper
   
   end
   
+  def get_max(collection, &comparison)
+    result = nil
+    collection.each do |element|
+      if result.nil?
+        result = element
+      else
+        cmp_result = yield(result, element)
+        if cmp_result > 0
+          result = element
+        end
+      end
+    end
+    result
+  end
+  
   def interaction_done?(interaction)
     return current_user && UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
   end
@@ -281,6 +302,21 @@ module ApplicationHelper
           tag_to_rewards[reward_tag.tag.name] = Set.new 
         end
         tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
+      end
+      tag_to_rewards
+    end
+  end
+  
+  def get_tag_to_my_rewards(user)
+    cache_short("tag_to_my_rewards") do
+      tag_to_rewards = Hash.new
+      user.user_rewards.each do |ur|
+        ur.reward_tags.all.each do |reward_tag|
+          unless tag_to_rewards.key? reward_tag.tag.name
+            tag_to_rewards[reward_tag.tag.name] = Set.new 
+          end
+          tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
+        end
       end
       tag_to_rewards
     end
@@ -346,6 +382,23 @@ module ApplicationHelper
     cache_short get_rewards_with_tag_cache_key(tag_name) do
       Reward.includes(reward_tags: :tag).where("tags.name = ?", tag_name).to_a
     end
+  end
+  
+  def get_last_rewards_for_tag(tag_name)
+    cache_short get_last_rewards_for_tag(tag_name, current_user.id) do
+      
+      
+      last_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").order("rewards.updated_at DESC").first
+      if last_reward
+        last_reward
+      else
+        CACHED_NIL
+      end
+    end
+  end
+  
+  def get_max_reard(rewards)
+    rewards.order("updated_at DESC").first
   end
   
   def get_tags_for_vote_ranking(vote_ranking)
@@ -471,6 +524,14 @@ module ApplicationHelper
       reward: reward
     }
 
+  end
+  
+  def get_current_property_point
+    if $context_root.nil?
+      get_counter_about_user_reward("point");
+    else
+      get_counter_about_user_reward("#{$context_root}_point");
+    end
   end
 
   def get_counter_about_user_reward(reward_name, all_periods = false)
@@ -835,6 +896,75 @@ module ApplicationHelper
     end 
     
     return user, from_registration
+  end
+  
+  def get_max_reward(reward_name)
+    cache_short(get_max_reward_key(reward_name, current_user.id)) do
+      levels, use_property = rewards_by_tag(reward_name, current_user)
+      level = nil
+      
+      if use_property
+        if !levels.empty?
+          level = get_max(levels) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+        end 
+      elsif !levels.nil? && !levels[$context_root].nil?
+        level = get_max(levels[$context_root]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+      end
+      
+      if !level.nil?
+        level
+      else
+        CACHED_NIL
+      end
+      
+    end
+  end
+  
+  def rewards_by_tag(tag_name, user = nil)
+    if user.nil?
+      tag_to_rewards = get_tag_to_rewards()
+    else
+      tag_to_rewards = get_tag_to_my_rewards(user)
+    end
+
+    # rewards_from_param can include badges or levels 
+    rewards_from_param = tag_to_rewards[tag_name] 
+
+    property_tags = get_tags_with_tag("property")
+
+    if property_tags.present?
+
+      rewards_to_show = Hash.new
+
+      property_tag_names = property_tags.map{ |tag| tag.name }
+
+      tag_to_rewards.each do |tag_name, rewards|
+        if property_tag_names.include?(tag_name)
+          rewards_to_show[tag_name] = rewards & rewards_from_param
+        end
+      end
+
+      are_properties_used = are_properties_used?(rewards_to_show)
+     
+      unless are_properties_used
+        rewards_to_show = rewards_from_param
+      end
+
+    else
+      are_properties_used = false
+      rewards_to_show = rewards_from_param
+    end
+
+    [rewards_to_show, are_properties_used]
+  end
+
+  def are_properties_used?(rewards_to_show)
+    not_empty_properties_counter = 0
+    rewards_to_show.each do |tag_name, rewards|
+      not_empty_properties_counter += 1 if rewards.any?  
+    end
+
+    not_empty_properties_counter > 0
   end
   
 end

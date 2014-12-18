@@ -1,12 +1,14 @@
-class Tag < ActiveRecord::Base
+class Tag < ActiveRecordWithJSON
 
   include ActionView::Helpers::TextHelper
   include DateMethods
 
-  attr_accessible :name, :title, :description, :locked, :tag_fields_attributes, :created_at, :updated_at, :valid_from, :valid_to,
+  attr_accessible :name, :title, :description, :locked, :extra_fields, :tag_fields_attributes, :created_at, :updated_at, :valid_from, :valid_to,
                   :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time
 
   attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time
+
+   json_attributes [[:extra_fields, EmptyAux]]
 
   validates_presence_of :name
   validates :name, uniqueness: true

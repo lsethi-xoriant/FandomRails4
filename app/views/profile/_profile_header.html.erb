@@ -1,35 +1,50 @@
-<div class="row">
-	<div class="col-md-6 col-sm-6 ">
-	  <div class="col-md-4 col-sm-4 col-xs-4 text-center">
-	  <img src="<%= user_avatar current_user %>" alt="profile img" class="img-circle img-responsive img-profile">
-	  </div>
-	  <div class="col-md-8 col-sm-8 col-xs-8">
-	    <h4><%= extract_name_or_username(current_user) %></h4>
-	    <p>Il tuo avanzamento</p>
-	    <div class="progress">
-	    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;">
-	      <span class="sr-only">10% Complete</span>
-	    </div>
-	  </div>
-	  </div>
+<%
+level = get_max_reward("level");
+my_position, total = get_my_general_position_in_property 
+%>
+<div class="row profile-header">
+	<div class="col-sm-3">
+		<div class="profile-header__item">
+			<img src="<%= user_avatar current_user %>" alt="profile avatar" class="profile-header__item__image">
+			<p class="profile-header__item__title"><%= extract_name_or_username(current_user) %></p>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="row profile-header__item">
+			<% if !cached_nil?(level) %>
+				<img src="<%= get_reward_image_for_status(level) %>" alt="" class="profile-header__item__image">
+				<p class="profile-header__item__title"><%= level.title %></p>
+				<p class=".profile-header__item__subtitle"><a href="/users/sign_out"></a></p>
+			<% end %>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="row profile-header__item">
+				<% if my_position %>
+					<p class="profile-header__item__rank-position"># <%= myposition %></p>
+					<p class="profile-header__item__title">
+						Classifica
+					</p>
+					<p class=".profile-header__item__subtitle">
+						<%= total %> utenti
+					</p>
+				<% else %>
+					<p class="profile-header__item__rank-position"># </p>
+					<p class="profile-header__item__title">
+						Classifica
+					</p>
+				<% end %>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="row profile-header__item profile-header__item--last">
+			<div class="profile-header__item__reward">
+				Punti <span class="label label-warning profile-header__item__counter"><%= get_current_property_point %></span>
+			</div>
+			<div class="profile-header__item__reward">
+				Crediti <span class="label label-warning profile-header__item__counter"><%= get_counter_about_user_reward("credit") %></span>
+			</div>
+		</div>
 	</div>
 	<hr class="visible-xs">
-	<!--
-	<div class="col-md-6 col-sm-6 ">
-	  <div class="row">
-	    <div class="col-md-4 col-sm-4 col-xs-4 border-right text-center">
-	      <h5>Livello</h5>
-	      <h3 class="no-margin">1<br><small>/10</small></h3>
-	    </div>
-	    <div class="col-md-4 col-sm-4 col-xs-4 border-right text-center">
-	      <h5>Classifica</h5>
-	      <h3 class="no-margin">134<br><small>/1000</small></h3>
-	    </div>
-	    <div class="col-md-4 col-sm-4 col-xs-4 text-center"> 
-	      <h5>Biglietti</h5>
-	      <h3>7 <button class="btn btn-default btn-sm">Gioca!</button></h3>
-	    </div>
-	  </div>
-	</div>  
-	-->   
 </div>
