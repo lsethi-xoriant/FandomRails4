@@ -54,24 +54,25 @@ module ApplicationHelper
   end
   
   def tag_to_category(tag, populate_desc = true)
-    has_thumb = tag.tag_fields.find_by_name("thumbnail") && tag.tag_fields.find_by_name("thumbnail").upload.present?
-    thumb_url = tag.tag_fields.find_by_name("thumbnail").upload(:medium) if tag.tag_fields.find_by_name("thumbnail")
-    if tag.tag_fields.find_by_name("description")
-      description = truncate(tag.tag_fields.find_by_name("description").value, :length => 150, :separator => ' ')
-      long_description = tag.tag_fields.find_by_name("description").value
+    thumb_field = get_extra_fields!(tag)["thumbnail"]
+    has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
+    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if thumb_field
+    if get_extra_fields!(tag).key? "description"
+      description = truncate(get_extra_fields!(tag)["description"], :length => 150, :separator => ' ')
+      long_description = get_extra_fields!(tag)["description"]
     else
       description = ""
       long_description = ""
     end
-    header_image = tag.tag_fields.find_by_name("header_image").upload.url if tag.tag_fields.find_by_name("header_image")
-    icon = tag.tag_fields.find_by_name("icon") if tag.tag_fields.find_by_name("icon")
-    category_icon = tag.tag_fields.find_by_name("category_icon").upload.url if tag.tag_fields.find_by_name("category_icon")
+    header_image = get_extra_fields!(tag)["header_image"]["url"] if get_extra_fields!(tag).key? "header_image"
+    icon = get_extra_fields!(tag)["icon"]["url"] if get_extra_fields!(tag).key? "icon"
+    category_icon = get_extra_fields!(tag)["category_icon"]["url"] if get_extra_fields!(tag).key? "category_icon"
     BrowseCategory.new(
       type: "tag",
       id: tag.id,
       has_thumb: has_thumb, 
       thumb_url: thumb_url,
-      title: tag.tag_fields.find_by_name("title").try(:value),
+      title: get_extra_fields!(tag).fetch("title", tag.name),
       long_description: populate_desc ? long_description : nil,
       description: populate_desc ? description : nil,  
       detail_url: "/browse/category/#{tag.id}",
@@ -167,7 +168,7 @@ module ApplicationHelper
     tag = Tag.find_by_name("highlight")
     if tag
       highlight_calltoactions = calltoaction_active_with_tag(tag.name, "DESC")
-      meta_ordering = tag.tag_fields.find_by_name("ordering")    
+      meta_ordering = get_extra_fields!(tag)["ordering"]    
       if meta_ordering
         ordered_highlight_calltoactions = order_highlight_calltoactions_by_ordering_meta(meta_ordering, highlight_calltoactions)
       else
