@@ -54,24 +54,25 @@ module ApplicationHelper
   end
   
   def tag_to_category(tag, populate_desc = true)
-    has_thumb = tag.tag_fields.find_by_name("thumbnail") && tag.tag_fields.find_by_name("thumbnail").upload.present?
-    thumb_url = tag.tag_fields.find_by_name("thumbnail").upload(:medium) if tag.tag_fields.find_by_name("thumbnail")
-    if tag.tag_fields.find_by_name("description")
-      description = truncate(tag.tag_fields.find_by_name("description").value, :length => 150, :separator => ' ')
-      long_description = tag.tag_fields.find_by_name("description").value
+    thumb_field = get_extra_fields!(tag)["thumbnail"]
+    has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
+    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if thumb_field
+    if get_extra_fields!(tag).key? "description"
+      description = truncate(get_extra_fields!(tag)["description"], :length => 150, :separator => ' ')
+      long_description = get_extra_fields!(tag)["description"]
     else
       description = ""
       long_description = ""
     end
-    header_image = tag.tag_fields.find_by_name("header_image").upload.url if tag.tag_fields.find_by_name("header_image")
-    icon = tag.tag_fields.find_by_name("icon") if tag.tag_fields.find_by_name("icon")
-    category_icon = tag.tag_fields.find_by_name("category_icon").upload.url if tag.tag_fields.find_by_name("category_icon")
+    header_image = get_extra_fields!(tag)["header_image"]["url"] if get_extra_fields!(tag).key? "header_image"
+    icon = get_extra_fields!(tag)["icon"]["url"] if get_extra_fields!(tag).key? "icon"
+    category_icon = get_extra_fields!(tag)["category_icon"]["url"] if get_extra_fields!(tag).key? "category_icon"
     BrowseCategory.new(
       type: "tag",
       id: tag.id,
       has_thumb: has_thumb, 
       thumb_url: thumb_url,
-      title: tag.tag_fields.find_by_name("title").try(:value),
+      title: get_extra_fields!(tag).fetch("title", tag.name),
       long_description: populate_desc ? long_description : nil,
       description: populate_desc ? description : nil,  
       detail_url: "/browse/category/#{tag.id}",
@@ -167,7 +168,7 @@ module ApplicationHelper
     tag = Tag.find_by_name("highlight")
     if tag
       highlight_calltoactions = calltoaction_active_with_tag(tag.name, "DESC")
-      meta_ordering = tag.tag_fields.find_by_name("ordering")    
+      meta_ordering = get_extra_fields!(tag)["ordering"]    
       if meta_ordering
         ordered_highlight_calltoactions = order_highlight_calltoactions_by_ordering_meta(meta_ordering, highlight_calltoactions)
       else
@@ -222,6 +223,8 @@ module ApplicationHelper
 
       if interaction.resource_type.downcase == "share"
         aux = merge_aux(aux, user_interaction.aux)
+      elsif interaction.resource_type.downcase == "like"
+        aux = { like: !(JSON.parse(user_interaction.aux)["like"]) }.to_json
       end
 
       unless interaction.resource.one_shot
@@ -230,7 +233,7 @@ module ApplicationHelper
       end
 
     else
-      user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, like: like, aux: aux)
+      user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
   
       unless anonymous_user?(user)
         UserCounter.update_counters(interaction, user_interaction, user, true)
@@ -273,6 +276,21 @@ module ApplicationHelper
   
   end
   
+  def get_max(collection, &comparison)
+    result = nil
+    collection.each do |element|
+      if result.nil?
+        result = element
+      else
+        cmp_result = yield(result, element)
+        if cmp_result > 0
+          result = element
+        end
+      end
+    end
+    result
+  end
+  
   def interaction_done?(interaction)
     return current_user && UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
   end
@@ -285,6 +303,21 @@ module ApplicationHelper
           tag_to_rewards[reward_tag.tag.name] = Set.new 
         end
         tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
+      end
+      tag_to_rewards
+    end
+  end
+  
+  def get_tag_to_my_rewards(user)
+    cache_short("tag_to_my_rewards") do
+      tag_to_rewards = Hash.new
+      user.user_rewards.each do |ur|
+        ur.reward_tags.all.each do |reward_tag|
+          unless tag_to_rewards.key? reward_tag.tag.name
+            tag_to_rewards[reward_tag.tag.name] = Set.new 
+          end
+          tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
+        end
       end
       tag_to_rewards
     end
@@ -350,6 +383,23 @@ module ApplicationHelper
     cache_short get_rewards_with_tag_cache_key(tag_name) do
       Reward.includes(reward_tags: :tag).where("tags.name = ?", tag_name).to_a
     end
+  end
+  
+  def get_last_rewards_for_tag(tag_name)
+    cache_short get_last_rewards_for_tag(tag_name, current_user.id) do
+      
+      
+      last_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").order("rewards.updated_at DESC").first
+      if last_reward
+        last_reward
+      else
+        CACHED_NIL
+      end
+    end
+  end
+  
+  def get_max_reard(rewards)
+    rewards.order("updated_at DESC").first
   end
   
   def get_tags_for_vote_ranking(vote_ranking)
@@ -475,6 +525,14 @@ module ApplicationHelper
       reward: reward
     }
 
+  end
+  
+  def get_current_property_point
+    if $context_root.nil?
+      get_counter_about_user_reward("point");
+    else
+      get_counter_about_user_reward("#{$context_root}_point");
+    end
   end
 
   def get_counter_about_user_reward(reward_name, all_periods = false)
@@ -839,6 +897,75 @@ module ApplicationHelper
     end 
     
     return user, from_registration
+  end
+  
+  def get_max_reward(reward_name)
+    cache_short(get_max_reward_key(reward_name, current_user.id)) do
+      levels, use_property = rewards_by_tag(reward_name, current_user)
+      level = nil
+      
+      if use_property
+        if !levels.empty?
+          level = get_max(levels) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+        end 
+      elsif !levels.nil? && !levels[$context_root].nil?
+        level = get_max(levels[$context_root]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+      end
+      
+      if !level.nil?
+        level
+      else
+        CACHED_NIL
+      end
+      
+    end
+  end
+  
+  def rewards_by_tag(tag_name, user = nil)
+    if user.nil?
+      tag_to_rewards = get_tag_to_rewards()
+    else
+      tag_to_rewards = get_tag_to_my_rewards(user)
+    end
+
+    # rewards_from_param can include badges or levels 
+    rewards_from_param = tag_to_rewards[tag_name] 
+
+    property_tags = get_tags_with_tag("property")
+
+    if property_tags.present?
+
+      rewards_to_show = Hash.new
+
+      property_tag_names = property_tags.map{ |tag| tag.name }
+
+      tag_to_rewards.each do |tag_name, rewards|
+        if property_tag_names.include?(tag_name)
+          rewards_to_show[tag_name] = rewards & rewards_from_param
+        end
+      end
+
+      are_properties_used = are_properties_used?(rewards_to_show)
+     
+      unless are_properties_used
+        rewards_to_show = rewards_from_param
+      end
+
+    else
+      are_properties_used = false
+      rewards_to_show = rewards_from_param
+    end
+
+    [rewards_to_show, are_properties_used]
+  end
+
+  def are_properties_used?(rewards_to_show)
+    not_empty_properties_counter = 0
+    rewards_to_show.each do |tag_name, rewards|
+      not_empty_properties_counter += 1 if rewards.any?  
+    end
+
+    not_empty_properties_counter > 0
   end
   
 end

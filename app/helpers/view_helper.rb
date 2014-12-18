@@ -73,8 +73,18 @@ module ViewHelper
       element.extra_fields = JSON.parse(element.extra_fields)
       element.extra_fields
     else
-      element.extra_fields
+      element.extra_fields || {}
     end
+  end
+  
+  def upload_extra_field_present?(field)
+    !field["attachment_id"].nil?
+  end
+  
+  def get_upload_extra_field_processor(field, processor)
+    parts = field["url"].split('/')
+    parts[-2] = processor.to_s
+    parts.join('/')
   end
   
 end

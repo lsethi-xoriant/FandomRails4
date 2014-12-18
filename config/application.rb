@@ -115,6 +115,7 @@ module Fandom
     config.sites = []
     config.domain_to_site = {}
     config.domain_to_site_id = {}
+    config.id_to_site = {}
     
     enabled_sites = config.deploy_settings.fetch('enabled_sites', '')
     enabled_sites = enabled_sites.split(',').map { |s| s.strip }

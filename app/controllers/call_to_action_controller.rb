@@ -372,7 +372,7 @@ class CallToActionController < ApplicationController
       user_interaction = get_user_interaction_from_interaction(interaction, current_or_anonymous_user)
       like = user_interaction ? !user_interaction.like : true
 
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, like)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, { like: true }.to_json)
 
       response[:ga][:label] = "Like"
 

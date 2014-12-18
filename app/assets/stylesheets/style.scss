@@ -1,3 +1,6 @@
+$red: #a35217;
+$blu: #3399ff;
+
 $container-tablet:             100% !default;
 $container-sm:                 $container-tablet !default;
 
@@ -18,9 +21,11 @@ $panel-border-radius:          0px !default;
 @import "blocks/**/*";
 @import "typography/**/*";
 @import "buttons/**/*";
+@import "flexsliders/**/*";
 @import "reset";
 
-a, p, button {
+a, p, button, label {
   font-family: 'TrebuchetMS';
 }
+
 

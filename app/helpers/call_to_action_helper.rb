@@ -9,7 +9,7 @@ module CallToActionHelper
     calltoactions.each do |calltoaction|
 
       miniformat = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
-      if miniformat 
+      if miniformat.present?
         miniformat_info = {
           "label_background" => get_extra_fields!(miniformat)["label-background"],
           "icon" => get_extra_fields!(miniformat)["icon"],
@@ -67,6 +67,8 @@ module CallToActionHelper
         answers = build_answers_for_resource(interaction, resource.answers, resource_type, user_interaction)
       when "comment"
         comment_info = build_comments_for_resource(interaction)
+      when "like"
+        like_info = build_likes_for_resource(interaction)
       when "upload"
         upload_info = build_uploads_for_resource(interaction)
       end
@@ -85,6 +87,7 @@ module CallToActionHelper
             "answers" => answers,
             "providers" => resource_providers,
             "comment_info" => comment_info,
+            "like_info" => like_info,
             "upload_info" => upload_info
           }
         },
@@ -102,6 +105,7 @@ module CallToActionHelper
     outcome = JSON.parse(user_interaction.outcome)["win"]["attributes"] rescue nil
     user_interaction_for_interaction_info = { 
         "outcome" => outcome,
+        "aux" => user_interaction.aux,
         "answer" => user_interaction.answer,
         "hash" => Digest::MD5.hexdigest("#{MD5_FANDOM_PREFIX}#{user_interaction.interaction_id}")
       }
@@ -125,7 +129,11 @@ module CallToActionHelper
     answers_for_resurce
   end
 
-    def build_comments_for_resource(interaction)
+  def build_likes_for_resource(interaction)
+    interaction.user_interactions.where("(aux->>'like')::bool").count
+  end
+
+  def build_comments_for_resource(interaction)
     comments, comments_total_count = get_comments_approved(interaction)
 
     if page_require_captcha?(interaction)

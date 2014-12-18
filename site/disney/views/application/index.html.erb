@@ -2,20 +2,25 @@
 
 <%= render partial: "/application/home_launchers" %>
 
-<div class="container">   
+<div class="container main-container">   
 
   <!-- CUSTOM SITE HEADER --> 
   <%#= render partial: "/application/header" %>
 
   <div class="row">
-    <div class="col-sm-12">
-      <%= render partial: "/application/home_filters" %>
-    </div>
+    <%= render partial: "/application/home_filters" %>
   </div>
 
-  <div ng-repeat="calltoaction_info in calltoactions" class="row">
-    <div id="calltoaction-{{calltoaction_info.calltoaction.id}}" class="col-sm-8">
-      <%= render partial: "/call_to_action/cover_single_calltoaction" %>
+  <div class="row">
+    <div class="col-sm-8">
+      <div ng-repeat="calltoaction_info in calltoactions" class="row">
+        <div id="calltoaction-{{calltoaction_info.calltoaction.id}}" class="col-sm-12">
+          <%= render partial: "/call_to_action/cover_single_calltoaction" %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-default text-center" style="line-height: 200px;">ADV</div>
     </div>
   </div>
 

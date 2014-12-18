@@ -21,6 +21,22 @@ module RankingHelper
     users_positions['general_user_position'][current_user.id]
   end
   
+  def get_my_general_position_in_property
+    if $context_root.nil?
+      [nil, nil]
+    else
+      property_ranking = Ranking.find_by_name("#{$context_root}_general_chart")
+      if property_ranking
+        rank = cache_short("#{$context_root}_general_chart") do
+          rank = get_full_rank(property_ranking)
+        end
+        [rank['my_position'], rank["total"]]
+      else
+        [nil, nil]
+      end
+    end
+  end
+  
   def get_reward_points_in_period(period_kind, reward_name)    
     reward_points = get_counter_about_user_reward(reward_name, true)
     reward_points[period_kind].present? ? reward_points[period_kind] : 0
@@ -187,8 +203,12 @@ module RankingHelper
     end
   end
   
-  def create_general_user_position
-    ranking = Ranking.find_by_name("general_chart")
+  def create_general_user_position(property = nil)
+    if property.nil?
+      ranking = Ranking.find_by_name("general_chart")
+    else
+      ranking = Ranking.find_by_name("#{property}_general_chart")
+    end
     rank = get_ranking(ranking)
     if rank
       rank.user_to_position

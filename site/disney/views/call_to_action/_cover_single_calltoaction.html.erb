@@ -1,45 +1,37 @@
 <div class="panel panel-default cta-cover__card">
-
-  <div class="panel-heading hidden">
-    <div class="row">
-      <!-- MINIFORMAT -->
-      <div ng-if="calltoaction_info.miniformat" class="col-md-8 col-xs-8">
-        <h5>
-          <span class="label label-default" style="background-color: {{calltoaction_info.miniformat.label_background}}; color: {{calltoaction_info.miniformat.label_color}; padding: 7px; font-size: 90%;">
-            <span class="{{calltoaction.miniformat.icon}}"></span>
-            {{calltoaction_info.miniformat.title}}
-          </span>
-        </h5>  
-      </div>
-      <!-- CALLTOACTION WINNABLE REWARD COUNT -->
-      <div ng-if="calltoaction_info.status" class="col-md-4 col-xs-4">
-        <h4>
-          <span id="head-feedback-calltoaction-{{calltoaction_info.calltoaction.id}}" class="label label-warning">
-            +{{calltoaction_info.status.winnable_reward_count}}<span class="glyphicon glyphicon-star">
-          </span>  
-        </h4>
-      </div>
-      <!-- CALLTOACTION DONE -->
-      <div ng-if="!calltoaction_info.status" class="col-md-4 col-xs-4">
-        <h4>
-          <span id="head-feedback-calltoaction-{{calltoaction_info.calltoaction.id}}" class="label label-success">
-            FATTO <span class="glyphicon glyphicon-ok">
-          </span>  
-        </h4>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 text-left">
-        <h2>{{calltoaction_info.calltoaction.title}}</h2>
-      </div>
-    </div>
-  </div>
     
   <div class="panel-body cta-cover__card__body">  
-    <div class="row cta-cover__thumbnail-row">
+    <div class="row cta-cover__thumbnail-row" style="position: relative;">
+      <!-- CALLTOACTION THUMBNAIL -->
       <div class="col-sm-12 cta-cover__thumbnail-column">
         <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
-      </div>    
+      </div>  
+      <!-- CALLTOACTION WINNABLE REWARD COUNT -->
+      <div ng-if="calltoaction_info.status" class="col-md-12 cta-cover__winnable-reward text-right">
+        <span class="label label-warning cta-cover__winnable-reward__label">
+          +{{calltoaction_info.status.winnable_reward_count}}<span class="glyphicon glyphicon-star">
+        </span>  
+      </div> 
+      <!-- CALLTOACTION DONE -->
+      <div ng-if="!calltoaction_info.status" class="col-md-12 cta-cover__winnable-reward text-right">
+        <span class="label label-success cta-cover__winnable-reward__label">
+          FATTO <span class="glyphicon glyphicon-ok">
+        </span>  
+      </div> 
+      <div class="col-sm-8 text-left cta-cover__title">
+        <span ng-if="calltoaction_info.miniformat" class="label label-default cta-cover__miniformat" style="background-color: {{calltoaction_info.miniformat.label_background}}; color: {{calltoaction_info.miniformat.label_color}; padding: 7px;">
+          <span class="{{calltoaction_info.miniformat.icon}}"></span>
+          {{calltoaction_info.miniformat.title}}
+        </span>
+        <p>{{calltoaction_info.calltoaction.title}}</p>
+      </div>
+    </div>
+    <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions" class="row">
+      <div class="like-interaction__cover__info">
+        <button ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}">
+          <span class="glyphicon glyphicon-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span>
+        </button><span class="like-interaction__cover__info__text">{{interaction_info.interaction.resource.like_info}} mi piace</span>
+      </div>
     </div>
   </div>  
 

@@ -16,13 +16,20 @@ module CacheKeysHelper
   end
 
   # Rewards
-  # ~~~~~
+  # ~~~~~~~
   
   def get_reward_cache_key(reward_name)
     "reward_#{reward_name}"
   end
 
-  # USER
+  # Rewarding System
+  # ~~~~~~~~~~~~~~~~
+  
+  def get_rewarding_rules_collector_cache_key(call_to_action_id)
+    "rewarding_rules_collector_#{call_to_action_id}"
+  end
+
+  # User
   # ~~~~~
 
   def get_cta_completed_or_reward_status_cache_key(cta_id, user_id)
@@ -91,6 +98,10 @@ module CacheKeysHelper
     "rewards_with_tag_#{tag_name}"
   end
   
+  def get_last_rewards_for_tag(tag_name, user_id)
+    "last_rewards_with_tag_#{tag_name}_user_#{user_id}"
+  end
+  
   def get_ctas_with_tags_cache_key(tags_name)
     "ctas_with_tags_#{tags_name.join("_")}"
   end
@@ -150,6 +161,10 @@ module CacheKeysHelper
     "superfan_contest_point_user_#{user_id}"
   end
   
+  def get_max_reward_key(reward_name, user_id)
+    "max_reward_#{reward_name}_user_#{user_id}_key"
+  end
+  
   # Gallery
   # ~~~~~~~
   
@@ -168,14 +183,14 @@ module CacheKeysHelper
     "user_#{user_id}_already_won_contest_#{interaction_id}"
   end
   
-  # BROWSE
+  # Browse
   # ~~~~~~
   
   def get_browse_search_results_key(term)
     "browse_search_result_#{term}"
   end
 
-  # COIN
+  # Coin
   # ~~~~~~~~~~
 
   def get_coin_locations_cache_key()

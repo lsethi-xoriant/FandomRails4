@@ -135,4 +135,17 @@ module FandomUtils
     end
   end
   
+  
+  def switch_tenant(tenant)
+    puts "The Apartment gem and the $site global variable have been set to tenant #{tenant}"
+    init_global_variables
+    $site = Rails.configuration.id_to_site[tenant]
+    Apartment::Tenant.switch(tenant);
+    nil
+  end
+
+  def all_site_ids_with_db
+    Rails.configuration.sites.select {|s| s.share_db.nil? }.map { |s| s.id }
+  end
+  
 end
