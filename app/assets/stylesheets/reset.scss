@@ -7,9 +7,15 @@ body {
 
 .main-container {
   background-color: #fff;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
-@media (max-width: $screen-md-min) { 
+@media (max-width: $screen-sm-min) { 
+  .main-container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 }
 
 .disabled {

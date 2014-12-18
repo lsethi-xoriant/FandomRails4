@@ -1,11 +1,11 @@
-<div class="col-sm-12 mobile-menu" style="margin-top: 15px;" ng-if="aux.filter_info">
+<div class="col-sm-12 filters__flexslider" ng-if="aux.filter_info">
   <div class="flexslider filters__flexslider-desktop hidden-xs">
     <div class="flex-viewport-shadow"></div>
     <ul class="slides">
       <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-desktop-item" style="background-color: {{filter.background}};">
         <div class="filters__flexslider-item-active hidden"></div>
-        <!--<p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;">{{filter.title}}</p>-->
         <img ng-src="{{filter.image}}">
+        <p class="filters__title">{{filter.title}}</p>
       </li>
     </ul>
   </div>
@@ -14,7 +14,8 @@
     <ul class="slides">
       <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-mobile-item" style="background-color: {{filter.background}};">
         <div class="filters__flexslider-item-active hidden"></div>
-        <p style="color: #fff; font-size: 12px; text-transform: uppercase; padding-bottom: 10px;">{{filter.title}}</p>
+        <img ng-src="{{filter.image}}">
+        <p class="filters__title">{{filter.title}}</p>
       </li>
     </ul>
   </div>
@@ -54,7 +55,7 @@
       slideshow: false,
       animationLoop: false,
       touch: true,
-      itemWidth: 130,
+      itemWidth: 262,
       itemMargin: 8,
       controlNav: false,
       prevText: "",
