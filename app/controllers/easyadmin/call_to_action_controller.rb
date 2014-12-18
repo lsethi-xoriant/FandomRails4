@@ -30,7 +30,7 @@ class Easyadmin::CallToActionController < ApplicationController
   end
 
   def save_cta
-    create_and_link_attachment(params, nil)
+    create_and_link_attachment(params[:call_to_action], nil)
     @cta = CallToAction.create(params[:call_to_action])
     if @cta.errors.any?
       @tag_list = params[:tag_list].split(",")
@@ -52,7 +52,7 @@ class Easyadmin::CallToActionController < ApplicationController
 
   def update_cta
     @cta = CallToAction.find(params[:id])
-    create_and_link_attachment(params, @cta)
+    create_and_link_attachment(params[:call_to_action], @cta)
     unless @cta.update_attributes(params[:call_to_action])
       @tag_list = params[:tag_list].split(",")
       @extra_options = params[:extra_options]
@@ -118,29 +118,7 @@ class Easyadmin::CallToActionController < ApplicationController
     end
 
   end
-  
-  def create_and_link_attachment(params, cta)
-    if params[:call_to_action][:extra_fields].present?
-      params[:call_to_action][:extra_fields].each do |extra_field_name, extra_field_value|
-        if extra_field_value[:type] == 'string'
-          params[:call_to_action][:extra_fields][extra_field_name] = extra_field_value[:value]
-        else
-          if extra_field_value[:value].present? # new
-            attachment = Attachment.create(data: extra_field_value[:value])
-            extra_field_value[:attachment_id] = attachment.id
-            extra_field_value[:url] = attachment.data.url
-            extra_field_value.delete :value
-          else # edit
-            value_of_extra_field = JSON.parse(cta.extra_fields)[extra_field_name]
-            extra_field_value[:type] = value_of_extra_field['type']
-            extra_field_value[:attachment_id] = value_of_extra_field['attachment_id']
-            extra_field_value[:url] = value_of_extra_field['url']
-          end
-        end
-      end
-    end
-  end
-  
+
   def update_activated_at
     cta = CallToAction.find(params[:id])
     cta.update_attribute(:activated_at, Time.parse(params["time"]).to_date)
