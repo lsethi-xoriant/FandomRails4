@@ -216,6 +216,8 @@ module ApplicationHelper
 
       if interaction.resource_type.downcase == "share"
         aux = merge_aux(aux, user_interaction.aux)
+      elsif interaction.resource_type.downcase == "like"
+        aux = { like: !(JSON.parse(user_interaction.aux)["like"]) }.to_json
       end
 
       unless interaction.resource.one_shot
@@ -224,7 +226,7 @@ module ApplicationHelper
       end
 
     else
-      user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, like: like, aux: aux)
+      user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
   
       unless anonymous_user?(user)
         UserCounter.update_counters(interaction, user_interaction, user, true)

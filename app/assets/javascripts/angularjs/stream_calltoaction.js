@@ -334,6 +334,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     return (interaction_info.interaction.resource_type == "comment");
   };
 
+  $scope.likePressed = function(interaction_info) {
+    return (JSON.parse(interaction_info.user_interaction.aux)["like"]);
+  };
+
+  $scope.filterLikeInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "like");
+  };
+
   $scope.filterPlayInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "play");
   };
@@ -1164,6 +1172,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             	$timeout(function() { 
     			      removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
     			    }, 3000);
+            } else {
+              if(interaction_info.interaction.resource_type == "like") {
+                console.log(JSON.parse(interaction_info.user_interaction.aux)["like"]);
+                if(JSON.parse(interaction_info.user_interaction.aux)["like"]) {
+                  interaction_info.interaction.resource.like_info += 1;
+                } else {
+                  interaction_info.interaction.resource.like_info -= 1;
+                } 
+              }
             }
 
             /*

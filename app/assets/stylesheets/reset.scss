@@ -2,9 +2,17 @@
 
 body {
   padding-top: 60px;
+  background-color: #ccc;
 }
 
-.disabled{
+.main-container {
+  background-color: #fff;
+}
+
+@media (max-width: $screen-md-min) { 
+}
+
+.disabled {
   background-color: grey !important;
 }
 
@@ -13,7 +21,7 @@ body {
     animation: comment_evidence_animation 3s;
 }
 
-.spacer{
+.spacer {
   margin: 20px 0;
 }
 

@@ -132,11 +132,25 @@ class ApplicationController < ActionController::Base
   end
 
   def init_aux()
+    filters = get_tags_with_tag("filter")
+    if filters.any?
+      filter_info = []
+      filters.each do |filter|
+        filter_info << {
+          "background" => get_extra_fields!(filter)["label-background"],
+          "icon" => get_extra_fields!(filter)["icon"],
+          "title" => get_extra_fields!(filter)["title"],
+          "image" => (get_extra_fields!(filter)["image"]["url"] rescue nil)
+        }
+      end
+    end
+
     {
       "tenant" => get_site_from_request(request)["id"],
       "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
       "main_reward_name" => MAIN_REWARD_NAME,
-      "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil)
+      "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
+      "filter_info" => filter_info
     }
   end
 

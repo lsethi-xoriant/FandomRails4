@@ -12,11 +12,13 @@
 
 .cta-cover__card__body {
   padding-top: 0;
+  padding-bottom: 0;
 }
 
 .cta-cover__thumbnail-row {
   height: 250px; 
   overflow: hidden;
+  position: relative;
 }
 
 .cta-cover__thumbnail-column {
@@ -28,4 +30,31 @@
   position: absolute; 
   top: 0; 
   left: 0;
+}
+
+.cta-cover__winnable-reward {
+  position: absolute; 
+  top: 10px
+}
+
+.cta-cover__winnable-reward__label {
+  font-size: 14px;
+  border-radius: 15px;
+  color: $red;
+  border: 1px solid $red;
+}
+
+.cta-cover__title {
+  font-size: 22px;
+  color: #fff;
+  position: absolute; 
+  bottom: 0;
+}
+
+.cta-cover__miniformat {
+  font-size: 10px;
+  text-transform: uppercase;
+  background-color: $blu;
+  color: #fff;
+  padding: 4px 6px 4px 4px;
 }

@@ -73,7 +73,7 @@ module ViewHelper
       element.extra_fields = JSON.parse(element.extra_fields)
       element.extra_fields
     else
-      element.extra_fields
+      element.extra_fields || {}
     end
   end
   
