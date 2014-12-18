@@ -1,14 +1,10 @@
-<div class="row">
-    <div class="col-xs-12">
-      <!--<div data-spy="affix" data-offset-top="200" data-offset-bottom="200">-->
-        <ul class="nav nav-tabs">
-          <li class="<%= "active" if page == "edit" %>"><a href="/profile/edit">Account</a></li>
-          <li class="<%= "active" if page == "levels" %>"><a href="/profile/levels">Livelli</a></li>
-          <li class="<%= "active" if page == "badges" %>"><a href="/profile/badges">Badges</a></li>
-          <li class="<%= "active" if page == "prizes" %>"><a href="/profile/prizes">Miei premi</a></li>
-          <li class="<%= "active" if page == "notices" %>"><a href="/profile/notices">Notifiche</a></li>
-          <li class="<%= "active" if page == "rankings" %>"><a href="/profile/rankings">Classifica</a></li>
+<div class="row profile-menu-block">
+    <div class="col-xs-12 text-center">
+        <ul class="profile-menu-block__menu">
+          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "edit" %>"><a class="profile-menu-block__item-link" href="/profile/edit">Nickname &	 Avatar</a></li>
+          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "rewards" %>"><a class="profile-menu-block__item-link" href="/profile/levels">Rewards</a></li>
+          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "rankings" %>"><a class="profile-menu-block__item-link" href="/profile/badges">Classifica	</a></li>
+          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "notices" %>"><a class="profile-menu-block__item-link" href="/profile/notices">Notifiche</a></li>
         </ul>
-      <!--</div>-->
     </div>
 </div>
