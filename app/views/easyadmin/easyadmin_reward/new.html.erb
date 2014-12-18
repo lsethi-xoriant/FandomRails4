@@ -42,12 +42,12 @@
       <div class="row">
         <div class="col-lg-6">
           <div class="form-group">
-              <label class="text-input">Nome</label>
-              <%= f.text_field :name, :class => "form-control" %>
-          </div>
-          <div class="form-group">
               <label class="text-input">Titolo</label>
               <%= f.text_field :title, :class => "form-control" %>
+          </div>
+          <div class="form-group">
+              <label class="text-input">Nome</label>
+              <%= f.text_field :name, :class => "form-control" %>
           </div>
           <div class="form-group">
               <label class="text-input">Descrizione breve</label>
@@ -157,7 +157,11 @@
       </div>
 
       <div class="row">
-	  	<div class="col-md-10"><h3>CAMPI EXTRA</h3></div>
+	  	<div class="col-md-10">
+            <div class="form-group">
+                <h3>CAMPI EXTRA</h3>
+            </div>
+        </div>
         <div class="col-md-2">
 	  		<input type='button' value='AGGIUNGI CAMPO' id='add-button-for-extra_fields-fields' class='btn btn-primary'>
 	  	</div>
@@ -254,6 +258,8 @@
   }
 
   $(document).ready(function() {
+
+    fillInputWithSlug($('#reward_title'), $('#reward_name'));
 
   	var mandatory_fields = null;
   	var formName = "new_reward"

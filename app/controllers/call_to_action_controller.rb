@@ -202,8 +202,11 @@ class CallToActionController < ApplicationController
     @profanities_regexp = cache_short("profanities") do
       pattern_array = Array.new
 
-      Setting.where(key: 'profanity.words').first.value.split(",").each do |exp|
-        pattern_array.push(build_regexp(exp))
+      profanity_words = Setting.find_by_key("profanity.words")
+      if profanity_words
+        profanity_words.value.split(",").each do |exp|
+          pattern_array.push(build_regexp(exp))
+        end
       end
 
       Regexp.union(pattern_array)

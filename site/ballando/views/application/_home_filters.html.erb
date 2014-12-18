@@ -14,14 +14,14 @@
 				        	%>
 				        	<% if is_special_guest_active %>
 				         	<li>
-				                <div class="slide slide-upload" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= special_guest_tag.nil? ? asset_path('special_guest_thumb.jpg') : special_guest_tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                <div class="slide slide-upload" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= special_guest_tag.nil? ? asset_path('special_guest_thumb.jpg') : get_extra_fields!(special_guest_tag)["thumbnail"]["url"] %>');">
 				                    <div class="comment-center">
 				                        <a href="/gallery/55">
 									      <div class="row">
 									        <div class="col-md-12">
-									          <h2><%= special_guest_tag.nil? ? "SPECIAL GUEST" : special_guest_tag.tag_fields.find_by_name("title").try(:value) %></h2>
+									          <h2><%= special_guest_tag.nil? ? "SPECIAL GUEST" : get_extra_fields!(special_guest_tag)["title"] %></h2>
 									        </div>
-									      </div>
+									      </div>   
 									    </a>
 				                    </div>
 				                </div>
@@ -29,12 +29,12 @@
 				        <% end %>
 				        	<% tag_menu.each do |tag| %>
 				            <li>
-				                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" && !single_cta %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= tag.tag_fields.select { |tf| tf.name == "thumbnail" }.map { |tf| tf.upload.url }.first %>');">
+				                <div class="slide slide-<%= tag.id %> <%= "active filter-all" if tag.name == "home_filter_all" && !single_cta %>" style="background-position:center center; background-repeat: no-repeat; background-image: url('<%= get_extra_fields!(tag)["thumbnail"]["url"] %>');">
 				                    <div class="comment-center">
 				                        <a href="javascript: void(0)" onclick="<%= tag.name == "home_filter_all" ? "updatePageWithTag(null)" : "updatePageWithTag(#{tag.id})" %>">
 									      <div class="row">
 									        <div class="col-md-12">
-									          <h2><%= tag.tag_fields.find_by_name("title").try(:value) %></h2>
+									          <h2><%= get_extra_fields!(tag)["title"] %></h2>
 									        </div>
 									      </div>
 									    </a>
@@ -54,8 +54,8 @@
 		<div class="menu-info-extra hidden-xs">
 			<% get_tags_with_tag("menu").each do |tag| %>
 				<div class="extra-info extra-info-<%= tag.id %> <%= "extra-info-all" if tag.name == "home_filter_all" %>">
-					<img class="extra-info-img" src="<%= tag.tag_fields.select { |tf| tf.name == "image" }.map { |tf| tf.upload }.first %>" />
-					<span class="extra-info-description text-with-shadow"><%= tag.tag_fields.select { |tf| tf.name == "description" }.map { |tf| tf.value }.first %></span>
+					<img class="extra-info-img" src="<%= get_extra_fields!(tag)["image"]["url"] %>" />
+					<span class="extra-info-description text-with-shadow"><%= get_extra_fields!(tag)["description"] %></span>
 					<div id="banner-rai" class="hidden-xs" style="position: absolute; right: 25px; bottom: 15px; width: 300px; height: 250px;"></div>
 				</div>
 			<% end %>

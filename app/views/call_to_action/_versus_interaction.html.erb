@@ -1,7 +1,5 @@
 <div class="col-sm-8 col-sm-offset-2 text-center">
-  <h3>
-    {{interaction_info.interaction.resource.question}}
-  </h3>
+  <p class="versus-interaction__question--overvideo">{{interaction_info.interaction.resource.question}}</p>
 </div>
 <div ng-if="interaction_info.user_interaction && currentUserEmptyAndAnonymousInteractionEnable()" class="row">
   <div class="col-md-12 text-center">
@@ -10,7 +8,7 @@
 </div>
 <div class="row">
   <div ng-repeat="answer in interaction_info.interaction.resource.answers">
-    <div class="col-md-6 col-xs-6">
+    <div class="col-sm-6">
       <%= render partial: "/call_to_action/versus_answer" %>
     </div>
   </div>

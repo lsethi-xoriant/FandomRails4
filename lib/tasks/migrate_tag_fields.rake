@@ -2,7 +2,7 @@ namespace :tag_fields do
 
   desc "Migrates the tag_fields table to the tag.extra_field JSON."
   task :migrate => :environment do
-    tenants = ['ballando']
+    tenants = Rails.configuration.sites.select {|s| s.share_db.nil? }.map { |s| s.id }
     tenants.each do |tenant|
       migrate(tenant)
     end
@@ -19,15 +19,22 @@ namespace :tag_fields do
     Tag.all.each do |tag|
       puts "migrating #{tag.name}"
       hash = {}
-      TagField.all.each do |tag_field|
+      tag.tag_fields.each do |tag_field|
         if tag_field.field_type == "UPLOAD"
-          attachment = Attachment.create(data: tag_field.upload)
-          if attachment.id.nil? # this means that the image is not accessible anymore
+          begin
+            attachment = Attachment.create(data: tag_field.upload)
+          rescue
+            attachment = nil
+          end
+          if attachment.nil? || attachment.id.nil? # this means that the image is not accessible anymore
             hash[tag_field.name] = "" 
           else
             hash[tag_field.name] = { type: 'media', attachment_id: attachment.id, url: attachment.data.url }
           end
         else
+          if tag_field.name.downcase == 'title'
+            tag.title = tag_field.value
+          end
           hash[tag_field.name] = tag_field.value
         end
       end

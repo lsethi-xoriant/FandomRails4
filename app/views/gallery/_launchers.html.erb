@@ -12,7 +12,7 @@
       <% i = 0 %>
       <% galleries.each do |g| %>
       	<% gallery_tag = get_tag_with_tag_about_call_to_action(g, "gallery").first %>
-        <div class="item <%= "active" if i == 0 %>" style="background: url('<%= gallery_tag.tag_fields.find_by_name("preview_image").upload %>') no-repeat center top; background-size: cover;">
+        <div class="item <%= "active" if i == 0 %>" style="background: url('<%= get_extra_fields!(tags_with_miniformat_in_calltoaction.first.gallery_tag)["preview_image"]["url"] %>') no-repeat center top; background-size: cover;">
           <!--<img src="http://placehold.it/1000x500">-->
           <div class="container">
             <div class="carousel-caption">

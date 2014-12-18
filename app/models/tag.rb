@@ -3,7 +3,7 @@ class Tag < ActiveRecord::Base
   include ActionView::Helpers::TextHelper
   include DateMethods
 
-  attr_accessible :name,  :description, :locked, :tag_fields_attributes, :created_at, :updated_at, :valid_from, :valid_to,
+  attr_accessible :name, :title, :description, :locked, :tag_fields_attributes, :created_at, :updated_at, :valid_from, :valid_to,
                   :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time
 
   attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time

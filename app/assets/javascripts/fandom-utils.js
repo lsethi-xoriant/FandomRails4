@@ -6,15 +6,13 @@ function showTagboxAlert(idTextField, unactiveTagsName, allTagsName, newTagMessa
     unactiveTagsSelected = intersect(values, unactiveTagsName);
     if(unactiveTagsSelected.length > 0) {
         var unactiveTagMessageDiv = $(renderTagboxAlertDiv("Attenzione: tag '" + unactiveTagsSelected + "' non attivo/i"));
-        var unactiveTagMsgHasChanged = true;
     }
 
     existentTagsSelected = intersect(values, allTagsName);
-    if((existentTagsSelected.length != values.length) & !unactiveTagMsgHasChanged) {
+    if(existentTagsSelected.length != values.length) {
         var newTagMessageDiv = $(renderTagboxAlertDiv(newTagMessage));
     }
 
-    var unactiveTagMsgHasChanged = false;
     $(idTextField + "_message").empty().append(unactiveTagMessageDiv, newTagMessageDiv);
 };
 
@@ -28,6 +26,24 @@ function intersect(a, b) {
 
 function renderTagboxAlertDiv(str) {
     return "<div class='alert alert-info' role='alert'>" + str + "</div>";
+};
+
+function fillInputWithSlug(srcInputElement, destInputElement) {
+    var nameManuallyModified = false;
+    srcInputElement.keyup(function() {
+        if (!nameManuallyModified) {
+            var text = this.value;
+            text = text.toLowerCase();
+            text = text.replace(/[^a-zA-Z0-9]+/g,'-').replace(/-+/g,'-').replace(/-$/g,'').replace(/^-/g,'');
+            destInputElement.val(text);
+        }
+    });
+
+    destInputElement.keyup(function() {
+        nameManuallyModified = true;
+        if (destInputElement.val() == "")
+            nameManuallyModified = false;
+    });
 };
 
 function getButtonHandlerForJsonFieldsName(fieldName) {

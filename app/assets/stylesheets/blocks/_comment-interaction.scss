@@ -1,0 +1,42 @@
+.comment-interaction__cover__avatar {
+  width: 30px;
+  height: 30px;
+  float: left;
+}
+
+.comment-interaction__cover__info {
+  padding: 0 15px;
+  margin: 0 0 15px 0;
+  font-size: 14px;
+  color: #999;
+}
+
+.comment-interaction__cover__info__glyphicon-comment {
+  font-size: 22px 
+}
+
+.comment-interaction__cover__info__text {
+  bottom: 3px;
+  left: 3px;
+  position: relative;
+}
+
+.comment-interaction__cover__text-p {
+  text-overflow: ellipsis; overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-transform: none; 
+  line-height: 30px;
+  padding-left: 5px;
+  padding-right: 15px; 
+  margin: 0;
+  color: #999;
+}
+
+.comment-interaction__cover__name {
+  color: #000;
+}
+
+.comment-interaction__cover__comment {
+  margin: 5px 10px;
+}

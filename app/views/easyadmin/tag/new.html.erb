@@ -50,8 +50,13 @@
         <div class="col-lg-6">
           <div class="form-group">
               <label class="text-input">Titolo</label>
+              <%= f.text_field :title, :class => "form-control" %>
+          </div>
+          <div class="form-group">
+              <label class="text-input">Nome</label>
               <%= f.text_field :name, :class => "form-control" %>
           </div>
+
           <div class="form-group">
               <label class="text-input">Descrizione</label>
               <%= f.text_area :description, :class => "form-control", rows: 5 %>
@@ -153,11 +158,15 @@
 
   tl = <%= raw(Tag.select("name").where("valid_to IS NULL OR valid_to > now()").map(&:name).to_json) %>;
   $(document).ready(function() {
+
     $('#s2_tokenization').select2({
       placeholder: "",
       tags: tl,
       tokenSeparators: [","]
-    })
+    });
+
+    fillInputWithSlug($('#tag_title'), $('#tag_name'));
+
   });
 
   function add_tag_fields(link, association, content) {
@@ -170,4 +179,6 @@
     $(link).parent().parent().parent().remove();
   }
 
+  $(document).ready(function() {
+  });
 </script>

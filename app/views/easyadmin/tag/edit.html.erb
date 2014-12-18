@@ -46,9 +46,13 @@
 
     <%= form_for @tag, url: "/easyadmin/tag/#{@tag.id}", multipart: true do |f| %>
       <div class="row">
-        <div class="col-lg-6">
+          <div class="col-lg-6">
           <div class="form-group">
               <label class="text-input">Titolo</label>
+              <%= f.text_field :title, :class => "form-control" %>
+          </div>
+          <div class="form-group">
+              <label class="text-input">Nome</label>
               <%= f.text_field :name, :class => "form-control", :readonly => true %>
           </div>
           <div class="form-group">
