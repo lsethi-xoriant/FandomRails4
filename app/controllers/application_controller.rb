@@ -133,7 +133,11 @@ class ApplicationController < ActionController::Base
 
   def init_aux()
     filters = get_tags_with_tag("filter")
+    #$context_root
     if filters.any?
+      if $context_root
+        filters = filters & get_tags_with_tag($context_root)
+      end
       filter_info = []
       filters.each do |filter|
         filter_info << {
