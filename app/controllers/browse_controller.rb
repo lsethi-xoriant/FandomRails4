@@ -10,7 +10,7 @@ class BrowseController < ApplicationController
         @browse_section << send(func)
       else
         tag_area = Tag.find_by_name(area)
-        if tag_area.tag_fields.any? && tag_area.tag_fields.find_by_name("contents")
+        if get_extra_fields!(tag_area).key? "contents"
           @browse_section << get_featured(tag_area)
         else
           @browse_section << get_browse_area_by_category(tag_area)
@@ -29,7 +29,7 @@ class BrowseController < ApplicationController
         @browse_section << send(func, params[:query])
       else
         tag_area = Tag.find_by_name(area)
-        if tag_area.tag_fields.any? && tag_area.tag_fields.find_by_name("contents")
+        if get_extra_fields!(tag_area).key? "contents"
           @browse_section << get_featured_with_match(tag_area, params[:query])
         else
           @browse_section << get_browse_area_by_category_with_match(tag_area, params[:query])
@@ -48,7 +48,7 @@ class BrowseController < ApplicationController
     featured_contents = get_featured_content(featured)
     browse_section = ContentSection.new(
       key: "featured",
-      title: featured.tag_fields.find_by_name("title").value,
+      title: featured.title,
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: 12/4 #featured_contents.count
@@ -59,7 +59,7 @@ class BrowseController < ApplicationController
     featured_contents = get_featured_content_with_match(featured, query)
     browse_section = ContentSection.new(
       key: "featured",
-      title: featured.tag_fields.find_by_name("title").value,
+      title: featured.title,
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: 12/4 #featured_contents.count
@@ -70,7 +70,7 @@ class BrowseController < ApplicationController
     featured_contents = get_featured_content(featured)
     browse_section = ContentSection.new(
       key: "featured",
-      title: featured.tag_fields.find_by_name("title").value,
+      title: featured.title,
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: 12/4 #featured_contents.count
@@ -93,7 +93,7 @@ class BrowseController < ApplicationController
     contents = get_contents_by_category(category)
     browse_section = ContentSection.new(
       key: category.name,
-      title: category.tag_fields.present? ? category.tag_fields.find_by_name("title").value : category.name,
+      title:  get_extra_fields!(category).fetch('title', category.name),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
       column_number: 12/4
@@ -116,7 +116,7 @@ class BrowseController < ApplicationController
     contents = get_contents_by_category_with_match(category, query)
     browse_section = ContentSection.new(
       key: category.name,
-      title: category.tag_fields.present? ? category.tag_fields.find_by_name("title").value : category.name,
+      title: get_extra_fields!(category).fetch('title', category.name),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
       column_number: 12/6
@@ -152,7 +152,7 @@ class BrowseController < ApplicationController
 
   def get_featured_content(featured)
     contents = Array.new
-    featured.tag_fields.find_by_name("contents").value.split(",").each do |name|
+    get_extra_fields!(featured)["contents"].split(",").each do |name|
       cta = CallToAction.find_by_name(name)
       if cta
         contents << cta
@@ -167,7 +167,7 @@ class BrowseController < ApplicationController
   def get_featured_content_with_match(featured, query)
     contents = Array.new
     conditions = construct_conditions_from_query(query, "title")
-    featured.tag_fields.find_by_name("contents").value.split(",").each do |name|
+    get_extra_fields!(featured)["contents"].split(",").each do |name|
       cta = CallToAction.where("name = ? AND (#{conditions})", name)
       if cta
         contents << cta
@@ -238,7 +238,7 @@ class BrowseController < ApplicationController
   def addCtaTags(tags, element)
     element.call_to_action_tags.includes(:tag).each do |t|
       if !tags.has_key?(t.tag.id)
-        tags[t.tag.id] = t.tag.tag_fields.find_by_name("title").present? ? t.tag.tag_fields.find_by_name("title").value : t.tag.name
+        tags[t.tag.id] = get_extra_fields!(t.tag).fetch("title", t.tag.name)
       end
     end
     tags
@@ -248,7 +248,7 @@ class BrowseController < ApplicationController
     element.tags_tags.each do |t|
       other_tag = Tag.find(t.other_tag_id)
       if !tags.has_key?(other_tag.id)
-        tags[t.other_tag_id] = other_tag.tag_fields.find_by_name("title").present? ? other_tag.tag_fields.find_by_name("title").value : other_tag.name
+        tags[t.other_tag_id] = get_extra_fields!(other_tag).fetch("title", other_tag.name)
       end
     end
     tags
