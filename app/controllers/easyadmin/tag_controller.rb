@@ -20,6 +20,11 @@ class Easyadmin::TagController < ApplicationController
         success = yield create_or_update_block
         if !success
           @tag_list = params[:tag_list]
+          if @tag.extra_fields.blank?
+            @extra_options = {}
+          else
+            @extra_options = JSON.parse(@tag.extra_fields)
+          end
           render template_name
         else
           add_tags_tags_and_check_cycle()
@@ -31,6 +36,11 @@ class Easyadmin::TagController < ApplicationController
         # TODO: fix error message
         flash[:error] = "Errore hai generato un ciclo nel riferimento tag"
         @tag_list = params[:tag_list]
+        if @tag.extra_fields.blank?
+          @extra_options = {}
+        else
+          @extra_options = JSON.parse(@tag.extra_fields)
+        end
         render template_name
         raise ActiveRecord::Rollback
       end
@@ -41,6 +51,7 @@ class Easyadmin::TagController < ApplicationController
   
   def create
     create_or_update("new") do
+    create_and_link_attachment(params[:tag], nil)
       @tag = Tag.create(params[:tag])
       @tag.errors.empty?
     end
@@ -49,6 +60,7 @@ class Easyadmin::TagController < ApplicationController
   def update
     create_or_update("edit") do
       @tag = Tag.find(params[:id])
+      create_and_link_attachment(params[:tag], @tag)
       old_name = @tag.name
       new_name = params[:tag][:name]
 
@@ -71,6 +83,11 @@ class Easyadmin::TagController < ApplicationController
 
   def edit
     @tag = Tag.find(params[:id])
+    if @tag.extra_fields.blank?
+      @extra_options = {}
+    else
+      @extra_options = JSON.parse(@tag.extra_fields)
+    end
     @tag_list_arr = Array.new
     @tag.tags_tags.each { |t| @tag_list_arr << t.other_tag.name }
     @tag_list = @tag_list_arr.join(",")
@@ -110,7 +127,7 @@ class Easyadmin::TagController < ApplicationController
     params[:id] = @tag.id
     render "new"
   end
-  
+
   def clone_tags_tags(new_tag, old_tag)
     old_tag.tags_tags.each do |t|
       new_tag.tags_tags.build(tag_id: new_tag.id, other_tag_id: t.other_tag_id)

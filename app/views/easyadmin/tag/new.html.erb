@@ -80,6 +80,20 @@
       </div>
 
       <div class="row">
+        <div class="col-md-10">
+            <div class="form-group">
+                <h3>CAMPI EXTRA</h3>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <input type='button' value='AGGIUNGI CAMPO' id='add-button-for-extra_fields-fields' class='btn btn-primary'>
+        </div>
+      </div>
+      <div class="row">
+        <div id='text-boxes-for-extra_fields-fields' class="col-lg-12"></div>
+      </div>
+
+      <div class="row">
       	<div class="col-lg-12">
             <label>METADATI</label>
             <p style="float: right;">
@@ -164,6 +178,12 @@
       tags: tl,
       tokenSeparators: [","]
     });
+
+    var formName = "new_tag"
+    var modelName = "tag";
+    var fieldName = "extra_fields";
+
+    initializeTextbox(null, formName, modelName, fieldName);
 
     fillInputWithSlug($('#tag_title'), $('#tag_name'));
 

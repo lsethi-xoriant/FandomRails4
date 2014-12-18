@@ -191,5 +191,34 @@ module EasyadminHelper
     link_to_function(name, "remove_vote_fields(this)", class: "btn btn-warning btn-xs")
   end
 
+  def create_and_link_attachment(param, model_instance)
+    if param[:extra_fields].present?
+      param[:extra_fields].each do |extra_field_name, extra_field_value|
+        if extra_field_value[:type] == 'string'
+          param[:extra_fields][extra_field_name] = extra_field_value[:value]
+        else
+          if extra_field_value[:value].present?
+            attachment = Attachment.create(data: extra_field_value[:value])
+            extra_field_value[:attachment_id] = attachment.id
+            extra_field_value[:url] = attachment.data.url
+            extra_field_value.delete :value
+          else
+            value_of_extra_field = JSON.parse(model_instance.extra_fields)[extra_field_name]
+            extra_field_value[:type] = 'media'
+            if value_of_extra_field.nil?
+              extra_field_value[:attachment_id] = 'null'
+              extra_field_value[:url] = 'null'
+            else
+              extra_field_value[:attachment_id] = value_of_extra_field['attachment_id']
+              extra_field_value[:url] = value_of_extra_field['url']
+            end
+          end
+        end
+      end
+    else
+      param[:extra_fields] = "{}"
+    end
+  end
+
 end
 
