@@ -771,6 +771,11 @@ module ApplicationHelper
     compute_save_and_notify_outcome(user_interaction)    
   end
 
+  def compute_and_save_context_rewards(user)
+    user_interaction = MockedUserInteraction.new(MockedInteraction.new, user, 1, false)
+    compute_and_save_outcome(user_interaction)    
+  end
+
   def days_in_month(month, year = Time.now.year)
    return 29 if month == 2 && Date.gregorian_leap?(year)
    DAYS_IN_MONTH[month]
