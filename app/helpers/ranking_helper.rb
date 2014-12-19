@@ -30,7 +30,7 @@ module RankingHelper
         rank = cache_short("#{$context_root}_general_chart") do
           rank = get_full_rank(property_ranking)
         end
-        [rank['my_position'], rank["total"]]
+        [rank[:my_position], rank[:total]]
       else
         [nil, nil]
       end
@@ -61,6 +61,19 @@ module RankingHelper
         total: rankings.count,
         number_of_pages: get_pages(rankings.count, RANKING_USER_PER_PAGE) 
       )
+    end
+  end
+  
+  # day is in datetime format
+  def get_winner_of_day(day)
+    period = Period.where("start_datetime < ? and end_datetime > ? and kind = ?", day, day, PERIOD_KIND_DAILY).first
+    if period.nil?
+      nil
+    else
+      cache_short("winner_of_day_#{day.to_time.to_i}") do
+        reward_id = Reward.find_by_name("#{$context_root}_point").id
+        UserReward.includes(:user).where("reward_id = ? and period_id = ? and user_id <> ?", reward_id, period.id, anonymous_user.id).order("counter DESC, updated_at ASC, user_id ASC").first
+      end
     end
   end
   

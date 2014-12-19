@@ -914,7 +914,7 @@ module ApplicationHelper
         if !levels.empty?
           level = get_max(levels) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
         end 
-      elsif !levels.nil? && !levels[$context_root].nil?
+      elsif !levels.nil?
         level = get_max(levels[$context_root]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
       end
       
