@@ -147,5 +147,12 @@ module FandomUtils
   def all_site_ids_with_db
     Rails.configuration.sites.select {|s| s.share_db.nil? }.map { |s| s.id }
   end
+
+  def apply_all_sites(&block)
+    site_ids = all_site_ids_with_db
+    site_ids.each do |site_id|
+      yield(site_id)
+    end
+  end
   
 end
