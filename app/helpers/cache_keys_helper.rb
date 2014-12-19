@@ -16,13 +16,20 @@ module CacheKeysHelper
   end
 
   # Rewards
-  # ~~~~~
+  # ~~~~~~~
   
   def get_reward_cache_key(reward_name)
     "reward_#{reward_name}"
   end
 
-  # USER
+  # Rewarding System
+  # ~~~~~~~~~~~~~~~~
+  
+  def get_rewarding_rules_collector_cache_key(call_to_action_id)
+    "rewarding_rules_collector_#{call_to_action_id}"
+  end
+
+  # User
   # ~~~~~
 
   def get_cta_completed_or_reward_status_cache_key(cta_id, user_id)
@@ -180,14 +187,14 @@ module CacheKeysHelper
     "user_#{user_id}_already_won_contest_#{interaction_id}"
   end
   
-  # BROWSE
+  # Browse
   # ~~~~~~
   
   def get_browse_search_results_key(term)
     "browse_search_result_#{term}"
   end
 
-  # COIN
+  # Coin
   # ~~~~~~~~~~
 
   def get_coin_locations_cache_key()
