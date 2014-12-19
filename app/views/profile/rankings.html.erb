@@ -1,63 +1,20 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container" style="background-color: #fff;">
+<div class="container" style="background-color: #fff;" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings(get_ranking_settings).to_json %>, <%= current_user.to_json %>);">
 	<%= render partial: "profile/profile_header" %>
   	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
 
-	<div class="row">
-    <div class="col-xs-12">
-	  <div class="section-heading">
-        	<h3>
-        		<img src="<%= asset_path("icon-cat.png") %>" class=" section-heading__icon" />
-        		Classifica generale
-        	</h3>
-      </div>
-	  <div class="row">
-	  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-	  		<div class="ranking-element ranking-element--myposition">
-	  			<p class="ranking-element__position ranking-element__position--myposition text-center"># <%= @property_rank[:my_position] %></p>
-	  			<img src="<%= current_avatar %>" class="ranking-element__avatar" />
-	  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(current_user) %></p>
-	  			<div class="label label-warning ranking-element__points">+ <%= get_current_property_point %></div>
-	  		</div>
-	  	</div>
-	  	<% @property_rank[:rank_list].slice(0,4).each do |rank_user| %>
-		  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-		  		<div class="ranking-element">
-		  			<p class="ranking-element__position text-center"># <%= rank_user["position"] %></p>
-		  			<img src="<%= rank_user["avatar"] %>" class="ranking-element__avatar" />
-		  			<p class="ranking-element__nickname"><%= rank_user["user"] %></p>
-		  			<div class="label label-warning ranking-element__points">+ <%= rank_user["counter"] %></div>
-		  		</div>
-		  	</div>
-	  	<% end %>
+		<div class="row">
+			
+			<% get_ranking_settings.each do |rs| %>
+				<% if rs == "my_position_general" %>
+					<% if get_my_general_position %>
+						<%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
+					<% end %>
+				<% else %>
+					<%= render partial: "/ranking/rank", locals: { rankings: "rankings.#{rs}" } %>
+				<% end %>
+			<% end %>
+			
 		</div>
-		
-		<div class="section-heading">
-        	<h3>
-        		<img src="<%= asset_path("icon-cat.png") %>" class=" section-heading__icon" />
-        		Fan del giorno
-        	</h3>
-      	</div>
-	  	<% @fan_of_days.each do |winner| %>
-	  		<% if winner["winner"] %>
-		  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-		  		<div class="ranking-element">
-		  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
-		  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
-		  			<p class="ranking-element__nickname"><%= extract_name_or_username(winner["winner"].user) %></p>
-		  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %></div>
-		  		</div>
-		  	</div>
-		  	<% else %>
-		  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-		  		<div class="ranking-element">
-		  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
-		  			<img src="/assets/anon.png" class="ranking-element__avatar" />
-		  			<p class="ranking-element__nickname">nessun vincitore</p>
-		  			<div class="label label-warning ranking-element__points">+ 0</div>
-		  		</div>
-		  	</div>
-		  	<% end %>
-	  	<% end %>
-		</div>
+</div>

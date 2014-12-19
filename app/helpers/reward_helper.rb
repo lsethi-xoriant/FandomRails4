@@ -120,4 +120,12 @@ module RewardHelper
     SUPERFAN_CONTEST_POINTS_TO_WIN - contest_points
   end
   
+  def get_point
+    if $context_root.nil?
+      get_counter_about_user_reward(MAIN_REWARD_NAME)
+    else
+      get_current_property_point
+    end
+  end
+  
 end

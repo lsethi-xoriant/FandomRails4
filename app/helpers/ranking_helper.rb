@@ -16,24 +16,32 @@ module RankingHelper
     attribute :number_of_pages, type: Integer
   end
   
+  def get_my_position
+    if $context_root.nil?
+      get_my_general_position
+    else
+      get_my_general_position_in_property
+    end
+  end
+  
   def get_my_general_position
     users_positions = cache_short(get_ranking_page_key){ populate_rankings(get_ranking_settings) }
-    users_positions['general_user_position'][current_user.id]
+    if users_positions['general_user_position']
+      [users_positions['general_user_position'][current_user.id], users_positions['general_user_position'].count] 
+    else
+      [nil, nil]
+    end
   end
   
   def get_my_general_position_in_property
-    if $context_root.nil?
-      [nil, nil]
-    else
-      property_ranking = Ranking.find_by_name("#{$context_root}_general_chart")
-      if property_ranking
-        rank = cache_short("#{$context_root}_general_chart") do
-          rank = get_full_rank(property_ranking)
-        end
-        [rank[:my_position], rank[:total]]
-      else
-        [nil, nil]
+    property_ranking = Ranking.find_by_name("#{$context_root}_general_chart")
+    if property_ranking
+      rank = cache_short("#{$context_root}_general_chart") do
+        rank = get_full_rank(property_ranking)
       end
+      [rank[:my_position], rank[:total]]
+    else
+      [nil, nil]
     end
   end
   
