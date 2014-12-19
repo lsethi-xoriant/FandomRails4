@@ -6,15 +6,18 @@
 
   <!-- CUSTOM SITE HEADER --> 
   <%#= render partial: "/application/header" %>
-
   <div class="row">
+    <%= render partial: "/application/evidence_ctas" %>
+  </div>
+
+  <div class="row main-row">
     <%= render partial: "/application/home_filters" %>
   </div>
 
-  <div class="row">
+  <div class="row main-row">
     <div class="col-sm-8">
       <div ng-repeat="calltoaction_info in calltoactions" class="row">
-        <div id="calltoaction-{{calltoaction_info.calltoaction.id}}" class="col-sm-12">
+        <div class="col-sm-12">
           <%= render partial: "/call_to_action/cover_single_calltoaction" %>
         </div>
       </div>

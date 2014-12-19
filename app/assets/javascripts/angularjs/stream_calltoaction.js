@@ -911,49 +911,40 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   function flowplayerPlayer(playerId, media_data) {
   	this.playerManager = null;
   	this.playerId = playerId;
-	this.calltoaction_id = $("#" + playerId).attr("calltoaction-id");
+	  this.calltoaction_id = $("#" + playerId).attr("calltoaction-id");
   	this.media_data = media_data;
 
-	this.cuepoints = getOvervideoInteractions(this.calltoaction_id);
+	  this.cuepoints = getOvervideoInteractions(this.calltoaction_id);
   	fplayer = this;
   	
-	$("#"+playerId).flowplayer({
+	  $("#"+playerId).flowplayer({
         playlist: [
            [
-              {mp4: fplayer.media_data}
+              { mp4: fplayer.media_data }
            ]
         ],
         swf: "/assets/flowplayer.swf",
         cuepoints: fplayer.cuepoints,
-     }).bind("ready", function(e, api){
-     	//start interaction
-     	fplayer.playerManager = api;
-     	
-     }).bind("resume", function(e, api){
-     	calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
-	    calltoaction_media_priority = $("#" + player.playerId).attr("main-media");
-	
-	    if(calltoaction_media_priority == "main") {
-	
-	      updateStartVideoInteraction(calltoaction_id);
-	
-	    } else {
-			//secondary media hendler
-	    }
+      }).bind("ready", function(e, api) {
+     	  fplayer.playerManager = api; 	
+      }).bind("resume", function(e, api) {
+     	  calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
+	      calltoaction_media_priority = $("#" + player.playerId).attr("main-media");
+  	    if(calltoaction_media_priority == "main") {
+  	      updateStartVideoInteraction(calltoaction_id);
+  	    } else {
+  			  // SECONDARY MEDIA
+  	    }    
+      }).bind("cuepoint", function(e, api, cuepoint) {
+        if(!$scope.overvideo_interaction_locked[calltoaction_id]) {
+         	$scope.$apply(function() {
+         		executeInteraction(fplayer, fplayer.calltoaction_id, cuepoint.interaction);
+         	});
+        }
+    });
      
-     }).bind("cuepoint", function(e, api, cuepoint){
-     	$scope.$apply(function(){
-     		executeInteraction(fplayer, fplayer.calltoaction_id, cuepoint.interaction);
-     	});
-     });
-     
-     this.play = function(){
-     	this.playerManager.resume();
-     };
-     
-     this.pause = function(){
-     	this.playerManager.pause();
-     };
+    this.play = function(){ this.playerManager.resume(); };
+    this.pause = function(){ this.playerManager.pause(); };
    
   }
   

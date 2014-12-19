@@ -29,8 +29,8 @@
               <th>Nome</th>
               <th>Email</th>
               <th>Premio</th>
-              <th>Data di vincita</th>
-              <th>Giocato in data</th>
+              <th>Premio vincibile da</th>
+              <th>Vinto in data</th>
               <th>Azioni</th>
             </tr>
           </thead>
@@ -44,7 +44,7 @@
               <td><%= user.email %></td>
               <td><%= reward.title %></td>
               <td><%= instantwin.valid_from.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") %></td>
-              <td><%= instantwin_user_interaction.created_at.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") %></td>
+              <td><%= instantwin.updated_at.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") %></td>
 
               <td>
                 <div class="col-sm-1" style="margin: 0;">

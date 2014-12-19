@@ -73,6 +73,7 @@ module ConfigUtils
   def register_fandom_site(params)
     site = FandomSite.new(params)
     config.sites << site
+    config.id_to_site[site.id] = site
     site.domains.each do |domain|
       config.domain_to_site[domain] = site
       config.domain_to_site_id[domain] = site.id

@@ -767,7 +767,7 @@ module ApplicationHelper
   # This methods should be called when rules have been updated with new "context" rules (i.e. those assigning rewards
   # based on other rewards or counters) 
   def compute_save_and_notify_context_rewards(user)
-    user_interaction = MockedUserInteraction.new(nil, user, 1, false)
+    user_interaction = MockedUserInteraction.new(MockedInteraction.new, user, 1, false)
     compute_save_and_notify_outcome(user_interaction)    
   end
 
