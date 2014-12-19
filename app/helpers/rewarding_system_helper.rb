@@ -364,7 +364,7 @@ module RewardingSystemHelper
   
       log_synced("assigning reward to user", { 
         'time' => total_time, 
-        'user_interaction' => user_interaction.mocked? ? nil : user_interaction.id, 
+        'interaction' => user_interaction.mocked? ? nil : user_interaction.interaction.id, 
         'outcome_rewards' => outcome.reward_name_to_counter, 
         'outcome_unlocks' => outcome.unlocks.to_a })
 
