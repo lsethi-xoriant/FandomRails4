@@ -1,16 +1,16 @@
-<div class="row">
-  <div class="col-sm-12">
-    <p class="comment-interaction__cover__info"><span class="glyphicon glyphicon-comment comment-interaction__cover__info__glyphicon-comment"></span> <span class="comment-interaction__cover__info__text">Ci sono {{interaction_info.interaction.resource.comment_info.comments_total_count}} commenti</span></p>
-  </div>
+<div class="col-sm-12">
+  <p class="comment-interaction__cover__info"><span class="glyphicon glyphicon-comment comment-interaction__cover__info__glyphicon-comment"></span> <span class="comment-interaction__cover__info__text">Ci sono {{interaction_info.interaction.resource.comment_info.comments_total_count}} commenti</span></p>
 </div>
-<div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments | limitTo:2">
-  <div class="row" ng-class="{comment_evidence: comment.evidence }">
-    <div class="col-xs-12 text-left comment-interaction__cover__comment">
-      <img ng-src="{{comment.user.avatar}}" alt="user-avatar" class="img-circle comment-interaction__cover__avatar">
-      <p class="comment-interaction__cover__text-p">
-        <span class="comment-interaction__cover__name">{{comment.user.name}}</span> <span class="comment-interaction__cover__text">{{comment.text}}</span>
-        <!--<br><small>{{comment.updated_at}}</small>-->
-      </p>
+<div class="col-sm-12">
+  <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments | limitTo:2">
+    <div class="row" ng-class="{comment_evidence: comment.evidence }">
+      <div class="col-xs-12 text-left comment-interaction__cover__comment">
+        <img ng-src="{{comment.user.avatar}}" alt="user-avatar" class="img-circle comment-interaction__cover__avatar">
+        <p class="comment-interaction__cover__text-p">
+          <span class="comment-interaction__cover__name">{{comment.user.name}}</span> <span class="comment-interaction__cover__text">{{comment.text}}</span>
+          <!--<br><small>{{comment.updated_at}}</small>-->
+        </p>
+      </div>
     </div>
   </div>
 </div>

@@ -39,6 +39,10 @@ module CacheKeysHelper
   # CTA
   # ~~~~~
 
+  def get_evidence_calltoactions_cache_key()
+    "evidence_calltoactions"
+  end
+
   def get_calltoaction_last_comments_cache_key(cta_id)
     "calltoaction_#{cta_id}_last_comments"
   end

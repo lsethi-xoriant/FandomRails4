@@ -1,0 +1,33 @@
+<div class="col-sm-12 ctas__flexslider__container" style="padding-left: 0; padding-right: 0;" ng-if="aux.calltoaction_evidence_info">
+  <div class="flexslider ctas__flexslider">
+    <ul class="slides">
+      <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
+        <img ng-src="{{calltoaction.thumbnail_carousel_url}}">
+        <div class="col-xs-8 ctas__info">
+          <p class="ctas__title">{{calltoaction.title}}</p>
+          <%= light_link_to("/call_to_action/{{calltoaction.id}}", class: "btn btn-primary btn-primary-disney") do %>
+            Vai
+          <% end %>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.ctas__flexslider').flexslider({
+      animation: "fade",
+      slideshow: false,
+      animationLoop: true,
+      touch: true,
+      itemWidth: "100%",
+      itemMargin: 0,
+      controlNav: true,
+      prevText: "",
+      nextText: ""
+    });
+  });
+
+  
+</script>
