@@ -40,6 +40,7 @@ class InstantwinController < ApplicationController
           aux = {"instant_win_id" => instantwin.id, "reward_id" => prize.id}
           send_winner_email(JSON.parse(instantwin.reward_info)['prize_code'],prize)
           expire_cache_key(get_user_already_won_contest(current_user.id, interaction.id))
+          log_synced("assigning instant win to user", { 'instantwin_id' => instantwin.id })
         end
         deduct_ticket(interaction.resource.reward.name)
         create_or_update_interaction(current_user, interaction, nil, nil, aux.to_json)
