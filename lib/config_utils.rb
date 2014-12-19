@@ -53,6 +53,7 @@ module ConfigUtils
     attribute :force_landing, :default => false
     attribute :search_results_per_page, :default => 5
     attribute :allowed_context_roots, :default => []
+    attribute :timezone, type: String, :default => "Europe/Rome"
 
     def unbranded?
       self.id == 'fandom'
