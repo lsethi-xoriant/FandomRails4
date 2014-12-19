@@ -49,6 +49,13 @@ class ProfileController < ApplicationController
 
   def rankings
   end
+  
+  def rewards
+    @levels, prop = rewards_by_tag("level")
+    @mylevels, prop1 = rewards_by_tag("level", current_user)
+    @badges, prop2 = rewards_by_tag("badge")
+    @mybadges, prop3 = rewards_by_tag("badge", current_user)
+  end
 
   def levels
     @rewards_to_show, @are_properties_used = rewards_by_tag("level")

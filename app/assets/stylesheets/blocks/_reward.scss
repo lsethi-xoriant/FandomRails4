@@ -5,6 +5,14 @@
 
 .reward-block__progress-bar{}
 
-.reward-block__title{}
+.reward-block__title{
+  margin: 0; 
+  text-transform: uppercase; 
+  font-weight: bold;
+}
 
-.reward-block__subtitle{}
+.reward-block__subtitle{
+  margin: 0; 
+  padding: 0 20px; 
+  color: #858585;
+}

@@ -7,6 +7,7 @@ my_position, total = get_my_general_position_in_property
 		<div class="profile-header__item">
 			<img src="<%= user_avatar current_user %>" alt="profile avatar" class="profile-header__item__image">
 			<p class="profile-header__item__title"><%= extract_name_or_username(current_user) %></p>
+			<p class="profile-header__item__subtitle"><%= light_link_to "/users/sign_out" do %>Logout<% end %></p>
 		</div>
 	</div>
 	<div class="col-sm-3">
@@ -14,18 +15,17 @@ my_position, total = get_my_general_position_in_property
 			<% if !cached_nil?(level) %>
 				<img src="<%= get_reward_image_for_status(level) %>" alt="" class="profile-header__item__image">
 				<p class="profile-header__item__title"><%= level.title %></p>
-				<p class=".profile-header__item__subtitle"><a href="/users/sign_out"></a></p>
 			<% end %>
 		</div>
 	</div>
 	<div class="col-sm-3">
 		<div class="row profile-header__item">
 				<% if my_position %>
-					<p class="profile-header__item__rank-position"># <%= myposition %></p>
+					<p class="profile-header__item__rank-position"># <%= my_position %></p>
 					<p class="profile-header__item__title">
 						Classifica
 					</p>
-					<p class=".profile-header__item__subtitle">
+					<p class="profile-header__item__subtitle">
 						<%= total %> utenti
 					</p>
 				<% else %>
@@ -39,10 +39,10 @@ my_position, total = get_my_general_position_in_property
 	<div class="col-sm-3">
 		<div class="row profile-header__item profile-header__item--last">
 			<div class="profile-header__item__reward">
-				Punti <span class="label label-warning profile-header__item__counter"><%= get_current_property_point %></span>
+				Punti <span class="label label-warning profile-header__item__counter">+ <%= get_current_property_point %></span>
 			</div>
 			<div class="profile-header__item__reward">
-				Crediti <span class="label label-warning profile-header__item__counter"><%= get_counter_about_user_reward("credit") %></span>
+				Crediti <span class="label label-warning profile-header__item__counter">+ <%= get_counter_about_user_reward("credit") %></span>
 			</div>
 		</div>
 	</div>

@@ -1,0 +1,48 @@
+/* RANKING BLOCK */
+
+.ranking-element{
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 5px 0;
+}
+
+.ranking-element--myposition{
+  background-color: #00a1d9;
+}
+
+.ranking-element--fan-of-day{
+  background-color: #904aa2;
+}
+
+.ranking-element__position{
+  font-size: 28px;
+  color: #00a1d9;
+}
+
+.ranking-element__position--myposition{
+  color: #fff;
+}
+
+.ranking-element__avatar{
+  display: block;
+  margin: 5px auto;
+  max-width: 50px;
+}
+
+.ranking-element__nickname{
+  font-size: 16px;
+  color: #000;
+  text-align: center;
+}
+
+.ranking-element__nickname--myposition{
+  color: #fff; 
+}
+
+.ranking-element__points{
+  font-size: 16px;
+  color: #993300;
+  width: 65%;
+  display: block;
+  margin: 0 auto;
+}

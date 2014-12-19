@@ -312,7 +312,7 @@ module ApplicationHelper
     cache_short("tag_to_my_rewards") do
       tag_to_rewards = Hash.new
       user.user_rewards.each do |ur|
-        ur.reward_tags.all.each do |reward_tag|
+        ur.reward.reward_tags.all.each do |reward_tag|
           unless tag_to_rewards.key? reward_tag.tag.name
             tag_to_rewards[reward_tag.tag.name] = Set.new 
           end
@@ -326,6 +326,12 @@ module ApplicationHelper
   def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
     cache_short get_tag_with_tag_about_call_to_action_cache_key(calltoaction.id, tag_name) do
       Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).to_a
+    end
+  end
+  
+  def get_tag_with_tag_about_reward(reward, tag_name)
+    cache_short get_tag_with_tag_about_reward_cache_key(reward.id, tag_name) do
+      Tag.includes(tags_tags: :other_tag).includes(:reward_tags).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND reward_tags.reward_id = ?", tag_name, reward.id).to_a
     end
   end
   
@@ -927,7 +933,6 @@ module ApplicationHelper
     else
       tag_to_rewards = get_tag_to_my_rewards(user)
     end
-
     # rewards_from_param can include badges or levels 
     rewards_from_param = tag_to_rewards[tag_name] 
 
@@ -966,6 +971,15 @@ module ApplicationHelper
     end
 
     not_empty_properties_counter > 0
+  end
+  
+  def get_avatar_list
+    folder = Setting.find_by_key("avatar.folder").value
+    avatars = []
+    Setting.find_by_key("avatar.file_names").value.split(",").each do |avatar|
+      avatars << "#{folder}#{avatar}"
+    end
+    avatars
   end
   
 end

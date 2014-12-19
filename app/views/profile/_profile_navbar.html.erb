@@ -1,10 +1,10 @@
 <div class="row profile-menu-block">
     <div class="col-xs-12 text-center">
         <ul class="profile-menu-block__menu">
-          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "edit" %>"><a class="profile-menu-block__item-link" href="/profile/edit">Nickname &	 Avatar</a></li>
-          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "rewards" %>"><a class="profile-menu-block__item-link" href="/profile/levels">Rewards</a></li>
-          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "rankings" %>"><a class="profile-menu-block__item-link" href="/profile/badges">Classifica	</a></li>
-          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "notices" %>"><a class="profile-menu-block__item-link" href="/profile/notices">Notifiche</a></li>
+          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "edit" %>"><%= light_link_to "/profile/edit", {"class" => "profile-menu-block__item-link"} do %>Nickname &	 Avatar<% end %></li>
+          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "rewards" %>"><%= light_link_to "/profile/rewards", {"class" => "profile-menu-block__item-link"} do %>Rewards<% end %></li>
+          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "rankings" %>"><%= light_link_to "/profile/rankings", {"class" => "profile-menu-block__item-link"} do %>Classifica<% end %></li>
+          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "notices" %>"><%= light_link_to "/profile/notices", {"class" => "profile-menu-block__item-link"} do %>Notifiche<% end %></li>
         </ul>
     </div>
 </div>

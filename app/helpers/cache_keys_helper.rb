@@ -14,6 +14,10 @@ module CacheKeysHelper
   def get_special_guest_settings_key
     "special_guest_menu_setting"
   end
+  
+  def get_tag_with_tag_about_reward_cache_key(reward_id, tag_name)
+    "tag_with_tag_about_reward_#{reward_id}_#{tag_name}"
+  end
 
   # Rewards
   # ~~~~~
