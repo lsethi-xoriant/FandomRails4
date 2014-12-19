@@ -1,5 +1,7 @@
 module TagBoxHelper
 
+  # Return an html div (as String) that handles completion of multiple tag names; it is tipically used in easyadmin
+  # to complete tag names in rewards, call to actions, etc.
   def render_html_tag_box(id_text_field, instance_text_field, new_tag_message)
     
     tag_list = raw(Tag.select("name").where("valid_to IS NULL OR valid_to > now()").map(&:name).to_json)
