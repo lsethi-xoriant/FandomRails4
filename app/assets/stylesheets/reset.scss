@@ -5,19 +5,26 @@ body {
   background-color: #ccc;
 }
 
+.flowplayer.is-paused {
+  opacity: 0.9;
+}
+
 .main-container {
   background-color: #fff;
-  padding-left: 40px;
-  padding-right: 40px;
   -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 1);
   -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 1);
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 1);
 }
 
+.main-row {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
 @media (max-width: $screen-sm-min) { 
-  .main-container {
-    padding-left: 15px;
-    padding-right: 15px;
+  .main-row {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 

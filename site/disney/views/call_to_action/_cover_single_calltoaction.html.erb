@@ -1,19 +1,19 @@
 <div class="panel panel-default cta-cover__card">
     
   <div class="panel-body cta-cover__card__body">  
-    <div class="row cta-cover__thumbnail-row" style="position: relative;">
+    <div class="row cta-cover__thumbnail-row">
       <!-- CALLTOACTION THUMBNAIL -->
       <div class="col-sm-12 cta-cover__thumbnail-column">
         <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
       </div>  
       <!-- CALLTOACTION WINNABLE REWARD COUNT -->
-      <div ng-if="calltoaction_info.status" class="col-md-12 cta-cover__winnable-reward text-right">
+      <div ng-if="calltoaction_info.status" class="col-sm-12 cta-cover__winnable-reward text-right">
         <span class="label label-warning cta-cover__winnable-reward__label">
           +{{calltoaction_info.status.winnable_reward_count}}<span class="glyphicon glyphicon-star">
         </span>  
       </div> 
       <!-- CALLTOACTION DONE -->
-      <div ng-if="!calltoaction_info.status" class="col-md-12 cta-cover__winnable-reward text-right">
+      <div ng-if="!calltoaction_info.status" class="col-sm-12 cta-cover__winnable-reward text-right">
         <span class="label label-success cta-cover__winnable-reward__label">
           FATTO <span class="glyphicon glyphicon-ok">
         </span>  
