@@ -117,19 +117,5 @@
 
   <%= render partial: "/application/ga" %>
 
-  <script type="text/javascript" src="https://registration.disneyinternational.com/commonfiles/iur.js" ></script>
-  <script type="text/javascript">
-    function connectWithDisneyWithIur() {
-      result = launchIUR_v4({
-      regUrl: "http://registrazione.disneychannel.it",
-      task: "invite",
-      nextUrl: window.location.href,
-      promotionId: "9017",
-      layout: "fullScreen",
-      callback: "callback_fun(data)"
-      });
-    }
-  </script>
-
 </body>
 </html>

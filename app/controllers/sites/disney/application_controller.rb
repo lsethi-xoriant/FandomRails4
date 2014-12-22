@@ -1,5 +1,9 @@
 class Sites::Disney::ApplicationController < ApplicationController
   include RankingHelper
+
+  def iur
+    cookies[:from_iur_authenticate] = request.referrer
+  end
   
   def rankings
     rank = Ranking.find_by_name("#{$context_root}_general_chart")

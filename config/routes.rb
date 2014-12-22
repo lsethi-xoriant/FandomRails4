@@ -27,7 +27,11 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('disney')) do
     scope module: "sites" do
       scope module: "disney" do
+        match "/iur", to: "application#iur"
         match "/profile/rankings", :to => "application#rankings"
+        devise_scope :user do
+          match "/iur/sign_in", to: "registrations#iur"
+        end
       end
     end  
   end
