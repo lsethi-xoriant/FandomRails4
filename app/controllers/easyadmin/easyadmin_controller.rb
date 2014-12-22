@@ -55,7 +55,7 @@ def export_users
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 30
 
-    @instantwin_user_interactions = UserInteraction.where("cast(\"aux\"->>'instant_win_id' AS int) IS NOT NULL").page(page).per(per_page).order("created_at ASC")
+    @instantwin_user_interactions = UserInteraction.where("cast(\"aux\"->>'instant_win_id' AS int) IS NOT NULL").page(page).per(per_page).order("updated_at ASC")
     @page_size = @instantwin_user_interactions.num_pages
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
