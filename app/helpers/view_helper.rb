@@ -69,11 +69,16 @@ module ViewHelper
   #
   # Please note that this method sets extra_fields on the container by side-effect (hence the "bang" in the method name)
   def get_extra_fields!(element)
-    if element.extra_fields.is_a? String
-      element.extra_fields = JSON.parse(element.extra_fields)
-      element.extra_fields
-    else
-      element.extra_fields || {}
+    begin
+      if element.extra_fields.is_a? String
+        element.extra_fields = JSON.parse(element.extra_fields)
+        element.extra_fields
+      else
+        element.extra_fields || {}
+      end
+    rescue Exception => exception
+      log_error("exception while trying to access 'extra_fields'", { backtrace: exception.backtrace, element: element.inspect })
+      {}
     end
   end
   
