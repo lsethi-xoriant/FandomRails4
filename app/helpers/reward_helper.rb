@@ -1,7 +1,6 @@
 module RewardHelper
   
   include PeriodicityHelper
-  include ApplicationHelper
 
   def assign_reward(user, reward_name, counter, site)
     user_reward = get_user_reward(user, reward_name)
