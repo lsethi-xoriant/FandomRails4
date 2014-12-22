@@ -2,6 +2,14 @@
 class Sites::Forte::ApplicationController < ApplicationController
   include CallToActionHelper
 
+  def generate_captcha
+    response = generate_captcha_response
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+  end
+
   def index
     if user_signed_in?
       compute_save_and_notify_context_rewards(current_user)

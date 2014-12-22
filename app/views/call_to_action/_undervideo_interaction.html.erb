@@ -38,7 +38,7 @@
     </div> 
   </div>
 
-  <div ng-if="!interaction_info.user_interaction" class="row">
+  <div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row">
     <div class="col-md-12">
       <p>Rispondi per ottenere fino a + {{interaction_info.status["winnable_reward_count"]}} punti</p>
       <div ng-if="!interaction_info.status.reward.numeric_display" ng-repeat="status_image in interaction_info.status.reward_status_images track by $index">  

@@ -42,6 +42,8 @@ Fandom::Application.routes.draw do
 
           resources :call_to_action
 
+          match "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
+
           match "/redirect_top_with_cookie", :to => "application#redirect_top_with_cookie"
 
           match '/users/sign_in', :to => 'sessions#ballando_new', :as => 'user_sign_in'
@@ -92,6 +94,8 @@ Fandom::Application.routes.draw do
         scope module: "forte" do
 
           resources :call_to_action
+
+          match "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
 
           match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 

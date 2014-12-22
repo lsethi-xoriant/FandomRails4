@@ -1,0 +1,55 @@
+<div class="row main-row">
+  <div class="col-md-8 cta__title-col">
+    <img src="<%= asset_path("icon-cat.png") %>" style="float: left;">
+    <p class="cta__title">{{calltoaction_info.calltoaction.title}}</p>
+  </div>
+  <!-- CALLTOACTION WINNABLE REWARD COUNT -->
+  <div ng-if="calltoaction_info.status" class="col-md-4 cta__winnable-reward text-right">
+    <span class="label label-warning cta-cover__winnable-reward__label">
+      +{{calltoaction_info.status.winnable_reward_count}}<span class="glyphicon glyphicon-star">
+    </span>  
+  </div> 
+  <!-- CALLTOACTION DONE -->
+  <div ng-if="!calltoaction_info.status" class="col-md-4 cta__winnable-reward text-right">
+    <span class="label label-success cta-cover__winnable-reward__label">
+      FATTO <span class="glyphicon glyphicon-ok">
+    </span>  
+  </div> 
+</div>
+<div class="row">
+  <div class="col-sm-12 cta__media-container">
+    <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
+  </div>
+  <div class="col-sm-12 cta__media-footer">
+    <div class="row">
+      <div class="like-interaction__cta__info col-sm-2" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions">
+        <button ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" class="btn btn-default like-interaction__cta__info__button" ng-class="{active: likePressed(interaction_info)}">
+          <span class="glyphicon glyphicon-thumbs-up like-interaction__cta__info__glyphicon-thumbs-up"></span>
+        </button><span class="like-interaction__cta__info__text">{{interaction_info.interaction.resource.like_info}} mi piace</span>
+      </div>
+      <div class="comment-interaction__cta__info col-sm-2" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions">
+          <button class="btn btn-default comment-interaction__cta__info__button">
+            <span class="glyphicon glyphicon-comment comment-interaction__cta__info__glyphicon-comment"></span>
+          </button><span class="comment-interaction__cta__info__text">{{interaction_info.interaction.resource.comment_info.comments_total_count}} commenti</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row main-row">
+  <div class="col-sm-8">
+    <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+    <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions | filter:filterLikeInteractions" class="row">
+      <div id="share-interaction-{{interaction_info.interaction.id}}">
+        <%= render partial: "/call_to_action/share_interaction" %>
+      </div>
+    </div>
+    <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
+      <div id="comment-interaction-{{interaction_info.interaction.id}}">
+        <%= render partial: "/call_to_action/comment_interaction" %>
+      </div>
+    </div>      
+  </div>
+  <div class="col-sm-4">
+    <div class="panel panel-default text-center" style="line-height: 200px;">ADV</div>
+  </div>
+</div>

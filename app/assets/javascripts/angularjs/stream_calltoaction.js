@@ -58,6 +58,22 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       ga('send', 'event', "Registration", "Registration", "Registration", 1, true);
     }
 
+    // With one calltoaction I active comment interaction
+    $scope.comments_polling = new Object();
+    $scope.ajax_comment_append_in_progress = false;
+    if($scope.calltoactions.length == 1) {
+      comment_info = getCommentInteraction($scope.calltoactions[0].calltoaction.id);
+      if(comment_info) {
+        comment_info.interaction.resource.comment_info.open = true;
+        $scope.comments_polling.polling = $interval($scope.commentsPolling, 15000);
+        $scope.comments_polling.interaction_info = comment_info;
+      }
+    }
+
+    if($scope.aux.init_captcha && !$scope.current_user.length) {
+      initCaptcha();
+    }
+
     initAnonymousUser();
 
     $scope.form_data = {};
@@ -68,7 +84,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION = "call-to-action__media__description hidden-xs slide-left";
     $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION = "call-to-action__media__description hidden-xs";
 
-    $scope.ajax_comment_append_in_progress = false;
     $scope.interactions_timeout = new Object();
     $scope.overvideo_interaction_locked = {};
     $scope.secondary_video_players = {};
@@ -79,7 +94,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     $scope.calltoactions_count = calltoactions_count;
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
-    $scope.comments_polling = new Object();
     $scope.youtube_api_ready = false;
     $scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION;
     $scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
@@ -315,6 +329,33 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     return overvideo_end_interaction;
   }
 
+  function getCommentInteraction(calltoaction_id) {
+    comment_interaction = null;
+    calltoaction_info = getCallToActionInfo(calltoaction_id);
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.resource_type == "comment") {
+        comment_interaction = interaction_info;
+      }
+    });
+    return comment_interaction;
+  }
+
+  function getStreamCommentInteractions() {
+    comment_interactions = [];
+    angular.forEach($scope.calltoactions, function(calltoaction_info) {
+      angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+        if(interaction_info.interaction.resource_type == "comment") {
+          comment_interaction = new Object({
+            "interaction_id": interaction_info.interaction.id,
+            "calltoaction_id": calltoaction_info.calltoaction.id
+          })    
+          comment_interactions.push(comment_interaction);
+        }
+      });
+    });
+    return comment_interactions;
+  }
+
   function getPlayInteraction(calltoaction_id) {
     play_interaction = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
@@ -330,12 +371,20 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     return (interaction_info.interaction.resource_type == "share");
   };
 
+  $scope.filterLikeInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "like");
+  };
+
   $scope.filterCommentInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "comment");
   };
 
   $scope.likePressed = function(interaction_info) {
-    return (JSON.parse(interaction_info.user_interaction.aux)["like"]);
+    if(interaction_info.user_interaction) {
+      return (JSON.parse(interaction_info.user_interaction.aux)["like"]);
+    } else {
+      return false;
+    }
   };
 
   $scope.filterLikeInteractions = function(interaction_info) {
@@ -1165,7 +1214,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     			    }, 3000);
             } else {
               if(interaction_info.interaction.resource_type == "like") {
-                console.log(JSON.parse(interaction_info.user_interaction.aux)["like"]);
                 if(JSON.parse(interaction_info.user_interaction.aux)["like"]) {
                   interaction_info.interaction.resource.like_info += 1;
                 } else {
@@ -1484,10 +1532,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   //////////////////////// POINTS AND CHECKS FEEDBACK METHODS ////////////////////////
 
   function unevidenceComments(interaction_info) {
+    /*
     $timeout.cancel($scope.interactions_timeout[interaction_info.interaction.id]);
     angular.forEach(interaction_info.interaction.resource.comment_info.comments, function(comment) {
+      alert(JSON.stringify(comment));
       comment.evidence = false;
     });
+    */
   }
 
   $scope.emptyUserComment = function(interaction_info) {
@@ -1496,37 +1547,32 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $scope.submitComment = function(interaction_info) {
+
+    if($scope.emptyUserComment(interaction_info)) {
+      return;
+    }
+
     interaction_id = interaction_info.interaction.id;
     session_storage_captcha = sessionStorage["captcha" + interaction_id];
 
-    $http.post("/add_comment", { interaction_id: interaction_id, comment_info: interaction_info.interaction.resource.comment_info })
+    $http.post("/add_comment", { interaction_id: interaction_id, comment_info: interaction_info.interaction.resource.comment_info, session_storage_captcha: session_storage_captcha })
       .success(function(data) {
 
         if(data.errors) {
-          /*
-          interaction_info.interaction.resource.comment_info.user_captcha = null;
-          $("#comment-danger-text-" + interaction_id).html(data.errors);
-          $("#comment-danger-" + interaction_id).removeClass("hidden");
-          */
+          alert("ERROR");
+        } else if(!data.captcha_evaluate) {
+          alert("CAPTCHA NON VALIDO");
+          interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
+          interaction_info.interaction.resource.comment_info.user_captcha = "";
+          sessionStorage.setItem("captcha" + interaction_info.interaction.id, data.captcha.code);
         } else {
           interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
-          $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info); }, 5000);
-          /*
-          $("#comment-danger-" + $scope.comment.interaction_id).addClass("hidden");
 
-          if($scope.$parent.current_user) {
-            userFeedbackAfterSubmitComment(data);
-            $("#user-comment-" + $scope.comment.interaction_id).val("");
-          } else {
-            userFeedbackAfterSubmitCommentWithCaptcha(data);
+          interaction_info.interaction.resource.comment_info.user_text = "";
+          interaction_info.interaction.resource.comment_info.user_captcha = "";
+          if(!$scope.current_user.length) {
+            interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           }
-
-          if(data.ga) {
-            update_ga_event(data.ga.category, data.ga.action, data.ga.label);
-          }
-
-          newCommentsPolling();
-          */
         }
 
       }).error(function() {
@@ -1545,7 +1591,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           .success(function(data) {
 
             comment_info.comments = comment_info.comments.concat(data.comments);
-            $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info); }, 5000);
             
             /*
             $scope.comments_shown = $scope.comments_shown.concat(data.comments_to_append_ids);
@@ -1580,7 +1625,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           .success(function(data) {
             comment_info.comments = data.comments.concat(comment_info.comments);
             comment_info.comments_total_count = comment_info.comments_total_count + data.comments.length;
-            $scope.interactions_timeout[interaction_id] = $timeout(function() { unevidenceComments(interaction_info); }, 5000);
           }).error(function() {
           });
       } finally {
@@ -1589,5 +1633,32 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
     }
   };
+
+  function initCaptcha() {
+    interaction_info_list = getStreamCommentInteractions();
+    if(interaction_info_list.length > 0) {
+      $http.post("/captcha" , { interaction_info_list: getStreamCommentInteractions() })
+        .success(function(data) { 
+          initSessionStorageAndCaptchaImage(data)
+        }).error(function() {
+          // ERROR.
+        });
+    }
+  }
+
+  function initSessionStorageAndCaptchaImage(data_info_list) {
+    angular.forEach(data_info_list, function(data) {
+      data = JSON.parse(data);
+      calltoaction_info = getCallToActionInfo(data.calltoaction_id);
+      angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+        if(interaction_info.interaction.id == data.interaction_id) {
+          interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
+          sessionStorage.setItem("captcha" + interaction_info.interaction.id, data.captcha.code);
+        }
+      });
+    });
+
+
+  }
 
 }
