@@ -46,12 +46,15 @@ def main
 
     tenants = get_tenants(source_db_conn)
     tenants.each do |tenant|
+      logger.info("processing tenant #{tenant}... ")
+      inserted_count = 0
+      fail_count = 0
+      start_time = Time.now
       loop do
         events = get_events(tenant, source_db_conn, max_timestamp)
         if events.empty? 
           break
         else
-          logger.info("processing #{events.count} events for tenant #{tenant}")
           not_archived_events, already_moved_ids = filter_events_not_already_archived(events, tenant, dest_db_conn)
           if already_moved_ids.any?
             logger.info("cleaning #{already_moved_ids.count} events that have already been stored")
@@ -61,18 +64,19 @@ def main
           event_chunks.each do |event_chunk|
             begin
               columns, values, ids = generate_data_for_sql_insert_query(dest_db_conn, event_chunk)
-              start_time = Time.now
-              logger.info("moving #{ids.count} events...")
               insert_events_in_db(columns, values, dest_db_conn, logger)
+              inserted_count += event_chunk.count
               delete_events_from_db(tenant, ids, source_db_conn)
-              logger.info("moved #{ids.count} events: #{Time.now - start_time} s")
+              
             rescue Exception => exception
+              fail_count += 1
               logger.error("exception in chunk processing: #{exception} - #{exception.backtrace}")
               exit
             end
           end
         end
       end
+      logger.info("moved #{inserted_count} events; there were #{fail_count} failures; time: #{Time.now - start_time} s")
     end
     logger.info("archiving process ended.")
   rescue Exception => exception
