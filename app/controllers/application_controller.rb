@@ -132,7 +132,7 @@ class ApplicationController < ActionController::Base
   end
 
   def init_aux()
-    filters = get_tags_with_tag("filter")
+    filters = get_tags_with_tag("featured")
 
     if filters.any?
       if $context_root
