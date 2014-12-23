@@ -28,21 +28,23 @@
         </div>
       <% end %>
     </div>
-    <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions" class="row">
-      <div class="like-interaction__cover__info">
-        <button ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}">
-          <span class="glyphicon glyphicon-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span>
-        </button><span class="like-interaction__cover__info__text">{{interaction_info.interaction.resource.like_info}} mi piace</span>
+    <div class="row">
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions" class="col-sm-6">
+        <div class="like-interaction__cover__info">
+          <button ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}">
+            <span class="glyphicon glyphicon-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span>
+          </button><span class="like-interaction__cover__info__text">{{interaction_info.interaction.resource.like_info}} mi piace</span>
+        </div>
+      </div>
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="col-sm-6 text-right">
+        <div id="share-interaction-{{interaction_info.interaction.id}}">
+          <%= render partial: "/call_to_action/share_interaction" %>
+        </div>
       </div>
     </div>
   </div>  
 
   <div class="panel-footer cta-cover__card__footer">
-    <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row">
-      <div id="share-interaction-{{interaction_info.interaction.id}}">
-        <%= render partial: "/call_to_action/share_interaction" %>
-      </div>
-    </div>
     <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
       <div id="comment-interaction-{{interaction_info.interaction.id}}">
         <%= render partial: "/call_to_action/cover_comment_interaction" %>
