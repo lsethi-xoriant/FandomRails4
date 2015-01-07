@@ -13,8 +13,8 @@ $container-lg:                 $container-desktop !default;
 $panel-border-radius:          0px !default;
 
 @font-face {
-  font-family: 'TrebuchetMS';
-  src: url('TrebuchetMS.ttf');
+  font-family: 'Matterhorn-Regular';
+  src: url('Matterhorn-Regular.otf');
 }
 
 @import "bootstrap/bootstrap";
@@ -26,7 +26,7 @@ $panel-border-radius:          0px !default;
 
 
 a, p, button, label {
-  font-family: 'TrebuchetMS';
+  font-family: 'Matterhorn-Regular';
 }
 
 

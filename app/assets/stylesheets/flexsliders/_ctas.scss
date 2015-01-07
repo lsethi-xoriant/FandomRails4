@@ -9,7 +9,7 @@
     background: none !important;
     border: none !important;
     box-shadow: none !important;
-    margin: 0 0 15px 0 !important;
+    margin: 0 !important;
     li {
         img {
             width: 100%;
@@ -18,6 +18,15 @@
             -o-user-select: none;
             user-select: none;
         }
+    }
+}
+
+.ctas__search {
+    background: whitesmoke; 
+    padding-bottom: 15px; 
+    padding-top: 15px;
+    .dropdown-menu {
+        right: 15px;
     }
 }
 

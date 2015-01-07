@@ -10,7 +10,7 @@
              <img class="img-circle user-bar__avatar-mobile" src="<%= current_avatar %>">
           </div>
 
-          <div class="col-xs-5 col-xs-offset-1">
+          <div class="col-xs-5 col-xs-offset-1"  ng-if="aux.instant_win_info.interaction_id">
             <div class="panel panel-default user-bar__ticket-panel">
               <div class="panel-body user-bar__ticket-panel-body text-right">
                 <span class="user-bar__ticket-value">{{current_user.main_reward_counter.general}}</span><img class="user-bar__ticket-img" src="<%= asset_path("coin/reward-ticket.png") %>">
@@ -18,7 +18,7 @@
             </div>
           </div>
 
-          <div class="col-xs-4">
+          <div class="col-xs-4" ng-if="aux.instant_win_info.interaction_id">
             <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-right: 15px;" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
               VINCI
             </button>
@@ -28,16 +28,14 @@
             </button>
           </div>
 
+          <div ng-if="!aux.instant_win_info.interaction_id" class="col-xs-10">
+            <p class="user-bar__body__contest-end">IL CONCORSO E' TERMINATO</p>
+          </div>
+
         </div>
 
       </div>
-      <!--
-      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="/">Home</a></li>
-        </ul>
-      </nav>
-      -->
+
     </div>
   </header>
   <div class="row hidden-xs">
@@ -55,24 +53,32 @@
               </p>
             </div>
             
-            <div class="col-sm-1 text-right user-bar__ticket-pre"><p class="user-bar__ticket-pre-text">Hai</p></div>
-            <div class="col-sm-2 user-bar__ticket-column">
-              <div class="panel panel-default user-bar__ticket-panel">
-                <div class="panel-body user-bar__ticket-panel-body text-right">
-                  <span class="user-bar__ticket-value">{{current_user.main_reward_counter.general}}</span><img class="user-bar__ticket-img" src="<%= asset_path("coin/reward-ticket.png") %>">
+            <div ng-if="aux.instant_win_info.interaction_id">
+
+              <div class="col-sm-1 text-right user-bar__ticket-pre"><p class="user-bar__ticket-pre-text">Hai</p></div>
+              <div class="col-sm-2 user-bar__ticket-column">
+                <div class="panel panel-default user-bar__ticket-panel">
+                  <div class="panel-body user-bar__ticket-panel-body text-right">
+                    <span class="user-bar__ticket-value">{{current_user.main_reward_counter.general}}</span><img class="user-bar__ticket-img" src="<%= asset_path("coin/reward-ticket.png") %>">
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-sm-1 text-left user-bar__ticket-post"><p class="user-bar__ticket-post-text">biglietti</p></div>
-            
-            <div class="col-sm-2">
-              <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-left: 15px;" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
-                VINCI
-              </button>
+              <div class="col-sm-1 text-left user-bar__ticket-post"><p class="user-bar__ticket-post-text">biglietti</p></div>
+              
+              <div class="col-sm-2">
+                <button ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-left: 15px;" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+                  VINCI
+                </button>
 
-              <button ng-if="current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-left: 15px;" ng-click="openInstantWinModal()">
-                VINCI
-              </button>
+                <button ng-if="current_user.registration_fully_completed" type="button" class="btn btn-block user-bar__button btn-primary" style="float: right; margin-left: 15px;" ng-click="openInstantWinModal()">
+                  VINCI
+                </button>
+              </div>
+
+            </div>
+
+            <div ng-if="!aux.instant_win_info.interaction_id" class="col-sm-6 text-right">
+              <p class="user-bar__body__contest-end">IL CONCORSO E' TERMINATO</p>
             </div>
 
           </div>

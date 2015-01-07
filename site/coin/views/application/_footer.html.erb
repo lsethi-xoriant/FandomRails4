@@ -11,7 +11,8 @@
       </div>
     </div>
     <div class="col-md-12 text-center">
-      <img class="footer__img" src="<%= asset_path("coin/coin-ticket-footer.png") %>">
+      <img class="footer__img" ng-if="aux.instant_win_info.interaction_id" src="<%= asset_path("coin/coin-ticket-footer.png") %>">
+      <img class="footer__img" ng-if="!aux.instant_win_info.interaction_id" src="<%= asset_path("coin/coin-ticket-footer-end.png") %>">
     </div>
     <div class="col-xs-12 text-center">
       <p class="footer__description-small">Condividi ogni giorno e ottieni +1 biglietto<br>per vincere una delle 35 Giftcard Coin</p>

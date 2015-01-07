@@ -1,22 +1,7 @@
 class BrowseController < ApplicationController
   
   def index
-    browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY).value
-    browse_areas = browse_settings.split(",")
-    @browse_section = Array.new
-    browse_areas.each do |area|
-      if area.start_with?("$")
-        func = "get_#{area[1..area.length]}"
-        @browse_section << send(func)
-      else
-        tag_area = Tag.find_by_name(area)
-        if get_extra_fields!(tag_area).key? "contents"
-          @browse_section << get_featured(tag_area)
-        else
-          @browse_section << get_browse_area_by_category(tag_area)
-        end
-      end
-    end
+    @browse_section = init_browse_sections()
   end
   
   def full_search
@@ -74,18 +59,6 @@ class BrowseController < ApplicationController
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: 12/4 #featured_contents.count
-    )
-  end
-  
-  def get_recent(query = "")
-    recent = get_recent_ctas(query)
-    recent_contents = prepare_contents(recent)
-    browse_section = ContentSection.new(
-      key: "recent",
-      title: "I piu recenti",
-      contents: recent_contents,
-      view_all_link: "/browse/view_recent",
-      column_number: 12/4
     )
   end
   
@@ -179,15 +152,6 @@ class BrowseController < ApplicationController
     contents = prepare_contents(contents)
   end
   
-  def get_recent_ctas(query = "")
-    if query.empty?
-      CallToAction.active.limit(6)
-    else
-      conditions = construct_conditions_from_query(query, "title")
-      CallToAction.active.where("#{conditions}").limit(6)
-    end
-  end
-  
   def view_all
     @tag = Tag.find(params[:id])
     @contents = get_contents_by_category(@tag)
@@ -206,18 +170,6 @@ class BrowseController < ApplicationController
   def merge_search_contents(ctas, tags, offset, limit)
     merged = (ctas + tags).sort_by(&:created_at)
     prepare_contents(merged)
-  end
-  
-  def prepare_contents(elements)
-    contents = []
-    elements.each do |element|
-      if element.class.name == "CallToAction"
-        contents << cta_to_category(element)
-      else
-        contents << tag_to_category(element)
-      end
-    end
-    contents
   end
   
   def prepare_contents_with_related_tags(elements)

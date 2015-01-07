@@ -1,6 +1,7 @@
 <div class="row header-row">
   <div class="col-sm-4 hidden-xs">
-    <img class="header__ticket-img" src="<%= asset_path("coin/gift-header.png") %>">
+    <img class="header__ticket-img" ng-if="aux.instant_win_info.interaction_id" src="<%= asset_path("coin/gift-header.png") %>">
+    <img class="header__ticket-img" ng-if="!aux.instant_win_info.interaction_id" src="<%= asset_path("coin/gift-header-end.png") %>">
   </div>
   <div class="col-sm-4 col-xs-12 text-center"><a href="/"><img class="header__logo" src="<%= asset_path("coin/logo.png") %>"></a></div>
   <div class="col-sm-4"></div>
