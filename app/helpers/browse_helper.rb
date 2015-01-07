@@ -67,6 +67,129 @@ module BrowseHelper
     end
   end
 
+  def get_featured(featured)
+    featured_contents = get_featured_content(featured)
+    browse_section = ContentSection.new(
+      key: "featured",
+      title: featured.title,
+      contents: featured_contents,
+      view_all_link: "/browse/view_all/#{featured.id}",
+      column_number: 12/4 #featured_contents.count
+    )
+  end
+  
+  def get_featured_with_match(featured, query)
+    featured_contents = get_featured_content_with_match(featured, query)
+    browse_section = ContentSection.new(
+      key: "featured",
+      title: featured.title,
+      contents: featured_contents,
+      view_all_link: "/browse/view_all/#{featured.id}",
+      column_number: 12/4 #featured_contents.count
+    )
+  end
+  
+  def get_featured_with_match(featured, query)
+    featured_contents = get_featured_content(featured)
+    browse_section = ContentSection.new(
+      key: "featured",
+      title: featured.title,
+      contents: featured_contents,
+      view_all_link: "/browse/view_all/#{featured.id}",
+      column_number: 12/4 #featured_contents.count
+    )
+  end
+  
+  def get_browse_area_by_category(category)
+    contents = get_contents_by_category(category)
+    browse_section = ContentSection.new(
+      key: category.name,
+      title:  get_extra_fields!(category).fetch('title', category.name),
+      contents: contents,
+      view_all_link: "/browse/view_all/#{category.id}",
+      column_number: 12/4
+    )
+  end
+  
+  def get_contents_by_category(category)
+    tags = get_tags_with_tag(category.name).sort_by { |tag| tag.created_at }
+    ctas = get_ctas_with_tag(category.name).sort_by { |cta| cta.created_at }
+    merge_contents(ctas, tags)
+  end
+  
+  def get_contents_by_category_with_tags(category)
+    tags = get_tags_with_tag(category.name).sort_by { |tag| tag.created_at }
+    ctas = get_ctas_with_tag(category.name).sort_by { |cta| cta.created_at }
+    merge_contents_with_tags(ctas, tags)
+  end
+  
+  def get_browse_area_by_category_with_match(category, query)
+    contents = get_contents_by_category_with_match(category, query)
+    browse_section = ContentSection.new(
+      key: category.name,
+      title: get_extra_fields!(category).fetch('title', category.name),
+      contents: contents,
+      view_all_link: "/browse/view_all/#{category.id}",
+      column_number: 12/6
+    )
+  end
+  
+  def get_contents_by_category_with_match(category, query)
+    tags = get_tags_with_tag_with_match(category.name, query).sort_by { |tag| tag.created_at }
+    ctas = get_ctas_with_tag_with_match(category.name, query).sort_by { |cta| cta.created_at }
+    merge_contents(ctas, tags)
+  end
+  
+  def get_contents_by_query(term)
+    browse_tag_ids = get_browse_tag_ids()
+    tags = Tag.includes(:tags_tags).where("tags_tags.other_tag_id IN (?) OR tags.id IN (?)", browse_tag_ids, browse_tag_ids)
+    tags = tags.where("name ILIKE ?","%#{term}%")
+    #tags = Tag.where("name ILIKE ?","%#{term}%")
+    ctas = CallToAction.where("title ILIKE ?","%#{term}%")
+    merge_contents(ctas, tags)
+  end
+  
+  def get_browse_tag_ids
+    browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY).value
+    browse_areas = browse_settings.split(",")
+    ids = []
+    browse_areas.each do |area|
+      if !area.start_with?("$")
+        ids << Tag.find_by_name(area).id
+      end
+    end
+    ids
+  end
+
+  def get_featured_content(featured)
+    contents = Array.new
+    get_extra_fields!(featured)["contents"].split(",").each do |name|
+      cta = CallToAction.find_by_name(name)
+      if cta
+        contents << cta
+      else
+        tag = Tag.find_by_name(name)
+        contents << tag
+      end
+    end
+    contents = prepare_contents(contents)
+  end
+  
+  def get_featured_content_with_match(featured, query)
+    contents = Array.new
+    conditions = construct_conditions_from_query(query, "title")
+    get_extra_fields!(featured)["contents"].split(",").each do |name|
+      cta = CallToAction.where("name = ? AND (#{conditions})", name)
+      if cta
+        contents << cta
+      else
+        tag = Tag.find_by_name(name)
+        contents << tag
+      end
+    end
+    contents = prepare_contents(contents)
+  end
+
   def prepare_contents(elements)
     contents = []
     elements.each do |element|

@@ -13,12 +13,9 @@ $item-margin-right: 15px;
     margin-right: $item-margin-right; 
 }
 
-.filters__flexslider-desktop-item {
-    padding: 7px;
-}
-
 .filters__flexslider-image {
-    border-radius: 3px;
+    border-radius: 12px;
+    padding: 7px;
 }
 
 .filters__title {
@@ -30,7 +27,6 @@ $item-margin-right: 15px;
     position: absolute;
     left: 0;
     right: 0;
-    
 }
 
 .filters__flexslider-desktop-item, .filters__flexslider-mobile-item {
