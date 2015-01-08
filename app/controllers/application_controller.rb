@@ -133,10 +133,11 @@ class ApplicationController < ActionController::Base
 
   def init_aux()
     filters = get_tags_with_tag("featured")
+    current_property = get_tags_with_tag($context_root)
 
     if filters.any?
       if $context_root
-        filters = filters & get_tags_with_tag($context_root)
+        filters = filters & current_property
       end
       filter_info = []
       filters.each do |filter|
@@ -146,6 +147,21 @@ class ApplicationController < ActionController::Base
           "icon" => get_extra_fields!(filter)["icon"],
           "title" => get_extra_fields!(filter)["title"],
           "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :custom) rescue nil) 
+        }
+      end
+    end
+
+    properties = get_tags_with_tag("property")
+
+    if properties.any?
+      property_info = []
+      properties.each do |property|
+        property_info << {
+          "id" => property.id,
+          "background" => get_extra_fields!(property)["label-background"],
+          "icon" => get_extra_fields!(property)["icon"],
+          "title" => get_extra_fields!(property)["title"],
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :custom) rescue nil) 
         }
       end
     end
@@ -178,6 +194,7 @@ class ApplicationController < ActionController::Base
       "main_reward_name" => MAIN_REWARD_NAME,
       "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
       "filter_info" => filter_info,
+      "property_info" => property_info,
       "calltoaction_evidence_info" => calltoaction_evidence_info
     }
   end

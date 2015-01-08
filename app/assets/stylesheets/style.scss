@@ -12,6 +12,31 @@ $container-lg:                 $container-desktop !default;
 
 $panel-border-radius:          0px !default;
 
+// Navbar
+
+$navbar-default-color:                      #ccc !default;
+$navbar-default-bg:                         #222 !default;
+$navbar-default-border:                     darken($navbar-default-bg, 10%) !default;
+
+$navbar-default-link-color:                 #ccc !default;
+$navbar-default-link-hover-color:           #fff !default;
+$navbar-default-link-hover-bg:              $blu !default;
+$navbar-default-link-active-color:          $navbar-default-link-hover-color !default;
+$navbar-default-link-active-bg:             $blu !default;
+$navbar-default-link-disabled-color:        #444 !default;
+$navbar-default-link-disabled-bg:           transparent !default;
+
+$navbar-default-brand-color:                $navbar-default-link-color !default;
+$navbar-default-brand-hover-color:          #42C5ED !default;
+$navbar-default-brand-hover-bg:             transparent !default;
+
+$navbar-default-toggle-hover-bg:            darken($navbar-default-bg, 10%) !default;
+$navbar-default-toggle-icon-bar-bg:         #ccc !default;
+$navbar-default-toggle-border-color:        #ccc !default;
+
+$navbar-height:                    40px !default;
+$navbar-border-radius:             0 !default;
+
 @font-face {
   font-family: 'Matterhorn-Regular';
   src: url('Matterhorn-Regular.otf');
@@ -23,7 +48,6 @@ $panel-border-radius:          0px !default;
 @import "buttons/**/*";
 @import "flexsliders/**/*";
 @import "reset";
-
 
 a, p, button, label {
   font-family: 'Matterhorn-Regular';

@@ -28,8 +28,10 @@ body {
   }
 }
 
-.disabled {
-  //background-color: grey !important;
+.btn {
+  span {
+    position: relative; top: 2px;
+  }
 }
 
 .comment_evidence {
