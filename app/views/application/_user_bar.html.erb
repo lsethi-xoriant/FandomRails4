@@ -22,6 +22,9 @@
     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
       <ul class="nav navbar-nav hidden-xs">
         <li><a href="/">Home</a></li>
+        <% unless current_user %>
+          <li><a href="/iur">SIGN IN</a></li>
+        <% end %>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <% if current_user %>
@@ -34,7 +37,6 @@
             <a class="user-reward-counter" href="javascript: void(0)"></a>
           </li>
         <% end %>
-        <li><a href="/">Home</a></li>
       </ul>
     </nav>
 

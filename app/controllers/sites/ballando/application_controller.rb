@@ -2,6 +2,14 @@
 class Sites::Ballando::ApplicationController < ApplicationController
   include CallToActionHelper
 
+  def generate_captcha
+    response = generate_captcha_response
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+  end
+
   def gigya_socialize_redirect
     session[:gigya_socialize_redirect] = params.to_json
     redirect_to Rails.configuration.deploy_settings["sites"]["ballando"]["profile_url"]

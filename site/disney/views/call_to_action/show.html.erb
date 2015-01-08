@@ -1,0 +1,16 @@
+<%= render partial: "/application/user_bar" %>
+
+<%= render partial: "/application/home_launchers" %>
+
+<div class="container main-container">   
+
+  <!-- CUSTOM SITE HEADER --> 
+  <%#= render partial: "/application/header" %>
+
+  <div ng-repeat="calltoaction_info in calltoactions">
+    <%= render partial: "/call_to_action/stream_single_calltoaction" %>
+  </div>
+
+</div>
+
+<%= render partial: "/application/footer" %>

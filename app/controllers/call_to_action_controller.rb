@@ -206,7 +206,7 @@ class CallToActionController < ApplicationController
         }
       end
 
-      @aux = init_aux()
+      @aux = init_show_aux()
     else
 
       redirect_to "/"
@@ -228,6 +228,16 @@ class CallToActionController < ApplicationController
     end
 =end
 
+  end
+
+  def init_show_aux()
+    {
+      "tenant" => get_site_from_request(request)["id"],
+      "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
+      "main_reward_name" => MAIN_REWARD_NAME,
+      "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
+      "init_captcha" => true
+    }
   end
   
   def get_correlated_cta(calltoaction)
@@ -317,17 +327,20 @@ class CallToActionController < ApplicationController
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
         expire_cache_key(get_comments_approved_cache_key(interaction.id))
       end
-    elsif 
-      response[:captcha_check] = params[:stored_captcha] == Digest::MD5.hexdigest(params[:user_filled_captcha])
-      if response[:captcha_check]
+    else
+      response[:captcha_evaluate] = params[:session_storage_captcha] == Digest::MD5.hexdigest(params[:comment_info][:user_captcha] || "")
+      if response[:captcha_evaluate]
         user_comment = UserCommentInteraction.new(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
         unless check_profanity_words_in_comment(user_comment).errors.any?
           user_comment.save
         end
         if approved && user_comment.errors.blank?
+          response[:comment] = build_comment_for_comment_info(user_comment, true)
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
           expire_cache_key(get_comments_approved_cache_key(interaction.id))
         end
+      else
+        response[:captcha] = generate_captcha_response
       end
     end
 

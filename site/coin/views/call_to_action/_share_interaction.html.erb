@@ -1,4 +1,4 @@
-<div class="col-sm-4 col-xs-7 text-right call-to-action__share-column">
+<div class="col-sm-4 text-right call-to-action__share-column" ng-class="{ 'col-xs-7': aux.share_interaction_daily_done; 'col-xs-6': !aux.share_interaction_daily_done }">
 
   <p class="call-to-action__share__text hidden-xs">CONDIVIDI</p>
 
@@ -105,12 +105,14 @@
   </div>
   -->
 
-  <div ng-if="aux.share_interaction_daily_done" class="call-to-action__reward-status-images">
-    <span class="call-to-action_reward-value active">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket-gray.png")%>">
-  </div>
+  <div class="col-sm-8 col-xs-6" ng-if="aux.instant_win_info.interaction_id">
+    <div ng-if="aux.share_interaction_daily_done" class="call-to-action__reward-status-images">
+      <span class="call-to-action_reward-value active">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket-gray.png")%>">
+    </div>
 
-  <div ng-if="!aux.share_interaction_daily_done" class="call-to-action__reward-status-images">
-    <span class="call-to-action_reward-value">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket.png")%>">
+    <div ng-if="!aux.share_interaction_daily_done" class="call-to-action__reward-status-images">
+      <span class="call-to-action_reward-value">+1</span><img style="height: 35px;" ng-src="<%= asset_path("coin/reward-ticket.png")%>">
+    </div>
   </div>
 
 </div>

@@ -27,7 +27,11 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('disney')) do
     scope module: "sites" do
       scope module: "disney" do
+        match "/iur", to: "application#iur"
         match "/profile/rankings", :to => "application#rankings"
+        devise_scope :user do
+          match "/iur/sign_in", to: "registrations#iur"
+        end
       end
     end  
   end
@@ -41,6 +45,8 @@ Fandom::Application.routes.draw do
         scope module: "ballando" do
 
           resources :call_to_action
+
+          match "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
 
           match "/redirect_top_with_cookie", :to => "application#redirect_top_with_cookie"
 
@@ -92,6 +98,8 @@ Fandom::Application.routes.draw do
         scope module: "forte" do
 
           resources :call_to_action
+
+          match "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
 
           match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 

@@ -3,9 +3,9 @@
     <div class="flex-viewport-shadow"></div>
     <ul class="slides">
       <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-desktop-item" style="background-color: {{filter.background}};">
-        <%= light_link_to("/browse/category/{{filter.id}}") do %>
-          <img class="filters__flexslider-image" ng-src="{{filter.image}}">
-          <p class="filters__title">{{filter.title}}</p>
+        <%= light_link_to("/browse/category/{{filter.id}}", class: "filters__flexslider-a") do %>
+          <img class="filters__flexslider-image" ng-src="{{filter.image}}">  
+          <div class="filters__title">{{filter.title}}</div>      
         <% end %>
       </li>
     </ul>
@@ -14,10 +14,10 @@
   <div class="flexslider filters__flexslider-mobile visible-xs">
     <ul class="slides">
       <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-mobile-item" style="background-color: {{filter.background}};">
-        <a href="/browse/category/{{filter.id}}">
-          <img  class="filters__flexslider-image" ng-src="{{filter.image}}">
+        <%= light_link_to("/browse/category/{{filter.id}}") do %>
           <p class="filters__title">{{filter.title}}</p>
-        </a>
+          <img  class="filters__flexslider-image" ng-src="{{filter.image}}">
+        <% end %>
       </li>
     </ul>
   </div>
@@ -30,8 +30,8 @@
       slideshow: false,
       animationLoop: false,
       touch: true,
-      itemWidth: 282,
-      itemMargin: 8,
+      itemWidth: 262,
+      itemMargin: 15,
       controlNav: false,
       prevText: "",
       nextText: ""
@@ -63,6 +63,4 @@
       nextText: ""
     });
   });
-
-  
 </script>

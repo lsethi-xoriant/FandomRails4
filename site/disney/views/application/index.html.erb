@@ -10,6 +10,20 @@
     <%= render partial: "/application/evidence_ctas" %>
   </div>
 
+  <div class="row main-row ctas__search" ng-controller="SearchCtrl" ng-init="init(<%= init_browse_sections().to_json %>)">
+    <%= form_tag("/browse/full_search", { method: "post", role: "search" }) do %>
+      <div class="col-sm-8 col-sm-offset-1">
+        <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue)" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="resultSelected" name="query" type="text" class="form-control" placeholder="Search" style="width: 100%;">
+      </div>
+      <div class="col-sm-2">
+        <button type="submit" class="btn btn-primary btn-block">Cerca</button>
+      </div>
+    <% end %> 
+    <script type="text/ng-template" id="itemTpl.html">
+      <%= render partial: "/application/search_template" %>
+    </script>
+  </div>
+
   <div class="row main-row">
     <%= render partial: "/application/home_filters" %>
   </div>

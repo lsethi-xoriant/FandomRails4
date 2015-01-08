@@ -2,10 +2,19 @@ class CaptchaController < ApplicationController
   include CaptchaHelper
   
   def generate_captcha
-    response = generate_captcha_response
+
+    response = []
+    interaction_info_list = params[:interaction_info_list]
+    interaction_info_list.each do |interaction|
+      response << {
+        "calltoaction_id" => interaction["calltoaction_id"],
+        "interaction_id" => interaction["interaction_id"],
+        "captcha" => generate_captcha_response
+      }.to_json
+    end
 
     respond_to do |format|
-      format.json { render json: response.to_json }
+      format.json { render json: response }
     end
   end
 

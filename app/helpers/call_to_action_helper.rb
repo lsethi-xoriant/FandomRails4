@@ -49,6 +49,7 @@ module CallToActionHelper
 
       resource = interaction.resource
       resource_question = resource.question rescue nil
+      resource_description = resource.description rescue nil
       resource_title = resource.title rescue nil
       resource_one_shot = resource.one_shot rescue false
       resource_providers = JSON.parse(resource.providers) rescue nil
@@ -83,6 +84,7 @@ module CallToActionHelper
           "resource" => {
             "question" => resource_question,
             "title" => resource_title,
+            "description" => resource_description,
             "one_shot" => resource_one_shot,
             "answers" => answers,
             "providers" => resource_providers,
