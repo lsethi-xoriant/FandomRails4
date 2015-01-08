@@ -11,7 +11,7 @@
       </div>
       <div class="row">
       	<% if @levels %>
-	        <% @levels[$context_root].each do |level| %>
+	        <% @levels.each do |level| %>
 	        	<%= render partial: "/profile/badge", locals: { reward: level } %>
 	        <% end %>
 	    <% else %>
@@ -33,7 +33,7 @@
       <div class="row">
       	<% if @mylevels %>
 	        <% @mylevels.each do |level| %>
-	        	<%= render partial: "/profile/property_badge", locals: { reward: level.first } %>
+	        	<%= render partial: "/profile/property_badge", locals: { reward: level } %>
 	        <% end %>
 	    <% else %>
 	    	<div class="col-xs-12"><p>Nessun livello ottenuto.</p></div>
@@ -53,7 +53,7 @@
       </div>
       <div class="row">
       	<% if @badges %>
-	        <% @badges[$context_root].each do |badge| %>
+	        <% @badges.each do |badge| %>
 	        	<%= render partial: "/profile/badge", locals: { reward: badge } %>
 	        <% end %>
 	    <% else %>
