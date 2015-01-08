@@ -8,7 +8,7 @@ class Tag < ActiveRecordWithJSON
 
   attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time
 
-   json_attributes [[:extra_fields, EmptyAux]]
+  json_attributes [[:extra_fields, EmptyAux]]
 
   validates_presence_of :name
   validates :name, uniqueness: true

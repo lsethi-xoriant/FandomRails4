@@ -264,8 +264,13 @@
   	var mandatory_fields = null;
   	var formName = "new_reward"
   	var modelName = "reward";
-	var fieldName = "extra_fields";
+	  var fieldName = "extra_fields";
 
-  	initializeTextbox(mandatory_fields, formName, modelName, fieldName);
+    var json_field = null;
+    <% if @reward.extra_fields.present? %>
+      json_field = <%= @reward.extra_fields.to_s.html_safe %>;
+    <% end %>
+
+  	initializeTextbox(json_field, mandatory_fields, formName, modelName, fieldName);
   });
 </script>
