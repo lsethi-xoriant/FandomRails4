@@ -198,7 +198,7 @@ module EasyadminHelper
           param[:extra_fields][extra_field_name] = extra_field_value
         elsif extra_field_value[:type] == 'string'
           param[:extra_fields][extra_field_name] = extra_field_value[:value]
-        else
+        else # it's not a string
           if extra_field_value[:value].present?
             attachment = Attachment.create(data: extra_field_value[:value])
             extra_field_value[:attachment_id] = attachment.id

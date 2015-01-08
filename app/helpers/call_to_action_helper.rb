@@ -363,6 +363,9 @@ module CallToActionHelper
     resource_attributes = interaction.resource.attributes
     resource_attributes.delete("id")
     resource_type = interaction.resource_type
+    if resource_type == "Play"
+      interaction.resource.attributes["title"] << "COPY"
+    end
     resource_model = get_model_from_name(resource_type)
     new_interaction.resource = resource_model.new(resource_attributes, :without_protection => true)
     new_resource = new_interaction.resource 

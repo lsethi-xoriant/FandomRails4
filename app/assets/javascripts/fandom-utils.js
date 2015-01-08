@@ -242,11 +242,6 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
         }
     });
     addButtonHandlerForJsonFields(modelName, fieldName);
-
-    //$('#' + formName).submit(function (){
-    //    if($('input[name^=' + modelName + '\\[\\[' + fieldName + '\\]]').length == 0)
-    //       $('#text-boxes-for-' + fieldName + '-fields').append('<input type="hidden" id="value-for-' + fieldName + '-field-0" name="' + modelName + '[' + fieldName + ']" value="{}">');
-    //});
 };
 
 function initializeTextbox(json_field, mandatory_fields, formName, modelName, fieldName) {
@@ -256,11 +251,6 @@ function initializeTextbox(json_field, mandatory_fields, formName, modelName, fi
         addMandatoryFieldsElements(mandatory_fields, modelName, fieldName);
         addButtonHandlerForJsonFields(modelName, fieldName);
     }
-
-    //$('#' + formName).submit(function (){
-    //   if($('input[name^=' + modelName + '\\[\\[' + fieldName + '\\]]').length == 0)
-    //        $('#text-boxes-for-' + fieldName + '-fields').append('<input type="hidden" id="value-for-' + fieldName + '-field-0" name="' + modelName + '[' + fieldName + ']" value="{}">');
-    //});
 };
 
 function addMandatoryFieldsElements(mandatory_fields, modelName, fieldName) {

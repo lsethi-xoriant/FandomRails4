@@ -476,7 +476,7 @@
 
     var json_field = null;
     <% if @cta.extra_fields.present? %>
-      json_field = <%= @cta.extra_fields.to_s.html_safe %>;
+      json_field = <%= @cta.extra_fields.is_a?(String) ? @cta.extra_fields.html_safe : @cta.extra_fields.to_json.html_safe %>;
     <% end %>
 
   	initializeTextbox(json_field, null, formName, modelName, fieldName);
