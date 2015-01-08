@@ -908,14 +908,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $window.onKalturaPlayEvent = function(idPlayer) {  
     aux = idPlayer.split("-");
     calltoaction_id = aux[aux.length - 1];
+	
+	// KALTURA replace div with calltoaction_media_priority info so 
+	//secondary media dose not work with kaltura
+	
+    //if(calltoaction_media_priority == "main") {
+	    updateStartVideoInteraction(calltoaction_id);
 
-    if(calltoaction_media_priority == "main") {
-
-      updateStartVideoInteraction(calltoaction_id);
-
-    } else {
+    //} else {
 		//secondary media hendler
-    }
+    //}
   };
   
   $window.onKalturaVideoEnded = function(idPlayer){
