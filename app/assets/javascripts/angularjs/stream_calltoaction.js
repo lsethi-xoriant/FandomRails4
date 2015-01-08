@@ -70,7 +70,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       }
     }
 
-    if($scope.aux.init_captcha && !$scope.current_user.length) {
+    if($scope.aux.init_captcha && !$scope.current_user) {
       initCaptcha();
     }
 
@@ -260,7 +260,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   }
 
   $scope.currentUserEmptyAndAnonymousInteractionEnable = function() {
-    return ($scope.current_user == null && $scope.aux.anonymous_interaction);
+    return (!$scope.current_user && $scope.aux.anonymous_interaction);
   };
 
   function getPlayer(calltoaction_id) {
@@ -422,7 +422,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.getAnonymousUserStorage = function() {
-    return $scope.current_user != null ? null : JSON.parse(localStorage[$scope.aux.tenant]);
+    return $scope.current_user ? null : JSON.parse(localStorage[$scope.aux.tenant]);
   };
 
   $window.setAnonymousUserStorageAttr = function(name, value) {
@@ -451,11 +451,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   function initAnonymousUser() {
     if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage[$scope.aux.tenant] == null) {
       initAnonymousUserStorage();      
-    } else if ($scope.current_user != null && localStorage[$scope.aux.tenant] != null) {
+    } else if ($scope.current_user && localStorage[$scope.aux.tenant] != null) {
       clearAnonymousUserStorage();
     }
 
-    if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+    if(!$scope.current_user && $scope.aux.anonymous_interaction) {
       updateCallToActionInfoWithAnonymousUserStorage();
     }
   }
@@ -593,7 +593,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           appendYTIframe(calltoaction_info);
         });
 
-        if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+        if(!$scope.current_user && $scope.aux.anonymous_interaction) {
           updateCallToActionInfoWithAnonymousUserStorage();
         }
 
@@ -1060,7 +1060,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           }
 
           // Update local storage for anonymous user.
-          if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+          if(!$scope.current_user && $scope.aux.anonymous_interaction) {
             setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
             
             user_interaction_for_storage = new Object();
@@ -1152,7 +1152,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction) {
 
-    if($scope.current_user != null || $scope.aux.anonymous_interaction) {
+    if($scope.current_user || $scope.aux.anonymous_interaction) {
 
       calltoaction_id = calltoaction_info.calltoaction.id;
       interaction_id = interaction_info.interaction.id;
@@ -1175,7 +1175,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             // HERE removeOvervideoInteraction
 
             // Update local storage for anonymous user.
-            if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+            if(!$scope.current_user && $scope.aux.anonymous_interaction) {
               setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
               
               user_interaction_for_storage = new Object();
@@ -1287,7 +1287,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
     showMarkerNearInteraction(interaction_id);
 
-    if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+    if(!$scope.current_user && $scope.aux.anonymous_interaction) {
       updateUserRewardInView(data.main_reward_counter);
     } else {
       updateUserRewardInView(data.main_reward_counter.general);
@@ -1562,7 +1562,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
         if(data.errors) {
           alert("ERROR");
-        } else if(!data.captcha_evaluate) {
+        } else if(!$scope.current_user && !data.captcha_evaluate) {
           alert("CAPTCHA NON VALIDO");
           interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           interaction_info.interaction.resource.comment_info.user_captcha = "";
@@ -1572,7 +1572,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
           interaction_info.interaction.resource.comment_info.user_text = "";
           interaction_info.interaction.resource.comment_info.user_captcha = "";
-          if(!$scope.current_user.length) {
+          if(!$scope.current_user) {
             interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           }
         }

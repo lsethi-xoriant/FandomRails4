@@ -186,7 +186,7 @@ class User < ActiveRecordWithJSON
   end
   
   def default_values
-    self.avatar_selected_url ||= "/assets/anon.png"
+    self.avatar_selected_url ||= asset_path("#{$site.id}_anon.png")
   end
   
 end

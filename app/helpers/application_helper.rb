@@ -633,12 +633,12 @@ module ApplicationHelper
     if current_user
       return user_avatar current_user
     else
-      return "/assets/anon.png"
+      return asset_path("#{$site.id}_anon.png")
     end
   end
 
   def user_avatar user, size = "normal"
-    user.avatar_selected_url.present? ? user.avatar_selected_url : "/assets/anon.png"
+    user.avatar_selected_url.present? ? user.avatar_selected_url : asset_path("#{$site.id}_anon.png")
   end
 
   def disqus_sso
