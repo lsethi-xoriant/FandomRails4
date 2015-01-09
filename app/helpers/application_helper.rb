@@ -510,11 +510,7 @@ module ApplicationHelper
   end
   
   def get_current_property_point
-    if $context_root.nil?
-      get_counter_about_user_reward("point");
-    else
       get_counter_about_user_reward("#{$context_root}_point");
-    end
   end
 
   def get_counter_about_user_reward(reward_name, all_periods = false)
