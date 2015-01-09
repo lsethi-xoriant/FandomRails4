@@ -18,6 +18,9 @@
   <%= csrf_meta_tags %>
 
 </head>
+  
+<%= render partial: "/application/style" %>
+
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.present? ? @current_user_info.to_json : "null" %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_disney_calltoactions_count_in_property() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.present? ? @aux.to_json : {} %>)">
 
   <!-- COMMENT FEEDBACK MODAL -->

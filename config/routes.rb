@@ -34,6 +34,8 @@ Fandom::Application.routes.draw do
           match "/iur/sign_in", to: "registrations#iur"
         end
 
+        resources :call_to_action
+
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         root :to => "application#index"
 

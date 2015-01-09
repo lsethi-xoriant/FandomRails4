@@ -1162,8 +1162,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       interaction_id = interaction_info.interaction.id;
 
       enableWaitingAudio("stop");
+
+      update_interaction_path = "/update_interaction"
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.title) {
+        update_interaction_path = "/" + $scope.aux.current_property_info.title + "" + update_interaction_path;
+      }
   	  
-      $http.post("/update_interaction", { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getAnonymousUserStorage() })
+      $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getAnonymousUserStorage() })
           .success(function(data) {
 
             updateUserRewardInView(data.main_reward_counter.general);
