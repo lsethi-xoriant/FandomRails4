@@ -1,6 +1,6 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container" style="background-color: #fff;">
+<div class="container container--default" style="background-color: #fff;">
 	<%= render partial: "profile/profile_header" %>
   	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
 
@@ -19,7 +19,7 @@
 	  			<p class="ranking-element__position ranking-element__position--myposition text-center"># <%= @property_rank[:my_position] %></p>
 	  			<img src="<%= current_avatar %>" class="ranking-element__avatar" />
 	  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(current_user) %></p>
-	  			<div class="label label-warning ranking-element__points">+ <%= get_current_property_point %></div>
+	  			<div class="label label-warning ranking-element__points">+ <%= get_point %></div>
 	  		</div>
 	  	</div>
 	  	<% @property_rank[:rank_list].slice(0,4).each do |rank_user| %>

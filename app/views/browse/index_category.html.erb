@@ -1,6 +1,7 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container" ng-controller="BrowseCtrl" ng-init="init(<%= @category.to_json %>, <%= @contents.to_json %>, <%= @tags.to_json %>)">
+
+<div class="container container--default" ng-controller="BrowseCtrl" ng-init="init(<%= @category.to_json %>, <%= @contents.to_json %>, <%= @tags.to_json %>)">
 	<div class="row category-header">
     	<img ng-src="{{category.header_image_url}}" class="img-responsive" />
     	<h1 class="category-header__title">{{category.title}}</h1>
@@ -9,8 +10,8 @@
       <div class="row text-center">
       	<div class="col-xs-12">
 			<div collapse="!isTagFilterOpen" class="row category-filter">
-				<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-md-1 col-xs-3">
-					<button ng-class="{'btn btn-default btn-xs': true, 'disabled': tagsEnabled[tag_id] == undefined, 'btn-primary': activeTags[tag_id] != undefined}" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">{{tag_name}}</button>
+				<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-3">
+					<button ng-class="{'btn btn-default btn-xs category-filter__tag': true, 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'category-filter__tag--selected': activeTags[tag_id] != undefined}" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">{{tag_name}}</button>
 				</div> 
 			</div>
 		</div>
@@ -19,14 +20,12 @@
       	<div class="col-xs-12">
       		<div class="row spacer">
       			<div class="col-sm-8">
-      				<p>{{category.long_description}}</p>
       			</div>
       			<div class="col-sm-3 col-sm-offset-1">
       				<div class="btn-group" style="float: right;">
 						<button type="button" class="btn btn-primary">Ordina per</button>
 						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
 							<span class="caret"></span>
-						    <span class="sr-only">Toggle Dropdown</span>
 						</button>
 					  	<ul class="dropdown-menu" role="menu">
 					    	<li><a href="javascript:void(0);" ng-click="order('created_at',false)">Piu recenti</a></li>
