@@ -94,7 +94,7 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def new_promocode
-    @inter_promocode = Interaction.new(name: "#PRCODE#{ DateTime.now.strftime("%Y%m%d") }")
+    @inter_promocode = Interaction.new(name: "#PRCODE#{ DateTime.now.strftime('%FT%T') }")
     @inter_promocode.resource = Promocode.new
   end
 
