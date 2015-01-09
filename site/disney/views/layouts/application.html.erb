@@ -18,7 +18,7 @@
   <%= csrf_meta_tags %>
 
 </head>
-<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.present? ? @current_user_info.to_json : {} %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.present? ? @aux.to_json : {} %>)">
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.present? ? @current_user_info.to_json : "null" %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_cta_active_count() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.present? ? @aux.to_json : {} %>)">
 
   <!-- COMMENT FEEDBACK MODAL -->
   <div class="modal fade" id="comment-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -112,6 +112,19 @@
   </div>
 
   <%= yield %>
+
+  <% unless cookies[:user_cookies] %>
+    <div id="cookies-bar" class="navbar navbar-fixed-bottom cookies-footer">
+      <div class="row">
+        <div class="col-sm-11">
+          <p class="cookies-footer__description">Per migliorare la tua navigazione su questo sito, utilizziamo cookies ed altre tecnologie che ci permettono di riconoscerti.<br>Utilizzando questo sito, acconsenti agli utilizzi di cookies e delle altre tecnologie descritti nella nostra <a target="_blank" class="cookies-footer__link" href="http://www.disney.it/cookies/">Cookies Policy</a>.</p>
+        </div>
+        <div class="col-sm-1 text-right">
+          <a class="btn btn-default btn-xs btn-block" href="javascript: void(0)" ng-click="acceptCookies()">CHIUDI</a>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
   <%= render partial: "/application/ga" %>
 

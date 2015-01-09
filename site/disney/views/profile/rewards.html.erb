@@ -1,78 +1,73 @@
 <div class="container" style="background-color: #fff;">
   <%= render partial: "profile/profile_header" %>
   <%= render partial: "profile/profile_navbar", locals: { page: "rewards" } %>
-  <div class="row">
-    <div class="col-xs-12">
-	  <div class="section-heading">
+    
+  <div class="row brws-item">
+  	<div class="col-xs-12">
+      	<div class="section-heading">
         	<h3>
         		<img src="<%= asset_path("icon-cat.png") %>" class=" section-heading__icon" />
         		Livelli
         	</h3>
-      </div>
-      <div class="row">
+      	</div>
       	<% if @levels %>
-	        <% @levels[$context_root].each do |level| %>
+	        <% @levels.each do |level| %>
 	        	<%= render partial: "/profile/badge", locals: { reward: level } %>
 	        <% end %>
 	    <% else %>
 	    	<p>Nessun livello presente</p>
 	    <% end %>
-     </div>
-      
-    </div>
+ 	</div>
   </div>
   
-  <div class="row">
-    <div class="col-xs-12">
-	  <div class="section-heading">
+    
+  <div class="row brws-item">
+  	<div class="col-xs-12">
+      	<div class="section-heading">
         	<h3>
         		<img src="<%= asset_path("icon-cat.png") %>" class="section-heading__icon" />
         		Tuoi livelli nelle altre Community
         	</h3>
-      </div>
-      <div class="row">
+      	</div>
       	<% if @mylevels %>
 	        <% @mylevels.each do |level| %>
-	        	<%= render partial: "/profile/property_badge", locals: { reward: level.first } %>
+	        	<%= render partial: "/profile/property_badge", locals: { reward: level } %>
 	        <% end %>
 	    <% else %>
 	    	<div class="col-xs-12"><p>Nessun livello ottenuto.</p></div>
 	    <% end %>
-     </div>
-      
-    </div>
+ 	</div>
   </div>
   
-  <div class="row">
-    <div class="col-xs-12">
-	  <div class="section-heading">
+    
+	  
+  <div class="row brws-item">
+  	<div class="col-xs-12">
+      	<div class="section-heading">
         	<h3>
         		<img src="<%= asset_path("icon-cat.png") %>" class="section-heading__icon" />
         		Badge
         	</h3>
-      </div>
-      <div class="row">
+      	</div>
       	<% if @badges %>
-	        <% @badges[$context_root].each do |badge| %>
+	        <% @badges.each do |badge| %>
 	        	<%= render partial: "/profile/badge", locals: { reward: badge } %>
 	        <% end %>
 	    <% else %>
 	    	<p>Nessun badge presente</p>
 	    <% end %>
-     </div>
-      
-    </div>
+ 	</div>
   </div>
   
-  <div class="row">
-    <div class="col-xs-12">
-	  <div class="section-heading">
+    
+  <div class="row brws-item">
+  	<div class="col-xs-12">
+      	<div class="section-heading">
         	<h3>
         		<img src="<%= asset_path("icon-cat.png") %>" class="section-heading__icon" />
         		Ultimi badge ottenuti nelle altre Community
         	</h3>
-      </div>
-      <div class="row">
+      	</div>
       	<% if @mybadges %>
 	        <% @mybadges.each do |badge| %>
 	        	<%= render partial: "/profile/property_badge", locals: { reward: badge.first } %>
@@ -80,9 +75,7 @@
 	    <% else %>
 	    	<div class="col-xs-12"><p>Nessun livello ottenuto.</p></div>
 	    <% end %>
-     </div>
-      
-    </div>
+ 	</div>
   </div>
 
 </div>

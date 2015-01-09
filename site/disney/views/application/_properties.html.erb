@@ -1,0 +1,36 @@
+<div class="col-md-3">
+  <img class="properties__logo" ng-src="{{aux.current_property_info.logo}}">
+</div>           
+
+<div class="col-md-6 properties__flexslider-col" ng-if="aux.property_info">
+  <div class="flexslider properties__flexslider">
+    <ul class="slides">
+      <li ng-repeat="property in aux.property_info" class="text-center properties__flexslider-item">
+        <a class="properties__flexslider-a" href="/{{property.title}}"> 
+          <img class="properties__flexslider-image" ng-src="{{property.image}}" style="border-bottom: 4px solid {{property.background}};">     
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="col-md-3 text-left">
+  <p class="properties__right-bar-text">Partecipa<br>alla community</p>
+  <a class="btn btn-primary" href="/iur" ng-if="!current_user"><span>ENTRA</span></a>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.properties__flexslider').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: true,
+      touch: true,
+      itemWidth: 120,
+      itemMargin: 8,
+      controlNav: false,
+      prevText: "",
+      nextText: ""
+    });
+  });
+</script> 

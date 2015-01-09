@@ -19,4 +19,10 @@ class RankingController < ApplicationController
     end
   end
   
+  def show_single_rank
+    ranking = Ranking.find(params[:id])
+    @rank_name = ranking.name
+    render template: "/profile/ranking"
+  end
+  
 end

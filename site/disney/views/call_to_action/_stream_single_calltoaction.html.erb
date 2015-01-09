@@ -1,18 +1,21 @@
 <div class="row main-row">
   <div class="col-md-8 cta__title-col">
-    <img src="<%= asset_path("icon-cat.png") %>" style="float: left;">
+    <span ng-if="calltoaction_info.miniformat" class="label label-default cta-cover__miniformat" style="background-color: {{calltoaction_info.miniformat.label_background}}; color: {{calltoaction_info.miniformat.label_color}; padding: 7px;">
+      <span class="{{calltoaction_info.miniformat.icon}}"></span>
+      {{calltoaction_info.miniformat.title}}
+    </span>
     <p class="cta__title">{{calltoaction_info.calltoaction.title}}</p>
   </div>
   <!-- CALLTOACTION WINNABLE REWARD COUNT -->
-  <div ng-if="calltoaction_info.status" class="col-md-4 cta__winnable-reward text-right">
+  <div ng-if="calltoaction_info.status && calltoaction_info.status.winnable_reward_count > 0" class="col-md-4 cta__winnable-reward text-right">
     <span class="label label-warning cta-cover__winnable-reward__label">
-      +{{calltoaction_info.status.winnable_reward_count}}<span class="glyphicon glyphicon-star">
+      +{{calltoaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
     </span>  
   </div> 
   <!-- CALLTOACTION DONE -->
-  <div ng-if="!calltoaction_info.status" class="col-md-4 cta__winnable-reward text-right">
+  <div ng-if="!calltoaction_info.status || calltoaction_info.status.winnable_reward_count < 1" class="col-md-4 cta__winnable-reward text-right">
     <span class="label label-success cta-cover__winnable-reward__label">
-      FATTO <span class="glyphicon glyphicon-ok">
+      FATTO <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
     </span>  
   </div> 
 </div>

@@ -1,0 +1,18 @@
+<%= render partial: "/application/user_bar" %>
+
+<div class="container" style="background-color: #fff;" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings([@rank_name]).to_json %>, <%= current_user.to_json %>);">
+	<%= render partial: "profile/profile_header" %>
+  	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
+
+		<div class="row">
+			
+				<% if @rank_name == "my_position_general" %>
+					<% if get_my_general_position %>
+						<%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
+					<% end %>
+				<% else %>
+					<%= render partial: "/ranking/rank", locals: { rankings: "rankings.#{@rank_name}" } %>
+				<% end %>
+			
+		</div>
+</div>

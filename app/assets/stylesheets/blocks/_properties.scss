@@ -1,0 +1,23 @@
+/* PROPERTIES */
+
+.properties__container {
+  background-color: #fff;
+  -webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.6);
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.6);
+  border-radius: 5px 5px 0 0;
+}
+
+.properties__logo {
+  position: absolute;
+  left: 30px;
+  top: 0;
+  width: 200px;
+  z-index: 10;
+}
+
+.properties__right-bar-text {
+  font-size: 16px;
+  line-height: 18px;
+  margin-top: 15px;
+}

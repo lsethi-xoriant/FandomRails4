@@ -1,0 +1,46 @@
+/* NAVBAR */
+
+.main-menu__container {
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.main-menu__row {
+}
+
+.navbar {
+  border: none;
+}
+
+.navbar-nav > li {
+  background: #000; 
+  background: -webkit-linear-gradient(#fff, #000);
+  background: -o-linear-gradient(#fff, #000);
+  background: -moz-linear-gradient(#fff, #000);
+  background: linear-gradient(#fff, #000);
+  padding-right: 1px;
+}
+
+.navbar-nav > li > a {
+  background: black;
+  padding-top: 12px;
+}
+
+.navbar-toggle {
+  margin-top: 4px;
+  padding: 8px 10px;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .navbar-nav > li {
+    padding-right: 0;
+  }
+
+  .main-menu__container { 
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
