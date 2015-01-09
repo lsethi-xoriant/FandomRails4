@@ -114,12 +114,7 @@ class ApplicationController < ActionController::Base
       @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
       
       if current_user
-        @current_user_info = {
-          "facebook" => current_user.facebook(request.site.id),
-          "twitter" => current_user.twitter(request.site.id),
-          "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
-          "registration_fully_completed" => registration_fully_completed?
-        }
+        @current_user_info = build_current_user()
       end
     end
     ########## NEW ANGULAR TEMPLATES ##########
@@ -129,6 +124,15 @@ class ApplicationController < ActionController::Base
     @calltoactions_active_interaction = Hash.new
 
     @home = true
+  end
+
+  def build_current_user() 
+    {
+      "facebook" => current_user.facebook(request.site.id),
+      "twitter" => current_user.twitter(request.site.id),
+      "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
+      "registration_fully_completed" => registration_fully_completed?
+    }
   end
 
   def init_aux()

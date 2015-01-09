@@ -23,9 +23,38 @@ class Sites::Disney::ApplicationController < ApplicationController
     
   end
 
-  def init_aux()
-    filters = get_tags_with_tag("featured")
+  def index
+    if current_user
+      compute_save_and_notify_context_rewards(current_user)
+      @current_user_info = build_current_user()
+    end
+
+    return if cookie_based_redirect?
+    
+    init_ctas = request.site.init_ctas
     current_property = get_tag_from_params(get_disney_property())
+
+    @calltoactions = cache_short("stream_ctas_init_calltoactions_#{current_property}") do
+      CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", current_property.id).limit(init_ctas)
+    end
+    
+    @calltoactions_during_video_interactions_second = cache_short("stream_ctas_init_calltoactions_during_video_interactions_second") do
+      init_calltoactions_during_video_interactions_second(@calltoactions)
+    end
+
+    @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions)
+
+    @calltoactions_active_count = cache_short("stream_ctas_init_calltoactions_active_count") do
+      CallToAction.active.count
+    end
+
+    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
+
+    @aux = init_aux(current_property)
+  end
+
+  def init_aux(current_property)
+    filters = get_tags_with_tag("featured")
 
     current_property_info = {
       "id" => current_property.id,
@@ -65,15 +94,15 @@ class Sites::Disney::ApplicationController < ApplicationController
       end
     end
 
-    calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key()) do   
-      highlight_calltoactions = get_highlight_calltoactions()
-      active_calltoactions_without_rewards = CallToAction.includes(:rewards).active.where("rewards.id IS NULL")
+    calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_cache_key(current_property.id)) do  
+
+      highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
+      calltoactions_in_property = CallToAction.includes(:rewards, :call_to_action_tags).active.where("rewards.id IS NULL AND call_to_action_tags.tag_id = ?", current_property.id)
       if highlight_calltoactions.any?
-        last_calltoactions = active_calltoactions_without_rewards.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
-      else
-        last_calltoactions = active_calltoactions_without_rewards.active.limit(3).to_a
+        calltoactions_in_property = calltoactions_in_property.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
       end
-      calltoactions = highlight_calltoactions + last_calltoactions
+
+      calltoactions = highlight_calltoactions + calltoactions_in_property.limit(3).to_a
       calltoaction_evidence_info = []
       calltoactions.each do |calltoaction|
         calltoaction_evidence_info << {

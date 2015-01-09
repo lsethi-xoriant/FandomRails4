@@ -47,6 +47,10 @@ module CacheKeysHelper
     "evidence_calltoactions"
   end
 
+  def get_evidence_calltoactions_in_property_cache_key(property_id)
+    "evidence_calltoactions_in_property_#{property_id}"
+  end
+
   def get_calltoaction_last_comments_cache_key(cta_id)
     "calltoaction_#{cta_id}_last_comments"
   end
