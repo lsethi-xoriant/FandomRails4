@@ -1,21 +1,6 @@
-<%= render partial: "/application/style" %>
-
-<div class="container properties__container" style="border-top: 10px solid {{aux.current_property_info.background}};">
-  <div class="row text-center">
-    <%= render partial: "/application/properties" %>
-  </div>
-</div>
-
-<div class="container main-menu__container">
-  <div class="row main-menu__row">
-    <%= render partial: "/application/main_menu" %>
-  </div>
-</div>
+<%= render partial: "/application/user_bar" %>
 
 <div class="container main-container">   
-
-  <!-- CUSTOM SITE HEADER --> 
-  <%#= render partial: "/application/header" %>
 
   <div class="row">
     <%= render partial: "/application/evidence_ctas" %>
@@ -52,10 +37,10 @@
     </div>
   </div>
 
-  <div class="row">      
-    <div class="col-sm-6 col-sm-offset-3">
+  <div class="row main-row">      
+    <div class="col-sm-8">
       <div id="append-other" class="text-center" style="margin-bottom: 20px;">
-        <button class="btn btn-default" href="javascript: void(0)" ng-click="appendCallToAction();">CARICA ALTRI</button>
+        <button class="btn btn-primary" href="javascript: void(0)" ng-click="appendCallToAction();"><span>CARICA ALTRI</span></button>
       </div>
     </div>
   </div>

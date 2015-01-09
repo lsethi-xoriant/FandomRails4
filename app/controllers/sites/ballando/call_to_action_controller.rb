@@ -190,7 +190,60 @@ class Sites::Ballando::CallToActionController < CallToActionController
     end
   end
 
-    def show
+  def append_calltoaction
+    
+    calltoactions = Array.new
+    render_calltoactions_str = String.new
+    
+    calltoactions_showed_ids = params[:calltoactions_showed].map { |calltoaction| calltoaction["id"] }
+    calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")
+
+    if params[:tag_id].present?
+      stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", params[:tag_id]).active
+      if params[:current_calltoaction].present?
+        stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
+      end
+    else
+      stream_call_to_action_to_render = CallToAction.active
+      if params[:current_calltoaction].present?
+        stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
+      end
+    end
+
+    stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id NOT IN (#{calltoactions_showed_id_qmarks})", *calltoactions_showed_ids).limit(3)
+    calltoactions_comment_interaction = init_calltoactions_comment_interaction(stream_call_to_action_to_render)
+
+    stream_call_to_action_to_render.each do |calltoaction|
+      calltoactions << calltoaction
+      render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: nil, calltoaction_active_interaction: Hash.new, aux: nil }, layout: false, formats: :html)
+    end
+
+    calltoactions_during_video_interactions_second = Hash.new
+    calltoactions.each do |calltoaction|
+      interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")
+      if(interactions_overvideo_during.any?)
+        calltoactions_during_video_interactions_second[calltoaction.id] = Hash.new
+        interactions_overvideo_during.each do |interaction|
+          calltoactions_during_video_interactions_second[calltoaction.id][interaction.id] = interaction.seconds
+        end
+      end
+    end
+
+    response = Hash.new
+    response = {
+      calltoactions_during_video_interactions_second: calltoactions_during_video_interactions_second,
+      calltoactions: calltoactions,
+      html_to_append: render_calltoactions_str,
+      calltoaction_info_list: build_call_to_action_info_list(calltoactions)
+    }
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+    
+  end
+    
+  def show
       calltoaction_id = params[:id].to_i
       calltoaction = CallToAction.includes(:interactions).active.find_by_id(calltoaction_id)
 

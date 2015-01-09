@@ -198,12 +198,7 @@ class CallToActionController < ApplicationController
       @calltoaction_info_list = build_call_to_action_info_list(@calltoactions_with_current)
       
       if current_user
-        @current_user_info = {
-          "facebook" => current_user.facebook(request.site.id),
-          "twitter" => current_user.twitter(request.site.id),
-          "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
-          "registration_fully_completed" => registration_fully_completed?
-        }
+        @current_user_info = build_current_user()
       end
 
       @aux = init_show_aux()
@@ -230,11 +225,21 @@ class CallToActionController < ApplicationController
 
   end
 
+=begin
+  def build_current_user()
+    {
+      "facebook" => current_user.facebook(request.site.id),
+      "twitter" => current_user.twitter(request.site.id),
+      "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
+      "registration_fully_completed" => registration_fully_completed?
+    }
+  end
+=end
+
   def init_show_aux()
     {
       "tenant" => get_site_from_request(request)["id"],
       "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
-      "main_reward_name" => MAIN_REWARD_NAME,
       "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
       "init_captcha" => true
     }
@@ -312,6 +317,8 @@ class CallToActionController < ApplicationController
     user_text = params[:comment_info][:user_text]
     
     response = Hash.new
+
+    response[:approved] = approved
 
     response[:ga] = Hash.new
     response[:ga][:category] = "UserCommentInteraction"
@@ -503,7 +510,7 @@ class CallToActionController < ApplicationController
         "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME])
       }
     else
-      response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true) #HERE
+      response["main_reward_counter"] = get_point
       response = setup_update_interaction_response_info(response)
     end    
     

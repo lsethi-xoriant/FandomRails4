@@ -58,6 +58,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       ga('send', 'event', "Registration", "Registration", "Registration", 1, true);
     }
 
+    if($scope.aux.current_property_info) {
+      $scope.current_tag_id = $scope.aux.current_property_info.id;
+    }
+
     // With one calltoaction I active comment interaction
     $scope.comments_polling = new Object();
     $scope.ajax_comment_append_in_progress = false;
@@ -114,7 +118,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     
     $(function(){ flowplayerReady(); });
 
-    updateSecondaryVideoPlayers($scope.calltoactions);
+    //updateSecondaryVideoPlayers($scope.calltoactions);
 
     $("#append-other button").attr('disabled', false);
     if($scope.calltoactions.length >= $scope.calltoactions_count) {
@@ -608,9 +612,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           $("#append-other button").hide();
         }
 
-        updateSecondaryVideoPlayers(data.calltoactions);
-
-        $scope.last_calltoaction_shown_activated_at = $scope.calltoactions[$scope.calltoactions.length - 1].activated_at;
+        //updateSecondaryVideoPlayers(data.calltoactions);
 
         $("#append-other button").attr('disabled', false);
 
@@ -1160,8 +1162,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       interaction_id = interaction_info.interaction.id;
 
       enableWaitingAudio("stop");
+
+      update_interaction_path = "/update_interaction"
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.title) {
+        update_interaction_path = "/" + $scope.aux.current_property_info.title + "" + update_interaction_path;
+      }
   	  
-      $http.post("/update_interaction", { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getAnonymousUserStorage() })
+      $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getAnonymousUserStorage() })
           .success(function(data) {
 
             updateUserRewardInView(data.main_reward_counter.general);
@@ -1570,6 +1577,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           interaction_info.interaction.resource.comment_info.user_captcha = "";
           sessionStorage.setItem("captcha" + interaction_info.interaction.id, data.captcha.code);
+        } else if(!data.approved) {
+          alert("In attesa di approvazione!");
         } else {
           interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
 

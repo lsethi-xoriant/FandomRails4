@@ -510,22 +510,33 @@ module ApplicationHelper
   end
   
   def get_current_property_point
-      get_counter_about_user_reward("#{$context_root}_point");
+    get_counter_about_user_reward(get_current_property_point_reward_name)
+  end  
+
+  def get_current_property_point_reward_name
+    $context_root.nil? ? "point" : "#{$context_root}_point"
   end
 
   def get_counter_about_user_reward(reward_name, all_periods = false)
     if current_user
       reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
-        reward_points = Hash.new
+        
+        reward_points = { general: 0 }
+        $site.periodicity_kinds.each do |periodicity_kind|
+          reward_points[:periodicity_kind] = 0
+        end
+
         get_reward_with_periods(reward_name).each do |user_reward|
           if user_reward.period.blank?
-            reward_points[:general] = user_reward.counter || 0
+            reward_points[:general] = user_reward.counter
           else
-            reward_points[user_reward.period.kind] = user_reward.counter || 0
+            reward_points[user_reward.period.kind] = user_reward.counter
           end
         end 
+
         reward_points     
       end
+
       all_periods ? reward_points : reward_points[:general]  
     else
       nil
@@ -629,12 +640,12 @@ module ApplicationHelper
     if current_user
       return user_avatar current_user
     else
-      return asset_path("#{$site.id}_anon.png")
+      return asset_path("#{$site.anon_avatar}")
     end
   end
 
   def user_avatar user, size = "normal"
-    user.avatar_selected_url.present? ? user.avatar_selected_url : asset_path("#{$site.id}_anon.png")
+    user.avatar_selected_url.present? ? user.avatar_selected_url : asset_path("#{$site.anon_avatar}")
   end
 
   def disqus_sso
@@ -956,6 +967,14 @@ module ApplicationHelper
       avatars << "#{folder}#{avatar}"
     end
     avatars
+  end
+
+  def get_tag_from_params(name)
+    if name
+      Tag.find_by_name(name)  
+    else
+      nil
+    end
   end
   
 end

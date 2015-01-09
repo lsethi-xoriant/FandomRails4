@@ -1,7 +1,6 @@
-<div class="container main-container">   
+<%= render partial: "/application/user_bar" %>
 
-  <!-- CUSTOM SITE HEADER --> 
-  <%#= render partial: "/application/header" %>
+<div class="container main-container">   
 
   <div ng-repeat="calltoaction_info in calltoactions">
     <%= render partial: "/call_to_action/stream_single_calltoaction" %>

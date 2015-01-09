@@ -34,6 +34,9 @@ Fandom::Application.routes.draw do
           match "/iur/sign_in", to: "registrations#iur"
         end
 
+        resources :call_to_action
+
+        match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         root :to => "application#index"
 
       end
@@ -49,6 +52,8 @@ Fandom::Application.routes.draw do
         scope module: "ballando" do
 
           resources :call_to_action
+
+          match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 
           match "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
 
@@ -205,6 +210,7 @@ Fandom::Application.routes.draw do
     match "user", :to => "easyadmin#index_user"
     match "export_users", :to => "easyadmin#export_users"
     match "user/show/:id", :to => "easyadmin#show_user"
+    match "user/filter/:mail_filter", :to => "easyadmin#filter_users"
 
     # WINNER
     match "winner", :to => "easyadmin#index_winner"

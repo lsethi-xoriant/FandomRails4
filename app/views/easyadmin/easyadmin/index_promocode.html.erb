@@ -25,33 +25,28 @@
 	    <hr/>
 
 		<div class="row">
-			<div class="col-md-8"> 
+			<div class="col-md-12"> 
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>#</th>
-							<th>Property</th>
-							<th>Nome</th>
+							<th>Id</th>
+							<th>Titolo</th>
 							<th>Codice</th>
-							<th>Contatore utilizzo</th>
+							<!--<th>Contatore utilizzo</th>-->
 							<th>Azioni</th>
 						</tr>
 					</thead>
 					<% i = 1 %>
-					<% Property.includes(:promocodes).where("promocodes.id IS NOT NULL").each do |prop| %>
-						<% prop.promocodes.each do |p| %>
-							<tr>
-								<td><%= i %></td>
-								<td><%= Property.name.upcase %></td>
-								<td><%= p.title %></td>
-								<td><%= p.code %></td>
-								<td><%= p.interaction.cache_counter %></td>
-								<td>
-									&nbsp;&nbsp;
-								</td>
-							</tr>
-							<% i = i + 1 %>
-						<% end %>
+					<% Promocode.all.each do |p| %>
+						<tr>
+							<td><%= p.id %></td>
+							<td><%= p.title %></td>
+							<td><%= p.code %></td>
+							<!--<td> p.interaction.cache_counter </td>-->
+							<td>
+								&nbsp;&nbsp;
+							</td>
+						</tr>
 					<% end %>
 				</table>
 			</div>

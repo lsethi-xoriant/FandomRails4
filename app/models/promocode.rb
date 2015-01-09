@@ -1,5 +1,5 @@
 class Promocode < ActiveRecord::Base
-  	attr_accessible :title, :code, :property_id
+  	attr_accessible :title, :code
 
   	before_create :generate_code
 
@@ -7,7 +7,6 @@ class Promocode < ActiveRecord::Base
   	validates_uniqueness_of :code
   
   	has_one :interaction, as: :resource
-  	belongs_to :property
 
   	def generate_code
 	    begin
