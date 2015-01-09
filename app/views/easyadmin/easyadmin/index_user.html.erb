@@ -27,7 +27,20 @@
 	    	</div>
 	    </div>
 
-		<div class="row">
+      <div class="row">
+        <div class="col-md-3">
+          <label>Filtra per EMAIL</label><input class="form-control" type="text" onkeyup="updateFilter(this);">
+        </div>
+      </div>
+
+      <div id="users-to-filter" class="row hidden">
+        <div class="col-md-12"> 
+          <table id="users-from-ajax-request" class="table table-striped">
+          </table>
+        </div>
+      </div>
+
+		<div class="row users-to-show">
 			<div class="col-md-12"> 
 				<table class="table table-striped">
 					<thead>
@@ -39,24 +52,8 @@
 							<th>Azioni</th>
 						</tr>
 					</thead>
-					<% @user_list.each do |u| %>
-						<tr>
-							<td><%= "#{u.first_name} #{u.last_name}" %></td>
-							<td><%= u.username %></td>
-							<td><%= u.email %></td>
-							<td><%= "#{u.location}, (#{u.province})" if u.location.present? %></td>
-
-							<td>
-								<div class="row">
-
-									<div class="col-sm-1" style="margin: 0;">
-										<a href="user/show/<%= u.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
-									</div>
-
-								</div>
-							</td>
-
-						</tr>
+					<% @user_list.each do |user| %>
+						<%= render partial: "/easyadmin/easyadmin/users_index_row", locals: { user: user } %>
 					<% end %>
 				</table>
 			</div>
@@ -70,3 +67,68 @@
 
 	</div>
 </div>
+
+<script type="text/javascript">
+
+  var ajax_in_progress = false;
+  var filterString = "";
+
+  function updateFilter(filter) {
+    filterString = $(filter).val();
+    updateUsersToFilter(filterString);
+  }
+
+  function updateUsersToFilter(filterString) {
+    if(filterString == "") {
+
+      $(".users-to-show").removeClass("hidden");
+      $("#users-to-filter").addClass("hidden");
+
+    } else {
+
+      $(".users-to-show").addClass("hidden");
+      $("#users-to-filter").removeClass("hidden");
+
+        if(!ajax_in_progress) {
+
+        ajax_in_progress = true;
+
+        $.ajax({
+              type: "GET",
+              url: "user/filter/" + filterString,
+              beforeSend: function(jqXHR, settings) {
+                  jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+              },
+              success: function(data) {
+
+                $("#users-from-ajax-request").html("");
+
+                $("#users-from-ajax-request").html(data);
+
+                html =
+                      "<thead>" +
+                        "<tr>" +
+                          "<th>Nome</th>" +
+                          "<th>Username</th>" +
+                          "<th>Email</th>" +
+                          "<th>Città</th>" +
+                          "<th>Azioni</th>" +
+                        "</tr>" +
+                      "</thead>";
+
+                $("#users-from-ajax-request").prepend(html);
+
+                ajax_in_progress = false;
+
+              },
+              error: function(data) {
+                ajax_in_progress = false;
+              }
+          });
+        }
+        else
+          updateUsersToFilter(filterString);
+    }
+  }
+
+</script>

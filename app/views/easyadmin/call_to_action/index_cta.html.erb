@@ -99,7 +99,6 @@
 
 	function updateFilter(n, filter) {
 		filters[n] = $(filter).val();
-		console.log(filters[n]);
 		updateCtaToFilters(filters);
 	}
 
@@ -160,8 +159,9 @@
 	            }
 	        });
 				}
-
+        else
+          updateCtaToFilters(filters);
 		}
-   }
+  }
 
 </script>

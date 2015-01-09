@@ -200,6 +200,7 @@ Fandom::Application.routes.draw do
     match "user", :to => "easyadmin#index_user"
     match "export_users", :to => "easyadmin#export_users"
     match "user/show/:id", :to => "easyadmin#show_user"
+    match "user/filter/:mail_filter", :to => "easyadmin#filter_users"
 
     # WINNER
     match "winner", :to => "easyadmin#index_winner"
