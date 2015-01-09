@@ -181,12 +181,6 @@ module CallToActionHelper
     response
   end
 
-  def get_cta_active_count()
-    cache_short("cta_active_count") do
-      CallToAction.active.count
-    end
-  end
-
   def page_require_captcha?(calltoaction_comment_interaction)
     return !current_user && calltoaction_comment_interaction
   end
