@@ -1577,6 +1577,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           interaction_info.interaction.resource.comment_info.user_captcha = "";
           sessionStorage.setItem("captcha" + interaction_info.interaction.id, data.captcha.code);
+        } else if(!data.approved) {
+          alert("In attesa di approvazione!");
         } else {
           interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
 

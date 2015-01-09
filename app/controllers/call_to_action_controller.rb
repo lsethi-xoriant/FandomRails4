@@ -318,6 +318,8 @@ class CallToActionController < ApplicationController
     
     response = Hash.new
 
+    response[:approved] = approved
+
     response[:ga] = Hash.new
     response[:ga][:category] = "UserCommentInteraction"
     response[:ga][:action] = "AddComment"
