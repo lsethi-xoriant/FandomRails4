@@ -16,7 +16,7 @@
   </div>  
 </div>
 
-<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row undervideo-interaction__feedback">
+<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome  && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row undervideo-interaction__feedback">
   <div ng-if="interaction_info.interaction.resource_type != 'trivia'" class="col-sm-10 col-sm-offset-1 text-center">
     <div class="alert alert-success" style="margin-bottom: 0;">
     <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.

@@ -185,12 +185,16 @@
     	$("#tag_name").focus();
     <% end %>
 
-    var json_field = <%= @extra_options.to_json.html_safe %>;
-    var formName = 'edit_tag_' + <%= @tag.id.to_s %>
+    var json_field = null;
+    <% if @tag.extra_fields.present? %>
+      json_field = <%= @tag.extra_fields.to_s.html_safe %>;
+    <% end %>
+
+    var formName = "edit_tag_" + <%= @tag.id.to_s %>;
     var modelName = "tag";
     var fieldName = "extra_fields";
 
-    populateTextboxWithJsonField(json_field, null, formName, modelName, fieldName);
+    initializeTextbox(json_field, null, formName, modelName, fieldName);
     
   });
 

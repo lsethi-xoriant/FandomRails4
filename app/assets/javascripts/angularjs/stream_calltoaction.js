@@ -70,7 +70,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       }
     }
 
-    if($scope.aux.init_captcha && !$scope.current_user.length) {
+    if($scope.aux.init_captcha && !$scope.current_user) {
       initCaptcha();
     }
 
@@ -260,7 +260,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   }
 
   $scope.currentUserEmptyAndAnonymousInteractionEnable = function() {
-    return ($scope.current_user == null && $scope.aux.anonymous_interaction);
+    return (!$scope.current_user && $scope.aux.anonymous_interaction);
   };
 
   function getPlayer(calltoaction_id) {
@@ -422,7 +422,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   $window.getAnonymousUserStorage = function() {
-    return $scope.current_user != null ? null : JSON.parse(localStorage[$scope.aux.tenant]);
+    return $scope.current_user ? null : JSON.parse(localStorage[$scope.aux.tenant]);
   };
 
   $window.setAnonymousUserStorageAttr = function(name, value) {
@@ -451,11 +451,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   function initAnonymousUser() {
     if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage[$scope.aux.tenant] == null) {
       initAnonymousUserStorage();      
-    } else if ($scope.current_user != null && localStorage[$scope.aux.tenant] != null) {
+    } else if ($scope.current_user && localStorage[$scope.aux.tenant] != null) {
       clearAnonymousUserStorage();
     }
 
-    if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+    if(!$scope.current_user && $scope.aux.anonymous_interaction) {
       updateCallToActionInfoWithAnonymousUserStorage();
     }
   }
@@ -593,7 +593,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           appendYTIframe(calltoaction_info);
         });
 
-        if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+        if(!$scope.current_user && $scope.aux.anonymous_interaction) {
           updateCallToActionInfoWithAnonymousUserStorage();
         }
 
@@ -964,38 +964,40 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   	this.playerId = playerId;
 	  this.calltoaction_id = $("#" + playerId).attr("calltoaction-id");
   	this.media_data = media_data;
-
-	  this.cuepoints = getOvervideoInteractions(this.calltoaction_id);
-  	fplayer = this;
-  	
-	  $("#"+playerId).flowplayer({
-        playlist: [
-           [
-              { mp4: fplayer.media_data }
-           ]
-        ],
-        swf: "/assets/flowplayer.swf",
-        cuepoints: fplayer.cuepoints,
-      }).bind("ready", function(e, api) {
-     	  fplayer.playerManager = api; 	
-      }).bind("resume", function(e, api) {
-     	  calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
-	      calltoaction_media_priority = $("#" + player.playerId).attr("main-media");
-  	    if(calltoaction_media_priority == "main") {
-  	      updateStartVideoInteraction(calltoaction_id);
-  	    } else {
-  			  // SECONDARY MEDIA
-  	    }    
-      }).bind("cuepoint", function(e, api, cuepoint) {
-        if(!$scope.overvideo_interaction_locked[calltoaction_id]) {
-         	$scope.$apply(function() {
-         		executeInteraction(fplayer, fplayer.calltoaction_id, cuepoint.interaction);
-         	});
-        }
-    });
-     
-    this.play = function(){ this.playerManager.resume(); };
-    this.pause = function(){ this.playerManager.pause(); };
+    if(this.calltoaction_id) {
+      
+  	  this.cuepoints = getOvervideoInteractions(this.calltoaction_id);
+    	fplayer = this;
+    	
+  	  $("#"+playerId).flowplayer({
+          playlist: [
+             [
+                { mp4: fplayer.media_data }
+             ]
+          ],
+          swf: "/assets/flowplayer.swf",
+          cuepoints: fplayer.cuepoints,
+        }).bind("ready", function(e, api) {
+       	  fplayer.playerManager = api; 	
+        }).bind("resume", function(e, api) {
+       	  calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
+  	      calltoaction_media_priority = $("#" + player.playerId).attr("main-media");
+    	    if(calltoaction_media_priority == "main") {
+    	      updateStartVideoInteraction(calltoaction_id);
+    	    } else {
+    			  // SECONDARY MEDIA
+    	    }    
+        }).bind("cuepoint", function(e, api, cuepoint) {
+          if(!$scope.overvideo_interaction_locked[calltoaction_id]) {
+           	$scope.$apply(function() {
+           		executeInteraction(fplayer, fplayer.calltoaction_id, cuepoint.interaction);
+           	});
+          }
+      });
+       
+      this.play = function(){ this.playerManager.resume(); };
+      this.pause = function(){ this.playerManager.pause(); };
+    }
    
   }
   
@@ -1060,7 +1062,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           }
 
           // Update local storage for anonymous user.
-          if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+          if(!$scope.current_user && $scope.aux.anonymous_interaction) {
             setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
             
             user_interaction_for_storage = new Object();
@@ -1133,7 +1135,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
         $scope.current_user.main_reward_counter = data.main_reward_counter;  
         interaction_info.status = data.interaction_status;
-        
+
         $scope.aux.share_interaction_daily_done = true;
 
         $("#modal-interaction-" + interaction_id + "-" + provider).modal("hide");
@@ -1152,7 +1154,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction) {
 
-    if($scope.current_user != null || $scope.aux.anonymous_interaction) {
+    if($scope.current_user || $scope.aux.anonymous_interaction) {
 
       calltoaction_id = calltoaction_info.calltoaction.id;
       interaction_id = interaction_info.interaction.id;
@@ -1175,7 +1177,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             // HERE removeOvervideoInteraction
 
             // Update local storage for anonymous user.
-            if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+            if(!$scope.current_user && $scope.aux.anonymous_interaction) {
               setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
               
               user_interaction_for_storage = new Object();
@@ -1188,6 +1190,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
             // Interaction after user response.
             updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+            calltoaction_info.status = JSON.parse(data.calltoaction_status);
             $scope.current_user.main_reward_counter = data.main_reward_counter;   
 
             if(data.answers) {
@@ -1287,7 +1290,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
     showMarkerNearInteraction(interaction_id);
 
-    if($scope.current_user == null && $scope.aux.anonymous_interaction) {
+    if(!$scope.current_user && $scope.aux.anonymous_interaction) {
       updateUserRewardInView(data.main_reward_counter);
     } else {
       updateUserRewardInView(data.main_reward_counter.general);
@@ -1562,7 +1565,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
         if(data.errors) {
           alert("ERROR");
-        } else if(!data.captcha_evaluate) {
+        } else if(!$scope.current_user && !data.captcha_evaluate) {
           alert("CAPTCHA NON VALIDO");
           interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           interaction_info.interaction.resource.comment_info.user_captcha = "";
@@ -1572,7 +1575,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
           interaction_info.interaction.resource.comment_info.user_text = "";
           interaction_info.interaction.resource.comment_info.user_captcha = "";
-          if(!$scope.current_user.length) {
+          if(!$scope.current_user) {
             interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           }
         }

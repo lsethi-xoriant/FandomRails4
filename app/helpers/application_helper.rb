@@ -7,31 +7,7 @@ module ApplicationHelper
   include CacheHelper
   include RewardingSystemHelper
   include NoticeHelper
-  
-  class BrowseCategory
-    include ActiveAttr::TypecastedAttributes
-    include ActiveAttr::MassAssignment
-    include ActiveAttr::AttributeDefaults
-
-    # human readable name of this field
-    attribute :title, type: String
-    # html id of this field
-    attribute :id, type: String
-    attribute :type, type: String
-    attribute :has_thumb, type: Boolean
-    attribute :thumb_url, type: String
-    attribute :description, type: String
-    attribute :long_description, type: String
-    attribute :detail_url, type: String
-    attribute :created_at, type: Integer
-    attribute :header_image_url, type: String
-    attribute :icon, type: String
-    attribute :category_icon, type: String
-    attribute :status, type: String
-    attribute :likes, type: Integer
-    attribute :comments, type: Integer
-    attribute :tags
-  end
+  include BrowseHelper
 
   class ContentSection
     include ActiveAttr::TypecastedAttributes
@@ -657,12 +633,12 @@ module ApplicationHelper
     if current_user
       return user_avatar current_user
     else
-      return "/assets/anon.png"
+      return asset_path("#{$site.id}_anon.png")
     end
   end
 
   def user_avatar user, size = "normal"
-    user.avatar_selected_url.present? ? user.avatar_selected_url : "/assets/anon.png"
+    user.avatar_selected_url.present? ? user.avatar_selected_url : asset_path("#{$site.id}_anon.png")
   end
 
   def disqus_sso

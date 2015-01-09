@@ -194,23 +194,27 @@ module EasyadminHelper
   def create_and_link_attachment(param, model_instance)
     if param[:extra_fields].present?
       param[:extra_fields].each do |extra_field_name, extra_field_value|
-        if extra_field_value[:type] == 'string'
+        if extra_field_value.is_a?(String)
+          param[:extra_fields][extra_field_name] = extra_field_value
+        elsif extra_field_value[:type] == 'string'
           param[:extra_fields][extra_field_name] = extra_field_value[:value]
-        else
+        else # it's not a string
           if extra_field_value[:value].present?
             attachment = Attachment.create(data: extra_field_value[:value])
             extra_field_value[:attachment_id] = attachment.id
             extra_field_value[:url] = attachment.data.url
             extra_field_value.delete :value
           else
-            value_of_extra_field = JSON.parse(model_instance.extra_fields)[extra_field_name]
-            extra_field_value[:type] = 'media'
-            if value_of_extra_field.nil?
-              extra_field_value[:attachment_id] = 'null'
-              extra_field_value[:url] = 'null'
-            else
-              extra_field_value[:attachment_id] = value_of_extra_field['attachment_id']
-              extra_field_value[:url] = value_of_extra_field['url']
+            if model_instance.present?
+              value_of_extra_field = JSON.parse(model_instance.extra_fields)[extra_field_name]
+              extra_field_value[:type] = 'media'
+              if value_of_extra_field.nil?
+                extra_field_value[:attachment_id] = 'null'
+                extra_field_value[:url] = 'null'
+              else
+                extra_field_value[:attachment_id] = value_of_extra_field['attachment_id']
+                extra_field_value[:url] = value_of_extra_field['url']
+              end
             end
           end
         end

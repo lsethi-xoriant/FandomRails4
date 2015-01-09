@@ -114,12 +114,7 @@ class ApplicationController < ActionController::Base
       @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
       
       if current_user
-        @current_user_info = {
-          "facebook" => current_user.facebook(request.site.id),
-          "twitter" => current_user.twitter(request.site.id),
-          "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
-          "registration_fully_completed" => registration_fully_completed?
-        }
+        @current_user_info = build_current_user()
       end
     end
     ########## NEW ANGULAR TEMPLATES ##########
@@ -131,12 +126,22 @@ class ApplicationController < ActionController::Base
     @home = true
   end
 
+  def build_current_user() 
+    {
+      "facebook" => current_user.facebook(request.site.id),
+      "twitter" => current_user.twitter(request.site.id),
+      "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
+      "registration_fully_completed" => registration_fully_completed?
+    }
+  end
+
   def init_aux()
     filters = get_tags_with_tag("featured")
+    current_property = get_tags_with_tag($context_root)
 
     if filters.any?
       if $context_root
-        filters = filters & get_tags_with_tag($context_root)
+        filters = filters & current_property
       end
       filter_info = []
       filters.each do |filter|
@@ -146,6 +151,21 @@ class ApplicationController < ActionController::Base
           "icon" => get_extra_fields!(filter)["icon"],
           "title" => get_extra_fields!(filter)["title"],
           "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :thumb) rescue nil) 
+        }
+      end
+    end
+
+    properties = get_tags_with_tag("property")
+
+    if properties.any?
+      property_info = []
+      properties.each do |property|
+        property_info << {
+          "id" => property.id,
+          "background" => get_extra_fields!(property)["label-background"],
+          "icon" => get_extra_fields!(property)["icon"],
+          "title" => get_extra_fields!(property)["title"],
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :custom) rescue nil) 
         }
       end
     end
@@ -178,6 +198,7 @@ class ApplicationController < ActionController::Base
       "main_reward_name" => MAIN_REWARD_NAME,
       "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
       "filter_info" => filter_info,
+      "property_info" => property_info,
       "calltoaction_evidence_info" => calltoaction_evidence_info
     }
   end

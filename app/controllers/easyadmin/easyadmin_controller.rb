@@ -45,7 +45,7 @@ def export_users
             "#{user.phone};#{user.number};#{user.rule};#{user.birth_date};#{user.username};#{user.newsletter};#{user.avatar_selected_url};#{user.aux};#{user.gender}\n"
   end
     send_data(csv, :type => 'text/csv; charset=utf-8; header=present', :filename => "users.csv")
-  end
+end
 
   def show_user
     @user = User.find(params[:id])

@@ -598,6 +598,13 @@ fieldset[disabled] .call-to-action__share__modal-button.btn-primary.active {
   color: #959595; // gray
 }
 
+.user-bar__body__contest-end {
+  margin: 0;
+  line-height: 50px; 
+  font-size: 18px;
+  color: #d21020; // gray
+}
+
 .user-bar__body__sign-out {
   font-size: 13px; padding-left: 5px;
   color: #959595;
@@ -1055,6 +1062,10 @@ fieldset[disabled] .btn-facebook.active {
     background: -moz-linear-gradient(#bbb7ac, #857e6b) fixed;
     background: linear-gradient(#bbb7ac, #857e6b) fixed;
   }
+
+  .user-bar__body__contest-end {
+    margin-left: 15px;
+  }
   
   .gift-container {
   	overflow: hidden;
@@ -1128,6 +1139,10 @@ fieldset[disabled] .btn-facebook.active {
     padding-left: 0;
     padding-top: 15px;
     font-weight: 400;
+  }
+
+  .call-to-action__share-and-win__title--end {
+    padding-top: 13px;
   }
 
   .user-bar__ticket-panel {

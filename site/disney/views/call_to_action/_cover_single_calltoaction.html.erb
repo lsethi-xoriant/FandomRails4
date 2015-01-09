@@ -8,15 +8,15 @@
           <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
         </div>  
         <!-- CALLTOACTION WINNABLE REWARD COUNT -->
-        <div ng-if="calltoaction_info.status" class="col-sm-12 cta-cover__winnable-reward text-right">
+        <div ng-if="calltoaction_info.status  && calltoaction_info.status.winnable_reward_count > 0" class="col-sm-12 cta-cover__winnable-reward text-right">
           <span class="label label-warning cta-cover__winnable-reward__label">
-            +{{calltoaction_info.status.winnable_reward_count}}<span class="glyphicon glyphicon-star">
+            +{{calltoaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
           </span>  
         </div> 
         <!-- CALLTOACTION DONE -->
-        <div ng-if="!calltoaction_info.status" class="col-sm-12 cta-cover__winnable-reward text-right">
+        <div ng-if="!calltoaction_info.status || calltoaction_info.status.winnable_reward_count < 1" class="col-sm-12 cta-cover__winnable-reward text-right">
           <span class="label label-success cta-cover__winnable-reward__label">
-            FATTO <span class="glyphicon glyphicon-ok">
+            FATTO <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
           </span>  
         </div> 
         <div class="col-sm-8 text-left cta-cover__title">

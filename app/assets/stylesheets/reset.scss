@@ -1,7 +1,6 @@
 /* RESET CSS */
 
 body {
-  padding-top: 60px;
   background-color: $grey;
 }
 
@@ -21,6 +20,29 @@ body {
   padding-right: 40px;
 }
 
+* {
+  font-family: 'Matterhorn-Regular';
+}
+
+/********************* COOKIES FOOTER *********************/
+
+.cookies-footer {
+  background: rgba(0, 0, 0, 0.6); 
+  color: #fff; 
+  min-height: 0; 
+  padding: 10px;
+}
+
+.cookies-footer__description {
+  margin: 0; 
+  font-size: 11px;
+}
+
+.cookies-footer__link {
+  color: #fff;
+  text-decoration: underline;
+}
+
 @media (max-width: $screen-sm-min) { 
   .main-row {
     padding-left: 0;
@@ -28,8 +50,10 @@ body {
   }
 }
 
-.disabled {
-  //background-color: grey !important;
+.btn {
+  span {
+    position: relative; top: 2px;
+  }
 }
 
 .comment_evidence {

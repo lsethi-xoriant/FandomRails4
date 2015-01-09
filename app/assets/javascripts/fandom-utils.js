@@ -47,7 +47,7 @@ function fillInputWithSlug(srcInputElement, destInputElement) {
 };
 
 function getButtonHandlerForJsonFieldsName(fieldName) {
-    return  'text-boxes-for-' + fieldName + '-fields';	
+    return  'text-boxes-for-' + fieldName + '-fields';  
 };
 
 function addButtonHandlerForJsonFields(modelName, fieldName) {
@@ -90,11 +90,13 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
         id: 'name-for-' + fieldName + '-field-' + counter,
         name: 'name-for-' + fieldName + '-field-' + counter,
         class: 'form-control',
-        keyup: function() { 
-            updateValueElementName($(this), modelName, fieldName, 'value'); 
-            updateValueElementName($(this), modelName, fieldName, 'type'); 
+        keyup: function() {
+            updateValueElementName($(this), modelName, fieldName, 'value');
+            updateValueElementName($(this), modelName, fieldName, 'type');
+            updateValueElementName($(this), modelName, fieldName, 'attachment-id');
+            updateValueElementName($(this), modelName, fieldName, 'url');
         }
-	}).appendTo('#extra-fields-name-for-' + fieldName + '-' + counter);
+    }).appendTo('#extra-fields-name-for-' + fieldName + '-' + counter);
 
     // *** TYPE *** //
     jQuery('<div/>', {
@@ -110,7 +112,7 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
     jQuery('<select/>', {
         id: 'type-for-' + fieldName + '-field-' + counter,
         class: 'form-control',
-        change: function() { updateValueElementType($(this), modelName, fieldName); }
+        change: function() { updateValueElementType($(this), fieldName); }
     }).appendTo('#extra-fields-type-for-' + fieldName + '-' + counter);
 
     $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "string">STRINGA</option>');
@@ -139,10 +141,11 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
         id: 'value-for-' + fieldName + '-field-' + counter,
         name: 'empty-value',
         class: 'form-control',
+        change: function() { removeImage($(this), fieldName); }
     }).appendTo('#extra-fields-value-div-for-' + fieldName + '-' + counter);
 
     // *** REMOVE *** //
-	if(addRemoveButton != false) {
+    if(addRemoveButton != false) {
         $('#extra-fields-for-' + fieldName + '-' + counter).append('<label id ="remove-button-label-for-' + fieldName + '-field-' + counter + '" class="col-lg-2">Elimina</label>');
         $('#extra-fields-for-' + fieldName + '-' + counter).append('<a id = "remove-link-for-' + fieldName + '-field-' + counter + '" href="#" class="col-lg-1 btn btn-primary btn-xs">Rimuovi</a>');
     }
@@ -161,26 +164,34 @@ function updateValueElementName(elementName, modelName, fieldName, inputBoxKind)
     relatedValueElement.attr('name', modelName + '[[' + fieldName + '][' + fieldValue + '][' + inputBoxKind + ']]');
 };
 
-function updateValueElementType(elementName, modelName, fieldName) {
+function updateValueElementType(elementName, fieldName) {
     identifier = elementName.attr('id').replace('type-for-' + fieldName + '-field-','');
     id = '#value-for-' + fieldName + '-field-' + identifier;
     relatedValueElement = $(id);
     selectedType = elementName.val();
+    var type;
     if (selectedType == 'media') {
-        var type = 'file';
+        type = 'file';
         $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').show();
     }
     else {
         $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').hide();
         if (selectedType == 'integer')
-          var type = 'number';
+          type = 'number';
         else if (selectedType == 'boolean')
-            var type = 'checkbox';
+            type = 'checkbox';
         else
-            var type = 'text';
+            type = 'text';
     }
 
+    $('#attachment-id-for-' + fieldName + '-field-' + identifier).remove();
+    $('#url-for-' + fieldName + '-field-' + identifier).remove();
     relatedValueElement.attr('type', type);
+};
+
+function removeImage(elementName, fieldName) {
+    identifier = elementName.attr('id').replace('value-for-' + fieldName + '-field-','');
+    $('#extra-fields-value-div-for-' + fieldName +  '-' + identifier).children('img').remove();
 };
 
 function populateTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName) {
@@ -196,7 +207,7 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
             index++;
             addFieldElements(modelName, fieldName, index, true);
             $('#name-for-' + fieldName + '-field-' + index).val(key);
-            updateValueElementName($("#name-for-" + fieldName + "-field-" + index), modelName, fieldName, 'value');
+            updateValueElementName($('#name-for-' + fieldName + '-field-' + index), modelName, fieldName, 'value');
             updateValueElementName($('#name-for-' + fieldName + '-field-' + index), modelName, fieldName, 'type');
             if (typeof value == 'string') {
                 $('#type-for-' + fieldName + '-field-' + index).val('string');
@@ -206,6 +217,21 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
             else {
                 $('#type-for-' + fieldName + '-field-' + index).val('media');
                 $('#value-for-' + fieldName + '-field-' + index).attr('type', 'file');
+                $('#value-for-' + fieldName + '-field-' + index);
+
+                old_attachment_id_input = jQuery('<input/>', {
+                  id : 'attachment-id-for-' + fieldName + '-field-' + index,
+                  name : modelName + '[[' + fieldName + '][' + fieldValue + '][attachment_id]]',
+                  style : 'display: none;'
+                }).val(value.attachment_id);
+
+                old_url_input = jQuery('<input/>', {
+                  id : 'url-for-' + fieldName + '-field-' + index,
+                  name : modelName + '[[' + fieldName + '][' + fieldValue + '][url]]',
+                  style : 'display: none;'
+                }).val(value.url);
+
+                $('#extra-fields-value-div-for-' + fieldName + '-' + index).append(old_attachment_id_input).append(old_url_input);
 
                 jQuery('<img/>', {
                     src: value.url,
@@ -216,21 +242,15 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
         }
     });
     addButtonHandlerForJsonFields(modelName, fieldName);
-
-    //$('#' + formName).submit(function (){
-    //    if($('input[name^=' + modelName + '\\[\\[' + fieldName + '\\]]').length == 0)
-    //       $('#text-boxes-for-' + fieldName + '-fields').append('<input type="hidden" id="value-for-' + fieldName + '-field-0" name="' + modelName + '[' + fieldName + ']" value="{}">');
-    //});
 };
 
-function initializeTextbox(mandatory_fields, formName, modelName, fieldName) {
-    addMandatoryFieldsElements(mandatory_fields, modelName, fieldName);
-    addButtonHandlerForJsonFields(modelName, fieldName);
-
-    //$('#' + formName).submit(function (){
-    //   if($('input[name^=' + modelName + '\\[\\[' + fieldName + '\\]]').length == 0)
-    //        $('#text-boxes-for-' + fieldName + '-fields').append('<input type="hidden" id="value-for-' + fieldName + '-field-0" name="' + modelName + '[' + fieldName + ']" value="{}">');
-    //});
+function initializeTextbox(json_field, mandatory_fields, formName, modelName, fieldName) {
+    if(json_field != null) // for cloning
+        populateTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName);
+    else {
+        addMandatoryFieldsElements(mandatory_fields, modelName, fieldName);
+        addButtonHandlerForJsonFields(modelName, fieldName);
+    }
 };
 
 function addMandatoryFieldsElements(mandatory_fields, modelName, fieldName) {
