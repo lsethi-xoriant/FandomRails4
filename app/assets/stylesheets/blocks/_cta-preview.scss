@@ -4,8 +4,9 @@
 	border: 1px solid #ccc;
 	position: relative;
 	margin-bottom: 20px;
-	height: 294px;
+	height: 240px;
 	overflow: hidden;
+	background-color: #FFF;
 }
 
 .cta-preview__image{
@@ -25,6 +26,11 @@
 .cta-preview__title{
 	color: #000;
 	font-size: 14px;
+	margin-top: 10px;
+	padding-left: 15px;
+	color: $blu;
+	font-size: 24px;
+	font-weight: normal;
 }
 
 .cta-preview__like{
@@ -32,7 +38,7 @@
 }
 
 .cta-preview__thumbnail{
-	padding-top: 75%; //padding for aspect ratio 16:9
+	padding-top: 57%; //padding for aspect ratio 16:9
 	overflow: hidden;
 	position: relative;
 }
