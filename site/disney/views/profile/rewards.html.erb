@@ -70,7 +70,7 @@
       	</div>
       	<% if @mybadges %>
 	        <% @mybadges.each do |badge| %>
-	        	<%= render partial: "/profile/property_badge", locals: { reward: badge.first } %>
+	        	<%= render partial: "/profile/property_badge", locals: { reward: badge } %>
 	        <% end %>
 	    <% else %>
 	    	<div class="col-xs-12"><p>Nessun livello ottenuto.</p></div>
