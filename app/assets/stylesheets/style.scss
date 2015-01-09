@@ -1,5 +1,6 @@
 $red: #a35217;
 $blu: #3399ff;
+$grey: #ececec;
 
 $container-tablet:             100% !default;
 $container-sm:                 $container-tablet !default;
@@ -25,7 +26,7 @@ $panel-border-radius:          0px !default;
 @import "reset";
 
 
-a, p, button, label {
+a, p, button, label, * {
   font-family: 'TrebuchetMS';
 }
 

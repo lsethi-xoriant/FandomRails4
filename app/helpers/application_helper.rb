@@ -309,7 +309,7 @@ module ApplicationHelper
   end
   
   def get_tag_to_my_rewards(user)
-    cache_short("tag_to_my_rewards") do
+    cache_short("tag_to_my_rewards_#{user.id}") do
       tag_to_rewards = Hash.new
       user.user_rewards.each do |ur|
         ur.reward.reward_tags.all.each do |reward_tag|
@@ -912,15 +912,14 @@ module ApplicationHelper
   
   def get_max_reward(reward_name)
     cache_short(get_max_reward_key(reward_name, current_user.id)) do
-      levels, use_property = rewards_by_tag(reward_name, current_user)
+      rewards, use_property = rewards_by_tag(reward_name, current_user)
       level = nil
-      
       if use_property
-        if !levels.empty?
-          level = get_max(levels) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+        if !rewards.empty?
+          level = get_max(rewards[$context_root]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
         end 
-      elsif !levels.nil?
-        level = get_max(levels[$context_root]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+      elsif !rewards.nil?
+        level = get_max(rewards) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
       end
       
       if !level.nil?
@@ -939,7 +938,7 @@ module ApplicationHelper
       tag_to_rewards = get_tag_to_my_rewards(user)
     end
     # rewards_from_param can include badges or levels 
-    rewards_from_param = tag_to_rewards[tag_name] 
+    rewards_from_param = tag_to_rewards[tag_name]
 
     property_tags = get_tags_with_tag("property")
 
@@ -948,9 +947,9 @@ module ApplicationHelper
       rewards_to_show = Hash.new
 
       property_tag_names = property_tags.map{ |tag| tag.name }
-
+      
       tag_to_rewards.each do |tag_name, rewards|
-        if property_tag_names.include?(tag_name)
+        if property_tag_names.include?(tag_name) && rewards_from_param
           rewards_to_show[tag_name] = rewards & rewards_from_param
         end
       end

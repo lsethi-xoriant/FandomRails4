@@ -1,18 +1,30 @@
 /* REWARD BLOCK */
-.reward-block{}
+.reward-block{
+  background-color: #FFF;
+  height: 180px;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
 
-.reward-block__image{}
+.reward-block__image{
+  margin: 0 auto;
+}
 
 .reward-block__progress-bar{}
 
 .reward-block__title{
-  margin: 0; 
-  text-transform: uppercase; 
-  font-weight: bold;
+  margin: 10px 0; 
+  text-transform: capitalize; 
+  color: #373737;
+  font-size: 18px;
 }
 
 .reward-block__subtitle{
   margin: 0; 
   padding: 0 20px; 
   color: #858585;
+  font-size: 14px;
 }

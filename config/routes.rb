@@ -177,6 +177,7 @@ Fandom::Application.routes.draw do
   match "classifiche", :to => "ranking#show_rankings_page"
   match "bootcamp", :to => "ranking#show_vote_rankings_page"
   match "/ranking/page", :to => "ranking#get_rank_page"
+  match "/ranking/show/:id", :to => "ranking#show_single_rank"
   
   match "/healthcheck", :to => "health_check#health_check"
   

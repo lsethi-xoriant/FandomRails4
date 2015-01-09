@@ -20,4 +20,15 @@ module NoticeHelper
     Notice.create(params)
   end
   
+  def get_notice_icon(reward)
+    icon = asset_path('logo_community.png')
+    reward.reward_tags.each do |tag|
+      notification_icon = get_extra_fields!(tag)["notification-icon"]
+      if notification_icon && upload_extra_field_present?(notification_icon)
+        icon = get_upload_extra_field_processor(notification_icon,"medium")
+      end
+    end
+    icon
+  end
+  
 end

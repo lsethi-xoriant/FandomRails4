@@ -208,7 +208,7 @@ module RankingHelper
           rankings[rn] = get_full_rank(rank)
         end
       end
-      rankings['general_user_position'] = create_general_user_position()
+      rankings['general_user_position'] = create_general_user_position($context_root)
       rankings
     end
   end

@@ -1,17 +1,17 @@
-<div class="row">
-	<% if reward.media_type.downcase == "calltoaction" %>
-		<div class="col-sm-2 hidden-xs">
-			<img src="<%= reward.main_image.url %>" class="img-responsive" style="padding: 5px; max-width: 85px;">
-		</div>
-		<div class="col-sm-10 col-xs-12">	  
-		  	<h5 style="line-height: 30px;">Complimenti! Hai ottenuto hai sbloccato un contenuto esclusivo. <a href="/redirect_into_iframe_calltoaction/<%= reward.call_to_action_id %>" target="_top" style="color: #fff; text-decoration: underline;">Guardalo qui</a></h5>
+<div class="row notice">
+	<div class="col-sm-2 hidden-xs">
+		<img src="<%= get_notice_icon(reward) %>" class="img-responsive notice__property-icon">
+	</div>
+	<div class="col-sm-2 hidden-xs">
+		<img src="<%= reward.main_image.url %>" class="img-responsive notice__reward-image">
+	</div>
+	<% if reward.media_type && reward.media_type.downcase == "calltoaction" %>
+		<div class="col-sm-8 col-xs-12">	  
+		  	<h5 class="notice__title">Complimenti! Hai sbloccato un contenuto esclusivo. <a href="/call_to_action/<%= reward.call_to_action_id %>" style="color: #fff; text-decoration: underline;">Guardalo qui</a></h5>
 		</div>
 	<% else %>
-		<div class="col-sm-2 hidden-xs">
-			<img src="<%= reward.main_image.url %>" class="img-circle img-responsive" style="max-width: 70px;">
-		</div>
-		<div class="col-sm-10 col-xs-12">	  
-		  	<h5 style="line-height: 50px;">Complimenti! Hai ottenuto il badge <b><%= reward.title %></b></h5>
+		<div class="col-sm-8 col-xs-12">	  
+		  	<h5 class="notice__title">Complimenti! Hai ottenuto il badge <b><%= reward.title %></b></h5>
 		</div>
 	<% end %>
 </div>
