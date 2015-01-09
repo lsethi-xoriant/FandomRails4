@@ -1050,7 +1050,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         return;
       }
 
-      $http.post("/update_interaction", { interaction_id: play_interaction.id, main_reward_name: MAIN_REWARD_NAME })
+      update_interaction_path = "/update_interaction"
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.title) {
+        update_interaction_path = "/" + $scope.aux.current_property_info.title + "" + update_interaction_path;
+      }
+
+      $http.post(update_interaction_path, { interaction_id: play_interaction.id, main_reward_name: MAIN_REWARD_NAME })
         .success(function(data) {
 
           updateUserRewardInView(data.main_reward_counter.general);
@@ -1077,6 +1082,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
           // Interaction after user response.
           updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+          $scope.current_user.main_reward_counter = data.main_reward_counter;  
+          interaction_info.status = data.interaction_status;
           
           /*
 
