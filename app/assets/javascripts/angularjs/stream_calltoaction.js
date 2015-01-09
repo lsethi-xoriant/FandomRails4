@@ -1084,7 +1084,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
           $scope.current_user.main_reward_counter = data.main_reward_counter;  
           interaction_info.status = data.interaction_status;
-          
+
           /*
 
           interaction_point = data.outcome.attributes.reward_name_to_counter[MAIN_REWARD_NAME];
@@ -1172,7 +1172,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
       update_interaction_path = "/update_interaction"
       if($scope.aux.current_property_info && $scope.aux.current_property_info.title) {
-        update_interaction_path = "/" + $scope.aux.current_property_info.title + "" + update_interaction_path;
+        update_interaction_path = "/" + $scope.aux.current_property_info.title.toLowerCase() + "" + update_interaction_path;
       }
   	  
       $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getAnonymousUserStorage() })
