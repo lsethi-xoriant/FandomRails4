@@ -1082,6 +1082,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
           // Interaction after user response.
           updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+          $scope.current_user.main_reward_counter = data.main_reward_counter;  
+          interaction_info.status = data.interaction_status;
           
           /*
 
