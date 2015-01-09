@@ -43,6 +43,10 @@ module CacheKeysHelper
   # CTA
   # ~~~~~
 
+  def get_calltoactions_count_in_property_cache_key(property_id)
+    "calltoactions_count_in_property_#{property_id}"
+  end
+
   def get_evidence_calltoactions_cache_key()
     "evidence_calltoactions"
   end

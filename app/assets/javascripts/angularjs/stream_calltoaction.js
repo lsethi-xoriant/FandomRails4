@@ -58,6 +58,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
       ga('send', 'event', "Registration", "Registration", "Registration", 1, true);
     }
 
+    if($scope.aux.current_property_info) {
+      $scope.current_tag_id = $scope.aux.current_property_info.id;
+    }
+
     // With one calltoaction I active comment interaction
     $scope.comments_polling = new Object();
     $scope.ajax_comment_append_in_progress = false;
@@ -114,7 +118,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     
     $(function(){ flowplayerReady(); });
 
-    updateSecondaryVideoPlayers($scope.calltoactions);
+    //updateSecondaryVideoPlayers($scope.calltoactions);
 
     $("#append-other button").attr('disabled', false);
     if($scope.calltoactions.length >= $scope.calltoactions_count) {
@@ -608,9 +612,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           $("#append-other button").hide();
         }
 
-        updateSecondaryVideoPlayers(data.calltoactions);
-
-        $scope.last_calltoaction_shown_activated_at = $scope.calltoactions[$scope.calltoactions.length - 1].activated_at;
+        //updateSecondaryVideoPlayers(data.calltoactions);
 
         $("#append-other button").attr('disabled', false);
 

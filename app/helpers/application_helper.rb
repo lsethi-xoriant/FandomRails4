@@ -961,5 +961,13 @@ module ApplicationHelper
     end
     avatars
   end
+
+  def get_tag_from_params(name)
+    if name
+      Tag.find_by_name(name)  
+    else
+      nil
+    end
+  end
   
 end

@@ -22,8 +22,15 @@ module DisneyHelper
 
   def calltoaction_active_with_tag_in_property(tag, property, order)
     # Cached in index
-    highlight_calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.id = ?", tag.id)
-    highlight_calltoactions_in_property = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.id = ? AND call_to_actions.id IN (?)", tag.id, highlight_calltoactions.map { |calltoaction| calltoaction.id }).order("activated_at #{order}")
+    highlight_calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", tag.id)
+    highlight_calltoactions_in_property = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ? AND call_to_actions.id IN (?)", tag.id, highlight_calltoactions.map { |calltoaction| calltoaction.id }).order("activated_at #{order}")
+  end
+
+  def get_disney_calltoactions_count_in_property()
+    property = get_tag_from_params(get_disney_property())
+    cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
+      CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", property.id).count
+    end
   end
 
 end

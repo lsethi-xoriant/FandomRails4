@@ -34,6 +34,7 @@ Fandom::Application.routes.draw do
           match "/iur/sign_in", to: "registrations#iur"
         end
 
+        match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         root :to => "application#index"
 
       end
@@ -49,6 +50,8 @@ Fandom::Application.routes.draw do
         scope module: "ballando" do
 
           resources :call_to_action
+
+          match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 
           match "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
 
