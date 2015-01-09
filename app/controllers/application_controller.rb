@@ -22,6 +22,10 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
+  def get_context()
+    $context_root
+  end
+
   def facebook_app
     cookies[:oauth_connect_from_page] = Rails.configuration.deploy_settings["sites"][get_site_from_request(request).id]["authentications"]["facebook"]["app"]
     redirect_to "/"
