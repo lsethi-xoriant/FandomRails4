@@ -41,7 +41,18 @@
   font-size: 14px;
   border-radius: 15px;
   color: $red;
-  border: 1px solid $red;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+  padding-top: 7px;
+}
+
+.cta-cover__glyphicon-icon {
+  margin-left: 3px;
+  font-size: 10px;
+  top: 0;
 }
 
 .cta-cover__title {
@@ -57,4 +68,10 @@
   background-color: $blu;
   color: #fff;
   padding: 6px 6px 4px 4px;
+}
+
+.cta-cover__winnable-reward__label.label-success {
+  background: green;
+  color: #fff;
+  padding-left: 10px;
 }

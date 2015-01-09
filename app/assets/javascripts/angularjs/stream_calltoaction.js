@@ -1133,7 +1133,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
         $scope.current_user.main_reward_counter = data.main_reward_counter;  
         interaction_info.status = data.interaction_status;
-        
+
         $scope.aux.share_interaction_daily_done = true;
 
         $("#modal-interaction-" + interaction_id + "-" + provider).modal("hide");
@@ -1188,6 +1188,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
             // Interaction after user response.
             updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+            calltoaction_info.status = JSON.parse(data.calltoaction_status);
             $scope.current_user.main_reward_counter = data.main_reward_counter;   
 
             if(data.answers) {

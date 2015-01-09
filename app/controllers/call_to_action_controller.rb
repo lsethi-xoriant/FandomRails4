@@ -508,6 +508,7 @@ class CallToActionController < ApplicationController
     end    
     
     response["interaction_status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
+    response["calltoaction_status"] = compute_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction);
 
     respond_to do |format|
       format.json { render :json => response.to_json }
