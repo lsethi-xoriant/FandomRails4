@@ -31,7 +31,7 @@ class User < ActiveRecordWithJSON
 
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, 
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
-                    :default_url => "#{$site.id}_anon.png"
+                    :default_url => ""
 
   validates_presence_of :location, if: Proc.new { |f| required_attr?("location") }
   validates_presence_of :gender, if: Proc.new { |f| required_attr?("gender") }
