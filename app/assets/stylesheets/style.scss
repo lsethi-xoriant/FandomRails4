@@ -53,4 +53,21 @@ a, p, button, span {
   font-family: 'Matterhorn-Regular';
 }
 
+/********************* COOKIES FOOTER *********************/
 
+.cookies-footer {
+  background: rgba(0, 0, 0, 0.6); 
+  color: #fff; 
+  min-height: 0; 
+  padding: 10px;
+}
+
+.cookies-footer__description {
+  margin: 0; 
+  font-size: 11px;
+}
+
+.cookies-footer__link {
+  color: #fff;
+  text-decoration: underline;
+}
