@@ -22,15 +22,13 @@
 }
 
 .comment-interaction__cover__text-p {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-transform: none; 
-  line-height: 30px;
-  padding-left: 5px;
-  padding-right: 15px; 
-  margin: 0;
+  /* text-overflow: ellipsis; overflow: hidden; white-space: nowrap; */
   color: #999;
+  margin: 0;
+  padding-left: 40px;
+  padding-right: 15px;
+  padding-top: 5px;
+  text-transform: none;
 }
 
 .comment-interaction__cover__name {
@@ -152,4 +150,10 @@
 
 .comment-interaction__btn-container {
   padding-left: 0;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .cta-cover__card__footer {
+    padding: 10px !important;
+  }
 }
