@@ -42,7 +42,7 @@ module DisneyHelper
     }
   end
 
-  def disney_default_aux(current_property, other)
+  def disney_default_aux(current_property, other = [])
     filters = get_tags_with_tag("featured")
 
     current_property_info = {
