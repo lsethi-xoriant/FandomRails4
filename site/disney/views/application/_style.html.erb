@@ -6,23 +6,6 @@
     background-repeat: no-repeat;
   }
 
-  .ctas__flexslider .flex-direction-nav a, 
-  .filters__flexslider-desktop .flex-direction-nav a, 
-  .filters__flexslider-mobile .flex-direction-nav a {
-    color: <%= @aux["current_property_info"]["background"] rescue "" %> !important;
-  }
-
-  .navbar-default .navbar-nav > .active > a, 
-  .navbar-default .navbar-nav > li > a:hover, 
-  .navbar-default .navbar-nav > li > a:focus {
-    background: <%= @aux["current_property_info"]["background"] rescue "" %> !important;
-  }
-
-  .properties__flexslider .flex-direction-nav a.flex-prev:before, 
-  .properties__flexslider .flex-direction-nav a.flex-next:before {
-    color: <%= @aux["current_property_info"]["background"] rescue "" %> !important;
-  }
-
   .btn-primary { 
     color: #FFFFFF; 
     background-color: <%= @aux["current_property_info"]["background"] rescue "" %>; 

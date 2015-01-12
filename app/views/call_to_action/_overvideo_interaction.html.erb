@@ -1,4 +1,4 @@
-<div id="overvideo-interaction-{{interaction_info.interaction.id}}" class="row {{interaction_info.interaction.resource_type}}-interaction">
+<div ng-if="!interaction_info.feedback" class="row {{interaction_info.interaction.resource_type}}-interaction">
   <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-md-12">
     <%= render partial: "/call_to_action/trivia_interaction_overvideo" %>
   </div>
@@ -16,6 +16,7 @@
   </div>  
 
   <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" id="overvideo-outcome-{{interaction_info.interaction.id}}" class="row">
+    <!--
     <div ng-if="interaction_info.interaction.resource_type != 'trivia'" class="col-sm-10 col-sm-offset-1 text-center">
       <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
       <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
@@ -33,11 +34,19 @@
       <strong>Risposta errata!</strong> Hai guadagnato {{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
       </div>
     </div> 
+    -->
+    <div class="col-md-12 interaction__winnable-reward text-center">
+      <span class="label label-success cta-cover__winnable-reward__label">
+        FATTO <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+      </span> 
+    </div>
   </div>
 
   <div ng-if="!interaction_info.user_interaction" class="row text-center">
-    <div class="col-md-12" style="margin-top: 15px;">
-      <p>Rispondi per ottenere fino a + {{interaction_info.status["winnable_reward_count"]}} punti</p>
+    <div class="col-md-12 interaction__winnable-reward">
+      <span class="label label-warning cta-cover__winnable-reward__label">
+        +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
+      </span>  
       <div ng-if="!interaction_info.status.reward.numeric_display" ng-repeat="status_image in interaction_info.status.reward_status_images track by $index">  
         <img ng-src="{{status_image}}">
       </div>
@@ -46,5 +55,24 @@
 
 </div>
 
+<div ng-if="interaction_info.feedback" class="row {{interaction_info.interaction.resource_type}}-interaction">
+  <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" id="overvideo-outcome-{{interaction_info.interaction.id}}" class="row">
 
+    <div ng-if="interaction_info.interaction.resource_type != 'trivia'">
+      <div class="col-sm-12">Bravo!<br>Hai guadagnato altri punti</div>
+      <div class="col-sm-12">+{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}</div>
+    </div> 
+      
+    <div ng-if="interaction_info.interaction.resource_type == 'trivia' && interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
+      <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+      <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+      </div>
+    </div> 
 
+    <div ng-if="interaction_info.interaction.resource_type == 'trivia' && !interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
+      <div class="alert alert-danger" style="margin-bottom: 0; margin-top: 15px;">
+      <strong>Risposta errata!</strong> Hai guadagnato {{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+      </div>
+    </div> 
+  </div>
+</div>
