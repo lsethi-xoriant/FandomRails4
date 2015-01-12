@@ -36,11 +36,9 @@
                 Profilo
               <% end %>
             </li>
-            <% if @aux["current_property_info"]["outer"] %>
-              <li>
-                <a href="<%= @aux["current_property_info"]["outer-url"] rescue nil %>"><%= @aux["current_property_info"]["outer"] rescue nil %></a>
-              </li>
-              <% end %>
+            <li>
+              <a href="<%= @aux["current_property_info"]["outer-url"] rescue nil %>"><%= @aux["current_property_info"]["outer"] rescue nil %></a>
+            </li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
