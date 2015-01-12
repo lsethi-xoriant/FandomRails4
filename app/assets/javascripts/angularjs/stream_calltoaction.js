@@ -1206,6 +1206,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
               updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
             } 
 
+            // Interaction after user response.
+            updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+            calltoaction_info.status = JSON.parse(data.calltoaction_status);
+            $scope.current_user.main_reward_counter = data.main_reward_counter;   
+
+            if(data.answers) {
+              updateAnswersInInteractionInfo(interaction_info, data.answers);
+            }
+
             if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
               
               interaction_info.feedback = true;
@@ -1243,17 +1252,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
                 } 
               }
             }
-
-            // Interaction after user response.
-            updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-            calltoaction_info.status = JSON.parse(data.calltoaction_status);
-            $scope.current_user.main_reward_counter = data.main_reward_counter;   
-
-            if(data.answers) {
-              updateAnswersInInteractionInfo(interaction_info, data.answers);
-            }
             
-
             /*
             if(data.download_interaction_attachment) {
               window.open(data.download_interaction_attachment, '_blank');

@@ -26,9 +26,19 @@
             <li><a href="#">Gallery</a></li>
             <li><a href="#">Premi</a></li>
             <li><a href="#">Classifiche</a></li>
-            <li><a href="#">Cerca</a></li>
-            <li><a href="#">Profilo</a></li>
-            <li><a href="#">Disney Channel</a></li>
+            <li>
+              <%= light_link_to("/browse") do %>
+                Cerca
+              <% end %>
+            </li>
+            <li>
+              <%= light_link_to("/profile") do %>
+                Profilo
+              <% end %>
+            </li>
+            <li>
+              <a href="<%= @aux["current_property_info"]["outer-url"] rescue nil %>"><%= @aux["current_property_info"]["outer"] rescue nil %></a>
+            </li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

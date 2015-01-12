@@ -8,18 +8,18 @@
           <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
         </div>  
         <!-- CALLTOACTION WINNABLE REWARD COUNT -->
-        <div ng-if="calltoaction_info.status  && calltoaction_info.status.winnable_reward_count > 0" class="col-sm-12 cta-cover__winnable-reward text-right">
+        <div ng-if="calltoaction_info.status  && calltoaction_info.status.winnable_reward_count > 0" class="col-xs-12 cta-cover__winnable-reward text-right">
           <span class="label label-warning cta-cover__winnable-reward__label">
             +{{calltoaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
           </span>  
         </div> 
         <!-- CALLTOACTION DONE -->
-        <div ng-if="!calltoaction_info.status || calltoaction_info.status.winnable_reward_count < 1" class="col-sm-12 cta-cover__winnable-reward text-right">
+        <div ng-if="!calltoaction_info.status || calltoaction_info.status.winnable_reward_count < 1" class="col-xs-12 cta-cover__winnable-reward text-right">
           <span class="label label-success cta-cover__winnable-reward__label">
             Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
           </span>  
         </div> 
-        <div class="col-sm-8 text-left cta-cover__title">
+        <div class="col-sm-12 text-left cta-cover__title">
           <span ng-if="calltoaction_info.miniformat" class="label label-default cta-cover__miniformat" style="background-color: {{calltoaction_info.miniformat.label_background}}; color: {{calltoaction_info.miniformat.label_color}; padding: 7px;">
             <span class="{{calltoaction_info.miniformat.icon}}"></span>
             {{calltoaction_info.miniformat.title}}
