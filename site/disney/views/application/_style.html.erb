@@ -6,6 +6,17 @@
     background-repeat: no-repeat;
   }
 
+  .navbar-default .navbar-nav > .active > a,
+  .navbar-default .navbar-nav > li > a:hover,
+  .navbar-default .navbar-nav > li > a:focus {
+  background: <%= @aux["current_property_info"]["background"] rescue "" %> !important;
+  }
+
+  .properties__flexslider .flex-direction-nav a.flex-prev:before,
+  .properties__flexslider .flex-direction-nav a.flex-next:before {
+  color: <%= @aux["current_property_info"]["background"] rescue "" %> !important;
+  }
+
   .btn-primary { 
     color: #FFFFFF; 
     background-color: <%= @aux["current_property_info"]["background"] rescue "" %>; 

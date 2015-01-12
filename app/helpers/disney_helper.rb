@@ -51,6 +51,8 @@ module DisneyHelper
       "image-background" => (get_extra_fields!(current_property)["image-background"]["url"] rescue nil),
       "logo" => (get_extra_fields!(current_property)["logo"]["url"] rescue nil),
       "title" => get_extra_fields!(current_property)["title"],
+      "outer" => get_extra_fields!(current_property)["outer"],
+      "outer-url" => get_extra_fields!(current_property)["outer-url"],
       "image" => (get_upload_extra_field_processor(get_extra_fields!(current_property)["image"], :thumb) rescue nil) 
     }
 
