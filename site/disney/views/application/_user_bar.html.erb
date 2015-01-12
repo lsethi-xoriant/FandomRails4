@@ -38,7 +38,7 @@
             </li>
             <% if @aux["current_property_info"]["outer"] %>
               <li>
-                <a href="<%= @aux["current_property_info"]["outer-url"] %>"><%= @aux["current_property_info"]["outer"] %></a>
+                <a href="<%= @aux["current_property_info"]["outer-url"] rescue nil %>"><%= @aux["current_property_info"]["outer"] rescue nil %></a>
               </li>
               <% end %>
           </ul>
