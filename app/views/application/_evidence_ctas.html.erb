@@ -2,7 +2,8 @@
   <div class="flexslider ctas__flexslider">
     <ul class="slides">
       <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
-        <img ng-src="{{calltoaction.thumbnail_carousel_url}}">
+        <img class="hidden-xs" ng-src="{{calltoaction.thumbnail_carousel_url}}">
+        <img class="visible-xs" ng-src="{{calltoaction.thumbnail_medium_url}}">
         <div class="col-xs-8 ctas__info">
           <p class="ctas__title">{{calltoaction.title}}</p>
           <%= light_link_to("/call_to_action/{{calltoaction.id}}", class: "btn btn-primary btn-primary-disney") do %>

@@ -98,6 +98,7 @@ module DisneyHelper
           "id" => calltoaction.id,
           "status" => compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction),
           "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
+          "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
           "title" => calltoaction.title,
           "description" => calltoaction.description
         }
