@@ -1228,7 +1228,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
                 $timeout(function() { 
                   removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
                 }, 3000);
-              }, 300000000000);
+              }, 3000);
 
             } else {
               if(interaction_info.interaction.resource_type == "like") {

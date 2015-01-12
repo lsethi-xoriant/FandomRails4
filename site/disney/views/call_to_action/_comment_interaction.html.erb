@@ -1,28 +1,26 @@
 <div class="col-sm-12">
   <div class="row comment-interaction__form-row">
-    <div class="col-xs-1 text-center comment-interaction__avatar-container">
+    <div class="col-sm-1 col-xs-2 text-center comment-interaction__avatar-container">
       <img src="<%= current_avatar %>" class="comment-interaction__profile-img">
     </div>
-    <div class="col-xs-11">
+    <div class="col-sm-11 col-xs-10">
       <textarea ng-model="interaction_info.interaction.resource.comment_info.user_text" class="form-control comment-interaction__textarea" style="resize: none;" rows="1" name="text"></textarea>
     </div>
-    <div ng-if="!current_user" class="col-sm-3 col-sm-offset-1 comment-interaction__captcha-img">                    
+    <div ng-if="!current_user" class="col-sm-3 col-sm-offset-1 col-xs-5 col-xs-offset-2 comment-interaction__captcha-img">
       <img ng-src="{{interaction_info.interaction.captcha}}" style="width: 100%; max-width: 200px; height: 33px;">
     </div> 
-    <div ng-if="!current_user" class="col-sm-3 comment-interaction__captcha-code">   
+    <div ng-if="!current_user" class="col-sm-3 col-xs-5 comment-interaction__captcha-code">   
       <input class="form-control" ng-model="interaction_info.interaction.resource.comment_info.user_captcha" placeholder="AZ341MM">
     </div>     
-    <div class="col-sm-5 text-right comment-interaction__btn-container" ng-class="{'col-sm-offset-7': current_user}">
+    <div class="col-sm-5 col-xs-10 col-xs-offset-2 text-right comment-interaction__btn-container" ng-class="{'col-sm-offset-7': current_user, 'col-sm-offset-0': !current_user}">
       <button class="btn btn-primary btn-block comment-interaction__btn-submit" ng-click="submitComment(interaction_info)"><span>Commenta</span></button>
     </div> 
   </div>
 
   <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments">
     <div class="row comment-interaction__comment-row" ng-class="{'comment_evidence': (comment.evidence), 'comment-interaction__comment-even': ($index % 2 == 0), 'comment-interaction__comment-odd': ($index % 2 == 1)}">
-      <div class="col-xs-1 text-center comment-interaction__avatar-container">
+      <div class="col-xs-12">
         <img ng-src="{{comment.user.avatar}}" class="comment-interaction__avatar">
-      </div>
-      <div class="col-xs-11">
         <p class="comment-interaction__text-p">
           <span class="comment-interaction__cover__name">{{comment.user.name}}</span><br>
           <span class="comment-interaction__cover__text">{{comment.text}}</span><br>
@@ -38,5 +36,3 @@
     </div>
   </div>
 </div>
-
-
