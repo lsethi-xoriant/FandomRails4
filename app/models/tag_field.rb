@@ -1,5 +1,7 @@
 class TagField < ActiveRecord::Base
-  attr_accessible :name, :field_type, :value, :tag_id, :upload
+  attr_accessible :name, :field_type, :value, :tag_id, :upload, :mark_for_destruction
+
+  attr_accessor :mark_for_destruction
   
   has_attached_file :upload,
     :styles => { 

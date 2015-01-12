@@ -174,19 +174,15 @@ module EasyadminHelper
   def link_to_remove_contest_fields(name)
     link_to_function(name, "remove_contest_fields(this)", class: "btn btn-warning btn-xs")
   end
-  
-  def link_to_remove_tag_fields(name)
-    link_to_function(name, "remove_tag_fields(this)", class: "btn btn-warning btn-xs")
-  end
-  
-  def link_to_remove_upload_fields(name)
-    link_to_function(name, "remove_tag_fields(this)", class: "btn btn-warning btn-xs")
+
+  def link_to_remove_tag_fields(name, tag_field_id)
+    link_to_function(name, "remove_tag_fields(this, #{tag_field_id.present?})", class: "btn btn-warning btn-xs")
   end
   
   def link_to_remove_upload_fields(name)
     link_to_function(name, "remove_upload_fields(this)", class: "btn btn-warning btn-xs")
   end
-  
+
   def link_to_remove_vote_fields(name)
     link_to_function(name, "remove_vote_fields(this)", class: "btn btn-warning btn-xs")
   end

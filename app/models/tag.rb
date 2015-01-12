@@ -16,10 +16,10 @@ class Tag < ActiveRecordWithJSON
   has_many :call_to_action_tags, dependent: :destroy
   has_many :reward_tags, dependent: :destroy
   has_many :tags_tags, dependent: :destroy
-  has_many :tag_fields, dependent: :destroy
+  has_many :tag_fields, dependent: :destroy, autosave: true
   has_many :vote_ranking_tags, dependent: :destroy
 
-  accepts_nested_attributes_for :tag_fields
+  accepts_nested_attributes_for :tag_fields, :allow_destroy => true
 
   validates_associated :tag_fields
 

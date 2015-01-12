@@ -49,6 +49,19 @@
     border-radius: 3px;
 }
 
+.ctas__flexslider {
+    .flex-control-paging {
+        margin-bottom: 45px; 
+        z-index: 10;
+        li a {
+            background: rgba(255, 255, 255, 0.5)
+        }
+        li a.flex-active {
+            background: #fff;
+        }
+    }
+}
+
 @media (min-width: $screen-sm-min) { 
   .ctas__flexslider {
     .flex-direction-nav a {
@@ -79,4 +92,11 @@
         font-size: 30px !important;
     }
   }
+}
+
+@media (max-width: $screen-sm-min) { 
+    .flex-control-nav {
+        bottom: 0;
+        z-index: 10;
+    }
 }

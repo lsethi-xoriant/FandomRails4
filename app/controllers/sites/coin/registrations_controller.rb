@@ -19,7 +19,7 @@ class Sites::Coin::RegistrationsController < RegistrationsController
 
   def setUpAccount()
     assignRegistrationReward()
-    SystemMailer.welcome_mail(current_user).deliver
+    #SystemMailer.welcome_mail(current_user).deliver
   end
 
 end

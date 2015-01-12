@@ -1,12 +1,9 @@
 
 <div class="panel panel-default">
-		<% if f.object.id %>
-			<div class="panel-heading">METADATO</div>
-		<% else %>
 			<div class="panel-heading">METADATO
-				<p style="float: right"><%= link_to_remove_tag_fields "rimuovi" %></p>
+				<p style="float: right"><%= link_to_remove_tag_fields "rimuovi", f.object.id %></p>
+        <%= f.hidden_field :mark_for_destruction, :value => false %>
 			</div>
-		<% end %>
 		<div class="panel-body">
 
 				<div class="col-lg-10 metadata-form-container">
@@ -34,7 +31,7 @@
 					</div>
 					<div class="row media-metadata">
 						<div class="col-lg-6 text-center">
-				          
+
 				          <% if f.object.id && f.object.upload %>
 				          <div class="form-group">
 				              <label class="text-input">Media</label>
@@ -66,7 +63,7 @@
 					</div>
 			</div>
   	</div>
-  	
+
 </div>
 <style>
 	.media-metadata{ display: none; }

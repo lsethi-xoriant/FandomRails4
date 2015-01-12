@@ -39,6 +39,7 @@ class Easyadmin::TagController < ApplicationController
 
   def create
     create_or_update("new") do
+      destroy_tag_fields_deleted(params[:tag][:tag_fields_attributes]) unless params[:tag][:tag_fields_attributes].nil?
       create_and_link_attachment(params[:tag], nil)
       @tag = Tag.create(params[:tag])
       @tag.errors.empty?
@@ -52,12 +53,27 @@ class Easyadmin::TagController < ApplicationController
       old_name = @tag.name
       new_name = params[:tag][:name]
 
+      unless params[:tag][:tag_fields_attributes].nil?
+        params[:tag][:tag_fields_attributes] = destroy_tag_fields_deleted(params[:tag][:tag_fields_attributes])
+      end
+
       if old_name == new_name
         @tag.update_attributes(params[:tag])
       else
         change_name_if_not_locked(@tag, params)
       end
+
     end
+  end
+
+  def destroy_tag_fields_deleted(tag_fields_attributes)
+    tag_fields_attributes.each do |key, value|
+      if value[:mark_for_destruction] == "true"
+        tag_fields_attributes.delete(key)
+        TagField.destroy(value[:id]) if value[:id]
+      end
+    end
+    tag_fields_attributes
   end
 
   def change_name_if_not_locked(tag, new_tag_params)
