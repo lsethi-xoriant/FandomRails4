@@ -1111,6 +1111,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
+  
+  $scope.goToLogin = function(){
+  	location.href = "/users/sign_up";
+  };
 
   $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
 
