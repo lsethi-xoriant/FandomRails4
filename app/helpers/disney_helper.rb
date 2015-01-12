@@ -50,7 +50,7 @@ module DisneyHelper
       "background" => get_extra_fields!(current_property)["label-background"],
       "logo" => (get_extra_fields!(current_property)["logo"]["url"] rescue nil),
       "title" => get_extra_fields!(current_property)["title"],
-      "image" => (get_upload_extra_field_processor(get_extra_fields!(current_property)["image"], :custom) rescue nil) 
+      "image" => (get_upload_extra_field_processor(get_extra_fields!(current_property)["image"], :thumb) rescue nil) 
     }
 
     if filters.any?
@@ -64,7 +64,7 @@ module DisneyHelper
           "background" => get_extra_fields!(filter)["label-background"],
           "icon" => get_extra_fields!(filter)["icon"],
           "title" => get_extra_fields!(filter)["title"],
-          "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :custom) rescue nil) 
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :thumb) rescue nil) 
         }
       end
     end
@@ -78,7 +78,7 @@ module DisneyHelper
           "id" => property.id,
           "background" => get_extra_fields!(property)["label-background"],
           "title" => (get_extra_fields!(property)["title"].downcase rescue nil),
-          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :custom) rescue nil) 
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil) 
         }
       end
     end

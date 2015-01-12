@@ -17,6 +17,7 @@ module ApplicationHelper
     # key can be either tag name or special keyword such as $recent
     attribute :key, type: String
     attribute :title, type: String
+    attribute :icon_url, type: String
     attribute :contents
     attribute :view_all_link, type: String
     attribute :column_number, type: Integer
@@ -312,11 +313,9 @@ module ApplicationHelper
   end
   
   def construct_conditions_from_query(query, field)
-    conditions = Array.new
-    query.split(" ").each do |elem|
-      conditions << "#{field} ILIKE '%#{elem}%'"
-    end
-    conditions.join(" OR ")
+    query.gsub!(/\W+/, '%')
+    conditions = "#{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{query}%")}"
+    conditions
   end
 
   def get_tags_with_tag(tag_name)
@@ -326,9 +325,8 @@ module ApplicationHelper
   end
   
   def get_tags_with_tag_with_match(tag_name, query = "")
-    conditions = construct_conditions_from_query(query, "value")
-    ids = TagField.where("name = 'title' AND (#{conditions})").uniq.pluck(:tag_id)
-    Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND tags.id IN (?)", tag_name, ids).to_a
+    conditions = construct_conditions_from_query(query, "tags.title")
+    Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND #{conditions}", tag_name).to_a
   end
   
   def get_ctas_with_tag(tag_name)
@@ -338,8 +336,8 @@ module ApplicationHelper
   end
   
   def get_ctas_with_tag_with_match(tag_name, query = "")
-    conditions = construct_conditions_from_query(query, "title")
-    CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND (#{conditions})", tag_name).to_a
+    conditions = construct_conditions_from_query(query, "call_to_actions.title")
+    CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND #{conditions}", tag_name).to_a
   end
   
   def get_ctas_with_tags(*tags_name)
