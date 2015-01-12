@@ -43,6 +43,7 @@ $navbar-border-radius:             0 !default;
   src: url('Matterhorn-Regular.otf');
 }
 
+//import style folders
 @import "bootstrap/bootstrap";
 @import "blocks/**/*";
 @import "typography/**/*";

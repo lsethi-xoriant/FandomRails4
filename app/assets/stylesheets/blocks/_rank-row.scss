@@ -1,0 +1,33 @@
+/* STYLE FOR SINGLE PAGE RANKING */
+
+.rank-row{
+  border-top: 1px solid #dddddd;
+  padding: 10px 0;
+}
+
+.rank-row--myself{
+  background-color: #FFCC03;
+}
+
+.rank-row--grey{
+  background-color: whitesmoke; 
+}
+
+.rank-row__position{}
+
+.rank-row__avatar{
+  max-width: 40px;
+  display: block;
+  margin: 0 auto;
+}
+
+.rank-row__username{}
+
+.rank-row__points{
+  padding: 6px 12px 4px 12px;
+  color: #993300;
+  font-size: 14px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 6px;
+}
