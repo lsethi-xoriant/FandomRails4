@@ -1,4 +1,5 @@
 <%= render partial: "/application/user_bar" %>
+
 <style type="text/css">
 	.dropdown-menu{
 		width: 80%;
@@ -6,31 +7,31 @@
 		overflow-y: scroll;
 	}
 </style>
-<div class="container" ng-controller="SearchCtrl" ng-init="init(<%= @browse_section.to_json %>)">
-	<div class="row">
+<div class="container container--default" ng-controller="SearchCtrl" ng-init="init(<%= @browse_section.to_json %>)">
+	<div class="row brws-item search-bar">
 		<div class="col-xs-12">
 			<%= form_tag("/browse/full_search",{method: "post", class: "navbar-form", role: "search"}) %>
-	        <div class="form-group col-xs-11">
+	        <div class="form-group col-xs-10">
 	          <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue)" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="resultSelected" name="query" type="text" class="form-control" placeholder="Search" style="width: 100%;">
 	        </div>
-	        <button type="submit" class="btn btn-default">Cerca</button>
+	        <div class="form-group col-xs-2">
+	        	<button type="submit" class="btn btn-primary btn-block">Cerca</button>
+	        </div>
 	     </form>
 	    </div>
 	</div>	
 	
 	<div class="browse-sections" ng-repeat="section in sections">
-		<div class="row">
-		    <div class="col-xs-12">
+		
+		<div class="row brws-item">
+			<div class="col-xs-12">
 		      <div class="section-heading">
 		        	<h3>
 		        		<img src="<%= asset_path("icon-cat.png") %>" class="section-heading__icon" />
-		        		{{section.attributes.title}} <a href="{{section.attributes.view_all_link}}" style="float:right"><small>View all</small></a>
+		        		{{section.attributes.title}} <a href="{{section.attributes.view_all_link}}" class="section-heading__see-all">View all</a>
 		        	</h3>
 		      </div>
 		    </div>
-		</div>
-		
-		<div class="row brws-item">
 			<div class="col-xs-12 col-md-{{section.attributes.column_number}}" ng-repeat="content in section.attributes.contents">
 				<div class="cta-preview" ng-if="content.attributes.type == 'cta'">
 					<div class="row">
@@ -48,8 +49,8 @@
 						</div>
 					</div>
 					<div class="row cta-preview__counter">
-						<div class="cta-preview__like col-xs-3" ng-if="content.attributes.likes >= 0">{{content.attributes.likes}}</div>
-						<div class="cta-preview__comments col-xs-3" ng-if="content.attributes.comments >= 0">{{content.attributes.comments}}</div>	
+						<div class="cta-preview__like col-xs-4 col-xs-offset-1" ng-if="content.attributes.likes >= 0"><i class="fa fa-thumbs-up"></i> {{content.attributes.likes}}</div>
+						<div class="cta-preview__comments col-xs-4 col-xs-offset-1" ng-if="content.attributes.comments >= 0"><span class="glyphicon glyphicon-comment"></span> {{content.attributes.comments}} </div>	
 					</div>
 				</div>
 				
@@ -73,10 +74,10 @@
 	<script type="text/ng-template" id="itemTpl.html">
 	   <a href="{{match.model.detail_url}}" tabindex="-1">
 	   	<div class='row'>
-	   		<div class='col-xs-2 col-sm-1'>
+	   		<div class='col-xs-4 col-sm-2'>
 	   			<img src="{{match.model.thumb_url}}" class="img-responsive" />
 	   		</div>
-	   		<div class='col-xs-10 col-sm-11'>{{match.model.title}}</div>
+	   		<div class='col-xs-8 col-sm-10'>{{match.model.title}}</div>
 	   	</div>
 	   </a>
 	</script>

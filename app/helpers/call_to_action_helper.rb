@@ -4,6 +4,16 @@ require 'digest/md5'
 module CallToActionHelper
   include ViewHelper
 
+  def get_cta_active_count()
+    cache_short("cta_active_count") do
+      CallToAction.active.count
+    end
+  end
+
+  def get_cta_max_updated_at()
+    CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
+  end
+
   def build_call_to_action_info_list(calltoactions)
     calltoaction_info_list = Array.new
     calltoactions.each do |calltoaction|

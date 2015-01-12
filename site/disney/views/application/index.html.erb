@@ -1,27 +1,12 @@
-<%= render partial: "/application/style" %>
-
-<div class="container properties__container" style="border-top: 10px solid {{aux.current_property_info.background}};">
-  <div class="row text-center">
-    <%= render partial: "/application/properties" %>
-  </div>
-</div>
-
-<div class="container main-menu__container">
-  <div class="row main-menu__row">
-    <%= render partial: "/application/main_menu" %>
-  </div>
-</div>
+<%= render partial: "/application/user_bar" %>
 
 <div class="container main-container">   
-
-  <!-- CUSTOM SITE HEADER --> 
-  <%#= render partial: "/application/header" %>
 
   <div class="row">
     <%= render partial: "/application/evidence_ctas" %>
   </div>
 
-  <div class="row main-row ctas__search" ng-controller="SearchCtrl" ng-init="init(<%= init_browse_sections().to_json %>)">
+  <div class="row main-row ctas__search hidden-xs" ng-controller="SearchCtrl" ng-init="init(<%= init_browse_sections().to_json %>)">
     <%= form_tag("/browse/full_search", { method: "post", role: "search" }) do %>
       <div class="col-sm-8 col-sm-offset-1">
         <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue)" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="resultSelected" name="query" type="text" class="form-control" placeholder="Search" style="width: 100%;">
@@ -52,10 +37,10 @@
     </div>
   </div>
 
-  <div class="row">      
-    <div class="col-sm-6 col-sm-offset-3">
+  <div class="row main-row">      
+    <div class="col-sm-8">
       <div id="append-other" class="text-center" style="margin-bottom: 20px;">
-        <button class="btn btn-default" href="javascript: void(0)" ng-click="appendCallToAction();">CARICA ALTRI</button>
+        <button class="btn btn-primary" href="javascript: void(0)" ng-click="appendCallToAction();"><span>CARICA ALTRI</span></button>
       </div>
     </div>
   </div>

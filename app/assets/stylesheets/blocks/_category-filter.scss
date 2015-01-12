@@ -1,11 +1,23 @@
 /* CATEGORY FILTER BLOCK */
 
 .category-filter{
-  background-color: #CCE0F0;
+  background-color: #bababa;
   padding: 20px;
 }
 
 .category-filter__tag{
+  width: 100%;
+  color: #989898 !important;
+}
+
+.category-filter__tag--disabled{
+  background: #d4d4d4 !important;
+  color: #989898 !important;
+}
+
+.category-filter__tag--selected{
+   background: #014da5 !important;
+  color: #FFF !important;
 }
 
 .category-filter__load-more{  

@@ -20,16 +20,24 @@
 	position: absolute;
 	top: 10px;
 	right: 10px;
-	font-size: 12px;
+	font-size: 14px;
+	font-weight: bold;
+	-webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  background-color: #fdc511;
+  color: #993300;
+  font-weight: bold;
+  padding: 5px 10px 3px 10px;
 }
 
 .cta-preview__title{
 	color: #000;
 	font-size: 14px;
 	margin-top: 10px;
-	padding-left: 15px;
+	padding: 0 10px;
 	color: $blu;
-	font-size: 24px;
+	font-size: 18px;
 	font-weight: normal;
 }
 
@@ -44,16 +52,17 @@
 }
 
 .cta-preview__counter{
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-top: 25px;
+  margin-bottom: 0px;
 }
 
 .cta-preview__comments{
-	font-size: 12px;
+	font-size: 14px;
 }
 
 .cta-preview__thumbnail--category{
   padding-top: 140%; //padding for aspect ratio 3:4
+  margin-left: -100px;
 }
 
 .cta-preview__title--category{

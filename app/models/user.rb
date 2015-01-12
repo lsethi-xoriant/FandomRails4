@@ -30,8 +30,7 @@ class User < ActiveRecordWithJSON
   before_create :default_values
 
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, 
-                    :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
-                    :default_url => "/assets/anon.png"
+                    :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }
 
   validates_presence_of :location, if: Proc.new { |f| required_attr?("location") }
   validates_presence_of :gender, if: Proc.new { |f| required_attr?("gender") }
@@ -186,7 +185,7 @@ class User < ActiveRecordWithJSON
   end
   
   def default_values
-    self.avatar_selected_url ||= asset_path("#{$site.id}_anon.png")
+    self.avatar_selected_url ||= "#{$site.anon_avatar}"
   end
   
 end

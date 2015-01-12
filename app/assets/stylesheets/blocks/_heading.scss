@@ -1,7 +1,6 @@
 /* HEADING TITLE BLOCK */
 .section-heading{
   padding-bottom: 20px;
-  padding-left: 15px;
 }
 
 .section-heading__icon{
@@ -20,5 +19,7 @@
 }
 
 .section-heading__see-all{
-  color: #ccc;
+  display: inline-block;
+  color: $blu;
+  font-size: 16px;
 }

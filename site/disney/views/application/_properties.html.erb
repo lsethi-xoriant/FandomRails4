@@ -14,9 +14,16 @@
   </div>
 </div>
 
-<div class="col-md-3 text-left">
+<div class="col-md-3 text-left" ng-if="!current_user">
   <p class="properties__right-bar-text">Partecipa<br>alla community</p>
-  <a class="btn btn-primary" href="/iur" ng-if="!current_user"><span>ENTRA</span></a>
+  <a class="btn btn-primary" href="/iur"><span>ENTRA</span></a>
+</div>
+
+<div class="col-md-3 text-left" ng-if="current_user">
+  <p class="properties__right-bar-text">{{current_user.username}}</p>
+  <span class="label label-warning cta-cover__winnable-reward__label">
+    +{{current_user.main_reward_counter}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
+  </span>  
 </div>
 
 <script type="text/javascript">
