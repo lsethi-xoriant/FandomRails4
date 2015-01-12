@@ -125,5 +125,9 @@ module DisneyHelper
     aux
 
   end
+  
+  def disney_get_max_reward(reward_name)
+    get_max_reward(reward_name, $context_root)
+  end
 
 end

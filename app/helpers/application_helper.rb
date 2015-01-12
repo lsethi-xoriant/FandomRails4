@@ -255,13 +255,15 @@ module ApplicationHelper
   
   def get_max(collection, &comparison)
     result = nil
-    collection.each do |element|
-      if result.nil?
-        result = element
-      else
-        cmp_result = yield(result, element)
-        if cmp_result > 0
+    if collection
+      collection.each do |element|
+        if result.nil?
           result = element
+        else
+          cmp_result = yield(result, element)
+          if cmp_result > 0
+            result = element
+          end
         end
       end
     end
@@ -891,24 +893,26 @@ module ApplicationHelper
     return user, from_registration
   end
   
-  def get_max_reward(reward_name)
-    cache_short(get_max_reward_key(reward_name, current_user.id)) do
+  # Get max reward
+  #   rward_name      - name of the reward type (eg: level, badge)
+  #   extra_cache_key - further param to handle name clashing clash in case of multi property
+  def get_max_reward(reward_name, extra_cache_key = "")
+    cache_short(get_max_reward_key(reward_name, current_user.id, extra_cache_key)) do
       rewards, use_property = rewards_by_tag(reward_name, current_user)
-      level = nil
+      reward = nil
       if use_property
         if !rewards.empty?
-          level = get_max(rewards[$context_root]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+          reward = get_max(rewards[$context_root]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
         end 
       elsif !rewards.nil?
-        level = get_max(rewards) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+        rweard = get_max(rewards) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
       end
       
-      if !level.nil?
-        level
-      else
+      if reward.nil?
         CACHED_NIL
+      else
+        reward
       end
-      
     end
   end
   

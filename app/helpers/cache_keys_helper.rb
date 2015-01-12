@@ -181,8 +181,8 @@ module CacheKeysHelper
     "superfan_contest_point_user_#{user_id}"
   end
   
-  def get_max_reward_key(reward_name, user_id)
-    "max_reward_#{reward_name}_user_#{user_id}_key"
+  def get_max_reward_key(reward_name, user_id, extra_cache_key)
+    "max_reward_#{reward_name}_user_#{user_id}_#{extra_cache_key}_key"
   end
   
   # Gallery
