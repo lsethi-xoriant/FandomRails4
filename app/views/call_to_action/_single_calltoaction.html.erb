@@ -17,7 +17,7 @@
             <h4>
               <% if call_to_action_completed?(calltoaction) %>
                 <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-success" style="padding-top: 7px;">
-                  FATTO <span class="glyphicon glyphicon-ok"></span>
+                  Fatto <span class="glyphicon glyphicon-ok"></span>
                 </span>
               <% else %>
                 <span id="head-feedback-calltoaction-<%= calltoaction.id %>" class="label label-warning" style="padding-top: 7px;">+<%= get_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction)[:winnable_reward_count] %>

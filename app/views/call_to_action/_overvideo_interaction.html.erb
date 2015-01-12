@@ -37,7 +37,7 @@
     -->
     <div class="col-md-12 interaction__winnable-reward text-center">
       <span class="label label-success cta-cover__winnable-reward__label">
-        FATTO <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+        Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
       </span> 
     </div>
   </div>
@@ -56,23 +56,31 @@
 </div>
 
 <div ng-if="interaction_info.feedback" class="row {{interaction_info.interaction.resource_type}}-interaction">
-  <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" id="overvideo-outcome-{{interaction_info.interaction.id}}" class="row">
+  <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row">
 
     <div ng-if="interaction_info.interaction.resource_type != 'trivia'">
-      <div class="col-sm-12">Bravo!<br>Hai guadagnato altri punti</div>
-      <div class="col-sm-12">+{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}</div>
+      <div class="col-sm-12 text-center interaction__feedback-text-col">
+        <p class="interaction__feedback-text">Bravo!</p>
+        <p class="interaction__feedback-text">Hai guadagnato altri punti</p>
+      </div>
+      <div class="col-sm-12 text-center"><span class="interaction__feedback-reward">+{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}</span></div>
     </div> 
       
     <div ng-if="interaction_info.interaction.resource_type == 'trivia' && interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
-      <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
-      <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+      <div class="col-sm-12 text-center interaction__feedback-text-col">
+        <p class="interaction__feedback-text">Corretto!</p>
+        <p class="interaction__feedback-text">Hai guadagnato altri punti</p>
       </div>
+      <div class="col-sm-12 text-center"><span class="interaction__feedback-reward">+{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}</span></div>
     </div> 
 
     <div ng-if="interaction_info.interaction.resource_type == 'trivia' && !interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
-      <div class="alert alert-danger" style="margin-bottom: 0; margin-top: 15px;">
-      <strong>Risposta errata!</strong> Hai guadagnato {{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+      <div class="col-sm-12 text-center interaction__feedback-text-col">
+        <p class="interaction__feedback-text">Sbagliato!</p>
+        <p class="interaction__feedback-text">Hai guadagnato altri punti</p>
       </div>
+      <div class="col-sm-12 text-center"><span class="interaction__feedback-reward">+{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}</span></div>
     </div> 
+    
   </div>
 </div>

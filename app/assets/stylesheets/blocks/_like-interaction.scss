@@ -25,10 +25,11 @@
 }
 
 .like-interaction__cta__info {
-  padding-left: 40px;
-  margin: 10px 0 5px 0;
+  padding-left: 25px;
+  margin: 10px 15px 5px 0;
   font-size: 14px;
   color: #999;
+  display: inline;
 }
 
 .like-interaction__cta__info__button {
@@ -46,4 +47,10 @@
   top: 2px;
   left: 6px;
   position: relative;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .like-interaction__cta__info {
+    padding-left: 0;
+  }
 }

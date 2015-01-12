@@ -16,7 +16,7 @@
         <!-- CALLTOACTION DONE -->
         <div ng-if="!calltoaction_info.status || calltoaction_info.status.winnable_reward_count < 1" class="col-sm-12 cta-cover__winnable-reward text-right">
           <span class="label label-success cta-cover__winnable-reward__label">
-            FATTO <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+            Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
           </span>  
         </div> 
         <div class="col-sm-8 text-left cta-cover__title">
@@ -37,7 +37,7 @@
         </div>
       </div>
       <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="col-xs-6 text-right">
-        <div id="share-interaction-{{interaction_info.interaction.id}}">
+        <div class="share-interaction__cover__col">
           <%= render partial: "/call_to_action/share_interaction" %>
         </div>
       </div>

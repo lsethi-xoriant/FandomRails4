@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+.cta_left-col {
+  margin-bottom: 15px;
+}
+
 .cta__media-footer {
   padding-bottom: 10px;
   padding-top: 10px;
@@ -15,8 +19,25 @@
   background: linear-gradient(#fdfdfd, #f3f3f5);
 }
 
+.cta__title-small-col {
+  padding: 0;
+}
+
+.cta__description-small-col {
+  padding: 0;
+}
+
+.cta__title-small {
+  font-size: 18px;
+}
+
+.cta__description-small {
+  font-size: 14px;
+  color: #999;
+}
+
 .cta__winnable-reward {
-  padding-top: 22px
+  padding-top: 27px
 }
 
 .cta__title {
@@ -80,4 +101,19 @@
 
 .ctas__search__col {
   padding-left: 5px;
+}
+
+
+@media (max-width: $screen-sm-min) { 
+
+  .cta__title-small-col {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .cta__description-small-col {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
 }

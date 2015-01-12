@@ -76,7 +76,11 @@
 }
 
 .cta-cover__winnable-reward__label.label-success {
-  background: green;
+  background: #47cd48; 
+  background: -webkit-linear-gradient(#47cd48, #37ba39);
+  background: -o-linear-gradient(#47cd48, #37ba39);
+  background: -moz-linear-gradient(#47cd48, #37ba39);
+  background: linear-gradient(#47cd48, #37ba39);
   color: #fff;
   padding-left: 10px;
 }

@@ -99,4 +99,22 @@
         bottom: 0;
         z-index: 10;
     }
+
+    .ctas__flexslider {
+        .flex-direction-nav a {
+            color: #ccc !important;
+            margin: -15px 0 0 !important;
+        }
+
+        .flex-control-paging {
+            margin-bottom: 5px; 
+            z-index: 10;
+            li a {
+                background: rgba(255, 255, 255, 0.5)
+            }
+            li a.flex-active {
+                background: #fff;
+            }
+        }
+    }
 }
