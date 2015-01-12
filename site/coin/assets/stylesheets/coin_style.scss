@@ -20,6 +20,10 @@ body {
   font-family: 'Source Sans Pro', helvetica, arial, sans-serif;
 }
 
+.coin-footer {
+  margin-top: 80px;
+}
+
 .panel-shadow {
   -webkit-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.5);
@@ -1269,6 +1273,10 @@ fieldset[disabled] .btn-facebook.active {
 
   .landing__buttons {
     margin-top: 0;
+  }
+
+  .coin-footer {
+    margin-top: 15px;
   }
 
 }
