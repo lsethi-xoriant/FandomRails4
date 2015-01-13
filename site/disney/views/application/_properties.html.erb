@@ -17,7 +17,6 @@
 <div class="col-md-3 text-left" ng-if="!current_user">
   <p class="properties__right-bar-text">Partecipa<br>alla community</p>
   <a class="btn btn-primary" href="/iur"><span>ENTRA</span></a>
-  <img src="<%= current_avatar %>" class="navbar__avatar">
 </div>
 
 <div class="col-md-3 text-left" ng-if="current_user">
@@ -25,8 +24,9 @@
   <span class="label label-warning cta-cover__winnable-reward__label">
     +{{current_user.main_reward_counter}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
   </span>  
-  <img src="<%= current_avatar %>" class="navbar__avatar">
 </div>
+
+<img src="<%= current_avatar %>" class="navbar__avatar">
 
 <script type="text/javascript">
   $(document).ready(function() {
