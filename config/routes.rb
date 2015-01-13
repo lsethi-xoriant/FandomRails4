@@ -31,6 +31,7 @@ Fandom::Application.routes.draw do
         match "/iur", to: "application#iur"
         match "profile/rankings", :to => "profile#rankings"
         match "profile/rewards", :to => "profile#rewards"
+        match "profile/notices", :to => "profile#notices"
         devise_scope :user do
           match "/iur/sign_in", to: "registrations#iur"
         end
