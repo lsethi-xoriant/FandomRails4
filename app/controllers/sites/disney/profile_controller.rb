@@ -38,7 +38,7 @@ class Sites::Disney::ProfileController < ProfileController
       levels.each do |level|
         if level_before_status.nil? || level_before_status == "gained"
           progress = disney_calculate_level_progress(level, level_before_point, get_current_property)
-          if progress > 100
+          if progress >= 100
             level_before_status = "gained"
             prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => 100, "status" => level_before_status }
           else

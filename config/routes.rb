@@ -29,7 +29,8 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         match "/iur", to: "application#iur"
-        match "/profile/rankings", :to => "application#rankings"
+        match "profile/rankings", :to => "profile#rankings"
+        match "profile/rewards", :to => "profile#rewards"
         devise_scope :user do
           match "/iur/sign_in", to: "registrations#iur"
         end

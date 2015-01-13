@@ -155,7 +155,7 @@ module DisneyHelper
   #   starting_point - the cost of the preceding level
   def disney_calculate_level_progress(level, starting_point, property_name)
     user_points = get_counter_about_user_reward(disney_get_point_name_from_property_name(property_name))
-    ((user_points - starting_point) * 100) / (level.cost - starting_point)
+    level.cost > 0 ? ((user_points - starting_point) * 100) / (level.cost - starting_point) : 100
   end
 
 end
