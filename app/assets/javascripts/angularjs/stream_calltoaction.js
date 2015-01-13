@@ -365,7 +365,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.resource_type == "play") {
-        play_interaction = interaction_info.interaction;
+        play_interaction = interaction_info;
       }
     });
     return play_interaction;
@@ -733,7 +733,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         });
 
         if(overvideo_interaction.interaction.when_show_interaction == "OVERVIDEO_END") {
-          getCallToActionInfo(calltoaction_id).active_end_interaction = true;//HERE
+          getCallToActionInfo(calltoaction_id).active_end_interaction = true;
         }
 
       }, 1000);
@@ -1041,10 +1041,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.updateStartVideoInteraction = function(calltoaction_id, interaction_id) {
     if(!$scope.play_event_tracked[calltoaction_id]) {
-      $("#home-overvideo-title-" + calltoaction_id).addClass("hidden");
+
       $scope.play_event_tracked[calltoaction_id] = true;
 
-      play_interaction = getPlayInteraction(calltoaction_id);
+      play_interaction_info = getPlayInteraction(calltoaction_id);
       if(play_interaction == null) {
         console.log("You must enable the play interaction for this calltoaction.");
         return;
@@ -1055,7 +1055,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         update_interaction_path = "/" + $scope.aux.current_property_info.title + "" + update_interaction_path;
       }
 
-      $http.post(update_interaction_path, { interaction_id: play_interaction.id, main_reward_name: MAIN_REWARD_NAME })
+      $http.post(update_interaction_path, { interaction_id: play_interaction_info.interaction.id })
         .success(function(data) {
 
           updateUserRewardInView(data.main_reward_counter.general);
@@ -1083,7 +1083,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           // Interaction after user response.
           updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
           $scope.current_user.main_reward_counter = data.main_reward_counter;  
-          interaction_info.status = data.interaction_status;
+          play_interaction_info.status = data.interaction_status;
 
           /*
 

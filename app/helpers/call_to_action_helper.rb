@@ -84,10 +84,16 @@ module CallToActionHelper
         upload_info = build_uploads_for_resource(interaction)
       end
 
+      if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
+        when_show_interaction = "SEMPRE_VISIBILE"
+      else
+        when_show_interaction = interaction.when_show_interaction
+      end
+
       interaction_info_list << {
         "interaction" => {
           "id" => interaction.id,
-          "when_show_interaction" => interaction.when_show_interaction,
+          "when_show_interaction" => when_show_interaction,
           "overvideo_active" => false,
           "seconds" => interaction.seconds,
           "resource_type" => resource_type,

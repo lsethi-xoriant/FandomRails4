@@ -203,7 +203,8 @@ class CallToActionController < ApplicationController
       "tenant" => get_site_from_request(request)["id"],
       "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
       "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
-      "init_captcha" => true
+      "init_captcha" => true,
+      "mobile" => small_mobile_device?()
     }
   end
   

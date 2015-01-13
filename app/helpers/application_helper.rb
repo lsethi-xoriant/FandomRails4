@@ -191,7 +191,6 @@ module ApplicationHelper
   end
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
-
     unless anonymous_user?(user)
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
       expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
@@ -215,7 +214,7 @@ module ApplicationHelper
   
       unless anonymous_user?(user)
         UserCounter.update_counters(interaction, user_interaction, user, true)
-        expire_cache_key(get_cta_completed_or_reward_status_cache_key(interaction.call_to_action_id, user.id))
+        expire_cache_key(get_cta_completed_or_reward_status_cache_key(get_main_reward_name, interaction.call_to_action_id, user.id))
       end
     end
 
@@ -433,7 +432,6 @@ module ApplicationHelper
 
   # Generates an hash with reward information.
   def compute_current_call_to_action_reward_status(reward_name, calltoaction)
-    debugger
     reward = get_reward_from_cache(reward_name)
     
     winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
