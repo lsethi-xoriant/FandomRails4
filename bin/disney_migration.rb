@@ -13,6 +13,7 @@ def migrate_call_to_actions(destination_db_tenant, source_db_connection, destina
   source_call_to_actions = source_db_connection.exec("SELECT * FROM call_to_actions")
 
   puts "call_to_actions: #{source_call_to_actions.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_call_to_actions.count)
 
   count = 0
@@ -74,6 +75,7 @@ def migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_
   source_quizzes = source_db_connection.exec("SELECT * FROM quiz_interactions")
 
   puts "quizzes: #{source_quizzes.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_quizzes.count)
   count = 0
   quizzes_id_map = Hash.new
@@ -110,6 +112,7 @@ def migrate_answers(destination_db_tenant, source_db_connection, destination_db_
   source_answers = source_db_connection.exec("SELECT * FROM quiz_answers")
 
   puts "answers: #{source_answers.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_answers.count)
 
   count = 0
@@ -157,6 +160,7 @@ def migrate_checks(destination_db_tenant, source_db_connection, destination_db_c
   source_checks = source_db_connection.exec("SELECT * FROM check_content_interactions")
 
   puts "checks: #{source_checks.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_checks.count)
 
   count = 0
@@ -191,6 +195,7 @@ def migrate_plays(destination_db_tenant, source_db_connection, destination_db_co
   source_plays = source_db_connection.exec("SELECT * FROM action_video_interactions")
 
   puts "plays: #{source_plays.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_plays.count)
 
   count = 0
@@ -224,6 +229,7 @@ def migrate_interactions(destination_db_tenant, source_db_connection, destinatio
   source_interactions = source_db_connection.exec("SELECT * FROM interactions")
 
   puts "interactions: #{source_interactions.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_interactions.count)
 
   count = 0
@@ -280,6 +286,7 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
   source_users = source_db_connection.exec("SELECT * FROM users#{limit ? " limit 20000" : ""}") # limit for testing
 
   puts "users: #{source_users.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_users.count)
 
   count = 0
@@ -408,6 +415,7 @@ def migrate_tags(destination_db_tenant, source_db_connection, destination_db_con
   source_custom_galleries = source_db_connection.exec("SELECT * FROM core_custom_galleries")
 
   puts "tags (custom_galleries): #{source_custom_galleries.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_custom_galleries.count)
 
   count = 0
@@ -445,6 +453,7 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
   source_galleries = source_db_connection.exec("SELECT * FROM core_galleries ORDER BY parent_custom_gallery_id")
 
   puts "user_call_to_actions: #{source_galleries.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_galleries.count)
 
   count = 0
@@ -537,6 +546,7 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
   source_user_interactions = source_db_connection.exec("SELECT * FROM cta_ci_users#{limit ? " limit 2000" : ""}") # limit for testing
 
   puts "user_interactions: #{source_user_interactions.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_user_interactions.count)
 
   count = 0
@@ -611,6 +621,7 @@ def migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connectio
   #source_rewarding_levels = source_db_connection.exec("SELECT * FROM rewarding_levels")
 
   puts "rewards: #{source_rewarding_prizes.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
 
   # POINTS
   if source_db_tenant == "disney"
@@ -794,6 +805,7 @@ def migrate_user_rewards(destination_db_tenant, source_db_connection, destinatio
   source_rewarding_prizes_users = source_db_connection.exec("SELECT * FROM rewarding_prizes_users#{limit ? " limit 2000" : ""}") # limit for testing
 
   puts "user_rewards: #{source_rewarding_prizes_users.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
 
   #badge_counters = migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_badges_users, "badge")
   #level_counters = migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_levels_users, "level")
@@ -801,6 +813,7 @@ def migrate_user_rewards(destination_db_tenant, source_db_connection, destinatio
 
   puts "#{prize_counters[0]} lines successfully migrated"
   puts "#{prize_counters[1]} rows had dangling reference to user \n#{prize_counters[2]} rows had dangling reference to reward \n*********************************************************************************\n\n"
+  STDOUT.flush
 end
 
 def migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_users, reward_type)
@@ -847,6 +860,7 @@ def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_con
   source_user_counters = source_db_connection.exec("SELECT * FROM rewarding_users")
 
   puts "user_rewards_for_points_and_credits: #{source_user_counters.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_user_counters.count * 2)
   count = 0
   rows_with_user_missing = 0
@@ -910,6 +924,7 @@ def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_con
   end
   puts "#{count} lines successfully created"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_updated_credits} rows updated for credits \n********************************************************************************* \n"
+  STDOUT.flush
   #write_table_id_mapping_to_file("user_rewards", user_rewards_id_map)
 end
 
@@ -919,6 +934,7 @@ def migrate_comments_and_user_comment_interactions(destination_db_tenant, source
   source_comments_and_user_comment_interactions = source_db_connection.exec("SELECT * FROM comments ORDER BY content_id#{limit ? " limit 20000" : ""}") # limit for testing
 
   puts "comments & user_comment_interactions: #{source_comments_and_user_comment_interactions.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_comments_and_user_comment_interactions.count)
   count_for_user_comment_interactions = 0
   count_for_comments = 0
@@ -1014,6 +1030,7 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
   source_votes = source_db_connection.exec("SELECT * FROM votes#{limit ? " limit 20000" : ""}") # limit for testing
 
   puts "votes: #{source_votes.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_votes.count)
   count = 0
   rows_with_user_missing = 0
@@ -1089,6 +1106,7 @@ def migrate_notices(destination_db_tenant, source_db_connection, destination_db_
   source_notices = source_db_connection.exec("SELECT * FROM rewarding_notifications")
 
   puts "notices: #{source_notices.count} lines to migrate \nRunning migration..."
+  STDOUT.flush
   lines_step, next_step = init_progress(source_notices.count)
   count = 0
   rows_with_user_missing = 0
@@ -1177,6 +1195,7 @@ def write_table_id_mapping_to_file(table, hash)
     file.print("#{table}: #{hash}\n\n")
   }
   puts "IDs' mapping written to #{tables_id_mapping_file_name} \n*********************************************************************************\n\n"
+  STDOUT.flush
 end
 
 def write_and_store_time(source_db_tenant, interval_name)
@@ -1188,6 +1207,7 @@ def write_and_store_time(source_db_tenant, interval_name)
     file.print("#{interval_name} #{source_db_tenant} migration at: #{time}\n\n")
   }
   puts "#{interval_name} #{source_db_tenant} migration at: #{time} \n*********************************************************************************\n\n"
+  STDOUT.flush
 end
 
 def int?(str) # method to define if a string represents an integer
@@ -1211,6 +1231,7 @@ def print_progress(count, lines_step, next_step)
   if count == next_step
     puts "#{count} lines successfully migrated \n"
     next_step + lines_step
+    STDOUT.flush
   else
     next_step
   end
