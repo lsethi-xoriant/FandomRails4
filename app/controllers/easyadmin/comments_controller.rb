@@ -18,7 +18,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
       if anonymous_user.id != current_comment.user_id
         interaction = current_comment.comment.interaction
-        user_interaction, outcome = UserInteraction.create_or_update_interaction(current_comment.user_id, interaction.id, nil, nil)
+        user_interaction, outcome = UserInteraction.create_or_update_interaction(current_comment.user, interaction, nil, nil)
 
         create_notice(:user_id => current_comment.user_id, :html_notice => current_comment.text, :viewed => false, :read => false)
 

@@ -27,7 +27,7 @@ module CallToActionHelper
           "title" => get_extra_fields!(miniformat)["title"]
         }
       end
-      
+
       calltoaction_info_list << {
         "calltoaction" => { 
           "id" => calltoaction.id,
@@ -40,7 +40,7 @@ module CallToActionHelper
           "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
           "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
           "interaction_info_list" => build_interaction_info_list(calltoaction),
-          "aux" => (JSON.parse(calltoaction.aux) if calltoaction.aux.present?)
+          "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}")
         },
         "miniformat" => miniformat_info,
         "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction)
@@ -84,10 +84,16 @@ module CallToActionHelper
         upload_info = build_uploads_for_resource(interaction)
       end
 
+      if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
+        when_show_interaction = "SEMPRE_VISIBILE"
+      else
+        when_show_interaction = interaction.when_show_interaction
+      end
+
       interaction_info_list << {
         "interaction" => {
           "id" => interaction.id,
-          "when_show_interaction" => interaction.when_show_interaction,
+          "when_show_interaction" => when_show_interaction,
           "overvideo_active" => false,
           "seconds" => interaction.seconds,
           "resource_type" => resource_type,

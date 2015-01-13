@@ -4,10 +4,32 @@
   height: 9999px;
 }
 
+.versus_answer-col-left {
+  padding: 0 15px 0 0;
+}
+
+.versus_answer-col-right {
+  padding: 0 0 0 15px;
+}
+
 .versus-interaction__question--overvideo {
   font-size: 22px;
   color: #fff;
   margin: 20px 15px 5px 15px;
+}
+
+.versus-interaction__avatar {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.versus-interaction__question {
+  font-size: 22px;
+  color: #000;
+  margin: 20px 0 5px 0;
 }
 
 .versus-interaction__answer--left {
@@ -148,4 +170,27 @@
 
 @keyframes versusAnswerFadeOut {
     100% { opacity: 0; }
+}
+
+@media (max-width: $screen-sm-min) { 
+  .versus-interaction__img {
+    width: 120px; 
+    height: 120px;
+  }
+
+  .versus-interaction__progress-bar--left {
+    right: 140px;
+  }
+
+  .versus-interaction__progress-bar--right {
+    left: 140px;
+  }
+
+  .versus-interaction__button {
+    width: 140px;
+  }
+
+  .versus-interaction__progress-bar {
+    height: 120px !important; 
+  }
 }

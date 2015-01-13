@@ -146,7 +146,8 @@ class ApplicationController < ActionController::Base
           "background" => get_extra_fields!(filter)["label-background"],
           "icon" => get_extra_fields!(filter)["icon"],
           "title" => get_extra_fields!(filter)["title"],
-          "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :thumb) rescue nil) 
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :thumb) rescue nil),
+          "mobile" => small_mobile_device?()
         }
       end
     end

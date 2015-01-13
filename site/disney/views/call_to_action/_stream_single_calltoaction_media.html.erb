@@ -1,5 +1,6 @@
 <div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA' || calltoaction_info.calltoaction.media_type == 'FLOWPLAYER'" id="main-media-{{calltoaction_info.calltoaction.id}}">
   <div class="media-youtube embed-responsive embed-responsive-16by9">             
+    
     <!-- IFRAME VIDEO -->
     <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
 
@@ -10,12 +11,13 @@
           <%= render partial: "/call_to_action/overvideo_interaction" %>
         </div>
       </div>
-
       <!-- DEFAULT END -->
       <div class="col-xs-12 end-interaction" ng-if="calltoaction_info.active_end_interaction">
         <div class="row">
           <div class="col-sm-8 col-sm-offset-2 text-center">
-            <p class="end-interaction__title">END</p>
+            <p class="end-interaction__title" ng-if="!calltoaction_info.calltoaction.extra_fields['end-video']">Cosa ne pensi? Dì la tua! Lascia subito il tuo commento su questo argomento.</p>
+            <p class="end-interaction__title" ng-if="calltoaction_info.calltoaction.extra_fields['end-video']">{{calltoaction_info.calltoaction.extra_fields['end-video']}}</p>
+            <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue"><span>COMMENTA</span></a>
           </div>
         </div>
       </div>

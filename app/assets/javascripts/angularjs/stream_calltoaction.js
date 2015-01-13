@@ -32,7 +32,13 @@ streamCalltoactionModule.animation('.slide-right', function() {
   };
 });
 
-function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
+function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
+
+  $scope.scrollTo = function(el_id) {
+    $('html, body').animate({
+        scrollTop: $("#"+ el_id).offset().top
+    }, 500);
+  };
 
   $scope.unsafe = function(value) {
      return $sce.trustAsHtml(value);
@@ -365,7 +371,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.resource_type == "play") {
-        play_interaction = interaction_info.interaction;
+        play_interaction = interaction_info;
       }
     });
     return play_interaction;
@@ -733,7 +739,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         });
 
         if(overvideo_interaction.interaction.when_show_interaction == "OVERVIDEO_END") {
-          getCallToActionInfo(calltoaction_id).active_end_interaction = true;//HERE
+          getCallToActionInfo(calltoaction_id).active_end_interaction = true;
         }
 
       }, 1000);
@@ -782,7 +788,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   	this.playerId = playerId;
   	this.media_data = media_data;
   	
-	this.playerManager = new YT.Player( (this.playerId), {
+	  this.playerManager = new YT.Player( (this.playerId), {
         playerVars: { html5: 1, controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 },
         height: "100%", width: "100%",
         videoId: this.media_data,
@@ -855,26 +861,26 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   	this.media_data = media_data;
 
   	player = this;
-	kWidget.embed({
-		'targetId': this.playerId,
-		'wid': '_'+$scope.aux.kaltura.partner_id,
-		'uiconf_id' : $scope.aux.kaltura.uiconf_id,
-		'entry_id' : media_data,
-		'flashvars':{ // flashvars allows you to set runtime uiVar configuration overrides. 
-			'autoPlay': false
-		},
-		'params':{ // params allows you to set flash embed params such as wmode, allowFullScreen etc
-			'wmode': 'transparent' 
-		},
-		'readyCallback': function( playerId ){
-			kdp = $("#"+playerId).get(0);
-			kdp.addJsListener("playerReady", "onKalturaPlayerReady");
-			kdp.addJsListener("doPlay", "onKalturaPlayEvent");
-			kdp.addJsListener("playerUpdatePlayhead", "kalturaCheckInteraction");
-			kdp.addJsListener("playerPlayEnd", "onKalturaVideoEnded");
-			player.playerManager = kdp;
-		}
-   });
+	  kWidget.embed({
+  		'targetId': this.playerId,
+  		'wid': '_' + $scope.aux.kaltura.partner_id,
+  		'uiconf_id': $scope.aux.kaltura.uiconf_id,
+  		'entry_id': media_data,
+  		'flashvars':{
+  			'autoPlay': false
+  		},
+  		'params':{
+  			'wmode': 'transparent' 
+  		},
+  		'readyCallback': function( playerId ){
+  			kdp = $("#"+playerId).get(0);
+  			kdp.addJsListener("playerReady", "onKalturaPlayerReady");
+  			kdp.addJsListener("doPlay", "onKalturaPlayEvent");
+  			kdp.addJsListener("playerUpdatePlayhead", "kalturaCheckInteraction");
+  			kdp.addJsListener("playerPlayEnd", "onKalturaVideoEnded");
+  			player.playerManager = kdp;
+  		}
+     });
   	
   	this.play = function(){
   		this.playerManager.sendNotification('doPlay');
@@ -907,44 +913,38 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   $window.onKalturaPlayerReady = function(event) {
   };
 
-  $window.onKalturaPlayEvent = function(idPlayer) {  
+  function getCallToActionIdFromKalturaPlayer(idPlayer) {
     aux = idPlayer.split("-");
-    calltoaction_id = aux[aux.length - 1];
-	
-	// KALTURA replace div with calltoaction_media_priority info so 
-	//secondary media dose not work with kaltura
-	
-    //if(calltoaction_media_priority == "main") {
-	    updateStartVideoInteraction(calltoaction_id);
+    return aux[aux.length - 1];
+  }
 
-    //} else {
-		//secondary media hendler
-    //}
+  $window.onKalturaPlayEvent = function(idPlayer) {  
+    calltoaction_id = getCallToActionIdFromKalturaPlayer(idPlayer);
+    $scope.$apply(function() {
+	    updateStartVideoInteraction(calltoaction_id);
+    });
   };
   
   $window.onKalturaVideoEnded = function(idPlayer){
-  	aux = idPlayer.split("-");
-    calltoaction_id = aux[aux.length - 1];
-    console.log($("#" + idPlayer));
+  	calltoaction_id = getCallToActionIdFromKalturaPlayer(idPlayer);
     $scope.$apply(function() {
       updateEndVideoInteraction(calltoaction_id);
     });
   };
   
   $window.kalturaCheckInteraction = function(data, idPlayer) {
-  	  //calltoaction_id = $("#" + idPlayer).attr("calltoaction-id");
-  	  aux = idPlayer.split("-");
-  	  calltoaction_id = aux[aux.length - 1];
-      current_video_player = getPlayer(calltoaction_id);
-      kaltura_player_current_time = Math.floor(data);
-      
-      overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, kaltura_player_current_time);
+	  calltoaction_id = getCallToActionIdFromKalturaPlayer(idPlayer);
 
-      if(overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
-        $scope.$apply(function(){
-        	executeInteraction(current_video_player, calltoaction_id, overvideo_interaction);
-        });
-      }
+    current_video_player = getPlayer(calltoaction_id);
+    kaltura_player_current_time = Math.floor(data);
+    
+    overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, kaltura_player_current_time);
+
+    if(overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
+      $scope.$apply(function(){
+      	executeInteraction(current_video_player, calltoaction_id, overvideo_interaction);
+      });
+    }
   };
   
   $window.appendKalturaframe = function(calltoaction_info) {
@@ -1041,10 +1041,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
 
   $window.updateStartVideoInteraction = function(calltoaction_id, interaction_id) {
     if(!$scope.play_event_tracked[calltoaction_id]) {
-      $("#home-overvideo-title-" + calltoaction_id).addClass("hidden");
+
       $scope.play_event_tracked[calltoaction_id] = true;
 
-      play_interaction = getPlayInteraction(calltoaction_id);
+      play_interaction_info = getPlayInteraction(calltoaction_id);
       if(play_interaction == null) {
         console.log("You must enable the play interaction for this calltoaction.");
         return;
@@ -1055,7 +1055,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         update_interaction_path = "/" + $scope.aux.current_property_info.title + "" + update_interaction_path;
       }
 
-      $http.post(update_interaction_path, { interaction_id: play_interaction.id, main_reward_name: MAIN_REWARD_NAME })
+      $http.post(update_interaction_path, { interaction_id: play_interaction_info.interaction.id })
         .success(function(data) {
 
           updateUserRewardInView(data.main_reward_counter.general);
@@ -1083,7 +1083,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           // Interaction after user response.
           updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
           $scope.current_user.main_reward_counter = data.main_reward_counter;  
-          interaction_info.status = data.interaction_status;
+          play_interaction_info.status = data.interaction_status;
+          calltoaction_info.status = JSON.parse(data.calltoaction_status);
 
           /*
 
@@ -1598,6 +1599,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
           sessionStorage.setItem("captcha" + interaction_info.interaction.id, data.captcha.code);
         } else if(!data.approved) {
           alert("In attesa di approvazione!");
+
+          interaction_info.interaction.resource.comment_info.user_text = "";
+          interaction_info.interaction.resource.comment_info.user_captcha = "";
+          if(!$scope.current_user) {
+            interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
+          }
         } else {
           interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
 
@@ -1690,8 +1697,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
         }
       });
     });
-
-
   }
 
 }
