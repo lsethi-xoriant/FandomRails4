@@ -42,16 +42,18 @@ module DisneyHelper
     }
   end
 
-  def disney_default_aux(current_property)
+  def disney_default_aux(current_property, other = [])
     filters = get_tags_with_tag("featured")
 
     current_property_info = {
       "id" => current_property.id,
       "background" => get_extra_fields!(current_property)["label-background"],
-      "image-background" => get_extra_fields!(current_property)["image-background"]["url"],
+      "image-background" => (get_extra_fields!(current_property)["image-background"]["url"] rescue nil),
       "logo" => (get_extra_fields!(current_property)["logo"]["url"] rescue nil),
       "title" => get_extra_fields!(current_property)["title"],
-      "image" => (get_upload_extra_field_processor(get_extra_fields!(current_property)["image"], :custom) rescue nil) 
+      "outer" => get_extra_fields!(current_property)["outer"],
+      "outer-url" => get_extra_fields!(current_property)["outer-url"],
+      "image" => (get_upload_extra_field_processor(get_extra_fields!(current_property)["image"], :thumb) rescue nil) 
     }
 
     if filters.any?
@@ -65,7 +67,7 @@ module DisneyHelper
           "background" => get_extra_fields!(filter)["label-background"],
           "icon" => get_extra_fields!(filter)["icon"],
           "title" => get_extra_fields!(filter)["title"],
-          "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :custom) rescue nil) 
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :thumb) rescue nil) 
         }
       end
     end
@@ -79,7 +81,7 @@ module DisneyHelper
           "id" => property.id,
           "background" => get_extra_fields!(property)["label-background"],
           "title" => (get_extra_fields!(property)["title"].downcase rescue nil),
-          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :custom) rescue nil) 
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil) 
         }
       end
     end
@@ -107,7 +109,7 @@ module DisneyHelper
       calltoaction_evidence_info
     end
 
-    {
+    aux = {
       "tenant" => get_site_from_request(request)["id"],
       "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
       "main_reward_name" => MAIN_REWARD_NAME,
@@ -117,6 +119,17 @@ module DisneyHelper
       "current_property_info" => current_property_info,
       "calltoaction_evidence_info" => calltoaction_evidence_info
     }
+
+    other.each do |key, value|
+      aux[key] = value
+    end
+
+    aux
+
+  end
+  
+  def disney_get_max_reward(reward_name)
+    get_max_reward(reward_name, $context_root)
   end
 
 end

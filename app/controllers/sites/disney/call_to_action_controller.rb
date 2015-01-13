@@ -12,7 +12,7 @@ class Sites::Disney::CallToActionController < CallToActionController
 
   def init_show_aux()
     current_property = get_tag_from_params(get_disney_property())
-    disney_default_aux(current_property);
+    disney_default_aux(current_property, init_captcha: true);
   end
 
 end

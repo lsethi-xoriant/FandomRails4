@@ -52,6 +52,7 @@ module BrowseHelper
     browse_section = ContentSection.new(
       key: "recent",
       title: "I piu recenti",
+      icon_url: ActionController::Base.helpers.asset_path("icon-cat.png"),
       contents: recent_contents,
       view_all_link: "/browse/view_recent",
       column_number: 12/4
@@ -72,6 +73,7 @@ module BrowseHelper
     browse_section = ContentSection.new(
       key: "featured",
       title: featured.title,
+      icon_url: ActionController::Base.helpers.asset_path("icon-cat.png"),
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: 12/4 #featured_contents.count
@@ -83,17 +85,7 @@ module BrowseHelper
     browse_section = ContentSection.new(
       key: "featured",
       title: featured.title,
-      contents: featured_contents,
-      view_all_link: "/browse/view_all/#{featured.id}",
-      column_number: 12/4 #featured_contents.count
-    )
-  end
-  
-  def get_featured_with_match(featured, query)
-    featured_contents = get_featured_content(featured)
-    browse_section = ContentSection.new(
-      key: "featured",
-      title: featured.title,
+      icon_url: ActionController::Base.helpers.asset_path("icon-cat.png"),
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: 12/4 #featured_contents.count
@@ -102,9 +94,24 @@ module BrowseHelper
   
   def get_browse_area_by_category(category)
     contents = get_contents_by_category(category)
+    extra_fields = get_extra_fields!(category)
     browse_section = ContentSection.new(
       key: category.name,
-      title:  get_extra_fields!(category).fetch('title', category.name),
+      title:  extra_fields.fetch('title', category.name),
+      icon_url: extra_fields["icon"] && upload_extra_field_present?(extra_fields["icon"]) ? get_upload_extra_field_processor(extra_fields["icon"], :original) : ActionController::Base.helpers.asset_path("icon-cat.png"),
+      contents: contents,
+      view_all_link: "/browse/view_all/#{category.id}",
+      column_number: 12/4
+    )
+  end
+  
+  def get_browse_area_by_category_with_match(category, query)
+    contents = get_contents_by_category_with_match(category, query)
+    extra_fields = get_extra_fields!(category)
+    browse_section = ContentSection.new(
+      key: category.name,
+      title: extra_fields.fetch('title', category.name),
+      icon_url: (extra_fields["icon"] && upload_extra_field_present?(extra_fields["icon"])) ? get_upload_extra_field_processor(extra_fields["icon"], :original) : ActionController::Base.helpers.asset_path("icon-cat.png"),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
       column_number: 12/4
@@ -121,17 +128,6 @@ module BrowseHelper
     tags = get_tags_with_tag(category.name).sort_by { |tag| tag.created_at }
     ctas = get_ctas_with_tag(category.name).sort_by { |cta| cta.created_at }
     merge_contents_with_tags(ctas, tags)
-  end
-  
-  def get_browse_area_by_category_with_match(category, query)
-    contents = get_contents_by_category_with_match(category, query)
-    browse_section = ContentSection.new(
-      key: category.name,
-      title: get_extra_fields!(category).fetch('title', category.name),
-      contents: contents,
-      view_all_link: "/browse/view_all/#{category.id}",
-      column_number: 12/6
-    )
   end
   
   def get_contents_by_category_with_match(category, query)

@@ -5,7 +5,7 @@
   <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments | limitTo:2">
     <div class="row" ng-class="{comment_evidence: comment.evidence }">
       <div class="col-xs-12 text-left comment-interaction__cover__comment">
-        <img ng-src="{{comment.user.avatar}}" alt="user-avatar" class="img-circle comment-interaction__cover__avatar">
+        <img ng-src="{{comment.user.avatar}}" alt="user-avatar" class="comment-interaction__cover__avatar">
         <p class="comment-interaction__cover__text-p">
           <span class="comment-interaction__cover__name">{{comment.user.name}}</span> <span class="comment-interaction__cover__text">{{comment.text}}</span>
           <!--<br><small>{{comment.updated_at}}</small>-->

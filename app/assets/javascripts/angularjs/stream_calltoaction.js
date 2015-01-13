@@ -1111,6 +1111,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
+  
+  $scope.goToLogin = function(){
+  	location.href = "/users/sign_up";
+  };
 
   $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
 
@@ -1210,27 +1214,35 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             if(data.answers) {
               updateAnswersInInteractionInfo(interaction_info, data.answers);
             }
-            
-            if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
-              if(interaction_info.interaction.resource_type == "trivia") {
-                angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
-                  answer.class = "trivia-interaction__answer--visible";
-                });
-              } else if(interaction_info.interaction.resource_type == "versus") {
-                index = 0;
-                angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
-                  if(index % 2 == 0) {
-                    answer.class = "versus-interaction__answer--visible-left";
-                  } else {
-                    answer.class = "versus-interaction__answer--visible-right";
-                  }
-                  index += 1;
-                });
-              }
 
-            	$timeout(function() { 
-    			      removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
-    			    }, 3000);
+            if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
+              
+              interaction_info.feedback = true;
+
+              $timeout(function() { 
+                interaction_info.feedback = false;
+
+                if(interaction_info.interaction.resource_type == "trivia") {
+                  angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
+                    answer.class = "trivia-interaction__answer--visible";
+                  });
+                } else if(interaction_info.interaction.resource_type == "versus") {
+                  index = 0;
+                  angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
+                    if(index % 2 == 0) {
+                      answer.class = "versus-interaction__answer--visible-left";
+                    } else {
+                      answer.class = "versus-interaction__answer--visible-right";
+                    }
+                    index += 1;
+                  });
+                }
+
+                $timeout(function() { 
+                  removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
+                }, 3000);
+              }, 3000);
+
             } else {
               if(interaction_info.interaction.resource_type == "like") {
                 if(JSON.parse(interaction_info.user_interaction.aux)["like"]) {
@@ -1240,7 +1252,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
                 } 
               }
             }
-
+            
             /*
             if(data.download_interaction_attachment) {
               window.open(data.download_interaction_attachment, '_blank');
@@ -1295,7 +1307,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
   };
   
   $window.updateVote = function(call_to_action_id, interaction_id, when_show_interaction){
-  	var vote = $("#interaction-"+interaction_id+"-vote-value").val();
+  	var vote = $("#interaction-" + interaction_id + "-vote-value").val();
   	updateAnswer(call_to_action_id, interaction_id, vote, when_show_interaction);
   };
 
