@@ -1,6 +1,14 @@
 <!-- IMAGE SECTION -->
-<div class="row">
-  <div class="col-xs-12">
+<div class="row versus-interaction__answer--{{ $index % 2 == 0 ? 'left' : 'right' }} {{answer.class}}">
+  <div class="col-sm-12">
+    <!--
+    <div ng-if="interaction_info.user_interaction">
+      <div>
+        <h1>{{answer.percentage}}%</h1>
+      </div>
+    </div>
+    -->
+
     <div class="progress bottom vertical versus-interaction__progress-bar versus-interaction__progress-bar--{{ $index % 2 == 0 ? 'left' : 'right' }}">
       <div class="progress-bar progress-bar-warning" role="progressbar" style="height: {{answer.percentage}}%;"></div>
     </div>
@@ -9,7 +17,7 @@
 
     <!-- BUTTON SECTION -->
     <div class="row" ng-if="interaction_info.user_interaction">
-      <div class="col-xs-12 versus_answer-col-{{ $index % 2 == 0 ? 'left' : 'right' }}">
+      <div class="col-sm-12">
         <div ng-if="interaction_info.interaction.resource.one_shot">
           <a type="button" class="versus-interaction__button versus-interaction__button--{{ $index % 2 == 0 ? 'left' : 'right' }} active btn {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-green' : 'btn-blue'}} btn-block"><span>{{answer.text}}</span></a>
         </div>
@@ -19,7 +27,7 @@
       </div>
     </div>
     <div class="row" ng-if="!interaction_info.user_interaction">
-      <div class="col-xs-12 versus_answer-col-{{ $index % 2 == 0 ? 'left' : 'right' }}">
+      <div class="col-sm-12">
         <a type="button" class="versus-interaction__button versus-interaction__button--{{ $index % 2 == 0 ? 'left' : 'right' }} btn btn-blue btn-block" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)"><span>{{answer.text}}</span></a>
       </div>
     </div>

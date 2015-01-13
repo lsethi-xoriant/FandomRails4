@@ -4,10 +4,21 @@
   height: 9999px;
 }
 
+.trivia-interaction__answer {
+  margin: 0 0 10px 15px;
+}
+
 .trivia-interaction__question--overvideo {
   font-size: 22px;
   color: #fff;
   margin: 20px 15px 5px 15px;
+}
+
+.trivia-interaction__avatar {
+  left: -38px;
+  top: 8px;
+  position: absolute;
+  width: 30px;
 }
 
 .trivia-interaction__answer--overvideo {

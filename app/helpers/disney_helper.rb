@@ -38,7 +38,8 @@ module DisneyHelper
       "facebook" => current_user.facebook($site.id),
       "twitter" => current_user.twitter($site.id),
       "main_reward_counter" => get_point,
-      "username" => current_user.username
+      "username" => current_user.username,
+      "avatar" => current_avatar
     }
   end
 
@@ -117,7 +118,8 @@ module DisneyHelper
       "filter_info" => filter_info,
       "property_info" => property_info,
       "current_property_info" => current_property_info,
-      "calltoaction_evidence_info" => calltoaction_evidence_info
+      "calltoaction_evidence_info" => calltoaction_evidence_info,
+      "mobile" => small_mobile_device?()
     }
 
     other.each do |key, value|
