@@ -691,8 +691,8 @@ def generate_point_reward(destination_db_tenant, source_db_connection, destinati
 end
 
 def migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewards, reward_type)
-  count = 0
   lines_step, next_step = init_progress(source_rewards.count)
+  count = 0
   source_rewards.each do |line|
 
     if line["is_video_content"] == "t"
@@ -1179,6 +1179,17 @@ def write_table_id_mapping_to_file(table, hash)
   puts "IDs' mapping written to #{tables_id_mapping_file_name} \n*********************************************************************************\n\n"
 end
 
+def write_and_store_time(source_db_tenant, interval_name)
+  FileUtils.mkdir_p "files" # mkdir if not existing
+  time = Time.now
+  time_log_file_name = "files/time_log_" + time.strftime("%Y-%m-%d").to_s + ".txt"
+  
+  File.open(time_log_file_name, "a") { |file| 
+    file.print("#{interval_name} #{source_db_tenant} migration at: #{time}\n\n")
+  }
+  puts "#{interval_name} #{source_db_tenant} migration at: #{time} \n*********************************************************************************\n\n"
+end
+
 def int?(str) # method to define if a string represents an integer
   unless str.nil?
     !!(str =~ /\A[-+]?[0-9]+\z/)
@@ -1205,15 +1216,8 @@ def print_progress(count, lines_step, next_step)
   end
 end
 
-def main()
-  
-  config = YAML.load_file("config.yml")
-
-  source_db_tenant = config["source_db_tenant"]
-  destination_db_tenant = config["destination_db_tenant"]
-  source_db_connection = PG::Connection.open(:dbname => config["source_db_name"])
-  destination_db_connection = PG::Connection.open(:dbname => config["destination_db_name"])
-  limit = config["limit_lines"]
+def migrate_db(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant, limit)
+  write_and_store_time(source_db_tenant, "start")
 
   call_to_actions_id_map = migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection)
   quizzes_id_map = migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_connection)
@@ -1234,6 +1238,30 @@ def main()
 
   destination_db_connection.exec("UPDATE #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions SET resource_type = 'Check' WHERE resource_type = 'CheckContent'");
 
+  write_and_store_time(source_db_tenant, "end")
+end
+
+def main()
+
+  if ARGV.size < 1
+    puts <<-EOF
+    Usage: #{$0} <configuration_file_path>
+    Runs disney and violetta databases migration into a new fandom schema structured database using 
+    options defined in <configuration_file_path> YAML file.
+    EOF
+    exit
+  end
+
+  config = YAML.load_file(ARGV[0].to_s)
+
+  source_db_tenants = [config["source_db_tenants"][0], config["source_db_tenants"][1]]
+  destination_db_tenant = config["destination_db_tenant"]
+  source_db_connections = [PG::Connection.open(:dbname => config["source_db_names"][0]), PG::Connection.open(:dbname => config["source_db_names"][1])]
+  destination_db_connection = PG::Connection.open(:dbname => config["destination_db_name"])
+  limit = config["limit_lines"]
+
+  migrate_db(source_db_connections[0], source_db_tenants[0], destination_db_connection, destination_db_tenant, limit)
+  migrate_db(source_db_connections[1], source_db_tenants[1], destination_db_connection, destination_db_tenant, limit)
 end
 
 main()

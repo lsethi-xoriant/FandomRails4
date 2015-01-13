@@ -1,15 +1,19 @@
 
-# name of source db
-source_db_name: violetta
+# name of source dbs
+source_db_names:
+  - violetta
+  - disneychannel
 
-# select 'disney' or 'violetta'
-source_db_tenant: violetta
+# select 'disney' or 'violetta' respecting source_db_names order
+source_db_tenants: 
+  - violetta
+  - disney
 
 # name of destination db
-destination_db_name: test_fandom
+destination_db_name: test_fandom_3
 
 # tenant of destination db (or null)
 destination_db_tenant: disney
 
 # set true to limit users', user_interactions', user_rewards', comments' and votes' table entries (just for testing)
-limit_lines: false
+limit_lines: true
