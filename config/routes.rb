@@ -29,10 +29,7 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         match "/iur", to: "application#iur"
-        match "profile/rankings", :to => "profile#rankings"
-        match "profile/rewards", :to => "profile#rewards"
-        match "profile/notices", :to => "profile#notices"
-        
+        match "/profile/rankings", :to => "application#rankings"
         devise_scope :user do
           match "/iur/sign_in", to: "registrations#iur"
         end
@@ -310,7 +307,7 @@ Fandom::Application.routes.draw do
   match "/reward/catalogue", :to => "reward#index"
   match "/reward/show/:reward_id", :to => "reward#show"
   match "/reward/buy/:reward_id", :to => "reward#buy"
-  
+
   # Captcha.
   match "/captcha", :to => "captcha#generate_captcha", defaults: { format: 'json' }
 
@@ -325,6 +322,7 @@ Fandom::Application.routes.draw do
   match "profile/badges", :to => "profile#badges"
   match "profile/prizes", :to => "profile#prizes"
   match "profile/rankings", :to => "profile#rankings"
+  match "profile/rewards", :to => "profile#rewards"
   match "profile/notices", :to => "profile#notices"
   match "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
   match "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
@@ -337,7 +335,7 @@ Fandom::Application.routes.draw do
   match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
   match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
   match "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
-  
+
   match "/playticket", :to => "instantwin#play_ticket_mb"
   match "/winners", :to => "instantwin#show_winners"
 
@@ -347,11 +345,11 @@ Fandom::Application.routes.draw do
 
   devise_scope :user do
     match "/password_feedback", :to => "passwords#feedback"
-    match '/users/sign_in', :to => 'sessions#create', :as => 'user_sign_in'
-    match '/users/sign_out', :to => 'sessions#destroy'
-    match 'auth/:provider/callback', :to => 'sessions#create'
-    match '/auth/failure' => 'sessions#omniauth_failure'
-    match '/profile/edit', :to => 'registrations#edit'
+    match "/users/sign_in", :to => "sessions#create", :as => "user_sign_in"
+    match "/users/sign_out", :to => "sessions#destroy"
+    match "auth/:provider/callback", :to => "sessions#create"
+    match "/auth/failure" => "sessions#omniauth_failure"
+    match "/profile/edit", :to => "registrations#edit"
   end
 
   match "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }
@@ -389,7 +387,7 @@ Fandom::Application.routes.draw do
   match "rss", :to => "rss#rss", defaults: { format: 'rss' }
 
   match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
-  
+
   match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
   match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
   match "/comments_polling", :to => "call_to_action#comments_polling", defaults: { format: 'json' }
@@ -400,7 +398,10 @@ Fandom::Application.routes.draw do
   resources :call_to_action do
     match "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }
   end
-  
+
+  match "/newsletter_unsubscribe/:email/:security_token", :to => "newsletter#unsubscribe", :constraints => { :email => /.*/ }
+  match "email_notifications_unsubscribe/:username/:security_token", :to => "notice#unsubscribe", :constraints => { :username => /.*/ }
+
   match "/tag/:name", :to => "application#index"
   root :to => "application#index"
 
