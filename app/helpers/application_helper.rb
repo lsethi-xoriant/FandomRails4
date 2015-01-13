@@ -8,6 +8,7 @@ module ApplicationHelper
   include RewardingSystemHelper
   include NoticeHelper
   include BrowseHelper
+  include LogHelper
 
   class ContentSection
     include ActiveAttr::TypecastedAttributes

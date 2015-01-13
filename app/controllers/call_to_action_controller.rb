@@ -148,6 +148,9 @@ class CallToActionController < ApplicationController
 
   def show
     calltoaction_id = params[:id].to_i
+    
+    log_call_to_action_viewed(calltoaction_id)
+    
     calltoaction = CallToAction.includes(:interactions).active.find_by_id(calltoaction_id)
 
     if calltoaction
