@@ -7,23 +7,6 @@ class Sites::Disney::ApplicationController < ApplicationController
     cookies[:from_iur_authenticate] = request.referrer
   end
   
-  def rankings
-    rank = Ranking.find_by_name("#{$context_root}_general_chart")
-    @property_rank = get_full_rank(rank)
-    
-    @fan_of_days = []
-    (1..6).each do |i|
-      day = Time.now - i.day
-      @fan_of_days << {"day" => "#{day.strftime('%d %b.')}", "winner" => get_winner_of_day(day)}
-    end
-    
-    render template: "profile/rankings"
-  end
-  
-  def populate_rankings
-    
-  end
-
   def index
     if current_user
       compute_save_and_notify_context_rewards(current_user)

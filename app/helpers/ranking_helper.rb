@@ -79,7 +79,11 @@ module RankingHelper
       nil
     else
       cache_short("winner_of_day_#{day.to_time.to_i}") do
-        reward_id = Reward.find_by_name("#{$context_root}_point").id
+        unless $context_root.nil?
+          reward_id = Reward.find_by_name("#{$context_root}_point").id
+        else
+          reward_id = Reward.find_by_name("point").id
+        end
         UserReward.includes(:user).where("reward_id = ? and period_id = ? and user_id <> ?", reward_id, period.id, anonymous_user.id).order("counter DESC, updated_at ASC, user_id ASC").first
       end
     end
