@@ -4,6 +4,7 @@
 class ProfileController < ApplicationController
   include ProfileHelper
   include ApplicationHelper
+  include RankingHelper
   
   before_filter :check_user_logged
   
@@ -38,7 +39,11 @@ class ProfileController < ApplicationController
   end
 
   def index
-    redirect_to "/users/edit"
+    unless get_current_property.empty?
+      redirect_to "/#{get_current_property}/users/edit"
+    else
+      redirect_to "/users/edit"
+    end
   end
 
   def remove_provider
@@ -50,27 +55,10 @@ class ProfileController < ApplicationController
   def rankings
   end
   
-  def rewards
-    levels, levels_use_prop = rewards_by_tag("level")
-    mylevels, levels_use_prop1 = rewards_by_tag("level", current_user)
-    if levels_use_prop
-      @levels = levels.nil? ? nil : levels[$context_root]
-      @my_levels = mylevels.nil? ? nil : mylevels[$context_root]
-    else
-      @levels = levels
-      @my_levels = mylevels
-    end
-    badges, badges_use_prop = rewards_by_tag("badge")
-    mybadges, badges_use_prop1 = rewards_by_tag("badge", current_user)
-    if badges_use_prop
-      @badges = badges.nil? ? nil : badges[$context_root]
-      @mybadges = mybadges.nil? ? nil : mybadges[$context_root]
-    else
-      @badges = badges
-      @mybadges = mybadges
-    end
+  def get_current_property
+    $context_root || ""
   end
-
+  
   def levels
     @rewards_to_show, @are_properties_used = rewards_by_tag("level")
   end

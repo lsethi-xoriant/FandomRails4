@@ -3,7 +3,15 @@ module DisneyHelper
   def get_disney_property() 
     $context_root || "disney-channel"
   end
-
+  
+  def get_disney_current_contest_point_name
+    unless $context_root.nil?
+      "#{$context_root}_point"
+    else
+      "point"
+    end
+  end
+  
   def get_disney_highlight_calltoactions(property)
     # Cached in index
     tag = Tag.find_by_name("highlight")

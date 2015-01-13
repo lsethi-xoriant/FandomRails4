@@ -29,7 +29,10 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         match "/iur", to: "application#iur"
-        match "/profile/rankings", :to => "application#rankings"
+        match "profile/rankings", :to => "profile#rankings"
+        match "profile/rewards", :to => "profile#rewards"
+        match "profile/notices", :to => "profile#notices"
+        
         devise_scope :user do
           match "/iur/sign_in", to: "registrations#iur"
         end
@@ -322,7 +325,6 @@ Fandom::Application.routes.draw do
   match "profile/badges", :to => "profile#badges"
   match "profile/prizes", :to => "profile#prizes"
   match "profile/rankings", :to => "profile#rankings"
-  match "profile/rewards", :to => "profile#rewards"
   match "profile/notices", :to => "profile#notices"
   match "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
   match "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
