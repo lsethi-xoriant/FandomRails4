@@ -5,6 +5,12 @@
   box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
 }
 
+.cta-cover__card:hover {
+  -webkit-box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
+}
+
 .cta-cover__card__body {
   padding-top: 0;
   padding-bottom: 0;

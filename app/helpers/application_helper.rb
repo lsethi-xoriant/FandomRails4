@@ -8,6 +8,7 @@ module ApplicationHelper
   include RewardingSystemHelper
   include NoticeHelper
   include BrowseHelper
+  include LogHelper
 
   class ContentSection
     include ActiveAttr::TypecastedAttributes
@@ -415,7 +416,7 @@ module ApplicationHelper
   end
 
   def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction)
-    call_to_action_completed_or_reward_status = cache_short get_cta_completed_or_reward_status_cache_key(calltoaction.id, current_or_anonymous_user.id) do
+    call_to_action_completed_or_reward_status = cache_short get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, current_or_anonymous_user.id) do
       if call_to_action_completed?(calltoaction)
         CACHED_NIL
       else
@@ -972,11 +973,11 @@ module ApplicationHelper
   end
 
   def get_tag_from_params(name)
-    if name
-      Tag.find_by_name(name)  
-    else
-      nil
-    end
+    Tag.find_by_name(name) rescue nil
+  end
+
+  def get_main_reward_name() 
+    $context_root ? "#{$context_root}_#{MAIN_REWARD_NAME}" : MAIN_REWARD_NAME
   end
   
 end

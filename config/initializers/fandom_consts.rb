@@ -81,4 +81,6 @@ unless defined? FILTER_OPERATOR_CONTAINS
 
   CACHED_NIL = CachedNil.new
 
+  LOG_MESSAGE_CONTENT_VIEWED = 'content viewed'
+
 end

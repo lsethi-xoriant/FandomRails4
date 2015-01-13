@@ -51,11 +51,14 @@ def main
         closed_event_log_files(event_logs_path).each do |process_file_path|
           begin
             pid, timestamp = extract_pid_and_timestamp_from_path(process_file_path)
-            insert_values_for_event = generate_sql_insert_values_for_event(process_file_path, pid)
-            
-            sql_query = generate_sql_insert_query(insert_values_for_event, pid, timestamp)
-            
-            execute_query(base_db_connection.connection, sql_query)
+            tenant_to_insert_values, tenant_to_content_type_to_id_to_views = get_query_data(process_file_path, pid)
+            sql_queries = generate_sql_insert_queries(tenant_to_insert_values, pid, timestamp)
+
+            conn = base_db_connection.connection
+            execute_query(conn, 'BEGIN')
+            execute_query(conn, sql_queries)
+            execute_update_counters(conn, tenant_to_content_type_to_id_to_views)
+            execute_query(conn, 'COMMIT')
             
             delete_process_file(process_file_path)
           rescue ActiveRecord::RecordNotUnique => exception      
@@ -146,8 +149,9 @@ def extract_pid_and_timestamp_from_path(process_file_path)
   [pid.to_i, timestamp]
 end
 
-def generate_sql_insert_values_for_event(process_file_path, pid)
+def get_query_data(process_file_path, pid)
   tenant_to_insert_values = Hash.new
+  tenant_to_content_type_to_id_to_views = Hash.new
 
   process_file_descriptor = File.open(process_file_path, 'r')
   
@@ -162,16 +166,22 @@ def generate_sql_insert_values_for_event(process_file_path, pid)
       event_values.merge!(request_data)
       
       tenant = event_values["share_db"].nil? ? event_values["tenant"] : event_values["share_db"]
-      (tenant_to_insert_values[tenant] ||= []) << "(#{generate_values_for_event_log_line(event_values)})" 
+      (tenant_to_insert_values[tenant] ||= []) << "(#{get_values_for_event_log_line(event_values)})" 
+
+      if event_values['message'] == 'content viewed' # the related constant is not accessible in this source file
+        content_id = event_values['data']['id']
+        content_type = event_values['data']['type']
+        ((tenant_to_content_type_to_id_to_views[tenant] ||= {})[content_type] ||= {})[content_id] ||= 0
+        tenant_to_content_type_to_id_to_views[tenant][content_type][content_id] += 1
+      end
     end
   end
 
-  result = {}
   tenant_to_insert_values.each do |k, vs|
-    result[k] = vs.join(", ")
+    tenant_to_insert_values[k] = vs.join(", ")
   end
   
-  result  
+  [tenant_to_insert_values, tenant_to_content_type_to_id_to_views]  
 end
 
 def init_request_data(pid)
@@ -201,7 +211,7 @@ def get_request_data(event_values, pid)
   }  
 end
 
-def generate_values_for_event_log_line(event_values)
+def get_values_for_event_log_line(event_values)
   values_for_event_log_line = Array.new
   EVENTS_COLUMNS.each do |column|
     value = event_values[column]
@@ -217,12 +227,12 @@ def generate_values_for_event_log_line(event_values)
   values_for_event_log_line.join(', ')
 end
 
-def generate_sql_insert_query(insert_values_for_event, pid, timestamp)
+def generate_sql_insert_queries(tenant_to_insert_values, pid, timestamp)  
   insert_columns_for_event = EVENTS_COLUMNS_STRING
   insert_columns_for_synced_log_files = "pid, server_hostname, timestamp"
 
-  sql_query = "BEGIN;"
-  insert_values_for_event.each do |tenant, value| 
+  sql_queries = []
+  tenant_to_insert_values.each do |tenant, value| 
     if tenant != "no_tenant"
       timestamp_db = Time.strptime(timestamp, TIMESTAMP_FMT).strftime("%Y-%m-%d %H:%M:%S.%N")
       server_hostname = ActiveRecord::Base.connection.quote(Socket.gethostname)
@@ -230,13 +240,27 @@ def generate_sql_insert_query(insert_values_for_event, pid, timestamp)
   
       insert_values_for_synced_log_files = "#{pid_quote}, #{server_hostname}, '#{timestamp_db}'"
   
-      sql_query << "INSERT INTO #{tenant}.synced_log_files (#{insert_columns_for_synced_log_files}) VALUES (#{insert_values_for_synced_log_files});"
-      sql_query << "INSERT INTO #{tenant}.events (#{insert_columns_for_event}) VALUES #{value};"
+      sql_queries << "INSERT INTO #{tenant}.synced_log_files (#{insert_columns_for_synced_log_files}) VALUES (#{insert_values_for_synced_log_files});"
+      sql_queries << "INSERT INTO #{tenant}.events (#{insert_columns_for_event}) VALUES #{value};"
     end
   end
-  sql_query << "COMMIT;"
+  
+  sql_queries.join(' ')
+end
 
-  sql_query
+def execute_update_counters(connection, tenant_to_content_type_to_id_to_views)
+  tenant_to_content_type_to_id_to_views.each do |tenant, content_type_to_id_to_views|
+    content_type_to_id_to_views.each do |type, id_to_views|
+      id_to_views.each do |ref_id, view_count|
+        query = "UPDATE #{tenant}.view_counters SET counter = counter + #{view_count}, updated_at = now() WHERE type = '#{type}' AND ref_id = #{ref_id};"
+        result = execute_query(connection, query)
+        if result.cmd_tuples == 0
+          query = "INSERT INTO #{tenant}.view_counters (type, ref_id, counter, created_at, updated_at) VALUES ('#{type}', #{ref_id}, #{view_count}, now(), now())"
+          execute_query(connection, query)
+        end
+      end
+    end
+  end
 end
 
 def closed_event_log_files(event_logs_path)

@@ -1,6 +1,7 @@
 /* PROPERTIES */
 
 .properties__container {
+  position: relative;
   background-color: #fff;
   -webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.6);
@@ -19,5 +20,5 @@
 .properties__right-bar-text {
   font-size: 14px;
   line-height: 16px;
-  margin-top: 20px;
+  margin-top: 15px;
 }

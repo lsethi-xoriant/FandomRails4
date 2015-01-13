@@ -43,7 +43,7 @@ module CallToActionHelper
           "aux" => (JSON.parse(calltoaction.aux) if calltoaction.aux.present?)
         },
         "miniformat" => miniformat_info,
-        "status" => compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, calltoaction)
+        "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction)
       }
     
     end

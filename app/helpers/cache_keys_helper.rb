@@ -36,8 +36,8 @@ module CacheKeysHelper
   # User
   # ~~~~~
 
-  def get_cta_completed_or_reward_status_cache_key(cta_id, user_id)
-    "cta_#{cta_id}_completed_or_reward_status_for_user_#{user_id}"
+  def get_cta_completed_or_reward_status_cache_key(reward_name, cta_id, user_id)
+    "cta_#{cta_id}_completed_or_reward_status_for_user_#{user_id}_for_reward_#{reward_name}"
   end
   
   # CTA
