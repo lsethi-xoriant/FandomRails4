@@ -112,7 +112,7 @@ module ApplicationHelper
       "month_of_birth" => current_user.month_of_birth,
       "year_of_birth" => current_user.year_of_birth,
       "gender" => current_user.gender,
-      "location" => current_user.location,
+      "location" => current_user.location, 
       "aux" => { 
         "contest" => contest,
         "terms" => role
@@ -304,13 +304,13 @@ module ApplicationHelper
 
   def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
     cache_short get_tag_with_tag_about_call_to_action_cache_key(calltoaction.id, tag_name) do
-      Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).to_a
+      Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).to_a
     end
   end
   
   def get_tag_with_tag_about_reward(reward, tag_name)
     cache_short get_tag_with_tag_about_reward_cache_key(reward.id, tag_name) do
-      Tag.includes(tags_tags: :other_tag).includes(:reward_tags).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND reward_tags.reward_id = ?", tag_name, reward.id).to_a
+      Tag.includes(tags_tags: :other_tag).includes(:reward_tags).where("other_tags_tags_tags.name = ? AND reward_tags.reward_id = ?", tag_name, reward.id).to_a
     end
   end
   
@@ -322,13 +322,13 @@ module ApplicationHelper
 
   def get_tags_with_tag(tag_name)
     cache_short get_tags_with_tag_cache_key(tag_name) do
-        Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ?", tag_name).to_a
+        Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).to_a
     end
   end
   
   def get_tags_with_tag_with_match(tag_name, query = "")
     conditions = construct_conditions_from_query(query, "tags.title")
-    Tag.includes(:tags_tags => :other_tag ).includes(:tag_fields).where("other_tags_tags_tags.name = ? AND #{conditions}", tag_name).to_a
+    Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND #{conditions}", tag_name).to_a
   end
   
   def get_ctas_with_tag(tag_name)
