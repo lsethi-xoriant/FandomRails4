@@ -3,16 +3,16 @@
     <p style="font-size: 16px;">{{interaction_info.interaction.resource.description}}</p>
   </div>
 
-  <div ng-if="interaction.user_interaction">
+  <div ng-if="interaction_info.user_interaction">
     <!-- CURRENT USER HAS ALREADY RESPONDED -->
     <div class="col-xs-6 col-xs-offset-3 text-center">
-      <button class="btn btn-blue btn-lg disabled">{{interaction_info.interaction.resource.title}}</button>
+      <button class="btn btn-blue btn-lg active"><span>{{interaction_info.interaction.resource.title}}</span></button>
     </div>
   </div>
-  <div ng-if="!interaction.user_interaction">
+  <div ng-if="!interaction_info.user_interaction">
     <!-- CURRENT USER HAS NOT RESPONDED -->
     <div class="col-xs-6 col-xs-offset-3 text-center">
-      <a class="btn btn-lg btn-blue" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)">{{interaction_info.interaction.resource.title}}</a>
+      <a class="btn btn-lg btn-blue" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>{{interaction_info.interaction.resource.title}}</span></a>
     </div>
   </div>
 </div>
