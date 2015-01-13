@@ -46,4 +46,25 @@ class NoticeController < ApplicationController
     end
   end
 
+  def unsubscribe
+    if params[:security_token] == Digest::MD5.hexdigest(params[:username] + Rails.configuration.secret_token)
+      user = User.find_by_username(params[:username])
+      if user.aux
+        aux_hash = JSON.parse(user.aux)
+        if aux_hash['subscriptions']
+          if aux_hash['subscriptions']['notifications'] == false
+            flash[:notice] = "Al momento non ricevi mail relative alle tue notifiche"
+            return
+          end
+        end
+      end
+      aux_hash = { 'subscriptions' => {} } if aux_hash.blank?
+      aux_hash['subscriptions']['notifications'] = false
+      user.update_attribute(:aux, aux_hash)
+      flash[:notice] = "Non riceverai ulteriori mail relative alle tue notifiche"
+    else
+      flash[:error] = "Link non valido"
+    end
+  end
+
 end
