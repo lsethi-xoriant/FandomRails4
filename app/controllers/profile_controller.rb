@@ -59,27 +59,6 @@ class ProfileController < ApplicationController
     $context_root || ""
   end
   
-  def rewards
-    levels, levels_use_prop = rewards_by_tag("level")
-    mylevels, levels_use_prop1 = rewards_by_tag("level", current_user)
-    if levels_use_prop
-      @levels = levels.nil? ? nil : levels[get_current_property]
-      @my_levels = mylevels.nil? ? nil : mylevels[get_current_property]
-    else
-      @levels = levels
-      @my_levels = mylevels
-    end
-    badges, badges_use_prop = rewards_by_tag("badge")
-    mybadges, badges_use_prop1 = rewards_by_tag("badge", current_user)
-    if badges_use_prop
-      @badges = badges.nil? ? nil : badges[get_current_property]
-      @mybadges = mybadges.nil? ? nil : mybadges[get_current_property]
-    else
-      @badges = badges
-      @mybadges = mybadges
-    end
-  end
-
   def levels
     @rewards_to_show, @are_properties_used = rewards_by_tag("level")
   end

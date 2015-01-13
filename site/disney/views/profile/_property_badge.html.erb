@@ -1,12 +1,11 @@
 <div class="col-xs-6 col-sm-3 col-md-2 reward-block text-center">
-  <img class="img-responsive reward-block__image" src="<%= get_reward_image_for_status(reward) %>" alt="<%= reward.title %>">
-  <h4 class="reward-block__title"><%= reward.title %></h4>
-  <p class="reward-block__subtitle"><%= reward.short_description %></p>
+  <img class="img-responsive reward-block__image" src="<%= get_reward_image_for_status(reward["reward"]) %>" alt="<%= reward["reward"].title %>">
+  <h4 class="reward-block__title"><%= reward["reward"].title %></h4>
+  <p class="reward-block__subtitle"><%= reward["reward"].short_description %></p>
   <% 
-  property = get_tag_with_tag_about_reward(reward, "property")
-  thumb = get_extra_fields!(property)["thumbnail"]
+  thumb = get_extra_fields!(reward["property"])["logo"]
   %> 
   <% if thumb && upload_extra_field_present?(thumb) %>
-  	<img class="img-responsive reward-block__image" src="<%= thumb["url"] %>" alt="<%= reward.title %>">
+  	<img class="img-responsive reward-block__image" src="<%= thumb["url"] %>" alt="<%= reward["reward"].title %>">
   <% end %>
 </div>

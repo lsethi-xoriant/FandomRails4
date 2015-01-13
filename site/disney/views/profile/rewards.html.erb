@@ -29,8 +29,8 @@
         		Tuoi livelli nelle altre Community
         	</h3>
       	</div>
-      	<% if @mylevels %>
-	        <% @mylevels.each do |level| %>
+      	<% if @my_levels %>
+	        <% @my_levels.each do |level| %>
 	        	<%= render partial: "/profile/property_badge", locals: { reward: level } %>
 	        <% end %>
 	    <% else %>
@@ -68,8 +68,8 @@
         		Ultimi badge ottenuti nelle altre Community
         	</h3>
       	</div>
-      	<% if @mybadges %>
-	        <% @mybadges.each do |badge| %>
+      	<% if @my_badges %>
+	        <% @my_badges.each do |badge| %>
 	        	<%= render partial: "/profile/property_badge", locals: { reward: badge } %>
 	        <% end %>
 	    <% else %>

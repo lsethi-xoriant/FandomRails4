@@ -325,7 +325,6 @@ Fandom::Application.routes.draw do
   match "profile/badges", :to => "profile#badges"
   match "profile/prizes", :to => "profile#prizes"
   match "profile/rankings", :to => "profile#rankings"
-  match "profile/rewards", :to => "profile#rewards"
   match "profile/notices", :to => "profile#notices"
   match "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
   match "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
