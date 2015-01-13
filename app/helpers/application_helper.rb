@@ -433,7 +433,6 @@ module ApplicationHelper
 
   # Generates an hash with reward information.
   def compute_current_call_to_action_reward_status(reward_name, calltoaction)
-    debugger
     reward = get_reward_from_cache(reward_name)
     
     winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
