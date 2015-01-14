@@ -11,8 +11,8 @@
         	</h3>
       	</div>
       	<% if @levels %>
-	        <% @levels.each do |level| %>
-	        	<%= render partial: "/profile/badge", locals: { reward: level } %>
+	        <% @levels.each do |key, level| %>
+	        	<%= render partial: "/profile/level_badge", locals: { reward: level } %>
 	        <% end %>
 	    <% else %>
 	    	<p>Nessun livello presente</p>

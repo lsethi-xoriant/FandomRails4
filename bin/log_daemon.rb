@@ -252,10 +252,10 @@ def execute_update_counters(connection, tenant_to_content_type_to_id_to_views)
   tenant_to_content_type_to_id_to_views.each do |tenant, content_type_to_id_to_views|
     content_type_to_id_to_views.each do |type, id_to_views|
       id_to_views.each do |ref_id, view_count|
-        query = "UPDATE #{tenant}.view_counters SET counter = counter + #{view_count}, updated_at = now() WHERE type = '#{type}' AND ref_id = #{ref_id};"
+        query = "UPDATE #{tenant}.view_counters SET counter = counter + #{view_count}, updated_at = now() WHERE ref_type = '#{type}' AND ref_id = #{ref_id};"
         result = execute_query(connection, query)
         if result.cmd_tuples == 0
-          query = "INSERT INTO #{tenant}.view_counters (type, ref_id, counter, created_at, updated_at) VALUES ('#{type}', #{ref_id}, #{view_count}, now(), now())"
+          query = "INSERT INTO #{tenant}.view_counters (ref_type, ref_id, counter, created_at, updated_at) VALUES ('#{type}', #{ref_id}, #{view_count}, now(), now())"
           execute_query(connection, query)
         end
       end

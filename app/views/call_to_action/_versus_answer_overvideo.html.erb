@@ -19,7 +19,10 @@
     <div class="row" ng-if="interaction_info.user_interaction">
       <div class="col-sm-12">
         <div ng-if="interaction_info.interaction.resource.one_shot">
-          <a type="button" class="versus-interaction__button versus-interaction__button--{{ $index % 2 == 0 ? 'left' : 'right' }} active btn {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-green' : 'btn-blue'}} btn-block"><span>{{answer.text}}</span></a>
+          <a type="button" class="versus-interaction__button versus-interaction__button--{{ $index % 2 == 0 ? 'left' : 'right' }} active btn {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-green' : 'btn-blue'}} btn-block">
+            <span>{{answer.text}}</span>
+            <img class="versus-interaction__avatar" ng-src="{{current_user.avatar}}" ng-if="interaction_info.user_interaction.answer.id == answer.id">
+          </a>
         </div>
         <div ng-if="!interaction_info.interaction.resource.one_shot">
           <a type="button" class="versus-interaction__button versus-interaction__button--{{ $index % 2 == 0 ? 'left' : 'right' }} btn {{answer.id == interaction_info.user_interaction.answer.id ? 'btn-green' : 'btn-blue'}}" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)"><span>{{answer.text}}</span></a>

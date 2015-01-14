@@ -12,6 +12,14 @@ module DisneyHelper
     end
   end
   
+  def disney_get_point_name_from_property_name(property_name)
+    unless property_name == "disney-channel"
+      "#{property_name}_point"
+    else
+      "point"
+    end
+  end
+  
   def get_disney_highlight_calltoactions(property)
     # Cached in index
     tag = Tag.find_by_name("highlight")
@@ -140,6 +148,14 @@ module DisneyHelper
   
   def disney_get_max_reward(reward_name)
     get_max_reward(reward_name, $context_root)
+  end
+  
+  # Calculate a progress into a reward level.
+  #   level          - the level to check progress
+  #   starting_point - the cost of the preceding level
+  def disney_calculate_level_progress(level, starting_point, property_name)
+    user_points = get_counter_about_user_reward(disney_get_point_name_from_property_name(property_name))
+    level.cost > 0 ? ((user_points - starting_point) * 100) / (level.cost - starting_point) : 100
   end
 
 end

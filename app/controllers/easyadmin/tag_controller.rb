@@ -39,7 +39,6 @@ class Easyadmin::TagController < ApplicationController
 
   def create
     create_or_update("new") do
-      destroy_tag_fields_deleted(params[:tag][:tag_fields_attributes]) unless params[:tag][:tag_fields_attributes].nil?
       create_and_link_attachment(params[:tag], nil)
       @tag = Tag.create(params[:tag])
       @tag.errors.empty?
@@ -53,10 +52,6 @@ class Easyadmin::TagController < ApplicationController
       old_name = @tag.name
       new_name = params[:tag][:name]
 
-      unless params[:tag][:tag_fields_attributes].nil?
-        params[:tag][:tag_fields_attributes] = destroy_tag_fields_deleted(params[:tag][:tag_fields_attributes])
-      end
-
       if old_name == new_name
         @tag.update_attributes(params[:tag])
       else
@@ -64,16 +59,6 @@ class Easyadmin::TagController < ApplicationController
       end
 
     end
-  end
-
-  def destroy_tag_fields_deleted(tag_fields_attributes)
-    tag_fields_attributes.each do |key, value|
-      if value[:mark_for_destruction] == "true"
-        tag_fields_attributes.delete(key)
-        TagField.destroy(value[:id]) if value[:id]
-      end
-    end
-    tag_fields_attributes
   end
 
   def change_name_if_not_locked(tag, new_tag_params)
@@ -117,7 +102,6 @@ class Easyadmin::TagController < ApplicationController
     tag_attributes.delete("id")
     tag_copy = Tag.new(tag_attributes, :without_protection => true)
     clone_tags_tags(tag_copy, tag)
-    clone_tag_fields(tag_copy, tag)
     @tag = tag_copy
     @cloning = true
     tag_array = Array.new
@@ -132,15 +116,6 @@ class Easyadmin::TagController < ApplicationController
   def clone_tags_tags(new_tag, old_tag)
     old_tag.tags_tags.each do |t|
       new_tag.tags_tags.build(tag_id: new_tag.id, other_tag_id: t.other_tag_id)
-    end
-  end
-
-  def clone_tag_fields(new_tag, old_tag)
-    old_tag.tag_fields.each do |f|
-      f.tag_id = new_tag.id
-      tag_field_data = f.attributes
-      tag_field_data.delete("id")
-      new_tag.tag_fields.build(tag_field_data, :without_protection => true)
     end
   end
 

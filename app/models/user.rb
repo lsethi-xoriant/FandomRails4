@@ -25,7 +25,7 @@ class User < ActiveRecordWithJSON
   has_many :call_to_actions
 
   before_save :set_date_of_birth
-  before_save :set_username_if_not_required
+  before_create :set_username_if_not_required
   before_update :set_current_avatar
   before_create :default_values
 

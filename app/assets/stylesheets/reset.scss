@@ -54,14 +54,6 @@ a{
     padding-top: 50px;
   }
 
-  .navbar-default {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-  }
-
   .main-row {
     padding-left: 0;
     padding-right: 0;
@@ -83,7 +75,7 @@ a{
   margin: 20px 0;
 }
 
-.brws-item{
+.brws-item {
   background: $grey; 
   background: -webkit-linear-gradient(#FFFFFF, $grey);
   background: -o-linear-gradient(#FFFFFF, $grey);
@@ -92,7 +84,7 @@ a{
   border-bottom: 1px solid #d1d2d4;
 }
 
-.container--default{
+.container--default {
   border: 1px solid #d1d2d4;
   background-color: #FFF;
 }
