@@ -13,15 +13,7 @@ class GalleryController < ApplicationController
     @upload_interaction = @calltoaction.interactions.find_by_resource_type("Upload")
     @gallery_tag = get_tag_with_tag_about_call_to_action(@calltoaction, "gallery").first
     @extra_info = cache_short(get_gallery_extra_info_key()) do
-      extra = Hash.new
-      TagField.where("tag_id = ?", @gallery_tag.id).each do |tf|
-        if tf.field_type == "STRINGA"
-          extra[tf.name] = tf.value
-        else
-          extra[tf.name] = tf.upload
-        end
-      end
-      extra
+      JSON.parse(Tag.find(@gallery_tag.id).extra_fields)
     end
     @extra_fields = JSON.parse(@upload_interaction.resource.aux)['extra_fields']
     @gallery_calltoactions = calltoaction_active_with_tag(@gallery_tag.name, "DESC").where("user_id IS NOT NULL AND approved = true")

@@ -1176,14 +1176,6 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 
 --
--- Name: tag_fields; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-);
-
-
---
 -- Name: tags; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -2763,14 +2755,6 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 
 --
--- Name: tag_fields; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-);
-
-
---
 -- Name: tags; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -4347,14 +4331,6 @@ CREATE SEQUENCE synced_log_files_id_seq
 --
 
 ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
-
-
---
--- Name: tag_fields; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-);
 
 
 --
@@ -5939,14 +5915,6 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 
 --
--- Name: tag_fields; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-);
-
-
---
 -- Name: tags; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -7526,14 +7494,6 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 
 --
--- Name: tag_fields; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-);
-
-
---
 -- Name: tags; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -9110,14 +9070,6 @@ CREATE SEQUENCE synced_log_files_id_seq
 --
 
 ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
-
-
---
--- Name: tag_fields; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-);
 
 
 --

@@ -11,9 +11,21 @@
         	</h3>
       	</div>
       	<% if @levels %>
-	        <% @levels.each do |key, level| %>
-	        	<%= render partial: "/profile/level_badge", locals: { reward: level } %>
-	        <% end %>
+      		<% if small_mobile_device? %>
+      			<% @levels.each do |key, level| %>
+		        	<%= render partial: "/profile/level_badge", locals: { reward: level } %>
+		        <% end %>
+			<% else %>
+				<div class="rewards-flexslider">
+		      	  	<ul class="slides">
+				        <% @levels.each do |key, level| %>
+				        	<li class="rewards-flexslider__item">
+				        		<%= render partial: "/profile/level_badge", locals: { reward: level } %>
+				        	</li>
+				        <% end %>
+			        </ul>
+			    </div>
+			<% end %>
 	    <% else %>
 	    	<p>Nessun livello presente</p>
 	    <% end %>
@@ -50,9 +62,21 @@
         	</h3>
       	</div>
       	<% if @badges %>
-	        <% @badges.each do |badge| %>
-	        	<%= render partial: "/profile/badge", locals: { reward: badge } %>
-	        <% end %>
+      		<% if small_mobile_device? %>
+		        <% @badges.each do |badge| %>
+		        	<%= render partial: "/profile/badge", locals: { reward: badge } %>
+		        <% end %>
+		    <% else %>
+		    	<div class="rewards-flexslider">
+		      	  	<ul class="slides">
+		      			<% @badges.each do |badge| %>
+		      				<li class="rewards-flexslider__item">
+				        		<%= render partial: "/profile/badge", locals: { reward: badge } %>
+				        	</li>
+				        <% end %>	
+		      	  	</ul>
+		      	</div>
+		    <% end %>
 	    <% else %>
 	    	<p>Nessun badge presente</p>
 	    <% end %>
@@ -79,3 +103,20 @@
   </div>
 
 </div>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $('.rewards-flexslider').flexslider({
+	      animation: "slide",
+	      slideshow: false,
+	      animationLoop: false,
+	      touch: true,
+	      itemWidth: 165,
+	      itemMargin: 15,
+	      controlNav: false,
+	      prevText: "",
+	      nextText: ""
+	    });
+	});
+</script>

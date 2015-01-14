@@ -63,15 +63,7 @@ class Sites::Forte::CallToActionController < CallToActionController
 
   def get_extra_info(gallery_tag)
     cache_short(get_gallery_extra_info_key()) do
-      extra = Hash.new
-      TagField.where("tag_id = ?", gallery_tag.id).each do |tf|
-        if tf.field_type == "STRINGA"
-          extra[tf.name] = tf.value
-        else
-          extra[tf.name] = tf.upload
-        end
-      end
-      extra
+      JSON.parse(Tag.find(gallery_tag.id).extra_fields)
     end
   end
 
