@@ -27,7 +27,7 @@ module DisneyHelper
       highlight_calltoactions_in_property = calltoaction_active_with_tag_in_property(tag, property, "DESC")
       meta_ordering = get_extra_fields!(tag)["ordering"]    
       if meta_ordering
-        ordered_highlight_calltoactions = order_highlight_calltoactions_by_ordering_meta(meta_ordering, highlight_calltoactions_in_property)
+        ordered_highlight_calltoactions = order_elements_by_ordering_meta(meta_ordering, highlight_calltoactions_in_property)
       else
         highlight_calltoactions
       end
@@ -55,7 +55,9 @@ module DisneyHelper
       "twitter" => current_user.twitter($site.id),
       "main_reward_counter" => get_point,
       "username" => current_user.username,
-      "avatar" => current_avatar
+      "avatar" => current_avatar,
+      "level" => (get_max_reward("level")["title"] rescue "nessun livello"),
+      "notifications" => get_unread_notifications_count()
     }
   end
 
@@ -90,6 +92,11 @@ module DisneyHelper
     end
 
     properties = get_tags_with_tag("property")
+    property = get_tag_from_params("property")
+    meta_ordering = get_extra_fields!(property)["ordering"]    
+    if meta_ordering
+      properties = order_elements_by_ordering_meta(meta_ordering, properties)
+    end
 
     if properties.any?
       property_info = []

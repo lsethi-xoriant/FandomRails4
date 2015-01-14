@@ -4,7 +4,11 @@ class Sites::Disney::ApplicationController < ApplicationController
   include DisneyHelper
 
   def iur
-    cookies[:from_iur_authenticate] = request.referrer
+    referrer = request.referrer 
+    if URI.parse(request.referrer).path != "/iur"
+      cookies[:from_iur_authenticate] = referrer
+    end
+    render layout: false
   end
   
   def index

@@ -12,23 +12,11 @@
   </div>
 </div>
 
-<div class="container main-menu__container">
+<div class="container main-menu__container hidden-xs">
   <div class="row main-menu__row">
     <nav class="navbar navbar-default">
       <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"></a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="#">Home</a></li>
             <li><a href="#">Gallery</a></li>
@@ -44,12 +32,55 @@
                 Profilo
               <% end %>
             </li>
-            <li>
-              <a href="<%= @aux["current_property_info"]["outer-url"] rescue nil %>"><%= @aux["current_property_info"]["outer"] rescue nil %></a>
-            </li>
+            <% if @aux && @aux["current_property_info"] && @aux["current_property_info"]["outer"] && @aux["current_property_info"]["outer-url"] %>
+              <li>
+                <a href="<%= @aux["current_property_info"]["outer-url"] %>"><%= @aux["current_property_info"]["outer"] %></a>
+              </li>
+            <% end %>
           </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
+        </div>
+      </div>
     </nav>
   </div>
 </div>
+
+
+<nav class="navbar navbar-inverse visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="navbar-inverse__menu">MENU</span>
+      </button>
+      <div class="text-center">
+        <img class="navbar__logo" ng-src="{{aux.current_property_info.logo}}">
+      </div>
+      <%= light_link_to("/profile") do %>
+        <img src="<%= current_avatar %>" class="navbar__avatar">
+      <% end %>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Gallery</a></li>
+        <li><a href="#">Premi</a></li>
+        <li><a href="#">Classifiche</a></li>
+        <li>
+          <%= light_link_to("/browse") do %>
+            Cerca
+          <% end %>
+        </li>
+        <li>
+          <%= light_link_to("/profile") do %>
+            Profilo
+          <% end %>
+        </li>
+        <% if @aux && @aux["current_property_info"] && @aux["current_property_info"]["outer"] && @aux["current_property_info"]["outer-url"] %>
+          <li>
+            <a href="<%= @aux["current_property_info"]["outer-url"] %>"><%= @aux["current_property_info"]["outer"] %></a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>

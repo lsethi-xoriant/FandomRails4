@@ -1245,6 +1245,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               }, 3000);
 
             } else {
+              interaction_info.user_interaction.feedback = data.user_interaction.outcome;
+
               if(interaction_info.interaction.resource_type == "like") {
                 if(JSON.parse(interaction_info.user_interaction.aux)["like"]) {
                   interaction_info.interaction.resource.like_info += 1;
