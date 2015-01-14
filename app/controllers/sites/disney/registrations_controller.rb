@@ -47,6 +47,7 @@ class Sites::Disney::RegistrationsController < RegistrationsController
 
     redirect_to cookies[:from_iur_authenticate]
 
+    cookies.delete :from_iur_authenticate
     cookies.delete :BLUE
     cookies.delete :SWID
   end

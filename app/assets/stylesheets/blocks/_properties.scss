@@ -20,5 +20,30 @@
 .properties__right-bar-text {
   font-size: 14px;
   line-height: 16px;
-  margin-top: 15px;
+  margin-bottom: 0;
+  margin-top: 25px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.properties__right-bar-level {
+  font-size: 10px;
+  color: #999;
+}
+
+.properties__right-bar-notifications {
+  background: none repeat scroll 0 0 red;
+  border-radius: 50%;
+  color: #fff;
+  height: 25px;
+  padding-top: 4px;
+  position: absolute;
+  right: 5px;
+  top: 25px;
+  width: 25px;
+  z-index: 10;
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
 }
