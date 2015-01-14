@@ -62,7 +62,7 @@ def migrate_call_to_actions(destination_db_tenant, source_db_connection, destina
     call_to_actions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count + rows_with_cnt_type_missing, lines_step, next_step)
+    next_step = print_progress(count + rows_with_cnt_type_missing, lines_step, next_step, source_call_to_actions.count)
   end
   puts "#{count} lines successfully migrated \n#{rows_with_cnt_type_missing} rows had dangling reference to content type \n"
   write_table_id_mapping_to_file("call_to_actions", call_to_actions_id_map)
@@ -99,7 +99,7 @@ def migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_
     quizzes_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}quizzes_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step)
+    next_step = print_progress(count, lines_step, next_step, source_quizzes.count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("quizzes", quizzes_id_map)
@@ -149,6 +149,7 @@ def migrate_answers(destination_db_tenant, source_db_connection, destination_db_
     answers_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}answers_id_seq')").values[0][0].to_i)
 
     count += 1
+    next_step = print_progress(count, lines_step, next_step, source_answers.count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("answers", answers_id_map)
@@ -182,7 +183,7 @@ def migrate_checks(destination_db_tenant, source_db_connection, destination_db_c
     checks_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}checks_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step)
+    next_step = print_progress(count, lines_step, next_step, source_checks.count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("checks", checks_id_map)
@@ -216,7 +217,7 @@ def migrate_plays(destination_db_tenant, source_db_connection, destination_db_co
     plays_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}plays_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step)
+    next_step = print_progress(count, lines_step, next_step, source_plays.count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("plays", plays_id_map)
@@ -257,7 +258,7 @@ def migrate_interactions(destination_db_tenant, source_db_connection, destinatio
     interactions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step)
+    next_step = print_progress(count, lines_step, next_step, source_interactions.count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("interactions", interactions_id_map)
@@ -386,7 +387,7 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
       users_uid_map.store(line["uid_encrypted"], user_id)
 
     end
-    next_step = print_progress(count + count_email_present, lines_step, next_step)
+    next_step = print_progress(count + count_email_present, lines_step, next_step, source_users.count)
   end
   puts "#{count} lines successfully migrated \n#{count_email_present} users found with same email and successfully updated\n"
   write_table_id_mapping_to_file("users", users_id_map)
@@ -439,7 +440,7 @@ def migrate_tags(destination_db_tenant, source_db_connection, destination_db_con
     gallery_tags_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step)
+    next_step = print_progress(count, lines_step, next_step, source_custom_galleries.count)
   end
 
   puts "#{count} lines successfully migrated \n"
@@ -518,7 +519,7 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
       end
   
       count += 1
-      next_step = print_progress(count, lines_step, next_step)
+      next_step = print_progress(count, lines_step, next_step, source_galleries.count)
     end
   end
   puts "#{count} lines successfully migrated \n#{rows_with_user_missing} rows had dangling reference to user \n"
@@ -587,7 +588,7 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
   
       count += 1
     end
-    next_step = print_progress(count + rows_with_user_missing + rows_with_interaction_missing, lines_step, next_step)
+    next_step = print_progress(count + rows_with_user_missing + rows_with_interaction_missing, lines_step, next_step, source_user_interactions.count)
   end
   puts "#{count} lines successfully migrated"
   puts "#{rows_with_interaction_missing} rows had dangling reference to interaction \n#{rows_with_user_missing} rows had dangling reference to user"
@@ -706,57 +707,57 @@ def migrate_source_reward_lines(destination_db_tenant, source_db_connection, des
   count = 0
   source_rewards.each do |line|
 
-    if line["is_video_content"] == "t"
+    #if line["is_video_content"] == "t"
       create_new_cta_reward(destination_db_tenant, source_db_connection, destination_db_connection, line, cta_rewards_id_map)
-    end
+    #end
 
-      fields = {
-        #"id" => line["id"].to_i,
-        "title" => nullify_or_escape_string(source_db_connection, line["title"]),
-        "short_description" => nullify_or_escape_string(source_db_connection, line["description"]),
-        "long_description" => "NULL",
-        "button_label" => "NULL",
-        "cost" => line["points"],
-        "valid_from" => "NULL",
-        "valid_to" => "NULL",
-        "video_url" => nullify_or_escape_string(source_db_connection, line["prize_url"]),
-        "media_type" => "DIGITALE",
-        "currency_id" => "NULL",
-        "spendable" => "f",
-        "countable" => "f",
-        "numeric_display" => "f",
-        "name" => nullify_or_escape_string(source_db_connection, line["name"]).gsub('_', '-'),
-        "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
-        "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
-        "preview_image_file_name" => "NULL",
-        "preview_image_content_type" => "NULL",
-        "preview_image_file_size" => "NULL",
-        "preview_image_updated_at" => "NULL",
-        "main_image_file_name" => nullify_or_escape_string(source_db_connection, line["prize_image_file_name"]),
-        "main_image_content_type" => nullify_or_escape_string(source_db_connection, line["prize_image_file_name"]),
-        "main_image_file_size" => line["prize_image_file_size"] != nil ? line["prize_image_file_size"] : "NULL",
-        "main_image_updated_at" => line["prize_image_updated_at"] != nil ? nullify_or_escape_string(source_db_connection, line["prize_image_updated_at"]) : "NULL",
-        "media_file_file_name" => nullify_or_escape_string(source_db_connection, line["prize_file_file_name"]),
-        "media_file_content_type" => nullify_or_escape_string(source_db_connection, line["prize_file_file_name"]),
-        "media_file_file_size" => line["prize_file_file_size"] != nil ? line["prize_file_file_size"] : "NULL",
-        "media_file_updated_at" => line["prize_file_updated_at"] != nil ? nullify_or_escape_string(source_db_connection, line["prize_file_updated_at"]) : "NULL",
-        "not_awarded_image_file_name" => "NULL",
-        "not_awarded_image_content_type" => "NULL",
-        "not_awarded_image_file_size" => "NULL",
-        "not_awarded_image_updated_at" => "NULL",
-        "not_winnable_image_file_name" => "NULL",
-        "not_winnable_image_content_type" => "NULL",
-        "not_winnable_image_file_size" => "NULL",
-        "not_winnable_image_updated_at" => "NULL",
-        "call_to_action_id" => line["is_video_content"] == "t" ? destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i : "NULL"
-      }
+    fields = {
+      #"id" => line["id"].to_i,
+      "title" => nullify_or_escape_string(source_db_connection, line["title"]),
+      "short_description" => nullify_or_escape_string(source_db_connection, line["description"]),
+      "long_description" => "NULL",
+      "button_label" => "NULL",
+      "cost" => line["points"],
+      "valid_from" => "NULL",
+      "valid_to" => "NULL",
+      "video_url" => nullify_or_escape_string(source_db_connection, line["prize_url"]),
+      "media_type" => "DIGITALE",
+      "currency_id" => "NULL",
+      "spendable" => "f",
+      "countable" => "f",
+      "numeric_display" => "f",
+      "name" => nullify_or_escape_string(source_db_connection, line["name"]).gsub('_', '-'),
+      "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
+      "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
+      "preview_image_file_name" => "NULL",
+      "preview_image_content_type" => "NULL",
+      "preview_image_file_size" => "NULL",
+      "preview_image_updated_at" => "NULL",
+      "main_image_file_name" => nullify_or_escape_string(source_db_connection, line["prize_image_file_name"]),
+      "main_image_content_type" => nullify_or_escape_string(source_db_connection, line["prize_image_file_name"]),
+      "main_image_file_size" => line["prize_image_file_size"] != nil ? line["prize_image_file_size"] : "NULL",
+      "main_image_updated_at" => line["prize_image_updated_at"] != nil ? nullify_or_escape_string(source_db_connection, line["prize_image_updated_at"]) : "NULL",
+      "media_file_file_name" => nullify_or_escape_string(source_db_connection, line["prize_file_file_name"]),
+      "media_file_content_type" => nullify_or_escape_string(source_db_connection, line["prize_file_file_name"]),
+      "media_file_file_size" => line["prize_file_file_size"] != nil ? line["prize_file_file_size"] : "NULL",
+      "media_file_updated_at" => line["prize_file_updated_at"] != nil ? nullify_or_escape_string(source_db_connection, line["prize_file_updated_at"]) : "NULL",
+      "not_awarded_image_file_name" => "NULL",
+      "not_awarded_image_content_type" => "NULL",
+      "not_awarded_image_file_size" => "NULL",
+      "not_awarded_image_updated_at" => "NULL",
+      "not_winnable_image_file_name" => "NULL",
+      "not_winnable_image_content_type" => "NULL",
+      "not_winnable_image_file_size" => "NULL",
+      "not_winnable_image_updated_at" => "NULL",
+      "call_to_action_id" => line["is_video_content"] == "t" ? destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i : "NULL"
+    }
 
-      query = build_query_string(destination_db_tenant, "rewards", fields)
+    query = build_query_string(destination_db_tenant, "rewards", fields)
 
-      destination_db_connection.exec(query)
-      rewards_id_map.store("#{reward_type}#{line["id"].to_i}", destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}rewards_id_seq')").values[0][0].to_i)
-      count += 1
-      next_step = print_progress(count, lines_step, next_step)
+    destination_db_connection.exec(query)
+    rewards_id_map.store("#{reward_type}#{line["id"].to_i}", destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}rewards_id_seq')").values[0][0].to_i)
+    count += 1
+    next_step = print_progress(count, lines_step, next_step, source_rewards.count)
   end
 end
 
@@ -765,22 +766,22 @@ def create_new_cta_reward(destination_db_tenant, source_db_connection, destinati
   fields = {
     #"id" => line["id"].to_i,
     "name" => nullify_or_escape_string(source_db_connection, "#{line["name"]}-id#{line["id"]}".gsub(" ", "").gsub('_', '-')),
-    "title" => nullify_or_escape_string(source_db_connection, line["description"]),
-    "description" => nullify_or_escape_string(source_db_connection, line["long_description"]),
-    "media_type" => nullify_or_escape_string(source_db_connection, line["cta_image_content_type"]),
+    "title" => nullify_or_escape_string(source_db_connection, line["title"]),
+    "description" => nullify_or_escape_string(source_db_connection, line["description"]),
+    "media_type" => line["is_video_content"] ? "FLOWPLAYER" : "IMAGE",
     "enable_disqus" => "f",
-    "activated_at" => line["activate_at"] != nil ? nullify_or_escape_string(source_db_connection, line["activate_at"]) : "NULL",
+    "activated_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
     "secondary_id" => "NULL",
     "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
     "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
     "slug" => "NULL",
-    "media_image_file_name" => nullify_or_escape_string(source_db_connection, line["cta_image_file_name"]),
-    "media_image_content_type" => nullify_or_escape_string(source_db_connection, line["cta_image_content_type"]),
-    "media_image_file_size" => line["cta_image_file_size"] != nil ? line["cta_image_file_size"] : "NULL",
-    "media_image_updated_at" => line["cta_image_updated_at"] != nil ? nullify_or_escape_string(source_db_connection, line["cta_image_updated_at"]) : "NULL",
+    "media_image_file_name" => nullify_or_escape_string(source_db_connection, line["prize_image_file_name"]),
+    "media_image_content_type" => nullify_or_escape_string(source_db_connection, line["prize_image_content_type"]),
+    "media_image_file_size" => line["cta_image_file_size"] != nil ? line["prize_image_file_size"] : "NULL",
+    "media_image_updated_at" => line["cta_image_updated_at"] != nil ? nullify_or_escape_string(source_db_connection, line["prize_image_updated_at"]) : "NULL",
     "media_data" => "NULL",
     "releasing_file_id" => "NULL",
-    "approved" => line["published_at"] != nil ? "t" : "f",
+    "approved" => "t",
     "thumbnail_file_name" => "NULL",
     "thumbnail_content_type" => "NULL",
     "thumbnail_file_size" => "NULL",
@@ -847,7 +848,7 @@ def migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connec
   
       destination_db_connection.exec(query)
       count += 1
-      next_step = print_progress(count, lines_step, next_step)
+      next_step = print_progress(count, lines_step, next_step, source_rewarding_users.count)
     end
   end
 
@@ -918,7 +919,7 @@ def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_con
         rows_with_updated_credits += 1
       end
     end
-    next_step = print_progress(count + rows_with_user_missing + rows_with_updated_credits, lines_step, next_step)
+    next_step = print_progress(count + rows_with_user_missing + rows_with_updated_credits, lines_step, next_step, source_user_counters.count)
   end
   puts "#{count} lines successfully created"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_updated_credits} rows updated for credits \n********************************************************************************* \n"
@@ -1007,7 +1008,7 @@ def migrate_comments_and_user_comment_interactions(destination_db_tenant, source
   
       count_for_user_comment_interactions += 1
     end
-    next_step = print_progress(count_for_user_comment_interactions + rows_with_user_missing, lines_step, next_step)
+    next_step = print_progress(count_for_user_comment_interactions + rows_with_user_missing, lines_step, next_step, source_comments_and_user_comment_interactions.count)
 
   end
   puts "#{count_for_comments} lines successfully generated for comments and interactions\n"
@@ -1093,7 +1094,7 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
   
       count += 1
     end
-    next_step = print_progress(count + rows_with_user_missing + rows_with_cta_missing, lines_step, next_step)
+    next_step = print_progress(count + rows_with_user_missing + rows_with_cta_missing, lines_step, next_step, source_votes.count)
   end
   puts "#{count} lines successfully migrated"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_cta_missing} rows had dangling reference to cta"
@@ -1140,7 +1141,7 @@ def migrate_notices(destination_db_tenant, source_db_connection, destination_db_
   
       count += 1
     end
-    next_step = print_progress(count + rows_with_user_missing + rows_with_user_comment_interaction_missing, lines_step, next_step)
+    next_step = print_progress(count + rows_with_user_missing + rows_with_user_comment_interaction_missing, lines_step, next_step, source_notices.count)
   end
 
   puts "#{count} lines successfully migrated \n"
@@ -1225,9 +1226,9 @@ def init_progress(count)
   end
 end
 
-def print_progress(count, lines_step, next_step)
-  if count == next_step
-    puts "#{count} lines successfully migrated \n"
+def print_progress(count, lines_step, next_step, total_count)
+  if count == next_step and total_count - count < lines_step
+    puts "#{count} lines processed \n"
     STDOUT.flush
     next_step + lines_step
   else
