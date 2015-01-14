@@ -620,6 +620,7 @@ def migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connectio
   source_rewarding_prizes = source_db_connection.exec("SELECT * FROM rewarding_prizes")
   #source_rewarding_badges = source_db_connection.exec("SELECT * FROM rewarding_badges")
   #source_rewarding_levels = source_db_connection.exec("SELECT * FROM rewarding_levels")
+  download_count = 0
 
   puts "rewards: #{source_rewarding_prizes.count} lines to migrate \nRunning migration..."
   STDOUT.flush
@@ -635,7 +636,7 @@ def migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connectio
   rewards_id_map = Hash.new
   cta_rewards_id_map = Hash.new
 
-  migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_prizes, "prize")
+  download_count = migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_prizes, "prize", download_count)
   # ***do not migrate*** migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_badges, "badge")
   # ***do not migrate*** migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_levels, "level")
 
@@ -644,6 +645,8 @@ def migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connectio
 
   puts "#{cta_rewards_id_map.length} cta_rewards successfully created \n"
   write_table_id_mapping_to_file("cta_rewards", cta_rewards_id_map)
+
+  puts "#{download_count} downloads and download_interactions successfully created \n********************************************************************************* \n"
 
   return rewards_id_map
 end
@@ -702,13 +705,13 @@ def generate_point_reward(destination_db_tenant, source_db_connection, destinati
 
 end
 
-def migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewards, reward_type)
+def migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewards, reward_type, download_count)
   lines_step, next_step = init_progress(source_rewards.count)
   count = 0
   source_rewards.each do |line|
 
     #if line["is_video_content"] == "t"
-      create_new_cta_reward(destination_db_tenant, source_db_connection, destination_db_connection, line, cta_rewards_id_map)
+      download_count = create_new_cta_reward(destination_db_tenant, source_db_connection, destination_db_connection, line, cta_rewards_id_map, download_count)
     #end
 
     fields = {
@@ -759,16 +762,17 @@ def migrate_source_reward_lines(destination_db_tenant, source_db_connection, des
     count += 1
     next_step = print_progress(count, lines_step, next_step, source_rewards.count)
   end
+  download_count
 end
 
-def create_new_cta_reward(destination_db_tenant, source_db_connection, destination_db_connection, line, cta_rewards_id_map)
+def create_new_cta_reward(destination_db_tenant, source_db_connection, destination_db_connection, line, cta_rewards_id_map, download_count)
 
   fields = {
     #"id" => line["id"].to_i,
     "name" => nullify_or_escape_string(source_db_connection, "#{line["name"]}-id#{line["id"]}".gsub(" ", "").gsub('_', '-')),
     "title" => nullify_or_escape_string(source_db_connection, line["title"]),
     "description" => nullify_or_escape_string(source_db_connection, line["description"]),
-    "media_type" => line["is_video_content"] ? "FLOWPLAYER" : "IMAGE",
+    "media_type" => line["is_video_content"] == "f" ? "FLOWPLAYER" : "IMAGE",
     "enable_disqus" => "f",
     "activated_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
     "secondary_id" => "NULL",
@@ -793,7 +797,49 @@ def create_new_cta_reward(destination_db_tenant, source_db_connection, destinati
   query = build_query_string(destination_db_tenant, "call_to_actions", fields)
 
   destination_db_connection.exec(query)
-  cta_rewards_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i)
+  new_cta_id = destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i
+  cta_rewards_id_map.store(line["id"].to_i, new_cta_id)
+
+  if line["is_video_content"] == "f"
+    create_new_download_and_download_interaction(destination_db_tenant, source_db_connection, destination_db_connection, line, new_cta_id)
+    download_count += 1
+  end
+
+  download_count
+end
+
+def create_new_download_and_download_interaction(destination_db_tenant, source_db_connection, destination_db_connection, line, new_cta_id)
+
+  fields_for_download = {
+    #"id" => ,
+    "title" => nullify_or_escape_string(source_db_connection, line["name"]),
+    "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
+    "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
+    "attachment_file_name" => nullify_or_escape_string(source_db_connection, line["prize_image_file_name"]),
+    "attachment_content_type" => nullify_or_escape_string(source_db_connection, line["prize_image_content_type"]),
+    "attachment_file_size" => line["cta_image_file_size"] != nil ? line["prize_image_file_size"] : "NULL",
+    "attachment_updated_at" => line["cta_image_updated_at"] != nil ? nullify_or_escape_string(source_db_connection, line["prize_image_updated_at"]) : "NULL"
+  }
+
+  query_for_download = build_query_string(destination_db_tenant, "downloads", fields_for_download)
+
+  destination_db_connection.exec(query_for_download)
+  download_id = destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}downloads_id_seq')").values[0][0].to_i
+
+  fields_for_download_interaction = {
+    #"id" => ,
+    "name" => nullify_or_escape_string(source_db_connection, line["name"]),
+    "seconds" => 0,
+    "when_show_interaction" => "NULL",
+    "required_to_complete" => "NULL",
+    "resource_id" => download_id,
+    "resource_type" => "Download",
+    "call_to_action_id" => new_cta_id
+  }
+
+  query_for_download_interaction = build_query_string(destination_db_tenant, "interactions", fields_for_download_interaction)
+
+  destination_db_connection.exec(query_for_download_interaction)
 
 end
 
@@ -1096,7 +1142,7 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
     end
     next_step = print_progress(count + rows_with_user_missing + rows_with_cta_missing, lines_step, next_step, source_votes.count)
   end
-  puts "#{count} lines successfully migrated"
+  puts "#{count} lines successfully migrated\n"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_cta_missing} rows had dangling reference to cta"
   write_table_id_mapping_to_file("votes", votes_id_map)
 end
