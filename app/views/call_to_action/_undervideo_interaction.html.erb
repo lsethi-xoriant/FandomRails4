@@ -16,27 +16,25 @@
   </div>  
 </div>
 
-<!--
-<div style="margin-top: 15px;" ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row undervideo-interaction__feedback">
-  <div ng-if="interaction_info.interaction.resource_type != 'trivia'" class="col-sm-10 col-sm-offset-1 text-center">
-    <div class="alert alert-success" style="margin-bottom: 0;">
-    <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
-    </div>
+<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.feedback && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row undervideo-interaction__feedback visible-xs">
+  <div ng-if="interaction_info.interaction.resource_type != 'trivia'" class="col-sm-12 interaction__feedback-col">
+    <div class="interaction__feedback-circle interaction__feedback-circle--green"></div>
+    <p class="interaction__feedback-text">Bravo!</p> 
+    <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
   </div> 
     
-  <div ng-if="interaction_info.interaction.resource_type == 'trivia' && interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
-    <div class="alert alert-success" style="margin-bottom: 0;">
-    <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
-    </div>
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia' && interaction_info.user_interaction.answer.correct" class="col-sm-12 interaction__feedback-col">
+    <div class="interaction__feedback-circle interaction__feedback-circle--green"></div>
+    <p class="interaction__feedback-text interaction__feedback-text--green">Bravo!</p> 
+    <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
   </div> 
 
-  <div ng-if="interaction_info.interaction.resource_type == 'trivia' && !interaction_info.user_interaction.answer.correct" class="col-sm-10 col-sm-offset-1 text-center">
-    <div class="alert alert-danger" style="margin-bottom: 0;">
-    <strong>Risposta errata!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
-    </div>
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia' && !interaction_info.user_interaction.answer.correct" class="col-sm-12 interaction__feedback-col">
+    <div class="interaction__feedback-circle interaction__feedback-circle--green"></div>
+    <p class="interaction__feedback-text interaction__feedback-text--red">Sbagliato!</p> 
+    <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
   </div> 
 </div>
--->
 
 <!--
 <div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center undervideo-interaction__feedback">
