@@ -10,19 +10,19 @@
 	    	</h3>
         </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12">
           <% @notices_list.each do |date, nl| %>
           <h6><%= date %></h6>
           <ul class="list-group">
           	<% nl.each do |n| %>
-            <li id="<%= n.id %>" class="list-group-item <%= "list-group-item-warning" if !n.read %>">
+            <li id="<%= n.id %>" class="list-group-item <%= "notice--unread" if !n.read %>">
               <div class="row">
-              	<div class="col-md-11">
+              	<div class="col-xs-11">
               		<div class="row">
               			<%= n.html_notice.html_safe %>
               		</div>
               	</div>
-              	<div class="col-md-1">
+              	<div class="col-xs-1">
               			<% if n.read %>
               				<i class="fa fa-circle" style="float: right;"></i>
               			<% else %>
@@ -55,7 +55,7 @@
 	      },
 	      success: function(data) {
 	        if(data.success){
-	        	$("li#"+id).removeClass("list-group-item-warning");
+	        	$("li#"+id).removeClass("notice--unread");
 	        	$("li#"+id+" i.fa").removeClass("fa-circle-o").addClass("fa-circle");
 	        }else{
 	        	alert(data.message);

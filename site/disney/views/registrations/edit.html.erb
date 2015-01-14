@@ -1,8 +1,10 @@
 <%= render partial: "/application/user_bar" %>
 
 <div class="container container--default">
-  <%= render partial: "profile/profile_header" %>
-  <%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
+	<% unless small_mobile_device? %>
+  		<%= render partial: "profile/profile_header" %>
+  		<%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
+  	<% end %>
   <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :multipart => true }) do |f| %>
     <div class="row" style="background-color: #fff; padding: 10px 0;">
       <div class="col-md-12">
