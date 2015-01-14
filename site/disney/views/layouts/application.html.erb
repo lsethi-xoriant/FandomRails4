@@ -116,6 +116,7 @@
 
   <%= yield %>
 
+  <!--
   <% unless cookies[:user_cookies] %>
     <div id="cookies-bar" class="navbar navbar-fixed-bottom cookies-footer">
       <div class="row">
@@ -128,6 +129,9 @@
       </div>
     </div>
   <% end %>
+  -->
+
+  <%= render partial: "/application/footer" %>
 
   <%= render partial: "/application/ga" %>
 

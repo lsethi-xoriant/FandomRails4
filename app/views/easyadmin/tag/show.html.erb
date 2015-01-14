@@ -47,23 +47,6 @@
       </div>
     </div> 
 	
-	<% if @tag.tag_fields.count > 0 %>
-		<h3>Metadati</h3>
-	    <hr/>
-		<div class="row">
-			<div class="col-sm-5">
-	          <dl class="dl-horizontal">
-	          	<% @tag.tag_fields.each do |tf| %>
-	          		<% if  tf.upload_content_type && tf.upload_content_type.split("/").first == "image" %>
-	          			<dt><%= tf.name %></dt><dd><p><img class="img-responsive" src="<%= tf.upload.url %>" /></p></dd>
-	          		<% else %>
-	          			<dt><%= tf.name %></dt><dd><p><%= tf.value %></p></dd>
-	          		<% end %>
-	            <% end %>
-	          </dl>
-	      </div>
-		</div>
-	<% end %>
   </div>
 
 </div>

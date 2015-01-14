@@ -27,6 +27,11 @@
   <div class="col-sm-12 cta__media-container">
     <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
   </div>
+
+  <div class="col-sm-12 visible-xs interaction__underevideo-mobile-container">
+    <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+  </div>
+
   <div class="col-sm-12 cta__media-footer">
     <div class="row">
       <div class="col-xs-6">
@@ -56,12 +61,16 @@
       </div>
 
       <div class="col-sm-12 cta__description-small-col cta__description-small-col--extra text-center" ng-if="calltoaction_info.calltoaction.extra_fields['external_related_content_label'] && calltoaction_info.calltoaction.extra_fields['external_related_content_url']">
-        <a target="_blank" class="btn btn-blue" href="{{calltoaction_info.calltoaction.extra_fields['external_related_content_url']}}">{{calltoaction_info.calltoaction.extra_fields['external_related_content_label']}}</a>
+        <a target="_blank" class="btn btn-primary" href="{{calltoaction_info.calltoaction.extra_fields['external_related_content_url']}}">{{calltoaction_info.calltoaction.extra_fields['external_related_content_label']}}</a>
       </div>
-      
-
     </div>
-    <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+
+    <div class="row hidden-xs">
+      <div class="col-xs-12">
+        <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+      </div>
+    </div>
+
     <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions | filter:filterLikeInteractions" class="row">
       <div id="share-interaction-{{interaction_info.interaction.id}}">
         <%= render partial: "/call_to_action/share_interaction" %>

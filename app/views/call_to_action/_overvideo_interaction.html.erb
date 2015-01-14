@@ -1,19 +1,23 @@
 <div ng-if="!interaction_info.feedback" class="row {{interaction_info.interaction.resource_type}}-interaction">
-  <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-md-12 hidden-xs">
     <%= render partial: "/call_to_action/trivia_interaction_overvideo" %>
   </div>
-  <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-md-12 hidden-xs">
     <%= render partial: "/call_to_action/versus_interaction_overvideo" %>
   </div>
-  <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-md-12 hidden-xs">
     <%= render partial: "/call_to_action/check_interaction" %>
   </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-md-12 hidden-xs">
     <%= render partial: "/call_to_action/share_interaction" %>
   </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-md-12 hidden-xs">
     <%= render partial: "/call_to_action/upload_interaction" %>
   </div>  
+
+  <div class="col-md-12 visible-xs text-center">
+    <p class="interaction__go-to-mobile">ACCEDI DA MOBILE</p>
+  </div>
 
   <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" id="overvideo-outcome-{{interaction_info.interaction.id}}" class="row">
     <!--

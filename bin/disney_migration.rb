@@ -586,8 +586,8 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
       user_interactions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}user_interactions_id_seq')").values[0][0].to_i)
   
       count += 1
-      next_step = print_progress(count, lines_step, next_step)
     end
+    next_step = print_progress(count + rows_with_user_missing + rows_with_interaction_missing, lines_step, next_step)
   end
   puts "#{count} lines successfully migrated"
   puts "#{rows_with_interaction_missing} rows had dangling reference to interaction \n#{rows_with_user_missing} rows had dangling reference to user"
@@ -891,7 +891,6 @@ def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_con
       query_for_points = build_query_string(destination_db_tenant, "user_rewards", fields_for_points)
       destination_db_connection.exec(query_for_points)
       count += 1
-      next_step = print_progress(count + rows_with_user_missing, lines_step, next_step)
 
       credits_present_for_user_user_reward_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}user_rewards WHERE user_id = #{new_user_id.to_i} AND reward_id = #{credit_reward_id}").values.first
 
@@ -918,9 +917,8 @@ def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_con
         destination_db_connection.exec("UPDATE #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}user_rewards SET counter = counter + #{line["points"]} WHERE user_id = #{new_user_id.to_i} AND reward_id = #{credit_reward_id}")
         rows_with_updated_credits += 1
       end
-
-      next_step = print_progress(count + rows_with_updated_credits, lines_step, next_step)
     end
+    next_step = print_progress(count + rows_with_user_missing + rows_with_updated_credits, lines_step, next_step)
   end
   puts "#{count} lines successfully created"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_updated_credits} rows updated for credits \n********************************************************************************* \n"
@@ -1094,8 +1092,8 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
       votes_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions_id_seq')").values[0][0].to_i)
   
       count += 1
-      next_step = print_progress(count + rows_with_user_missing, lines_step, next_step)
     end
+    next_step = print_progress(count + rows_with_user_missing + rows_with_cta_missing, lines_step, next_step)
   end
   puts "#{count} lines successfully migrated"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_cta_missing} rows had dangling reference to cta"
@@ -1141,8 +1139,8 @@ def migrate_notices(destination_db_tenant, source_db_connection, destination_db_
       notices_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}notices_id_seq')").values[0][0].to_i)
   
       count += 1
-      next_step = print_progress(count + rows_with_user_missing + rows_with_user_comment_interaction_missing, lines_step, next_step)
     end
+    next_step = print_progress(count + rows_with_user_missing + rows_with_user_comment_interaction_missing, lines_step, next_step)
   end
 
   puts "#{count} lines successfully migrated \n"
@@ -1230,8 +1228,8 @@ end
 def print_progress(count, lines_step, next_step)
   if count == next_step
     puts "#{count} lines successfully migrated \n"
-    next_step + lines_step
     STDOUT.flush
+    next_step + lines_step
   else
     next_step
   end

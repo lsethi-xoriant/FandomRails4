@@ -1,73 +1,74 @@
 
 function showTagboxAlert(idTextField, unactiveTagsName, allTagsName, newTagMessage) {
 
-    values = $(idTextField).select2("val");
+  values = $(idTextField).select2("val");
 
-    unactiveTagsSelected = intersect(values, unactiveTagsName);
-    if(unactiveTagsSelected.length > 0) {
-        var unactiveTagMessageDiv = $(renderTagboxAlertDiv("Attenzione: tag '" + unactiveTagsSelected + "' non attivo/i"));
-    }
+  unactiveTagsSelected = intersect(values, unactiveTagsName);
+  if(unactiveTagsSelected.length > 0) {
+      var unactiveTagMessageDiv = $(renderTagboxAlertDiv("Attenzione: tag '" + unactiveTagsSelected + "' non attivo/i"));
+  }
 
-    existentTagsSelected = intersect(values, allTagsName);
-    if(existentTagsSelected.length != values.length) {
-        var newTagMessageDiv = $(renderTagboxAlertDiv(newTagMessage));
-    }
+  existentTagsSelected = intersect(values, allTagsName);
+  if(existentTagsSelected.length != values.length) {
+      var newTagMessageDiv = $(renderTagboxAlertDiv(newTagMessage));
+  }
 
-    $(idTextField + "_message").empty().append(unactiveTagMessageDiv, newTagMessageDiv);
+  $(idTextField + "_message").empty().append(unactiveTagMessageDiv, newTagMessageDiv);
 };
 
 function intersect(a, b) {
-    var t;
-    if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
-    return a.filter(function (e) {
-        if (b.indexOf(e) !== -1) return true;
-    });
+  var t;
+  if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
+  return a.filter(function (e) {
+      if (b.indexOf(e) !== -1) return true;
+  });
 };
 
 function renderTagboxAlertDiv(str) {
-    return "<div class='alert alert-info' role='alert'>" + str + "</div>";
+  return "<div class='alert alert-info' role='alert'>" + str + "</div>";
 };
 
 function fillInputWithSlug(srcInputElement, destInputElement) {
-    var nameManuallyModified = false;
-    srcInputElement.keyup(function() {
-        if (!nameManuallyModified) {
-            var text = this.value;
-            text = text.toLowerCase();
-            text = text.replace(/[^a-zA-Z0-9]+/g,'-').replace(/-+/g,'-').replace(/-$/g,'').replace(/^-/g,'');
-            destInputElement.val(text);
-        }
-    });
+  var nameManuallyModified = false;
 
-    destInputElement.keyup(function() {
-        nameManuallyModified = true;
-        if (destInputElement.val() == "")
-            nameManuallyModified = false;
-    });
+  srcInputElement.on('input', function() { 
+    if (!nameManuallyModified) {
+      var text = this.value;
+      text = text.toLowerCase();
+      text = text.replace(/[^a-zA-Z0-9]+/g,'-').replace(/-+/g,'-').replace(/-$/g,'').replace(/^-/g,'');
+      destInputElement.val(text);
+    }
+  });
+
+  destInputElement.keyup(function() {
+    nameManuallyModified = true;
+    if (destInputElement.val() == "")
+      nameManuallyModified = false;
+  });
 };
 
 function getButtonHandlerForJsonFieldsName(fieldName) {
-    return  'text-boxes-for-' + fieldName + '-fields';  
+  return  'text-boxes-for-' + fieldName + '-fields';  
 };
 
 function addButtonHandlerForJsonFields(modelName, fieldName) {
-    var elementRemoved = 0;
+  var elementRemoved = 0;
 
-    $('#add-button-for-' + fieldName + '-fields').click(function (e) {
-        e.preventDefault();
-        var counter = $('#text-boxes-for-' + fieldName + '-fields').children().length + 1 + elementRemoved;
-        addFieldElements(modelName, fieldName, counter, true);
-    });
+  $('#add-button-for-' + fieldName + '-fields').click(function (e) {
+    e.preventDefault();
+    var counter = $('#text-boxes-for-' + fieldName + '-fields').children().length + 1 + elementRemoved;
+      addFieldElements(modelName, fieldName, counter, true);
+  });
 
-    $('#text-boxes-for-' + fieldName + '-fields').on('click','.btn', function(e){
-        e.preventDefault();
-        $(this).parent().remove();
-        elementRemoved++;
-    });
+  $('#text-boxes-for-' + fieldName + '-fields').on('click','.btn', function(e){
+    e.preventDefault();
+    $(this).parent().remove();
+    elementRemoved++;
+  });
 };
 
 function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
-    var containerDivId = getButtonHandlerForJsonFieldsName(fieldName);
+  var containerDivId = getButtonHandlerForJsonFieldsName(fieldName);
 
     jQuery('<div/>', {
         id: 'extra-fields-for-' + fieldName + '-' + counter,
@@ -90,7 +91,7 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
         id: 'name-for-' + fieldName + '-field-' + counter,
         name: 'name-for-' + fieldName + '-field-' + counter,
         class: 'form-control',
-        keyup: function() {
+        change: function() {
             updateValueElementName($(this), modelName, fieldName, 'value');
             updateValueElementName($(this), modelName, fieldName, 'type');
             updateValueElementName($(this), modelName, fieldName, 'attachment-id');
@@ -147,7 +148,7 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
     // *** REMOVE *** //
     if(addRemoveButton != false) {
         $('#extra-fields-for-' + fieldName + '-' + counter).append('<label id ="remove-button-label-for-' + fieldName + '-field-' + counter + '" class="col-lg-2">Elimina</label>');
-        $('#extra-fields-for-' + fieldName + '-' + counter).append('<a id = "remove-link-for-' + fieldName + '-field-' + counter + '" href="#" class="col-lg-1 btn btn-primary btn-xs">Rimuovi</a>');
+        $('#extra-fields-for-' + fieldName + '-' + counter).append('<a id = "remove-link-for-' + fieldName + '-field-' + counter + '" href="#" class="col-lg-1 btn btn-primary btn-sm">Rimuovi</a>');
     }
 };
 

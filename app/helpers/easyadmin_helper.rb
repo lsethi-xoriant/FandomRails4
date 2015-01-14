@@ -97,14 +97,6 @@ module EasyadminHelper
     link_to_function(name, "add_contest_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
   end
   
-  def link_to_add_tag_fields(name, f, association)
-    new_object = TagField.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/tag/tag-field-form", f: builder)
-    end
-    link_to_function(name, "add_tag_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-xs")
-  end
-  
   def link_to_add_upload_fields(name, f, association)
     new_object = Interaction.new
     new_object.resource = Upload.new
@@ -175,10 +167,6 @@ module EasyadminHelper
     link_to_function(name, "remove_contest_fields(this)", class: "btn btn-warning btn-xs")
   end
 
-  def link_to_remove_tag_fields(name, tag_field_id)
-    link_to_function(name, "remove_tag_fields(this, #{tag_field_id.present?})", class: "btn btn-warning btn-xs")
-  end
-  
   def link_to_remove_upload_fields(name)
     link_to_function(name, "remove_upload_fields(this)", class: "btn btn-warning btn-xs")
   end

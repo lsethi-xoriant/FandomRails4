@@ -87,25 +87,6 @@
         <div id="extra-fields-for-extra_fields-button_label"></div>
       </div>
 
-      <div class="row">
-      	<div class="col-lg-12">
-            <label>METADATI</label>
-            <p style="float: right;">
-              <%= link_to_add_tag_fields "AGGIUNGI METADATO", f, :tag_fields %>
-            </p>
-            <hr style="margin-top: 10px; margin-bottom: 10px;" />
-
-            <div id="tmp-tagfield-add"></div>
-
-            <%= f.fields_for :tag_fields do |builder| %>
-            	<% if @tag.tag_fields.count > 0 %>
-            		<%= render 'tag-field-form', :f => builder %>
-            	<% end %>
-            <% end %>
-
-          </div>
-      </div>
-
       <h3>Data inizio validità</h3>
       <hr/>
 
@@ -197,24 +178,5 @@
     initializeTextbox(json_field, null, formName, modelName, fieldName);
 
   });
-
-  function add_tag_fields(link, association, content) {
-    var new_id = new Date().getTime();
-    var regexp = new RegExp("new_" + association, "g");
-    $("#tmp-tagfield-add").prepend(content.replace(regexp, new_id));
-  }
-
-  function remove_tag_fields(link, tagFieldPresent) {
-    $(link).parent().next().val("true");
-    panel = $(link).parent().parent().parent();
-    panel.hide();
-  }
-
-  function getTagFieldId(name) {
-    string = name.replace("tag[tag_fields_attributes][", "");
-    id = string.slice(0, string.indexOf("][name]"));
-    console.log("id: " + id);
-    return id;
-  }
 
 </script>

@@ -82,7 +82,7 @@
 								<% end %>
 							</td>
 							<td>
-								<% if t.tag_fields.any? %>
+								<% if get_extra_fields!(t).any? %>
 									Si
 								<% else %>
 									No
