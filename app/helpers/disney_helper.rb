@@ -157,5 +157,60 @@ module DisneyHelper
     user_points = get_counter_about_user_reward(disney_get_point_name_from_property_name(property_name))
     level.cost > 0 ? ((user_points - starting_point) * 100) / (level.cost - starting_point) : 100
   end
+  
+  def disney_extract_name_or_username(user)
+    if !user.username.empty?
+      user.username
+    else
+      "#{user.first_name} #{user.last_name}"
+    end
+  end
+  
+  def disney_prepare_levels_to_show(levels)
+    levels = levels[get_disney_property] 
+    order_rewards(levels.to_a, "cost")
+    prepared_levels = {}
+    if levels
+      index = 0
+      level_before_point = 0
+      level_before_status = nil
+      levels.each do |level|
+        if level_before_status.nil? || level_before_status == "gained"
+          progress = disney_calculate_level_progress(level, level_before_point, get_disney_property)
+          if progress >= 100
+            level_before_status = "gained"
+            prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => 100, "status" => level_before_status }
+          else
+            level_before_status = "progress"
+            prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => progress, "status" => level_before_status }
+          end
+        else
+          progress = 0
+          level_before_status = "locked"
+          prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => progress, "status" => level_before_status }
+        end
+        index += 1
+      end
+    end
+    prepared_levels
+  end
+  
+  def disney_get_current_level
+    cache_short(get_current_level_by_user(current_user.id, get_disney_property)) do
+      levels, levels_use_prop = rewards_by_tag("level")
+      property_levels = disney_prepare_levels_to_show(levels)
+      current_level = property_levels.select{|key, hash| hash["status"] == "progress" }.first
+      unless current_level.nil?
+        current_level[1]
+      else
+        CACHED_NIL
+      end
+    end
+  end
+  
+  def disney_get_level_number
+    levels, use_property = rewards_by_tag("level")
+    levels[get_disney_property].count
+  end
 
 end

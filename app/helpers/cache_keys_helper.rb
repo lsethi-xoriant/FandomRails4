@@ -185,6 +185,10 @@ module CacheKeysHelper
     "max_reward_#{reward_name}_user_#{user_id}_#{extra_cache_key}_key"
   end
   
+  def get_current_level_by_user(user_id, extra_cache_key = "")
+    "current_level_#{user_id}_for_#{extra_cache_key}_key"
+  end
+  
   # Gallery
   # ~~~~~~~
   

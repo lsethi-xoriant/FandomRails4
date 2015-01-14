@@ -46,18 +46,35 @@
 }
 
 .profile-header__item__counter{
-  padding: 5px 25px;
-  font-size: 30px;
+  padding: 8px 25px 4px 25px;
+  font-size: 23px;
   color: #993300;
   margin: 0 10px;
   border-radius: 60px;
   display: inline-block;
+  width:95%;
+}
+
+.profile-header__item__counter--credits{
+  padding: 4px 25px 4px 25px;
+  font-size: 23px;
+  color: #993300;
+  margin: 0 10px;
+  border-radius: 60px;
+  display: inline-block;
+  background-color: #fff;
+  border: 2px solid #993300;
+  width:95%;
 }
 
 .profile-header__item__counter--credit{
   color: #c72726;
   border-color: #c72726;
   background-color: #fff;
+}
+
+.profile-header__item__counter-label{
+  line-height: 40px;
 }
 
 .profile-header__glyphicon-icon{

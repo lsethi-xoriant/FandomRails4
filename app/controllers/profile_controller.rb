@@ -5,6 +5,7 @@ class ProfileController < ApplicationController
   include ProfileHelper
   include ApplicationHelper
   include RankingHelper
+  include RewardHelper
   
   before_filter :check_user_logged
   
@@ -99,5 +100,5 @@ class ProfileController < ApplicationController
 
   def show
   end
-
+  
 end
