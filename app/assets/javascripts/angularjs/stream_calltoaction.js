@@ -68,6 +68,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $scope.current_tag_id = $scope.aux.current_property_info.id;
     }
 
+    if($scope.aux.mobile) {
+      $scope.coverCommentsLimit = 1;
+    } else {
+      $scope.coverCommentsLimit = 2;
+    }
+
     // With one calltoaction I active comment interaction
     $scope.comments_polling = new Object();
     $scope.ajax_comment_append_in_progress = false;

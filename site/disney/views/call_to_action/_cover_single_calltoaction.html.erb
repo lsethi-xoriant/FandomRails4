@@ -1,9 +1,14 @@
+<div ng-if="calltoaction_info.flag" class="cta-cover__flag">
+  <img ng-src="{{calltoaction_info.flag.icon}}">
+</div>
+
 <div class="panel panel-default cta-cover__card">
     
   <div class="panel-body cta-cover__card__body">  
     <div class="row cta-cover__thumbnail-row">
       <!-- CALLTOACTION THUMBNAIL -->
       <%= light_link_to("/call_to_action/{{calltoaction_info.calltoaction.id}}") do %>
+
         <div class="col-xs-12 cta-cover__thumbnail-column">
           <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
         </div>  
