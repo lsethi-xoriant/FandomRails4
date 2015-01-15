@@ -127,7 +127,9 @@ module DisneyHelper
           "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
           "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
           "title" => calltoaction.title,
-          "description" => calltoaction.description
+          "description" => calltoaction.description,
+          "likes" => get_number_of_likes_for_cta(calltoaction),
+          "comments" => get_number_of_comments_for_cta(calltoaction)
         }
       end
       calltoaction_evidence_info
