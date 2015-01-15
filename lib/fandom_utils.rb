@@ -164,7 +164,7 @@ module FandomUtils
   end    
   
   def reset_migrations_table_for_tenant(tenant_id = nil)
-    schema = tenant_id.nil? '' : tenant_id + '.'
+    schema = tenant_id.nil? ? '' : tenant_id + '.'
     Dir.open('db/migrate').each do |fname|
        i = fname.split('_').first.to_i
        next if i == 0
