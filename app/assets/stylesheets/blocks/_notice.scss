@@ -1,6 +1,12 @@
 /* CSS NOTICES */
 
-.notice{}
+.notice{
+  
+}
+
+.notice--unread{
+   background-color: rgba(51, 153, 255, 0.4);
+}
 
 .notice__property-icon{
   padding: 5px; 
@@ -16,4 +22,23 @@
 
 .notice__title{
   line-height: 30px;
+}
+
+@media (max-width: $screen-sm-min) {
+  .notice__property-icon{
+    padding: 5px; 
+    max-width: 40px;
+  }
+  
+  .notice__reward-image{
+    padding: 5px; 
+    max-width: 40px;
+  }
+  
+  .notice__title{
+    font-size: 14px;
+    line-height: 16px;
+    margin: 4px 0;
+  }
+  
 }

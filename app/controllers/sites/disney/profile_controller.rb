@@ -11,16 +11,43 @@ class Sites::Disney::ProfileController < ProfileController
       @fan_of_days << {"day" => "#{day.strftime('%d %b.')}", "winner" => get_winner_of_day(day)}
     end
     
-    render template: "profile/rankings"
+    if small_mobile_device?
+      render template: "profile/rankings_mobile"
+    else
+      render template: "profile/rankings"
+    end
+  end
+  
+  def index_mobile
+    @level = disney_get_current_level;
+    @my_position, total = get_my_position 
   end
   
   def rewards
-    levels, levels_use_prop = rewards_by_tag("level")
-    @levels = disney_prepare_levels_to_show(levels)
-    @my_levels = get_other_property_rewards("level")
-    badges, badges_use_prop = rewards_by_tag("badge")
-    @badges = badges.nil? ? nil : badges[get_disney_property]
-    @mybadges = get_other_property_rewards("badge")
+    if small_mobile_device?
+      levels, levels_use_prop = rewards_by_tag("level")
+      @levels = disney_prepare_levels_to_show(levels)
+      badges, badges_use_prop = rewards_by_tag("badge")
+      @badges = badges.nil? ? nil : badges[get_disney_property]
+      render template: "/profile/rewards_mobile"
+    else
+      levels, levels_use_prop = rewards_by_tag("level")
+      @levels = disney_prepare_levels_to_show(levels)
+      @my_levels = get_other_property_rewards("level")
+      badges, badges_use_prop = rewards_by_tag("badge")
+      @badges = badges.nil? ? nil : badges[get_disney_property]
+      @mybadges = get_other_property_rewards("badge")
+    end
+    
+  end
+  
+  def notices
+    Notice.mark_all_as_viewed()
+    notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC")
+    @notices_list = group_notice_by_date(notices)
+    if small_mobile_device?
+      render template: "/profile/notices_mobile"
+    end
   end
   
   def get_other_property_rewards(reward_name)

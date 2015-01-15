@@ -1,0 +1,114 @@
+/* PROFILE HEADER BLOCK */
+.profile-header-mobile{
+  background-color: #fff;
+}
+
+.profile-header-mobile__item{
+  border-right: 1px solid #ccc;
+  padding-top: 10px;
+  position: relative;
+}
+
+.profile-header-mobile__item--last{
+  border-right: none;
+}
+
+.profile-header-mobile__item__image{
+  display: block;
+  max-width: 65px;
+  margin: 0 auto 10px auto;
+  
+}
+
+.profile-header-mobile__item__title{
+  color: #373737;
+  font-size: 24px;
+  margin: 10px 0 0 0;
+}
+
+.profile-header-mobile__item__subtitle{
+  color: #8a8a8a;
+  font-size: 14px;
+  margin: 0;
+}
+
+.profile-header-mobile__item__subtitle--rank{
+  color: #8a8a8a;
+  font-size: 14px;
+  margin: 10px 0 0 0;
+}
+
+.profile-header-mobile__item__rank-position{
+  font-size: 30px;
+  margin-top: -5px;
+}
+
+.profile-header-mobile__item__reward{
+  font-size: 16px;
+  color: #373737;
+  margin-top: 20px;
+  padding: 0 10px;
+}
+
+.profile-header-mobile__item__counter{
+  padding: 6px 15px 6px 15px;
+  font-size: 18px;
+  color: #993300;
+  margin: 0 10px;
+  border-radius: 60px;
+  display: inline-block;
+  width:90%;
+}
+
+.profile-header-mobile__item__counter--credits{
+  padding: 8px 15px 4px 15px;
+  font-size: 18px;
+  color: #993300;
+  margin: 0 10px;
+  border-radius: 60px;
+  display: inline-block;
+  background-color: #fff;
+  border: 2px solid #993300;
+  width:95%;
+}
+
+.profile-header-mobile__item__counter--credit{
+  color: #c72726;
+  border-color: #c72726;
+  background-color: #fff;
+}
+
+.profile-header-mobile__item__counter-label{
+  line-height: 20px;
+}
+
+.profile-header-mobile__glyphicon-icon{
+  font-size: 18px;
+}
+
+.profile-header-mobile__glyphicon-icon--big{
+  font-size: 30px;
+  line-height: 75px;
+}
+
+.profile-header-mobile__glyphicon-icon--blue{
+  font-size: 30px;
+  line-height: 75px;
+  color: $blu
+}
+
+.profile-header-mobile__arrow{
+  font-size: 30px;
+  line-height: 75px;
+}
+
+.profile-header-mobile__link{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-indent: -9000px;
+  z-index: 100;
+}
