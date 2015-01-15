@@ -4,7 +4,7 @@
       <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
 
         <!-- CALLTOACTION WINNABLE REWARD COUNT -->
-        <div ng-if="calltoaction.status && calltoaction.status.winnable_reward_count > 0" class="col-xs-12 cta-cover__winnable-reward text-right">
+        <div ng-if="calltoaction.status && calltoaction.status.winnable_reward_count > 0" class="col-xs-12 ctas__winnable-reward cta-cover__winnable-reward text-right">
           <span class="label label-warning cta-cover__winnable-reward__label">
             +{{calltoaction.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
           </span>  
