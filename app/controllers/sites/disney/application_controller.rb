@@ -19,15 +19,11 @@ class Sites::Disney::ApplicationController < ApplicationController
 
     return if cookie_based_redirect?
     
-    init_ctas = request.site.init_ctas
+    init_ctas = $site.init_ctas
     current_property = get_tag_from_params(get_disney_property())
 
-    @calltoactions = cache_short("stream_ctas_init_calltoactions_#{current_property}") do
-      CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", current_property.id).limit(init_ctas)
-    end
-    
-    @calltoactions_active_count = cache_short("stream_ctas_init_calltoactions_active_count") do
-      CallToAction.active.count
+    @calltoactions = cache_short(get_calltoactions_in_property_cache_key(current_property.id)) do
+      get_disney_ctas(current_property).limit(init_ctas).to_a
     end
 
     @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
