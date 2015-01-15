@@ -1,0 +1,78 @@
+<div class="profile-header-mobile">
+	
+	<div class="row brws-item profile-header-mobile__item">
+		<%= light_link_to "/profile/edit", {"class" => "profile-header-mobile__link"} do %><% end %>
+		<div class="col-xs-3 text-right">
+			<img src="<%= user_avatar current_user %>" alt="profile avatar" class="profile-header-mobile__item__image">
+		</div>
+		<div class="col-xs-6">
+			<p class="profile-header-mobile__item__title"><%= disney_extract_name_or_username(current_user) %></p>
+		</div>
+		<div class="col-xs-2">
+			<span class="glyphicon glyphicon-chevron-right profile-header-mobile__glyphicon-icon--big" aria-hidden="true"></span>
+		</div>
+	</div>
+	
+	<div class="row brws-item profile-header-mobile__item">
+		<div class="col-xs-6 text-center">
+			<span class="label label-warning profile-header-mobile__item__counter--credits">+ <%= get_counter_about_user_reward("credit") %> <i class="fa fa-copyright"></i></span>
+			<p class="profile-header-mobile__item__counter-label">Crediti</p>
+		</div>
+		<div class="col-xs-6 text-center">
+			<span class="label label-warning profile-header-mobile__item__counter">+ <%= get_point %> <span class="profile-header-mobile__glyphicon-icon glyphicon glyphicon-star"></span></span>
+			<p class="profile-header-mobile__item__counter-label">Punti</p>
+		</div>
+	</div>
+	
+	<div class="row brws-item profile-header-mobile__item">
+		<%= light_link_to "/profile/rewards", {"class" => "profile-header-mobile__link"} do %><% end %>
+		<% if !cached_nil?(@level) %>
+			<div class="col-xs-3 text-right">
+				<img src="<%= get_reward_image_for_status(@level["level"]) %>" alt="" class="profile-header-mobile__item__image">
+			</div>
+			<div class="col-xs-6 text-left">
+				<p class="profile-header-mobile__item__title"><%= @level["level"].title %></p>
+				<p class="profile-header-mobile__item__subtitle">Livello <%= @level["level_number"] %></p>
+				<div class="progress" style="margin: 5px auto; height: 12px; width: 100%;">
+					<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: <%= @level["progress"] %>%;"></div>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<span class="glyphicon glyphicon-chevron-right profile-header-mobile__glyphicon-icon--big" aria-hidden="true"></span>
+			</div>
+		<% else %>
+		<% end %>
+	</div>
+	
+	<div class="row brws-item profile-header-mobile__item">
+		<%= light_link_to "/profile/rankings", {"class" => "profile-header-mobile__link"} do %><% end %>
+		<div class="col-xs-3 text-right">
+			<span class="glyphicon glyphicon-signal profile-header-mobile__glyphicon-icon--blue" aria-hidden="true"></span>
+		</div>
+		<div class="col-xs-6">
+			<p class="profile-header-mobile__item__subtitle--rank">Posizione</p>
+			<% if @my_position %>
+				<p class="profile-header-mobile__item__rank-position"># <%= @my_position %></p>
+			<% else %>
+				<p class="profile-header-mobile__item__rank-position"># ---</p>
+			<% end %>
+		</div>
+		<div class="col-xs-2">
+			<span class="glyphicon glyphicon-chevron-right profile-header-mobile__glyphicon-icon--big" aria-hidden="true"></span>
+		</div>
+	</div>
+	
+	<div class="row brws-item profile-header-mobile__item">
+		<%= light_link_to "/profile/notices", {"class" => "profile-header-mobile__link"} do %><% end %>
+		<div class="col-xs-3 text-right">
+			<span class="glyphicon glyphicon-bell profile-header-mobile__glyphicon-icon--blue" aria-hidden="true"></span>
+		</div>
+		<div class="col-xs-6">
+			<p class="profile-header-mobile__item__title">Notifiche</p>
+		</div>
+		<div class="col-xs-2">
+			<span class="glyphicon glyphicon-chevron-right profile-header-mobile__glyphicon-icon--big" aria-hidden="true"></span>
+		</div>
+	</div>
+
+</div>

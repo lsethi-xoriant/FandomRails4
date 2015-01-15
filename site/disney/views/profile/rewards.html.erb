@@ -11,21 +11,15 @@
         	</h3>
       	</div>
       	<% if @levels %>
-      		<% if small_mobile_device? %>
-      			<% @levels.each do |key, level| %>
-		        	<%= render partial: "/profile/level_badge", locals: { reward: level } %>
-		        <% end %>
-			<% else %>
-				<div class="rewards-flexslider">
-		      	  	<ul class="slides">
-				        <% @levels.each do |key, level| %>
-				        	<li class="rewards-flexslider__item">
-				        		<%= render partial: "/profile/level_badge", locals: { reward: level } %>
-				        	</li>
-				        <% end %>
-			        </ul>
-			    </div>
-			<% end %>
+			<div class="rewards-flexslider">
+	      	  	<ul class="slides">
+			        <% @levels.each do |key, level| %>
+			        	<li class="rewards-flexslider__item">
+			        		<%= render partial: "/profile/level_badge", locals: { reward: level } %>
+			        	</li>
+			        <% end %>
+		        </ul>
+		    </div>
 	    <% else %>
 	    	<p>Nessun livello presente</p>
 	    <% end %>
@@ -41,12 +35,18 @@
         		Tuoi livelli nelle altre Community
         	</h3>
       	</div>
-      	<% if @my_levels %>
-	        <% @my_levels.each do |level| %>
-	        	<%= render partial: "/profile/property_badge", locals: { reward: level } %>
-	        <% end %>
+      	<% if @my_levels && !@my_levels.empty? %>
+      		<div class="rewards-flexslider">
+	      	  	<ul class="slides">
+			        <% @my_levels.each do |level| %>
+			        	<li class="rewards-flexslider__item">
+			        		<%= render partial: "/profile/property_badge", locals: { reward: level } %>
+			        	</li>
+			        <% end %>
+		        </ul>
+		    </div>
 	    <% else %>
-	    	<div class="col-xs-12"><p>Nessun livello ottenuto.</p></div>
+	    	<p>Nessun livello ottenuto.</p>
 	    <% end %>
  	</div>
   </div>
@@ -62,21 +62,15 @@
         	</h3>
       	</div>
       	<% if @badges %>
-      		<% if small_mobile_device? %>
-		        <% @badges.each do |badge| %>
-		        	<%= render partial: "/profile/badge", locals: { reward: badge } %>
-		        <% end %>
-		    <% else %>
-		    	<div class="rewards-flexslider">
-		      	  	<ul class="slides">
-		      			<% @badges.each do |badge| %>
-		      				<li class="rewards-flexslider__item">
-				        		<%= render partial: "/profile/badge", locals: { reward: badge } %>
-				        	</li>
-				        <% end %>	
-		      	  	</ul>
-		      	</div>
-		    <% end %>
+	    	<div class="rewards-flexslider">
+	      	  	<ul class="slides">
+	      			<% @badges.each do |badge| %>
+	      				<li class="rewards-flexslider__item">
+			        		<%= render partial: "/profile/badge", locals: { reward: badge } %>
+			        	</li>
+			        <% end %>	
+	      	  	</ul>
+	      	</div>
 	    <% else %>
 	    	<p>Nessun badge presente</p>
 	    <% end %>
@@ -93,11 +87,17 @@
         	</h3>
       	</div>
       	<% if @my_badges %>
-	        <% @my_badges.each do |badge| %>
-	        	<%= render partial: "/profile/property_badge", locals: { reward: badge } %>
-	        <% end %>
+      		<div class="rewards-flexslider">
+	      	  	<ul class="slides">
+	      			<% @my_badges.each do |badge| %>
+	      				<li class="rewards-flexslider__item">
+			        		<%= render partial: "/profile/property_badge", locals: { reward: badge } %>
+			        	</li>
+			        <% end %>	
+	      	  	</ul>
+	      	</div>
 	    <% else %>
-	    	<div class="col-xs-12"><p>Nessun livello ottenuto.</p></div>
+	    	<p>Nessun badge ottenuto.</p>
 	    <% end %>
  	</div>
   </div>
@@ -112,7 +112,7 @@
 	      slideshow: false,
 	      animationLoop: false,
 	      touch: true,
-	      itemWidth: 165,
+	      itemWidth: 160,
 	      itemMargin: 15,
 	      controlNav: false,
 	      prevText: "",

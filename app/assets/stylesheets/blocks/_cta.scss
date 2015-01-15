@@ -94,18 +94,29 @@
   background: transparent !important;
 }
 
+.ctas__search__a:hover, .ctas__search__a:focus {
+  background: whitesmoke !important;
+}
+
 .ctas__search__title {
-  line-height: 60px; 
-  color: #999; 
-  display: inline; 
-  margin-left: 10px; 
-  padding: 0;
+  color: #999;
+  margin-bottom: 0;
+  margin-left: 10px;
+  margin-top: 12px;
+  padding: 0 0 0 105px;
+  white-space: normal;
 }
 
 .ctas__search__col {
+  color: #999;
+  min-height: 60px;
   padding-left: 5px;
 }
 
+.ctas__search__img {
+  height: 60px; 
+  position: absolute;
+}
 
 @media (max-width: $screen-sm-min) { 
   .cta__title {

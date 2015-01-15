@@ -4,6 +4,18 @@ module DisneyHelper
     $context_root || "disney-channel"
   end
   
+  def get_my_general_position_in_property
+    property_ranking = Ranking.find_by_name("#{get_disney_property}_general_chart")
+    if property_ranking
+      rank = cache_short("#{$context_root}_general_chart") do
+        rank = get_full_rank(property_ranking)
+      end
+      [rank[:my_position], rank[:total]]
+    else
+      [nil, nil]
+    end
+  end
+  
   def get_disney_current_contest_point_name
     unless $context_root.nil?
       "#{$context_root}_point"
@@ -27,7 +39,7 @@ module DisneyHelper
       highlight_calltoactions_in_property = calltoaction_active_with_tag_in_property(tag, property, "DESC")
       meta_ordering = get_extra_fields!(tag)["ordering"]    
       if meta_ordering
-        ordered_highlight_calltoactions = order_highlight_calltoactions_by_ordering_meta(meta_ordering, highlight_calltoactions_in_property)
+        ordered_highlight_calltoactions = order_elements_by_ordering_meta(meta_ordering, highlight_calltoactions_in_property)
       else
         highlight_calltoactions
       end
@@ -55,7 +67,9 @@ module DisneyHelper
       "twitter" => current_user.twitter($site.id),
       "main_reward_counter" => get_point,
       "username" => current_user.username,
-      "avatar" => current_avatar
+      "avatar" => current_avatar,
+      "level" => (get_max_reward("level")["title"] rescue "nessun livello"),
+      "notifications" => get_unread_notifications_count()
     }
   end
 
@@ -90,6 +104,11 @@ module DisneyHelper
     end
 
     properties = get_tags_with_tag("property")
+    property = get_tag_from_params("property")
+    meta_ordering = get_extra_fields!(property)["ordering"]    
+    if meta_ordering
+      properties = order_elements_by_ordering_meta(meta_ordering, properties)
+    end
 
     if properties.any?
       property_info = []
@@ -120,7 +139,9 @@ module DisneyHelper
           "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
           "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
           "title" => calltoaction.title,
-          "description" => calltoaction.description
+          "description" => calltoaction.description,
+          "likes" => get_number_of_likes_for_cta(calltoaction),
+          "comments" => get_number_of_comments_for_cta(calltoaction)
         }
       end
       calltoaction_evidence_info
@@ -167,7 +188,7 @@ module DisneyHelper
   end
   
   def disney_prepare_levels_to_show(levels)
-    levels = levels[get_disney_property] 
+    levels = levels[get_disney_property] rescue nil
     order_rewards(levels.to_a, "cost")
     prepared_levels = {}
     if levels
@@ -211,6 +232,14 @@ module DisneyHelper
   def disney_get_level_number
     levels, use_property = rewards_by_tag("level")
     levels[get_disney_property].count
+  end
+  
+  def disney_link_to_profile(options = nil, html_options = nil, &block)
+    if small_mobile_device?
+      light_link_to("/profile/index", options, html_options, &block)
+    else
+      light_link_to("/profile", options, html_options, &block)
+    end
   end
 
 end

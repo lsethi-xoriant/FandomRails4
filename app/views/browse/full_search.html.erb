@@ -53,12 +53,12 @@
 							</div>
 						</div>
 						<div class="col-xs-12">
-							<h3 class="cta-preview__title">{{content.attributes.title}}</h3>
+							<h3 class="cta-preview__title">{{content.attributes.title | limitTo : 40}}</h3>
 						</div>
 					</div>
 					<div class="row cta-preview__counter">
-						<div class="cta-preview__like col-xs-4 col-xs-offset-1" ng-if="content.attributes.likes >= 0"><i class="fa fa-thumbs-up"></i> {{content.attributes.likes}}</div>
-						<div class="cta-preview__comments col-xs-4 col-xs-offset-1" ng-if="content.attributes.comments >= 0"><span class="glyphicon glyphicon-comment"></span> {{content.attributes.comments}} </div>	
+						<div class="cta-preview__like col-xs-4 col-xs-offset-1"><i class="fa fa-thumbs-up"></i> {{content.attributes.likes}}</div>
+						<div class="cta-preview__comments col-xs-4 col-xs-offset-1"><span class="glyphicon glyphicon-comment"></span> {{content.attributes.comments}} </div>	
 					</div>
 				</div>
 				

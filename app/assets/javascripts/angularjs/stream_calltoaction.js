@@ -595,7 +595,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       $("#append-other button").attr('disabled', true);
 
-      $http.post("/append_calltoaction", { calltoactions_showed: $scope.calltoactions, tag_id: $scope.current_tag_id, current_calltoaction: $scope.current_calltoaction })
+      append_calltoaction_path = "/append_calltoaction"
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.title) {
+        append_calltoaction_path = "/" + $scope.aux.current_property_info.title.toLowerCase() + "" + append_calltoaction_path;
+      }
+
+      $http.post(append_calltoaction_path, { calltoactions_showed: $scope.calltoactions, tag_id: $scope.current_tag_id, current_calltoaction: $scope.current_calltoaction })
       .success(function(data) {
 
         angular.forEach(data.calltoaction_info_list, function(calltoaction_info) {
@@ -969,18 +974,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(this.calltoaction_id) {
       
   	  this.cuepoints = getOvervideoInteractions(this.calltoaction_id);
-    	fplayer = this;
-    	
-  	  $("#"+playerId).flowplayer({
+
+  	  $("#" + playerId).flowplayer({
           playlist: [
              [
-                { mp4: fplayer.media_data }
+                { mp4: this.media_data }
              ]
           ],
           swf: "/assets/flowplayer.swf",
-          cuepoints: fplayer.cuepoints,
+          cuepoints: this.cuepoints
         }).bind("ready", function(e, api) {
-       	  fplayer.playerManager = api; 	
+       	  this.playerManager = api; 	
         }).bind("resume", function(e, api) {
        	  calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
   	      calltoaction_media_priority = $("#" + player.playerId).attr("main-media");
@@ -988,11 +992,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     	      updateStartVideoInteraction(calltoaction_id);
     	    } else {
     			  // SECONDARY MEDIA
-    	    }    
+    	    }   
+        }).bind("finish", function(e, api) {
+          calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
+          alert("HERE");
+          $scope.$apply(function() {
+            updateEndVideoInteraction(calltoaction_id);
+          });
         }).bind("cuepoint", function(e, api, cuepoint) {
+          calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
           if(!$scope.overvideo_interaction_locked[calltoaction_id]) {
            	$scope.$apply(function() {
-           		executeInteraction(fplayer, fplayer.calltoaction_id, cuepoint.interaction);
+           		executeInteraction(this, this.calltoaction_id, cuepoint.interaction);
            	});
           }
       });

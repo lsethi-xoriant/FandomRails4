@@ -468,23 +468,25 @@ module CallToActionHelper
     get_ctas_with_tags(tags_name).sample
   end
   
-  def get_number_of_commtents_for_cta(cta)
+  def get_number_of_comments_for_cta(cta)
     cache_short(get_comments_count_for_cta_key(cta.id)) do
       comment_interaction = cta.interactions.find_by_resource_type("Comment")
       if comment_interaction
         comment_interaction.resource.user_comment_interactions.where("approved = true").count
       else
-        -1
+        0
       end
     end
   end
   
   def get_number_of_likes_for_cta(cta)
-    like_interaction = cta.interactions.find_by_resource_type("like")
-    if like_interaction
-      like_interaction.user_interactions.where("(aux->>'like') = true").count
-    else
-      -1
+    cache_short(get_likes_count_for_cta_key(cta.id)) do
+      like_interaction = cta.interactions.find_by_resource_type("like")
+      if like_interaction
+        like_interaction.user_interactions.where("(aux->>'like') = true").count
+      else
+        0
+      end
     end
   end
   

@@ -21,6 +21,27 @@
     }
 }
 
+.ctas__winnable-reward {
+    top: 20px;
+}
+
+.ctas_likes, .ctas_comments {
+    display: inline;
+    color: #fff;
+    margin-left: 15px;
+    top: 4px;
+    position: relative;
+}
+
+.ctas__thumbs-up, .ctas__glyphicon-comment {
+    font-size: 22px;
+    margin-right: 5px;
+}
+
+.ctas__glyphicon-comment {
+    top: 3px;
+}
+
 .ctas__info {
     position: absolute; 
     bottom: 0; 
@@ -32,6 +53,17 @@
     color: #fff;
     font-size: 24px;
     font-weight: bold;
+    /*margin: 0;*/
+    text-shadow: 0 1px #000;
+}
+
+.ctas__description {
+    color: #fff;
+    font-size: 18px;
+}
+
+.ctas__button {
+    width: 120px;
 }
 
 .ctas__flexslider-item {

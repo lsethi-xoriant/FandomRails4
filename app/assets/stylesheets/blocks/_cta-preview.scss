@@ -7,6 +7,7 @@
 	height: 240px;
 	overflow: hidden;
 	background-color: #FFF;
+	position: relative;
 }
 
 .cta-preview__image{
@@ -22,13 +23,14 @@
 	right: 10px;
 	font-size: 14px;
 	font-weight: bold;
-	-webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-  background-color: #fdc511;
-  color: #993300;
-  font-weight: bold;
-  padding: 5px 10px 3px 10px;
+  border-radius: 15px;
+  color: $red;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+  padding-top: 7px;
 }
 
 .cta-preview__title{
@@ -39,10 +41,11 @@
 	color: $blu;
 	font-size: 18px;
 	font-weight: normal;
+	max-height: 44px;
 }
 
 .cta-preview__like{
-	font-size: 12px;
+	font-size: 14px !important;
 }
 
 .cta-preview__thumbnail{
@@ -52,8 +55,10 @@
 }
 
 .cta-preview__counter{
-  margin-top: 25px;
-  margin-bottom: 0px;
+  position: absolute;
+  width: 100%;
+  bottom: 10px;
+  margin: 0;
 }
 
 .cta-preview__comments{
@@ -68,7 +73,7 @@
 .cta-preview__title--category{
   position: absolute;
   bottom: 20px;
-  left:15px;
+  left: 10px;
   color: #fff;
   z-index: 1;
 }

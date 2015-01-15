@@ -9,10 +9,10 @@
       </div>
       
       <div ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'row rank-row': true, 'rank-row--myself': rank_user.general_position == <%= rankings %>.my_position }" ng-class-even="'rank-row--grey'">
-	  	<div class="col-sm-2 col-xs-2 text-right"><h4 class="rank-row__position no-margin">{{rank_user.position}}</h4></div>
-	    <div class="col-sm-2 hidden-xs"><img ng-src="{{rank_user.avatar}}" class="img-circle img-responsive rank-row__avatar"></div>
-	    <div class="col-sm-5 col-xs-7"><h4 class="rank-row__username">{{rank_user.user}}</h4></div>
-	    <div class="col-sm-3 col-xs-3 text-right"><span class="label label-warning rank-row__points">+ {{rank_user.counter}} <span class="glyphicon glyphicon-star">
+	  	<div class="col-xs-2 text-right"><h4 class="rank-row__position no-margin">{{rank_user.position}}</h4></div>
+	    <div class="col-xs-2"><img ng-src="{{rank_user.avatar}}" class="img-circle img-responsive rank-row__avatar"></div>
+	    <div class="col-xs-5"><h4 class="rank-row__username">{{rank_user.user}}</h4></div>
+	    <div class="col-xs-3 text-right"><span class="label label-warning rank-row__points">+ {{rank_user.counter}} <span class="glyphicon glyphicon-star">
   </span></span></div>
       </div>
       

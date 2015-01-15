@@ -1,9 +1,20 @@
 /* RANKING BLOCK */
 
+.ranking-element__container{
+  padding-bottom: 20px;
+  background: $grey; 
+  background: -webkit-linear-gradient(#FFFFFF, $grey);
+  background: -o-linear-gradient(#FFFFFF, $grey);
+  background: -moz-linear-gradient(#FFFFFF, $grey);
+  background: linear-gradient(#FFFFFF, $grey);
+  border-bottom: 1px solid #d1d2d4;
+}
+
 .ranking-element{
   background-color: #fff;
   border-radius: 5px;
   padding: 5px 0;
+  border: 1px solid #ececec;
 }
 
 .ranking-element--myposition{
@@ -17,10 +28,12 @@
 .ranking-element__position{
   font-size: 28px;
   color: #00a1d9;
+  border-bottom: 1px solid #ececec;
 }
 
 .ranking-element__position--myposition{
   color: #fff;
+  border-bottom: 1px solid #32b3e0;
 }
 
 .ranking-element__avatar{
@@ -41,8 +54,18 @@
 
 .ranking-element__points{
   font-size: 16px;
-  color: #993300;
   width: 65%;
   display: block;
   margin: 0 auto;
+  border-radius: 15px;
+  color: $red;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+  padding-top: 7px;
+  .glyphicon{
+    font-size: 12px !important;
+  }
 }

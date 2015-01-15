@@ -2,6 +2,10 @@
 
 $filters-item-margin-right: 15px;
 
+.filters__flexslider-main-row {
+    min-height: 30px;
+}
+
 .filters__flexslider-desktop, .filters__flexslider-mobile {
     background: none !important;
     border: none !important;
@@ -21,6 +25,7 @@ $filters-item-margin-right: 15px;
 .filters__title {
     color: #fff;
     text-transform: uppercase;
+    text-shadow: 0 1px #000;
     top: 65px;
     font-size: 18px;
     font-weight: bold;

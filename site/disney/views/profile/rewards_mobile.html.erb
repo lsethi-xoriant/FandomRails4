@@ -1,0 +1,45 @@
+<div class="container container--default">
+    
+  <div id="lelves" class="row brws-item">
+  	<div class="col-xs-12">
+      	<div class="section-heading">
+        	<h3>
+        		<img src="<%= asset_path("icon-cat.png") %>" class=" section-heading__icon" />
+        		Livelli
+        	</h3>
+      	</div>
+      	<% if @levels %>
+  			<% @levels.each do |key, level| %>
+	        	<%= render partial: "/profile/level_badge", locals: { reward: level } %>
+	        <% end %>
+	    <% else %>
+	    	<p>Nessun livello presente</p>
+	    <% end %>
+ 	</div>
+  </div>
+  
+  <div id="badges" class="row brws-item">
+  	<div class="col-xs-12">
+      	<div class="section-heading">
+        	<h3>
+        		<img src="<%= asset_path("icon-cat.png") %>" class="section-heading__icon" />
+        		Badge
+        	</h3>
+      	</div>
+      	<% if @badges %>
+	        <% @badges.each do |badge| %>
+	        	<%= render partial: "/profile/badge", locals: { reward: badge } %>
+	        <% end %>
+	    <% else %>
+	    	<p>Nessun badge presente</p>
+	    <% end %>
+ 	</div>
+  </div>
+  
+  <div class="row brws-item">
+  	<div class="col-xs-12 text-center">
+  		<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
+  	</div>
+  </div>
+  
+</div>

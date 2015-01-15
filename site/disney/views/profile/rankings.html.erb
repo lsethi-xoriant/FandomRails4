@@ -13,13 +13,13 @@
         		<a href="/ranking/show/<%= @property_rank[:ranking].id %>" class="section-heading__see-all">View all</a>
         	</h3>
       </div>
-	  <div class="row">
+	  <div class="row ranking-element__container">
 	  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
 	  		<div class="ranking-element ranking-element--myposition">
 	  			<p class="ranking-element__position ranking-element__position--myposition text-center"># <%= @property_rank[:my_position] %></p>
 	  			<img src="<%= current_avatar %>" class="ranking-element__avatar" />
 	  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(current_user) %></p>
-	  			<div class="label label-warning ranking-element__points">+ <%= get_point %></div>
+	  			<div class="label label-warning ranking-element__points">+ <%= get_point %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
 	  		</div>
 	  	</div>
 	  	<% @property_rank[:rank_list].slice(0,4).each do |rank_user| %>
@@ -28,7 +28,7 @@
 		  			<p class="ranking-element__position text-center"># <%= rank_user["position"] %></p>
 		  			<img src="<%= rank_user["avatar"] %>" class="ranking-element__avatar" />
 		  			<p class="ranking-element__nickname"><%= rank_user["user"] %></p>
-		  			<div class="label label-warning ranking-element__points">+ <%= rank_user["counter"] %></div>
+		  			<div class="label label-warning ranking-element__points">+ <%= rank_user["counter"] %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
 		  		</div>
 		  	</div>
 	  	<% end %>
@@ -40,25 +40,38 @@
         		Fan del giorno
         	</h3>
       	</div>
+      	<div class="row ranking-element__container">
 	  	<% @fan_of_days.each do |winner| %>
 	  		<% if winner["winner"] %>
-		  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-		  		<div class="ranking-element">
-		  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
-		  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
-		  			<p class="ranking-element__nickname"><%= extract_name_or_username(winner["winner"].user) %></p>
-		  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %></div>
-		  		</div>
-		  	</div>
+	  			<% if winner["winner"].user.email == current_user.email %>
+	  				<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
+				  		<div class="ranking-element ranking-element--myposition">
+				  			<p class="ranking-element__position ranking-element__position--myposition text-center"><%= winner["day"] %></p>
+				  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
+				  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(winner["winner"].user) %></p>
+				  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
+				  		</div>
+				  	</div>
+	  			<% else %>
+				  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
+				  		<div class="ranking-element">
+				  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
+				  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
+				  			<p class="ranking-element__nickname"><%= extract_name_or_username(winner["winner"].user) %></p>
+				  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
+				  		</div>
+				  	</div>
+			  	<% end %>
 		  	<% else %>
 		  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
 		  		<div class="ranking-element">
 		  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
 		  			<img src="/assets/anon.png" class="ranking-element__avatar" />
 		  			<p class="ranking-element__nickname">nessun vincitore</p>
-		  			<div class="label label-warning ranking-element__points">+ 0</div>
+		  			<div class="label label-warning ranking-element__points">+ 0<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
 		  		</div>
 		  	</div>
 		  	<% end %>
 	  	<% end %>
-		</div>
+	  	</div>
+	</div>

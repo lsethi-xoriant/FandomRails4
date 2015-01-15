@@ -73,7 +73,7 @@ module ApplicationHelper
       long_description: populate_desc ? cta.description : nil,
       detail_url: "/call_to_action/#{cta.id}",
       created_at: cta.created_at.to_time.to_i,
-      comments: get_number_of_commtents_for_cta(cta),
+      comments: get_number_of_comments_for_cta(cta),
       likes: get_number_of_likes_for_cta(cta),
       status: compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, cta),
       tags: get_tag_ids_for_cta(cta)
@@ -120,25 +120,25 @@ module ApplicationHelper
     }
   end
 
-  def order_highlight_calltoactions_by_ordering_meta(meta_ordering, highlight_calltoactions)
-    ordered_highlight_calltoaction_names = meta_ordering.value.split(",")
-    if ordered_highlight_calltoaction_names.any?         
-      ordered_highlight_calltoactions = Array.new
-      ordered_highlight_calltoaction_names.each do |calltoaction_name|
-        highlight_calltoactions.each do |calltoaction|
-          if calltoaction.name == calltoaction_name
-            ordered_highlight_calltoactions << calltoaction
+  def order_elements_by_ordering_meta(meta_ordering, elements)
+    ordered_element_names = meta_ordering.split(",")
+    if ordered_element_names.any?         
+      ordered_elements = Array.new
+      ordered_element_names.each do |element_name|
+        elements.each do |element|
+          if element.name == element_name
+            ordered_elements << element
           end
         end
       end
-      highlight_calltoactions.each do |calltoaction|
-        unless ordered_highlight_calltoaction_names.include?(calltoaction.name) 
-          ordered_highlight_calltoactions << calltoaction
+      elements.each do |element|
+        unless ordered_element_names.include?(element.name) 
+          ordered_elements << element
         end
       end
-      ordered_highlight_calltoactions
+      ordered_elements
     else
-      highlight_calltoactions
+      elements
     end
   end
 
@@ -148,7 +148,7 @@ module ApplicationHelper
       highlight_calltoactions = calltoaction_active_with_tag(tag.name, "DESC")
       meta_ordering = get_extra_fields!(tag)["ordering"]    
       if meta_ordering
-        ordered_highlight_calltoactions = order_highlight_calltoactions_by_ordering_meta(meta_ordering, highlight_calltoactions)
+        ordered_highlight_calltoactions = order_elements_by_ordering_meta(meta_ordering, highlight_calltoactions)
       else
         highlight_calltoactions
       end
@@ -640,12 +640,12 @@ module ApplicationHelper
     if current_user
       return user_avatar current_user
     else
-      return asset_path("#{$site.anon_avatar}")
+      return asset_path("#{$site.assets["anon_avatar"]}")
     end
   end
 
   def user_avatar user, size = "normal"
-    user.avatar_selected_url.present? ? user.avatar_selected_url : asset_path("#{$site.anon_avatar}")
+    user.avatar_selected_url.present? ? user.avatar_selected_url : asset_path("#{$site.assets["anon_avatar"]}")
   end
 
   def disqus_sso

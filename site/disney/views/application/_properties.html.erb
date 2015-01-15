@@ -20,13 +20,24 @@
 </div>
 
 <div class="col-md-3 text-left" ng-if="current_user">
-  <p class="properties__right-bar-text">{{current_user.username}}</p>
+  <%= light_link_to("/profile/notices") do %>
+    <p class="properties__right-bar-text">{{current_user.username}}</p>
+  <% end %>  
+  <p class="properties__right-bar-level">{{current_user.level}}</p>
   <span class="label label-warning cta-cover__winnable-reward__label">
     +{{current_user.main_reward_counter}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
   </span>  
 </div>
 
-<img src="<%= current_avatar %>" class="navbar__avatar">
+<div ng-if="current_user && current_user.notifications > 0" class="properties__right-bar-notifications">
+  <%= light_link_to("/profile/notices") do %>
+    {{current_user.notifications}}
+  <% end %>
+</div>
+
+<%= light_link_to("/profile") do %>
+  <img src="<%= current_avatar %>" class="navbar__avatar">
+<% end %>
 
 <script type="text/javascript">
   $(document).ready(function() {

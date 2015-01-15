@@ -5,15 +5,21 @@
       <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-desktop-item">
         <%= light_link_to("/browse/category/{{filter.id}}", class: "filters__flexslider-a") do %>
           <img class="filters__flexslider-image" ng-src="{{filter.image}}">  
-          <div class="filters__title">{{filter.title}}</div>      
+          <div class="filters__title">{{filter.title}}</div>   
+        <% end %>
+      </li>
+      <li class="text-center filters__flexslider-desktop-item">
+        <%= light_link_to("/browse", class: "filters__flexslider-a") do %>
+          <img class="filters__flexslider-image" src="http://placehold.it/262x147">  
+          <div class="filters__title">VEDI ALTRI</div>   
         <% end %>
       </li>
     </ul>
   </div>
 
-  <div class="flexslider filters__flexslider-mobile visible-xs">
+  <div class="flexslider filters__flexslider-mobile visible-xs" ng-if="aux.filter_info">
     <ul class="slides">
-      <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-mobile-item" style="background-color: {{filter.background}};">
+      <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-mobile-item">
         <%= light_link_to("/browse/category/{{filter.id}}") do %>
           <p class="filters__title">{{filter.title}}</p>
           <img  class="filters__flexslider-image" ng-src="{{filter.image}}">
