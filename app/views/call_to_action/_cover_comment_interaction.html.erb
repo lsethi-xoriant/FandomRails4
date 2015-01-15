@@ -1,8 +1,8 @@
-<div class="col-sm-12">
+<div class="col-sm-12 hidden-xs">
   <p class="comment-interaction__cover__info"><span class="glyphicon glyphicon-comment comment-interaction__cover__info__glyphicon-comment"></span> <span class="comment-interaction__cover__info__text">Ci sono {{interaction_info.interaction.resource.comment_info.comments_total_count}} commenti</span></p>
 </div>
 <div class="col-sm-12">
-  <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments | limitTo:2">
+  <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments | limitTo:coverCommentsLimit">
     <div class="row" ng-class="{comment_evidence: comment.evidence }">
       <div class="col-xs-12 text-left comment-interaction__cover__comment">
         <img ng-src="{{comment.user.avatar}}" alt="user-avatar" class="comment-interaction__cover__avatar">

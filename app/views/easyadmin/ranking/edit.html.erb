@@ -44,7 +44,7 @@
     <h3>Dati generali</h3>
     <hr/>
     
-    <%= form_for @ranking, url: "/easyadmin/ranking/#{@ranking.id}", multipart: true do |f| %>
+    <%= form_for @ranking, url: "/easyadmin/ranking/#{@ranking.id}", html: { multipart: true } do |f| %>
       <div class="row">
         <div class="col-lg-6">
           <div class="form-group">

@@ -38,7 +38,7 @@
     <h3>Dati generali</h3>
     <hr/>
     
-    <%= form_for @cta, url: { action: "update_cta" }, multipart: true do |f| %>
+    <%= form_for @cta, url: { action: "update_cta" }, html: { multipart: true } do |f| %>
       <%= hidden_field_tag :id, @cta.id %>
       <div class="row">
         <div class="col-lg-6">

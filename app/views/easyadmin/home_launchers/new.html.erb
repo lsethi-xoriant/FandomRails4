@@ -35,7 +35,7 @@
       </div>
     </div>
     
-    <%= form_for @home_launcher, url: easyadmin_home_launchers_path, multipart: true do |f| %>
+    <%= form_for @home_launcher, url: easyadmin_home_launchers_path, html: { multipart: true } do |f| %>
 
       <h3>Dati generali</h3>
       <hr/>

@@ -47,6 +47,10 @@ module CacheKeysHelper
     "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}"
   end
 
+  def get_calltoactions_in_property_cache_key(property_id)
+    "calltoactions_in_property_#{property_id}"
+  end
+
   def get_calltoactions_count_in_property_cache_key(property_id)
     "calltoactions_count_in_property_#{property_id}"
   end

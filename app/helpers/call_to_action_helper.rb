@@ -28,6 +28,13 @@ module CallToActionHelper
         }
       end
 
+      flag = get_tag_with_tag_about_call_to_action(calltoaction, "flag").first
+      if flag.present?
+        flag_info = {
+          "icon" => (get_extra_fields!(miniformat)["icon"]["url"] rescue nil),
+        }
+      end
+
       calltoaction_info_list << {
         "calltoaction" => { 
           "id" => calltoaction.id,
@@ -42,6 +49,7 @@ module CallToActionHelper
           "interaction_info_list" => build_interaction_info_list(calltoaction),
           "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}")
         },
+        "flag" => flag_info,
         "miniformat" => miniformat_info,
         "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction)
       }
