@@ -35,7 +35,7 @@
       </div>
     </div>
     
-    <%= form_for @badge, url: { action: "save_badge" }, multipart: true do |f| %>
+    <%= form_for @badge, url: { action: "save_badge" }, html: { multipart: true } do |f| %>
       <%= f.hidden_field :property_id, value: @current_prop.id %>
 
       <h3>Dati generali <a style="float: right" href="/easyadmin/property/show/<%= @current_prop.id %>" class="btn btn-primary">TORNA ALLA PROPERTY</a></h3>
