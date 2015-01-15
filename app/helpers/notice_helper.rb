@@ -22,11 +22,10 @@ module NoticeHelper
   
   def get_notice_icon(reward)
     icon = asset_path('logo_community.png')
-    reward.reward_tags.each do |tag|
-      notification_icon = get_extra_fields!(tag)["notification-icon"]
-      if notification_icon && upload_extra_field_present?(notification_icon)
-        icon = get_upload_extra_field_processor(notification_icon,"medium")
-      end
+    property_tag = get_tag_with_tag_about_reward(reward, "property").first
+    unless property_tag.nil?
+      notification_icon = get_extra_fields!(property_tag)["logo"]
+      icon = get_upload_extra_field_processor(notification_icon,"medium")
     end
     icon
   end

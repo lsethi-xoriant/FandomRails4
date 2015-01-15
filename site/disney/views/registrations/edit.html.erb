@@ -53,10 +53,10 @@
                     <div class="col-sm-3 text-center">
                             <img class="current_avatar_selected" src="<%= current_user.avatar_selected_url %>">
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-8">
                     	<div class="row">
                     		<div class="col-sm-12 avatars__flexslider">
-							  <div class="flexslider avatars__flexslider-desktop hidden-xs">
+							  <div class="flexslider avatars__flexslider-desktop">
 							    <div class="flex-viewport-shadow"></div>
 							    <ul class="slides">
 							    	<% get_avatar_list.each_slice(2) do |avatar_slice| %>
@@ -75,15 +75,6 @@
 							    </ul>
 							  </div>
 							
-							  <div class="flexslider avatars__flexslider-mobile visible-xs">
-							    <ul class="slides">
-							    	<% get_avatar_list.each do |avatar| %>
-								      <li class="text-center avatars__flexslider-mobile-item">
-								        <img src="<%= avatar %>" >
-								      </li>
-								    <% end %>
-							    </ul>
-							  </div>
 							</div>
                     	</div>
                     </div>
@@ -105,18 +96,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $('.avatars__flexslider-desktop').flexslider({
-      animation: "slide",
-      slideshow: false,
-      animationLoop: false,
-      touch: true,
-      itemWidth: 60,
-      itemMargin: 4,
-      controlNav: false,
-      prevText: "",
-      nextText: ""
-    });
-
-    $('.avatars__flexslider-mobile').flexslider({
       animation: "slide",
       slideshow: false,
       animationLoop: false,
