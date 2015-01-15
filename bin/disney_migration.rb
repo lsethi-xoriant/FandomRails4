@@ -7,9 +7,96 @@ require "fileutils"
 
 BIG_NUMBER_OF_LINES = 500000
 
+########## METHOD TO CREATE GALLERY_ID - TAG_ID MAP, IF TAG ALREADY EXISTS IN SEED ##########
+
+def map_category_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
+  map = Hash.new
+  source_categories_names = Array.new
+  source_db_connection.exec("SELECT title FROM cta_categories").values.each do |title|
+    source_categories_names << title[0] unless title[0] == "categoriarosa"
+  end
+  #puts source_categories_names.values
+  destination_tags_names = Array.new
+  destination_db_connection.exec("SELECT name FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags").values.each do |name|
+    destination_tags_names << name[0]
+  end
+
+  source_categories_names = gsubs(source_categories_names)
+  #destination_tags_names = gsubs(destination_tags_names)
+
+  if (source_categories_names & destination_tags_names).count != source_categories_names.count 
+    print_missing("cta_categories", source_categories_names, destination_tags_names)
+    exit
+  else
+    source_categories_names.each do |name|
+      category_id = source_db_connection.exec("SELECT id FROM cta_categories where title = '#{ungsub(name)}'").values[0][0]
+      tag_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags where name = '#{name}'").values[0][0]
+      map[category_id] = tag_id
+    end
+  end
+
+  categoriarosa_id = source_db_connection.exec("SELECT id FROM cta_categories where title = 'categoriarosa'").values[0]
+  tutto_violetta_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags where name = 'tutto-violetta'").values[0]
+  map[categoriarosa_id[0]] = tutto_violetta_id[0] if categoriarosa_id
+
+  return map
+end
+
+def gsubs(names)
+  res = Array.new
+  names.each do |name|
+    res << name.gsub('_', '-').gsub('mystery', 'mistery')
+  end
+  res
+end
+
+def ungsub(name)
+  name.gsub('-', '_').gsub('mistery', 'mystery')
+end
+
+########## METHOD TO CREATE CORE_CUSTOM_GALLERY_ID - TAG_ID MAP, IF TAG ALREADY EXISTS IN SEED ##########
+
+def map_core_custom_gallery_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
+  map = Hash.new
+  source_core_custom_galleries_names = Array.new
+  source_db_connection.exec("SELECT name FROM core_custom_galleries").values.each do |name|
+    source_core_custom_galleries_names << name[0]
+  end
+  #puts source_core_custom_galleries_names.values
+  destination_tags_names = Array.new
+  destination_db_connection.exec("SELECT name FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags").values.each do |name|
+    destination_tags_names << name[0]
+  end
+
+  if (source_core_custom_galleries_names & destination_tags_names).count != source_core_custom_galleries_names.count 
+    print_missing("core_custom_galleries", source_core_custom_galleries_names, destination_tags_names)
+    exit
+  else
+    source_core_custom_galleries_names.each do |name|
+      category_id = source_db_connection.exec("SELECT id FROM core_custom_galleries where name = '#{name}'").values[0][0]
+      tag_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags where name = '#{name}'").values[0][0]
+      map[category_id] = tag_id
+    end
+  end
+
+  return map
+end
+
+def print_missing(table_name, categories, tags)
+  puts "Mancano tag. #{(categories & tags).count} #{table_name} presenti su #{categories.count} #{table_name} totali.\n"
+  res = Array.new
+  puts categories
+  puts "\n-----------------------------------\n"
+  puts tags
+  categories.each do |c|
+    res << c unless tags.include?(c)
+  end
+  puts "Tag mancanti: \n#{res}"
+end
+
 ########## CALL TO ACTIONS ##########
 
-def migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection)
+def migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, categories_tags_id_map)
   source_call_to_actions = source_db_connection.exec("SELECT * FROM call_to_actions")
 
   puts "call_to_actions: #{source_call_to_actions.count} lines to migrate \nRunning migration..."
@@ -18,6 +105,7 @@ def migrate_call_to_actions(destination_db_tenant, source_db_connection, destina
 
   count = 0
   rows_with_cnt_type_missing = 0
+  rows_with_category_id_missing = 0
   call_to_actions_id_map = Hash.new
 
   source_call_to_actions.each do |line|
@@ -59,14 +147,37 @@ def migrate_call_to_actions(destination_db_tenant, source_db_connection, destina
     query = build_query_string(destination_db_tenant, "call_to_actions", fields)
 
     destination_db_connection.exec(query)
-    call_to_actions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i)
+    new_cta_id = destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i
+    call_to_actions_id_map.store(line["id"].to_i, new_cta_id)
+
+    if line["cta_category_id"].nil?
+      rows_with_category_id_missing += 1
+    else
+      tag_id = categories_tags_id_map[line["cta_category_id"]]
+      create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, tag_id, nullify_or_escape_string(source_db_connection, line["updated_at"]))
+    end
 
     count += 1
     next_step = print_progress(count + rows_with_cnt_type_missing, lines_step, next_step, source_call_to_actions.count)
   end
-  puts "#{count} lines successfully migrated \n#{rows_with_cnt_type_missing} rows had dangling reference to content type \n"
+  puts "#{count} lines successfully migrated \n"
+  puts "#{rows_with_cnt_type_missing} rows had dangling reference to content type \n#{rows_with_category_id_missing} rows had no category \n"
   write_table_id_mapping_to_file("call_to_actions", call_to_actions_id_map)
   return call_to_actions_id_map
+end
+
+def create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, tag_id, created_and_updated_at)
+  fields = {
+    #"id" => ,
+    "call_to_action_id" => new_cta_id,
+    "tag_id" => tag_id,
+    "created_at" => created_and_updated_at,
+    "updated_at" => created_and_updated_at
+  }
+
+  query = build_query_string(destination_db_tenant, "call_to_action_tags", fields)
+
+  destination_db_connection.exec(query)
 end
 
 ########## QUIZZES ##########
@@ -284,7 +395,7 @@ end
 ########## USERS ##########
 
 def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, limit)
-  source_users = source_db_connection.exec("SELECT * FROM users#{limit ? " limit 20000" : ""}") # limit for testing
+  source_users = source_db_connection.exec("SELECT * FROM users#{limit ? " limit 3000" : ""}") # limit for testing
 
   puts "users: #{source_users.count} lines to migrate \nRunning migration..."
   STDOUT.flush
@@ -450,7 +561,7 @@ end
 
 ########## USER CALL TO ACTIONS ##########
 
-def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, gallery_tags_id_map)
+def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, core_custom_galleries_tags_id)
   source_galleries = source_db_connection.exec("SELECT * FROM core_galleries ORDER BY parent_custom_gallery_id")
 
   puts "user_call_to_actions: #{source_galleries.count} lines to migrate \nRunning migration..."
@@ -481,7 +592,7 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
       rows_with_user_missing += 1
     else
       description = nullify_or_escape_string(source_db_connection, line["description"])
-  
+
       fields_for_call_to_actions = {
         #"id" => line["id"].to_i,
         "name" => nullify_or_escape_string(source_db_connection, "id#{line["id"]}".gsub(" ", "")),
@@ -515,7 +626,7 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
       user_call_to_actions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i)
   
       if line["parent_custom_gallery_id"] != "NULL"
-        create_call_to_action_tag(destination_db_tenant, destination_db_connection, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i, gallery_tags_id_map[line["parent_custom_gallery_id"].to_i])
+        create_call_to_action_tag_gallery(destination_db_tenant, destination_db_connection, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i, core_custom_galleries_tags_id[line["parent_custom_gallery_id"]])
       end
   
       count += 1
@@ -527,7 +638,7 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
   return user_call_to_actions_id_map
 end
 
-def create_call_to_action_tag(destination_db_tenant, destination_db_connection, call_to_action_id, tag_id)
+def create_call_to_action_tag_gallery(destination_db_tenant, destination_db_connection, call_to_action_id, tag_id)
 
   fields_for_call_to_action_tag = {
     #"id" => ,
@@ -626,12 +737,12 @@ def migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connectio
   STDOUT.flush
 
   # POINTS
-  if source_db_tenant == "disney"
-    generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "point")
-  elsif source_db_tenant == "violetta"
-    generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "violetta-point")
-  end
-  generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "credit")
+  #if source_db_tenant == "disney"
+  #  generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "point")
+  #elsif source_db_tenant == "violetta"
+  #  generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "violetta-point")
+  #end
+  #generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "credit")
 
   rewards_id_map = Hash.new
   cta_rewards_id_map = Hash.new
@@ -1285,15 +1396,18 @@ end
 def migrate_db(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant, limit)
   write_and_store_time(source_db_tenant, "start")
 
-  call_to_actions_id_map = migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection)
+  categories_tags_id_map = map_category_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
+  core_custom_galleries_tags_id = map_core_custom_gallery_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
+
+  call_to_actions_id_map = migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, categories_tags_id_map)
   quizzes_id_map = migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_connection)
   migrate_answers(destination_db_tenant, source_db_connection, destination_db_connection, quizzes_id_map)
   checks_id_map = migrate_checks(destination_db_tenant, source_db_connection, destination_db_connection)
   plays_id_map = migrate_plays(destination_db_tenant, source_db_connection, destination_db_connection)
   interactions_id_map = migrate_interactions(destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, quizzes_id_map, checks_id_map, plays_id_map)
   users_id_map = migrate_users(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, limit)
-  gallery_tags_id_map = migrate_tags(destination_db_tenant, source_db_connection, destination_db_connection)
-  user_call_to_actions_id_map = migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], gallery_tags_id_map)
+  # *** DO NOT MIGRATE *** gallery_tags_id_map_old = migrate_tags(destination_db_tenant, source_db_connection, destination_db_connection)
+  user_call_to_actions_id_map = migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], core_custom_galleries_tags_id)
   migrate_user_interactions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], interactions_id_map, limit)
   rewards_id_map = migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
   migrate_user_rewards(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], rewards_id_map, limit)
