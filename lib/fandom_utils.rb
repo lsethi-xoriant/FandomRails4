@@ -155,4 +155,21 @@ module FandomUtils
     end
   end
   
+  # This method can be used from rails console to reset the schema_migrations table.
+  def reset_migrations_table
+    reset_migrations_table_for_tenant()
+    all_site_ids_with_db.each do |tenant_id|
+      reset_migrations_table_for_tenant(tenant_id)
+    end
+  end    
+  
+  def reset_migrations_table_for_tenant(tenant_id = nil)
+    schema = tenant_id.nil? '' : tenant_id + '.'
+    Dir.open('db/migrate').each do |fname|
+       i = fname.split('_').first.to_i
+       next if i == 0
+       ActiveRecord::Base.connection.execute("INSERT INTO #{schema}schema_migrations (version) VALUES(#{i})")
+    end
+  end    
+  
 end
