@@ -1,6 +1,115 @@
 
 class Sites::Ballando::CallToActionController < CallToActionController
 
+  def update_interaction
+    interaction = Interaction.find(params[:interaction_id])
+
+    response = Hash.new
+
+    response[:calltoaction_id] = interaction.call_to_action_id;
+    
+    response[:ga] = Hash.new
+    response[:ga][:category] = "UserInteraction"
+    response[:ga][:action] = "CreateOrUpdate"
+
+    if interaction.resource_type.downcase == "download" 
+      response["download_interaction_attachment"] = interaction.resource.attachment.url
+    end
+
+    if interaction.resource_type.downcase == "quiz"
+      
+      answer = Answer.find(params[:params])
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil)
+      response["have_answer_media"] = answer.answer_with_media?
+      response["answer"] = answer
+
+      if answer.media_type == "IMAGE" && answer.media_image
+        response["answer"]["media_image"] = answer.media_image
+      end
+
+      if interaction.resource.quiz_type.downcase == "trivia"
+        response[:ga][:label] = "#{interaction.resource.quiz_type.downcase}-answer-#{answer.correct ? "right" : "wrong"}"
+      else 
+        response[:ga][:label] = interaction.resource.quiz_type.downcase
+      end
+
+      response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, interaction.resource.quiz_type.downcase, user_interaction)
+
+    elsif interaction.resource_type.downcase == "like"
+
+      # TODO: user_interaction calculated 2 times
+      user_interaction = get_user_interaction_from_interaction(interaction, current_or_anonymous_user)
+      like = user_interaction ? !user_interaction.like : true
+
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, { like: true }.to_json)
+
+      response[:ga][:label] = "Like"
+
+    elsif interaction.resource_type.downcase == "share"
+      provider = params[:provider]
+      result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address], params[:facebook_message])
+      if result
+        aux = { "#{provider}" => 1 }
+        user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
+        response[:ga][:label] = interaction.resource_type.downcase
+      end
+
+      response[:share] = Hash.new
+      response[:share][:result] = result
+      response[:share][:exception] = exception.to_s
+    
+    elsif interaction.resource_type.downcase == "vote"
+      vote = params[:params]
+      aux = { "call_to_action_id" => interaction.call_to_action.id, "vote" => vote }
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
+      response[:ga][:label] = interaction.resource_type.downcase
+
+    else
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil)
+      response[:ga][:label] = interaction.resource_type.downcase
+    end
+
+    if user_interaction
+
+      calltoaction = interaction.call_to_action
+      
+      response["user_interaction"] = build_user_interaction_for_interaction_info(user_interaction)
+
+      response['outcome'] = outcome
+
+      if call_to_action_completed?(calltoaction)
+        response["call_to_action_completed"] = true
+      else
+        winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user_interaction.user)
+        response['winnable_reward_count'] = winnable_outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
+      end
+
+      if interaction.when_show_interaction == "SEMPRE_VISIBILE"
+        response["feedback"] = generate_response_for_interaction([interaction], calltoaction, params[:aux] || {}, outcome)[:render_interaction_str]
+      else
+        response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
+      end
+
+    end
+
+    if anonymous_user?(current_or_anonymous_user)
+      anonymous_user_main_reward_count = params["anonymous_user"][MAIN_REWARD_NAME] || 0
+      response["main_reward_counter"] = {
+        "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME])
+      }
+    else
+      response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME)
+      response = setup_update_interaction_response_info(response)
+    end    
+    
+    response["interaction_status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
+    response["calltoaction_status"] = compute_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction);
+
+    respond_to do |format|
+      format.json { render :json => response.to_json }
+    end
+  end 
+
   def setup_update_interaction_response_info(response) 
     response["contest_points_counter"] = [SUPERFAN_CONTEST_POINTS_TO_WIN - (get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD, false) || 0), 0].max
     response
