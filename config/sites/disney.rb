@@ -7,8 +7,8 @@ module Fandom
       twitter_integration: true,
       allowed_context_roots: ["violetta"],
       assets:{
-        anon_avatar: "disney_anon.png",
-        community_logo: "disney_community_logo.png"
+        "anon_avatar" => "disney_anon.png",
+        "community_logo" => "disney_community_logo.png"
       }
     )      
   end
