@@ -1,13 +1,17 @@
 /* CATEGORY FILTER BLOCK */
 
 .category-filter{
-  background-color: #bababa;
-  padding: 20px;
+  background-color: $blu;
+  padding: 20px 0 10px 0;
 }
 
 .category-filter__tag{
   width: 100%;
   color: #989898 !important;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .category-filter__tag--disabled{

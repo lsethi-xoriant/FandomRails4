@@ -4,6 +4,18 @@ module DisneyHelper
     $context_root || "disney-channel"
   end
   
+  def get_my_general_position_in_property
+    property_ranking = Ranking.find_by_name("#{get_disney_property}_general_chart")
+    if property_ranking
+      rank = cache_short("#{$context_root}_general_chart") do
+        rank = get_full_rank(property_ranking)
+      end
+      [rank[:my_position], rank[:total]]
+    else
+      [nil, nil]
+    end
+  end
+  
   def get_disney_current_contest_point_name
     unless $context_root.nil?
       "#{$context_root}_point"

@@ -10,7 +10,7 @@
       <div class="row text-center">
       	<div class="col-xs-12">
 			<div collapse="!isTagFilterOpen" class="row category-filter">
-				<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-3">
+				<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-6">
 					<button ng-class="{'btn btn-default btn-xs category-filter__tag': true, 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'category-filter__tag--selected': activeTags[tag_id] != undefined}" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">{{tag_name}}</button>
 				</div> 
 			</div>
@@ -48,12 +48,12 @@
 								</div>
 							</div>
 							<div class="col-xs-12">
-								<h3 class="cta-preview__title">{{content.title}}</h3>
+								<h3 class="cta-preview__title">{{content.title | limitTo : 40}}</h3>
 							</div>
 						</div>
 						<div class="row cta-preview__counter">
-							<div class="cta-preview__like col-xs-3" ng-if="content.attributes.likes >= 0">{{content.likes}}</div>
-							<div class="cta-preview__comments col-xs-3" ng-if="content.attributes.comments >= 0">{{content.comments}}</div>	
+							<div class="cta-preview__like col-xs-3"><i class="fa fa-thumbs-up"></i> {{content.likes}}</div>
+							<div class="cta-preview__comments col-xs-3"><span class="glyphicon glyphicon-comment"></span> {{content.comments}}</div>	
 						</div>
 					</div>
 					

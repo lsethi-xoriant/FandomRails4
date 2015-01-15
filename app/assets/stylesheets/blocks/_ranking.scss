@@ -54,8 +54,18 @@
 
 .ranking-element__points{
   font-size: 16px;
-  color: #993300;
   width: 65%;
   display: block;
   margin: 0 auto;
+  border-radius: 15px;
+  color: $red;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+  padding-top: 7px;
+  .glyphicon{
+    font-size: 12px !important;
+  }
 }

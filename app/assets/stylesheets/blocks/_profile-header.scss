@@ -4,7 +4,7 @@
 }
 
 .profile-header__item{
-  height: 170px;
+  height: 190px;
   border-right: 1px solid #ccc;
   padding-top: 10px;
 }
@@ -48,23 +48,28 @@
 .profile-header__item__counter{
   padding: 4px 25px 4px 25px;
   font-size: 23px;
-  color: #993300;
   margin: 0 10px;
-  border-radius: 60px;
   display: inline-block;
   width:95%;
+  border-radius: 15px;
+  color: $red;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
 }
 
 .profile-header__item__counter--credits{
   padding: 8px 25px 4px 25px;
   font-size: 23px;
-  color: #993300;
   margin: 0 10px;
-  border-radius: 60px;
   display: inline-block;
   background-color: #fff;
   border: 2px solid #993300;
   width:95%;
+  border-radius: 15px;
+  color: $red;
 }
 
 .profile-header__item__counter--credit{
