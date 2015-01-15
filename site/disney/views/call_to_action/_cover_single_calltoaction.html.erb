@@ -4,7 +4,7 @@
     <div class="row cta-cover__thumbnail-row">
       <!-- CALLTOACTION THUMBNAIL -->
       <%= light_link_to("/call_to_action/{{calltoaction_info.calltoaction.id}}") do %>
-        <div class="col-sm-12 cta-cover__thumbnail-column">
+        <div class="col-xs-12 cta-cover__thumbnail-column">
           <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
         </div>  
         <!-- CALLTOACTION WINNABLE REWARD COUNT -->
@@ -19,7 +19,7 @@
             Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
           </span>  
         </div> 
-        <div class="col-sm-12 text-left cta-cover__title">
+        <div class="col-xs-12 text-left cta-cover__title">
           <span ng-if="calltoaction_info.miniformat" class="label label-default cta-cover__miniformat" style="background-color: {{calltoaction_info.miniformat.label_background}}; color: {{calltoaction_info.miniformat.label_color}; padding: 7px;">
             <span class="{{calltoaction_info.miniformat.icon}}"></span>
             {{calltoaction_info.miniformat.title}}

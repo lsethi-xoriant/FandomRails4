@@ -26,12 +26,6 @@ class Sites::Disney::ApplicationController < ApplicationController
       CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", current_property.id).limit(init_ctas)
     end
     
-    @calltoactions_during_video_interactions_second = cache_short("stream_ctas_init_calltoactions_during_video_interactions_second") do
-      init_calltoactions_during_video_interactions_second(@calltoactions)
-    end
-
-    @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions)
-
     @calltoactions_active_count = cache_short("stream_ctas_init_calltoactions_active_count") do
       CallToAction.active.count
     end

@@ -2,6 +2,53 @@
 class Sites::Ballando::ApplicationController < ApplicationController
   include CallToActionHelper
 
+  def index
+    if user_signed_in?
+      compute_save_and_notify_context_rewards(current_user)
+    end
+
+    return if cookie_based_redirect?
+    
+    init_ctas = request.site.init_ctas
+
+    # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
+    @tag = get_tag_from_params(params[:name])
+    if @tag.nil? || params[:name] == "home_filter_all" 
+      if params[:calltoaction_id]
+        @calltoactions = [CallToAction.find_by_id(params[:calltoaction_id])]
+      else
+        if get_site_from_request(request)["id"] == "coin"
+          calltoaction = get_all_active_ctas().sample
+          @calltoactions = [calltoaction]
+        else
+          @calltoactions = cache_short("stream_ctas_init_calltoactions") do
+            CallToAction.active.limit(init_ctas).to_a
+          end
+        end
+      end
+    else
+      @calltoactions = cache_short("stream_ctas_init_calltoactions_#{params[:name]}") do
+        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", @tag.id).limit(init_ctas)
+      end
+    end
+    
+    @calltoactions_during_video_interactions_second = cache_short("stream_ctas_init_calltoactions_during_video_interactions_second") do
+      init_calltoactions_during_video_interactions_second(@calltoactions)
+    end
+
+    @calltoactions_comment_interaction = init_calltoactions_comment_interaction(@calltoactions)
+
+    @calltoactions_active_count = cache_short("stream_ctas_init_calltoactions_active_count") do
+      CallToAction.active.count
+    end
+
+    @aux = init_aux()
+
+    @calltoactions_active_interaction = Hash.new
+
+    @home = true
+  end
+
   def generate_captcha
     response = generate_captcha_response
 

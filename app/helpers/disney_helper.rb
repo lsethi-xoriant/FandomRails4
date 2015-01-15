@@ -174,7 +174,7 @@ module DisneyHelper
   end
   
   def disney_prepare_levels_to_show(levels)
-    levels = levels[get_disney_property] 
+    levels = levels[get_disney_property] rescue nil
     order_rewards(levels.to_a, "cost")
     prepared_levels = {}
     if levels

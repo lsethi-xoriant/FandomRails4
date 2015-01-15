@@ -55,6 +55,8 @@ Fandom::Application.routes.draw do
 
           resources :call_to_action
 
+          root :to => "application#index"
+
           match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 
           match "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
