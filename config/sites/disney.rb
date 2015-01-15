@@ -6,7 +6,10 @@ module Fandom
       assets_precompile: ['disney_application.css', 'disney_application.js'],
       twitter_integration: true,
       allowed_context_roots: ["violetta"],
-      anon_avatar: "disney_anon.png"
+      assets:{
+        anon_avatar: "disney_anon.png",
+        community_logo: "disney_community_logo.png"
+      }
     )      
   end
 end

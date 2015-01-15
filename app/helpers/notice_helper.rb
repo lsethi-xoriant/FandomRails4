@@ -21,7 +21,11 @@ module NoticeHelper
   end
   
   def get_notice_icon(reward)
-    icon = asset_path('logo_community.png')
+    if $site.assets["community_logo"].nil?
+      icon = ""
+    else
+      icon = $site.assets["community_logo"]
+    end
     property_tag = get_tag_with_tag_about_reward(reward, "property").first
     unless property_tag.nil?
       notification_icon = get_extra_fields!(property_tag)["logo"]
