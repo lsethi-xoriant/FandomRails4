@@ -127,7 +127,9 @@ module DisneyHelper
           "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
           "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
           "title" => calltoaction.title,
-          "description" => calltoaction.description
+          "description" => calltoaction.description,
+          "likes" => get_number_of_likes_for_cta(calltoaction),
+          "comments" => get_number_of_comments_for_cta(calltoaction)
         }
       end
       calltoaction_evidence_info
@@ -174,7 +176,7 @@ module DisneyHelper
   end
   
   def disney_prepare_levels_to_show(levels)
-    levels = levels[get_disney_property] 
+    levels = levels[get_disney_property] rescue nil
     order_rewards(levels.to_a, "cost")
     prepared_levels = {}
     if levels

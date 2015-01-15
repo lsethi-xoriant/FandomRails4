@@ -84,7 +84,7 @@ module CacheKeysHelper
   end
   
   def get_likes_count_for_cta_key(cta_id)
-    "comments_likes_for_cta_#{cta_id}"
+    "likes_count_for_cta_#{cta_id}"
   end
   
   def get_tag_names_for_cta_key(cta_id)
