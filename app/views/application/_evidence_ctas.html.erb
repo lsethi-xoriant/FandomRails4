@@ -20,13 +20,11 @@
         <img class="visible-xs" ng-src="{{calltoaction.thumbnail_medium_url}}">
         <div class="col-xs-12 ctas__info">
           <p class="ctas__title">{{calltoaction.title}}</p>
-          <p class="ctas__description">{{calltoaction.description}}</p>
           <%= light_link_to("/call_to_action/{{calltoaction.id}}", class: "btn btn-primary ctas__button") do %>
             <span>Vai</span>
           <% end %>
           <p class="ctas_likes"><span class="fa fa-thumbs-up ctas__thumbs-up"></span>{{calltoaction.likes}}</p>
           <p class="ctas_comments"><span class="glyphicon glyphicon-comment ctas__glyphicon-comment"></span>{{calltoaction.comments}}</p>
-
         </div>
 
       </li>

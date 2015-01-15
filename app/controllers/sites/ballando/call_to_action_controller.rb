@@ -98,7 +98,7 @@ class Sites::Ballando::CallToActionController < CallToActionController
         "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME])
       }
     else
-      response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME)
+      response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
       response = setup_update_interaction_response_info(response)
     end    
     
