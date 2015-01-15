@@ -54,7 +54,7 @@ module ConfigUtils
     attribute :search_results_per_page, :default => 5
     attribute :allowed_context_roots, :default => []
     attribute :timezone, type: String, :default => "Europe/Rome"
-    attribute :assets, type: String, :default => { anon_avatar: "anon.png", community_logo: nil }
+    attribute :assets, type: String, :default => { "anon_avatar" => "anon.png", "community_logo" => nil }
 
     def unbranded?
       self.id == 'fandom'
