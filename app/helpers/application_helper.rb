@@ -73,7 +73,7 @@ module ApplicationHelper
       long_description: populate_desc ? cta.description : nil,
       detail_url: "/call_to_action/#{cta.id}",
       created_at: cta.created_at.to_time.to_i,
-      comments: get_number_of_commtents_for_cta(cta),
+      comments: get_number_of_comments_for_cta(cta),
       likes: get_number_of_likes_for_cta(cta),
       status: compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, cta),
       tags: get_tag_ids_for_cta(cta)

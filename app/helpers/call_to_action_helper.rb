@@ -468,7 +468,7 @@ module CallToActionHelper
     get_ctas_with_tags(tags_name).sample
   end
   
-  def get_number_of_commtents_for_cta(cta)
+  def get_number_of_comments_for_cta(cta)
     cache_short(get_comments_count_for_cta_key(cta.id)) do
       comment_interaction = cta.interactions.find_by_resource_type("Comment")
       if comment_interaction
