@@ -64,7 +64,7 @@ module RankingHelper
     else
       cache_short("winner_of_day_#{day.to_time.to_i}") do
         unless $context_root.nil?
-          reward_id = Reward.find_by_name("#{$context_root}_point").id
+          reward_id = Reward.find_by_name("#{$context_root}-point").id
         else
           reward_id = Reward.find_by_name("point").id
         end
@@ -214,9 +214,9 @@ module RankingHelper
   
   def create_general_user_position(property = nil)
     if property.nil?
-      ranking = Ranking.find_by_name("general_chart")
+      ranking = Ranking.find_by_name("general-chart")
     else
-      ranking = Ranking.find_by_name("#{property}_general_chart")
+      ranking = Ranking.find_by_name("#{property}-general-chart")
     end
     rank = get_ranking(ranking)
     if rank

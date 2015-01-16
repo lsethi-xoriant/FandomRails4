@@ -536,7 +536,7 @@ module ApplicationHelper
   end  
 
   def get_current_property_point_reward_name
-    $context_root.nil? ? "point" : "#{$context_root}_point"
+    $context_root.nil? ? "point" : "#{$context_root}-point"
   end
 
   def get_counter_about_user_reward(reward_name, all_periods = false)

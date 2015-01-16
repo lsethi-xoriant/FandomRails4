@@ -2,7 +2,7 @@ class Sites::Disney::ProfileController < ProfileController
   include DisneyHelper
   
   def rankings
-    rank = Ranking.find_by_name("#{get_disney_property}_general_chart")
+    rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
     @property_rank = get_full_rank(rank)
     
     @fan_of_days = []
