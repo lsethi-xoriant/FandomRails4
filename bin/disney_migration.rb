@@ -1042,7 +1042,7 @@ def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_con
   if source_db_tenant == "disney"
     point_reward_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}rewards WHERE name ILIKE 'point'").values[0][0].to_i
   elsif source_db_tenant == "violetta"
-    point_reward_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}rewards WHERE name ILIKE 'violetta_point'").values[0][0].to_i
+    point_reward_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}rewards WHERE name ILIKE 'violetta-point'").values[0][0].to_i
   end
   credit_reward_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}rewards WHERE name ILIKE 'credit'").values[0][0].to_i
 
