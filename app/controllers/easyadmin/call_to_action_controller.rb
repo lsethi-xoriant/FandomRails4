@@ -33,7 +33,7 @@ class Easyadmin::CallToActionController < ApplicationController
     create_and_link_attachment(params[:call_to_action], nil)
     @cta = CallToAction.create(params[:call_to_action])
     if @cta.errors.any?
-      @tag_list = params[:tag_list].split(",")
+      @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/new_cta"     
     else
