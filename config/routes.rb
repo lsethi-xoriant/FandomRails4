@@ -232,6 +232,7 @@ Fandom::Application.routes.draw do
     match "cta/filter/:title_filter/:tag_filter", :to => "call_to_action#filter_calltoaction"
     match "cta/new/", :to => "call_to_action#new_cta"
     match "cta/show/:id", :to => "call_to_action#show_cta", :as => :cta_show
+    match "cta/show_details/:id", :to => "call_to_action#show_details"
     match "cta/edit/:id/", :to => "call_to_action#edit_cta"
     match "cta/save", :to => "call_to_action#save_cta"
     match "cta/update", :to => "call_to_action#update_cta"

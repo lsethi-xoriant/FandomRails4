@@ -51,6 +51,7 @@ class Easyadmin::CallToActionController < ApplicationController
   end
 
   def update_cta
+    debugger
     @cta = CallToAction.find(params[:id])
     create_and_link_attachment(params[:call_to_action], @cta)
     unless @cta.update_attributes(params[:call_to_action])
@@ -87,12 +88,15 @@ class Easyadmin::CallToActionController < ApplicationController
   end
   
   def show_cta
-
     @current_cta = CallToAction.find(params[:id])
 
     tag_list_arr = Array.new
     @current_cta.call_to_action_tags.each { |t| tag_list_arr << t.tag.name }
     @tag_list = tag_list_arr.join(", ")
+  end
+
+  def show_details
+    @current_cta = CallToAction.find(params[:id])
 
     @trivia_answer = Hash.new
     @versus_answer = Hash.new
@@ -117,6 +121,7 @@ class Easyadmin::CallToActionController < ApplicationController
       end
     end
 
+    render :partial => 'show_cta_details'#, :locals => { :id => params[:id] }
   end
 
   def update_activated_at
