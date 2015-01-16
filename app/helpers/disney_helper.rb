@@ -3,6 +3,18 @@ module DisneyHelper
   def get_disney_property() 
     $context_root || "disney-channel"
   end
+
+  def get_disney_ctas(property)
+    ugc_tag = get_tag_from_params("ugc")
+    calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", property.id)
+    if ugc_tag
+      ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
+      if ugc_calltoactions
+        calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
+      end
+    end
+    calltoactions
+  end
   
   def get_my_general_position_in_property
     property_ranking = Ranking.find_by_name("#{get_disney_property}-general-chart")
@@ -34,30 +46,30 @@ module DisneyHelper
   
   def get_disney_highlight_calltoactions(property)
     # Cached in index
-    tag = Tag.find_by_name("highlight")
-    if tag
-      highlight_calltoactions_in_property = calltoaction_active_with_tag_in_property(tag, property, "DESC")
-      meta_ordering = get_extra_fields!(tag)["ordering"]    
+    tag_highlight = Tag.find_by_name("highlight")
+    if tag_highlight
+      calltoactions = get_disney_calltoaction_active_with_tag_in_property(tag_highlight, property, "DESC")
+      meta_ordering = get_extra_fields!(tag_highlight)["ordering"]    
       if meta_ordering
-        ordered_highlight_calltoactions = order_elements_by_ordering_meta(meta_ordering, highlight_calltoactions_in_property)
+        order_elements_by_ordering_meta(meta_ordering, calltoactions)
       else
-        highlight_calltoactions
+        calltoactions
       end
     else
       []
     end
   end
 
-  def calltoaction_active_with_tag_in_property(tag, property, order)
+  def get_disney_calltoaction_active_with_tag_in_property(tag, property, order)
     # Cached in index
-    highlight_calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", tag.id)
-    highlight_calltoactions_in_property = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ? AND call_to_actions.id IN (?)", tag.id, highlight_calltoactions.map { |calltoaction| calltoaction.id }).order("activated_at #{order}")
+    tag_calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", tag.id)
+    get_disney_ctas(property).where("call_to_actions.id IN (?)", tag_calltoactions.map { |calltoaction| calltoaction.id }).order("activated_at #{order}")
   end
 
   def get_disney_calltoactions_count_in_property()
     property = get_tag_from_params(get_disney_property())
     cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
-      CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", property.id).count
+      get_disney_ctas(property).count
     end
   end
 
@@ -125,7 +137,7 @@ module DisneyHelper
     calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_cache_key(current_property.id)) do  
 
       highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
-      calltoactions_in_property = CallToAction.includes(:rewards, :call_to_action_tags).active.where("rewards.id IS NULL AND call_to_action_tags.tag_id = ?", current_property.id)
+      calltoactions_in_property = get_disney_ctas(current_property)
       if highlight_calltoactions.any?
         calltoactions_in_property = calltoactions_in_property.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
       end
@@ -144,6 +156,7 @@ module DisneyHelper
           "comments" => get_number_of_comments_for_cta(calltoaction)
         }
       end
+
       calltoaction_evidence_info
     end
 

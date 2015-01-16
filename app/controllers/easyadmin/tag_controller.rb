@@ -26,9 +26,9 @@ class Easyadmin::TagController < ApplicationController
           redirect_to "/easyadmin/tag/#{ @tag.id }"
         end
 
-      rescue
+      rescue Exception => e
         # TODO: fix error message
-        flash[:error] = "Errore hai generato un ciclo nel riferimento tag"
+        flash[:error] = "Errore hai generato un ciclo nel riferimento tag: #{e}"
         @tag_list = params[:tag_list]
         render template_name
         raise ActiveRecord::Rollback

@@ -35,7 +35,7 @@
       </div>
     </div>
     
-     <%= form_for @periodicity, url: "/easyadmin/periodicity/save" , multipart: true do |f| %>
+     <%= form_for @periodicity, url: "/easyadmin/periodicity/save" , html: { multipart: true } do |f| %>
 
       <h3>Dati generali</h3>
       <hr/>

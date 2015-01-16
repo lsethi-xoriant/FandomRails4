@@ -998,7 +998,7 @@ module ApplicationHelper
   end
 
   def get_main_reward_name() 
-    $context_root ? "#{$context_root}_#{MAIN_REWARD_NAME}" : MAIN_REWARD_NAME
+    $context_root ? "#{$context_root}-#{MAIN_REWARD_NAME}" : MAIN_REWARD_NAME
   end
   
 end

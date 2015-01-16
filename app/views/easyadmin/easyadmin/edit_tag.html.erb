@@ -35,7 +35,7 @@
       </div>
     </div>
     
-    <%= form_for @tag, url: { action: "update_tag" }, multipart: true do |f| %>
+    <%= form_for @tag, url: { action: "update_tag" }, html: { multipart: true } do |f| %>
       <h3>&nbsp; <a style="float: right" href="/easyadmin/tag" class="btn btn-primary">TORNA AI TAG</a></h3>
       <hr/>
 

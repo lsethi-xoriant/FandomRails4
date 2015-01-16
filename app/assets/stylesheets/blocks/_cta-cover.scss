@@ -5,6 +5,13 @@
   box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
 }
 
+.cta-cover__flag {
+  left: 6px;
+  position: absolute;
+  top: -6px;
+  z-index: 10;
+}
+
 .cta-cover__card:hover {
   -webkit-box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
@@ -95,4 +102,15 @@
   background: linear-gradient(#47cd48, #37ba39);
   color: #fff;
   padding-left: 10px;
+}
+
+
+
+
+@media (max-width: $screen-sm-min) { 
+  .cta-cover__thumbnail-row {
+    height: 200px; 
+    overflow: hidden;
+    position: relative;
+  }
 }

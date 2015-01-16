@@ -21,6 +21,10 @@
     }
 }
 
+.ctas__winnable-reward {
+    padding-top: 20px;
+}
+
 .ctas_likes, .ctas_comments {
     display: inline;
     color: #fff;
@@ -49,7 +53,8 @@
     color: #fff;
     font-size: 24px;
     font-weight: bold;
-    margin: 0;
+    /*margin: 0;*/
+    text-shadow: 0 1px #000;
 }
 
 .ctas__description {
@@ -125,6 +130,7 @@
 
     .ctas__info {
         padding-left: 15px; 
+        padding-bottom: 45px;
     }
 
     .ctas__title {

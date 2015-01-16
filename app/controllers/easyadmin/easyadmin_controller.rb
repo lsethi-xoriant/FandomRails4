@@ -240,12 +240,15 @@ class Easyadmin::EasyadminController < ApplicationController
   def dashboard
     @user_week_list = Hash.new
     if User.any? 
-      @from_date_string = (params[:datepicker_from_date].blank? || params[:commit] == "Reset") ? 
-                              User.order("created_at ASC").limit(1).first.created_at.strftime('%m/%d/%Y')
-                          : params[:datepicker_from_date]
+      if (params[:datepicker_from_date].blank? || params[:commit] == "Reset") 
+        #first_user_created_at = User.order("created_at ASC").limit(1).first.created_at
+        @from_date_string = (Time.now - 1.week).strftime('%m/%d/%Y')
+      else
+        @from_date_string = params[:datepicker_from_date]
+      end
       @to_date_string = (params[:datepicker_to_date].blank? || params[:commit] == "Reset") ? 
-                              Time.now.strftime('%m/%d/%Y')
-                          : params[:datepicker_to_date]
+                          Time.now.strftime('%m/%d/%Y')
+                            : params[:datepicker_to_date]
 
       @from_date = datetime_parsed_to_utc(DateTime.strptime("#{@from_date_string} 00:00:00 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
       @to_date = datetime_parsed_to_utc(DateTime.strptime("#{@to_date_string} 23:59:59 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))

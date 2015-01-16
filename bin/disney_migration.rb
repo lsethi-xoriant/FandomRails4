@@ -4,20 +4,111 @@ require "yaml"
 require "pg"
 require "json"
 require "fileutils"
+require "benchmark"
+require "ruby-debug"
 
 BIG_NUMBER_OF_LINES = 500000
 
+########## METHOD TO CREATE GALLERY_ID - TAG_ID MAP, IF TAG ALREADY EXISTS IN SEED ##########
+
+def map_category_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
+  map = Hash.new
+  source_categories_names = Array.new
+  source_db_connection.exec("SELECT title FROM cta_categories").values.each do |title|
+    source_categories_names << title[0] unless title[0] == "categoriarosa"
+  end
+  #puts source_categories_names.values
+  destination_tags_names = Array.new
+  destination_db_connection.exec("SELECT name FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags").values.each do |name|
+    destination_tags_names << name[0]
+  end
+
+  source_categories_names = gsubs(source_categories_names)
+  #destination_tags_names = gsubs(destination_tags_names)
+
+  if (source_categories_names & destination_tags_names).count != source_categories_names.count 
+    print_missing("cta_categories", source_categories_names, destination_tags_names)
+    exit
+  else
+    source_categories_names.each do |name|
+      category_id = source_db_connection.exec("SELECT id FROM cta_categories where title = '#{ungsub(name)}'").values[0][0]
+      tag_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags where name = '#{name}'").values[0][0]
+      map[category_id] = tag_id
+    end
+  end
+
+  categoriarosa_id = source_db_connection.exec("SELECT id FROM cta_categories where title = 'categoriarosa'").values[0]
+  tutto_violetta_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags where name = 'tutto-violetta'").values[0]
+  map[categoriarosa_id[0]] = tutto_violetta_id[0] if categoriarosa_id
+
+  return map
+end
+
+def gsubs(names)
+  res = Array.new
+  names.each do |name|
+    res << name.gsub('_', '-').gsub('mystery', 'mistery')
+  end
+  res
+end
+
+def ungsub(name)
+  name.gsub('-', '_').gsub('mistery', 'mystery')
+end
+
+########## METHOD TO CREATE CORE_CUSTOM_GALLERY_ID - TAG_ID MAP, IF TAG ALREADY EXISTS IN SEED ##########
+
+def map_core_custom_gallery_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
+  map = Hash.new
+  source_core_custom_galleries_names = Array.new
+  source_db_connection.exec("SELECT name FROM core_custom_galleries").values.each do |name|
+    source_core_custom_galleries_names << name[0]
+  end
+  #puts source_core_custom_galleries_names.values
+  destination_tags_names = Array.new
+  destination_db_connection.exec("SELECT name FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags").values.each do |name|
+    destination_tags_names << name[0]
+  end
+
+  if (source_core_custom_galleries_names & destination_tags_names).count != source_core_custom_galleries_names.count 
+    print_missing("core_custom_galleries", source_core_custom_galleries_names, destination_tags_names)
+    exit
+  else
+    source_core_custom_galleries_names.each do |name|
+      category_id = source_db_connection.exec("SELECT id FROM core_custom_galleries where name = '#{name}'").values[0][0]
+      tag_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags where name = '#{name}'").values[0][0]
+      map[category_id] = tag_id
+    end
+  end
+
+  return map
+end
+
+def print_missing(table_name, categories, tags)
+  puts "Mancano tag. #{(categories & tags).count} #{table_name} presenti su #{categories.count} #{table_name} totali.\n"
+  res = Array.new
+  puts categories
+  puts "\n-----------------------------------\n"
+  puts tags
+  categories.each do |c|
+    res << c unless tags.include?(c)
+  end
+  puts "Tag mancanti: \n#{res}"
+end
+
 ########## CALL TO ACTIONS ##########
 
-def migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection)
+def migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, categories_tags_id_map)
   source_call_to_actions = source_db_connection.exec("SELECT * FROM call_to_actions")
+  source_call_to_actions_count = source_call_to_actions.count
 
-  puts "call_to_actions: #{source_call_to_actions.count} lines to migrate \nRunning migration..."
+  puts "call_to_actions: #{source_call_to_actions_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_call_to_actions.count)
+  lines_step, next_step = init_progress(source_call_to_actions_count)
 
   count = 0
   rows_with_cnt_type_missing = 0
+  rows_with_category_id_missing = 0
   call_to_actions_id_map = Hash.new
 
   source_call_to_actions.each do |line|
@@ -59,24 +150,48 @@ def migrate_call_to_actions(destination_db_tenant, source_db_connection, destina
     query = build_query_string(destination_db_tenant, "call_to_actions", fields)
 
     destination_db_connection.exec(query)
-    call_to_actions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i)
+    new_cta_id = destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i
+    call_to_actions_id_map.store(line["id"].to_i, new_cta_id)
+
+    if line["cta_category_id"].nil?
+      rows_with_category_id_missing += 1
+    else
+      tag_id = categories_tags_id_map[line["cta_category_id"]]
+      create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, tag_id, nullify_or_escape_string(source_db_connection, line["updated_at"]))
+    end
 
     count += 1
-    next_step = print_progress(count + rows_with_cnt_type_missing, lines_step, next_step, source_call_to_actions.count)
+    next_step = print_progress(count + rows_with_cnt_type_missing, lines_step, next_step, source_call_to_actions_count)
   end
-  puts "#{count} lines successfully migrated \n#{rows_with_cnt_type_missing} rows had dangling reference to content type \n"
+  puts "#{count} lines successfully migrated \n"
+  puts "#{rows_with_cnt_type_missing} rows had dangling reference to content type \n#{rows_with_category_id_missing} rows had no category \n"
   write_table_id_mapping_to_file("call_to_actions", call_to_actions_id_map)
   return call_to_actions_id_map
+end
+
+def create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, tag_id, created_and_updated_at)
+  fields = {
+    #"id" => ,
+    "call_to_action_id" => new_cta_id,
+    "tag_id" => tag_id,
+    "created_at" => created_and_updated_at,
+    "updated_at" => created_and_updated_at
+  }
+
+  query = build_query_string(destination_db_tenant, "call_to_action_tags", fields)
+
+  destination_db_connection.exec(query)
 end
 
 ########## QUIZZES ##########
 
 def migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_connection)
   source_quizzes = source_db_connection.exec("SELECT * FROM quiz_interactions")
+  source_quizzes_count = source_quizzes.count
 
-  puts "quizzes: #{source_quizzes.count} lines to migrate \nRunning migration..."
+  puts "quizzes: #{source_quizzes_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_quizzes.count)
+  lines_step, next_step = init_progress(source_quizzes_count)
   count = 0
   quizzes_id_map = Hash.new
 
@@ -99,7 +214,7 @@ def migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_
     quizzes_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}quizzes_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step, source_quizzes.count)
+    next_step = print_progress(count, lines_step, next_step, source_quizzes_count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("quizzes", quizzes_id_map)
@@ -110,10 +225,11 @@ end
 
 def migrate_answers(destination_db_tenant, source_db_connection, destination_db_connection, quizzes_id_map)
   source_answers = source_db_connection.exec("SELECT * FROM quiz_answers")
+  source_answers_count = source_answers.count
 
-  puts "answers: #{source_answers.count} lines to migrate \nRunning migration..."
+  puts "answers: #{source_answers_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_answers.count)
+  lines_step, next_step = init_progress(source_answers_count)
 
   count = 0
   answers_id_map = Hash.new
@@ -149,7 +265,7 @@ def migrate_answers(destination_db_tenant, source_db_connection, destination_db_
     answers_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}answers_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step, source_answers.count)
+    next_step = print_progress(count, lines_step, next_step, source_answers_count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("answers", answers_id_map)
@@ -159,10 +275,11 @@ end
 
 def migrate_checks(destination_db_tenant, source_db_connection, destination_db_connection)
   source_checks = source_db_connection.exec("SELECT * FROM check_content_interactions")
+  source_checks_count = source_checks.count
 
-  puts "checks: #{source_checks.count} lines to migrate \nRunning migration..."
+  puts "checks: #{source_checks_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_checks.count)
+  lines_step, next_step = init_progress(source_checks_count)
 
   count = 0
   checks_id_map = Hash.new
@@ -183,7 +300,7 @@ def migrate_checks(destination_db_tenant, source_db_connection, destination_db_c
     checks_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}checks_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step, source_checks.count)
+    next_step = print_progress(count, lines_step, next_step, source_checks_count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("checks", checks_id_map)
@@ -194,10 +311,11 @@ end
 
 def migrate_plays(destination_db_tenant, source_db_connection, destination_db_connection)
   source_plays = source_db_connection.exec("SELECT * FROM action_video_interactions")
+  source_plays_count = source_plays.count
 
-  puts "plays: #{source_plays.count} lines to migrate \nRunning migration..."
+  puts "plays: #{source_plays_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_plays.count)
+  lines_step, next_step = init_progress(source_plays_count)
 
   count = 0
   plays_id_map = Hash.new
@@ -217,7 +335,7 @@ def migrate_plays(destination_db_tenant, source_db_connection, destination_db_co
     plays_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}plays_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step, source_plays.count)
+    next_step = print_progress(count, lines_step, next_step, source_plays_count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("plays", plays_id_map)
@@ -228,10 +346,11 @@ end
 
 def migrate_interactions(destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, quizzes_id_map, checks_id_map, plays_id_map)
   source_interactions = source_db_connection.exec("SELECT * FROM interactions")
+  source_interactions_count = source_interactions.count
 
-  puts "interactions: #{source_interactions.count} lines to migrate \nRunning migration..."
+  puts "interactions: #{source_interactions_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_interactions.count)
+  lines_step, next_step = init_progress(source_interactions_count)
 
   count = 0
   interactions_id_map = Hash.new
@@ -258,7 +377,7 @@ def migrate_interactions(destination_db_tenant, source_db_connection, destinatio
     interactions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step, source_interactions.count)
+    next_step = print_progress(count, lines_step, next_step, source_interactions_count)
   end
   puts "#{count} lines successfully migrated \n"
   write_table_id_mapping_to_file("interactions", interactions_id_map)
@@ -284,11 +403,12 @@ end
 ########## USERS ##########
 
 def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, limit)
-  source_users = source_db_connection.exec("SELECT * FROM users#{limit ? " limit 20000" : ""}") # limit for testing
+  source_users = source_db_connection.exec("SELECT * FROM users#{limit ? " limit 10000" : ""}") # limit for testing
+  source_users_count = source_users.count
 
-  puts "users: #{source_users.count} lines to migrate \nRunning migration..."
+  puts "users: #{source_users_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_users.count)
+  lines_step, next_step = init_progress(source_users_count)
 
   count = 0
   count_email_present = 0
@@ -387,7 +507,7 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
       users_uid_map.store(line["uid_encrypted"], user_id)
 
     end
-    next_step = print_progress(count + count_email_present, lines_step, next_step, source_users.count)
+    next_step = print_progress(count + count_email_present, lines_step, next_step, source_users_count)
   end
   puts "#{count} lines successfully migrated \n#{count_email_present} users found with same email and successfully updated\n"
   write_table_id_mapping_to_file("users", users_id_map)
@@ -414,10 +534,11 @@ end
 
 def migrate_tags(destination_db_tenant, source_db_connection, destination_db_connection)
   source_custom_galleries = source_db_connection.exec("SELECT * FROM core_custom_galleries")
+  source_custom_galleries_count = source_custom_galleries.count
 
-  puts "tags (custom_galleries): #{source_custom_galleries.count} lines to migrate \nRunning migration..."
+  puts "tags (custom_galleries): #{source_custom_galleries_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_custom_galleries.count)
+  lines_step, next_step = init_progress(source_custom_galleries_count)
 
   count = 0
   gallery_tags_id_map = Hash.new
@@ -440,7 +561,7 @@ def migrate_tags(destination_db_tenant, source_db_connection, destination_db_con
     gallery_tags_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags_id_seq')").values[0][0].to_i)
 
     count += 1
-    next_step = print_progress(count, lines_step, next_step, source_custom_galleries.count)
+    next_step = print_progress(count, lines_step, next_step, source_custom_galleries_count)
   end
 
   puts "#{count} lines successfully migrated \n"
@@ -450,12 +571,13 @@ end
 
 ########## USER CALL TO ACTIONS ##########
 
-def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, gallery_tags_id_map)
+def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, core_custom_galleries_tags_id)
   source_galleries = source_db_connection.exec("SELECT * FROM core_galleries ORDER BY parent_custom_gallery_id")
+  source_galleries_count = source_galleries.count
 
-  puts "user_call_to_actions: #{source_galleries.count} lines to migrate \nRunning migration..."
+  puts "user_call_to_actions: #{source_galleries_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_galleries.count)
+  lines_step, next_step = init_progress(source_galleries_count)
 
   count = 0
   rows_with_user_missing = 0
@@ -481,7 +603,7 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
       rows_with_user_missing += 1
     else
       description = nullify_or_escape_string(source_db_connection, line["description"])
-  
+
       fields_for_call_to_actions = {
         #"id" => line["id"].to_i,
         "name" => nullify_or_escape_string(source_db_connection, "id#{line["id"]}".gsub(" ", "")),
@@ -515,11 +637,11 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
       user_call_to_actions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i)
   
       if line["parent_custom_gallery_id"] != "NULL"
-        create_call_to_action_tag(destination_db_tenant, destination_db_connection, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i, gallery_tags_id_map[line["parent_custom_gallery_id"].to_i])
+        create_call_to_action_tag_gallery(destination_db_tenant, destination_db_connection, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i, core_custom_galleries_tags_id[line["parent_custom_gallery_id"]])
       end
-  
+
       count += 1
-      next_step = print_progress(count, lines_step, next_step, source_galleries.count)
+      next_step = print_progress(count, lines_step, next_step, source_galleries_count)
     end
   end
   puts "#{count} lines successfully migrated \n#{rows_with_user_missing} rows had dangling reference to user \n"
@@ -527,7 +649,7 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
   return user_call_to_actions_id_map
 end
 
-def create_call_to_action_tag(destination_db_tenant, destination_db_connection, call_to_action_id, tag_id)
+def create_call_to_action_tag_gallery(destination_db_tenant, destination_db_connection, call_to_action_id, tag_id)
 
   fields_for_call_to_action_tag = {
     #"id" => ,
@@ -545,10 +667,11 @@ end
 
 def migrate_user_interactions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, interactions_id_map, limit)
   source_user_interactions = source_db_connection.exec("SELECT * FROM cta_ci_users#{limit ? " limit 2000" : ""}") # limit for testing
+  source_user_interactions_count = source_user_interactions.count
 
-  puts "user_interactions: #{source_user_interactions.count} lines to migrate \nRunning migration..."
+  puts "user_interactions: #{source_user_interactions_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_user_interactions.count)
+  lines_step, next_step = init_progress(source_user_interactions_count)
 
   count = 0
   rows_with_interaction_missing = 0
@@ -560,7 +683,7 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
     old_interaction_id = source_db_connection.exec("SELECT interaction_id FROM cta_content_interactions WHERE id = #{line["cta_content_interaction_id"]}").values.first
     res = source_db_connection.exec("SELECT id FROM cta_ci_user_params WHERE cta_ci_user_id = #{line["id"]}").values.first
     new_user_id = users_id_map[line["user_id"].to_i]
-    
+
     if old_interaction_id.nil?
       rows_with_interaction_missing += 1
     elsif new_user_id.nil?
@@ -580,7 +703,7 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
         "outcome" => build_outcome(source_db_connection, line),
         "aux" => "{}"
       }
-  
+
       query = build_query_string(destination_db_tenant, "user_interactions", fields)
   
       destination_db_connection.exec(query)
@@ -588,7 +711,8 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
   
       count += 1
     end
-    next_step = print_progress(count + rows_with_user_missing + rows_with_interaction_missing, lines_step, next_step, source_user_interactions.count)
+
+    next_step = print_progress(count + rows_with_user_missing + rows_with_interaction_missing, lines_step, next_step, source_user_interactions_count)
   end
   puts "#{count} lines successfully migrated"
   puts "#{rows_with_interaction_missing} rows had dangling reference to interaction \n#{rows_with_user_missing} rows had dangling reference to user"
@@ -622,16 +746,17 @@ def migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connectio
   #source_rewarding_levels = source_db_connection.exec("SELECT * FROM rewarding_levels")
   download_count = 0
 
-  puts "rewards: #{source_rewarding_prizes.count} lines to migrate \nRunning migration..."
+  source_rewarding_prizes_count = source_rewarding_prizes.count
+  puts "rewards: #{source_rewarding_prizes_count} lines to migrate \nRunning migration..."
   STDOUT.flush
 
   # POINTS
-  if source_db_tenant == "disney"
-    generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "point")
-  elsif source_db_tenant == "violetta"
-    generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "violetta-point")
-  end
-  generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "credit")
+  #if source_db_tenant == "disney"
+  #  generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "point")
+  #elsif source_db_tenant == "violetta"
+  #  generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "violetta-point")
+  #end
+  #generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, "credit")
 
   rewards_id_map = Hash.new
   cta_rewards_id_map = Hash.new
@@ -706,7 +831,8 @@ def generate_point_reward(destination_db_tenant, source_db_connection, destinati
 end
 
 def migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewards, reward_type, download_count)
-  lines_step, next_step = init_progress(source_rewards.count)
+  source_rewards_count = source_rewards.count
+  lines_step, next_step = init_progress(source_rewards_count)
   count = 0
   source_rewards.each do |line|
 
@@ -760,7 +886,7 @@ def migrate_source_reward_lines(destination_db_tenant, source_db_connection, des
     destination_db_connection.exec(query)
     rewards_id_map.store("#{reward_type}#{line["id"].to_i}", destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}rewards_id_seq')").values[0][0].to_i)
     count += 1
-    next_step = print_progress(count, lines_step, next_step, source_rewards.count)
+    next_step = print_progress(count, lines_step, next_step, source_rewards_count)
   end
   download_count
 end
@@ -851,7 +977,8 @@ def migrate_user_rewards(destination_db_tenant, source_db_connection, destinatio
   #source_rewarding_levels_users = source_db_connection.exec("SELECT * FROM rewarding_levels_users#{limit ? " limit 2000" : ""}") # limit for testing
   source_rewarding_prizes_users = source_db_connection.exec("SELECT * FROM rewarding_prizes_users#{limit ? " limit 2000" : ""}") # limit for testing
 
-  puts "user_rewards: #{source_rewarding_prizes_users.count} lines to migrate \nRunning migration..."
+  source_rewarding_prizes_users_count = source_rewarding_prizes_users.count
+  puts "user_rewards: #{source_rewarding_prizes_users_count} lines to migrate \nRunning migration..."
   STDOUT.flush
 
   #badge_counters = migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_badges_users, "badge")
@@ -864,7 +991,8 @@ def migrate_user_rewards(destination_db_tenant, source_db_connection, destinatio
 end
 
 def migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_users, reward_type)
-  lines_step, next_step = init_progress(source_rewarding_users.count)
+  source_rewarding_users_count = source_rewarding_users.count
+  lines_step, next_step = init_progress(source_rewarding_users_count)
   count = 0
   rows_with_user_missing = 0
   rows_with_reward_missing = 0
@@ -894,7 +1022,7 @@ def migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connec
   
       destination_db_connection.exec(query)
       count += 1
-      next_step = print_progress(count, lines_step, next_step, source_rewarding_users.count)
+      next_step = print_progress(count, lines_step, next_step, source_rewarding_users_count)
     end
   end
 
@@ -905,10 +1033,11 @@ end
 
 def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_uid_map)
   source_user_counters = source_db_connection.exec("SELECT * FROM rewarding_users")
+  source_user_counters_count = source_user_counters.count
 
-  puts "user_rewards_for_points_and_credits: #{source_user_counters.count} lines to migrate \nRunning migration..."
+  puts "user_rewards_for_points_and_credits: #{source_user_counters_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_user_counters.count * 2)
+  lines_step, next_step = init_progress(source_user_counters_count * 2)
   count = 0
   rows_with_user_missing = 0
   rows_with_updated_credits = 0
@@ -965,7 +1094,7 @@ def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_con
         rows_with_updated_credits += 1
       end
     end
-    next_step = print_progress(count + rows_with_user_missing + rows_with_updated_credits, lines_step, next_step, source_user_counters.count)
+    next_step = print_progress(count + rows_with_user_missing + rows_with_updated_credits, lines_step, next_step, source_user_counters_count)
   end
   puts "#{count} lines successfully created"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_updated_credits} rows updated for credits \n********************************************************************************* \n"
@@ -977,10 +1106,11 @@ end
 
 def migrate_comments_and_user_comment_interactions(destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, users_id_map, limit)
   source_comments_and_user_comment_interactions = source_db_connection.exec("SELECT * FROM comments ORDER BY content_id#{limit ? " limit 20000" : ""}") # limit for testing
+  source_comments_and_user_comment_interactions_count = source_comments_and_user_comment_interactions.count
 
-  puts "comments & user_comment_interactions: #{source_comments_and_user_comment_interactions.count} lines to migrate \nRunning migration..."
+  puts "comments & user_comment_interactions: #{source_comments_and_user_comment_interactions_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_comments_and_user_comment_interactions.count)
+  lines_step, next_step = init_progress(source_comments_and_user_comment_interactions_count)
   count_for_user_comment_interactions = 0
   count_for_comments = 0
   rows_with_user_missing = 0
@@ -1054,7 +1184,7 @@ def migrate_comments_and_user_comment_interactions(destination_db_tenant, source
   
       count_for_user_comment_interactions += 1
     end
-    next_step = print_progress(count_for_user_comment_interactions + rows_with_user_missing, lines_step, next_step, source_comments_and_user_comment_interactions.count)
+    next_step = print_progress(count_for_user_comment_interactions + rows_with_user_missing, lines_step, next_step, source_comments_and_user_comment_interactions_count)
 
   end
   puts "#{count_for_comments} lines successfully generated for comments and interactions\n"
@@ -1073,10 +1203,11 @@ end
 
 def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, call_to_actions_id_map, user_call_to_actions_id_map, limit)
   source_votes = source_db_connection.exec("SELECT * FROM votes#{limit ? " limit 20000" : ""}") # limit for testing
+  source_votes_count = source_votes.count
 
-  puts "votes: #{source_votes.count} lines to migrate \nRunning migration..."
+  puts "votes: #{source_votes_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_votes.count)
+  lines_step, next_step = init_progress(source_votes_count)
   count = 0
   rows_with_user_missing = 0
   rows_with_cta_missing = 0
@@ -1140,7 +1271,7 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
   
       count += 1
     end
-    next_step = print_progress(count + rows_with_user_missing + rows_with_cta_missing, lines_step, next_step, source_votes.count)
+    next_step = print_progress(count + rows_with_user_missing + rows_with_cta_missing, lines_step, next_step, source_votes_count)
   end
   puts "#{count} lines successfully migrated\n"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_cta_missing} rows had dangling reference to cta"
@@ -1149,10 +1280,11 @@ end
 
 def migrate_notices(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, user_comment_interactions_id_map)
   source_notices = source_db_connection.exec("SELECT * FROM rewarding_notifications")
+  source_notices_count = source_notices.count
 
-  puts "notices: #{source_notices.count} lines to migrate \nRunning migration..."
+  puts "notices: #{source_notices_count} lines to migrate \nRunning migration..."
   STDOUT.flush
-  lines_step, next_step = init_progress(source_notices.count)
+  lines_step, next_step = init_progress(source_notices_count)
   count = 0
   rows_with_user_missing = 0
   rows_with_user_comment_interaction_missing = 0
@@ -1187,7 +1319,7 @@ def migrate_notices(destination_db_tenant, source_db_connection, destination_db_
   
       count += 1
     end
-    next_step = print_progress(count + rows_with_user_missing + rows_with_user_comment_interaction_missing, lines_step, next_step, source_notices.count)
+    next_step = print_progress(count + rows_with_user_missing + rows_with_user_comment_interaction_missing, lines_step, next_step, source_notices_count)
   end
 
   puts "#{count} lines successfully migrated \n"
@@ -1273,7 +1405,7 @@ def init_progress(count)
 end
 
 def print_progress(count, lines_step, next_step, total_count)
-  if count == next_step and total_count - count < lines_step
+  if count == next_step
     puts "#{count} lines processed \n"
     STDOUT.flush
     next_step + lines_step
@@ -1285,15 +1417,18 @@ end
 def migrate_db(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant, limit)
   write_and_store_time(source_db_tenant, "start")
 
-  call_to_actions_id_map = migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection)
+  categories_tags_id_map = map_category_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
+  core_custom_galleries_tags_id = map_core_custom_gallery_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
+
+  call_to_actions_id_map = migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, categories_tags_id_map)
   quizzes_id_map = migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_connection)
   migrate_answers(destination_db_tenant, source_db_connection, destination_db_connection, quizzes_id_map)
   checks_id_map = migrate_checks(destination_db_tenant, source_db_connection, destination_db_connection)
   plays_id_map = migrate_plays(destination_db_tenant, source_db_connection, destination_db_connection)
   interactions_id_map = migrate_interactions(destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, quizzes_id_map, checks_id_map, plays_id_map)
   users_id_map = migrate_users(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, limit)
-  gallery_tags_id_map = migrate_tags(destination_db_tenant, source_db_connection, destination_db_connection)
-  user_call_to_actions_id_map = migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], gallery_tags_id_map)
+  # *** DO NOT MIGRATE *** gallery_tags_id_map_old = migrate_tags(destination_db_tenant, source_db_connection, destination_db_connection)
+  user_call_to_actions_id_map = migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], core_custom_galleries_tags_id)
   migrate_user_interactions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], interactions_id_map, limit)
   rewards_id_map = migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
   migrate_user_rewards(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], rewards_id_map, limit)

@@ -20,7 +20,7 @@
     </script>
   </div>
 
-  <div class="row main-row">
+  <div class="row main-row filters__flexslider-main-row">
     <%= render partial: "/application/home_filters" %>
   </div>
 
@@ -31,17 +31,16 @@
           <%= render partial: "/call_to_action/cover_single_calltoaction" %>
         </div>
       </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="append-other" class="text-center" style="margin-bottom: 20px;">
+            <button class="btn btn-primary" href="javascript: void(0)" ng-click="appendCallToAction();"><span>CARICA ALTRI</span></button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-sm-4">
       <div class="panel panel-default text-center" style="line-height: 200px;">ADV</div>
-    </div>
-  </div>
-
-  <div class="row main-row">      
-    <div class="col-sm-8">
-      <div id="append-other" class="text-center" style="margin-bottom: 20px;">
-        <button class="btn btn-primary" href="javascript: void(0)" ng-click="appendCallToAction();"><span>CARICA ALTRI</span></button>
-      </div>
     </div>
   </div>
 

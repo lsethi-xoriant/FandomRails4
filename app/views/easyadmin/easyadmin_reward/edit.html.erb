@@ -38,7 +38,7 @@
     <h3>Dati premio</h3>
     <hr/>
     
-    <%= form_for @reward, url: { action: "update" }, multipart: true do |f| %>
+    <%= form_for @reward, url: { action: "update" }, html: { multipart: true } do |f| %>
       <%= hidden_field_tag :id, @reward.id %>
       <div class="row">
         <div class="col-lg-6">
