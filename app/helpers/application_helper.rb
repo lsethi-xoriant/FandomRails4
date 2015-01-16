@@ -315,8 +315,15 @@ module ApplicationHelper
   end
   
   def construct_conditions_from_query(query, field)
-    query.gsub!(/\W+/, '%')
-    conditions = "#{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{query}%")}"
+    query.gsub!(/\W+/, ' ')
+    conditions = ""
+    query.split(" ").each do |term|
+      unless conditions.blank?
+        conditions += " OR #{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
+      else
+        conditions += "#{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
+      end
+    end
     conditions
   end
 
@@ -328,7 +335,8 @@ module ApplicationHelper
   
   def get_tags_with_tag_with_match(tag_name, query = "")
     conditions = construct_conditions_from_query(query, "tags.title")
-    Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND #{conditions}", tag_name).to_a
+    tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions})", tag_name).to_a
+    filter_results(tags, query)
   end
   
   def get_ctas_with_tag(tag_name)
@@ -339,7 +347,21 @@ module ApplicationHelper
   
   def get_ctas_with_tag_with_match(tag_name, query = "")
     conditions = construct_conditions_from_query(query, "call_to_actions.title")
-    CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND #{conditions}", tag_name).to_a
+    ctas = CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND (#{conditions})", tag_name).to_a
+    filter_results(ctas, query)
+  end
+  
+  
+  def filter_results(results, query)
+    regexp = Regexp.new query.split(/\W+/).map { |term| "(\\W+#{term}\\W+)" }.join("|")
+    filtered_results = []
+    results.each do |result|
+      title = " #{result.title} "
+      unless regexp.match(title).nil?
+        filtered_results << result
+      end
+    end
+    filtered_results
   end
   
   def get_ctas_with_tags(*tags_name)

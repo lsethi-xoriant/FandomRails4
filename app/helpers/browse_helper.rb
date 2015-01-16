@@ -138,9 +138,8 @@ module BrowseHelper
   
   def get_contents_by_query(term)
     browse_tag_ids = get_browse_tag_ids()
-    tags = Tag.includes(:tags_tags).where("tags_tags.other_tag_id IN (?) OR tags.id IN (?)", browse_tag_ids, browse_tag_ids)
-    tags = tags.where("name ILIKE ?","%#{term}%")
-    #tags = Tag.where("name ILIKE ?","%#{term}%")
+    tags = Tag.includes(:tags_tags).where("tags_tags.other_tag_id IN (?)", browse_tag_ids)
+    tags = tags.where("title ILIKE ?","%#{term}%")
     ctas = CallToAction.where("title ILIKE ?","%#{term}%")
     merge_contents(ctas, tags)
   end
