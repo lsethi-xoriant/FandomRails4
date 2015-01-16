@@ -34,6 +34,14 @@ module CallToActionHelper
           "icon" => (get_extra_fields!(miniformat)["icon"]["url"] rescue nil),
         }
       end
+      
+      unless calltoaction.rewards.empty?
+        reward = calltoaction.rewards.first
+        calltoaction_reward_info = {
+          "cost" => reward.cost,
+          "status" => get_user_reward_status(reward)
+        }
+      end 
 
       calltoaction_info_list << {
         "calltoaction" => { 
@@ -51,7 +59,8 @@ module CallToActionHelper
         },
         "flag" => flag_info,
         "miniformat" => miniformat_info,
-        "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction)
+        "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
+        "reward_info" => calltoaction_reward_info
       }
     
     end

@@ -5,6 +5,11 @@ body {
   background-color: $grey;
 }
 
+p{
+  margin: 0;
+  line-height: inherit;
+}
+
 #goc-body {
   background: transparent !important;
 }

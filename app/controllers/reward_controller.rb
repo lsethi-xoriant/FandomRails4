@@ -4,16 +4,37 @@
 require 'fandom_utils'
 
 class RewardController < ApplicationController
+  include ApplicationHelper
+  include RewardHelper
   
   def index
-    @user_rewards = get_user_rewards(current_user.id)
-    @top_rewards = get_top_rewards(current_user.id)
-    @user_available_rewards = get_user_available_rewards(current_user.id)
-    @user_all_rewards = get_all_rewards(current_user.id)
+    user_rewards = get_user_rewards(current_user.id)
+    user_available_rewards = get_user_available_rewards(current_user.id)
+    newest_rewards = get_newest_rewards
+    all_rewards = get_all_rewards(current_user.id)
+    reward_list = {
+      "user_rewards" => prepare_rewards_for_presentation(user_rewards),
+      "user_available_rewards" => prepare_rewards_for_presentation(user_available_rewards),
+      "newest_rewards" => prepare_rewards_for_presentation(newest_rewards),
+      "all_rewards" => prepare_rewards_for_presentation(all_rewards)
+    }
+    @reward_list = reward_list
+  end
+  
+  def prepare_rewards_for_presentation(rewards)
+    unless rewards.empty?
+      build_call_to_action_info_list(rewards.map{ |r| r.call_to_action})
+    end
   end
   
   def get_user_rewards(user_id)
-    Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.counter > 0 AND user_rewards.user_id = ?", user_id)
+    Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.counter > 0 AND user_rewards.user_id = ? AND rewards.id NOT IN (?)", user_id, get_basic_rewards_ids)
+  end
+  
+  def get_newest_rewards
+    cache_short("newest_rewards") do
+      Reward.where("rewards.id NOT IN (?)", get_basic_rewards_ids).order("created_at DESC").limit(8).to_a
+    end
   end
   
   def get_top_rewards(user_id)
@@ -22,14 +43,19 @@ class RewardController < ApplicationController
   end
   
   def get_user_available_rewards(user_id)
-    Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.counter = 0 AND user_rewards.user_id = ?", user_id)
+    avaiable_rewards = []
+    Reward.where("rewards.id NOT IN (?)", get_basic_rewards_ids).each do |reward|
+      if user_has_currency_for_reward(reward) && !user_has_reward(reward.name)
+        avaiable_rewards << reward
+      end
+    end
+    avaiable_rewards
   end
   
   def get_all_rewards(user_id)
-    reward_system_tag = ["basic"]
-    excluded_reward_ids = RewardTag.includes(:tag).where("tags.name in (?) AND reward_id IS NOT NULL", reward_system_tag).map{ |row| row.reward_id }
-    rewards_result_set = Reward.where("id not in (?)", excluded_reward_ids)
-    rewards_list = create_reward_list(rewards_result_set, user_id)
+    cache_short("all_catalogue_rewards") do
+      Reward.where("rewards.id NOT IN (?)", get_basic_rewards_ids).to_a
+    end
   end
   
   def create_reward_list(rewards, user_id)

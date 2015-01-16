@@ -29,7 +29,7 @@ module NoticeHelper
     property_tag = get_tag_with_tag_about_reward(reward, "property").first
     unless property_tag.nil?
       notification_icon = get_extra_fields!(property_tag)["logo"]
-      icon = get_upload_extra_field_processor(notification_icon,"medium")
+      icon = get_upload_extra_field_processor(notification_icon, "medium")
     end
     icon
   end

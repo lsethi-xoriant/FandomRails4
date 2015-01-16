@@ -13,6 +13,7 @@
 //= require angularjs/comment
 //= require angularjs/ranking
 //= require angularjs/search
+//= require angularjs/reward_catalogue
 //= require config
 //= require angularjs/stream_calltoaction
 //= require angularjs/eventfilter

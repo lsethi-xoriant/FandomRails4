@@ -1,0 +1,48 @@
+/* REWARD CATALOGUE HEADER CSS */
+
+.reward-catalogue-header{
+  background-color: $blu;
+  padding: 20px 0;
+}
+
+.reward-catalogue-header__avatar-container{
+  text-align: right;  
+}
+
+.reward-catalogue-header__avatar{
+  max-height: 55px;
+}
+
+.reward-catalogue-header__credit-counter{
+  padding: 8px 25px 4px 25px;
+  font-size: 23px;
+  margin: 0 10px;
+  display: inline;
+  background-color: #fff;
+  border: 2px solid #993300;
+  border-radius: 15px;
+  color: $red;
+}
+
+.reward-catalogue-header__credit-text{
+  color: #fff;
+  font-size: 28px;
+  line-height: 55px;
+}
+
+.reward-catalogue-header__credit-subtext{
+  color: #fff;
+}
+
+@media (max-width: $screen-sm-min) {
+   .reward-catalogue-header__credit-text{
+    color: #fff;
+    font-size: 28px;
+    line-height: 55px;
+    text-align: center;
+  }
+  
+  .reward-catalogue-header__avatar-container{
+    text-align: center;  
+  }
+}
