@@ -6,7 +6,7 @@
   <div class="flexslider properties__flexslider">
     <ul class="slides">
       <li ng-repeat="property in aux.property_info" class="text-center properties__flexslider-item">
-        <a class="properties__flexslider-a" href="/{{property.title}}"> 
+        <a class="properties__flexslider-a" href="/{{property.path}}"> 
           <img class="properties__flexslider-image" ng-src="{{property.image}}" style="border-bottom: 4px solid {{property.background}};">     
         </a>
       </li>
