@@ -1001,7 +1001,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     	    }   
         }).bind("finish", function(e, api) {
           calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
-          alert("HERE");
           $scope.$apply(function() {
             updateEndVideoInteraction(calltoaction_id);
           });
@@ -1241,9 +1240,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
                 interaction_info.feedback = false;
 
                 if(interaction_info.interaction.resource_type == "trivia") {
-                  angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
-                    answer.class = "trivia-interaction__answer--visible";
-                  });
+                  // Answer exit animation
+                  //angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
+                  //  answer.class = "trivia-interaction__answer--visible";
+                  //});
                 } else if(interaction_info.interaction.resource_type == "versus") {
                   index = 0;
                   angular.forEach(interaction_info.interaction.resource.answers, function(answer) {

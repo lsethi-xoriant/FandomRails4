@@ -1,15 +1,21 @@
-<div class="col-sm-8 col-sm-offset-2 text-center">
-  <p class="versus-interaction__question--overvideo">{{interaction_info.interaction.resource.question}}</p>
-</div>
-<div ng-if="interaction_info.user_interaction && currentUserEmptyAndAnonymousInteractionEnable()" class="row">
-  <div class="col-md-12 text-center">
+<div class="row" ng-if="!interaction_info.feedback">
+  <div class="col-sm-8 col-sm-offset-2 text-center">
+    <p class="versus-interaction__question--overvideo">{{interaction_info.interaction.resource.question}}</p>
+  </div>
+  <div class="col-md-12 text-center" ng-if="interaction_info.user_interaction && currentUserEmptyAndAnonymousInteractionEnable()">
     <p>Registrati per fare valere il tuo voto.</p>
   </div>
-</div>
-<div class="row">
   <div ng-repeat="answer in interaction_info.interaction.resource.answers">
     <div class="col-sm-6">
       <%= render partial: "/call_to_action/versus_answer_overvideo" %>
     </div>
   </div>
+</div>
+
+<div class="row text-center" ng-if="interaction_info.feedback && interaction_info.user_interaction && interaction_info.user_interaction.outcome">
+  <div class="col-sm-12">
+    <p class="versus-interaction__feedback-title">Complimenti!</p>
+    <p class="versus-interaction__feedback-description">Hai guadagnato altri punti.</p>
+  </div>
+  <div class="col-sm-12"><span class="interaction__feedback-reward">+{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}</span></div> 
 </div>
