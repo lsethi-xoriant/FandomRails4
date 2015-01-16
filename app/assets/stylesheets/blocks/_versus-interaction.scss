@@ -4,38 +4,42 @@
   height: 9999px;
 }
 
+.versus-interaction__feedback-title {
+  color: #fff;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 0;
+  margin-top: 10%;
+  text-shadow: 0 1px #000;
+}
+
+.versus-interaction__feedback-description {
+  text-shadow: 0 1px #000;
+  color: #fff;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
 .versus-interaction__percentage-text {
   margin: 0;
 }
 
 .versus-interaction__percentage--left {
-  width: 120px;
+  color: #fff;
+  font-size: 46px;
+  font-weight: bold;
+  right: 180px;
   position: absolute;
-  right: 20px;
-  text-align: center;
-  top: 91px;
-  font-size: 24px;
-  color: #3399ff;
-
-  background: -webkit-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
-  background: -o-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
-  background: -moz-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
-  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+  top: 36px;
 }
 
 .versus-interaction__percentage--right {
-  left: 20px;
+  color: #fff;
+  font-size: 46px;
+  font-weight: bold;
+  left: 180px;
   position: absolute;
-  width: 120px;
-  text-align: center;
-  top: 91px;
-  font-size: 24px;
-  color: #30bf43;
-
-  background: -webkit-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
-  background: -o-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
-  background: -moz-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
-  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+  top: 36px;
 }
 
 
@@ -48,9 +52,9 @@
 }
 
 .versus-interaction__question--overvideo {
-  font-size: 22px;
   color: #fff;
-  margin: 20px 15px 5px 15px;
+  font-size: 28px;
+  margin: 10% 0 25px;
 }
 
 .versus-interaction__question {
@@ -75,8 +79,8 @@
 }
 
 .versus-interaction__img {
-  width: 130px; 
-  height: 130px;
+  width: 120px; 
+  height: 120px;
 }
 
 .versus-interaction__img--left {
@@ -91,7 +95,7 @@
 
 .versus-interaction__button {
   margin-top: 15px;
-  width: 150px;
+  width: 155px;
 }
 
 .versus-interaction__button--left {
@@ -111,21 +115,24 @@
 }
 
 .versus-interaction__progress-bar {
-  position: absolute !important;
-  width: 15px !important;
-  height: 130px !important; 
+  background-color: #000;
+  border: 0.5px solid #999;
+  border-radius: 10px;
+  height: 120px !important;
   margin: 0 !important;
+  position: absolute !important;
+  width: 25px !important;
 }
 
 .versus-interaction__progress-bar--left {
-  right: 150px;
+  right: 145px;
   .progress-bar {
     background: #3399ff;
   }
 }
 
 .versus-interaction__progress-bar--right {
-  left: 150px;
+  left: 145px;
   .progress-bar {
     background: #30bf43;
   }
@@ -216,10 +223,10 @@
   background: none repeat scroll 0 0 #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
-  right: 168px;
+  right: 180px;
+  bottom: -7px;
   padding: 5px;
   position: absolute;
-  top: -4px;
   -webkit-box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
   box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
@@ -258,10 +265,10 @@
   background: none repeat scroll 0 0 #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
-  left: 168px;
+  left: 180px;
+  bottom: -7px;
   padding: 5px;
   position: absolute;
-  top: -4px;
   -webkit-box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
   box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
@@ -308,11 +315,6 @@
 
   .versus-interaction__avatar-container--left {
     right: 115px;
-  }
-
-  .versus-interaction__img {
-    width: 120px; 
-    height: 120px;
   }
 
   .versus-interaction__img--left {
