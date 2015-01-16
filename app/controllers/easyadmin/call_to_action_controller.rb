@@ -51,11 +51,10 @@ class Easyadmin::CallToActionController < ApplicationController
   end
 
   def update_cta
-    debugger
     @cta = CallToAction.find(params[:id])
     create_and_link_attachment(params[:call_to_action], @cta)
     unless @cta.update_attributes(params[:call_to_action])
-      @tag_list = params[:tag_list].split(",")
+      @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/edit_cta"
     else
