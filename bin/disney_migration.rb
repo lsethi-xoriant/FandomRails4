@@ -5,6 +5,7 @@ require "pg"
 require "json"
 require "fileutils"
 require "benchmark"
+require "ruby-debug"
 
 BIG_NUMBER_OF_LINES = 500000
 
@@ -682,7 +683,7 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
     old_interaction_id = source_db_connection.exec("SELECT interaction_id FROM cta_content_interactions WHERE id = #{line["cta_content_interaction_id"]}").values.first
     res = source_db_connection.exec("SELECT id FROM cta_ci_user_params WHERE cta_ci_user_id = #{line["id"]}").values.first
     new_user_id = users_id_map[line["user_id"].to_i]
-    
+
     if old_interaction_id.nil?
       rows_with_interaction_missing += 1
     elsif new_user_id.nil?
@@ -702,7 +703,7 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
         "outcome" => build_outcome(source_db_connection, line),
         "aux" => "{}"
       }
-  
+
       query = build_query_string(destination_db_tenant, "user_interactions", fields)
   
       destination_db_connection.exec(query)
@@ -710,6 +711,7 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
   
       count += 1
     end
+
     next_step = print_progress(count + rows_with_user_missing + rows_with_interaction_missing, lines_step, next_step, source_user_interactions_count)
   end
   puts "#{count} lines successfully migrated"
@@ -1403,7 +1405,7 @@ def init_progress(count)
 end
 
 def print_progress(count, lines_step, next_step, total_count)
-  if count == next_step and total_count - count < lines_step
+  if count == next_step
     puts "#{count} lines processed \n"
     STDOUT.flush
     next_step + lines_step
