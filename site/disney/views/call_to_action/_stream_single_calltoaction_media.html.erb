@@ -5,23 +5,40 @@
     <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
 
     <!-- OVERVIDEO AREA -->
-    <div ng-if="overvideoInteractionsPresent(calltoaction_info.calltoaction.id)" id="overvideo-calltoaction-{{calltoaction_info.calltoaction.id}}">
+    <div ng-if="overvideoInteractionsPresent(calltoaction_info.calltoaction.id)">
       <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterOvervideoDuringInteractions | filter:filterOvervideoDuringActiveInteraction" class="col-xs-12">
-        <div id="overvideo-interaction-{{interaction_info.interaction.id}}">
-          <%= render partial: "/call_to_action/overvideo_interaction" %>
-        </div>
-      </div>
-      <!-- DEFAULT END -->
-      <div class="col-xs-12 end-interaction" ng-if="calltoaction_info.active_end_interaction">
-        <div class="row">
-          <div class="col-sm-8 col-sm-offset-2 text-center">
-            <p class="end-interaction__title" ng-if="!calltoaction_info.calltoaction.extra_fields['end-video']">Cosa ne pensi? Dì la tua! Lascia subito il tuo commento su questo argomento.</p>
-            <p class="end-interaction__title" ng-if="calltoaction_info.calltoaction.extra_fields['end-video']">{{calltoaction_info.calltoaction.extra_fields['end-video']}}</p>
-            <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue"><span>COMMENTA</span></a>
-          </div>
-        </div>
+        <%= render partial: "/call_to_action/overvideo_interaction" %>
       </div>
     </div>  
+
+    <!-- DEFAULT END -->
+    <div class="col-xs-12 end-interaction text-center" ng-if="calltoaction_info.active_end_interaction">
+      <p class="end-interaction__title" ng-if="!calltoaction_info.calltoaction.extra_fields['end-video']">Cosa ne pensi? Dì la tua!<br>Lascia subito il tuo commento su questo argomento.</p>
+      <p class="end-interaction__title" ng-if="calltoaction_info.calltoaction.extra_fields['end-video']">{{calltoaction_info.calltoaction.extra_fields['end-video']}}</p>
+      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-lg hidden-xs"><span>COMMENTA</span></a>
+      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-sm visible-xs"><span>COMMENTA</span></a>
+    </div>
+
+    <!-- PLAY INTERACTION -->
+    <div class="play-interaction__container" ng-if="(interaction_info = getPlayInteraction(calltoaction_info.calltoaction.id)) && !interaction_info.hide">
+      <div class="col-md-12 text-center hidden-xs">
+        <p class="play-interaction__title">Guarda il video e guardagna i punti.</p>
+      </div>
+      <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row">
+        <div class="col-md-12 play-interaction__winnable-reward text-center">
+          <span class="label label-success cta-cover__winnable-reward__label">
+            Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+          </span> 
+        </div>
+      </div>
+      <div ng-if="!interaction_info.user_interaction" class="row text-center">
+        <div class="col-md-12 play-interaction__winnable-reward">
+          <span class="label label-warning cta-cover__winnable-reward__label">
+            +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
+          </span>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>

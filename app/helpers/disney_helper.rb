@@ -73,6 +73,14 @@ module DisneyHelper
     end
   end
 
+  def compute_property_path(property)
+    if property.name == "disney-channel"
+      nil
+    else
+      property.name
+    end
+  end
+
   def build_disney_current_user()
     {
       "facebook" => current_user.facebook($site.id),
@@ -93,7 +101,7 @@ module DisneyHelper
       "background" => get_extra_fields!(current_property)["label-background"],
       "image-background" => (get_extra_fields!(current_property)["image-background"]["url"] rescue nil),
       "logo" => (get_extra_fields!(current_property)["logo"]["url"] rescue nil),
-      "title" => get_extra_fields!(current_property)["title"],
+      "path" => compute_property_path(current_property),
       "outer" => get_extra_fields!(current_property)["outer"],
       "outer-url" => get_extra_fields!(current_property)["outer-url"],
       "image" => (get_upload_extra_field_processor(get_extra_fields!(current_property)["image"], :thumb) rescue nil) 
@@ -128,7 +136,7 @@ module DisneyHelper
         property_info << {
           "id" => property.id,
           "background" => get_extra_fields!(property)["label-background"],
-          "title" => (get_extra_fields!(property)["title"].downcase rescue nil),
+          "path" => compute_property_path(property),
           "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil) 
         }
       end

@@ -372,7 +372,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return comment_interactions;
   }
 
-  function getPlayInteraction(calltoaction_id) {
+  $scope.getPlayInteraction = function(calltoaction_id) {
     play_interaction = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
@@ -602,8 +602,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $("#append-other button").attr('disabled', true);
 
       append_calltoaction_path = "/append_calltoaction"
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.title) {
-        append_calltoaction_path = "/" + $scope.aux.current_property_info.title.toLowerCase() + "" + append_calltoaction_path;
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+        append_calltoaction_path = "/" + $scope.aux.current_property_info.path + "" + append_calltoaction_path;
       }
 
       $http.post(append_calltoaction_path, { calltoactions_showed: $scope.calltoactions, tag_id: $scope.current_tag_id, current_calltoaction: $scope.current_calltoaction })
@@ -1041,7 +1041,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $window.updateEndVideoInteraction = function(calltoaction_id) {
     $scope.play_event_tracked[calltoaction_id] = false;
-    interaction_info = getOvervideoEndInteractionInfo(calltoaction_id);//HERE
+    interaction_info = getOvervideoEndInteractionInfo(calltoaction_id);
     if(interaction_info) {
       interaction_info.interaction.overvideo_active = true;
       animateInInteraction(interaction_info.interaction);
@@ -1060,15 +1060,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       $scope.play_event_tracked[calltoaction_id] = true;
 
-      play_interaction_info = getPlayInteraction(calltoaction_id);
+      play_interaction_info = $scope.getPlayInteraction(calltoaction_id);
       if(play_interaction == null) {
         console.log("You must enable the play interaction for this calltoaction.");
         return;
       }
 
+      play_interaction_info.hide = true; 
+
       update_interaction_path = "/update_interaction"
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.title) {
-        update_interaction_path = "/" + $scope.aux.current_property_info.title + "" + update_interaction_path;
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
       }
 
       $http.post(update_interaction_path, { interaction_id: play_interaction_info.interaction.id })
@@ -1192,8 +1194,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       enableWaitingAudio("stop");
 
       update_interaction_path = "/update_interaction"
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.title) {
-        update_interaction_path = "/" + $scope.aux.current_property_info.title.toLowerCase() + "" + update_interaction_path;
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
       }
   	  
       $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getAnonymousUserStorage() })

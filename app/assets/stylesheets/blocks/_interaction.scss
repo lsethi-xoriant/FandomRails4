@@ -20,9 +20,13 @@
 }
 
 .interaction__feedback-reward {
-  border: 2px solid orange;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+  color: $red;
   border-radius: 20px;
-  color: #fff;
   font-size: 32px;
   padding-left: 20px;
   padding-right: 20px;
