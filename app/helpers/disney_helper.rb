@@ -17,9 +17,9 @@ module DisneyHelper
   end
   
   def get_my_general_position_in_property
-    property_ranking = Ranking.find_by_name("#{get_disney_property}_general_chart")
+    property_ranking = Ranking.find_by_name("#{get_disney_property}-general-chart")
     if property_ranking
-      rank = cache_short("#{$context_root}_general_chart") do
+      rank = cache_short("#{$context_root}-general-chart") do
         rank = get_full_rank(property_ranking)
       end
       [rank[:my_position], rank[:total]]
@@ -30,7 +30,7 @@ module DisneyHelper
   
   def get_disney_current_contest_point_name
     unless $context_root.nil?
-      "#{$context_root}_point"
+      "#{$context_root}-point"
     else
       "point"
     end
@@ -38,7 +38,7 @@ module DisneyHelper
   
   def disney_get_point_name_from_property_name(property_name)
     unless property_name == "disney-channel"
-      "#{property_name}_point"
+      "#{property_name}-point"
     else
       "point"
     end
@@ -202,9 +202,9 @@ module DisneyHelper
   
   def disney_prepare_levels_to_show(levels)
     levels = levels[get_disney_property] rescue nil
-    order_rewards(levels.to_a, "cost")
+    levels = order_rewards(levels.to_a, "cost")
     prepared_levels = {}
-    if levels
+    unless levels.blank?
       index = 0
       level_before_point = 0
       level_before_status = nil

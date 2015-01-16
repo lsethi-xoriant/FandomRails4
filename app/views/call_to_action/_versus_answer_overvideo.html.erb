@@ -5,8 +5,8 @@
       <div class="progress-bar" role="progressbar" style="height: {{answer.percentage}}%;"></div>
     </div>
 
-    <div ng-if="{{answer.percentage}}" class="versus-interaction__percentage--{{ $index % 2 == 0 ? 'left' : 'right' }}">
-      <p class="versus-interaction__percentage-text">{{answer.percentage}}</p>
+    <div ng-if="answer.percentage != null" class="versus-interaction__percentage--{{ $index % 2 == 0 ? 'left' : 'right' }}">
+      <p class="versus-interaction__percentage-text">{{answer.percentage}}%</p>
     </div>
 
     <img class="versus-interaction__img versus-interaction__img--{{ $index % 2 == 0 ? 'left' : 'right' }}" ng-src="{{answer.image_medium}}" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">

@@ -1,6 +1,7 @@
 <div class="row" ng-if="!interaction_info.feedback">
   <div class="col-sm-8 col-sm-offset-2 text-center">
     <p class="versus-interaction__question--overvideo">{{interaction_info.interaction.resource.question}}</p>
+    <div class="versus-interaction__vs">VS</div>
   </div>
   <div class="col-md-12 text-center" ng-if="interaction_info.user_interaction && currentUserEmptyAndAnonymousInteractionEnable()">
     <p>Registrati per fare valere il tuo voto.</p>
