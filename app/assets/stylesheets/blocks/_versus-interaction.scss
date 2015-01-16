@@ -63,12 +63,24 @@
   margin: 20px 0 5px 0;
 }
 
+.versus-interaction__vs {
+  bottom: -90px;
+  color: #fff;
+  font-size: 34px;
+  font-weight: bold;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
 .versus-interaction__answer--left {
+  margin-right: 15px;
   position: relative;
   left: -150%;
 }
 
 .versus-interaction__answer--right {
+  margin-left: 15px;
   position: relative;
   left: 150%;
 }
@@ -303,22 +315,41 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+
+  .versus-interaction__vs {
+    color: #000;
+    font-size: 22px;
+    bottom: -78px;
+  }
+
+  .versus-interaction__question {
+    margin: 0px 0 15px 0;
+  }
+
   .versus-interaction__percentage--left {
+    color: $blu;
+    font-size: 26px;
+    font-weight: bold;
+    position: absolute;
+    top: 180px;
+    text-align: center;
     width: 110px;
-    right: 28px;
+    right: 29px;
   }
 
   .versus-interaction__percentage--right {
+    color: $green;
+    font-size: 26px;
+    font-weight: bold;
+    position: absolute;
+    top: 180px;
+    text-align: center;
     width: 110px;
-    left: 32px; 
-  }
-
-  .versus-interaction__avatar-container--left {
-    right: 115px;
+    left: 29px;
   }
 
   .versus-interaction__img--left {
-    margin-right: 8px;
+    margin-right: 9px;
   }
 
   .versus-interaction__img--right {
@@ -341,16 +372,13 @@
     height: 120px !important; 
   }
 
+  .versus-interaction__avatar-container--left {
+    right: 115px;
+    bottom: 135px;
+  }
+
   .versus-interaction__avatar-container--right {
-    background: none repeat scroll 0 0 #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    left: 123px;
-    padding: 5px;
-    position: absolute;
-    top: -4px;
-    -webkit-box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
-    -moz-box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
-    box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
+    left: 115px;
+    bottom: 135px;
   }
 }
