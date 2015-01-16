@@ -121,7 +121,7 @@ class Easyadmin::CallToActionController < ApplicationController
       end
     end
 
-    render :partial => 'show_cta_details'#, :locals => { :id => params[:id] }
+    render :partial => 'show_cta_details'
   end
 
   def update_activated_at
