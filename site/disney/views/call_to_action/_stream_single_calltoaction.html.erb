@@ -25,7 +25,14 @@
 </div>
 <div class="row">
   <div class="col-sm-12 cta__media-container">
-    <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
+  	<% if @is_cta_locked %>
+  		<img ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" />
+		<div class="cta-preview__locked-layer">
+			<i class="fa fa-lock"></i>
+		</div>
+  	<% else %>
+    	<%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
+    <% end %>
   </div>
 
   <div class="col-sm-12 visible-xs interaction__underevideo-mobile-container">
