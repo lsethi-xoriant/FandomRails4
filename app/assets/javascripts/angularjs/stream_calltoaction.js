@@ -372,7 +372,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return comment_interactions;
   }
 
-  function getPlayInteraction(calltoaction_id) {
+  $scope.getPlayInteraction = function(calltoaction_id) {
     play_interaction = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
@@ -1060,11 +1060,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       $scope.play_event_tracked[calltoaction_id] = true;
 
-      play_interaction_info = getPlayInteraction(calltoaction_id);
+      play_interaction_info = $scope.getPlayInteraction(calltoaction_id);
       if(play_interaction == null) {
         console.log("You must enable the play interaction for this calltoaction.");
         return;
       }
+
+      play_interaction_info.hide = true; 
 
       update_interaction_path = "/update_interaction"
       if($scope.aux.current_property_info && $scope.aux.current_property_info.title) {
