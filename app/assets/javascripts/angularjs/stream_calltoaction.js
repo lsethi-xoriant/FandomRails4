@@ -1041,7 +1041,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $window.updateEndVideoInteraction = function(calltoaction_id) {
     $scope.play_event_tracked[calltoaction_id] = false;
-    interaction_info = getOvervideoEndInteractionInfo(calltoaction_id);//HERE
+    interaction_info = getOvervideoEndInteractionInfo(calltoaction_id);
     if(interaction_info) {
       interaction_info.interaction.overvideo_active = true;
       animateInInteraction(interaction_info.interaction);
