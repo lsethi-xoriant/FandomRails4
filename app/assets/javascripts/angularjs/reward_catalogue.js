@@ -13,7 +13,6 @@ function RewardCatalogueCtrl($scope, $window, $filter, $http) {
 	
 	$scope.init = function(reward_list) {
 		$scope.reward_list = reward_list;
-		console.log(reward_list["all_rewards"][0]);
 	};
 	
 }

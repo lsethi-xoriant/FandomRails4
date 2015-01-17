@@ -187,7 +187,7 @@ module RewardHelper
   end
   
   def get_user_reward_status(reward)
-    if user_has_reward(reward)
+    if user_has_reward(reward.name)
       "gained"
     elsif user_has_currency_for_reward(reward)
       "avaiable"
