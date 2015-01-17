@@ -1,39 +1,41 @@
-<div class="row {{interaction_info.interaction.resource_type}}-interaction">
-  <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-md-12 hidden-xs">
-    <%= render partial: "/call_to_action/trivia_interaction_overvideo" %>
-  </div>
-  <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-md-12 hidden-xs">
-    <%= render partial: "/call_to_action/versus_interaction_overvideo" %>
-  </div>
-  <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-md-12 hidden-xs">
-    <%= render partial: "/call_to_action/check_interaction" %>
-  </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-md-12 hidden-xs">
-    <%= render partial: "/call_to_action/share_interaction" %>
-  </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-md-12 hidden-xs">
-    <%= render partial: "/call_to_action/upload_interaction" %>
-  </div>  
-
-  <div class="col-md-12 visible-xs text-center">
-    <p class="interaction__go-to-mobile">ACCEDI DA MOBILE</p>
-  </div>
-
-  <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && !interaction_info.feedback" class="row">
-    <div class="col-md-12 interaction__winnable-reward text-center">
-      <span class="label label-success cta-cover__winnable-reward__label">
-        Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
-      </span> 
+<div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterOvervideoDuringInteractions | filter:filterOvervideoDuringActiveInteraction" class="col-xs-12 {{interaction_info.interaction.resource_type}}-interaction" ng-if="overvideoInteractionsPresent(calltoaction_info.calltoaction.id)" ng-class="{'{{interaction_info.interaction.resource_type}}-interaction--feedback': interaction_info.feedback}">
+  <div class="row">
+    <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-md-12 hidden-xs">
+      <%= render partial: "/call_to_action/trivia_interaction_overvideo" %>
     </div>
-  </div>
+    <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-md-12 hidden-xs">
+      <%= render partial: "/call_to_action/versus_interaction_overvideo" %>
+    </div>
+    <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-md-12 hidden-xs">
+      <%= render partial: "/call_to_action/check_interaction" %>
+    </div>  
+    <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-md-12 hidden-xs">
+      <%= render partial: "/call_to_action/share_interaction" %>
+    </div>  
+    <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-md-12 hidden-xs">
+      <%= render partial: "/call_to_action/upload_interaction" %>
+    </div>  
 
-  <div ng-if="!interaction_info.user_interaction && !interaction_info.feedback" class="row text-center">
-    <div class="col-md-12 interaction__winnable-reward">
-      <span class="label label-warning cta-cover__winnable-reward__label">
-        +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
-      </span>  
-      <div ng-if="!interaction_info.status.reward.numeric_display" ng-repeat="status_image in interaction_info.status.reward_status_images track by $index">  
-        <img ng-src="{{status_image}}">
+    <div class="col-md-12 visible-xs text-center">
+      <p class="interaction__go-to-mobile">ACCEDI DA MOBILE</p>
+    </div>
+
+    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && !interaction_info.feedback" class="row">
+      <div class="col-md-12 interaction__winnable-reward text-center">
+        <span class="label label-success cta-cover__winnable-reward__label">
+          Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+        </span> 
+      </div>
+    </div>
+
+    <div ng-if="!interaction_info.user_interaction && !interaction_info.feedback" class="row text-center">
+      <div class="col-md-12 interaction__winnable-reward">
+        <span class="label label-warning cta-cover__winnable-reward__label">
+          +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
+        </span>  
+        <div ng-if="!interaction_info.status.reward.numeric_display" ng-repeat="status_image in interaction_info.status.reward_status_images track by $index">  
+          <img ng-src="{{status_image}}">
+        </div>
       </div>
     </div>
   </div>
