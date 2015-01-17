@@ -137,12 +137,12 @@ module BrowseHelper
   end
   
   def get_contents_by_query(term)
-    browse_tag_ids = get_browse_tag_ids()
-    tags = Tag.includes(:tags_tags).where("tags_tags.other_tag_id IN (?)", browse_tag_ids)
-    tags = tags.where("title ILIKE ?","%#{term}%")
-    ctas = CallToAction.where("title ILIKE ?","%#{term}%")
+    category_tag_ids = get_category_tag_ids()
+    tags = Tag.where("title ILIKE ? AND id IN (?)","#{term}%", category_tag_ids)
+    ctas = CallToAction.where("title ILIKE ?","#{term}%")
     merge_contents(ctas, tags)
   end
+  
   
   def get_browse_tag_ids
     browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY).value
@@ -244,6 +244,12 @@ module BrowseHelper
       end
     end
     tags
+  end
+  
+  def get_category_tag_ids
+    cache_short("category_tag_ids") do
+      Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'title' <> '' and extra_fields->>'header_image' <> '' and extra_fields->>'description' <> ''").map{|t| t.id}
+    end
   end
 
 end
