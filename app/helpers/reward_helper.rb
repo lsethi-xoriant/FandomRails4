@@ -169,4 +169,31 @@ module RewardHelper
     levels.count
   end
   
+  def user_has_currency_for_reward(reward)
+    unless reward.currency.nil?
+      get_counter_about_user_reward(reward.currency.name) >= reward.cost
+    else
+      get_counter_about_user_reward("credit") >= reward.cost    end
+  end
+  
+  def is_basic_reward(reward)
+    basic_tag = Tag.find_by_name("basic")
+    reward_tags = reward.reward_tags.map{ |rt| [rt.id] }
+    reward_tags.include?(basic_tag.id)
+  end
+  
+  def get_basic_rewards_ids
+    get_rewards_with_tag("basic").map{ |rt| rt.id }
+  end
+  
+  def get_user_reward_status(reward)
+    if user_has_reward(reward.name)
+      "gained"
+    elsif user_has_currency_for_reward(reward)
+      "avaiable"
+    else
+      "locked"
+    end
+  end
+  
 end

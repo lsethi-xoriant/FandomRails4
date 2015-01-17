@@ -34,6 +34,14 @@ module CallToActionHelper
           "icon" => (get_extra_fields!(miniformat)["icon"]["url"] rescue nil),
         }
       end
+      
+      unless calltoaction.rewards.empty?
+        reward = calltoaction.rewards.first
+        calltoaction_reward_info = {
+          "cost" => reward.cost,
+          "status" => get_user_reward_status(reward)
+        }
+      end 
 
       calltoaction_info_list << {
         "calltoaction" => { 
@@ -51,7 +59,8 @@ module CallToActionHelper
         },
         "flag" => flag_info,
         "miniformat" => miniformat_info,
-        "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction)
+        "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
+        "reward_info" => calltoaction_reward_info
       }
     
     end
@@ -366,6 +375,7 @@ module CallToActionHelper
   def duplicate_cta(old_cta_id)
     cta = CallToAction.find(old_cta_id)
     cta.title = "Copy of " + cta.title
+    cta.name = "copy-of-" + cta.name
     cta.activated_at = DateTime.now
     cta_attributes = cta.attributes
     cta_attributes.delete("id")
@@ -382,7 +392,7 @@ module CallToActionHelper
     resource_attributes.delete("id")
     resource_type = interaction.resource_type
     if resource_type == "Play"
-      interaction.resource.attributes["title"] << "COPY"
+      resource_attributes["title"] = "#{interaction.resource.attributes["title"][0..12]}T#{Time.now.strftime("%H%M")}"
     end
     resource_model = get_model_from_name(resource_type)
     new_interaction.resource = resource_model.new(resource_attributes, :without_protection => true)

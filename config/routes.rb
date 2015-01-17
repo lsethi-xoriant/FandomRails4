@@ -312,7 +312,7 @@ Fandom::Application.routes.draw do
   #reward
   match "/reward/catalogue", :to => "reward#index"
   match "/reward/show/:reward_id", :to => "reward#show"
-  match "/reward/buy/:reward_id", :to => "reward#buy"
+  match "/reward/buy", :to => "reward#buy_reward", defaults: { format: 'json' }
 
   # Captcha.
   match "/captcha", :to => "captcha#generate_captcha", defaults: { format: 'json' }

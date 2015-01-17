@@ -14,6 +14,7 @@
 //= require angularjs/browse
 //= require angularjs/ranking
 //= require angularjs/search
+//= require angularjs/reward_catalogue
 //= require bootstrap
 //= require bootstrap-notify
 //= require easyadmin/jquery-ui-1.9.2.custom.min

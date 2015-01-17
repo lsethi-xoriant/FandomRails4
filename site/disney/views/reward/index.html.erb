@@ -1,0 +1,167 @@
+<%= render partial: "/application/user_bar" %>
+
+
+<div class="container container--default" ng-controller="RewardCatalogueCtrl" ng-init="init(<%= @reward_list.to_json %>)">
+	<%= render partial: "reward/reward_catalogue_header"  %>
+	
+	<div class="row brws-item">
+		<div class="col-xs-12">
+		      <div class="section-heading">
+		        	<h3>
+		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
+		        		I miei premi
+		        	</h3>
+		      </div>
+		</div>
+		<div class="col-xs-12 col-md-3" ng-repeat="reward in reward_list['user_rewards']">
+			<div class="cta-preview">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="cta-preview__thumbnail">
+							<a href="/call_to_action/{{reward.calltoaction.id}}">
+								<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
+							</a>
+							<div class="label label-warning cta-preview__points">+ {{reward.status.winnable_reward_count}}<span class="glyphicon glyphicon-star"></div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
+					</div>
+				</div>
+				<div class="row cta-preview__counter">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row brws-item">
+		<div class="col-xs-12">
+		      <div class="section-heading">
+		        	<h3>
+		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
+		        		Premi che puoi sbloccare
+		        	</h3>
+		      </div>
+		</div>
+		<div class="col-xs-12 col-md-3" ng-repeat="reward in reward_list['user_available_rewards']">
+			<div class="cta-preview" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="cta-preview__thumbnail">
+							<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
+							<div class="cta-preview__locked-layer">
+								<i class="fa fa-lock"></i>
+							</div>
+							<a class="cta_preview__link" href="/call_to_action/{{reward.calltoaction.id}}"></a>
+							<div class="label cta-preview__credits">+ {{reward.reward_info.cost}}<i class="fa fa-copyright"></i></div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
+					</div>
+				</div>
+				<div class="row cta-preview__counter">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row brws-item">
+		<div class="col-xs-12">
+		      <div class="section-heading">
+		        	<h3>
+		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
+		        		Nuovi premi
+		        	</h3>
+		      </div>
+		</div>
+		<div class="col-xs-12 col-md-3" ng-repeat="reward in reward_list['newest_rewards']">
+			<div class="cta-preview" ng-if="reward.reward_info.status != 'gained'">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="cta-preview__thumbnail">
+							<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
+							<div class="cta-preview__locked-layer">
+								<i class="fa fa-lock"></i>
+							</div>
+							<a class="cta_preview__link" href="/call_to_action/{{reward.calltoaction.id}}"></a>
+							<div class="label cta-preview__credits">+ {{reward.reward_info.cost}}<i class="fa fa-copyright"></i></div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
+					</div>
+				</div>
+				<div class="row cta-preview__counter">
+				</div>
+			</div>
+			<div class="cta-preview" ng-if="reward.reward_info.status == 'gained'">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="cta-preview__thumbnail">
+							<a href="/call_to_action/{{reward.calltoaction.id}}">
+								<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
+							</a>
+							<div class="label cta-preview__points">+ {{reward.status.winnable_reward_count}}<span class="glyphicon glyphicon-star"></div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
+					</div>
+				</div>
+				<div class="row cta-preview__counter">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row brws-item">
+		<div class="col-xs-12">
+		      <div class="section-heading">
+		        	<h3>
+		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
+		        		Tutti i premi
+		        	</h3>
+		      </div>
+		</div>
+		<div class="col-xs-12 col-md-3" ng-repeat="reward in reward_list['all_rewards']">
+			<div class="cta-preview" ng-if="reward.reward_info.status != 'gained'">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="cta-preview__thumbnail">
+							<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
+							<div class="cta-preview__locked-layer">
+								<i class="fa fa-lock"></i>
+							</div>
+							<a class="cta_preview__link" href="/call_to_action/{{reward.calltoaction.id}}"></a>
+							<div class="label cta-preview__credits">+ {{reward.reward_info.cost}}<i class="fa fa-copyright"></i></div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
+					</div>
+				</div>
+				<div class="row cta-preview__counter">
+				</div>
+			</div>
+			<div class="cta-preview" ng-if="reward.reward_info.status == 'gained'">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="cta-preview__thumbnail">
+							<a href="/call_to_action/{{reward.calltoaction.id}}">
+								<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
+							</a>
+							<div class="label cta-preview__points">+ {{reward.status.winnable_reward_count}}<span class="glyphicon glyphicon-star"></div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
+					</div>
+				</div>
+				<div class="row cta-preview__counter">
+				</div>
+			</div>
+		</div>
+	</div>
+	      
+</div>

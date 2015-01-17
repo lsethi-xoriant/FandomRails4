@@ -364,7 +364,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           comment_interaction = new Object({
             "interaction_id": interaction_info.interaction.id,
             "calltoaction_id": calltoaction_info.calltoaction.id
-          })    
+          });
           comment_interactions.push(comment_interaction);
         }
       });
@@ -381,7 +381,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
     });
     return play_interaction;
-  }
+  };
 
   $scope.filterShareInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "share");
@@ -1672,13 +1672,23 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     }
   };
+  
+  $scope.buyReward = function(reward_id){
+  	$http.post("/reward/buy" , { reward_id: reward_id })
+	    .success(function(data) { 
+	    	console.log(data);
+	      $(".cta-preview__locked-layer--reward").html(data.html);
+	    }).error(function() {
+	      // ERROR.
+	    });
+  };
 
   function initCaptcha() {
     interaction_info_list = getStreamCommentInteractions();
     if(interaction_info_list.length > 0) {
       $http.post("/captcha" , { interaction_info_list: getStreamCommentInteractions() })
         .success(function(data) { 
-          initSessionStorageAndCaptchaImage(data)
+          initSessionStorageAndCaptchaImage(data);
         }).error(function() {
           // ERROR.
         });
