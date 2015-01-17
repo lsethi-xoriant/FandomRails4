@@ -38,7 +38,7 @@ class User < ActiveRecordWithJSON
   validate :presence_of_birth_date, if: Proc.new { |f| required_attr?("birth_date") }
   validates_presence_of :first_name, if: Proc.new { |f| required_attr?("first_name") }
   validates_presence_of :last_name, if: Proc.new { |f| required_attr?("last_name") }
-  validate :privacy_accepted
+  validate :privacy_accepted, if: Proc.new { |f| required_attr?("privacy") }
   validate :newsletter_acceptance, if: Proc.new { |f| required_attr?("newsletter") }
   validates_presence_of :username, if: Proc.new { |f| required_attr?("username") }
   validates :username, uniqueness: true, if: Proc.new { |f| required_attr?("username") }

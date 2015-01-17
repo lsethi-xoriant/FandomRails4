@@ -938,45 +938,43 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
   
   //////////////////////// FLOWPLAYER API /////////////////////////////
-  
   function flowplayerPlayer(playerId, media_data) {
-  	this.playerManager = null;
-  	this.playerId = playerId;
-	  this.calltoaction_id = $("#" + playerId).attr("calltoaction-id");
-  	this.media_data = media_data;
+    this.playerManager = null;
+    this.playerId = playerId;
+    this.calltoaction_id = $("#" + playerId).attr("calltoaction-id");
+    this.media_data = media_data;
     if(this.calltoaction_id) {
       
-  	  this.cuepoints = getOvervideoInteractions(this.calltoaction_id);
-
-  	  $("#" + playerId).flowplayer({
+      this.cuepoints = getOvervideoInteractions(this.calltoaction_id);
+      fplayer = this;
+      
+      $("#"+playerId).flowplayer({
           playlist: [
              [
-                { mp4: this.media_data }
+                { mp4: fplayer.media_data }
              ]
           ],
           swf: "/assets/flowplayer.swf",
-          cuepoints: this.cuepoints
+          cuepoints: fplayer.cuepoints,
         }).bind("ready", function(e, api) {
-       	  this.playerManager = api; 	
+          fplayer.playerManager = api;  
         }).bind("resume", function(e, api) {
-       	  calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
-  	      calltoaction_media_priority = $("#" + player.playerId).attr("main-media");
-    	    if(calltoaction_media_priority == "main") {
-    	      updateStartVideoInteraction(calltoaction_id);
-    	    } else {
-    			  // SECONDARY MEDIA
-    	    }   
+          calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
+          calltoaction_media_priority = $("#" + player.playerId).attr("main-media");
+          if(calltoaction_media_priority == "main") {
+            updateStartVideoInteraction(calltoaction_id);
+          } else {
+            // SECONDARY MEDIA
+          }   
         }).bind("finish", function(e, api) {
-          calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
           $scope.$apply(function() {
-            updateEndVideoInteraction(calltoaction_id);
-          });
+            updateEndVideoInteraction(fplayer.calltoaction_id);
+          }); 
         }).bind("cuepoint", function(e, api, cuepoint) {
-          calltoaction_id = $("#" + player.playerId).attr("calltoaction-id");
-          if(!$scope.overvideo_interaction_locked[calltoaction_id]) {
-           	$scope.$apply(function() {
-           		executeInteraction(this, this.calltoaction_id, cuepoint.interaction);
-           	});
+          if(!$scope.overvideo_interaction_locked[fplayer.calltoaction_id]) {
+            $scope.$apply(function() {
+              executeInteraction(fplayer, fplayer.calltoaction_id, cuepoint.interaction);
+            });
           }
       });
        
