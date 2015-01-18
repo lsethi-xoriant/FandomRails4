@@ -1,6 +1,26 @@
 class Sites::Disney::ProfileController < ProfileController
   include DisneyHelper
-  
+
+  def complete_registration
+    user_params = params[:user]
+    
+    required_attrs = ["username", "username_length"]
+    user_params = user_params.merge(required_attrs: required_attrs)
+
+    response = {}
+    if !current_user.update_attributes(user_params)
+      response[:errors] = current_user.errors.full_messages
+    else
+      response[:username] = current_user.username
+      response[:avatar] = current_user.avatar_selected_url 
+      log_audit("registration completion", { 'form_data' => params[:user], 'user_id' => current_user.id })
+    end
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+  end
+
   def rankings
     rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
     @property_rank = get_full_rank(rank)

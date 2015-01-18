@@ -90,9 +90,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       initCaptcha();
     }
 
+    $scope.form_data = {};
+
     initAnonymousUser();
 
-    $scope.form_data = {};
     $scope.animation_in_progress = false;
     
     $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION = "slide-right";
@@ -139,6 +140,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $("#append-other button").show();
     }
     
+    $scope.extraInit();
+
+  };
+
+  $scope.extraInit = function() {
   };
   
   $window.playSound = function(element){
@@ -736,7 +742,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         index += 1;
       });
     }
-    alert("here")
     $timeout(function() {
       if(overvideo_interaction.interaction.when_show_interaction == "OVERVIDEO_DURING") {
         player.play();

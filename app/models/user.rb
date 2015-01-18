@@ -32,6 +32,7 @@ class User < ActiveRecordWithJSON
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, 
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }
 
+  validates_length_of :username, maximum: 15, if: Proc.new { |f| required_attr?("username_length") }
   validates_presence_of :location, if: Proc.new { |f| required_attr?("location") }
   validates_presence_of :gender, if: Proc.new { |f| required_attr?("gender") }
   validates_presence_of :province, if: Proc.new { |f| required_attr?("province") }
@@ -48,7 +49,8 @@ class User < ActiveRecordWithJSON
 
   def set_username_if_not_required
     unless required_attr?("username")
-      self.username = email
+      # Username can be empty in Disney
+      # self.username = email
     end
   end
 
@@ -89,7 +91,7 @@ class User < ActiveRecordWithJSON
 
   def required_attr?(attr_name)
     if required_attrs.present? # COIN
-      required_attrs.include?(attr_name)
+      required_attrs.include?(attr_name) || $site.required_attrs.include?(attr_name)
     elsif $site.required_attrs.present?
       $site.required_attrs.include?(attr_name)
     else

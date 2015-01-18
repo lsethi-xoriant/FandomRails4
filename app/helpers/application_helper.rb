@@ -988,7 +988,7 @@ module ApplicationHelper
     folder = Setting.find_by_key("avatar.folder").value
     avatars = []
     Setting.find_by_key("avatar.file_names").value.split(",").each do |avatar|
-      avatars << "#{folder}#{avatar}"
+      avatars << { id: avatar.split(".")[0], url: "#{folder}#{avatar}" }
     end
     avatars
   end
