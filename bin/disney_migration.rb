@@ -1213,6 +1213,8 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
   rows_with_cta_missing = 0
   votes_id_map = Hash.new
 
+  seen_vote_interaction_ids = {}
+
   source_votes.each do |line|
     new_user_id = users_id_map[line["voter_id"].to_i]
     new_call_to_action_id = nil
@@ -1237,19 +1239,22 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
       query_for_likes = build_query_string(destination_db_tenant, "likes", fields_for_likes)
       destination_db_connection.exec(query_for_likes)
 
-      fields_for_interactions = {
-        #"id" => line["id"].to_i,
-        "name" => nullify_or_escape_string(source_db_connection, "interaction-like-#{source_db_tenant}-id#{line["id"]}"),
-        "seconds" => 0,
-        "when_show_interaction" => "SEMPRE_VISIBILE",
-        "required_to_complete" => "f",
-        "resource_id" => destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}likes_id_seq')").values[0][0].to_i, # created above
-        "resource_type" => "Like",
-        "call_to_action_id" => new_call_to_action_id
-      }
+      unless seen_vote_interaction_ids.key?(line["id"])
+        seen_vote_interaction_ids[line["id"]] = true
+        fields_for_interactions = {
+          #"id" => line["id"].to_i,
+          "name" => nullify_or_escape_string(source_db_connection, "interaction-like-#{source_db_tenant}-id#{line["id"]}"),
+          "seconds" => 0,
+          "when_show_interaction" => "SEMPRE_VISIBILE",
+          "required_to_complete" => "f",
+          "resource_id" => destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}likes_id_seq')").values[0][0].to_i, # created above
+          "resource_type" => "Like",
+          "call_to_action_id" => new_call_to_action_id
+        }
 
-      query_for_interactions = build_query_string(destination_db_tenant, "interactions", fields_for_interactions)
-      destination_db_connection.exec(query_for_interactions)
+        query_for_interactions = build_query_string(destination_db_tenant, "interactions", fields_for_interactions)
+        destination_db_connection.exec(query_for_interactions)
+      end
 
       fields_for_user_interactions = {
         #"id" => line["id"].to_i,
