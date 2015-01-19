@@ -89,7 +89,8 @@ module DisneyHelper
       "username" => current_user.username,
       "avatar" => current_avatar,
       "level" => (get_max_reward("level")["title"] rescue "nessun livello"),
-      "notifications" => get_unread_notifications_count()
+      "notifications" => get_unread_notifications_count(),
+      "avatar" => current_avatar
     }
   end
 

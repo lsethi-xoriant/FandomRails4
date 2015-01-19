@@ -36,7 +36,8 @@
 </div>
 
 <%= light_link_to("/profile") do %>
-  <img src="<%= current_avatar %>" class="navbar__avatar">
+  <img ng-src="{{current_user.avatar}}" class="navbar__avatar" ng-if="current_user">
+  <img src="<%= anon_avatar() %>" class="navbar__avatar" ng-if="!current_user">
 <% end %>
 
 <script type="text/javascript">

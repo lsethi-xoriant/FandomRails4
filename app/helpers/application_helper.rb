@@ -662,12 +662,20 @@ module ApplicationHelper
     if current_user
       return user_avatar current_user
     else
-      return asset_path("#{$site.assets["anon_avatar"]}")
+      return anon_avatar()
     end
   end
 
   def user_avatar user, size = "normal"
-    user.avatar_selected_url.present? ? user.avatar_selected_url : asset_path("#{$site.assets["anon_avatar"]}")
+    begin
+      user.avatar_selected_url.present? ? user.avatar_selected_url : anon_avatar()
+    rescue
+      anon_avatar()
+    end
+  end
+
+  def anon_avatar
+    ActionController::Base.helpers.asset_path("#{$site.assets["anon_avatar"]}")
   end
 
   def disqus_sso
