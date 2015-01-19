@@ -313,6 +313,7 @@ Fandom::Application.routes.draw do
   
   #reward
   match "/reward/catalogue", :to => "reward#index"
+  match "/reward/catalogue/all", :to => "reward#show_all_catalogue"
   match "/reward/show/:reward_id", :to => "reward#show"
   match "/reward/buy", :to => "reward#buy_reward", defaults: { format: 'json' }
 

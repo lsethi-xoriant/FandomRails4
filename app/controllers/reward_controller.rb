@@ -16,7 +16,7 @@ class RewardController < ApplicationController
       user_available_rewards = []
     end
     newest_rewards = get_newest_rewards
-    all_rewards = get_all_rewards
+    all_rewards = get_all_rewards.slice(0,8)
     reward_list = {
       "user_rewards" => prepare_rewards_for_presentation(user_rewards),
       "user_available_rewards" => prepare_rewards_for_presentation(user_available_rewards),
@@ -112,6 +112,14 @@ class RewardController < ApplicationController
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
+  end
+  
+  def show_all_catalogue
+    all_rewards = get_all_rewards
+    reward_list = {
+      "all_rewards" => prepare_rewards_for_presentation(all_rewards)
+    }
+    @reward_list = reward_list
   end
   
 end

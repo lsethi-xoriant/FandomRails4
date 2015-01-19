@@ -15,7 +15,7 @@
 		      
 		      <div class="rewards-flexslider">
 		    	<ul class="slides">
-		    		<li class="rewards-flexslider__item" ng-repeat="reward in reward_list['user_rewards']">
+		    		<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['user_rewards']">
 						<div class="cta-preview">
 							<div class="row">
 								<div class="col-xs-12">
@@ -51,7 +51,7 @@
 		      
 		      <div class="rewards-flexslider">
 			    <ul class="slides">
-					<li class="rewards-flexslider__item" ng-repeat="reward in reward_list['user_available_rewards']">
+					<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['user_available_rewards']">
 						<div class="cta-preview" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
 							<div class="row">
 								<div class="col-xs-12">
@@ -90,7 +90,7 @@
 		      
 		      <div class="rewards-flexslider">
 		    	<ul class="slides">
-		    		<li class="rewards-flexslider__item" ng-repeat="reward in reward_list['newest_rewards']">
+		    		<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['newest_rewards']">
 		    			<div class="cta-preview" ng-if="reward.reward_info.status != 'gained'">
 							<div class="row">
 								<div class="col-xs-12">
@@ -139,13 +139,14 @@
 		      <div class="section-heading">
 		        	<h3>
 		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
-		        		Tutti premi
+		        		Tutti i premi
+		        		<a href="/reward/catalogue/all" class="section-heading__see-all">View all</a>
 		        	</h3>
 		      </div>
 		      
 		      <div class="rewards-flexslider">
 		    	<ul class="slides">
-		    		<li class="rewards-flexslider__item" ng-repeat="reward in reward_list['all_rewards']">
+		    		<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['all_rewards']">
 		    			<div class="cta-preview" ng-if="reward.reward_info.status != 'gained'">
 							<div class="row">
 								<div class="col-xs-12">
