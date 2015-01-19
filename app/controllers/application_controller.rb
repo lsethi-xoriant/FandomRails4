@@ -182,7 +182,8 @@ class ApplicationController < ActionController::Base
       "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
       "filter_info" => filter_info,
       "property_info" => property_info,
-      "calltoaction_evidence_info" => calltoaction_evidence_info
+      "calltoaction_evidence_info" => calltoaction_evidence_info,
+      "enable_comment_polling" => get_deploy_setting('comment_polling', true)
     }
   end
 

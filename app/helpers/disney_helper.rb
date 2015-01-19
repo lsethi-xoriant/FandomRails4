@@ -178,7 +178,8 @@ module DisneyHelper
       "property_info" => property_info,
       "current_property_info" => current_property_info,
       "calltoaction_evidence_info" => calltoaction_evidence_info,
-      "mobile" => small_mobile_device?()
+      "mobile" => small_mobile_device?(),
+      "enable_comment_polling" => get_deploy_setting('comment_polling', true)
     }
 
     other.each do |key, value|
