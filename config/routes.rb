@@ -29,6 +29,7 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         match "/iur", to: "application#iur"
+        match "profile", :to => "profile#index"
         match "profile/index", :to => "profile#index_mobile"
         match "profile/rankings", :to => "profile#rankings"
         match "profile/rewards", :to => "profile#rewards"
@@ -312,6 +313,7 @@ Fandom::Application.routes.draw do
   
   #reward
   match "/reward/catalogue", :to => "reward#index"
+  match "/reward/catalogue/all", :to => "reward#show_all_catalogue"
   match "/reward/show/:reward_id", :to => "reward#show"
   match "/reward/buy", :to => "reward#buy_reward", defaults: { format: 'json' }
 

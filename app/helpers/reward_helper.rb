@@ -187,10 +187,14 @@ module RewardHelper
   end
   
   def get_user_reward_status(reward)
-    if user_has_reward(reward.name)
-      "gained"
-    elsif user_has_currency_for_reward(reward)
-      "avaiable"
+    if current_user
+      if user_has_reward(reward.name)
+        "gained"
+      elsif user_has_currency_for_reward(reward)
+        "avaiable"
+      else
+        "locked"
+      end
     else
       "locked"
     end

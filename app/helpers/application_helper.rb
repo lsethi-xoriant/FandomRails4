@@ -662,12 +662,20 @@ module ApplicationHelper
     if current_user
       return user_avatar current_user
     else
-      return asset_path("#{$site.assets["anon_avatar"]}")
+      return anon_avatar()
     end
   end
 
   def user_avatar user, size = "normal"
-    user.avatar_selected_url.present? ? user.avatar_selected_url : asset_path("#{$site.assets["anon_avatar"]}")
+    begin
+      user.avatar_selected_url.present? ? user.avatar_selected_url : anon_avatar()
+    rescue
+      anon_avatar()
+    end
+  end
+
+  def anon_avatar
+    ActionController::Base.helpers.asset_path("#{$site.assets["anon_avatar"]}")
   end
 
   def disqus_sso
@@ -994,7 +1002,11 @@ module ApplicationHelper
   end
 
   def get_tag_from_params(name)
-    Tag.find_by_name(name) rescue nil
+    tag = cache_short(get_tag_cache_key(name)) do
+      tag = Tag.find_by_name(name)
+      tag ? tag : CACHED_NIL
+    end
+    cached_nil?(tag) ? nil : tag
   end
 
   def get_main_reward_name() 

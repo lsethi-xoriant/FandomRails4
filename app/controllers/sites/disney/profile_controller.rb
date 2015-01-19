@@ -40,7 +40,19 @@ class Sites::Disney::ProfileController < ProfileController
   
   def index_mobile
     @level = disney_get_current_level;
-    @my_position, total = get_my_position 
+    @my_position, total = get_my_general_position_in_property 
+  end
+  
+  def index
+    if small_mobile_device?
+      redirect_to "/profile/index"
+    else
+      if $context_root.nil?
+        redirect_to "/users/edit"
+      else
+        redirect_to "/#{get_disney_property}/users/edit"
+      end
+    end
   end
   
   def rewards

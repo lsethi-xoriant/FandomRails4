@@ -13,7 +13,7 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
   $scope.extraInit = function() {
-    if(!$scope.current_user.username) {
+    if($scope.current_user && !$scope.current_user.username) {
       $("#complete-registration").modal("show");
       $scope.form_data.current_user = new Object();
     }

@@ -30,8 +30,12 @@
 		<div class="cta-preview__locked-layer cta-preview__locked-layer--reward">
 				<p>Per sbloccare questo premio</p>
 				<div class="label cta-preview__credits--reward">+ <%= @reward.cost %><i class="fa fa-copyright"></i></div>
-				<% if user_has_currency_for_reward(@reward) %>
-					<button class="btn btn-primary" ng-click="buyReward(<%= @reward.id %>)">Sblocca</button>
+				<% if current_user%>
+					<% if user_has_currency_for_reward(@reward) %>
+						<button class="btn btn-primary" ng-click="buyReward(<%= @reward.id %>)">Sblocca</button>
+					<% end %>
+				<% else %>
+					<button class="btn btn-primary" onclick="$('#registrate-modal').modal('show');">Sblocca</button>
 				<% end %>
 		</div>
   	<% else %>

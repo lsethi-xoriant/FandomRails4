@@ -65,7 +65,7 @@
 								        	<% avatar_slice.each do |avatar| %>
 								        	<div class="col-xs-12">
 								        		<div class="avatars__flexslider__avatar-container" onclick="selectAvatar(this);">
-								        			<img ng-src="<%= avatar %>">	
+								        			<img ng-src="<%= avatar[:url] %>">	
 								        		</div>
 								        	</div>
 								        	<% end %>
@@ -87,11 +87,6 @@
     </div>
   <% end %>
 </div>
-
-<div class="container-fluid">
-  <%= render partial: "/application/footer" %>
-</div>
-
 
 <script type="text/javascript">
 $(document).ready(function() {

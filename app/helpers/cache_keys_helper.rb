@@ -43,6 +43,10 @@ module CacheKeysHelper
   # CTA
   # ~~~~~
 
+  def get_tag_cache_key(tag_name)
+    "tag_#{tag_name}"
+  end
+
   def get_next_ctas_stream_cache_key(tag, prev_cta_id, cta_max_updated_at, ordering = "")
     "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}"
   end
@@ -153,6 +157,10 @@ module CacheKeysHelper
   
   def get_ranking_page_key
     "ranking_page"
+  end
+  
+  def get_single_ranking_page_key(ranking_name)
+    "single_ranking_page_key_#{ranking_name}"
   end
   
   def get_ranking_settings_key

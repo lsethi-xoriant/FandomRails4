@@ -14,9 +14,9 @@ p{
   background: transparent !important;
 }
 
-.flowplayer.is-paused {
-  opacity: 0.9;
-}
+//.flowplayer.is-paused {
+//  opacity: 0.9;
+//}
 
 .main-container {
   background-color: #fff;
@@ -43,6 +43,13 @@ a{
 .btn-back{
   margin: 20px 0;
 }
+
+
+.from-disney-registration {
+  background-image: url('bg-modal.png'); 
+  background-size: 100% 100%;
+}
+
 /********************* COOKIES FOOTER *********************/
 
 .cookies-footer {
