@@ -187,7 +187,7 @@ class User < ActiveRecordWithJSON
   end
   
   def default_values
-    self.avatar_selected_url ||= "#{$site.assets["anon_avatar"]}"
+    self.avatar_selected_url ||= ActionController::Base.helpers.asset_path("#{$site.assets["anon_avatar"]}")
   end
   
 end

@@ -5,7 +5,7 @@ class Sites::Disney::ApplicationController < ApplicationController
 
   def iur
     referrer = request.referrer 
-    if URI.parse(request.referrer).path != "/iur"
+    if URI.parse(request.referrer).path != "/iur" && URI.parse(request.referrer).path != "/iur/sign_in"
       cookies[:from_iur_authenticate] = referrer
     end
     render layout: false

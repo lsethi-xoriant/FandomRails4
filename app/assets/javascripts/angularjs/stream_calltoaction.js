@@ -961,6 +961,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           ],
           swf: "/assets/flowplayer.swf",
           cuepoints: fplayer.cuepoints,
+          plugins: {
+            controls: null
+          }
         }).bind("ready", function(e, api) {
           fplayer.playerManager = api;  
         }).bind("resume", function(e, api) {
