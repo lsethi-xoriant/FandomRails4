@@ -77,7 +77,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     // With one calltoaction I active comment interaction
     $scope.comments_polling = new Object();
     $scope.ajax_comment_append_in_progress = false;
-    if($scope.calltoactions.length == 1) {
+    if($scope.calltoactions.length == 1 && $scope.aux['enable_comment_polling']) {
       comment_info = getCommentInteraction($scope.calltoactions[0].calltoaction.id);
       if(comment_info) {
         comment_info.interaction.resource.comment_info.open = true;
@@ -961,6 +961,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           ],
           swf: "/assets/flowplayer.swf",
           cuepoints: fplayer.cuepoints,
+          plugins: {
+            controls: null
+          }
         }).bind("ready", function(e, api) {
           fplayer.playerManager = api;  
         }).bind("resume", function(e, api) {

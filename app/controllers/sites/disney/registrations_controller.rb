@@ -4,6 +4,15 @@
 class Sites::Disney::RegistrationsController < RegistrationsController
 
   def iur
+    unless cookies[:SWID] && cookies[:SWID]
+      from_iur_authenticate = cookies[:from_iur_authenticate]
+      cookies.delete :from_iur_authenticate
+
+      flash[:notice] = "from-disney-registration"
+      redirect_to from_iur_authenticate
+      return
+    end
+
     user = User.find_by_swid(cookies[:SWID])
     unless user
       uri = URI.parse("http://registrazione.disneychannel.it/iur3/services/Login")
@@ -45,11 +54,13 @@ class Sites::Disney::RegistrationsController < RegistrationsController
       sign_in(user)   
     end
 
-    redirect_to cookies[:from_iur_authenticate]
+    from_iur_authenticate = cookies[:from_iur_authenticate]
 
     cookies.delete :from_iur_authenticate
-    cookies.delete :BLUE
-    cookies.delete :SWID
+    cookies.delete :BLUE, domain: ".disneychannel.it"
+    cookies.delete :SWID, domain: ".disneychannel.it"
+
+    redirect_to from_iur_authenticate
   end
 
 end

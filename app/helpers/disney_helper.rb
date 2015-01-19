@@ -82,19 +82,25 @@ module DisneyHelper
   end
 
   def build_disney_current_user()
-    {
-      "facebook" => current_user.facebook($site.id),
-      "twitter" => current_user.twitter($site.id),
-      "main_reward_counter" => get_point,
-      "username" => current_user.username,
-      "avatar" => current_avatar,
-      "level" => (get_max_reward("level")["title"] rescue "nessun livello"),
-      "notifications" => get_unread_notifications_count(),
-      "avatar" => current_avatar
-    }
+    if current_user
+      {
+        "facebook" => current_user.facebook($site.id),
+        "twitter" => current_user.twitter($site.id),
+        "main_reward_counter" => get_point,
+        "username" => current_user.username,
+        "avatar" => current_avatar,
+        "level" => (get_max_reward("level")["title"] rescue "nessun livello"),
+        "notifications" => get_unread_notifications_count(),
+        "avatar" => current_avatar
+      }
+    else
+      nil
+    end
   end
 
-  def disney_default_aux(current_property, other = [])
+  def disney_default_aux(other)
+    current_property = get_tag_from_params(get_disney_property())
+
     filters = get_tags_with_tag("featured")
 
     current_property_info = {
@@ -138,6 +144,7 @@ module DisneyHelper
           "id" => property.id,
           "background" => get_extra_fields!(property)["label-background"],
           "path" => compute_property_path(property),
+          "title" => property.title,
           "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil) 
         }
       end
@@ -178,11 +185,14 @@ module DisneyHelper
       "property_info" => property_info,
       "current_property_info" => current_property_info,
       "calltoaction_evidence_info" => calltoaction_evidence_info,
-      "mobile" => small_mobile_device?()
+      "mobile" => small_mobile_device?(),
+      "enable_comment_polling" => get_deploy_setting('comment_polling', true)
     }
 
-    other.each do |key, value|
-      aux[key] = value
+    if other
+      other.each do |key, value|
+        aux[key] = value
+      end
     end
 
     aux

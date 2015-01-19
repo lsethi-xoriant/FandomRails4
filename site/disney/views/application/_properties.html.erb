@@ -20,7 +20,7 @@
 </div>
 
 <div class="col-md-3 text-left" ng-if="current_user">
-  <%= light_link_to("/profile/notices") do %>
+  <%= light_link_to("/profile/index") do %>
     <p class="properties__right-bar-text">{{current_user.username}}</p>
   <% end %>  
   <p class="properties__right-bar-level">{{current_user.level}}</p>

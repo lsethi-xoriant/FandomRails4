@@ -303,7 +303,8 @@ class CallToActionController < ApplicationController
         expire_cache_key(get_comments_approved_cache_key(interaction.id))
       end
     else
-      response[:captcha_evaluate] = params[:session_storage_captcha] == Digest::MD5.hexdigest(params[:comment_info][:user_captcha] || "")
+      captcha_enabled = get_deploy_setting("captcha", true)
+      response[:captcha_evaluate] = !captcha_enabled || params[:session_storage_captcha] == Digest::MD5.hexdigest(params[:comment_info][:user_captcha] || "")
       if response[:captcha_evaluate]
         user_comment = UserCommentInteraction.new(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
         unless check_profanity_words_in_comment(user_comment).errors.any?

@@ -147,7 +147,7 @@ class ApplicationController < ActionController::Base
           "id" => property.id,
           "background" => get_extra_fields!(property)["label-background"],
           "icon" => get_extra_fields!(property)["icon"],
-          "title" => get_extra_fields!(property)["title"],
+          "title" => property.title,
           "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :custom) rescue nil) 
         }
       end
@@ -182,7 +182,8 @@ class ApplicationController < ActionController::Base
       "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
       "filter_info" => filter_info,
       "property_info" => property_info,
-      "calltoaction_evidence_info" => calltoaction_evidence_info
+      "calltoaction_evidence_info" => calltoaction_evidence_info,
+      "enable_comment_polling" => get_deploy_setting('comment_polling', true)
     }
   end
 
