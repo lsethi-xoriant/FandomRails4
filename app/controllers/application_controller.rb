@@ -147,7 +147,7 @@ class ApplicationController < ActionController::Base
           "id" => property.id,
           "background" => get_extra_fields!(property)["label-background"],
           "icon" => get_extra_fields!(property)["icon"],
-          "title" => get_extra_fields!(property)["title"],
+          "title" => property.title,
           "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :custom) rescue nil) 
         }
       end
