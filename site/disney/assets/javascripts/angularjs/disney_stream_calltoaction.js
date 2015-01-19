@@ -1,3 +1,14 @@
+var disneyStreamCalltoactionModule = angular.module('DisneyStreamCalltoactionModule', ['ngRoute', 'ngSanitize', 'ngAnimate']);
+
+DisneyStreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce'];
+disneyStreamCalltoactionModule.controller('DisneyStreamCalltoactionCtrl', DisneyStreamCalltoactionCtrl);
+
+// Gestione del csrf-token nelle chiamate ajax.
+disneyStreamCalltoactionModule.config(["$httpProvider", function(provider) {
+  provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
+}]);
+
+
 function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
