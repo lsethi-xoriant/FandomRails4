@@ -1002,10 +1002,11 @@ module ApplicationHelper
   end
 
   def get_tag_from_params(name)
-    cache_short(get_tag_cache_key(name)) do
+    tag = cache_short(get_tag_cache_key(name)) do
       tag = Tag.find_by_name(name)
       tag ? tag : CACHED_NIL
     end
+    cached_nil?(tag) ? nil : tag
   end
 
   def get_main_reward_name() 
