@@ -16,6 +16,9 @@
     </div>
     <p class="trivia-interaction__feedback-title">Bravo! Risposta corretta.</p> 
     <p class="trivia-interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
+    <span class="label label-warning trivia-interaction__winnable-reward__label">
+      +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}<span class="trivia-interaction__glyphicon-icon glyphicon glyphicon-star">
+    </span>  
   </div> 
 
   <div ng-if="interaction_info.interaction.resource_type == 'trivia' && !interaction_info.user_interaction.answer.correct" class="col-sm-12">
@@ -24,6 +27,8 @@
     </div>
     <p class="trivia-interaction__feedback-title">Peccato! Risposta sbagliata.</p> 
     <p class="trivia-interaction__feedback-description">Non hai guadagnato punti bonus.</p>
-    <!--{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}-->
+    <span class="label label-warning trivia-interaction__winnable-reward__label">
+      +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}<span class="trivia-interaction__glyphicon-icon glyphicon glyphicon-star">
+    </span> 
   </div> 
 </div>

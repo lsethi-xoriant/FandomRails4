@@ -99,6 +99,7 @@ module DisneyHelper
   end
 
   def disney_default_aux(other)
+
     current_property = get_tag_from_params(get_disney_property())
 
     filters = get_tags_with_tag("featured")
