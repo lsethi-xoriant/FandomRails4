@@ -110,15 +110,23 @@
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="#">Home</a></li>
             <li><a href="#">Gallery</a></li>
-            <li><a href="#">Premi</a></li>
-            <li><a href="#">Classifiche</a></li>
+            <li>
+              <%= light_link_to("/reward/catalogue") do %>
+                Premi
+              <% end %>
+            </li>
+            <li>
+              <%= light_link_to("/profile/rankings") do %>
+                Classifiche
+              <% end %>
+            </li>
             <li>
               <%= light_link_to("/browse") do %>
                 Cerca
               <% end %>
             </li>
             <li>
-              <%= light_link_to("/profile") do %>
+              <%= light_link_to("/profile/index") do %>
                 Profilo
               <% end %>
             </li>
@@ -153,15 +161,23 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="active"><a href="#">Home</a></li>
         <li><a href="#">Gallery</a></li>
-        <li><a href="#">Premi</a></li>
-        <li><a href="#">Classifiche</a></li>
+        <li>
+          <%= light_link_to("/reward/catalogue") do %>
+            Premi
+          <% end %>
+        </li>
+        <li>
+          <%= light_link_to("/profile/rankings") do %>
+            Classifiche
+          <% end %>
+        </li>
         <li>
           <%= light_link_to("/browse") do %>
             Cerca
           <% end %>
         </li>
         <li>
-          <%= light_link_to("/profile") do %>
+          <%= light_link_to("/profile/index") do %>
             Profilo
           <% end %>
         </li>
@@ -170,6 +186,12 @@
             <a href="<%= @aux["current_property_info"]["outer-url"] %>"><%= @aux["current_property_info"]["outer"] %></a>
           </li>
         <% end %>
+        <hr>
+        <li ng-repeat="property in aux.property_info">
+          <a href="/{{property.path}}"> 
+             {{property.title}} 
+          </a>
+        </li>
       </ul>
     </div>
   </div>
