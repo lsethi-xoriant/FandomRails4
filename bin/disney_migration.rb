@@ -1202,7 +1202,7 @@ end
 ########## VOTES ##########
 
 def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, call_to_actions_id_map, user_call_to_actions_id_map, limit)
-  source_votes = source_db_connection.exec("SELECT * FROM votes#{limit ? " limit 20000" : ""}") # limit for testing
+  source_votes = source_db_connection.exec("SELECT * FROM votes ORDER BY votable_type, votable_id#{limit ? " limit 20000" : ""}") # limit for testing
   source_votes_count = source_votes.count
 
   puts "votes: #{source_votes_count} lines to migrate \nRunning migration..."
@@ -1211,9 +1211,8 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
   count = 0
   rows_with_user_missing = 0
   rows_with_cta_missing = 0
+  last_interaction_type_and_id = [nil, nil]
   votes_id_map = Hash.new
-
-  seen_vote_interaction_ids = {}
 
   source_votes.each do |line|
     new_user_id = users_id_map[line["voter_id"].to_i]
@@ -1228,19 +1227,21 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
     end
 
     if new_call_to_action_id != nil
-      #new_call_to_action_id = call_to_actions_id_map[old_call_to_action_id.to_i].nil? ? user_call_to_actions_id_map[old_call_to_action_id.to_i] : call_to_actions_id_map[old_call_to_action_id.to_i]
-      fields_for_likes = {
-        #"id" => , 
-        "title" => "like-id#{line["id"]}",
-        "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
-        "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"])
-      }
 
-      query_for_likes = build_query_string(destination_db_tenant, "likes", fields_for_likes)
-      destination_db_connection.exec(query_for_likes)
+      if last_interaction_type_and_id != [line["votable_type"], line["votable_id"]]
 
-      unless seen_vote_interaction_ids.key?(line["id"])
-        seen_vote_interaction_ids[line["id"]] = true
+        last_interaction_type_and_id = [line["votable_type"], line["votable_id"]]
+
+        fields_for_likes = {
+          #"id" => , 
+          "title" => "like-id#{line["id"]}",
+          "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
+          "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"])
+        }
+
+        query_for_likes = build_query_string(destination_db_tenant, "likes", fields_for_likes)
+        destination_db_connection.exec(query_for_likes)
+
         fields_for_interactions = {
           #"id" => line["id"].to_i,
           "name" => nullify_or_escape_string(source_db_connection, "interaction-like-#{source_db_tenant}-id#{line["id"]}"),
@@ -1256,25 +1257,27 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
         destination_db_connection.exec(query_for_interactions)
       end
 
-      fields_for_user_interactions = {
-        #"id" => line["id"].to_i,
-        "user_id" => new_user_id,
-        "interaction_id" => destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions_id_seq')").values[0][0].to_i, # created above
-        "answer_id" => "NULL",
-        "counter" => 1,
-        "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
-        "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
-        "like" => "NULL", # likes in aux field!
-        "outcome" => "NULL",
-        "aux" => '{"like":true}'
-      }
-  
-      query_for_user_interactions = build_query_string(destination_db_tenant, "user_interactions", fields_for_user_interactions)
-      destination_db_connection.exec(query_for_user_interactions)
+      if new_user_id != nil # don't create user_interaction if there is no user mapped
+        fields_for_user_interactions = {
+          #"id" => line["id"].to_i,
+          "user_id" => new_user_id,
+          "interaction_id" => destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions_id_seq')").values[0][0].to_i, # created above
+          "answer_id" => "NULL",
+          "counter" => 1,
+          "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
+          "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
+          "like" => "NULL", # likes in aux field!
+          "outcome" => "NULL",
+          "aux" => '{"like":true}'
+        }
+    
+        query_for_user_interactions = build_query_string(destination_db_tenant, "user_interactions", fields_for_user_interactions)
+        destination_db_connection.exec(query_for_user_interactions)
 
-      votes_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions_id_seq')").values[0][0].to_i)
-  
-      count += 1
+        votes_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions_id_seq')").values[0][0].to_i)
+    
+        count += 1
+      end
     end
     next_step = print_progress(count + rows_with_user_missing + rows_with_cta_missing, lines_step, next_step, source_votes_count)
   end

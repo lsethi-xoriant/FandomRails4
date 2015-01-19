@@ -65,7 +65,7 @@
 								        	<% avatar_slice.each do |avatar| %>
 								        	<div class="col-xs-12">
 								        		<div class="avatars__flexslider__avatar-container" onclick="selectAvatar(this);">
-								        			<img ng-src="<%= avatar %>">	
+								        			<img ng-src="<%= avatar[:url] %>">	
 								        		</div>
 								        	</div>
 								        	<% end %>

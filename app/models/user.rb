@@ -42,7 +42,7 @@ class User < ActiveRecordWithJSON
   validate :privacy_accepted, if: Proc.new { |f| required_attr?("privacy") }
   validate :newsletter_acceptance, if: Proc.new { |f| required_attr?("newsletter") }
   validates_presence_of :username, if: Proc.new { |f| required_attr?("username") }
-  validates :username, uniqueness: true, if: Proc.new { |f| required_attr?("username") }
+  validates_uniqueness_of :username, case_sensitive: false, if: Proc.new { |f| required_attr?("username") }
   validate :major, if: Proc.new { |f| major_date.present? }
 
   after_initialize :set_attrs
