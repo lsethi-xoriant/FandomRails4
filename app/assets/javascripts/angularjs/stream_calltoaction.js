@@ -842,6 +842,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   	this.media_data = media_data;
 
   	player = this;
+    
+    $scope.KalturaPlayerId = playerId;
+    // Update: http://knowledge.kaltura.com/javascript-api-kaltura-media-players#EnablingtheJavascriptAPI
+
 	  kWidget.embed({
   		'targetId': this.playerId,
   		'wid': '_' + $scope.aux.kaltura.partner_id,
@@ -854,7 +858,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   			'wmode': 'transparent' 
   		},
   		'readyCallback': function( playerId ){
-  			kdp = $("#"+playerId).get(0);
+  			kdp = $("#" + playerId).get(0);
   			kdp.addJsListener("playerReady", "onKalturaPlayerReady");
   			kdp.addJsListener("doPlay", "onKalturaPlayEvent");
   			kdp.addJsListener("playerUpdatePlayhead", "kalturaCheckInteraction");
@@ -880,7 +884,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   	if(typeof kWidget === 'undefined'){
   		setTimeout(initKalturaApi, 300);
   	}else{
-		kalturaApiReady();
+		  kalturaApiReady();
   	}
   };
  
@@ -916,7 +920,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
   
   $window.kalturaCheckInteraction = function(data, idPlayer) {
-	  calltoaction_id = getCallToActionIdFromKalturaPlayer(idPlayer);
+	  calltoaction_id = getCallToActionIdFromKalturaPlayer($scope.KalturaPlayerId);//getCallToActionIdFromKalturaPlayer(idPlayer);
 
     current_video_player = getPlayer(calltoaction_id);
     kaltura_player_current_time = Math.floor(data);

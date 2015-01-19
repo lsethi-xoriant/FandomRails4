@@ -15,7 +15,7 @@
   border-radius: 50%;
   float: left;
   height: 40px;
-  margin: 8px;
+  margin: 8px 15px 8px 8px;
   width: 40px;
 }
 
@@ -24,11 +24,11 @@
 }
 
 .interaction__feedback-circle--red {
-  background: $red;
+  background: red;
 }
 
 .interaction__feedback-text--red {
-  color: $red;
+  color: red;
 }
 
 .interaction__feedback-text--green {
