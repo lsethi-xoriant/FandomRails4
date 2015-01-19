@@ -8,10 +8,15 @@ class RewardController < ApplicationController
   include RewardHelper
   
   def index
-    user_rewards = get_user_rewards(current_user.id)
-    user_available_rewards = get_user_available_rewards(current_user.id)
+    if current_user
+      user_rewards = get_user_rewards(current_user.id)
+      user_available_rewards = get_user_available_rewards(current_user.id)
+    else
+      user_rewards = []
+      user_available_rewards = []
+    end
     newest_rewards = get_newest_rewards
-    all_rewards = get_all_rewards(current_user.id)
+    all_rewards = get_all_rewards
     reward_list = {
       "user_rewards" => prepare_rewards_for_presentation(user_rewards),
       "user_available_rewards" => prepare_rewards_for_presentation(user_available_rewards),
@@ -52,7 +57,7 @@ class RewardController < ApplicationController
     avaiable_rewards
   end
   
-  def get_all_rewards(user_id)
+  def get_all_rewards
     cache_short("all_catalogue_rewards") do
       Reward.where("rewards.id NOT IN (?)", get_basic_rewards_ids).to_a
     end

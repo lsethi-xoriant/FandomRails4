@@ -5,7 +5,11 @@
 				<img src="<%= user_avatar current_user %>" class="reward-catalogue-header__avatar" />
 			</div>
 			<div class="col-xs-12 col-sm-10">
+			<% if current_user %>
 				<p class="reward-catalogue-header__credit-text">Hai <span class="label label-warning reward-catalogue-header__credit-counter">+ <%= get_counter_about_user_reward("credit") %> <i class="fa fa-copyright"></i></span> crediti a disposizione</p>
+			<% else %>
+				<p class="reward-catalogue-header__credit-text--not-logged">Registrati per ottenere crediti e sbloccare i contenuti esclusivi della community.</p>
+			<% end %>
 			</div>
 		</div>
 		<div class="row text-center">
