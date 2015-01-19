@@ -27,7 +27,6 @@ class Easyadmin::EasyadminRewardController < ApplicationController
       @extra_options = params[:extra_options]
       render template: "/easyadmin/easyadmin_reward/new"
     else
-      @reward.update_attribute(:currency_id,params[:currency_id])
       update_and_redirect(tag_list, "Reward generato correttamente", @reward)
     end
   end
