@@ -9,13 +9,13 @@
 		      <div class="section-heading">
 		        	<h3>
 		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
-		        		Tutti i premi
+		        		<%= @title %>
 		        	</h3>
 		      </div>
 		      
 		</div>
 		
-		<div class="col-xs-12 col-sm-3" ng-repeat="reward in reward_list['all_rewards']">
+		<div class="col-xs-12 col-sm-3" ng-repeat="reward in reward_list['<%= @reward_key %>']">
 			<div class="cta-preview" ng-if="reward.reward_info.status != 'gained'">
 				<div class="row">
 					<div class="col-xs-12">
