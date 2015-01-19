@@ -19,7 +19,7 @@ module ConfigUtils
         if part.start_with? ':'
           part = part[1..-1].to_sym
         end 
-        x = x[part]
+        x = x.fetch(part)
       end
       x
     rescue
