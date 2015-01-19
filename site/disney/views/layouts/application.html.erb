@@ -18,10 +18,11 @@
   <%= csrf_meta_tags %>
 
 </head>
-  
-<%= render partial: "/application/style" %>
 
-<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="DisneyStreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.present? ? @current_user_info.to_json : "null" %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_disney_calltoactions_count_in_property() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.present? ? @aux.to_json : {} %>)">
+<% aux = disney_default_aux(@aux_other_params) %>  
+<%= render partial: "/application/style", locals: { aux: aux } %>
+
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="DisneyStreamCalltoactionCtrl" ng-init="init(<%= build_disney_current_user().to_json %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_disney_calltoactions_count_in_property() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 
   <% if flash[:notice] == "from-disney-registration" %>
     <div class="modal show" role="dialog" aria-hidden="true">

@@ -1,7 +1,7 @@
 <style type="text/css">
 
   body {
-    background-image: url("<%= @aux["current_property_info"]["image-background"] rescue "" %>");
+    background-image: url("<%= aux["current_property_info"]["image-background"] %>");
     background-position: top center;
     background-repeat: no-repeat;
   }
@@ -9,18 +9,18 @@
   .navbar-default .navbar-nav > .active > a,
   .navbar-default .navbar-nav > li > a:hover,
   .navbar-default .navbar-nav > li > a:focus {
-  background: <%= @aux["current_property_info"]["background"] rescue "" %> !important;
+  background: <%= aux["current_property_info"]["background"] %> !important;
   }
 
   .properties__flexslider .flex-direction-nav a.flex-prev:before,
   .properties__flexslider .flex-direction-nav a.flex-next:before {
-  color: <%= @aux["current_property_info"]["background"] rescue "" %> !important;
+  color: <%= aux["current_property_info"]["background"] %> !important;
   }
 
   .btn-primary { 
     color: #FFFFFF; 
-    background-color: <%= @aux["current_property_info"]["background"] rescue "" %>; 
-    border-color: <%= @aux["current_property_info"]["background"] rescue "" %>; 
+    background-color: <%= aux["current_property_info"]["background"] %>; 
+    border-color: <%= aux["current_property_info"]["background"] %>; 
     -webkit-box-shadow: inset 0 3px 0 0 rgba(255, 255, 255, 0.4);
     -moz-box-shadow: inset 0 3px 0 0 rgba(255, 255, 255, 0.4);
     box-shadow: inset 0 3px 0 0 rgba(255, 255, 255, 0.4);
@@ -32,8 +32,8 @@
   .btn-primary.active, 
   .open .dropdown-toggle.btn-primary { 
     color: #FFFFFF; 
-    background-color: <%= @aux["current_property_info"]["background"] rescue "" %>; 
-    border-color: <%= @aux["current_property_info"]["background"] rescue "" %>; 
+    background-color: <%= aux["current_property_info"]["background"] %>; 
+    border-color: <%= aux["current_property_info"]["background"] %>; 
   } 
    
   .btn-primary:active, 
@@ -57,8 +57,8 @@
   .btn-primary.disabled.active, 
   .btn-primary[disabled].active, 
   fieldset[disabled] .btn-primary.active { 
-    background-color: <%= @aux["current_property_info"]["background"] rescue "" %>; 
-    border-color: <%= @aux["current_property_info"]["background"] rescue "" %>; 
+    background-color: <%= aux["current_property_info"]["background"] %>; 
+    border-color: <%= aux["current_property_info"]["background"] %>; 
   } 
 
 </style>
