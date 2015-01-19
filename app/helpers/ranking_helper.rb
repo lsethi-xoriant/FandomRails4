@@ -201,6 +201,20 @@ module RankingHelper
     end
   end
   
+  def populate_ranking(ranking_name)
+    cache_short(get_single_ranking_page_key(ranking_name)) do
+      rankings = Hash.new
+      rank = Ranking.find_by_name(ranking_name)
+      if rank.people_filter != "all"
+        rankings[ranking_name] = send("get_#{rank.people_filter}_rank", rank)
+      else
+        rankings[ranking_name] = get_full_rank(rank)
+      end
+      rankings['general_user_position'] = create_current_chart_user_position(rank)
+      rankings
+    end
+  end
+  
   def populate_vote_rankings(vote_ranking_names)
     cache_short(get_vote_ranking_page_key) do 
       rankings = Hash.new
@@ -218,6 +232,13 @@ module RankingHelper
     else
       ranking = Ranking.find_by_name("#{property}-general-chart")
     end
+    rank = get_ranking(ranking)
+    if rank
+      rank.user_to_position
+    end
+  end
+  
+  def create_current_chart_user_position(ranking)
     rank = get_ranking(ranking)
     if rank
       rank.user_to_position

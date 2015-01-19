@@ -155,6 +155,10 @@ module CacheKeysHelper
     "ranking_page"
   end
   
+  def get_single_ranking_page_key(ranking_name)
+    "single_ranking_page_key_#{ranking_name}"
+  end
+  
   def get_ranking_settings_key
     "ranking_page_settings"
   end

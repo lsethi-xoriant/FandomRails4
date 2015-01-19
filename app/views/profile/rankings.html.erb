@@ -9,10 +9,10 @@
 			<% get_ranking_settings.each do |rs| %>
 				<% if rs == "my_position_general" %>
 					<% if get_my_general_position %>
-						<%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
+						<%= render partial: "/ranking/rank", locals: { rankings: "rankings['my-position-general']" } %>
 					<% end %>
 				<% else %>
-					<%= render partial: "/ranking/rank", locals: { rankings: "rankings.#{rs}" } %>
+					<%= render partial: "/ranking/rank", locals: { rankings: "rankings['#{rs}']" } %>
 				<% end %>
 			<% end %>
 			

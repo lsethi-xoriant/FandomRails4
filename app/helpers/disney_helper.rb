@@ -19,7 +19,7 @@ module DisneyHelper
   def get_my_general_position_in_property
     property_ranking = Ranking.find_by_name("#{get_disney_property}-general-chart")
     if property_ranking
-      rank = cache_short("#{$context_root}-general-chart") do
+      rank = cache_short("#{get_disney_property}-general-chart-position") do
         rank = get_full_rank(property_ranking)
       end
       [rank[:my_position], rank[:total]]
