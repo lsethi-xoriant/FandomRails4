@@ -130,9 +130,9 @@
                 Profilo
               <% end %>
             </li>
-            <% if @aux && @aux["current_property_info"] && @aux["current_property_info"]["outer"] && @aux["current_property_info"]["outer-url"] %>
+            <% if aux["current_property_info"] && aux["current_property_info"]["outer"] && aux["current_property_info"]["outer-url"] %>
               <li>
-                <a href="<%= @aux["current_property_info"]["outer-url"] %>"><%= @aux["current_property_info"]["outer"] %></a>
+                <a href="<%= aux["current_property_info"]["outer-url"] %>"><%= aux["current_property_info"]["outer"] %></a>
               </li>
             <% end %>
           </ul>
@@ -181,9 +181,9 @@
             Profilo
           <% end %>
         </li>
-        <% if @aux && @aux["current_property_info"] && @aux["current_property_info"]["outer"] && @aux["current_property_info"]["outer-url"] %>
+        <% if aux["current_property_info"] && aux["current_property_info"]["outer"] && aux["current_property_info"]["outer-url"] %>
           <li>
-            <a href="<%= @aux["current_property_info"]["outer-url"] %>"><%= @aux["current_property_info"]["outer"] %></a>
+            <a href="<%= aux["current_property_info"]["outer-url"] %>"><%= aux["current_property_info"]["outer"] %></a>
           </li>
         <% end %>
         <hr style="margin-top: 5px; margin-bottom: 5px;">
