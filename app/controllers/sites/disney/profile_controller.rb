@@ -47,7 +47,11 @@ class Sites::Disney::ProfileController < ProfileController
     if small_mobile_device?
       redirect_to "/profile/index"
     else
-      redirect_to "/#{get_disney_property}/users/edit"
+      if $context_root.nil?
+        redirect_to "/users/edit"
+      else
+        redirect_to "/#{get_disney_property}/users/edit"
+      end
     end
   end
   
