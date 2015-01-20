@@ -112,6 +112,14 @@ class Sites::Disney::ProfileController < ProfileController
     end
   end
   
+  def load_more_notice
+    notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC").limit(params[:count])
+    notices_list = group_notice_by_date(notices)
+    respond_to do |format|
+      format.json { render :json => notices_list.to_json }
+    end
+  end
+  
   def get_other_property_rewards(reward_name)
     myrewards, use_prop = rewards_by_tag(reward_name, current_user)
     other_rewards = []

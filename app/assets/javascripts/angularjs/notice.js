@@ -8,8 +8,10 @@ noticeModule.config(["$httpProvider", function(provider) {
 
 NoticeCtrl.$inject = ['$scope', '$window', '$timeout', '$resource','ngTableParams', '$sce'];
 NoticeBarCtrl.$inject = ['$scope', '$resource', '$sce'];
+NoticePageCtrl.$inject = ['$scope', '$resource', '$sce'];
 noticeModule.controller('NoticeCtrl', NoticeCtrl);
 noticeModule.controller('NoticeBarCtrl', NoticeBarCtrl);
+noticeModule.controller('NoticePageCtrl', NoticePageCtrl);
 
 noticeModule.service("LatestNoticeService", function($scope, $resource){
 	this.get_notices = function(){
@@ -90,4 +92,56 @@ function NoticeBarCtrl($scope, $resource, $sce) {
 	     });
 	     $scope.notices = data.result;
 	});
+}
+
+function NoticePageCtrl($scope, $resource, $sce) {
+	//LatestNoticeService.get_notices();
+	var Api = $resource('/profile/notices/load_more');
+	
+	$scope.init = function(notices) {
+		//console.log(notices);
+		
+		angular.forEach(notices, function(value, key) {
+			angular.forEach(value, function(value, key) {
+	       		value.html_notice = $sce.trustAsHtml(value.html_notice);
+	     	});
+	    });
+	    $scope.notice_list = notices;
+		$scope.notice_number = 20;
+	};
+	
+	$scope.loadMore = function(){
+		Api.get({count: $scope.notice_number + 20}, function(data) {
+		   if (data.length > 0){
+		   	 angular.forEach(data, function(value, key) {
+		   	 	angular.forEach(value, function(value, key) {
+		       		value.html_notice = $sce.trustAsHtml(value.html_notice);
+		      	});
+		     });
+		     $scope.notices = data;
+		     $scope.notice_number = $scope.notice_number + 20;
+		   }else{
+		   	$(".notice-load-more").hide();
+		   }
+		});
+	};
+	
+	$scope.mark_as_read = function(id){
+		$.ajax({
+	      type: "POST",
+	      url: "/profile/notices/mark_as_read",
+	      data: { notice_id: id },
+	      beforeSend: function(jqXHR, settings) {
+	        jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+	      },
+	      success: function(data) {
+	        if(data.success){
+	        	$("li#"+id).removeClass("notice--unread");
+	        	$("li#"+id+" i.fa").removeClass("fa-circle-o").addClass("fa-circle");
+	        }else{
+	        	alert(data.message);
+	        }
+	      } // success AJAX
+      	});
+	};
 }
