@@ -1,9 +1,10 @@
 <div class="container container--default" style="background-color: #fff;" ng-controller="RankingCtrl" ng-init="init(<%= populate_ranking(@rank_name).to_json %>, <%= current_user.to_json %>);">
-	<% unless small_mobile_device? %>
-		<%= render partial: "profile/profile_header" %>
-	  	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
+	<% if current_user %>
+		<% unless small_mobile_device? %>
+			<%= render partial: "profile/profile_header" %>
+		  	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
+		<% end %>
 	<% end %>
-
 		<div class="row">
 			
 				<% if @rank_name == "my-position-general" %>

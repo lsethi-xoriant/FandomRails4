@@ -183,8 +183,8 @@
 }
 
 .trivia-interaction__answer-slide-out {
-  -webkit-animation: triviaAnswerSlideOut 0.5s forwards, triviaAnswerFadeOut 0.5s forwards;
-  animation: triviaAnswerSlideOut 0.5s forwards, triviaAnswerFadeOut 0.5s forwards;
+  -webkit-animation: triviaAnswerSlideOut 0.5s forwards, triviaElemFadeOut 0.5s forwards;
+  animation: triviaAnswerSlideOut 0.5s forwards, triviaElemFadeOut 0.5s forwards;
   -webkit-animation-delay: 0s, 0s;
   animation-delay: 0s, 0s; 
 }
@@ -197,11 +197,20 @@
     100% { left: -150%; }
 }
 
-@-webkit-keyframes triviaAnswerFadeOut {
+.trivia-interaction__question-fade-out, .trivia-interaction__reward-fade-out {
+  -webkit-animation: triviaElemFadeOut 0.5s forwards;
+  animation: triviaElemFadeOut 0.5s forwards;
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s; 
+}
+
+@-webkit-keyframes triviaElemFadeOut {
+    0% { opacity: 1; }
     100% { opacity: 0; }
 }
 
-@keyframes triviaAnswerFadeOut {
+@keyframes triviaElemFadeOut {
+    0% { opacity: 1; }
     100% { opacity: 0; }
 }
 

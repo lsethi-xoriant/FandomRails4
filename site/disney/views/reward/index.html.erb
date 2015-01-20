@@ -7,6 +7,7 @@
 		        	<h3>
 		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
 		        		I miei premi
+		        		<a href="/reward/catalogue/my/all" class="section-heading__see-all">View all</a>
 		        	</h3>
 		      </div>
 		      
@@ -20,7 +21,7 @@
 										<a href="/call_to_action/{{reward.calltoaction.id}}">
 											<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
 										</a>
-										<div class="label label-warning cta-preview__points">+ {{reward.status.winnable_reward_count}}<span class="glyphicon glyphicon-star"></div>
+										<div class="label label-warning cta-preview__points hidden">+ {{reward.status.winnable_reward_count}}<span class="fa fa-star"></div>
 									</div>
 								</div>
 								<div class="col-xs-12">
@@ -43,6 +44,7 @@
 		        	<h3>
 		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
 		        		Premi che puoi sbloccare
+		        		<a href="/reward/catalogue/available/all" class="section-heading__see-all">View all</a>
 		        	</h3>
 		      </div>
 		      
@@ -82,6 +84,7 @@
 		        	<h3>
 		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
 		        		Nuovi premi
+		        		<a href="/reward/catalogue/all" class="section-heading__see-all">View all</a>
 		        	</h3>
 		      </div>
 		      
@@ -114,7 +117,7 @@
 										<a href="/call_to_action/{{reward.calltoaction.id}}">
 											<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
 										</a>
-										<div class="label cta-preview__points">+ {{reward.status.winnable_reward_count}}<span class="glyphicon glyphicon-star"></div>
+										<div class="label cta-preview__points hidden">+ {{reward.status.winnable_reward_count}}<span class="fa fa-star"></div>
 									</div>
 								</div>
 								<div class="col-xs-12">
@@ -170,7 +173,7 @@
 										<a href="/call_to_action/{{reward.calltoaction.id}}">
 											<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
 										</a>
-										<div class="label cta-preview__points">+ {{reward.status.winnable_reward_count}}<span class="glyphicon glyphicon-star"></div>
+										<div class="label cta-preview__points hidden">+ {{reward.status.winnable_reward_count}}<span class="fa fa-star"></div>
 									</div>
 								</div>
 								<div class="col-xs-12">

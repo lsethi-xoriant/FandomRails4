@@ -149,3 +149,9 @@
     margin: 20px 0;
   }
 }
+
+@media (max-width: $screen-sm-min) {
+  .cta-preview__credits--reward{
+    width: 30%;
+  }
+}

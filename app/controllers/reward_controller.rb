@@ -119,7 +119,39 @@ class RewardController < ApplicationController
     reward_list = {
       "all_rewards" => prepare_rewards_for_presentation(all_rewards)
     }
+    @title = "Tutti i premi"
+    @reward_key = "all_rewards"
     @reward_list = reward_list
+  end
+  
+  def show_all_available_catalogue
+    if current_user
+      user_available_rewards = get_user_available_rewards(current_user.id)
+      reward_list = {
+        "user_available_rewards" => prepare_rewards_for_presentation(user_available_rewards)
+      }
+      @reward_list = reward_list
+      @title = "Premi che puoi sbloccare"
+      @reward_key = "user_available_rewards"
+      render template: "/reward/show_all_catalogue"
+    else
+      redirect_to "/reward/catalogue" 
+    end
+  end
+  
+  def show_all_my_catalogue
+    if current_user
+      user_rewards = get_user_rewards(current_user.id)
+      reward_list = {
+        "user_rewards" => prepare_rewards_for_presentation(user_rewards),
+      }
+      @reward_list = reward_list
+      @title = "I miei premi"
+      @reward_key = "user_rewards"
+      render template: "/reward/show_all_catalogue"
+    else
+      redirect_to "/reward/catalogue" 
+    end
   end
   
 end

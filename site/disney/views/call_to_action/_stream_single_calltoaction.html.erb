@@ -9,7 +9,7 @@
     <!-- CALLTOACTION WINNABLE REWARD COUNT -->
     <div ng-if="calltoaction_info.status && calltoaction_info.status.winnable_reward_count > 0" class="cta__winnable-reward">
       <span class="label label-warning cta-cover__winnable-reward__label">
-        +{{calltoaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
+        +{{calltoaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
       </span>  
     </div> 
     <!-- CALLTOACTION DONE -->
@@ -26,7 +26,7 @@
 <div class="row">
   <div class="col-sm-12 cta__media-container">
   	<% if @is_cta_locked %>
-  		<img ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" />
+  		<img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" />
 		<div class="cta-preview__locked-layer cta-preview__locked-layer--reward">
 				<p>Per sbloccare questo premio</p>
 				<div class="label cta-preview__credits--reward">+ <%= @reward.cost %><i class="fa fa-copyright"></i></div>
@@ -44,7 +44,9 @@
   </div>
 
   <div class="col-sm-12 visible-xs interaction__underevideo-mobile-container">
-    <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+  	<% unless @is_cta_locked %>
+    	<%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+    <% end %>
   </div>
 
   <div class="col-sm-12 cta__media-footer">
@@ -76,7 +78,7 @@
       </div>
 
       <div class="col-sm-12 cta__description-small-col cta__description-small-col--extra text-center" ng-if="calltoaction_info.calltoaction.extra_fields['external_related_content_label'] && calltoaction_info.calltoaction.extra_fields['external_related_content_url']">
-        <a target="_blank" class="btn btn-primary" href="{{calltoaction_info.calltoaction.extra_fields['external_related_content_url']}}">{{calltoaction_info.calltoaction.extra_fields['external_related_content_label']}}</a>
+        <a target="_blank" class="btn btn-primary" href="{{calltoaction_info.calltoaction.extra_fields['external_related_content_url']}}"><span>{{calltoaction_info.calltoaction.extra_fields['external_related_content_label']}}</span></a>
       </div>
     </div>
 
@@ -93,7 +95,11 @@
     </div>
     <div id="comment-interactions" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
       <%= render partial: "/call_to_action/comment_interaction" %>
-    </div>      
+    </div> 
+
+    <div class="row">
+      <hr>
+    </div>    
   </div>
   <div class="col-sm-4">
     <div class="panel panel-default text-center" style="line-height: 200px;">ADV</div>

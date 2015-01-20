@@ -66,6 +66,17 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .interaction__feedback-text {
+    font-size: 14px;
+    margin: 12px 0 0 0;
+    color: #000;
+  }
+
+  .interaction__feedback-description {
+    font-size: 12px;
+    margin: 0 0 4px 0; 
+  }
+
   .undervideo-interaction__feedback {
     bottom: -150%;
     left: 0;
@@ -76,7 +87,7 @@
 
     -webkit-animation: feedbackUndervideoSlideIn 1s forwards, feedbackUndervideoSlideOut 1s forwards;
     animation: feedbackUndervideoSlideIn 1s forwards, feedbackUndervideoSlideOut 1s forwards;
-    -webkit-animation-delay: 0s, 5s;
-    animation-delay: 0s, 5s;
+    -webkit-animation-delay: 0s, 5000000s;
+    animation-delay: 0s, 5000000s;
   }
 }

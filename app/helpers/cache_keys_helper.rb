@@ -25,6 +25,10 @@ module CacheKeysHelper
   def get_reward_cache_key(reward_name)
     "reward_#{reward_name}"
   end
+  
+  def get_main_reward_image_cache_key
+    "main_reward_image"
+  end
 
   # Rewarding System
   # ~~~~~~~~~~~~~~~~
@@ -35,6 +39,10 @@ module CacheKeysHelper
 
   # User
   # ~~~~~
+
+  def get_ctas_except_me_in_property_for_user_cache_key(calltoaction_id, property_id, user_id)
+    "ctas_except_#{calltoaction_id}_in_property_#{calltoaction_id}_for_user_#{user_id}"
+  end
 
   def get_cta_completed_or_reward_status_cache_key(reward_name, cta_id, user_id)
     "cta_#{cta_id}_completed_or_reward_status_for_user_#{user_id}_for_reward_#{reward_name}"
@@ -241,4 +249,10 @@ module CacheKeysHelper
     "share_interaction_daily_done_for_user_#{user_id}"
   end
   
+  # Disney
+  # ~~~~~~~~~~
+  
+  def get_property_rankings_cache_key
+    "property_rankings_thumbnails"
+  end
 end

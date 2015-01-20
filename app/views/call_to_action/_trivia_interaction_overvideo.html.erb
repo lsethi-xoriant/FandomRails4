@@ -1,6 +1,6 @@
 <div class="row" ng-if="!interaction_info.feedback">
   <div class="col-sm-8 col-sm-offset-2 text-center">
-    <p class="trivia-interaction__question--overvideo">{{interaction_info.interaction.resource.question}}</p>
+    <p class="trivia-interaction__question--overvideo {{interaction_info.question_class}}">{{interaction_info.interaction.resource.question}}</p>
   </div>
   <div class="col-sm-8 col-sm-offset-2 text-center">
     <div ng-repeat="answer in interaction_info.interaction.resource.answers">
@@ -17,7 +17,7 @@
     <p class="trivia-interaction__feedback-title">Bravo! Risposta corretta.</p> 
     <p class="trivia-interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
     <span class="label label-warning trivia-interaction__winnable-reward__label">
-      +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}<span class="trivia-interaction__glyphicon-icon glyphicon glyphicon-star">
+      +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}<span class="trivia-interaction__glyphicon-icon fa fa-star">
     </span>  
   </div> 
 
@@ -28,7 +28,7 @@
     <p class="trivia-interaction__feedback-title">Peccato! Risposta sbagliata.</p> 
     <p class="trivia-interaction__feedback-description">Non hai guadagnato punti bonus.</p>
     <span class="label label-warning trivia-interaction__winnable-reward__label">
-      +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}<span class="trivia-interaction__glyphicon-icon glyphicon glyphicon-star">
+      +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}}<span class="trivia-interaction__glyphicon-icon fa fa-star">
     </span> 
   </div> 
 </div>

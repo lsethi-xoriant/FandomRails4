@@ -826,7 +826,7 @@ module ApplicationHelper
   end
   
   def get_main_reward_image_url
-    cache_short("main_reward_image") do
+    cache_short(get_main_reward_image_cache_key) do
       Reward.find_by_name(MAIN_REWARD_NAME).main_image.url
     end
   end
@@ -1011,6 +1011,15 @@ module ApplicationHelper
 
   def get_main_reward_name() 
     $context_root ? "#{$context_root}-#{MAIN_REWARD_NAME}" : MAIN_REWARD_NAME
+  end
+  
+  def get_property_from_cta(cta)
+    properties_tag = get_tag_with_tag_about_call_to_action(cta, "property")
+    if properties_tag.empty?
+      ""
+    else
+      "#{properties_tag.first.name}"
+    end
   end
   
 end
