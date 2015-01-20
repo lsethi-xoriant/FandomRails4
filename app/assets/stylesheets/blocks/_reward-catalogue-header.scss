@@ -48,12 +48,24 @@
 @media (max-width: $screen-sm-min) {
    .reward-catalogue-header__credit-text{
     color: #fff;
-    font-size: 28px;
-    line-height: 55px;
+    font-size: 20px;
+    line-height: 33px;
     text-align: center;
   }
   
+  .reward-catalogue-header__credit-counter{
+    padding: 5px;
+    font-size: 20px;
+    margin: 5px 5px;
+    display: inline-block;
+    background-color: #fff;
+    border: 2px solid #993300;
+    border-radius: 15px;
+    color: $red;
+  }
+  
   .reward-catalogue-header__avatar-container{
-    text-align: center;  
+    text-align: center;
+    display: none;  
   }
 }

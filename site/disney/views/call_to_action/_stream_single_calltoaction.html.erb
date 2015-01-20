@@ -44,7 +44,9 @@
   </div>
 
   <div class="col-sm-12 visible-xs interaction__underevideo-mobile-container">
-    <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+  	<% unless @is_cta_locked %>
+    	<%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+    <% end %>
   </div>
 
   <div class="col-sm-12 cta__media-footer">
