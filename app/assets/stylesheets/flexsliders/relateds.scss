@@ -1,0 +1,79 @@
+/* CTA RELATED */
+
+.relateds-flexslider {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.relateds__header-row {
+  margin-bottom: 15px;
+}
+
+.relateds__icon-container {
+  background: $blu; 
+  background: -webkit-linear-gradient($blu, #2e78c5);
+  background: -o-linear-gradient($blu, #2e78c5);
+  background: -moz-linear-gradient($blu, #2e78c5);
+  background: linear-gradient($blu, #2e78c5);
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  float: left;
+  .fa {
+    color: #fff;
+    font-size: 26px;
+    line-height: 40px;
+  }
+}
+
+.relateds__title {
+  font-size: 16px;
+  margin-left: 50px;
+}
+
+.relateds__description {
+  font-size: 12px;
+  margin-left: 50px;
+}
+
+.relateds-flexslider__item {
+  margin-right: 15px;
+}
+
+.relateds-flexslider__item-panel {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  height: 290px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  position: relative;
+  -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+}
+
+.relateds-flexslider__thumbnail {
+  height: 165px;
+  overflow: hidden;
+  padding-top: 57%;
+  position: relative;
+}
+
+.relateds-flexslider__likes, .relateds-flexslider__comments {
+  color: #000;
+  display: inline;
+  margin-left: 15px;
+  position: relative;
+  top: 4px;
+}
+
+.relateds-flexslider__footer {
+  position: absolute;
+  bottom: 15px;
+}
+
+.relateds-flexslider__thumbs-up, .relateds-flexslider__glyphicon-comment {
+    font-size: 14px;
+    margin-right: 5px;
+}

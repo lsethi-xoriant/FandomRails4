@@ -8,6 +8,7 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
+/* COIN */
 streamCalltoactionModule.animation('.slide-left', function() {
   return {
     // you can also capture these animation events
@@ -20,6 +21,7 @@ streamCalltoactionModule.animation('.slide-left', function() {
   };
 });
 
+/* COIN */
 streamCalltoactionModule.animation('.slide-right', function() {
   return {
     // you can also capture these animation events
@@ -29,6 +31,26 @@ streamCalltoactionModule.animation('.slide-right', function() {
     removeClass : function(element, className, done) {
     	$(element).effect( "fade", {}, 1000);
     }
+  };
+});
+
+angular.module('ng').filter('cut', function () {
+  return function (value, wordwise, max, tail) {
+      if (!value) return '';
+
+      max = parseInt(max, 10);
+      if (!max) return value;
+      if (value.length <= max) return value;
+
+      value = value.substr(0, max);
+      if (wordwise) {
+          var lastspace = value.lastIndexOf(' ');
+          if (lastspace != -1) {
+              value = value.substr(0, lastspace);
+          }
+      }
+
+      return value + (tail || '...');
   };
 });
 

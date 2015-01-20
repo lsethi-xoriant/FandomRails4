@@ -26,6 +26,12 @@ class Sites::Disney::ApplicationController < ApplicationController
     end
 
     @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
+
+    @aux_other_params = { 
+      filters: true,
+      calltoaction_evidence_info: false
+    }
+
   end
 
   def build_current_user() 
