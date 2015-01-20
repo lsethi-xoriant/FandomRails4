@@ -90,9 +90,11 @@
       		<div class="rewards-flexslider">
 	      	  	<ul class="slides">
 	      			<% @mybadges.each do |badge| %>
-	      				<li class="rewards-flexslider__item">
-			        		<%= render partial: "/profile/property_badge", locals: { reward: badge } %>
-			        	</li>
+	      				<% if badge["reward"] %>
+		      				<li class="rewards-flexslider__item">
+				        		<%= render partial: "/profile/property_badge", locals: { reward: badge } %>
+				        	</li>
+				        <% end %>
 			        <% end %>	
 	      	  	</ul>
 	      	</div>
