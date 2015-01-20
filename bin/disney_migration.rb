@@ -85,7 +85,7 @@ def map_core_custom_gallery_ids_to_tag_ids(source_db_connection, source_db_tenan
 end
 
 def print_missing(table_name, categories, tags)
-  puts "Mancano tag. #{(categories & tags).count} #{table_name} presenti su #{categories.count} #{table_name} totali.\n"
+  puts "Tags missing. \nThere are #{(categories & tags).count} #{table_name} on #{categories.count} total #{table_name}.\n"
   res = Array.new
   puts categories
   puts "\n-----------------------------------\n"
@@ -98,7 +98,7 @@ end
 
 ########## CALL TO ACTIONS ##########
 
-def migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, categories_tags_id_map)
+def migrate_call_to_actions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, categories_tags_id_map)
   source_call_to_actions = source_db_connection.exec("SELECT * FROM call_to_actions")
   source_call_to_actions_count = source_call_to_actions.count
 
@@ -108,42 +108,74 @@ def migrate_call_to_actions(destination_db_tenant, source_db_connection, destina
 
   count = 0
   rows_with_cnt_type_missing = 0
+  rows_with_cnt_id_missing = 0
   rows_with_category_id_missing = 0
   call_to_actions_id_map = Hash.new
 
+  violetta_tag_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags WHERE name = 'violetta'").values[0][0];
+  disney_tag_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags WHERE name = 'disney-channel'").values[0][0];
+
+  if (!violetta_tag_id or !disney_tag_id)
+    puts "ERROR: Tag property id not found\n"
+  end
+
   source_call_to_actions.each do |line|
     cnt_type_query_result = source_db_connection.exec("SELECT contents.cnt_type FROM contents JOIN cta_content_interactions ON contents.id = cta_content_interactions.content_id WHERE cta_content_interactions.call_to_action_id = #{line["id"]}").values
-    if cnt_type_query_result.nil?
+    if cnt_type_query_result[0].nil?
       cnt_type = ""
       rows_with_cnt_type_missing += 1
     else
-      cnt_type = cnt_type_query_result[0]
+      cnt_type = cnt_type_query_result[0][0]
     end
+
+    content_id = source_db_connection.exec("SELECT content_id FROM cta_content_interactions WHERE call_to_action_id = #{line["id"]}").values[0]
+    if content_id.nil?
+      rows_with_cnt_id_missing += 1
+    else
+      if cnt_type == 'Experience::PostContent'
+        new_description = source_db_connection.exec("SELECT body FROM post_contents WHERE id = #{content_id[0]}").values
+        new_description = new_description[0].nil? ? "" : new_description[0][0]
+        media_type = "IMAGE"
+        media_data = "NULL"
+      else
+        new_description = nullify_or_escape_string(source_db_connection, line["long_description"])
+        if cnt_type == 'Experience::VideoContent'
+          media_type = "FLOWPLAYER"
+          media_data = source_db_connection.exec("SELECT vcode FROM video_contents WHERE id = #{content_id[0]}").values
+          media_data = media_data[0].nil? ? "" : media_data[0][0]
+        else
+          media_type = "NULL"
+          media_data = "NULL"
+        end
+      end
+    end
+
+    updated_at = nullify_or_escape_string(source_db_connection, line["updated_at"])
 
     fields = {
       #"id" => line["id"].to_i,
       "name" => nullify_or_escape_string(source_db_connection, "#{line["name"]}-id#{line["id"]}".gsub(" ", "")),
       "title" => nullify_or_escape_string(source_db_connection, line["description"]),
-      "description" => nullify_or_escape_string(source_db_connection, line["long_description"]),
-      "media_type" => cnt_type == "Experience::VideoContent" ? "FLOWPLAYER" : "IMAGE",
+      "description" => nullify_or_escape_string(source_db_connection, new_description),
+      "media_type" => nullify_or_escape_string(source_db_connection, media_type),
       "enable_disqus" => "f",
       "activated_at" => line["activate_at"] != nil ? nullify_or_escape_string(source_db_connection, line["activate_at"]) : "NULL",
       "secondary_id" => "NULL",
       "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
-      "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
+      "updated_at" => updated_at,
       "slug" => "NULL",
       "media_image_file_name" => nullify_or_escape_string(source_db_connection, line["cta_image_file_name"]),
       "media_image_content_type" => nullify_or_escape_string(source_db_connection, line["cta_image_content_type"]),
       "media_image_file_size" => line["cta_image_file_size"] != nil ? line["cta_image_file_size"] : "NULL",
       "media_image_updated_at" => line["cta_image_updated_at"] != nil ? nullify_or_escape_string(source_db_connection, line["cta_image_updated_at"]) : "NULL",
-      "media_data" => "NULL",
-      "releasing_file_id" => "NULL", # it's not an user-cta
+      "media_data" => nullify_or_escape_string(source_db_connection, media_data),
+      "releasing_file_id" => "NULL", # it's not an user cta
       "approved" => line["published_at"] != nil ? "t" : "f",
       "thumbnail_file_name" => "NULL",
       "thumbnail_content_type" => "NULL",
       "thumbnail_file_size" => "NULL",
       "thumbnail_updated_at" => "NULL",
-      "user_id" => "NULL", # it's not an user-cta
+      "user_id" => "NULL", # it's not an user cta
       "aux" => "{}"
     }
 
@@ -160,11 +192,21 @@ def migrate_call_to_actions(destination_db_tenant, source_db_connection, destina
       create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, tag_id, nullify_or_escape_string(source_db_connection, line["updated_at"]))
     end
 
+    # CREATE CALL_TO_ACTION_TAG FOR PROPERTY
+    if source_db_tenant == 'violetta'
+      create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, violetta_tag_id, updated_at)
+    else # disney
+      create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, disney_tag_id, updated_at)
+    end
+
+
     count += 1
     next_step = print_progress(count + rows_with_cnt_type_missing, lines_step, next_step, source_call_to_actions_count)
   end
   puts "#{count} lines successfully migrated \n"
-  puts "#{rows_with_cnt_type_missing} rows had dangling reference to content type \n#{rows_with_category_id_missing} rows had no category \n"
+  puts "#{rows_with_cnt_type_missing} rows had dangling reference to content type \n#{rows_with_cnt_id_missing} rows had dangling reference to content id \n"
+  puts "#{rows_with_category_id_missing} rows had no category \n"
+  puts ""
   write_table_id_mapping_to_file("call_to_actions", call_to_actions_id_map)
   return call_to_actions_id_map
 end
@@ -909,7 +951,7 @@ def create_new_cta_reward(destination_db_tenant, source_db_connection, destinati
     "media_image_content_type" => nullify_or_escape_string(source_db_connection, line["prize_image_content_type"]),
     "media_image_file_size" => line["cta_image_file_size"] != nil ? line["prize_image_file_size"] : "NULL",
     "media_image_updated_at" => line["cta_image_updated_at"] != nil ? nullify_or_escape_string(source_db_connection, line["prize_image_updated_at"]) : "NULL",
-    "media_data" => "NULL",
+    "media_data" => nullify_or_escape_string(source_db_connection, line["prize_url"]),
     "releasing_file_id" => "NULL",
     "approved" => "t",
     "thumbnail_file_name" => "NULL",
@@ -1035,7 +1077,7 @@ def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_con
   source_user_counters = source_db_connection.exec("SELECT * FROM rewarding_users")
   source_user_counters_count = source_user_counters.count
 
-  puts "user_rewards_for_points_and_credits: #{source_user_counters_count} lines to migrate \nRunning migration..."
+  puts "user_rewards_for_points_and_credits: #{source_user_counters_count * 2} lines to migrate \nRunning migration..."
   STDOUT.flush
   lines_step, next_step = init_progress(source_user_counters_count * 2)
   count = 0
@@ -1208,6 +1250,7 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
   puts "votes: #{source_votes_count} lines to migrate \nRunning migration..."
   STDOUT.flush
   lines_step, next_step = init_progress(source_votes_count)
+  like_interaction_count = 0
   count = 0
   rows_with_user_missing = 0
   rows_with_cta_missing = 0
@@ -1255,6 +1298,7 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
 
         query_for_interactions = build_query_string(destination_db_tenant, "interactions", fields_for_interactions)
         destination_db_connection.exec(query_for_interactions)
+        like_interaction_count += 1
       end
 
       if new_user_id != nil # don't create user_interaction if there is no user mapped
@@ -1281,7 +1325,7 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
     end
     next_step = print_progress(count + rows_with_user_missing + rows_with_cta_missing, lines_step, next_step, source_votes_count)
   end
-  puts "#{count} lines successfully migrated\n"
+  puts "#{like_interaction_count} lines successfully generated for likes and interactions \n#{count} lines successfully migrated for like user_interactions \n"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_cta_missing} rows had dangling reference to cta"
   write_table_id_mapping_to_file("votes", votes_id_map)
 end
@@ -1346,6 +1390,111 @@ def build_notice_aux(source_db_connection, notification_type, new_user_comment_i
   #"{\"original_message\":\"#{nullify_or_escape_string(source_db_connection, line["message"])}#{(notification_type == 'comment' and url != 'url') ? "\",\"comment_id\":\"" + nullify_or_escape_string(source_db_connection, message) : ""}\"}"
 end
 
+def create_comment_and_like_interaction_for_cta_with_no_comments_or_likes(destination_db_connection, destination_db_tenant)
+  call_to_actions_ids = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions")
+  call_to_actions_count = call_to_actions_ids.count
+
+  call_to_actions_ids_array = Array.new
+  call_to_actions_ids.each do |id|
+    call_to_actions_ids_array << id["id"].to_i
+  end
+
+  ### COMMENTS ###
+
+  call_to_actions_with_comments_ids = destination_db_connection.exec("SELECT call_to_action_id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions WHERE resource_type = 'Comment'")
+
+  call_to_actions_with_comments_ids_array = Array.new
+  call_to_actions_with_comments_ids.each do |id|
+    call_to_actions_with_comments_ids_array << id["call_to_action_id"].to_i
+  end
+
+  call_to_actions_without_comments_ids_array = call_to_actions_ids_array - call_to_actions_with_comments_ids_array
+
+  puts "#{call_to_actions_without_comments_ids_array.size} call to actions without comment interaction on #{call_to_actions_count} call to actions \n"
+  puts "Creating comment interactions... \n"
+
+  count_for_comments = 0
+
+  call_to_actions_without_comments_ids_array.each do |id|
+    fields_for_comments = {
+      #"id" => count_for_comments + 1,
+      "must_be_approved" => "f",
+      "title" => "#COMMENTCTA#{id}",
+      "created_at" => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S"),
+      "updated_at" => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    query_for_comments = build_query_string(destination_db_tenant, "comments", fields_for_comments)
+    destination_db_connection.exec(query_for_comments)
+    last_comment_id = destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}comments_id_seq')").values[0][0].to_i
+
+    ### COMMENTS REFERENCE CTA CREATING A NEW INTERACTION ###
+
+    fields_for_interactions = {
+      #"id" => last_interaction_id + 1,
+      "name" => "NULL", # always NULL for comments
+      "seconds" => 0,
+      "when_show_interaction" => "SEMPRE_VISIBILE",
+      "required_to_complete" => "t",
+      "resource_id" => last_comment_id,
+      "resource_type" => "Comment",
+      "call_to_action_id" => id
+    }
+
+    query_for_interactions = build_query_string(destination_db_tenant, "interactions", fields_for_interactions)
+
+    destination_db_connection.exec(query_for_interactions)
+    count_for_comments += 1
+  end
+
+  puts "#{count_for_comments} comments and comment interactions successfully created\n\n"
+
+  ### LIKES ###
+
+  call_to_actions_with_likes_ids = destination_db_connection.exec("SELECT call_to_action_id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions WHERE resource_type = 'Like'")
+
+  call_to_actions_with_likes_ids_array = Array.new
+  call_to_actions_with_likes_ids.each do |id|
+    call_to_actions_with_likes_ids_array << id["call_to_action_id"].to_i
+  end
+
+  call_to_actions_without_likes_ids_array = call_to_actions_ids_array - call_to_actions_with_likes_ids_array
+
+  puts "#{call_to_actions_without_likes_ids_array.size} call to actions without like interaction on #{call_to_actions_count} call to actions \n"
+  puts "Creating like interactions... \n"
+
+  count_for_likes = 0
+
+  call_to_actions_without_likes_ids_array.each do |id|
+    fields_for_likes = {
+      #"id" => , 
+      "title" => "like-cta#{id}",
+      "created_at" => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S"),
+      "updated_at" => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    query_for_likes = build_query_string(destination_db_tenant, "likes", fields_for_likes)
+    destination_db_connection.exec(query_for_likes)
+
+    fields_for_interactions = {
+      #"id" => line["id"].to_i,
+      "name" => "interaction-like-cta-id#{id}",
+      "seconds" => 0,
+      "when_show_interaction" => "SEMPRE_VISIBILE",
+      "required_to_complete" => "f",
+      "resource_id" => destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}likes_id_seq')").values[0][0].to_i, # created above
+      "resource_type" => "Like",
+      "call_to_action_id" => id
+    }
+
+    query_for_interactions = build_query_string(destination_db_tenant, "interactions", fields_for_interactions)
+    destination_db_connection.exec(query_for_interactions)
+    count_for_likes += 1
+  end
+
+  puts "#{count_for_likes} likes and like interactions successfully created\n\n"
+
+end
 
 def nullify_or_escape_string(conn, str)
   if str.nil?
@@ -1428,7 +1577,7 @@ def migrate_db(source_db_connection, source_db_tenant, destination_db_connection
   categories_tags_id_map = map_category_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
   core_custom_galleries_tags_id = map_core_custom_gallery_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
 
-  call_to_actions_id_map = migrate_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, categories_tags_id_map)
+  call_to_actions_id_map = migrate_call_to_actions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, categories_tags_id_map)
   quizzes_id_map = migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_connection)
   migrate_answers(destination_db_tenant, source_db_connection, destination_db_connection, quizzes_id_map)
   checks_id_map = migrate_checks(destination_db_tenant, source_db_connection, destination_db_connection)
@@ -1464,13 +1613,15 @@ def main()
   config = YAML.load_file(ARGV[0].to_s)
 
   source_db_tenants = [config["source_db_tenants"][0], config["source_db_tenants"][1]]
-  destination_db_tenant = config["destination_db_tenant"]
+  destination_db_tenant = (config["destination_db_tenant"].nil? or config["destination_db_tenant"] == "null") ? nil : config["destination_db_tenant"]
   source_db_connections = [PG::Connection.open(:dbname => config["source_db_names"][0]), PG::Connection.open(:dbname => config["source_db_names"][1])]
   destination_db_connection = PG::Connection.open(:dbname => config["destination_db_name"])
   limit = config["limit_lines"]
 
   migrate_db(source_db_connections[0], source_db_tenants[0], destination_db_connection, destination_db_tenant, limit)
   migrate_db(source_db_connections[1], source_db_tenants[1], destination_db_connection, destination_db_tenant, limit)
+
+  create_comment_and_like_interaction_for_cta_with_no_comments_or_likes(destination_db_connection, destination_db_tenant)
 end
 
 main()
