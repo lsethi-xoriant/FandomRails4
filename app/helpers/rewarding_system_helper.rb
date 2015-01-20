@@ -324,7 +324,7 @@ module RewardingSystemHelper
   end
   
   def log_outcome(outcome)
-    if Rails.env == 'development'
+    if Rails.env == 'development' || get_deploy_setting('rewarding.system/log_outcome', false)
       log_info("outcome messages", { info: outcome.info, errors: outcome.errors })
       # empty the lists of info/errors for performance
       outcome.info = []
