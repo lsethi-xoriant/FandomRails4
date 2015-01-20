@@ -163,7 +163,7 @@ class CallToActionController < ApplicationController
         @current_user_info = build_current_user()
       end
 
-      @aux = init_show_aux()
+      @aux = init_show_aux(calltoaction)
       @is_cta_locked = cta_is_a_reward(calltoaction) && !user_has_reward(calltoaction.rewards.first.name)
       if @is_cta_locked
         @reward = calltoaction.rewards.first
@@ -203,7 +203,7 @@ class CallToActionController < ApplicationController
   end
 =end
 
-  def init_show_aux()
+  def init_show_aux(calltoaction)
     {
       "tenant" => get_site_from_request(request)["id"],
       "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],

@@ -9,7 +9,7 @@ module DisneyHelper
     calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", property.id)
     if ugc_tag
       ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
-      if ugc_calltoactions
+      if ugc_calltoactions.any?
         calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
       end
     end
@@ -98,23 +98,8 @@ module DisneyHelper
     end
   end
 
-  def disney_default_aux(other)
-
-    current_property = get_tag_from_params(get_disney_property())
-
+  def get_disney_filter_info()
     filters = get_tags_with_tag("featured")
-
-    current_property_info = {
-      "id" => current_property.id,
-      "background" => get_extra_fields!(current_property)["label-background"],
-      "image-background" => (get_extra_fields!(current_property)["image-background"]["url"] rescue nil),
-      "logo" => (get_extra_fields!(current_property)["logo"]["url"] rescue nil),
-      "path" => compute_property_path(current_property),
-      "outer" => get_extra_fields!(current_property)["outer"],
-      "outer-url" => get_extra_fields!(current_property)["outer-url"],
-      "image" => (get_upload_extra_field_processor(get_extra_fields!(current_property)["image"], :thumb) rescue nil) 
-    }
-
     if filters.any?
       if $context_root
         filters = filters & get_tags_with_tag(get_disney_property())
@@ -129,10 +114,62 @@ module DisneyHelper
           "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :thumb) rescue nil) 
         }
       end
+      filter_info
+    else
+      nil
+    end
+  end
+
+  def build_thumb_calltoaction(calltoaction)
+    {
+      "id" => calltoaction.id,
+      "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
+      "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
+      "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
+      "title" => calltoaction.title,
+      "description" => calltoaction.description,
+      "likes" => get_number_of_likes_for_cta(calltoaction),
+      "comments" => get_number_of_comments_for_cta(calltoaction)
+    }
+  end
+
+  def get_disney_related_calltoaction_info(current_calltoaction, property)
+    cache_short(get_ctas_except_me_in_property_for_user_cache_key(current_calltoaction.id, property.id, current_or_anonymous_user.id)) do
+      calltoactions = get_disney_ctas(property).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8)
+      related_calltoaction_info = []
+      calltoactions.each do |calltoaction|
+        related_calltoaction_info << build_thumb_calltoaction(calltoaction)
+      end
+      related_calltoaction_info
+    end
+  end
+
+  def disney_default_aux(other)
+
+    current_property = get_tag_from_params(get_disney_property())
+    property = get_tag_from_params("property")
+
+    if other && other.has_key?(:calltoaction)
+      calltoaction = other[:calltoaction]
+      related_calltoaction_info = get_disney_related_calltoaction_info(calltoaction, current_property)
+    end
+
+    current_property_info = {
+      "id" => current_property.id,
+      "background" => get_extra_fields!(current_property)["label-background"],
+      "image-background" => (get_extra_fields!(current_property)["image-background"]["url"] rescue nil),
+      "logo" => (get_extra_fields!(current_property)["logo"]["url"] rescue nil),
+      "path" => compute_property_path(current_property),
+      "outer" => get_extra_fields!(current_property)["outer"],
+      "outer-url" => get_extra_fields!(current_property)["outer-url"],
+      "image" => (get_upload_extra_field_processor(get_extra_fields!(current_property)["image"], :thumb) rescue nil) 
+    }
+
+    if other && other.has_key?(:filters)
+      filter_info = get_disney_filter_info()
     end
 
     properties = get_tags_with_tag("property")
-    property = get_tag_from_params("property")
     meta_ordering = get_extra_fields!(property)["ordering"]    
     if meta_ordering
       properties = order_elements_by_ordering_meta(meta_ordering, properties)
@@ -151,30 +188,23 @@ module DisneyHelper
       end
     end
 
-    calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_cache_key(current_property.id)) do  
+    if other && other.has_key?(:calltoaction_evidence_info)
+      calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_cache_key(current_property.id)) do  
 
-      highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
-      calltoactions_in_property = get_disney_ctas(current_property)
-      if highlight_calltoactions.any?
-        calltoactions_in_property = calltoactions_in_property.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
+        highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
+        calltoactions_in_property = get_disney_ctas(current_property)
+        if highlight_calltoactions.any?
+          calltoactions_in_property = calltoactions_in_property.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
+        end
+
+        calltoactions = highlight_calltoactions + calltoactions_in_property.limit(3).to_a
+        calltoaction_evidence_info = []
+        calltoactions.each do |calltoaction|
+          calltoaction_evidence_info << build_thumb_calltoaction(calltoaction)
+        end
+
+        calltoaction_evidence_info
       end
-
-      calltoactions = highlight_calltoactions + calltoactions_in_property.limit(3).to_a
-      calltoaction_evidence_info = []
-      calltoactions.each do |calltoaction|
-        calltoaction_evidence_info << {
-          "id" => calltoaction.id,
-          "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
-          "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
-          "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
-          "title" => calltoaction.title,
-          "description" => calltoaction.description,
-          "likes" => get_number_of_likes_for_cta(calltoaction),
-          "comments" => get_number_of_comments_for_cta(calltoaction)
-        }
-      end
-
-      calltoaction_evidence_info
     end
 
     aux = {
@@ -186,13 +216,14 @@ module DisneyHelper
       "property_info" => property_info,
       "current_property_info" => current_property_info,
       "calltoaction_evidence_info" => calltoaction_evidence_info,
+      "related_calltoaction_info" => related_calltoaction_info,
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true)
     }
 
     if other
       other.each do |key, value|
-        aux[key] = value
+        aux[key] = value unless other.has_key?(key)
       end
     end
 

@@ -10,8 +10,11 @@ class Sites::Disney::CallToActionController < CallToActionController
     get_disney_property()
   end
 
-  def init_show_aux()
-    @aux_other_params = { init_captcha: true };
+  def init_show_aux(calltoaction)
+    @aux_other_params = { 
+      init_captcha: true,
+      calltoaction: calltoaction
+    }
   end
 
   def append_calltoaction

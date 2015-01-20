@@ -68,7 +68,7 @@
 <div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
     <span class="label label-warning cta-cover__winnable-reward__label">
-      +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">
+      +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
     </span>  
     <div ng-if="!interaction_info.status.reward.numeric_display" ng-repeat="status_image in interaction_info.status.reward_status_images track by $index">  
       <img ng-src="{{status_image}}">

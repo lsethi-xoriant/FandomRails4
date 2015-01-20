@@ -11,7 +11,7 @@
 
       <!-- MOBILE COUNTER -->
       <% if current_user %>
-        <a style="float: right; font-size: 14px; margin-right: 15px;" class="play-2 visible-xs navbar-brand user-reward-counter" href="javascript: void(0)">+<span class=""><%= get_counter_about_user_reward(MAIN_REWARD_NAME, false) %></span> <span class="glyphicon glyphicon-star"></span> punti</a>
+        <a style="float: right; font-size: 14px; margin-right: 15px;" class="play-2 visible-xs navbar-brand user-reward-counter" href="javascript: void(0)">+<span class=""><%= get_counter_about_user_reward(MAIN_REWARD_NAME, false) %></span> <span class="fa fa-star"></span> punti</a>
       <% end %>
 
       <a style="float: left; padding: 8px 8px 8px 0; margin-left: 15px;" href="http://www.ballandoconlestelle.rai.it/dl/portali/site/articolo/ContentItem-31298c5f-1077-418f-b851-9f90353e4e8b.html" class="navbar-brand visible-xs">
@@ -30,7 +30,7 @@
         <% if current_user %>
           <!-- DESKTOP COUNTER -->
           <li class="play-2 hidden-xs">
-            <a class="user-reward-counter" href="javascript: void(0)">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME, false) %> <span class="glyphicon glyphicon-star"></span> punti</a>
+            <a class="user-reward-counter" href="javascript: void(0)">+<%= get_counter_about_user_reward(MAIN_REWARD_NAME, false) %> <span class="fa fa-star"></span> punti</a>
           </li>
         <% elsif get_site_from_request(request)["anonymous_interaction"] %>
           <li class="play-2 hidden-xs">
@@ -47,9 +47,9 @@
   <% if !current_user && get_site_from_request(request)["anonymous_interaction"] %>
     anonymous_user = localStorage['<%= get_site_from_request(request)["id"] %>'];
     if(anonymous_user != null && JSON.parse(anonymous_user)['<%= MAIN_REWARD_NAME %>']) {
-      $(".user-reward-counter").html("+" + JSON.parse(anonymous_user)['<%= MAIN_REWARD_NAME %>'] + " <span class=\"glyphicon glyphicon-star\"></span> punti")
+      $(".user-reward-counter").html("+" + JSON.parse(anonymous_user)['<%= MAIN_REWARD_NAME %>'] + " <span class=\"fa fa-star\"></span> punti")
     } else {
-      $(".user-reward-counter").html("+0 <span class=\"glyphicon glyphicon-star\"></span> punti")
+      $(".user-reward-counter").html("+0 <span class=\"fa fa-star\"></span> punti")
     }
   <% end %>
 </script>

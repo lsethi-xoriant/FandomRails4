@@ -23,6 +23,7 @@
 
 .comment-interaction__cover__text-p {
   /* text-overflow: ellipsis; overflow: hidden; white-space: nowrap; */
+  word-wrap: break-word;
   color: #999;
   margin: 0;
   padding-left: 40px;

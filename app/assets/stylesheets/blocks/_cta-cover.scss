@@ -68,9 +68,10 @@
 }
 
 .cta-cover__glyphicon-icon {
+  font-size: 10px !important;
   margin-left: 3px;
-  font-size: 10px;
-  top: 0;
+  position: relative;
+  top: -1px;
 }
 
 .cta-cover__title {

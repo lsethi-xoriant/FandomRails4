@@ -25,8 +25,6 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
         html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_comment_approved_template", locals: {cta: cta}, layout: false, formats: :html
         
         create_notice(:user_id => current_comment.user_id, :html_notice => html_notice, :viewed => false, :read => false)
-
-        outcome = compute_save_and_notify_outcome(user_interaction)
       end    
 
     end
