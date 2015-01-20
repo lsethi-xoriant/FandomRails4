@@ -118,7 +118,7 @@ class Sites::Disney::ProfileController < ProfileController
       get_tags_with_tag("property").each do |property|
         if myrewards[property.name] && property.name != get_disney_property
           reward = get_max(myrewards[property.name]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
-          other_erwards << { "reward" => reward, "property" => property }
+          other_rewards << { "reward" => reward, "property" => property }
         end
       end
     end
