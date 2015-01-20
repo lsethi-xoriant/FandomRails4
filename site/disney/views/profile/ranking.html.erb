@@ -1,5 +1,3 @@
-<%= render partial: "/application/user_bar" %>
-
 <div class="container container--default" style="background-color: #fff;" ng-controller="RankingCtrl" ng-init="init(<%= populate_ranking(@rank_name).to_json %>, <%= current_user.to_json %>);">
 	<% unless small_mobile_device? %>
 		<%= render partial: "profile/profile_header" %>

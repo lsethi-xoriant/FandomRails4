@@ -14,25 +14,35 @@
   <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-md-12">
     <%= render partial: "/call_to_action/upload_interaction" %>
   </div>  
+  <div ng-if="interaction_info.interaction.resource_type == 'download'" class="col-md-12">
+    <%= render partial: "/call_to_action/download_interaction" %>
+  </div>  
 </div>
 
 <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.feedback && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row undervideo-interaction__feedback visible-xs">
   <div ng-if="interaction_info.interaction.resource_type != 'trivia'" class="col-sm-12 interaction__feedback-col">
-    <div class="interaction__feedback-circle interaction__feedback-circle--green"></div>
-    <p class="interaction__feedback-text">Bravo!</p> 
+    <div class="interaction__feedback-circle interaction__feedback-circle--green text-center">
+      <span class="glyphicon glyphicon-ok trivia-interaction__feedback__glyphicon trivia-interaction__feedback__glyphicon-ok"></span>
+    </div>
+    <p class="interaction__feedback-text">Complimenti!</p> 
     <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
   </div> 
     
   <div ng-if="interaction_info.interaction.resource_type == 'trivia' && interaction_info.user_interaction.answer.correct" class="col-sm-12 interaction__feedback-col">
-    <div class="interaction__feedback-circle interaction__feedback-circle--green"></div>
-    <p class="interaction__feedback-text interaction__feedback-text--green">Bravo!</p> 
+    <div class="interaction__feedback-circle interaction__feedback-circle--green text-center">
+      <span class="glyphicon glyphicon-ok trivia-interaction__feedback__glyphicon trivia-interaction__feedback__glyphicon-ok"></span>
+    </div>
+    <p class="interaction__feedback-text interaction__feedback-text--green">Bravo! Risposta corretta.</p> 
     <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
   </div> 
 
   <div ng-if="interaction_info.interaction.resource_type == 'trivia' && !interaction_info.user_interaction.answer.correct" class="col-sm-12 interaction__feedback-col">
-    <div class="interaction__feedback-circle interaction__feedback-circle--green"></div>
-    <p class="interaction__feedback-text interaction__feedback-text--red">Sbagliato!</p> 
-    <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
+    <div class="interaction__feedback-circle interaction__feedback-circle--red text-center">
+      <span class="glyphicon glyphicon-remove trivia-interaction__feedback__glyphicon"></span>
+    </div>
+    <p class="interaction__feedback-text interaction__feedback-text--red">Peccato! Risposta sbagliata.</p> 
+    <p class="interaction__feedback-description">Non hai guadagnato punti bonus.</p>
+    <!-- {{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} -->
   </div> 
 </div>
 
@@ -47,7 +57,7 @@
 </div>
 -->
 
-<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row">
+<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
     <span class="label label-success cta-cover__winnable-reward__label">
       Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
@@ -55,7 +65,7 @@
   </div>
 </div>
 
-<div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center">
+<div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
     <span class="label label-warning cta-cover__winnable-reward__label">
       +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">

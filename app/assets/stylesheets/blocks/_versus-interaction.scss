@@ -1,7 +1,12 @@
 /* VERSUS */
 .versus-interaction {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  
   background: rgba(0, 0, 0, 0.6);
-  height: 9999px;
+
+  z-index: 1;
 }
 
 .versus-interaction__feedback-title {
@@ -196,8 +201,8 @@
 }
 
 .versus-interaction__answer-slide-out-right {
-  -webkit-animation: versusAnswerSlideOutRight 0.5s forwards, versusAnswerFadeOut 0.5s forwards;
-  animation: versusAnswerSlideOutRight 0.5s forwards, versusAnswerFadeOut 0.5s forwards;
+  -webkit-animation: versusAnswerSlideOutRight 0.5s forwards, versusElemFadeOut 0.5s forwards;
+  animation: versusAnswerSlideOutRight 0.5s forwards, versusElemFadeOut 0.5s forwards;
   -webkit-animation-delay: 0s, 0s;
   animation-delay: 0s, 0s; 
 }
@@ -218,17 +223,26 @@
     100% { opacity: 1; }
 }
 
-@-webkit-keyframes versusAnswerFadeOut {
-    100% { opacity: 0; }
-}
-
-@keyframes versusAnswerFadeOut {
-    100% { opacity: 0; }
-}
-
 .versus-interaction__avatar {
   width: 30px;
   height: 30px;
+}
+
+.versus-interaction__question-fade-out, .versus-interaction__reward-fade-out {
+  -webkit-animation: triviaElemFadeOut 0.5s forwards;
+  animation: triviaElemFadeOut 0.5s forwards;
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s; 
+}
+
+@-webkit-keyframes versusElemFadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes versusElemFadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 .versus-interaction__avatar-container--left {

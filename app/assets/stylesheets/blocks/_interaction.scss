@@ -39,3 +39,14 @@
   margin-top: 25px;
   margin-bottom: 0px;
 }
+
+@media (min-width: $screen-md-min) { 
+  .interaction__winnable-reward--undervideo__row {
+    background: #efefef;
+    margin-bottom: 15px;
+  }
+  .interaction__winnable-reward--undervideo {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}

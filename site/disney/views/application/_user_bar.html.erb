@@ -1,6 +1,5 @@
 <script type="text/javascript" src="http://navbar.disneyinternational.com/it/03/navbar.js"></script>
 
-
 <!-- REGISTRATION MODAL -->
 <div id="complete-registration" class="modal fade" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
@@ -126,13 +125,13 @@
               <% end %>
             </li>
             <li>
-              <%= light_link_to("/profile/index") do %>
+              <%= light_link_to("/profile") do %>
                 Profilo
               <% end %>
             </li>
-            <% if @aux && @aux["current_property_info"] && @aux["current_property_info"]["outer"] && @aux["current_property_info"]["outer-url"] %>
+            <% if aux["current_property_info"] && aux["current_property_info"]["outer"] && aux["current_property_info"]["outer-url"] %>
               <li>
-                <a href="<%= @aux["current_property_info"]["outer-url"] %>"><%= @aux["current_property_info"]["outer"] %></a>
+                <a href="<%= aux["current_property_info"]["outer-url"] %>"><%= aux["current_property_info"]["outer"] %></a>
               </li>
             <% end %>
           </ul>
@@ -177,13 +176,13 @@
           <% end %>
         </li>
         <li>
-          <%= light_link_to("/profile/index") do %>
+          <%= light_link_to("/profile") do %>
             Profilo
           <% end %>
         </li>
-        <% if @aux && @aux["current_property_info"] && @aux["current_property_info"]["outer"] && @aux["current_property_info"]["outer-url"] %>
+        <% if aux["current_property_info"] && aux["current_property_info"]["outer"] && aux["current_property_info"]["outer-url"] %>
           <li>
-            <a href="<%= @aux["current_property_info"]["outer-url"] %>"><%= @aux["current_property_info"]["outer"] %></a>
+            <a href="<%= aux["current_property_info"]["outer-url"] %>"><%= aux["current_property_info"]["outer"] %></a>
           </li>
         <% end %>
         <hr style="margin-top: 5px; margin-bottom: 5px;">
