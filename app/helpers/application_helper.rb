@@ -826,7 +826,7 @@ module ApplicationHelper
   end
   
   def get_main_reward_image_url
-    cache_short("main_reward_image") do
+    cache_short(get_main_reward_image_cache_key) do
       Reward.find_by_name(MAIN_REWARD_NAME).main_image.url
     end
   end
