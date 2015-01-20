@@ -34,4 +34,18 @@ module NoticeHelper
     icon
   end
   
+  def get_notice_icon_from_cta(cta)
+    if $site.assets["community_logo"].nil?
+      icon = ""
+    else
+      icon = $site.assets["community_logo"]
+    end
+    property_tag = get_tag_with_tag_about_call_to_action(cta, "property").first
+    unless property_tag.nil?
+      notification_icon = get_extra_fields!(property_tag)["logo"]
+      icon = get_upload_extra_field_processor(notification_icon, "medium")
+    end
+    icon
+  end
+  
 end

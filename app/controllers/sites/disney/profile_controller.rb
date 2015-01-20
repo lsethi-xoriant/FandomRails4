@@ -80,6 +80,7 @@ class Sites::Disney::ProfileController < ProfileController
       @levels = disney_prepare_levels_to_show(levels)
       badges, badges_use_prop = rewards_by_tag("badge")
       @badges = badges.nil? ? nil : badges[get_disney_property]
+      @badges = order_badges(@badges)
       render template: "/profile/rewards_mobile"
     else
       levels, levels_use_prop = rewards_by_tag("level")
@@ -87,9 +88,18 @@ class Sites::Disney::ProfileController < ProfileController
       @my_levels = get_other_property_rewards("level")
       badges, badges_use_prop = rewards_by_tag("badge")
       @badges = badges.nil? ? nil : badges[get_disney_property]
+      @badges = order_badges(@badges)
       @mybadges = get_other_property_rewards("badge")
     end
     
+  end
+  
+  def order_badges(badges)
+    meta_ordering = get_extra_fields!(Tag.find_by_name("badge"))["ordering"]
+    if meta_ordering
+      badges = order_elements_by_ordering_meta(meta_ordering, badges)
+    end
+    badges
   end
   
   def notices
@@ -108,7 +118,7 @@ class Sites::Disney::ProfileController < ProfileController
       get_tags_with_tag("property").each do |property|
         if myrewards[property.name] && property.name != get_disney_property
           reward = get_max(myrewards[property.name]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
-          other_rewards << { "reward" => reward, "property" => property }
+          other_erwards << { "reward" => reward, "property" => property }
         end
       end
     end

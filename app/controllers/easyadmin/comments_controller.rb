@@ -19,11 +19,14 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
       if anonymous_user.id != current_comment.user_id
         interaction = current_comment.comment.interaction
         user_interaction, outcome = UserInteraction.create_or_update_interaction(current_comment.user, interaction, nil, nil)
+        
+        cta = user_interaction.interaction.call_to_action
+        
+        html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_comment_approved_template", locals: {cta: cta}, layout: false, formats: :html
+        
+        create_notice(:user_id => current_comment.user_id, :html_notice => html_notice, :viewed => false, :read => false)
 
-        create_notice(:user_id => current_comment.user_id, :html_notice => current_comment.text, :viewed => false, :read => false)
-
-        outcome = compute_and_save_outcome(user_interaction)
-        # TODO: notify outcome
+        outcome = compute_save_and_notify_outcome(user_interaction)
       end    
 
     end

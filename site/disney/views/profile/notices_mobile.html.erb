@@ -1,6 +1,4 @@
 <div class="container container--default" style="background-color: #fff;">
-  <%= render partial: "profile/profile_header" %>
-  <%= render partial: "profile/profile_navbar", locals: { page: "notices" } %>
   <div class="row">
     <div class="col-md-12">
     	<div class="section-heading">
@@ -38,7 +36,7 @@
           <% end %>
         </div>
       </div>
-            
+      <%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
     </div>
   </div>
 

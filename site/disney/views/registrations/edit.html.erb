@@ -82,6 +82,9 @@
               <p>Il tuo Nickname e il tuo avatar, così come i punteggi rimarranno gli stessi per tutte le Community Disney.</p>
             <button class="btn btn-primary">Salva</button>
       </div>
+      <% if small_mobile_device? %>
+	  	<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
+	  <% end %>
     </div>
   <% end %>
 </div>

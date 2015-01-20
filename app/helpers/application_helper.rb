@@ -1013,4 +1013,13 @@ module ApplicationHelper
     $context_root ? "#{$context_root}-#{MAIN_REWARD_NAME}" : MAIN_REWARD_NAME
   end
   
+  def get_property_from_cta(cta)
+    properties_tag = get_tag_with_tag_about_call_to_action(cta, "property")
+    if properties_tag.empty?
+      ""
+    else
+      "#{properties_tag.first.name}"
+    end
+  end
+  
 end

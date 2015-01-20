@@ -2,8 +2,8 @@
 	<div class="reward-block text-center">
 	  <img class="img-responsive reward-block__image" src="<%= get_reward_image_for_status(reward["reward"]) %>" alt="<%= reward["reward"].title %>">
 	  <h4 class="reward-block__title"><%= reward["reward"].title %></h4>
-	  <% 
-	  thumb = get_extra_fields!(reward["property"])["logo"]
+	  <%
+	  thumb = get_ectra_fields!(reward["property"])["logo"] 
 	  %> 
 	  <% if thumb && upload_extra_field_present?(thumb) %>
 	  	<img class="img-responsive reward-block__image--property" src="<%= thumb["url"] %>" alt="<%= reward["reward"].title %>">
