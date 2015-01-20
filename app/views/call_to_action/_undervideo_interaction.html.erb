@@ -14,6 +14,9 @@
   <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-md-12">
     <%= render partial: "/call_to_action/upload_interaction" %>
   </div>  
+  <div ng-if="interaction_info.interaction.resource_type == 'download'" class="col-md-12">
+    <%= render partial: "/call_to_action/download_interaction" %>
+  </div>  
 </div>
 
 <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.feedback && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row undervideo-interaction__feedback visible-xs">
@@ -54,7 +57,7 @@
 </div>
 -->
 
-<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row">
+<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
     <span class="label label-success cta-cover__winnable-reward__label">
       Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
@@ -62,7 +65,7 @@
   </div>
 </div>
 
-<div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center">
+<div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
     <span class="label label-warning cta-cover__winnable-reward__label">
       +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star">

@@ -725,6 +725,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   function removeOvervideoInteraction(player, calltoaction_id, overvideo_interaction) {
 
     if(overvideo_interaction.interaction.resource_type == "trivia") {
+      overvideo_interaction.question_class = "trivia-interaction__question-fade-out";
+      overvideo_interaction.reward_class = "trivia-interaction__reward-fade-out";
       angular.forEach(overvideo_interaction.interaction.resource.answers, function(answer) {
         $timeout(function() { 
           answer.class = "trivia-interaction__answer--visible trivia-interaction__answer-slide-out";
@@ -732,6 +734,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         time += 300;
       });
     } else if(overvideo_interaction.interaction.resource_type == "versus") {
+      overvideo_interaction.question_class = "versus-interaction__question-fade-out";
+      overvideo_interaction.reward_class = "versus-interaction__reward-fade-out";
       index = 0;
       angular.forEach(overvideo_interaction.interaction.resource.answers, function(answer) {
         if(index % 2 == 0) {
@@ -1024,7 +1028,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       animateInInteraction(interaction_info.interaction);
       if(interaction_info.user_interaction) {
         $timeout(function() { 
-          removeOvervideoInteraction(null, calltoaction_id, interaction_info);
+          $scope.$apply(function() {
+            removeOvervideoInteraction(null, calltoaction_id, interaction_info);
+          });
         }, 3000);
       }
     } else {
@@ -1267,11 +1273,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               }
             }
             
-            /*
-            if(data.download_interaction_attachment) {
+            if(interaction_info.interaction.resource_type == "download") {
               window.open(data.download_interaction_attachment, '_blank');
             }
 
+            /*
             if(data.answer) {
               $scope.current_user_answer_response_correct[calltoaction_id] = data.answer.correct;
             }

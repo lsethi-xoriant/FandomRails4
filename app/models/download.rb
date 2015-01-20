@@ -6,4 +6,8 @@ class Download < ActiveRecord::Base
   has_one :interaction, as: :resource
 
   validates_presence_of :attachment
+
+  def one_shot
+    false
+  end
 end
