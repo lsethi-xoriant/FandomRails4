@@ -245,4 +245,10 @@ module CacheKeysHelper
     "share_interaction_daily_done_for_user_#{user_id}"
   end
   
+  # Disney
+  # ~~~~~~~~~~
+  
+  def get_property_rankings_cache_key
+    "property_rankings_thumbnails"
+  end
 end

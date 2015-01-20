@@ -1,10 +1,12 @@
 <%= render partial: "/application/user_bar" %>
 
 <div class="container container--default">
-	<%= render partial: "profile/profile_header" %>
-  	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
+	<% if current_user %>
+		<%= render partial: "profile/profile_header" %>
+  		<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
+  	<% end %>
 
-	<div class="row">
+  <div class="row brws-item">
     <div class="col-xs-12">
 	  <div class="section-heading">
         	<h3>
@@ -13,65 +15,128 @@
         		<a href="/ranking/show/<%= @property_rank[:ranking].id %>" class="section-heading__see-all">View all</a>
         	</h3>
       </div>
-	  <div class="row ranking-element__container">
-	  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-	  		<div class="ranking-element ranking-element--myposition">
-	  			<p class="ranking-element__position ranking-element__position--myposition text-center"># <%= @property_rank[:my_position] %></p>
-	  			<img src="<%= current_avatar %>" class="ranking-element__avatar" />
-	  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(current_user) %></p>
-	  			<div class="label label-warning ranking-element__points">+ <%= get_point %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
-	  		</div>
-	  	</div>
-	  	<% @property_rank[:rank_list].slice(0,4).each do |rank_user| %>
-		  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-		  		<div class="ranking-element">
-		  			<p class="ranking-element__position text-center"># <%= rank_user["position"] %></p>
-		  			<img src="<%= rank_user["avatar"] %>" class="ranking-element__avatar" />
-		  			<p class="ranking-element__nickname"><%= rank_user["user"] %></p>
-		  			<div class="label label-warning ranking-element__points">+ <%= rank_user["counter"] %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
-		  		</div>
-		  	</div>
-	  	<% end %>
+	  <div class="rewards-flexslider rewards-flexslider--rankings">
+    	<ul class="slides">
+    		<% if current_user %>
+	    		<li class="rewards-flexslider__item">
+				  		<div class="ranking-element ranking-element--myposition">
+				  			<p class="ranking-element__position ranking-element__position--myposition text-center"># <%= @property_rank[:my_position] %></p>
+				  			<img src="<%= current_avatar %>" class="ranking-element__avatar" />
+				  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(current_user) %></p>
+				  			<div class="label label-warning ranking-element__points">+ <%= get_point %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
+				  		</div>
+				</li>
+			<% end %>
+		  	<% @property_rank[:rank_list].slice(0,7).each do |rank_user| %>
+		  		<li class="rewards-flexslider__item">
+				  		<div class="ranking-element">
+				  			<p class="ranking-element__position text-center"># <%= rank_user["position"] %></p>
+				  			<img src="<%= rank_user["avatar"] %>" class="ranking-element__avatar" />
+				  			<p class="ranking-element__nickname"><%= rank_user["user"] %></p>
+				  			<div class="label label-warning ranking-element__points">+ <%= rank_user["counter"] %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
+				  		</div>
+				</li>
+		  	<% end %>
+		  </ul>
 		</div>
-		
+	  </div>
+	</div>
+	<div class="row brws-item">
+      <div class="col-xs-12">
 		<div class="section-heading">
         	<h3>
         		<span class="section-heading__marker"><i class="fa fa-graduation-cap"></i></span>
         		Fan del giorno
         	</h3>
       	</div>
-      	<div class="row ranking-element__container">
-	  	<% @fan_of_days.each do |winner| %>
-	  		<% if winner["winner"] %>
-	  			<% if winner["winner"].user.email == current_user.email %>
-	  				<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-				  		<div class="ranking-element ranking-element--myposition">
-				  			<p class="ranking-element__position ranking-element__position--myposition text-center"><%= winner["day"] %></p>
-				  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
-				  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(winner["winner"].user) %></p>
-				  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
-				  		</div>
-				  	</div>
-	  			<% else %>
-				  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-				  		<div class="ranking-element">
-				  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
-				  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
-				  			<p class="ranking-element__nickname"><%= extract_name_or_username(winner["winner"].user) %></p>
-				  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
-				  		</div>
-				  	</div>
+      	<div class="rewards-flexslider rewards-flexslider--rankings">
+    		<ul class="slides">
+			  	<% @fan_of_days.each do |winner| %>
+			  		<% if winner["winner"] %>
+			  			<% if current_user && winner["winner"].user.email == current_user.email %>
+			  				<li class="rewards-flexslider__item">
+						  		<div class="ranking-element ranking-element--myposition">
+						  			<p class="ranking-element__position ranking-element__position--myposition text-center"><%= winner["day"] %></p>
+						  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
+						  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(winner["winner"].user) %></p>
+						  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
+						  		</div>
+						  	</li>
+			  			<% else %>
+						  	<li class="rewards-flexslider__item">
+						  		<div class="ranking-element">
+						  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
+						  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
+						  			<p class="ranking-element__nickname"><%= extract_name_or_username(winner["winner"].user) %></p>
+						  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
+						  		</div>
+						  	</li>
+					  	<% end %>
+				  	<% else %>
+					  	<li class="rewards-flexslider__item">
+					  		<div class="ranking-element">
+					  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
+					  			<img src="/assets/anon.png" class="ranking-element__avatar" />
+					  			<p class="ranking-element__nickname">nessun vincitore</p>
+					  			<div class="label label-warning ranking-element__points">+ 0<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
+					  		</div>
+					  	</li>
+				  	<% end %>
 			  	<% end %>
-		  	<% else %>
-		  	<div class="col-xs-8 col-xs-offset-2 col-sm-2 col-sm-offset-0 col-md-2">
-		  		<div class="ranking-element">
-		  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
-		  			<img src="/assets/anon.png" class="ranking-element__avatar" />
-		  			<p class="ranking-element__nickname">nessun vincitore</p>
-		  			<div class="label label-warning ranking-element__points">+ 0<span class="cta-cover__glyphicon-icon glyphicon glyphicon-star"></span></div>
-		  		</div>
-		  	</div>
-		  	<% end %>
-	  	<% end %>
+			 </ul>
 	  	</div>
 	</div>
+  </div>
+  <div class="row brws-item">
+    <div class="col-xs-12">
+	  <div class="section-heading">
+        	<h3>
+        		<span class="section-heading__marker"><i class="fa fa-users"></i></span>
+        		Classifica altre property
+        	</h3>
+      </div>
+	  <div class="rewards-flexslider--property rewards-flexslider--rankings">
+    	<ul class="slides">
+		  	<% @property_rankings.each do |rank_property| %>
+		  		<li class="rewards-flexslider__item">
+			  		<div class="ranking-element--property">
+			  			<a class="ranking-element--property__link" href="<%= rank_property["link"] %>"></a>
+			  			<img src="<%= rank_property["thumb"] %>" class="img-responsive" />
+			  			<p class="ranking-element__property-title"><%= rank_property["title"] %></p>
+			  		</div>
+				</li>
+		  	<% end %>
+		  </ul>
+		</div>
+	  </div>
+	</div>
+</div>
+	
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $('.rewards-flexslider').flexslider({
+	      animation: "slide",
+	      slideshow: false,
+	      animationLoop: false,
+	      touch: true,
+	      itemWidth: 160,
+	      itemMargin: 15,
+	      controlNav: false,
+	      prevText: "",
+	      nextText: ""
+	    });
+	    
+	    $('.rewards-flexslider--property').flexslider({
+	      animation: "slide",
+	      slideshow: false,
+	      animationLoop: false,
+	      touch: true,
+	      itemWidth: 260,
+	      itemMargin: 15,
+	      controlNav: false,
+	      prevText: "",
+	      nextText: ""
+	    });
+	});
+</script>

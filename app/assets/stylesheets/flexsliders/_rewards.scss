@@ -25,6 +25,32 @@
     }
 }
 
+.rewards-flexslider--property {
+    padding-left: 0!important;
+    padding-right: 0 !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    position: relative;
+    .flex-viewport{
+      margin: 0 15px;
+    }
+    .flex-direction-nav .flex-next, .flex-direction-nav .flex-prev {
+      top: 90px;
+    }
+    .flex-next {
+      right: -5px !important;
+    }
+    .flex-prev {
+      left: -5px !important;
+    }
+}
+
+.rewards-flexslider--rankings {
+  padding-bottom: 20px;
+}
+
 .rewards-flexslider-item {
     position: relative !important;
 }
