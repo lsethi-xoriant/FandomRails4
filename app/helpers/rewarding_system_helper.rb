@@ -271,13 +271,13 @@ module RewardingSystemHelper
         user_rewards[name].counters[period_kind.downcase] = counter
       else
         user_rewards[name] = MockedUserReward.new({ period_kind.downcase => counter })
-        if !countable
-          if available
-            user_unlocked_names << name
-          end
-          uncountable_user_reward_names << name
-        end
       end 
+      if available
+        user_unlocked_names << name
+      end
+      if !countable
+        uncountable_user_reward_names << name
+      end
     end
     fill_user_rewards(user_rewards)
     [user_rewards, uncountable_user_reward_names, user_unlocked_names]
@@ -361,8 +361,7 @@ module RewardingSystemHelper
     outcome = compute_outcome(user_interaction, rules_buffer)
     total_time = Time.now.utc - start_time
 
-    if outcome.reward_name_to_counter.any? || outcome.unlocks.any?
-  
+    if outcome.reward_name_to_counter.any? || outcome.unlocks.any?  
       log_synced("assigning reward to user", { 
         'time' => total_time, 
         'interaction' => user_interaction.mocked? ? nil : user_interaction.interaction.id, 
