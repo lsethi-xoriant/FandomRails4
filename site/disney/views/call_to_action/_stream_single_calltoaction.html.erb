@@ -68,7 +68,7 @@
   </div>
 </div>
 <div class="row main-row">
-  <div class="col-sm-8 cta_left-col">
+  <div class="col-md-8 cta_left-col">
     <div class="row">
       <div class="col-sm-12 cta__title-small-col">
         <p class="cta__title-small">{{calltoaction_info.calltoaction.title}}</p>
@@ -101,12 +101,7 @@
       <hr>
     </div>    
   </div>
-  <div class="col-sm-4 text-center">
-    <div class="adv__square">
-      <p>PUB</p>
-      <script type="text/javascript" language="javascript"> 
-        dimgAd.display("300x250");
-      </script>
-    </div>
+  <div class="col-md-4 text-center">
+    <%= render partial: "/application/adv-square" %>
   </div>
 </div>

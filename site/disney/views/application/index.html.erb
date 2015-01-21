@@ -23,7 +23,7 @@
   </div>
 
   <div class="row main-row">
-    <div class="col-sm-8">
+    <div class="col-md-8">
       <div ng-repeat="calltoaction_info in calltoactions" class="row">
         <div class="col-sm-12">
           <%= render partial: "/call_to_action/cover_single_calltoaction" %>
@@ -37,13 +37,8 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-4 text-center">
-      <div class="adv__square">
-        <p>PUB</p>
-        <script type="text/javascript" language="javascript"> 
-          dimgAd.display("300x250");
-        </script>
-      </div>
+    <div class="col-md-4 text-center">
+      <%= render partial: "/application/adv-square" %>
     </div>
   </div>
 
