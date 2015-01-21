@@ -49,6 +49,7 @@ p{
   margin-right: auto;
   position: relative;
   width: 728px;
+  background: #000;
 }
 
 //.flowplayer.is-paused {
@@ -119,13 +120,6 @@ a{
   text-decoration: underline;
 }
 
-@media (max-width: $screen-sm-min) { 
-  .main-row {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
 .btn {
   span {
     position: relative; top: 2px;
@@ -165,4 +159,18 @@ a{
   0% { background: transparent; }
   50% { background: yellow; }
   100% { background: transparent; }
+}
+
+@media (max-width: $screen-sm-min) { 
+  .adv__horizontal {
+    width: 320px;
+    p {
+      font-size: 12px;
+      left: -21px;
+    }
+  }
+  .main-row {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
