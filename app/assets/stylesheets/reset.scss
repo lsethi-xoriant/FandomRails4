@@ -22,17 +22,26 @@ p{
   background: transparent !important;
 }
 
-.adv__vertical-label {
-  background: none repeat scroll 0 0 #000;
-  border-radius: 5px 5px 0 0;
-  bottom: 10px;
+.adv__square {
+  background: #606060; 
+  border: 3px solid #606060; 
   color: #fff;
-  height: 21px;
-  left: -11px;
-  padding-top: 2px;
-  position: absolute;
-  transform: rotate(270deg);
-  width: 41px;
+}
+
+.adv__horizontal {
+  min-height: 50px;
+  p {
+    transform: rotate(270deg);
+    margin-left: -5px;
+    width: 30px;
+    position: absolute;
+    bottom: 0;
+    top: 1px;
+  }
+  background: #606060;
+  border: 3px solid #606060; 
+  color: #fff;
+  padding-left: 15px;
 }
 
 //.flowplayer.is-paused {
