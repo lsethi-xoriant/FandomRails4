@@ -1,6 +1,6 @@
 <%= render partial: "/application/user_bar" %>
 
-<div class="container container--default" style="background-color: #fff;" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings([@rank_name]).to_json %>, <%= current_user.to_json %>);">
+<div class="container container--default" style="background-color: #fff;" ng-controller="RankingCtrl" ng-init="init(<%= populate_rankings([@rank_name]).to_json %>, <%= current_user.to_json %>, true);">
 	<%= render partial: "profile/profile_header" %>
   	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
 
