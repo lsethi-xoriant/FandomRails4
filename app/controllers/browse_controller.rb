@@ -5,6 +5,13 @@ class BrowseController < ApplicationController
   end
   
   def full_search
+    @contents = get_contents_with_match(params[:query])
+    if @contents.empty?
+      redirect_to "/browse"
+    end
+  end
+  
+  def full_search_old
     browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY).value
     browse_areas = browse_settings.split(",")
     @browse_section = Array.new

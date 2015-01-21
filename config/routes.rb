@@ -29,6 +29,7 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         match "/iur", to: "application#iur"
+        match "/browse/full_search", :to => "browse#full_search"
         match "profile", :to => "profile#index"
         match "profile/index", :to => "profile#index_mobile"
         match "profile/rankings", :to => "profile#rankings"

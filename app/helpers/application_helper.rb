@@ -342,6 +342,12 @@ module ApplicationHelper
     filter_results(tags, query)
   end
   
+  def get_tags_with_match(query = "")
+    conditions = construct_conditions_from_query(query, "tags.title")
+    tags = Tag.where("(#{conditions})").to_a
+    filter_results(tags, query)
+  end
+  
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
       CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
@@ -354,9 +360,14 @@ module ApplicationHelper
     filter_results(ctas, query)
   end
   
+  def get_ctas_with_match(query = "")
+    conditions = construct_conditions_from_query(query, "call_to_actions.title")
+    ctas = CallToAction.active.where("#{conditions}").to_a
+    filter_results(ctas, query)
+  end
   
   def filter_results(results, query)
-    regexp = Regexp.new query.split(/\W+/).map { |term| "(\\W+#{term}\\W+)" }.join("|")
+    regexp = Regexp.new(query.split(/\W+/).map { |term| "(\\W+#{term}\\W+)" }.join("|"), Regexp::IGNORECASE)
     filtered_results = []
     results.each do |result|
       title = " #{result.title} "

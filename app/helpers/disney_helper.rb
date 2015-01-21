@@ -3,6 +3,10 @@ module DisneyHelper
   def get_disney_property() 
     $context_root || "disney-channel"
   end
+  
+  def get_disney_property_root_path
+    $context_root ? "/#{$context_root}" : ""
+  end
 
   def get_disney_ctas(property)
     ugc_tag = get_tag_from_params("ugc")
