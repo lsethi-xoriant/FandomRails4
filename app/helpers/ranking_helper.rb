@@ -39,11 +39,8 @@ module RankingHelper
       rankings = Array.new
       period = get_current_periodicities[ranking.period]
 
-      if period.blank?
-        rankings = UserReward.includes(:user).where("user_rewards.reward_id = ? and user_rewards.period_id IS NULL and user_id <> ?", ranking.reward_id, anonymous_user.id).order("counter DESC, updated_at ASC, user_id ASC").to_a
-      else
-        rankings = UserReward.includes(:user).where("reward_id = ? and period_id = ? and user_id <> ?", ranking.reward_id, period.id, anonymous_user.id).order("counter DESC, updated_at ASC, user_id ASC").to_a
-      end
+      period_id_condition = period.blank? ? "period_id is null" : "period_id = #{period.id}"
+      rankings = UserReward.joins(:user).where("reward_id = ? and #{period_id_condition} and user_id <> ?", ranking.reward_id, anonymous_user.id).select("user_id, counter, users.avatar_selected_url, users.username, users.first_name, users.last_name").order("counter DESC, user_rewards.updated_at ASC, user_id ASC").to_a
       user_position_hash = cache_short("#{ranking.id}_user_position") { generate_user_position_hash(rankings) }
       rank = RankingElement.new(
         period: ranking.period,
@@ -251,10 +248,10 @@ module RankingHelper
     ranking.each do |r|
       positions << { 
         "position" => i,
-        "general_position" => user_position_hash[r.user.id], 
-        "avatar" => r.user.avatar_selected_url, 
-        "user" => extract_name_or_username(r.user),
-        "user_id" => r.user.id, 
+        "general_position" => user_position_hash[r.user_id], 
+        "avatar" => r.avatar_selected_url, 
+        "user" => r.username.nil? ? "#{r.first_name} #{r.last_name}" : r.username,
+        "user_id" => r.user_id, 
         "counter" => r.counter 
       }
       i += 1
