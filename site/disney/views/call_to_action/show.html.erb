@@ -1,6 +1,6 @@
 <div class="container main-container">   
 
-  <div ng-repeat="calltoaction_info in calltoactions">
+  <div ng-init="calltoaction_info = calltoactions[0]">
     <%= render partial: "/call_to_action/stream_single_calltoaction" %>
   </div>
 
