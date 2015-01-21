@@ -76,6 +76,7 @@
 
 <script type="text/javascript">
 	function updateComment(approved, comment_id) {
+		$("#comment-" + comment_id + "-tr").remove();
 		$.ajax({
             type: "POST",
             url: "/easyadmin/comments/" + comment_id + "/update_comment_status",

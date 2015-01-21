@@ -93,6 +93,7 @@
 
 <script type="text/javascript">
 	function updateCta(approved, cta_id) {
+		$("#cta-" + cta_id).remove();
 		$.ajax({
             type: "POST",
             url: "/easyadmin/cta/" + cta_id + "/update_cta_status",

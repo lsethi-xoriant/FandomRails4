@@ -26,6 +26,11 @@ unless defined? FILTER_OPERATOR_CONTAINS
   REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
   BROWSE_SETTINGS_KEY = 'browse.setting'
   RANKING_SETTINGS_KEY = 'ranking.setting'
+  NOTIFICATIONS_SETTINGS_KEY = 'notifications.setting'
+
+  UPLOAD_APPROVED_LABEL = "Upload approvato"
+  COMMENT_APPROVED_LABEL = "Commento approvato"
+  USER_CTA_INTERACTIONS_LABEL = "Interazioni su cta utente"
   
   MEDIA_TYPES = ["VOID", "IMAGE", "YOUTUBE", "KALTURA", "FLOWPLAYER", "IFRAME"]
   PERIOD_TYPES = ["GIORNALIERA", "SETTIMANALE", "MENSILE", "GLOBALE"]
