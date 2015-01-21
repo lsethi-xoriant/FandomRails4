@@ -5,6 +5,14 @@ body {
   background-color: $grey;
 }
 
+.disney-js-mh-footer-logo {
+    background: url("http://navbar.disneyinternational.com/disney-logo-dark.png") no-repeat scroll 0 0 / contain rgba(0, 0, 0, 0) !important;
+}
+
+.disney-js-mh-footer-menu.disney-js-mh-footer-about > li > a {
+  color: #000 !important;
+}
+
 p{
   margin: 0;
   line-height: inherit;
@@ -31,8 +39,17 @@ p{
 //  opacity: 0.9;
 //}
 
+.container--footer {
+  background: #f8f9fa;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
 .main-container {
   background-color: #fff;
+  margin-bottom: 30px;
   /*
     -webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
     -moz-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
