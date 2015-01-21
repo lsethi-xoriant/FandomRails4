@@ -1,6 +1,6 @@
 <div class="container main-container">   
 
-  <div ng-repeat="calltoaction_info in calltoactions">
+  <div ng-init="calltoaction_info = calltoactions[0]">
     <%= render partial: "/call_to_action/stream_single_calltoaction" %>
   </div>
 
@@ -16,7 +16,7 @@
 
   <div class="row main-row">
     <div class="relateds-flexslider">
-      <div class="flex-viewport-shadow"></div>
+      <div class="flex-viewport-shadow hidden-xs"></div>
       <ul class="slides">
         <li class="relateds-flexslider__item" ng-repeat="calltoaction in aux.related_calltoaction_info">
           <div class="relateds-flexslider__item-panel">

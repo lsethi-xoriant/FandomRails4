@@ -90,11 +90,13 @@
 </script>
 
 <div class="container">
-  <div class="row" style="position: relative;">
-    <div class="col-md-12 text-center" style="padding-left: 20px; margin-bottom: 15px; margin-top: 15px;">
-      <div style="border: 1px solid #ccc;">
-        <div class="adv__vertical-label">PUB</div>
-        <p style="line-height: 90px; margin: 0; color: #ccc;">ADV</p>
+  <div class="row">
+    <div class="col-md-12 text-center" style="padding: 0;">
+      <div class="adv__horizontal">
+        <p>PUB</p>
+        <script type="text/javascript" language="javascript">
+          dimgAd.display("728x90");
+        </script>
       </div>
     </div>
   </div>
@@ -112,7 +114,7 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="<%= aux["current_property_info"]["name"] %>">Home</a></li>
+            <li class="active"><a href="/<%= $context_root %>">Home</a></li>
             <li><a href="#">Gallery</a></li>
             <li>
               <%= light_link_to("/reward/catalogue") do %>
@@ -168,7 +170,7 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="<%= aux["current_property_info"]["name"] %>">Home</a></li>
+        <li class="active"><a href="/<%= $context_root %>">Home</a></li>
         <li><a href="#">Gallery</a></li>
         <li>
           <%= light_link_to("/reward/catalogue") do %>
