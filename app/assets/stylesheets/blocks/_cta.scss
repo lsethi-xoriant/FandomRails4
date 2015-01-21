@@ -20,7 +20,6 @@
 }
 
 .cta__description-small-col--extra {
-  margin-bottom: 15px;
 }
 
 .cta__title-small-col {
@@ -29,6 +28,7 @@
 
 .cta__description-small-col {
   padding: 0;
+  margin-bottom: 15px;
 }
 
 .cta__title-small {
@@ -45,9 +45,10 @@
 }
 
 .cta__title {
-  margin-bottom: 0;
-  padding-top: 5px;
   font-size: 22px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+  padding-top: 5px;
 }
 
 .cta__miniformat-col {

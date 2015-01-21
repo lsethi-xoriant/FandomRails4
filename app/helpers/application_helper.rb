@@ -431,16 +431,22 @@ module ApplicationHelper
   def call_to_action_completed?(cta)
     if current_user
       require_to_complete_interactions = interactions_required_to_complete(cta)
+
+      if require_to_complete_interactions.count == 0
+        return false
+      end
+
       require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
       interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", current_user.id, require_to_complete_interactions_ids)
-      require_to_complete_interactions.any? && (require_to_complete_interactions.count == interactions_done.count)
+      require_to_complete_interactions.count == interactions_done.count
+
     else
       false
     end
   end
 
   def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction)
-    call_to_action_completed_or_reward_status = cache_short get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, current_or_anonymous_user.id) do
+    call_to_action_completed_or_reward_status = cache_short(get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, current_or_anonymous_user.id)) do
       if call_to_action_completed?(calltoaction)
         CACHED_NIL
       else
