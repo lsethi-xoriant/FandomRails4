@@ -279,13 +279,17 @@ module ApplicationHelper
 
   def get_tag_to_rewards()
     cache_short("tag_to_rewards") do
-      tag_to_rewards = Hash.new
-      RewardTag.all.each do |reward_tag|
-        unless tag_to_rewards.key? reward_tag.tag.name
-          tag_to_rewards[reward_tag.tag.name] = Set.new 
-        end
-        tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
+      rewards = Reward.all
+      id_to_reward = {}
+      rewards.each do |r|
+        id_to_reward[r.id] = r
       end
+
+      tag_to_rewards = {}
+      RewardTag.joins(:tag).select('tags.name, reward_id').each do |reward_tag|
+        (tag_to_rewards[reward_tag.name] ||= Set.new) << id_to_reward[reward_tag.reward_id]
+      end
+
       tag_to_rewards
     end
   end
