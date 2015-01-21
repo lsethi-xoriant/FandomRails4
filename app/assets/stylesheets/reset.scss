@@ -22,6 +22,10 @@ p{
   background: transparent !important;
 }
 
+.adv-square__container {
+  padding: 0;
+}
+
 .adv__square {
   p {
     background: none repeat scroll 0 0 #000;
@@ -43,6 +47,8 @@ p{
     padding-right: 5px;
     padding-top: 2px;
     position: absolute;
+    -ms-transform: rotate(270deg); /* IE 9 */
+    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
     transform: rotate(270deg);
     background: #000;
   }
@@ -166,13 +172,31 @@ a{
 @media (max-width: $screen-sm-min) { 
   .adv__horizontal {
     width: 320px;
+    margin-bottom: 5px;
     p {
-      bottom: 8px;
+      bottom: auto;
       font-size: 8px;
-      left: -16px;
-      width: 30px;
+      left: 5px;
+      top: -13px;
+      transform: none;
+      width: 40px;
     }
   }
+
+  .adv__square {
+    p {
+      bottom: auto;
+      font-size: 8px;
+      left: 5px;
+      top: -13px;
+      transform: none;
+      width: 40px;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    margin-bottom: 15px;
+  }
+
   .main-row {
     padding-left: 0;
     padding-right: 0;
