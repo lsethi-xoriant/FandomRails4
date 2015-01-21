@@ -25,6 +25,7 @@
 
 </head>
 
+
 <% aux = disney_default_aux(@aux_other_params) %>  
 <%= render partial: "/application/style", locals: { aux: aux } %>
 
@@ -158,7 +159,13 @@
   <% end %>
   -->
 
-  <%= render partial: "/application/footer" %>
+  <div class="container container--footer">
+    <div class="row">
+      <div class="col-md-12">
+        <%= render partial: "/application/footer" %>
+      </div>
+    </div>
+  </div>
 
   <%= render partial: "/application/ga" %>
 

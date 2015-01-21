@@ -240,16 +240,19 @@ class Easyadmin::CallToActionController < ApplicationController
       format.json { render :json => risp.to_json }
     end
   end
-  
+
   def update_cta_status
     cta = CallToAction.find(params[:id])
     cta.update_attributes(activated_at: DateTime.now, approved: params[:approved])
     log_synced("moderated UGC content", approved: params[:approved], cta_id: cta.id, moderator_id: current_user.id)
     if cta.approved
-      html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_ugc_approved_template", layout: false, formats: :html
+      html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_ugc_approved_template", layout: false, 
+                                      locals: { call_to_action_title: cta.title }, formats: :html
       user_upload_interaction = cta.user_upload_interaction
-      notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
-      notice.send_to_user(request)
+      if JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['upload_approved'] != false
+        notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+        notice.send_to_user(request)
+      end
       userinteraction, outcome = UserInteraction.create_or_update_interaction(user_upload_interaction.user_id, user_upload_interaction.upload_id, nil, nil)
       compute_save_and_notify_outcome(userinteraction, user_upload_interaction)
     end

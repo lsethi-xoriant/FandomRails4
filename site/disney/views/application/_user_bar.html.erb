@@ -90,8 +90,13 @@
 </script>
 
 <div class="container">
-  <div class="col-md-12 text-center" style="border: 1px solid #ccc; margin-bottom: 15px;">
-    <p style="line-height: 90px; margin: 0; color: #ccc;">ADV</p>
+  <div class="row" style="position: relative;">
+    <div class="col-md-12 text-center" style="padding-left: 20px; margin-bottom: 15px; margin-top: 15px;">
+      <div style="border: 1px solid #ccc;">
+        <div class="adv__vertical-label">PUB</div>
+        <p style="line-height: 90px; margin: 0; color: #ccc;">ADV</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -107,7 +112,7 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="#">Home</a></li>
+            <li class="active"><a href="<%= aux["current_property_info"]["name"] %>">Home</a></li>
             <li><a href="#">Gallery</a></li>
             <li>
               <%= light_link_to("/reward/catalogue") do %>
@@ -152,13 +157,18 @@
         <img class="navbar__logo" ng-src="{{aux.current_property_info.logo}}">
       </div>
       <%= light_link_to("/profile") do %>
-        <img src="<%= current_avatar %>" class="navbar__avatar">
+        <div ng-if="current_user && current_user.notifications > 0" class="properties__right-bar-notifications text-center">
+          {{current_user.notifications}}
+        </div>
+
+        <img ng-src="{{current_user.avatar}}" class="navbar__avatar" ng-if="current_user">
+        <img src="<%= anon_avatar() %>" class="navbar__avatar" ng-if="!current_user">
       <% end %>
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="#">Home</a></li>
+        <li class="active"><a href="<%= aux["current_property_info"]["name"] %>">Home</a></li>
         <li><a href="#">Gallery</a></li>
         <li>
           <%= light_link_to("/reward/catalogue") do %>

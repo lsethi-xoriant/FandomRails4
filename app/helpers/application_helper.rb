@@ -214,8 +214,11 @@ module ApplicationHelper
   
       unless anonymous_user?(user)
         UserCounter.update_counters(interaction, user_interaction, user, true)
-        expire_cache_key(get_cta_completed_or_reward_status_cache_key(get_main_reward_name, interaction.call_to_action_id, user.id))
       end
+    end
+
+    unless anonymous_user?(user)
+      expire_cache_key(get_cta_completed_or_reward_status_cache_key(get_main_reward_name, interaction.call_to_action_id, user.id))
     end
 
     outcome = compute_save_and_notify_outcome(user_interaction)

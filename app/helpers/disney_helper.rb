@@ -89,7 +89,7 @@ module DisneyHelper
         "main_reward_counter" => get_point,
         "username" => current_user.username,
         "avatar" => current_avatar,
-        "level" => (get_max_reward("level")["title"] rescue "nessun livello"),
+        "level" => (disney_get_current_level["level"]["name"] rescue "nessun livello"),
         "notifications" => get_unread_notifications_count(),
         "avatar" => current_avatar
       }
@@ -189,7 +189,7 @@ module DisneyHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_cache_key(current_property.id)) do  
+      calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_for_user_cache_key(current_or_anonymous_user.id, current_property.id)) do  
 
         highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
         calltoactions_in_property = get_disney_ctas(current_property)
@@ -281,8 +281,8 @@ module DisneyHelper
     prepared_levels
   end
   
-  def disney_get_current_level
-    cache_short(get_current_level_by_user(current_user.id, get_disney_property)) do
+  def disney_get_current_level()
+    current_level = cache_short(get_current_level_by_user(current_user.id, get_disney_property)) do
       levels, levels_use_prop = rewards_by_tag("level")
       property_levels = disney_prepare_levels_to_show(levels)
       current_level = property_levels.select{|key, hash| hash["status"] == "progress" }.first
@@ -292,6 +292,7 @@ module DisneyHelper
         CACHED_NIL
       end
     end
+    cached_nil?(current_level) ? nil : current_level
   end
   
   def disney_get_level_number

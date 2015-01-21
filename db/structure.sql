@@ -797,6 +797,7 @@ CREATE TABLE promocodes (
     id integer NOT NULL,
     title character varying(255),
     code character varying(255),
+    property_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -1549,39 +1550,6 @@ CREATE SEQUENCE users_id_seq
 --
 
 ALTER SEQUENCE users_id_seq OWNED BY users.id;
-
-
---
--- Name: view_counters; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE TABLE view_counters (
-    id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    type character varying(255),
-    ref_id integer,
-    counter integer
-);
-
-
---
--- Name: view_counters_id_seq; Type: SEQUENCE; Schema: ballando; Owner: -
---
-
-CREATE SEQUENCE view_counters_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: view_counters_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
---
-
-ALTER SEQUENCE view_counters_id_seq OWNED BY view_counters.id;
 
 
 --
@@ -2779,42 +2747,6 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 
 --
--- Name: tag_fields; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-    id integer NOT NULL,
-    tag_id integer,
-    name character varying(255),
-    field_type character varying(255),
-    value text,
-    upload_file_name character varying(255),
-    upload_content_type character varying(255),
-    upload_file_size integer,
-    upload_updated_at timestamp without time zone
-);
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE; Schema: coin; Owner: -
---
-
-CREATE SEQUENCE tag_fields_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: coin; Owner: -
---
-
-ALTER SEQUENCE tag_fields_id_seq OWNED BY tag_fields.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -3174,7 +3106,7 @@ CREATE TABLE view_counters (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    type character varying(255),
+    ref_type character varying(255),
     ref_id integer,
     counter integer
 );
@@ -4394,42 +4326,6 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 
 --
--- Name: tag_fields; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-    id integer NOT NULL,
-    tag_id integer,
-    name character varying(255),
-    field_type character varying(255),
-    value text,
-    upload_file_name character varying(255),
-    upload_content_type character varying(255),
-    upload_file_size integer,
-    upload_updated_at timestamp without time zone
-);
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE; Schema: disney; Owner: -
---
-
-CREATE SEQUENCE tag_fields_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: disney; Owner: -
---
-
-ALTER SEQUENCE tag_fields_id_seq OWNED BY tag_fields.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -4789,7 +4685,7 @@ CREATE TABLE view_counters (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    type character varying(255),
+    ref_type character varying(255),
     ref_id integer,
     counter integer
 );
@@ -5230,7 +5126,7 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    "timestamp" timestamp without time zone,
+    "timestamp" character varying(255),
     level character varying(255),
     tenant character varying(255),
     user_id integer,
@@ -5611,7 +5507,9 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    text_before character varying(255),
+    text_after character varying(255)
 );
 
 
@@ -6009,42 +5907,6 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 
 --
--- Name: tag_fields; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-    id integer NOT NULL,
-    tag_id integer,
-    name character varying(255),
-    field_type character varying(255),
-    value text,
-    upload_file_name character varying(255),
-    upload_content_type character varying(255),
-    upload_file_size integer,
-    upload_updated_at timestamp without time zone
-);
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE; Schema: fandom; Owner: -
---
-
-CREATE SEQUENCE tag_fields_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: fandom; Owner: -
---
-
-ALTER SEQUENCE tag_fields_id_seq OWNED BY tag_fields.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -6404,7 +6266,7 @@ CREATE TABLE view_counters (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    type character varying(255),
+    ref_type character varying(255),
     ref_id integer,
     counter integer
 );
@@ -7624,42 +7486,6 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 
 --
--- Name: tag_fields; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-    id integer NOT NULL,
-    tag_id integer,
-    name character varying(255),
-    field_type character varying(255),
-    value text,
-    upload_file_name character varying(255),
-    upload_content_type character varying(255),
-    upload_file_size integer,
-    upload_updated_at timestamp without time zone
-);
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE; Schema: forte; Owner: -
---
-
-CREATE SEQUENCE tag_fields_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: forte; Owner: -
---
-
-ALTER SEQUENCE tag_fields_id_seq OWNED BY tag_fields.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -8019,7 +7845,7 @@ CREATE TABLE view_counters (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    type character varying(255),
+    ref_type character varying(255),
     ref_id integer,
     counter integer
 );
@@ -9239,42 +9065,6 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 
 --
--- Name: tag_fields; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
---
-
-CREATE TABLE tag_fields (
-    id integer NOT NULL,
-    tag_id integer,
-    name character varying(255),
-    field_type character varying(255),
-    value text,
-    upload_file_name character varying(255),
-    upload_content_type character varying(255),
-    upload_file_size integer,
-    upload_updated_at timestamp without time zone
-);
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE; Schema: maxibon; Owner: -
---
-
-CREATE SEQUENCE tag_fields_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tag_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: maxibon; Owner: -
---
-
-ALTER SEQUENCE tag_fields_id_seq OWNED BY tag_fields.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -9634,7 +9424,7 @@ CREATE TABLE view_counters (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    type character varying(255),
+    ref_type character varying(255),
     ref_id integer,
     counter integer
 );
@@ -11624,13 +11414,6 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
 --
 
-ALTER TABLE ONLY view_counters ALTER COLUMN id SET DEFAULT nextval('view_counters_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
---
-
 ALTER TABLE ONLY vote_ranking_tags ALTER COLUMN id SET DEFAULT nextval('vote_ranking_tags_id_seq'::regclass);
 
 
@@ -11858,13 +11641,6 @@ ALTER TABLE ONLY shares ALTER COLUMN id SET DEFAULT nextval('shares_id_seq'::reg
 --
 
 ALTER TABLE ONLY synced_log_files ALTER COLUMN id SET DEFAULT nextval('synced_log_files_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: coin; Owner: -
---
-
-ALTER TABLE ONLY tag_fields ALTER COLUMN id SET DEFAULT nextval('tag_fields_id_seq'::regclass);
 
 
 --
@@ -12174,13 +11950,6 @@ ALTER TABLE ONLY synced_log_files ALTER COLUMN id SET DEFAULT nextval('synced_lo
 -- Name: id; Type: DEFAULT; Schema: disney; Owner: -
 --
 
-ALTER TABLE ONLY tag_fields ALTER COLUMN id SET DEFAULT nextval('tag_fields_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: disney; Owner: -
---
-
 ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
 
 
@@ -12478,13 +12247,6 @@ ALTER TABLE ONLY shares ALTER COLUMN id SET DEFAULT nextval('shares_id_seq'::reg
 --
 
 ALTER TABLE ONLY synced_log_files ALTER COLUMN id SET DEFAULT nextval('synced_log_files_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
---
-
-ALTER TABLE ONLY tag_fields ALTER COLUMN id SET DEFAULT nextval('tag_fields_id_seq'::regclass);
 
 
 --
@@ -12794,13 +12556,6 @@ ALTER TABLE ONLY synced_log_files ALTER COLUMN id SET DEFAULT nextval('synced_lo
 -- Name: id; Type: DEFAULT; Schema: forte; Owner: -
 --
 
-ALTER TABLE ONLY tag_fields ALTER COLUMN id SET DEFAULT nextval('tag_fields_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: forte; Owner: -
---
-
 ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
 
 
@@ -13098,13 +12853,6 @@ ALTER TABLE ONLY shares ALTER COLUMN id SET DEFAULT nextval('shares_id_seq'::reg
 --
 
 ALTER TABLE ONLY synced_log_files ALTER COLUMN id SET DEFAULT nextval('synced_log_files_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
---
-
-ALTER TABLE ONLY tag_fields ALTER COLUMN id SET DEFAULT nextval('tag_fields_id_seq'::regclass);
 
 
 --
@@ -13824,14 +13572,6 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: view_counters_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY view_counters
-    ADD CONSTRAINT view_counters_pkey PRIMARY KEY (id);
-
-
---
 -- Name: vote_ranking_tags_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -14095,14 +13835,6 @@ ALTER TABLE ONLY shares
 
 ALTER TABLE ONLY synced_log_files
     ADD CONSTRAINT synced_log_files_pkey PRIMARY KEY (id);
-
-
---
--- Name: tag_fields_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY tag_fields
-    ADD CONSTRAINT tag_fields_pkey PRIMARY KEY (id);
 
 
 --
@@ -14452,14 +14184,6 @@ ALTER TABLE ONLY synced_log_files
 
 
 --
--- Name: tag_fields_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY tag_fields
-    ADD CONSTRAINT tag_fields_pkey PRIMARY KEY (id);
-
-
---
 -- Name: tags_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -14803,14 +14527,6 @@ ALTER TABLE ONLY shares
 
 ALTER TABLE ONLY synced_log_files
     ADD CONSTRAINT synced_log_files_pkey PRIMARY KEY (id);
-
-
---
--- Name: tag_fields_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY tag_fields
-    ADD CONSTRAINT tag_fields_pkey PRIMARY KEY (id);
 
 
 --
@@ -15160,14 +14876,6 @@ ALTER TABLE ONLY synced_log_files
 
 
 --
--- Name: tag_fields_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY tag_fields
-    ADD CONSTRAINT tag_fields_pkey PRIMARY KEY (id);
-
-
---
 -- Name: tags_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -15511,14 +15219,6 @@ ALTER TABLE ONLY shares
 
 ALTER TABLE ONLY synced_log_files
     ADD CONSTRAINT synced_log_files_pkey PRIMARY KEY (id);
-
-
---
--- Name: tag_fields_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY tag_fields
-    ADD CONSTRAINT tag_fields_pkey PRIMARY KEY (id);
 
 
 --
@@ -16177,20 +15877,6 @@ CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
--- Name: index_view_counters_on_ref_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_view_counters_on_ref_id ON view_counters USING btree (ref_id);
-
-
---
--- Name: index_view_counters_on_type; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_view_counters_on_type ON view_counters USING btree (type);
-
-
---
 -- Name: unique_schema_migrations; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -16413,7 +16099,7 @@ CREATE INDEX index_view_counters_on_ref_id ON view_counters USING btree (ref_id)
 -- Name: index_view_counters_on_type; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_view_counters_on_type ON view_counters USING btree (type);
+CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type);
 
 
 --
@@ -16587,6 +16273,20 @@ CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btr
 
 
 --
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
+
+
+--
 -- Name: index_user_uploads_on_aux_fields; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -16625,7 +16325,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: index_users_on_username; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+CREATE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
@@ -16639,7 +16339,7 @@ CREATE INDEX index_view_counters_on_ref_id ON view_counters USING btree (ref_id)
 -- Name: index_view_counters_on_type; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_view_counters_on_type ON view_counters USING btree (type);
+CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type);
 
 
 --
@@ -16865,7 +16565,7 @@ CREATE INDEX index_view_counters_on_ref_id ON view_counters USING btree (ref_id)
 -- Name: index_view_counters_on_type; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_view_counters_on_type ON view_counters USING btree (type);
+CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type);
 
 
 --
@@ -17091,7 +16791,7 @@ CREATE INDEX index_view_counters_on_ref_id ON view_counters USING btree (ref_id)
 -- Name: index_view_counters_on_type; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_view_counters_on_type ON view_counters USING btree (type);
+CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type);
 
 
 --
@@ -17317,7 +17017,7 @@ CREATE INDEX index_view_counters_on_ref_id ON view_counters USING btree (ref_id)
 -- Name: index_view_counters_on_type; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_view_counters_on_type ON view_counters USING btree (type);
+CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type);
 
 
 --
@@ -17488,6 +17188,20 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 --
 
 CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
 
 
 --
@@ -17872,3 +17586,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150113164916');
 INSERT INTO schema_migrations (version) VALUES ('20150113171522');
 
 INSERT INTO schema_migrations (version) VALUES ('20150117115050');
+
+INSERT INTO schema_migrations (version) VALUES ('20150119161752');

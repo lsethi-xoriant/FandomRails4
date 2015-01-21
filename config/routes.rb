@@ -41,6 +41,7 @@ Fandom::Application.routes.draw do
 
         resources :call_to_action
 
+        match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         root :to => "application#index"
 
@@ -304,6 +305,8 @@ Fandom::Application.routes.draw do
     match "settings/browse/save", :to => "settings#save_browse_settings"
     match "settings/ranking", :to => "settings#ranking_settings"
     match "settings/ranking/save", :to => "settings#save_ranking_settings"
+    match "settings/notifications", :to => "settings#notifications_settings"
+    match "settings/notifications/save", :to => "settings#save_notifications_settings"
   end
 
   match '/facebook_app', to: "application#facebook_app"

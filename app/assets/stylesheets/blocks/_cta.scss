@@ -119,6 +119,12 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .ctas__search {
+    button {
+      margin-top: 5px;
+    }
+  }
+
   .cta__title {
     margin-bottom: 0;
     padding-top: 5px;

@@ -18,14 +18,23 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
       if anonymous_user.id != current_comment.user_id
         interaction = current_comment.comment.interaction
-        user_interaction, outcome = UserInteraction.create_or_update_interaction(current_comment.user, interaction, nil, nil)
+        user_interaction, outcome = create_or_update_interaction(current_comment.user, interaction, nil, nil)
         
         cta = user_interaction.interaction.call_to_action
-        
-        html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_comment_approved_template", locals: {cta: cta}, layout: false, formats: :html
-        
-        create_notice(:user_id => current_comment.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+
+        html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_comment_approved_template", locals: { cta: cta }, layout: false, formats: :html
+
+        if JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['comment_approved'] != false
+          create_notice(:user_id => current_comment.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+        end
       end    
+
+      unless cta.user_id.nil? # user_call_to_action
+        if JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['user_cta_interactions'] != false
+          html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_interaction_on_ugc_approved_template", locals: { cta: cta, interaction_type: "commento" }, layout: false, formats: :html
+          create_notice(:user_id => cta.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+        end
+      end
 
     end
 
