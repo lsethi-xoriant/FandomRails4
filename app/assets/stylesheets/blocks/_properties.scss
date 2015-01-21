@@ -48,3 +48,14 @@
     text-decoration: none;
   }
 }
+
+@media (max-width: $screen-sm-min) {
+  .properties__right-bar-notifications {
+    font-size: 10px;
+    height: 15px;
+    padding-top: 2px;
+    right: 10px;
+    top: 15px;
+    width: 15px;
+  }
+}

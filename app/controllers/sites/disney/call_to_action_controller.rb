@@ -17,6 +17,13 @@ class Sites::Disney::CallToActionController < CallToActionController
     }
   end
 
+  def expire_user_interaction_cache_keys()
+    if current_user
+      current_property = get_tag_from_params(get_disney_property())
+      expire_cache_key(get_evidence_calltoactions_in_property_for_user_cache_key(current_user.id, current_property.id))
+    end
+  end
+
   def append_calltoaction
     calltoactions_showed_ids = params[:calltoactions_showed].map { |calltoaction_info| calltoaction_info["calltoaction"]["id"] }
     calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")

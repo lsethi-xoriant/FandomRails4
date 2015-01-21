@@ -471,6 +471,8 @@ class CallToActionController < ApplicationController
         response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
       end
 
+      expire_user_interaction_cache_keys()
+
     end
 
     if anonymous_user?(current_or_anonymous_user)
@@ -490,6 +492,9 @@ class CallToActionController < ApplicationController
       format.json { render :json => response.to_json }
     end
   end 
+
+  def expire_user_interaction_cache_keys()
+  end
 
   def setup_update_interaction_response_info(response)
     response

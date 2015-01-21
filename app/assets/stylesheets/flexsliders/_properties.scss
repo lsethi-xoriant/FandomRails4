@@ -56,3 +56,12 @@ $properties-item-margin-right: 8px;
   border-left: 1px solid #ccc;
   border-top: 1px solid #ccc;
 }
+
+@media (max-width: $screen-md-min) {
+  .properties__flexslider {
+    max-width: 250px;
+  }
+  .properties__logo {
+    width: 150px;
+  }
+}

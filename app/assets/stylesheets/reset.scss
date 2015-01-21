@@ -14,6 +14,19 @@ p{
   background: transparent !important;
 }
 
+.adv__vertical-label {
+  background: none repeat scroll 0 0 #000;
+  border-radius: 5px 5px 0 0;
+  bottom: 10px;
+  color: #fff;
+  height: 21px;
+  left: -11px;
+  padding-top: 2px;
+  position: absolute;
+  transform: rotate(270deg);
+  width: 41px;
+}
+
 //.flowplayer.is-paused {
 //  opacity: 0.9;
 //}
