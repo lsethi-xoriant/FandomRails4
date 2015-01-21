@@ -3,6 +3,14 @@
 
 class Sites::Disney::RegistrationsController < RegistrationsController
 
+  def update
+    user_params = params[:user]
+    required_attrs = ["username", "username_length"]
+    params[:user] = user_params.merge(required_attrs: required_attrs)
+
+    super
+  end
+
   def iur
     unless cookies[:SWID] && cookies[:SWID]
       from_iur_authenticate = cookies[:from_iur_authenticate]
