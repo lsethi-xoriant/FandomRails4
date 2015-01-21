@@ -114,7 +114,7 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="<%= aux["current_property_info"]["name"] %>">Home</a></li>
+            <li class="active"><a href="/<%= $context_root %>">Home</a></li>
             <li><a href="#">Gallery</a></li>
             <li>
               <%= light_link_to("/reward/catalogue") do %>
@@ -170,7 +170,7 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="<%= aux["current_property_info"]["name"] %>">Home</a></li>
+        <li class="active"><a href="/<%= $context_root %>">Home</a></li>
         <li><a href="#">Gallery</a></li>
         <li>
           <%= light_link_to("/reward/catalogue") do %>

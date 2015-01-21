@@ -173,27 +173,30 @@ a{
   .adv__horizontal {
     width: 320px;
     margin-bottom: 5px;
+    margin-top: 20px;
     p {
       bottom: auto;
-      font-size: 8px;
+      font-size: 12px;
       left: 5px;
-      top: -13px;
-      transform: none;
+      top: -19px;
       width: 40px;
+      -ms-transform: none; /* IE 9 */
+      -webkit-transform: none; /* Chrome, Safari, Opera */
+      transform: none;
     }
   }
 
   .adv__square {
     p {
       bottom: auto;
-      font-size: 8px;
+      font-size: 12px;
       left: 5px;
-      top: -13px;
-      transform: none;
+      top: -19px;
       width: 40px;
-      margin-left: 0;
+      width: 300px;
       margin-right: 0;
     }
+    margin-top: 20px;
     margin-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
