@@ -141,7 +141,8 @@ def migrate_call_to_actions(source_db_tenant, destination_db_tenant, source_db_c
         new_description = nullify_or_escape_string(source_db_connection, line["long_description"])
         if cnt_type == 'Experience::VideoContent'
           media_type = "FLOWPLAYER"
-          media_data = source_db_connection.exec("SELECT vcode FROM video_contents WHERE id = #{content_id[0]}").values
+          video_content_id = source_db_connection.exec("SELECT cnt_id FROM contents WHERE id = #{content_id[0]}").values[0][0]
+          media_data = source_db_connection.exec("SELECT vcode FROM video_contents WHERE id = #{video_content_id}").values
           media_data = media_data[0].nil? ? "" : media_data[0][0]
         else
           media_type = "NULL"
@@ -189,16 +190,14 @@ def migrate_call_to_actions(source_db_tenant, destination_db_tenant, source_db_c
       rows_with_category_id_missing += 1
     else
       tag_id = categories_tags_id_map[line["cta_category_id"]]
-      create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, tag_id, nullify_or_escape_string(source_db_connection, line["updated_at"]))
+      create_call_to_action_tag(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, tag_id, nullify_or_escape_string(source_db_connection, line["updated_at"]))
     end
 
     # CREATE CALL_TO_ACTION_TAG FOR PROPERTY
     if source_db_tenant == 'violetta'
-      create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, violetta_tag_id, updated_at)
-    else # disney
-      create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, disney_tag_id, updated_at)
+      create_call_to_action_tag(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, violetta_tag_id, updated_at)
     end
-
+    create_call_to_action_tag(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, disney_tag_id, updated_at)
 
     count += 1
     next_step = print_progress(count + rows_with_cnt_type_missing, lines_step, next_step, source_call_to_actions_count)
@@ -207,11 +206,11 @@ def migrate_call_to_actions(source_db_tenant, destination_db_tenant, source_db_c
   puts "#{rows_with_cnt_type_missing} rows had dangling reference to content type \n#{rows_with_cnt_id_missing} rows had dangling reference to content id \n"
   puts "#{rows_with_category_id_missing} rows had no category \n"
   puts ""
-  write_table_id_mapping_to_file("call_to_actions", call_to_actions_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "call_to_actions", call_to_actions_id_map)
   return call_to_actions_id_map
 end
 
-def create_call_to_action_tag(destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, tag_id, created_and_updated_at)
+def create_call_to_action_tag(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, tag_id, created_and_updated_at)
   fields = {
     #"id" => ,
     "call_to_action_id" => new_cta_id,
@@ -227,7 +226,7 @@ end
 
 ########## QUIZZES ##########
 
-def migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_connection)
+def migrate_quizzes(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
   source_quizzes = source_db_connection.exec("SELECT * FROM quiz_interactions")
   source_quizzes_count = source_quizzes.count
 
@@ -259,13 +258,13 @@ def migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_
     next_step = print_progress(count, lines_step, next_step, source_quizzes_count)
   end
   puts "#{count} lines successfully migrated \n"
-  write_table_id_mapping_to_file("quizzes", quizzes_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "quizzes", quizzes_id_map)
   return quizzes_id_map
 end
 
 ########## ANSWERS ##########
 
-def migrate_answers(destination_db_tenant, source_db_connection, destination_db_connection, quizzes_id_map)
+def migrate_answers(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, quizzes_id_map)
   source_answers = source_db_connection.exec("SELECT * FROM quiz_answers")
   source_answers_count = source_answers.count
 
@@ -310,12 +309,12 @@ def migrate_answers(destination_db_tenant, source_db_connection, destination_db_
     next_step = print_progress(count, lines_step, next_step, source_answers_count)
   end
   puts "#{count} lines successfully migrated \n"
-  write_table_id_mapping_to_file("answers", answers_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "answers", answers_id_map)
 end
 
 ########## CHECKS #########
 
-def migrate_checks(destination_db_tenant, source_db_connection, destination_db_connection)
+def migrate_checks(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
   source_checks = source_db_connection.exec("SELECT * FROM check_content_interactions")
   source_checks_count = source_checks.count
 
@@ -345,13 +344,13 @@ def migrate_checks(destination_db_tenant, source_db_connection, destination_db_c
     next_step = print_progress(count, lines_step, next_step, source_checks_count)
   end
   puts "#{count} lines successfully migrated \n"
-  write_table_id_mapping_to_file("checks", checks_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "checks", checks_id_map)
   return checks_id_map
 end
 
 ########## PLAYS #########
 
-def migrate_plays(destination_db_tenant, source_db_connection, destination_db_connection)
+def migrate_plays(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
   source_plays = source_db_connection.exec("SELECT * FROM action_video_interactions")
   source_plays_count = source_plays.count
 
@@ -380,13 +379,13 @@ def migrate_plays(destination_db_tenant, source_db_connection, destination_db_co
     next_step = print_progress(count, lines_step, next_step, source_plays_count)
   end
   puts "#{count} lines successfully migrated \n"
-  write_table_id_mapping_to_file("plays", plays_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "plays", plays_id_map)
   return plays_id_map
 end
 
 ########## INTERACTIONS ##########
 
-def migrate_interactions(destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, quizzes_id_map, checks_id_map, plays_id_map)
+def migrate_interactions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, quizzes_id_map, checks_id_map, plays_id_map)
   source_interactions = source_db_connection.exec("SELECT * FROM interactions")
   source_interactions_count = source_interactions.count
 
@@ -406,7 +405,7 @@ def migrate_interactions(destination_db_tenant, source_db_connection, destinatio
       #"id" => line["id"].to_i,
       "name" => nullify_or_escape_string(source_db_connection, "#{line["name"]}-id#{line["id"]}".gsub(" ", "")),
       "seconds" => line["video_second"] != nil ? line["video_second"] : 0,
-      "when_show_interaction" => (line["intr_type"] != nil and line["intr_type"][12..-12] == ("Quiz" || "Versus")) ? "OVERVIDEO_DURING" : "SEMPRE_VISIBILE",
+      "when_show_interaction" => (line["intr_type"] != nil and line["intr_type"][12..-12] == ("Versus")) ? "OVERVIDEO_DURING" : "SEMPRE_VISIBILE",
       "required_to_complete" => (line["intr_type"] != nil and line["intr_type"][12..-12] == ("Quiz" || "Versus" || "CheckContent")) ? "t" : "f",
       "resource_id" => new_resource_id(source_db_connection, destination_db_connection, line["intr_type"], line["intr_id"], quizzes_id_map, checks_id_map, plays_id_map),
       "resource_type" => (line["intr_type"] != nil and line["intr_type"][12..-12] == "ActionVideo") ? "Play" : nullify_or_escape_string(source_db_connection, line["intr_type"][12..-12]),
@@ -422,7 +421,7 @@ def migrate_interactions(destination_db_tenant, source_db_connection, destinatio
     next_step = print_progress(count, lines_step, next_step, source_interactions_count)
   end
   puts "#{count} lines successfully migrated \n"
-  write_table_id_mapping_to_file("interactions", interactions_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "interactions", interactions_id_map)
   return interactions_id_map
 end
 
@@ -552,7 +551,7 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
     next_step = print_progress(count + count_email_present, lines_step, next_step, source_users_count)
   end
   puts "#{count} lines successfully migrated \n#{count_email_present} users found with same email and successfully updated\n"
-  write_table_id_mapping_to_file("users", users_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "users", users_id_map)
   return [users_id_map, users_uid_map]
 end
 
@@ -574,7 +573,7 @@ end
 
 ########## TAGS (CUSTOM GALLERIES) ##########
 
-def migrate_tags(destination_db_tenant, source_db_connection, destination_db_connection)
+def migrate_tags(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
   source_custom_galleries = source_db_connection.exec("SELECT * FROM core_custom_galleries")
   source_custom_galleries_count = source_custom_galleries.count
 
@@ -607,13 +606,13 @@ def migrate_tags(destination_db_tenant, source_db_connection, destination_db_con
   end
 
   puts "#{count} lines successfully migrated \n"
-  write_table_id_mapping_to_file("gallery_tags", gallery_tags_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "gallery_tags", gallery_tags_id_map)
   return gallery_tags_id_map
 end
 
 ########## USER CALL TO ACTIONS ##########
 
-def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, core_custom_galleries_tags_id)
+def migrate_user_call_to_actions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, core_custom_galleries_tags_id)
   source_galleries = source_db_connection.exec("SELECT * FROM core_galleries ORDER BY parent_custom_gallery_id")
   source_galleries_count = source_galleries.count
 
@@ -624,6 +623,8 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
   count = 0
   rows_with_user_missing = 0
   user_call_to_actions_id_map = Hash.new
+
+  ugc_tag_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags where name = 'ugc'").values[0][0].to_i
 
   source_galleries.each do |line|
 
@@ -645,6 +646,7 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
       rows_with_user_missing += 1
     else
       description = nullify_or_escape_string(source_db_connection, line["description"])
+      updated_at = nullify_or_escape_string(source_db_connection, line["updated_at"])
 
       fields_for_call_to_actions = {
         #"id" => line["id"].to_i,
@@ -656,7 +658,7 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
         "activated_at" => line["published_at"] != nil ? nullify_or_escape_string(source_db_connection, line["published_at"]) : "NULL",
         "secondary_id" => "NULL",
         "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
-        "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
+        "updated_at" => updated_at,
         "slug" => "NULL",
         "media_image_file_name" => nullify_or_escape_string(source_db_connection, line["picture_file_name"]),
         "media_image_content_type" => nullify_or_escape_string(source_db_connection, line["picture_content_type"]),
@@ -678,20 +680,23 @@ def migrate_user_call_to_actions(destination_db_tenant, source_db_connection, de
       destination_db_connection.exec(query_for_call_to_actions)
       user_call_to_actions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i)
   
+      new_cta_id = destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i
       if line["parent_custom_gallery_id"] != "NULL"
-        create_call_to_action_tag_gallery(destination_db_tenant, destination_db_connection, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i, core_custom_galleries_tags_id[line["parent_custom_gallery_id"]])
+        create_call_to_action_tag_gallery(source_db_tenant, destination_db_tenant, destination_db_connection, new_cta_id, core_custom_galleries_tags_id[line["parent_custom_gallery_id"]])
       end
+
+      create_call_to_action_tag(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, ugc_tag_id, updated_at)
 
       count += 1
       next_step = print_progress(count, lines_step, next_step, source_galleries_count)
     end
   end
   puts "#{count} lines successfully migrated \n#{rows_with_user_missing} rows had dangling reference to user \n"
-  write_table_id_mapping_to_file("user_call_to_actions", user_call_to_actions_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "user_call_to_actions", user_call_to_actions_id_map)
   return user_call_to_actions_id_map
 end
 
-def create_call_to_action_tag_gallery(destination_db_tenant, destination_db_connection, call_to_action_id, tag_id)
+def create_call_to_action_tag_gallery(source_db_tenant, destination_db_tenant, destination_db_connection, call_to_action_id, tag_id)
 
   fields_for_call_to_action_tag = {
     #"id" => ,
@@ -707,7 +712,7 @@ end
 
 ########## USER INTERACTIONS ##########
 
-def migrate_user_interactions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, interactions_id_map, limit)
+def migrate_user_interactions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, interactions_id_map, limit)
   source_user_interactions = source_db_connection.exec("SELECT * FROM cta_ci_users#{limit ? " limit 2000" : ""}") # limit for testing
   source_user_interactions_count = source_user_interactions.count
 
@@ -758,7 +763,7 @@ def migrate_user_interactions(destination_db_tenant, source_db_connection, desti
   end
   puts "#{count} lines successfully migrated"
   puts "#{rows_with_interaction_missing} rows had dangling reference to interaction \n#{rows_with_user_missing} rows had dangling reference to user"
-  write_table_id_mapping_to_file("user_interactions", user_interactions_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "user_interactions", user_interactions_id_map)
 end
 
 def build_outcome(source_db_connection, line)
@@ -803,22 +808,22 @@ def migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connectio
   rewards_id_map = Hash.new
   cta_rewards_id_map = Hash.new
 
-  download_count = migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_prizes, "prize", download_count)
-  # ***do not migrate*** migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_badges, "badge")
-  # ***do not migrate*** migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_levels, "level")
+  download_count = migrate_source_reward_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_prizes, "prize", download_count)
+  # ***do not migrate*** migrate_source_reward_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_badges, "badge")
+  # ***do not migrate*** migrate_source_reward_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewarding_levels, "level")
 
   puts "#{rewards_id_map.length} lines successfully migrated \n"
-  write_table_id_mapping_to_file("rewards", rewards_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "rewards", rewards_id_map)
 
   puts "#{cta_rewards_id_map.length} cta_rewards successfully created \n"
-  write_table_id_mapping_to_file("cta_rewards", cta_rewards_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "cta_rewards", cta_rewards_id_map)
 
   puts "#{download_count} downloads and download_interactions successfully created \n********************************************************************************* \n"
 
   return rewards_id_map
 end
 
-def generate_point_reward(destination_db_tenant, source_db_connection, destination_db_connection, reward_name)
+def generate_point_reward(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, reward_name)
   
   reward_with_reward_name = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}rewards WHERE name = '#{reward_name}'").values.first
 
@@ -872,14 +877,14 @@ def generate_point_reward(destination_db_tenant, source_db_connection, destinati
 
 end
 
-def migrate_source_reward_lines(destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewards, reward_type, download_count)
+def migrate_source_reward_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, rewards_id_map, cta_rewards_id_map, source_rewards, reward_type, download_count)
   source_rewards_count = source_rewards.count
   lines_step, next_step = init_progress(source_rewards_count)
   count = 0
   source_rewards.each do |line|
 
     #if line["is_video_content"] == "t"
-      download_count = create_new_cta_reward(destination_db_tenant, source_db_connection, destination_db_connection, line, cta_rewards_id_map, download_count)
+      download_count = create_new_cta_reward(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, line, cta_rewards_id_map, download_count)
     #end
 
     fields = {
@@ -920,7 +925,7 @@ def migrate_source_reward_lines(destination_db_tenant, source_db_connection, des
       "not_winnable_image_content_type" => "NULL",
       "not_winnable_image_file_size" => "NULL",
       "not_winnable_image_updated_at" => "NULL",
-      "call_to_action_id" => line["is_video_content"] == "t" ? destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i : "NULL"
+      "call_to_action_id" => destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}call_to_actions_id_seq')").values[0][0].to_i
     }
 
     query = build_query_string(destination_db_tenant, "rewards", fields)
@@ -933,14 +938,14 @@ def migrate_source_reward_lines(destination_db_tenant, source_db_connection, des
   download_count
 end
 
-def create_new_cta_reward(destination_db_tenant, source_db_connection, destination_db_connection, line, cta_rewards_id_map, download_count)
+def create_new_cta_reward(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, line, cta_rewards_id_map, download_count)
 
   fields = {
     #"id" => line["id"].to_i,
     "name" => nullify_or_escape_string(source_db_connection, "#{line["name"]}-id#{line["id"]}".gsub(" ", "").gsub('_', '-')),
     "title" => nullify_or_escape_string(source_db_connection, line["title"]),
     "description" => nullify_or_escape_string(source_db_connection, line["description"]),
-    "media_type" => line["is_video_content"] == "f" ? "FLOWPLAYER" : "IMAGE",
+    "media_type" => line["is_video_content"] == "f" ? "IMAGE" : "FLOWPLAYER",
     "enable_disqus" => "f",
     "activated_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
     "secondary_id" => "NULL",
@@ -969,14 +974,17 @@ def create_new_cta_reward(destination_db_tenant, source_db_connection, destinati
   cta_rewards_id_map.store(line["id"].to_i, new_cta_id)
 
   if line["is_video_content"] == "f"
-    create_new_download_and_download_interaction(destination_db_tenant, source_db_connection, destination_db_connection, line, new_cta_id)
+    create_new_download_and_download_interaction(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, line, new_cta_id)
     download_count += 1
   end
+
+  reward_cta_tag_id = destination_db_connection.exec("SELECT id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}tags WHERE name = 'reward-cta'").values[0][0].to_i
+  create_call_to_action_tag(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, new_cta_id, reward_cta_tag_id, nullify_or_escape_string(source_db_connection, line["created_at"]))
 
   download_count
 end
 
-def create_new_download_and_download_interaction(destination_db_tenant, source_db_connection, destination_db_connection, line, new_cta_id)
+def create_new_download_and_download_interaction(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, line, new_cta_id)
 
   fields_for_download = {
     #"id" => ,
@@ -1013,7 +1021,7 @@ end
 
 ########## USER_REWARDS ##########
 
-def migrate_user_rewards(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, limit)
+def migrate_user_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, limit)
 
   #source_rewarding_badges_users = source_db_connection.exec("SELECT * FROM rewarding_badges_users#{limit ? " limit 500" : ""}") # limit for testing
   #source_rewarding_levels_users = source_db_connection.exec("SELECT * FROM rewarding_levels_users#{limit ? " limit 2000" : ""}") # limit for testing
@@ -1023,16 +1031,16 @@ def migrate_user_rewards(destination_db_tenant, source_db_connection, destinatio
   puts "user_rewards: #{source_rewarding_prizes_users_count} lines to migrate \nRunning migration..."
   STDOUT.flush
 
-  #badge_counters = migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_badges_users, "badge")
-  #level_counters = migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_levels_users, "level")
-  prize_counters = migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_prizes_users, "prize")
+  #badge_counters = migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_badges_users, "badge")
+  #level_counters = migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_levels_users, "level")
+  prize_counters = migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_prizes_users, "prize")
 
   puts "#{prize_counters[0]} lines successfully migrated"
   puts "#{prize_counters[1]} rows had dangling reference to user \n#{prize_counters[2]} rows had dangling reference to reward \n*********************************************************************************\n\n"
   STDOUT.flush
 end
 
-def migrate_source_rewarding_users_lines(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_users, reward_type)
+def migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_users, reward_type)
   source_rewarding_users_count = source_rewarding_users.count
   lines_step, next_step = init_progress(source_rewarding_users_count)
   count = 0
@@ -1141,12 +1149,12 @@ def migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_con
   puts "#{count} lines successfully created"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_updated_credits} rows updated for credits \n********************************************************************************* \n"
   STDOUT.flush
-  #write_table_id_mapping_to_file("user_rewards", user_rewards_id_map)
+  #write_table_id_mapping_to_file(source_db_tenant, "user_rewards", user_rewards_id_map)
 end
 
 ########## COMMENTS + USER_COMMENT_INTERACTIONS [+ NEW INTERACTIONS] ##########
 
-def migrate_comments_and_user_comment_interactions(destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, users_id_map, limit)
+def migrate_comments_and_user_comment_interactions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, users_id_map, limit)
   source_comments_and_user_comment_interactions = source_db_connection.exec("SELECT * FROM comments ORDER BY content_id#{limit ? " limit 20000" : ""}") # limit for testing
   source_comments_and_user_comment_interactions_count = source_comments_and_user_comment_interactions.count
 
@@ -1171,7 +1179,7 @@ def migrate_comments_and_user_comment_interactions(destination_db_tenant, source
 
       fields_for_comments = {
         #"id" => count_for_comments + 1,
-        "must_be_approved" => "f",
+        "must_be_approved" => "t",
         "title" => "#COMMENT#{res.nil? ? "" : res.first}",
         "created_at" => res.nil? ? "NULL" : res.first,
         "updated_at" => res.nil? ? "NULL" : res.first
@@ -1190,7 +1198,7 @@ def migrate_comments_and_user_comment_interactions(destination_db_tenant, source
         "name" => "NULL", # always NULL for comments
         "seconds" => 0,
         "when_show_interaction" => "SEMPRE_VISIBILE",
-        "required_to_complete" => "t",
+        "required_to_complete" => "f",
         "resource_id" => last_comment_id,
         "resource_type" => "Comment",
         "call_to_action_id" => new_call_to_action_id # Disney -> reference to content, Fandom -> reference to cta
@@ -1231,7 +1239,7 @@ def migrate_comments_and_user_comment_interactions(destination_db_tenant, source
   end
   puts "#{count_for_comments} lines successfully generated for comments and interactions\n"
   puts "#{count_for_user_comment_interactions} lines successfully migrated for user_comment_interactions \n#{rows_with_user_missing} rows had dangling reference to user"
-  write_table_id_mapping_to_file("user_comment_interactions", user_comment_interactions_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "user_comment_interactions", user_comment_interactions_id_map)
   return user_comment_interactions_id_map
 end
 
@@ -1327,10 +1335,10 @@ def migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection,
   end
   puts "#{like_interaction_count} lines successfully generated for likes and interactions \n#{count} lines successfully migrated for like user_interactions \n"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_cta_missing} rows had dangling reference to cta"
-  write_table_id_mapping_to_file("votes", votes_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "votes", votes_id_map)
 end
 
-def migrate_notices(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, user_comment_interactions_id_map)
+def migrate_notices(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, user_comment_interactions_id_map)
   source_notices = source_db_connection.exec("SELECT * FROM rewarding_notifications")
   source_notices_count = source_notices.count
 
@@ -1376,7 +1384,7 @@ def migrate_notices(destination_db_tenant, source_db_connection, destination_db_
 
   puts "#{count} lines successfully migrated \n"
   puts "#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_user_comment_interaction_missing} rows had dangling reference to user_comment_interaction"
-  write_table_id_mapping_to_file("notices", notices_id_map)
+  write_table_id_mapping_to_file(source_db_tenant, "notices", notices_id_map)
   return notices_id_map
 end
 
@@ -1521,13 +1529,13 @@ def add_default_value_for_id!(keys, values)
 end
 =end
 
-def write_table_id_mapping_to_file(table, hash)
-  FileUtils.mkdir_p "files" # mkdir if not existing
-  tables_id_mapping_file_name = "files/tables_id_mapping_" + Time.now.strftime("%Y-%m-%d").to_s + ".txt"
-  
+def write_table_id_mapping_to_file(source_db_tenant, table, hash)
+
+  tables_id_mapping_file_name = "files/" + source_db_tenant + "_tables_id_mapping.txt"
   File.open(tables_id_mapping_file_name, "a") { |file| 
     file.print("#{table}: #{hash}\n\n")
   }
+
   puts "IDs' mapping written to #{tables_id_mapping_file_name} \n*********************************************************************************\n\n"
   STDOUT.flush
 end
@@ -1574,25 +1582,31 @@ end
 def migrate_db(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant, limit)
   write_and_store_time(source_db_tenant, "start")
 
+  FileUtils.mkdir_p "files" # mkdir if not existing
+  tables_id_mapping_file_name = "files/" + source_db_tenant + "_tables_id_mapping.txt"
+  id_mapping_file = File.open(tables_id_mapping_file_name, "w") { |file| 
+    file.truncate(0)
+  }
+
   categories_tags_id_map = map_category_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
   core_custom_galleries_tags_id = map_core_custom_gallery_ids_to_tag_ids(source_db_connection, source_db_tenant, destination_db_connection, destination_db_tenant)
 
   call_to_actions_id_map = migrate_call_to_actions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, categories_tags_id_map)
-  quizzes_id_map = migrate_quizzes(destination_db_tenant, source_db_connection, destination_db_connection)
-  migrate_answers(destination_db_tenant, source_db_connection, destination_db_connection, quizzes_id_map)
-  checks_id_map = migrate_checks(destination_db_tenant, source_db_connection, destination_db_connection)
-  plays_id_map = migrate_plays(destination_db_tenant, source_db_connection, destination_db_connection)
-  interactions_id_map = migrate_interactions(destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, quizzes_id_map, checks_id_map, plays_id_map)
+  quizzes_id_map = migrate_quizzes(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
+  migrate_answers(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, quizzes_id_map)
+  checks_id_map = migrate_checks(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
+  plays_id_map = migrate_plays(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
+  interactions_id_map = migrate_interactions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, quizzes_id_map, checks_id_map, plays_id_map)
   users_id_map = migrate_users(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, limit)
-  # *** DO NOT MIGRATE *** gallery_tags_id_map_old = migrate_tags(destination_db_tenant, source_db_connection, destination_db_connection)
-  user_call_to_actions_id_map = migrate_user_call_to_actions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], core_custom_galleries_tags_id)
-  migrate_user_interactions(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], interactions_id_map, limit)
+  # *** DO NOT MIGRATE *** gallery_tags_id_map_old = migrate_tags(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
+  user_call_to_actions_id_map = migrate_user_call_to_actions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], core_custom_galleries_tags_id)
+  migrate_user_interactions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], interactions_id_map, limit)
   rewards_id_map = migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
-  migrate_user_rewards(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], rewards_id_map, limit)
+  migrate_user_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], rewards_id_map, limit)
   migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[1])
-  user_comment_interactions_id_map = migrate_comments_and_user_comment_interactions(destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, users_id_map[0], limit)
+  user_comment_interactions_id_map = migrate_comments_and_user_comment_interactions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, users_id_map[0], limit)
   migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], call_to_actions_id_map, user_call_to_actions_id_map, limit)
-  # *** DO NOT MIGRATE *** migrate_notices(destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], user_comment_interactions_id_map)
+  # *** DO NOT MIGRATE *** migrate_notices(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], user_comment_interactions_id_map)
 
   destination_db_connection.exec("UPDATE #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions SET resource_type = 'Check' WHERE resource_type = 'CheckContent'");
 
