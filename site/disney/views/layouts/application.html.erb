@@ -31,7 +31,7 @@
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="DisneyStreamCalltoactionCtrl" ng-init="init(<%= build_disney_current_user().to_json %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_disney_calltoactions_count_in_property() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 
   <% if flash[:notice] == "from-disney-registration" %>
-    <div class="modal show" role="dialog" aria-hidden="true">
+    <div class="modal show" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
       <div class="modal-dialog">
         <div class="modal-content from-disney-registration">
           <div class="modal-header">

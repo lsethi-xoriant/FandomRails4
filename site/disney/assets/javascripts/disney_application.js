@@ -28,4 +28,5 @@
 //= require config
 //= require angularjs/stream_calltoaction
 //= require angularjs/disney_stream_calltoaction
+//= require fastclick
 

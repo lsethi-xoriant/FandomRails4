@@ -33,7 +33,7 @@ module CommentHelper
       "updated_at" => comment.updated_at.strftime("%Y/%m/%d %H:%M:%S"),
       "evidence" => evidence,
       "user" => {
-        "name" => "#{comment.user.first_name} #{comment.user.last_name}",
+        "name" => comment.user.username,
         "avatar" => user_avatar(comment.user)
       }
     }

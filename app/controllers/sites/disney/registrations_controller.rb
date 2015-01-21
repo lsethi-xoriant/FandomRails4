@@ -35,17 +35,23 @@ class Sites::Disney::RegistrationsController < RegistrationsController
       request.initialize_http_header(header)
       response = http.request(request)
       hash = Hash.from_xml response.body
-      hash["Envelope"]["Body"]["retrieveResponse"]["retrieveReturn"]["attributes"]["item"].each do |key, value|
-        if key["key"] == "EMAIL_ADDRESS"
-          password = Devise.friendly_token.first(8)
-          user = User.find_by_email(key["value"])
-          if user
-            user.update_attribute(:swid, cookies[:SWID])
-          else
-            user = User.create(email: key["value"], swid: cookies[:SWID], password: password, password_confirmation: password)
-          end
-        end
+
+      hash_items = hash["Envelope"]["Body"]["retrieveResponse"]["retrieveReturn"]["attributes"]["item"]
+
+      password = Devise.friendly_token.first(8)
+      
+      hash_user = {}
+      hash_items.each do |key, value|
+        hash_user[key["key"]] = key["value"]
       end
+
+      user = User.find_by_email(hash_user["EMAIL_ADDRESS"])
+      if user
+        user.update_attribute(:swid, cookies[:SWID])
+      else
+        user = User.create(email: hash_user["EMAIL_ADDRESS"], swid: cookies[:SWID], password: password, password_confirmation: password, first_name: hash_user["FIRST_NAME"], last_name: hash_user["LAST_NAME"])
+      end
+
     end
 
     if user.errors.any?
