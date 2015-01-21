@@ -366,7 +366,7 @@ module ApplicationHelper
   
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
+      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
     end
   end
   
@@ -378,7 +378,7 @@ module ApplicationHelper
   
   def get_ctas_with_match(query = "")
     conditions = construct_conditions_from_query(query, "call_to_actions.title")
-    ctas = CallToAction.active.where("#{conditions}").to_a
+    ctas = CallToAction.active.where("#{conditions} AND user_id IS NULL").to_a
     filter_results(ctas, query)
   end
   
