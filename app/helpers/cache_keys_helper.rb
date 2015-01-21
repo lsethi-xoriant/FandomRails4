@@ -29,6 +29,10 @@ module CacheKeysHelper
   def get_main_reward_image_cache_key
     "main_reward_image"
   end
+  
+  def get_user_rewards_cache_key
+    "user_rewards_key"
+  end
 
   # Rewarding System
   # ~~~~~~~~~~~~~~~~
