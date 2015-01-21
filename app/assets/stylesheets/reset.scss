@@ -44,12 +44,14 @@ p{
     padding-top: 2px;
     position: absolute;
     transform: rotate(270deg);
+    background: #000;
   }
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 15px;
+  margin-top: 15px;
   position: relative;
   width: 728px;
-  background: #000;
 }
 
 //.flowplayer.is-paused {
@@ -165,8 +167,10 @@ a{
   .adv__horizontal {
     width: 320px;
     p {
-      font-size: 12px;
-      left: -21px;
+      bottom: 7px;
+      font-size: 10px;
+      left: -38px;
+      width: 70px;
     }
   }
   .main-row {
