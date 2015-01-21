@@ -1,8 +1,8 @@
-<div class="col-md-3">
+<div class="col-sm-3">
   <img class="properties__logo" ng-src="{{aux.current_property_info.logo}}">
 </div>           
 
-<div class="col-md-6 properties__flexslider-col" ng-if="aux.property_info">
+<div class="col-sm-6 properties__flexslider-col" ng-if="aux.property_info">
   <div class="flexslider properties__flexslider">
     <ul class="slides">
       <li ng-repeat="property in aux.property_info" class="text-center properties__flexslider-item">
@@ -10,16 +10,21 @@
           <img class="properties__flexslider-image" ng-src="{{property.image}}" style="border-bottom: 4px solid {{property.background}};">     
         </a>
       </li>
+      <li class="text-center properties__flexslider-item">
+        <a class="properties__flexslider-a" href="javascript: void(0)"> 
+          <img class="properties__flexslider-image" src="http://placehold.it/262x147" style="border-bottom: 4px solid #999;">     
+        </a>
+      </li>
     </ul>
   </div>
 </div>
 
-<div class="col-md-3 text-left" ng-if="!current_user">
+<div class="col-sm-3 text-left" ng-if="!current_user">
   <p class="properties__right-bar-text">Partecipa<br>alla community</p>
   <a class="btn btn-primary" href="/iur"><span>ENTRA</span></a>
 </div>
 
-<div class="col-md-3 text-left" ng-if="current_user">
+<div class="col-sm-3 text-left" ng-if="current_user">
   <%= light_link_to("/profile") do %>
     <p class="properties__right-bar-text">{{current_user.username}}</p>
   <% end %>  

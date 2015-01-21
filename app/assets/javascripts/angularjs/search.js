@@ -10,22 +10,24 @@ SearchCtrl.$inject = ['$scope', '$window', '$filter', '$http'];
 searchModule.controller('searchCtrl', SearchCtrl);
 
 function SearchCtrl($scope, $window, $filter, $http) {
-	
+
 	$scope.init = function(browseSections) {
 		$scope.sections = browseSections;
+		$scope.search = new Object();
+		$scope.search.selected = undefined;
 	};
 	
 	$scope.getResults = function(val) {
-	    return $http.get("/browse/search.json", {
-	      params: {
-	        q: val,
-	        sensor: false
-	      }
-	    }).then(function(response){
-	      return response.data.map(function(item){
-	        return item.attributes;
-	      });
-	    });
-	  };
+    return $http.get("/browse/search.json", {
+      params: {
+        q: val,
+        sensor: false
+      }
+    }).then(function(response){
+      return response.data.map(function(item){
+        return item.attributes;
+      });
+    });
+  };
 	
 }
