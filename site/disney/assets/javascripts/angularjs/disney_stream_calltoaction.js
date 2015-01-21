@@ -13,10 +13,16 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
   $scope.extraInit = function() {
+
     if($scope.current_user && !$scope.current_user.username) {
       $("#complete-registration").modal("show");
       $scope.form_data.current_user = new Object();
     }
+
+    if($scope.aux.flash_notice == "from-disney-registration") {
+      $("#modal__from-disney-registration").modal("show");
+    }
+
   };
 
   $scope.setAvatar = function(avatar, id) {

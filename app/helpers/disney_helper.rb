@@ -218,7 +218,8 @@ module DisneyHelper
       "calltoaction_evidence_info" => calltoaction_evidence_info,
       "related_calltoaction_info" => related_calltoaction_info,
       "mobile" => small_mobile_device?(),
-      "enable_comment_polling" => get_deploy_setting('comment_polling', true)
+      "enable_comment_polling" => get_deploy_setting('comment_polling', true),
+      "flash_notice" => flash[:notice]
     }
 
     if other

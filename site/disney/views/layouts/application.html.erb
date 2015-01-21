@@ -30,25 +30,23 @@
 
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="DisneyStreamCalltoactionCtrl" ng-init="init(<%= build_disney_current_user().to_json %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_disney_calltoactions_count_in_property() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 
-  <% if flash[:notice] == "from-disney-registration" %>
-    <div class="modal show" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
-      <div class="modal-dialog">
-        <div class="modal-content from-disney-registration">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          </div>
-          <div class="modal-body">
-            <p>Registrazione completata</p>
-            <p>Se vuoi continuare e guadagnare punti devi entrare nella Community</p>
-            <a href="/iur" class="btn btn-primary">ENTRA</a>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><span>Chiudi</span></button>
-          </div>
+  <div id="modal__from-disney-registration" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+      <div class="modal-content from-disney-registration">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Registrazione completata</p>
+          <p>Se vuoi continuare e guadagnare punti devi entrare nella Community</p>
+          <a href="/iur" class="btn btn-primary">ENTRA</a>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><span>Chiudi</span></button>
         </div>
       </div>
     </div>
-  <% end %>
+  </div>
 
   <!-- COMMENT FEEDBACK MODAL -->
   <div class="modal fade" id="comment-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
