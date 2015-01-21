@@ -279,13 +279,17 @@ module ApplicationHelper
 
   def get_tag_to_rewards()
     cache_short("tag_to_rewards") do
-      tag_to_rewards = Hash.new
-      RewardTag.all.each do |reward_tag|
-        unless tag_to_rewards.key? reward_tag.tag.name
-          tag_to_rewards[reward_tag.tag.name] = Set.new 
-        end
-        tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
+      rewards = Reward.all
+      id_to_reward = {}
+      rewards.each do |r|
+        id_to_reward[r.id] = r
       end
+
+      tag_to_rewards = {}
+      RewardTag.joins(:tag).select('tags.name, reward_id').each do |reward_tag|
+        (tag_to_rewards[reward_tag.name] ||= Set.new) << id_to_reward[reward_tag.reward_id]
+      end
+
       tag_to_rewards
     end
   end
@@ -342,6 +346,12 @@ module ApplicationHelper
     filter_results(tags, query)
   end
   
+  def get_tags_with_match(query = "")
+    conditions = construct_conditions_from_query(query, "tags.title")
+    tags = Tag.where("(#{conditions})").to_a
+    filter_results(tags, query)
+  end
+  
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
       CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
@@ -354,9 +364,14 @@ module ApplicationHelper
     filter_results(ctas, query)
   end
   
+  def get_ctas_with_match(query = "")
+    conditions = construct_conditions_from_query(query, "call_to_actions.title")
+    ctas = CallToAction.active.where("#{conditions}").to_a
+    filter_results(ctas, query)
+  end
   
   def filter_results(results, query)
-    regexp = Regexp.new query.split(/\W+/).map { |term| "(\\W+#{term}\\W+)" }.join("|")
+    regexp = Regexp.new(query.split(/\W+/).map { |term| "(\\W+#{term}\\W+)" }.join("|"), Regexp::IGNORECASE)
     filtered_results = []
     results.each do |result|
       title = " #{result.title} "
@@ -431,16 +446,22 @@ module ApplicationHelper
   def call_to_action_completed?(cta)
     if current_user
       require_to_complete_interactions = interactions_required_to_complete(cta)
+
+      if require_to_complete_interactions.count == 0
+        return false
+      end
+
       require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
       interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", current_user.id, require_to_complete_interactions_ids)
-      require_to_complete_interactions.any? && (require_to_complete_interactions.count == interactions_done.count)
+      require_to_complete_interactions.count == interactions_done.count
+
     else
       false
     end
   end
 
   def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction)
-    call_to_action_completed_or_reward_status = cache_short get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, current_or_anonymous_user.id) do
+    call_to_action_completed_or_reward_status = cache_short(get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, current_or_anonymous_user.id)) do
       if call_to_action_completed?(calltoaction)
         CACHED_NIL
       else

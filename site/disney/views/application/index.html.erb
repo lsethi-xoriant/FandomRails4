@@ -4,7 +4,7 @@
     <%= render partial: "/application/evidence_ctas" %>
   </div>
 
-  <div class="row main-row ctas__search hidden-xs" ng-controller="SearchCtrl" ng-init="init({})">
+  <div class="row main-row ctas__search" ng-controller="SearchCtrl" ng-init="init({})">
     <%= form_tag("/browse/full_search", { method: "post", role: "search" }) do %>
       <div class="col-sm-8 col-sm-offset-1">
         <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control" placeholder="Search" style="width: 100%;">
@@ -23,7 +23,7 @@
   </div>
 
   <div class="row main-row">
-    <div class="col-sm-8">
+    <div class="col-md-8">
       <div ng-repeat="calltoaction_info in calltoactions" class="row">
         <div class="col-sm-12">
           <%= render partial: "/call_to_action/cover_single_calltoaction" %>
@@ -37,8 +37,8 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-4">
-      <div class="panel panel-default text-center" style="line-height: 200px;">ADV</div>
+    <div class="col-md-4 text-center adv-square__container">
+      <%= render partial: "/application/adv-square" %>
     </div>
   </div>
 

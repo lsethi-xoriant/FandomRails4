@@ -458,35 +458,36 @@ class CallToActionController < ApplicationController
 
       response['outcome'] = outcome
 
-      if call_to_action_completed?(calltoaction)
-        response["call_to_action_completed"] = true
-      else
-        winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user_interaction.user)
-        response['winnable_reward_count'] = winnable_outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
-      end
 
-      if interaction.when_show_interaction == "SEMPRE_VISIBILE"
-        response["feedback"] = generate_response_for_interaction([interaction], calltoaction, params[:aux] || {}, outcome)[:render_interaction_str]
-      else
-        response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
-      end
+      #if call_to_action_completed?(calltoaction)
+      #  response["call_to_action_completed"] = true
+      #else
+      #  winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user_interaction.user)
+      #  response['winnable_reward_count'] = winnable_outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
+      #end
+
+      #if interaction.when_show_interaction == "SEMPRE_VISIBILE"
+      #  response["feedback"] = generate_response_for_interaction([interaction], calltoaction, params[:aux] || {}, outcome)[:render_interaction_str]
+      #else
+      #  response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
+      #end
 
       expire_user_interaction_cache_keys()
 
     end
 
     if anonymous_user?(current_or_anonymous_user)
-      anonymous_user_main_reward_count = params["anonymous_user"][MAIN_REWARD_NAME] || 0
+      anonymous_user_main_reward_count = params["anonymous_user"][get_main_reward_name()] || 0
       response["main_reward_counter"] = {
-        "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME])
+        "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][get_main_reward_name()])
       }
     else
       response["main_reward_counter"] = get_point
       response = setup_update_interaction_response_info(response)
     end    
     
-    response["interaction_status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
-    response["calltoaction_status"] = compute_current_call_to_action_reward_status(MAIN_REWARD_NAME, calltoaction);
+    response["interaction_status"] = get_current_interaction_reward_status(get_main_reward_name(), interaction)
+    response["calltoaction_status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction).to_json
 
     respond_to do |format|
       format.json { render :json => response.to_json }

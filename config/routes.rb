@@ -29,6 +29,7 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         match "/iur", to: "application#iur"
+        match "/browse/full_search", :to => "browse#full_search"
         match "profile", :to => "profile#index"
         match "profile/index", :to => "profile#index_mobile"
         match "profile/rankings", :to => "profile#rankings"
@@ -36,6 +37,7 @@ Fandom::Application.routes.draw do
         match "profile/notices", :to => "profile#notices"
         match "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         devise_scope :user do
+          put "/users/edit", :to => "registrations#update"
           match "/iur/sign_in", to: "registrations#iur"
         end
 

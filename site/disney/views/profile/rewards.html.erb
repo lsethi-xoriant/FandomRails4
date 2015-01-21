@@ -26,16 +26,15 @@
  	</div>
   </div>
   
-    
-  <div class="row brws-item">
-  	<div class="col-xs-12">
-      	<div class="section-heading">
-        	<h3>
-        		<span class="section-heading__marker"><i class="fa fa-bar-chart-o"></i></span>
-        		Tuoi livelli nelle altre Community
-        	</h3>
-      	</div>
-      	<% if @my_levels && !@my_levels.empty? %>
+	<% if @my_levels && !@my_levels.empty? %>    
+	  <div class="row brws-item">
+	  	<div class="col-xs-12">
+	      	<div class="section-heading">
+	        	<h3>
+	        		<span class="section-heading__marker"><i class="fa fa-bar-chart-o"></i></span>
+	        		Tuoi livelli nelle altre Community
+	        	</h3>
+	      	</div>
       		<div class="rewards-flexslider">
 	      	  	<ul class="slides">
 			        <% @my_levels.each do |level| %>
@@ -45,12 +44,9 @@
 			        <% end %>
 		        </ul>
 		    </div>
-	    <% else %>
-	    	<p>Nessun livello ottenuto.</p>
-	    <% end %>
- 	</div>
-  </div>
-  
+	 	</div>
+	  </div>
+	<% end %>  
     
 	  
   <div class="row brws-item">
@@ -77,16 +73,15 @@
  	</div>
   </div>
   
-    
-  <div class="row brws-item">
-  	<div class="col-xs-12">
-      	<div class="section-heading">
-        	<h3>
-        		<span class="section-heading__marker"><i class="fa fa-certificate"></i></span>
-        		Ultimi badge ottenuti nelle altre Community
-        	</h3>
-      	</div>
-      	<% if @mybadges %>
+	<% if @mybadges %>    
+	  <div class="row brws-item">
+	  	<div class="col-xs-12">
+	      	<div class="section-heading">
+	        	<h3>
+	        		<span class="section-heading__marker"><i class="fa fa-certificate"></i></span>
+	        		Ultimi badge ottenuti nelle altre Community
+	        	</h3>
+	      	</div>
       		<div class="rewards-flexslider">
 	      	  	<ul class="slides">
 	      			<% @mybadges.each do |badge| %>
@@ -98,12 +93,9 @@
 			        <% end %>	
 	      	  	</ul>
 	      	</div>
-	    <% else %>
-	    	<p>Nessun badge ottenuto.</p>
-	    <% end %>
- 	</div>
-  </div>
-
+	 	</div>
+	  </div>
+	<% end %>
 </div>
 
 

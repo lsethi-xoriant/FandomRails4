@@ -1,4 +1,4 @@
-<div class="container container--default" style="background-color: #fff;" ng-controller="RankingCtrl" ng-init="init(<%= populate_ranking(@rank_name).to_json %>, <%= current_user.to_json %>);">
+<div class="container container--default" style="background-color: #fff;" ng-controller="RankingCtrl" ng-init="init(<%= populate_ranking(@rank_name).to_json %>, <%= current_user.to_json %>, true);">
 	<% if current_user %>
 		<% unless small_mobile_device? %>
 			<%= render partial: "profile/profile_header" %>
@@ -9,10 +9,18 @@
 			
 				<% if @rank_name == "my-position-general" %>
 					<% if get_my_general_position %>
-						<%= render partial: "/ranking/rank", locals: { rankings: "rankings['my-position-general']" } %>
+						<% if small_mobile_device? %>
+							<%= render partial: "/ranking/rank_mobile", locals: { rankings: "rankings['my-position-general']" } %>
+						<% else %>
+							<%= render partial: "/ranking/rank", locals: { rankings: "rankings['my-position-general']" } %>
+						<% end %>
 					<% end %>
 				<% else %>
-					<%= render partial: "/ranking/rank", locals: { rankings: "rankings['#{@rank_name}']" } %>
+					<% if small_mobile_device? %>
+						<%= render partial: "/ranking/rank_mobile", locals: { rankings: "rankings['#{@rank_name}']" } %>
+					<% else %>
+						<%= render partial: "/ranking/rank", locals: { rankings: "rankings['#{@rank_name}']" } %>
+					<% end %>
 				<% end %>
 			
 		</div>

@@ -3,6 +3,10 @@ module DisneyHelper
   def get_disney_property() 
     $context_root || "disney-channel"
   end
+  
+  def get_disney_property_root_path
+    $context_root ? "/#{$context_root}" : ""
+  end
 
   def get_disney_ctas(property)
     ugc_tag = get_tag_from_params("ugc")
@@ -89,7 +93,7 @@ module DisneyHelper
         "main_reward_counter" => get_point,
         "username" => current_user.username,
         "avatar" => current_avatar,
-        "level" => (disney_get_current_level["level"] rescue "nessun livello"),
+        "level" => (disney_get_current_level["level"]["name"] rescue "nessun livello"),
         "notifications" => get_unread_notifications_count(),
         "avatar" => current_avatar
       }
@@ -156,6 +160,7 @@ module DisneyHelper
 
     current_property_info = {
       "id" => current_property.id,
+      "name" => current_property.name,
       "background" => get_extra_fields!(current_property)["label-background"],
       "image-background" => (get_extra_fields!(current_property)["image-background"]["url"] rescue nil),
       "logo" => (get_extra_fields!(current_property)["logo"]["url"] rescue nil),

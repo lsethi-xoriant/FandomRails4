@@ -13,8 +13,10 @@ function SearchCtrl($scope, $window, $filter, $http) {
 
 	$scope.init = function(browseSections) {
 		$scope.sections = browseSections;
-		$scope.search = new Object();
-		$scope.search.selected = undefined;
+	};
+	
+	$scope.init_search = function(contents) {
+		$scope.contents = contents;
 	};
 	
 	$scope.getResults = function(val) {

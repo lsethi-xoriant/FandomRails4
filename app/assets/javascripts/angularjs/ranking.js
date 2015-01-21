@@ -14,14 +14,16 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 
 	var Api = $resource('/ranking/page.json');
 	
-	$scope.init = function(rankings, user) {
+	$scope.init = function(rankings, user, single_rank) {
 		$scope.rankings = rankings;
 		$scope.user = user;
-		user_off = rankings.general_user_position[user.id] % 10;
-		if(user_off == 0){
-			$scope.user_offset = 9;
-		}else{
-			$scope.user_offset = user_off - 1;
+		if (user != null){
+			user_off = rankings.general_user_position[user.id] % 10;
+			if(user_off == 0){
+				$scope.user_offset = 9;
+			}else{
+				$scope.user_offset = user_off - 1;
+			}
 		}
 	};
 	
@@ -49,6 +51,26 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 				};
 			    var newrank = eval("$scope.rankings." + data.ranking.name + " = " + JSON.stringify(newData));
 			});
+		}
+	};
+	
+	$scope.get_pagination_page_before = function(current_page){
+		if(current_page == 1){
+			return [];
+		}else if(current_page == 2){
+			return [1];
+		}else{
+			return [current_page-2, current_page-1];
+		}
+	};
+	
+	$scope.get_pagination_page_after = function(current_page, total){
+		if(current_page == total){
+			return [];
+		}else if(current_page == total-1){
+			return [total];
+		}else{
+			return [current_page+1, current_page+2];
 		}
 	};
 		

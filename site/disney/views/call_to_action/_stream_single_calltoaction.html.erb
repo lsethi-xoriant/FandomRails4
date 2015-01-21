@@ -13,14 +13,14 @@
       </span>  
     </div> 
     <!-- CALLTOACTION DONE -->
-    <div ng-if="!calltoaction_info.status || calltoaction_info.status.winnable_reward_count < 1" class="cta__winnable-reward">
+    <div ng-if="!calltoaction_info.status" class="cta__winnable-reward">
       <span class="label label-success cta-cover__winnable-reward__label">
         Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
       </span>  
     </div> 
   </div>
   <div class="col-xs-12">
-    <p class="cta__title">{{calltoaction_info.calltoaction.title}}</p>
+    <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
   </div>
 </div>
 <div class="row">
@@ -68,11 +68,13 @@
   </div>
 </div>
 <div class="row main-row">
-  <div class="col-sm-8 cta_left-col">
+  <div class="col-md-8 cta_left-col">
     <div class="row">
+      <!--
       <div class="col-sm-12 cta__title-small-col">
         <p class="cta__title-small">{{calltoaction_info.calltoaction.title}}</p>
       </div>
+      -->
       <div class="col-sm-12 cta__description-small-col">
         <p class="cta__description-small" ng-bind-html="calltoaction_info.calltoaction.description"></p>
       </div>
@@ -101,7 +103,7 @@
       <hr>
     </div>    
   </div>
-  <div class="col-sm-4">
-    <div class="panel panel-default text-center" style="line-height: 200px;">ADV</div>
+  <div class="col-md-4 text-center adv-square__container">
+    <%= render partial: "/application/adv-square" %>
   </div>
 </div>

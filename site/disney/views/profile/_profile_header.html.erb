@@ -12,7 +12,7 @@ my_position, total = get_my_general_position_in_property
 	</div>
 	<div class="col-sm-3">
 		<div class="row profile-header__item">
-			<% if !cached_nil?(level) %>
+			<% if level %>
 				<img src="<%= get_reward_image_for_status(level["level"]) %>" alt="" class="profile-header__item__image">
 				<p class="profile-header__item__title"><%= level["level"].title %></p>
 				<div class="progress" style="margin: 10px auto; height: 12px; width: 65%;">

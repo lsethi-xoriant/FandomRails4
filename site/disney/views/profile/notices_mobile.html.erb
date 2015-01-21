@@ -1,42 +1,37 @@
 <div class="container container--default" style="background-color: #fff;">
-  <div class="row">
+  <div class="row" ng-controller="NoticePageCtrl" ng-init="init(<%= @notices_list.to_json %>)">
     <div class="col-md-12">
     	<div class="section-heading">
 	    	<h3>
-	    		<span class="section-heading__marker"><span class="glyphicon glyphicon-bell" aria-hidden="true"></span></span>
+	    		<span class="glyphicon glyphicon-bell glyphicon-blu" aria-hidden="true"></span>
 	    		Notifiche
 	    	</h3>
         </div>
       <div class="row">
         <div class="col-xs-12">
-          <% @notices_list.each do |date, nl| %>
-          <h6><%= date %></h6>
-          <ul class="list-group">
-          	<% nl.each do |n| %>
-            <li id="<%= n.id %>" class="list-group-item <%= "notice--unread" if !n.read %>">
-              <div class="row">
-              	<div class="col-xs-11">
-              		<div class="row">
-              			<%= n.html_notice.html_safe %>
-              		</div>
-              	</div>
-              	<div class="col-xs-1">
-              			<% if n.read %>
-              				<i class="fa fa-circle" style="float: right;"></i>
-              			<% else %>
-              			<a href="javascript:void(0)" onclick="mark_as_read(<%= n.id %>);" style="float: right; color: black;">
-              				<i class="fa fa-circle-o"></i>
-              			</a>
-              			<% end %>
-              	</div>
-              </div>
-            </li>
-            <% end %>
-          </ul>
-          <% end %>
+          <div ng-repeat="(date, notices) in notice_list">
+          	<div class="row brws-item">
+          		<div class="col-xs-12">
+          			<h4>{{date}}</h4>
+          		</div>
+          	</div>
+          	<div class="row">
+	          	<ul class="list-group">
+	          		<li id="{{notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.read}" ng-repeat="notice in notices">
+	          			<div class="row">
+			              	<div class="col-xs-12">
+			              		<div class="row" ng-bind-html='notice.html_notice'></div>
+			              	</div>
+			              </div>
+			          </li>
+	          	</ul>
+          	</div>
+          </div>
         </div>
       </div>
-      <%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
+      <div class="text-center">
+      	<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
+      </div>
     </div>
   </div>
 

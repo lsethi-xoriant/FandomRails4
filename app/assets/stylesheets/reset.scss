@@ -22,17 +22,42 @@ p{
   background: transparent !important;
 }
 
-.adv__vertical-label {
-  background: none repeat scroll 0 0 #000;
-  border-radius: 5px 5px 0 0;
-  bottom: 10px;
-  color: #fff;
-  height: 21px;
-  left: -11px;
-  padding-top: 2px;
-  position: absolute;
-  transform: rotate(270deg);
-  width: 41px;
+.adv-square__container {
+  padding: 0;
+}
+
+.adv__square {
+  p {
+    background: none repeat scroll 0 0 #000;
+    color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+  }
+  margin-bottom: 15px;
+}
+
+.adv__horizontal {
+  p {
+    bottom: 8px;
+    color: #fff;
+    left: -25px;
+    margin-left: -5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    position: absolute;
+    -ms-transform: rotate(270deg); /* IE 9 */
+    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
+    transform: rotate(270deg);
+    background: #000;
+  }
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  position: relative;
+  width: 728px;
 }
 
 //.flowplayer.is-paused {
@@ -80,6 +105,10 @@ a{
   background-size: 100% 100%;
 }
 
+.glyphicon-blu{
+  color: $blu;
+}
+
 /********************* COOKIES FOOTER *********************/
 
 .cookies-footer {
@@ -97,13 +126,6 @@ a{
 .cookies-footer__link {
   color: #fff;
   text-decoration: underline;
-}
-
-@media (max-width: $screen-sm-min) { 
-  .main-row {
-    padding-left: 0;
-    padding-right: 0;
-  }
 }
 
 .btn {
@@ -145,4 +167,46 @@ a{
   0% { background: transparent; }
   50% { background: yellow; }
   100% { background: transparent; }
+}
+
+@media (max-width: $screen-sm-min) { 
+  .adv__horizontal {
+    margin-bottom: 10px;
+    margin-top: 25px;
+    display: inline-block;
+    width: auto;
+    text-align: center;
+    p {
+      bottom: auto;
+      font-size: 12px;
+      left: 5px;
+      top: -19px;
+      width: 100%;
+      -ms-transform: none; /* IE 9 */
+      -webkit-transform: none; /* Chrome, Safari, Opera */
+      transform: none;
+    }
+  }
+
+  .adv__square {
+    p {
+      bottom: auto;
+      font-size: 12px;
+      left: 5px;
+      top: -19px;
+      width: 100%;
+      -ms-transform: none; /* IE 9 */
+      -webkit-transform: none; /* Chrome, Safari, Opera */
+      transform: none;
+    }
+    margin-left: 10px auto;
+    display: inline-block;
+    width: auto;
+    text-align: center;
+  }
+
+  .main-row {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

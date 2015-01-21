@@ -77,3 +77,9 @@
     font-size: 14px;
     margin-right: 5px;
 }
+
+@media (max-width: $screen-sm-min) { 
+  .relateds-flexslider {
+    padding-left: 15px;
+  }
+}

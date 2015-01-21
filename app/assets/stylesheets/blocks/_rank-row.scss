@@ -32,3 +32,32 @@
   display: inline-block;
   margin-top: 6px;
 }
+
+@media (max-width: $screen-sm-min) {
+  .rank-row{
+    .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6,
+    .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12{
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  
+  .rank-row__position{
+    font-size: 13px;
+  }
+  
+  .rank-row__avatar{
+    max-width: 44px;
+  }
+  
+  .rank-row__username{
+    font-size: 13px;
+    margin: 0;
+  }
+  
+  .rank-row__points{
+    font-size: 12px;
+    padding: 5px;
+  }
+  
+}
