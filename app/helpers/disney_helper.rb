@@ -89,7 +89,7 @@ module DisneyHelper
         "main_reward_counter" => get_point,
         "username" => current_user.username,
         "avatar" => current_avatar,
-        "level" => (disney_get_current_level["level"] rescue "nessun livello"),
+        "level" => (disney_get_current_level["level"]["name"] rescue "nessun livello"),
         "notifications" => get_unread_notifications_count(),
         "avatar" => current_avatar
       }
