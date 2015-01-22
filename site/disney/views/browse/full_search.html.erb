@@ -1,0 +1,64 @@
+<div class="container container--default" ng-controller="SearchCtrl" ng-init="init_search(<%= @contents.to_json %>)">
+	
+	<div class="row main-row ctas__search" ng-controller="SearchCtrl" ng-init="init({})">
+	    <%= form_tag("/browse/full_search", { method: "post", role: "search" }) do %>
+	      <div class="col-sm-8 col-sm-offset-1">
+	        <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control" placeholder="Search" style="width: 100%;">
+	      </div>
+	      <div class="col-sm-2">
+	        <button type="submit" class="btn btn-primary btn-block"><span>Cerca</span></button>
+	      </div>
+	    <% end %> 
+	    <script type="text/ng-template" id="itemTpl.html">
+	      <%= render partial: "/application/search_template" %>
+	    </script>
+	  </div>
+	
+	<div class="row brws-item">
+		<div class="col-xs-12">
+	      <div class="section-heading">
+	        	<h2>
+	        		Risultati della ricerca
+	        	</h2>
+	      </div>
+	    </div>
+		<div class="col-xs-12 col-md-3" ng-repeat="content in contents">
+			<div class="cta-preview" ng-if="content.attributes.type == 'cta'">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="cta-preview__thumbnail">
+							<a href="{{content.attributes.detail_url}}">
+								<img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
+								<img class="img-responsive cta-preview__image" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
+							</a>
+							<div class="label label-warning cta-preview__points" ng-if="content.attributes.status != undefined">+ {{content.attributes.status.winnable_reward_count}} <span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<h3 class="cta-preview__title">{{content.attributes.title | limitTo : 40}}</h3>
+					</div>
+				</div>
+				<div class="row cta-preview__counter">
+					<div class="cta-preview__like col-xs-4 col-xs-offset-1"><i class="fa fa-thumbs-up"></i> {{content.attributes.likes}}</div>
+					<div class="cta-preview__comments col-xs-4 col-xs-offset-1"><span class="glyphicon glyphicon-comment"></span> {{content.attributes.comments}} </div>	
+				</div>
+			</div>
+			
+			<div class="cta-preview cta-preview--category" ng-if="content.attributes.type == 'tag'">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="cta-preview__thumbnail cta-preview__thumbnail--category">
+							<a href="{{content.attributes.detail_url}}">
+								<img class="cta-preview__image cta-preview__image--category" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
+								<img class="cta-preview__image cta-preview__image--category" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
+							</a>
+						</div>
+					</div>
+				</div>
+				<h3 class="cta-preview__title cta-preview__title--category">{{content.attributes.title}}</h3>
+			</div>
+		</div>
+	</div>			
+</div>
+	
+</div>

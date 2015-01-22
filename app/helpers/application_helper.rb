@@ -295,17 +295,29 @@ module ApplicationHelper
   end
   
   def get_tag_to_my_rewards(user)
-    cache_short("tag_to_my_rewards_#{user.id}") do
-      tag_to_rewards = Hash.new
-      user.user_rewards.each do |ur|
-        ur.reward.reward_tags.all.each do |reward_tag|
-          unless tag_to_rewards.key? reward_tag.tag.name
-            tag_to_rewards[reward_tag.tag.name] = Set.new 
-          end
-          tag_to_rewards[reward_tag.tag.name] << reward_tag.reward 
+    get_user_rewards_from_cache(user)[0]
+  end
+  
+  def get_user_rewards_from_cache(user)
+    cache_short(get_user_rewards_cache_key) do
+      rewards = Reward.joins(:user_rewards).select("rewards.*").where("user_rewards.user_id = ?", user.id)
+      id_to_reward = {}
+      rewards.each do |r|
+        id_to_reward[r.id] = r
+      end
+      
+      name_to_reward = {}
+      rewards.each do |r|
+        name_to_reward[r.name] = r
+      end
+      
+      tag_to_rewards = {}
+      RewardTag.joins(:tag).select('tags.name, reward_id').each do |reward_tag|
+        if id_to_reward[reward_tag.reward_id]
+          (tag_to_rewards[reward_tag.name] ||= Set.new) << id_to_reward[reward_tag.reward_id]
         end
       end
-      tag_to_rewards
+      [tag_to_rewards, name_to_reward] 
     end
   end
 
@@ -354,7 +366,7 @@ module ApplicationHelper
   
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
+      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
     end
   end
   
@@ -366,7 +378,7 @@ module ApplicationHelper
   
   def get_ctas_with_match(query = "")
     conditions = construct_conditions_from_query(query, "call_to_actions.title")
-    ctas = CallToAction.active.where("#{conditions}").to_a
+    ctas = CallToAction.active.where("#{conditions} AND user_id IS NULL").to_a
     filter_results(ctas, query)
   end
   
@@ -597,7 +609,8 @@ module ApplicationHelper
   end
 
   def user_has_reward(reward_name)
-    current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").any?
+    user_reward = get_user_rewards_from_cache(current_user)[1]
+    !user_reward[reward_name].nil?
   end
 
   def compute_rewards_gotten_over_total(reward_ids)

@@ -88,7 +88,8 @@ p{
 }
 
 * {
-  font-family: 'Matterhorn-Regular';
+  /*font-family: 'Matterhorn-Regular';*/
+  font-family: "Matterhorn";
 }
 
 a{
@@ -150,6 +151,7 @@ a{
   background: -moz-linear-gradient(#FFFFFF, $grey);
   background: linear-gradient(#FFFFFF, $grey);
   border-bottom: 1px solid #d1d2d4;
+  padding: 0 40px;
 }
 
 .container--default {
