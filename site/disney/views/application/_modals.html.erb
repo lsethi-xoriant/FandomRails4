@@ -1,0 +1,118 @@
+<!-- SIGN IN IN COMMUNITY -->
+<div class="modal modal__custom fade" id="registrate-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content modal--bg">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-4 visible-xs text-center">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image">
+          </div>    
+          <div class="col-sm-6 col-sm-offset-1 text-center">
+            <p class="modal__custom__text">Se vuoi continuare e<br>guardagnare punti devi<br><span>entrare nella Community</span></p>
+            <a class="modal__custom__button-sign-in btn btn-primary" href="/iur"><span>Login</span></a>
+            <a class="modal__custom__button-sign-up btn btn-primary" href="/iur"><span>Registrati</span></a>
+          </div>
+          <div class="col-sm-4 hidden-xs">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image"> 
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEW USER IN DISNEY -->
+<div id="modal__from-disney-registration" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content from-disney-registration">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Registrazione completata</p>
+        <p>Se vuoi continuare e<br>guadagnare punti devi<br>entrare nella Community</p>
+        <a href="/iur" class="btn btn-primary">ENTRA</a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><span>Chiudi</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SET USERNAME AND AVATAR -->
+<% unless disney_profile_completed?() %>
+  <div id="complete-registration" class="modal fade" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form onsubmit="return false;" ng-submit="processRegistrationForm()" method="post" action="" accept-charset="UTF-8">
+            <div ng-if="form_data.current_user.errors" class="row">
+              <div class="col-md-12">
+                <ul class="list-unstyled form-error">
+                  <p>Errori nell'inserimento dei dati:</p>
+                  <li ng-repeat="error in form_data.current_user.errors">{{error}}</li>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label style="margin-bottom: 15px;">Scegli il tuo nickname:</label>         
+                  <input name="username" class="form-control" ng-model="form_data.current_user.username">
+                </div>
+                <hr>
+              </div>
+              <div class="col-md-12">
+                <label>Scegli il tuo avatar:</label> 
+              </div>
+              <div class="col-sm-12 avatars__flexslider avatars__flexslider--modal">
+                  <div class="flexslider avatars__flexslider-desktop">
+                    <div class="flex-viewport-shadow"></div>
+                    <ul class="slides">
+                      <% get_avatar_list.each_slice(3) do |avatar_slice| %>
+                        <li  class="text-center avatars__flexslider-desktop-item">
+                          <div class="row">
+                            <% avatar_slice.each do |avatar| %>
+                            <div class="col-xs-12">
+                              <div id="avatar_<%= avatar[:id] %>__flexslider__avatar-container" class="avatars__flexslider__avatar-container" ng-click="setAvatar('<%= avatar[:url] %>', '<%= avatar[:id] %>');">
+                                <img src="<%= avatar[:url] %>">  
+                              </div>
+                            </div>
+                            <% end %>
+                          </div>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>  
+              </div>
+              <div class="col-md-12 text-center">
+                <hr>
+                <button type="submit" class="btn btn-primary"><span>Salva</span></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.avatars__flexslider-desktop').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: false,
+      touch: true,
+      itemWidth: 60,
+      itemMargin: 4,
+      controlNav: false,
+      prevText: "",
+      nextText: ""
+    });
+  });
+</script>

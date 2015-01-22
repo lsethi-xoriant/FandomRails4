@@ -11,6 +11,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
   end
 
   def update_comment_status
+    debugger
     current_comment = UserCommentInteraction.find(params[:comment_id])
     current_comment.update_attributes(approved: params[:approved])
 
@@ -51,7 +52,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
     @id_cta_not_approved_filter = params[:id_cta_not_approved_filter]
     where_condition = write_where_condition(:id_cta_not_approved_filter, "approved = false")
-    @comment_not_approved = UserCommentInteraction.where(where_condition, params[:id]).page(page).per(per_page).order("created_at ASC")
+    @comment_not_approved = UserCommentInteraction.where(where_condition, params[:id]).page(page).per(per_page).order("created_at DESC")
 
     @page_size = @comment_not_approved.num_pages
     @page_current = page
@@ -64,7 +65,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
     @id_cta_to_be_approved_filter = params[:id_cta_to_be_approved_filter]
     where_condition = write_where_condition(:id_cta_to_be_approved_filter, "approved IS NULL")
-    @comment_to_be_approved = UserCommentInteraction.where(where_condition, params[:id]).page(page).per(per_page).order("created_at ASC")
+    @comment_to_be_approved = UserCommentInteraction.where(where_condition, params[:id]).page(page).per(per_page).order("created_at DESC")
 
     @page_size = @comment_to_be_approved.num_pages
     @page_current = page
@@ -77,7 +78,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
     @id_cta_approved_filter = params[:id_cta_approved_filter]
     where_condition = write_where_condition(:id_cta_approved_filter, "approved = true")
-    @comment_approved = UserCommentInteraction.where(where_condition, params[:id]).page(page).per(per_page).order("created_at ASC")
+    @comment_approved = UserCommentInteraction.where(where_condition, params[:id]).page(page).per(per_page).order("created_at DESC")
 
     @page_size = @comment_approved.num_pages
     @page_current = page
