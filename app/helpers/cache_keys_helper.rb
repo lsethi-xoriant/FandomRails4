@@ -237,6 +237,10 @@ module CacheKeysHelper
   def get_browse_search_results_key(term)
     "browse_search_result_#{term}"
   end
+  
+  def get_full_search_results_key(term)
+    "full_search_result_#{term}"
+  end
 
   # Coin
   # ~~~~~~~~~~

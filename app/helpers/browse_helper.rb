@@ -137,15 +137,17 @@ module BrowseHelper
   end
   
   def get_contents_with_match(query)
-    tags = get_tags_with_match(query).sort_by { |tag| tag.created_at }
-    ctas = get_ctas_with_match(query).sort_by { |cta| cta.created_at }
-    merge_contents(ctas, tags)
+    cache_medium(get_full_search_results_key(query)) do
+      tags = get_tags_with_match(query).sort_by { |tag| tag.created_at }
+      ctas = get_ctas_with_match(query).sort_by { |cta| cta.created_at }
+      merge_contents(ctas, tags)
+    end
   end
   
   def get_contents_by_query(term)
     category_tag_ids = get_category_tag_ids()
     tags = Tag.where("title ILIKE ? AND id IN (?)","#{term}%", category_tag_ids)
-    ctas = CallToAction.where("title ILIKE ?","#{term}%")
+    ctas = CallToAction.active.where("title ILIKE ?","#{term}%")
     merge_contents(ctas, tags)
   end
   
