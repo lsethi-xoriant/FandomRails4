@@ -12,6 +12,7 @@
       	</div>
       	<% if @levels %>
 			<div class="rewards-flexslider">
+				<div class="flex-viewport-shadow hidden-xs"></div>
 	      	  	<ul class="slides">
 			        <% @levels.each do |key, level| %>
 			        	<li class="rewards-flexslider__item">
@@ -36,6 +37,7 @@
 	        	</h3>
 	      	</div>
       		<div class="rewards-flexslider">
+      			<div class="flex-viewport-shadow hidden-xs"></div>
 	      	  	<ul class="slides">
 			        <% @my_levels.each do |level| %>
 			        	<li class="rewards-flexslider__item">
@@ -59,6 +61,7 @@
       	</div>
       	<% if @badges %>
 	    	<div class="rewards-flexslider">
+	    		<div class="flex-viewport-shadow hidden-xs"></div>
 	      	  	<ul class="slides">
 	      			<% @badges.each do |badge| %>
 	      				<li class="rewards-flexslider__item">
@@ -83,6 +86,7 @@
 	        	</h3>
 	      	</div>
       		<div class="rewards-flexslider">
+      			<div class="flex-viewport-shadow hidden-xs"></div>
 	      	  	<ul class="slides">
 	      			<% @mybadges.each do |badge| %>
 	      				<% if badge["reward"] %>

@@ -1,25 +1,11 @@
-<div class="container container--default" ng-controller="SearchCtrl" ng-init="init_search(<%= @contents.to_json %>, <%= @total %>, '<%= @query %>')">
-	
-	<div class="row main-row ctas__search">
-	    <%= form_tag("#{ get_disney_property_root_path }/browse/full_search", { method: "post", role: "search" }) do %>
-	      <div class="col-sm-8 col-sm-offset-1">
-	        <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control" placeholder="{{query}}" style="width: 100%;">
-	      </div>
-	      <div class="col-sm-2">
-	        <button type="submit" class="btn btn-primary btn-block"><span>Cerca</span></button>
-	      </div>
-	    <% end %> 
-	    <script type="text/ng-template" id="itemTpl.html">
-	      <%= render partial: "/application/search_template" %>
-	    </script>
-	  </div>
+<div class="container container--default" ng-controller="SearchCtrl" ng-init="init_view_all(<%= @contents.to_json %>, <%= @total %>, '<%= @per_page %>')">
 	
 	<div class="row brws-item">
 		<div class="col-xs-12">
 	      <div class="section-heading">
 	        	<h3>
 	        		<span class="section-heading__marker"><i class="fa fa-star"></i></span>
-	        		Risultati della ricerca
+	        		I più recenti
 	        	</h3>
 	      </div>
 	    </div>
@@ -60,9 +46,9 @@
 			</div>
 		</div>
 	</div>
-	<div class="row brws-item text-center" ng-if="total > offset">
-		<div class="col-sx-12">
-			<a class="btn btn-primary btn-block" ng-click="load_more(offset)">Carica Altri</a>
+	<div class="row row-load-more text-center" ng-if="total > offset">
+		<div class="col-xs-4 col-xs-offset-4">
+			<a class="btn btn-primary btn-block" ng-click="load_more_recent(offset)">Carica Altri</a>
 		</div>
 	</div>
 </div>

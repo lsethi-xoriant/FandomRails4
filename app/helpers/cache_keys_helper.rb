@@ -241,6 +241,10 @@ module CacheKeysHelper
   def get_full_search_results_key(term)
     "full_search_result_#{term}"
   end
+  
+  def get_recent_contents_cache_key(query)
+    "recent_contents_cache_key_#{query}"
+  end
 
   # Coin
   # ~~~~~~~~~~

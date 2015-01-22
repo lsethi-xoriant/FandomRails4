@@ -18,6 +18,11 @@ p{
   line-height: inherit;
 }
 
+.row-load-more{
+  padding: 20px 0;
+  text-align: center;
+}
+
 #goc-body {
   background: transparent !important;
 }
@@ -151,7 +156,7 @@ a{
   background: -moz-linear-gradient(#FFFFFF, $grey);
   background: linear-gradient(#FFFFFF, $grey);
   border-bottom: 1px solid #d1d2d4;
-  padding: 0 40px;
+  padding: 0 40px 20px 40px;
 }
 
 .container--default {

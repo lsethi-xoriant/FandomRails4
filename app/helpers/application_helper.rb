@@ -42,7 +42,7 @@ module ApplicationHelper
       description = ""
       long_description = ""
     end
-    header_image = get_extra_fields!(tag)["header_image"]["url"] if get_extra_fields!(tag).key? "header_image"
+    header_image = get_upload_extra_field_processor(get_extra_fields!(tag)["header_image"], :original) if get_extra_fields!(tag).key? "header_image"
     icon = get_extra_fields!(tag)["icon"]["url"] if get_extra_fields!(tag).key? "icon"
     category_icon = get_extra_fields!(tag)["category_icon"]["url"] if get_extra_fields!(tag).key? "category_icon"
     BrowseCategory.new(
