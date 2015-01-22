@@ -38,6 +38,7 @@ Fandom::Application.routes.draw do
         match "profile/notices", :to => "profile#notices"
         match "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         devise_scope :user do
+          post "/users", :to => "registrations#create"
           put "/users/edit", :to => "registrations#update"
           match "/iur/sign_in", to: "registrations#iur"
         end

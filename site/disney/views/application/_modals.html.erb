@@ -43,6 +43,81 @@
   </div>
 </div>
 
+<!-- COMMENT -->
+<div class="modal modal__custom fade" id="comment-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content modal--bg">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-4 visible-xs text-center">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image">
+          </div>    
+          <div class="col-sm-6 col-sm-offset-1 text-center">
+            <p class="modal__custom__text">I commenti verranno<br>moderati prima di essere<br>pubblicati</p>
+            <button type="button" class="modal__custom__button-sign-up btn btn-primary" data-dismiss="modal"><span>Ok</span></button>
+          </div>
+          <div class="col-sm-4 hidden-xs">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image"> 
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CAPTCHA ERROR -->
+<div class="modal modal__custom fade" id="comment-captcha-error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content modal--bg">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-4 visible-xs text-center">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image">
+          </div>    
+          <div class="col-sm-6 col-sm-offset-1 text-center">
+            <p class="modal__custom__text">Il codice inserito<br>non è corretto</p>
+            <button type="button" class="modal__custom__button-sign-up btn btn-primary" data-dismiss="modal"><span>Ok</span></button>
+          </div>
+          <div class="col-sm-4 hidden-xs">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image"> 
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEW USER IN DISNEY -->
+<div class="modal modal__custom fade" id="modal__from-disney-registration" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content modal--bg">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-4 visible-xs text-center">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image">
+          </div>    
+          <div class="col-sm-6 col-sm-offset-1 text-center">
+            <p class="modal__custom__text">Registrazione completata!<br>Se vuoi continuare e<br>guardagnare punti devi<br><span>entrare nella Community</span></p>
+            <a class="modal__custom__button-sign-up btn btn-primary" href="/iur"><span>Login</span></a>
+          </div>
+          <div class="col-sm-4 hidden-xs">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image"> 
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- SET USERNAME AND AVATAR -->
 <% unless disney_profile_completed?() %>
   <div id="complete-registration" class="modal fade" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
