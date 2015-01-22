@@ -54,10 +54,15 @@ class Sites::Disney::RegistrationsController < RegistrationsController
       end
 
       user = User.find_by_email(hash_user["EMAIL_ADDRESS"])
+      aux = { 
+        "profile_completed" => false, 
+        "membername" => hash_user["MEMBERNAME"] 
+      }.to_json
+
       if user
-        user.update_attribute(:swid, cookies[:SWID])
+        user.update_attributes(swid: cookies[:SWID], aux: aux)
       else
-        user = User.create(email: hash_user["EMAIL_ADDRESS"], swid: cookies[:SWID], password: password, password_confirmation: password, first_name: hash_user["FIRST_NAME"], last_name: hash_user["LAST_NAME"])
+        user = User.create(email: hash_user["EMAIL_ADDRESS"], swid: cookies[:SWID], password: password, password_confirmation: password, first_name: hash_user["FIRST_NAME"], last_name: hash_user["LAST_NAME"], aux: aux)
       end
 
     end
