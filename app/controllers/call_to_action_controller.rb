@@ -450,9 +450,9 @@ class CallToActionController < ApplicationController
       response[:ga][:label] = interaction.resource_type.downcase
     end
 
-    if user_interaction
+    calltoaction = interaction.call_to_action
 
-      calltoaction = interaction.call_to_action
+    if user_interaction
       
       response["user_interaction"] = build_user_interaction_for_interaction_info(user_interaction)
 
