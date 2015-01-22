@@ -238,8 +238,9 @@ module BrowseHelper
   end
   
   def addCtaTags(tags, element)
+    hidden_tags_ids = get_hidden_tag_ids
     element.call_to_action_tags.includes(:tag).each do |t|
-      if !tags.has_key?(t.tag.id)
+      if !tags.has_key?(t.tag.id) && !hidden_tags_ids.include?(t.tag.id)
         tags[t.tag.id] = get_extra_fields!(t.tag).fetch("title", t.tag.name)
       end
     end

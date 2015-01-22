@@ -161,6 +161,10 @@ module CacheKeysHelper
     "tags_with_tag_with_match_#{tag_name}_#{query}"
   end
   
+  def get_hidden_tags_cache_key
+    "hidden_tags_ids"
+  end
+  
   # Rankings
   # ~~~~~
   def get_general_position_key(user_id)

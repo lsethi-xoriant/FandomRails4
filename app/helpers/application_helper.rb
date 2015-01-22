@@ -348,7 +348,8 @@ module ApplicationHelper
 
   def get_tags_with_tag(tag_name)
     cache_short get_tags_with_tag_cache_key(tag_name) do
-        Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).to_a
+      hidden_tags_ids = get_hidden_tag_ids
+      Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND tags.id not in (?)", tag_name, hidden_tags_ids).to_a
     end
   end
   
@@ -1056,6 +1057,12 @@ module ApplicationHelper
       ""
     else
       "#{properties_tag.first.name}"
+    end
+  end
+  
+  def get_hidden_tag_ids
+    cache_short(get_hidden_tags_cache_key) do
+      Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? ", "hide-tag").map{|t| t.id}
     end
   end
   
