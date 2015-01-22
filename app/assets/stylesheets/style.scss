@@ -64,9 +64,18 @@ $navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 10%) !def
 $navbar-inverse-toggle-icon-bar-bg:         #fff !default;
 $navbar-inverse-toggle-border-color:        #999 !default;
 
+/*
 @font-face {
   font-family: 'Matterhorn-Regular';
   src: url('Matterhorn-Regular.otf');
+}
+*/
+
+@font-face {
+  font-family: 'Matterhorn';
+  font-style: normal;
+  font-weight: 400;
+  src: url("matterhorn-regular.eot") format("eot"), url("matterhorn-regular.woff") format("woff"), url("matterhorn-regular.ttf") format("truetype"), url("matterhorn-regular.svg") format("svg");
 }
 
 //import style folders

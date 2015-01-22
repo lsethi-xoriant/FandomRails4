@@ -229,7 +229,7 @@ module DisneyHelper
 
     if other
       other.each do |key, value|
-        aux[key] = value unless other.has_key?(key)
+        aux[key] = value unless aux.has_key?(key.to_s)
       end
     end
 

@@ -25,7 +25,7 @@ class Sites::Disney::CallToActionController < CallToActionController
   end
 
   def append_calltoaction
-    calltoactions_showed_ids = params[:calltoactions_showed].map { |calltoaction_info| calltoaction_info["calltoaction"]["id"] }
+    calltoactions_showed_ids = params[:calltoactions_showed]
     calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")
 
     context_tag = get_tag_from_params(get_context())

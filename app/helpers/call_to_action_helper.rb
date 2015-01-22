@@ -31,7 +31,7 @@ module CallToActionHelper
       flag = get_tag_with_tag_about_call_to_action(calltoaction, "flag").first
       if flag.present?
         flag_info = {
-          "icon" => (get_extra_fields!(miniformat)["icon"]["url"] rescue nil),
+          "icon" => (get_extra_fields!(flag)["icon"]["url"] rescue nil),
         }
       end
       
