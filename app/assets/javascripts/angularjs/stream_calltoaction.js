@@ -110,7 +110,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
     }
 
-    console.log($scope.aux.init_captcha);
     if($scope.aux.init_captcha && !$scope.current_user) {
       initCaptcha();
     }
@@ -1644,13 +1643,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         if(data.errors) {
           alert("ERROR");
         } else if(!$scope.current_user && !data.captcha_evaluate) {
-          alert("CAPTCHA NON VALIDO");
+          $("#comment-captcha-error").modal("show");
           interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           interaction_info.interaction.resource.comment_info.user_captcha = "";
           sessionStorage.setItem("captcha" + interaction_info.interaction.id, data.captcha.code);
         } else if(!data.approved) {
-          alert("In attesa di approvazione!");
-
+          $("#comment-feedback").modal("show");
           interaction_info.interaction.resource.comment_info.user_text = "";
           interaction_info.interaction.resource.comment_info.user_captcha = "";
           if(!$scope.current_user) {

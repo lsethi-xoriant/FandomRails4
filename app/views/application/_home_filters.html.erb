@@ -10,7 +10,7 @@
       </li>
       <li class="text-center filters__flexslider-desktop-item">
         <%= light_link_to("/browse", class: "filters__flexslider-a") do %>
-          <img class="filters__flexslider-image" src="http://placehold.it/262x147">  
+          <img class="filters__flexslider-image" src="http://placehold.it/262x147/108ff7/108ff7">  
           <div class="filters__title">VEDI ALTRI</div>   
         <% end %>
       </li>
@@ -25,12 +25,19 @@
           <img  class="filters__flexslider-image" ng-src="{{filter.image}}">
         <% end %>
       </li>
+      <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-mobile-item">
+        <%= light_link_to("/browse/category/{{filter.id}}") do %>
+          <p class="filters__title">VEDI ALTRI</p>
+          <img class="filters__flexslider-image" src="http://placehold.it/262x147/108ff7/108ff7">
+        <% end %>
+      </li>
     </ul>
   </div>
 </div>
 
 <script type="text/javascript">
   $(document).ready(function() {
+    is_last_flexslider_slide = false;
     $('.filters__flexslider-desktop').flexslider({
       animation: "slide",
       slideshow: false,
@@ -40,7 +47,21 @@
       itemMargin: 15,
       controlNav: false,
       prevText: "",
-      nextText: ""
+      nextText: "",
+      before: function(slider) {
+        is_last_flexslider_slide = false;
+        $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+      },
+      after: function(slider) {
+        if(is_last_flexslider_slide) {
+          $(slider).find(".flex-viewport-shadow").addClass("hidden");
+        } else {
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        }
+      },
+      end: function(slider) {
+        is_last_flexslider_slide = true;
+      }
     });
 
     $(".filters__flexslider-desktop-item").first().find(".filters__flexslider-item-active").removeClass("hidden");

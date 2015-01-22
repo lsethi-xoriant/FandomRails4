@@ -3,6 +3,9 @@
 
 class Sites::Disney::RegistrationsController < RegistrationsController
 
+  def setUpAccount()
+  end
+
   def update
     user_params = params[:user]
     required_attrs = ["username", "username_length"]

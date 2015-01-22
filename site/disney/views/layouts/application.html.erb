@@ -32,42 +32,6 @@
 
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="DisneyStreamCalltoactionCtrl" ng-init="init(<%= build_disney_current_user().to_json %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_disney_calltoactions_count_in_property() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 
-  <!-- COMMENT FEEDBACK MODAL -->
-  <div class="modal fade" id="comment-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4>Commento inserito con successo</h4>
-        </div>
-        <div class="modal-body">
-          <p id="comment-must-be-approved">Il commento verrà pubblicato solo dopo l'approvazione.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CAPTCHA ERROR MODAL -->
-  <div class="modal fade" id="comment-captcha-error-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4>Errore nell'inserimento del commento</h4>
-        </div>
-        <div class="modal-body">
-          <p>Verifica di avere inserito correttamente il captcha.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Modal -->
   <div class="modal fade" id="facebook-like-modal" tabindex="-1" role="dialog" aria-labelledby="facebookModal" aria-hidden="true">
     <div class="modal-dialog">
