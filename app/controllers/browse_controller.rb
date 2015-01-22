@@ -5,9 +5,20 @@ class BrowseController < ApplicationController
   end
   
   def full_search
-    @contents = get_contents_with_match(params[:query])
+    contents = get_contents_with_match(params[:query])
+    @total = contents.count
+    @contents = contents.slice(0,12)
+    @query = params[:query]
     if @contents.empty?
       redirect_to "/browse"
+    end
+  end
+  
+  def full_search_load_more
+    offset = params[:offset].to_i
+    contents = get_contents_with_match(params[:query]).slice(offset,12)
+    respond_to do |format|
+      format.json { render :json => contents.to_json }
     end
   end
   
