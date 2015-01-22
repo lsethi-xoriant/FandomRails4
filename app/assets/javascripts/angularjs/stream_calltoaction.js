@@ -110,6 +110,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
     }
 
+    console.log($scope.aux.init_captcha);
     if($scope.aux.init_captcha && !$scope.current_user) {
       initCaptcha();
     }
@@ -636,7 +637,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         append_calltoaction_path = "/" + $scope.aux.current_property_info.path + "" + append_calltoaction_path;
       }
 
-      $http.post(append_calltoaction_path, { calltoactions_showed: $scope.calltoactions, tag_id: $scope.current_tag_id, current_calltoaction: $scope.current_calltoaction })
+      calltoactions_showed = [];
+      angular.forEach($scope.calltoactions, function(_info) {
+        calltoactions_showed.push(_info.calltoaction.id);
+      });
+
+      $http.post(append_calltoaction_path, { calltoactions_showed: calltoactions_showed, tag_id: $scope.current_tag_id, current_calltoaction: $scope.current_calltoaction })
       .success(function(data) {
 
         angular.forEach(data.calltoaction_info_list, function(calltoaction_info) {
@@ -1628,7 +1634,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     interaction_id = interaction_info.interaction.id;
     session_storage_captcha = sessionStorage["captcha" + interaction_id];
 
-    $http.post("/add_comment", { interaction_id: interaction_id, comment_info: interaction_info.interaction.resource.comment_info, session_storage_captcha: session_storage_captcha })
+    comment_info = new Object();
+    comment_info.user_text = interaction_info.interaction.resource.comment_info.user_text;
+    comment_info.user_captcha = interaction_info.interaction.resource.comment_info.user_captcha;
+
+    $http.post("/add_comment", { interaction_id: interaction_id, comment_info: comment_info, session_storage_captcha: session_storage_captcha })
       .success(function(data) {
 
         if(data.errors) {
