@@ -5122,7 +5122,7 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    "timestamp" timestamp without time zone,
+    "timestamp" character varying(255),
     level character varying(255),
     tenant character varying(255),
     user_id integer,
@@ -5503,7 +5503,9 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    text_before character varying(255),
+    text_after character varying(255)
 );
 
 
@@ -15815,6 +15817,13 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -15826,6 +15835,20 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 --
 
 CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
 
 
 --
@@ -15867,7 +15890,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: index_users_on_username; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_users_on_username ON users USING btree (username);
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
@@ -16041,6 +16064,13 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -16052,6 +16082,20 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 --
 
 CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
 
 
 --
@@ -16093,7 +16137,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: index_users_on_username; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_users_on_username ON users USING btree (username);
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
@@ -16278,6 +16322,20 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 --
 
 CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
 
 
 --
@@ -16507,6 +16565,20 @@ CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btr
 
 
 --
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
+
+
+--
 -- Name: index_user_uploads_on_aux_fields; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -16730,6 +16802,20 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 --
 
 CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
 
 
 --
@@ -16959,6 +17045,20 @@ CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btr
 
 
 --
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
+
+
+--
 -- Name: index_user_uploads_on_aux_fields; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -17168,6 +17268,13 @@ CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
 --
 
 CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
+
+
+--
+-- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
 
 
 --
@@ -17584,3 +17691,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150117115050');
 INSERT INTO schema_migrations (version) VALUES ('20150119161752');
 
 INSERT INTO schema_migrations (version) VALUES ('20150122113027');
+
+INSERT INTO schema_migrations (version) VALUES ('20150123114506');
