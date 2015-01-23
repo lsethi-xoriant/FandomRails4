@@ -25,7 +25,14 @@ class Sites::Disney::CallToActionController < CallToActionController
   end
 
   def send_share_interaction_email(address, calltoaction)
-    aux = {}
+    property = get_tag_from_params(get_disney_property())
+    aux = {
+      color: get_extra_fields!(property)["label-background"],
+      logo: (get_extra_fields!(property)["logo"]["url"] rescue nil),
+      path: compute_property_path(property),
+      root: root_url,
+      subject: property.title
+    }
     SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
   end
 

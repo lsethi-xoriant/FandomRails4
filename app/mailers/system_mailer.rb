@@ -4,10 +4,11 @@
 class SystemMailer < ActionMailer::Base
 
   def share_interaction(user, to, calltoaction, aux = {})
-    subject = $site.title
     @cuser = user
     @calltoaction = calltoaction
-    mail(to: to, subject: "#{subject} - Un tuo amico di ha condiviso un contenuto")
+    @aux = aux
+    subject = @aux.has_key?(:subject) ? @aux[:subject] : $site.title
+    mail(to: to, subject: "#{subject} - Un tuo amico ti ha condiviso un contenuto")
   end
 
   def welcome_mail(user)

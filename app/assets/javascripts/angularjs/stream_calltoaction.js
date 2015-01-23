@@ -1214,7 +1214,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
       }
   	  
-      $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getAnonymousUserStorage() })
+      $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, anonymous_user: getAnonymousUserStorage() })
           .success(function(data) {
 
             updateUserRewardInView(data.main_reward_counter.general);
