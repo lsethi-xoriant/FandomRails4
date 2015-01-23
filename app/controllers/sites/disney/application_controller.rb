@@ -25,7 +25,7 @@ class Sites::Disney::ApplicationController < ApplicationController
       get_disney_ctas(property).limit(init_ctas).to_a
     end
 
-    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
+    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions, ["like", "comment", "share"])
 
     @aux_other_params = { 
       filters: true,
