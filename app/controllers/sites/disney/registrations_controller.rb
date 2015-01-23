@@ -68,7 +68,6 @@ class Sites::Disney::RegistrationsController < RegistrationsController
         "membername" => membername
       }.to_json
 
-      debugger
       if user
         user.update_attributes(swid: cookies[:SWID], aux: aux)
       else

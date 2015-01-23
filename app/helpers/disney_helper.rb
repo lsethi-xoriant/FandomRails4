@@ -116,17 +116,21 @@ module DisneyHelper
 
   def get_disney_filter_info()
     filters = get_tags_with_tag("featured")
+
     if filters.any?
-      if $context_root
-        filters = filters & get_tags_with_tag(get_disney_property())
-      end
+      featured = get_tag_from_params("featured")
+      filters = filters & get_tags_with_tag(get_disney_property())
+      meta_ordering = get_extra_fields!(featured)["ordering"]    
+      if meta_ordering
+        filters = order_elements_by_ordering_meta(meta_ordering, filters)
+      end    
       filter_info = []
       filters.each do |filter|
         filter_info << {
           "id" => filter.id,
           "background" => get_extra_fields!(filter)["label-background"],
           "icon" => get_extra_fields!(filter)["icon"],
-          "title" => get_extra_fields!(filter)["title"],
+          "title" => filter.title,
           "image" => (get_upload_extra_field_processor(get_extra_fields!(filter)["image"], :thumb) rescue nil) 
         }
       end
