@@ -200,6 +200,7 @@ a{
 }
 
 .modal__custom__text {
+  margin-bottom: 10px;
   font-size: 18px;
   span {
     font-weight: bold;
@@ -207,7 +208,6 @@ a{
 }
 
 .modal__custom__text--ie8 {
-  margin-bottom: 10px !important;
   font-size: 18px;
 }
 

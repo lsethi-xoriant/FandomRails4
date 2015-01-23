@@ -11,7 +11,6 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
   end
 
   def update_comment_status
-    debugger
     current_comment = UserCommentInteraction.find(params[:comment_id])
     current_comment.update_attributes(approved: params[:approved])
 

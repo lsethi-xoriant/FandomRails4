@@ -37,13 +37,13 @@ class Sites::Disney::CallToActionController < CallToActionController
   end
 
   def append_calltoaction
-    calltoactions_showed_ids = params[:calltoactions_showed]
-    calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")
+    calltoaction_ids_shown = params[:calltoaction_ids_shown]
+    calltoaction_ids_shown_qmarks = (["?"] * calltoaction_ids_shown.count).join(", ")
 
     context_tag = get_tag_from_params(get_context())
 
-    calltoactions = cache_short(get_next_ctas_stream_cache_key(context_tag.id, calltoactions_showed_ids.last, get_cta_max_updated_at())) do
-      get_disney_ctas(context_tag).where("call_to_actions.id NOT IN (#{calltoactions_showed_id_qmarks})", *calltoactions_showed_ids).limit(3).to_a
+    calltoactions = cache_short(get_next_ctas_stream_cache_key(context_tag.id, calltoaction_ids_shown.last, get_cta_max_updated_at())) do
+      get_disney_ctas(context_tag).where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown).limit(3).to_a
     end
 
     response = {
