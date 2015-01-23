@@ -55,6 +55,10 @@ module CacheKeysHelper
   # CTA
   # ~~~~~
 
+  def get_rss_ctas_in_property_cache_key(property_id)
+    "rss_ctas_in_property_#{property_id}"
+  end
+
   def get_tag_cache_key(tag_name)
     "tag_#{tag_name}"
   end
@@ -105,6 +109,10 @@ module CacheKeysHelper
   
   def get_likes_count_for_cta_key(cta_id)
     "likes_count_for_cta_#{cta_id}"
+  end
+
+  def get_likes_count_for_interaction_cache_key(interaction_id)
+    "likes_count_for_interaction_#{interaction_id}"
   end
   
   def get_tag_names_for_cta_key(cta_id)
@@ -248,6 +256,10 @@ module CacheKeysHelper
   
   def get_recent_contents_cache_key(query)
     "recent_contents_cache_key_#{query}"
+  end
+  
+  def get_browse_settings_key
+    "browse_settings_key"
   end
 
   # Coin

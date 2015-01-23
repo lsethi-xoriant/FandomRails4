@@ -170,7 +170,9 @@ module CallToActionHelper
   end
 
   def build_likes_for_resource(interaction)
-    interaction.user_interactions.where("(aux->>'like')::bool").count
+    cache_short(get_likes_count_for_interaction_cache_key(interaction.id)) do
+      interaction.user_interactions.where("(aux->>'like')::bool").count
+    end
   end
 
   def build_comments_for_resource(interaction)
@@ -506,7 +508,7 @@ module CallToActionHelper
     cache_short(get_likes_count_for_cta_key(cta.id)) do
       like_interaction = cta.interactions.find_by_resource_type("Like")
       if like_interaction
-        like_interaction.user_interactions.where("(aux->>'like') = 'true'").count
+        build_likes_for_resource(like_interaction)
       else
         0
       end

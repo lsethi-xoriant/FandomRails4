@@ -640,12 +640,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         append_calltoaction_path = "/" + $scope.aux.current_property_info.path + "" + append_calltoaction_path;
       }
 
-      calltoactions_showed = [];
+      calltoaction_ids_shown = [];
       angular.forEach($scope.calltoactions, function(_info) {
-        calltoactions_showed.push(_info.calltoaction.id);
+        calltoaction_ids_shown.push(_info.calltoaction.id);
       });
 
-      $http.post(append_calltoaction_path, { calltoactions_showed: calltoactions_showed, tag_id: $scope.current_tag_id, current_calltoaction: $scope.current_calltoaction })
+      $http.post(append_calltoaction_path, { calltoaction_ids_shown: calltoaction_ids_shown, tag_id: $scope.current_tag_id })
       .success(function(data) {
 
         angular.forEach(data.calltoaction_info_list, function(calltoaction_info) {

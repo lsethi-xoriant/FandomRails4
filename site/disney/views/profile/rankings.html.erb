@@ -56,7 +56,7 @@
 						  		<div class="ranking-element ranking-element--myposition">
 						  			<p class="ranking-element__position ranking-element__position--myposition text-center"><%= winner["day"] %></p>
 						  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
-						  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(winner["winner"].user) %></p>
+						  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= winner["winner"].user.username %></p>
 						  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
 						  		</div>
 						  	</li>
@@ -65,7 +65,7 @@
 						  		<div class="ranking-element">
 						  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
 						  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
-						  			<p class="ranking-element__nickname"><%= extract_name_or_username(winner["winner"].user) %></p>
+						  			<p class="ranking-element__nickname"><%= winner["winner"].user.username %></p>
 						  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
 						  		</div>
 						  	</li>
