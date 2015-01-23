@@ -46,8 +46,8 @@ module BrowseHelper
     return browse_sections_arr
   end
 
-  def get_recent(query = "")
-    recent = get_recent_ctas(query)
+  def get_recent(offset = 0, per_page = 8, query = "")
+    recent = get_recent_ctas(query).slice(offset, per_page)
     recent_contents = prepare_contents(recent)
     browse_section = ContentSection.new(
       key: "recent",
@@ -60,11 +60,13 @@ module BrowseHelper
   end
 
   def get_recent_ctas(query = "")
-    if query.empty?
-      CallToAction.active.limit(6)
-    else
-      conditions = construct_conditions_from_query(query, "title")
-      CallToAction.active.where("#{conditions}").limit(6)
+    cache_medium(get_recent_contents_cache_key(query)) do
+      if query.empty?
+        CallToAction.active.order("activated_at")
+      else
+        conditions = construct_conditions_from_query(query, "title")
+        CallToAction.active.where("#{conditions}")
+      end
     end
   end
 
@@ -93,7 +95,7 @@ module BrowseHelper
   end
   
   def get_browse_area_by_category(category)
-    contents = get_contents_by_category(category)
+    contents = get_contents_by_category(category).slice(0,8)
     extra_fields = get_extra_fields!(category)
     browse_section = ContentSection.new(
       key: category.name,
@@ -236,8 +238,9 @@ module BrowseHelper
   end
   
   def addCtaTags(tags, element)
+    hidden_tags_ids = get_hidden_tag_ids
     element.call_to_action_tags.includes(:tag).each do |t|
-      if !tags.has_key?(t.tag.id)
+      if !tags.has_key?(t.tag.id) && !hidden_tags_ids.include?(t.tag.id)
         tags[t.tag.id] = get_extra_fields!(t.tag).fetch("title", t.tag.name)
       end
     end

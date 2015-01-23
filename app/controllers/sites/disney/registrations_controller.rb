@@ -3,6 +3,9 @@
 
 class Sites::Disney::RegistrationsController < RegistrationsController
 
+  def setUpAccount()
+  end
+
   def update
     user_params = params[:user]
     required_attrs = ["username", "username_length"]
@@ -53,11 +56,22 @@ class Sites::Disney::RegistrationsController < RegistrationsController
         hash_user[key["key"]] = key["value"]
       end
 
-      user = User.find_by_email(hash_user["EMAIL_ADDRESS"])
-      if user
-        user.update_attribute(:swid, cookies[:SWID])
+      if hash_user["MEMBERNAME"].is_a?(Hash)
+        membername = ""
       else
-        user = User.create(email: hash_user["EMAIL_ADDRESS"], swid: cookies[:SWID], password: password, password_confirmation: password, first_name: hash_user["FIRST_NAME"], last_name: hash_user["LAST_NAME"])
+        membername = hash_user["MEMBERNAME"].to_s
+      end
+
+      user = User.find_by_email(hash_user["EMAIL_ADDRESS"])
+      aux = { 
+        "profile_completed" => false, 
+        "membername" => membername
+      }.to_json
+
+      if user
+        user.update_attributes(swid: cookies[:SWID], aux: aux)
+      else
+        user = User.create(email: hash_user["EMAIL_ADDRESS"], swid: cookies[:SWID], password: password, password_confirmation: password, first_name: hash_user["FIRST_NAME"], last_name: hash_user["LAST_NAME"], aux: aux)
       end
 
     end

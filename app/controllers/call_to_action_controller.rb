@@ -164,7 +164,7 @@ class CallToActionController < ApplicationController
       end
 
       @aux = init_show_aux(calltoaction)
-      @is_cta_locked = cta_is_a_reward(calltoaction) && !user_has_reward(calltoaction.rewards.first.name)
+      @is_cta_locked = cta_is_a_reward(calltoaction) && (!current_user || !user_has_reward(calltoaction.rewards.first.name))
       if @is_cta_locked
         @reward = calltoaction.rewards.first
       end
@@ -450,9 +450,9 @@ class CallToActionController < ApplicationController
       response[:ga][:label] = interaction.resource_type.downcase
     end
 
-    if user_interaction
+    calltoaction = interaction.call_to_action
 
-      calltoaction = interaction.call_to_action
+    if user_interaction
       
       response["user_interaction"] = build_user_interaction_for_interaction_info(user_interaction)
 

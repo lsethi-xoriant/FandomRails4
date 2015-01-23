@@ -22,6 +22,13 @@ function SearchCtrl($scope, $window, $filter, $http) {
 		$scope.query = query;
 	};
 	
+	$scope.init_view_all = function(contents, total, per_page) {
+		$scope.contents = contents;
+		$scope.total = total;
+		$scope.offset = $scope.perpage = per_page;
+		console.log("total: "+total+" per page: "+per_page);
+	};
+	
 	$scope.getResults = function(val) {
 	    return $http.get("/browse/search.json", {
 	      params: {
@@ -44,6 +51,19 @@ function SearchCtrl($scope, $window, $filter, $http) {
 	    }).then(function(response){
 	      $scope.contents = $scope.contents.concat(response.data);
 	      $scope.offset = offset + 12;
+	    });
+  	};
+  	
+  	$scope.load_more_recent = function(offset){
+  		$http.get("/browse/view_recent/load_more.json", {
+	      params: {
+	        offset: offset,
+	        per_page: $scope.per_page
+	      }
+	    }).then(function(response){
+	    	console.log(response);
+	      $scope.contents = $scope.contents.concat(response.data);
+	      $scope.offset = offset + $scope.per_page;
 	    });
   	};
 	

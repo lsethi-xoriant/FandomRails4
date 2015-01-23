@@ -1,7 +1,7 @@
 <div class="container container--default" ng-controller="SearchCtrl" ng-init="init(<%= @browse_section.to_json %>)">
 	
 	<div class="row main-row ctas__search">
-	    <%= form_tag("/browse/full_search", { method: "post", role: "search" }) do %>
+	    <%= form_tag("#{ get_disney_property_root_path }/browse/full_search", { method: "post", role: "search" }) do %>
 	      <div class="col-sm-8 col-sm-offset-1">
 	        <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control" placeholder="Search" style="width: 100%;">
 	      </div>
@@ -28,20 +28,24 @@
 		      <div class="section-heading">
 		        	<h3>
 		        		<img ng-src="{{section.attributes.icon_url}}" class="img-circle section-heading__icon" />
-		        		{{section.attributes.title}} <a href="{{section.attributes.view_all_link}}" class="section-heading__see-all">View all</a>
+		        		{{section.attributes.title}} 
+		        		<%= light_link_to("{{section.attributes.view_all_link}}", class: "section-heading__see-all") do %>
+				            Vedi tutti
+				          <% end %>
 		        	</h3>
 		      </div>
 		    	<div class="rewards-flexslider">
+		    		<div class="flex-viewport-shadow hidden-xs"></div>
 			    	<ul class="slides">
 						<li class="" ng-repeat="content in section.attributes.contents">
 							<div class="cta-preview--slider" ng-if="content.attributes.type == 'cta'">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="cta-preview__thumbnail">
-											<a href="{{content.attributes.detail_url}}">
+											<%= light_link_to("{{content.attributes.detail_url}}") do %>
 												<img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
 												<img class="img-responsive cta-preview__image" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
-											</a>
+											<% end %>
 											<div class="label label-warning cta-preview__points" ng-if="content.attributes.status != undefined">+ {{content.attributes.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
 										</div>
 									</div>
@@ -57,7 +61,7 @@
 						        </div> 
 							</div>
 					
-							<div class="cta-preview cta-preview--category" ng-if="content.attributes.type == 'tag'">
+							<div class="cta-preview--slider cta-preview--category" ng-if="content.attributes.type == 'tag'">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="cta-preview__thumbnail cta-preview__thumbnail--category">

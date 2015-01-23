@@ -49,8 +49,7 @@ class User < ActiveRecordWithJSON
 
   def set_username_if_not_required
     unless required_attr?("username")
-      # Username can be empty in Disney
-      # self.username = email
+      self.username = email
     end
   end
 

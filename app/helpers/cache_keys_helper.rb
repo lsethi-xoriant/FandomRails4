@@ -161,6 +161,10 @@ module CacheKeysHelper
     "tags_with_tag_with_match_#{tag_name}_#{query}"
   end
   
+  def get_hidden_tags_cache_key
+    "hidden_tags_ids"
+  end
+  
   # Rankings
   # ~~~~~
   def get_general_position_key(user_id)
@@ -240,6 +244,10 @@ module CacheKeysHelper
   
   def get_full_search_results_key(term)
     "full_search_result_#{term}"
+  end
+  
+  def get_recent_contents_cache_key(query)
+    "recent_contents_cache_key_#{query}"
   end
 
   # Coin

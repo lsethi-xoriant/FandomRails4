@@ -5,6 +5,10 @@ body {
   background-color: $grey;
 }
 
+.form-error {
+  color: red;
+}
+
 .disney-js-mh-footer-logo {
     background: url("http://navbar.disneyinternational.com/disney-logo-dark.png") no-repeat scroll 0 0 / contain rgba(0, 0, 0, 0) !important;
 }
@@ -16,6 +20,11 @@ body {
 p{
   margin: 0;
   line-height: inherit;
+}
+
+.row-load-more{
+  padding: 20px 0;
+  text-align: center;
 }
 
 #goc-body {
@@ -100,12 +109,6 @@ a{
   margin: 20px 0;
 }
 
-
-.from-disney-registration {
-  background-image: url('bg-modal.png'); 
-  background-size: 100% 100%;
-}
-
 .glyphicon-blu{
   color: $blu;
 }
@@ -151,7 +154,7 @@ a{
   background: -moz-linear-gradient(#FFFFFF, $grey);
   background: linear-gradient(#FFFFFF, $grey);
   border-bottom: 1px solid #d1d2d4;
-  padding: 0 40px;
+  padding: 0 40px 20px 40px;
 }
 
 .container--default {
@@ -169,6 +172,45 @@ a{
   0% { background: transparent; }
   50% { background: yellow; }
   100% { background: transparent; }
+}
+
+/********************* MODALS *********************/
+
+.modal__custom {
+  .modal-header {
+    border: none;
+  }
+  .modal-body {
+    margin-top: 40px;
+    margin-bottom: 60px;
+  }
+}
+
+.modal__custom__button-sign-in, .modal__custom__button-sign-up {
+  width: 110px;
+}
+
+.modal__custom__button-sign-in {
+  margin-right: 10px;
+}
+
+.modal__custom__image {
+  margin-bottom: 15px;
+  max-width: 170px;
+  width: 100%;
+}
+
+.modal__custom__text {
+  font-size: 18px;
+  margin-bottom: 15px;
+  span {
+    font-weight: bold;
+  }
+}
+
+.modal--bg {
+  background-image: url('bg-modal.png'); 
+  background-size: 100% 100%;
 }
 
 @media (max-width: $screen-sm-min) { 

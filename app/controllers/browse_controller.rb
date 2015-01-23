@@ -52,6 +52,21 @@ class BrowseController < ApplicationController
     @contents = get_contents_by_category(@tag)
   end
   
+  def view_all_recent
+    contents = get_recent_ctas()
+    @total = contents.count
+    @contents = prepare_contents(contents.slice(0, 12))
+    @per_page = 12
+  end
+  
+  def view_all_recent_load_more
+    offset = params[:offset].to_i
+    contents = prepare_contents(get_recent_ctas().slice(offset, 12))
+    respond_to do |format|
+      format.json { render :json => contents.to_json }
+    end
+  end
+  
   def search
     term = params[:q]
     results = cache_short(get_browse_search_results_key(term)) { get_contents_by_query(term) }

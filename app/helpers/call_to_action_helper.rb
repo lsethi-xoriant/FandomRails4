@@ -499,9 +499,9 @@ module CallToActionHelper
   
   def get_number_of_likes_for_cta(cta)
     cache_short(get_likes_count_for_cta_key(cta.id)) do
-      like_interaction = cta.interactions.find_by_resource_type("like")
+      like_interaction = cta.interactions.find_by_resource_type("Like")
       if like_interaction
-        like_interaction.user_interactions.where("(aux->>'like') = true").count
+        like_interaction.user_interactions.where("(aux->>'like') = 'true'").count
       else
         0
       end
