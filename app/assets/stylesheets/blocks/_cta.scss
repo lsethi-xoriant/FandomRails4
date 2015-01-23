@@ -120,16 +120,28 @@
 }
 
 @media (max-width: $screen-sm-min) { 
-  .ctas__search {
-    button {
-      margin-top: 5px;
-    }
+
+  .ctas__search__img {
+    height: 35px; 
+  }
+
+  .ctas__search__col {
+    min-height: 35px;
   }
 
   .cta__title {
     margin-bottom: 0;
     padding-top: 5px;
     font-size: 18px;
+  }
+
+  .ctas__search__title {
+    margin: 10px 0 0 0;
+    padding: 0 0 0 75px;
+    white-space: nowrap;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .cta__title-small-col {
