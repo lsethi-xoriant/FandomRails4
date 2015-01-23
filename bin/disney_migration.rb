@@ -469,7 +469,7 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
       end
 
       email = nullify_or_escape_string(source_db_connection, line["email"])
-      if (new_username == "" or new_username == "scheke")
+      if (new_username == "" or new_username == "NULL" or new_username == "scheke")
         new_username = email
         aux = "{\"profile_completed\":false}"
       else
