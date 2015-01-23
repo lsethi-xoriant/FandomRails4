@@ -25,19 +25,25 @@
 </div>
 
 <!-- NEW USER IN DISNEY -->
-<div id="modal__from-disney-registration" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
+<div class="modal modal__custom hide" id="modal__from-disney-registration" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content from-disney-registration">
+    <div class="modal-content modal--bg">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
-        <p>Registrazione completata</p>
-        <p>Se vuoi continuare e<br>guadagnare punti devi<br>entrare nella Community</p>
-        <a href="/iur" class="btn btn-primary">ENTRA</a>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><span>Chiudi</span></button>
+        <div class="row">
+          <div class="col-sm-4 visible-xs text-center">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image">
+          </div>    
+          <div class="col-sm-6 col-sm-offset-1 text-center">
+            <p class="modal__custom__text">Registrazione completata!<br>Se vuoi continuare e<br>guardagnare punti devi<br><span>entrare nella Community</span></p>
+            <a class="modal__custom__button-sign-up btn btn-primary" href="/iur"><span>Login</span></a>
+          </div>
+          <div class="col-sm-4 hidden-xs">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image"> 
+          </div>  
+        </div>
       </div>
     </div>
   </div>

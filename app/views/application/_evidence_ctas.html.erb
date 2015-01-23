@@ -20,6 +20,7 @@
         <img class="visible-xs" ng-src="{{calltoaction.thumbnail_medium_url}}">
         <div class="col-xs-12 ctas__info">
           <p class="ctas__title">{{calltoaction.title}}</p>
+          <p style="color: #fff; margin-bottom: 15px; margin-top: 5px;">{{calltoaction.description | cut:true:70}}</p>
           <%= light_link_to("/call_to_action/{{calltoaction.id}}", class: "btn btn-primary ctas__button hidden-xs") do %>
             <span>Vai</span>
           <% end %>
