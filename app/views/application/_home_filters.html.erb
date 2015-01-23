@@ -25,7 +25,7 @@
           <img  class="filters__flexslider-image" ng-src="{{filter.image}}">
         <% end %>
       </li>
-      <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-mobile-item">
+      <li class="text-center filters__flexslider-mobile-item">
         <%= light_link_to("/browse/category/{{filter.id}}") do %>
           <p class="filters__title">VEDI ALTRI</p>
           <img class="filters__flexslider-image" src="http://placehold.it/262x147/108ff7/108ff7">
