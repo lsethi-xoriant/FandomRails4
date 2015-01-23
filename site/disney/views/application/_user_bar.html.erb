@@ -81,23 +81,24 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="/<%= $context_root %>">Home</a></li>
-        <li>
+        <li class="<%= "active" if "#{controller_name}##{action_name}" == "application#index" %>"><a href="/<%= $context_root %>">Home</a>
+        </li>
+        <li class="<%= "active" if "#{controller_name}##{action_name}" == "reward#index" %>">
           <%= light_link_to("/reward/catalogue") do %>
             Premi
           <% end %>
         </li>
-        <li>
+        <li class="<%= "active" if "#{controller_name}##{action_name}" == "profile#rankings" %>">
           <%= light_link_to("/profile/rankings") do %>
             Classifiche
           <% end %>
         </li>
-        <li>
+        <li class="<%= "active" if "#{controller_name}##{action_name}" == "browse#index" %>">
           <%= light_link_to("/browse") do %>
             Cerca
           <% end %>
         </li>
-        <li>
+        <li class="<%= "active" if "#{controller_name}##{action_name}" == "registrations#edit" %>">
           <%= light_link_to("/profile") do %>
             Profilo
           <% end %>
@@ -107,12 +108,6 @@
             <a href="<%= aux["current_property_info"]["outer-url"] %>"><%= aux["current_property_info"]["outer"] %></a>
           </li>
         <% end %>
-        <hr style="margin-top: 5px; margin-bottom: 5px;">
-        <li ng-repeat="property in aux.property_info">
-          <a href="/{{property.path}}"> 
-             {{property.title}}
-          </a>
-        </li>
       </ul>
     </div>
   </div>
