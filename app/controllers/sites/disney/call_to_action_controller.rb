@@ -47,7 +47,7 @@ class Sites::Disney::CallToActionController < CallToActionController
     end
 
     response = {
-      calltoaction_info_list: build_call_to_action_info_list(calltoactions)
+      calltoaction_info_list: build_call_to_action_info_list(calltoactions, ["like", "comment", "share"])
     }
     
     respond_to do |format|
