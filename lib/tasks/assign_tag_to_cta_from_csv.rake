@@ -8,7 +8,7 @@ task :assign_tags, [:csv_file] => :environment do |task, args|
 end
 
 def assign_tags(csv_file)
-  Apartment::Tenant.switch('disney')
+  switch_tenant('disney')
 
   FileUtils.mkdir_p "tag_assignment_files" # mkdir if not existing
   File.open("tag_assignment_files/log.txt", "w") { |file| file.truncate(0) }
