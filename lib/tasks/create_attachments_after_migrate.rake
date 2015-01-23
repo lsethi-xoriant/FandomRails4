@@ -9,7 +9,7 @@ task :create_attachments, [:param1, :param2] => :environment do |t, args|
 end
 
 def create_attachments(url_map, id_map)
-  Apartment::Tenant.switch('disney')
+  switch_tenant('disney')
 
   # Create url map hashes
   puts "Creating url map hashes...\n"
@@ -39,26 +39,52 @@ def create_attachments(url_map, id_map)
   rewards_substring = id_map.slice(id_map.index("rewards: ")..-1)[9..-1]
   id_map_rewards_hash = eval(truncate_end(rewards_substring))
 
+
+  # Create attachments for answers
+  id_map_answers_hash.each do |old_id, new_id|
+    puts "Creating attachment for answer #{new_id}\n"
+    begin
+      url = url_map_answers_hash[old_id.to_s]["answer_image_url"]
+      answer = Answer.find(new_id)
+      answer.media_image.destroy
+      answer.media_image = open(url)
+      answer.save
+
+      if answer.errors.first
+        puts "Error on answer #{new_id}: #{answer.errors.first}\n"
+      end
+    rescue Exception => exception
+      puts "Error on answer #{new_id}: #{exception} - #{exception.backtrace[0, 5]}\n"
+    end
+  end
+
   # Create attachments for call to actions
   id_map_cta_hash.each do |old_id, new_id|
-    puts "Creating attachment for call to action #{new_id}\n"
+    start_time = Time.now
 
     url = url_map_cta_hash[old_id.to_s]["cta_image_url"]
     cta = CallToAction.find(new_id)
     cta.thumbnail.destroy
-    cta.thumbnail = open(url)
+    begin
+      cta.thumbnail = open(url)
 
-    url = url_map_cta_hash[old_id.to_s]["post_image_url"]
-    if url
-      cta.media_image.destroy
-      cta.media_image = open(url)
-    end
-    cta.save
+      url = url_map_cta_hash[old_id.to_s]["post_image_url"]
+      if url
+        cta.media_image.destroy
+        cta.media_image = open(url)
+      end
+      cta.save
+      if cta.errors.first
+        puts "Error on call to action #{new_id}: #{cta.errors.first}\n"
+      else
+        puts "Created attachment for call to action #{new_id}: #{Time.now - start_time}s\n"
+      end
+    rescue Exception => exception
+      puts "Error on call to action #{new_id}: #{exception} - #{exception.backtrace[0, 5]}\n"
+   end
 
-    if cta.errors.first
-      puts "Error on call to action #{new_id}: #{cta.errors.first}\n"
-    end
   end
+
 
   # Create attachments for user call to actions
   id_map_user_cta_hash.each do |old_id, new_id|
@@ -72,21 +98,6 @@ def create_attachments(url_map, id_map)
 
     if cta.errors.first
       puts "Error on user_call_to_action #{new_id}: #{cta.errors.first}\n"
-    end
-  end
-
-  # Create attachments for answers
-  id_map_answers_hash.each do |old_id, new_id|
-    puts "Creating attachment for answer #{new_id}\n"
-
-    url = url_map_answers_hash[old_id.to_s]["answer_image_url"]
-    answer = Answer.find(new_id)
-    answer.media_image.destroy
-    answer.media_image = open(url)
-    answer.save
-
-    if answer.errors.first
-      puts "Error on answer #{new_id}: #{answer.errors.first}\n"
     end
   end
 
