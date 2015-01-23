@@ -1740,7 +1740,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   function initCaptcha() {
     interaction_info_list = getStreamCommentInteractions();
     if(interaction_info_list.length > 0) {
-      $http.post("/captcha" , { interaction_info_list: getStreamCommentInteractions() })
+      $http.get("/captcha" , { params: { "interaction_info_list[]": interaction_info_list }})
         .success(function(data) { 
           initSessionStorageAndCaptchaImage(data);
         }).error(function() {
