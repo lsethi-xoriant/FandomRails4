@@ -56,12 +56,19 @@ class Sites::Disney::RegistrationsController < RegistrationsController
         hash_user[key["key"]] = key["value"]
       end
 
+      if hash_user["MEMBERNAME"].is_a?(Hash)
+        membername = ""
+      else
+        membername = hash_user["MEMBERNAME"].to_s
+      end
+
       user = User.find_by_email(hash_user["EMAIL_ADDRESS"])
       aux = { 
         "profile_completed" => false, 
-        "membername" => hash_user["MEMBERNAME"] 
+        "membername" => membername
       }.to_json
 
+      debugger
       if user
         user.update_attributes(swid: cookies[:SWID], aux: aux)
       else
