@@ -201,10 +201,18 @@ a{
 
 .modal__custom__text {
   font-size: 18px;
-  margin-bottom: 15px;
   span {
     font-weight: bold;
   }
+}
+
+.modal__custom__text--ie8 {
+  margin-bottom: 10px !important;
+  font-size: 18px;
+}
+
+.modal__custom__text--ie8-description {
+  margin-bottom: 15px;
 }
 
 .modal--bg {

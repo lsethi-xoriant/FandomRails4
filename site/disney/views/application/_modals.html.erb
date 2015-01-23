@@ -1,3 +1,29 @@
+ <!--[if lte IE 8]>
+    <div class="modal modal__custom fade" id="ie8-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content modal--bg">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="row">  
+              <div class="col-sm-10 col-sm-offset-1 text-center">
+                <p class="modal__custom__text modal__custom__text--ie8"><span>Siamo spiacenti, il browser utilizzato non è supportato!</span></p>
+                <p class="modal__custom__text--ie8-description">Per vivere a pieno la magica esperienza dei siti Disney, ti invitiamo ad aggiornare il tuo browser alla versione più recente.</p>
+                <button type="button" class="modal__custom__button-sign-up btn btn-primary" data-dismiss="modal"><span>Ok</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("#ie8-modal").modal("show");
+      });
+    </script>
+<![endif]-->
+
 <!-- SIGN IN IN COMMUNITY -->
 <div class="modal modal__custom fade" id="registrate-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
