@@ -268,7 +268,7 @@ module CacheKeysHelper
   # Disney
   # ~~~~~~~~~~
   
-  def get_property_rankings_cache_key
-    "property_rankings_thumbnails"
+  def get_property_rankings_cache_key(extra_key)
+    "property_rankings_thumbnails_#{extra_key}"
   end
 end

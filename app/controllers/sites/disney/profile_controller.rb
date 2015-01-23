@@ -52,13 +52,13 @@ class Sites::Disney::ProfileController < ProfileController
   end
   
   def get_property_rankings
-    cache_short(get_property_rankings_cache_key) do
+    cache_short(get_property_rankings_cache_key(get_disney_property)) do
       property_rankings = Array.new
       properties = get_tags_with_tag("property")
       properties.each do |p|
         if get_disney_property != p.name
           thumb_url = get_upload_extra_field_processor(get_extra_fields!(p)['thumbnail'], :medium) 
-          property_ranking = {"title" => get_extra_fields!(p)['title'], "thumb" => thumb_url, "link" => "/#{p.name}/profile/rankings"}
+          property_ranking = {"title" => p.title, "thumb" => thumb_url, "link" => "#{get_disney_root_path_for_property_name(p.name)}/profile/rankings"}
           property_rankings << property_ranking
         end  
       end

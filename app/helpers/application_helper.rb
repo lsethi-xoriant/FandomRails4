@@ -365,7 +365,12 @@ module ApplicationHelper
   
   def get_tags_with_match(query = "")
     conditions = construct_conditions_from_query(query, "tags.title")
-    tags = Tag.where("#{conditions}").to_a
+    category_tag_ids = get_category_tag_ids()
+    if conditions.empty?
+      tags = Tag.where("id in (?)", category_tag_ids).to_a
+    else
+      tags = Tag.where("#{conditions} AND id in (?)", category_tag_ids).to_a
+    end
     filter_results(tags, query)
   end
   
