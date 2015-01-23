@@ -1,9 +1,6 @@
  <div class="share-interaction__cover__info"> 
   <!-- EMAIL -->
-  <button ng-if="interaction_info.interaction.resource.providers.email && current_user" type="button" class="btn btn-default share-interaction__cta__info__email-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email" ng-class="{'disabled': animation_in_progress}">
-    <span class="fa fa-envelope share-interaction__cover__info__glyphicon-envelope"></span>
-  </button>
-  <button ng-if="interaction_info.interaction.resource.providers.email && !current_user" type="button" class="btn btn-default share-interaction__cta__info__email-button" data-toggle="modal" data-target="#modal-login" ng-class="{'disabled': animation_in_progress}">
+  <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default share-interaction__cta__info__email-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email" ng-class="{'disabled': animation_in_progress}">
     <span class="fa fa-envelope share-interaction__cover__info__glyphicon-envelope"></span>
   </button>
 
@@ -52,11 +49,14 @@
               <p class="share-interaction__modal-feedback">{{interaction_info.user_interaction.success}}</p>
             </div>
 
-            <div class="col-md-12 share-interaction__modal-input-col"> 
+            <div class="col-md-12 share-interaction__modal-input-col" ng-if="current_user"> 
               <input ng-model="interaction_info.user_interaction.share_to_email" class="form-control" type="text" placeholder="mario@rossi.it" name="address">
             </div>
-            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;">
+            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="current_user">
               <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-primary btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'email')">CONDIVIDI</button>
+            </div>
+            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="!current_user">
+              <a class="btn btn-primary btn-block" href="/iur">ENTRA PER CONDIVIDERE</a>
             </div>
 
           </div>
@@ -112,38 +112,5 @@
       </div>
     </div>
   </div>
-  
-  <!-- MODAL LOGIN -->
-  <div class="modal fade" id="modal-login" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content text-center">
-        <div class="modal-body">
-
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
-          <div class="row">
-
-            <div class="col-md-12" style="margin-top: 10px;"> 
-              <p class="call-to-action__share__modal-title">Devi registrarti alla community per poter guadagnare punti.</p>
-            </div>
-
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-body call-to-action__share__modal-panel-body"> 
-                  <img style="width: 100%" ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}">
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;">
-              <button id="login" type="button" class="btn btn-primary btn-block" ng-click="goToLogin();">REGISTRATI</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
   
 </div>

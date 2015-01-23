@@ -462,6 +462,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $window.update_ga_event = function(category, action, label, value) {
+    if($scope.aux && $scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+      category = $scope.aux.current_property_info.path + "_" + category;
+    }
+
     if($scope.google_analytics_code.length > 0) {
       ga('send', 'event', category, action, label, value, true);
     }
@@ -1210,7 +1214,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
       }
   	  
-      $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, aux: $scope.aux, anonymous_user: getAnonymousUserStorage() })
+      $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, anonymous_user: getAnonymousUserStorage() })
           .success(function(data) {
 
             updateUserRewardInView(data.main_reward_counter.general);

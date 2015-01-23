@@ -45,8 +45,8 @@ def create_attachments(url_map, id_map)
     begin
       url = url_map_answers_hash[old_id.to_s]["answer_image_url"]
       answer = Answer.find(new_id)
-      answer.media_image.destroy
-      answer.media_image = open(url)
+      answer.image.destroy
+      answer.image = open(url)
       answer.save
 
       if answer.errors.first

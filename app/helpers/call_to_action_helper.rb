@@ -14,7 +14,7 @@ module CallToActionHelper
     CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
   end
 
-  def build_call_to_action_info_list(calltoactions)
+  def build_call_to_action_info_list(calltoactions, interactions_to_compute = nil)
     calltoaction_info_list = Array.new
     calltoactions.each do |calltoaction|
 
@@ -54,7 +54,7 @@ module CallToActionHelper
           "thumbnail_url" => calltoaction.thumbnail_url,
           "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
           "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
-          "interaction_info_list" => build_interaction_info_list(calltoaction),
+          "interaction_info_list" => build_interaction_info_list(calltoaction, interactions_to_compute),
           "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}")
         },
         "flag" => flag_info,
@@ -69,66 +69,71 @@ module CallToActionHelper
 
   end
 
-  def build_interaction_info_list(calltoaction)
+  def build_interaction_info_list(calltoaction, interactions_to_compute)
 
     interaction_info_list = Array.new
     enable_interactions(calltoaction).each do |interaction|
 
-      resource = interaction.resource
-      resource_question = resource.question rescue nil
-      resource_description = resource.description rescue nil
-      resource_title = resource.title rescue nil
-      resource_one_shot = resource.one_shot rescue false
-      resource_providers = JSON.parse(resource.providers) rescue nil
-
-      if current_user
-        user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)
-        if user_interaction
-          user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
-        end
-      end
-
       resource_type = interaction.resource_type.downcase
-      case resource_type
-      when "quiz"
-        resource_type = resource.quiz_type.downcase
-        answers = build_answers_for_resource(interaction, resource.answers, resource_type, user_interaction)
-      when "comment"
-        comment_info = build_comments_for_resource(interaction)
-      when "like"
-        like_info = build_likes_for_resource(interaction)
-      when "upload"
-        upload_info = build_uploads_for_resource(interaction)
-      end
 
-      if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
-        when_show_interaction = "SEMPRE_VISIBILE"
-      else
-        when_show_interaction = interaction.when_show_interaction
-      end
+      if !interactions_to_compute || interactions_to_compute.include?(resource_type)
 
-      interaction_info_list << {
-        "interaction" => {
-          "id" => interaction.id,
-          "when_show_interaction" => when_show_interaction,
-          "overvideo_active" => false,
-          "seconds" => interaction.seconds,
-          "resource_type" => resource_type,
-          "resource" => {
-            "question" => resource_question,
-            "title" => resource_title,
-            "description" => resource_description,
-            "one_shot" => resource_one_shot,
-            "answers" => answers,
-            "providers" => resource_providers,
-            "comment_info" => comment_info,
-            "like_info" => like_info,
-            "upload_info" => upload_info
-          }
-        },
-        "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction),
-        "user_interaction" => user_interaction_for_interaction_info
-      }
+        resource = interaction.resource
+        resource_question = resource.question rescue nil
+        resource_description = resource.description rescue nil
+        resource_title = resource.title rescue nil
+        resource_one_shot = resource.one_shot rescue false
+        resource_providers = JSON.parse(resource.providers) rescue nil
+
+        if current_user
+          user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)
+          if user_interaction
+            user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
+          end
+        end
+
+        
+        case resource_type
+        when "quiz"
+          resource_type = resource.quiz_type.downcase
+          answers = build_answers_for_resource(interaction, resource.answers, resource_type, user_interaction)
+        when "comment"
+          comment_info = build_comments_for_resource(interaction)
+        when "like"
+          like_info = build_likes_for_resource(interaction)
+        when "upload"
+          upload_info = build_uploads_for_resource(interaction)
+        end
+
+        if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
+          when_show_interaction = "SEMPRE_VISIBILE"
+        else
+          when_show_interaction = interaction.when_show_interaction
+        end
+
+        interaction_info_list << {
+          "interaction" => {
+            "id" => interaction.id,
+            "when_show_interaction" => when_show_interaction,
+            "overvideo_active" => false,
+            "seconds" => interaction.seconds,
+            "resource_type" => resource_type,
+            "resource" => {
+              "question" => resource_question,
+              "title" => resource_title,
+              "description" => resource_description,
+              "one_shot" => resource_one_shot,
+              "answers" => answers,
+              "providers" => resource_providers,
+              "comment_info" => comment_info,
+              "like_info" => like_info,
+              "upload_info" => upload_info
+            }
+          },
+          "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction),
+          "user_interaction" => user_interaction_for_interaction_info
+        }
+      end
 
     end
 
@@ -226,7 +231,7 @@ module CallToActionHelper
 
   def enable_interactions(calltoaction)
     cache_short("enable_interactions_#{calltoaction.id}") do
-      calltoaction.interactions.where("when_show_interaction <> ?", "MAI_VISIBILE").to_a
+      calltoaction.interactions.includes(:resource).where("when_show_interaction <> ?", "MAI_VISIBILE").to_a
     end
   end
 
