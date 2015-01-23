@@ -60,6 +60,9 @@ GEM
       sass (~> 3.2)
     buftok (0.2.0)
     builder (3.0.4)
+    bullet (4.14.2)
+      activesupport (>= 3.0.0)
+      uniform_notifier (>= 1.6.0)
     cancan (1.6.10)
     capistrano (3.1.0)
       i18n
@@ -372,6 +375,7 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    uniform_notifier (1.6.2)
     uuidtools (2.1.4)
     warden (1.2.3)
       rack (>= 1.0)
@@ -389,6 +393,7 @@ DEPENDENCIES
   aws-ses (~> 0.5.0)
   better_errors (>= 0.7.2)
   binding_of_caller
+  bullet
   cancan
   capistrano
   capistrano-rails

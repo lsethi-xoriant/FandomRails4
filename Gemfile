@@ -56,6 +56,7 @@ group :development do
   gem 'capistrano-rails'
   
   gem 'colorize'
+  gem 'bullet'
 end
 
 group :production do

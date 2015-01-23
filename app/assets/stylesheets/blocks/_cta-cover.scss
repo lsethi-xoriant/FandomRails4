@@ -106,7 +106,26 @@
   padding-left: 10px;
 }
 
+.cta-cover__flag-img {
+  width: 107px;
+}
+
 @media (max-width: $screen-sm-min) { 
+  .cta-cover__flag {
+    left: 10px;
+    position: absolute;
+    top: -3px;
+    z-index: 10;
+  }
+
+  .cta-cover__flag-img {
+    width: 70px;
+  }
+
+  .cta-cover__title {
+    font-size: 18px;
+  }
+
   .cta-cover__thumbnail-row {
     height: 200px; 
     overflow: hidden;
