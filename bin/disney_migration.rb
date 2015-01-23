@@ -405,7 +405,7 @@ def migrate_interactions(source_db_tenant, destination_db_tenant, source_db_conn
       #"id" => line["id"].to_i,
       "name" => nullify_or_escape_string(source_db_connection, "#{line["name"]}-id#{line["id"]}".gsub(" ", "")),
       "seconds" => line["video_second"] != nil ? line["video_second"] : 0,
-      "when_show_interaction" => (line["intr_type"] != nil and line["intr_type"][12..-12] == ("Versus")) ? "OVERVIDEO_DURING" : "SEMPRE_VISIBILE",
+      "when_show_interaction" => (line["intr_type"] != nil and line["intr_type"][12..-12] == ("Versus")) ? "OVERVIDEO_END" : "SEMPRE_VISIBILE",
       "required_to_complete" => (line["intr_type"] != nil and line["intr_type"][12..-12] == ("Quiz" || "Versus" || "CheckContent")) ? "t" : "f",
       "resource_id" => new_resource_id(source_db_connection, destination_db_connection, line["intr_type"], line["intr_id"], quizzes_id_map, checks_id_map, plays_id_map),
       "resource_type" => (line["intr_type"] != nil and line["intr_type"][12..-12] == "ActionVideo") ? "Play" : nullify_or_escape_string(source_db_connection, line["intr_type"][12..-12]),
@@ -468,9 +468,17 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
         new_username = nullify_or_escape_string(source_db_connection, assign_new_username(destination_db_tenant, destination_db_connection, line["nickname"]))
       end
 
+      email = nullify_or_escape_string(source_db_connection, line["email"])
+      if (new_username == "" or new_username == "scheke")
+        new_username = email
+        aux = "{\"profile_completed\":false}"
+      else
+        aux = "{}"
+      end
+
       fields = {
         #"id" => line["id"].to_i,
-        "email" => nullify_or_escape_string(source_db_connection, line["email"]),
+        "email" => email,
         "encrypted_password" => "NULL",
         "reset_password_token" => "NULL",
         "reset_password_sent_at" => "NULL",
@@ -508,7 +516,7 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
         "username" => new_username,
         "newsletter" => "NULL",
         "avatar_selected_url" => nullify_or_escape_string(source_db_connection, line["avatar"]), # alert: in Disney, this is the selected avatar name
-        "aux" => "{}"
+        "aux" => aux
       }
   
       query = build_query_string(destination_db_tenant, "users", fields)
@@ -1426,7 +1434,7 @@ def create_comment_and_like_interaction_for_cta_with_no_comments_or_likes(destin
   call_to_actions_without_comments_ids_array.each do |id|
     fields_for_comments = {
       #"id" => count_for_comments + 1,
-      "must_be_approved" => "f",
+      "must_be_approved" => "t",
       "title" => "#COMMENTCTA#{id}",
       "created_at" => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S"),
       "updated_at" => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")
