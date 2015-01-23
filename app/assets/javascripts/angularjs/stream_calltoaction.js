@@ -462,6 +462,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $window.update_ga_event = function(category, action, label, value) {
+    if($scope.aux && $scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+      category = $scope.aux.current_property_info.path + "_" + category;
+    }
+
     if($scope.google_analytics_code.length > 0) {
       ga('send', 'event', category, action, label, value, true);
     }
