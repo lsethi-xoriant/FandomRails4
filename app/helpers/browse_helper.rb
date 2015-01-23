@@ -23,9 +23,15 @@ module BrowseHelper
     attribute :comments, type: Integer
     attribute :tags
   end
+  
+  def get_browse_settings
+    cache_short(get_browse_settings_key) do
+      Setting.find_by_key(BROWSE_SETTINGS_KEY)
+    end
+  end
 
   def init_browse_sections()
-    browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY)
+    browse_settings = get_browse_settings
     browse_sections_arr = []
     if browse_settings
       browse_areas = browse_settings.value.split(",")
@@ -230,7 +236,7 @@ module BrowseHelper
         contents << cta_to_category(element)
         tags = addCtaTags(tags, element)
       else
-        contents << tag_to_category(element)
+        contents << tag_to_category(element, true)
         tags = addTagTags(tags, element)
       end
     end

@@ -31,7 +31,7 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
   
-  def tag_to_category(tag, populate_desc = true)
+  def tag_to_category(tag, needs_related_tags = false, populate_desc = true)
     thumb_field = get_extra_fields!(tag)["thumbnail"]
     has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
     thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if thumb_field
@@ -58,7 +58,7 @@ module ApplicationHelper
       header_image_url: header_image,
       icon: icon,
       category_icon: category_icon,
-      tags: get_tag_ids_for_tag(tag)
+      tags: needs_related_tags ? get_tag_ids_for_tag(tag) : []
     )
   end
   
@@ -367,9 +367,9 @@ module ApplicationHelper
     conditions = construct_conditions_from_query(query, "tags.title")
     category_tag_ids = get_category_tag_ids()
     if conditions.empty?
-      tags = Tag.where("id in (?)", category_tag_ids).to_a
+      tags = Tag.includes(:tags_tags).where("id in (?)", category_tag_ids).to_a
     else
-      tags = Tag.where("#{conditions} AND id in (?)", category_tag_ids).to_a
+      tags = Tag.includes(:tags_tags).where("#{conditions} AND id in (?)", category_tag_ids).to_a
     end
     filter_results(tags, query)
   end

@@ -14,7 +14,7 @@
 		      <div class="rewards-flexslider">
 		    	<ul class="slides">
 		    		<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['user_rewards']">
-						<div class="cta-preview">
+						<div class="cta-preview--slider">
 							<div class="row">
 								<div class="col-xs-12">
 									<div class="cta-preview__thumbnail">
@@ -51,7 +51,7 @@
 		      <div class="rewards-flexslider">
 			    <ul class="slides">
 					<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['user_available_rewards']">
-						<div class="cta-preview" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
+						<div class="cta-preview--slider" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
 							<div class="row">
 								<div class="col-xs-12">
 									<div class="cta-preview__thumbnail">
@@ -91,7 +91,7 @@
 		      <div class="rewards-flexslider">
 		    	<ul class="slides">
 		    		<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['newest_rewards']">
-		    			<div class="cta-preview" ng-if="reward.reward_info.status != 'gained'">
+		    			<div class="cta-preview--slider" ng-if="reward.reward_info.status != 'gained'">
 							<div class="row">
 								<div class="col-xs-12">
 									<div class="cta-preview__thumbnail">
@@ -110,7 +110,7 @@
 							<div class="row cta-preview__counter">
 							</div>
 						</div>
-						<div class="cta-preview" ng-if="reward.reward_info.status == 'gained'">
+						<div class="cta-preview--slider" ng-if="reward.reward_info.status == 'gained'">
 							<div class="row">
 								<div class="col-xs-12">
 									<div class="cta-preview__thumbnail">
@@ -147,7 +147,7 @@
 		      <div class="rewards-flexslider">
 		    	<ul class="slides">
 		    		<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['all_rewards']">
-		    			<div class="cta-preview" ng-if="reward.reward_info.status != 'gained'">
+		    			<div class="cta-preview--slider" ng-if="reward.reward_info.status != 'gained'">
 							<div class="row">
 								<div class="col-xs-12">
 									<div class="cta-preview__thumbnail">
@@ -166,7 +166,7 @@
 							<div class="row cta-preview__counter">
 							</div>
 						</div>
-						<div class="cta-preview" ng-if="reward.reward_info.status == 'gained'">
+						<div class="cta-preview--slider" ng-if="reward.reward_info.status == 'gained'">
 							<div class="row">
 								<div class="col-xs-12">
 									<div class="cta-preview__thumbnail">
@@ -200,7 +200,7 @@
 	      slideshow: false,
 	      animationLoop: false,
 	      touch: true,
-	      itemWidth: 226,
+	      itemWidth: 273,
 	      itemMargin: 15,
 	      controlNav: false,
 	      prevText: "",

@@ -42,7 +42,7 @@ class BrowseController < ApplicationController
   end
   
   def index_category
-    tag = Tag.find(params[:id])
+    tag = Tag.includes(:tags_tags).find(params[:id])
     @category = tag_to_category(tag)
     @contents, @tags = get_contents_by_category_with_tags(tag)
   end

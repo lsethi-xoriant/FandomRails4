@@ -249,6 +249,10 @@ module CacheKeysHelper
   def get_recent_contents_cache_key(query)
     "recent_contents_cache_key_#{query}"
   end
+  
+  def get_browse_settings_key
+    "browse_settings_key"
+  end
 
   # Coin
   # ~~~~~~~~~~
