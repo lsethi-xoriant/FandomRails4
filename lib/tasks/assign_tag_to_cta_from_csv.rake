@@ -25,7 +25,7 @@ def assign_tags(csv_file)
       row = eval(csv_row.inspect)
       if csv_row[2] # there are some tags in row
         cta = CallToAction.find_by_description(row[0])
-        tags = csv_row[2][0..-2].split(',')
+        tags = csv_row[2][-1] == "," ? csv_row[2][0..-2].split(',') : csv_row[2].split(',')
         tags.each do |tag_name|
           tag_name.gsub!(/\s+/, "")
           tag = Tag.find_by_name(tag_name)
