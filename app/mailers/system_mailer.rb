@@ -2,12 +2,12 @@
 # encoding: utf-8
 
 class SystemMailer < ActionMailer::Base
-  
-  def share_interaction(user, address_to_send, calltoaction, request)
-    subject = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["title"]
+
+  def share_interaction(user, to, calltoaction, aux = {})
+    subject = $site.title
     @cuser = user
     @calltoaction = calltoaction
-    mail(to: address_to_send, subject: "#{subject} - Un tuo amico di ha condiviso un contenuto")
+    mail(to: to, subject: "#{subject} - Un tuo amico di ha condiviso un contenuto")
   end
 
   def welcome_mail(user)

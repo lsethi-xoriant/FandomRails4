@@ -612,7 +612,7 @@ class CallToActionController < ApplicationController
     elsif provider == "email"
 
       if address =~ Devise.email_regexp
-        SystemMailer.share_interaction(current_user, address, interaction.call_to_action, request).deliver
+        send_share_interaction_email(address, interaction.call_to_action)
       else
         result = false
         error = "Formato non valido"
@@ -623,6 +623,10 @@ class CallToActionController < ApplicationController
     end
 
     [result, error]
+  end
+
+  def send_share_interaction_email(address, calltoaction)
+    SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
   end
   
   def upload

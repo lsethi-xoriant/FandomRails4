@@ -24,6 +24,10 @@ class Sites::Disney::CallToActionController < CallToActionController
     end
   end
 
+  def send_share_interaction_email(address, calltoaction)
+    SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
+  end
+
   def append_calltoaction
     calltoactions_showed_ids = params[:calltoactions_showed]
     calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")

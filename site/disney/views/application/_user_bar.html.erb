@@ -53,6 +53,12 @@
                 <a href="<%= aux["current_property_info"]["outer-url"] %>"><%= aux["current_property_info"]["outer"] %></a>
               </li>
             <% end %>
+            <hr style="margin-top: 5px; margin-bottom: 5px;">
+            <li ng-repeat="property in aux.property_info">
+              <a href="/{{property.path}}">
+                {{property.title}}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
