@@ -365,7 +365,7 @@ module ApplicationHelper
   
   def get_tags_with_match(query = "")
     conditions = construct_conditions_from_query(query, "tags.title")
-    tags = Tag.where("(#{conditions})").to_a
+    tags = Tag.where("#{conditions}").to_a
     filter_results(tags, query)
   end
   
@@ -383,7 +383,11 @@ module ApplicationHelper
   
   def get_ctas_with_match(query = "")
     conditions = construct_conditions_from_query(query, "call_to_actions.title")
-    ctas = CallToAction.active.where("#{conditions} AND user_id IS NULL").to_a
+    if conditions.empty?
+      ctas = CallToAction.active.where("user_id IS NULL").to_a
+    else
+      ctas = CallToAction.active.where("#{conditions} AND user_id IS NULL").to_a
+    end
     filter_results(ctas, query)
   end
   
