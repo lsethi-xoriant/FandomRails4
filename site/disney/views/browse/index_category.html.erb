@@ -1,6 +1,6 @@
 <div class="container container--default" ng-controller="BrowseCtrl" ng-init="init(<%= @category.to_json %>, <%= @contents.to_json %>, <%= @tags.to_json %>)">
 	<div class="row category-header">
-    	<img ng-src="{{category.header_image_url}}" class="img-responsive" />
+    	<img ng-src="{{category.header_image_url}}" class="img-responsive category-header__header-image" />
     	<h1 class="category-header__title">{{category.title}}</h1>
     	<div class="category-header__filter-area"><button class="btn btn-primary" ng-click="isTagFilterOpen = !isTagFilterOpen"><span class="caret"></span> Filtra</button></div>
     </div>

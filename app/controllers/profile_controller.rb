@@ -81,19 +81,16 @@ class ProfileController < ApplicationController
   
   def notices
     Notice.mark_all_as_viewed()
-    notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC")
+    notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC").to_a
     @notices_list = group_notice_by_date(notices)
   end
   
   def group_notice_by_date(notices)
-    notices_list = Hash.new
+    notices_list = []
+    
     notices.each do |n|
-      key = n.created_at.strftime("%d %B %Y")
-      if notices_list[key]
-        notices_list[key] << n
-      else
-        notices_list[key] = [n]
-      end
+      date = n.created_at.strftime("%d %B %Y")
+      notices_list << {date: date, notice: n}
     end
     notices_list
   end

@@ -259,7 +259,7 @@ module BrowseHelper
   
   def get_category_tag_ids
     cache_short("category_tag_ids") do
-      Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'title' <> '' and extra_fields->>'header_image' <> '' and extra_fields->>'description' <> ''").map{|t| t.id}
+      Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'title' <> '' and extra_fields->>'header_image' <> ''").map{|t| t.id}
     end
   end
 

@@ -8,6 +8,7 @@
 //= require angular-route
 //= require angular-animate
 //= require angularjs/ng-table
+//= require angularjs/angular-filter
 //= require angularjs/fandom
 //= require angularjs/notice
 //= require angularjs/comment
@@ -28,4 +29,3 @@
 //= require jquery.jcarousel
 //= require jquery.flexslider
 //= require fastclick
-

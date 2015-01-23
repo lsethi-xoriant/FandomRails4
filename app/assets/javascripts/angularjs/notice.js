@@ -8,7 +8,7 @@ noticeModule.config(["$httpProvider", function(provider) {
 
 NoticeCtrl.$inject = ['$scope', '$window', '$timeout', '$resource','ngTableParams', '$sce'];
 NoticeBarCtrl.$inject = ['$scope', '$resource', '$sce'];
-NoticePageCtrl.$inject = ['$scope', '$resource', '$sce'];
+NoticePageCtrl.$inject = ['$scope', '$resource', '$sce', '$filter'];
 noticeModule.controller('NoticeCtrl', NoticeCtrl);
 noticeModule.controller('NoticeBarCtrl', NoticeBarCtrl);
 noticeModule.controller('NoticePageCtrl', NoticePageCtrl);
@@ -94,12 +94,12 @@ function NoticeBarCtrl($scope, $resource, $sce) {
 	});
 }
 
-function NoticePageCtrl($scope, $resource, $sce) {
+function NoticePageCtrl($scope, $resource, $sce, $filter) {
 	//LatestNoticeService.get_notices();
 	var Api = $resource('/profile/notices/load_more');
 	
 	$scope.init = function(notices) {
-		//console.log(notices);
+		console.log(notices);
 		
 		angular.forEach(notices, function(value, key) {
 			angular.forEach(value, function(value, key) {
@@ -144,4 +144,9 @@ function NoticePageCtrl($scope, $resource, $sce) {
 	      } // success AJAX
       	});
 	};
+	
+	$scope.min = function(arr) {
+    	return $filter('min')
+      		($filter('map')(arr, 'date'));
+ 	};
 }
