@@ -12,6 +12,12 @@
   z-index: 10;
 }
 
+.cta-cover__column-title {
+  font-size: 24px;
+  margin: 0 0 30px 0;
+  padding-top: 6px;
+}
+
 .cta-cover__card:hover {
   -webkit-box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
