@@ -20,7 +20,7 @@
 				  		<div class="ranking-element ranking-element--myposition">
 				  			<p class="ranking-element__position ranking-element__position--myposition text-center"># <%= @property_rank[:my_position] %></p>
 				  			<img src="<%= current_avatar %>" class="ranking-element__avatar" />
-				  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= extract_name_or_username(current_user) %></p>
+				  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= current_user.username %></p>
 				  			<div class="label label-warning ranking-element__points">+ <%= get_point %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
 				  		</div>
 				</li>
