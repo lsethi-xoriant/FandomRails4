@@ -25,6 +25,7 @@ class Sites::Disney::CallToActionController < CallToActionController
   end
 
   def send_share_interaction_email(address, calltoaction)
+    aux = {}
     SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
   end
 
