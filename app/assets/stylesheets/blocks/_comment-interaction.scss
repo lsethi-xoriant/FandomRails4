@@ -76,13 +76,15 @@
   background: #efefef;
   padding-top: 15px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #e2e2e2;
+  border: 1px solid #e2e2e2;
 }
 
 .comment-interaction__comment-row { 
   padding-top: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid #e2e2e2;
+  border-left: 1px solid #e2e2e2;
+  border-right: 1px solid #e2e2e2;
 }
 
 .comment-interaction__comment-even {
@@ -150,7 +152,16 @@
   padding-left: 0;
 }
 
+.comment-interaciton__col {
+  padding-left: 30px;
+}
+
 @media (max-width: $screen-sm-min) { 
+
+  .comment-interaciton__col {
+    padding-left: 15px;
+  }
+
   .cta-cover__card__footer {
     padding: 10px !important;
   }

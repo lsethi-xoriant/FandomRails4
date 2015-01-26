@@ -9,8 +9,7 @@
 }
 
 .cta__media-footer {
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding: 10px 58px;
   margin-bottom: 15px;
   background: #f3f3f5; 
   background: -webkit-linear-gradient(#fdfdfd, #f3f3f5);
@@ -27,8 +26,8 @@
 }
 
 .cta__description-small-col {
-  padding: 0;
   margin-bottom: 15px;
+  margin-top: 10px;
 }
 
 .cta__title-small {
@@ -44,15 +43,19 @@
   padding-top: 20px
 }
 
+.cta__winnable-reward--single-page {
+  padding-top: 30px
+}
+
 .cta__title {
-  font-size: 22px;
-  margin-bottom: 10px;
+  font-size: 1.9em;
+  margin-bottom: 25px;
   margin-top: 5px;
   padding-top: 5px;
 }
 
 .cta__miniformat-col {
-  padding-top: 20px;
+  padding-top: 30px;
 }
 
 .ctas__search {
