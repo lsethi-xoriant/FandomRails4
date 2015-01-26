@@ -40,8 +40,8 @@ def create_attachments(url_map, id_map)
   id_map_rewards_hash = eval(truncate_end(rewards_substring))
 
   # Create attachments for answers
+  puts "Creating attachment for answers...\n"
   id_map_answers_hash.each do |old_id, new_id|
-    puts "Creating attachment for answer #{new_id}\n"
     begin
       url = url_map_answers_hash[old_id.to_s]["answer_image_url"]
       answer = Answer.find(new_id)
@@ -58,13 +58,13 @@ def create_attachments(url_map, id_map)
   end
 
   # Create attachments for call to actions
+  puts "Creating attachment for call_to_actions...\n"
   id_map_cta_hash.each do |old_id, new_id|
     start_time = Time.now
-
+    begin
     url = url_map_cta_hash[old_id.to_s]["cta_image_url"]
     cta = CallToAction.find(new_id)
     cta.thumbnail.destroy
-    begin
       cta.thumbnail = open(url)
 
       url = url_map_cta_hash[old_id.to_s]["post_image_url"]
@@ -81,14 +81,12 @@ def create_attachments(url_map, id_map)
     rescue Exception => exception
       puts "Error on call to action #{new_id}: #{exception} - #{exception.backtrace[0, 5]}\n"
    end
-
   end
 
   # Create attachments for user call to actions
+  puts "Creating attachment for user ctas...\n"
   id_map_user_cta_hash.each do |old_id, new_id|
     begin
-        puts "Creating attachment for user cta #{new_id}\n"
-
         url = url_map_user_cta_hash[old_id.to_s]["user_call_to_action_image_url"]
         cta = CallToAction.find(new_id)
         cta.media_image.destroy
@@ -104,10 +102,9 @@ def create_attachments(url_map, id_map)
   end
 
   # Create attachments for rewards
+  puts "Creating attachment for rewards...\n"
   id_map_rewards_hash.each do |old_prize_id, new_id|
     begin
-      puts "Creating attachment for reward #{new_id}\n"
-
       old_id = old_prize_id.gsub("prize", "")
       url = url_map_rewards_hash[old_id.to_s]["prize_image_url"]
       reward = Reward.find(new_id)
