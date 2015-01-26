@@ -78,6 +78,13 @@ $navbar-inverse-toggle-border-color:        #999 !default;
   src: url("matterhorn-regular.eot") format("eot"), url("matterhorn-regular.woff") format("woff"), url("matterhorn-regular.ttf") format("truetype"), url("matterhorn-regular.svg") format("svg");
 }
 
+@font-face {
+  font-family: 'MatterhornBold';
+  font-style: normal;
+  font-weight: 400;
+  src: url("matterhorn-bold.eot") format("eot"), url("matterhorn-bold.woff") format("woff"), url("matterhorn-bold.ttf") format("truetype"), url("matterhorn-bold.svg") format("svg");
+}
+
 //import style folders
 @import "bootstrap/bootstrap";
 @import "blocks/**/*";

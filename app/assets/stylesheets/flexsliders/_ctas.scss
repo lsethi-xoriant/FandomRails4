@@ -94,11 +94,15 @@
 }
 
 .ctas__flexslider {
+    .flex-direction-nav a {
+        color: rgba(255, 255, 255, 0.3) !important;
+        text-shadow: none;
+    }
     .flex-control-paging {
         margin-bottom: 45px; 
         z-index: 10;
         li a {
-            background: rgba(255, 255, 255, 0.5)
+            background: rgba(255, 255, 255, 0.5);
         }
         li a.flex-active {
             background: #fff;
@@ -109,15 +113,21 @@
 @media (min-width: $screen-sm-min) { 
   .ctas__flexslider {
     .flex-direction-nav a {
-        color: #ccc !important;
+        color: rgba(255, 255, 255, 0.3) !important;
         margin: -15px 0 0 !important;
+    }
+
+    .flex-direction-nav a:hover {
+        color: rgba(255, 255, 255, 0.7) !important;
+        transition: color 333ms ease 0s;
+        -webkit-transition: color 333ms ease 0s;
     }
 
     .flex-control-paging {
         margin-bottom: 45px; 
         z-index: 10;
         li a {
-            background: rgba(255, 255, 255, 0.5)
+            background: rgba(255, 255, 255, 0.5);
         }
         li a.flex-active {
             background: #fff;
@@ -156,7 +166,7 @@
         }
 
         .flex-direction-nav a {
-            color: #ccc !important;
+            color: rgba(255, 255, 255, 0.3) !important;
             margin: -15px 0 0 !important;
         }
 
@@ -172,7 +182,7 @@
             margin-bottom: 5px; 
             z-index: 10;
             li a {
-                background: rgba(255, 255, 255, 0.5)
+                background: rgba(255, 255, 255, 0.5);
             }
             li a.flex-active {
                 background: #fff;

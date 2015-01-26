@@ -18,13 +18,13 @@ $filters-item-margin-right: 15px;
 }
 
 .filters__flexslider-image {
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 7px;
 }
 
 .filters__title {
     color: #fff;
-    text-transform: uppercase;
+    text-transform: capitalize;
     text-shadow: 0 1px #000;
     top: 65px;
     font-size: 18px;
@@ -51,6 +51,7 @@ $filters-item-margin-right: 15px;
 
 .filters__flexslider {
     margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 @media (min-width: $screen-sm-min) { 
@@ -81,7 +82,7 @@ $filters-item-margin-right: 15px;
 
     .filters__flexslider-desktop, .filters__flexslider-mobile {
         .flex-direction-nav a {
-            color: #ccc !important;
+            color: #999 !important;
             margin: -10px 0 0 !important;
         }
 

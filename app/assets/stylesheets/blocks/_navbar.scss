@@ -13,7 +13,7 @@
 .navbar__avatar {
   position: absolute; 
   right: 15px; 
-  bottom: 10px; 
+  bottom: 20px; 
   width: 60px
 }
 
@@ -33,11 +33,19 @@
 .navbar-nav > li > a {
   background: black;
   padding-top: 12px;
+  font-size: 15px;
+  font-family: "MatterhornBold";
 }
 
 .navbar-toggle {
   margin-top: 4px;
   padding: 8px 10px;
+}
+
+
+.navbar .navbar-nav > li > a:hover, .navbar .navbar-nav > li > a:focus {
+  transition: background-color 0.2s ease 0s;
+  -webkit-transition: background-color 0.2s ease 0s;
 }
 
 @media (max-width: $screen-sm-min) { 

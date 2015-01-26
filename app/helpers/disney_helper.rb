@@ -208,7 +208,8 @@ module DisneyHelper
           "background" => get_extra_fields!(property)["label-background"],
           "path" => compute_property_path(property),
           "title" => property.title,
-          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil) 
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil),
+          "image_hover" => (get_upload_extra_field_processor(get_extra_fields!(property)["image-hover"], :thumb) rescue nil) 
         }
       end
     end
