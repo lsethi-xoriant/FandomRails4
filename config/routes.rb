@@ -48,7 +48,8 @@ Fandom::Application.routes.draw do
         end
 
         resources :call_to_action
-
+        
+        match "rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
         match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         root :to => "application#index"
