@@ -241,7 +241,6 @@ class Easyadmin::EasyadminController < ApplicationController
     @user_week_list = Hash.new
     if User.any? 
       if (params[:datepicker_from_date].blank? || params[:commit] == "Reset") 
-        #first_user_created_at = User.order("created_at ASC").limit(1).first.created_at
         @from_date_string = (Time.now - 1.week).strftime('%m/%d/%Y')
       else
         @from_date_string = params[:datepicker_from_date]

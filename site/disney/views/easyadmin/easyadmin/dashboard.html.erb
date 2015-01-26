@@ -1,0 +1,418 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "dashboard" } %>
+ 
+  <div id="content">    
+    
+  <div id="content-header">
+    <h1>Statistiche generali</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+  <div class="row">
+    <div class="col-md-2">
+    	<%= form_tag :method => 'post' do %>
+        <div class="form-group">
+          <label class="text-input">DAL GIORNO</label></br>
+          <%= text_field_tag :datepicker_from_date, @from_date_string, :class => "form-control" %>
+        </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label class="text-input">AL GIORNO</label></br>
+        <%= text_field_tag :datepicker_to_date, @to_date_string, :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div>
+        <label class="text-input">PERIODO</label></br>
+        <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
+        <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        </br><%= submit_tag 'RESET', class: 'btn btn-primary btn-block' %>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        </br><a href="/easyadmin/export_users" class="btn btn-primary btn-block">ESPORTA CSV</a>
+      </div>
+    </div>
+    </div> <!-- /.row -->
+
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Statistiche cross-property</h3>
+        <hr/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="portlet">
+          <div class="portlet-header">
+            <h3>
+              <i class="fa fa-bar-chart-o"></i>
+              UTENTI REGISTRATI DAL <%= @from_date_string %> AL <%= @to_date_string %>
+            </h3>
+          </div> <!-- /.portlet-header -->
+          <div class="portlet-content">
+            <div id="line-chart" class="chart-holder">
+            </div>
+          </div> <!-- /.portlet-content -->
+        </div> <!-- /.portlet -->
+      </div> <!-- /.col -->
+
+    </div> <!-- /.row -->
+
+    <br/>
+    
+    <div class="row">
+    	<div class="col-md-6">
+    		<h4> Registrazioni totali </h4>
+   			<hr/>
+   		</div>
+   		<div class="col-md-3">
+    		<h4> Premi totali </h4>
+   			<hr/>
+   		</div>
+      <div class="col-md-3">
+        <h4> Commenti totali </h4>
+        <hr/>
+      </div>
+    </div> <!-- /.row -->
+    
+    <div class="row">
+      <div class="col-md-3">
+        <div class="portlet">
+          <div class="portlet-header">
+            <h3>
+              <i class="fa fa-bar-chart-o"></i>
+              REGISTRAZIONI
+            </h3>
+          </div> <!-- /.portlet-header -->
+          <div class="portlet-content">
+            <div id="fb-reg-donut-chart" class="chart-holder"></div>
+          </div> <!-- /.portlet-content -->
+        </div> <!-- /.portlet -->
+      </div> <!-- /.col -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary">
+            <div class="details">
+              <span class="content"> UTENTI REGISTRATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
+              <span class="value"><%= @total_users %></span>
+            </div>
+            <div class="visual">
+              <i class="fa fa-user"></i>
+            </div>
+          </div><hr/>
+          <div class="dashboard-stat secondary">
+            <div class="details">
+              <span class="content"> UTENTI REGISTRATI CON SOCIAL <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
+              <span class="value"><%= @social_reg_users %></span>
+            </div>
+            <div class="visual">
+              <i class="fa fa-group"></i>
+            </div>
+          </div><hr/>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #50A550;">
+            <div class="details">
+              <span class="content"> SBLOCCATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @total_rewards_to_date - @total_rewards_from_date %></span>
+            </div> <!-- /.details -->	
+            <div class="visual">
+            	<i class="fa fa-trophy" style="color: #FFF"></i>
+            </div>
+          </div><hr/> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
+            <div class="details">
+              <span class="content"> LASCIATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @total_comments_to_date - @total_comments_from_date %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-comments" style="color: #FFF"></i>
+            </div>
+          </div><hr/> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div> <!-- /.row -->
+
+    <hr/>
+
+    <div id="property-stats" class="row">
+      <div class="col-md-3">
+        <h3>Statistiche per property</h3>
+      </div>
+      <div class="col-md-2">
+        <%= submit_tag 'VIOLETTA', class: 'btn btn-primary btn-block' %>
+      </div>
+      <div class="col-md-2">
+        <%= submit_tag 'DISNEY-CHANNEL', class: 'btn btn-primary btn-block' %>
+      </div>
+      <% end %> <!-- form-post -->
+    </div>
+
+    <hr/>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h4><%= "Trivia #{@property_tag_name}" %></h4>
+        <hr/>
+      </div>
+      <div class="col-md-3">
+        <h4><%= "Versus #{@property_tag_name}" %></h4>
+        <hr/>
+      </div>
+    </div> <!-- /.row -->
+
+      <div class="row">
+        <div class="col-md-3">
+          <div class="portlet">
+            <div class="portlet-header">
+              <h3>
+                <i class="fa fa-bar-chart-o"></i>
+                TRIVIA
+              </h3>
+            </div>
+            <div class="portlet-content">
+              <div id="trivia-donut-chart" class="chart-holder"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="dashboard-stat primary" style="background-color: #FFB547;">
+            <div class="details">
+              <span class="content"> RISPOSTE TOTALI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_trivia_answers_to_date - @property_trivia_answers_from_date %></span>
+            </div>
+            <div class="visual">
+              <i class="fa fa-question" style="color: #FFF"></i>
+            </div>
+          </div><hr/>
+          <div class="dashboard-stat primary" style="background-color: #FFB547;">
+            <div class="details">
+              <span class="content"> RISPOSTE ESATTE <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_trivia_correct_answers_to_date - @property_trivia_correct_answers_from_date %></span>
+            </div>
+            <div class="visual">
+              <i class="fa fa-question" style="color: #FFF"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #C199EA;">
+            <div class="details">
+              <span class="content"> RISPOSTE TOTALI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_versus_answers_to_date - @property_versus_answers_from_date %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-random" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div> <!-- /.row -->
+
+    <hr/>
+
+    <div class="row">
+      <div class="col-md-3">
+        <h4><%= "Check #{@property_tag_name}" %></h4>
+        <hr/>
+      </div>
+      <div class="col-md-3">
+        <h4><%= "Like #{@property_tag_name}" %></h4>
+        <hr/>
+      </div>
+      <div class="col-md-3">
+        <h4><%= "Share #{@property_tag_name}" %></h4>
+        <hr/>
+      </div>
+      <div class="col-md-3">
+        <h4><%= "Download #{@property_tag_name}" %></h4>
+        <hr/>
+      </div>
+    </div> <!-- /.row -->
+
+      <div class="row">
+        <div class="col-md-3">
+          <div class="dashboard-stat primary" style="background-color: #DDDDDD;">
+            <div class="details">
+              <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_checks_to_date - @property_checks_from_date %></span>
+            </div>
+            <div class="visual">
+              <i class="fa fa-check" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #FF7A59;">
+            <div class="details">
+              <span class="content"> DATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_likes_to_date - @property_likes_from_date %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-thumbs-up" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #99C1D6;">
+            <div class="details">
+              <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_shares_to_date - @property_shares_from_date %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-share" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
+            <div class="details">
+              <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_downloads_to_date - @property_downloads_from_date %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-download" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div> <!-- /.row -->
+
+    <hr/>
+
+    <div class="row">
+      <div class="col-md-3">
+        <h4><%= "Livelli #{@property_tag_name}" %></h4>
+        <hr/>
+      </div>
+      <div class="col-md-3">
+        <h4><%= "Badge #{@property_tag_name}" %></h4>
+        <hr/>
+      </div>
+    </div> <!-- /.row -->
+
+      <div class="row">
+        <div class="col-md-3">
+          <div class="dashboard-stat primary" style="background-color: #C89175;">
+            <div class="details">
+              <span class="content"> ASSEGNATI <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_assigned_levels_to_date - @property_assigned_levels_from_date %></span>
+            </div>
+            <div class="visual">
+              <i class="fa fa-list-ol" style="color: #FFF"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #80CC80;">
+            <div class="details">
+              <span class="content"> ASSEGNATI <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_assigned_badges_to_date - @property_assigned_badges_from_date %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-certificate" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div> <!-- /.row -->
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var total_users = <%= @total_users %>;
+  var social_reg_users = <%= @social_reg_users %>;
+  var property_trivia = <%= @property_trivia_answers_to_date - @property_trivia_answers_from_date %>
+  var property_correct_trivia = <%= @property_trivia_correct_answers_to_date - @property_trivia_correct_answers_from_date %>
+
+  $(document).ready(function() {
+    buildDonut();
+    buildLine();
+
+    $(window).resize(App.debounce(buildDonut, 325));
+    $(window).resize(App.debounce(buildLine, 325));
+
+    var commit = '<%= params['commit'] %>'
+    if(commit == 'VIOLETTA' || commit == 'DISNEY-CHANNEL')
+      scrollToElement($('#property-stats'));
+  });
+
+  function scrollToElement(ele) {
+    $(window).scrollTop(ele.offset().top).scrollLeft(ele.offset().left);
+  }
+
+  function buildLine() {
+    $('#line-chart').empty();
+
+      var data_arr = [];
+      user_arr = <%= raw(@user_week_list.to_json) %>;
+
+      $.each(user_arr, function(key, value) {
+        data_arr.push({
+          time: key,
+          tot: value.tot,
+          provider: (value.tot - value.simple),
+          simple: value.simple
+        });
+      });
+
+      Morris.Line({
+        element: 'line-chart',
+        data: data_arr,
+        xLabelFormat: function (x) { return (x.getMonth() + 1) + "/" + x.getFullYear(); },
+        xkey: 'time',
+        ykeys: ['tot', 'provider', 'simple'],
+        labels: ['Registrati totali', 'Registrati via social', 'Registrati via email'],
+        lineColors: ["#000", "#f0ad4e", "#e5412d"]
+      });
+
+  }
+
+  function buildDonut() {
+    $('#fb-reg-donut-chart').empty();
+    if(total_users > 0) {
+      Morris.Donut({
+            element: 'fb-reg-donut-chart',
+            data: [
+                { label: 'Registrazioni via social', value: Math.round(((social_reg_users * 100)/total_users)) },
+                { label: 'Registrazioni via mail', value: Math.round((((total_users - social_reg_users) * 100)/total_users)) }
+            ],
+            hideHover: true,
+            colors: ["#f0ad4e", "#e5412d"],
+            formatter: function (y) { return y + "%" }
+      });
+    }
+    $('#trivia-donut-chart').empty();
+    if(property_trivia > 0) {
+      Morris.Donut({
+			element: 'trivia-donut-chart',
+            data: [
+                { label: 'Trivia risposti correttamente', value: Math.round(((property_correct_trivia * 100)/property_trivia)) },
+                { label: 'Trivia risposti erroneamente', value: Math.round((((property_trivia - property_correct_trivia) * 100)/property_trivia)) }
+            ],
+            hideHover: true,
+            colors: ["#f18c09", "#0b62a4"],
+            formatter: function (y) { return y + "%" }
+      });
+     }
+  }
+
+  $(function() {
+    $("#datepicker_from_date").datepicker()
+    $("#datepicker_to_date").datepicker()
+  });
+
+</script>

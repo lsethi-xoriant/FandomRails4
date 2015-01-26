@@ -28,6 +28,10 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "disney" do
 
+        namespace :easyadmin do
+          match "/", :to => "easyadmin#dashboard"
+        end
+        
         match "/iur", to: "application#iur"
         match "/browse/full_search", :to => "browse#full_search"
         match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
@@ -44,8 +48,6 @@ Fandom::Application.routes.draw do
         end
 
         resources :call_to_action
-
-        match "/rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
 
         match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
@@ -406,7 +408,7 @@ Fandom::Application.routes.draw do
   match "/500", :to => "http_error#internal_error_500"
   match "/422", :to => "http_error#unprocessable_entity_422"
 
-  match "rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
+  match "rss", :to => "rss#rss", defaults: { format: 'rss' }
 
   match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 
@@ -414,7 +416,7 @@ Fandom::Application.routes.draw do
   match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
   match "/comments_polling", :to => "call_to_action#comments_polling", defaults: { format: 'json' }
 
-  #match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
+  match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
   match "get_overvideo_during_interaction", :to => "call_to_action#get_overvideo_during_interaction", defaults: { format: 'json' }
   resources :call_to_action do
