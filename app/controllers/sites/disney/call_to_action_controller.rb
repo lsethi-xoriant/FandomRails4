@@ -42,13 +42,14 @@ class Sites::Disney::CallToActionController < CallToActionController
 
     context_tag = get_tag_from_params(get_context())
 
-    calltoactions = cache_short(get_next_ctas_stream_cache_key(context_tag.id, calltoaction_ids_shown.last, get_cta_max_updated_at())) do
-      get_disney_ctas(context_tag).where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown).limit(3).to_a
+    response = calltoactions = cache_short(get_next_ctas_stream_for_user_cache_key(current_or_anonymous_user.id, context_tag.id, calltoaction_ids_shown.last, get_cta_max_updated_at())) do
+      calltoactions = cache_short(get_next_ctas_stream_cache_key(context_tag.id, calltoaction_ids_shown.last, get_cta_max_updated_at())) do
+        get_disney_ctas(context_tag).where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown).limit(3).to_a
+      end
+      {
+        calltoaction_info_list: build_call_to_action_info_list(calltoactions, ["like", "comment", "share"])
+      }
     end
-
-    response = {
-      calltoaction_info_list: build_call_to_action_info_list(calltoactions, ["like", "comment", "share"])
-    }
     
     respond_to do |format|
       format.json { render json: response.to_json }

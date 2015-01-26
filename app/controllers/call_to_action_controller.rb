@@ -150,7 +150,7 @@ class CallToActionController < ApplicationController
     
     log_call_to_action_viewed(calltoaction_id)
     
-    calltoaction = CallToAction.includes(:interactions).active_with_media.find_by_id(calltoaction_id)
+    calltoaction = CallToAction.includes(interactions: :resource).active_with_media.find_by_id(calltoaction_id)
 
     if calltoaction
 

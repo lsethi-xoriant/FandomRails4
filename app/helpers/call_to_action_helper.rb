@@ -233,7 +233,7 @@ module CallToActionHelper
 
   def enable_interactions(calltoaction)
     cache_short("enable_interactions_#{calltoaction.id}") do
-      calltoaction.interactions.includes(:resource).where("when_show_interaction <> ?", "MAI_VISIBILE").to_a
+      calltoaction.interactions.includes(:resource, :call_to_action).where("when_show_interaction <> ?", "MAI_VISIBILE").to_a
     end
   end
 
@@ -246,7 +246,7 @@ module CallToActionHelper
   
   def interactions_required_to_complete(cta)
     cache_short get_interactions_required_to_complete_cache_key(cta.id) do
-      cta.interactions.includes(:call_to_action, :resource).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
+      cta.interactions.includes(:resource, :call_to_action).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
     end
   end
 
