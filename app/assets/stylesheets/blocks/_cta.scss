@@ -9,7 +9,8 @@
 }
 
 .cta__media-footer {
-  padding: 10px 58px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   margin-bottom: 15px;
   background: #f3f3f5; 
   background: -webkit-linear-gradient(#fdfdfd, #f3f3f5);
@@ -121,6 +122,13 @@
   height: 60px; 
   position: absolute;
 }
+
+@media (min-width: $screen-sm-min) { 
+  .cta__media-footer {
+    padding: 10px 58px;
+  }
+}
+
 
 @media (max-width: $screen-sm-min) { 
 

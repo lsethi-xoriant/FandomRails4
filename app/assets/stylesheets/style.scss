@@ -16,11 +16,11 @@ $panel-border-radius:          0px !default;
 
 // Navbar
 
-$navbar-default-color:                      #ccc !default;
+$navbar-default-color:                      #fff !default;
 $navbar-default-bg:                         #000 !default;
 $navbar-default-border:                     darken($navbar-default-bg, 10%) !default;
 
-$navbar-default-link-color:                 #ccc !default;
+$navbar-default-link-color:                 #fff !default;
 $navbar-default-link-hover-color:           #fff !default;
 $navbar-default-link-hover-bg:              $blu !default;
 $navbar-default-link-active-color:          $navbar-default-link-hover-color !default;
@@ -33,8 +33,8 @@ $navbar-default-brand-hover-color:          #42C5ED !default;
 $navbar-default-brand-hover-bg:             transparent !default;
 
 $navbar-default-toggle-hover-bg:            darken($navbar-default-bg, 10%) !default;
-$navbar-default-toggle-icon-bar-bg:         #ccc !default;
-$navbar-default-toggle-border-color:        #ccc !default;
+$navbar-default-toggle-icon-bar-bg:         #fff !default;
+$navbar-default-toggle-border-color:        #fff !default;
 
 $navbar-height:                             40px !default;
 $navbar-border-radius:                      0 !default;

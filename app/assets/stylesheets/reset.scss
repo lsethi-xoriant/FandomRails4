@@ -232,6 +232,19 @@ a{
   background-size: 100% 100%;
 }
 
+@media (min-width: $screen-md-min) { 
+
+  .main-row__covers-left-col {
+    padding-right: 0;
+  }
+
+  .adv__square {
+    float: right;
+  }
+  
+}
+
+
 @media (max-width: $screen-sm-min) { 
   .adv__horizontal {
     margin-bottom: 10px;
