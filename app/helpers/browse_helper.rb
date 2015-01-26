@@ -156,7 +156,7 @@ module BrowseHelper
     category_tag_ids = get_category_tag_ids()
     tags = Tag.where("title ILIKE ? AND id IN (?)","#{term}%", category_tag_ids)
     ctas = CallToAction.active.where("title ILIKE ?","#{term}%")
-    merge_contents(ctas, tags)
+    merge_contents_for_autocomplete(ctas, tags)
   end
   
   
@@ -212,10 +212,27 @@ module BrowseHelper
     end
     contents
   end
+  
+  def prepare_contents_for_autocomplete(elements)
+    contents = []
+    elements.each do |element|
+      if element.class.name == "CallToAction"
+        contents << cta_to_category_light(element, false)
+      else
+        contents << tag_to_category_light(element, false, false)
+      end
+    end
+    contents
+  end
 
   def merge_contents(ctas,tags)
     merged = (ctas + tags).sort_by(&:created_at)
     prepare_contents(merged)
+  end
+  
+  def merge_contents_for_autocomplete(ctas,tags)
+    merged = (ctas + tags).sort_by(&:created_at)
+    prepare_contents_for_autocomplete(merged)
   end
   
   def merge_contents_with_tags(ctas,tags)
