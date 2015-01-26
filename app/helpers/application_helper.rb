@@ -50,7 +50,38 @@ module ApplicationHelper
       id: tag.id,
       has_thumb: has_thumb, 
       thumb_url: thumb_url,
-      title: get_extra_fields!(tag).fetch("title", tag.name),
+      title: tag.title,
+      long_description: populate_desc ? long_description : nil,
+      description: populate_desc ? description : nil,  
+      detail_url: "/browse/category/#{tag.id}",
+      created_at: tag.created_at.to_time.to_i,
+      header_image_url: header_image,
+      icon: icon,
+      category_icon: category_icon,
+      tags: needs_related_tags ? get_tag_ids_for_tag(tag) : []
+    )
+  end
+  
+  def tag_to_category_light(tag, needs_related_tags = false, populate_desc = true)
+    thumb_field = get_extra_fields!(tag)["thumbnail"]
+    has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
+    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if thumb_field
+    if get_extra_fields!(tag).key? "description"
+      description = truncate(get_extra_fields!(tag)["description"], :length => 150, :separator => ' ')
+      long_description = get_extra_fields!(tag)["description"]
+    else
+      description = ""
+      long_description = ""
+    end
+    header_image = get_upload_extra_field_processor(get_extra_fields!(tag)["header_image"], :original) if get_extra_fields!(tag).key? "header_image"
+    icon = get_extra_fields!(tag)["icon"]["url"] if get_extra_fields!(tag).key? "icon"
+    category_icon = get_extra_fields!(tag)["category_icon"]["url"] if get_extra_fields!(tag).key? "category_icon"
+    BrowseCategory.new(
+      type: "tag",
+      id: tag.id,
+      has_thumb: has_thumb, 
+      thumb_url: thumb_url,
+      title: tag.title,
       long_description: populate_desc ? long_description : nil,
       description: populate_desc ? description : nil,  
       detail_url: "/browse/category/#{tag.id}",
@@ -77,6 +108,24 @@ module ApplicationHelper
       likes: get_number_of_likes_for_cta(cta),
       status: compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, cta),
       tags: get_tag_ids_for_cta(cta)
+    )
+  end
+  
+  def cta_to_category_light(cta, populate_desc = true)
+    BrowseCategory.new(
+      type: "cta",
+      id: cta.id, 
+      has_thumb: cta.thumbnail.present?, 
+      thumb_url: cta.thumbnail(:thumb), 
+      title: cta.title, 
+      description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
+      long_description: populate_desc ? cta.description : nil,
+      detail_url: "/call_to_action/#{cta.id}",
+      created_at: cta.created_at.to_time.to_i,
+      comments: nil,
+      likes: nil,
+      status: nil,
+      tags: nil
     )
   end
   
