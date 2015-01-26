@@ -1,4 +1,4 @@
-<div class="col-sm-12">
+<div class="col-sm-12 comment-interaciton__col">
   <div class="row comment-interaction__form-row">
     <div class="col-sm-1 col-xs-2 text-center comment-interaction__avatar-container">
       <img src="<%= current_avatar %>" class="comment-interaction__profile-img">
@@ -35,4 +35,5 @@
       <a href="javascript: void(0)" ng-click="appendComments(interaction_info)"><span class="glyphicon glyphicon-comment comment-interaction__info__glyphicon-comment"></span><span class="comment-interaction__other-text">Leggi {{interaction_info.interaction.resource.comment_info.comments_total_count - interaction_info.interaction.resource.comment_info.comments.length}} commenti precedenti</span></a>
     </div>
   </div>
+  
 </div>

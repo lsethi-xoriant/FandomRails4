@@ -2,13 +2,13 @@
 
 .flex-viewport-shadow {
     background: radial-gradient(at 100% 50% , rgba(0, 0, 0, 0.5) 0%, transparent 75%);
-    bottom: -3px;
+    bottom: -6px;
     position: absolute;
-    right: 0;
-    top: -3px;
+    right: -1px;
+    top: -6px;
     width: 6px;
     z-index: 100;
-    border-right: 1px solid #999;
+    border-right: 1px solid transparent;
 }
 
 .flex-disabled {

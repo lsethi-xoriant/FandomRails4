@@ -1,5 +1,9 @@
 /* UNDERVIDEO */
 
+.interaction__main-col {
+  padding-left: 30px;
+}
+
 .interaction__feedback-text {
   font-size: 18px;
   margin: 7px 0 0 0;
@@ -66,6 +70,10 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .interaction__main-col {
+    padding-left: 15px;
+  }
+
   .interaction__feedback-text {
     font-size: 14px;
     margin: 12px 0 0 0;

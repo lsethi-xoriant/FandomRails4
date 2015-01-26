@@ -1,6 +1,4 @@
 <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterRemoveShareInteractions | filter:filterRemovePlayInteractions | filter:filterAlwaysVisibleInteractions">
-  <div id="home-undervideo-interaction-{{interaction_info.interaction.id}}">
-    <%= render partial: "/call_to_action/undervideo_interaction" %>
-  </div>
+  <%= render partial: "/call_to_action/undervideo_interaction" %>
 </div>
 
