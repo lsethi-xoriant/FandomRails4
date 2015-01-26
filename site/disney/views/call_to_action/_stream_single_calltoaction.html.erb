@@ -43,7 +43,7 @@
     <% end %>
   </div>
 
-  <div class="col-sm-12 visible-xs interaction__underevideo-mobile-container">
+  <div class="col-sm-12" ng-if="aux.mobile">
   	<% unless @is_cta_locked %>
     	<%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
     <% end %>
@@ -84,8 +84,8 @@
       </div>
     </div>
 
-    <div class="row hidden-xs">
-      <div class="col-xs-12">
+    <div class="row" ng-if="!aux.mobile">
+      <div class="col-xs-12 interaction__main-col">
         <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
       </div>
     </div>
