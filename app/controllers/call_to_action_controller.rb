@@ -150,7 +150,7 @@ class CallToActionController < ApplicationController
     
     log_call_to_action_viewed(calltoaction_id)
     
-    calltoaction = CallToAction.includes(:interactions).active_with_media.find_by_id(calltoaction_id)
+    calltoaction = CallToAction.includes(interactions: :resource).active_with_media.find_by_id(calltoaction_id)
 
     if calltoaction
 
@@ -315,9 +315,8 @@ class CallToActionController < ApplicationController
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
           expire_cache_key(get_comments_approved_cache_key(interaction.id))
         end
-      else
-        response[:captcha] = generate_captcha_response
       end
+      response[:captcha] = generate_captcha_response
     end
 
     if user_comment && user_comment.errors.any?

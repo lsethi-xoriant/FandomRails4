@@ -155,7 +155,7 @@ class ApplicationController < ActionController::Base
 
     calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key()) do   
       highlight_calltoactions = get_highlight_calltoactions()
-      active_calltoactions_without_rewards = CallToAction.includes(:rewards).active.where("rewards.id IS NULL")
+      active_calltoactions_without_rewards = CallToAction.includes(:rewards, :interactions).active.where("rewards.id IS NULL")
       if highlight_calltoactions.any?
         last_calltoactions = active_calltoactions_without_rewards.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
       else

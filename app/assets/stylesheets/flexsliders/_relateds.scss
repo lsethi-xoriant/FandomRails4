@@ -1,9 +1,11 @@
 /* CTA RELATED */
 
 .relateds-flexslider {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    position: relative;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  position: relative;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .relateds__header-row {
@@ -79,8 +81,26 @@
     margin-right: 5px;
 }
 
+@media (min-width: $screen-sm-min) { 
+  .relateds-flexslider {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+    margin-left: 15px;
+    margin-right: 15px;
+    .flex-direction-nav .flex-next {
+      right: -40px;
+    }
+    .flex-direction-nav .flex-prev {
+      left: -40px;
+    }
+  }
+}
+
 @media (max-width: $screen-sm-min) { 
   .relateds-flexslider {
     padding-left: 15px;
+    margin-left: 0;
+    margin-right: 0;
   }
 }

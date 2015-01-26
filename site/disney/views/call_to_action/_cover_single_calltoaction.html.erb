@@ -51,9 +51,9 @@
 
   <div class="panel-footer cta-cover__card__footer">
     <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
-      <div id="comment-interaction-{{interaction_info.interaction.id}}">
+      <%= light_link_to("/call_to_action/{{calltoaction_info.calltoaction.id}}") do %>
         <%= render partial: "/call_to_action/cover_comment_interaction" %>
-      </div>
+      <% end %>
     </div>
   </div>
 

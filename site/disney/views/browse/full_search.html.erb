@@ -3,7 +3,7 @@
 	<div class="row main-row ctas__search">
 	    <%= form_tag("#{ get_disney_property_root_path }/browse/full_search", { method: "post", role: "search" }) do %>
 	      <div class="col-sm-8 col-sm-offset-1">
-	        <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control" placeholder="{{query}}" style="width: 100%;">
+	        <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-wait-ms="1000" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control" placeholder="{{query}}" style="width: 100%;">
 	      </div>
 	      <div class="col-sm-2">
 	        <button type="submit" class="btn btn-primary btn-block"><span>Cerca</span></button>

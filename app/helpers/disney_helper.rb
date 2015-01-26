@@ -14,9 +14,9 @@ module DisneyHelper
 
   def get_disney_ctas(property)
     ugc_tag = get_tag_from_params("ugc")
-    calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", property.id)
+    calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", property.id)
     if ugc_tag
-      ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
+      ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
       if ugc_calltoactions.any?
         calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
       end
@@ -208,7 +208,8 @@ module DisneyHelper
           "background" => get_extra_fields!(property)["label-background"],
           "path" => compute_property_path(property),
           "title" => property.title,
-          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil) 
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil),
+          "image_hover" => (get_upload_extra_field_processor(get_extra_fields!(property)["image-hover"], :thumb) rescue nil) 
         }
       end
     end

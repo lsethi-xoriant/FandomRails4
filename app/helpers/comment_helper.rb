@@ -14,7 +14,7 @@ module CommentHelper
 
   def get_comments_approved(interaction)
     cache_short(get_comments_approved_cache_key(interaction.id)) do
-      comments = interaction.resource.user_comment_interactions.approved.order("updated_at DESC").limit(5).to_a
+      comments = interaction.resource.user_comment_interactions.includes(:user).approved.order("updated_at DESC").limit(5).to_a
       comments_total_count = interaction.resource.user_comment_interactions.approved.count
 
       comment_for_comment_info = Array.new
