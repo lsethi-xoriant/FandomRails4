@@ -1,19 +1,17 @@
 <% if current_user %>
-<div class="row reward-catalogue-header">
-	<div class="col-xs-10 col-xs-offset-1">
-		<div class="row">
-			<div class="col-xs-12 col-sm-2 reward-catalogue-header__avatar-container">
-				<img src="<%= user_avatar current_user %>" class="reward-catalogue-header__avatar" />
+	<div class="row reward-catalogue-header">
+		<div class="col-xs-10 col-xs-offset-1">
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					<img src="<%= user_avatar current_user %>" class="reward-catalogue-header__avatar" />
+					<p class="reward-catalogue-header__credit-text">Hai <span class="label label-warning reward-catalogue-header__credit-counter">+<%= get_counter_about_user_reward("credit") %><span class="fa fa-copyright"></span></span> crediti a disposizione</p>
+				</div>
 			</div>
-			<div class="col-xs-12 col-sm-10">
-				<p class="reward-catalogue-header__credit-text">Hai <span class="label label-warning reward-catalogue-header__credit-counter">+ <%= get_counter_about_user_reward("credit") %> <i class="fa fa-copyright"></i></span> crediti a disposizione</p>
-			</div>
-		</div>
-		<div class="row text-center">
-			<div class="col-xs-12">
-				<p class="reward-catalogue-header__credit-subtext"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Interagisci con i contenuti della community per ottenere crediti e sbloccare i contenuti esclusivi.</p>
+			<div class="row text-center">
+				<div class="col-xs-12">
+					<p class="reward-catalogue-header__credit-subtext"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Interagisci con i contenuti della community per ottenere crediti e sbloccare i contenuti esclusivi.</p>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 <% end %>

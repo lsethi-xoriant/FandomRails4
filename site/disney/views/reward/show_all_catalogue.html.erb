@@ -1,17 +1,15 @@
 <div class="container container--default" ng-controller="RewardCatalogueCtrl" ng-init="init(<%= @reward_list.to_json %>)">
 	<%= render partial: "reward/reward_catalogue_header" %>
 	
-	<div class="row brws-item">
+	<div class="row brws-item main-row">
 		<div class="col-xs-12">
-		      <div class="section-heading">
-		        	<h3>
-		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
-		        		<%= @title %>
-		        	</h3>
-		      </div>
-		      
+      <div class="section-heading">
+      	<h3>
+      		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
+      		<%= @title %>
+      	</h3>
+      </div>   
 		</div>
-		
 		<div class="col-xs-12 col-sm-3" ng-repeat="reward in reward_list['<%= @reward_key %>']">
 			<div class="cta-preview" ng-if="reward.reward_info.status != 'gained'">
 				<div class="row">
@@ -22,7 +20,9 @@
 								<i class="fa fa-lock"></i>
 							</div>
 							<a class="cta_preview__link" href="/call_to_action/{{reward.calltoaction.id}}"></a>
-							<div class="label cta-preview__credits">+ {{reward.reward_info.cost}}<i class="fa fa-copyright"></i></div>
+							<div class="col-sm-12  cta-cover__winnable-reward text-right">
+								<span class="label label-warning cta-preview__credits">+{{reward.reward_info.cost}}<i class="fa fa-copyright"></i></span>
+							</div>
 						</div>
 					</div>
 					<div class="col-xs-12">
@@ -39,7 +39,7 @@
 							<a href="/call_to_action/{{reward.calltoaction.id}}">
 								<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
 							</a>
-							<div class="label cta-preview__points hidden">+ {{reward.status.winnable_reward_count}}<span class="fa fa-star"></div>
+							<span class="label cta-preview__points hidden">+{{reward.status.winnable_reward_count}}<span class="fa fa-star"></span>
 						</div>
 					</div>
 					<div class="col-xs-12">

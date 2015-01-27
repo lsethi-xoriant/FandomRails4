@@ -2,151 +2,226 @@
 	<%= render partial: "reward/reward_catalogue_header" %>
 	
 	<div class="row brws-item" ng-if="reward_list['user_rewards'].length > 0">
-		<div class="col-xs-12">
-		      <div class="section-heading">
-		        	<h3>
-		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
-		        		I miei premi
-		        		<a href="/reward/catalogue/my/all" class="section-heading__see-all">View all</a>
-		        	</h3>
-		      </div>
-		      
-		      <div class="rewards-flexslider">
-		    	<ul class="slides">
-		    		<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['user_rewards']">
-						<div class="cta-preview--slider">
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="cta-preview__thumbnail">
-										<a href="/call_to_action/{{reward.calltoaction.id}}">
-											<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
-										</a>
-									</div>
-								</div>
-								<div class="col-xs-12">
-									<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
-								</div>
-							</div>
-							<div class="row cta-preview__counter">
-							</div>
+		<div class="col-sm-12">
+			<div class="row main-row">
+				<div class="col-xs-12">
+				  <div class="section-heading" style="margin-top: 30px;">
+		        <div class="relateds__icon-container text-center">
+							<span class="fa fa-star"></span>
 						</div>
-					</li>
-				</ul>
-			</div>
-		  
-		</div>
-	</div>
-	
-	<div class="row brws-ite" ng-if="reward_list['user_available_rewards'].length > 0">
-		<div class="col-xs-12">
-		      <div class="section-heading">
-		        	<h3>
-		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
-		        		Premi che puoi sbloccare
-		        		<a href="/reward/catalogue/available/all" class="section-heading__see-all">View all</a>
-		        	</h3>
+						<p class="relateds__title">I miei premi <a href="/reward/catalogue/my/all" class="section-heading__see-all">View all</a></p>
 		      </div>
-		      
-		      <div class="rewards-flexslider">
-			    <ul class="slides">
-					<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['user_available_rewards']">
-						<div class="cta-preview--slider" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="cta-preview__thumbnail">
-										<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
-										<div class="cta-preview__locked-layer">
-											<i class="fa fa-lock"></i>
-										</div>
-										<a class="cta_preview__link" href="/call_to_action/{{reward.calltoaction.id}}"></a>
-										<div class="label cta-preview__credits">+ {{reward.reward_info.cost}}<i class="fa fa-copyright"></i></div>
-									</div>
-								</div>
-								<div class="col-xs-12">
-									<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
-								</div>
-							</div>
-							<div class="row cta-preview__counter">
-							</div>
-						</div>
-					</li>
-				</ul>
+		    </div>
+		    <div class="col-xs-12">
+			    <div class="rewards-flexslider rewards-flexslider--user_rewards">
+			      <div class="flex-viewport-shadow hidden-xs"></div>
+			      <ul class="slides">
+			        <li class="relateds-flexslider__item" ng-repeat="reward in reward_list['user_rewards']" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
+			          <a href="/call_to_action/{{reward.calltoaction.id}}">
+				          <div class="relateds-flexslider__item-panel"> 
+				            <div class="row">
+				              <div class="col-xs-12">
+				                <div class="relateds-flexslider__thumbnail">
+				                  <img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}">            
+				                  <!-- STATUS -->
+				                  <div class="col-sm-12  cta-cover__winnable-reward text-right">
+														<span class="label label-warning cta-preview__credits">+{{reward.reward_info.cost}}<i class="fa fa-copyright"></i></span>
+													</div>
+
+				                </div>
+				                <p class="cta-preview__title">{{reward.calltoaction.title | cut:true:70}}</p>
+				              </div>
+				            </div>
+				          </div>  
+			          </a>
+			        </li>
+			      </ul>
+			    </div>
 			  </div>
-		      
-		      
+			</div>
 		</div>
 	</div>
 	
-	<div class="row brws-item">
-		<div class="col-xs-12">
-		      <div class="section-heading">
-		        	<h3>
-		        		<img src="<%= asset_path("icon-cat.png") %>" class="img-circle section-heading__icon" />
-		        		Nuovi premi
-		        		<a href="/reward/catalogue/all" class="section-heading__see-all">View all</a>
-		        	</h3>
-		      </div>
-		      
-		      <div class="rewards-flexslider">
-		    	<ul class="slides">
-		    		<li class="rewards-flexslider__item--catalogue" ng-repeat="reward in reward_list['newest_rewards']">
-		    			<div class="cta-preview--slider" ng-if="reward.reward_info.status != 'gained'">
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="cta-preview__thumbnail">
-										<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
-										<div class="cta-preview__locked-layer">
-											<i class="fa fa-lock"></i>
-										</div>
-										<a class="cta_preview__link" href="/call_to_action/{{reward.calltoaction.id}}"></a>
-										<div class="label cta-preview__credits">+ {{reward.reward_info.cost}}<i class="fa fa-copyright"></i></div>
-									</div>
-								</div>
-								<div class="col-xs-12">
-									<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
-								</div>
-							</div>
-							<div class="row cta-preview__counter">
-							</div>
+	<div class="row brws-item" ng-if="reward_list['user_available_rewards'].length > 0">
+		<div class="col-sm-12">
+			<div class="row main-row">
+				<div class="col-xs-12">
+				  <div class="section-heading" style="margin-top: 30px;">
+		        <div class="relateds__icon-container text-center">
+							<span class="fa fa-star"></span>
 						</div>
-						<div class="cta-preview--slider" ng-if="reward.reward_info.status == 'gained'">
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="cta-preview__thumbnail">
-										<a href="/call_to_action/{{reward.calltoaction.id}}">
-											<img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}" alt="...">
-										</a>
-									</div>
-								</div>
-								<div class="col-xs-12">
-									<h3 class="cta-preview__title">{{reward.calltoaction.title}}</h3>
-								</div>
-							</div>
-							<div class="row cta-preview__counter">
-							</div>
-						</div>
-		    		</li>
-		    	</ul>
+						<p class="relateds__title">Premi che puoi sbloccare <a href="/reward/catalogue/available/all" class="section-heading__see-all">View all</a></p>
 		      </div>
+		    </div>
+		    <div class="col-xs-12">
+			    <div class="rewards-flexslider rewards-flexslider--user_available_rewards">
+			      <div class="flex-viewport-shadow hidden-xs"></div>
+			      <ul class="slides">
+			        <li class="relateds-flexslider__item" ng-repeat="reward in reward_list['user_available_rewards']" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
+			          <a href="/call_to_action/{{reward.calltoaction.id}}">
+				          <div class="relateds-flexslider__item-panel"> 
+				            <div class="row">
+				              <div class="col-xs-12">
+				                <div class="relateds-flexslider__thumbnail">
+				                  <img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}">            
+				                  <!-- STATUS -->
+				                  <div class="col-sm-12  cta-cover__winnable-reward text-right">
+														<span class="label label-warning cta-preview__credits">+{{reward.reward_info.cost}}<i class="fa fa-copyright"></i></span>
+													</div>
+
+													<!-- LOCK -->
+													<div class="cta-preview__locked-layer">
+														<i class="fa fa-lock"></i>
+													</div>
+
+				                </div>
+				                <p class="cta-preview__title">{{reward.calltoaction.title | cut:true:70}}</p>
+				              </div>
+				            </div>
+				          </div>  
+			          </a>
+			        </li>
+			      </ul>
+			    </div>
+			  </div>
+			</div>
 		</div>
-		
+	</div>
+
+	<div class="row brws-item">
+		<div class="col-sm-12">
+			<div class="row  main-row">
+				<div class="col-xs-12">
+				      <div class="section-heading" style="margin-top: 30px;">
+		        		<div class="relateds__icon-container text-center">
+									<span class="fa fa-star"></span>
+								</div>
+								<p class="relateds__title">Nuovi premi <a href="/reward/catalogue/all" class="section-heading__see-all">View all</a></p>
+				      </div>
+				 </div>
+			</div>
+			<div class="row main-row">
+				<div class="col-xs-12">
+					<div class="rewards-flexslider rewards-flexslider--newest_rewards">
+			      <div class="flex-viewport-shadow hidden-xs"></div>
+			      <ul class="slides">
+			        <li class="relateds-flexslider__item" ng-repeat="reward in reward_list['newest_rewards']" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
+			          <a href="/call_to_action/{{reward.calltoaction.id}}">
+				          <div class="relateds-flexslider__item-panel"> 
+				            <div class="row">
+				              <div class="col-xs-12">
+				                <div class="relateds-flexslider__thumbnail">
+				                  <img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}">            
+				                  <!-- STATUS -->
+				                  <div class="col-sm-12  cta-cover__winnable-reward text-right">
+														<span class="label label-warning cta-preview__credits">+{{reward.reward_info.cost}}<i class="fa fa-copyright"></i></span>
+													</div>
+
+													<!-- LOCK -->
+													<div class="cta-preview__locked-layer">
+														<i class="fa fa-lock"></i>
+													</div>
+
+				                </div>
+				                <p class="cta-preview__title">{{reward.calltoaction.title | cut:true:70}}</p>
+				              </div>
+				            </div>
+				          </div>  
+			          </a>
+			        </li>
+			      </ul>
+			    </div>
+				</div>	
+			</div>
+		</div>
 	</div>
 	
 </div>
 
 
 <script type="text/javascript">
-	$(document).ready(function() {
-	    $('.rewards-flexslider').flexslider({
-	      animation: "slide",
-	      slideshow: false,
-	      animationLoop: false,
-	      touch: true,
-	      itemWidth: 273,
-	      itemMargin: 15,
-	      controlNav: false,
-	      prevText: "",
-	      nextText: ""
-	    });
-	});
+  $(document).ready(function() {
+  	
+      is_last_rewards_flexslider_nr_slide = false;
+      $('.rewards-flexslider--newest_rewards').flexslider({
+        animation: "slide",
+        slideshow: false,
+        animationLoop: false,
+        touch: true,
+        itemWidth: 258,
+        itemMargin: 15,
+        controlNav: false,
+        prevText: "",
+        nextText: "",
+        before: function(slider) {
+          is_last_rewards_flexslider_nr_slide = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_rewards_flexslider_nr_slide) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }
+        },
+        end: function(slider) {
+          is_last_rewards_flexslider_nr_slide = true;
+        }
+      });
+
+      is_last_rewards_flexslider_uar_slide = false;
+      $('.rewards-flexslider--user_available_rewards').flexslider({
+        animation: "slide",
+        slideshow: false,
+        animationLoop: false,
+        touch: true,
+        itemWidth: 258,
+        itemMargin: 15,
+        controlNav: false,
+        prevText: "",
+        nextText: "",
+        before: function(slider) {
+          is_last_rewards_flexslider_uar_slide = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_rewards_flexslider_uar_slide) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }
+        },
+        end: function(slider) {
+          is_last_rewards_flexslider_uar_slide = true;
+        }
+      });
+
+      is_last_rewards_flexslider_ur_slide = false;
+      $('.rewards-flexslider--user_rewards').flexslider({
+        animation: "slide",
+        slideshow: false,
+        animationLoop: false,
+        touch: true,
+        itemWidth: 258,
+        itemMargin: 15,
+        controlNav: false,
+        prevText: "",
+        nextText: "",
+        before: function(slider) {
+          is_last_rewards_flexslider_ur_slide = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_rewards_flexslider_ur_slide) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }
+        },
+        end: function(slider) {
+          is_last_rewards_flexslider_ur_slide = true;
+        }
+      });
+
+  });
 </script>
