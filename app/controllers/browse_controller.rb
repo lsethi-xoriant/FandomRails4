@@ -1,6 +1,8 @@
 class BrowseController < ApplicationController
   
   def index
+    # TODO: use this new function to improve performance
+    #result = cta_to_reward_statuses_by_user(current_or_anonymous_user, [CallToAction.find(979), CallToAction.find(980), CallToAction.find(981), CallToAction.find(2397)], 'point')
     @browse_section = init_browse_sections()
   end
   

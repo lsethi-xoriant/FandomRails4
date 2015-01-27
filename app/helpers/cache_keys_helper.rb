@@ -139,6 +139,10 @@ module CacheKeysHelper
     "tag_names_for_tag_key_#{tag_id}"
   end
 
+  def get_cta_to_reward_statuses_by_user_cache_key(user_id)
+    "cta_to_reward_statuses_#{user_id}"
+  end
+
   # CTA and tags
   # ~~~~~
 

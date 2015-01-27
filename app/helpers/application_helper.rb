@@ -518,6 +518,38 @@ module ApplicationHelper
     end
   end
 
+  def cta_to_reward_statuses_by_user(user, ctas, reward_name) 
+    debugger
+    cta_to_reward_statuses = cache_long(get_cta_to_reward_statuses_by_user_cache_key(user.id)) do
+      result = {}
+      ctas.each do |cta|
+        result[cta.id] = cta_reward_statuses(user, cta, reward_name)
+      end
+      result
+    end
+    updated = false
+    ctas.each do |cta|
+      unless cta_to_reward_statuses.key? cta.id
+        updated = true
+        cta_to_reward_statuses[cta.id] = cta_reward_statuses(user, cta, reward_name)
+      end
+    end
+    if updated
+      cache_write_long(get_cta_to_reward_statuses_by_user_cache_key(user.id), cta_to_reward_statuses)
+    end
+    cta_to_reward_statuses
+  end
+
+  def cta_reward_statuses(user, cta, reward_name)
+    if call_to_action_completed?(cta)
+      nil
+    else
+      winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(cta, user)
+      winnable_outcome["reward_name_to_counter"][reward_name]
+    end
+  end
+
+
   def call_to_action_completed?(cta)
     if current_user
       require_to_complete_interactions = interactions_required_to_complete(cta)

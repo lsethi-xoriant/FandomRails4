@@ -2,7 +2,8 @@ require 'fandom_utils'
 
 module CacheHelper
   include FandomUtils
-
+  include CacheExpireHelper
+  
   # Caches a rails template, that should be passed as block.
   #
   # key       - A simple string, or a model (or an array of models) from which the template depends
@@ -35,9 +36,17 @@ module CacheHelper
   end
   
   def cache_write_short(key, value)
+    cache_write(key, value, 1.minute)  
+  end
+
+  def cache_write_long(key, value)
+    cache_write(key, value, 1.hour)  
+  end
+
+  def cache_write(key, value, expires_in)
     actual_key = get_cache_key(key)
     log_info("rewriting cache key", { key: actual_key })
-    Rails.cache.write(actual_key, value, :expires_in => 1.minute, :race_condition_ttl => 30)
+    Rails.cache.write(actual_key, value, :expires_in => expires_in, :race_condition_ttl => 30)
   end
 
   def get_cache_key(key = nil)
