@@ -11,7 +11,7 @@
         	</h3>
       	</div>
       	<% if @levels %>
-			<div class="rewards-flexslider">
+			<div class="rewards-flexslider" id="level-flexslider">
 				<div class="flex-viewport-shadow hidden-xs"></div>
 	      	  	<ul class="slides">
 			        <% @levels.each do |key, level| %>
@@ -36,7 +36,7 @@
 	        		Tuoi livelli nelle altre Community
 	        	</h3>
 	      	</div>
-      		<div class="rewards-flexslider">
+      		<div class="rewards-flexslider" id="property_level-flexslider">
       			<div class="flex-viewport-shadow hidden-xs"></div>
 	      	  	<ul class="slides">
 			        <% @my_levels.each do |level| %>
@@ -60,7 +60,7 @@
         	</h3>
       	</div>
       	<% if @badges %>
-	    	<div class="rewards-flexslider">
+	    	<div class="rewards-flexslider" id="badge-flexslider">
 	    		<div class="flex-viewport-shadow hidden-xs"></div>
 	      	  	<ul class="slides">
 	      			<% @badges.each do |badge| %>
@@ -85,7 +85,7 @@
 	        		Ultimi badge ottenuti nelle altre Community
 	        	</h3>
 	      	</div>
-      		<div class="rewards-flexslider">
+      		<div class="rewards-flexslider" id="property_badge-flexslider">
       			<div class="flex-viewport-shadow hidden-xs"></div>
 	      	  	<ul class="slides">
 	      			<% @mybadges.each do |badge| %>
@@ -105,6 +105,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+      is_last_rewards_flexslider_slide = new Object();
 	    $('.rewards-flexslider').flexslider({
 	      animation: "slide",
 	      slideshow: false,
@@ -114,7 +115,21 @@
 	      itemMargin: 15,
 	      controlNav: false,
 	      prevText: "",
-	      nextText: ""
+	      nextText: "",
+        before: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }
+        },
+        end: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+        }
 	    });
 	});
 </script>
