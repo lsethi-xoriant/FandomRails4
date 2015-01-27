@@ -106,7 +106,7 @@ module ApplicationHelper
       created_at: cta.created_at.to_time.to_i,
       comments: get_number_of_comments_for_cta(cta),
       likes: get_number_of_likes_for_cta(cta),
-      status: compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, cta),
+      #status: compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, cta),
       tags: get_tag_ids_for_cta(cta)
     )
   end
@@ -132,7 +132,7 @@ module ApplicationHelper
   def get_tag_ids_for_cta(cta)
     cache_short(get_tag_names_for_cta_key(cta.id)) do
       tags = {}
-      cta.call_to_action_tags.includes(:tag).each do |t|
+      cta.call_to_action_tags.each do |t|
         tags[t.tag.id] = t.tag.id
       end
       tags
@@ -425,7 +425,7 @@ module ApplicationHelper
   
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
+      CallToAction.active.includes(call_to_action_tags: :tag).includes(:interactions).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
     end
   end
   

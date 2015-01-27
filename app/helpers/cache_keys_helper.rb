@@ -285,6 +285,10 @@ module CacheKeysHelper
   def get_index_category_cache_key(category_id)
     "index_category_cache_#{category_id}_key"
   end
+  
+  def get_browse_sections_cache_key
+    "browse_page_sections"
+  end
 
   # Coin
   # ~~~~~~~~~~

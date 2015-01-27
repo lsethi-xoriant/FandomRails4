@@ -27,7 +27,7 @@ function BrowseCtrl($scope, $window, $filter) {
 		$scope.isTagFilterOpen = false;
 		$scope.category = category.attributes;
 		$scope.elements = normalizeElements(elements);
-		$scope.elements_in_page = 10;
+		$scope.elements_in_page = 12;
 		$scope.visibleElements = $scope.elements.slice(0,$scope.elements_in_page);
 		$scope.tags = $scope.tagsEnabled = tags;
 		$scope.activeTags = {};
