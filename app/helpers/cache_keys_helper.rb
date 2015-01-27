@@ -203,6 +203,10 @@ module CacheKeysHelper
     "single_ranking_page_key_#{ranking_name}"
   end
   
+  def get_full_rank_cache_key(ranking_name)
+    "full_rank_#{ranking_name}_cache_key"
+  end
+  
   def get_ranking_settings_key
     "ranking_page_settings"
   end
