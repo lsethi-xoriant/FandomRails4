@@ -43,6 +43,17 @@ module CallToActionHelper
         }
       end 
 
+      if !interactions_to_compute || interactions_to_compute.include?("prize")
+        if cta_is_a_reward(calltoaction) && (!current_user || !user_has_reward(calltoaction.rewards.first.name))
+          reward = calltoaction.rewards.first
+          prize = {
+            "id" => reward.id,
+            "cost" => reward.cost,
+            "has_currency" => user_has_currency_for_reward(reward)
+          }
+        end
+      end
+
       calltoaction_info_list << {
         "calltoaction" => { 
           "id" => calltoaction.id,
@@ -57,6 +68,7 @@ module CallToActionHelper
           "interaction_info_list" => build_interaction_info_list(calltoaction, interactions_to_compute),
           "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}")
         },
+        "prize" => prize,
         "flag" => flag_info,
         "miniformat" => miniformat_info,
         "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),

@@ -43,7 +43,7 @@
                 Cerca
               <% end %>
             </li>
-            <li class="<%= "active" if "#{controller_name}##{action_name}" == "registrations#edit" %>">
+            <li class="<%= "active" if "#{controller_name}##{action_name}" == "registrations#edit" || "#{controller_name}##{action_name}" == "profile#rewards" || "#{controller_name}##{action_name}" == "profile#notices" %>">
               <%= light_link_to("/profile") do %>
                 Profilo
               <% end %>
@@ -98,7 +98,7 @@
             Cerca
           <% end %>
         </li>
-        <li class="<%= "active" if "#{controller_name}##{action_name}" == "registrations#edit" %>">
+        <li class="<%= "active" if "#{controller_name}##{action_name}" == "registrations#edit" || "#{controller_name}##{action_name}" == "profile#rewards" || "#{controller_name}##{action_name}" == "profile#notices" %>">
           <%= light_link_to("/profile") do %>
             Profilo
           <% end %>

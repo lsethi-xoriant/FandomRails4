@@ -1,10 +1,8 @@
 <div class="row profile-menu-block">
     <div class="col-xs-12 text-center">
-        <ul class="profile-menu-block__menu">
-          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "edit" %>"><%= light_link_to "/profile/edit", {"class" => "profile-menu-block__item-link"} do %>Nickname &	 Avatar<% end %></li>
-          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "badges" %>"><%= light_link_to "/profile/badges", {"class" => "profile-menu-block__item-link"} do %>Badges<% end %></li>
-          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "rankings" %>"><%= light_link_to "/profile/rankings", {"class" => "profile-menu-block__item-link"} do %>Classifica<% end %></li>
-          <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "notices" %>"><%= light_link_to "/profile/notices", {"class" => "profile-menu-block__item-link"} do %>Notifiche<% end %></li>
-        </ul>
+      <div class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "edit" %>"><%= light_link_to "/profile/edit", {"class" => "profile-menu-block__item-link"} do %>Nickname & Avatar<% end %></div>
+      <div class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "badges" %>"><%= light_link_to "/profile/badges", {"class" => "profile-menu-block__item-link"} do %>Badges<% end %></div>
+      <div class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "rankings" %>"><%= light_link_to "/profile/rankings", {"class" => "profile-menu-block__item-link"} do %>Classifica<% end %></div>
+      <div class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "notices" %>"><%= light_link_to "/profile/notices", {"class" => "profile-menu-block__item-link"} do %>Notifiche<% end %></div>
     </div>
 </div>

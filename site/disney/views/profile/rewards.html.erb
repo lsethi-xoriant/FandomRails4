@@ -2,7 +2,7 @@
   <%= render partial: "profile/profile_header" %>
   <%= render partial: "profile/profile_navbar", locals: { page: "rewards" } %>
     
-  <div class="row brws-item">
+  <div class="row brws-item main-row">
   	<div class="col-xs-12">
       	<div class="section-heading">
         	<h3>
@@ -28,7 +28,7 @@
   </div>
   
 	<% if @my_levels && !@my_levels.empty? %>    
-	  <div class="row brws-item">
+	  <div class="row brws-item main-row">
 	  	<div class="col-xs-12">
 	      	<div class="section-heading">
 	        	<h3>
@@ -51,7 +51,7 @@
 	<% end %>  
     
 	  
-  <div class="row brws-item">
+  <div class="row brws-item main-row">
   	<div class="col-xs-12">
       	<div class="section-heading">
         	<h3>
@@ -77,7 +77,7 @@
   </div>
   
 	<% if @mybadges && !@mybadges.empty? %>    
-	  <div class="row brws-item">
+	  <div class="row brws-item main-row">
 	  	<div class="col-xs-12">
 	      	<div class="section-heading">
 	        	<h3>
