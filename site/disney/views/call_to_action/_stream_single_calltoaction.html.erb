@@ -29,7 +29,7 @@
   		<img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" />
 		<div class="cta-preview__locked-layer cta-preview__locked-layer--reward">
 				<p>Per sbloccare questo premio</p>
-				<div class="label cta-preview__credits--reward">+ <%= @reward.cost %><i class="fa fa-copyright"></i></div>
+				<span class="label label-warning cta-preview__credits--reward">+<%= @reward.cost %><i class="fa fa-copyright"></i></span>
 				<% if current_user%>
 					<% if user_has_currency_for_reward(@reward) %>
 						<button class="btn btn-primary" ng-click="buyReward(<%= @reward.id %>)">Sblocca</button>

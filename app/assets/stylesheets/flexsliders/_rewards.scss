@@ -1,21 +1,11 @@
 .rewards-flexslider__container {
-    padding-left: 0 !important; 
-    padding-right: 0 !important;   
+
 }
 
-.rewards-flexslider {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    position: relative;
-    .flex-viewport{
-    }
-    .flex-direction-nav .flex-next, .flex-direction-nav .flex-prev {
-    }
-    .flex-next {
-      right: -25px !important;
-    }
-    .flex-prev {
-      left: -25px !important;
+.rewards-flexslider {   
+    .slides {
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 }
 
@@ -50,8 +40,6 @@
 }
 
 
-
-
 @media (min-width: $screen-sm-min) { 
   .ctas__flexslider {
     .flex-direction-nav a {
@@ -79,6 +67,31 @@
 
     .flex-direction-nav a:before {
         font-size: 30px !important;
+    }
+  }
+
+  .rewards-flexslider {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+    margin-left: 0;
+    margin-right: 0;
+    .flex-direction-nav a:before {
+      -webkit-transition: color 300ms ease 0s;
+      transition: color 300ms ease 0s;
+      font-size: 24px !important;
+      color: #ccc;
+    }
+    .flex-direction-nav a:hover:before, .flex-direction-nav a:focus:before {
+      -webkit-transition: color 300ms ease 0s;
+      transition: color 300ms ease 0s;
+      color: #303030;
+    }
+    .flex-direction-nav .flex-next {
+      right: -30px;
+    }
+    .flex-direction-nav .flex-prev {
+      left: -30px;
     }
   }
 }
