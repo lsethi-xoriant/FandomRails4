@@ -92,7 +92,8 @@ class RewardController < ApplicationController
         period_reward.update_attribute(:counter, period_reward.counter - reward.cost)
       end
       UserReward.create(user_id: current_user.id, reward_id: reward.id, available: true, counter: 1)
-      expire_cache_key(get_reward_points_for_user_key(reward.currency.name, current_user.id))
+      buy_reward_catalogue_expires(reward.currency.name, current_user.id)
+      
       response["html"] = "<p class=\"cta-preview__unlocked-message\">PREMIO SBLOCCATO</p>
       <p><small>Hai speso #{reward.cost} #{reward.currency.name}</small></p>
       <p><small>Hai ancora #{get_counter_about_user_reward(reward.currency.name)} #{reward.currency.name}</small></p>

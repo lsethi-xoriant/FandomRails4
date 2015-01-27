@@ -164,6 +164,11 @@ class CallToActionController < ApplicationController
 
       @aux = init_show_aux(calltoaction)
       
+      @is_cta_locked = cta_is_a_reward(calltoaction) && (!current_user || !user_has_reward(calltoaction.rewards.first.name))
+      if @is_cta_locked
+        @reward = calltoaction.rewards.first
+      end
+      
     else
 
       redirect_to "/"
