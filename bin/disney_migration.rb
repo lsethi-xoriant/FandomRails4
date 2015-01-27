@@ -444,7 +444,7 @@ end
 ########## USERS ##########
 
 def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, limit)
-  source_users = source_db_connection.exec("SELECT * FROM users#{limit ? " limit 10000" : ""}") # limit for testing
+  source_users = source_db_connection.exec("SELECT * FROM users") # limit for testing
   source_users_count = source_users.count
 
   puts "users: #{source_users_count} lines to migrate \nRunning migration..."
@@ -464,16 +464,16 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
     if email_present_user_id.nil? # email not present
       if username_present_user_id.nil?
         new_username = nullify_or_escape_string(source_db_connection, line["nickname"])
-      else email_present_user_id.nil? # username present, email not present
+      else # username present, email not present
         new_username = nullify_or_escape_string(source_db_connection, assign_new_username(destination_db_tenant, destination_db_connection, line["nickname"]))
       end
 
       email = nullify_or_escape_string(source_db_connection, line["email"])
       if (new_username == "" or new_username == "NULL" or new_username == "scheke")
         new_username = email
-        aux = "{\"profile_completed\":false}"
+        aux = { "profile_completed" => false }.to_json
       else
-        aux = "{}"
+        aux = { "profile_completed" => true }.to_json
       end
 
       fields = {
@@ -535,19 +535,26 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
       nickname = nullify_or_escape_string(source_db_connection, line["nickname"])
       count_email_present += 1
 
+      aux = destination_db_connection.exec("SELECT aux FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}users WHERE id = #{user_id}").values[0][0]
+      if aux
+        aux = JSON.parse(aux)
+      else
+        aux = { "profile_completed" => true } # for seed users
+      end
+
       if  username_present_user_id.nil? # email present, username not present
         if source_db_tenant == 'disney' # violetta present
-          aux = { "violetta_username" => username, "dc_username" => nickname }
+          aux = aux.merge({ "violetta_username" => username, "dc_username" => nickname })
           aux = nullify_or_escape_string(source_db_connection, aux.to_json)
           destination_db_connection.exec("UPDATE #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}users SET aux = '#{aux}'::json WHERE id = #{user_id}")
         else # dc present
-          aux = { "violetta_username" => username, "dc_username" => nickname }
+          aux = aux.merge({ "violetta_username" => username, "dc_username" => nickname })
           aux = nullify_or_escape_string(source_db_connection, aux.to_json)
           destination_db_connection.exec("UPDATE #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}users SET (username, avatar_selected_url, aux) = ('#{nickname}', '#{avatar_selected_url}', '#{aux}'::json) WHERE id = #{user_id}")
         end
 
       else # username and email present
-        aux = { "violetta_username" => nickname, "dc_username" => nickname }
+        aux = aux.merge({ "violetta_username" => nickname, "dc_username" => nickname })
         aux = nullify_or_escape_string(source_db_connection, aux.to_json)
         destination_db_connection.exec("UPDATE #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}users SET aux = '#{aux}'::json WHERE id = #{user_id}")
       end
@@ -1033,7 +1040,7 @@ def migrate_user_rewards(source_db_tenant, destination_db_tenant, source_db_conn
 
   #source_rewarding_badges_users = source_db_connection.exec("SELECT * FROM rewarding_badges_users#{limit ? " limit 500" : ""}") # limit for testing
   #source_rewarding_levels_users = source_db_connection.exec("SELECT * FROM rewarding_levels_users#{limit ? " limit 2000" : ""}") # limit for testing
-  source_rewarding_prizes_users = source_db_connection.exec("SELECT * FROM rewarding_prizes_users#{limit ? " limit 2000" : ""}") # limit for testing
+  source_rewarding_prizes_users = source_db_connection.exec("SELECT * FROM rewarding_prizes_users") # limit for testing
 
   source_rewarding_prizes_users_count = source_rewarding_prizes_users.count
   puts "user_rewards: #{source_rewarding_prizes_users_count} lines to migrate \nRunning migration..."
