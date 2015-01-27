@@ -106,7 +106,6 @@ module ApplicationHelper
       created_at: cta.created_at.to_time.to_i,
       comments: get_number_of_comments_for_cta(cta),
       likes: get_number_of_likes_for_cta(cta),
-      #status: compute_call_to_action_completed_or_reward_status(MAIN_REWARD_NAME, cta),
       tags: get_tag_ids_for_cta(cta)
     )
   end
@@ -519,7 +518,6 @@ module ApplicationHelper
   end
 
   def cta_to_reward_statuses_by_user(user, ctas, reward_name) 
-    debugger
     cta_to_reward_statuses = cache_long(get_cta_to_reward_statuses_by_user_cache_key(user.id)) do
       result = {}
       ctas.each do |cta|
