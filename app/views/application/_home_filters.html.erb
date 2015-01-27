@@ -37,7 +37,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    is_last_flexslider_slide = false;
+    is_last_filters_flexslider_slide = false;
     $('.filters__flexslider-desktop').flexslider({
       animation: "slide",
       slideshow: false,
@@ -49,18 +49,18 @@
       prevText: "",
       nextText: "",
       before: function(slider) {
-        is_last_flexslider_slide = false;
+        is_last_filters_flexslider_slide = false;
         $(slider).find(".flex-viewport-shadow").removeClass("hidden");
       },
       after: function(slider) {
-        if(is_last_flexslider_slide) {
+        if(is_last_filters_flexslider_slide) {
           $(slider).find(".flex-viewport-shadow").addClass("hidden");
         } else {
           $(slider).find(".flex-viewport-shadow").removeClass("hidden");
         }
       },
       end: function(slider) {
-        is_last_flexslider_slide = true;
+        is_last_filters_flexslider_slide = true;
       }
     });
 

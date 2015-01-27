@@ -33,7 +33,19 @@ module CacheKeysHelper
   def get_user_rewards_cache_key
     "user_rewards_key"
   end
-
+  
+  def get_basic_reward_cache_key
+    "basic_reward_ids_cache_key"
+  end
+  
+  def get_all_rewards_map_cache_key
+    "all_rewards_catalogue_map_key"
+  end
+  
+  def get_catalogue_user_rewards_ids_key(user_id)
+    "catalogue_user_#{user_id}_rewards_ids_key"
+  end
+  
   # Rewarding System
   # ~~~~~~~~~~~~~~~~
   
@@ -264,6 +276,10 @@ module CacheKeysHelper
   
   def get_browse_settings_key
     "browse_settings_key"
+  end
+  
+  def get_index_category_cache_key(category_id)
+    "index_category_cache_#{category_id}_key"
   end
 
   # Coin

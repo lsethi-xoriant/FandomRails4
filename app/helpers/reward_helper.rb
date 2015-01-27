@@ -173,7 +173,25 @@ module RewardHelper
     unless reward.currency.nil?
       get_counter_about_user_reward(reward.currency.name) >= reward.cost
     else
-      get_counter_about_user_reward("credit") >= reward.cost    end
+      get_counter_about_user_reward("credit") >= reward.cost
+    end
+  end
+  
+  def get_all_rewards_map
+    cache_short(get_all_rewards_map_cache_key) do
+      all_rewards = Hash.new
+      basic_rewards_ids = get_basic_rewards_ids()
+      if basic_rewards_ids.any?
+        rewards = Reward.includes(:currency).includes(:call_to_action).where("rewards.id not in (?)", get_basic_rewards_ids).order("created_at DESC")
+      else
+        rewards = Reward.includes(:currency).includes(:call_to_action).order("created_at DESC")
+      end
+
+      rewards.each do |reward|
+        all_rewards[reward.id] = reward
+      end
+      all_rewards
+    end
   end
   
   def is_basic_reward(reward)
@@ -183,7 +201,9 @@ module RewardHelper
   end
   
   def get_basic_rewards_ids
-    get_rewards_with_tag("basic").map{ |rt| rt.id }
+    cache_short(get_basic_reward_cache_key) do
+      get_rewards_with_tag("basic").map{ |rt| rt.id }
+    end
   end
   
   def get_user_reward_status(reward)

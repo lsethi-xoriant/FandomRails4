@@ -38,6 +38,7 @@
 }
 
 .cta-preview__points{
+  padding-top: 7px;
 	position: absolute;
 	top: 10px;
 	right: 10px;
@@ -67,7 +68,7 @@
   z-index: 20;
 }
 
-.cta-preview__credits--reward{
+.cta-preview__credits--reward {
   display: block;
   font-size: 20px;
   font-weight: bold;
@@ -79,15 +80,23 @@
   margin: 20px auto;
 }
 
-.cta-preview__title{
-	color: #000;
-	font-size: 14px;
+.cta-preview__title {
+	color: #000 !important;
+	font-size: 15px !important;
 	margin-top: 10px;
 	padding: 0 10px;
 	color: $blu;
 	font-size: 18px;
 	font-weight: normal;
 	max-height: 44px;
+  -webkit-transition: color 200ms ease 0s;
+  transition: color 200ms ease 0s;
+}
+
+.relateds-flexslider__item-panel:hover .cta-preview__title {
+  color: #1786eb !important;
+  -webkit-transition: color 200ms ease 0s;
+  transition: color 200ms ease 0s;
 }
 
 .cta-preview__like{

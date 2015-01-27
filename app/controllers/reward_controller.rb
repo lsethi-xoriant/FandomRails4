@@ -8,15 +8,16 @@ class RewardController < ApplicationController
   include RewardHelper
   
   def index
+    all_rewards = get_all_rewards_map
     if current_user
-      user_rewards = get_user_rewards(current_user.id)
-      user_available_rewards = get_user_available_rewards(current_user.id)
+      user_rewards = get_user_rewards(all_rewards).slice(0,8)
+      user_available_rewards = get_user_available_rewards(all_rewards)
     else
       user_rewards = []
       user_available_rewards = []
     end
-    newest_rewards = get_newest_rewards
-    all_rewards = get_all_rewards.slice(0,8)
+    newest_rewards = all_rewards.map{|k,v| v}.sort_by{|reward| reward.created_at}.slice(0,8)
+    all_rewards = []
     reward_list = {
       "user_rewards" => prepare_rewards_for_presentation(user_rewards),
       "user_available_rewards" => prepare_rewards_for_presentation(user_available_rewards),
@@ -28,50 +29,46 @@ class RewardController < ApplicationController
   
   def prepare_rewards_for_presentation(rewards)
     unless rewards.empty?
-      build_call_to_action_info_list(rewards.map{ |r| r.call_to_action})
+      reward_info_list = []
+      rewards.each do |reward|
+        reward_info_list << {
+          "calltoaction" => { 
+            "id" => reward.call_to_action.id,
+            "title" => reward.call_to_action.title,
+            "thumbnail_url" => reward.call_to_action.thumbnail_url,
+          },
+          "reward_info" => {
+            "cost" => reward.cost,
+            "status" => get_user_reward_status(reward)
+          }
+        }
+      end
+      reward_info_list
     end
   end
   
-  def get_user_rewards(user_id)
-    Reward.includes(:user_rewards).where("user_rewards.available = TRUE AND user_rewards.counter > 0 AND user_rewards.user_id = ? AND rewards.id NOT IN (?)", user_id, get_basic_rewards_ids)
-  end
-  
-  def get_newest_rewards
-    cache_short("newest_rewards") do
-      Reward.where("rewards.id NOT IN (?)", get_basic_rewards_ids).order("created_at DESC").limit(8).to_a
+  def get_catalogue_user_rewards_ids
+    cache_short(get_catalogue_user_rewards_ids_key(current_user.id)) do
+      Reward.joins(:user_rewards).select("rewards.id").where("user_rewards.available = TRUE AND user_rewards.counter > 0 AND user_rewards.user_id = ? AND rewards.id NOT IN (?)", current_user.id, get_basic_rewards_ids).to_a
     end
   end
   
-  def get_top_rewards(user_id)
-    rewards_result_set = Reward.includes(:reward_tags => :tag).where("tags.name = 'top'")
-    rewards_list = create_reward_list(rewards_result_set, user_id)
+  def get_user_rewards(all_rewards)
+    user_rewards = []
+    get_catalogue_user_rewards_ids.each do |reward|
+      user_rewards << all_rewards[reward.id]
+    end
+    user_rewards
   end
   
-  def get_user_available_rewards(user_id)
+  def get_user_available_rewards(all_rewards)
     avaiable_rewards = []
-    Reward.where("rewards.id NOT IN (?)", get_basic_rewards_ids).each do |reward|
+    all_rewards.each do |key, reward|
       if user_has_currency_for_reward(reward) && !user_has_reward(reward.name)
         avaiable_rewards << reward
       end
     end
     avaiable_rewards
-  end
-  
-  def get_all_rewards
-    cache_short("all_catalogue_rewards") do
-      Reward.where("rewards.id NOT IN (?)", get_basic_rewards_ids).to_a
-    end
-  end
-  
-  def create_reward_list(rewards, user_id)
-    rewards_list = Array.new
-    rewards.each do |r|
-      reward_element = Hash.new
-      reward_element['reward'] = r
-      reward_element['user_already_bought'] = UserReward.where("user_id = ? AND reward_id = ? AND counter > 0", user_id, r.id).count > 0
-      rewards_list.push(reward_element)
-    end
-    rewards_list
   end
   
   def show
@@ -85,11 +82,6 @@ class RewardController < ApplicationController
       @user_can_buy_reward = user_reward.counter > @reward.cost && !@user_got_reward
       @currency_to_buy_reward = @user_can_buy_reward ? 0 : (@reward.cost - user_reward.counter)
      end
-  end
-  
-  def get_user_currency_amount(user_id, currency_id)
-    user_reward_for_currency = UserReward.select("counter").where("user_id = ? AND reward_id = ?", user_id, currency_id).first 
-    return user_reward_for_currency.counter
   end
   
   def buy_reward
@@ -115,7 +107,7 @@ class RewardController < ApplicationController
   end
   
   def show_all_catalogue
-    all_rewards = get_all_rewards
+    all_rewards = get_all_rewards_map.map{|k,v| v}.sort_by{|reward| reward.created_at}
     reward_list = {
       "all_rewards" => prepare_rewards_for_presentation(all_rewards)
     }
@@ -126,7 +118,8 @@ class RewardController < ApplicationController
   
   def show_all_available_catalogue
     if current_user
-      user_available_rewards = get_user_available_rewards(current_user.id)
+      all_rewards = get_all_rewards_map
+      user_available_rewards = get_user_available_rewards(all_rewards)
       reward_list = {
         "user_available_rewards" => prepare_rewards_for_presentation(user_available_rewards)
       }
@@ -141,7 +134,8 @@ class RewardController < ApplicationController
   
   def show_all_my_catalogue
     if current_user
-      user_rewards = get_user_rewards(current_user.id)
+      all_rewards = get_all_rewards_map
+      user_rewards = get_user_rewards(all_rewards)
       reward_list = {
         "user_rewards" => prepare_rewards_for_presentation(user_rewards),
       }

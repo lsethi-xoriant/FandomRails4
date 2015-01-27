@@ -779,6 +779,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         index += 1;
       });
     }
+
     $timeout(function() {
       if(overvideo_interaction.interaction.when_show_interaction == "OVERVIDEO_DURING") {
         player.play();
@@ -1273,7 +1274,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               } else {
 
                 $timeout(function() { 
-                  interaction_info.feedback = false;
+                  interaction_info.feedback = true;
 
                   if(interaction_info.interaction.resource_type == "versus") {
                     index = 0;
@@ -1288,6 +1289,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
                   }
 
                   $timeout(function() { 
+                    interaction_info.feedback = false;
                     removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
                   }, 3000);
                 }, 3000);
