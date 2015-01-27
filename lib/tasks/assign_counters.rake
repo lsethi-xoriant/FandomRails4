@@ -15,6 +15,7 @@ def assign_counters
   comment_counter_id = Reward.find_by_name('comment-counter').id
   violetta_comment_counter_id = Reward.find_by_name('violetta-comment-counter').id
 
+  count = 0
   User.find_each do |user|
     total_comment_counter = UserCommentInteraction.where(:user_id => user.id).count
     dc_comment_counter = UserCommentInteraction.joins("join comments on user_comment_interactions.comment_id = comments.id 
@@ -27,5 +28,12 @@ def assign_counters
     UserReward.create(:user_id => user.id, :reward_id => comment_counter_id, :available => true, :counter => dc_comment_counter, :period_id => nil)
     UserReward.create(:user_id => user.id, :reward_id => violetta_comment_counter_id, :available => true, :counter => total_comment_counter - dc_comment_counter, :period_id => nil)
 
+    count += 1
+    if count % 1000 == 0
+      puts "Counter user rewards assigned to #{count} users"
+    end
   end
+
+  puts "Counter user rewards assigned to #{count} users"
+
 end
