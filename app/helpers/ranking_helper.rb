@@ -37,15 +37,17 @@ module RankingHelper
   def get_ranking(ranking)
     if ranking
       rankings = Array.new
-      period = get_current_periodicities[ranking.period]
-
-      period_id_condition = period.blank? ? "period_id is null" : "period_id = #{period.id}"
-      rankings = UserReward.joins(:user).where("reward_id = ? and #{period_id_condition} and user_id <> ?", ranking.reward_id, anonymous_user.id).select("user_id, counter, users.avatar_selected_url, users.username, users.first_name, users.last_name").order("counter DESC, user_rewards.updated_at ASC, user_id ASC").to_a
+      rankings = cache_short(get_full_rank_cache_key(ranking.name)) do
+        period = get_current_periodicities[ranking.period]
+        period_id_condition = period.blank? ? "period_id is null" : "period_id = #{period.id}"
+        UserReward.joins(:user).where("reward_id = ? and #{period_id_condition} and user_id <> ?", ranking.reward_id, anonymous_user.id).select("user_id, counter, users.avatar_selected_url, users.username, users.first_name, users.last_name").order("counter DESC, user_rewards.updated_at ASC, user_id ASC").to_a
+      end
       user_position_hash = cache_short("#{ranking.id}_user_position") { generate_user_position_hash(rankings) }
+      
       rank = RankingElement.new(
         period: ranking.period,
         title: ranking.title,
-        rankings: prepare_rank_for_json(rankings, user_position_hash),
+        rankings: prepare_rank_for_json(rankings.slice(0,10), user_position_hash),
         user_to_position: user_position_hash,
         total: rankings.count,
         number_of_pages: get_pages(rankings.count, RANKING_USER_PER_PAGE) 
@@ -59,7 +61,7 @@ module RankingHelper
     if period.nil?
       nil
     else
-      cache_short("winner_of_day_#{day.to_time.to_i}") do
+      cache_medium("winner_of_day_#{day.to_time.to_i}") do
         unless $context_root.nil?
           reward_id = Reward.find_by_name("#{$context_root}-point").id
         else
@@ -108,16 +110,19 @@ module RankingHelper
   end
   
   def get_full_rank(ranking)
-    rank = get_ranking(ranking)
-    if current_user
-      my_position = rank.user_to_position[current_user.id]
-    else
-      my_position = -1
-    end
-    if ranking.rank_type == "trirank"
-      compose_triranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
-    else
-      compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+    cache_short("extra_big_cache") do
+      rank = get_ranking(ranking)
+      if current_user
+        my_position = rank.user_to_position[current_user.id]
+      else
+        my_position = -1
+      end
+      
+      if ranking.rank_type == "trirank"
+        compose_triranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+      else
+        compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+      end
     end
   end
   
@@ -207,7 +212,6 @@ module RankingHelper
       else
         rankings[ranking_name] = get_full_rank(rank)
       end
-      rankings['general_user_position'] = create_current_chart_user_position(rank)
       rankings
     end
   end
@@ -246,7 +250,7 @@ module RankingHelper
     positions = Array.new
     i = 1
     ranking.each do |r|
-      positions << { 
+      positions << {
         "position" => i,
         "general_position" => user_position_hash[r.user_id], 
         "avatar" => r.avatar_selected_url, 
