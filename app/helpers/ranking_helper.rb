@@ -245,20 +245,27 @@ module RankingHelper
       rank.user_to_position
     end
   end
+
+  def get_id_to_user(user_ids)
+    result = {}
+    User.where("id in (?)", user_ids).select("id, username, avatar_selected_url, first_name, last_name").each do |user|
+      result[user.id] = user  
+    end
+    result
+  end
   
   def prepare_rank_for_json(ranking, user_position_hash)
+    id_to_user = get_id_to_user(ranking.map { |r| r.user_id })
     positions = Array.new
-    i = 1
-    ranking.each do |r|
+    ranking.each_with_index do |r, i|
       positions << {
-        "position" => i,
+        "position" => i + 1,
         "general_position" => user_position_hash[r.user_id], 
-        "avatar" => r.avatar_selected_url, 
-        "user" => r.username.nil? ? "#{r.first_name} #{r.last_name}" : r.username,
+        "avatar" => id_to_user[r.user_id].avatar_selected_url, 
+        "user" => id_to_user[r.user_id].username.nil? ? "#{id_to_user[r.user_id].first_name} #{id_to_user[r.user_id].last_name}" : id_to_user[r.user_id].username,
         "user_id" => r.user_id, 
         "counter" => r.counter 
       }
-      i += 1
     end
     positions
   end

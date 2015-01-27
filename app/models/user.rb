@@ -62,21 +62,27 @@ class User < ActiveRecordWithJSON
   end
 
   def set_attrs
-    if !day_of_birth.present? && birth_date
-      self.day_of_birth = birth_date.strftime("%d")
-    else
+    begin
+      if !day_of_birth.present? && birth_date
+        self.day_of_birth = birth_date.strftime("%d")
+      else
+        self.day_of_birth = ""
+      end
+  
+      if !month_of_birth.present? && birth_date
+        self.month_of_birth = birth_date.strftime("%m")
+      else
+        self.month_of_birth = ""
+      end
+  
+      if !year_of_birth.present? && birth_date
+        self.year_of_birth = birth_date.strftime("%Y")
+      else
+        self.year_of_birth = ""
+      end
+    rescue Exception => e
       self.day_of_birth = ""
-    end
-
-    if !month_of_birth.present? && birth_date
-      self.month_of_birth = birth_date.strftime("%m")
-    else
       self.month_of_birth = ""
-    end
-
-    if !year_of_birth.present? && birth_date
-      self.year_of_birth = birth_date.strftime("%Y")
-    else
       self.year_of_birth = ""
     end
   end
