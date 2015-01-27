@@ -5,6 +5,33 @@ class Easyadmin::EasyadminRewardController < ApplicationController
 
   def index
     @reward_list = Reward.order("cost ASC")
+
+    if params[:commit] == "APPLICA FILTRO"
+      reward_ids = Array.new
+      @reward_list.find_each do |r|
+        reward_ids << r.id
+      end
+
+      tag_ids = Array.new
+      params[:tag_list].split(",").each do |tag_name|
+        tag = Tag.find_by_name(tag_name)
+        tag_ids << tag.id if tag
+      end
+
+      tag_ids.each_with_index do |tag_id, i|
+        rewards_ids_tagged = Array.new
+        RewardTag.where("tag_id = #{tag_id}").each do |rt|
+          rewards_ids_tagged << rt.reward_id
+        end
+        reward_ids = reward_ids & rewards_ids_tagged
+      end
+
+      @reward_list = Reward.where(:id => reward_ids).order("cost ASC")
+    end
+
+    if params[:commit] == "RESET"
+      params[:tag_list] = ""
+    end
   end
 
   def new
