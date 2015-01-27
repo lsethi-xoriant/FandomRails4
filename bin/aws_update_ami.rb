@@ -72,7 +72,7 @@ def create_launch_configuration(auto_scaling, ec2, postfix, config)
       launch_configuration_name, 
       ami_id,
       config["instance_type"], 
-      :security_groups => ["sg-c64d8aa3"],
+      :security_groups => [security_group_id],
       :key_pair => config["key_pair"],
       :user_data => config.fetch('launch_configuration_user_data', '')
       )
