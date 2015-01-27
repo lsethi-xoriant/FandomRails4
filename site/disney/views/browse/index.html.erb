@@ -1,18 +1,6 @@
 <div class="container container--default" ng-controller="SearchCtrl" ng-init="init(<%= @browse_section.to_json %>)">
 	
-	<div class="row main-row ctas__search">
-	    <%= form_tag("#{ get_disney_property_root_path }/browse/full_search", { method: "post", role: "search" }) do %>
-	      <div class="col-sm-8 col-sm-offset-1">
-	        <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-wait-ms="1000" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control" placeholder="Search" style="width: 100%;">
-	      </div>
-	      <div class="col-sm-2">
-	        <button type="submit" class="btn btn-primary btn-block"><span>Cerca</span></button>
-	      </div>
-	    <% end %> 
-	    <script type="text/ng-template" id="itemTpl.html">
-	      <%= render partial: "/application/search_template" %>
-	    </script>
-	  </div>
+	<%= render partial: "/application/search" %>
 	
 	<% if flash[:notice] %>
 		<div class="row brws-item">
@@ -22,78 +10,96 @@
 		</div>
 	<% end %>
 	
-	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.attributes.contents.length > 0">
-		
-		<div class="row brws-item">
-		      <div class="section-heading">
-		        	<h3>
-		        		<img ng-src="{{section.attributes.icon_url}}" class="img-circle section-heading__icon" />
-		        		{{section.attributes.title}} 
-		        		<%= light_link_to("{{section.attributes.view_all_link}}", class: "section-heading__see-all") do %>
-				            Vedi tutti
-				          <% end %>
-		        	</h3>
-		      </div>
-		    	<div class="rewards-flexslider">
-		    		<div class="flex-viewport-shadow hidden-xs"></div>
-			    	<ul class="slides">
-						<li class="" ng-repeat="content in section.attributes.contents">
-							<div class="cta-preview--slider" ng-if="content.attributes.type == 'cta'">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="cta-preview__thumbnail">
-											<%= light_link_to("{{content.attributes.detail_url}}") do %>
-												<img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
-												<img class="img-responsive cta-preview__image" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
-											<% end %>
-											<div class="label label-warning cta-preview__points" ng-if="content.attributes.status != undefined">+ {{content.attributes.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-										</div>
-									</div>
-									<div class="col-xs-12">
-										<h3 class="cta-preview__title">{{content.attributes.title | cut:true:40}}</h3>
-									</div>
-								</div>
-								<div class="row relateds-flexslider__footer">
-						            <div class="col-xs-12">
-						              <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.attributes.likes}}</p>
-						              <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.attributes.comments}}</p>
-						            </div>
-						        </div> 
-							</div>
-					
-							<div class="cta-preview--slider cta-preview--category" ng-if="content.attributes.type == 'tag'">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="cta-preview__thumbnail cta-preview__thumbnail--category">
-											<a href="{{content.attributes.detail_url}}">
-												<img class="cta-preview__image cta-preview__image--category" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
-												<img class="cta-preview__image cta-preview__image--category" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
-											</a>
-										</div>
-									</div>
-								</div>
-								<h3 class="cta-preview__title--category">{{content.attributes.title}}</h3>
-							</div>
-						</li>
-					</ul>
-				</div>
+	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.attributes.contents.length > 0">	
+		<div class="row brws-item main-row" style="margin-top: 30px;">
+		  
+			  <!-- HEADING -->
+			<div class="col-sm-12">
+			  <div class="row section-heading">
+	    		<div class="col-xs-12">  
+			      <div class="relateds__icon-container text-center">
+			        <span class="fa fa-star"></span>
+			      </div>
+			      <p class="relateds__title">{{section.attributes.title}} <%= light_link_to("{{section.attributes.view_all_link}}", class: "section-heading__see-all") do %>
+		            Vedi tutti
+		          <% end %></p>
+			    </div>
+			  </div>
+			</div>
+
+	    <div class="col-xs-12">
+		    <div class="rewards-flexslider" id="browse-{{$index}}--flexslider">
+		      <div class="flex-viewport-shadow hidden-xs"></div>
+		      <ul class="slides">
+		        <li class="relateds-flexslider__item" ng-repeat="content in section.attributes.contents">
+		          <%= light_link_to("{{content.attributes.detail_url}}") do %>	
+			          <div class="relateds-flexslider__item-panel" ng-if="content.attributes.type == 'cta'"> 
+			            <div class="row">
+			              <div class="col-xs-12">
+			                <div class="relateds-flexslider__thumbnail">
+			                  <img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}">            
+			                  <!-- STATUS -->
+			                  <div class="col-sm-12  cta-cover__winnable-reward text-right" ng-if="content.attributes.status != undefined">
+													<span class="label label-warning cta-cover__winnable-reward__label">+{{content.attributes.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></span>
+												</div>
+
+			                </div>
+			                <p class="cta-preview__title">{{content.attributes.title | cut:true:40}}</p>
+			              </div>
+			            </div>
+			            <div class="row relateds-flexslider__footer">
+			              <div class="col-xs-12">
+			                <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.attributes.likes}}</p>
+			                <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.attributes.comments}}</p>
+			              </div>
+			            </div>
+			          </div>  
+			          <div class="relateds-flexslider__item-panel" ng-if="content.attributes.type == 'tag'" style="background-image: url('{{content.attributes.thumb_url}}'); background-position: center center; background-size: auto 100%;"> 
+			            <div class="row">
+			              <div class="col-xs-12 text-center cta-preview--tag">
+			                <p class="cta-preview__title--tag">{{content.attributes.title | cut:true:40}}</p>
+			              </div>
+			            </div>
+			          </div>  
+		          <% end %>
+		        </li>
+		      </ul>
+		    </div>
+		  </div>
+
 		</div>
 	</div>
 	
 </div>
 
+
 <script type="text/javascript">
 	$(document).ready(function() {
+      is_last_rewards_flexslider_slide = new Object();
 	    $('.rewards-flexslider').flexslider({
 	      animation: "slide",
-	      slideshow: false,
-	      animationLoop: false,
-	      touch: true,
-	      itemWidth: 273,
-	      itemMargin: 15,
-	      controlNav: false,
-	      prevText: "",
-	      nextText: ""
+        slideshow: false,
+        animationLoop: false,
+        touch: true,
+        itemWidth: 258,
+        itemMargin: 15,
+        controlNav: false,
+        prevText: "",
+        nextText: "",
+        before: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }
+        },
+        end: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+        }
 	    });
 	});
 </script>
