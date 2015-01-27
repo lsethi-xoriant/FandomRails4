@@ -14,7 +14,7 @@ xml.rss :version => "2.0" do
         end
 
         xml.pubDate calltoaction.activated_at.to_s(:rfc822)
-        xml.link "#{root_url}"
+        xml.link "#{root_url}/#{@path + "/" if @path}call_to_action/#{calltoaction.id}"
       end
     end
   end

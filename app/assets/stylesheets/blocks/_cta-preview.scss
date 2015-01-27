@@ -38,6 +38,7 @@
 }
 
 .cta-preview__points{
+  padding-top: 7px;
 	position: absolute;
 	top: 10px;
 	right: 10px;
@@ -88,11 +89,13 @@
 	font-size: 18px;
 	font-weight: normal;
 	max-height: 44px;
+  -webkit-transition: color 200ms ease 0s;
   transition: color 200ms ease 0s;
 }
 
 .relateds-flexslider__item-panel:hover .cta-preview__title {
   color: #1786eb !important;
+  -webkit-transition: color 200ms ease 0s;
   transition: color 200ms ease 0s;
 }
 
