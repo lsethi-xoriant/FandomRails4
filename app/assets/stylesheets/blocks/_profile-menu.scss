@@ -4,19 +4,36 @@
   background-color: #1478e8;
 }
 
-.profile-menu-block__menu{
+.profile-menu-block__menu {
   list-style-type: none;
   display: inline-block;
   margin: 0;
   padding-left: 0;
+  a {
+    text-decoration: none;
+  }
+  li {
+    margin-right: -4px;
+  }
 }
 
-.profile-menu-block__item{
+.profile-menu-block__item {
   display: inline-block;
-  background: transparent; 
+  background-color: transparent; 
   height: 100%;
-  margin: 0 5px;
+  margin: 0;
+  padding: 0 10px;
+  line-height: 50px;
+  -webkit-transition: -backgroundcolor 300ms ease 0s;
+  transition: background-color 300ms ease 0s;
 }
+
+.profile-menu-block__item:hover {
+  -webkit-transition: -backgroundcolor 300ms ease 0s;
+  transition: background-color 300ms ease 0s;
+  background-color: #0e54a2;
+}
+
 
 .profile-menu-block__item--active{
   background-color: #0e54a2;

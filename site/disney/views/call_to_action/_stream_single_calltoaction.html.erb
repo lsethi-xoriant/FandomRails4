@@ -24,23 +24,19 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-12 cta__media-container">
-  	<% if @is_cta_locked %>
-  		<img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" />
-		<div class="cta-preview__locked-layer cta-preview__locked-layer--reward">
-				<p>Per sbloccare questo premio</p>
-				<span class="label label-warning cta-preview__credits--reward">+<%= @reward.cost %><i class="fa fa-copyright"></i></span>
-				<% if current_user%>
-					<% if user_has_currency_for_reward(@reward) %>
-						<button class="btn btn-primary" ng-click="buyReward(<%= @reward.id %>)">Sblocca</button>
-					<% end %>
-				<% else %>
-					<button class="btn btn-primary" onclick="$('#registrate-modal').modal('show');">Sblocca</button>
-				<% end %>
-		</div>
-  	<% else %>
-    	<%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
-    <% end %>
+
+  <div class="col-sm-12 cta__media-container" ng-if="calltoaction_info.prize">
+		<img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" />
+	  <div class="cta-preview__locked-layer cta-preview__locked-layer--reward">
+			<p>Per sbloccare questo premio</p>
+			<span class="label label-warning cta-preview__credits--reward">+{{calltoaction_info.prize.cost}}<i class="fa fa-copyright"></i></span>
+			<button ng-if="current_user && calltoaction_info.prize.has_currency" class="btn btn-blue btn-lg" ng-click="buyReward(calltoaction_info.prize.id)"><span>Sblocca</span></button>
+			<button ng-if="!current_user" class="btn btn-blue btn-lg" onclick="$('#registrate-modal').modal('show');"><span>Sblocca</span></button>
+	  </div>
+  </div>
+
+  <div class="col-sm-12 cta__media-container" ng-if="!calltoaction_info.prize">
+    <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
   </div>
 
   <div class="col-sm-12" ng-if="aux.mobile">
