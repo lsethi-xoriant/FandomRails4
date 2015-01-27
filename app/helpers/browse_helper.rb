@@ -101,7 +101,7 @@ module BrowseHelper
   end
   
   def get_browse_area_by_category(category)
-    contents = get_contents_by_category(category).slice(0,8)
+    contents = get_contents_by_category(category)
     extra_fields = get_extra_fields!(category)
     browse_section = ContentSection.new(
       key: category.name,
@@ -135,7 +135,7 @@ module BrowseHelper
   def get_contents_by_category_with_tags(category)
     tags = get_tags_with_tag(category.name).sort_by { |tag| tag.created_at }
     ctas = get_ctas_with_tag(category.name).sort_by { |cta| cta.created_at }
-    merge_contents_with_tags(ctas, tags)
+    merge_contents_with_tags(ctas, tags, category.id)
   end
   
   def get_contents_by_category_with_match(category, query)
@@ -226,7 +226,7 @@ module BrowseHelper
   end
 
   def merge_contents(ctas,tags)
-    merged = (ctas + tags).sort_by(&:created_at)
+    merged = (ctas + tags).sort_by(&:created_at).slice(0,8)
     prepare_contents(merged)
   end
   
@@ -235,9 +235,9 @@ module BrowseHelper
     prepare_contents_for_autocomplete(merged)
   end
   
-  def merge_contents_with_tags(ctas,tags)
+  def merge_contents_with_tags(ctas, tags, category_id)
     merged = (ctas + tags).sort_by(&:created_at)
-    prepare_contents_with_related_tags(merged)
+    prepare_contents_with_related_tags(merged, category_id)
   end
   
   def merge_search_contents(ctas, tags, offset, limit)
@@ -245,7 +245,7 @@ module BrowseHelper
     prepare_contents(merged)
   end
   
-  def prepare_contents_with_related_tags(elements)
+  def prepare_contents_with_related_tags(elements, category_id)
     contents = []
     tags = {}
     elements.each do |element|
@@ -262,7 +262,7 @@ module BrowseHelper
   
   def addCtaTags(tags, element)
     hidden_tags_ids = get_hidden_tag_ids
-    element.call_to_action_tags.includes(:tag).each do |t|
+    element.call_to_action_tags.each do |t|
       if !tags.has_key?(t.tag.id) && !hidden_tags_ids.include?(t.tag.id)
         tags[t.tag.id] = get_extra_fields!(t.tag).fetch("title", t.tag.name)
       end
