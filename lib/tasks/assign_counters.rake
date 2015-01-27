@@ -15,26 +15,40 @@ def assign_counters
   comment_counter_id = Reward.find_by_name('comment-counter').id
   violetta_comment_counter_id = Reward.find_by_name('violetta-comment-counter').id
 
+  user_ids_dc_comments_hash = UserCommentInteraction.joins("join interactions on comment_id = interactions.resource_id")
+                              .where("resource_type = 'Comment' and call_to_action_id <= #{max_dc_cta_id}")
+                              .group("user_comment_interactions.user_id")
+                              .count
+
+  user_ids_violetta_comments_hash = UserCommentInteraction.joins("join interactions on comment_id = interactions.resource_id")
+                              .where("resource_type = 'Comment' and call_to_action_id > #{max_dc_cta_id}")
+                              .group("user_comment_interactions.user_id")
+                              .count
+
   count = 0
   start_time = Time.now()
-  User.find_each do |user|
-    total_comment_counter = UserCommentInteraction.where(:user_id => user.id).count
-    dc_comment_counter = UserCommentInteraction.joins("join comments on user_comment_interactions.comment_id = comments.id 
-                                                      join interactions on interactions.resource_id = comments.id")
-                                                      .where("user_comment_interactions.user_id = #{user.id} 
-                                                              and interactions.resource_type = 'Comment' 
-                                                              and interactions.call_to_action_id <= #{max_dc_cta_id}")
-                                                        .count
+  user_ids_dc_comments_hash.each do |user_id, dc_comments|
 
-    UserReward.create(:user_id => user.id, :reward_id => comment_counter_id, :available => true, :counter => dc_comment_counter, :period_id => nil)
-    UserReward.create(:user_id => user.id, :reward_id => violetta_comment_counter_id, :available => true, :counter => total_comment_counter - dc_comment_counter, :period_id => nil)
+    UserReward.create(:user_id => user_id, :reward_id => comment_counter_id, :available => true, :counter => dc_comments, :period_id => nil)
 
     count += 1
-    if count % 1 == 0
-      puts "Counter user rewards assigned to #{count} users in #{Time.now - start_time}s"
+    if count % 1000 == 0
+      puts "Disney-channel counter user rewards assigned to #{count} users. Elapsed time: #{Time.now - start_time}s"
     end
   end
 
-  puts "Counter user rewards assigned to #{count} users in #{Time.now - start_time}s"
+  count = 0
+
+  user_ids_violetta_comments_hash.each do |user_id, violetta_comments|
+
+    UserReward.create(:user_id => user_id, :reward_id => violetta_comment_counter_id, :available => true, :counter => violetta_comments, :period_id => nil)
+
+    count += 1
+    if count % 1000 == 0
+      puts "Violetta counter user rewards assigned to #{count} users. Elapsed time: #{Time.now - start_time}s"
+    end
+  end
+
+  puts "\nAll counter user rewards assigned to all users. Elapsed time: #{Time.now - start_time}s"
 
 end
