@@ -204,7 +204,7 @@ module CacheKeysHelper
   end
   
   def get_full_rank_cache_key(ranking_name)
-    "full_rank_#{ranking_name}_cache_key"
+    "full_rank_#{ranking_name}"
   end
   
   def get_ranking_settings_key
@@ -238,11 +238,11 @@ module CacheKeysHelper
   end
   
   def get_max_reward_key(reward_name, user_id, extra_cache_key)
-    "max_reward_#{reward_name}_user_#{user_id}_#{extra_cache_key}_key"
+    "max_reward_#{reward_name}_user_#{user_id}_#{extra_cache_key}"
   end
   
   def get_current_level_by_user(user_id, extra_cache_key = "")
-    "current_level_#{user_id}_for_#{extra_cache_key}_key"
+    "current_level_#{user_id}_for_#{extra_cache_key}"
   end
   
   # Gallery
