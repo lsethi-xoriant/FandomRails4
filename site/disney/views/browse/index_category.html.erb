@@ -1,37 +1,46 @@
 <div class="container container--default" ng-controller="BrowseCtrl" ng-init="init(<%= @category.to_json %>, <%= @contents.to_json %>, <%= @tags.to_json %>)">
 	<div class="row category-header">
-    	<img ng-src="{{category.header_image_url}}" class="img-responsive category-header__header-image" />
-    	<h1 class="category-header__title">{{category.title}}</h1>
-    	<div class="category-header__filter-area"><button class="btn btn-primary" ng-click="isTagFilterOpen = !isTagFilterOpen"><span class="caret"></span> Filtra</button></div>
+    <img ng-src="{{category.header_image_url}}" class="img-responsive category-header__header-image" />
+  	<h1 class="category-header__title">{{category.title}}</h1>
+  	<div class="category-header__filter-area">
+      <button class="btn btn-primary" ng-click="isTagFilterOpen = !isTagFilterOpen">
+        <span class="glyphicon glyphicon-chevron-down" style="position: relative; top: 3px;"></span>
+          Filtra
+      </button>
     </div>
-      <div class="row text-center">
-      	<div class="col-xs-12">
+  </div>
+  <div class="row text-center">
+    <div class="col-xs-12">
 			<div collapse="!isTagFilterOpen" class="row category-filter">
-				<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-6">
-					<button ng-class="{'btn btn-default btn-xs category-filter__tag': true, 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'category-filter__tag--selected': activeTags[tag_id] != undefined}" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">{{tag_name}}</button>
+				<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-6 category-filter__col">
+					<button class="category-filter__btn btn btn-xs category-filter__tag" ng-class="{ 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'btn-dark-blue': activeTags[tag_id] != undefined }" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">
+            {{tag_name}}<span class="fa fa-remove" ng-if="activeTags[tag_id] != undefined"></span>
+          </button>
 				</div> 
 			</div>
 		</div>
+  </div>
+
+  <div class="row main-row">
+    <!-- ORDER FILTER -->
+    <div class="col-md-12 text-right" style="margin-top: 15px; margin-bottom: 15px;">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+          <span class="glyphicon glyphicon-chevron-down" style="position: relative; top: 3px;"></span>
+          Ordina
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right text-left" role="menu" aria-labelledby="dropdownMenu1">
+          <li class="active" role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="order('created_at',false)">Più recenti</a></li>
+          <li role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="order('title',false)">Titolo</a></li>
+        </ul>
       </div>
-      <div class="row">
-      	<div class="col-xs-12">
-      		<div class="row spacer">
-      			<div class="col-sm-8">
-      			</div>
-      			<div class="col-sm-3 col-sm-offset-1">
-      				<div class="btn-group" style="float: right;">
-						<button type="button" class="btn btn-primary">Ordina per</button>
-						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-							<span class="caret"></span>
-						</button>
-					  	<ul class="dropdown-menu" role="menu">
-					    	<li><a href="javascript:void(0);" ng-click="order('created_at',false)">Piu recenti</a></li>
-					    	<li><a href="javascript:void(0);" ng-click="order('title',false)">Titolo</a></li>
-					  	</ul>
-					</div>
-      			</div>
-      		</div>
-	      <div class="row brws-item">
+    </div>
+  </div>
+
+  <div class="row main-row brws-item">
+    <div class="col-md-12">
+     
+	      <div class="row">
 	      		<div class="col-xs-12 col-sm-4 col-md-3" ng-repeat="content in visibleElements">
 					<div class="cta-preview" ng-if="content.type == 'cta'">
 						<div class="row">
@@ -41,7 +50,7 @@
 										<img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}" alt="..." ng-if="content.has_thumb">
 										<img class="img-responsive cta-preview__image" src="http://placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
 									<% end %>
-									<div class="label label-warning cta-preview__points" ng-if="content.status != undefined">+ {{content.status.winnable_reward_count}}</div>
+									<div class="label label-warning cta-preview__points" ng-if="content.status != undefined">+{{content.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
 								</div>
 							</div>
 							<div class="col-xs-12">

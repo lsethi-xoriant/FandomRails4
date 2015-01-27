@@ -62,6 +62,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+      is_last_relateds_flexslider_slide = false;
       $('.relateds-flexslider').flexslider({
         animation: "slide",
         slideshow: false,
@@ -71,7 +72,21 @@
         itemMargin: 15,
         controlNav: false,
         prevText: "",
-        nextText: ""
+        nextText: "",
+        before: function(slider) {
+          is_last_relateds_flexslider_slide = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_relateds_flexslider_slide) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }
+        },
+        end: function(slider) {
+          is_last_relateds_flexslider_slide = true;
+        }
       });
   });
 </script>
