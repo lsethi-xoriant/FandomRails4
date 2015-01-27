@@ -110,20 +110,19 @@ module RankingHelper
   end
   
   def get_full_rank(ranking)
-    cache_short("extra_big_cache") do
-      rank = get_ranking(ranking)
-      if current_user
-        my_position = rank.user_to_position[current_user.id]
-      else
-        my_position = -1
-      end
-      
-      if ranking.rank_type == "trirank"
-        compose_triranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
-      else
-        compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
-      end
+    rank = get_ranking(ranking)
+    if current_user
+      my_position = rank.user_to_position[current_user.id]
+    else
+      my_position = -1
     end
+    
+    if ranking.rank_type == "trirank"
+      compose_triranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+    else
+      compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+    end
+    
   end
   
   def get_full_rank_page(ranking, page)
