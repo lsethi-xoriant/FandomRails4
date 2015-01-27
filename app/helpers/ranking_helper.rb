@@ -37,7 +37,7 @@ module RankingHelper
   def get_ranking(ranking)
     if ranking
       start_time = Time.now
-      rankings, user_position_hash = cache_short(get_full_rank_cache_key(ranking.name)) do
+      rankings, user_position_hash = cache_medium(get_full_rank_cache_key(ranking.name)) do
         period = get_current_periodicities[ranking.period]
         period_id_condition = period.blank? ? "period_id is null" : "period_id = #{period.id}"
         rankings = UserReward.where("reward_id = ? and #{period_id_condition} and user_id <> ?", ranking.reward_id, anonymous_user.id).select("user_id, counter").order("counter DESC, user_rewards.updated_at ASC, user_id ASC").to_a
