@@ -154,10 +154,10 @@
         <h3>Statistiche per property</h3>
       </div>
       <div class="col-md-2">
-        <%= submit_tag 'VIOLETTA', class: 'btn btn-primary btn-block' %>
+        <%= submit_tag 'DISNEY-CHANNEL', class: 'btn btn-primary btn-block' %>
       </div>
       <div class="col-md-2">
-        <%= submit_tag 'DISNEY-CHANNEL', class: 'btn btn-primary btn-block' %>
+        <%= submit_tag 'VIOLETTA', class: 'btn btn-primary btn-block' %>
       </div>
       <% end %> <!-- form-post -->
     </div>
@@ -171,6 +171,10 @@
       </div>
       <div class="col-md-3">
         <h4><%= "Versus #{@property_tag_name}" %></h4>
+        <hr/>
+      </div>
+      <div class="col-md-3">
+        <h4><%= "Video #{@property_tag_name}" %></h4>
         <hr/>
       </div>
     </div> <!-- /.row -->
@@ -217,6 +221,17 @@
             </div> <!-- /.details --> 
             <div class="visual">
               <i class="fa fa-random" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #70AAFF;">
+            <div class="details">
+              <span class="content"> VISUALIZZAZIONI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_plays_to_date - @property_plays_from_date %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-youtube-play" style="color: #FFF"></i>
             </div>
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->

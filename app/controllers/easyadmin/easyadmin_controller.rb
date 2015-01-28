@@ -65,6 +65,23 @@ class Easyadmin::EasyadminController < ApplicationController
     end
   end
 
+  def filter_tags
+    conditions = ['description ILIKE ?', "%#{ params[:description_filter] }%"]
+
+    stream_tags_to_render = Tag.all(
+                              :conditions => conditions,
+                              :limit => 10
+                              )
+    render_tags_str = ""
+    stream_tags_to_render.each do |tag|
+      render_tags_str = render_tags_str + (render_to_string "/easyadmin/easyadmin/_tags_index_row", locals: { tag: tag }, layout: false, formats: :html)
+    end
+
+    respond_to do |format|
+      format.json { render :json => render_tags_str.to_json }
+    end
+  end
+
   def show_user
     @user = User.find(params[:id])
   end
