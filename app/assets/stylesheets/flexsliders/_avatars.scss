@@ -60,7 +60,7 @@
 .avatars__flexslider__avatar-container{
   background-color: #c2efff;
   padding: 4px;
-  margin: 4px;
+  margin-bottom: 8px;
   cursor: pointer;
 }
 
@@ -74,22 +74,26 @@
 
 @media (min-width: $screen-sm-min) { 
 
-    .avatars__flexslider-desktop-item { 
-        .flex-direction-nav a {
-            color: #ccc !important;
-            margin: -10px 0 0 !important;
-        }
-
-        .flex-direction-nav .flex-prev {
-            left: -25px !important; 
-        }
-
-        .flex-direction-nav .flex-next {
-            right: -25px !important; 
-        }
-
+    .avatars__flexslider { 
+        padding-top: 10px;
+        padding-bottom: 10px;
+        position: relative;
         .flex-direction-nav a:before {
-            font-size: 20px !important;
+          -webkit-transition: color 300ms ease 0s;
+          transition: color 300ms ease 0s;
+          font-size: 24px !important;
+          color: #ccc;
+        }
+        .flex-direction-nav a:hover:before, .flex-direction-nav a:focus:before {
+          -webkit-transition: color 300ms ease 0s;
+          transition: color 300ms ease 0s;
+          color: #303030;
+        }
+        .flex-direction-nav .flex-next {
+          right: -25px;
+        }
+        .flex-direction-nav .flex-prev {
+          left: -25px;
         }
     }
 }

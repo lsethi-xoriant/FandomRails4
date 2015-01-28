@@ -51,7 +51,7 @@
 </div>
 
 <!-- NEW USER IN DISNEY -->
-<div class="modal modal__custom hide" id="modal__from-disney-registration" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal modal__custom fade" id="modal__from-disney-registration" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content modal--bg">
       <div class="modal-header">
@@ -182,15 +182,13 @@
                     <ul class="slides">
                       <% get_avatar_list.each_slice(3) do |avatar_slice| %>
                         <li  class="text-center avatars__flexslider-desktop-item">
-                          <div class="row">
-                            <% avatar_slice.each do |avatar| %>
-                            <div class="col-xs-12">
+                          <% avatar_slice.each do |avatar| %>
+                            <div style="width: 60px;">
                               <div id="avatar_<%= avatar[:id] %>__flexslider__avatar-container" class="avatars__flexslider__avatar-container" ng-click="setAvatar('<%= avatar[:url] %>', '<%= avatar[:id] %>');">
                                 <img src="<%= avatar[:url] %>">  
                               </div>
                             </div>
-                            <% end %>
-                          </div>
+                          <% end %>
                         </li>
                       <% end %>
                     </ul>
@@ -216,7 +214,7 @@
       animationLoop: false,
       touch: true,
       itemWidth: 60,
-      itemMargin: 4,
+      itemMargin: 8,
       controlNav: false,
       prevText: "",
       nextText: ""
