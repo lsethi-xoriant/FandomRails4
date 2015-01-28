@@ -1,9 +1,11 @@
-<div class="col-xs-12 hidden-xs" ng-repeat="calltoaction in aux.sidebar_calltoaction_info">
+<div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="calltoaction in aux.sidebar_calltoaction_info">
   <%= light_link_to("/call_to_action/{{calltoaction.id}}") do %>
     <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel"> 
       <div class="row">
-        <div class="col-xs-12 cta__sidebar-panel__header" style="background-color: {{aux.current_property_info.background}};">
-          <p style="font-size: 18px; padding: 10px 15px; color: #fff;">In evidenza</p>
+        <div class="col-xs-12">
+          <div class="cta__sidebar-panel__header" style="background-color: {{aux.current_property_info.background}};">
+            <p class="cta__sidebar-panel__header-title">In evidenza</p>
+          </div>
         </div>
         <div class="col-xs-12">
           <div class="relateds-flexslider__thumbnail">

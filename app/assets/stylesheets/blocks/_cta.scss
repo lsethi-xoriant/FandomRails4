@@ -12,14 +12,23 @@
   max-width: 300px; 
   margin-left: auto; 
   margin-bottom: 15px;
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px 10px 0 0 !important;
   height: 310px !important;
+  border: none !important;
+  background-color: whitesmoke !important;
 }
 
 .cta__sidebar-panel__header {
   background-image: url("disney/points-bg.png");
   background-position: right top;
   background-repeat: no-repeat;
+  border-radius: 10px 10px 0 0 !important;
+}
+
+.cta__sidebar-panel__header-title {
+  font-size: 18px; 
+  padding: 12px 15px 10px; 
+  color: #fff;
 }
 
 .cta__media-footer {
