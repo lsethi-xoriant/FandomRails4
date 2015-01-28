@@ -146,18 +146,25 @@ module BrowseHelper
     merge_contents(ctas, tags)
   end
   
-  def get_contents_with_match(query)
-    cache_medium(get_full_search_results_key(query)) do
-      tags = get_tags_with_match(query).sort_by { |tag| tag.created_at }
-      ctas = get_ctas_with_match(query).sort_by { |cta| cta.created_at }
-      merge_contents(ctas, tags)
+  def get_contents_with_match(query, offset = 0)
+    property = get_disney_property
+    contents, total = cache_medium(get_full_search_results_key(query, property)) do
+      if property != "disney-channel"
+        tags = get_tags_with_tag_with_match(property, query)
+        ctas = get_ctas_with_tag_with_match(property, query).sort_by { |cta| cta.created_at }
+      else
+        tags = get_tags_with_match(query)
+        ctas = get_ctas_with_match(query)
+      end
+      [merge_search_contents(ctas, tags), tags.count + ctas.count]
     end
+    [contents.slice(offset, 12), total]
   end
   
   def get_contents_by_query(term)
     category_tag_ids = get_category_tag_ids()
     tags = Tag.where("title ILIKE ? AND id IN (?)","#{term}%", category_tag_ids)
-    ctas = CallToAction.active.where("title ILIKE ?","#{term}%")
+    ctas = CallToAction.active.where("title ILIKE ?","%#{term}%")
     merge_contents_for_autocomplete(ctas, tags)
   end
   
@@ -227,8 +234,21 @@ module BrowseHelper
     contents
   end
 
-  def merge_contents(ctas,tags)
-    merged = (ctas + tags).sort_by(&:created_at).slice(0,8)
+  def merge_contents(ctas, tags, qty = 8, offset = 0)
+    if qty > 0
+      merged = (ctas + tags).sort_by(&:created_at).slice(offset, qty)
+    else
+      merged = (ctas + tags).sort_by(&:created_at)
+    end
+    prepare_contents(merged)
+  end
+  
+  def merge_contents(ctas, tags, qty = 8, offset = 0)
+    if qty > 0
+      merged = (ctas + tags).sort_by(&:created_at).slice(offset, qty)
+    else
+      merged = (ctas + tags).sort_by(&:created_at)
+    end
     prepare_contents(merged)
   end
   
@@ -242,9 +262,8 @@ module BrowseHelper
     prepare_contents_with_related_tags(merged, category_id)
   end
   
-  def merge_search_contents(ctas, tags, offset, limit)
-    merged = (ctas + tags).sort_by(&:created_at)
-    prepare_contents(merged)
+  def merge_search_contents(ctas, tags)
+    (ctas + tags).sort_by(&:created_at)
   end
   
   def prepare_contents_with_related_tags(elements, category_id)

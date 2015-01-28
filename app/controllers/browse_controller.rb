@@ -1,8 +1,7 @@
 class BrowseController < ApplicationController
+  include BrowseHelper
   
   def index
-    # TODO: use this new function to improve performance
-    #result = cta_to_reward_statuses_by_user(current_or_anonymous_user, [CallToAction.find(979), CallToAction.find(980), CallToAction.find(981), CallToAction.find(2397)], 'point')
     @browse_section = init_browse_sections()
     cta_ids = []
     @browse_section.each do |bs|
@@ -28,9 +27,9 @@ class BrowseController < ApplicationController
   end
   
   def full_search
-    contents = get_contents_with_match(params[:query])
-    @total = contents.count
-    @contents = contents.slice(0,12)
+    contents, total = get_contents_with_match(params[:query])
+    @total = total
+    @contents = prepare_contents(contents)
     @query = params[:query]
     if @contents.empty?
       redirect_to "/browse"
@@ -39,7 +38,8 @@ class BrowseController < ApplicationController
   
   def full_search_load_more
     offset = params[:offset].to_i
-    contents = get_contents_with_match(params[:query]).slice(offset,12)
+    contents, total = get_contents_with_match(params[:query], offset)
+    contents = prepare_contents(contents)
     respond_to do |format|
       format.json { render :json => contents.to_json }
     end
@@ -92,7 +92,7 @@ class BrowseController < ApplicationController
   
   def search
     term = params[:q]
-    results = cache_short(get_browse_search_results_key(term)) { get_contents_by_query(term) }
+    results = cache_short(get_browse_search_results_key(term)) { get_contents_by_query(term).slice(0,8) }
     respond_to do |format|
       format.json { render :json => results.to_a.to_json }
     end

@@ -5,7 +5,7 @@
 		overflow-y: scroll;
 	}
 </style>
-<div class="container container--default" ng-controller="SearchCtrl" ng-init="init_search(<%= @contents.to_json %>)">
+<div class="container container--default" ng-controller="SearchCtrl" ng-init="init_search(<%= @contents.to_json %>, <%= @total %>, '<%= @query %>')">
 	<div class="row brws-item search-bar">
 		<div class="col-xs-12">
 			<%= form_tag("/browse/full_search",{method: "post", class: "navbar-form", role: "search"}) %>
@@ -31,10 +31,10 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="cta-preview__thumbnail">
-							<a href="{{content.attributes.detail_url}}">
+							<%= light_link_to {{content.attributes.detail_url}} do %>
 								<img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
 								<img class="img-responsive cta-preview__image" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
-							</a>
+							<% end %>
 							<div class="label label-warning cta-preview__points" ng-if="content.attributes.status != undefined">+ {{content.attributes.status.winnable_reward_count}} <span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
 						</div>
 					</div>
@@ -52,10 +52,10 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="cta-preview__thumbnail cta-preview__thumbnail--category">
-							<a href="{{content.attributes.detail_url}}">
+							<%= light_link_to {{content.attributes.detail_url}} do %>
 								<img class="cta-preview__image cta-preview__image--category" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
 								<img class="cta-preview__image cta-preview__image--category" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
-							</a>
+							<% end %>
 						</div>
 					</div>
 				</div>

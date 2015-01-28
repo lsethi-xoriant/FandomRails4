@@ -13,7 +13,7 @@
 	    </div>
 
 		<div class="col-xs-12 col-md-3" ng-repeat="content in contents">
-			<%= light_link_to("{{content.attributes.detail_url}}") do %>	
+		<%= light_link_to("{{content.attributes.detail_url}}") do %>	
         <div class="relateds-flexslider__item-panel relateds-flexslider__item-panel--full-search" ng-if="content.attributes.type == 'cta'"> 
           <div class="row">
             <div class="col-xs-12">
@@ -43,7 +43,7 @@
           </div>
         </div>  
       <% end %>
-		</div>
+	</div>
 	</div>
 	<div class="row row-load-more text-center" ng-if="total > offset">
 		<div class="col-xs-4 col-xs-offset-4">

@@ -278,8 +278,8 @@ module CacheKeysHelper
     "browse_search_result_#{term}"
   end
   
-  def get_full_search_results_key(term)
-    "full_search_result_#{term}"
+  def get_full_search_results_key(term, extra_cache_key = "")
+    "full_search_result_#{term}_#{extra_cache_key}"
   end
   
   def get_recent_contents_cache_key(query)
