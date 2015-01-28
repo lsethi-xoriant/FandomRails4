@@ -11,7 +11,6 @@ def add_extra_fields_attachments(folder)
   switch_tenant('disney')
 
   Dir.foreach(folder) do |tag_folder|
-    puts "tag_folder: #{tag_folder}"
     next if tag_folder == '.' or tag_folder == '..' or tag_folder == '.DS_Store'
 
     tag = Tag.find_by_name(tag_folder)
