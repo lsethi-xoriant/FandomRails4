@@ -1,4 +1,4 @@
-<div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="calltoaction in aux.sidebar_calltoaction_info">
+<div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="calltoaction in aux.sidebar_info.calltoaction_info_list">
   <%= light_link_to("/call_to_action/{{calltoaction.id}}") do %>
     <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel"> 
       <div class="row">
@@ -30,6 +30,22 @@
         <div class="col-xs-12">
           <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{calltoaction.likes}}</p>
           <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{calltoaction.comments}}</p>
+        </div>
+      </div>
+    </div>  
+  <% end %>  
+</div>
+
+<div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="tag in aux.sidebar_info.tag_info_list">
+  <%= light_link_to("/call_to_action/{{tag.url}}") do %>
+    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--tag"> 
+      <div class="row">
+        <div class="col-xs-12">
+          <p class="cta__sidebar-panel__header-title--tag">{{tag.title}}</p>
+        </div>
+        <div class="col-xs-12">
+          <img class="cta-preview__image--tag" ng-src="{{tag.image}}">            
+          <p class="cta-preview__title">{{tag.description | cut:true:70}}</p>
         </div>
       </div>
     </div>  
