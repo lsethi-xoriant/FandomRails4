@@ -8,6 +8,20 @@
   margin-bottom: 15px;
 }
 
+.cta__sidebar-panel {
+  max-width: 300px; 
+  margin-left: auto; 
+  margin-bottom: 15px;
+  border-radius: 10px 10px 0 0;
+  height: 310px !important;
+}
+
+.cta__sidebar-panel__header {
+  background-image: url("disney/points-bg.png");
+  background-position: right top;
+  background-repeat: no-repeat;
+}
+
 .cta__media-footer {
   padding-top: 10px;
   padding-bottom: 10px;

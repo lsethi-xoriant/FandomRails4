@@ -1090,7 +1090,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $scope.play_event_tracked[calltoaction_id] = true;
 
       play_interaction_info = $scope.getPlayInteraction(calltoaction_id);
-      if(play_interaction == null) {
+      if(play_interaction_info == null) {
         console.log("You must enable the play interaction for this calltoaction.");
         return;
       }
