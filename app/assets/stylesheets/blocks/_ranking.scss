@@ -74,6 +74,13 @@
   color: #000;
   text-align: center;
   margin: 10px 0;
+  overflow: hidden;
+  padding: 5px;
+  text-overflow: ellipsis;
+}
+
+.rewards-flexslider__item--fod {
+  margin-right: 30px;
 }
 
 .ranking-element__nickname--myposition{

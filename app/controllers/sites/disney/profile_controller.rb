@@ -57,7 +57,7 @@ class Sites::Disney::ProfileController < ProfileController
       properties = get_tags_with_tag("property")
       properties.each do |p|
         if get_disney_property != p.name
-          thumb_url = get_upload_extra_field_processor(get_extra_fields!(p)['thumbnail'], :medium) 
+          thumb_url = get_upload_extra_field_processor(get_extra_fields!(p)['thumbnail'], :medium) rescue ""
           property_ranking = {"title" => p.title, "thumb" => thumb_url, "link" => "#{get_disney_root_path_for_property_name(p.name)}/profile/rankings"}
           property_rankings << property_ranking
         end  
