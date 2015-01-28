@@ -1,0 +1,37 @@
+<div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="calltoaction in aux.sidebar_calltoaction_info">
+  <%= light_link_to("/call_to_action/{{calltoaction.id}}") do %>
+    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel"> 
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="cta__sidebar-panel__header" style="background-color: {{aux.current_property_info.background}};">
+            <p class="cta__sidebar-panel__header-title">In evidenza</p>
+          </div>
+        </div>
+        <div class="col-xs-12">
+          <div class="relateds-flexslider__thumbnail">
+            <img class="img-responsive cta-preview__image" ng-src="{{calltoaction.thumbnail_medium_url}}">            
+            <!-- CALLTOACTION WINNABLE REWARD COUNT -->
+            <div ng-if="calltoaction.status && calltoaction.status.winnable_reward_count > 0" class="col-xs-12 cta-cover__winnable-reward text-right">
+              <span class="label label-warning cta-cover__winnable-reward__label">
+                +{{calltoaction.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star"></span>
+              </span>  
+            </div> 
+            <!-- CALLTOACTION DONE -->
+            <div ng-if="!calltoaction.status || calltoaction.status.winnable_reward_count < 1" class="col-xs-12 cta-cover__winnable-reward text-right">
+              <span class="label label-success cta-cover__winnable-reward__label">
+                Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span>
+              </span>  
+            </div> 
+          </div>
+          <p class="cta-preview__title">{{calltoaction.title | cut:true:40}}</p>
+        </div>
+      </div>
+      <div class="row relateds-flexslider__footer">
+        <div class="col-xs-12">
+          <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{calltoaction.likes}}</p>
+          <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{calltoaction.comments}}</p>
+        </div>
+      </div>
+    </div>  
+  <% end %>  
+</div>

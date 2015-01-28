@@ -66,6 +66,22 @@ module DisneyHelper
     end
   end
 
+  def get_disney_sidebar_calltoactions(property)
+    # Cached in index
+    tag_sidebar = Tag.find_by_name("sidebar")
+    if tag_sidebar
+      calltoactions = get_disney_calltoaction_active_with_tag_in_property(tag_sidebar, property, "DESC")
+      meta_ordering = get_extra_fields!(tag_sidebar)["ordering"]    
+      if meta_ordering
+        order_elements_by_ordering_meta(meta_ordering, calltoactions)
+      else
+        calltoactions
+      end
+    else
+      []
+    end
+  end
+
   def get_disney_calltoaction_active_with_tag_in_property(tag, property, order)
     # Cached in index
     tag_calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", tag.id)
@@ -166,6 +182,19 @@ module DisneyHelper
     end
   end
 
+  def get_disney_sidebar_info(property)
+    cache_short(get_sidebar_calltoactions_in_property_for_user_cache_key(current_or_anonymous_user.id, property.id)) do  
+      calltoactions = get_disney_sidebar_calltoactions(property)
+
+      calltoaction_info = []
+      calltoactions.each do |calltoaction|
+        calltoaction_info << build_thumb_calltoaction(calltoaction)
+      end
+
+      calltoaction_info
+    end
+  end
+
   def disney_default_aux(other)
 
     current_property = get_tag_from_params(get_disney_property())
@@ -214,7 +243,6 @@ module DisneyHelper
 
     if other && other.has_key?(:calltoaction_evidence_info)
       calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_for_user_cache_key(current_or_anonymous_user.id, current_property.id)) do  
-
         highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
         calltoactions_in_property = get_disney_ctas(current_property)
         if highlight_calltoactions.any?
@@ -243,7 +271,8 @@ module DisneyHelper
       "related_calltoaction_info" => related_calltoaction_info,
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
-      "flash_notice" => flash[:notice]
+      "flash_notice" => flash[:notice],
+      "sidebar_calltoaction_info" => get_disney_sidebar_info(current_property)
     }
 
     if other
