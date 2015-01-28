@@ -26,7 +26,6 @@ function SearchCtrl($scope, $window, $filter, $http) {
 		$scope.contents = contents;
 		$scope.total = total;
 		$scope.offset = $scope.perpage = per_page;
-		console.log("total: "+total+" per page: "+per_page);
 	};
 	
 	$scope.getResults = function(val) {

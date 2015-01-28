@@ -17,7 +17,7 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 	$scope.init = function(rankings, user, single_rank) {
 		$scope.rankings = rankings;
 		$scope.user = user;
-		if (user != null){
+		if (user != null && rankings.general_user_position != undefined){
 			user_off = rankings.general_user_position[user.id] % 10;
 			if(user_off == 0){
 				$scope.user_offset = 9;
@@ -39,7 +39,7 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 	
 	$scope.get_rank_page = function(page, rank){
 		if(page >= 1 && page <= rank.number_of_pages){
-			Api.save({ page: page, rank: JSON.stringify(rank) }, function(data) {
+			Api.save({ page: page, rank_name: rank.ranking.name }, function(data) {
 				var newData = {
 					current_page: data.current_page,
 					my_position: data.my_position,
@@ -49,7 +49,10 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 					ranking: data.ranking,
 					total: data.total
 				};
-			    var newrank = eval("$scope.rankings." + data.ranking.name + " = " + JSON.stringify(newData));
+				console.log(JSON.stringify(newData));
+				console.log(data.ranking.name);
+			    var newrank = eval("$scope.rankings['" + data.ranking.name + "'] = " + JSON.stringify(newData));
+			    console.log(eval("$scope.rankings['" + data.ranking.name + "']"));
 			});
 		}
 	};

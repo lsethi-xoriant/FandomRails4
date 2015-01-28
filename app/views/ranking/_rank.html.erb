@@ -23,11 +23,11 @@
 		      </a>
 		    </li>
 		    <li ng-repeat="page in get_pagination_page_before(<%= rankings %>.current_page)">
-		    	<a href="javascript:void(0)" ng-click="get_rank_page(page)">{{page}}</a>
+		    	<a href="javascript:void(0)" ng-click="get_rank_page(page, <%= rankings %>)">{{page}}</a>
 		    </li>
-		    <li><a href="javascript:void(0);">{{<%= rankings %>.current_page}}</a></li>
+		    <li class="active"><a href="javascript:void(0);">{{<%= rankings %>.current_page}}</a></li>
 		    <li ng-repeat="page in get_pagination_page_after(<%= rankings %>.current_page, <%= rankings %>.number_of_pages)">
-		    	<a href="javascript:void(0)" ng-click="get_rank_page(page)">{{page}}</a>
+		    	<a href="javascript:void(0)" ng-click="get_rank_page(page, <%= rankings %>)">{{page}}</a>
 		    </li>
 		    <li>
 		      <a href="javascript:void(0);" aria-label="Next" ng-click="next_page(<%= rankings %>.current_page, <%= rankings %>)">
