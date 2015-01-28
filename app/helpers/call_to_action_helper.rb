@@ -66,7 +66,8 @@ module CallToActionHelper
           "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
           "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
           "interaction_info_list" => build_interaction_info_list(calltoaction, interactions_to_compute),
-          "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}")
+          "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}"),
+          "activated_at" => calltoaction.activated_at
         },
         "prize" => prize,
         "flag" => flag_info,

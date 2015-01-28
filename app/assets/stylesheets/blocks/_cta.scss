@@ -11,11 +11,22 @@
 .cta__sidebar-panel {
   max-width: 300px; 
   margin-left: auto; 
-  margin-bottom: 15px;
+  margin-bottom: 15px !important;
   border-radius: 10px 10px 0 0 !important;
   height: 310px !important;
   border: none !important;
   background-color: whitesmoke !important;
+}
+
+.cta__sidebar-panel--tag {
+  border-radius: 0 !important;
+  height: 290px !important;
+}
+
+.cta-preview__image--tag {
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 100%;
 }
 
 .cta__sidebar-panel__header {
@@ -29,6 +40,12 @@
   font-size: 18px; 
   padding: 12px 15px 10px; 
   color: #fff;
+}
+
+.cta__sidebar-panel__header-title--tag {
+  color: #000;
+  font-size: 18px; 
+  padding: 12px 10px 10px;
 }
 
 .cta__media-footer {

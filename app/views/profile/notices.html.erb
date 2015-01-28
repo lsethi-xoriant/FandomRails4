@@ -14,7 +14,7 @@
           <div ng-repeat="notices in notice_list | groupBy: 'date' | toArray:true | orderBy:min">
           	<h6>{{notices.$key}}</h6>
           	<ul class="list-group">
-          		<li id="{{notice.notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.read}" ng-repeat="notice in notices | orderBy:min">
+          		<li id="{{notice.notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.notice.read}" ng-repeat="notice in notices | orderBy:min">
           			<div class="row">
 		              	<div class="col-xs-11">
 		              		<div class="row" ng-bind-html='notice.notice.html_notice'></div>
