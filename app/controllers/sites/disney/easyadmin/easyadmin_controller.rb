@@ -38,12 +38,12 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
           "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", to).count
           }
 
-      if params[:commit] == "DISNEY-CHANNEL"
-        @property_tag_name = "disney-channel"
-        @property_prefix = ""
-      else
+      if params[:commit] == "VIOLETTA"
         @property_tag_name = "violetta"
         @property_prefix = "violetta-"
+      else
+        @property_tag_name = "disney-channel"
+        @property_prefix = ""
       end
 
       # TOTAL USER REWARDS
@@ -81,6 +81,10 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       # VERSUS
       @property_versus_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}versus-counter", @to_date)
       @property_versus_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}versus-counter", @from_date)
+
+      # PLAYS
+      @property_plays_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}play-counter", @to_date)
+      @property_plays_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}play-counter", @from_date)
 
       # LIKES
       @property_likes_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}like-counter", @to_date)
