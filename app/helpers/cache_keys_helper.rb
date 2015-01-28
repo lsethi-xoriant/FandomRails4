@@ -99,6 +99,10 @@ module CacheKeysHelper
     "evidence_calltoactions_in_property_#{property_id}_for_user_#{user_id}"
   end
 
+  def get_sidebar_calltoactions_in_property_for_user_cache_key(user_id, property_id)
+    "sidebar_calltoactions_in_property_#{property_id}_for_user_#{user_id}"
+  end
+
   def get_calltoaction_last_comments_cache_key(cta_id)
     "calltoaction_#{cta_id}_last_comments"
   end

@@ -35,12 +35,6 @@ def add_extra_fields_attachments(folder)
 
           tag.update_attribute(:extra_fields, extra_fields.to_json)
         end
-
-        #my_model_instance = MyModel.new
-        #file = File.open(file_path)
-        #my_model_instance.attachment = file
-        #file.close
-        #my_model_instance.save!
       end
     end
   end

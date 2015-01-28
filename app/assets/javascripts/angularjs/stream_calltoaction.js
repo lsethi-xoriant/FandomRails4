@@ -403,15 +403,23 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.getPlayInteraction = function(calltoaction_id) {
-    play_interaction = null;
+    return getInteraction(calltoaction_id, "play");
+  };
+
+  $scope.getDownloadInteraction = function(calltoaction_id) {
+    return getInteraction(calltoaction_id, "download");
+  };
+
+  function getInteraction(calltoaction_id, interaction_type) {
+    result = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
-      if(interaction_info.interaction.resource_type == "play") {
-        play_interaction = interaction_info;
+      if(interaction_info.interaction.resource_type == interaction_type) {
+        result = interaction_info;
       }
     });
-    return play_interaction;
-  };
+    return result;
+  }
 
   $scope.filterShareInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "share");
@@ -459,6 +467,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.filterRemovePlayInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type != "play");
+  };
+
+  $scope.filterRemoveDownloadInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type != "download");
   };
 
   $window.update_ga_event = function(category, action, label, value) {
@@ -1078,7 +1090,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $scope.play_event_tracked[calltoaction_id] = true;
 
       play_interaction_info = $scope.getPlayInteraction(calltoaction_id);
-      if(play_interaction == null) {
+      if(play_interaction_info == null) {
         console.log("You must enable the play interaction for this calltoaction.");
         return;
       }
