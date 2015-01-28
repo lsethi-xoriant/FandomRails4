@@ -1,12 +1,33 @@
 /* PROFILE HEADER BLOCK */
 .profile-header-mobile{
   background-color: #fff;
+  border-top: 2px solid #ddd;
 }
 
 .profile-header-mobile__item{
   border-right: 1px solid #ccc;
   padding-top: 10px;
   position: relative;
+  height: 95px;
+  padding-top: 20px !important;
+}
+
+.profile-header-mobile__item--level{
+  border-right: 1px solid #ccc;
+  padding-top: 10px;
+  position: relative;
+  height: 95px;
+  .profile-header-mobile__glyphicon-icon--big{
+    line-height: 90px;
+  }
+}
+
+.profile-header-mobile__item--rewards{
+  border-right: 1px solid #ccc;
+  padding-top: 10px;
+  position: relative;
+  height: 95px;
+  padding-top: 30px !important;
 }
 
 .profile-header-mobile__item--last{
@@ -22,8 +43,9 @@
 
 .profile-header-mobile__item__title{
   color: #373737;
-  font-size: 24px;
+  font-size: 20px;
   margin: 10px 0 0 0;
+  line-height: 35px;
 }
 
 .profile-header-mobile__item__subtitle{
@@ -39,7 +61,7 @@
 }
 
 .profile-header-mobile__item__rank-position{
-  font-size: 30px;
+  font-size: 26px;
   margin-top: -5px;
 }
 
@@ -61,15 +83,15 @@
 }
 
 .profile-header-mobile__item__counter--credits{
-  padding: 8px 15px 4px 15px;
+  padding: 4px 13px 4px 13px;
   font-size: 18px;
-  color: #993300;
+  color: #fff;
   margin: 0 10px;
   border-radius: 60px;
   display: inline-block;
-  background-color: #fff;
+  background-color: #993300;
   border: 2px solid #993300;
-  width:95%;
+  width:90%;
 }
 
 .profile-header-mobile__item__counter--credit{
@@ -87,13 +109,13 @@
 }
 
 .profile-header-mobile__glyphicon-icon--big{
-  font-size: 30px;
-  line-height: 75px;
+  font-size: 22px;
+  line-height: 60px;
 }
 
 .profile-header-mobile__glyphicon-icon--blue{
   font-size: 30px;
-  line-height: 75px;
+  line-height: 60px;
   color: $blu
 }
 

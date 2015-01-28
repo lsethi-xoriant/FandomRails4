@@ -13,7 +13,7 @@
 		</div>
 	</div>
 	
-	<div class="row brws-item profile-header-mobile__item">
+	<div class="row brws-item profile-header-mobile__item--rewards">
 		<div class="col-xs-6 text-center">
 			<span class="label label-warning profile-header-mobile__item__counter--credits">+ <%= get_counter_about_user_reward("credit") %> <i class="fa fa-copyright"></i></span>
 			<p class="profile-header-mobile__item__counter-label">Crediti</p>
@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	
-	<div class="row brws-item profile-header-mobile__item">
+	<div class="row brws-item profile-header-mobile__item--level">
 		<%= light_link_to "/profile/rewards", {"class" => "profile-header-mobile__link"} do %><% end %>
 		<% if !cached_nil?(@level) %>
 			<div class="col-xs-3 text-right">

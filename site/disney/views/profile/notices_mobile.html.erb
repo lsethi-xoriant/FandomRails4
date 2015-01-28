@@ -1,7 +1,7 @@
 <div class="container container--default" style="background-color: #fff;">
   <div class="row" ng-controller="NoticePageCtrl" ng-init="init(<%= @notices_list.to_json %>)">
     <div class="col-md-12">
-    	<div class="section-heading">
+    	<div class="row section-heading">
 	    	<h3>
 	    		<span class="glyphicon glyphicon-bell glyphicon-blu" aria-hidden="true"></span>
 	    		Notifiche
@@ -9,18 +9,18 @@
         </div>
       <div class="row">
         <div class="col-xs-12">
-          <div ng-repeat="(date, notices) in notice_list">
+          <div ng-repeat="notices in notice_list | groupBy: 'date' | toArray:true | orderBy:min">
           	<div class="row brws-item">
           		<div class="col-xs-12">
-          			<h4>{{date}}</h4>
+          			<h4>{{notices.$key}}</h4>
           		</div>
           	</div>
           	<div class="row">
 	          	<ul class="list-group">
-	          		<li id="{{notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.read}" ng-repeat="notice in notices">
+	          		<li id="{{notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.read}" ng-repeat="notice in notices | orderBy:min">
 	          			<div class="row">
 			              	<div class="col-xs-12">
-			              		<div class="row" ng-bind-html='notice.html_notice'></div>
+			              		<div class="row" ng-bind-html='notice.notice.html_notice'></div>
 			              	</div>
 			              </div>
 			          </li>

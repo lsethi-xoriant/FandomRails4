@@ -1,8 +1,8 @@
-<div class="container container--default" style="background-color: #fff;">
+<div class="container container--default">
 
 	<div class="row">
-    <div class="col-xs-12">
-	  <div class="section-heading">
+    <div class="col-xs-12" style="background-color: #fff;">
+	  <div class="row section-heading">
         	<h3>
         		Classifica generale
         		<a href="/ranking/show/<%= @property_rank[:ranking].id %>" class="section-heading__see-all">View all</a>
@@ -19,8 +19,6 @@
 		    </div>
 		  </div>
 	  
-    
-    	<div class="row"><p>&nbsp;</p></div>
     <% end %>
     
     <% @property_rank[:rank_list].slice(0,4).each do |rank_user| %>
@@ -34,7 +32,7 @@
 		</div>
     <% end %>
       
-		<div class="section-heading">
+		<div class="row section-heading">
         	<h3>
         		Fan del giorno
         	</h3>

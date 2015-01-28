@@ -44,3 +44,13 @@
   color: $blu;
   font-size: 16px;
 }
+
+@media (max-width: $screen-sm-min) {
+  .section-heading {
+    border-top: 2px solid #dddddd;
+    padding: 20px 0 10px 20px;
+    h3 {
+      line-height: 40px;
+    }
+  }
+}

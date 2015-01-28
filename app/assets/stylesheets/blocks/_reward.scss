@@ -35,3 +35,10 @@
   color: #858585;
   font-size: 13px;
 }
+
+@media (max-width: $screen-sm-min) {
+  .reward-block{
+    display: inline-block;
+    margin: 15px 8px;
+  }
+}
