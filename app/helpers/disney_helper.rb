@@ -66,17 +66,32 @@ module DisneyHelper
     end
   end
 
-  def get_disney_sidebar_calltoactions(property)
-    # Cached in index
-    tag_sidebar = Tag.find_by_name("sidebar")
+  def get_disney_sidebar_calltoactions(property, tag_sidebar)
     if tag_sidebar
       calltoactions = get_disney_calltoaction_active_with_tag_in_property(tag_sidebar, property, "DESC")
-      meta_ordering = get_extra_fields!(tag_sidebar)["ordering"]    
-      if meta_ordering
-        order_elements_by_ordering_meta(meta_ordering, calltoactions)
-      else
-        calltoactions
+      calltoaction_info = []
+      calltoactions.each do |calltoaction|
+        calltoaction_info << build_thumb_calltoaction(calltoaction)
       end
+      calltoaction_info
+    else
+      []
+    end
+  end
+
+  def get_disney_sidebar_tags(property, tag_sidebar)
+    if tag_sidebar
+      tags = get_tags_with_tag(tag_sidebar.name)
+      tag_info = []
+      tags.each do |tag|
+        tag_info << {
+          "title" => tag.title,
+          "image" => (get_upload_extra_field_processor(get_extra_fields!(tag)["image"], :thumb) rescue nil),
+          "description" => tag.description,
+          "url" => get_extra_fields!(tag)["url"]
+        }
+      end
+      tag_info
     else
       []
     end
@@ -183,15 +198,15 @@ module DisneyHelper
   end
 
   def get_disney_sidebar_info(property)
-    cache_short(get_sidebar_calltoactions_in_property_for_user_cache_key(current_or_anonymous_user.id, property.id)) do  
-      calltoactions = get_disney_sidebar_calltoactions(property)
+    cache_short(get_sidebar_for_property_for_user_cache_key(current_or_anonymous_user.id, property.id)) do  
+      
+      tag_sidebar = Tag.find_by_name("sidebar")
 
-      calltoaction_info = []
-      calltoactions.each do |calltoaction|
-        calltoaction_info << build_thumb_calltoaction(calltoaction)
-      end
+      {
+        "calltoaction_info_list" => get_disney_sidebar_calltoactions(property, tag_sidebar),
+        "tag_info_list" => get_disney_sidebar_tags(property, tag_sidebar)
+      }
 
-      calltoaction_info
     end
   end
 
@@ -272,7 +287,7 @@ module DisneyHelper
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
-      "sidebar_calltoaction_info" => get_disney_sidebar_info(current_property)
+      "sidebar_info" => get_disney_sidebar_info(current_property)
     }
 
     if other

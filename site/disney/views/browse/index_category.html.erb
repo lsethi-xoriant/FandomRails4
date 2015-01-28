@@ -11,9 +11,9 @@
   </div>
   <div class="row text-center">
     <div class="col-xs-12">
-			<div collapse="!isTagFilterOpen" class="row category-filter">
+			<div collapse="!isTagFilterOpen" class="row category-filter main-row">
 				<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-6 category-filter__col">
-					<button class="category-filter__btn btn btn-xs category-filter__tag" ng-class="{ 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'btn-dark-blue': activeTags[tag_id] != undefined }" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">
+					<button class="category-filter__btn btn btn-xs btn-default category-filter__tag" ng-class="{ 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'btn-dark-blue': activeTags[tag_id] != undefined }" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">
             {{tag_name}}<span class="fa fa-remove" ng-if="activeTags[tag_id] != undefined"></span>
           </button>
 				</div> 

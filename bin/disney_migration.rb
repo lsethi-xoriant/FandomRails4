@@ -444,7 +444,7 @@ end
 ########## USERS ##########
 
 def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, limit)
-  source_users = source_db_connection.exec("SELECT * FROM users") # limit for testing
+  source_users = source_db_connection.exec("SELECT * FROM users")
   source_users_count = source_users.count
 
   puts "users: #{source_users_count} lines to migrate \nRunning migration..."
@@ -532,6 +532,7 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
       user_id = email_present_user_id[0].to_i
       username = email_present_user_id[1].to_s
       avatar_selected_url = email_present_user_id[2].to_s
+      new_avatar_selected_url = nullify_or_escape_string(source_db_connection, line["avatar"]) 
       nickname = nullify_or_escape_string(source_db_connection, line["nickname"])
       count_email_present += 1
 
@@ -548,9 +549,9 @@ def migrate_users(source_db_tenant, destination_db_tenant, source_db_connection,
           aux = nullify_or_escape_string(source_db_connection, aux.to_json)
           destination_db_connection.exec("UPDATE #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}users SET aux = '#{aux}'::json WHERE id = #{user_id}")
         else # dc present
-          aux = aux.merge({ "violetta_username" => username, "dc_username" => nickname })
+          aux = aux.merge({ "violetta_username" => nickname, "dc_username" => username })
           aux = nullify_or_escape_string(source_db_connection, aux.to_json)
-          destination_db_connection.exec("UPDATE #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}users SET (username, avatar_selected_url, aux) = ('#{nickname}', '#{avatar_selected_url}', '#{aux}'::json) WHERE id = #{user_id}")
+          destination_db_connection.exec("UPDATE #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}users SET (username, avatar_selected_url, aux) = ('#{nickname}', '#{ new_avatar_selected_url == "NULL" ? avatar_selected_url : new_avatar_selected_url}', '#{aux}'::json) WHERE id = #{user_id}")
         end
 
       else # username and email present
@@ -833,7 +834,7 @@ def migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connectio
   puts "#{cta_rewards_id_map.length} cta_rewards successfully created \n"
   write_table_id_mapping_to_file(source_db_tenant, "cta_rewards", cta_rewards_id_map)
 
-  puts "#{download_count} downloads and download_interactions successfully created \n********************************************************************************* \n"
+  puts "#{download_count} downloads and download_interactions successfully created \n********************************************************************************* \n\n"
 
   return rewards_id_map
 end
@@ -1036,11 +1037,11 @@ end
 
 ########## USER_REWARDS ##########
 
-def migrate_user_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, limit)
+def migrate_user_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, users_uid_map, rewards_id_map, limit)
 
   #source_rewarding_badges_users = source_db_connection.exec("SELECT * FROM rewarding_badges_users#{limit ? " limit 500" : ""}") # limit for testing
   #source_rewarding_levels_users = source_db_connection.exec("SELECT * FROM rewarding_levels_users#{limit ? " limit 2000" : ""}") # limit for testing
-  source_rewarding_prizes_users = source_db_connection.exec("SELECT * FROM rewarding_prizes_users") # limit for testing
+  source_rewarding_prizes_users = source_db_connection.exec("SELECT * FROM rewarding_prizes_users")
 
   source_rewarding_prizes_users_count = source_rewarding_prizes_users.count
   puts "user_rewards: #{source_rewarding_prizes_users_count} lines to migrate \nRunning migration..."
@@ -1048,14 +1049,14 @@ def migrate_user_rewards(source_db_tenant, destination_db_tenant, source_db_conn
 
   #badge_counters = migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_badges_users, "badge")
   #level_counters = migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_levels_users, "level")
-  prize_counters = migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_prizes_users, "prize")
+  prize_counters = migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, users_uid_map, rewards_id_map, source_rewarding_prizes_users, "prize")
 
   puts "#{prize_counters[0]} lines successfully migrated"
   puts "#{prize_counters[1]} rows had dangling reference to user \n#{prize_counters[2]} rows had dangling reference to reward \n*********************************************************************************\n\n"
   STDOUT.flush
 end
 
-def migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, rewards_id_map, source_rewarding_users, reward_type)
+def migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map, users_uid_map, rewards_id_map, source_rewarding_users, reward_type)
   source_rewarding_users_count = source_rewarding_users.count
   lines_step, next_step = init_progress(source_rewarding_users_count)
   count = 0
@@ -1064,7 +1065,15 @@ def migrate_source_rewarding_users_lines(source_db_tenant, destination_db_tenant
 
   source_rewarding_users.each do |line|
 
-    new_user_id = users_id_map[line["user_id"].to_i]
+    #new_user_id = users_id_map[line["user_id"].to_i]
+    rewarding_users_id = line["user_id"]
+    lid = source_db_connection.exec("SELECT lid FROM rewarding_users WHERE id = #{rewarding_users_id}").values[0][0]
+    new_user_id = users_uid_map[lid]
+
+    if new_user_id.nil?
+      puts "ERROR! rewarding_users_id = #{rewarding_users_id}, uid = #{uid}"
+    end
+
     new_reward_id = rewards_id_map["#{reward_type}#{line["prize_id"]}"] # reward_type == "badge" ? rewards_id_map["#{reward_type}#{line["badge_id"]}"] : rewards_id_map["#{reward_type}#{line["level_id"]}"] # caution to type
 
     if new_user_id.nil?
@@ -1617,7 +1626,7 @@ def migrate_db(source_db_connection, source_db_tenant, destination_db_connection
   user_call_to_actions_id_map = migrate_user_call_to_actions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], core_custom_galleries_tags_id)
   migrate_user_interactions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], interactions_id_map, limit)
   rewards_id_map = migrate_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection)
-  migrate_user_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], rewards_id_map, limit)
+  migrate_user_rewards(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], users_id_map[1], rewards_id_map, limit)
   migrate_user_counters(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[1])
   user_comment_interactions_id_map = migrate_comments_and_user_comment_interactions(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, call_to_actions_id_map, users_id_map[0], limit)
   migrate_votes(source_db_tenant, destination_db_tenant, source_db_connection, destination_db_connection, users_id_map[0], call_to_actions_id_map, user_call_to_actions_id_map, limit)

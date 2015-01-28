@@ -23,15 +23,14 @@
               Ordina
             </button>
             <ul class="dropdown-menu dropdown-menu-right text-left" role="menu" aria-labelledby="dropdownMenu1">
-              <li class="active" role="presentation"><a role="menuitem" href="javascript: void(0)">Più recenti</a></li>
-              <li role="presentation"><a role="menuitem" href="javascript: void(0)">Piu visti</a></li>
-              <li role="presentation"><a role="menuitem" href="javascript: void(0)">Più commentati</a></li>
+              <li class="active" role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="calltoaction_ordering = 'recent'">Più recenti</a></li>
+              <li role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="calltoaction_ordering = 'comment'">Più commentati</a></li>
             </ul>
           </div>
         </div>
       </div>
 
-      <div ng-repeat="calltoaction_info in calltoactions" class="row">
+      <div ng-repeat="calltoaction_info in calltoactions | orderBy:orderCallToActionStream:true" class="row">
         <div class="col-sm-12">
           <%= render partial: "/call_to_action/cover_single_calltoaction" %>
         </div>
@@ -47,7 +46,7 @@
     <div class="col-md-5 text-center adv-square__container">
       <div class="row">
         <%= render partial: "/application/adv-square" %>
-        <%= render partial: "/call_to_action/widget_calltoactions" %>
+        <%= render partial: "/call_to_action/widgets" %>
       </div>
     </div>
   </div>
