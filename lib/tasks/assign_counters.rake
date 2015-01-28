@@ -10,7 +10,7 @@ def assign_counters
   switch_tenant('disney')
 
   violetta_tag_id = Tag.find_by_name('violetta').id
-  max_dc_cta_id = CallToActionTag.where(:tag_id => violetta_tag_id).minimum(:id) - 1
+  max_dc_cta_id = CallToActionTag.where(:tag_id => violetta_tag_id).minimum(:call_to_action_id) - 1
 
   comment_counter_id = Reward.find_by_name('comment-counter').id
   violetta_comment_counter_id = Reward.find_by_name('violetta-comment-counter').id
@@ -27,12 +27,17 @@ def assign_counters
 
   count = 0
   start_time = Time.now()
+
+  puts "Deleting existing comment counters..."
+  UserReward.where("reward_id = #{comment_counter_id} or reward_id = #{violetta_comment_counter_id}").destroy_all
+  puts "Comment counters deleted. \nCounter user rewards is being assigned..."
+
   user_ids_dc_comments_hash.each do |user_id, dc_comments|
 
     UserReward.create(:user_id => user_id, :reward_id => comment_counter_id, :available => true, :counter => dc_comments, :period_id => nil)
 
     count += 1
-    if count % 1000 == 0
+    if count % 5000 == 0
       puts "Disney-channel counter user rewards assigned to #{count} users. Elapsed time: #{Time.now - start_time}s"
     end
   end
@@ -44,7 +49,7 @@ def assign_counters
     UserReward.create(:user_id => user_id, :reward_id => violetta_comment_counter_id, :available => true, :counter => violetta_comments, :period_id => nil)
 
     count += 1
-    if count % 1000 == 0
+    if count % 5000 == 0
       puts "Violetta counter user rewards assigned to #{count} users. Elapsed time: #{Time.now - start_time}s"
     end
   end
