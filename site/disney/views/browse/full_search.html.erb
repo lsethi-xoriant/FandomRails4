@@ -14,7 +14,7 @@
 	    </script>
 	  </div>
 	
-	<div class="row brws-item">
+	<div class="row brws-item main-row">
 		<div class="col-xs-12">
 	      <div class="section-heading">
 	        	<h3>
@@ -23,41 +23,41 @@
 	        	</h3>
 	      </div>
 	    </div>
+
 		<div class="col-xs-12 col-md-3" ng-repeat="content in contents">
-			<div class="cta-preview" ng-if="content.attributes.type == 'cta'">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="cta-preview__thumbnail">
-							<a href="{{content.attributes.detail_url}}">
-								<img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
-								<img class="img-responsive cta-preview__image" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
-							</a>
-							<div class="label label-warning cta-preview__points" ng-if="content.attributes.status != undefined">+ {{content.attributes.status.winnable_reward_count}} <span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-						</div>
-					</div>
-					<div class="col-xs-12">
-						<h3 class="cta-preview__title">{{content.attributes.title | limitTo : 40}}</h3>
-					</div>
-				</div>
-				<div class="row cta-preview__counter">
-					<div class="cta-preview__like col-xs-4 col-xs-offset-1"><i class="fa fa-thumbs-up"></i> {{content.attributes.likes}}</div>
-					<div class="cta-preview__comments col-xs-4 col-xs-offset-1"><span class="glyphicon glyphicon-comment"></span> {{content.attributes.comments}} </div>	
-				</div>
-			</div>
-			
-			<div class="cta-preview cta-preview--category" ng-if="content.attributes.type == 'tag'">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="cta-preview__thumbnail cta-preview__thumbnail--category">
-							<a href="{{content.attributes.detail_url}}">
-								<img class="cta-preview__image cta-preview__image--category" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
-								<img class="cta-preview__image cta-preview__image--category" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
-							</a>
-						</div>
-					</div>
-				</div>
-				<h3 class="cta-preview__title cta-preview__title--category">{{content.attributes.title}}</h3>
-			</div>
+
+			<%= light_link_to("{{content.attributes.detail_url}}") do %>	
+        <div class="relateds-flexslider__item-panel" ng-if="content.attributes.type == 'cta'"> 
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="relateds-flexslider__thumbnail">
+                <img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}">            
+                <!-- STATUS -->
+                <div class="col-sm-12  cta-cover__winnable-reward text-right" ng-if="content.attributes.status != undefined">
+									<span class="label label-warning cta-cover__winnable-reward__label">+{{content.attributes.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></span>
+								</div>
+
+              </div>
+              <p class="cta-preview__title">{{content.attributes.title | cut:true:40}}</p>
+            </div>
+          </div>
+          <div class="row relateds-flexslider__footer">
+            <div class="col-xs-12">
+              <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.attributes.likes}}</p>
+              <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.attributes.comments}}</p>
+            </div>
+          </div>
+        </div>  
+        <div class="relateds-flexslider__item-panel" ng-if="content.attributes.type == 'tag'" style="background-image: url('{{content.attributes.thumb_url}}'); background-position: center center; background-size: auto 100%;"> 
+          <div class="row">
+            <div class="col-xs-12 text-center cta-preview--tag">
+              <p class="cta-preview__title--tag">{{content.attributes.title | cut:true:40}}</p>
+            </div>
+          </div>
+        </div>  
+      <% end %>
+
+
 		</div>
 	</div>
 	<div class="row row-load-more text-center" ng-if="total > offset">
