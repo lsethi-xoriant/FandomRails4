@@ -66,15 +66,28 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def filter_tags
-    conditions = ['description ILIKE ?', "%#{ params[:description_filter] }%"]
+    conditions_string = ""
+    conditions_string << "tags.title ILIKE '%#{params[:title_filter]}%'" if params[:title_filter] != "nil_title_filter"
 
-    stream_tags_to_render = Tag.all(
-                              :conditions => conditions,
+    if params[:description_filter] != "nil_description_filter"
+      where_condition = "tags.description ILIKE '%#{params[:description_filter]}%'"
+      conditions_string = conditions_string.blank? ? where_condition : "#{conditions_string} and #{where_condition}"
+    end
+
+    if params[:tag_filter] != "nil_tag_filter"
+      where_condition = "tagstags.name ILIKE '%#{params[:tag_filter]}%'"
+      conditions_string = conditions_string.blank? ? where_condition : "#{conditions_string} and #{where_condition}"
+    end
+
+    stream_tags_to_render = Tag.where(conditions_string).all(
+                              :joins => "LEFT OUTER JOIN tags_tags ON tags_tags.tag_id = tags.id
+                                         LEFT OUTER JOIN tags tagstags ON tags_tags.other_tag_id = tagstags.id",
+                              :group => "tags.id, tags_tags.id, tagstags.id",
                               :limit => 10
                               )
     render_tags_str = ""
     stream_tags_to_render.each do |tag|
-      render_tags_str = render_tags_str + (render_to_string "/easyadmin/easyadmin/_tags_index_row", locals: { tag: tag }, layout: false, formats: :html)
+      render_tags_str = render_tags_str + (render_to_string "/easyadmin/tag/_tags_index_row", locals: { tag: tag }, layout: false, formats: :html)
     end
 
     respond_to do |format|

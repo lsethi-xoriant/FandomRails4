@@ -28,8 +28,14 @@
       </div>
 
     <div class="row">
+    <div class="col-md-3">
+        <label>Filtra per TITOLO</label><input class="form-control" type="text" onkeyup="updateFilter(0, this);">
+      </div>
       <div class="col-md-3">
-        <label>Filtra per DESCRIZIONE</label><input class="form-control" type="text" onkeyup="updateFilter(this);">
+        <label>Filtra per DESCRIZIONE</label><input class="form-control" type="text" onkeyup="updateFilter(1, this);">
+      </div>
+      <div class="col-md-3">
+        <label>Filtra per TAG</label><input class="form-control" type="text" onkeyup="updateFilter(2, this);">
       </div>
     </div>
 
@@ -50,13 +56,14 @@
               <th>Descrizione</th>
               <th>Inizio validità</th>
               <th>Fine validità</th>
+              <th>Tag</th>
               <th>Locked</th>
               <th>Metadati</th>
               <th>Azioni</th>
             </tr>
           </thead>
           <% @tags.each do |tag| %>
-            <%= render partial: "/easyadmin/easyadmin/tags_index_row", locals: { tag: tag } %>
+            <%= render partial: "/easyadmin/tag/tags_index_row", locals: { tag: tag } %>
           <% end %>
         </table>
       </div>
@@ -67,15 +74,15 @@
 <script type="text/javascript">
 
   var ajax_in_progress = false;
-  var filterString = "";
+  var filters = ["", "", ""];
 
-  function updateFilter(filter) {
-    filterString = $(filter).val();
-    updateTagsToFilter(filterString);
+  function updateFilter(n, filter) {
+    filters[n] = $(filter).val();
+    updateTagsToFilter(filters);
   }
 
-  function updateTagsToFilter(filterString) {
-    if(filterString == "") {
+  function updateTagsToFilter(filters) {
+    if(filters[0] == "" && filters[1] == "" && filters[2] == "") {
 
       $(".tag-to-show").removeClass("hidden");
       $("#tag-to-filter").addClass("hidden");
@@ -88,10 +95,24 @@
         if(!ajax_in_progress) {
 
         ajax_in_progress = true;
+        var urlString = "";
+
+        var filter0 = "nil_title_filter";
+        var filter1 = "nil_description_filter";
+        var filter2 = "nil_tag_filter";
+
+        if(filters[0] != "")
+          filter0 = filters[0];
+        if(filters[1] != "")
+          filter1 = filters[1];
+        if(filters[2] != "")
+          filter2 = filters[2];
+
+        urlString = "tag/filter/" + filter0 + "/" + filter1 + "/" + filter2;
 
         $.ajax({
               type: "GET",
-              url: "tag/filter/" + filterString,
+              url: urlString,
               beforeSend: function(jqXHR, settings) {
                   jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
               },
@@ -109,6 +130,7 @@
                           "<th>Descrizione</th>" +
                           "<th>Inizio validità</th>" +
                           "<th>Fine validità</th>" +
+                          "<th>Tag</th>" +
                           "<th>Locked</th>" +
                           "<th>Metadati</th>" +
                           "<th>Azioni</th>" +
@@ -126,7 +148,7 @@
           });
         }
         else
-          updateTagsToFilter(filterString);
+          updateTagsToFilter(filters);
     }
   }
 

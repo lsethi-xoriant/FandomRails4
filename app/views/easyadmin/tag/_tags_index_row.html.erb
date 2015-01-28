@@ -30,6 +30,7 @@
       </td>
       <td><%= tag.valid_from.present? ? tag.valid_from.in_time_zone(USER_TIME_ZONE).strftime('%d/%m/%Y %H:%M') : nil %></td>
       <td><%= tag.valid_to.present? ? tag.valid_to.in_time_zone(USER_TIME_ZONE).strftime('%d/%m/%Y %H:%M') : nil %></td>
+      <td><%= (tag.tags_tags.map { |tag_tag| tag_tag.other_tag.name }).join(", ") %></td>
       <td>
         <% if tag.locked %>
           <i class="fa fa-check fa-2"></i>
