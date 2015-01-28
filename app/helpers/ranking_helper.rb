@@ -36,19 +36,19 @@ module RankingHelper
   
   def get_ranking(ranking)
     if ranking
-      start_time = Time.now
+
       rankings, user_position_hash = cache_medium(get_full_rank_cache_key(ranking.name)) do
         period = get_current_periodicities[ranking.period]
         period_id_condition = period.blank? ? "period_id is null" : "period_id = #{period.id}"
-        rankings = UserReward.where("reward_id = ? and #{period_id_condition} and user_id <> ?", ranking.reward_id, anonymous_user.id).select("user_id, counter").order("counter DESC, user_rewards.updated_at ASC, user_id ASC").to_a
+        rankings = UserReward.where("reward_id = ? and #{period_id_condition} and user_id <> ?", ranking.reward_id, anonymous_user.id).select("user_id").order("counter DESC, user_rewards.updated_at ASC, user_id ASC").to_a
         user_position_hash = generate_user_position_hash(rankings)
         [rankings, user_position_hash]
       end
-      
+
       rank = RankingElement.new(
         period: ranking.period,
         title: ranking.title,
-        rankings: prepare_rank_for_json(rankings.slice(0,10), user_position_hash),
+        rankings: prepare_rank_for_json(rankings.slice(0,10), user_position_hash, ranking),
         user_to_position: user_position_hash,
         total: rankings.count,
         number_of_pages: get_pages(rankings.count, RANKING_USER_PER_PAGE) 
@@ -246,25 +246,27 @@ module RankingHelper
     end
   end
 
-  def get_id_to_user(user_ids)
+  def get_id_to_user(user_ids, ranking)
     result = {}
-    User.where("id in (?)", user_ids).select("id, username, avatar_selected_url, first_name, last_name").each do |user|
+    period = get_current_periodicities[ranking.period]
+    period_id_condition = period.blank? ? "period_id is null" : "period_id = #{period.id}"
+    User.joins(:user_rewards).where("users.id in (?) AND #{period_id_condition} AND user_rewards.reward_id = ?", user_ids, ranking.reward_id).select("users.id, username, avatar_selected_url, first_name, last_name, counter").each do |user|
       result[user.id] = user  
     end
     result
   end
   
-  def prepare_rank_for_json(ranking, user_position_hash)
-    id_to_user = get_id_to_user(ranking.map { |r| r.user_id })
+  def prepare_rank_for_json(rankings, user_position_hash, ranking)
+    id_to_user = get_id_to_user(rankings.map { |r| r.user_id }, ranking)
     positions = Array.new
-    ranking.each_with_index do |r, i|
+    rankings.each_with_index do |r, i|
       positions << {
         "position" => i + 1,
         "general_position" => user_position_hash[r.user_id], 
         "avatar" => id_to_user[r.user_id].avatar_selected_url, 
         "user" => id_to_user[r.user_id].username.nil? ? "#{id_to_user[r.user_id].first_name} #{id_to_user[r.user_id].last_name}" : id_to_user[r.user_id].username,
         "user_id" => r.user_id, 
-        "counter" => r.counter 
+        "counter" => id_to_user[r.user_id].counter 
       }
     end
     positions
