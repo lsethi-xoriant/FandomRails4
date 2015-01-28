@@ -34,7 +34,7 @@ module RankingHelper
     reward_points[period_kind].present? ? reward_points[period_kind] : 0
   end
   
-  def get_ranking(ranking)
+  def get_ranking(ranking, offset = 0)
     if ranking
 
       rankings, user_position_hash = cache_medium(get_full_rank_cache_key(ranking.name)) do
@@ -48,7 +48,7 @@ module RankingHelper
       rank = RankingElement.new(
         period: ranking.period,
         title: ranking.title,
-        rankings: prepare_rank_for_json(rankings.slice(0,10), user_position_hash, ranking),
+        rankings: prepare_rank_for_json(rankings.slice(offset, RANKING_USER_PER_PAGE), user_position_hash, ranking),
         user_to_position: user_position_hash,
         total: rankings.count,
         number_of_pages: get_pages(rankings.count, RANKING_USER_PER_PAGE) 
@@ -119,21 +119,22 @@ module RankingHelper
     end
     
     if ranking.rank_type == "trirank"
-      compose_triranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+      compose_triranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.total, rank.number_of_pages)
     else
-      compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages)
+      compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.total, rank.number_of_pages)
     end
     
   end
   
   def get_full_rank_page(ranking, page)
-    rank = get_ranking(ranking)
+    offset = (page-1).to_i * RANKING_USER_PER_PAGE;
+    rank = get_ranking(ranking, offset)
     if current_user
       my_position = rank.user_to_position[current_user.id]
     else
       my_position = -1
     end
-    compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.rankings.count, rank.number_of_pages, page)
+    compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.total, rank.number_of_pages, page)
   end
   
   def get_full_vote_rank(vote_ranking)
@@ -155,8 +156,6 @@ module RankingHelper
     if (rank_type == "my_position" || rank_type ==  "trirank") && my_position
       current_page = get_pages(my_position, RANKING_USER_PER_PAGE)
     end
-    off = (current_page.to_i - 1) * RANKING_USER_PER_PAGE
-    rank_list = rank_list.slice(off, RANKING_USER_PER_PAGE)
     {rank_list: rank_list, rank_type: rank_type, ranking: ranking, current_page: current_page, my_position: my_position, total: total, number_of_pages: number_of_pages}
   end
   
@@ -261,7 +260,7 @@ module RankingHelper
     positions = Array.new
     rankings.each_with_index do |r, i|
       positions << {
-        "position" => i + 1,
+        "position" => user_position_hash[r.user_id],
         "general_position" => user_position_hash[r.user_id], 
         "avatar" => id_to_user[r.user_id].avatar_selected_url, 
         "user" => id_to_user[r.user_id].username.nil? ? "#{id_to_user[r.user_id].first_name} #{id_to_user[r.user_id].last_name}" : id_to_user[r.user_id].username,
