@@ -88,6 +88,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       ga('send', 'event', "Registration", "Registration", "Registration", 1, true);
     }
 
+    $scope.calltoaction_ordering = "recent";
+
     if($scope.aux.current_property_info) {
       $scope.current_tag_id = $scope.aux.current_property_info.id;
     }
@@ -375,6 +377,20 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return overvideo_end_interaction;
   }
 
+  $scope.orderCallToActionStream = function(calltoaction_info) {
+    //calltoaction_ordering
+    if($scope.calltoaction_ordering == "recent") {
+      return calltoaction_info.calltoaction.activated_at;
+    } else {
+      comment_info_interaction = getCommentInteraction(calltoaction_info.calltoaction.id);
+      if(comment_info_interaction) {
+        return comment_info_interaction.interaction.resource.comment_info.comments_total_count;
+      } else {
+        return 0;
+      }
+    }
+  };
+
   function getCommentInteraction(calltoaction_id) {
     comment_interaction = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
@@ -646,6 +662,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if($scope.calltoactions.length < $scope.calltoactions_count) {
 
       $("#append-other button").attr('disabled', true);
+      $scope.calltoaction_ordering = "recent";
 
       append_calltoaction_path = "/append_calltoaction"
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {

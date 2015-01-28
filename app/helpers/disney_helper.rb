@@ -88,7 +88,7 @@ module DisneyHelper
           "title" => tag.title,
           "image" => (get_upload_extra_field_processor(get_extra_fields!(tag)["image"], :thumb) rescue nil),
           "description" => tag.description,
-          "url" => get_extra_fields!(tag)["description"]
+          "url" => get_extra_fields!(tag)["url"]
         }
       end
       tag_info

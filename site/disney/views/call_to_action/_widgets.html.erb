@@ -37,7 +37,7 @@
 </div>
 
 <div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="tag in aux.sidebar_info.tag_info_list">
-  <%= light_link_to("/call_to_action/{{tag.url}}") do %>
+  <a target="_blank" href="{{tag.url}}"> 
     <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--tag"> 
       <div class="row">
         <div class="col-xs-12">
@@ -49,5 +49,5 @@
         </div>
       </div>
     </div>  
-  <% end %>  
+  </a>
 </div>
