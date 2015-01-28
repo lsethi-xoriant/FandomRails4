@@ -8,74 +8,80 @@
 
     <div id="content-container">
 
-    	<% if flash[:notice] %>
-	    	<div class="row">
-		      <div class="col-md-12">         
-		          <div class="row">
-		            <div class="col-lg-12">
-		              <div class="alert alert-success"><%= flash[:notice] %></div>
-		            </div>
-		          </div>
-		        
-		      </div>
-		    </div>
-	    <% end %>
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col-md-12">         
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-success"><%= flash[:notice] %></div>
+                </div>
+              </div>
+            
+          </div>
+        </div>
+      <% end %>
 
-	    <div id="cta-to-filter" class="row hidden">
-				<div class="col-md-12"> 
-					<table id="cta-from-ajax-request" class="table table-striped">
-					</table>
-				</div>
-			</div>
+      <div id="cta-to-filter" class="row hidden">
+        <div class="col-md-12"> 
+          <table id="cta-from-ajax-request" class="table table-striped">
+          </table>
+        </div>
+      </div>
 
 
-		<div class="row cta-to-show">
-			<div class="col-md-12"> 
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Titolo</th>
-							<th>Engagement</th>
-							<th>CTA</th>
-							<th>Immagine CTA</th>
-						</tr>
-					</thead>            
-					
-					<% @interaction_list.each do |interaction| %>
-						<tr>
-             				<td>
-             					    <% case interaction.resource_type
-      									when "Share" %>
-								        <%= "Share" %>
-								     <% when "Check" %>
-								        <%= "#{Check.where(:id => interaction.resource_id).first.title} [Check]" %>
-								     <% when "Comment" %>
-								        <%= "#{Comment.where(:id => interaction.resource_id).first.title} [Commento]" %>
-								     <% when "Quiz" %>
-								        <%= "#{Quiz.where(:id => interaction.resource_id).first.question} [Quiz]" %>
-								     <% end %>
-             				</td>
-             				<td>
-             					<%= UserInteraction.where(:interaction_id => interaction.id).sum("counter") %>
-             				</td>
-             				<td>
-								<%= link_to "#{CallToAction.where(:id => interaction.call_to_action_id).first.title} [id: #{interaction.call_to_action_id}]", easyadmin_cta_show_path(interaction.call_to_action_id), class: "btn btn-secondary btn-xs" %></a>
-             				</td>
-             				<td><% if CallToAction.where(:id => interaction.call_to_action_id).first.media_image.present? %>
-             						<img src="<%= CallToAction.where(:id => interaction.call_to_action_id).first.media_image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
-             					<% end %>
-             				</td>
-          				</tr>
-					<% end %>
-				</table>
-			</div>
-		</div>
+    <div class="row cta-to-show">
+      <div class="col-md-12"> 
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Interazione</th>
+              <th>Engagement</th>
+              <th>CTA</th>
+              <th>Immagine CTA</th>
+            </tr>
+          </thead>            
+          
+          <% @interaction_list.each do |interaction| %>
+            <tr>
+                    <td>
+                      <% case interaction.resource_type
+                        when "Share" %>
+                        <%= "Share" %>
+                      <% when "Check" %>
+                        <%= "#{Check.where(:id => interaction.resource_id).first.title} [Check]" %>
+                      <% when "Comment" %>
+                        <%= "#{Comment.where(:id => interaction.resource_id).first.title} [Commento]" %>
+                      <% when "Quiz" %>
+                        <%= "#{Quiz.where(:id => interaction.resource_id).first.question} [Quiz]" %>
+                      <% when "Like" %>
+                        <%= "[Like]" %>
+                      <% when "Play" %>
+                        <%= "[Play]" %>
+                      <% when "Vote" %>
+                        <%= "[Vote]" %>
+                      <% end %>
+                    </td>
+                    <td>
+                      <%= UserInteraction.where(:interaction_id => interaction.id).sum("counter") %>
+                    </td>
+                    <td>
+                <%= link_to "#{CallToAction.where(:id => interaction.call_to_action_id).first.title} [id: #{interaction.call_to_action_id}]", easyadmin_cta_show_path(interaction.call_to_action_id), class: "btn btn-secondary btn-xs" %></a>
+                    </td>
+                    <td><% if CallToAction.where(:id => interaction.call_to_action_id).first.media_image.present? %>
+                        <img src="<%= CallToAction.where(:id => interaction.call_to_action_id).first.media_image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+                      <% end %>
+                    </td>
+                  </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
 
-		<div class="row cta-to-show">
-			<div class="col-md-12">
-				<%= render partial: "/easyadmin/easyadmin/pagination" %>
-			</div>
-		</div>
+    <div class="row cta-to-show">
+      <div class="col-md-12">
+        <%= render partial: "/easyadmin/easyadmin/pagination" %>
+      </div>
+    </div>
 
-	</div>
+  </div>
 </div>
