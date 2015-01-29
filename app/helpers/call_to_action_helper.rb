@@ -49,7 +49,7 @@ module CallToActionHelper
           prize = {
             "id" => reward.id,
             "cost" => reward.cost,
-            "has_currency" => user_has_currency_for_reward(reward)
+            "has_currency" => current_user ? user_has_currency_for_reward(reward) : false
           }
         end
       end

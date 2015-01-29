@@ -16,18 +16,13 @@
 			    <div class="rewards-flexslider rewards-flexslider--user_rewards">
 			      <div class="flex-viewport-shadow hidden-xs"></div>
 			      <ul class="slides">
-			        <li class="relateds-flexslider__item" ng-repeat="reward in reward_list['user_rewards']" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
+			        <li class="relateds-flexslider__item" ng-repeat="reward in reward_list['user_rewards']">
 			          <a href="/call_to_action/{{reward.calltoaction.id}}">
 				          <div class="relateds-flexslider__item-panel"> 
 				            <div class="row">
 				              <div class="col-xs-12">
 				                <div class="relateds-flexslider__thumbnail">
 				                  <img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}">            
-				                  <!-- STATUS -->
-				                  <div class="col-sm-12  cta-cover__winnable-reward text-right">
-														<span class="label label-warning cta-preview__credits">+{{reward.reward_info.cost}}<i class="fa fa-copyright"></i></span>
-													</div>
-
 				                </div>
 				                <p class="cta-preview__title">{{reward.calltoaction.title | cut:true:70}}</p>
 				              </div>
@@ -57,7 +52,7 @@
 			    <div class="rewards-flexslider rewards-flexslider--user_available_rewards">
 			      <div class="flex-viewport-shadow hidden-xs"></div>
 			      <ul class="slides">
-			        <li class="relateds-flexslider__item" ng-repeat="reward in reward_list['user_available_rewards']" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
+			        <li class="relateds-flexslider__item" ng-repeat="reward in reward_list['user_available_rewards']">
 			          <a href="/call_to_action/{{reward.calltoaction.id}}">
 				          <div class="relateds-flexslider__item-panel"> 
 				            <div class="row">
@@ -105,7 +100,7 @@
 					<div class="rewards-flexslider rewards-flexslider--newest_rewards">
 			      <div class="flex-viewport-shadow hidden-xs"></div>
 			      <ul class="slides">
-			        <li class="relateds-flexslider__item" ng-repeat="reward in reward_list['newest_rewards']" ng-if="!reward.calltoaction.reward_info.status != 'gained'">
+			        <li class="relateds-flexslider__item" ng-repeat="reward in reward_list['newest_rewards']">
 			          <a href="/call_to_action/{{reward.calltoaction.id}}">
 				          <div class="relateds-flexslider__item-panel"> 
 				            <div class="row">
@@ -113,12 +108,13 @@
 				                <div class="relateds-flexslider__thumbnail">
 				                  <img class="img-responsive cta-preview__image" ng-src="{{reward.calltoaction.thumbnail_url}}">            
 				                  <!-- STATUS -->
-				                  <div class="col-sm-12  cta-cover__winnable-reward text-right">
+				                  <div class="col-sm-12  cta-cover__winnable-reward text-right" ng-if="reward.reward_info.status != 'gained'">
 														<span class="label label-warning cta-preview__credits">+{{reward.reward_info.cost}}<i class="fa fa-copyright"></i></span>
 													</div>
 
 													<!-- LOCK -->
-													<div class="cta-preview__locked-layer">
+													<div class="cta-preview__locked-layer" ng-if="reward.reward_info.status != 'gained'">
+														{{reward.calltoaction.reward_info.status}}
 														<i class="fa fa-lock"></i>
 													</div>
 
