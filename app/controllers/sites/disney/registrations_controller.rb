@@ -15,7 +15,6 @@ class Sites::Disney::RegistrationsController < RegistrationsController
   end
 
   def iur
-    debugger
     unless cookies[:SWID] && cookies[:SWID]
       from_iur_authenticate = cookies[:from_iur_authenticate]
       cookies.delete :from_iur_authenticate
