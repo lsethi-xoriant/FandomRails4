@@ -1114,7 +1114,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       play_interaction_info.hide = true; 
 
-      update_interaction_path = "/update_interaction"
+      update_interaction_path = "/update_interaction";
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
         update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
       }
@@ -1199,7 +1199,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     current_button_html = button.html();
     button.html("condivisione in corso");
 
-    $http.post("/update_interaction", { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider, facebook_message: facebook_message })
+    update_interaction_path = "/update_interaction";
+    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+      update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
+    }
+
+    $http.post(update_interaction_path, { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider, facebook_message: facebook_message })
       .success(function(data) {
 
         button.attr('disabled', false);
@@ -1239,7 +1244,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       enableWaitingAudio("stop");
 
-      update_interaction_path = "/update_interaction"
+      update_interaction_path = "/update_interaction";
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
         update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
       }
