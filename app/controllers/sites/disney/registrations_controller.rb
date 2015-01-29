@@ -15,6 +15,7 @@ class Sites::Disney::RegistrationsController < RegistrationsController
   end
 
   def iur
+    debugger
     unless cookies[:SWID] && cookies[:SWID]
       from_iur_authenticate = cookies[:from_iur_authenticate]
       cookies.delete :from_iur_authenticate
@@ -25,8 +26,8 @@ class Sites::Disney::RegistrationsController < RegistrationsController
     end
 
     user = User.find_by_swid(cookies[:SWID])
-    unless user
-      uri = URI.parse("http://registrazione.disneychannel.it/iur3/services/Login")
+    unless user #http://testregistration.disneyinternational.com/ registrazione.disneychannel.it
+      uri = URI.parse("http://testregistration.disneyinternational.com/iur3/services/Login")
       http = Net::HTTP.new(uri.host, uri.port)
       request = Net::HTTP::Post.new(uri.request_uri)
       request.body =
