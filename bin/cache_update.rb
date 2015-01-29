@@ -21,7 +21,7 @@ def main
   tenant = config["tenant"]
   app_root_path = config["app_root_path"]
 
-  conn = PG::Connection.open(:dbname => = db_name)
+  conn = PG::Connection.open(:dbname => db_name)
   logger = Logger.new("#{app_root_path}/log/cache_update_medium.log")
 
   execute_job {
