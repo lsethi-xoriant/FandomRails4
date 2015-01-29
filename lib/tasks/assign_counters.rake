@@ -10,7 +10,7 @@ def assign_counters
   switch_tenant('disney')
 
   violetta_tag_id = Tag.find_by_name('violetta').id
-  max_dc_cta_id = CallToActionTag.where(:tag_id => violetta_tag_id).minimum(:call_to_action_id) - 1
+  max_dc_cta_id = CallToActionTag.where("tag_id = #{violetta_tag_id} AND call_to_action_id > 20").minimum(:call_to_action_id) - 1
 
   comment_counter_id = Reward.find_by_name('comment-counter').id
   violetta_comment_counter_id = Reward.find_by_name('violetta-comment-counter').id
@@ -29,8 +29,8 @@ def assign_counters
   start_time = Time.now()
 
   puts "Deleting existing comment counters..."
-  UserReward.where("reward_id = #{comment_counter_id} or reward_id = #{violetta_comment_counter_id}").destroy_all
-  puts "Comment counters deleted. \nCounter user rewards is being assigned..."
+  destroyed = UserReward.where("reward_id = #{comment_counter_id} or reward_id = #{violetta_comment_counter_id}").destroy_all
+  puts "#{destroyed.length} comment counters deleted. \nCounter user rewards is being assigned..."
 
   user_ids_dc_comments_hash.each do |user_id, dc_comments|
 
