@@ -29,7 +29,7 @@ def main
   loop do
     start_time = Time.now
     execute_job(logger) do
-      cache_generate_rankings(conn, tenant)
+      cache_generate_rankings(conn, tenant, logger)
     end
 
     if $GOT_SIGTERM
@@ -50,7 +50,7 @@ def main
 
 end
 
-def cache_generate_rankings(conn, tenant)
+def cache_generate_rankings(conn, tenant, logger)
   anonymous_user_id = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE email = 'anonymous@shado.tv'").first["id"]
   rankings = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}rankings")
 
@@ -58,6 +58,7 @@ def cache_generate_rankings(conn, tenant)
 
     reward_id = r["reward_id"]
     name = r["name"]
+    logger.info "Generating cache for ranking #{name}"
 
     cache = execute_query(conn, "SELECT version FROM #{tenant + '.' if tenant}cache_versions WHERE name = '#{name}'").first
 
@@ -67,6 +68,8 @@ def cache_generate_rankings(conn, tenant)
     else
       new_cache_version = 1
     end
+
+    logger.info "New version -> #{new_cache_version}"
 
     period = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}periods WHERE start_datetime < now() AND end_datetime > now() 
                                     AND kind = '#{r["period"]}'")
@@ -90,6 +93,8 @@ def cache_generate_rankings(conn, tenant)
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_versions (name, version, data, created_at, updated_at) 
                             VALUES ('#{name}', #{ new_cache_version }, '#{hash.to_json}', now(), now())")
     end
+
+    logger.info "cache_rankings and cache_versions tables written for ranking #{name}, version #{new_cache_version} "
 
   end
 
