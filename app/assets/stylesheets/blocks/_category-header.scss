@@ -1,6 +1,6 @@
 /* CATEGORY HEADER BLOCK */
 
-.category-header{
+.category-header {
   height: 250px;
   overflow: hidden;
   position: relative;
@@ -13,7 +13,7 @@
 .category-header__title{
   position: absolute;
   bottom: 15px;
-  left: 30px;
+  left: 50px;
   color: #fff;
 }
 
@@ -21,4 +21,25 @@
   position: absolute;
   right: 58px;
   bottom: 15px;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .category-header {
+    height: auto;
+    overflow: hidden;
+    position: relative;
+  }
+  .category-header__filter-area{
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+  }
+  .category-header__title {
+    bottom: 10px;
+    color: #fff;
+    font-size: 18px;
+    left: 15px;
+    position: absolute;
+  }
+
 }

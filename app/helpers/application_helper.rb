@@ -347,7 +347,7 @@ module ApplicationHelper
   end
   
   def get_user_rewards_from_cache(user)
-    cache_short(get_user_rewards_cache_key) do
+    cache_short(get_user_rewards_cache_key(user.id)) do
       rewards = Reward.joins(:user_rewards).select("rewards.*").where("user_rewards.user_id = ?", user.id)
       id_to_reward = {}
       rewards.each do |r|

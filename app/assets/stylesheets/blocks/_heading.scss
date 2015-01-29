@@ -47,9 +47,9 @@
 
 @media (max-width: $screen-sm-min) {
   .section-heading {
-    border-top: 2px solid #dddddd;
-    padding: 20px 0 10px 20px;
+    padding: 20px 0 20px 0;
     h3 {
+      font-size: 18px;
       line-height: 40px;
     }
   }

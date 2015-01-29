@@ -2,11 +2,12 @@
 
 	<div class="row">
     <div class="col-xs-12" style="background-color: #fff;">
-	  <div class="row section-heading">
+	  <div class="section-heading">
         	<h3>
-        		Classifica generale
-        		<a href="/ranking/show/<%= @property_rank[:ranking].id %>" class="section-heading__see-all">View all</a>
-        	</h3>
+            <span class="section-heading__marker"><i class="fa fa-users"></i></span>
+            Classifica generale
+            <a href="/ranking/show/<%= @property_rank[:ranking].id %>" class="section-heading__see-all">Vedi tutti</a>
+          </h3>
       </div>
       
       <% if current_user %>
@@ -25,18 +26,22 @@
     	<div class="row rank-row">
 			<div class="col-xs-3 text-center"><h4 class="rank-row__position no-margin"># <%= rank_user["position"] %></h4></div>
 		    <div class="col-xs-3"><img src="<%= rank_user["avatar"] %>" class="img-circle img-responsive rank-row__avatar"></div>
-		    <div class="col-xs-5">
+		    <div class="col-xs-6">
 		    	<h4 class="rank-row__username"><%= rank_user["user"] %></h4>
 		    	<span class="label label-warning rank-row__points">+ <%= rank_user["counter"] %> <span class="fa fa-star"></span></span>
 		    </div>
 		</div>
     <% end %>
+
+    <div class="row rank-row">
+    </div>
       
-		<div class="row section-heading">
-        	<h3>
-        		Fan del giorno
-        	</h3>
-      	</div>
+		<div class="section-heading" style="padding-top: 0;">
+        <h3 style="margin-bottom: 30px;">
+          <span class="section-heading__marker"><i class="fa fa-graduation-cap"></i></span>
+            Fan del giorno
+        </h3>
+
 	  	<% @fan_of_days.each do |winner| %>
 	  		<% if winner["winner"] %>
 	  			<% if current_user && winner["winner"].user.email == current_user.email %>
@@ -44,7 +49,7 @@
 						<div class="col-xs-3 text-center"><h4 class="rank-row__position no-margin"><%= winner["day"] %></h4></div>
 					    <div class="col-xs-3"><img src="<%= winner["winner"].user.avatar_selected_url  %>" class="img-circle img-responsive rank-row__avatar"></div>
 					    <div class="col-xs-6">
-					    	<h4 class="rank-row__username"><%= extract_name_or_username(winner["winner"].user) %></h4>
+					    	<h4 class="rank-row__username"><%= winner["winner"].user.username %></h4>
 					    	<span class="label label-warning rank-row__points">+ <%= winner["winner"].counter %> <span class="fa fa-star"></span></span>
 					    </div>
 					</div>
@@ -53,7 +58,7 @@
 						<div class="col-xs-3 text-center"><h4 class="rank-row__position no-margin"><%= winner["day"] %></h4></div>
 					    <div class="col-xs-3"><img src="<%= winner["winner"].user.avatar_selected_url  %>" class="img-circle img-responsive rank-row__avatar"></div>
 					    <div class="col-xs-6">
-					    	<h4 class="rank-row__username"><%= extract_name_or_username(winner["winner"].user) %></h4>
+					    	<h4 class="rank-row__username"><%= winner["winner"].user.username %></h4>
 					    	<span class="label label-warning rank-row__points">+ <%= winner["winner"].counter %> <span class="fa fa-star"></span></span>
 					    </div>
 					</div>
@@ -69,6 +74,10 @@
 				</div>
 		  	<% end %>
 	  	<% end %>
+
+      <div class="row rank-row">
+    </div>
+
 	  	<div class="text-center">
 	  		<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
 	  	</div>

@@ -30,8 +30,8 @@ module CacheKeysHelper
     "main_reward_image"
   end
   
-  def get_user_rewards_cache_key
-    "user_rewards_key"
+  def get_user_rewards_cache_key(user_id)
+    "user_#{user_id}_rewards"
   end
   
   def get_basic_reward_cache_key

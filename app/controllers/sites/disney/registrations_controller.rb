@@ -25,7 +25,7 @@ class Sites::Disney::RegistrationsController < RegistrationsController
     end
 
     user = User.find_by_swid(cookies[:SWID])
-    unless user
+    unless user #http://testregistration.disneyinternational.com/
       uri = URI.parse("http://registrazione.disneychannel.it/iur3/services/Login")
       http = Net::HTTP.new(uri.host, uri.port)
       request = Net::HTTP::Post.new(uri.request_uri)

@@ -34,11 +34,14 @@
   border-right: none;
 }
 
-.profile-header-mobile__item__image{
+.profile-header-mobile__item__image {
   display: block;
-  max-width: 65px;
-  margin: 0 auto 10px auto;
-  
+  width: 65px;
+  margin: 15px 2px 0 10px;
+}
+
+.profile-header-mobile__item__image--main {
+  margin-top: 0px;
 }
 
 .profile-header-mobile__item__title{

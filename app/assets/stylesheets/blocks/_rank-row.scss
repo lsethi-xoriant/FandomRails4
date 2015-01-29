@@ -53,6 +53,8 @@
   .rank-row__username{
     font-size: 13px;
     margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   
   .rank-row__points{

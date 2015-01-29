@@ -2,9 +2,10 @@
 		
     <div class="col-sm-10 col-sm-offset-1" ng-if="<%= rankings %>.rank_type == 'full'">
       <div class="section-heading">
-        	<h1>
-        		{{<%= rankings %>.ranking.title}}
-        	</h1>
+        <h3>
+          <span class="section-heading__marker"><i class="fa fa-users"></i></span>
+          {{<%= rankings %>.ranking.title}}
+        </h3>
       </div>
       
       <div ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'row rank-row': true, 'rank-row--myself': rank_user.general_position == <%= rankings %>.my_position }" ng-class-even="'rank-row--grey'">
@@ -39,9 +40,13 @@
     </div>
     
     <div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'my_position'">
-      <div class="page-header">
-        <h1>{{<%= rankings %>.ranking.title}}</h1>
+      <div class="section-heading">
+        <h3>
+          <span class="section-heading__marker"><i class="fa fa-users"></i></span>
+          {{<%= rankings %>.ranking.title}}
+        </h3>
       </div>
+
 
       <ul class="list-group">
           <li ng-repeat="rank_user in <%= rankings %>.rank_list" ng-class="{'list-group-item': true, 'list-group-item-warning': rank_user.general_position == <%= rankings %>.my_position }" >
@@ -56,9 +61,13 @@
     </div>
     
     <div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'full_compressed'">
-      <div class="page-header">
-        <h1>{{<%= rankings %>.ranking.title}}</h1>
+      <div class="section-heading">
+        <h3>
+          <span class="section-heading__marker"><i class="fa fa-users"></i></span>
+          {{<%= rankings %>.ranking.title}}
+        </h3>
       </div>
+
       <ul class="list-group">
           <li ng-class="{'list-group-item': true, 'list-group-item-warning': <%= rankings %>.my_position == 1}">
             <div class="row">
@@ -98,8 +107,11 @@
     </div>
 
 	<div class="col-sm-12" ng-if="<%= rankings %>.rank_type == 'trirank'">
-      <div class="page-header">
-        <h1>{{<%= rankings %>.ranking.title}}</h1>
+      <div class="section-heading">
+        <h3>
+          <span class="section-heading__marker"><i class="fa fa-users"></i></span>
+          {{<%= rankings %>.ranking.title}}
+        </h3>
       </div>
       <ul class="list-group" ng-if="<%= rankings %>.my_position == 1" >
           <li class="list-group-item list-group-item-warning">
@@ -145,7 +157,7 @@
               <div class="col-sm-3 col-xs-3 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 2].counter}}</h4></div>
             </div>
           </li>
-          <li class="list-group-item list-group-item-warning"">
+          <li class="list-group-item list-group-item-warning">
             <div class="row">
               <div class="col-sm-2 col-xs-2 text-right"><h4 class="no-margin">{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].position}}</h4></div>
               <div class="col-sm-2 hidden-xs"><img ng-src="{{<%= rankings %>.rank_list[<%= rankings %>.my_position - 1].avatar}}" class="img-circle img-responsive"></div>

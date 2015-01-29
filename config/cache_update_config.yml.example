@@ -1,0 +1,6 @@
+# Database name and tenant
+db_name: db_name
+tenant: disney
+
+# Application root path for log files
+app_root_path: root/to/path
