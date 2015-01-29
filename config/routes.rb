@@ -46,6 +46,8 @@ Fandom::Application.routes.draw do
           post "/users", :to => "registrations#create"
           put "/users/edit", :to => "registrations#update"
           match "/iur/sign_in", to: "registrations#iur"
+          get "/users/sign_in", to: "application#iur"
+          match "/users/sign_in_admin", to: "sessions#new"
         end
 
         resources :call_to_action
