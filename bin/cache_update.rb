@@ -26,33 +26,29 @@ def main
   conn = PG::Connection.open(:dbname => db_name)
   logger = Logger.new("#{app_root_path}/log/cache_update_medium.log")
 
-  execute_job {
-
-    loop do
-      execute_job do
-        cache_generate_rankings(conn, logger)
-      end
+  loop do
+    execute_job(logger) do
+      cache_generate_rankings
     end
+  end
 
-    if $GOT_SIGTERM
-      logger.info("got SIGTERM, exiting gracefully")
-      break
+  if $GOT_SIGTERM
+    logger.info("got SIGTERM, exiting gracefully")
+    break
+  else
+    elapsed_time = Time.now - start_time
+    logger.info "Daemon end; elapsed time: #{elapsed_time}s"
+    if elapsed_time > 5.minutes
+      logger.error("main loop lasted more than 5 minutes; restarting in one minute")
+      sleep(1.minutes)
     else
-      elapsed_time = Time.now - start_time
-      logger.info "Daemon end; elapsed time: #{elapsed_time}s"
-      if elapsed_time > 5.minutes
-        logger.error("main loop lasted more than 5 minutes; restarting in one minute")
-        sleep(1.minutes)
-      else
-        sleep(5.minutes - elapsed_time)
-      end
+      sleep(5.minutes - elapsed_time)
     end
-
-  }
+  end
 
 end
 
-def cache_generate_rankings(conn, logger)
+def cache_generate_rankings
   anonymous_user_id = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE email = 'anonymous@shado.tv'").first["id"]
   rankings = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}rankings")
 
@@ -97,7 +93,7 @@ def cache_generate_rankings(conn, logger)
 
 end
 
-def execute_job
+def execute_job(logger)
   begin
     logger.info "Daemon start"
     event_logs_path = "#{app_root_path}/log/events"
