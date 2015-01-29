@@ -95,7 +95,7 @@ def cache_generate_rankings
 
 end
 
-def execute_job(conn, logger)
+def execute_job(logger)
   begin
     logger.info "Daemon start"
     event_logs_path = "#{app_root_path}/log/events"
