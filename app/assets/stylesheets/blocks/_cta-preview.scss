@@ -191,13 +191,27 @@
   color: #fff;
   padding-top: 14%;
   line-height: 30px;
-  p{
-    margin: 20px 0;
+}
+
+@media (min-width: $screen-sm-min) {
+  .cta-preview__credits--btn {
+    font-size: 18px;
+    line-height: 1.33;
+    padding: 10px 16px;
+    border-radius: 6px;
   }
 }
 
 @media (max-width: $screen-sm-min) {
   .cta-preview__credits--reward{
     width: 30%;
+  }
+  .cta-preview__locked-layer--reward {
+    p {
+      font-size: 18px;
+    }
+  }
+  .cta-preview__unlocked-message {
+    font-size: 18px;
   }
 }

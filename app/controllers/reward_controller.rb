@@ -97,7 +97,7 @@ class RewardController < ApplicationController
       response["html"] = "<p class=\"cta-preview__unlocked-message\">PREMIO SBLOCCATO</p>
       <p><small>Hai speso #{reward.cost} #{reward.currency.name}</small></p>
       <p><small>Hai ancora #{get_counter_about_user_reward(reward.currency.name)} #{reward.currency.name}</small></p>
-      <button class=\"btn btn-primary\" onclick=\"javascript:location.reload();\">Scopri il premio</button>".html_safe
+      <button class=\"btn btn-blue cta-preview__credits--btn\" onclick=\"javascript:location.reload();\">Scopri il premio</button>".html_safe
     else
       response["html"] = "<p>Non hai abbastanza #{reward.currency.name} per sbloccare questo premio</p><div class=\"col-sm-12  cta-cover__winnable-reward text-right\">
       <span class=\"label label-warning cta-preview__credits--reward\">+#{reward.cost}<i class=\"fa fa-copyright\"></i></span></div>".html_safe
