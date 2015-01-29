@@ -47,15 +47,21 @@
   padding: 10px;
 }
 
-.profile-menu-block__notice-counter{
+.profile-menu-block__notice-counter {
   background: none repeat scroll 0 0 red;
   border-radius: 50%;
   color: #fff;
-  height: 25px;
-  padding-top: 4px;
-  width: 25px;
   display: inline-block;
+  height: 25px;
   margin-left: -12px;
+  position: absolute;
+  top: 2px;
+  width: 25px;
+  line-height: 25px;
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
 }
 
 .profile-menu-block__glhyphicon{

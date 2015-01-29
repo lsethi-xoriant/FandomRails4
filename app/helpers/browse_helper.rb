@@ -137,7 +137,7 @@ module BrowseHelper
   def get_contents_by_category_with_tags(category)
     tags = get_tags_with_tag(category.name).sort_by { |tag| tag.created_at }
     ctas = get_ctas_with_tag(category.name).sort_by { |cta| cta.created_at }
-    merge_contents_with_tags(ctas, tags, category.id)
+    merge_contents_with_tags(ctas, tags)
   end
   
   def get_contents_by_category_with_match(category, query)
@@ -257,16 +257,16 @@ module BrowseHelper
     prepare_contents_for_autocomplete(merged)
   end
   
-  def merge_contents_with_tags(ctas, tags, category_id)
+  def merge_contents_with_tags(ctas, tags)
     merged = (ctas + tags).sort_by(&:created_at)
-    prepare_contents_with_related_tags(merged, category_id)
+    prepare_contents_with_related_tags(merged)
   end
   
   def merge_search_contents(ctas, tags)
     (ctas + tags).sort_by(&:created_at)
   end
   
-  def prepare_contents_with_related_tags(elements, category_id)
+  def prepare_contents_with_related_tags(elements)
     contents = []
     tags = {}
     elements.each do |element|
@@ -295,7 +295,7 @@ module BrowseHelper
     element.tags_tags.each do |t|
       other_tag = Tag.find(t.other_tag_id)
       if !tags.has_key?(other_tag.id)
-        tags[t.other_tag_id] = get_extra_fields!(other_tag).fetch("title", other_tag.name)
+        tags[other_tag.id] = other_tag.title
       end
     end
     tags
