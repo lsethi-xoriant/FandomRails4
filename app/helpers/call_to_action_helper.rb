@@ -192,14 +192,14 @@ module CallToActionHelper
   def build_comments_for_resource(interaction)
     comments, comments_total_count = get_comments_approved(interaction)
 
-    if page_require_captcha?(interaction)
-      captcha_data = generate_captcha_response
-    end
+    #if page_require_captcha?(interaction)
+    #  captcha_data = generate_captcha_response
+    #end
 
     comments_for_resource = {
       "comments" => comments,     
       "comments_total_count" => comments_total_count,  
-      "captcha_data" => captcha_data,
+      #"captcha_data" => captcha_data,
       "open" => false
     }
   end

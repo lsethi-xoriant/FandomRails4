@@ -13,9 +13,10 @@
           <p><span style="font-weight: 700;">Ciao!</span></p>
           <p>Il tuo amico <span style="font-weight: 700;"><%= @cuser.username %></span> ha voluto condividere con te questo post direttamente da Disney Channel Community!</p>
           <div style="width: 100%;">
-            <a href="<%= @aux[:root] %><%= "#{@aux.path}/" if @aux[:path] %>call_to_action/<%= @calltoaction.id %>"><img style="width: 100%" src="<%= @calltoaction.thumbnail %>"></a>
+            <a href="<%= @aux[:root] %><%= "#{@aux[:path]}/" if @aux[:path] %>call_to_action/<%= @calltoaction.id %>"><img style="width: 100%" src="<%= @calltoaction.thumbnail %>"></a>
           </div>
-          <p>Scopri anche tu la <a href="<%= @aux[:root] %><%= "#{@aux.path}" if @aux[:path] %>">Community ufficiale di Disney Channel</a>: interagisci con tanti amici che condividono con te la passione per il canale più divertente della tv! Registrati, dì la tua, gioca, guarda i video dei momenti più divertenti: più partecipi, più contenuti esclusivi potrai scoprire!</p>
+  
+          <p>Scopri anche tu la <a href="<%= @aux[:root] %><%= "#{@aux[:path]}" if @aux[:path] %>">Community ufficiale di Disney Channel</a>: interagisci con tanti amici che condividono con te la passione per il canale più divertente della tv! Registrati, dì la tua, gioca, guarda i video dei momenti più divertenti: più partecipi, più contenuti esclusivi potrai scoprire!</p>
         </div>
       </div>
     </div>
