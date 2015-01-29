@@ -5,8 +5,9 @@
 		  	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
 		<% end %>
 	<% end %>
-		<div class="row">
-			
+
+	<div class="row">
+			<div class="col-sm-12">
 			<% if @rank_name == "my-position-general" %>
 				<% if get_my_general_position %>
 					<% if small_mobile_device? %>
@@ -22,6 +23,6 @@
 					<%= render partial: "/ranking/rank", locals: { rankings: "rankings['#{@rank_name}']" } %>
 				<% end %>
 			<% end %>
-			
+			</div>
 		</div>
 </div>
