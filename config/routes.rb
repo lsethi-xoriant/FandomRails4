@@ -199,6 +199,7 @@ Fandom::Application.routes.draw do
   match "/browse/view_all/:id", :to => "browse#index_category"
   match "/browse/view_recent", :to => "browse#view_all_recent"
   match "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
+  match "/browse/index_category_load_more", :to => "browse#index_category_load_more"
   match "/browse/category/:id", :to => "browse#index_category"
   
   match "/gallery", :to => "gallery#index"

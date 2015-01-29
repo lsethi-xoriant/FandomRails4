@@ -134,10 +134,10 @@ module BrowseHelper
     merge_contents(ctas, tags)
   end
   
-  def get_contents_by_category_with_tags(category)
+  def get_contents_by_category_with_tags(category, offset = 0)
     tags = get_tags_with_tag(category.name).sort_by { |tag| tag.created_at }
     ctas = get_ctas_with_tag(category.name).sort_by { |cta| cta.created_at }
-    merge_contents_with_tags(ctas, tags)
+    merge_contents_with_tags(ctas, tags, offset)
   end
   
   def get_contents_by_category_with_match(category, query)
@@ -257,8 +257,8 @@ module BrowseHelper
     prepare_contents_for_autocomplete(merged)
   end
   
-  def merge_contents_with_tags(ctas, tags)
-    merged = (ctas + tags).sort_by(&:created_at)
+  def merge_contents_with_tags(ctas, tags, offset = 0)
+    merged = (ctas + tags).sort_by(&:created_at).slice(offset, 12)
     prepare_contents_with_related_tags(merged)
   end
   

@@ -54,7 +54,7 @@ module ApplicationHelper
       long_description: populate_desc ? long_description : nil,
       description: populate_desc ? description : nil,  
       detail_url: "/browse/category/#{tag.id}",
-      created_at: tag.created_at.to_time.to_i,
+      created_at: tag.created_at.to_i,
       header_image_url: header_image,
       icon: icon,
       category_icon: category_icon,
@@ -85,7 +85,7 @@ module ApplicationHelper
       long_description: populate_desc ? long_description : nil,
       description: populate_desc ? description : nil,  
       detail_url: "/browse/category/#{tag.id}",
-      created_at: tag.created_at.to_time.to_i,
+      created_at: tag.created_at.to_i,
       header_image_url: header_image,
       icon: icon,
       category_icon: category_icon,
@@ -347,7 +347,7 @@ module ApplicationHelper
   end
   
   def get_user_rewards_from_cache(user)
-    cache_short(get_user_rewards_cache_key) do
+    cache_short(get_user_rewards_cache_key(user.id)) do
       rewards = Reward.joins(:user_rewards).select("rewards.*").where("user_rewards.user_id = ?", user.id)
       id_to_reward = {}
       rewards.each do |r|
@@ -398,9 +398,9 @@ module ApplicationHelper
     cache_short get_tags_with_tag_cache_key(tag_name) do
       hidden_tags_ids = get_hidden_tag_ids
       if hidden_tags_ids.any?
-        Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND tags.id not in (?)", tag_name, hidden_tags_ids).to_a
+        Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND tags.id not in (?)", tag_name, hidden_tags_ids).to_a
       else
-        Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).to_a
+        Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).to_a
       end
     end
   end
@@ -429,7 +429,7 @@ module ApplicationHelper
   
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.active.joins(:call_to_action_tags => :tag).includes(:interactions).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
+      CallToAction.active.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
     end
   end
   

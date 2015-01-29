@@ -6,10 +6,10 @@ browseModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
-BrowseCtrl.$inject = ['$scope', '$window', '$filter'];
+BrowseCtrl.$inject = ['$scope', '$window', '$filter', '$http'];
 browseModule.controller('BrowseCtrl', BrowseCtrl);
 
-function BrowseCtrl($scope, $window, $filter) {
+function BrowseCtrl($scope, $window, $filter, $http) {
 	var orderBy = $filter('orderBy');
 	
 	$scope.$watch('visibleElements', function() {
@@ -85,6 +85,20 @@ function BrowseCtrl($scope, $window, $filter) {
 	$scope.order = function(predicate, reverse) {
       $scope.visibleElements = orderBy($scope.visibleElements, predicate, reverse);
     };
+    
+    $scope.load_more = function(offset){
+  		$http.get("/browse/index_category_load_more.json", {
+	      params: {
+	        offset: offset,
+	        tag_id: $scope.category.id
+	      }
+	    }).then(function(response){
+	    	console.log(normalizeElements(response.data));
+	      $scope.elements = $scope.elements.concat(normalizeElements(response.data));
+	      $scope.offset = offset + 12;
+	      updateContents();      
+	    });
+  	};
 
 }
 

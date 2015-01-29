@@ -30,8 +30,8 @@ module CacheKeysHelper
     "main_reward_image"
   end
   
-  def get_user_rewards_cache_key
-    "user_rewards_key"
+  def get_user_rewards_cache_key(user_id)
+    "user_#{user_id}_rewards"
   end
   
   def get_basic_reward_cache_key
@@ -217,6 +217,14 @@ module CacheKeysHelper
   
   def get_ranking_settings_key
     "ranking_page_settings"
+  end
+  
+  def get_rank_page_cache_key(ranking_name, page, version)
+    "#{ranking_name}_page_#{page}_#{version}"
+  end
+  
+  def get_user_position_rank_cache_key(user_id, ranking_name, version)
+    "#{ranking_name}_user_#{user_id}_position_rank_#{version}"
   end
   
   # Profile
