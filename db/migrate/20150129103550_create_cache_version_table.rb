@@ -5,7 +5,7 @@ class CreateCacheVersionTable < ActiveRecord::Migration
       t.integer :version
       t.timestamps
     end
+    add_column :cache_versions, :data, :json
     add_index :cache_versions, :name
-    add_index :cache_versions, :version
   end
 end
