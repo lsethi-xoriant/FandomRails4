@@ -2,7 +2,6 @@ require 'yaml'
 require 'json'
 require 'pg'
 require 'logger'
-require 'activesupport'
 
 def help_message
   <<-EOF
@@ -39,11 +38,11 @@ def main
     else
       elapsed_time = Time.now - start_time
       logger.info "Daemon end; elapsed time: #{elapsed_time}s"
-      if elapsed_time > 5.minutes
+      if elapsed_time > 300000 # 5 mins
         logger.error("main loop lasted more than 5 minutes; restarting in one minute")
-        sleep(1.minutes)
+        sleep(60000) # 1 min
       else
-        sleep(5.minutes - elapsed_time)
+        sleep(300000 - elapsed_time) # 5 mins - elapsed_time
       end
     end
 
