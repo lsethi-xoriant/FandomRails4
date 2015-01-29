@@ -27,6 +27,7 @@ def main
   logger = Logger.new("#{app_root_path}/log/cache_update_medium.log")
 
   loop do
+    start_time = Time.now
     execute_job(logger) do
       cache_generate_rankings
     end
@@ -98,7 +99,6 @@ def execute_job(logger)
   begin
     logger.info "Daemon start"
     event_logs_path = "#{app_root_path}/log/events"
-    start_time = Time.now
     begin
       yield
     rescue Exception => exception
