@@ -20,3 +20,9 @@
   line-height: 1.33 !important;
   padding: 10px 16px;
 }
+
+@media (max-width: $screen-sm-min) { 
+  .search-bar__input {
+    background: none;
+  }
+}

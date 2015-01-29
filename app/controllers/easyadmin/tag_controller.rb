@@ -108,7 +108,7 @@ class Easyadmin::TagController < ApplicationController
     @tag.tags_tags.each { |t| tag_array << t.other_tag.name }
     @tag_list = tag_array.join(",")
     params[:id] = @tag.id
-    params[:extra_fields] = JSON.parse(@tag.extra_fields)
+    params[:extra_fields] = JSON.parse(@tag.extra_fields) if @tag.extra_fields
     create_and_link_attachment(params, @tag)
     render "new"
   end

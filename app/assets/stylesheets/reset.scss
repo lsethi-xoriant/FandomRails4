@@ -252,8 +252,16 @@ a{
   
 }
 
-
 @media (max-width: $screen-sm-min) { 
+  button.close {
+    position: relative;
+    z-index: 10;
+  }
+
+  .flex-direction-nav {
+    display: none !important;
+  }
+
   .adv__horizontal {
     margin-bottom: 10px;
     margin-top: 25px;
@@ -291,6 +299,10 @@ a{
     display: inline-block;
     width: auto;
     text-align: center;
+  }
+
+  .adv__square-col {
+    padding: 0;
   }
 
   .main-row {

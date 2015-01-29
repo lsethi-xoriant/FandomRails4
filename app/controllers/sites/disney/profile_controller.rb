@@ -39,7 +39,7 @@ class Sites::Disney::ProfileController < ProfileController
     @fan_of_days = []
     (1..8).each do |i|
       day = Time.now - i.day
-      @fan_of_days << {"day" => "#{day.strftime('%d %b.')}", "winner" => get_winner_of_day(day)}
+      @fan_of_days << {"day" => "#{day.strftime('%d')} #{calculate_month_string_ita(day.strftime('%m').to_i)[0..2].camelcase}", "winner" => get_winner_of_day(day)}
     end
     
     @property_rankings = get_property_rankings

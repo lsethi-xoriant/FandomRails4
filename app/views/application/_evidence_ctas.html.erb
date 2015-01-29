@@ -2,32 +2,32 @@
   <div class="flexslider ctas__flexslider">
     <ul class="slides">
       <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
+        <%= light_link_to("/call_to_action/{{calltoaction.id}}") do %>
+          <!-- CALLTOACTION WINNABLE REWARD COUNT -->
+          <div ng-if="calltoaction.status && calltoaction.status.winnable_reward_count > 0" class="col-xs-12 ctas__winnable-reward cta-cover__winnable-reward text-right">
+            <span class="label label-warning cta-cover__winnable-reward__label">
+              +{{calltoaction.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+            </span>  
+          </div> 
+          <!-- CALLTOACTION DONE -->
+          <div ng-if="!calltoaction.status || calltoaction.status.winnable_reward_count < 1" class="col-xs-12 ctas__winnable-reward cta-cover__winnable-reward text-right">
+            <span class="label label-success cta-cover__winnable-reward__label">
+              Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+            </span>  
+          </div> 
 
-        <!-- CALLTOACTION WINNABLE REWARD COUNT -->
-        <div ng-if="calltoaction.status && calltoaction.status.winnable_reward_count > 0" class="col-xs-12 ctas__winnable-reward cta-cover__winnable-reward text-right">
-          <span class="label label-warning cta-cover__winnable-reward__label">
-            +{{calltoaction.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
-          </span>  
-        </div> 
-        <!-- CALLTOACTION DONE -->
-        <div ng-if="!calltoaction.status || calltoaction.status.winnable_reward_count < 1" class="col-xs-12 ctas__winnable-reward cta-cover__winnable-reward text-right">
-          <span class="label label-success cta-cover__winnable-reward__label">
-            Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
-          </span>  
-        </div> 
-
-        <img class="hidden-xs" ng-src="{{calltoaction.thumbnail_carousel_url}}">
-        <img class="visible-xs" ng-src="{{calltoaction.thumbnail_medium_url}}">
-        <div class="col-xs-12 ctas__info">
-          <p class="ctas__title">{{calltoaction.title}}</p>
-          <p style="color: #fff; margin-bottom: 15px; margin-top: 5px;">{{calltoaction.description | cut:true:70}}</p>
-          <%= light_link_to("/call_to_action/{{calltoaction.id}}", class: "btn btn-primary ctas__button hidden-xs") do %>
-            <span>Vai</span>
-          <% end %>
-          <p class="ctas_likes hidden-xs"><span class="fa fa-thumbs-up ctas__thumbs-up"></span>{{calltoaction.likes}}</p>
-          <p class="ctas_comments hidden-xs"><span class="glyphicon glyphicon-comment ctas__glyphicon-comment"></span>{{calltoaction.comments}}</p>
-        </div>
-
+          <img class="hidden-xs" ng-src="{{calltoaction.thumbnail_carousel_url}}">
+          <img class="visible-xs" ng-src="{{calltoaction.thumbnail_medium_url}}">
+          <div class="col-xs-12 ctas__info">
+            <p class="ctas__title">{{calltoaction.title}}</p>
+            <p class="hidden-xs" style="color: #fff; margin-bottom: 15px; margin-top: 5px;">{{calltoaction.description | cut:true:70}}</p>
+            <%= light_link_to("/call_to_action/{{calltoaction.id}}", class: "btn btn-primary ctas__button hidden-xs") do %>
+              <span>Vai</span>
+            <% end %>
+            <p class="ctas_likes hidden-xs"><span class="fa fa-thumbs-up ctas__thumbs-up"></span>{{calltoaction.likes}}</p>
+            <p class="ctas_comments hidden-xs"><span class="glyphicon glyphicon-comment ctas__glyphicon-comment"></span>{{calltoaction.comments}}</p>
+          </div>
+        <% end %>
       </li>
     </ul>
   </div>
