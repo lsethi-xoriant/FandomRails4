@@ -1,5 +1,7 @@
 require 'yaml'
 require 'json'
+require 'pg'
+require 'logger'
 
 def help_message
   <<-EOF
