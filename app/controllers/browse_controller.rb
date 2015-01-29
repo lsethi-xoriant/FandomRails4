@@ -70,6 +70,15 @@ class BrowseController < ApplicationController
     @contents, @tags = get_contents_by_category_with_tags(tag)
   end
   
+  def index_category_load_more
+    offset = params[:offset].to_i
+    category = Tag.find(params[:tag_id])
+    contents, tags = get_contents_by_category_with_tags(category, offset)
+    respond_to do |format|
+      format.json { render :json => contents.to_json }
+    end
+  end
+  
   def view_all
     @tag = Tag.find(params[:id])
     @contents = get_contents_by_category(@tag)

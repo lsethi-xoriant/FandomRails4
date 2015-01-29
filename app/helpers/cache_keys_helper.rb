@@ -219,6 +219,14 @@ module CacheKeysHelper
     "ranking_page_settings"
   end
   
+  def get_rank_page_cache_key(ranking_name, page, version)
+    "#{ranking_name}_page_#{page}_#{version}"
+  end
+  
+  def get_user_position_rank_cache_key(user_id, ranking_name, version)
+    "#{ranking_name}_user_#{user_id}_position_rank_#{version}"
+  end
+  
   # Profile
   # ~~~~~~~
   def get_current_user_key(user_id)

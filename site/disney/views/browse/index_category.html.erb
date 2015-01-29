@@ -63,12 +63,24 @@
 			              <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.comments}}</p>
 			            </div>
 			          </div>
-			        </div>  
+			        </div>
+			        <div class="relateds-flexslider__item-panel" ng-if="content.type == 'tag'" style="background-image: url('{{content.thumb_url}}'); background-position: center center; background-size: auto 100%;"> 
+			            <div class="row">
+			              <div class="col-xs-12 text-center cta-preview--tag">
+			                <p class="cta-preview__title--tag">{{content.title | cut:true:40}}</p>
+			              </div>
+			            </div>
+			          </div> 
 			      <% end %>
 				  </div>
 	      	
 	      </div>
 	     </div>
       </div>
+    <div class="row row-load-more text-center">
+		<div class="col-xs-4 col-xs-offset-4">
+			<a class="btn btn-primary btn-block" ng-click="load_more(elements_in_page)">Carica Altri</a>
+		</div>
+	</div>
       
 </div>
