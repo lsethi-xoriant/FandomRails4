@@ -63,7 +63,7 @@ def cache_generate_rankings(conn, tenant)
 
     if cache
       execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE version <> #{cache["version"]}")
-      new_cache_version = cache["version"] + 1
+      new_cache_version = cache["version"].to_i + 1
     else
       new_cache_version = 1
     end
