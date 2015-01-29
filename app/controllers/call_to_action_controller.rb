@@ -146,11 +146,11 @@ class CallToActionController < ApplicationController
   end
 
   def show
-    calltoaction_id = params[:id].to_i
+    calltoaction_id = params[:id]
     
     log_call_to_action_viewed(calltoaction_id)
     
-    calltoaction = CallToAction.includes(interactions: :resource).active_with_media.find_by_id(calltoaction_id)
+    calltoaction = CallToAction.includes(interactions: :resource).active_with_media.find(calltoaction_id)
 
     if calltoaction
 
