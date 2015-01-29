@@ -2,6 +2,7 @@ require 'yaml'
 require 'json'
 require 'pg'
 require 'logger'
+require 'activesupport'
 
 def help_message
   <<-EOF
