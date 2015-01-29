@@ -30,7 +30,7 @@ def main
 
     loop do
       execute_job do
-        cache_generate_rankings
+        cache_generate_rankings(conn, logger)
       end
     end
 
@@ -52,7 +52,7 @@ def main
 
 end
 
-def cache_generate_rankings
+def cache_generate_rankings(conn, logger)
   anonymous_user_id = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE email = 'anonymous@shado.tv'").first["id"]
   rankings = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}rankings")
 
