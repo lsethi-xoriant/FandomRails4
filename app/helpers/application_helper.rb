@@ -429,7 +429,7 @@ module ApplicationHelper
   
   def get_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.active.includes(call_to_action_tags: :tag).includes(:interactions).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
+      CallToAction.active.joins(:call_to_action_tags => :tag).includes(:interactions).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
     end
   end
   
