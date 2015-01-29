@@ -34,7 +34,7 @@
   		  			<p class="ranking-element__nickname"><%= rank_user["user"] %></p>
   		  			<div class="label label-warning ranking-element__points">+ <%= rank_user["counter"] %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
   		  		</div>
-  				</li>
+  			</li>
   		  <% end %>
         </ul>
       </div>
@@ -105,7 +105,7 @@
           <ul class="slides">
             <% @property_rankings.each do |rank_property| %>
             <li class="relateds-flexslider__item">
-              <%= light_link_to(rank_property["link"]) do %>  
+              <a href="<%= rank_property["link"] %>">  
                 <div class="relateds-flexslider__item-panel" style="background-image: url('<%= rank_property["thumb"] %>'); background-position: center center; background-size: auto 100%;"> 
                   <div class="row">
                     <div class="col-xs-12 text-center cta-preview--tag">
@@ -113,7 +113,7 @@
                     </div>
                   </div>
                 </div>  
-              <% end %>
+              </a>
             </li>
             <% end %>
           </ul>
