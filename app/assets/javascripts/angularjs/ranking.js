@@ -49,10 +49,7 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 					ranking: data.ranking,
 					total: data.total
 				};
-				console.log(JSON.stringify(newData));
-				console.log(data.ranking.name);
 			    var newrank = eval("$scope.rankings['" + data.ranking.name + "'] = " + JSON.stringify(newData));
-			    console.log(eval("$scope.rankings['" + data.ranking.name + "']"));
 			});
 		}
 	};
