@@ -30,20 +30,21 @@ def main
     execute_job(logger) do
       cache_generate_rankings
     end
-  end
 
-  if $GOT_SIGTERM
-    logger.info("got SIGTERM, exiting gracefully")
-    break
-  else
-    elapsed_time = Time.now - start_time
-    logger.info "Daemon end; elapsed time: #{elapsed_time}s"
-    if elapsed_time > 5.minutes
-      logger.error("main loop lasted more than 5 minutes; restarting in one minute")
-      sleep(1.minutes)
+    if $GOT_SIGTERM
+      logger.info("got SIGTERM, exiting gracefully")
+      break
     else
-      sleep(5.minutes - elapsed_time)
+      elapsed_time = Time.now - start_time
+      logger.info "Daemon end; elapsed time: #{elapsed_time}s"
+      if elapsed_time > 5.minutes
+        logger.error("main loop lasted more than 5 minutes; restarting in one minute")
+        sleep(1.minutes)
+      else
+        sleep(5.minutes - elapsed_time)
+      end
     end
+
   end
 
 end
