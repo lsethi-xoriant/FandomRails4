@@ -1,44 +1,48 @@
 <div class="container container--default">
     
-  <div id="lelves" class="row brws-item">
+  <div id="levels" class="row brws-item">
   	<div class="col-xs-12">
-      	<div class="section-heading">
-        	<h3>
-        		<img src="<%= asset_path("icon-cat.png") %>" class=" section-heading__icon" />
-        		Livelli
-        	</h3>
-      	</div>
-      	<% if @levels %>
-  			<% @levels.each do |key, level| %>
-	        	<%= render partial: "/profile/level_badge", locals: { reward: level } %>
-	        <% end %>
-	    <% else %>
-	    	<p>Nessun livello presente</p>
-	    <% end %>
- 	</div>
+    	<div class="section-heading">
+        <h3>
+          <span class="section-heading__marker"><i class="fa fa-tasks"></i></span>
+          Livelli
+        </h3>
+      </div>
+    </div>
+    <% if @levels %>
+  		<% @levels.each do |key, level| %>
+        <div class="col-xs-6" style="margin-bottom: 20px">
+        	<%= render partial: "/profile/level_badge", locals: { reward: level } %>
+        </div>
+      <% end %>
+    <% else %>
+    	<p>Nessun livello presente</p>
+    <% end %>
   </div>
   
   <div id="badges" class="row brws-item">
   	<div class="col-xs-12">
-      	<div class="section-heading">
-        	<h3>
-        		<img src="<%= asset_path("icon-cat.png") %>" class="section-heading__icon" />
-        		Badge
-        	</h3>
-      	</div>
-      	<% if @badges %>
-	        <% @badges.each do |badge| %>
-	        	<%= render partial: "/profile/badge", locals: { reward: badge } %>
-	        <% end %>
-	    <% else %>
-	    	<p>Nessun badge presente</p>
-	    <% end %>
- 	</div>
+    	<div class="section-heading">
+        <h3>
+          <span class="section-heading__marker"><i class="fa fa-shield"></i></span>
+          Badge
+        </h3>
+      </div>
+    </div>
+    <% if @badges %>
+      <% @badges.each do |badge| %>
+       <div class="col-xs-6" style="margin-bottom: 20px">
+    	    <%= render partial: "/profile/badge", locals: { reward: badge } %>
+        </div>
+      <% end %>
+    <% else %>
+    	<p>Nessun badge presente</p>
+    <% end %>
   </div>
   
   <div class="row brws-item">
   	<div class="col-xs-12 text-center">
-  		<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
+  		<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %><span>Indietro</span><% end %>
   	</div>
   </div>
   

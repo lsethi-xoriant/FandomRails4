@@ -1,9 +1,11 @@
-<div class="profile-header-mobile">
-	
+<div class="container">
+<div class="profile-header-mobile row">
+<div class="col-xs-12">	
+
 	<div class="row brws-item profile-header-mobile__item">
 		<%= light_link_to "/profile/edit", {"class" => "profile-header-mobile__link"} do %><% end %>
 		<div class="col-xs-3 text-right">
-			<img src="<%= user_avatar current_user %>" alt="profile avatar" class="profile-header-mobile__item__image">
+			<img src="<%= user_avatar current_user %>" alt="profile avatar" class="profile-header-mobile__item__image profile-header-mobile__item__image--main">
 		</div>
 		<div class="col-xs-6">
 			<p class="profile-header-mobile__item__title"><%= disney_extract_name_or_username(current_user) %></p>
@@ -26,7 +28,7 @@
 	
 	<div class="row brws-item profile-header-mobile__item--level">
 		<%= light_link_to "/profile/rewards", {"class" => "profile-header-mobile__link"} do %><% end %>
-		<% if !cached_nil?(@level) %>
+		<% if @level %>
 			<div class="col-xs-3 text-right">
 				<img src="<%= get_reward_image_for_status(@level["level"]) %>" alt="" class="profile-header-mobile__item__image">
 			</div>
@@ -75,4 +77,6 @@
 		</div>
 	</div>
 
+</div>
+</div>
 </div>

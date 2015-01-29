@@ -30,8 +30,8 @@
 	  <div class="cta-preview__locked-layer cta-preview__locked-layer--reward">
 			<p>Per sbloccare questo premio</p>
 			<span class="label label-warning cta-preview__credits--reward">+{{calltoaction_info.prize.cost}}<i class="fa fa-copyright"></i></span>
-			<button ng-if="current_user && calltoaction_info.prize.has_currency" class="btn btn-blue btn-lg" ng-click="buyReward(calltoaction_info.prize.id)"><span>Sblocca</span></button>
-			<button ng-if="!current_user" class="btn btn-blue btn-lg" onclick="$('#registrate-modal').modal('show');"><span>Sblocca</span></button>
+			<button ng-if="current_user && calltoaction_info.prize.has_currency" class="btn btn-blue cta-preview__credits--btn" ng-click="buyReward(calltoaction_info.prize.id)"><span>Sblocca</span></button>
+			<button ng-if="!current_user" class="btn btn-blue cta-preview__credits--btn" onclick="$('#registrate-modal').modal('show');"><span>Sblocca</span></button>
 	  </div>
   </div>
 
