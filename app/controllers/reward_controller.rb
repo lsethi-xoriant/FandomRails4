@@ -149,4 +149,8 @@ class RewardController < ApplicationController
     end
   end
   
+  def how_to
+    
+  end
+  
 end
