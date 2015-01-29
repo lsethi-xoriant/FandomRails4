@@ -12,7 +12,13 @@
           </li>
           <li class="profile-menu-block__item <%= "profile-menu-block__item--active" if page == "notices" %>">
           	<%= light_link_to "/profile/notices", {"class" => "profile-menu-block__item-link"} do %><span class="glyphicon glyphicon-bell profile-menu-block__glhyphicon" aria-hidden="true"></span>Notifiche <% end %>
-          	<%= "<div class='profile-menu-block__notice-counter'>#{get_unread_notifications_count}</div>".html_safe if get_unread_notifications_count > 0 %>
+
+            <% if get_unread_notifications_count > 0 %>
+              <div class="profile-menu-block__notice-counter">
+                <a href="/profile/notices"><%= get_unread_notifications_count %></a>
+              </div>
+            <% end %>
+
           </li>
         </ul>
     </div>
