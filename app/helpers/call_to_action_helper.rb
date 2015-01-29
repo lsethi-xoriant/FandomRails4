@@ -57,6 +57,7 @@ module CallToActionHelper
       calltoaction_info_list << {
         "calltoaction" => { 
           "id" => calltoaction.id,
+          "name" => calltoaction.name,
           "title" => calltoaction.title,
           "description" => calltoaction.description,
           "media_type" => calltoaction.media_type,
