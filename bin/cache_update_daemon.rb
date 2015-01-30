@@ -31,7 +31,7 @@ def main
   else
     conn = PG::Connection.open(:host => host, :user => user, :password => password)
   end
-  logger = Logger.new("#{app_root_path}/log/cache_update.log")
+  logger = Logger.new("#{app_root_path}/log/cache_update_daemon.log")
 
   loop do
     start_time = Time.now
