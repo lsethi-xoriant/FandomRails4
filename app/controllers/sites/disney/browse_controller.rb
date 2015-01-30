@@ -7,7 +7,7 @@ class Sites::Disney::BrowseController < BrowseController
     @contents = prepare_contents(contents)
     @query = params[:query]
     if @contents.empty?
-      redirect_to "#{get_disney_property_root_path}/browse", :flash => { :notice => "Non ci sono risultati!" }
+      redirect_to "#{get_disney_property_root_path}/browse", :flash => { :notice => "Non ci sono risultati, potrebbero interessarti alcuni di questi contenuti." }
     end
   end
   

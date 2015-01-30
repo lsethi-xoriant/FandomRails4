@@ -253,7 +253,7 @@ module BrowseHelper
   end
   
   def merge_contents_for_autocomplete(ctas,tags)
-    merged = (ctas + tags).sort_by(&:created_at)
+    merged = (tags.sort_by(&:created_at) + ctas.sort_by(&:created_at))
     prepare_contents_for_autocomplete(merged)
   end
   
@@ -263,7 +263,7 @@ module BrowseHelper
   end
   
   def merge_search_contents(ctas, tags)
-    (ctas + tags).sort_by(&:created_at)
+    (tags.sort_by(&:created_at) + ctas.sort_by(&:created_at))
   end
   
   def prepare_contents_with_related_tags(elements)
