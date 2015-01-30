@@ -27,6 +27,9 @@ class BrowseController < ApplicationController
   end
   
   def full_search
+    if params[:query].blank?
+      redirect_to "/browse"
+    end
     contents, total = get_contents_with_match(params[:query])
     @total = total
     contents = prepare_contents(contents)

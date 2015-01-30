@@ -2,6 +2,10 @@ class Sites::Disney::BrowseController < BrowseController
   include DisneyHelper
   
   def full_search
+    if params[:query].blank?
+      redirect_to "#{get_disney_property_root_path}/browse"
+      return
+    end
     contents, total = get_contents_with_match(params[:query])
     @total = total
     contents = prepare_contents(contents)
