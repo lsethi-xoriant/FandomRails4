@@ -176,13 +176,49 @@ class BrowseController < ApplicationController
   def view_all_recent
     contents = get_recent_ctas()
     @total = contents.count
-    @contents = prepare_contents(contents.slice(0, 12))
+    contents = prepare_contents(contents.slice(0, 12))
+    
+    cta_ids = []
+    contents.each do |content|
+      if content["type"] == "cta"
+        cta_ids << content["id"]
+      end
+    end
+    cta_statuses = {}
+    unless cta_ids.empty?
+      cta_statuses = cta_to_reward_statuses_by_user(current_or_anonymous_user, CallToAction.includes(:interactions).where("id in (?)", cta_ids).to_a, 'point')
+    end
+    contents.each do |content|
+      if content["type"] == "cta"
+        content["status"] = cta_statuses[content["id"].to_i]
+      end
+    end
+    @contents = contents
+    
     @per_page = 12
   end
   
   def view_all_recent_load_more
     offset = params[:offset].to_i
     contents = prepare_contents(get_recent_ctas().slice(offset, 12))
+    
+    cta_ids = []
+    contents.each do |content|
+      if content["type"] == "cta"
+        cta_ids << content["id"]
+      end
+    end
+    cta_statuses = {}
+    unless cta_ids.empty?
+      cta_statuses = cta_to_reward_statuses_by_user(current_or_anonymous_user, CallToAction.includes(:interactions).where("id in (?)", cta_ids).to_a, 'point')
+    end
+    contents.each do |content|
+      if content["type"] == "cta"
+        content["status"] = cta_statuses[content["id"].to_i]
+      end
+    end
+    contents = contents
+    
     respond_to do |format|
       format.json { render :json => contents.to_json }
     end
