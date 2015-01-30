@@ -1,6 +1,6 @@
 <div class="container container--default">
 
-	<div class="row">
+<div class="row">
     <div class="col-xs-12" style="background-color: #fff;">
 	  <div class="section-heading">
         	<h3>
@@ -20,7 +20,7 @@
 		    </div>
 		  </div>
 	  
-    <% end %>
+      <% end %>
     
     <% @property_rank[:rank_list].slice(0,4).each do |rank_user| %>
     	<div class="row rank-row">
@@ -41,7 +41,7 @@
           <span class="section-heading__marker"><i class="fa fa-graduation-cap"></i></span>
             Fan del giorno
         </h3>
-
+		</div>
 	  	<% @fan_of_days.each do |winner| %>
 	  		<% if winner["winner"] %>
 	  			<% if current_user && winner["winner"].user.email == current_user.email %>
@@ -82,3 +82,5 @@
 	  		<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
 	  	</div>
 	</div>
+</div>
+</div>
