@@ -25,7 +25,7 @@ module RankingHelper
   end
   
   def get_my_general_position(ranking_name, user_id)
-    version_rank = CacheVersion.where("name = ?", ranking_name).first
+    version_rank = CacheVersion.where("name = ?", ranking_name).order("version desc").first
     if version_rank
       version = version_rank.version
       total = JSON.parse(version_rank.data)['total']
@@ -63,7 +63,7 @@ module RankingHelper
   end
   
   def get_ranking_page(ranking_name, page)
-    version_rank = CacheVersion.where("name = ?", ranking_name).first
+    version_rank = CacheVersion.where("name = ?", ranking_name).order("version desc").first
     if version_rank
       version = version_rank.version
       total = JSON.parse(version_rank.data)['total']
