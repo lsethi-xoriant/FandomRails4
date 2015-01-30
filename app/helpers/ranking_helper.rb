@@ -26,8 +26,13 @@ module RankingHelper
   
   def get_my_general_position(ranking_name, user_id)
     version_rank = CacheVersion.where("name = ?", ranking_name).first
-    version = version_rank.version
-    total = JSON.parse(version_rank.data)['total']
+    if version_rank
+      version = version_rank.version
+      total = JSON.parse(version_rank.data)['total']
+    else
+      version = 0
+      total = 0
+    end
     position = cache_huge(get_user_position_rank_cache_key(user_id, ranking_name, version)) do
       user_position = CacheRanking.where("user_id = ? and name = ?", user_id, ranking_name).first
       if user_position
@@ -59,8 +64,13 @@ module RankingHelper
   
   def get_ranking_page(ranking_name, page)
     version_rank = CacheVersion.where("name = ?", ranking_name).first
-    version = version_rank.version
-    total = JSON.parse(version_rank.data)['total']
+    if version_rank
+      version = version_rank.version
+      total = JSON.parse(version_rank.data)['total']
+    else
+      version = 0
+      total = 0
+    end
     positions = cache_huge(get_rank_page_cache_key(ranking_name, page, version)) do
       offset = (page-1).to_i * RANKING_USER_PER_PAGE;
       CacheRanking.where("name = ?", ranking_name).order("position asc").offset(offset).limit(RANKING_USER_PER_PAGE).to_a
@@ -125,7 +135,7 @@ module RankingHelper
   def get_full_rank(ranking, page = 1)
     rank = get_ranking(ranking, page)
     if current_user
-      my_position = get_my_general_position(ranking.name, current_user.id)
+      my_position, total = get_my_general_position(ranking.name, current_user.id)
     else
       my_position = -1
     end
