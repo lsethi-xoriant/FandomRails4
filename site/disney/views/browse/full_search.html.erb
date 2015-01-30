@@ -21,7 +21,7 @@
                 <img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}">            
                 <!-- STATUS -->
                 <div class="label label-warning cta-preview__points" ng-if="content.attributes.status > 0">+ {{content.attributes.status}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-				<div class="col-xs-12 cta-cover__winnable-reward text-right ng-scope" ng-if="content.attributes.status == 0"><span class="label label-success cta-cover__winnable-reward__label">Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span></span></div>
+				<div class="col-xs-12 cta-cover__winnable-reward text-right ng-scope" ng-if="content.attributes.status == null"><span class="label label-success cta-cover__winnable-reward__label">Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span></span></div>
 
               </div>
               <p class="cta-preview__title">{{content.attributes.title | cut:true:40}}</p>
