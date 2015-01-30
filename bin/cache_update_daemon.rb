@@ -90,7 +90,7 @@ def cache_generate_rankings(conn, tenant, logger)
 
     res.each_with_index do |user_res, i|
       hash = { "username" =>  nullify_or_escape_string(conn, user_res["username"]), "avatar_selected_url" => user_res["avatar_selected_url"], 
-                "first_name" => user_res["first_name"], "last_name" => user_res["last_name"], "counter" => user_res["counter"].to_i }
+                "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]), "counter" => user_res["counter"].to_i }
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_rankings (name, version, user_id, position, data, created_at, updated_at) 
                             VALUES ('#{name}', #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, '#{hash.to_json}', now(), now())")
     end
