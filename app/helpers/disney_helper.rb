@@ -26,9 +26,8 @@ module DisneyHelper
   
   def get_my_general_position_in_property
     property_ranking = Ranking.find_by_name("#{get_disney_property}-general-chart")
-    if property_ranking
-      rank = get_full_rank(property_ranking)
-      [rank[:my_position], rank[:total]]
+    if property_ranking && current_user
+      get_my_general_position(property_ranking.name, current_user.id)
     else
       [nil, nil]
     end
@@ -222,6 +221,7 @@ module DisneyHelper
 
     current_property_info = {
       "id" => current_property.id,
+      "title" => current_property.title,
       "name" => current_property.name,
       "background" => get_extra_fields!(current_property)["label-background"],
       "image-background" => (get_extra_fields!(current_property)["image-background"]["url"] rescue nil),

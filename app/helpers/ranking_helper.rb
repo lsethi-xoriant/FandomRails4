@@ -16,17 +16,27 @@ module RankingHelper
     attribute :number_of_pages, type: Integer
   end
   
-  def get_my_position
-      get_my_general_position
+  def get_my_position(ranking_name)
+      if current_user
+        get_my_general_position(ranking_name, current_user.id)
+      else
+        nil
+      end
   end
   
-  def get_my_general_position
-    users_positions = cache_short(get_ranking_page_key){ populate_rankings(get_ranking_settings) }
-    if users_positions['general_user_position']
-      [users_positions['general_user_position'][current_user.id], users_positions['general_user_position'].count] 
-    else
-      [nil, nil]
+  def get_my_general_position(ranking_name, user_id)
+    version_rank = CacheVersion.where("name = ?", ranking_name).first
+    version = version_rank.version
+    total = JSON.parse(version_rank.data)['total']
+    position = cache_huge(get_user_position_rank_cache_key(user_id, ranking_name, version)) do
+      user_position = CacheRanking.where("user_id = ? and name = ?", user_id, ranking_name).first
+      if user_position
+        user_position.position
+      else
+          nil       
+      end
     end
+    [position, total]
   end
   
   def get_reward_points_in_period(period_kind, reward_name)    
@@ -34,26 +44,28 @@ module RankingHelper
     reward_points[period_kind].present? ? reward_points[period_kind] : 0
   end
   
-  def get_ranking(ranking, offset = 0)
+  def get_ranking(ranking, page)
     if ranking
-
-      rankings, user_position_hash = cache_medium(get_full_rank_cache_key(ranking.name)) do
-        period = get_current_periodicities[ranking.period]
-        period_id_condition = period.blank? ? "period_id is null" : "period_id = #{period.id}"
-        rankings = UserReward.where("reward_id = ? and #{period_id_condition} and user_id <> ?", ranking.reward_id, anonymous_user.id).select("user_id").order("counter DESC, user_rewards.updated_at ASC, user_id ASC").to_a
-        user_position_hash = generate_user_position_hash(rankings)
-        [rankings, user_position_hash]
-      end
-
+      rankings, total = get_ranking_page(ranking.name, page)
       rank = RankingElement.new(
         period: ranking.period,
         title: ranking.title,
-        rankings: prepare_rank_for_json(rankings.slice(offset, RANKING_USER_PER_PAGE), user_position_hash, ranking),
-        user_to_position: user_position_hash,
-        total: rankings.count,
-        number_of_pages: get_pages(rankings.count, RANKING_USER_PER_PAGE) 
+        rankings: prepare_rank_for_json(rankings, ranking),
+        total: total,
+        number_of_pages: get_pages(total, RANKING_USER_PER_PAGE) 
       )
     end
+  end
+  
+  def get_ranking_page(ranking_name, page)
+    version_rank = CacheVersion.where("name = ?", ranking_name).first
+    version = version_rank.version
+    total = JSON.parse(version_rank.data)['total']
+    positions = cache_huge(get_rank_page_cache_key(ranking_name, page, version)) do
+      offset = (page-1).to_i * RANKING_USER_PER_PAGE;
+      CacheRanking.where("name = ?", ranking_name).order("position asc").offset(offset).limit(RANKING_USER_PER_PAGE).to_a
+    end
+    [positions, total]
   end
   
   # day is in datetime format
@@ -110,10 +122,10 @@ module RankingHelper
     )
   end
   
-  def get_full_rank(ranking)
-    rank = get_ranking(ranking)
+  def get_full_rank(ranking, page = 1)
+    rank = get_ranking(ranking, page)
     if current_user
-      my_position = rank.user_to_position[current_user.id]
+      my_position = get_my_general_position(ranking.name, current_user.id)
     else
       my_position = -1
     end
@@ -121,20 +133,9 @@ module RankingHelper
     if ranking.rank_type == "trirank"
       compose_triranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.total, rank.number_of_pages)
     else
-      compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.total, rank.number_of_pages)
+      compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.total, rank.number_of_pages, page.to_i)
     end
     
-  end
-  
-  def get_full_rank_page(ranking, page)
-    offset = (page-1).to_i * RANKING_USER_PER_PAGE;
-    rank = get_ranking(ranking, offset)
-    if current_user
-      my_position = rank.user_to_position[current_user.id]
-    else
-      my_position = -1
-    end
-    compose_ranking_info(ranking.rank_type, ranking, rank.rankings, my_position, rank.total, rank.number_of_pages, page)
   end
   
   def get_full_vote_rank(vote_ranking)
@@ -244,28 +245,18 @@ module RankingHelper
       rank.user_to_position
     end
   end
-
-  def get_id_to_user(user_ids, ranking)
-    result = {}
-    period = get_current_periodicities[ranking.period]
-    period_id_condition = period.blank? ? "period_id is null" : "period_id = #{period.id}"
-    User.joins(:user_rewards).where("users.id in (?) AND #{period_id_condition} AND user_rewards.reward_id = ?", user_ids, ranking.reward_id).select("users.id, username, avatar_selected_url, first_name, last_name, counter").each do |user|
-      result[user.id] = user  
-    end
-    result
-  end
   
-  def prepare_rank_for_json(rankings, user_position_hash, ranking)
-    id_to_user = get_id_to_user(rankings.map { |r| r.user_id }, ranking)
+  def prepare_rank_for_json(rankings, ranking)
     positions = Array.new
-    rankings.each_with_index do |r, i|
+    rankings.each do |r|
+      extra_data = JSON.parse(r.data)
       positions << {
-        "position" => user_position_hash[r.user_id],
-        "general_position" => user_position_hash[r.user_id], 
-        "avatar" => id_to_user[r.user_id].avatar_selected_url, 
-        "user" => id_to_user[r.user_id].username.nil? ? "#{id_to_user[r.user_id].first_name} #{id_to_user[r.user_id].last_name}" : id_to_user[r.user_id].username,
+        "position" => r.position,
+        "general_position" => r.position, 
+        "avatar" => extra_data['avatar_selected_url'], 
+        "user" => extra_data['username'].blank? ? "#{extra_data['first_name']} #{extra_data['last_name']}" : extra_data['username'],
         "user_id" => r.user_id, 
-        "counter" => id_to_user[r.user_id].counter 
+        "counter" => extra_data['counter']
       }
     end
     positions
