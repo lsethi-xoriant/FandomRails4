@@ -14,7 +14,7 @@ module RewardHelper
     site.periodicity_kinds.each do |pk|
       save_user_reward_with_periodicity(user, reward_name, counter, pk, active_periodicities)
     end
-    assign_reward_expires(user.id)
+    assign_reward_expires(user.id, reward_name)
   end
 
   def save_user_reward_with_periodicity(user, reward_name, counter, periodicity_kind, active_periodicities)
