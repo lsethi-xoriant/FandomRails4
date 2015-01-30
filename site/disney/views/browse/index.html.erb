@@ -85,7 +85,7 @@
         prevText: "",
         nextText: "",
         start: function(slider) {
-          if($(slider).find('.slides li').length == 1) {
+          if((slider.currentSlide + 1) == 1) {
             $(slider).find('.flex-viewport-shadow').addClass("hidden");
           }
         },

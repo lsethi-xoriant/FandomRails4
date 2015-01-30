@@ -16,7 +16,7 @@ class Sites::Disney::RegistrationsController < RegistrationsController
 
   def iur
     unless cookies[:SWID] && cookies[:SWID]
-      from_iur_authenticate = cookies[:from_iur_authenticate]
+      from_iur_authenticate = cookies[:from_iur_authenticate] || "/"
       cookies.delete :from_iur_authenticate
 
       flash[:notice] = "from-disney-registration"
