@@ -33,6 +33,7 @@ def main
   else
     conn = PG::Connection.open(:host => host, :dbname => db_name, :user => user, :password => password)
   end
+
   logger = Logger.new("#{app_root_path}/log/cache_update_daemon.log")
 
   loop do
@@ -47,14 +48,8 @@ def main
     else
       elapsed_time = Time.now - start_time
       logger.info "Daemon end; elapsed time: #{elapsed_time}s"
-      if elapsed_time > 300 # 5 mins
-        logger.error("main loop lasted more than 5 minutes; restarting in one minute")
-        sleep(60) # 1 min
-      else
-        sleep(300 - elapsed_time) # 5 mins - elapsed_time
-      end
+      sleep(300) # 5 min
     end
-
   end
 
 end
@@ -93,6 +88,12 @@ def cache_generate_rankings(conn, tenant, logger)
                 "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]), "counter" => user_res["counter"].to_i }
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_rankings (name, version, user_id, position, data, created_at, updated_at) 
                             VALUES ('#{name}', #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, '#{hash.to_json}', now(), now())")
+
+      # In order to avoid database stressing, the loop will sleep for 1 second every 1000 lines inserted into cache_rankings table
+      if i % 1000 == 0 and i != 0
+        sleep(1)
+      end
+
     end
 
     logger.info "Cache ranking for #{name} successfully updated to version #{new_cache_version}"
