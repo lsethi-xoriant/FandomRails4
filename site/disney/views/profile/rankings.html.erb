@@ -42,53 +42,46 @@
 	  </div>
 	</div>
 
-	<div class="row brws-item main-row" style="padding-top: 30px;">
-    <div class="col-xs-12">
-		  <div class="section-heading">
-	        <h3>
-	        	<span class="section-heading__marker"><i class="fa fa-graduation-cap"></i></span>
-	        		Fan del giorno
-	        </h3>
-      	  </div>
-      <div class="rewards-flexslider-r rewards-flexslider--rankings" id="fan-of-days__flexslider">
-        <div class="flex-viewport-shadow hidden-xs"></div>
-    		<ul class="slides">
-			  	<% @fan_of_days.each do |winner| %>
-			  		<% if winner["winner"] %>
-			  			<% if current_user && winner["winner"].user.email == current_user.email %>
-			  				<li class="rewards-flexslider__item--fod">
-						  		<div class="ranking-element ranking-element--myposition">
-						  			<p class="ranking-element__position ranking-element__position--myposition text-center"><%= winner["day"] %></p>
-						  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
-						  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= winner["winner"].user.username %></p>
-						  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-						  		</div>
-						  	</li>
-			  			<% else %>
-						  	<li class="rewards-flexslider__item--fod">
-						  		<div class="ranking-element">
-						  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
-						  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
-						  			<p class="ranking-element__nickname"><%= winner["winner"].user.username %></p>
-						  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-						  		</div>
-						  	</li>
-					  	<% end %>
-				  	<% else %>
-					  	<li class="rewards-flexslider__item--fod">
-					  		<div class="ranking-element">
-					  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
-					  			<img src="/assets/anon.png" class="ranking-element__avatar" />
-					  			<p class="ranking-element__nickname">nessun vincitore</p>
-					  			<div class="label label-warning ranking-element__points">+ 0<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-					  		</div>
-					  	</li>
-				  	<% end %>
-			  	<% end %>
-			 </ul>
-	  	</div>
-	  </div>
-  </div>
+  <% if @fan_of_days.any? %>
+  	<div class="row brws-item main-row" style="padding-top: 30px;">
+      <div class="col-xs-12">
+  		  <div class="section-heading">
+  	        <h3>
+  	        	<span class="section-heading__marker"><i class="fa fa-graduation-cap"></i></span>
+  	        		Fan del giorno
+  	        </h3>
+        	  </div>
+        <div class="rewards-flexslider-r rewards-flexslider--rankings" id="fan-of-days__flexslider">
+          <div class="flex-viewport-shadow hidden-xs"></div>
+      		<ul class="slides">
+  			  	<% @fan_of_days.each do |winner| %>
+  			  		<% if winner["winner"] %>
+  			  			<% if current_user && winner["winner"].user.email == current_user.email %>
+  			  				<li class="rewards-flexslider__item--fod">
+  						  		<div class="ranking-element ranking-element--myposition">
+  						  			<p class="ranking-element__position ranking-element__position--myposition text-center"><%= winner["day"] %></p>
+  						  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
+  						  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= winner["winner"].user.username %></p>
+  						  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+  						  		</div>
+  						  	</li>
+  			  			<% else %>
+  						  	<li class="rewards-flexslider__item--fod">
+  						  		<div class="ranking-element">
+  						  			<p class="ranking-element__position text-center"><%= winner["day"] %></p>
+  						  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
+  						  			<p class="ranking-element__nickname"><%= winner["winner"].user.username %></p>
+  						  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+  						  		</div>
+  						  	</li>
+  					  	<% end %>
+  				  	<% end %>
+  			  	<% end %>
+  			 </ul>
+  	  	</div>
+  	  </div>
+    </div>
+  <% end %>
 
   <div class="row brws-item main-row" style="margin-top: 30px;">
     <div class="col-xs-12">
@@ -139,7 +132,7 @@
         prevText: "",
         nextText: "",
         start: function(slider) {
-          if($(slider).find('.slides li').length == 1) {
+          if((slider.currentSlide + 1) == 1) {
             $(slider).find('.flex-viewport-shadow').addClass("hidden");
           }
         },
@@ -170,7 +163,7 @@
 	      prevText: "",
 	      nextText: "",
         start: function(slider) {
-          if($(slider).find('.slides li').length == 1) {
+          if((slider.currentSlide + 1) == 1) {
             $(slider).find('.flex-viewport-shadow').addClass("hidden");
           }
         },
