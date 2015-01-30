@@ -58,6 +58,7 @@
               <th>Immagine</th>
               <th>Spendibile</th>
               <th>Cumulabile</th>
+              <th>Tag</th>
               <th>Azioni</th>
             </tr>
           </thead>
@@ -76,6 +77,9 @@
               </td>
               <td>
                 <%= p.countable? ? '<i class="fa fa-check"></i>'.html_safe : '<i class="fa fa-times"></i>'.html_safe %>
+              </td>
+              <td>
+                <%= (p.reward_tags.map { |reward_tag| reward_tag.tag.name }).join(", ") %>
               </td>
               <td>
                 <div class="row">

@@ -221,6 +221,7 @@ module DisneyHelper
 
     current_property_info = {
       "id" => current_property.id,
+      "title" => current_property.title,
       "name" => current_property.name,
       "background" => get_extra_fields!(current_property)["label-background"],
       "image-background" => (get_extra_fields!(current_property)["image-background"]["url"] rescue nil),
