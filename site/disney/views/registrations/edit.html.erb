@@ -4,9 +4,9 @@
   		<%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
   	<% end %>
   <%= form_for(resource, :as => resource_name, :url => "/users/edit", :html => { :method => :put, :multipart => true }) do |f| %>
-    <div class="row" style="background-color: #fff; padding: 10px 0;">
+    <div class="row" style="padding: 10px 0;">
       <div class="col-md-12">
-              <div class="row">
+              <div class="row main-row">
                 <div class="col-md-12">
                   <% if resource.errors.any? %>
                     <div class="row">
@@ -33,7 +33,7 @@
                 </div>
               </div>
 
-              <div class="row">
+              <div class="row main-row">
                 <%= f.hidden_field :avatar_selected_url %>
                 <div class="col-xs-12">
                 	
@@ -77,10 +77,28 @@
                     	</div>
                     </div>
                   </div>
+                  <% unless small_mobile_device? %>
+	                  <div class="row">
+	                  	<div class="col-xs-12">
+	                  		<p><span style="font-weight: bold;">Scegli</span> il tuo Nickname e il tuo avatar: <span style="font-weight: bold;">come i punteggi</span> rimarranno gli stessi per tutte le Community Disney.</p>
+		            	  	<button class="btn btn-primary">Salva</button>
+		            	</div>
+	            	  </div>
+            	  <% else %>
+            	  	<div class="row">
+	                  	<div class="col-xs-12 text-center">
+	                  		<p><span style="font-weight: bold; text-align: left;">Scegli</span> il tuo Nickname e il tuo avatar: <span style="font-weight: bold;">come i punteggi</span> rimarranno gli stessi per tutte le Community Disney.</p>
+		            	  	<button class="btn btn-primary">Salva</button>
+		            	</div>
+	            	  </div>
+            	  	<div class="row">
+                  		<div class="col-xs-12 text-center">
+				  			<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
+				  		</div>
+            	  	</div>
+				  <% end %>
                 </div>
               </div>
-              <p><span style="font-weight: bold;">Scegli</span> il tuo Nickname e il tuo avatar: <span style="font-weight: bold;">come i punteggi</span> rimarranno gli stessi per tutte le Community Disney.</p>
-            <button class="btn btn-primary">Salva</button>
       </div>
       <% if small_mobile_device? %>
 	  	<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
