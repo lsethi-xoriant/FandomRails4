@@ -57,7 +57,7 @@
 </div>
 -->
 
-<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center interaction__winnable-reward--undervideo__row">
+<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment' && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
     <span class="label label-success cta-cover__winnable-reward__label">
       Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
@@ -65,7 +65,7 @@
   </div>
 </div>
 
-<div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center interaction__winnable-reward--undervideo__row">
+<div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment' && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
     <span class="label label-warning cta-cover__winnable-reward__label">
       +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
