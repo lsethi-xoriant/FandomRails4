@@ -26,10 +26,12 @@ def main
   tenant = config["tenant"]
   app_root_path = config["app_root_path"]
 
-  if !host or !user or !password
+  if !host
     conn = PG::Connection.open(:dbname => db_name)
+  elsif !user or !password
+    conn = PG::Connection.open(:host => host, :dbname => db_name)
   else
-    conn = PG::Connection.open(:host => host, :user => user, :password => password)
+    conn = PG::Connection.open(:host => host, :dbname => db_name, :user => user, :password => password)
   end
   logger = Logger.new("#{app_root_path}/log/cache_update_daemon.log")
 
