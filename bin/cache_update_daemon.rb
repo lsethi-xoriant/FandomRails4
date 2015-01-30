@@ -68,10 +68,10 @@ def cache_generate_rankings(conn, tenant, logger)
     reward_id = r["reward_id"]
     name = r["name"]
 
-    cache = execute_query(conn, "SELECT version FROM #{tenant + '.' if tenant}cache_versions WHERE name = '#{name}'").first
+    cache = execute_query(conn, "SELECT max(version) FROM #{tenant + '.' if tenant}cache_versions WHERE name = '#{name}'").first
 
     if cache
-      new_cache_version = cache["version"].to_i + 1
+      new_cache_version = cache["max"].to_i + 1
       execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE name = '#{name}' AND version <> #{new_cache_version}")
       logger.info "Cache rankings with name #{name} and version != #{new_cache_version} deleted"
       logger.info "Cache version updating for #{name} from #{new_cache_version - 1} to #{new_cache_version}..."
