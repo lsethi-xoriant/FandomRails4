@@ -2,7 +2,8 @@ require 'rake'
 require 'json'
 require 'open-uri'
 
-desc "Creates Paperclip attachments from attachment urls map and ids map"
+desc "Creates Paperclip attachments from attachment urls map and ids map. 
+      Example: create_attachments['/path/to/id_to_paperclip_url_map.txt','/path/to/tables_id_mapping.txt']"
 
 task :create_attachments, [:param1, :param2] => :environment do |t, args|
   create_attachments(args[:param1], args[:param2])
@@ -94,7 +95,9 @@ def create_attachments(url_map, id_map)
         cta.save
 
         if cta.errors.first
-          puts "Error on user_call_to_action #{new_id}: #{cta.errors.first}\n"
+          puts "Error on user call to action #{new_id}: #{cta.errors.first}\n"
+        else
+          puts "Created attachment for user call to action #{new_id}: #{Time.now - start_time}s\n"
         end
     rescue Exception => exception
       puts "Error on user call to action #{new_id}: #{exception} - #{exception.backtrace[0, 5]}\n"
@@ -114,6 +117,8 @@ def create_attachments(url_map, id_map)
 
       if reward.errors.first
         puts "Error on reward #{new_id}: #{reward.errors.first}\n"
+      else
+        puts "Created attachment for reward #{new_id}: #{Time.now - start_time}s\n"
       end
     rescue Exception => exception
         puts "Error on reward #{new_id}: #{exception} - #{exception.backtrace[0, 5]}\n"
