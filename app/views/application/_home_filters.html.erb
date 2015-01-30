@@ -48,6 +48,11 @@
       controlNav: false,
       prevText: "",
       nextText: "",
+      start: function(slider) {
+        if($(slider).find('.slides li').length == 1) {
+          $(slider).find('.flex-viewport-shadow').addClass("hidden");
+        }
+      },
       before: function(slider) {
         is_last_filters_flexslider_slide = false;
         $(slider).find(".flex-viewport-shadow").removeClass("hidden");
