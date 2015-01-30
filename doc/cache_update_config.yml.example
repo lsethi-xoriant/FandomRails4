@@ -1,6 +1,13 @@
-# Database name and tenant
-db_name: db_name
+# Database name (for local test, ignored if host, user and password are not null)
+db_name: dbname
+
+# For live running
+host: 
+user:
+password:
+
+# Tenant (or null)
 tenant: disney
 
 # Application root path for log files
-app_root_path: root/to/path
+app_root_path: /app/root/path

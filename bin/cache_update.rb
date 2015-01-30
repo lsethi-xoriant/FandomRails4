@@ -20,10 +20,17 @@ def main
 
   config = YAML.load_file(ARGV[0].to_s)
   db_name = config["db_name"]
+  host = config["host"]
+  user = config["user"]
+  password = config["password"]
   tenant = config["tenant"]
   app_root_path = config["app_root_path"]
 
-  conn = PG::Connection.open(:dbname => db_name)
+  if !host or !user or !password
+    conn = PG::Connection.open(:dbname => db_name)
+  else
+    conn = PG::Connection.open(:host => host, :user => user, :password => password)
+  end
   logger = Logger.new("#{app_root_path}/log/cache_update.log")
 
   loop do
