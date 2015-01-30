@@ -33,8 +33,8 @@ module ApplicationHelper
   
   def tag_to_category(tag, needs_related_tags = false, populate_desc = true)
     thumb_field = get_extra_fields!(tag)["thumbnail"]
-    has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
-    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if thumb_field
+    has_thumb = !thumb_field.blank? && upload_extra_field_present?(thumb_field)
+    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if has_thumb
     if get_extra_fields!(tag).key? "description"
       description = truncate(get_extra_fields!(tag)["description"], :length => 150, :separator => ' ')
       long_description = get_extra_fields!(tag)["description"]
@@ -42,9 +42,18 @@ module ApplicationHelper
       description = ""
       long_description = ""
     end
-    header_image = get_upload_extra_field_processor(get_extra_fields!(tag)["header_image"], :original) if get_extra_fields!(tag).key? "header_image"
-    icon = get_extra_fields!(tag)["icon"]["url"] if get_extra_fields!(tag).key? "icon"
-    category_icon = get_extra_fields!(tag)["category_icon"]["url"] if get_extra_fields!(tag).key? "category_icon"
+    header_field = get_extra_fields!(tag)["header_image"]
+    has_header = !header_field.blank? && upload_extra_field_present?(header_field)
+    header_image = get_upload_extra_field_processor(header_field,"original") if has_header
+    
+    icon_field = get_extra_fields!(tag)["icon"]
+    has_icon = !icon_field.blank? && upload_extra_field_present?(icon_field)
+    icon = get_upload_extra_field_processor(icon_field,"medium") if has_icon
+    
+    category_icon_field = get_extra_fields!(tag)["category_icon"]
+    has_category_icon_field = !category_icon_field.blank? && upload_extra_field_present?(category_icon_field)
+    category_icon = get_upload_extra_field_processor(category_icon_field,"medium") if has_category_icon_field
+    
     BrowseCategory.new(
       type: "tag",
       id: tag.id,
@@ -65,7 +74,7 @@ module ApplicationHelper
   def tag_to_category_light(tag, needs_related_tags = false, populate_desc = true)
     thumb_field = get_extra_fields!(tag)["thumbnail"]
     has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
-    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if thumb_field
+    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if has_thumb
     if get_extra_fields!(tag).key? "description"
       description = truncate(get_extra_fields!(tag)["description"], :length => 150, :separator => ' ')
       long_description = get_extra_fields!(tag)["description"]
@@ -73,9 +82,18 @@ module ApplicationHelper
       description = ""
       long_description = ""
     end
-    header_image = get_upload_extra_field_processor(get_extra_fields!(tag)["header_image"], :original) if get_extra_fields!(tag).key? "header_image"
-    icon = get_extra_fields!(tag)["icon"]["url"] if get_extra_fields!(tag).key? "icon"
-    category_icon = get_extra_fields!(tag)["category_icon"]["url"] if get_extra_fields!(tag).key? "category_icon"
+    header_field = get_extra_fields!(tag)["header_image"]
+    has_header = !header_field.blank? && upload_extra_field_present?(header_field)
+    header_image = get_upload_extra_field_processor(header_field,"original") if has_header
+    
+    icon_field = get_extra_fields!(tag)["icon"]
+    has_icon = !icon_field.blank? && upload_extra_field_present?(icon_field)
+    icon = get_upload_extra_field_processor(icon_field,"medium") if has_icon
+    
+    category_icon_field = get_extra_fields!(tag)["category_icon"]
+    has_category_icon_field = !category_icon_field.blank? && upload_extra_field_present?(category_icon_field)
+    category_icon = get_upload_extra_field_processor(category_icon_field,"medium") if has_category_icon_field
+    
     BrowseCategory.new(
       type: "tag",
       id: tag.id,
@@ -642,8 +660,8 @@ module ApplicationHelper
     end
 
     if user_interaction
-      win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
-      correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
+      win_reward_count = (JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) rescue 0)
+      correct_answer_outcome = (JSON.parse(user_interaction.outcome)["correct_answer"] rescue nil)
       correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
 
       winnable_reward_count = 0

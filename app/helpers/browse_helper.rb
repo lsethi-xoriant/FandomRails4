@@ -258,7 +258,8 @@ module BrowseHelper
   end
   
   def merge_contents_with_tags(ctas, tags, offset = 0)
-    merged = (ctas + tags).sort_by(&:created_at).slice(offset, 12)
+    total = ctas.count + tags.count
+    merged = (total > offset || offset == 0) ? (ctas + tags).sort_by(&:created_at).slice(offset, 12) : []
     prepare_contents_with_related_tags(merged)
   end
   

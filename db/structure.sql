@@ -191,6 +191,74 @@ ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
 
 
 --
+-- Name: cache_rankings; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    user_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE; Schema: ballando; Owner: -
+--
+
+CREATE SEQUENCE cache_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+--
+
+ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
+
+
+--
+-- Name: cache_versions; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_versions (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE; Schema: ballando; Owner: -
+--
+
+CREATE SEQUENCE cache_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+--
+
+ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
+
+
+--
 -- Name: call_to_action_tags; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -1767,6 +1835,74 @@ CREATE SEQUENCE authentications_id_seq
 --
 
 ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
+
+
+--
+-- Name: cache_rankings; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    user_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE; Schema: coin; Owner: -
+--
+
+CREATE SEQUENCE cache_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: coin; Owner: -
+--
+
+ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
+
+
+--
+-- Name: cache_versions; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_versions (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE; Schema: coin; Owner: -
+--
+
+CREATE SEQUENCE cache_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: coin; Owner: -
+--
+
+ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
 
 
 --
@@ -3349,6 +3485,74 @@ ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
 
 
 --
+-- Name: cache_rankings; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    user_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE; Schema: disney; Owner: -
+--
+
+CREATE SEQUENCE cache_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: disney; Owner: -
+--
+
+ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
+
+
+--
+-- Name: cache_versions; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_versions (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE; Schema: disney; Owner: -
+--
+
+CREATE SEQUENCE cache_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: disney; Owner: -
+--
+
+ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
+
+
+--
 -- Name: call_to_action_tags; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -4925,6 +5129,74 @@ CREATE SEQUENCE authentications_id_seq
 --
 
 ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
+
+
+--
+-- Name: cache_rankings; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    user_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE; Schema: fandom; Owner: -
+--
+
+CREATE SEQUENCE cache_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: fandom; Owner: -
+--
+
+ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
+
+
+--
+-- Name: cache_versions; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_versions (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE; Schema: fandom; Owner: -
+--
+
+CREATE SEQUENCE cache_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: fandom; Owner: -
+--
+
+ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
 
 
 --
@@ -6507,6 +6779,74 @@ ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
 
 
 --
+-- Name: cache_rankings; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    user_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE; Schema: forte; Owner: -
+--
+
+CREATE SEQUENCE cache_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: forte; Owner: -
+--
+
+ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
+
+
+--
+-- Name: cache_versions; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_versions (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE; Schema: forte; Owner: -
+--
+
+CREATE SEQUENCE cache_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: forte; Owner: -
+--
+
+ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
+
+
+--
 -- Name: call_to_action_tags; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -8083,6 +8423,74 @@ CREATE SEQUENCE authentications_id_seq
 --
 
 ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
+
+
+--
+-- Name: cache_rankings; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    user_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE; Schema: maxibon; Owner: -
+--
+
+CREATE SEQUENCE cache_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: maxibon; Owner: -
+--
+
+ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
+
+
+--
+-- Name: cache_versions; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_versions (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE; Schema: maxibon; Owner: -
+--
+
+CREATE SEQUENCE cache_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: maxibon; Owner: -
+--
+
+ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
 
 
 --
@@ -9665,6 +10073,74 @@ ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
 
 
 --
+-- Name: cache_rankings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    user_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE cache_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
+
+
+--
+-- Name: cache_versions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_versions (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE cache_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
+
+
+--
 -- Name: call_to_action_tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -11149,6 +11625,20 @@ ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentica
 -- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
 --
 
+ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
+--
+
+ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
+--
+
 ALTER TABLE ONLY call_to_action_tags ALTER COLUMN id SET DEFAULT nextval('call_to_action_tags_id_seq'::regclass);
 
 
@@ -11446,6 +11936,20 @@ ALTER TABLE ONLY attachments ALTER COLUMN id SET DEFAULT nextval('attachments_id
 --
 
 ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: coin; Owner: -
+--
+
+ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: coin; Owner: -
+--
+
+ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versions_id_seq'::regclass);
 
 
 --
@@ -11755,6 +12259,20 @@ ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentica
 -- Name: id; Type: DEFAULT; Schema: disney; Owner: -
 --
 
+ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: disney; Owner: -
+--
+
+ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: disney; Owner: -
+--
+
 ALTER TABLE ONLY call_to_action_tags ALTER COLUMN id SET DEFAULT nextval('call_to_action_tags_id_seq'::regclass);
 
 
@@ -12052,6 +12570,20 @@ ALTER TABLE ONLY attachments ALTER COLUMN id SET DEFAULT nextval('attachments_id
 --
 
 ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
+--
+
+ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
+--
+
+ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versions_id_seq'::regclass);
 
 
 --
@@ -12361,6 +12893,20 @@ ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentica
 -- Name: id; Type: DEFAULT; Schema: forte; Owner: -
 --
 
+ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: forte; Owner: -
+--
+
+ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: forte; Owner: -
+--
+
 ALTER TABLE ONLY call_to_action_tags ALTER COLUMN id SET DEFAULT nextval('call_to_action_tags_id_seq'::regclass);
 
 
@@ -12658,6 +13204,20 @@ ALTER TABLE ONLY attachments ALTER COLUMN id SET DEFAULT nextval('attachments_id
 --
 
 ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
+--
+
+ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
+--
+
+ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versions_id_seq'::regclass);
 
 
 --
@@ -12967,6 +13527,20 @@ ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentica
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY call_to_action_tags ALTER COLUMN id SET DEFAULT nextval('call_to_action_tags_id_seq'::regclass);
 
 
@@ -13267,6 +13841,22 @@ ALTER TABLE ONLY attachments
 
 ALTER TABLE ONLY authentications
     ADD CONSTRAINT authentications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_rankings
+    ADD CONSTRAINT cache_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_versions_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_versions
+    ADD CONSTRAINT cache_versions_pkey PRIMARY KEY (id);
 
 
 --
@@ -13616,6 +14206,22 @@ ALTER TABLE ONLY authentications
 
 
 --
+-- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_rankings
+    ADD CONSTRAINT cache_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_versions_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_versions
+    ADD CONSTRAINT cache_versions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: call_to_action_tags_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -13959,6 +14565,22 @@ ALTER TABLE ONLY attachments
 
 ALTER TABLE ONLY authentications
     ADD CONSTRAINT authentications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_rankings
+    ADD CONSTRAINT cache_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_versions_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_versions
+    ADD CONSTRAINT cache_versions_pkey PRIMARY KEY (id);
 
 
 --
@@ -14308,6 +14930,22 @@ ALTER TABLE ONLY authentications
 
 
 --
+-- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_rankings
+    ADD CONSTRAINT cache_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_versions_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_versions
+    ADD CONSTRAINT cache_versions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: call_to_action_tags_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -14651,6 +15289,22 @@ ALTER TABLE ONLY attachments
 
 ALTER TABLE ONLY authentications
     ADD CONSTRAINT authentications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_rankings
+    ADD CONSTRAINT cache_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_versions_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_versions
+    ADD CONSTRAINT cache_versions_pkey PRIMARY KEY (id);
 
 
 --
@@ -15000,6 +15654,22 @@ ALTER TABLE ONLY authentications
 
 
 --
+-- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_rankings
+    ADD CONSTRAINT cache_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_versions_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_versions
+    ADD CONSTRAINT cache_versions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: call_to_action_tags_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -15346,6 +16016,22 @@ ALTER TABLE ONLY authentications
 
 
 --
+-- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_rankings
+    ADD CONSTRAINT cache_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_versions
+    ADD CONSTRAINT cache_versions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: call_to_action_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -15689,6 +16375,41 @@ CREATE INDEX index_authentications_on_user_id ON authentications USING btree (us
 
 
 --
+-- Name: index_cache_rankings_on_name; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_name ON cache_rankings USING btree (name);
+
+
+--
+-- Name: index_cache_rankings_on_position; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_position ON cache_rankings USING btree ("position");
+
+
+--
+-- Name: index_cache_rankings_on_user_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_user_id ON cache_rankings USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_version; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_version ON cache_rankings USING btree (version);
+
+
+--
+-- Name: index_cache_versions_on_name; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
+
+
+--
 -- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -15843,6 +16564,13 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 
 
 --
+-- Name: index_user_interactions_on_aux_like; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_like ON user_interactions USING btree (((aux ->> 'like'::text)));
+
+
+--
 -- Name: index_user_interactions_on_aux_share; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -15961,6 +16689,41 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_name; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_name ON cache_rankings USING btree (name);
+
+
+--
+-- Name: index_cache_rankings_on_position; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_position ON cache_rankings USING btree ("position");
+
+
+--
+-- Name: index_cache_rankings_on_user_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_user_id ON cache_rankings USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_version; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_version ON cache_rankings USING btree (version);
+
+
+--
+-- Name: index_cache_versions_on_name; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
 
 
 --
@@ -16118,6 +16881,13 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 
 
 --
+-- Name: index_user_interactions_on_aux_like; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_like ON user_interactions USING btree (((aux ->> 'like'::text)));
+
+
+--
 -- Name: index_user_interactions_on_aux_share; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -16236,6 +17006,41 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_name; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_name ON cache_rankings USING btree (name);
+
+
+--
+-- Name: index_cache_rankings_on_position; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_position ON cache_rankings USING btree ("position");
+
+
+--
+-- Name: index_cache_rankings_on_user_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_user_id ON cache_rankings USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_version; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_version ON cache_rankings USING btree (version);
+
+
+--
+-- Name: index_cache_versions_on_name; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
 
 
 --
@@ -16393,6 +17198,13 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 
 
 --
+-- Name: index_user_interactions_on_aux_like; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_like ON user_interactions USING btree (((aux ->> 'like'::text)));
+
+
+--
 -- Name: index_user_interactions_on_aux_share; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -16490,13 +17302,6 @@ CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type)
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
 
 
---
--- Name: user_comment_interaction_comment_id_idx; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
---
-
-CREATE INDEX user_comment_interaction_comment_id_idx ON user_comment_interactions USING btree (comment_id);
-
-
 SET search_path = fandom, pg_catalog;
 
 --
@@ -16518,6 +17323,41 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_name; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_name ON cache_rankings USING btree (name);
+
+
+--
+-- Name: index_cache_rankings_on_position; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_position ON cache_rankings USING btree ("position");
+
+
+--
+-- Name: index_cache_rankings_on_user_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_user_id ON cache_rankings USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_version; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_version ON cache_rankings USING btree (version);
+
+
+--
+-- Name: index_cache_versions_on_name; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
 
 
 --
@@ -16675,6 +17515,13 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 
 
 --
+-- Name: index_user_interactions_on_aux_like; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_like ON user_interactions USING btree (((aux ->> 'like'::text)));
+
+
+--
 -- Name: index_user_interactions_on_aux_share; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -16793,6 +17640,41 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_name; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_name ON cache_rankings USING btree (name);
+
+
+--
+-- Name: index_cache_rankings_on_position; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_position ON cache_rankings USING btree ("position");
+
+
+--
+-- Name: index_cache_rankings_on_user_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_user_id ON cache_rankings USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_version; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_version ON cache_rankings USING btree (version);
+
+
+--
+-- Name: index_cache_versions_on_name; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
 
 
 --
@@ -16950,6 +17832,13 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 
 
 --
+-- Name: index_user_interactions_on_aux_like; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_like ON user_interactions USING btree (((aux ->> 'like'::text)));
+
+
+--
 -- Name: index_user_interactions_on_aux_share; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -17068,6 +17957,41 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_name; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_name ON cache_rankings USING btree (name);
+
+
+--
+-- Name: index_cache_rankings_on_position; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_position ON cache_rankings USING btree ("position");
+
+
+--
+-- Name: index_cache_rankings_on_user_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_user_id ON cache_rankings USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_version; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_version ON cache_rankings USING btree (version);
+
+
+--
+-- Name: index_cache_versions_on_name; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
 
 
 --
@@ -17225,6 +18149,13 @@ CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactio
 
 
 --
+-- Name: index_user_interactions_on_aux_like; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_like ON user_interactions USING btree (((aux ->> 'like'::text)));
+
+
+--
 -- Name: index_user_interactions_on_aux_share; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -17343,6 +18274,41 @@ CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
 --
 
 CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_name ON cache_rankings USING btree (name);
+
+
+--
+-- Name: index_cache_rankings_on_position; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_position ON cache_rankings USING btree ("position");
+
+
+--
+-- Name: index_cache_rankings_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_user_id ON cache_rankings USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_version; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_version ON cache_rankings USING btree (version);
+
+
+--
+-- Name: index_cache_versions_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
 
 
 --
@@ -17493,10 +18459,24 @@ CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_inter
 
 
 --
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
+
+
+--
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree (((aux ->> 'call_to_action_id'::text)));
+
+
+--
+-- Name: index_user_interactions_on_aux_like; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_like ON user_interactions USING btree (((aux ->> 'like'::text)));
 
 
 --
@@ -17928,3 +18908,9 @@ INSERT INTO schema_migrations (version) VALUES ('20150123115529');
 INSERT INTO schema_migrations (version) VALUES ('20150123151020');
 
 INSERT INTO schema_migrations (version) VALUES ('20150126160149');
+
+INSERT INTO schema_migrations (version) VALUES ('20150129102847');
+
+INSERT INTO schema_migrations (version) VALUES ('20150129103550');
+
+INSERT INTO schema_migrations (version) VALUES ('20150130145005');

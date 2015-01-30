@@ -50,7 +50,7 @@
 		                <img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}">            
 		                <!-- STATUS -->
 		                <div class="label label-warning cta-preview__points" ng-if="content.status > 0">+ {{content.status}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-						<div class="col-xs-12 cta-cover__winnable-reward text-right ng-scope" ng-if="content.status == 0"><span class="label label-success cta-cover__winnable-reward__label">Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span></span></div>
+						<div class="col-xs-12 cta-cover__winnable-reward text-right ng-scope" ng-if="content.status == null"><span class="label label-success cta-cover__winnable-reward__label">Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span></span></div>
 		
 		              </div>
 		              <p class="cta-preview__title">{{content.title | cut:true:40}}</p>
@@ -60,6 +60,13 @@
 		            <div class="col-xs-12">
 		              <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.likes}}</p>
 		              <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.comments}}</p>
+		            </div>
+		          </div>
+		        </div>
+		        <div class="relateds-flexslider__item-panel relateds-flexslider__item-panel--full-search" ng-if="content.type == 'tag'" style="background-image: url('{{content.thumb_url}}'); background-position: center center; background-size: auto 100%;"> 
+		          <div class="row">
+		            <div class="col-xs-12 text-center cta-preview--tag">
+		              <p class="cta-preview__title--tag">{{content.title | cut:true:40}}</p>
 		            </div>
 		          </div>
 		        </div>
