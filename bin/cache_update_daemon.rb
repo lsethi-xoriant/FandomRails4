@@ -59,11 +59,7 @@ def main
 
 end
 
-<<<<<<< HEAD:bin/cache_update.rb
-def cache_generate_rankings(conn, tenant)
-=======
 def cache_generate_rankings(conn, tenant, logger)
->>>>>>> FETCH_HEAD:bin/cache_update_daemon.rb
   anonymous_user_id = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE email = 'anonymous@shado.tv'").first["id"]
   rankings = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}rankings")
 
@@ -75,15 +71,10 @@ def cache_generate_rankings(conn, tenant, logger)
     cache = execute_query(conn, "SELECT max(version) FROM #{tenant + '.' if tenant}cache_versions WHERE name = '#{name}'").first
 
     if cache
-<<<<<<< HEAD:bin/cache_update.rb
-      execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE version <> #{cache["version"].to_i}")
-      new_cache_version = cache["version"].to_i + 1
-=======
       new_cache_version = cache["max"].to_i + 1
       execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE name = '#{name}' AND version <> #{new_cache_version}")
       logger.info "Cache rankings with name #{name} and version != #{new_cache_version} deleted"
       logger.info "Cache version updating for #{name} from #{new_cache_version - 1} to #{new_cache_version}..."
->>>>>>> FETCH_HEAD:bin/cache_update_daemon.rb
     else
       new_cache_version = 1
       logger.info "Cache version 1 will be created for #{name}"
