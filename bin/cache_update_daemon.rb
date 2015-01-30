@@ -99,7 +99,8 @@ def cache_generate_rankings(conn, tenant, logger)
 
     hash = { "total" => res.count }
     if cache
-      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions SET version = #{new_cache_version} WHERE name = '#{name}'")
+      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions 
+                            SET version = #{new_cache_version}, created_at = now(), updated_at = now() WHERE name = '#{name}'")
     else
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_versions (name, version, data, created_at, updated_at) 
                             VALUES ('#{name}', #{new_cache_version}, '#{hash.to_json}', now(), now())")
