@@ -22,7 +22,7 @@ def main
 
   config = YAML.load_file(ARGV[0].to_s)
   json_object = JSON.parse(File.open(ARGV[1]).read)
-  dryrun = ARGV[1] != "false"
+  dryrun = ARGV[2] != "false"
 
   msg = dryrun ? 'dryrun' : 'for real'
   puts "starting: #{msg}"
@@ -35,9 +35,13 @@ def main
     description = obj['description']
     if dryrun
       result = execute_query(conn, "SELECT id FROM disney.call_to_actions WHERE title ilike '%#{nullify_or_escape_string(conn, title)}%'")
-      count += 1 if result.cmd_tuples == 0
+      if result.cmd_tuples == 0
+        count += 1
+      end
     else 
-      execute_query(conn, "UPDATE disney.call_to_actions SET description = '#{nullify_or_escape_string(conn, description)}' where title ilike '%#{nullify_or_escape_string(conn, title)}%'")
+      query = "UPDATE disney.call_to_actions SET description = '#{nullify_or_escape_string(conn, description)}' WHERE title == '%#{nullify_or_escape_string(conn, title)}%'"
+      execute_query(conn, query)
+      puts query
     end
   end
 
