@@ -93,10 +93,12 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 	        tag_id: $scope.category.id
 	      }
 	    }).then(function(response){
-	    	console.log(normalizeElements(response.data));
 	      $scope.elements = $scope.elements.concat(normalizeElements(response.data));
 	      $scope.offset = offset + 12;
-	      updateContents();      
+	      updateContents();
+	      if (response.data.length == 0){
+	      	$("a.btn-load-more").hide();
+	      }
 	    });
   	};
 
