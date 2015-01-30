@@ -94,7 +94,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 	      }
 	    }).then(function(response){
 	      $scope.elements = $scope.elements.concat(normalizeElements(response.data));
-	      $scope.offset = offset + 12;
+	      $scope.elements_in_page = offset + 12;
 	      updateContents();
 	      if (response.data.length == 0){
 	      	$("a.btn-load-more").hide();
