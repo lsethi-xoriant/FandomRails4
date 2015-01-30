@@ -163,7 +163,7 @@ module BrowseHelper
   
   def get_contents_by_query(term)
     category_tag_ids = get_category_tag_ids()
-    tags = Tag.where("title ILIKE ? AND id IN (?)","#{term}%", category_tag_ids)
+    tags = Tag.where("title ILIKE ? AND id IN (?)","%#{term}%", category_tag_ids)
     ctas = CallToAction.active.where("title ILIKE ?","%#{term}%")
     merge_contents_for_autocomplete(ctas, tags)
   end
@@ -303,7 +303,7 @@ module BrowseHelper
   
   def get_category_tag_ids
     cache_short("category_tag_ids") do
-      Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'title' <> '' and extra_fields->>'header_image' <> ''").map{|t| t.id}
+      Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'header_image' <> ''").map{|t| t.id}
     end
   end
 
