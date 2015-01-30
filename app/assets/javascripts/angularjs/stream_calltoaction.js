@@ -1324,7 +1324,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
                   $timeout(function() { 
                     interaction_info.feedback = false;
-                    removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
+                    $timeout(function() { 
+                      removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
+                    }, 3000);
                   }, 3000);
                 }, 3000);
 
