@@ -29,7 +29,7 @@ def main
   loop do
     start_time = Time.now
     execute_job(logger) do
-      cache_generate_rankings(conn, tenant)
+      cache_generate_rankings(conn, tenant, logger)
     end
 
     if $GOT_SIGTERM
@@ -50,7 +50,7 @@ def main
 
 end
 
-def cache_generate_rankings(conn, tenant)
+def cache_generate_rankings(conn, tenant, logger)
   anonymous_user_id = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE email = 'anonymous@shado.tv'").first["id"]
   rankings = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}rankings")
 
@@ -58,38 +58,43 @@ def cache_generate_rankings(conn, tenant)
 
     reward_id = r["reward_id"]
     name = r["name"]
+    logger.info "Generating cache for ranking #{name}"
 
-    cache = execute_query(conn, "SELECT version FROM #{tenant + '.' if tenant}cache_versions WHERE name = #{name}").first
+    cache = execute_query(conn, "SELECT version FROM #{tenant + '.' if tenant}cache_versions WHERE name = '#{name}'").first
 
     if cache
-      execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE version <> #{cache["version"].to_i}")
+      execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE version <> #{cache["version"]}")
       new_cache_version = cache["version"].to_i + 1
     else
       new_cache_version = 1
     end
 
+    logger.info "New version -> #{new_cache_version}"
+
     period = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}periods WHERE start_datetime < now() AND end_datetime > now() 
-                                    AND kind = #{r["period"]}")
-    period_id_condition = period.values.blank? ? "ur.period_id is null" : "ur.period_id = #{period.first["id"]}"
+                                    AND kind = '#{r["period"]}'")
+    period_id_condition = period.values.empty? ? "ur.period_id is null" : "ur.period_id = #{period.first["id"]}"
     res = execute_query(conn, "SELECT ur.user_id, ur.counter, u.username, u.avatar_selected_url, u.first_name, u.last_name FROM 
                               #{tenant + '.' if tenant}user_rewards ur INNER JOIN #{tenant + '.' if tenant}users u ON u.id = ur.user_id
                               WHERE (ur.reward_id = #{reward_id} and #{period_id_condition} and ur.user_id <> #{anonymous_user_id} ) 
                               ORDER BY ur.counter DESC, ur.updated_at ASC, ur.user_id ASC")
 
     res.each_with_index do |user_res, i|
-      hash = { "username" =>  user_res["username"], "avatar_selected_url" => user_res["avatar_selected_url"], 
-                "first_name" => user_res["first_name"], "last_name" => user_res["last_name"], "counter" => user_res["counter"] }
-      execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_rankings (name, version, user_id, position, data) 
-                            VALUES (#{name}, #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, #{hash.to_json})")
+      hash = { "username" =>  nullify_or_escape_string(conn, user_res["username"]), "avatar_selected_url" => user_res["avatar_selected_url"], 
+                "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]), "counter" => user_res["counter"] }
+      execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_rankings (name, version, user_id, position, data, created_at, updated_at) 
+                            VALUES ('#{name}', #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, '#{hash.to_json}', now(), now())")
     end
 
     hash = { "total" => res.count }
     if cache
-      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_version SET version = #{ new_cache_version } WHERE name = #{name}")
+      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions SET version = #{ new_cache_version } WHERE name = #{name}")
     else
-      execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_version (name, version, data) 
-                            VALUES (#{ new_cache_version }, #{name}, #{hash.to_json})")
+      execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_versions (name, version, data, created_at, updated_at) 
+                            VALUES ('#{name}', #{ new_cache_version }, '#{hash.to_json}', now(), now())")
     end
+
+    logger.info "cache_rankings and cache_versions tables written for ranking #{name}, version #{new_cache_version} "
 
   end
 
@@ -98,6 +103,7 @@ end
 def execute_job(logger)
   begin
     logger.info "Daemon start"
+    #event_logs_path = "#{app_root_path}/log/events"
     begin
       yield
     rescue Exception => exception
@@ -120,5 +126,13 @@ end
 Signal.trap("TERM") {
   $GOT_SIGTERM = true
 }
+
+def nullify_or_escape_string(conn, str)
+  if str.nil?
+    "NULL"
+  else
+    conn.escape_string(str)
+  end
+end
 
 main()

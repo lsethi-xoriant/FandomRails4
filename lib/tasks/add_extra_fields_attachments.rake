@@ -37,5 +37,6 @@ def add_extra_fields_attachments(folder)
         end
       end
     end
+    puts "Tag #{tag_folder} aggiornato"
   end
 end

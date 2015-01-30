@@ -2,10 +2,12 @@
   <div class="row" ng-controller="NoticePageCtrl" ng-init="init(<%= @notices_list.to_json %>)">
     <div class="col-md-12">
     	<div class="row section-heading">
-	    	<h3>
-	    		<span class="glyphicon glyphicon-bell glyphicon-blu" aria-hidden="true"></span>
-	    		Notifiche
-	    	</h3>
+    		<div class="col-xs-12">
+		    	<h3>
+		    		<span class="glyphicon glyphicon-bell glyphicon-blu" aria-hidden="true"></span>
+		    		Notifiche
+		    	</h3>
+		    </div>
         </div>
       <div class="row">
         <div class="col-xs-12">
@@ -16,15 +18,17 @@
           		</div>
           	</div>
           	<div class="row">
-	          	<ul class="list-group">
-	          		<li id="{{notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.notice.read}" ng-repeat="notice in notices | orderBy:min">
-	          			<div class="row">
-			              	<div class="col-xs-12">
-			              		<div class="row" ng-bind-html='notice.notice.html_notice'></div>
-			              	</div>
-			              </div>
-			          </li>
-	          	</ul>
+          		<div class="col-xs-12">
+		          	<ul class="list-group" style="margin: 10px 0;">
+		          		<li id="{{notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.notice.read}" ng-repeat="notice in notices | orderBy:min">
+		          			<div class="row">
+				              	<div class="col-xs-12">
+				              		<div class="row" ng-bind-html='notice.notice.html_notice'></div>
+				              	</div>
+				              </div>
+				          </li>
+		          	</ul>
+		        </div>
           	</div>
           </div>
         </div>

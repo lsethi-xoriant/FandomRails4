@@ -143,4 +143,12 @@
     margin-right: 0;
     margin-left: 15px;
   }
+  
+  .relateds-flexslider__item-panel--full-search {
+    height: 270px;
+    margin-bottom: 25px;
+    .relateds-flexslider__thumbnail{
+      padding-top: 50%;
+    }
+  }
 }

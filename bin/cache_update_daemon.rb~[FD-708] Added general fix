@@ -20,20 +20,11 @@ def main
 
   config = YAML.load_file(ARGV[0].to_s)
   db_name = config["db_name"]
-  host = config["host"]
-  user = config["user"]
-  password = config["password"]
   tenant = config["tenant"]
   app_root_path = config["app_root_path"]
 
-  if !host
-    conn = PG::Connection.open(:dbname => db_name)
-  elsif !user or !password
-    conn = PG::Connection.open(:host => host, :dbname => db_name)
-  else
-    conn = PG::Connection.open(:host => host, :dbname => db_name, :user => user, :password => password)
-  end
-  logger = Logger.new("#{app_root_path}/log/cache_update_daemon.log")
+  conn = PG::Connection.open(:dbname => db_name)
+  logger = Logger.new("#{app_root_path}/log/cache_update_medium.log")
 
   loop do
     start_time = Time.now
@@ -59,11 +50,7 @@ def main
 
 end
 
-<<<<<<< HEAD:bin/cache_update.rb
-def cache_generate_rankings(conn, tenant)
-=======
 def cache_generate_rankings(conn, tenant, logger)
->>>>>>> FETCH_HEAD:bin/cache_update_daemon.rb
   anonymous_user_id = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE email = 'anonymous@shado.tv'").first["id"]
   rankings = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}rankings")
 
@@ -71,23 +58,18 @@ def cache_generate_rankings(conn, tenant, logger)
 
     reward_id = r["reward_id"]
     name = r["name"]
+    logger.info "Generating cache for ranking #{name}"
 
-    cache = execute_query(conn, "SELECT max(version) FROM #{tenant + '.' if tenant}cache_versions WHERE name = '#{name}'").first
+    cache = execute_query(conn, "SELECT version FROM #{tenant + '.' if tenant}cache_versions WHERE name = '#{name}'").first
 
     if cache
-<<<<<<< HEAD:bin/cache_update.rb
-      execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE version <> #{cache["version"].to_i}")
+      execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE version <> #{cache["version"]}")
       new_cache_version = cache["version"].to_i + 1
-=======
-      new_cache_version = cache["max"].to_i + 1
-      execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE name = '#{name}' AND version <> #{new_cache_version}")
-      logger.info "Cache rankings with name #{name} and version != #{new_cache_version} deleted"
-      logger.info "Cache version updating for #{name} from #{new_cache_version - 1} to #{new_cache_version}..."
->>>>>>> FETCH_HEAD:bin/cache_update_daemon.rb
     else
       new_cache_version = 1
-      logger.info "Cache version 1 will be created for #{name}"
     end
+
+    logger.info "New version -> #{new_cache_version}"
 
     period = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}periods WHERE start_datetime < now() AND end_datetime > now() 
                                     AND kind = '#{r["period"]}'")
@@ -99,23 +81,20 @@ def cache_generate_rankings(conn, tenant, logger)
 
     res.each_with_index do |user_res, i|
       hash = { "username" =>  nullify_or_escape_string(conn, user_res["username"]), "avatar_selected_url" => user_res["avatar_selected_url"], 
-                "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]), "counter" => user_res["counter"].to_i }
+                "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]), "counter" => user_res["counter"] }
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_rankings (name, version, user_id, position, data, created_at, updated_at) 
                             VALUES ('#{name}', #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, '#{hash.to_json}', now(), now())")
     end
 
-    logger.info "Cache ranking for #{name} successfully updated to version #{new_cache_version}"
-
     hash = { "total" => res.count }
     if cache
-      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions 
-                            SET version = #{new_cache_version}, created_at = now(), updated_at = now() WHERE name = '#{name}'")
+      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions SET version = #{ new_cache_version } WHERE name = #{name}")
     else
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_versions (name, version, data, created_at, updated_at) 
-                            VALUES ('#{name}', #{new_cache_version}, '#{hash.to_json}', now(), now())")
+                            VALUES ('#{name}', #{ new_cache_version }, '#{hash.to_json}', now(), now())")
     end
 
-    logger.info "Cache version successfully updated to version #{new_cache_version}"
+    logger.info "cache_rankings and cache_versions tables written for ranking #{name}, version #{new_cache_version} "
 
   end
 
@@ -124,6 +103,7 @@ end
 def execute_job(logger)
   begin
     logger.info "Daemon start"
+    #event_logs_path = "#{app_root_path}/log/events"
     begin
       yield
     rescue Exception => exception
@@ -143,6 +123,10 @@ def execute_query(connection, query)
   end
 end
 
+Signal.trap("TERM") {
+  $GOT_SIGTERM = true
+}
+
 def nullify_or_escape_string(conn, str)
   if str.nil?
     "NULL"
@@ -150,9 +134,5 @@ def nullify_or_escape_string(conn, str)
     conn.escape_string(str)
   end
 end
-
-Signal.trap("TERM") {
-  $GOT_SIGTERM = true
-}
 
 main()

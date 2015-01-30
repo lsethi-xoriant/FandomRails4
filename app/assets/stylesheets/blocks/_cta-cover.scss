@@ -141,4 +141,14 @@
     overflow: hidden;
     position: relative;
   }
+  
+  .cta-cover__winnable-reward {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    z-index: 10;
+    padding: 0;
+    width: 80px;
+  }
+  
 }
