@@ -660,8 +660,8 @@ module ApplicationHelper
     end
 
     if user_interaction
-      win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
-      correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
+      win_reward_count = (JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) rescue 0)
+      correct_answer_outcome = (JSON.parse(user_interaction.outcome)["correct_answer"] rescue nil)
       correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
 
       winnable_reward_count = 0
