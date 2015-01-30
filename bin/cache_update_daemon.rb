@@ -89,8 +89,8 @@ def cache_generate_rankings(conn, tenant, logger)
                               ORDER BY ur.counter DESC, ur.updated_at ASC, ur.user_id ASC")
 
     res.each_with_index do |user_res, i|
-      hash = { "username" =>  user_res["username"], "avatar_selected_url" => user_res["avatar_selected_url"], 
-                "first_name" => user_res["first_name"], "last_name" => user_res["last_name"], "counter" => user_res["counter"].to_i }
+      hash = { "username" =>  nullify_or_escape_string(conn, user_res["username"]), "avatar_selected_url" => user_res["avatar_selected_url"], 
+                "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]), "counter" => user_res["counter"].to_i }
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_rankings (name, version, user_id, position, data, created_at, updated_at) 
                             VALUES ('#{name}', #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, '#{hash.to_json}', now(), now())")
     end
@@ -99,7 +99,8 @@ def cache_generate_rankings(conn, tenant, logger)
 
     hash = { "total" => res.count }
     if cache
-      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions SET version = #{new_cache_version} WHERE name = '#{name}'")
+      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions 
+                            SET version = #{new_cache_version}, created_at = now(), updated_at = now() WHERE name = '#{name}'")
     else
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_versions (name, version, data, created_at, updated_at) 
                             VALUES ('#{name}', #{new_cache_version}, '#{hash.to_json}', now(), now())")
@@ -130,6 +131,14 @@ def execute_query(connection, query)
   rescue Exception => exception
     connection.exec("ROLLBACK;")
     raise
+  end
+end
+
+def nullify_or_escape_string(conn, str)
+  if str.nil?
+    "NULL"
+  else
+    conn.escape_string(str)
   end
 end
 
