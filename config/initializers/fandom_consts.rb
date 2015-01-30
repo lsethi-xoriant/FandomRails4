@@ -87,5 +87,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   CACHED_NIL = CachedNil.new
 
   LOG_MESSAGE_CONTENT_VIEWED = 'content viewed'
+  
+  INDEX_CATEGORY_CTA_STATUS_ACTIVE = true
 
 end
