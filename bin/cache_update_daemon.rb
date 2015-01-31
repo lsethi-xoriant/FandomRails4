@@ -36,7 +36,7 @@ def main
 
     elapsed_time = Time.now - start_time
     logger.info "jobs executed; elapsed time: #{elapsed_time}s"
-    sleep(60) # 1 min
+    sleep(60 * 20) 
   end
 
 end
@@ -78,7 +78,7 @@ def cache_generate_rankings(conn, tenant, logger)
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_rankings (name, version, user_id, position, data, created_at, updated_at) 
                             VALUES ('#{name}', #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, '#{hash.to_json}', now(), now())")
       # In order to avoid database stressing, the loop will sleep for 1 second every 1000 lines inserted into cache_rankings table
-      if i % 1000 == 0 and i != 0
+      if i % 500 == 0 and i != 0
         sleep(1)
       end
 
