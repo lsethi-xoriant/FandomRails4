@@ -236,35 +236,35 @@ module BrowseHelper
 
   def merge_contents(ctas, tags, qty = 8, offset = 0)
     if qty > 0
-      merged = (ctas + tags).sort_by(&:created_at).slice(offset, qty)
+      merged = (ctas + tags).sort_by(&:created_at).reverse.slice(offset, qty)
     else
-      merged = (ctas + tags).sort_by(&:created_at)
+      merged = (ctas + tags).sort_by(&:created_at).reverse
     end
     prepare_contents(merged)
   end
   
   def merge_contents(ctas, tags, qty = 8, offset = 0)
     if qty > 0
-      merged = (ctas + tags).sort_by(&:created_at).slice(offset, qty)
+      merged = (ctas + tags).sort_by(&:created_at).reverse.slice(offset, qty)
     else
-      merged = (ctas + tags).sort_by(&:created_at)
+      merged = (ctas + tags).sort_by(&:created_at).reverse
     end
     prepare_contents(merged)
   end
   
   def merge_contents_for_autocomplete(ctas,tags)
-    merged = (tags.sort_by(&:created_at) + ctas.sort_by(&:created_at))
+    merged = (tags.sort_by(&:created_at).reverse + ctas.sort_by(&:created_at).reverse)
     prepare_contents_for_autocomplete(merged)
   end
   
   def merge_contents_with_tags(ctas, tags, offset = 0)
     total = ctas.count + tags.count
-    merged = (total > offset || offset == 0) ? (ctas + tags).sort_by(&:created_at).slice(offset, 12) : []
+    merged = (total > offset || offset == 0) ? (ctas + tags).sort_by(&:created_at).reverse.slice(offset, 12) : []
     prepare_contents_with_related_tags(merged)
   end
   
   def merge_search_contents(ctas, tags)
-    (tags.sort_by(&:created_at) + ctas.sort_by(&:created_at))
+    (tags.sort_by(&:created_at).reverse + ctas.sort_by(&:created_at).reverse)
   end
   
   def prepare_contents_with_related_tags(elements)
