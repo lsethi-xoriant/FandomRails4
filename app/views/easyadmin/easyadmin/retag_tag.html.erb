@@ -53,25 +53,32 @@
 
     	<h3>Aggiorna contenuti taggati con:</h3>
 
-        <%= render_html_tag_box("old_tag", nil, "Attenzione, inseriti tag non esistenti.") %>
-		<span class="help-block">Per separare i TAG digita virgola</span>
+      <div class="row">
+        <div class="col-sm-6">
+          <%= render_html_tag_box("old_tag", nil, "Attenzione, inseriti tag non esistenti.") %>
+        </div>
+      </div>
+		  <span class="help-block">Per separare i TAG digita virgola</span>
 
-      	<p id="old_tag_message"> </p>
-      	<hr/>
+      <p id="old_tag_message"> </p>
+      <hr/>
 
-      	<h3>Nuovo tag</h3>
+      <h3>Nuovo tag</h3>
+      <div class="row">
+        <div class="col-sm-6">
+      	  <%= render_html_tag_box("new_tag", nil, "Nuovi tag verranno creati.") %>
+        </div>
+      </div>
 
-      	<%= render_html_tag_box("new_tag", nil, "Nuovi tag verranno creati.") %>
+    	<p id="new_tag_message"> </p>
+    	<hr/>
 
-      	<p id="new_tag_message"> </p>
-      	<hr/>
-
-      	<br/>
-      	<div class="row text-center">
-      	  	<div class="col-sm12">
-       	  		<%= submit_tag 'RITAGGA', class: 'btn btn-primary' %>
-      	 	</div>
-     	 </div> 
+    	<br/>
+    	<div class="row text-center">
+    	  	<div class="col-sm12">
+     	  		<%= submit_tag 'RITAGGA', class: 'btn btn-primary' %>
+    	 	</div>
+   	 </div> 
       
 		<% end %>
 	</div>

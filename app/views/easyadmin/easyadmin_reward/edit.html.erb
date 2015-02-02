@@ -181,7 +181,9 @@
       <h3>TAGGING</h3>
       <hr />
 
-      <%= render_html_tag_box("tag_list", @tag_list, "Nuovi tag verranno creati.") %>
+      <div class="row">
+        <%= render_html_tag_box("tag_list", @tag_list, "Nuovi tag verranno creati.") %>
+      </div>
       <span class="help-block">Per separare i TAG digita virgola</span>
       <p id="tag_list_message"> </p>
 

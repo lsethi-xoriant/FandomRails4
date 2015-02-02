@@ -9,14 +9,12 @@ module TagBoxHelper
     all_tags_name = raw(Tag.pluck("name").to_json)
     
     tag_box = <<EOF
-      <div class="row">
-        <div class="col-sm-6">
+      <div class="col-sm-6">
 EOF
 
     tag_box += "#{text_field_tag id_text_field, instance_text_field, { id: id_text_field, class: 'form-control' } }"
     
     tag_box += <<EOF
-        </div>
       </div>
 
     <script type="text/javascript">

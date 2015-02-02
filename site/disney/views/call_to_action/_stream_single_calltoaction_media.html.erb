@@ -70,17 +70,6 @@
 </div>
 <!-- IFRAME -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
-  <div id="calltoaction-{{calltoaction_info.calltoaction.id}}-cover" class="calltoaction-cover row text-center">
-    <div class="col-xs-12">
-      <img ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" class="img-responsive" style="width: 100%;">
-    </div>
-    <div class="col-sm-4 col-sm-offset-4" style="position: absolute; bottom: 10px; z-index: 10;">
-      <button class="btn btn-danger btn-lg btn-block" ng-click="showCallToAction(calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_type)">GUARDA</button>
-    </div>     
-  </div>
   <!-- IFRAME -->
-  <div id="main-media-{{calltoaction_info.calltoaction.id}}">
-    <div id="iframe-calltoaction-{{calltoaction_info.calltoaction.id}}" class="<%= "iframe-apple-mobile" if request_is_from_apple_mobile_device?(request) %> video flex-video widescreen text-center media-iframe hidden">  
-    </div>
-  </div>
+  <div class="embed-responsive embed-responsive-16by9 text-center" id="iframe-calltoaction-{{calltoaction_info.calltoaction.id}}"></div>
 </div>
