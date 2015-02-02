@@ -171,10 +171,11 @@ module RewardHelper
   end
   
   def user_has_currency_for_reward(reward)
-    unless reward.currency.nil?
-      get_counter_about_user_reward(reward.currency.name) >= reward.cost
+    if reward.currency.nil?
+      log_error("expected currency for reward", {reward_name: reward.name})
+      false
     else
-      get_counter_about_user_reward("credit") >= reward.cost
+      get_counter_about_user_reward(reward.currency.name) >= reward.cost
     end
   end
   
