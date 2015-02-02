@@ -74,7 +74,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(window.name != "iframe_canvas_fb_https") {
       document.cookie = "oauth_connect_from_page=; expires=Thu, 01 Jan 1970 00:00:00 UTC"; 
     }
+    $scope.angularReady();
   });
+
+  $scope.angularReady = function() {
+  };
 
   $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
     FastClick.attach(document.body);

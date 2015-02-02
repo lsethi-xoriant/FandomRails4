@@ -22,7 +22,27 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     if($scope.aux.flash_notice == "from-disney-registration") {
       $("#modal__from-disney-registration").modal("show");
     }
+  };
 
+  $scope.angularReady = function() {
+    if($scope.calltoactions.length == 1 && $scope.calltoactions[0].calltoaction.media_type == "IFRAME") {
+
+      var hasFlash = false;
+      try {
+        hasFlash = Boolean(new ActiveXObject('ShockwaveFlash.ShockwaveFlash'));
+      } catch(exception) {
+        hasFlash = ('undefined' != typeof navigator.mimeTypes['application/x-shockwave-flash']);
+      }
+
+      calltoaction = $scope.calltoactions[0].calltoaction;
+      if(hasFlash) {
+        $("#iframe-calltoaction-" + calltoaction.id).html(calltoaction.media_data);
+      } else {
+        $("#iframe-calltoaction-" + calltoaction.id).html("Accedi da desktop per visualizzare questo contenuto");
+        $("#iframe-calltoaction-" + calltoaction.id).removeClass();
+        $("#iframe-calltoaction-" + calltoaction.id).addClass("text-center");
+      }
+    } 
   };
 
   $scope.setAvatar = function(avatar, id) {
