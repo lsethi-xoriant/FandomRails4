@@ -10,7 +10,7 @@ namespace :assign_share_interactions do
     }.to_json
 
     CallToAction.all.each do |calltoaction|
-      if calltoaction.interactions.where("resource_type = 'share'").count < 1 
+      if calltoaction.interactions.where("resource_type = 'Share'").count < 1 
         resource = Share.create(providers: aux)
         interaction = Interaction.create(name: "INTRSHARE#{calltoaction.id}", when_show_interaction: "SEMPRE_VISIBILE", required_to_complete: false, resource: resource, call_to_action_id: calltoaction.id)
         puts calltoaction.title

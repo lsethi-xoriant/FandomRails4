@@ -6,6 +6,10 @@
     background-repeat: no-repeat;
   }
 
+  .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+    background-color: <%= aux["current_property_info"]["background"] %> !important;
+  }
+
   .ranking-element--myposition {
     background-color: <%= aux["current_property_info"]["background"] %> !important;
   }
