@@ -53,7 +53,7 @@
 					<tr id="comment-<%= c.id %>-tr">
 						<td><%= c.user ? c.user.id : "Anonimo" %></td>
 						<td><%= link_to "CTA", easyadmin_cta_show_path(Interaction.select(:call_to_action_id).where(:resource_id => c.comment_id, :resource_type => 'Comment').first.call_to_action_id), class: "btn btn-primary btn-xs" %></a></td>
-						<td><%= c.text %></td>
+						<td style="max-width: 600px"><%= c.text %></td>
 						<td><%= c.created_at %></td>
 						<td id="comment-<%= c.id %>">
 							<button type="button" class="btn btn-default btn-xs" onclick="updateComment(true, <%= c.id %>)">Pubblica</button>					

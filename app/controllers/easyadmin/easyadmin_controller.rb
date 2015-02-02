@@ -82,8 +82,7 @@ class Easyadmin::EasyadminController < ApplicationController
     stream_tags_to_render = Tag.where(conditions_string).all(
                               :joins => "LEFT OUTER JOIN tags_tags ON tags_tags.tag_id = tags.id
                                          LEFT OUTER JOIN tags tagstags ON tags_tags.other_tag_id = tagstags.id",
-                              :group => "tags.id, tags_tags.id, tagstags.id",
-                              :limit => 10
+                              :group => "tags.id, tags_tags.id, tagstags.id"
                               )
     render_tags_str = ""
     stream_tags_to_render.each do |tag|

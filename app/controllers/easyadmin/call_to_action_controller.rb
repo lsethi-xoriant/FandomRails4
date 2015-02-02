@@ -136,6 +136,38 @@ class Easyadmin::CallToActionController < ApplicationController
     per_page = 20
 
     @cta_list = CallToAction.where("user_id IS NULL").page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    @title = params[:title]
+
+    if params[:commit] == "APPLICA FILTRO"
+      cta_ids = Array.new
+      @cta_list.find_each do |cta|
+        cta_ids << cta.id
+      end
+
+      tag_ids = Array.new
+      params[:tag_list].split(",").each do |tag_name|
+        tag = Tag.find_by_name(tag_name)
+        tag_ids << tag.id if tag
+      end
+
+      tag_ids.each_with_index do |tag_id, i|
+        cta_ids_tagged = Array.new
+        CallToActionTag.where("tag_id = #{tag_id}").each do |ctat|
+          cta_ids_tagged << ctat.call_to_action_id
+        end
+        cta_ids = cta_ids & cta_ids_tagged
+      end
+      where_conditions = "user_id IS NULL"
+      where_conditions << " AND title ILIKE '%#{@title}%'" unless @title.nil?
+      where_conditions << " AND id in (#{cta_ids.inspect[1..-2]})" unless params[:tag_list].nil?
+
+      @cta_list = CallToAction.where(where_conditions).page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    end
+
+    if params[:commit] == "RESET"
+      params[:tag_list] = ""
+      @title = nil
+    end
 
     @page_size = @cta_list.num_pages
     @page_current = page
