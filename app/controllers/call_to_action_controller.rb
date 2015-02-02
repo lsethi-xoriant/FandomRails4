@@ -472,10 +472,17 @@ class CallToActionController < ApplicationController
     end
 
     if anonymous_user?(current_or_anonymous_user)
-      anonymous_user_main_reward_count = params["anonymous_user"][get_main_reward_name()] || 0
+
+      if params["anonymous_user"]
+        anonymous_user_main_reward_count = params["anonymous_user"][get_main_reward_name()] || 0
+      else 
+        anonymous_user_main_reward_count = 0
+      end
+
       response["main_reward_counter"] = {
         "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][get_main_reward_name()])
       }
+      
     else
       response["main_reward_counter"] = get_point
       response = setup_update_interaction_response_info(response)

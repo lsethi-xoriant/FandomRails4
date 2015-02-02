@@ -1121,8 +1121,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       $http.post(update_interaction_path, { interaction_id: play_interaction_info.interaction.id })
         .success(function(data) {
-
-          updateUserRewardInView(data.main_reward_counter.general);
     
           // GOOGLE ANALYTICS
           if(data.ga) {
@@ -1145,10 +1143,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           } 
 
           // Interaction after user response.
-          updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-          $scope.current_user.main_reward_counter = data.main_reward_counter;  
-          play_interaction_info.status = data.interaction_status;
-          calltoaction_info.status = JSON.parse(data.calltoaction_status);
+          if($scope.current_user) {           
+            updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+            updateUserRewardInView(data.main_reward_counter.general);
+            play_interaction_info.status = data.interaction_status;
+            calltoaction_info.status = JSON.parse(data.calltoaction_status);
+          }
 
           /*
 
