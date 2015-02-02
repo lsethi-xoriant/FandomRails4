@@ -32,26 +32,24 @@ module BrowseHelper
 
   def init_browse_sections()
     browse_settings = get_browse_settings
-    cache_medium(get_browse_sections_cache_key) do
-      browse_sections_arr = []
-      if browse_settings
-        browse_areas = browse_settings.value.split(",")
-        browse_areas.each do |area|
-          if area.start_with?("$")
-            func = "get_#{area[1..area.length]}"
-            browse_sections_arr << send(func)
+    browse_sections_arr = []
+    if browse_settings
+      browse_areas = browse_settings.value.split(",")
+      browse_areas.each do |area|
+        if area.start_with?("$")
+          func = "get_#{area[1..area.length]}"
+          browse_sections_arr << send(func)
+        else
+          tag_area = Tag.find_by_name(area)
+          if get_extra_fields!(tag_area).key? "contents"
+            browse_sections_arr << get_featured(tag_area)
           else
-            tag_area = Tag.find_by_name(area)
-            if get_extra_fields!(tag_area).key? "contents"
-              browse_sections_arr << get_featured(tag_area)
-            else
-              browse_sections_arr << get_browse_area_by_category(tag_area)
-            end
+            browse_sections_arr << get_browse_area_by_category(tag_area)
           end
         end
       end
-      browse_sections_arr
     end
+    browse_sections_arr
   end
 
   def get_recent(offset = 0, per_page = 8, query = "")
