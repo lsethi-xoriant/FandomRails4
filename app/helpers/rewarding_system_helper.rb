@@ -53,6 +53,7 @@ module RewardingSystemHelper
         super(params)
         self.matching_rules = Set.new(self.matching_rules)
         self.unlocks = Set.new(self.unlocks)
+        self.reward_name_to_counter.default = 0
       end
     end
 

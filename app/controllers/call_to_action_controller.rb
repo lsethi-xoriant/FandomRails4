@@ -148,11 +148,10 @@ class CallToActionController < ApplicationController
   def show
     calltoaction_id = params[:id]
     
-    log_call_to_action_viewed(calltoaction_id)
-    
     calltoaction = CallToAction.includes(interactions: :resource).active_with_media.find(calltoaction_id)
 
     if calltoaction
+      log_call_to_action_viewed(calltoaction_id)
 
       #calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
       @calltoactions_with_current = [calltoaction] # + calltoactions
