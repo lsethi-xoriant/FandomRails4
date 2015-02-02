@@ -37,7 +37,7 @@ module RewardingSystemHelper
     # Merges the rewards won with a single rule with those already won.
     def self.merge_rewards(reward_name_to_counter, normalized_rule_rewards)
       normalized_rule_rewards.each do |k, v|
-        reward_name_to_counter[k] += v
+        reward_name_to_counter[k] = reward_name_to_counter[k].nil? ? v : reward_name_to_counter[k] + v
       end
     end
 
