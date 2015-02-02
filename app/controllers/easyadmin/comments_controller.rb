@@ -16,18 +16,18 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
     if current_comment.approved
 
+      interaction = current_comment.comment.interaction
+      cta = interaction.call_to_action
+
       if anonymous_user.id != current_comment.user_id
-        interaction = current_comment.comment.interaction
         user_interaction, outcome = create_or_update_interaction(current_comment.user, interaction, nil, nil)
-        
-        cta = user_interaction.interaction.call_to_action
 
         html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_comment_approved_template", locals: { cta: cta }, layout: false, formats: :html
 
         if JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['comment_approved'] != false
           create_notice(:user_id => current_comment.user_id, :html_notice => html_notice, :viewed => false, :read => false)
         end
-      end    
+      end
 
       unless cta.user_id.nil? # user_call_to_action
         if JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['user_cta_interactions'] != false
@@ -64,7 +64,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
     @id_cta_to_be_approved_filter = params[:id_cta_to_be_approved_filter]
     where_condition = write_where_condition(:id_cta_to_be_approved_filter, "approved IS NULL")
-    @comment_to_be_approved = UserCommentInteraction.where(where_condition, params[:id]).page(page).per(per_page).order("created_at DESC")
+    @comment_to_be_approved = UserCommentInteraction.where(where_condition, params[:id]).page(page).per(per_page).order("created_at ASC")
 
     @page_size = @comment_to_be_approved.num_pages
     @page_current = page

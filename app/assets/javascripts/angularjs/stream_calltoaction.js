@@ -1121,8 +1121,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       $http.post(update_interaction_path, { interaction_id: play_interaction_info.interaction.id })
         .success(function(data) {
-
-          updateUserRewardInView(data.main_reward_counter.general);
     
           // GOOGLE ANALYTICS
           if(data.ga) {
@@ -1145,10 +1143,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           } 
 
           // Interaction after user response.
-          updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-          $scope.current_user.main_reward_counter = data.main_reward_counter;  
-          play_interaction_info.status = data.interaction_status;
-          calltoaction_info.status = JSON.parse(data.calltoaction_status);
+          if($scope.current_user) {           
+            updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+            updateUserRewardInView(data.main_reward_counter.general);
+            play_interaction_info.status = data.interaction_status;
+            calltoaction_info.status = JSON.parse(data.calltoaction_status);
+          }
 
           /*
 
@@ -1243,6 +1243,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       interaction_id = interaction_info.interaction.id;
 
       enableWaitingAudio("stop");
+
+      if(interaction_info.interaction.resource_type == "download") {
+        newWindow = window.open();
+      }
 
       update_interaction_path = "/update_interaction";
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
@@ -1345,7 +1349,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             }
             
             if(interaction_info.interaction.resource_type == "download") {
-              window.open(data.download_interaction_attachment, '_blank');
+              //window.open(data.download_interaction_attachment, '_blank');
+              newWindow.location = data.download_interaction_attachment;
             }
 
             /*
