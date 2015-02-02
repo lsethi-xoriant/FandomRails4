@@ -63,7 +63,7 @@
 		            </div>
 		          </div>
 		        </div>
-		        <div class="relateds-flexslider__item-panel relateds-flexslider__item-panel--full-search" ng-if="content.type == 'tag'" ng-style="background-image: url('{{content.thumb_url}}'); background-position: center center; background-size: auto 100%;"> 
+		        <div class="relateds-flexslider__item-panel relateds-flexslider__item-panel--full-search" ng-if="content.type == 'tag'" ng-style="{'background-image': 'url('+content.thumb_url+')', 'background-position': 'center center', 'background-size': 'auto 100%'}"> 
 		          <div class="row">
 		            <div class="col-xs-12 text-center cta-preview--tag">
 		              <p class="cta-preview__title--tag">{{content.title | cut:true:70}}</p>
@@ -72,11 +72,9 @@
 		        </div>
 		      <% end %>
 			</div>
-			
 			<div class="col-xs-12 text-center">
 				<a class="btn btn-primary btn-load-more" ng-click="load_more(elements_in_page)">Carica Altri</a>
 			</div>
-
 	      </div>
 	  </div>
    </div>
