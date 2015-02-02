@@ -1244,6 +1244,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       enableWaitingAudio("stop");
 
+      if(interaction_info.interaction.resource_type == "download") {
+        newWindow = window.open();
+      }
+
       update_interaction_path = "/update_interaction";
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
         update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
@@ -1345,7 +1349,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             }
             
             if(interaction_info.interaction.resource_type == "download") {
-              window.open(data.download_interaction_attachment, '_blank');
+              //window.open(data.download_interaction_attachment, '_blank');
+              newWindow.location = data.download_interaction_attachment;
             }
 
             /*
