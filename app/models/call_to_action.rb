@@ -67,9 +67,9 @@ class CallToAction < ActiveRecordWithJSON
     }, 
     :convert_options => { 
       :original => " -quality 60", 
-      :carousel => " -crop '1024x320+0+40' -quality 60", 
-      :medium => " -gravity center -crop '524x393+0+0' -quality 60", 
-      :thumb => " -gravity center -crop '262x147+0+0' -quality 60" 
+      :carousel => " -crop '1024x320+0+40'", 
+      :medium => " -gravity center -crop '524x393+0+0'", 
+      :thumb => " -gravity center -crop '262x147+0+0'" 
     }
 
   has_many :interactions, dependent: :destroy
