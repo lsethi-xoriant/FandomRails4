@@ -3,6 +3,10 @@
     <ul class="slides">
       <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
         <%= light_link_to("/call_to_action/{{calltoaction.id}}", style: "text-decoration: none;" ) do %>
+          <div ng-if="calltoaction.flag" class="cta-cover__flag cta-cover__flag--carousel">
+            <img class="cta-cover__flag-img" ng-src="{{calltoaction.flag.icon}}">
+          </div>
+
           <!-- CALLTOACTION WINNABLE REWARD COUNT -->
           <div ng-if="calltoaction.status && calltoaction.status.winnable_reward_count > 0" class="col-xs-12 ctas__winnable-reward cta-cover__winnable-reward text-right">
             <span class="label label-warning cta-cover__winnable-reward__label">

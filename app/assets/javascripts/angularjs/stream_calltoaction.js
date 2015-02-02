@@ -1314,29 +1314,27 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
                 //});
 
               } else {
+  
+                interaction_info.feedback = true;
+
+                if(interaction_info.interaction.resource_type == "versus") {
+                  index = 0;
+                  angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
+                    if(index % 2 == 0) {
+                      answer.class = "versus-interaction__answer--visible-left";
+                    } else {
+                      answer.class = "versus-interaction__answer--visible-right";
+                    }
+                    index += 1;
+                  });
+                }
 
                 $timeout(function() { 
-                  interaction_info.feedback = true;
-
-                  if(interaction_info.interaction.resource_type == "versus") {
-                    index = 0;
-                    angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
-                      if(index % 2 == 0) {
-                        answer.class = "versus-interaction__answer--visible-left";
-                      } else {
-                        answer.class = "versus-interaction__answer--visible-right";
-                      }
-                      index += 1;
-                    });
-                  }
-
+                  interaction_info.feedback = false;
                   $timeout(function() { 
-                    interaction_info.feedback = false;
-                    $timeout(function() { 
-                      removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
-                    }, 3000);
+                    removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
                   }, 3000);
-                }, 3000);
+                }, 1000);
 
               }
 
