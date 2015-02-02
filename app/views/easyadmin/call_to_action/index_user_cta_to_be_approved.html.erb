@@ -6,95 +6,95 @@
       <h1>Contenuti generati dagli utenti</h1>
     </div> <!-- #content-header --> 
 
-    	<div id="content-container">
+      <div id="content-container">
 
-    	<% if flash[:notice] %>
-	    	<div class="row">
-		      <div class="col-md-12">         
-		          <div class="row">
-		            <div class="col-lg-12">
-		              <div class="alert alert-success"><%= flash[:notice] %></div>
-		            </div>
-		          </div>
-		      </div>
-		    </div>
-	    <% end %>
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col-md-12">         
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-success"><%= flash[:notice] %></div>
+                </div>
+              </div>
+          </div>
+        </div>
+      <% end %>
 
-	    <ul class="nav nav-tabs">
-		  <li class="active"><a href="/easyadmin/cta/to_approve">Contenuti da approvare</a></li>
-		  <li><a href="/easyadmin/cta/approved">Contenuti pubblicati</a></li>
-		  <li><a href="/easyadmin/cta/not_approved">Contenuti oscurati</a></li>
-		</ul>
+      <ul class="nav nav-tabs">
+      <li class="active"><a href="/easyadmin/cta/to_approve">Contenuti da approvare</a></li>
+      <li><a href="/easyadmin/cta/approved">Contenuti pubblicati</a></li>
+      <li><a href="/easyadmin/cta/not_approved">Contenuti oscurati</a></li>
+    </ul>
 
-	    <h3>Contenuti da moderare</h3>
-    	<hr/>
+      <h3>Contenuti da moderare</h3>
+      <hr/>
 
-		<div class="row cta-to-show">
-			<div class="col-md-12"> 
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Titolo</th>
-							<th class="hidden-xs hidden-sm">Data immissione</th>
-							<th>Utente</th>
-							<th>Tags</th>
-							<th>Immagine</th>
-							<th>Liberatoria</th>
-							<!--<th>Azioni</th>-->
-						</tr>
-					</thead>
-					<% @ctas.each do |c| %>
-						<tr id="cta-<%= c.id %>">
-							<td><%= c.title %></td>
-							<td class="hidden-xs hidden-sm"><%= c.created_at.strftime("%d/%m/%Y %H:%M") %></td>
-							<td><%= "#{c.user.first_name} #{c.user.last_name}" %></td>
-							<td>
-								<% c.call_to_action_tags.each do |ctatag| %>
-									<%= ctatag.tag.name %>
-								<% end	%>
-							</td>
-							<td>
-								<% if c.media_image.present? %>
-									<a href="<%= c.media_image.url %>" target="_blank"><%= c.media_image.url %></a>
-								<% end %>
-							</td>
-							<td>
-								<% if c.releasing_file.present? && c.releasing_file.file.present? %>
-									<% if c.releasing_file.file_content_type.split("/").first == "image" %>
-										<img src="<%= c.releasing_file.file.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
-									<% elsif c.releasing_file.file_content_type.split("/").first != "image" %>
-										<a href="<%= c.releasing_file.file.url %>" target="_blank">scarica</a>
-									<% else %>
-										--
-									<% end %>
-								<% end %>
-							</td>
-							<!--
-							<td>
-								<button type="button" class="btn btn-default btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>
-								&nbsp;&nbsp;
-								<button type="button" class="btn btn-warning btn-xs" onclick="updateCta(false, <%= c.id %>)">Rifiuta</button>							
-							</td>
-							-->						
-							</tr>
-					<% end %>
-				</table>
-			</div>
-		</div>
+    <div class="row cta-to-show">
+      <div class="col-md-12"> 
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Titolo</th>
+              <th class="hidden-xs hidden-sm">Data immissione</th>
+              <th>Utente</th>
+              <th>Tags</th>
+              <th>Immagine</th>
+              <th>Liberatoria</th>
+              <!--<th>Azioni</th>-->
+            </tr>
+          </thead>
+          <% @ctas.each do |c| %>
+            <tr id="cta-<%= c.id %>">
+              <td><%= c.title %></td>
+              <td class="hidden-xs hidden-sm"><%= c.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+              <td><%= "#{c.user.username}" %> <br/> <%= "(#{c.user.email})" %></td>
+              <td>
+                <% c.call_to_action_tags.each do |ctatag| %>
+                  <%= ctatag.tag.name %>
+                <% end  %>
+              </td>
+              <td>
+                <% if c.media_image.present? %>
+                  <a href="<%= c.media_image.url %>" target="_blank"><%= c.media_image.url %></a>
+                <% end %>
+              </td>
+              <td>
+                <% if c.releasing_file.present? && c.releasing_file.file.present? %>
+                  <% if c.releasing_file.file_content_type.split("/").first == "image" %>
+                    <img src="<%= c.releasing_file.file.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+                  <% elsif c.releasing_file.file_content_type.split("/").first != "image" %>
+                    <a href="<%= c.releasing_file.file.url %>" target="_blank">scarica</a>
+                  <% else %>
+                    --
+                  <% end %>
+                <% end %>
+              </td>
+              <!--
+              <td>
+                <button type="button" class="btn btn-default btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-warning btn-xs" onclick="updateCta(false, <%= c.id %>)">Rifiuta</button>             
+              </td>
+              -->           
+              </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
 
-		<div class="row cta-to-show">
-			<div class="col-md-12">
-				<%= render partial: "/easyadmin/easyadmin/pagination" %>
-			</div>
-		</div>
+    <div class="row cta-to-show">
+      <div class="col-md-12">
+        <%= render partial: "/easyadmin/easyadmin/pagination" %>
+      </div>
+    </div>
 
-	</div>
+  </div>
 </div>
 
 <script type="text/javascript">
-	function updateCta(approved, cta_id) {
-		$("#cta-" + cta_id).remove();
-		$.ajax({
+  function updateCta(approved, cta_id) {
+    $("#cta-" + cta_id).remove();
+    $.ajax({
             type: "POST",
             url: "/easyadmin/cta/" + cta_id + "/update_cta_status",
             data: { "approved": approved },
@@ -102,8 +102,8 @@
                 jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
             },
             success: function(data) {
-            	$("#cta-" + cta_id).remove();
+              $("#cta-" + cta_id).remove();
             }
         });
-	}
+  }
 </script>
