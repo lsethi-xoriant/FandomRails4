@@ -70,10 +70,10 @@ module BrowseHelper
   def get_recent_ctas(query = "")
     cache_medium(get_recent_contents_cache_key(query)) do
       if query.empty?
-        CallToAction.active.order("activated_at")
+        CallToAction.active.order("activated_at DESC")
       else
         conditions = construct_conditions_from_query(query, "title")
-        CallToAction.active.where("#{conditions}")
+        CallToAction.active.where("#{conditions}").order("activated_at DESC")
       end
     end
   end
@@ -234,15 +234,6 @@ module BrowseHelper
     contents
   end
 
-  def merge_contents(ctas, tags, qty = 8, offset = 0)
-    if qty > 0
-      merged = (ctas + tags).sort_by(&:created_at).reverse.slice(offset, qty)
-    else
-      merged = (ctas + tags).sort_by(&:created_at).reverse
-    end
-    prepare_contents(merged)
-  end
-  
   def merge_contents(ctas, tags, qty = 8, offset = 0)
     if qty > 0
       merged = (ctas + tags).sort_by(&:created_at).reverse.slice(offset, qty)
