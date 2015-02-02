@@ -203,8 +203,9 @@ class BrowseController < ApplicationController
   end
   
   def view_all_recent_load_more
+    contents = get_recent_ctas()
     offset = params[:offset].to_i
-    contents = prepare_contents(get_recent_ctas().slice(offset, 12))
+    contents = prepare_contents(contents.slice(offset, 12))
     
     cta_ids = []
     contents.each do |content|
@@ -221,7 +222,6 @@ class BrowseController < ApplicationController
         content["status"] = cta_statuses[content["id"].to_i]
       end
     end
-    contents = contents
     
     respond_to do |format|
       format.json { render :json => contents.to_json }
