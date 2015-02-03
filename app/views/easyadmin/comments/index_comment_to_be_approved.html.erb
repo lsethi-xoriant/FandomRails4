@@ -43,7 +43,7 @@
                 <thead>
                     <tr>
                         <th>Utente</th>
-                        <th>Call to action</th>
+                        <th>CTA</th>
                         <th>Testo</th>
                         <th>Scritto il</th>
                         <th>Azioni</th>
@@ -51,11 +51,11 @@
                 </thead>
                 <% @comment_to_be_approved.each do |c| %>
                     <tr id="comment-<%= c.id %>-tr">
-                        <td><%= c.user ? c.user.id : "Anonimo" %></td>
-                        <td><%= link_to "CTA", easyadmin_cta_show_path(Interaction.select(:call_to_action_id).where(:resource_id => c.comment_id, :resource_type => 'Comment').first.call_to_action_id), class: "btn btn-primary btn-xs" %></a></td>
-                        <td style="max-width: 600px"><%= c.text %></td>
-                        <td><%= c.created_at %></td>
-                        <td id="comment-<%= c.id %>">
+                        <td class="col-md-1"><%= c.user ? c.user.id : "Anonimo" %></td>
+                        <td class="col-md-1"><%= link_to "CTA", easyadmin_cta_show_path(Interaction.select(:call_to_action_id).where(:resource_id => c.comment_id, :resource_type => 'Comment').first.call_to_action_id), class: "btn btn-primary btn-xs" %></a></td>
+                        <td class="col-md-6"><%= c.text %></td>
+                        <td class="col-md-2"><%= c.created_at %></td>
+                        <td id="comment-<%= c.id %>" class="col-md-3">
                             <button type="button" class="btn btn-default btn-xs" onclick="updateComment(true, <%= c.id %>)">Pubblica</button>
                             &nbsp;&nbsp;
                             <button type="button" class="btn btn-warning btn-xs" onclick="updateComment(false, <%= c.id %>)">Nascondi</button>                          
