@@ -2,7 +2,7 @@
   <%= light_link_to("/call_to_action/{{calltoaction.id}}") do %>
     <div class="row text-left">
       <div class="col-xs-12">
-        <div class="cta__sidebar-panel__header" style="background-color: {{aux.current_property_info.background}};">
+        <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
           <p class="cta__sidebar-panel__header-title">In evidenza</p>
         </div>
       </div>
