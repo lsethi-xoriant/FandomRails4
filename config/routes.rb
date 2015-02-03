@@ -412,11 +412,6 @@ Fandom::Application.routes.draw do
 
   match "/delete_current_user_interactions", :to => "application#delete_current_user_interactions"
 
-  # error handling
-  match "/404", :to => "http_error#not_found_404"
-  match "/500", :to => "http_error#internal_error_500"
-  match "/422", :to => "http_error#unprocessable_entity_422"
-
   match "rss", :to => "rss#rss", defaults: { format: 'rss' }
 
   match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
@@ -437,5 +432,10 @@ Fandom::Application.routes.draw do
 
   match "/tag/:name", :to => "application#index"
   root :to => "application#index"
+
+  # error handling
+  match "/404", :to => "http_error#not_found_404"
+  match "/500", :to => "http_error#internal_error_500"
+  match "/422", :to => "http_error#unprocessable_entity_422"
 
 end
