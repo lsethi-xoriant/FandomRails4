@@ -98,6 +98,7 @@ module CallToActionHelper
         resource_title = resource.title rescue nil
         resource_one_shot = resource.one_shot rescue false
         resource_providers = JSON.parse(resource.providers) rescue nil
+        resource_url = resource.url rescue "/"
 
         if current_user
           user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)
@@ -141,7 +142,8 @@ module CallToActionHelper
               "providers" => resource_providers,
               "comment_info" => comment_info,
               "like_info" => like_info,
-              "upload_info" => upload_info
+              "upload_info" => upload_info,
+              "url" => resource_url
             }
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction),

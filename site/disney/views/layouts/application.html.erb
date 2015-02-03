@@ -35,7 +35,7 @@
 
 <%= render partial: "/application/style", locals: { aux: aux } %>
 
-<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="DisneyStreamCalltoactionCtrl" ng-init="init(<%= build_disney_current_user().to_json %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_disney_calltoactions_count_in_property() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= aux.to_json %>)">
+<body ng-cloak ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="DisneyStreamCalltoactionCtrl" ng-init="init(<%= build_disney_current_user().to_json %>, <%= @calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {} %>, '<%= get_disney_calltoactions_count_in_property() %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 
   <!-- Modal -->
   <div class="modal fade" id="facebook-like-modal" tabindex="-1" role="dialog" aria-labelledby="facebookModal" aria-hidden="true">

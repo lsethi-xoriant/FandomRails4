@@ -11,12 +11,25 @@ module EasyadminHelper
 
   # TODO: start here to uniform methods
   def link_to_add_comment_fields(name, f, association, resource)
+    link_to_add_fields(name, f, association, resource)
+  end
+
+  def link_to_add_fields(name, f, association, resource)
     new_object = Interaction.new
-    new_object.resource = resource.singularize.classify.constantize.new(title: "##{resource.upcase}#{ DateTime.now.strftime("%Y%m%d") }")
+
+    attr = {}
+    if resource.singularize.classify.constantize.new.attributes.keys.include?(:title)
+      attr = {
+        title: "##{resource.upcase}#{ DateTime.now.strftime("%Y%m%d") }"
+      }
+    end
+
+    new_object.resource = resource.singularize.classify.constantize.new(attr)
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render("/easyadmin/call_to_action/#{resource}-form", f: builder)
     end
-    link_to_function(name, "add_#{resource}_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary btn-block")
+
+    link_to_function(name, "add_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\", \"#{resource}\")", class: "btn btn-primary btn-block")
   end
 
   def link_to_add_download_fields(name, f, association)
@@ -113,6 +126,10 @@ module EasyadminHelper
       render("/easyadmin/call_to_action/vote-form", f: builder)
     end
     link_to_function(name, "add_vote_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
+  end
+
+  def link_to_remove_fields(name, resource)
+    link_to_function(name, "remove_fields(this, \"#{resource}\")", class: "btn btn-warning btn-xs")
   end
 
   def link_to_remove_check_fields(name)

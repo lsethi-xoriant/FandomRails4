@@ -1,0 +1,25 @@
+<div class="row check-interaction__container" style="margin-bottom: 15px;">
+  <div class="col-xs-6 col-xs-offset-3 text-center">
+    <a class="btn btn-lg btn-blue" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>{{interaction_info.interaction.resource.title}}</span></a>
+  </div>
+  <div class="col-xs-12" style="padding-top: 15px;">
+    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div class="col-sm-12" style="margin-top: 15px;">
+        <span class="label label-success cta-cover__winnable-reward__label">
+          Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+        </span> 
+      </div>
+    </div>
+
+    <div ng-if="!interaction_info.user_interaction" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div class="col-xs-12" style="margin-top: 15px;">
+        <span class="label label-warning cta-cover__winnable-reward__label">
+          +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+        </span>  
+        <div ng-if="!interaction_info.status.reward.numeric_display" ng-repeat="status_image in interaction_info.status.reward_status_images track by $index">  
+          <img ng-src="{{status_image}}">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -150,8 +150,8 @@
         prevText: "",
         nextText: "",
         start: function(slider) {
-          if((slider.currentSlide + 1) == 1) {
-            $(slider).find('.flex-viewport-shadow').addClass("hidden");
+          if(slider.pagingCount == 1) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
           }
         },
         before: function(slider) {
@@ -181,9 +181,9 @@
         controlNav: false,
         prevText: "",
         nextText: "",
-        start: function(slider) {
-          if((slider.currentSlide + 1) == 1) {
-            $(slider).find('.flex-viewport-shadow').addClass("hidden");
+         start: function(slider) {
+          if(slider.pagingCount == 1) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
           }
         },
         before: function(slider) {
@@ -213,6 +213,11 @@
         controlNav: false,
         prevText: "",
         nextText: "",
+        start: function(slider) {
+          if(slider.pagingCount == 1) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          }
+        },
         before: function(slider) {
           is_last_rewards_flexslider_ur_slide = false;
           $(slider).find(".flex-viewport-shadow").removeClass("hidden");

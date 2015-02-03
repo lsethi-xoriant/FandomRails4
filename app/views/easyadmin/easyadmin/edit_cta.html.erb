@@ -166,6 +166,19 @@
         <% end %>
       <% end %>
 
+      <div class="row">
+        <div class="col-md-10"><h3>LINK</h3></div>
+        <div class="col-md-2"><%= link_to_add_comment_fields "AGGIUNGI LINK", f, :interactions, "link" %></div>
+      </div>
+
+      <div id="tmp-link-add"></div>
+      
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Link" %>
+          <%= render 'link-form', :f => builder %>
+        <% end %>
+      <% end %>
+
       <h3>SHARE EMAIL</h3>
       <hr/>
 
@@ -364,16 +377,6 @@
     $("#tmp-download-add").prepend(content.replace(regexp, new_id));
   }
 
-  var comment_counter = false; 
-  function add_comment_fields(link, association, content) {
-    if(!comment_counter) {
-      var new_id = new Date().getTime();
-      var regexp = new RegExp("new_" + association, "g");
-      $("#tmp-comment-add").prepend(content.replace(regexp, new_id));
-      comment_counter = true;
-    }
-  }
-
   function remove_comment_fields(link) {
     $(link).parent().parent().parent().remove();
     comment_counter = false;
@@ -426,6 +429,16 @@
 
   function remove_check_fields(link) {
     $(link).parent().parent().parent().remove();
+  }
+
+  function remove_fields(link, resource) {
+    $(link).closest(".panel-" + resource).remove();
+  }
+
+  function add_fields(link, association, content, resource) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-" + resource + "-add").prepend(content.replace(regexp, new_id));
   }
 
 </script>

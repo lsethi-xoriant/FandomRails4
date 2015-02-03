@@ -12,9 +12,7 @@
   max-width: 300px; 
   margin-left: auto; 
   margin-bottom: 15px !important;
-  border-radius: 10px 10px 0 0 !important;
   height: 310px !important;
-  border: none !important;
   background-color: whitesmoke !important;
 }
 
@@ -34,6 +32,8 @@
   background-position: right top;
   background-repeat: no-repeat;
   border-radius: 10px 10px 0 0 !important;
+  max-width: 300px;
+  margin-left: auto; 
 }
 
 .cta__sidebar-panel__header-title {

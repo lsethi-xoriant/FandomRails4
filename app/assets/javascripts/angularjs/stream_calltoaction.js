@@ -74,7 +74,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(window.name != "iframe_canvas_fb_https") {
       document.cookie = "oauth_connect_from_page=; expires=Thu, 01 Jan 1970 00:00:00 UTC"; 
     }
+    $scope.angularReady();
   });
+
+  $scope.angularReady = function() {
+  };
 
   $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
     FastClick.attach(document.body);
@@ -1310,29 +1314,27 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
                 //});
 
               } else {
+  
+                interaction_info.feedback = true;
+
+                if(interaction_info.interaction.resource_type == "versus") {
+                  index = 0;
+                  angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
+                    if(index % 2 == 0) {
+                      answer.class = "versus-interaction__answer--visible-left";
+                    } else {
+                      answer.class = "versus-interaction__answer--visible-right";
+                    }
+                    index += 1;
+                  });
+                }
 
                 $timeout(function() { 
-                  interaction_info.feedback = true;
-
-                  if(interaction_info.interaction.resource_type == "versus") {
-                    index = 0;
-                    angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
-                      if(index % 2 == 0) {
-                        answer.class = "versus-interaction__answer--visible-left";
-                      } else {
-                        answer.class = "versus-interaction__answer--visible-right";
-                      }
-                      index += 1;
-                    });
-                  }
-
+                  interaction_info.feedback = false;
                   $timeout(function() { 
-                    interaction_info.feedback = false;
-                    $timeout(function() { 
-                      removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
-                    }, 3000);
+                    removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
                   }, 3000);
-                }, 3000);
+                }, 1000);
 
               }
 
@@ -1351,6 +1353,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             if(interaction_info.interaction.resource_type == "download") {
               //window.open(data.download_interaction_attachment, '_blank');
               newWindow.location = data.download_interaction_attachment;
+            } else if(interaction_info.interaction.resource_type == "link") {
+              window.location = interaction_info.interaction.resource.url;
             }
 
             /*

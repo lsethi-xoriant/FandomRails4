@@ -160,6 +160,7 @@ module DisneyHelper
       filters.each do |filter|
         filter_info << {
           "id" => filter.id,
+          "name" => filter.name,
           "background" => get_extra_fields!(filter)["label-background"],
           "icon" => get_extra_fields!(filter)["icon"],
           "title" => filter.title,
@@ -173,6 +174,14 @@ module DisneyHelper
   end
 
   def build_thumb_calltoaction(calltoaction)
+
+    flag = get_tag_with_tag_about_call_to_action(calltoaction, "flag").first
+    if flag.present?
+      flag_info = {
+        "icon" => (get_extra_fields!(flag)["icon"]["url"] rescue nil),
+      }
+    end
+
     {
       "id" => calltoaction.id,
       "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
@@ -181,7 +190,8 @@ module DisneyHelper
       "title" => calltoaction.title,
       "description" => calltoaction.description,
       "likes" => get_number_of_likes_for_cta(calltoaction),
-      "comments" => get_number_of_comments_for_cta(calltoaction)
+      "comments" => get_number_of_comments_for_cta(calltoaction),
+      "flag" => flag_info 
     }
   end
 

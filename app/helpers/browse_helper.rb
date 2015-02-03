@@ -161,8 +161,8 @@ module BrowseHelper
   
   def get_contents_by_query(term)
     category_tag_ids = get_category_tag_ids()
-    tags = Tag.where("title ILIKE ? AND id IN (?)","%#{term}%", category_tag_ids)
-    ctas = CallToAction.active.where("title ILIKE ?","%#{term}%")
+    tags = Tag.where("title ILIKE ? AND id IN (?)","%#{term}%", category_tag_ids).limit(8)
+    ctas = CallToAction.active.where("title ILIKE ?","%#{term}%").limit(8)
     merge_contents_for_autocomplete(ctas, tags)
   end
   

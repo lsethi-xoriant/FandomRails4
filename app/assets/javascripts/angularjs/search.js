@@ -60,9 +60,8 @@ function SearchCtrl($scope, $window, $filter, $http) {
 	        per_page: $scope.per_page
 	      }
 	    }).then(function(response){
-	    	console.log(response);
 	      $scope.contents = $scope.contents.concat(response.data);
-	      $scope.offset = offset + $scope.per_page;
+	      $scope.offset = parseInt(offset) + 12;
 	    });
   	};
 	
