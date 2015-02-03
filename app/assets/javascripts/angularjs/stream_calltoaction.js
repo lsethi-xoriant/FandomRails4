@@ -1700,6 +1700,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           sessionStorage.setItem("captcha" + interaction_info.interaction.id, data.captcha.code);
         } else if(!data.approved) {
           $("#comment-feedback").modal("show");
+          
+          data.comment.id = new Date().getTime();
+          interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
+
           interaction_info.interaction.resource.comment_info.user_text = "";
           interaction_info.interaction.resource.comment_info.user_captcha = "";
           if(!$scope.current_user) {

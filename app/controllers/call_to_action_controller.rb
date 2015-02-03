@@ -291,8 +291,8 @@ class CallToActionController < ApplicationController
       unless check_profanity_words_in_comment(user_comment).errors.any?
         user_comment.save
       end
+      response[:comment] = build_comment_for_comment_info(user_comment, true)
       if approved && user_comment.errors.blank?
-        response[:comment] = build_comment_for_comment_info(user_comment, true)
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
         expire_cache_key(get_comments_approved_cache_key(interaction.id))
       end
@@ -305,8 +305,8 @@ class CallToActionController < ApplicationController
         unless check_profanity_words_in_comment(user_comment).errors.any?
           user_comment.save
         end
+        response[:comment] = build_comment_for_comment_info(user_comment, true)
         if approved && user_comment.errors.blank?
-          response[:comment] = build_comment_for_comment_info(user_comment, true)
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
           expire_cache_key(get_comments_approved_cache_key(interaction.id))
         end
