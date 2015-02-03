@@ -652,6 +652,38 @@ ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 
 --
+-- Name: links; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE TABLE links (
+    id integer NOT NULL,
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: ballando; Owner: -
+--
+
+CREATE SEQUENCE links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+--
+
+ALTER SEQUENCE links_id_seq OWNED BY links.id;
+
+
+--
 -- Name: notices; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -2296,6 +2328,38 @@ CREATE SEQUENCE likes_id_seq
 --
 
 ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
+
+
+--
+-- Name: links; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE TABLE links (
+    id integer NOT NULL,
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: coin; Owner: -
+--
+
+CREATE SEQUENCE links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: coin; Owner: -
+--
+
+ALTER SEQUENCE links_id_seq OWNED BY links.id;
 
 
 --
@@ -3946,6 +4010,38 @@ ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 
 --
+-- Name: links; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE TABLE links (
+    id integer NOT NULL,
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: disney; Owner: -
+--
+
+CREATE SEQUENCE links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: disney; Owner: -
+--
+
+ALTER SEQUENCE links_id_seq OWNED BY links.id;
+
+
+--
 -- Name: notices; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -5590,6 +5686,38 @@ CREATE SEQUENCE likes_id_seq
 --
 
 ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
+
+
+--
+-- Name: links; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE TABLE links (
+    id integer NOT NULL,
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: fandom; Owner: -
+--
+
+CREATE SEQUENCE links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: fandom; Owner: -
+--
+
+ALTER SEQUENCE links_id_seq OWNED BY links.id;
 
 
 --
@@ -7240,6 +7368,38 @@ ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 
 --
+-- Name: links; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE TABLE links (
+    id integer NOT NULL,
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: forte; Owner: -
+--
+
+CREATE SEQUENCE links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: forte; Owner: -
+--
+
+ALTER SEQUENCE links_id_seq OWNED BY links.id;
+
+
+--
 -- Name: notices; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -8887,6 +9047,38 @@ ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 
 --
+-- Name: links; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE TABLE links (
+    id integer NOT NULL,
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: maxibon; Owner: -
+--
+
+CREATE SEQUENCE links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: maxibon; Owner: -
+--
+
+ALTER SEQUENCE links_id_seq OWNED BY links.id;
+
+
+--
 -- Name: notices; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -10479,7 +10671,8 @@ CREATE TABLE interactions (
     required_to_complete boolean,
     resource_id integer,
     resource_type character varying(255),
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json
 );
 
 
@@ -10531,6 +10724,38 @@ CREATE SEQUENCE likes_id_seq
 --
 
 ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
+
+
+--
+-- Name: links; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE links (
+    id integer NOT NULL,
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE links_id_seq OWNED BY links.id;
 
 
 --
@@ -11716,6 +11941,13 @@ ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
 --
 
+ALTER TABLE ONLY links ALTER COLUMN id SET DEFAULT nextval('links_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
+--
+
 ALTER TABLE ONLY notices ALTER COLUMN id SET DEFAULT nextval('notices_id_seq'::regclass);
 
 
@@ -12027,6 +12259,13 @@ ALTER TABLE ONLY interactions ALTER COLUMN id SET DEFAULT nextval('interactions_
 --
 
 ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: coin; Owner: -
+--
+
+ALTER TABLE ONLY links ALTER COLUMN id SET DEFAULT nextval('links_id_seq'::regclass);
 
 
 --
@@ -12350,6 +12589,13 @@ ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: disney; Owner: -
 --
 
+ALTER TABLE ONLY links ALTER COLUMN id SET DEFAULT nextval('links_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: disney; Owner: -
+--
+
 ALTER TABLE ONLY notices ALTER COLUMN id SET DEFAULT nextval('notices_id_seq'::regclass);
 
 
@@ -12661,6 +12907,13 @@ ALTER TABLE ONLY interactions ALTER COLUMN id SET DEFAULT nextval('interactions_
 --
 
 ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
+--
+
+ALTER TABLE ONLY links ALTER COLUMN id SET DEFAULT nextval('links_id_seq'::regclass);
 
 
 --
@@ -12984,6 +13237,13 @@ ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: forte; Owner: -
 --
 
+ALTER TABLE ONLY links ALTER COLUMN id SET DEFAULT nextval('links_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: forte; Owner: -
+--
+
 ALTER TABLE ONLY notices ALTER COLUMN id SET DEFAULT nextval('notices_id_seq'::regclass);
 
 
@@ -13301,6 +13561,13 @@ ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
 --
 
+ALTER TABLE ONLY links ALTER COLUMN id SET DEFAULT nextval('links_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
+--
+
 ALTER TABLE ONLY notices ALTER COLUMN id SET DEFAULT nextval('notices_id_seq'::regclass);
 
 
@@ -13612,6 +13879,13 @@ ALTER TABLE ONLY interactions ALTER COLUMN id SET DEFAULT nextval('interactions_
 --
 
 ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY links ALTER COLUMN id SET DEFAULT nextval('links_id_seq'::regclass);
 
 
 --
@@ -13945,6 +14219,14 @@ ALTER TABLE ONLY interactions
 
 ALTER TABLE ONLY likes
     ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: links_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
 
 
 --
@@ -14310,6 +14592,14 @@ ALTER TABLE ONLY likes
 
 
 --
+-- Name: links_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: notices_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -14669,6 +14959,14 @@ ALTER TABLE ONLY interactions
 
 ALTER TABLE ONLY likes
     ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: links_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
 
 
 --
@@ -15034,6 +15332,14 @@ ALTER TABLE ONLY likes
 
 
 --
+-- Name: links_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: notices_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -15393,6 +15699,14 @@ ALTER TABLE ONLY interactions
 
 ALTER TABLE ONLY likes
     ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: links_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
 
 
 --
@@ -15758,6 +16072,14 @@ ALTER TABLE ONLY likes
 
 
 --
+-- Name: links_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: notices_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -16117,6 +16439,14 @@ ALTER TABLE ONLY interactions
 
 ALTER TABLE ONLY likes
     ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: links_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
 
 
 --
@@ -16557,6 +16887,13 @@ CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_inter
 
 
 --
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
+
+
+--
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -16871,6 +17208,13 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
 
 
 --
@@ -17191,6 +17535,13 @@ CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_inter
 
 
 --
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
+
+
+--
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -17505,6 +17856,13 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
 
 
 --
@@ -17825,6 +18183,13 @@ CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_inter
 
 
 --
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
+
+
+--
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -18139,6 +18504,13 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
 
 
 --
@@ -18914,3 +19286,7 @@ INSERT INTO schema_migrations (version) VALUES ('20150129102847');
 INSERT INTO schema_migrations (version) VALUES ('20150129103550');
 
 INSERT INTO schema_migrations (version) VALUES ('20150130145005');
+
+INSERT INTO schema_migrations (version) VALUES ('20150203092457');
+
+INSERT INTO schema_migrations (version) VALUES ('20150203103504');
