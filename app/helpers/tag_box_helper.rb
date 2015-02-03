@@ -8,14 +8,9 @@ module TagBoxHelper
     unactive_tags_name = raw(Tag.where("valid_to < now()").pluck("name").to_json)
     all_tags_name = raw(Tag.pluck("name").to_json)
     
-    tag_box = <<EOF
-      <div class="col-sm-6">
-EOF
-
-    tag_box += "#{text_field_tag id_text_field, instance_text_field, { id: id_text_field, class: 'form-control' } }"
+    tag_box = "#{text_field_tag id_text_field, instance_text_field, { id: id_text_field, class: 'form-control' } }"
     
     tag_box += <<EOF
-      </div>
 
     <script type="text/javascript">
 

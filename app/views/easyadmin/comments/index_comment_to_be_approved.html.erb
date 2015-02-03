@@ -9,75 +9,75 @@
 
     <div id="content-container">
 
-	<ul class="nav nav-tabs">
-	  <li class="active"><a href="/easyadmin/comments/to_approved">Commenti da approvare</a></li>
-	  <li ><a href="/easyadmin/comments/approved">Commenti pubblicati</a></li>
-	  <li><a href="/easyadmin/comments/not_approved">Commenti oscurati</a></li>
-	</ul>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/easyadmin/comments/to_approved">Commenti da approvare</a></li>
+      <li ><a href="/easyadmin/comments/approved">Commenti pubblicati</a></li>
+      <li><a href="/easyadmin/comments/not_approved">Commenti oscurati</a></li>
+    </ul>
 
     <h3>Commenti da approvare</h3>
     <hr/>
 
     <div class="row">
-    	<div class="col-md-2">
-          	<%= form_tag :method => 'post' do %>
-          	<div class="form-group">
-              <label class="text-input">Filtra per ID CallTo Action</label></br>
-              	<%= text_field_tag :id_cta_to_be_approved_filter, @id_cta_to_be_approved_filter %>
-            </div>
-          </div>
-          <div class="col-md-1">
-          	<div class="form-group">
-                </br><%= submit_tag 'Filtra', class: 'btn btn-primary' %>
-            </div>
-          </div>
-          <div class="col-md-1">
-          	<div class="form-group">
-                </br><%= submit_tag 'Reset', class: 'btn btn-primary' %>
-		  	    <% end %>
-            </div>
-          </div>
-         </div>
-		<div class="col-md-12"> 
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>Utente</th>
-						<th>Call to action</th>
-						<th>Testo</th>
-						<th>Scritto il</th>
-						<th>Azioni</th>
-					</tr>
-				</thead>
-				<% @comment_to_be_approved.each do |c| %>
-					<tr id="comment-<%= c.id %>-tr">
-						<td><%= c.user ? c.user.id : "Anonimo" %></td>
-						<td><%= link_to "CTA", easyadmin_cta_show_path(Interaction.select(:call_to_action_id).where(:resource_id => c.comment_id, :resource_type => 'Comment').first.call_to_action_id), class: "btn btn-primary btn-xs" %></a></td>
-						<td style="max-width: 600px"><%= c.text %></td>
-						<td><%= c.created_at %></td>
-						<td id="comment-<%= c.id %>">
-							<button type="button" class="btn btn-default btn-xs" onclick="updateComment(true, <%= c.id %>)">Pubblica</button>
-							&nbsp;&nbsp;
-							<button type="button" class="btn btn-warning btn-xs" onclick="updateComment(false, <%= c.id %>)">Nascondi</button>							
-						</td>
-					</tr>
-				<% end %>
-			</table>
-		</div>
+      <div class="col-md-2">
+        <%= form_tag :method => 'post' do %>
+        <div class="form-group">
+          <label class="text-input">Filtra per ID CallTo Action</label></br>
+            <%= text_field_tag :id_cta_to_be_approved_filter, @id_cta_to_be_approved_filter, :class => 'form-control' %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+            </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+            </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+        <div class="col-md-12"> 
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Utente</th>
+                        <th>Call to action</th>
+                        <th>Testo</th>
+                        <th>Scritto il</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <% @comment_to_be_approved.each do |c| %>
+                    <tr id="comment-<%= c.id %>-tr">
+                        <td><%= c.user ? c.user.id : "Anonimo" %></td>
+                        <td><%= link_to "CTA", easyadmin_cta_show_path(Interaction.select(:call_to_action_id).where(:resource_id => c.comment_id, :resource_type => 'Comment').first.call_to_action_id), class: "btn btn-primary btn-xs" %></a></td>
+                        <td style="max-width: 600px"><%= c.text %></td>
+                        <td><%= c.created_at %></td>
+                        <td id="comment-<%= c.id %>">
+                            <button type="button" class="btn btn-default btn-xs" onclick="updateComment(true, <%= c.id %>)">Pubblica</button>
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-warning btn-xs" onclick="updateComment(false, <%= c.id %>)">Nascondi</button>                          
+                        </td>
+                    </tr>
+                <% end %>
+            </table>
+        </div>
 
-	<div class="row cta-to-show">
-		<div class="col-md-12">
-			<%= render partial: "/easyadmin/easyadmin/pagination" %>
-		</div>
-	</div>
+    <div class="row cta-to-show">
+        <div class="col-md-12">
+            <%= render partial: "/easyadmin/easyadmin/pagination" %>
+        </div>
+    </div>
 
   </div>
 </div>
 
 <script type="text/javascript">
-	function updateComment(approved, comment_id) {
-		$("#comment-" + comment_id + "-tr").remove();
-		$.ajax({
+    function updateComment(approved, comment_id) {
+        $("#comment-" + comment_id + "-tr").remove();
+        $.ajax({
             type: "POST",
             url: "/easyadmin/comments/" + comment_id + "/update_comment_status",
             data: { "approved": approved },
@@ -85,8 +85,8 @@
                 jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
             },
             success: function(data) {
-            	$("#comment-" + comment_id + "-tr").remove();
+                $("#comment-" + comment_id + "-tr").remove();
             }
         });
-	}
+    }
 </script>

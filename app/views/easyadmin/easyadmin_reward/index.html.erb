@@ -26,22 +26,22 @@
       </div>
     </div>
 
-    <%= form_tag :method => 'post' do %>
+    <%= form_tag :action => 'filter', :method => 'post' do %>
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-3">
           <label>Filtra per TAG</label>
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-3">
           <%= render_html_tag_box("tag_list", params[:tag_list], "ATTENZIONE: Sono stati inseriti tag non esistenti!") %>
           <span class="help-block">Per separare i TAG digita virgola</span>
           <p id="tag_list_message"> </p>
         </div>
-        <div class="col-sm-2">
+        <div class="col-md-2">
           <%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
         </div>
-        <div class="col-sm-2">
+        <div class="col-md-1">
           <%= submit_tag 'RESET', class: 'btn btn-primary' %>
         </div>
       </div>

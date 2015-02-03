@@ -85,7 +85,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
   end
   
   def write_where_condition(param, approved_cond)
-    if params[param].present? && params[:commit] != "Reset"
+    if params[param].present? && params[:commit] != "RESET"
       interaction = Interaction.where(:call_to_action_id => params[param], :resource_type => 'Comment')
       comment_id = interaction.present? ? interaction.first.resource_id : -1
       return comment_id.blank? ? approved_cond : approved_cond << " AND comment_id = #{comment_id}"

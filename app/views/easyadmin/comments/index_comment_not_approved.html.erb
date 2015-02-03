@@ -23,17 +23,17 @@
           	<%= form_tag :method => 'post' do %>
           	<div class="form-group">
               <label class="text-input">Filtra per ID CallTo Action</label></br>
-              	<%= text_field_tag :id_cta_not_approved_filter, @id_cta_not_approved_filter %>
+              	<%= text_field_tag :id_cta_not_approved_filter, @id_cta_not_approved_filter, :class => 'form-control' %>
             </div>
           </div>
-          <div class="col-md-1">
+          <div class="col-md-2">
           	<div class="form-group">
-                </br><%= submit_tag 'Filtra', class: 'btn btn-primary' %>
+                </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
             </div>
           </div>
-          <div class="col-md-1">
+          <div class="col-md-2">
           	<div class="form-group">
-                </br><%= submit_tag 'Reset', class: 'btn btn-primary' %>
+                </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
 		  	    <% end %>
             </div>
           </div>
