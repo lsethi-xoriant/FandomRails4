@@ -1,7 +1,7 @@
 <div class="row main-row ctas__search" ng-controller="SearchCtrl" ng-init="init({})">
   <%= form_tag("#{ get_disney_property_root_path }/browse/full_search", { method: "post", role: "search" }) do %>
     <div class="col-sm-8 col-sm-offset-1 col-xs-8">
-      <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control search-bar__input" placeholder="Cerca in Disney Channel Community" style="width: 100%;" typeahead-wait-ms="<%= AUTOCOMPLETE_DELAY %>">
+      <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control search-bar__input" placeholder="Cerca in {{aux.current_property_info.title}} Community" style="width: 100%;" typeahead-wait-ms="<%= AUTOCOMPLETE_DELAY %>">
     </div>
     <div class="col-sm-2 col-xs-4">
       <button type="submit" class="btn btn-primary btn-block search-bar__button"><span>Cerca</span></button>

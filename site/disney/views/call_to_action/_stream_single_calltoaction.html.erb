@@ -51,7 +51,7 @@
         <div class="like-interaction__cta__info" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions">
           <button class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span class="fa fa-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span></button><span class="like-interaction__cta__info__text">{{interaction_info.interaction.resource.like_info}}<span class="hidden-xs"> mi piace</span></span>
         </div>
-        <div class="comment-interaction__cta__info" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions">
+        <div class="comment-interaction__cta__info hidden-xs" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions">
             <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-default comment-interaction__cta__info__button">
               <span class="glyphicon glyphicon-comment comment-interaction__cta__info__glyphicon-comment"></span>
             </a><span class="comment-interaction__cta__info__text">{{interaction_info.interaction.resource.comment_info.comments_total_count}}<span class="hidden-xs"> commenti</span></span>
@@ -93,7 +93,14 @@
     </div>
     <div id="comment-interactions" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
       <%= render partial: "/call_to_action/comment_interaction" %>
-    </div>    
+    </div>  
+
+    <div class="row visible-xs">
+      <div class="col-md-2 col-md-offset-9 col-xs-12">
+        <button style="margin-top: 15px;" class="btn btn-primary btn-block registration__button" onclick="window.history.back()"><span>Indietro</span></button>
+      </div>
+    </div>
+
   </div>
   <div class="col-md-5 text-center adv-square__container">
     <div class="row adv-square__row">
