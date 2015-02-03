@@ -90,6 +90,7 @@
           <div class="col-sm-6 col-sm-offset-1 text-center">
             <p class="modal__custom__text">I commenti verranno<br>moderati prima di essere<br>pubblicati</p>
             <button type="button" class="modal__custom__button-sign-up btn btn-primary" data-dismiss="modal"><span>Ok</span></button>
+            <p ng-if="!current_user" style="margin-top: 15px; font-size: 12px;"><a href="/iur">Registrati per commentare più facilmente</a></p>
           </div>
           <div class="col-sm-4 hidden-xs">
               <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image"> 
