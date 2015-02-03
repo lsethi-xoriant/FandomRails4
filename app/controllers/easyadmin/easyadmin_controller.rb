@@ -17,6 +17,9 @@ class Easyadmin::EasyadminController < ApplicationController
         @param_list = @param_list + "&#{key}=#{value}"
       end
   end
+
+  def index
+  end
   
   def index_user
 

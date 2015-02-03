@@ -29,7 +29,6 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         namespace :easyadmin do
-          match "/", :to => "easyadmin#dashboard"
           match "/dashboard", :to => "easyadmin#dashboard"
         end
         
@@ -216,7 +215,8 @@ Fandom::Application.routes.draw do
   match "/profile/superfan_contest", :to => "profile#superfan_contest"
 
   namespace :easyadmin do
-    match "/", :to => "easyadmin#dashboard"
+
+    match "/", :to => "easyadmin#index"
 
     resources :home_launchers
 
