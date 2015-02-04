@@ -3,20 +3,37 @@
 
 class GalleryController < ApplicationController
   def index
-    @galleries_cta = calltoaction_active_with_tag("gallery", "DESC").where("user_id IS NULL")
-    @galleries_user_cta = calltoaction_active_with_tag("gallery", "DESC").where("user_id IS NOT NULL")
-    @calltoactions_during_video_interactions_second = init_calltoactions_during_video_interactions_second(@galleries_user_cta)
+    @galleries_cta = get_gallery_ctas_carousel
+    galleries_user_cta = get_gallery_ctas()
+    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share"])
   end
   
   def show
-    @calltoaction = CallToAction.find(params[:id])
-    @upload_interaction = @calltoaction.interactions.find_by_resource_type("Upload")
-    @gallery_tag = get_tag_with_tag_about_call_to_action(@calltoaction, "gallery").first
-    @extra_info = cache_short(get_gallery_extra_info_key()) do
-      JSON.parse(Tag.find(@gallery_tag.id).extra_fields)
+    @galleries_cta = get_gallery_ctas_carousel
+    cta = CallToAction.find(params[:id])
+    @upload_interaction_id = cta.interactions.find_by_resource_type("Upload").id
+    @aux_other_params = { "gallery" => build_call_to_action_info_list([cta]).first }
+    @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
+    galleries_user_cta = get_gallery_ctas(@gallery_tag)
+    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share"])
+  end
+  
+  def get_gallery_ctas(gallery = nil)
+    if gallery.nil?
+      gallery_tag_ids = get_tags_with_tag("gallery").map{|t| t.id}
+      if gallery_tag_ids.blank?
+        []
+      else
+        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).to_a
+      end
+    else
+      get_user_ctas_with_tag(gallery.name)
     end
-    @extra_fields = JSON.parse(@upload_interaction.resource.aux)['extra_fields']
-    @gallery_calltoactions = calltoaction_active_with_tag(@gallery_tag.name, "DESC").where("user_id IS NOT NULL AND approved = true")
+  end
+  
+  def get_gallery_ctas_carousel
+    gallery_tag_names = get_tags_with_tag("gallery").map{ |t| t.name}
+    get_ctas_with_tags(gallery_tag_names)
   end
   
 end

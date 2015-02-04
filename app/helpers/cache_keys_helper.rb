@@ -162,6 +162,10 @@ module CacheKeysHelper
     "ctas_with_tag_#{tag_name}"
   end
   
+  def get_user_ctas_with_tag_cache_key(tag_name)
+    "user_ctas_with_tag_#{tag_name}"
+  end
+  
   def get_ctas_with_tag_with_match_cache_key(tag_name)
     "ctas_with_tag_with_match_#{tag_name}"
   end
@@ -266,6 +270,10 @@ module CacheKeysHelper
   
   def get_gallery_extra_info_key
     "gallery_tag_metadata"
+  end
+  
+  def get_gallery_ctas_cache_key
+    "ctas_gallery"
   end
   
   # Instantwin

@@ -1,0 +1,84 @@
+<div class="col-sm-12 filters__flexslider">
+  <div class="flexslider filters__flexslider-desktop hidden-xs">
+    <div class="flex-viewport-shadow"></div>
+    <ul class="slides">
+    	<% galleries.each do |gallery| %>
+	      <li class="text-center filters__flexslider-desktop-item">
+    	    <%= light_link_to("/gallery/#{gallery.id}", class: "filters__flexslider-a") do %>
+        	  <img class="filters__flexslider-image" src="<%= gallery.thumbnail(:medium) %>">  
+          	  <div class="filters__title hidden"><%= gallery.title %></div>   
+        	<% end %>
+      	  </li>
+      	<% end %>
+    </ul>
+  </div>
+
+  <div class="flexslider filters__flexslider-mobile visible-xs" ng-if="aux.filter_info">
+    <ul class="slides">
+      <% galleries.each do |gallery| %>
+	      <li class="text-center filters__flexslider-mobile-item">
+	        <%= light_link_to("/gallery/#{gallery.id}") do %>
+	          <p class="filters__title hidden"><%= gallery.title %></p>
+	          <img  class="filters__flexslider-image" src="<%= gallery.thumbnail(:medium) %>">
+	        <% end %>
+	      </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    is_last_filters_flexslider_slide = false;
+    $('.filters__flexslider-desktop').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: false,
+      touch: true,
+      itemWidth: 262,
+      itemMargin: 15,
+      controlNav: false,
+      prevText: "",
+      nextText: "",
+      before: function(slider) {
+        is_last_filters_flexslider_slide = false;
+        $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+      },
+      after: function(slider) {
+        if(is_last_filters_flexslider_slide) {
+          $(slider).find(".flex-viewport-shadow").addClass("hidden");
+        } else {
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        }
+      },
+      end: function(slider) {
+        is_last_filters_flexslider_slide = true;
+      }
+    });
+
+    $(".filters__flexslider-desktop-item").first().find(".filters__flexslider-item-active").removeClass("hidden");
+
+    $(".filters__flexslider-desktop-item").bind("click", function() {
+      $(".filters__flexslider-desktop-item").find(".filters__flexslider-item-active").addClass("hidden");
+      $(this).find(".filters__flexslider-item-active").removeClass("hidden");
+    });
+
+    $(".filters__flexslider-mobile-item").first().find(".filters__flexslider-item-active").removeClass("hidden");
+
+    $(".filters__flexslider-mobile-item").bind("click", function() {
+      $(".filters__flexslider-mobile-item").find(".filters__flexslider-item-active").addClass("hidden");
+      $(this).find(".filters__flexslider-item-active").removeClass("hidden");
+    });
+
+    $('.filters__flexslider-mobile').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: false,
+      touch: true,
+      itemWidth: 262,
+      itemMargin: 8,
+      controlNav: false,
+      prevText: "",
+      nextText: ""
+    });
+  });
+</script>

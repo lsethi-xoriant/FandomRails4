@@ -1,0 +1,43 @@
+<div class="container main-container">
+
+	<div class="row">
+		<%= render partial: "/gallery/launchers", locals: { galleries: @galleries_cta }  %>		
+	</div>
+	
+	<div class="row main-row main-row__covers">
+		<div class="col-xs-12">
+			<div class="row">
+		        <div class="col-xs-6">
+		          <h2 class="cta-cover__column-title">Tutti</h2>
+		        </div>
+		        <div class="col-xs-6 text-right">
+		          <div class="dropdown">
+		            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+		              <span class="glyphicon glyphicon-chevron-down" style="position: relative; top: 3px;"></span>
+		              Ordina
+		            </button>
+		            <ul class="dropdown-menu dropdown-menu-right text-left" role="menu" aria-labelledby="dropdownMenu1">
+		              <li class="active" role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="calltoaction_ordering = 'recent'">Più recenti</a></li>
+		              <li role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="calltoaction_ordering = 'comment'">Più commentati</a></li>
+		            </ul>
+		          </div>
+		        </div>
+		    </div>
+		    
+		    <div ng-repeat="calltoaction_info in calltoactions | orderBy:orderCallToActionStream:true" class="row">
+		        <div class="col-sm-6">
+		          <%= render partial: "/call_to_action/cover_single_calltoaction" %>
+		        </div>
+		    </div>
+		    <div class="row">
+		        <div class="col-sm-12">
+		          <div id="append-other" class="text-center" style="margin-bottom: 20px;">
+		            <button class="btn btn-primary btn-lg" href="javascript: void(0)" ng-click="appendCallToAction();"><span>Carica altri</span></button>
+		          </div>
+		        </div>
+		    </div>
+		</div>
+  	</div>
+
+</div>
+

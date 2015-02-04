@@ -210,7 +210,8 @@ module CallToActionHelper
       "template_cta_id" => upload_interaction.call_to_action_id,
       "upload_number" => upload_interaction.upload_number,
       "privacy" => get_privacy_info(upload_interaction),
-      "releasing" => get_releasing_info(upload_interaction)
+      "releasing" => get_releasing_info(upload_interaction),
+      "title_needed" => upload_interaction.title_needed
     }
   end
   

@@ -41,6 +41,7 @@ Fandom::Application.routes.draw do
         match "profile/rankings", :to => "profile#rankings"
         match "profile/rewards", :to => "profile#rewards"
         match "profile/notices", :to => "profile#notices"
+        match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
         match "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         devise_scope :user do
           post "/users", :to => "registrations#create"

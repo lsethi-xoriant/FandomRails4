@@ -451,6 +451,12 @@ module ApplicationHelper
     end
   end
   
+  def get_user_ctas_with_tag(tag_name)
+    cache_short get_user_ctas_with_tag_cache_key(tag_name) do
+      CallToAction.active.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", tag_name).to_a
+    end
+  end
+  
   def get_ctas_with_tag_with_match(tag_name, query = "")
     conditions = construct_conditions_from_query(query, "call_to_actions.title")
     ctas = CallToAction.active.includes(call_to_action_tags: :tag).includes(:interactions).where("tags.name = ? AND (#{conditions})", tag_name).order("call_to_actions.created_at DESC").to_a
@@ -479,7 +485,7 @@ module ApplicationHelper
     filtered_results
   end
   
-  def get_ctas_with_tags(*tags_name)
+  def get_ctas_with_tags(tags_name)
     cache_short get_ctas_with_tags_cache_key(tags_name) do
       tag_ids = Tag.where("name in (?)", tags_name).pluck(:id)
       CallToAction.active.includes(call_to_action_tags: :tag).where("tags.id in (?)", tag_ids).to_a
