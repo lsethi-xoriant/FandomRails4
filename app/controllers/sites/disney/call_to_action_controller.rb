@@ -66,6 +66,7 @@ class Sites::Disney::CallToActionController < CallToActionController
     else
       flash[:notice] = "Caricamento completato con successo"
     end
+
     if is_call_to_action_gallery(calltoaction)
       redirect_to "/gallery/#{params[:cta_id]}"
     else
