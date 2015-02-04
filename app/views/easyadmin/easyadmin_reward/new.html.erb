@@ -173,10 +173,15 @@
       <hr/>
 
       <div class="row">
-        <%= render_html_tag_box("tag_list", @tag_list, "Nuovi tag verranno creati.") %>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= render_html_tag_box("tag_list", @tag_list, "Nuovi tag verranno creati.") %>
+          </div>
+          <span class="help-block">Per separare i TAG digita virgola</span>
+          <p id="tag_list_message"> </p>
+        </div>
       </div>
-      <span class="help-block">Per separare i TAG digita virgola</span>
-      <p id="tag_list_message"> </p>
+
       <hr/>
 
       <h3>Data inizio validità</h3>

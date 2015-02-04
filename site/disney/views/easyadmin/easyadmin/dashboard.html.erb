@@ -74,7 +74,7 @@
     <br/>
     
     <div class="row">
-    	<div class="col-md-6">
+    	<div class="col-md-3">
     		<h4> Registrazioni totali </h4>
    		</div>
    		<div class="col-md-3">
@@ -86,40 +86,17 @@
     </div> <!-- /.row -->
     
     <div class="row">
-      <div class="col-md-3">
-        <div class="portlet">
-          <div class="portlet-header">
-            <h3>
-              <i class="fa fa-bar-chart-o"></i>
-              REGISTRAZIONI
-            </h3>
-          </div> <!-- /.portlet-header -->
-          <div class="portlet-content">
-            <div id="fb-reg-donut-chart" class="chart-holder"></div>
-          </div> <!-- /.portlet-content -->
-        </div> <!-- /.portlet -->
-      </div> <!-- /.col -->
       <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat primary">
-            <div class="details">
-              <span class="content"> UTENTI REGISTRATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
-              <span class="value"><%= @total_users %></span>
-            </div>
-            <div class="visual">
-              <i class="fa fa-user"></i>
-            </div>
-          </div><hr/>
-          <div class="dashboard-stat secondary">
-            <div class="details">
-              <span class="content"> UTENTI REGISTRATI CON SOCIAL <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
-              <span class="value"><%= @social_reg_users %></span>
-            </div>
-            <div class="visual">
-              <i class="fa fa-group"></i>
-            </div>
+        <div class="dashboard-stat primary" style="background-color: #E5412D;">
+          <div class="details">
+            <span class="content"> UTENTI REGISTRATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
+            <span class="value"><%= @total_users %></span>
           </div>
+          <div class="visual">
+            <i class="fa fa-user" style="color: #FFF"></i>
+          </div>
+        </div>
       </div>
-
       <div class="col-md-3 col-sm-6">
           <div class="dashboard-stat primary" style="background-color: #50A550;">
             <div class="details">
@@ -162,7 +139,7 @@
     <hr/>
 
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-4 col-md-offset-2">
         <h4><%= "Trivia #{@property_tag_name}" %></h4>
       </div>
       <div class="col-md-3">
@@ -385,19 +362,6 @@
   }
 
   function buildDonut() {
-    $('#fb-reg-donut-chart').empty();
-    if(total_users > 0) {
-      Morris.Donut({
-            element: 'fb-reg-donut-chart',
-            data: [
-                { label: 'Registrazioni via social', value: Math.round(((social_reg_users * 100)/total_users)) },
-                { label: 'Registrazioni via mail', value: Math.round((((total_users - social_reg_users) * 100)/total_users)) }
-            ],
-            hideHover: true,
-            colors: ["#f0ad4e", "#e5412d"],
-            formatter: function (y) { return y + "%" }
-      });
-    }
     $('#trivia-donut-chart').empty();
     if(property_trivia > 0) {
       Morris.Donut({
