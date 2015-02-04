@@ -457,7 +457,7 @@ module ApplicationHelper
   
   def get_user_ctas_with_tag(tag_name)
     cache_short get_user_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.active.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", tag_name).to_a
+      CallToAction.active_with_media.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", tag_name).to_a
     end
   end
   
