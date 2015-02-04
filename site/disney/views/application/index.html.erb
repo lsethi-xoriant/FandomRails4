@@ -14,7 +14,9 @@
     <div class="col-md-7 main-row__covers-left-col">
       <div class="row">
         <div class="col-xs-6">
-          <h2 class="cta-cover__column-title">Tutti</h2>
+          <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'recent'">Tutti</h2>
+          <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'comment'">Più commentati</h2>
+          <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'view'">Più visti</h2>
         </div>
         <div class="col-xs-6 text-right">
           <div class="dropdown">
@@ -23,14 +25,15 @@
               Ordina
             </button>
             <ul class="dropdown-menu dropdown-menu-right text-left" role="menu" aria-labelledby="dropdownMenu1">
-              <li class="active" role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="calltoaction_ordering = 'recent'">Più recenti</a></li>
-              <li role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="calltoaction_ordering = 'comment'">Più commentati</a></li>
+              <li class="active" role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="updateOrdering('recent')">Più recenti</a></li>
+              <li role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="updateOrdering('comment')">Più commentati</a></li>
+              <li role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="updateOrdering('view')">Più visti</a></li>
             </ul>
           </div>
         </div>
       </div>
 
-      <div ng-repeat="calltoaction_info in calltoactions | orderBy:orderCallToActionStream:true" class="row">
+      <div ng-repeat="calltoaction_info in calltoactions" class="row">
         <div class="col-sm-12">
           <%= render partial: "/call_to_action/cover_single_calltoaction" %>
         </div>
