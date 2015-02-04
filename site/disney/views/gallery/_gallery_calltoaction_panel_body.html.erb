@@ -1,10 +1,9 @@
-  <!-- UNDERVIDEO AREA -->
 <div id="upload-form" class="row hidden gallery-cta__form">
     <div class="col-xs-12 text-center" ng-init="upload = getGalleryUploadInteraction(aux.gallery.calltoaction.interaction_info_list)">
 	<%= form_tag "/upload_interaction/create/#{interaction_id}", multipart: true, id: "form-upload" do %>
 	<input type="hidden" name="cta_id" id="cta_id" ng-value="aux.gallery.calltoaction.id" />
 	<div class="row">
-	  	<div class="col-sm-12">
+	  	<div class="col-sm-12 gallery-cta__steps">
 	  			<div class="row form-group gallery-cta__first-step">
 	  				<div class="col-xs-12">
 		  				<div class="row gallery-cta__form-element">
@@ -16,24 +15,30 @@
 							</div>		
 		  				</div>
 		  				<div class="row">
-				  			<div class="col-sm-6 col-sm-offset-3">
-			  					<input id="upload" name="upload" class="form-control hidden" type="file">
-			  					<a class="btn btn-primary btn-block" onclick="loadPhoto();">Carica la tua foto</a>
+				  			<div class="col-sm-6 col-sm-offset-3 gallery-cta__upload-photo">
+			  					<input id="upload" name="upload" class="form-control hidden" type="file" onchange="photoSelected()">
+			  					<a class="btn btn-primary btn-block" onclick="loadPhoto();"><i class="fa fa-camera"></i> Carica la tua foto</a>
 			  				</div>
 				  		</div>
 	  				</div>
 	  			</div>
-			  	<div class="row form-group gallery-cta__second-step" ng-if="upload.interaction.resource.upload_info.releasing.required">
-			  		<div class="col-xs-8 col-xs-offset-2">
-		  				<p class="small">{{upload.interaction.resource.upload_info.releasing.description}}</p>
-			  			<p class="text-center">
-			  				<input id="releasing" name="releasing" class="hidden" type="file">
-			  				<a class="btn btn-primary btn-block" onclick="loadRelease();">Carica la liberatoria firmata</a>
+			  	<div class="row form-group gallery-cta__step" ng-if="upload.interaction.resource.upload_info.releasing.required">
+			  		<div class="col-xs-12">
+			  			<p class="text-left"><b>{{upload.interaction.resource.upload_info.releasing.description}}</b></p>
+			  			<p>
+			  				<ul class="gallery-cta__releasing-files">
+			  					<li><i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria per miniori di 18 anni</li>
+			  					<li><i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria per maggiorenni</li>
+			  				</ul>
 			  			</p>
 			  		</div>
+			  		<div class="col-xs-6 col-xs-offset-3 gallery-cta__upload-release">
+			  				<input id="releasing" name="releasing" class="hidden" type="file" onchange="releaseSelected();">
+			  				<a class="btn btn-primary btn-block" onclick="loadRelease();"><i class="fa fa-pencil"></i> Carica la liberatoria firmata</a>
+			  		</div>
 		  		</div>
-		  		<div class="row form-group gallery-cta__second-step" ng-if="upload.interaction.resource.upload_info.privacy.required">
-		  			<div class="col-sm-8">
+		  		<div class="row form-group gallery-cta__last-step" ng-if="upload.interaction.resource.upload_info.privacy.required">
+		  			<div class="col-sm-8 text-left">
 		  				<input id="privacy" class="" name="privacy" type="checkbox" value="1">
 			  			<label>Accettazione privacy</label>
 			  			<p class="small">{{upload.interaction.resource.upload_info.privacy.description}}</p>
