@@ -36,7 +36,7 @@
   	</div>
   
 	<div class="row main-row">
-	  	<div class="col-xs-12">
+	  	<div class="col-xs-12 gallery-cta">
 	  		<div class="row" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image'], :original) if get_extra_fields!(@gallery_tag)['background_image'] %>); background-repeat: no-repeat; background-size: 100% auto;">
 	  			<div class="col-sm-4">
 	  				<img class="img-responsive" src="<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['thumbnail'], :medium) if get_extra_fields!(@gallery_tag)['thumbnail'] && upload_extra_field_present?(get_extra_fields!(@gallery_tag)['thumbnail']) %>" />
@@ -44,7 +44,15 @@
 	  			<div class="col-sm-7">
 	  				<h3><%= @gallery_tag.title %></h3>
 	  				<p><%= @gallery_tag.description %></p>
-	  				<button class="btn btn-primary btn-lg" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
+	  				<p>&nbsp;</p>
+	  				<div class="row">
+	  					<div class="col-xs-12 text-left">
+	  						<button class="btn btn-primary" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
+	  						<% if get_extra_fields!(@gallery_tag)['rule-link'] %>
+	  							<a href="<%= get_extra_fields!(@gallery_tag)['rule-link'] %>" class="btn btn-primary">leggi il regolamento</a>
+	  						<% end %>
+	  					</div>
+	  				</div>
 	  				<%= render partial: "/gallery/gallery_calltoaction", locals: { gallery_tag: @gallery_tag, interaction_id: @upload_interaction_id } %>
 	  			</div>
 	  		</div>
@@ -99,5 +107,13 @@
 	
 	function loadRelease(){
 		$("#releasing").click();
+	}
+	
+	function photoSelected(){
+		$(".gallery-cta__upload-photo").append('<i class="fa fa-check-circle"></i>');
+	}
+	
+	function releaseSelected(){
+		$(".gallery-cta__upload-release").append('<i class="fa fa-check-circle"></i>');
 	}
 </script>
