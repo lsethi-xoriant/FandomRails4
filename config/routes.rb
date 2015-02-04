@@ -42,6 +42,7 @@ Fandom::Application.routes.draw do
         match "profile/notices", :to => "profile#notices"
         match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
         match "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
+        
         devise_scope :user do
           post "/users", :to => "registrations#create"
           put "/users/edit", :to => "registrations#update"
@@ -52,6 +53,7 @@ Fandom::Application.routes.draw do
 
         resources :call_to_action
         
+        match "ordering_ctas", to: "call_to_action#ordering_ctas" , defaults: { format: 'json' }
         match "rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
         match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }

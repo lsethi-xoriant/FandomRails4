@@ -118,26 +118,7 @@ class BrowseController < ApplicationController
     @category = tag_to_category(tag)
     contents, @tags = get_contents_by_category_with_tags(tag)
     
-    if INDEX_CATEGORY_CTA_STATUS_ACTIVE
-      cta_ids = []
-      contents.each do |content|
-        if content["type"] == "cta"
-          cta_ids << content["id"]
-        end
-      end
-      cta_statuses = {}
-      unless cta_ids.empty?
-        cta_statuses = cta_to_reward_statuses_by_user(current_or_anonymous_user, CallToAction.includes(:interactions).where("id in (?)", cta_ids).to_a, 'point')
-      end
-      contents.each do |content|
-        if content["type"] == "cta"
-          content["status"] = cta_statuses[content["id"].to_i]
-        end
-      end
-      @contents = contents
-    else
-      @contens = contents
-    end
+    @contents = compute_gallery_contents(contents)
     
   end
   
@@ -146,6 +127,14 @@ class BrowseController < ApplicationController
     category = Tag.find(params[:tag_id])
     contents, tags = get_contents_by_category_with_tags(category, offset)
     
+    contents = compute_gallery_contents(contents)
+    
+    respond_to do |format|
+      format.json { render :json => contents.to_json }
+    end
+  end
+
+  def compute_gallery_contents(contents)
     if INDEX_CATEGORY_CTA_STATUS_ACTIVE
       cta_ids = []
       contents.each do |content|
@@ -162,13 +151,9 @@ class BrowseController < ApplicationController
           content["status"] = cta_statuses[content["id"].to_i]
         end
       end
-      contents = contents
+      contents
     else
-      contens = contents
-    end
-    
-    respond_to do |format|
-      format.json { render :json => contents.to_json }
+      contents
     end
   end
   

@@ -75,16 +75,20 @@ module CacheKeysHelper
     "tag_#{tag_name}"
   end
 
-  def get_next_ctas_stream_for_user_cache_key(user_id, tag, prev_cta_id, cta_max_updated_at, ordering = "")
-    "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}_for_user_#{user_id}"
+  def get_next_ctas_stream_for_user_cache_key(user_id, tag, prev_cta_id, cta_max_updated_at, ordering = "recent")
+    "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}_for_user_#{user_id}_by_#{ordering}"
   end
 
-  def get_next_ctas_stream_cache_key(tag, prev_cta_id, cta_max_updated_at, ordering = "")
-    "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}"
+  def get_next_ctas_stream_cache_key(tag, prev_cta_id, cta_max_updated_at, ordering = "recent")
+    "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}_by_#{ordering}"
   end
 
   def get_calltoactions_in_property_cache_key(property_id)
     "calltoactions_in_property_#{property_id}"
+  end
+
+  def get_calltoactions_in_property_by_ordering_cache_key(property_id, ordering)
+    "calltoactions_in_property_#{property_id}_by_#{ordering}"
   end
 
   def get_calltoactions_count_in_property_cache_key(property_id)

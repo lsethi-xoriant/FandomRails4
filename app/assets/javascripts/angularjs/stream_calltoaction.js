@@ -381,6 +381,23 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return overvideo_end_interaction;
   }
 
+  $scope.updateOrdering = function(ordering) {
+    $http.get("/ordering_ctas", { params: { "ordering": ordering } })
+        .success(function(data) { 
+          $scope.calltoaction_ordering = ordering;
+          $scope.calltoactions = data.calltoaction_info_list;
+
+          if($scope.calltoactions.length >= $scope.calltoactions_count) {
+            $("#append-other button").hide();
+          } else {
+            $("#append-other button").show();
+          }
+
+        }).error(function() {
+          // nothing to do
+        });
+  };
+
   $scope.orderCallToActionStream = function(calltoaction_info) {
     //calltoaction_ordering
     if($scope.calltoaction_ordering == "recent") {
@@ -680,7 +697,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if($scope.calltoactions.length < $scope.calltoactions_count) {
 
       $("#append-other button").attr('disabled', true);
-      $scope.calltoaction_ordering = "recent";
 
       append_calltoaction_path = "/append_calltoaction"
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
@@ -692,7 +708,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         calltoaction_ids_shown.push(_info.calltoaction.id);
       });
 
-      $http.post(append_calltoaction_path, { calltoaction_ids_shown: calltoaction_ids_shown, tag_id: $scope.current_tag_id })
+      $http.post(append_calltoaction_path, { calltoaction_ids_shown: calltoaction_ids_shown, tag_id: $scope.current_tag_id, ordering: $scope.calltoaction_ordering })
       .success(function(data) {
 
         angular.forEach(data.calltoaction_info_list, function(calltoaction_info) {
