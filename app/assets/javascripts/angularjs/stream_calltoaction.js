@@ -520,6 +520,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (interaction_info.interaction.resource_type != "play");
   };
 
+  $scope.filterRemoveLikeInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type != "like");
+  };
+
   $scope.filterRemoveDownloadInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type != "download");
   };

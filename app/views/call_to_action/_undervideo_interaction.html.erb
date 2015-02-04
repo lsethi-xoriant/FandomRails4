@@ -1,23 +1,23 @@
-<div class="row">
-  <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-md-12">
+<div class="row {{interaction_info.interaction.resource_type}}-undervideo-interaction__row">
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-sm-12 undervideo-interaction__col">
     <%= render partial: "/call_to_action/trivia_interaction" %>
   </div>
-  <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-sm-12 undervideo-interaction__col">
     <%= render partial: "/call_to_action/versus_interaction" %>
   </div>
-  <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-sm-12">
     <%= render partial: "/call_to_action/check_interaction" %>
   </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12 undervideo-interaction__col">
     <%= render partial: "/call_to_action/share_interaction" %>
   </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-sm-12 undervideo-interaction__col">
     <%= render partial: "/call_to_action/upload_interaction" %>
   </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'download'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'download'" class="col-sm-12 undervideo-interaction__col">
     <%= render partial: "/call_to_action/download_interaction" %>
   </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'link'" class="col-md-12">
+  <div ng-if="interaction_info.interaction.resource_type == 'link'" class="col-sm-12">
     <%= render partial: "/call_to_action/link_interaction" %>
   </div>  
 </div>

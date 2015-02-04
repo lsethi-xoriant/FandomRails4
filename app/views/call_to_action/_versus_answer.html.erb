@@ -5,7 +5,7 @@
       <div class="progress-bar" role="progressbar" style="height: {{answer.percentage}}%;"></div>
     </div>
 
-    <div ng-if="answer.percentage != null" class="versus-interaction__percentage--{{ $index % 2 == 0 ? 'left' : 'right' }}">
+    <div ng-if="answer.percentage != null" class="versus-interaction__percentage--{{ $index % 2 == 0 ? 'left' : 'right' }}--undervideo">
       <p class="versus-interaction__percentage-text versus-interaction__percentage-text--undervideo">{{answer.percentage}}%</p>
     </div>
 
