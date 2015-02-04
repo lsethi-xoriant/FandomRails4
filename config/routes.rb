@@ -29,7 +29,6 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         namespace :easyadmin do
-          match "/", :to => "easyadmin#dashboard"
           match "/dashboard", :to => "easyadmin#dashboard"
         end
         
@@ -217,25 +216,26 @@ Fandom::Application.routes.draw do
   match "/profile/superfan_contest", :to => "profile#superfan_contest"
 
   namespace :easyadmin do
-    match "/", :to => "easyadmin#dashboard"
+
+    match "/", :to => "easyadmin#index"
 
     resources :home_launchers
-    
+
     resources :tag
-    
+
     resources :ranking
-    
+
     resources :vote_ranking
-    
+
+    match "tag/filter", :to => "tag#filter"
     match "tag/clone/:id", :to => "tag#clone"
     match "retag", :to => "easyadmin#retag_tag"
-    match "tag/filter/:title_filter/:description_filter/:tag_filter", :to => "easyadmin#filter_tags"
 
     # USER
     match "user", :to => "easyadmin#index_user"
     match "export_users", :to => "easyadmin#export_users"
     match "user/show/:id", :to => "easyadmin#show_user"
-    match "user/filter/:mail_filter", :to => "easyadmin#filter_users"
+    match "user/filter", :to => "easyadmin#filter_user"
 
     # WINNER
     match "winner", :to => "easyadmin#index_winner"
@@ -243,6 +243,7 @@ Fandom::Application.routes.draw do
 
     # CALL TO ACTION
     match "cta", :to => "call_to_action#index_cta"
+    match "cta/filter", :to => "call_to_action#filter"
     match "cta/template", :to => "call_to_action#index_cta_template"
     match "cta_user", :to => "call_to_action#index_user_generated_cta"
     match "cta/to_approve", :to => "call_to_action#index_user_cta_to_be_approved"
@@ -270,6 +271,7 @@ Fandom::Application.routes.draw do
     
     # PRIZE
     match "reward", :to => "easyadmin_reward#index"
+    match "reward/filter", :to => "easyadmin_reward#filter"
     match "reward/show/:id", :to => "easyadmin_reward#show"
     match "reward/edit/:id", :to => "easyadmin_reward#edit"
     match "reward/new", :to => "easyadmin_reward#new"
@@ -411,11 +413,6 @@ Fandom::Application.routes.draw do
 
   match "/delete_current_user_interactions", :to => "application#delete_current_user_interactions"
 
-  # error handling
-  match "/404", :to => "http_error#not_found_404"
-  match "/500", :to => "http_error#internal_error_500"
-  match "/422", :to => "http_error#unprocessable_entity_422"
-
   match "rss", :to => "rss#rss", defaults: { format: 'rss' }
 
   match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
@@ -436,5 +433,10 @@ Fandom::Application.routes.draw do
 
   match "/tag/:name", :to => "application#index"
   root :to => "application#index"
+
+  # error handling
+  match "/404", :to => "http_error#not_found_404"
+  match "/500", :to => "http_error#internal_error_500"
+  match "/422", :to => "http_error#unprocessable_entity_422"
 
 end

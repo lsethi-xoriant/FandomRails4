@@ -66,6 +66,7 @@
   }
 
   function updateCalltoactionActivatedAt(timetostart, id) {
+    //time = timetostart.toString().slice(0, timetostart.toString().indexOf(" GMT"));
     $.ajax({
         type: "POST",
         url: "/easyadmin/dashboard/update_activated_at",
@@ -100,7 +101,8 @@
           });
 
           $.each(data, function(key, value) {
-            var date = new Date(value["activated_at"]);
+            var date = new Date(Date.parse(value["activated_at"]));
+            console.log(value["title"] + date)
             var m = date.getMonth();
             var y = date.getFullYear();
             var d = date.getDate();

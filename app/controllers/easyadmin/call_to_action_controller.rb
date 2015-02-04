@@ -9,6 +9,7 @@ class Easyadmin::CallToActionController < ApplicationController
   include RewardingSystemHelper
   include EventHandlerHelper
   include NoticeHelper
+  include FilterHelper
 
   layout "admin"
 
@@ -125,7 +126,7 @@ class Easyadmin::CallToActionController < ApplicationController
 
   def update_activated_at
     cta = CallToAction.find(params[:id])
-    cta.update_attribute(:activated_at, Time.parse(params["time"]).to_date)
+    cta.update_attribute(:activated_at, Time.parse(params["time"] + " UTC"))
     respond_to do |format|
       format.json { render :json => "calltoaction-update".to_json }
     end
@@ -136,38 +137,6 @@ class Easyadmin::CallToActionController < ApplicationController
     per_page = 20
 
     @cta_list = CallToAction.where("user_id IS NULL").page(page).per(per_page).order("activated_at DESC NULLS LAST")
-    @title = params[:title]
-
-    if params[:commit] == "APPLICA FILTRO"
-      cta_ids = Array.new
-      @cta_list.find_each do |cta|
-        cta_ids << cta.id
-      end
-
-      tag_ids = Array.new
-      params[:tag_list].split(",").each do |tag_name|
-        tag = Tag.find_by_name(tag_name)
-        tag_ids << tag.id if tag
-      end
-
-      tag_ids.each_with_index do |tag_id, i|
-        cta_ids_tagged = Array.new
-        CallToActionTag.where("tag_id = #{tag_id}").each do |ctat|
-          cta_ids_tagged << ctat.call_to_action_id
-        end
-        cta_ids = cta_ids & cta_ids_tagged
-      end
-      where_conditions = "user_id IS NULL"
-      where_conditions << " AND title ILIKE '%#{@title}%'" unless @title.nil?
-      where_conditions << " AND id in (#{cta_ids.inspect[1..-2]})" unless params[:tag_list].nil?
-
-      @cta_list = CallToAction.where(where_conditions).page(page).per(per_page).order("activated_at DESC NULLS LAST")
-    end
-
-    if params[:commit] == "RESET"
-      params[:tag_list] = ""
-      @title = nil
-    end
 
     @page_size = @cta_list.num_pages
     @page_current = page
@@ -213,31 +182,39 @@ class Easyadmin::CallToActionController < ApplicationController
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
   end
 
-  def filter_calltoaction
-    conditions = (params[:title_filter] != "nil_title_filter" && params[:tag_filter] != "nil_tag_filter") ?
-                    ['LOWER(call_to_actions.title) LIKE :title AND LOWER(tags.name) LIKE :tag', {:title => "%#{ params[:title_filter].downcase }%", :tag => "%#{ params[:tag_filter].downcase }%"}]
-                  : if params[:title_filter] != "nil_title_filter"
-                      ['LOWER(call_to_actions.title) LIKE ?', "%#{ params[:title_filter].downcase }%"]
-                    else
-                      ['LOWER(tags.name) LIKE ?', "%#{ params[:tag_filter].downcase }%"]
-                    end
+  def filter
 
-    stream_call_to_action_to_render = CallToAction.all(
-                                      :joins => "LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id
-                                                 LEFT OUTER JOIN tags ON call_to_action_tags.tag_id = tags.id",
-                                      :conditions => conditions,
-                                      :group => "call_to_actions.id",
-                                      :order => "activated_at DESC",
-                                      :limit => 10
-                                      )
-    render_calltoactions_str = ""
-    stream_call_to_action_to_render.each do |calltoaction|
-      render_calltoactions_str = render_calltoactions_str + (render_to_string "/easyadmin/call_to_action/_index_row", locals: { calltoaction: calltoaction }, layout: false, formats: :html)
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+
+    @cta_list = CallToAction.where("user_id IS NULL").page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    @title_filter = params[:title_filter]
+    @tag_list = params[:tag_list]
+
+    if params[:commit] == "APPLICA FILTRO"
+      
+      cta_ids = get_tagged_objects(@cta_list, params[:tag_list], CallToActionTag, 'call_to_action_id', 'tag_id')
+
+      where_conditions = "user_id IS NULL"
+      where_conditions << " AND title ILIKE '%#{@title_filter}%'" unless @title_filter.nil?
+      unless @tag_list.blank?
+        where_conditions << (cta_ids.blank? ? " AND id IS NULL" : " AND id in (#{cta_ids.inspect[1..-2]})")
+      end
+
+      @cta_list = CallToAction.where(where_conditions).page(page).per(per_page).order("activated_at DESC NULLS LAST")
     end
 
-    respond_to do |format|
-      format.json { render :json => render_calltoactions_str.to_json }
+    if params[:commit] == "RESET"
+      @tag_list = nil
+      @title_filter = nil
     end
+
+    @page_size = @cta_list.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+
+    render template: "/easyadmin/call_to_action/index_cta"
+    
   end
 
   def new_cta

@@ -17,6 +17,9 @@ class Easyadmin::EasyadminController < ApplicationController
         @param_list = @param_list + "&#{key}=#{value}"
       end
   end
+
+  def index
+  end
   
   def index_user
 
@@ -47,22 +50,30 @@ class Easyadmin::EasyadminController < ApplicationController
     send_data(csv, :type => 'text/csv; charset=utf-8; header=present', :filename => "users.csv")
   end
 
-  def filter_users
-    conditions = ['email ILIKE ?', "%#{ params[:mail_filter] }%"]
+  def filter_user
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+    @user_list = User.page(page).per(per_page)
 
-    stream_users_to_render = User.all(
-                                      :conditions => conditions,
-                                      :order => "email ASC",
-                                      :limit => 10
-                                      )
-    render_users_str = ""
-    stream_users_to_render.each do |user|
-      render_users_str = render_users_str + (render_to_string "/easyadmin/easyadmin/_users_index_row", locals: { user: user }, layout: false, formats: :html)
+    @email_filter = params[:email_filter]
+    @username_filter = params[:username_filter]
+
+    if params[:commit] == "APPLICA FILTRO"
+      where_conditions = "true"
+      where_conditions << " AND email ILIKE '%#{@email_filter}%'" unless @email_filter.blank?
+      where_conditions << " AND username ILIKE '%#{@username_filter}%'" unless @username_filter.blank?
+
+      @user_list = User.where(where_conditions).page(page).per(per_page)
+    else
+      @email_filter = nil
+      @username_filter = nil
     end
 
-    respond_to do |format|
-      format.json { render :json => render_users_str.to_json }
-    end
+    @page_size = @user_list.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+
+    render template: "/easyadmin/easyadmin/index_user" 
   end
 
   def filter_tags
@@ -370,7 +381,7 @@ class Easyadmin::EasyadminController < ApplicationController
 
   def update_activated_at
     cta = CallToAction.find(params[:id])
-    cta.update_attribute(:activated_at, Time.parse(params["time"]).to_date)
+    cta.update_attribute(:activated_at, Time.parse(params["time"] + " UTC"))
     respond_to do |format|
       format.json { render :json => "calltoaction-update".to_json }
     end

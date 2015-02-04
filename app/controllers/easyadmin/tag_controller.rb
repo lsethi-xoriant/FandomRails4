@@ -1,11 +1,38 @@
 class Easyadmin::TagController < ApplicationController
   include EasyadminHelper
   include GraphHelper
+  include FilterHelper
 
   layout "admin"
 
   def index
     @tags = Tag.all
+  end
+
+  def filter
+    @tags = Tag.scoped
+
+    @title_filter = params[:title_filter]
+    @description_filter = params[:description_filter]
+    @tag_list = params[:tag_list]
+
+    if params[:commit] == "APPLICA FILTRO"
+
+      tags_ids = get_tagged_objects(@tags, params[:tag_list], TagsTag, 'tag_id', 'other_tag_id')
+
+      where_conditions = "true"
+      where_conditions << " AND title ILIKE '%#{@title_filter}%'" unless @title_filter.blank?
+      where_conditions << " AND description ILIKE '%#{@description_filter}%'" unless @description_filter.blank?
+      unless @tag_list.blank?
+        where_conditions << (tags_ids.blank? ? " AND id IS NULL" : " AND id in (#{tags_ids.inspect[1..-2]})")
+      end
+
+      @tags = Tag.where(where_conditions)
+
+    else
+      @tag_list = nil
+    end
+    render "index"
   end
 
   def new

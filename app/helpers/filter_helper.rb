@@ -19,5 +19,29 @@ module FilterHelper
     }
     return operator_by_activerecord_expresson[operator]
   end
+
+  def get_tagged_objects(active_record_relation, tag_list, tagging_table, tagging_table_model_id_column_name, tagging_table_tag_id_column_name)
+
+    model_ids = Array.new
+    active_record_relation.find_each do |model_instance|
+      model_ids << model_instance.id
+    end
+
+    tag_ids = Array.new
+    tag_list.split(",").each do |tag_name|
+      tag = Tag.find_by_name(tag_name)
+      tag_ids << tag.id if tag
+    end
+
+    tag_ids.each do |tag_id|
+      model_ids_tagged = Array.new
+      tagging_table.where("#{tagging_table_tag_id_column_name} = #{tag_id}").each do |mt|
+        model_ids_tagged << mt[tagging_table_model_id_column_name]
+      end
+      model_ids = model_ids & model_ids_tagged
+    end
+
+    model_ids
+  end
 	
 end

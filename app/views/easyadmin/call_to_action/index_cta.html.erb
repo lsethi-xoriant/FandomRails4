@@ -31,45 +31,34 @@
         </div>
       </div>
 
-      <%= form_tag :method => 'post' do %>
+      <%= form_tag :action => 'filter', :method => 'post' do %>
         <div class="row">
-          <div class="col-md-9">
-            <div class="col-sm-2">
-              <label>Filtra per TITOLO</label>
-            </div>
-              <div class="col-sm-6">
-                <%= text_field_tag 'title', @title, class: 'form-control' %>
-              </div>
-            <div class="col-sm-2">
-              <%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-9">
-            <div class="col-sm-2">
-              <label>Filtra per TAG</label>
-            </div>
-              <%= render_html_tag_box("tag_list", params[:tag_list], "ATTENZIONE: Sono stati inseriti tag non esistenti!") %>
-            <div class="col-sm-2">
-              <%= submit_tag 'RESET', class: 'btn btn-primary' %>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-3 col-md-offset-2">
-              <span class="help-block">Per separare i TAG digita virgola</span>
-              <p id="tag_list_message"> </p>
-            </div>
-          </div>  
-        </div>
-      <% end %>
-
-      <div id="cta-to-filter" class="row hidden">
-        <div class="col-md-12"> 
-          <table id="cta-from-ajax-request" class="table table-striped">
-          </table>
+          <div class="col-md-3">
+        <div class="form-group">
+          <label class="text-input">Filtra per TITOLO</label></br>
+            <%= text_field_tag :title_filter, @title_filter, :class => 'form-control' %>
         </div>
       </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="text-input">Filtra per TAG</label></br>
+          <%= render_html_tag_box("tag_list", params[:tag_list], "ATTENZIONE: Sono stati inseriti tag non esistenti!") %>
+          <span class="help-block">Per separare i TAG digita virgola</span>
+          <p id="tag_list_message"> </p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="form-group">
+          </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+    <% end %>
 
     <div class="row cta-to-show">
       <div class="col-md-12"> 

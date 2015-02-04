@@ -160,6 +160,7 @@ module DisneyHelper
       filters.each do |filter|
         filter_info << {
           "id" => filter.id,
+          "name" => filter.name,
           "background" => get_extra_fields!(filter)["label-background"],
           "icon" => get_extra_fields!(filter)["icon"],
           "title" => filter.title,

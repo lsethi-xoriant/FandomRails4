@@ -170,6 +170,19 @@
           <%= render '/easyadmin/call_to_action/comment-form', :f => builder %>
         <% end %>
       <% end %>
+
+      <div class="row">
+        <div class="col-md-10"><h3>LINK</h3></div>
+        <div class="col-md-2"><%= link_to_add_comment_fields "AGGIUNGI LINK", f, :interactions, "link" %></div>
+      </div>
+
+      <div id="tmp-link-add"></div>
+      
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Link" %>
+          <%= render 'link-form', :f => builder %>
+        <% end %>
+      <% end %>
       
       <h3>UPLOAD <p style="float: right;"><%= link_to_add_upload_fields "AGGIUNGI UPLOAD", f, :interactions %></p></h3>
       <hr/>
@@ -383,16 +396,6 @@
     $("#tmp-share-add").prepend(content.replace(regexp, new_id));
   }
 
-  var comment_counter = false; 
-  function add_comment_fields(link, association, content) {
-    if(!comment_counter) {
-      var new_id = new Date().getTime();
-      var regexp = new RegExp("new_" + association, "g");
-      $("#tmp-comment-add").prepend(content.replace(regexp, new_id));
-      comment_counter = true;
-    }
-  }
-  
   var vote_counter = false;
   function add_vote_fields(link, association, content) {
   	if(!vote_counter){
@@ -467,6 +470,16 @@
     vote_counter = false;
   }
 
+  function remove_fields(link, resource) {
+    $(link).closest(".panel-" + resource).remove();
+  }
+
+  function add_fields(link, association, content, resource) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-" + resource + "-add").prepend(content.replace(regexp, new_id));
+  }
+  
   $(document).ready(function() {
 
     fillInputWithSlug($('#call_to_action_title'), $('#call_to_action_name'));

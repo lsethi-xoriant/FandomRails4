@@ -29,7 +29,7 @@ class CallToAction < ActiveRecordWithJSON
   validates_associated :interactions
   validates :privacy, :acceptance => { :accept => true }, if: Proc.new { |c| privacy_required }
 
-  before_save :set_activated_at # Costruisco la data di attivazione se arrivo dall'easyadmin.
+  before_save :set_activated_at # handles the activated_at fields when updating the model from easyadmin
   #before_save :set_extra_options
   
   has_attached_file :media_image,

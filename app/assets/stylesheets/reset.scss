@@ -193,6 +193,29 @@ a{
   100% { background: transparent; }
 }
 
+/********************* ERRORS *********************/
+
+.error__container {
+  background-image: url('bg-modal.png'); 
+  background-size: 100% 100%;
+  background-color: #fff;
+}
+
+.error__image {
+  margin-top: 155px;
+  max-width: 240px;
+  width: 100%;
+}
+
+.error__title {
+  margin-top: 220px;
+}
+
+.error__description {
+  margin-bottom: 220px;
+}
+
+
 /********************* MODALS *********************/
 
 .modal__custom {
@@ -253,6 +276,24 @@ a{
 }
 
 @media (max-width: $screen-sm-min) { 
+  .error__container {
+    text-align: center;
+  }
+
+  .error__image {
+    max-width: 120px;
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  .error__title {
+    margin-top: 45px;
+  }
+
+  .error__description {
+    margin-bottom: 45px;
+  }
+
   button.close {
     position: relative;
     z-index: 10;
