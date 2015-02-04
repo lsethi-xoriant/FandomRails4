@@ -3,53 +3,53 @@
   <div id="content">    
     
     <div id="content-header">
-      <h1>Elenco TAG</h1>
+      <h1>ELENCO TAG</h1>
     </div> <!-- #content-header --> 
 
-    	<div id="content-container">
+        <div id="content-container">
 
-    	<% if flash[:notice] %>
-	    	<div class="row">
-		      <div class="col-md-12">         
-		          <div class="row">
-		            <div class="col-lg-12">
-		              <div class="alert alert-success"><%= flash[:notice] %></div>
-		            </div>
-		          </div>
-		        
-		      </div>
-		    </div>
-	    <% end %>
+        <% if flash[:notice] %>
+            <div class="row">
+              <div class="col-md-12">         
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="alert alert-success"><%= flash[:notice] %></div>
+                    </div>
+                  </div>
+                
+              </div>
+            </div>
+        <% end %>
 
-		<div class="row">
-			<div class="col-md-8"> 
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Nome</th>
-							<th>Calltoacion correlate</th>
-							<th>Azioni</th>
-						</tr>
-					</thead>
-					<% @tag_list.each do |t| %>
-						<tr>
-							<td><%= t.name %></td>
-							<td><%= t.call_to_action_tags ? t.call_to_action_tags.count : 0 %></td>
-							<td>
-								<a href="/easyadmin/tag/edit/<%= t.id %>"><i class="fa fa-gears" style="color: red"></i></a>
-								&nbsp;&nbsp;
-							</td>
-						</tr>
-					<% end %>
-				</table>
-			</div>
-		</div>
+        <div class="row">
+            <div class="col-md-8"> 
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Calltoacion correlate</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <% @tag_list.each do |t| %>
+                        <tr>
+                            <td><%= t.name %></td>
+                            <td><%= t.call_to_action_tags ? t.call_to_action_tags.count : 0 %></td>
+                            <td>
+                                <a href="/easyadmin/tag/edit/<%= t.id %>"><i class="fa fa-gears" style="color: red"></i></a>
+                                &nbsp;&nbsp;
+                            </td>
+                        </tr>
+                    <% end %>
+                </table>
+            </div>
+        </div>
 
-		<div class="row">
-			<div class="col-md-8">
-				<%= render partial: "pagination" %>
-			</div>
-		</div>
+        <div class="row">
+            <div class="col-md-8">
+                <%= render partial: "pagination" %>
+            </div>
+        </div>
 
-	</div>
+    </div>
 </div>

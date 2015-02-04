@@ -3,71 +3,71 @@
   <div id="content">    
     
     <div id="content-header">
-      <h1>Elenco Classifiche Voti</h1>
+      <h1>ELENCO CLASSIFICHE VOTI</h1>
     </div> <!-- #content-header --> 
 
-    	<div id="content-container">
+      <div id="content-container">
 
-    	<% if flash[:notice] %>
-	    	<div class="row">
-		      <div class="col-md-12">         
-		          <div class="row">
-		            <div class="col-lg-12">
-		              <div class="alert alert-success"><%= flash[:notice] %></div>
-		            </div>
-		          </div>
-		      </div>
-		    </div>
-	    <% end %>
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col-md-12">         
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-success"><%= flash[:notice] %></div>
+                </div>
+              </div>
+          </div>
+        </div>
+      <% end %>
 
-	    
-	    <div class="row text-right">
-	    	<div class="col-md-12">
-	    		<a href="/easyadmin/vote_ranking/new"><button type="button" class="btn btn-primary">NUOVA</button></a>
-	    	</div>
-	    </div>
+      
+      <div class="row text-right">
+        <div class="col-md-12">
+          <a href="/easyadmin/vote_ranking/new"><button type="button" class="btn btn-primary">NUOVA</button></a>
+        </div>
+      </div>
 
-		<div class="row reward-to-show">
-			<div class="col-md-12"> 
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Nome</th>
-							<th>Titolo</th>
-							<th>Tags</th>
-							<th>Periodo</th>
-							<th>Tipo</th>
-							<th>Azioni</th>
-						</tr>
-					</thead>
-					<% @vote_rankings.each do |r| %>
-						<tr>
-							<td><%= r.name %></td>
-							<td><%= r.title %></td>
-							<td>
-								<%= get_tags_for_vote_ranking(r) %>
-							</td>
-							<td>
-								<%= r.period %>
-							</td>
-							<td><%= r.get_rank_type %></td>
-							<td>
-								<div class="row">
+    <div class="row reward-to-show">
+      <div class="col-md-12"> 
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Titolo</th>
+              <th>Tags</th>
+              <th>Periodo</th>
+              <th>Tipo</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <% @vote_rankings.each do |r| %>
+            <tr>
+              <td><%= r.name %></td>
+              <td><%= r.title %></td>
+              <td>
+                <%= get_tags_for_vote_ranking(r) %>
+              </td>
+              <td>
+                <%= r.period %>
+              </td>
+              <td><%= r.get_rank_type %></td>
+              <td>
+                <div class="row">
 
-									<div class="col-sm-1" style="margin: 0;">
-										<a href="/easyadmin/vote_ranking/<%= r.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
-									</div>
+                  <div class="col-sm-1" style="margin: 0;">
+                    <a href="/easyadmin/vote_ranking/<%= r.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+                  </div>
 
-									<div class="col-sm-1" style="margin: 0;">
-										<a href="/easyadmin/vote_ranking/<%= r.id %>/edit"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
-									</div>
+                  <div class="col-sm-1" style="margin: 0;">
+                    <a href="/easyadmin/vote_ranking/<%= r.id %>/edit"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
+                  </div>
 
-								</div>
-							</td>
-						</tr>
-					<% end %>
-				</table>
-			</div>
-		</div>
-	</div>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

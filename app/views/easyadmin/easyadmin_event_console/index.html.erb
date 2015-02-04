@@ -1,176 +1,176 @@
 <%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "events" } %>
  <style>
- 	.row-filter {
- 		display: none;
- 	}
+  .row-filter {
+    display: none;
+  }
  </style>
   <div id="content">    
     
     <div id="content-header">
-      <h1>Elenco EVENTI</h1>
+      <h1>ELENCO EVENTI</h1>
     </div> <!-- #content-header --> 
 
-    	<div id="content-container"
-	 		ng-controller="FilterCtrl"
-	 		ng-init="init(<%= @fields %>)">
+      <div id="content-container"
+      ng-controller="FilterCtrl"
+      ng-init="init(<%= @fields %>)">
 
-    	<% if flash[:notice] %>
-	    	<div class="row">
-		      <div class="col-md-12">         
-		          <div class="row">
-		            <div class="col-lg-12">
-		              <div class="alert alert-success"><%= flash[:notice] %></div>
-		            </div>
-		          </div>
-		      </div>
-		    </div>
-	    <% end %>
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col-md-12">         
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-success"><%= flash[:notice] %></div>
+                </div>
+              </div>
+          </div>
+        </div>
+      <% end %>
 
-	    <div class="row">
-	    	<h3>FILTRI</h3>
-	    	
-	    	<div class="col-md-10">
-	    		<div class="panel panel-default">
-	    		<div class="panel-body">
-	    		<div class="row">
-	    			<div class="col-md-2">
-	    				<p>Aggiungi filtro:</p>
-	    			</div>
-	    			<div class="col-md-2">
-	    				<select name="add-filter" id="add-filter">
-	    					<option ng-repeat="column in columns" value="{{column.field}}">{{column.title}}</option>
-	    				</select>
-	    			</div>
-	    			<div class="col-md-2">
-	    				<button class="btn btn-xs btn-primary" onclick="addFilter();"><i class="fa fa-plus-circle"></i> AGGIUNGI</button>
-	    			</div>
-	    		</div>
-	    		</div>
-	    		<div class="panel-footer">
-	    			<div id="event_filter">
-						<div class="row row-filter filter-date form-horizontal">
-									<label class="col-sm-2 control-label"><a href="javascript:void(0);" onclick="removeFilter(this);"><i class="fa fa-minus-circle"></i></a> Data</label>
-									<div class="col-sm-10">
-										<div class="row">
-											<input type="hidden" name="date" class="condition-field-name" />
-											<div class="col-sm-6">
-											<select name="date-condition" class="condition-type form-control">
-												<option value="<%= FILTER_OPERATOR_LESS %>">Minore di</option>
-												<option value="<%= FILTER_OPERATOR_MORE %>">Maggiore di </option>
-												<option value="<%= FILTER_OPERATOR_EQUAL %>">Uguale a</option>
-											</select>
-											</div>
-											<div class="col-sm-6">
-												<input name="date" id="date" class="condition-value form-control" type="text">
-											</div>
-										</div>
-									</div>
-						
-						</div>
-						<div class="row row-filter filter-user form-horizontal">
-								
-									<label class="col-sm-2 control-label"><a href="javascript:void(0);" onclick="removeFilter(this);"><i class="fa fa-minus-circle"></i></a> Utente</label>
-									<div class="col-sm-10">
-										<div class="row">
-											<input type="hidden" name="user" class="condition-field-name" />
-											<div class="col-sm-6">
-											<select name="user-condition" class="condition-type form-control">
-												<option value="<%= FILTER_OPERATOR_EQUAL %>">Uguale a</option>
-												<option value="<%= FILTER_OPERATOR_CONTAINS %>">Contiene</option>
-											</select>
-											</div>
-											<div class="col-sm-6">
-												<input name="user-value" id="user-value" class="condition-value form-control" type="text">
-											</div>
-										</div>
-									</div>
-						
-						</div>
-						<div class="row row-filter filter-interaction form-horizontal">
-								
-									<label class="col-sm-2 control-label"><a href="javascript:void(0);" onclick="removeFilter(this);"><i class="fa fa-minus-circle"></i></a> Interaction</label>
-									<div class="col-sm-10">
-										<div class="row">
-											<input type="hidden" name="interaction" class="condition-field-name" value="" />
-											<input type="hidden" name="interaction" class="condition-type" value="<%= FILTER_OPERATOR_EQUAL %>" />
-											<div class="col-sm-6">
-												<%= select_tag :interaction_condition, options_for_select(@interaction_type_options), :class => "condition-value form-control" %>
-											</div>
-										</div>
-									</div>
-						
-						</div>
-					</div>
-				
-	    		<div class="row row-filter apply-filter">
-	    			<hr/>
-					<div class="col-md-4">
-						<button class="btn btn-success" ng-click="updateFilter()">Apply</button>
-						<button class="btn btn-default">Cancel</button>
-					</div>
-				</div>
-				</div>
-				</div>
-	    	</div>
-	    	
-	    	
-			
-		</div>
+      <div class="row">
+        <h3>FILTRI</h3>
+        
+        <div class="col-md-10">
+          <div class="panel panel-default">
+          <div class="panel-body">
+          <div class="row">
+            <div class="col-md-2">
+              <p>Aggiungi filtro:</p>
+            </div>
+            <div class="col-md-2">
+              <select name="add-filter" id="add-filter">
+                <option ng-repeat="column in columns" value="{{column.field}}">{{column.title}}</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-xs btn-primary" onclick="addFilter();"><i class="fa fa-plus-circle"></i> AGGIUNGI</button>
+            </div>
+          </div>
+          </div>
+          <div class="panel-footer">
+            <div id="event_filter">
+            <div class="row row-filter filter-date form-horizontal">
+                  <label class="col-sm-2 control-label"><a href="javascript:void(0);" onclick="removeFilter(this);"><i class="fa fa-minus-circle"></i></a> Data</label>
+                  <div class="col-sm-10">
+                    <div class="row">
+                      <input type="hidden" name="date" class="condition-field-name" />
+                      <div class="col-sm-6">
+                      <select name="date-condition" class="condition-type form-control">
+                        <option value="<%= FILTER_OPERATOR_LESS %>">Minore di</option>
+                        <option value="<%= FILTER_OPERATOR_MORE %>">Maggiore di </option>
+                        <option value="<%= FILTER_OPERATOR_EQUAL %>">Uguale a</option>
+                      </select>
+                      </div>
+                      <div class="col-sm-6">
+                        <input name="date" id="date" class="condition-value form-control" type="text">
+                      </div>
+                    </div>
+                  </div>
+            
+            </div>
+            <div class="row row-filter filter-user form-horizontal">
+                
+                  <label class="col-sm-2 control-label"><a href="javascript:void(0);" onclick="removeFilter(this);"><i class="fa fa-minus-circle"></i></a> Utente</label>
+                  <div class="col-sm-10">
+                    <div class="row">
+                      <input type="hidden" name="user" class="condition-field-name" />
+                      <div class="col-sm-6">
+                      <select name="user-condition" class="condition-type form-control">
+                        <option value="<%= FILTER_OPERATOR_EQUAL %>">Uguale a</option>
+                        <option value="<%= FILTER_OPERATOR_CONTAINS %>">Contiene</option>
+                      </select>
+                      </div>
+                      <div class="col-sm-6">
+                        <input name="user-value" id="user-value" class="condition-value form-control" type="text">
+                      </div>
+                    </div>
+                  </div>
+            
+            </div>
+            <div class="row row-filter filter-interaction form-horizontal">
+                
+                  <label class="col-sm-2 control-label"><a href="javascript:void(0);" onclick="removeFilter(this);"><i class="fa fa-minus-circle"></i></a> Interaction</label>
+                  <div class="col-sm-10">
+                    <div class="row">
+                      <input type="hidden" name="interaction" class="condition-field-name" value="" />
+                      <input type="hidden" name="interaction" class="condition-type" value="<%= FILTER_OPERATOR_EQUAL %>" />
+                      <div class="col-sm-6">
+                        <%= select_tag :interaction_condition, options_for_select(@interaction_type_options), :class => "condition-value form-control" %>
+                      </div>
+                    </div>
+                  </div>
+            
+            </div>
+          </div>
+        
+          <div class="row row-filter apply-filter">
+            <hr/>
+          <div class="col-md-4">
+            <button class="btn btn-success" ng-click="updateFilter()">Apply</button>
+            <button class="btn btn-default">Cancel</button>
+          </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        
+        
+      
+    </div>
 
-		<hr />
-		<div class="row">
-				Seleziona colonne:
-				<div class="row">
-					<div class="col-md-1" ng-repeat="column in columns">
-					    <label class="checkbox">
-					        <input type="checkbox" ng-model="column.visible" /> {{column.title}}
-					    </label>
-				    </div>
-			    </div>
-			    <div class="col-md-10">
-				<table class="table table-striped" ng-table="tableParams">
-					<tbody>
-			          <tr ng-repeat="row in $data">
-			            <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.id" data-title="column.title">
-			                {{row[column.field]}}
-			            </td>
-			          </tr>
-			        </tbody>
-				</table>
-				</div>
-		</div>
+    <hr />
+    <div class="row">
+        Seleziona colonne:
+        <div class="row">
+          <div class="col-md-1" ng-repeat="column in columns">
+              <label class="checkbox">
+                  <input type="checkbox" ng-model="column.visible" /> {{column.title}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-10">
+        <table class="table table-striped" ng-table="tableParams">
+          <tbody>
+                <tr ng-repeat="row in $data">
+                  <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.id" data-title="column.title">
+                      {{row[column.field]}}
+                  </td>
+                </tr>
+              </tbody>
+        </table>
+        </div>
+    </div>
 
-	</div>
+  </div>
 </div>
 
 
 <script src="/assets/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
-	
-	$(document).ready(function(){
-		$('#date').datepicker();
-	});
-	
-	function addFilter(){
-		filtro = $("#add-filter").val();
-		switch(filtro){
-			case 'date':
-				$(".filter-date").show();
-				break;
-			case 'user':
-				$(".filter-user").show();
-				break;
-			case 'interaction':
-				$(".filter-interaction").show();
-				break;
-		}
-		
-		$(".apply-filter").show();
-	}
-	
-	function removeFilter(ele){
-		$(ele).parent().parent().hide();
-		if($("#event_filter :visible").length == 0)
-			$(".apply-filter").hide();
-	}
+  
+  $(document).ready(function(){
+    $('#date').datepicker();
+  });
+  
+  function addFilter(){
+    filtro = $("#add-filter").val();
+    switch(filtro){
+      case 'date':
+        $(".filter-date").show();
+        break;
+      case 'user':
+        $(".filter-user").show();
+        break;
+      case 'interaction':
+        $(".filter-interaction").show();
+        break;
+    }
+    
+    $(".apply-filter").show();
+  }
+  
+  function removeFilter(ele){
+    $(ele).parent().parent().hide();
+    if($("#event_filter :visible").length == 0)
+      $(".apply-filter").hide();
+  }
 </script>

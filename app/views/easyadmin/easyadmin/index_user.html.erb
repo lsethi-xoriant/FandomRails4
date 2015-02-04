@@ -3,29 +3,29 @@
   <div id="content">    
     
     <div id="content-header">
-      <h1>Elenco UTENTI</h1>
+      <h1>ELENCO UTENTI</h1>
     </div> <!-- #content-header --> 
 
-    	<div id="content-container">
+      <div id="content-container">
 
-    	<% if flash[:notice] %>
-	    	<div class="row">
-		      <div class="col-md-12">         
-		          <div class="row">
-		            <div class="col-lg-12">
-		              <div class="alert alert-success"><%= flash[:notice] %></div>
-		            </div>
-		          </div>
-		        
-		      </div>
-		    </div>
-	    <% end %>
-	    
-	  	<div class="row text-right">
-	    	<div class="col-md-12">
-	    		<a href="/easyadmin/export_users"><button type="button" class="btn btn-primary">ESPORTA CSV</button></a>
-	    	</div>
-	    </div>
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col-md-12">         
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-success"><%= flash[:notice] %></div>
+                </div>
+              </div>
+            
+          </div>
+        </div>
+      <% end %>
+      
+      <div class="row text-right">
+        <div class="col-md-12">
+          <a href="/easyadmin/export_users"><button type="button" class="btn btn-primary">ESPORTA CSV</button></a>
+        </div>
+      </div>
 
       <%= form_tag :action => 'filter_user', :method => 'post' do %>
       <div class="row">
@@ -54,30 +54,30 @@
     </div> 
     <% end %>
 
-		<div class="row users-to-show">
-			<div class="col-md-12"> 
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Nome</th>
-							<th>Username</th>
-							<th>Email</th>
-							<th>Città</th>
-							<th>Azioni</th>
-						</tr>
-					</thead>
-					<% @user_list.each do |user| %>
-						<%= render partial: "/easyadmin/easyadmin/users_index_row", locals: { user: user } %>
-					<% end %>
-				</table>
-			</div>
-		</div>
+    <div class="row users-to-show">
+      <div class="col-md-12"> 
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Città</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <% @user_list.each do |user| %>
+            <%= render partial: "/easyadmin/easyadmin/users_index_row", locals: { user: user } %>
+          <% end %>
+        </table>
+      </div>
+    </div>
 
-		<div class="row">
-			<div class="col-md-8">
-				<%= render partial: "pagination" %>
-			</div>
-		</div>
+    <div class="row">
+      <div class="col-md-8">
+        <%= render partial: "pagination" %>
+      </div>
+    </div>
 
-	</div>
+  </div>
 </div>
