@@ -1,9 +1,13 @@
 .panel-heading-dark {
-	padding: 10px 15px;
-	border-bottom: 1px solid transparent;
-	border-top-right-radius: 3px;
-	border-top-left-radius: 3px;
-	color: #FFFFFF;
-	background-color: #404040;
-	border-color: #ddd;
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  color: #FFFFFF;
+  background-color: #404040;
+  border-color: #ddd;
+}
+
+.tag-box-property {
+  background-image: -webkit-linear-gradient(top, #ffcc88 20%, #ffbb44 50%, #ffaa22 52%, #ff9900 100%) !important;
 }
