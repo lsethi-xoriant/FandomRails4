@@ -3,55 +3,55 @@
   <div id="content">    
     
     <div id="content-header">
-      <h1>Promocode</h1>
+      <h1>PROMOCODE</h1>
     </div> <!-- #content-header --> 
 
-    	<div id="content-container">
+      <div id="content-container">
 
-    	<% if flash[:notice] %>
-	    	<div class="row">
-		      <div class="col-md-12">         
-		          <div class="row">
-		            <div class="col-lg-12">
-		              <div class="alert alert-success"><%= flash[:notice] %></div>
-		            </div>
-		          </div>
-		        
-		      </div>
-		    </div>
-	    <% end %>
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col-md-12">         
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-success"><%= flash[:notice] %></div>
+                </div>
+              </div>
+            
+          </div>
+        </div>
+      <% end %>
 
-	    <h3>&nbsp;&nbsp; <a href="/easyadmin/promocode/new_promocode" style="float: right;"><button type="button" class="btn btn-primary">NUOVO PROMOCODE</button></a></h3>
-	    <hr/>
+      <h3>&nbsp;&nbsp; <a href="/easyadmin/promocode/new_promocode" style="float: right;"><button type="button" class="btn btn-primary">NUOVO PROMOCODE</button></a></h3>
+      <hr/>
 
-		<div class="row">
-			<div class="col-md-12"> 
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Id</th>
-							<th>Titolo</th>
-							<th>Codice</th>
-							<!--<th>Contatore utilizzo</th>-->
-							<th>Azioni</th>
-						</tr>
-					</thead>
-					<% i = 1 %>
-					<% Promocode.all.each do |p| %>
-						<tr>
-							<td><%= p.id %></td>
-							<td><%= p.title %></td>
-							<td><%= p.code %></td>
-							<!--<td> p.interaction.cache_counter </td>-->
-							<td>
-								&nbsp;&nbsp;
-							</td>
-						</tr>
-					<% end %>
-				</table>
-			</div>
-		</div>
-		
+    <div class="row">
+      <div class="col-md-12"> 
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Titolo</th>
+              <th>Codice</th>
+              <!--<th>Contatore utilizzo</th>-->
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <% i = 1 %>
+          <% Promocode.all.each do |p| %>
+            <tr>
+              <td><%= p.id %></td>
+              <td><%= p.title %></td>
+              <td><%= p.code %></td>
+              <!--<td> p.interaction.cache_counter </td>-->
+              <td>
+                &nbsp;&nbsp;
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
+    
 
-	</div>
+  </div>
 </div>

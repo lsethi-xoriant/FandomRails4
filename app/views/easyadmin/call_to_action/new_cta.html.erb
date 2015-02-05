@@ -3,7 +3,7 @@
 <div id="content">    
 
   <div id="content-header">
-    <h1>Nuova CALLTOACTION</h1>
+    <h1>NUOVA CALLTOACTION</h1>
   </div> <!-- #content-header --> 
 
   <div id="content-container">
@@ -223,15 +223,16 @@
       <hr/>
 
       <div class="row">
-        <div class="col-sm-6">
-          <div class="row">
-      		  <%= render_html_tag_box("tag_list", @tag_list, "Nuovi tag verranno creati.") %>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= render_html_tag_box("tag_list", @tag_list, "Nuovi tag verranno creati.") %>
           </div>
-      		<span class="help-block">Per separare i TAG digita virgola</span>
-      		<p id="tag_list_message"> </p>
-      		<hr/>
+          <span class="help-block">Per separare i TAG digita virgola</span>
+          <p id="tag_list_message"> </p>
         </div>
       </div>
+
+      <hr/>
 
       <h3>Data di attivazione</h3>
       <hr/>

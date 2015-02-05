@@ -3,7 +3,7 @@
   <div id="content">    
     
   <div id="content-header">
-    <h1>Home</h1>
+    <h1>HOME</h1>
   </div> <!-- #content-header --> 
 
   <div id="content-container">
@@ -16,8 +16,9 @@
   </div>
 
   <div class="row">
+  <% if can? :manage, :all %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #C199EA; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
           <h3> Dashboard </h3>
 
@@ -27,19 +28,18 @@
           <a href="/easyadmin/most_clicked_interactions" style="color: #FFF">
             <i class="fa fa-hand-o-up" style="color: #FFF"></i> Statistiche contenuti <br/>
           </a>
-          <% if can? :manage, :all %>
-            <a href="/easyadmin/reward_cta_unlocked" style="color: #FFF">
-              <i class="fa fa-trophy" style="color: #FFF"></i> CTA reward sbloccate <br/>
-            </a>
-          <% end %>
+          <a href="/easyadmin/reward_cta_unlocked" style="color: #FFF">
+            <i class="fa fa-trophy" style="color: #FFF"></i> CTA reward sbloccate <br/>
+          </a>
         </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-th-large" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+<% end %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #E5412D; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
       <h3> Utenti </h3>
 
@@ -55,26 +55,24 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+<% if can? :manage, :all %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #70AAFF; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if can? :manage, :all %>
-        <h3> Pubblicazioni </h3>
+          <h3> Pubblicazioni </h3>
 
-        <a href="/easyadmin/published" style="color: #FFF">
-          <i class="fa fa-calendar" style="color: #FFF"></i> Pubblicazioni <br/>
-        </a>
-      <% end %>
-    </div> <!-- /.details --> 
+          <a href="/easyadmin/published" style="color: #FFF">
+            <i class="fa fa-calendar" style="color: #FFF"></i> Pubblicazioni <br/>
+          </a>
+        </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-calendar" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #FF9DBD; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if can? :manage, :all %>
         <h3> Carosello </h3>
 
         <a href="/easyadmin/home_launchers" style="color: #FFF">
@@ -83,20 +81,20 @@
         <a href="/easyadmin/home_launchers/new" style="color: #FFF">
           <i class="fa fa-gears" style="color: #FFF"></i> Nuovo item <br/>
         </a>
-        <% end %>
     </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-flag" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+  <% end %>
   </div> <!-- /.row -->
 
   <div class="row">
+  <% if can? :manage, :all %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #FFA527; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if can? :manage, :all %>
         <h3> CallToAction </h3>
 
         <a href="/easyadmin/cta" style="color: #FFF">
@@ -108,33 +106,29 @@
         <a href="/easyadmin/cta/new" style="color: #FFF">
           <i class="fa fa-gears" style="color: #FFF"></i> Nuova <br/>
         </a>
-        <% end %>
-    </div> <!-- /.details --> 
+      </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-futbol-o" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #DDD; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if can? :manage, :all %>
         <h3> Promocode </h3>
 
         <a href="/easyadmin/promocode" style="color: #FFF">
           <i class="fa fa-ticket" style="color: #FFF"></i> Promocode <br/>
         </a>
-      <% end %>
-    </div> <!-- /.details --> 
+      </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-ticket" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #50A550; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if can? :manage, :all %>
         <h3> Rewards </h3>
 
         <a href="/easyadmin/reward" style="color: #FFF">
@@ -143,17 +137,15 @@
         <a href="/easyadmin/reward/new" style="color: #FFF">
           <i class="fa fa-save" style="color: #FFF"></i> Nuovo <br/>
         </a>
-      <% end %>
-    </div> <!-- /.details --> 
+      </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-trophy" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #C89175; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if can? :manage, :all %>
         <h3> Tag </h3>
 
         <a href="/easyadmin/tag" style="color: #FFF">
@@ -165,20 +157,20 @@
         <a href="/easyadmin/retag" style="color: #FFF">
           <i class="fa fa-reply-all" style="color: #FFF"></i> Ritagga <br/>
         </a>
-        <% end %>
-    </div> <!-- /.details --> 
+      </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-tags" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+    <% end %>
   </div> <!-- /.row -->
 
   <div class="row">
+  <% if (can? :manage, :all) || (can? :manage, :comments) %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #7EBBE5; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if (can? :manage, :all) || (can? :manage, :comments) %>
         <h3> Commenti </h3>
 
         <a href="/easyadmin/comments/to_approved" style="color: #FFF">
@@ -190,76 +182,72 @@
         <a href="/easyadmin/comments/not_approved" style="color: #FFF">
           <i class="fa fa-minus-square-o" style="color: #FFF"></i> Oscurati <br/>
         </a>
-      <% end %>
-    </div> <!-- /.details --> 
+      </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-comment" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+  <% end %>
+  <% if can? :manage, :all %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #FF7A59; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if can? :manage, :all %>
-        <h3> Notifiche </h3>
+          <h3> Notifiche </h3>
 
-        <a href="/easyadmin/notices" style="color: #FFF">
-          <i class="fa fa-th-list" style="color: #FFF"></i> Lista <br/>
-        </a>
-        <a href="/easyadmin/notices/new" style="color: #FFF">
-          <i class="fa fa-save" style="color: #FFF"></i> Nuovo <br/>
-        </a>
-      <% end %>
-    </div> <!-- /.details --> 
+          <a href="/easyadmin/notices" style="color: #FFF">
+            <i class="fa fa-th-list" style="color: #FFF"></i> Lista <br/>
+          </a>
+          <a href="/easyadmin/notices/new" style="color: #FFF">
+            <i class="fa fa-save" style="color: #FFF"></i> Nuovo <br/>
+          </a>
+        </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-envelope" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #EECC00; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if can? :manage, :all %>
-        <h3> Classifiche </h3>
+          <h3> Classifiche </h3>
 
-        <a href="/easyadmin/ranking" style="color: #FFF">
-          <i class="fa fa-th-list" style="color: #FFF"></i> Elenco classifiche <br/>
-        </a>
-        <a href="/easyadmin/ranking/new" style="color: #FFF">
-          <i class="fa fa-save" style="color: #FFF"></i> Nuova classifica <br/>
-        </a>
-      <% end %>
-    </div> <!-- /.details --> 
+          <a href="/easyadmin/ranking" style="color: #FFF">
+            <i class="fa fa-th-list" style="color: #FFF"></i> Elenco classifiche <br/>
+          </a>
+          <a href="/easyadmin/ranking/new" style="color: #FFF">
+            <i class="fa fa-save" style="color: #FFF"></i> Nuova classifica <br/>
+          </a>
+      </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-star" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat primary" style="background-color: #333; min-height: 175px">
+      <div class="dashboard-stat primary" style="background-color: #646464; min-height: 175px">
         <div class="details">
-      <% if can? :manage, :all %>
-        <h3> Impostazioni </h3>
+          <h3> Impostazioni </h3>
 
-        <a href="/easyadmin/rules" style="color: #FFF">
-          <i class="fa fa-comment" style="color: #FFF"></i> Regole Reward <br/>
-        </a>
-        <a href="/easyadmin/settings/browse" style="color: #FFF">
-          <i class="fa fa-th-large" style="color: #FFF"></i> Pagina Browse <br/>
-        </a>
-        <a href="/easyadmin/settings/ranking" style="color: #FFF">
-          <i class="fa fa-sort-amount-asc" style="color: #FFF"></i> Pagina Classifiche <br/>
-        </a>
-        <a href="/easyadmin/settings/notifications" style="color: #FFF">
-          <i class="fa fa-paper-plane" style="color: #FFF"></i> Impostazioni notifiche <br/>
-        </a>
-      <% end %>
-    </div> <!-- /.details --> 
+          <a href="/easyadmin/rules" style="color: #FFF">
+            <i class="fa fa-comment" style="color: #FFF"></i> Regole Reward <br/>
+          </a>
+          <a href="/easyadmin/settings/browse" style="color: #FFF">
+            <i class="fa fa-th-large" style="color: #FFF"></i> Pagina Browse <br/>
+          </a>
+          <a href="/easyadmin/settings/ranking" style="color: #FFF">
+            <i class="fa fa-sort-amount-asc" style="color: #FFF"></i> Pagina Classifiche <br/>
+          </a>
+          <a href="/easyadmin/settings/notifications" style="color: #FFF">
+            <i class="fa fa-paper-plane" style="color: #FFF"></i> Impostazioni notifiche <br/>
+          </a>
+        </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-gear" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+    <% end %>
   </div> <!-- /.row -->
 
 </div>
