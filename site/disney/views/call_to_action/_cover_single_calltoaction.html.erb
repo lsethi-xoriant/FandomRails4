@@ -24,12 +24,15 @@
             Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
           </span>  
         </div> 
-        <div class="col-xs-12 text-left cta-cover__title">
+        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id == null">
           <span ng-if="calltoaction_info.miniformat" class="label label-default cta-cover__miniformat" style="background-color: {{calltoaction_info.miniformat.label_background}} !important; color: {{calltoaction_info.miniformat.label_color}} !important;">
             <span class="{{calltoaction_info.miniformat.icon}}"></span>
             {{calltoaction_info.miniformat.title}}
           </span>
           <p>{{calltoaction_info.calltoaction.title}}</p>
+        </div>
+        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id != null">
+          <p><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}}</p>
         </div>
       <% end %>
     </div>

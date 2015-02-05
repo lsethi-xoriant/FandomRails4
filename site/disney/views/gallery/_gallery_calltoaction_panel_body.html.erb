@@ -32,7 +32,7 @@
 			  				</ul>
 			  			</p>
 			  		</div>
-			  		<div class="col-xs-6 col-xs-offset-3 gallery-cta__upload-release">
+			  		<div class="col-xs-12 col-sm-6 col-sm-offset-3 gallery-cta__upload-release">
 			  				<input id="releasing" name="releasing" class="hidden" type="file" onchange="releaseSelected();">
 			  				<a class="btn btn-primary btn-block" onclick="loadRelease();"><i class="fa fa-pencil"></i> Carica la liberatoria firmata</a>
 			  		</div>
@@ -43,7 +43,7 @@
 			  			<label>Accettazione privacy</label>
 			  			<p class="small">{{upload.interaction.resource.upload_info.privacy.description}}</p>
 		  			</div>
-		  			<div class="col-sm-4 text-right">
+		  			<div class="col-sm-4">
 		  				<button type="submit" class="btn btn-primary" ng-if="current_user != undefined">CARICA</button>
 						<button class="btn btn-primary" data-toggle="modal" data-target="#login" ng-if="current_user == undefined">CARICA</button>
 		  			</div>

@@ -24,7 +24,7 @@ class GalleryController < ApplicationController
       if gallery_tag_ids.blank?
         []
       else
-        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).to_a
+        CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).limit(6).to_a
       end
     else
       get_user_ctas_with_tag(gallery.name)

@@ -68,7 +68,10 @@ module CallToActionHelper
           "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
           "interaction_info_list" => build_interaction_info_list(calltoaction, interactions_to_compute),
           "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}"),
-          "activated_at" => calltoaction.activated_at
+          "activated_at" => calltoaction.activated_at,
+          "user_id" => calltoaction.user_id,
+          "user_name" => calltoaction.user.nil? ? "" : calltoaction.user.username,
+          "user_avatar" => user_avatar(calltoaction.user)
         },
         "prize" => prize,
         "flag" => flag_info,
