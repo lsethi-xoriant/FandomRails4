@@ -1,4 +1,4 @@
-class Easyadmin::RankingController < ApplicationController
+class Easyadmin::RankingController < Easyadmin::EasyadminController
   include EasyadminHelper
 
   layout "admin"

@@ -121,6 +121,11 @@ module CallToActionHelper
           like_info = build_likes_for_resource(interaction)
         when "upload"
           upload_info = build_uploads_for_resource(interaction)
+        when "vote"
+          vote_info = {
+            min: interaction.resource.vote_min,
+            max: interaction.resource.vote_max
+          }
         end
 
         if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
@@ -146,6 +151,7 @@ module CallToActionHelper
               "comment_info" => comment_info,
               "like_info" => like_info,
               "upload_info" => upload_info,
+              "vote_info" => vote_info,
               "url" => resource_url
             }
           },

@@ -87,6 +87,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.current_user = current_user;
     $scope.calltoactions = calltoaction_info_list;
 
+    $scope.answer_in_progress = false;
+
     if($scope.aux.from_registration) {
       $("#registration-modal").modal("show");
       ga('send', 'event', "Registration", "Registration", "Registration", 1, true);
@@ -459,6 +461,30 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.getDownloadInteraction = function(calltoaction_id) {
     return getInteraction(calltoaction_id, "download");
+  };
+
+  $scope.checkUndervideoInteractionTypes = function (interaction_info) {
+    return (
+            interaction_info.interaction.resource_type != 'like' 
+            && interaction_info.interaction.resource_type != 'comment' 
+            && interaction_info.interaction.resource_type != 'link'
+            && interaction_info.interaction.resource_type != 'vote'
+            && interaction_info.interaction.resource_type != 'download'
+          );
+  }
+
+
+  // Build an array from min to max for AngularJS ng-repeat
+  $scope.range = function(min, max) {
+    result = [];
+    for (var i = min; i <= max; i++) {
+      result.push(i);
+    }
+    return result;
+  }
+
+  $scope.getVoteInteraction = function(calltoaction_id) {
+    return getInteraction(calltoaction_id, "vote");
   };
 
   function getInteraction(calltoaction_id, interaction_type) {
@@ -1277,6 +1303,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     if($scope.current_user || $scope.aux.anonymous_interaction) {
 
+      if($scope.answer_in_progress) {
+        return;
+      }
+
+      $scope.answer_in_progress = true;
+
       calltoaction_id = calltoaction_info.calltoaction.id;
       interaction_id = interaction_info.interaction.id;
 
@@ -1340,6 +1372,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
                 $timeout(function() { 
                   interaction_info.feedback = false;
                   interaction_info.interaction.overvideo_active = false;
+                  $scope.answer_in_progress = false;
                 }, 3000);
 
                 // Answer exit animation
@@ -1366,6 +1399,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
                 $timeout(function() { 
                   interaction_info.feedback = false;
                   $timeout(function() { 
+                    $scope.answer_in_progress = false;
                     removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
                   }, 3000);
                 }, 1000);
@@ -1382,13 +1416,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
                   interaction_info.interaction.resource.like_info -= 1;
                 } 
               }
+
+              $scope.answer_in_progress = false;
             }
             
             if(interaction_info.interaction.resource_type == "download") {
-              //window.open(data.download_interaction_attachment, '_blank');
-              newWindow.location = data.download_interaction_attachment;
+              newWindow.location = data.download_interaction_attachment; //window.open(data.download_interaction_attachment, '_blank');
             } else if(interaction_info.interaction.resource_type == "link") {
               window.location = interaction_info.interaction.resource.url;
+            } else if(interaction_info.interaction.resource_type == "vote") {
+              interaction_info.class = "vote-interaction__baloon-container--hide";
             }
 
             /*
@@ -1428,7 +1465,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             */
 
           }).error(function() {
-            // ERROR.
+            $scope.answer_in_progress = false;
           });
           
     } else {
