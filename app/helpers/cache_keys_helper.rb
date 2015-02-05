@@ -280,6 +280,18 @@ module CacheKeysHelper
     "ctas_gallery"
   end
   
+  def get_carousel_gallery_cache_key
+    "carousel_galleries"
+  end
+  
+  def get_index_gallery_ctas_cache_key
+    "infex_gallery_ctas"
+  end
+  
+  def get_gallery_ctas_cache_key(gallery_id)
+    "gallery_#{gallery_id}_ctas"
+  end
+  
   # Instantwin
   # ~~~~~~~~~~
   
