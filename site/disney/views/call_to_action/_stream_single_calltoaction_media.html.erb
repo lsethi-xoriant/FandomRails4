@@ -67,6 +67,27 @@
     </div>
   </div>
 
+  <!-- VOTE INTERACTION -->
+  <div class="play-interaction__container" ng-if="(interaction_info = getVoteInteraction(calltoaction_info.calltoaction.id))">
+    <div class="col-md-12 text-center" style="position: absolute; bottom: 25px;">
+      <%= render partial: "/call_to_action/vote_interaction" %>
+    </div>
+    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.status.winnable_reward_count > 0" class="row">
+      <div class="col-md-12 play-interaction__winnable-reward text-center">
+        <span class="label label-success cta-cover__winnable-reward__label">
+          Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+        </span> 
+      </div>
+    </div>
+    <div ng-if="!interaction_info.user_interaction && interaction_info.status.winnable_reward_count > 0" class="row text-center">
+      <div class="col-md-12 play-interaction__winnable-reward">
+        <span class="label label-warning cta-cover__winnable-reward__label">
+          +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+        </span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <!-- IFRAME -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >

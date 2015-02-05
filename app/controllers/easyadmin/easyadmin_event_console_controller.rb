@@ -1,4 +1,4 @@
-class Easyadmin::EasyadminEventConsoleController < ApplicationController
+class Easyadmin::EasyadminEventConsoleController < Easyadmin::EasyadminController
   include EasyadminHelper
   include TableHelper
 

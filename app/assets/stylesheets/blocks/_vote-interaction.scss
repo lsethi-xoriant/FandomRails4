@@ -1,0 +1,102 @@
+/* VOTE */
+
+.vote-interaction__baloon-container {
+  display: none;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.8);
+  bottom: 20px;
+  position: relative;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  opacity: 0;
+}
+
+.vote-interaction__baloon-container--show {
+  display: inline-block;
+  -webkit-animation: voteFadeIn 1s forwards;
+  animation: voteFadeIn 1s forwards;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s; 
+}
+
+@-webkit-keyframes voteFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes voteFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.vote-interaction__baloon-container--hide {
+  -webkit-animation: voteFadeOut 1s forwards;
+  animation: voteFadeOut 1s forwards;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s; 
+}
+
+@-webkit-keyframes voteFadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; display: none; }
+}
+
+@keyframes voteFadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; display: none; }
+}
+
+.vote-interaction__baloon {
+  display: inline-block;
+}
+
+.vote-interaction__baloon:before {
+  border-top: 9px solid rgba(255, 255, 255, 0.8); ;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  content: "";
+  height: 0;
+  left: 0;
+  margin: 0 auto;
+  position: absolute;
+  right: 0;
+  bottom: -9px;
+  width: 0;
+}
+
+.vote-interaction__baloon__element {
+  padding: 10px 5px;
+  background: transparent;
+  display: inline-block; 
+  .vote-interaction__baloon__element-pin {
+    background: transparent;
+    width: 40px; 
+    height: 40px; 
+    border: 1px solid #333; 
+    color: #333;
+    border-radius: 50%; 
+    p {
+      line-height: 40px;
+    }
+  }
+}
+
+.vote-interaction__baloon:hover > .vote-interaction__baloon__element > .vote-interaction__baloon__element-pin {
+  background: $blu; 
+  background: -webkit-linear-gradient($blu, #2e78c5);
+  background: -o-linear-gradient($blu, #2e78c5);
+  background: -moz-linear-gradient($blu, #2e78c5);
+  background: linear-gradient($blu, #2e78c5);
+  border: 1px solid #333; 
+  color: #fff;
+}
+
+.vote-interaction__baloon__element:hover ~ .vote-interaction__baloon__element > .vote-interaction__baloon__element-pin {
+  background: transparent;
+  border: 1px solid #333; 
+  color: #333;
+}

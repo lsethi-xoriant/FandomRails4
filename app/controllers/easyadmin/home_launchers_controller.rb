@@ -1,4 +1,4 @@
-class Easyadmin::HomeLaunchersController < ApplicationController
+class Easyadmin::HomeLaunchersController < Easyadmin::EasyadminController
   include EasyadminHelper
 
   layout "admin"

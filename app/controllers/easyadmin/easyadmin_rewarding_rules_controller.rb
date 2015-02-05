@@ -1,4 +1,4 @@
-class Easyadmin::EasyadminRewardingRulesController < ApplicationController
+class Easyadmin::EasyadminRewardingRulesController < Easyadmin::EasyadminController
   include EasyadminHelper
   include RewardingSystemHelper
 

@@ -461,6 +461,30 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return getInteraction(calltoaction_id, "download");
   };
 
+  $scope.checkUndervideoInteractionTypes = function (interaction_info) {
+    return (
+            interaction_info.interaction.resource_type != 'like' 
+            && interaction_info.interaction.resource_type != 'comment' 
+            && interaction_info.interaction.resource_type != 'link'
+            && interaction_info.interaction.resource_type != 'vote'
+            && interaction_info.interaction.resource_type != 'download'
+          );
+  }
+
+
+  // Build an array from min to max for AngularJS ng-repeat
+  $scope.range = function(min, max) {
+    result = [];
+    for (var i = min; i <= max; i++) {
+      result.push(i);
+    }
+    return result;
+  }
+
+  $scope.getVoteInteraction = function(calltoaction_id) {
+    return getInteraction(calltoaction_id, "vote");
+  };
+
   function getInteraction(calltoaction_id, interaction_type) {
     result = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
@@ -1389,6 +1413,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               newWindow.location = data.download_interaction_attachment;
             } else if(interaction_info.interaction.resource_type == "link") {
               window.location = interaction_info.interaction.resource.url;
+            } else if(interaction_info.interaction.resource_type == "vote") {
+              interaction_info.class = "vote-interaction__baloon-container--hide";
             }
 
             /*
