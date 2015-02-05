@@ -1,18 +1,13 @@
+<div class="col-sm-12">
+  <p>{{interaction_info.interaction.resource.title}}</p>
+</div>
+
 <div class="vote-interaction__baloon-container {{interaction_info.class}}">
   <div class="vote-interaction__baloon">
     <div ng-repeat="i in range(interaction_info.interaction.resource.vote_info.min, interaction_info.interaction.resource.vote_info.max)" class="vote-interaction__baloon__element">
-      <div class="vote-interaction__baloon__element-pin" ng-click="updateAnswer(calltoaction_info, interaction_info, i, interaction_info.interaction.when_show_interaction)">
+      <div class="vote-interaction__baloon__element-pin" ng-click="updateAnswer(calltoaction_info, interaction_info, i, interaction_info.interaction.when_show_interaction)" ng-if="!interaction_info.user_interaction">
         <p>{{i}}</p>
       </div>
     </div>
   </div>
-</div>
-
-<div class="col-xs-12" ng-if="interaction_info.user_interaction" style="relative: absolute; bottom: 0;">
-  <!-- CURRENT USER HAS ALREADY RESPONDED -->
-  <button class="btn btn-blue btn-lg active"><span>{{interaction_info.interaction.resource.title}}</span></button>
-</div>
-<div class="col-xs-12" ng-if="!interaction_info.user_interaction" style="relative: absolute; bottom: 0;">
-  <!-- CURRENT USER HAS NOT RESPONDED -->
-  <a class="btn btn-lg btn-blue" ng-click="interaction_info.class = 'vote-interaction__baloon-container--show'"><span>{{interaction_info.interaction.resource.title}}</span></a>
 </div>

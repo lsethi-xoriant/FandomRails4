@@ -19,6 +19,9 @@
   </div>  
   <div ng-if="interaction_info.interaction.resource_type == 'link'" class="col-sm-12">
     <%= render partial: "/call_to_action/link_interaction" %>
+  </div> 
+  <div ng-if="interaction_info.interaction.resource_type == 'vote' && calltoaction_info.calltoaction.media_type != 'IMAGE'" class="col-sm-12 text-center visible-xs">
+    <%= render partial: "/call_to_action/vote_interaction" %>
   </div>  
 </div>
 
@@ -60,7 +63,7 @@
 </div>
 -->
 
-<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && checkUndervideoInteractionTypes(interaction_info)" class="row text-center interaction__winnable-reward--undervideo__row">
+<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
     <span class="label label-success cta-cover__winnable-reward__label">
       Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
@@ -68,7 +71,7 @@
   </div>
 </div>
 
-<div ng-if="!interaction_info.user_interaction && checkUndervideoInteractionTypes(interaction_info)" class="row text-center interaction__winnable-reward--undervideo__row">
+<div ng-if="!interaction_info.user_interaction && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
     <span class="label label-warning cta-cover__winnable-reward__label">
       +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">

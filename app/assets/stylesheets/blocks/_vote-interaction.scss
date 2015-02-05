@@ -1,5 +1,20 @@
 /* VOTE */
 
+.vote-interaction {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.vote-interaction__row-overvideo {
+  bottom: 25px;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
 .vote-interaction__baloon-container {
   display: none;
   border-radius: 5px;
@@ -99,4 +114,29 @@
   background: transparent;
   border: 1px solid #333; 
   color: #333;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .vote-undervideo-mobile {
+    .vote-interaction__baloon-container {
+      display: inline-block;
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.2);
+      margin-top: 30px;
+    }
+
+    .vote-interaction__baloon:before {
+      border-top: 9px solid rgba(0, 0, 0, 0.2); ;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      content: "";
+      height: 0;
+      left: 0;
+      margin: 0 auto;
+      position: absolute;
+      right: 0;
+      bottom: -9px;
+      width: 0;
+    }
+  }
 }

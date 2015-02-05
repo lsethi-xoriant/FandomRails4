@@ -1380,7 +1380,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
                 //  answer.class = "trivia-interaction__answer--visible";
                 //});
 
-              } else {
+              } else if(interaction_info.interaction.resource_type == "versus") {
   
                 interaction_info.feedback = true;
 
@@ -1404,6 +1404,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
                   }, 3000);
                 }, 1000);
 
+              } else {
+                removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
+                $scope.answer_in_progress = false;
               }
 
             } else {
@@ -1424,8 +1427,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               newWindow.location = data.download_interaction_attachment; //window.open(data.download_interaction_attachment, '_blank');
             } else if(interaction_info.interaction.resource_type == "link") {
               window.location = interaction_info.interaction.resource.url;
-            } else if(interaction_info.interaction.resource_type == "vote") {
-              interaction_info.class = "vote-interaction__baloon-container--hide";
             }
 
             /*

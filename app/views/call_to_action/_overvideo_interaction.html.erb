@@ -1,5 +1,5 @@
 <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterOvervideoDuringInteractions | filter:filterOvervideoDuringActiveInteraction" class="col-xs-12 {{interaction_info.interaction.resource_type}}-interaction" ng-if="overvideoInteractionsPresent(calltoaction_info.calltoaction.id)" ng-class="{'{{interaction_info.interaction.resource_type}}-interaction--feedback': interaction_info.feedback}">
-  <div class="row">
+  <div class="row {{interaction_info.interaction.resource_type}}-interaction__row-overvideo">
     <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-md-12 hidden-xs">
       <%= render partial: "/call_to_action/trivia_interaction_overvideo" %>
     </div>
@@ -15,12 +15,15 @@
     <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-md-12 hidden-xs">
       <%= render partial: "/call_to_action/upload_interaction" %>
     </div>  
+    <div ng-if="interaction_info.interaction.resource_type == 'vote'" class="col-md-12 hidden-xs text-center vote-interaction__overvideo-col">
+      <%= render partial: "/call_to_action/vote_interaction" %>
+    </div>  
 
     <div class="col-md-12 visible-xs text-center">
       <p class="interaction__go-to-mobile">ACCEDI DA MOBILE</p>
     </div>
 
-    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && !interaction_info.feedback" class="row {{interaction_info.reward_class}}">
+    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && !interaction_info.feedback && interaction_info.status.winnable_reward_count > 0" class="row {{interaction_info.reward_class}}">
       <div class="col-md-12 interaction__winnable-reward text-center">
         <span class="label label-success cta-cover__winnable-reward__label">
           Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
@@ -28,7 +31,7 @@
       </div>
     </div>
 
-    <div ng-if="!interaction_info.user_interaction && !interaction_info.feedback" class="row text-center">
+    <div ng-if="!interaction_info.user_interaction && !interaction_info.feedback && interaction_info.status.winnable_reward_count > 0" class="row text-center">
       <div class="col-md-12 interaction__winnable-reward {{interaction_info.reward_class}}">
         <span class="label label-warning cta-cover__winnable-reward__label">
           +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
