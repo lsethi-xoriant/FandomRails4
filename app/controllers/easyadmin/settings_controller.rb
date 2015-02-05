@@ -1,4 +1,4 @@
-class Easyadmin::SettingsController < ApplicationController
+class Easyadmin::SettingsController < Easyadmin::EasyadminController
   include EasyadminHelper
 
   layout "admin"

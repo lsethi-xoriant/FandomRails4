@@ -1,4 +1,4 @@
-class Easyadmin::EasyadminNoticeController < ApplicationController
+class Easyadmin::EasyadminNoticeController < Easyadmin::EasyadminController
   include EasyadminHelper
   include TableHelper
   include NoticeHelper

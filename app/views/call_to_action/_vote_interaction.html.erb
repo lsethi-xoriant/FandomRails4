@@ -1,47 +1,18 @@
-<div class="row" style="margin-bottom: 15px; margin-top: 15px;">
-  <div class="col-sm-10 col-sm-offset-1" style="padding: 0 30px;">
-    <p class="text-center" style="font-size: 16px;"><%= interaction.resource.title.html_safe %></p>
-  </div>
-
-  <% if current_user && current_user.user_interactions.find_by_interaction_id(interaction.id) && interaction.resource.oneshot? %>
-    <!-- CURRENT USER HAS ALREADY VOTED -->
-    <% vote = JSON.parse(current_user.user_interactions.find_by_interaction_id(interaction.id).aux)['vote'] %>
-    <div class="col-xs-6 col-xs-offset-3 text-center">
-      <button class="btn btn-primary btn-lg disabled"><%= vote %></button>
-    </div>
-  <% else %>
-    <!-- CURRENT USER HAS NOT VOTED -->
-    <div class="col-xs-6 col-xs-offset-3 text-center">
-    	<div class="row text-center">
-    		<div class="col-xs-12">
-    			<% if current_user && current_user.user_interactions.find_by_interaction_id(interaction.id) && !interaction.resource.oneshot? %>
-    			<% vote = JSON.parse(current_user.user_interactions.find_by_interaction_id(interaction.id).aux)['vote'] %>
-    				<p>Voto precedente: <%= vote %></p>
-    			<% end %>
-    		  <select id="interaction-<%= interaction.id %>-vote-value">
-		      	<% (interaction.resource.vote_min..interaction.resource.vote_max).each do |i| %>
-		      		<option value="<%= i %>"><%= i %></option>
-		      	<% end %>
-		      </select>
-		    </div>
-    	</div>
-      <div class="row text-center">
-      	<div class="col-xs-12">
-      		<button class="button-inter-<%= interaction.id %> btn btn-lg btn-primary" onclick="updateVote(<%= interaction.call_to_action.id %>, <%= interaction.id %>, '<%= interaction.when_show_interaction %>')">VOTA</button>
-      	</div>
+<div class="vote-interaction__baloon-container {{interaction_info.class}}">
+  <div class="vote-interaction__baloon">
+    <div ng-repeat="i in range(interaction_info.interaction.resource.vote_info.min, interaction_info.interaction.resource.vote_info.max)" class="vote-interaction__baloon__element">
+      <div class="vote-interaction__baloon__element-pin" ng-click="updateAnswer(calltoaction_info, interaction_info, i, interaction_info.interaction.when_show_interaction)">
+        <p>{{i}}</p>
       </div>
     </div>
-  <% end %>
+  </div>
 </div>
 
-<div class="row">
-  <% if current_user %>
-    <% if outcome && outcome.reward_name_to_counter[MAIN_REWARD_NAME] && outcome.reward_name_to_counter[MAIN_REWARD_NAME] > 0 %>       
-      <div class="col-sm-10 col-sm-offset-1 text-center">
-        <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
-        <strong>Bravo!</strong> Hai guadagnato +<%= outcome.reward_name_to_counter[MAIN_REWARD_NAME] %> punti.
-        </div>
-      </div> 
-    <% end %>
-  <% end %>
+<div class="col-xs-12" ng-if="interaction_info.user_interaction" style="relative: absolute; bottom: 0;">
+  <!-- CURRENT USER HAS ALREADY RESPONDED -->
+  <button class="btn btn-blue btn-lg active"><span>{{interaction_info.interaction.resource.title}}</span></button>
+</div>
+<div class="col-xs-12" ng-if="!interaction_info.user_interaction" style="relative: absolute; bottom: 0;">
+  <!-- CURRENT USER HAS NOT RESPONDED -->
+  <a class="btn btn-lg btn-blue" ng-click="interaction_info.class = 'vote-interaction__baloon-container--show'"><span>{{interaction_info.interaction.resource.title}}</span></a>
 </div>

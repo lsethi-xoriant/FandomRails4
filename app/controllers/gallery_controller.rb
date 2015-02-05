@@ -4,7 +4,7 @@
 class GalleryController < ApplicationController
   def index
     @galleries_cta = get_gallery_ctas_carousel
-    galleries_user_cta = get_gallery_ctas()
+    galleries_user_cta = cache_short(get_index_gallery_ctas_cache_key) { get_gallery_ctas() }
     @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share"])
   end
   
@@ -14,7 +14,7 @@ class GalleryController < ApplicationController
     @upload_interaction_id = cta.interactions.find_by_resource_type("Upload").id
     @aux_other_params = { "gallery" => build_call_to_action_info_list([cta]).first }
     @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
-    galleries_user_cta = get_gallery_ctas(@gallery_tag)
+    galleries_user_cta = cache_short(get_gallery_ctas_cache_key(@gallery_tag.id)) { get_gallery_ctas(@gallery_tag) }
     @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share"])
   end
   
@@ -24,7 +24,7 @@ class GalleryController < ApplicationController
       if gallery_tag_ids.blank?
         []
       else
-        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).to_a
+        CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).limit(6).to_a
       end
     else
       get_user_ctas_with_tag(gallery.name)
@@ -32,8 +32,10 @@ class GalleryController < ApplicationController
   end
   
   def get_gallery_ctas_carousel
-    gallery_tag_names = get_tags_with_tag("gallery").map{ |t| t.name}
-    get_ctas_with_tags(gallery_tag_names)
+    cache_medium(get_carousel_gallery_cache_key) do
+      gallery_tag_names = get_tags_with_tag("gallery").map{ |t| t.name}
+      get_ctas_with_tags(gallery_tag_names)
+    end
   end
   
 end

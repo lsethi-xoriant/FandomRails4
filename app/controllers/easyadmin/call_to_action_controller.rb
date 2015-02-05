@@ -3,7 +3,7 @@
 
 require 'fandom_utils'
 
-class Easyadmin::CallToActionController < ApplicationController
+class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   include EasyadminHelper
   include CallToActionHelper
   include RewardingSystemHelper

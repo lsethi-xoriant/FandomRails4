@@ -1,4 +1,4 @@
-class Easyadmin::EasyadminRewardController < ApplicationController
+class Easyadmin::EasyadminRewardController < Easyadmin::EasyadminController
   include EasyadminHelper
   include FilterHelper
 

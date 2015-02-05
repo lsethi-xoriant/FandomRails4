@@ -1,4 +1,4 @@
-class Easyadmin::TagController < ApplicationController
+class Easyadmin::TagController < Easyadmin::EasyadminController
   include EasyadminHelper
   include GraphHelper
   include FilterHelper

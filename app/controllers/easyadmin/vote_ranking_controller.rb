@@ -1,4 +1,4 @@
-class Easyadmin::VoteRankingController < ApplicationController
+class Easyadmin::VoteRankingController < Easyadmin::EasyadminController
   include EasyadminHelper
   include GraphHelper
 
