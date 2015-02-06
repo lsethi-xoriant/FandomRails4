@@ -38,4 +38,11 @@ class GalleryController < ApplicationController
     end
   end
   
+  def how_to
+    cta = CallToAction.find(params[:id])
+    @cta_id = cta.id
+    @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
+    @info = get_extra_fields!(@gallery_tag)
+  end
+  
 end

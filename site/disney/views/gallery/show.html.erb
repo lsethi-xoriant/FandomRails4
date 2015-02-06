@@ -42,8 +42,7 @@
 	  				<img class="img-responsive" src="<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['thumbnail'], :medium) if get_extra_fields!(@gallery_tag)['thumbnail'] && upload_extra_field_present?(get_extra_fields!(@gallery_tag)['thumbnail']) %>" />
 	  			</div>
 	  			<div class="col-sm-7">
-	  				<h3><%= @gallery_tag.title %></h3>
-	  				<p><%= @gallery_tag.description %></p>
+	  				<%= @gallery_tag.description.html_safe %>
 	  				<p>&nbsp;</p>
 	  				<div class="row">
 	  					<div class="col-xs-12 text-left">
@@ -57,7 +56,6 @@
 	  			</div>
 	  		</div>
 	  	</div>
-	  	
 	</div>
   
   	<div class="row main-row main-row__covers">
