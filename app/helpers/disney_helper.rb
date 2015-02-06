@@ -214,14 +214,19 @@ module DisneyHelper
   end
 
   def get_disney_related_calltoaction_info(current_calltoaction, property)
-    cache_short(get_ctas_except_me_in_property_for_user_cache_key(current_calltoaction.id, property.id, current_or_anonymous_user.id)) do
-      calltoactions = get_disney_ctas(property).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8)
-      related_calltoaction_info = []
-      calltoactions.each do |calltoaction|
-        related_calltoaction_info << build_thumb_calltoaction(calltoaction)
-      end
-      related_calltoaction_info
+    calltoactions = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
+      miniformat = get_tag_with_tag_about_call_to_action(current_calltoaction, "miniformat")
+      CallToAction.includes(:call_to_action_tags)
+                  .where("call_to_actions.id <> ?", current_calltoaction.id)
+                  .where("call_to_action_tags.tag_id IN (?)", miniformat.map { |m| m.id })
+                  .where("call_to_actions.id IN (?)", get_disney_ctas(property).map { |calltoaction| calltoaction.id })
+                  .limit(8).to_a
+    end 
+    related_calltoaction_info = []
+    calltoactions.each do |calltoaction|
+      related_calltoaction_info << build_thumb_calltoaction(calltoaction)
     end
+    related_calltoaction_info
   end
 
   def get_disney_sidebar_info(property)
