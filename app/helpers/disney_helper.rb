@@ -213,14 +213,18 @@ module DisneyHelper
     }
   end
 
-  def get_disney_related_calltoaction_info(current_calltoaction, property)
+  def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat")
     calltoactions = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
-      miniformat = get_tag_with_tag_about_call_to_action(current_calltoaction, "miniformat")
-      CallToAction.includes(:call_to_action_tags)
-                  .where("call_to_actions.id <> ?", current_calltoaction.id)
-                  .where("call_to_action_tags.tag_id IN (?)", miniformat.map { |m| m.id })
-                  .where("call_to_actions.id IN (?)", get_disney_ctas(property).map { |calltoaction| calltoaction.id })
-                  .limit(8).to_a
+      tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
+      if tag
+        CallToAction.includes(:call_to_action_tags)
+                    .where("call_to_actions.id <> ?", current_calltoaction.id)
+                    .where("call_to_action_tags.tag_id = ?", tag.id)
+                    .where("call_to_actions.id IN (?)", get_disney_ctas(property).map { |calltoaction| calltoaction.id })
+                    .limit(8).to_a
+      else
+        get_disney_ctas(property).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8)
+      end
     end 
     related_calltoaction_info = []
     calltoactions.each do |calltoaction|
