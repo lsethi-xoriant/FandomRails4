@@ -3,6 +3,10 @@ class Sites::Disney::CallToActionController < CallToActionController
   include DisneyHelper
 
   def ordering_ctas
+    if params["other_params"] && (other_params = JSON.parse(params["other_params"])["gallery"]["calltoaction_id"])
+      gallery_calltoaction_id = other_params
+    end
+
     property = get_tag_from_params(get_disney_property())
     init_ctas = $site.init_ctas
 
@@ -11,8 +15,8 @@ class Sites::Disney::CallToActionController < CallToActionController
 
     case ordering
     when "comment"
-      calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering)) do
-        calltoaction_ids = get_disney_ctas(property).map { |calltoaction| calltoaction.id }.join(",")
+      calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering, gallery_calltoaction_id)) do
+        calltoaction_ids = get_disney_ctas(property, gallery_calltoaction_id).map { |calltoaction| calltoaction.id }.join(",")
         sql = "SELECT call_to_actions.id,  sum((user_comment_interactions.approved is not null and user_comment_interactions.approved)::integer) " +
               "FROM call_to_actions LEFT OUTER JOIN interactions ON call_to_actions.id = interactions.call_to_action_id LEFT OUTER JOIN user_comment_interactions ON interactions.resource_id = user_comment_interactions.comment_id " +
               "WHERE interactions.resource_type = 'Comment' AND call_to_actions.id in (#{calltoaction_ids}) " +
@@ -21,8 +25,8 @@ class Sites::Disney::CallToActionController < CallToActionController
         execute_sql_and_get_ctas_ordered(sql)
       end
     when "view"
-      calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering)) do
-        calltoaction_ids = get_disney_ctas(property).map { |calltoaction| calltoaction.id }.join(",")
+      calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering, gallery_calltoaction_id)) do
+        calltoaction_ids = get_disney_ctas(property, gallery_calltoaction_id).map { |calltoaction| calltoaction.id }.join(",")
         sql = "SELECT call_to_actions.id " +
               "FROM call_to_actions LEFT OUTER JOIN view_counters ON call_to_actions.id = view_counters.ref_id " +
               "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'cta') AND call_to_actions.id in (#{calltoaction_ids}) " +
@@ -30,8 +34,8 @@ class Sites::Disney::CallToActionController < CallToActionController
         execute_sql_and_get_ctas_ordered(sql)
       end
     else
-      calltoactions = cache_short(get_calltoactions_in_property_cache_key(property.id)) do
-        get_disney_ctas(property).limit(init_ctas).to_a
+      calltoactions = cache_short(get_calltoactions_in_property_cache_key(property.id, gallery_calltoaction_id)) do
+        get_disney_ctas(property, gallery_calltoaction_id).limit(init_ctas).to_a
       end
     end
 

@@ -383,23 +383,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return overvideo_end_interaction;
   }
 
-  $scope.updateOrdering = function(ordering) {
-    $http.get("/ordering_ctas", { params: { "ordering": ordering } })
-        .success(function(data) { 
-          $scope.calltoaction_ordering = ordering;
-          $scope.calltoactions = data.calltoaction_info_list;
-
-          if($scope.calltoactions.length >= $scope.calltoactions_count) {
-            $("#append-other button").hide();
-          } else {
-            $("#append-other button").show();
-          }
-
-        }).error(function() {
-          // nothing to do
-        });
-  };
-
   $scope.orderCallToActionStream = function(calltoaction_info) {
     //calltoaction_ordering
     if($scope.calltoaction_ordering == "recent") {
@@ -733,7 +716,31 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.appendCallToActionOtherParams = function() {
     return null;
-  }
+  };
+
+  $scope.updateOrderingOtherParams = function() {
+    return null;
+  };
+
+  $scope.updateOrdering = function(ordering) {
+
+    other_params = $scope.updateOrderingOtherParams();
+
+    $http.get("/ordering_ctas", { params: { "ordering": ordering, "other_params": other_params } })
+      .success(function(data) { 
+        $scope.calltoaction_ordering = ordering;
+        $scope.calltoactions = data.calltoaction_info_list;
+
+        if($scope.calltoactions.length >= $scope.calltoactions_count) {
+          $("#append-other button").hide();
+        } else {
+          $("#append-other button").show();
+        }
+
+      }).error(function() {
+        // nothing to do
+      });
+  };
 
   $scope.appendCallToAction = function() {
     if($scope.calltoactions.length < $scope.calltoactions_count) {
