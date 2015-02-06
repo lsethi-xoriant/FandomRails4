@@ -32,11 +32,12 @@ def main
 
     execute_job(logger) do
       cache_generate_rankings(conn, tenant, logger)
+      cache_generate_votes(conn, tenant, logger)
     end
 
     elapsed_time = Time.now - start_time
     logger.info "jobs executed; elapsed time: #{elapsed_time}s"
-    sleep(60 * 20) 
+    sleep(20 * 60) # 20 minutes
   end
 
 end
@@ -53,15 +54,15 @@ def cache_generate_rankings(conn, tenant, logger)
 
     cache = execute_query(conn, "SELECT max(version) FROM #{tenant + '.' if tenant}cache_versions WHERE name = '#{name}'").first
 
-    if cache
+    if cache['max'].nil?
+      new_cache_version = 1
+    else
       cache_version = cache["max"].to_i
       new_cache_version = cache["max"].to_i + 1
       result = execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_rankings WHERE name = '#{name}' AND version <> #{cache_version}")
       if result.cmd_tuples > 0
         logger.info "cache rankings with name #{name} and version != #{cache_version} deleted (#{result.cmd_tuples} rows)"
       end
-    else
-      new_cache_version = 1
     end
 
     period = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}periods WHERE start_datetime < now() AND end_datetime > now() 
@@ -74,9 +75,11 @@ def cache_generate_rankings(conn, tenant, logger)
 
     res.each_with_index do |user_res, i|
       hash = { "username" =>  nullify_or_escape_string(conn, user_res["username"]), "avatar_selected_url" => user_res["avatar_selected_url"], 
-                "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]), "counter" => user_res["counter"].to_i }
+                "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]), 
+                  "counter" => user_res["counter"].to_i }
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_rankings (name, version, user_id, position, data, created_at, updated_at) 
                             VALUES ('#{name}', #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, '#{hash.to_json}', now(), now())")
+
       # In order to avoid database stressing, the loop will sleep for 1 second every 1000 lines inserted into cache_rankings table
       if i % 500 == 0 and i != 0
         sleep(1)
@@ -85,17 +88,74 @@ def cache_generate_rankings(conn, tenant, logger)
     end
 
     hash = { "total" => res.count }
-    if cache
-      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions 
-                            SET version = #{new_cache_version}, created_at = now(), updated_at = now() WHERE name = '#{name}'")
-    else
+    if cache["max"].nil?
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_versions (name, version, data, created_at, updated_at) 
                             VALUES ('#{name}', #{new_cache_version}, '#{hash.to_json}', now(), now())")
+    else
+      execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions 
+                            SET version = #{new_cache_version}, created_at = now(), updated_at = now() WHERE name = '#{name}'")  
     end
 
     logger.info "cache ranking for #{name} successfully updated to version #{new_cache_version}: #{Time.now - start_time}"
 
   end
+
+end
+
+def cache_generate_votes(conn, tenant, logger)
+  start_time = Time.now
+
+  votes = execute_query(conn, "select call_to_action_id, sum((user_interactions.aux::json->>'vote')::integer) as sum, count(*) as count
+                                FROM disney.interactions JOIN disney.user_interactions ON interactions.id = user_interactions.interaction_id 
+                                WHERE interactions.resource_type = 'Vote' GROUP BY call_to_action_id")
+
+  cache = execute_query(conn, "SELECT max(version) FROM #{tenant + '.' if tenant}cache_versions WHERE name = 'votes-chart'").first
+
+  if cache["max"].nil?
+    new_cache_version = 1
+  else
+    cache_version = cache["max"].to_i
+    new_cache_version = cache["max"].to_i + 1
+    result = execute_query(conn, "DELETE FROM #{tenant + '.' if tenant}cache_votes WHERE version <> #{cache_version}")
+    if result.cmd_tuples > 0
+      logger.info "cache votes with version != #{cache_version} deleted (#{result.cmd_tuples} rows)"
+    end
+  end
+
+  votes.each_with_index do |vote, i|
+
+    call_to_action = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}call_to_actions WHERE id = #{vote['call_to_action_id']}").first
+
+    hash = { "cta_title" => nullify_or_escape_string(conn, call_to_action["title"]) }
+
+    if call_to_action['user_id'] != nil
+      user_res = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}users WHERE id = #{call_to_action['user_id']}").first
+
+      hash = hash.merge({ "user_id" => user_res["id"], "username" =>  nullify_or_escape_string(conn, user_res["username"]), "avatar_selected_url" => user_res["avatar_selected_url"], 
+                  "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]) })
+    else
+      hash = hash.merge({ "user_id" => nil })
+    end
+
+    execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_votes (version, call_to_action_id, vote_count, vote_sum, aux, created_at, updated_at) 
+                          VALUES (#{new_cache_version}, #{vote['call_to_action_id'].to_i}, #{vote['count']}, #{vote['sum']}, '#{hash.to_json}', now(), now())")
+
+    # In order to avoid database stressing, the loop will sleep for 1 second every 1000 lines inserted into cache_votes table
+    if i % 500 == 0 and i != 0
+      sleep(1)
+    end
+
+  end
+
+  if cache["max"].nil?
+    execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_versions (name, version, created_at, updated_at) 
+                          VALUES ('votes-chart', #{new_cache_version}, now(), now())")
+  else
+    execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions 
+                          SET version = #{new_cache_version}, created_at = now(), updated_at = now() WHERE name = 'votes-chart'")
+  end
+
+  logger.info "cache votes successfully updated to version #{new_cache_version}: #{Time.now - start_time}"
 
 end
 
