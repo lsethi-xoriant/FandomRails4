@@ -83,12 +83,12 @@ module CacheKeysHelper
     "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}_by_#{ordering}_related_to_#{related_to}"
   end
 
-  def get_calltoactions_in_property_cache_key(property_id)
-    "calltoactions_in_property_#{property_id}"
+  def get_calltoactions_in_property_cache_key(property_id, related_to = "0")
+    "calltoactions_in_property_#{property_id}_related_to_#{related_to}"
   end
 
-  def get_calltoactions_in_property_by_ordering_cache_key(property_id, ordering)
-    "calltoactions_in_property_#{property_id}_by_#{ordering}"
+  def get_calltoactions_in_property_by_ordering_cache_key(property_id, ordering, related_to = "0")
+    "calltoactions_in_property_#{property_id}_by_#{ordering}_related_to_#{related_to}"
   end
 
   def get_calltoactions_count_in_property_cache_key(property_id)

@@ -47,7 +47,14 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   };
 
   $scope.appendCallToActionOtherParams = function() {
-    console.log($scope.aux);
+    return otherParamsForGallery();
+  };
+
+  $scope.updateOrderingOtherParams = function() {
+    return otherParamsForGallery();
+  };
+
+  function otherParamsForGallery() {
     if($scope.aux.gallery) {
       other_params = new Object();
       other_params.gallery = new Object();
