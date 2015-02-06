@@ -223,7 +223,7 @@ module DisneyHelper
                     .where("call_to_actions.id IN (?)", get_disney_ctas(property).map { |calltoaction| calltoaction.id })
                     .limit(8).to_a
       else
-        get_disney_ctas(property).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8)
+        get_disney_ctas(property).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
       end
     end 
     related_calltoaction_info = []
