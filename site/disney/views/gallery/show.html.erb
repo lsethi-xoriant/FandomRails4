@@ -1,3 +1,13 @@
+<% if get_extra_fields!(@gallery_tag)['background_image'] %>
+	<style type="text/css">
+	  body {
+	    background-image: url("<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image'], :original) %>");
+	    background-position: top center;
+	    background-repeat: no-repeat;
+	  }
+	</style>
+<% end %>
+
 <div class="container main-container">
 
 	<div class="row">
@@ -37,7 +47,7 @@
   
 	<div class="row main-row">
 	  	<div class="col-xs-12 gallery-cta">
-	  		<div class="row" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image'], :original) if get_extra_fields!(@gallery_tag)['background_image'] %>); background-repeat: no-repeat; background-size: 100% auto;">
+	  		<div class="row" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['backgroun_image_upload'], :original) if get_extra_fields!(@gallery_tag)['backgroun_image_upload'] %>); background-repeat: no-repeat; background-size: 100% auto;">
 	  			<div class="col-sm-4">
 	  				<img class="img-responsive" src="<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['thumbnail'], :medium) if get_extra_fields!(@gallery_tag)['thumbnail'] && upload_extra_field_present?(get_extra_fields!(@gallery_tag)['thumbnail']) %>" />
 	  			</div>

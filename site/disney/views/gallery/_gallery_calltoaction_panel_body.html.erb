@@ -27,8 +27,20 @@
 			  			<p class="text-left"><b>{{upload.interaction.resource.upload_info.releasing.description}}</b></p>
 			  			<p>
 			  				<ul class="gallery-cta__releasing-files">
-			  					<li><i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria per miniori di 18 anni</li>
-			  					<li><i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria per maggiorenni</li>
+			  					<% if get_extra_fields!(gallery_tag)['release_under18_url'] %> 
+			  						<li>
+			  							<a target="_blank" href="<%= get_extra_fields!(gallery_tag)['release_under18_url']['url'] %>">
+			  								<i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria per miniori di 18 anni
+			  							</a>
+			  						</li>
+			  					<% end %>
+			  					<% if get_extra_fields!(gallery_tag)['release_url'] %>
+			  						<li>
+			  							<a href="<%= get_extra_fields!(gallery_tag)['release_url']['url'] %>" target="_blank">
+			  								<i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria per maggiorenni
+			  							</a>
+			  						</li>
+			  					<% end %>
 			  				</ul>
 			  			</p>
 			  		</div>
