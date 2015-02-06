@@ -146,4 +146,27 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     end
   end
 
+  def retag_tag
+    if params[:commit] == "RITAGGA"
+
+      if params[:old_tag].blank?
+        msg = "Tag da ricercare non inseriti"
+        flash.now[:error] = (flash.now[:error] ||= []) << msg
+      end
+      if params[:new_tag].blank?
+        msg = "Nuovo tag non inserito"
+        flash.now[:error] = (flash.now[:error] ||= []) << msg
+      elsif params[:new_tag].include? ","
+        msg = "Inserire un solo nuovo tag"
+        flash.now[:error] = (flash.now[:error] ||= []) << msg
+      elsif params[:old_tag].present? && params[:new_tag].present? 
+        update_class_tag_table(CallToActionTag, "call_to_action_id", "tag_id")
+        update_class_tag_table(RewardTag, "reward_id", "tag_id")
+
+        update_tags_tag_table()
+      end
+
+    end
+  end
+
 end

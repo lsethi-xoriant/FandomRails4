@@ -232,7 +232,7 @@ Fandom::Application.routes.draw do
 
     match "tag/filter", :to => "tag#filter"
     match "tag/clone/:id", :to => "tag#clone"
-    match "retag", :to => "easyadmin#retag_tag"
+    match "retag", :to => "tag#retag_tag"
 
     # USER
     match "user", :to => "easyadmin#index_user"
