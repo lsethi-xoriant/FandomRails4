@@ -510,6 +510,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (interaction_info.interaction.resource_type == "comment");
   };
 
+  $scope.evaluateVote = function(interaction_info) {
+    if(interaction_info.user_interaction) {
+      return JSON.parse(interaction_info.user_interaction.aux)["vote"];
+    } else {
+      return null;
+    }
+  }
+
   $scope.likePressed = function(interaction_info) {
     if(interaction_info.user_interaction) {
       return (JSON.parse(interaction_info.user_interaction.aux)["like"]);
