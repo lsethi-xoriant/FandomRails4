@@ -22,6 +22,7 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     if($scope.aux.flash_notice == "from-disney-registration") {
       $("#modal__from-disney-registration").modal("show");
     }
+
   };
 
   $scope.angularReady = function() {
@@ -44,6 +45,22 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
       }
     } 
   };
+
+  $scope.appendCallToActionOtherParams = function() {
+    console.log($scope.aux);
+    if($scope.aux.gallery) {
+      other_params = new Object();
+      other_params.gallery = new Object();
+      if($scope.aux.gallery.calltoaction) {
+        other_params.gallery.calltoaction_id = $scope.aux.gallery.calltoaction.id;
+      } else {
+        other_params.gallery.calltoaction_id = "all";
+      }
+      return other_params;
+    } else {
+      return null;
+    } 
+  }
 
   $scope.setAvatar = function(avatar, id) {
     $scope.form_data.current_user.avatar_selected_url = avatar;

@@ -3,23 +3,41 @@
 
 class GalleryController < ApplicationController
   def index
+
     @galleries_cta = get_gallery_ctas_carousel
-    galleries_user_cta = cache_short(get_index_gallery_ctas_cache_key) { get_gallery_ctas() }
+
+    galleries_user_cta, galleries_user_cta_count = cache_short(get_index_gallery_ctas_cache_key) { 
+      [get_gallery_ctas(), get_gallery_ctas_count()] 
+    }
+
     @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share"])
+    @aux_other_params = { 
+      "gallery" => true, 
+      "gallery_calltoactions_count" => galleries_user_cta_count
+    }
+
   end
   
   def show
     @galleries_cta = get_gallery_ctas_carousel
     cta = CallToAction.find(params[:id])
     @upload_interaction_id = cta.interactions.find_by_resource_type("Upload").id
-    @aux_other_params = { "gallery" => build_call_to_action_info_list([cta]).first }
     @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
-    galleries_user_cta = cache_short(get_gallery_ctas_cache_key(@gallery_tag.id)) { get_gallery_ctas(@gallery_tag) }
+
+    galleries_user_cta, galleries_user_cta_count = cache_short(get_gallery_ctas_cache_key(@gallery_tag.id)) { 
+      [get_gallery_ctas(@gallery_tag), get_gallery_ctas_count(@gallery_tag)]
+    }
+
     @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share"])
+
+    @aux_other_params = { 
+      "gallery" => build_call_to_action_info_list([cta]).first,
+      "gallery_calltoactions_count" => galleries_user_cta_count
+    }
   end
   
   def get_gallery_ctas(gallery = nil)
-    if gallery.nil?
+    if gallery.present?
       gallery_tag_ids = get_tags_with_tag("gallery").map{|t| t.id}
       if gallery_tag_ids.blank?
         []
@@ -30,11 +48,24 @@ class GalleryController < ApplicationController
       get_user_ctas_with_tag(gallery.name)
     end
   end
+
+  def get_gallery_ctas_count(gallery = nil)
+    if gallery.present?
+      gallery_tag_ids = get_tags_with_tag("gallery").map{|t| t.id}
+      if gallery_tag_ids.blank?
+        []
+      else
+        CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).count
+      end
+    else
+      get_user_ctas_with_tag(gallery.name).count
+    end
+  end
   
   def get_gallery_ctas_carousel
     cache_medium(get_carousel_gallery_cache_key) do
       gallery_tag_names = get_tags_with_tag("gallery").map{ |t| t.name}
-      get_ctas_with_tags(gallery_tag_names)
+      get_ctas_with_tags(gallery_tag_names, true)
     end
   end
   

@@ -75,12 +75,12 @@ module CacheKeysHelper
     "tag_#{tag_name}"
   end
 
-  def get_next_ctas_stream_for_user_cache_key(user_id, tag, prev_cta_id, cta_max_updated_at, ordering = "recent")
-    "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}_for_user_#{user_id}_by_#{ordering}"
+  def get_next_ctas_stream_for_user_cache_key(user_id, tag, prev_cta_id, cta_max_updated_at, ordering = "recent", related_to = "0")
+    "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}_for_user_#{user_id}_by_#{ordering}_related_to_#{related_to}"
   end
 
-  def get_next_ctas_stream_cache_key(tag, prev_cta_id, cta_max_updated_at, ordering = "recent")
-    "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}_by_#{ordering}"
+  def get_next_ctas_stream_cache_key(tag, prev_cta_id, cta_max_updated_at, ordering = "recent", related_to = "0")
+    "next_ctas_stream_#{tag}_#{prev_cta_id}_#{cta_max_updated_at}_by_#{ordering}_related_to_#{related_to}"
   end
 
   def get_calltoactions_in_property_cache_key(property_id)
@@ -182,8 +182,8 @@ module CacheKeysHelper
     "last_rewards_with_tag_#{tag_name}_user_#{user_id}"
   end
   
-  def get_ctas_with_tags_cache_key(tags_name)
-    "ctas_with_tags_#{tags_name.join("_")}"
+  def get_ctas_with_tags_cache_key(tags_name, with_user_cta)
+    "ctas_with_tags_#{tags_name.join("_")}_with_user_cta_#{with_user_cta}"
   end
 
   def get_all_active_ctas_cache_key()

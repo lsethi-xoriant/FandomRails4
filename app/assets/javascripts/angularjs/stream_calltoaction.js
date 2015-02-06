@@ -171,7 +171,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       $("#append-other button").show();
     }
-    
+
     $scope.extraInit();
 
   };
@@ -731,6 +731,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
   };
 
+  $scope.appendCallToActionOtherParams = function() {
+    return null;
+  }
+
   $scope.appendCallToAction = function() {
     if($scope.calltoactions.length < $scope.calltoactions_count) {
 
@@ -746,7 +750,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         calltoaction_ids_shown.push(_info.calltoaction.id);
       });
 
-      $http.post(append_calltoaction_path, { calltoaction_ids_shown: calltoaction_ids_shown, tag_id: $scope.current_tag_id, ordering: $scope.calltoaction_ordering })
+      other_params = $scope.appendCallToActionOtherParams();
+
+      $http.post(append_calltoaction_path, { calltoaction_ids_shown: calltoaction_ids_shown, other_params: other_params, ordering: $scope.calltoaction_ordering })
       .success(function(data) {
 
         angular.forEach(data.calltoaction_info_list, function(calltoaction_info) {

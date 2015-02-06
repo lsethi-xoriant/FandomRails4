@@ -85,6 +85,10 @@ class Sites::Disney::CallToActionController < CallToActionController
   end
 
   def append_calltoaction
+    if params["other_params"] && params["other_params"]["gallery"]["calltoaction_id"]
+      gallery_calltoaction_id = params["other_params"]["gallery"]["calltoaction_id"]
+    end
+
     calltoaction_ids_shown = params[:calltoaction_ids_shown]
     calltoaction_ids_shown_qmarks = (["?"] * calltoaction_ids_shown.count).join(", ")
 
@@ -92,9 +96,9 @@ class Sites::Disney::CallToActionController < CallToActionController
 
     ordering = params[:ordering]
 
-    response = cache_short(get_next_ctas_stream_for_user_cache_key(current_or_anonymous_user.id, property.id, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering)) do
-      calltoactions = cache_short(get_next_ctas_stream_cache_key(property.id, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering)) do     
-        calltoactions = get_disney_ctas(property).where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)
+    response = cache_short(get_next_ctas_stream_for_user_cache_key(current_or_anonymous_user.id, property.id, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, gallery_calltoaction_id)) do
+      calltoactions = cache_short(get_next_ctas_stream_cache_key(property.id, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, gallery_calltoaction_id)) do     
+        calltoactions = get_disney_ctas(property, gallery_calltoaction_id).where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)
         case ordering
         when "comment"
           calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")

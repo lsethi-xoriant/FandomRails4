@@ -489,10 +489,14 @@ module ApplicationHelper
     filtered_results
   end
   
-  def get_ctas_with_tags(tags_name)
-    cache_short get_ctas_with_tags_cache_key(tags_name) do
+  def get_ctas_with_tags(tags_name, with_user_cta = false)
+    cache_short get_ctas_with_tags_cache_key(tags_name, with_user_cta) do
       tag_ids = Tag.where("name in (?)", tags_name).pluck(:id)
-      CallToAction.active.includes(call_to_action_tags: :tag).where("tags.id in (?)", tag_ids).to_a
+      if with_user_cta
+        CallToAction.active.includes(call_to_action_tags: :tag).where("tags.id in (?) AND call_to_actions.user_id IS NULL", tag_ids).to_a
+      else
+        CallToAction.active.includes(call_to_action_tags: :tag).where("tags.id in (?)", tag_ids).to_a
+      end
     end
   end
   
