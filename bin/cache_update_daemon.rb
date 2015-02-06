@@ -126,7 +126,7 @@ def cache_generate_votes(conn, tenant, logger)
 
     call_to_action = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}call_to_actions WHERE id = #{vote['call_to_action_id']}").first
 
-    hash = { "cta_id" => call_to_action["id"].to_i, "cta_title" => nullify_or_escape_string(conn, call_to_action["title"]) }
+    hash = { "cta_title" => nullify_or_escape_string(conn, call_to_action["title"]) }
 
     if call_to_action['user_id'] != nil
       user_res = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}users WHERE id = #{call_to_action['user_id']}").first
