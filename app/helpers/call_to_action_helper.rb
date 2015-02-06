@@ -541,4 +541,13 @@ module CallToActionHelper
     end
   end
   
+  def get_votes_for_cta(cta_id)
+    result = UserInteraction.select("SUM((aux->>'vote')::int) as votes").where("(aux->>'call_to_action_id')::int = ?", cta_id).first
+    if result.votes.blank?
+      nil
+    else
+      result.votes
+    end
+  end
+  
 end

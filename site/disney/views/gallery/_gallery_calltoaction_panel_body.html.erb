@@ -45,28 +45,11 @@
 		  			</div>
 		  			<div class="col-sm-4">
 		  				<button type="submit" class="btn btn-primary" ng-if="current_user != undefined">CARICA</button>
-						<button class="btn btn-primary" data-toggle="modal" data-target="#login" ng-if="current_user == undefined">CARICA</button>
+						<a class="btn btn-primary" data-toggle="modal" data-target="#registrate-modal" ng-if="current_user == undefined">CARICA</a>
 		  			</div>
 			  	</div>
 	  	</div>
 	</div>
 	<% end %>
 	</div>
-</div>
-
-
-
-<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Devi essere registrato</h4>
-      </div>
-      <div class="modal-body">
-        <p>Per poter caricare contenuti devi prima effetuare il login o registrarti.</p>
-        <p><a href="users/sign_up">Login / Registrati</a></p>
-      </div>
-    </div>
-  </div>
 </div>

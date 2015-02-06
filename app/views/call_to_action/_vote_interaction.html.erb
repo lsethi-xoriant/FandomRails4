@@ -1,18 +1,30 @@
-<div class="vote-interaction__baloon-container {{interaction_info.class}}">
-  <div class="vote-interaction__baloon">
+<div class="col-sm-12 text-center visible-xs">
+  <p class="vote-interaction__title">{{interaction_info.interaction.resource.title}}</p>
+</div>
+
+<div class="vote-interaction__baloon-container" ng-class="{'vote-interaction__done': interaction_info.user_interaction, 'vote-interaction__active': !interaction_info.user_interaction}">
+
+  <div class="vote-interaction__baloon text-center">
     <div ng-repeat="i in range(interaction_info.interaction.resource.vote_info.min, interaction_info.interaction.resource.vote_info.max)" class="vote-interaction__baloon__element">
-      <div class="vote-interaction__baloon__element-pin" ng-click="updateAnswer(calltoaction_info, interaction_info, i, interaction_info.interaction.when_show_interaction)">
+      <div class="vote-interaction__baloon__element-pin" ng-click="updateAnswer(calltoaction_info, interaction_info, i, interaction_info.interaction.when_show_interaction)" ng-class="{'vote-interaction__baloon__element-pin__active': (evaluateVote(interaction_info) >= i)}">
         <p>{{i}}</p>
       </div>
     </div>
   </div>
-</div>
 
-<div class="col-xs-12" ng-if="interaction_info.user_interaction" style="relative: absolute; bottom: 0;">
-  <!-- CURRENT USER HAS ALREADY RESPONDED -->
-  <button class="btn btn-blue btn-lg active"><span>{{interaction_info.interaction.resource.title}}</span></button>
-</div>
-<div class="col-xs-12" ng-if="!interaction_info.user_interaction" style="relative: absolute; bottom: 0;">
-  <!-- CURRENT USER HAS NOT RESPONDED -->
-  <a class="btn btn-lg btn-blue" ng-click="interaction_info.class = 'vote-interaction__baloon-container--show'"><span>{{interaction_info.interaction.resource.title}}</span></a>
+  <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.status.winnable_reward_count > 0" class="row vote-interaction__reward">
+    <div class="col-md-12 play-interaction__winnable-reward text-center">
+      <span class="label label-success cta-cover__winnable-reward__label">
+        Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+      </span> 
+    </div>
+  </div>
+  <div ng-if="!interaction_info.user_interaction && interaction_info.status.winnable_reward_count > 0" class="row text-center vote-interaction__reward">
+    <div class="col-md-12 play-interaction__winnable-reward">
+      <span class="label label-warning cta-cover__winnable-reward__label">
+        +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+      </span>
+    </div>
+  </div>
+
 </div>
