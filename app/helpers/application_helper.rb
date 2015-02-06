@@ -1191,4 +1191,16 @@ module ApplicationHelper
     end
   end
   
+  def get_number_of_page(elements, per_page)
+    if elements == 0
+      0
+    elsif elements < per_page
+      1
+    elsif elements % per_page == 0
+      elemetns / per_page
+    else
+      (elements / per_page) + 1
+    end
+  end
+  
 end
