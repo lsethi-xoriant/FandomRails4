@@ -1,9 +1,9 @@
 <div class="container container--default">
 	<div class="row category-header">
-	    <img ng-src="<%= @info['header_image'] %>" class="img-responsive category-header__header-image" />
+	    <img src="<%= @info['header_image'] if @info['header_image'] %>" class="img-responsive category-header__header-image" />
 	  	<h1 class="category-header__title"><%= @gallery_tag.title %></h1>
 	  	<div class="category-header__filter-area">
-	  		<%= light_link_to "/gallery/#{@cta_id}", {"class" => "btn btn-primary"} %>Partecipa<% end %>
+	  		<%= light_link_to "/gallery/#{@cta_id}", {"class" => "btn btn-primary"} do %>Partecipa<% end %>
 	    </div>
 	</div>
 	
@@ -15,32 +15,38 @@
 	
 	<div class="row main-row">
 		<div class="col-xs-12">
-			<div class="row">
-				<div class="col-xs-12 col-sm-5">
-					<img class="img-responsive" src="<%= @info['image_row_1'] %>" />
-				</div>			
-				<div class="col-xs-12 col-sm-7">
-					<%= @info['text_row_1'].html_safe %>
+			<% if @info['image_row_1'] && @info['text_row_1'] %>
+				<div class="row">
+					<div class="col-xs-12 col-sm-5">
+						<img class="img-responsive" src="<%= @info['image_row_1'] %>" />
+					</div>			
+					<div class="col-xs-12 col-sm-7">
+						<%= @info['text_row_1'].html_safe %>
+					</div>
 				</div>
-			</div>
+			<% end %>
 			
-			<div class="row">
-				<div class="col-xs-12 col-sm-7">
-					<%= @info['text_row_2'].html_safe %>
+			<% if @info['image_row_2'] && @info['text_row_2'] %>
+				<div class="row">
+					<div class="col-xs-12 col-sm-7">
+						<%= @info['text_row_2'].html_safe %>
+					</div>
+					<div class="col-xs-12 col-sm-5">
+						<img class="img-responsive" src="<%= @info['image_row_2'] %>" />
+					</div>
 				</div>
-				<div class="col-xs-12 col-sm-5">
-					<img class="img-responsive" src="<%= @info['image_row_2'] %>" />
-				</div>
-			</div>
+			<% end %>
 			
-			<div class="row">
-				<div class="col-xs-12 col-sm-5">
-					<img class="img-responsive" src="<%= @info['image_row_3'] %>" />
-				</div>			
-				<div class="col-xs-12 col-sm-7">
-					<%= @info['text_row_3'].html_safe %>
+			<% if @info['image_row_3'] && @info['text_row_3'] %>
+				<div class="row">
+					<div class="col-xs-12 col-sm-5">
+						<img class="img-responsive" src="<%= @info['image_row_3'] %>" />
+					</div>			
+					<div class="col-xs-12 col-sm-7">
+						<%= @info['text_row_3'].html_safe %>
+					</div>
 				</div>
-			</div>
+			<% end %>
 		</div>
 	</div>
 	

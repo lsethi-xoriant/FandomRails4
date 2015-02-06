@@ -206,6 +206,7 @@ Fandom::Application.routes.draw do
   
   match "/gallery", :to => "gallery#index"
   match "/gallery/:id", :to => "gallery#show"
+  match "/gallery/how_to/:id", :to => "gallery#how_to"
   
   #match "/classifica/:id", :to => "ranking#show"
   match "classifiche", :to => "ranking#show_rankings_page"

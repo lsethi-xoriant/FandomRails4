@@ -57,8 +57,8 @@
 	  				<div class="row">
 	  					<div class="col-xs-12 text-left">
 	  						<button class="btn btn-primary" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
-	  						<% if get_extra_fields!(@gallery_tag)['rule-link'] %>
-	  							<a href="<%= get_extra_fields!(@gallery_tag)['rule-link'] %>" class="btn btn-primary">leggi il regolamento</a>
+	  						<% if get_extra_fields!(@gallery_tag)['url_gallery_rules'] %>
+	  							<a href="/gallery/<%= get_extra_fields!(@gallery_tag)['url_gallery_rules'] %>/<%= @cta_id %>" class="btn btn-primary"><%= get_extra_fields!(@gallery_tag)['label_gallery_rules'] %></a>
 	  						<% end %>
 	  					</div>
 	  				</div>
