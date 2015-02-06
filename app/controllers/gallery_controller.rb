@@ -37,7 +37,7 @@ class GalleryController < ApplicationController
   end
   
   def get_gallery_ctas(gallery = nil)
-    if gallery.present?
+    if gallery.nil?
       gallery_tag_ids = get_tags_with_tag("gallery").map{|t| t.id}
       if gallery_tag_ids.blank?
         []
@@ -50,7 +50,7 @@ class GalleryController < ApplicationController
   end
 
   def get_gallery_ctas_count(gallery = nil)
-    if gallery.present?
+    if gallery.nil?
       gallery_tag_ids = get_tags_with_tag("gallery").map{|t| t.id}
       if gallery_tag_ids.blank?
         []
@@ -58,7 +58,7 @@ class GalleryController < ApplicationController
         CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).count
       end
     else
-      get_user_ctas_with_tag(gallery.name).count
+      CallToAction.active_with_media.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", tag_name).count
     end
   end
   
