@@ -21,6 +21,7 @@ class GalleryController < ApplicationController
   def show
     @galleries_cta = get_gallery_ctas_carousel
     cta = CallToAction.find(params[:id])
+    @cta_id = cta.id
     @upload_interaction_id = cta.interactions.find_by_resource_type("Upload").id
     @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
 
