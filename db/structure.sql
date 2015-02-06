@@ -597,7 +597,8 @@ CREATE TABLE interactions (
     required_to_complete boolean,
     resource_id integer,
     resource_type character varying(255),
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json
 );
 
 
@@ -2276,7 +2277,8 @@ CREATE TABLE interactions (
     required_to_complete boolean,
     resource_id integer,
     resource_type character varying(255),
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json
 );
 
 
@@ -3955,7 +3957,8 @@ CREATE TABLE interactions (
     required_to_complete boolean,
     resource_id integer,
     resource_type character varying(255),
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json
 );
 
 
@@ -5634,7 +5637,8 @@ CREATE TABLE interactions (
     required_to_complete boolean,
     resource_id integer,
     resource_type character varying(255),
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json
 );
 
 
@@ -7313,7 +7317,8 @@ CREATE TABLE interactions (
     required_to_complete boolean,
     resource_id integer,
     resource_type character varying(255),
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json
 );
 
 
@@ -8992,7 +8997,8 @@ CREATE TABLE interactions (
     required_to_complete boolean,
     resource_id integer,
     resource_type character varying(255),
-    call_to_action_id integer
+    call_to_action_id integer,
+    aux json
 );
 
 
@@ -10330,6 +10336,41 @@ CREATE SEQUENCE cache_versions_id_seq
 --
 
 ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
+
+
+--
+-- Name: cache_votes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_votes (
+    id integer NOT NULL,
+    version integer,
+    call_to_action_id integer,
+    vote_count integer,
+    vote_sum integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    aux json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: cache_votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE cache_votes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE cache_votes_id_seq OWNED BY cache_votes.id;
 
 
 --
@@ -13808,6 +13849,13 @@ ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versi
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY cache_votes ALTER COLUMN id SET DEFAULT nextval('cache_votes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY call_to_action_tags ALTER COLUMN id SET DEFAULT nextval('call_to_action_tags_id_seq'::regclass);
 
 
@@ -16354,6 +16402,14 @@ ALTER TABLE ONLY cache_versions
 
 
 --
+-- Name: cache_votes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_votes
+    ADD CONSTRAINT cache_votes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: call_to_action_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -16897,7 +16953,7 @@ CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btr
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree (((aux ->> 'call_to_action_id'::text)));
+CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree ((((aux ->> 'call_to_action_id'::text))::integer));
 
 
 --
@@ -17221,7 +17277,7 @@ CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btr
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree (((aux ->> 'call_to_action_id'::text)));
+CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree ((((aux ->> 'call_to_action_id'::text))::integer));
 
 
 --
@@ -17545,7 +17601,7 @@ CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btr
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree (((aux ->> 'call_to_action_id'::text)));
+CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree ((((aux ->> 'call_to_action_id'::text))::integer));
 
 
 --
@@ -17869,7 +17925,7 @@ CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btr
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree (((aux ->> 'call_to_action_id'::text)));
+CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree ((((aux ->> 'call_to_action_id'::text))::integer));
 
 
 --
@@ -18193,7 +18249,7 @@ CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btr
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree (((aux ->> 'call_to_action_id'::text)));
+CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree ((((aux ->> 'call_to_action_id'::text))::integer));
 
 
 --
@@ -18517,7 +18573,7 @@ CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btr
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree (((aux ->> 'call_to_action_id'::text)));
+CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree ((((aux ->> 'call_to_action_id'::text))::integer));
 
 
 --
@@ -18684,6 +18740,20 @@ CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
 
 
 --
+-- Name: index_cache_votes_on_call_to_action_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_votes_on_call_to_action_id ON cache_votes USING btree (call_to_action_id);
+
+
+--
+-- Name: index_cache_votes_on_version; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_votes_on_version ON cache_votes USING btree (version);
+
+
+--
 -- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -18841,7 +18911,7 @@ CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btr
 -- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree (((aux ->> 'call_to_action_id'::text)));
+CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree ((((aux ->> 'call_to_action_id'::text))::integer));
 
 
 --
@@ -19290,3 +19360,7 @@ INSERT INTO schema_migrations (version) VALUES ('20150130145005');
 INSERT INTO schema_migrations (version) VALUES ('20150203092457');
 
 INSERT INTO schema_migrations (version) VALUES ('20150203103504');
+
+INSERT INTO schema_migrations (version) VALUES ('20150205101617');
+
+INSERT INTO schema_migrations (version) VALUES ('20150205152504');

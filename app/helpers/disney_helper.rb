@@ -12,13 +12,23 @@ module DisneyHelper
     property_name == "disney-channel" ? "" : "/#{property_name}"
   end
 
-  def get_disney_ctas(property)
-    ugc_tag = get_tag_from_params("ugc")
-    calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", property.id)
-    if ugc_tag
-      ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
-      if ugc_calltoactions.any?
-        calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
+  def get_disney_ctas(property, in_gallery = false)
+    if in_gallery
+      if in_gallery != "all"
+        gallery_calltoaction = CallToAction.find(in_gallery)
+        gallery_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
+        calltoactions = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL", gallery_tag.id)
+      else
+        calltoactions = CallToAction.active_with_media.where("call_to_actions.user_id IS NOT NULL")
+      end
+    else
+      ugc_tag = get_tag_from_params("ugc")
+      calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", property.id)
+      if ugc_tag
+        ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
+        if ugc_calltoactions.any?
+          calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
+        end
       end
     end
     calltoactions
@@ -102,10 +112,14 @@ module DisneyHelper
     get_disney_ctas(property).where("call_to_actions.id IN (?)", tag_calltoactions.map { |calltoaction| calltoaction.id }).order("activated_at #{order}")
   end
 
-  def get_disney_calltoactions_count_in_property()
-    property = get_tag_from_params(get_disney_property())
-    cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
-      get_disney_ctas(property).count
+  def get_disney_calltoactions_count_in_property(aux = nil)
+    if aux && aux["gallery_calltoactions_count"]
+      aux["gallery_calltoactions_count"]
+    else
+      property = get_tag_from_params(get_disney_property())
+      cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
+        get_disney_ctas(property).count
+      end
     end
   end
 

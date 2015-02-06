@@ -83,7 +83,7 @@ class CallToAction < ActiveRecordWithJSON
   accepts_nested_attributes_for :interactions
 
   # TODO: in every place :active has been used, it should be substituted either with active_with_media or with active_with_media_not_from_user
-  scope :active, -> { where("call_to_actions.activated_at <= ? AND call_to_actions.activated_at IS NOT NULL AND call_to_actions.media_type <> 'VOID' AND call_to_actions.user_id IS NULL", Time.now).order("call_to_actions.activated_at DESC") }
+  scope :active, -> { where("call_to_actions.activated_at <= ? AND call_to_actions.activated_at IS NOT NULL", Time.now).order("call_to_actions.activated_at DESC") }
   
   scope :active_with_media, -> { where("call_to_actions.activated_at <= ? AND call_to_actions.activated_at IS NOT NULL AND call_to_actions.media_type <> 'VOID'", Time.now).order("call_to_actions.activated_at DESC") }
   scope :active_with_media_not_from_user, -> { where("call_to_actions.activated_at <= ? AND call_to_actions.activated_at IS NOT NULL AND call_to_actions.media_type <> 'VOID' AND call_to_actions.user_id IS NULL", Time.now).order("call_to_actions.activated_at DESC") }

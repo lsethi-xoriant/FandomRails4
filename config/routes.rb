@@ -395,17 +395,7 @@ Fandom::Application.routes.draw do
   match "/user_event/share/:provider", :to => "call_to_action#share", defaults: { format: 'json' }
   match "/user_event/share_free/:provider", :to => "call_to_action#share_free", defaults: { format: 'json' }
 
-  namespace :api do
-    namespace :v1 do
-      devise_scope :user do
-        post 'registrations' => 'registrations#create'
-        post 'passwords' => 'passwords#create'
-      end
-      get "user/me" => "users#me", defaults: { format: 'json' }
-      get "calltoaction/index" => "call_to_actions#index", defaults: { format: 'json' }
-      get "calltoaction/show" => "call_to_actions#show", defaults: { format: 'json' }
-    end
-  end
+  match "/gallery", :to => "gallery#index"
 
   match "/update_call_to_action_in_page_with_tag", :to => "application#update_call_to_action_in_page_with_tag", defaults: { format: 'json' }
 

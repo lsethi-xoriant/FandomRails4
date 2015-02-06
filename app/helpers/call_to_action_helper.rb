@@ -388,6 +388,19 @@ module CallToActionHelper
     end
     "UGC_" + name
   end
+
+  def generate_unique_name_for_interaction
+    duplicated = true
+    i = 0
+    while duplicated && i < 5 do
+      name = Digest::MD5.hexdigest("#{current_user.id}#{Time.now}")[0..8]
+      if Interaction.find_by_name(name).nil?
+        duplicated = false
+      end
+      i += 1
+    end
+    "UGC_" + name
+  end
   
   def clone_cta(params)
     old_cta = CallToAction.find(params[:id])
@@ -415,17 +428,19 @@ module CallToActionHelper
     CallToAction.new(cta_attributes, :without_protection => true)
   end
   
-  def duplicate_interaction(new_cta, interaction)
+  def duplicate_interaction(new_cta, interaction, name = "")
     interaction_attributes = interaction.attributes
     interaction_attributes.delete("id")
+    interaction_attributes.delete("name") # TODO
     interaction_attributes.delete("rescource_type")
     interaction_attributes.delete("resource")
     new_interaction = new_cta.interactions.build(interaction_attributes, :without_protection => true)
     resource_attributes = interaction.resource.attributes
     resource_attributes.delete("id")
     resource_type = interaction.resource_type
+
     if resource_type == "Play"
-      resource_attributes["title"] = "#{interaction.resource.attributes["title"][0..12]}T#{Time.now.strftime("%H%M")}"
+      resource_attributes["name"] = "#{interaction.resource.attributes["title"][0..12]}T#{Time.now.strftime("%H%M")}"
     end
     resource_model = get_model_from_name(resource_type)
     new_interaction.resource = resource_model.new(resource_attributes, :without_protection => true)
