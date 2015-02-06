@@ -112,13 +112,17 @@ module DisneyHelper
     get_disney_ctas(property).where("call_to_actions.id IN (?)", tag_calltoactions.map { |calltoaction| calltoaction.id }).order("activated_at #{order}")
   end
 
-  def get_disney_calltoactions_count_in_property(aux = nil)
+  def get_disney_calltoactions_count_in_property(calltoactions_in_page, aux)
     if aux && aux["gallery_calltoactions_count"]
       aux["gallery_calltoactions_count"]
     else
-      property = get_tag_from_params(get_disney_property())
-      cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
-        get_disney_ctas(property).count
+      if calltoactions_in_page < $site.init_ctas
+        calltoactions_in_page
+      else
+        property = get_tag_from_params(get_disney_property())
+        cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
+          get_disney_ctas(property).count
+        end
       end
     end
   end
