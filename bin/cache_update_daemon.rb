@@ -130,15 +130,23 @@ def cache_generate_votes(conn, tenant, logger)
 
     if call_to_action['user_id'] != nil
       user_res = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}users WHERE id = #{call_to_action['user_id']}").first
+      gallery_res = execute_query(conn, "SELECT t1.name FROM #{tenant + '.' if tenant}tags t1
+                                        LEFT OUTER JOIN #{tenant + '.' if tenant}tags_tags ON t1.id = tags_tags.tag_id 
+                                        LEFT OUTER JOIN #{tenant + '.' if tenant}tags t2 ON t2.id = tags_tags.other_tag_id
+                                        LEFT OUTER JOIN #{tenant + '.' if tenant}call_to_action_tags ct ON ct.tag_id = t1.id 
+                                        WHERE t2.name = 'gallery' AND ct.call_to_action_id = #{call_to_action['id'].to_i}").first
 
       hash = hash.merge({ "user_id" => user_res["id"], "username" =>  nullify_or_escape_string(conn, user_res["username"]), "avatar_selected_url" => user_res["avatar_selected_url"], 
                   "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]) })
+
+      gallery_name = "'#{nullify_or_escape_string(conn, gallery_res["name"])}'"
     else
       hash = hash.merge({ "user_id" => nil })
+      gallery_name = "NULL"
     end
 
-    execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_votes (version, call_to_action_id, vote_count, vote_sum, aux, created_at, updated_at) 
-                          VALUES (#{new_cache_version}, #{vote['call_to_action_id'].to_i}, #{vote['count']}, #{vote['sum']}, '#{hash.to_json}', now(), now())")
+    execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_votes (version, call_to_action_id, gallery_name, vote_count, vote_sum, data, created_at, updated_at) 
+                          VALUES (#{new_cache_version}, #{vote['call_to_action_id'].to_i}, #{gallery_name}, #{vote['count']}, #{vote['sum']}, '#{hash.to_json}', now(), now())")
 
     # In order to avoid database stressing, the loop will sleep for 1 second every 1000 lines inserted into cache_votes table
     if i % 500 == 0 and i != 0
