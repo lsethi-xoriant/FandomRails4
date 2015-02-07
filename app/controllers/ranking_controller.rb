@@ -24,4 +24,18 @@ class RankingController < ApplicationController
     render template: "/profile/ranking"
   end
   
+  def get_vote_rank_page
+    gallery = Tag.find_by_name(params[:name])
+    result = get_full_vote_rank(gallery, params[:page].to_i)
+    respond_to do |format|
+       format.json { render :json => result.to_json }
+    end
+  end
+  
+  def show_vote_rank
+    gallery = Tag.find(params[:id])
+    @rankings = get_full_vote_rank(gallery)
+    render template: "/profile/vote_ranking"
+  end
+  
 end

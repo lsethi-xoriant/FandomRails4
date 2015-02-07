@@ -457,7 +457,7 @@ module ApplicationHelper
   
   def get_user_ctas_with_tag(tag_name, offset = 0, limit = 6)
     cache_short get_user_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.active_with_media.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", tag_name).offset(offset).limit(limit).to_a
+        CallToAction.active_with_media.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", tag_name).offset(offset).limit(limit).to_a
     end
   end
   

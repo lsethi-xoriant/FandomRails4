@@ -13,6 +13,7 @@ rankingModule.controller('RankingCtrl', RankingCtrl);
 function RankingCtrl($scope, $window, $resource, $sce) {
 
 	var Api = $resource('/ranking/page.json');
+	var VoteApi = $resource('/ranking/vote/page.json');
 	
 	$scope.init = function(rankings, user, single_rank) {
 		$scope.rankings = rankings;
@@ -25,6 +26,12 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 				$scope.user_offset = user_off - 1;
 			}
 		}
+	};
+	
+	$scope.init_vote = function(rankings, user, single_rank) {
+		console.log(rankings);
+		$scope.rankings = rankings;
+		$scope.user = user;
 	};
 	
 	$scope.prev_page = function(current_page, rank){
@@ -50,6 +57,22 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 					total: data.total
 				};
 			    var newrank = eval("$scope.rankings['" + data.ranking.name + "'] = " + JSON.stringify(newData));
+			});
+		}
+	};
+	
+	$scope.get_vote_rank_page = function(page, rank){
+		if(page >= 1 && page <= rankings.number_of_pages){
+			Api.save({ page: page, name: rankings.ranking.name }, function(data) {
+				var newData = {
+					current_page: data.current_page,
+					number_of_pages: data.number_of_pages,
+					rank_list: data.rank_list,
+					rank_type: data.rank_type,
+					ranking: data.ranking,
+					total: data.total
+				};
+			    $scope.rankings = newData;
 			});
 		}
 	};

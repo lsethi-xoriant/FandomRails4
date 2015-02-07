@@ -78,6 +78,52 @@ module RankingHelper
     [positions, total]
   end
   
+  def get_vote_ranking(tag_name, page)
+    offset = (page-1).to_i * RANKING_USER_PER_PAGE;
+    cta_ids = get_ctas_with_tag(tag_name).map{|cta| cta.id}
+    debugger
+    version_rank = CacheVersion.where("name = 'votes-chart'").order("version desc").first
+    if version_rank
+      version = version_rank.version
+      total = CacheVote.where("call_to_action_id in (?)", cta_ids).count
+    else
+      version = 0
+      total = 0
+    end
+    positions = cache_huge(get_rank_page_cache_key(tag_name, page, version)) do
+      CacheVote.where("gallery_name = ? AND version = ?", tag_name, version).order("vote_sum desc").offset(offset).limit(RANKING_USER_PER_PAGE).to_a
+    end
+    positions = prepare_vote_rankings_for_json(rankings, offset)
+    [positions, total]
+  end
+  
+  def prepare_vote_rankings_for_json(rankings, offset)
+    positions = Array.new
+    ctas_info = get_call_to_actions_info(rankings.map{|r| r.call_to_action_id})
+    rankings.each do |r, index|
+      extra_data = JSON.parse(r.data)
+      positions << {
+        "position" => index + offset,
+        "general_position" => index + offset, 
+        "avatar" => extra_data['avatar_selected_url'], 
+        "user" => extra_data['username'].blank? ? "#{extra_data['first_name']} #{extra_data['last_name']}" : extra_data['username'],
+        "user_id" => extra_data['user_id'], 
+        "counter" => r.vote_sum,
+        "cta_url" => "/call_to_action/#{r.call_to_action_id}",
+        "cta_image" => ctas_info[r.call_to_action_id]['thumb_url']
+      }
+    end
+    positions
+  end
+  
+  def get_call_to_actions_info(cta_ids)
+    ctas = CallToAction.where("id in (?)", cta_ids)
+    ctas_info = {}
+    ctas.each do |cta|
+      ctas_info[cta.id] = { "thumb_url" => cta.thumbnail.url(:tunmb) }
+    end
+  end
+  
   # day is in datetime format
   def get_winner_of_day(day)
     period = Period.where("start_datetime < ? and end_datetime > ? and kind = ?", day, day, PERIOD_KIND_DAILY).first
@@ -93,43 +139,6 @@ module RankingHelper
         UserReward.includes(:user).where("reward_id = ? and period_id = ? and user_id <> ?", reward_id, period.id, anonymous_user.id).order("counter DESC, updated_at ASC, user_id ASC").first
       end
     end
-  end
-  
-  def get_vote_ranking(vote_ranking)
-    rankings = Array.new
-    period = get_current_periodicities[vote_ranking.period]
-    if period.blank?
-      rankings = cache_short("vote_rank_#{vote_ranking.id}_general") do
-        vote_ranking_list = Array.new
-        vote_ranking.vote_ranking_tags.each do |rt|
-          call_to_actions = get_ctas_with_tag(rt.tag.name)
-          call_to_actions.each do |cta|
-            vote_sum = UserInteraction.select("SUM((aux->>'vote')::int)").where("(aux->>'call_to_action_id')::int = ?", cta.id).first.sum
-            vote_ranking_list << {cta: cta, total_vote: vote_sum, user: cta.user}
-          end
-        end
-        vote_ranking_list = vote_ranking_list.sort_by{ |x| x[:total_vote] }
-      end
-    else
-      rankings = cache_short("vote_rank_#{vote_ranking.id}_#{period.id}") do
-        vote_ranking_list = Array.new
-        vote_ranking.vote_ranking_tags.each do |rt|
-          call_to_actions = get_ctas_with_tag(rt.tag.name)
-          call_to_actions.each do |cta|
-            vote_sum = UserInteraction.select("SUM((aux->>'vote')::int)").where("(aux->>'call_to_action_id')::int = ?", cta.id)
-            vote_ranking_list << {cta: cta, total_vote: vote_sum, user: cta.user}
-          end
-        end
-        vote_ranking_list = vote_ranking_list.sort_by{ |x| x[:total_vote] }
-      end
-    end
-    rank = RankingElement.new(
-      period: vote_ranking.period,
-      title: vote_ranking.title,
-      rankings: prepare_vote_rank_for_json(rankings),
-      total: rankings.count,
-      number_of_pages: get_pages(rankings.count, RANKING_USER_PER_PAGE) 
-    )
   end
   
   def get_full_rank(ranking, page = 1)
@@ -148,9 +157,10 @@ module RankingHelper
     
   end
   
-  def get_full_vote_rank(vote_ranking)
-    rank = get_vote_ranking(vote_ranking)
-    compose_vote_ranking_info(vote_ranking.rank_type, vote_ranking, rank.rankings, rank.rankings.count, rank.number_of_pages)
+  def get_full_vote_rank(tag, page = 1)
+    rank, total = get_vote_ranking(tag.name, page)
+    number_of_page = get_number_of_page(total, RANKING_USER_PER_PAGE)
+    compose_vote_ranking_info(rank, tag, page, total, number_of_page)
   end
   
   def get_fb_friends_rank(ranking)
@@ -168,6 +178,10 @@ module RankingHelper
       current_page = get_pages(my_position, RANKING_USER_PER_PAGE)
     end
     {rank_list: rank_list, rank_type: rank_type, ranking: ranking, current_page: current_page, my_position: my_position, total: total, number_of_pages: number_of_pages}
+  end
+  
+  def compose_vote_ranking_info(rank_list, gallery, current_page = 1, total = 0, number_of_pages = 1)
+    {rank_list: rank_list, rank_type: "full", ranking: gallery, current_page: current_page, total: total, number_of_pages: number_of_pages}
   end
   
   def compose_triranking_info(rank_type, ranking, rank_list, my_position, total = 0, number_of_pages = 0, current_page = 1)
@@ -188,13 +202,6 @@ module RankingHelper
     else
       []
     end
-  end
-  
-  def compose_vote_ranking_info(rank_type, ranking, rank_list, total = 0, number_of_pages = 0)
-    current_page = 1
-    off = 0
-    rank_list = rank_list.slice(off, RANKING_USER_PER_PAGE)
-    {rank_list: rank_list, rank_type: rank_type, ranking: ranking, current_page: current_page, total: total, number_of_pages: number_of_pages}
   end
     
   def populate_rankings(ranking_names)
@@ -226,14 +233,9 @@ module RankingHelper
     end
   end
   
-  def populate_vote_rankings(vote_ranking_names)
-    cache_short(get_vote_ranking_page_key) do 
-      rankings = Hash.new
-      vote_ranking_names.each do |rn|
-        rank = VoteRanking.find_by_name(rn)
-        rankings[rn] = get_full_vote_rank(rank)
-      end
-      rankings
+  def populate_vote_ranking(tag_name)
+    @rankings = cache_short(get_vote_ranking_page_key(tag_name)) do 
+      get_full_vote_rank(tag_name)
     end
   end
   
@@ -268,34 +270,6 @@ module RankingHelper
         "user_id" => r.user_id, 
         "counter" => extra_data['counter']
       }
-    end
-    positions
-  end
-  
-  def prepare_vote_rank_for_json(ranking)
-    positions = Array.new
-    i = 1
-    ranking.each do |r|
-      if r[:user]
-        avatar = user_avatar(r[:user])
-        user_id = r[:user].id
-        user_name = extract_name_or_username(r[:user])
-      else
-        avatar = ""
-        user_id = -1
-        user_name = ""
-      end
-      
-      positions << { 
-        "position" => i, 
-        "cta_thumb" => r[:cta].thumbnail(:thumb),
-        "cta_title" => r[:cta].title,
-        "avatar" => avatar, 
-        "user_id" => user_id,
-        "user" => user_name, 
-        "counter" => r[:total_vote] 
-      }
-      i += 1
     end
     positions
   end
