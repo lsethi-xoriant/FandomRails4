@@ -21,42 +21,48 @@ def migrate_comment_galleries(source_db_tenant, destination_db_tenant, source_db
   last_gallery_id = 0
   call_to_action_id = 0
 
-  source_comments.each do |line|
-    
-    if line["gallery_id"] != last_gallery_id # update last_gallery_id and comment_id
-      last_gallery_id = line["gallery_id"]
-      call_to_action_id = call_to_actions_id_map[last_gallery_id].to_i
-    end
+  ddl_file_name = "files/" + source_db_tenant + "_ddl.txt"
+  id_mapping_file = File.open(ddl_file_name, "w") { |ddl| 
+    ddl.truncate(0)
 
-    if call_to_action_id == 0
-        rows_with_gallery_missing += 1
-    else
-      comment_id = destination_db_connection.exec("SELECT resource_id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions WHERE resource_type = 'Comment' AND call_to_action_id = #{call_to_action_id}").values[0][0].to_i
-      new_user_id = users_id_map[line["user_id"]]
-
-      if new_user_id.nil?
-        rows_with_user_missing += 1
-      else
-        fields_for_user_comment_interactions = {
-          #"id" => line["id"].to_i,
-          "user_id" => new_user_id, # users may be missing
-          "comment_id" => comment_id, # assign according to gallery_id
-          "text" => nullify_or_escape_string(source_db_connection, line["body"]),
-          "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
-          "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
-          "approved" => (line["published_at"].nil? or line["published_at"] == 'f') ? "f" : "t"
-        }
-
-        query_for_user_comment_interactions = build_query_string(destination_db_tenant, "user_comment_interactions", fields_for_user_comment_interactions)
-
-        destination_db_connection.exec(query_for_user_comment_interactions)
-        user_comment_interactions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}user_comment_interactions_id_seq')").values[0][0].to_i)
-
-        count_for_user_comment_interactions += 1
+    source_comments.each do |line|
+      
+      if line["gallery_id"] != last_gallery_id # update last_gallery_id and comment_id
+        last_gallery_id = line["gallery_id"]
+        call_to_action_id = call_to_actions_id_map[last_gallery_id].to_i
       end
+
+      if call_to_action_id == 0
+          rows_with_gallery_missing += 1
+      else
+        comment_id = destination_db_connection.exec("SELECT resource_id FROM #{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}interactions WHERE resource_type = 'Comment' AND call_to_action_id = #{call_to_action_id}").values[0][0].to_i
+        new_user_id = users_id_map[line["user_id"]]
+
+        if new_user_id.nil?
+          rows_with_user_missing += 1
+        else
+          fields_for_user_comment_interactions = {
+            #"id" => line["id"].to_i,
+            "user_id" => new_user_id, # users may be missing
+            "comment_id" => comment_id, # assign according to gallery_id
+            "text" => nullify_or_escape_string(source_db_connection, line["body"]),
+            "created_at" => nullify_or_escape_string(source_db_connection, line["created_at"]),
+            "updated_at" => nullify_or_escape_string(source_db_connection, line["updated_at"]),
+            "approved" => (line["published_at"].nil? or line["published_at"] == 'f') ? "f" : "t"
+          }
+
+          query_for_user_comment_interactions = build_query_string(destination_db_tenant, "user_comment_interactions", fields_for_user_comment_interactions)
+
+          #destination_db_connection.exec(query_for_user_comment_interactions)
+          #user_comment_interactions_id_map.store(line["id"].to_i, destination_db_connection.exec("SELECT currval('#{destination_db_tenant.nil? ? "" : destination_db_tenant + "."}user_comment_interactions_id_seq')").values[0][0].to_i)
+          ddl.write(query_for_user_comment_interactions + ";\n")
+
+          count_for_user_comment_interactions += 1
+        end
+      end
+        next_step = print_progress(count_for_user_comment_interactions + rows_with_user_missing + rows_with_gallery_missing, lines_step, next_step, source_comments_count)
     end
-      next_step = print_progress(count_for_user_comment_interactions + rows_with_user_missing + rows_with_gallery_missing, lines_step, next_step, source_comments_count)
-  end
+  }
 
   puts "#{count_for_user_comment_interactions} lines successfully migrated for user_comment_interactions \n#{rows_with_user_missing} rows had dangling reference to user \n#{rows_with_gallery_missing} rows had dangling reference to call_to_action \n"
   write_table_id_mapping_to_file(source_db_tenant, "user_comment_interactions_from_galleries", user_comment_interactions_id_map)
