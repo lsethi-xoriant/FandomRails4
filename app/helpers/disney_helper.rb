@@ -213,17 +213,17 @@ module DisneyHelper
     }
   end
 
-  def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat")
+  def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat", in_gallery)
     calltoactions = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
       tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
       if tag
         CallToAction.includes(:call_to_action_tags)
                     .where("call_to_actions.id <> ?", current_calltoaction.id)
                     .where("call_to_action_tags.tag_id = ?", tag.id)
-                    .where("call_to_actions.id IN (?)", get_disney_ctas(property).map { |calltoaction| calltoaction.id })
+                    .where("call_to_actions.id IN (?)", get_disney_ctas(property, in_gallery).map { |calltoaction| calltoaction.id })
                     .limit(8).to_a
       else
-        get_disney_ctas(property).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
+        get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
       end
     end 
     related_calltoaction_info = []
@@ -253,7 +253,18 @@ module DisneyHelper
 
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
-      related_calltoaction_info = get_disney_related_calltoaction_info(calltoaction, current_property)
+
+      related_tag_name = "miniformat"
+      in_gallery = nil
+
+      if calltoaction.user_id
+        in_gallery = calltoaction.id
+        gallery_calltoaction = CallToAction.find(in_gallery)
+        related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
+        related_tag_name = related_tag.present? ? related_tag.name : "gallery"
+      end
+
+      related_calltoaction_info = get_disney_related_calltoaction_info(calltoaction, current_property, related_tag_name, in_gallery)
     end
 
     current_property_info = {

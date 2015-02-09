@@ -1,8 +1,12 @@
 <div class="col-sm-12 text-center visible-xs">
-  <p class="vote-interaction__title">{{interaction_info.interaction.resource.title}}</p>
+  <p ng-if="!interaction_info.user_interaction" class="vote-interaction__title">{{interaction_info.interaction.resource.title}}</p>
+  <p ng-if="interaction_info.user_interaction" class="vote-interaction__title">Il tuo voto è:</p>
 </div>
 
 <div class="vote-interaction__baloon-container" ng-class="{'vote-interaction__done': interaction_info.user_interaction, 'vote-interaction__active': !interaction_info.user_interaction}">
+
+  <p ng-if="!interaction_info.user_interaction" class="vote-interaction__title hidden-xs">{{interaction_info.interaction.resource.title}}</p>
+  <p ng-if="interaction_info.user_interaction" class="vote-interaction__title hidden-xs">Il tuo voto è:</p>
 
   <div class="vote-interaction__baloon text-center">
     <div ng-repeat="i in range(interaction_info.interaction.resource.vote_info.min, interaction_info.interaction.resource.vote_info.max)" class="vote-interaction__baloon__element">
