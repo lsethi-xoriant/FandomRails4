@@ -1,6 +1,6 @@
 module DisneyHelper
 
-  def get_disney_property() 
+  def get_disney_property
     $context_root || "disney-channel"
   end
   
@@ -64,12 +64,7 @@ module DisneyHelper
     tag_highlight = Tag.find_by_name("highlight")
     if tag_highlight
       calltoactions = get_disney_calltoaction_active_with_tag_in_property(tag_highlight, property, "DESC")
-      meta_ordering = get_extra_fields!(tag_highlight)["ordering"]    
-      if meta_ordering
-        order_elements_by_ordering_meta(meta_ordering, calltoactions)
-      else
-        calltoactions
-      end
+      order_elements(tag_highlight, calltoactions)
     else
       []
     end
@@ -170,10 +165,8 @@ module DisneyHelper
     if filters.any?
       featured = get_tag_from_params("featured")
       filters = filters & get_tags_with_tag(get_disney_property())
-      meta_ordering = get_extra_fields!(featured)["ordering"]    
-      if meta_ordering
-        filters = order_elements_by_ordering_meta(meta_ordering, filters)
-      end    
+      filters = order_elements(featured, filters)
+      
       filter_info = []
       filters.each do |filter|
         filter_info << {
@@ -213,17 +206,17 @@ module DisneyHelper
     }
   end
 
-  def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat")
+  def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat", in_gallery)
     calltoactions = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
       tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
       if tag
         CallToAction.includes(:call_to_action_tags)
                     .where("call_to_actions.id <> ?", current_calltoaction.id)
                     .where("call_to_action_tags.tag_id = ?", tag.id)
-                    .where("call_to_actions.id IN (?)", get_disney_ctas(property).map { |calltoaction| calltoaction.id })
+                    .where("call_to_actions.id IN (?)", get_disney_ctas(property, in_gallery).map { |calltoaction| calltoaction.id })
                     .limit(8).to_a
       else
-        get_disney_ctas(property).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
+        get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
       end
     end 
     related_calltoaction_info = []
@@ -253,7 +246,18 @@ module DisneyHelper
 
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
-      related_calltoaction_info = get_disney_related_calltoaction_info(calltoaction, current_property)
+
+      related_tag_name = "miniformat"
+      in_gallery = nil
+
+      if calltoaction.user_id
+        in_gallery = calltoaction.id
+        gallery_calltoaction = CallToAction.find(in_gallery)
+        related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
+        related_tag_name = related_tag.present? ? related_tag.name : "gallery"
+      end
+
+      related_calltoaction_info = get_disney_related_calltoaction_info(calltoaction, current_property, related_tag_name, in_gallery)
     end
 
     current_property_info = {
@@ -274,11 +278,8 @@ module DisneyHelper
     end
 
     properties = get_tags_with_tag("property")
-    meta_ordering = get_extra_fields!(property)["ordering"]    
-    if meta_ordering
-      properties = order_elements_by_ordering_meta(meta_ordering, properties)
-    end
-
+    properties = order_elements(property, properties)
+    
     if properties.any?
       property_info = []
       properties.each do |property|

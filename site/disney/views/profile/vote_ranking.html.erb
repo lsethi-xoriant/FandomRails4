@@ -1,0 +1,60 @@
+<div class="container container--default" style="background-color: #fff;" ng-controller="RankingCtrl" ng-init="init_vote(<%= @rankings.to_json %>, <%= current_user.to_json %>, true);">
+	<% if current_user %>
+		<% unless small_mobile_device? %>
+			<%= render partial: "profile/profile_header" %>
+		  	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
+		<% end %>
+	<% end %>
+
+	<div class="row">
+			<div class="col-sm-12">
+				<div class="row">
+		
+				    <div class="col-sm-10 col-sm-offset-1">
+				      <div class="section-heading">
+				        <h3>
+				          <span class="section-heading__marker"><i class="fa fa-users"></i></span>
+				          {{rankings.ranking.title}}
+				          <p class="relateds__description">La classifica viene aggiornata ogni ora</p>
+				        </h3>
+				      </div>
+				      
+				      <div ng-repeat="rank_user in rankings.rank_list" class="row rank-row">
+					  	<div class="col-xs-2 text-right"><h4 class="rank-row__position no-margin">{{rank_user.position}}</h4></div>
+					  	<div class="col-xs-2">
+					  		<%= light_link_to "{{rank_user.cta_url}}" do %>
+					  			<img ng-src="{{rank_user.cta_image}}" class="img-responsive rank-row__avatar">
+					  		<% end %>
+					  	</div>
+					    <div class="col-xs-2"><img ng-src="{{rank_user.avatar}}" class="img-circle img-responsive rank-row__avatar"></div>
+					    <div class="col-xs-3"><h4 class="rank-row__username">{{rank_user.user}}</h4></div>
+					    <div class="col-xs-3 text-right"><span class="label label-warning rank-row__points">+ {{rank_user.counter}} <span class="fa fa-star">
+				  </span></span></div>
+				      </div>
+				      
+				      <nav class="text-center">
+						  <ul class="pagination">
+						    <li>
+						      <a href="javascript:void(0);" aria-label="Previous" ng-click="prev_page(rankings.current_page, rankings.ranking.name)">
+						        <span aria-hidden="true">&laquo;</span>
+						      </a>
+						    </li>
+						    <li ng-repeat="page in get_pagination_page_before(rankings.current_page)">
+						    	<a href="javascript:void(0)" ng-click="get_rank_page(page, rankings)">{{page}}</a>
+						    </li>
+						    <li class="active"><a href="javascript:void(0);">{{rankings.current_page}}</a></li>
+						    <li ng-repeat="page in get_pagination_page_after(rankings.current_page, rankings.number_of_pages)">
+						    	<a href="javascript:void(0)" ng-click="get_rank_page(page, rankings)">{{page}}</a>
+						    </li>
+						    <li>
+						      <a href="javascript:void(0);" aria-label="Next" ng-click="next_page(rankings.current_page, rankings)">
+						        <span aria-hidden="true">&raquo;</span>
+						      </a>
+						    </li>
+						  </ul>
+					  </nav>
+    			</div>
+			</div>
+		</div>
+	</div>
+</div>

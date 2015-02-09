@@ -292,6 +292,14 @@ module CacheKeysHelper
     "gallery_#{gallery_id}_ctas"
   end
   
+  def get_vote_ranking_page_key(tag_name)
+    "vote_ranking_for_tag_#{tag_name}"
+  end
+  
+  def get_galleries_for_property_cache_key(property)
+    "galleries_for_property_#{property}"
+  end
+  
   # Instantwin
   # ~~~~~~~~~~
   
@@ -351,4 +359,5 @@ module CacheKeysHelper
   def get_property_rankings_cache_key(extra_key)
     "property_rankings_thumbnails_#{extra_key}"
   end
+  
 end

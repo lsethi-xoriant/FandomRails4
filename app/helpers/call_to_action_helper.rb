@@ -363,6 +363,7 @@ module CallToActionHelper
         name: generate_unique_name(), 
         user_id: current_user.id,
         media_image: params["upload"],
+        thumbnail: params["upload"],
         media_type: "IMAGE"
         )
 
