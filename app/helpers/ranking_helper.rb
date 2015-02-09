@@ -85,7 +85,7 @@ module RankingHelper
     version_rank = CacheVersion.where("name = 'votes-chart'").order("version desc").first
     if version_rank
       version = version_rank.version
-      total = CacheVote.where("call_to_action_id in (?)", cta_ids).count
+      total = CacheVote.where("gallery_name = ? AND version = ?", tag_name, version).count
     else
       version = 0
       total = 0
@@ -93,18 +93,19 @@ module RankingHelper
     positions = cache_huge(get_rank_page_cache_key(tag_name, page, version)) do
       CacheVote.where("gallery_name = ? AND version = ?", tag_name, version).order("vote_sum desc").offset(offset).limit(RANKING_USER_PER_PAGE).to_a
     end
-    positions = prepare_vote_rankings_for_json(rankings, offset)
+    positions = prepare_vote_rankings_for_json(positions, offset)
     [positions, total]
   end
   
   def prepare_vote_rankings_for_json(rankings, offset)
     positions = Array.new
     ctas_info = get_call_to_actions_info(rankings.map{|r| r.call_to_action_id})
-    rankings.each do |r, index|
+    debugger
+    rankings.each_with_index do |r, index|
       extra_data = JSON.parse(r.data)
       positions << {
-        "position" => index + offset,
-        "general_position" => index + offset, 
+        "position" => (index + 1) + offset,
+        "general_position" => (index + 1) + offset, 
         "avatar" => extra_data['avatar_selected_url'], 
         "user" => extra_data['username'].blank? ? "#{extra_data['first_name']} #{extra_data['last_name']}" : extra_data['username'],
         "user_id" => extra_data['user_id'], 
@@ -120,8 +121,9 @@ module RankingHelper
     ctas = CallToAction.where("id in (?)", cta_ids)
     ctas_info = {}
     ctas.each do |cta|
-      ctas_info[cta.id] = { "thumb_url" => cta.thumbnail.url(:tunmb) }
+      ctas_info[cta.id] = { "thumb_url" => cta.media_image.url(:thumb) }
     end
+    ctas_info
   end
   
   # day is in datetime format

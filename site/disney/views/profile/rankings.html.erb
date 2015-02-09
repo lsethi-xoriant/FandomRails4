@@ -115,6 +115,40 @@
 
 	  </div>
    </div>
+   
+   <div class="row brws-item main-row" style="margin-top: 30px;">
+    <div class="col-xs-12">
+	  <div class="section-heading">
+        	<h3>
+        		<span class="section-heading__marker"><i class="fa fa-users"></i></span>
+        		Classifica delle Gallery
+        	</h3>
+      </div>
+    </div>
+    <div class="col-xs-12">
+
+      <div class="rewards-flexslider" id="rewards-flexslider--property">
+          <div class="flex-viewport-shadow hidden-xs"></div>
+          <ul class="slides">
+            <% @galleries.each do |gallery| %>
+            <li class="relateds-flexslider__item">
+              <%= light_link_to "/ranking/vote/#{gallery.id}" do %>  
+                <div class="relateds-flexslider__item-panel" style="background-image: url('<%= get_upload_extra_field_processor(get_extra_fields!(gallery)['thumbnail'], :medium) if get_extra_fields!(gallery)["thumbnail"] %>'); background-position: center center; background-size: auto 100%;"> 
+                  <div class="row">
+                    <div class="col-xs-12 text-center cta-preview--tag">
+                      <p class="cta-preview__title--tag"><%= gallery.title %></p>
+                    </div>
+                  </div>
+                </div>  
+              <% end %>
+            </li>
+            <% end %>
+          </ul>
+        </div>
+
+	  </div>
+   </div>
+   
 </div>
 	
 

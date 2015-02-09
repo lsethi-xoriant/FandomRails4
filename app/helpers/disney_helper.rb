@@ -1,6 +1,6 @@
 module DisneyHelper
 
-  def get_disney_property() 
+  def get_disney_property
     $context_root || "disney-channel"
   end
   
@@ -64,12 +64,7 @@ module DisneyHelper
     tag_highlight = Tag.find_by_name("highlight")
     if tag_highlight
       calltoactions = get_disney_calltoaction_active_with_tag_in_property(tag_highlight, property, "DESC")
-      meta_ordering = get_extra_fields!(tag_highlight)["ordering"]    
-      if meta_ordering
-        order_elements_by_ordering_meta(meta_ordering, calltoactions)
-      else
-        calltoactions
-      end
+      order_elements(tag_highlight, calltoactions)
     else
       []
     end
@@ -170,10 +165,8 @@ module DisneyHelper
     if filters.any?
       featured = get_tag_from_params("featured")
       filters = filters & get_tags_with_tag(get_disney_property())
-      meta_ordering = get_extra_fields!(featured)["ordering"]    
-      if meta_ordering
-        filters = order_elements_by_ordering_meta(meta_ordering, filters)
-      end    
+      filters = order_elements(featured, filters)
+      
       filter_info = []
       filters.each do |filter|
         filter_info << {
@@ -274,11 +267,8 @@ module DisneyHelper
     end
 
     properties = get_tags_with_tag("property")
-    meta_ordering = get_extra_fields!(property)["ordering"]    
-    if meta_ordering
-      properties = order_elements_by_ordering_meta(meta_ordering, properties)
-    end
-
+    properties = order_elements(property, properties)
+    
     if properties.any?
       property_info = []
       properties.each do |property|

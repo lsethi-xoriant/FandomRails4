@@ -212,12 +212,7 @@ module ApplicationHelper
     tag = Tag.find_by_name("highlight")
     if tag
       highlight_calltoactions = calltoaction_active_with_tag(tag.name, "DESC")
-      meta_ordering = get_extra_fields!(tag)["ordering"]    
-      if meta_ordering
-        ordered_highlight_calltoactions = order_elements_by_ordering_meta(meta_ordering, highlight_calltoactions)
-      else
-        highlight_calltoactions
-      end
+      order_elements(tag, highlight_calltoactions)
     else
       []
     end
@@ -1205,6 +1200,14 @@ module ApplicationHelper
     else
       (elements / per_page) + 1
     end
+  end
+  
+  def order_elements(tag, elements)
+    meta_ordering = get_extra_fields!(tag)["ordering"]
+    if meta_ordering
+      elements = order_elements_by_ordering_meta(meta_ordering, elements)
+    end
+    elements
   end
   
 end

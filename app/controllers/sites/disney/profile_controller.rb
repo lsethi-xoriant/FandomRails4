@@ -45,6 +45,9 @@ class Sites::Disney::ProfileController < ProfileController
     
     @property_rankings = get_property_rankings
     
+    galleries = get_gallery_for_current_property
+    @galleries = order_elements(Tag.find_by_name("gallery"), galleries.sort_by{|tag| tag.created_at}.reverse)
+    
     if small_mobile_device?
       render template: "profile/rankings_mobile"
     else
@@ -90,7 +93,7 @@ class Sites::Disney::ProfileController < ProfileController
       @levels = disney_prepare_levels_to_show(levels)
       badges, badges_use_prop = rewards_by_tag("badge")
       @badges = badges.nil? ? nil : badges[get_disney_property]
-      @badges = order_badges(@badges)
+      @badges = order_elements(Tag.find_by_name("badge"), @badges)
       render template: "/profile/rewards_mobile"
     else
       levels, levels_use_prop = rewards_by_tag("level")
@@ -98,18 +101,21 @@ class Sites::Disney::ProfileController < ProfileController
       @my_levels = get_other_property_rewards("level")
       badges, badges_use_prop = rewards_by_tag("badge")
       @badges = badges.nil? ? nil : badges[get_disney_property]
-      @badges = order_badges(@badges)
+      @badges = order_elements(Tag.find_by_name("badge"), @badges)
       @mybadges = get_other_property_rewards("badge")
     end
     
   end
   
-  def order_badges(badges)
-    meta_ordering = get_extra_fields!(Tag.find_by_name("badge"))["ordering"]
-    if meta_ordering
-      badges = order_elements_by_ordering_meta(meta_ordering, badges)
+  def get_gallery_for_current_property
+    gallery_tags = get_tags_with_tag("gallery")
+    if get_disney_property == "disney-channel"
+      gallery_tags
+    else
+      cache_short(get_galleries_for_property_cache_key) do
+        Tag.includes(:tags_tags => :other_tag).where("other_tags_tags_tags = ? AND tags.id in (?)", get_disney_property, gallery_tags.map{|t| t.id}).to_a
+      end
     end
-    badges
   end
   
   def notices
