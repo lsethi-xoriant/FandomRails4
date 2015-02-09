@@ -101,6 +101,29 @@
   </div>
 </div>
 
+<!-- UGC -->
+<div class="modal modal__custom fade" id="ugc-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content modal--bg">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-4 visible-xs text-center">
+              <img ng-src="{{aux.current_property_info.logo}}" class="modal__custom__image">
+          </div>    
+          <div class="col-sm-6 col-sm-offset-1 text-center">
+          	<h1 class="text-center">Grazie!</h1>
+            <p class="modal__custom__text">La tua foto con la liberatoria è stata ricevuta.<br>Le foto dovranno essere approvate prima di essere pubblicate.</p>
+            <button type="button" class="btn btn-primary" data-dismiss="modal"><span>Vai alla gallery</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- CAPTCHA ERROR -->
 <div class="modal modal__custom fade" id="comment-captcha-error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">

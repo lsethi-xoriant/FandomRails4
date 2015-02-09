@@ -67,15 +67,27 @@ module BrowseHelper
 
   def get_recent_ctas(query = "")
     cache_medium(get_recent_contents_cache_key(query)) do
+      ugc_tag = get_tag_from_params("ugc")
+      
       if query.empty?
-        CallToAction.active.order("activated_at DESC")
+        calltoactions = CallToAction.active.order("activated_at DESC")
       else
         conditions = construct_conditions_from_query(query, "title")
-        CallToAction.active.where("#{conditions}").order("activated_at DESC")
+        calltoactions = CallToAction.active.where("#{conditions}").order("activated_at DESC")
       end
+      
+      if ugc_tag
+        ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
+        if ugc_calltoactions.any?
+          calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
+        end
+      end
+      
+      calltoactions.to_a
+      
     end
   end
-
+  
   def get_featured(featured)
     featured_contents = get_featured_content(featured)
     browse_section = ContentSection.new(

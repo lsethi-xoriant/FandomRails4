@@ -1,16 +1,19 @@
 /* GALLERY STILE CLASS*/
 .gallery-cta{
   margin-bottom: 20px;
+  color: #fff;
 }
 
 .gallery-cta__steps{
   border: 1px solid #d1d2d4;
+  margin-bottom: 0px;
 }
 
 .gallery-cta__first-step{
   background-color: #ececec;
   padding: 20px 0;
   border-bottom: 1px solid #d1d2d4;
+  margin-bottom: 0px;
 }
 
 .gallery-cta__form-element{
@@ -31,11 +34,14 @@
   background-color: #fff;
   padding: 20px 0;
   border-bottom: 1px solid #d1d2d4;
+  margin-bottom: 0px;
 }
 
 .gallery-cta__last-step{
   background-color: #fff;
   padding: 20px 0;
+  margin-bottom: 0px;
+  color: #999;
 }
 
 .gallery-cta__form{
@@ -60,5 +66,11 @@
   }
 }
 
+.gallery-cta__rule-button,
+.gallery-cta__rule-button:hover{
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+}
 .gallery-cta-list{}
 

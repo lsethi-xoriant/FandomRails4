@@ -35,6 +35,13 @@ class GalleryController < ApplicationController
       "gallery" => build_call_to_action_info_list([cta]).first,
       "gallery_calltoactions_count" => galleries_user_cta_count
     }
+    @uploaded = false
+    @error = false
+    if !flash[:notice].blank?
+      @uploaded = true
+    elsif !flash[:error].blank?
+      @error = true
+    end
   end
   
   def get_gallery_ctas(gallery = nil)
