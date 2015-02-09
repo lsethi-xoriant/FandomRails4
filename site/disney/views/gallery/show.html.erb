@@ -10,7 +10,7 @@
 
 <div class="container main-container">
 
-	<div class="row">
+	<div class="row main-row filters__flexslider-main-row">
 		<%= render partial: "/gallery/launchers", locals: { galleries: @galleries_cta }  %>		
 	</div>
 	
@@ -45,7 +45,7 @@
     	</div>
   	</div>
   
-	<div class="row main-row">
+	<div class="row">
 	  	<div class="col-xs-12 gallery-cta">
 	  		<div class="row" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image_upload'], :original) if get_extra_fields!(@gallery_tag)['background_image_upload'] %>); background-repeat: no-repeat; background-size: 100% auto;">
 	  			<div class="col-sm-4">
@@ -56,13 +56,13 @@
 	  				<p>&nbsp;</p>
 	  				<div class="row">
 	  					<div class="col-xs-12 text-left">
-	  						<button class="btn btn-primary" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
+	  						<button id="partecipa" class="btn btn-primary <%= "hidden" if @error %>" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
 	  						<% if get_extra_fields!(@gallery_tag)['url_gallery_rules'] %>
-	  							<a href="/gallery/<%= get_extra_fields!(@gallery_tag)['url_gallery_rules'] %>/<%= @cta_id %>" class="btn btn-primary"><%= get_extra_fields!(@gallery_tag)['label_gallery_rules'] %></a>
+	  							<a href="/gallery/<%= get_extra_fields!(@gallery_tag)['url_gallery_rules'] %>/<%= @cta_id %>" class="btn btn-default gallery-cta__rule-button"><%= get_extra_fields!(@gallery_tag)['label_gallery_rules'] %></a>
 	  						<% end %>
 	  					</div>
 	  				</div>
-	  				<%= render partial: "/gallery/gallery_calltoaction", locals: { gallery_tag: @gallery_tag, interaction_id: @upload_interaction_id } %>
+	  				<%= render partial: "/gallery/gallery_calltoaction", locals: { gallery_tag: @gallery_tag, interaction_id: @upload_interaction_id, uploaded: @uploaded, error: @error } %>
 	  			</div>
 	  		</div>
 	  	</div>
@@ -107,6 +107,7 @@
 <script type="text/javascript">
 	function partecipa(){
 		$("#upload-form").removeClass("hidden");
+		$("#partecipa").hide();
 	}
 	
 	function loadPhoto(){
@@ -124,4 +125,10 @@
 	function releaseSelected(){
 		$(".gallery-cta__upload-release").append('<i class="fa fa-check-circle"></i>');
 	}
+	
+	<% if @uploaded %>
+	$(document).ready(function(){
+		$("#ugc-feedback").modal('show');
+	});
+	<% end %>
 </script>

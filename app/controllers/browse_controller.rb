@@ -2,7 +2,7 @@ class BrowseController < ApplicationController
   include BrowseHelper
   
   def index
-    @browse_section = cache_medium(get_browse_sections_cache_key) do init_browse_sections() end
+    @browse_section = cache_long(get_browse_sections_cache_key) do init_browse_sections() end
     
     cta_ids = []
     @browse_section.each do |bs|
