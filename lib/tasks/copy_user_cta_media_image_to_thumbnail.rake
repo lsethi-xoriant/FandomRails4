@@ -1,3 +1,6 @@
+#!/bin/env ruby
+# encoding: utf-8
+
 require 'rake'
 
 desc "Links user cta media images to thumbnails"

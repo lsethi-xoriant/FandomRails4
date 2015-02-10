@@ -252,17 +252,28 @@ module ApplicationHelper
   end
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
-    unless anonymous_user?(user)
+    if !anonymous_user?(user) || $site.anonymous_interaction
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
       expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
     end
-
+    
     if user_interaction
 
-      if interaction.resource_type.downcase == "share"
+      case interaction.resource_type.downcase
+      when "share"
         aux = merge_aux(aux, user_interaction.aux)
-      elsif interaction.resource_type.downcase == "like"
+      when "like"
         aux = { like: !(JSON.parse(user_interaction.aux)["like"]) }.to_json
+      when "vote"
+        aux_parse = JSON.parse(aux)
+        aux_in_user_interaction = JSON.parse(user_interaction.aux)
+        aux_in_user_interaction["vote"] = aux_parse["vote"]
+        if aux_in_user_interaction["vote_info_list"].has_key?(aux_parse["vote"].to_s)
+          aux_in_user_interaction["vote_info_list"][aux_parse["vote"]] = aux_in_user_interaction["vote_info_list"][aux_parse["vote"].to_s] + 1
+        else
+          aux_in_user_interaction["vote_info_list"][aux_parse["vote"]] = 1
+        end
+        aux = aux_in_user_interaction.to_json
       end
 
       unless interaction.resource.one_shot
@@ -271,9 +282,18 @@ module ApplicationHelper
       end
 
     else
+
+      if interaction.resource_type.downcase == "vote"
+        aux_parse = JSON.parse(aux)
+        aux_parse["vote_info_list"] = {
+          aux_parse["vote"] => 1
+        }
+        aux = aux_parse.to_json
+      end
+
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
   
-      unless anonymous_user?(user)
+      if !(anonymous_user?(user) || $site.anonymous_interaction)
         UserCounter.update_counters(interaction, user_interaction, user, true)
       end
     end
@@ -313,7 +333,7 @@ module ApplicationHelper
 
     user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
 
-    unless anonymous_user?(user)
+    if !anonymous_user?(user) || $site.anonymous_interaction
       user_interaction.save
     end
   

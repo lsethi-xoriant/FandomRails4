@@ -260,7 +260,6 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       user_upload_interaction = cta.user_upload_interaction
       if JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['upload_approved'] != false
         notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
-        notice.send_to_user(request)
       end
       userinteraction, outcome = create_or_update_interaction(User.find(user_upload_interaction.user_id), Interaction.where(:resource_type => 'Upload', :resource_id => user_upload_interaction.upload_id).first, nil, nil)
     end
