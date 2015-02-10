@@ -87,7 +87,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.current_user = current_user;
     $scope.calltoactions = calltoaction_info_list;
 
-    clearAnonymousUserStorage();
+    //clearAnonymousUserStorage();
 
     $scope.answer_in_progress = false;
 
@@ -1478,6 +1478,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             } else if(interaction_info.interaction.resource_type == "link") {
               window.location = interaction_info.interaction.resource.url;
             }
+
+            if(interaction_info.interaction.resource_type == "vote" && $scope.currentUserEmptyAndAnonymousInteractionEnable()) {
+              interaction_info.anonymous_user_interaction_info = data.user_interaction;
+            }
+
 
           }).error(function() {
             $scope.answer_in_progress = false;
