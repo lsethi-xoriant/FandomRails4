@@ -5,17 +5,17 @@ class Easyadmin::EasyadminController < ApplicationController
   layout "admin"
 
   before_filter :authorize_user
-  before_filter :update_pagination_param, only: :index_cta
+  before_filter :update_pagination_param
 
   def authorize_user
     authorize! :access, :easyadmin
   end
 
   def update_pagination_param
-      @param_list = ""
-      params.except(:controller, :action, :page).each do |key, value| 
-        @param_list = @param_list + "&#{key}=#{value}"
-      end
+    @param_list = ""
+    params.except(:controller, :action, :page).each do |key, value| 
+      @param_list = @param_list + "&#{key}=#{value}"
+    end
   end
 
   def index
