@@ -22,7 +22,9 @@ class GalleryController < ApplicationController
     @galleries_cta = get_gallery_ctas_carousel
     cta = CallToAction.find(params[:id])
     @cta_id = cta.id
-    @upload_interaction_id = cta.interactions.find_by_resource_type("Upload").id
+    upload_interaction = cta.interactions.find_by_resource_type("Upload")
+    @upload_interaction_id = upload_interaction.id
+    @upload_active = upload_interaction.when_show_interaction != "MAI_VISIBILE"
     @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
 
     galleries_user_cta, galleries_user_cta_count = cache_short(get_gallery_ctas_cache_key(@gallery_tag.id)) { 
