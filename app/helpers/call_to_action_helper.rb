@@ -110,6 +110,12 @@ module CallToActionHelper
           end
         end
 
+        if ($site.anonymous_interaction && resource_type == "vote")
+          user_interaction = interaction.user_interactions.find_by_user_id(current_or_anonymous_user.id)
+          if user_interaction
+            anonymous_user_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
+          end
+        end
         
         case resource_type
         when "quiz"
@@ -156,7 +162,8 @@ module CallToActionHelper
             }
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction),
-          "user_interaction" => user_interaction_for_interaction_info
+          "user_interaction" => user_interaction_for_interaction_info,
+          "anonymous_user_interaction_info" => anonymous_user_interaction_info
         }
       end
 
@@ -461,7 +468,7 @@ module CallToActionHelper
   
   def duplicate_cta_tag(new_cta, tag)
     unless tag.tag.name.downcase == "template"
-      new_cta.call_to_action_tags.build(:call_to_action_id => new_cta.id, :tag_id => tag.tag_id)
+      new_cta.call_to_action_tags.build(:tag_id => tag.tag_id)
     end
   end
   

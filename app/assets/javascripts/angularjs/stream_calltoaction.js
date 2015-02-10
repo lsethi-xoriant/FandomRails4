@@ -87,6 +87,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.current_user = current_user;
     $scope.calltoactions = calltoaction_info_list;
 
+    clearAnonymousUserStorage();
+
     $scope.answer_in_progress = false;
 
     if($scope.aux.from_registration) {
@@ -315,6 +317,20 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.currentUserEmptyAndAnonymousInteractionEnable = function() {
     return (!$scope.current_user && $scope.aux.anonymous_interaction);
+  };
+
+  $scope.computeAvgForVoteInteraction = function(interaction_info) {
+    numerator = 0; denominator = 0;
+    if(interaction_info.anonymous_user_interaction_info) {
+      vote_info_list = JSON.parse(interaction_info.anonymous_user_interaction_info.aux).vote_info_list;
+      angular.forEach(vote_info_list, function(value, key) {
+        denominator = denominator + value;
+        numerator = numerator + (parseInt(key) * value);
+      });
+      return (numerator/denominator).toFixed(2);
+    } else {
+      return 0;
+    }
   };
 
   function getPlayer(calltoaction_id) {
@@ -1356,9 +1372,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, anonymous_user: getAnonymousUserStorage() })
           .success(function(data) {
 
-            updateUserRewardInView(data.main_reward_counter.general);
-			
-            // GOOGLE ANALYTICS
+            // Google analytics.
             if(data.ga) {
               update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
               angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
@@ -1366,25 +1380,30 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               });
             }
 
-            // HERE removeOvervideoInteraction
+            if($scope.current_user) {
 
-            // Update local storage for anonymous user.
-            if(!$scope.current_user && $scope.aux.anonymous_interaction) {
+              $scope.current_user.main_reward_counter = data.main_reward_counter;
+
+            } else if(!$scope.current_user && $scope.aux.anonymous_interaction) {
+
+              // Update local storage for anonymous user.
               setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
-              
+         
               user_interaction_for_storage = new Object();
               user_interaction_for_storage.calltoaction_id = calltoaction_id;
               user_interaction_for_storage.interaction_id = interaction_id;
               user_interaction_for_storage.user_interaction = data.user_interaction;
     
               updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
-            } 
+
+            } else {
+              // Nothing to do.
+            }
 
             // Interaction after user response.
             updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
             calltoaction_info.status = JSON.parse(data.calltoaction_status);
-            $scope.current_user.main_reward_counter = data.main_reward_counter;   
-
+            
             if(data.answers) {
               updateAnswersInInteractionInfo(interaction_info, data.answers);
             }
@@ -1454,46 +1473,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             }
             
             if(interaction_info.interaction.resource_type == "download") {
+              // Fix to ignore block popup.
               newWindow.location = data.download_interaction_attachment; //window.open(data.download_interaction_attachment, '_blank');
             } else if(interaction_info.interaction.resource_type == "link") {
               window.location = interaction_info.interaction.resource.url;
             }
-
-            /*
-            if(data.answer) {
-              $scope.current_user_answer_response_correct[calltoaction_id] = data.answer.correct;
-            }
-            
-            if(when_show_interaction == "SEMPRE_VISIBILE") {
-
-              userAnswerInAlwaysVisibleInteraction(interaction_id, data);
-              if(data.have_answer_media) {
-                userAnswerWithMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction);
-              }
-
-            } else {
-
-              if(data.have_answer_media) {
-                userAnswerWithMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction);
-              } else {
-                userAnswerWithoutMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction);
-              }
-
-              if(when_show_interaction == "OVERVIDEO_DURING") {
-                interaction_point = data.outcome.attributes.reward_name_to_counter[MAIN_REWARD_NAME];
-                if(interaction_point) {
-                  showAnimateFeedback(data.feedback, calltoaction_id);
-                }
-              }
-
-            }
-
-            if(data.call_to_action_completed) {
-              showCallToActionCompletedFeedback(calltoaction_id);
-            } else {
-              updateCallToActionRewardCounter(calltoaction_id, data.winnable_reward_count);
-            }
-            */
 
           }).error(function() {
             $scope.answer_in_progress = false;
