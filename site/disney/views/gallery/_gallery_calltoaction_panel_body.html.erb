@@ -37,7 +37,7 @@
 			  					<% if get_extra_fields!(gallery_tag)['release_url'] %>
 			  						<li>
 			  							<a href="<%= get_extra_fields!(gallery_tag)['release_url']['url'] %>" target="_blank">
-			  								<i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria per maggiorenni
+			  								<i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria
 			  							</a>
 			  						</li>
 			  					<% end %>
@@ -55,8 +55,8 @@
 			  			<label>Accettazione privacy</label>
 			  			<p class="small">{{upload.interaction.resource.upload_info.privacy.description}}</p>
 		  			</div>
-		  			<div class="col-sm-4">
-		  				<button type="submit" class="btn btn-primary" ng-if="current_user != undefined">CARICA</button>
+		  			<div class="col-sm-12 text-center">
+		  				<button type="button" class="btn btn-primary" ng-if="current_user != undefined" onclick="openLoadiongModal(); return true;">CARICA</button>
 						<a class="btn btn-primary" data-toggle="modal" data-target="#registrate-modal" ng-if="current_user == undefined">CARICA</a>
 		  			</div>
 			  	</div>

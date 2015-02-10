@@ -81,7 +81,6 @@ module RankingHelper
   def get_vote_ranking(tag_name, page)
     offset = (page-1).to_i * RANKING_USER_PER_PAGE;
     cta_ids = get_ctas_with_tag(tag_name).map{|cta| cta.id}
-    debugger
     version_rank = CacheVersion.where("name = 'votes-chart'").order("version desc").first
     if version_rank
       version = version_rank.version
@@ -100,7 +99,6 @@ module RankingHelper
   def prepare_vote_rankings_for_json(rankings, offset)
     positions = Array.new
     ctas_info = get_call_to_actions_info(rankings.map{|r| r.call_to_action_id})
-    debugger
     rankings.each_with_index do |r, index|
       extra_data = JSON.parse(r.data)
       positions << {
