@@ -33,7 +33,7 @@ module NoticeHelper
     end
     icon
   end
-  
+
   def get_notice_icon_from_cta(cta)
     if $site.assets["community_logo"].nil?
       icon = ""
