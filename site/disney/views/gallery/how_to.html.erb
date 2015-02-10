@@ -18,7 +18,7 @@
 			<% if @info['image_row_1'] && @info['text_row_1'] %>
 				<div class="row">
 					<div class="col-xs-12 col-sm-5">
-						<img class="img-responsive" src="<%= @info['image_row_1'] %>" />
+						<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_1'], :original) %>" />
 					</div>			
 					<div class="col-xs-12 col-sm-7">
 						<%= @info['text_row_1'].html_safe %>
@@ -32,7 +32,7 @@
 						<%= @info['text_row_2'].html_safe %>
 					</div>
 					<div class="col-xs-12 col-sm-5">
-						<img class="img-responsive" src="<%= @info['image_row_2'] %>" />
+						<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_2'], :original) %>" />
 					</div>
 				</div>
 			<% end %>
@@ -40,7 +40,7 @@
 			<% if @info['image_row_3'] && @info['text_row_3'] %>
 				<div class="row">
 					<div class="col-xs-12 col-sm-5">
-						<img class="img-responsive" src="<%= @info['image_row_3'] %>" />
+						<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_3'], :original) %>" />
 					</div>			
 					<div class="col-xs-12 col-sm-7">
 						<%= @info['text_row_3'].html_safe %>
