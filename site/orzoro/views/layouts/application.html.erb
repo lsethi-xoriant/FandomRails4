@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+
+  <% aux = default_aux(@aux_other_params) %>  
+  <title>Orzoro</title>
+
+  <meta name="title" content="" />
+  <meta property="og:title" content="" /> 
+  <meta property="og:description" content="" />  
+  <meta name="description" content="" />
+
+  <meta property="og:image" content="" />
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+  <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
+
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+
+  <!--[if lte IE 9]>
+    <link href="<%= asset_path("application.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
+    <script src="<%= asset_path("application.js").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" type="text/javascript"></script>  
+    <link href="<%= asset_path("ie9.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
+  <![endif]-->
+
+  <%= csrf_meta_tags %>
+
+</head>
+
+
+<% calltoaction_info_list = (@calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {}) %>
+<% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
+
+<body ng-cloak ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
+
+  <%= render partial: "/application/user_bar", locals: { aux: aux } %>
+
+  <%= yield %>
+
+  <% unless cookies[:user_cookies] %>
+    <div id="cookies-bar" class="navbar navbar-fixed-bottom cookies-footer">
+      <div class="row">
+        <div class="col-sm-11">
+          <p class="cookies-footer__description">Per migliorare la tua navigazione su questo sito, utilizziamo cookies ed altre tecnologie che ci permettono di riconoscerti.<br>Utilizzando questo sito, acconsenti agli utilizzi di cookies e delle altre tecnologie descritti nella nostra <a target="_blank" class="cookies-footer__link" href="http://www.disney.it/cookies/">Cookies Policy</a>.</p>
+        </div>
+        <div class="col-sm-1 text-right">
+          <a class="btn btn-primary btn-xs" href="javascript: void(0)" ng-click="acceptCookies()"><span>CHIUDI</span></a>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render partial: "/application/ga" %>
+
+</body>
+</html>

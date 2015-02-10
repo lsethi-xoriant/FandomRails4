@@ -448,12 +448,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.checkUndervideoInteractionTypes = function (interaction_info) {
     return (
-            interaction_info.interaction.resource_type != 'like' 
-            && interaction_info.interaction.resource_type != 'comment' 
-            && interaction_info.interaction.resource_type != 'link'
-            && interaction_info.interaction.resource_type != 'vote'
-            && interaction_info.interaction.resource_type != 'download'
-          );
+      interaction_info.interaction.resource_type != 'like' 
+      && interaction_info.interaction.resource_type != 'comment' 
+      && interaction_info.interaction.resource_type != 'link'
+      && interaction_info.interaction.resource_type != 'vote'
+      && interaction_info.interaction.resource_type != 'download'
+    );
   }
 
 
@@ -489,8 +489,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (interaction_info.interaction.resource_type == "like");
   };
 
+  $scope.filterVoteInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "vote");
+  };
+
   $scope.filterCommentInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "comment");
+  };
+
+  $scope.filterDownloadInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "download");
   };
 
   $scope.evaluateVote = function(interaction_info) {
@@ -583,6 +591,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   function initAnonymousUser() {
+
     if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage[$scope.aux.tenant] == null) {
       initAnonymousUserStorage();      
     } else if ($scope.current_user && localStorage[$scope.aux.tenant] != null) {
