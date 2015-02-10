@@ -112,8 +112,8 @@ class Sites::Disney::ProfileController < ProfileController
     if get_disney_property == "disney-channel"
       gallery_tags
     else
-      cache_short(get_galleries_for_property_cache_key) do
-        Tag.includes(:tags_tags => :other_tag).where("other_tags_tags_tags = ? AND tags.id in (?)", get_disney_property, gallery_tags.map{|t| t.id}).to_a
+      cache_short(get_galleries_for_property_cache_key(get_disney_property)) do
+        Tag.includes(:tags_tags => :other_tag).where("other_tags_tags_tags.name = ? AND tags.id in (?)", get_disney_property, gallery_tags.map{|t| t.id}).to_a
       end
     end
   end
