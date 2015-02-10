@@ -1201,6 +1201,61 @@ module ApplicationHelper
       (elements / per_page) + 1
     end
   end
+
+  def default_aux(other)
+
+    if other && other.has_key?(:calltoaction)
+      related_calltoaction_info = "TODO" # get_disney_related_calltoaction_info(calltoaction, current_property, related_tag_name, in_gallery)
+    end
+
+    if other && other.has_key?(:calltoaction_evidence_info)
+      calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_for_user_cache_key(current_or_anonymous_user.id, current_property.id)) do  
+        highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
+        calltoactions_in_property = get_disney_ctas(current_property)
+        if highlight_calltoactions.any?
+          calltoactions_in_property = calltoactions_in_property.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
+        end
+
+        calltoactions = highlight_calltoactions + calltoactions_in_property.limit(3).to_a
+        calltoaction_evidence_info = []
+        calltoactions.each do |calltoaction|
+          calltoaction_evidence_info << build_thumb_calltoaction(calltoaction)
+        end
+
+        calltoaction_evidence_info
+      end
+    end
+
+    aux = {
+      "tenant" => $site.id,
+      "anonymous_interaction" => $site.anonymous_interaction,
+      "main_reward_name" => MAIN_REWARD_NAME,
+      "calltoaction_evidence_info" => calltoaction_evidence_info,
+      "related_calltoaction_info" => related_calltoaction_info,
+      "mobile" => small_mobile_device?(),
+      "enable_comment_polling" => get_deploy_setting('comment_polling', true),
+      "flash_notice" => flash[:notice]
+    }
+
+    if other
+      other.each do |key, value|
+        aux[key] = value unless aux.has_key?(key.to_s)
+      end
+    end
+
+    aux
+
+  end
+
+  def get_calltoactions_count(calltoactions_in_page, aux)
+    if calltoactions_in_page < $site.init_ctas
+      calltoactions_in_page
+    else
+      cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
+        CallToAction.active.count
+      end
+    end
+  end
   
   def order_elements(tag, elements)
     meta_ordering = get_extra_fields!(tag)["ordering"]

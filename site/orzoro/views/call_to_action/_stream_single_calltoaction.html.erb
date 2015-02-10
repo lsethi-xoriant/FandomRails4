@@ -1,0 +1,106 @@
+<div class="row main-row">
+  <div class="col-xs-6 cta__miniformat-col">
+    <span ng-if="calltoaction_info.miniformat" class="label label-default cta-cover__miniformat" style="background-color: {{calltoaction_info.miniformat.label_background}} !important; color: {{calltoaction_info.miniformat.label_color}} !important;">
+      <span class="{{calltoaction_info.miniformat.icon}}"></span>
+      {{calltoaction_info.miniformat.title}}
+    </span>
+  </div>
+  <div class="col-xs-6 text-right">
+    <!-- CALLTOACTION WINNABLE REWARD COUNT -->
+    <div ng-if="calltoaction_info.status && calltoaction_info.status.winnable_reward_count > 0" class="cta__winnable-reward cta__winnable-reward--single-page">
+      <span class="label label-warning cta-cover__winnable-reward__label">
+        +{{calltoaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+      </span>  
+    </div> 
+    <!-- CALLTOACTION DONE -->
+    <div ng-if="!calltoaction_info.status" class="cta__winnable-reward cta__winnable-reward--single-page">
+      <span class="label label-success cta-cover__winnable-reward__label">
+        Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+      </span>  
+    </div> 
+  </div>
+  <div class="col-xs-12">
+    <h1 class="cta__title" ng-if="calltoaction_info.calltoaction.user_id == null">{{calltoaction_info.calltoaction.title}}</h1>
+    <h1 class="cta__title" ng-if="calltoaction_info.calltoaction.user_id != null"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}}</h1>
+  </div>
+</div>
+<div class="row">
+
+  <div class="col-sm-12 cta__media-container" ng-if="calltoaction_info.prize">
+		<img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" />
+	  <div class="cta-preview__locked-layer cta-preview__locked-layer--reward">
+			<p>Per sbloccare questo premio</p>
+			<span class="label label-warning cta-preview__credits--reward">+{{calltoaction_info.prize.cost}}<i class="fa fa-copyright"></i></span>
+			<button ng-if="current_user && calltoaction_info.prize.has_currency" class="btn btn-blue cta-preview__credits--btn" ng-click="buyReward(calltoaction_info.prize.id)"><span>Sblocca</span></button>
+			<button ng-if="!current_user" class="btn btn-blue cta-preview__credits--btn" onclick="$('#registrate-modal').modal('show');"><span>Sblocca</span></button>
+	  </div>
+  </div>
+
+  <div class="col-sm-12 cta__media-container" ng-if="!calltoaction_info.prize">
+    <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
+  </div>
+
+  <div class="col-sm-12" ng-if="aux.mobile">
+  	<% unless @is_cta_locked %>
+    	<%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+    <% end %>
+  </div>
+
+  <div class="col-sm-12 cta__media-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="like-interaction__cta__info" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions">
+          <button class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span class="fa fa-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span></button><span class="like-interaction__cta__info__text">{{interaction_info.interaction.resource.like_info}}<span class="hidden-xs"> mi piace</span></span>
+        </div>
+        <div class="comment-interaction__cta__info hidden-xs" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions">
+            <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-default comment-interaction__cta__info__button">
+              <span class="glyphicon glyphicon-comment comment-interaction__cta__info__glyphicon-comment"></span>
+            </a><span class="comment-interaction__cta__info__text">{{interaction_info.interaction.resource.comment_info.comments_total_count}}<span class="hidden-xs"> commenti</span></span>
+        </div>
+      </div>
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="col-xs-6 text-right">
+        <%= render partial: "/call_to_action/share_interaction" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row main-row">
+  <div class="col-md-7 cta_left-col">
+    <div class="row">
+      <!--
+      <div class="col-sm-12 cta__title-small-col">
+        <p class="cta__title-small">{{calltoaction_info.calltoaction.title}}</p>
+      </div>
+      -->
+      <div class="col-sm-12 cta__description-small-col">
+        <p class="cta__description-small" ng-bind-html="calltoaction_info.calltoaction.description"></p>
+      </div>
+
+      <div class="col-sm-12 cta__description-small-col cta__description-small-col--extra text-center" ng-if="calltoaction_info.calltoaction.extra_fields['external_related_content_label'] && calltoaction_info.calltoaction.extra_fields['external_related_content_url']">
+        <a target="_blank" class="btn btn-primary" href="{{calltoaction_info.calltoaction.extra_fields['external_related_content_url']}}"><span>{{calltoaction_info.calltoaction.extra_fields['external_related_content_label']}}</span></a>
+      </div>
+    </div>
+
+    <div class="row" ng-if="!aux.mobile">
+      <div class="col-xs-12 interaction__main-col">
+        <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+      </div>
+    </div>
+
+    <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions | filter:filterLikeInteractions" class="row">
+      <div id="share-interaction-{{interaction_info.interaction.id}}">
+        <%= render partial: "/call_to_action/share_interaction" %>
+      </div>
+    </div>
+    <div id="comment-interactions" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
+      <%= render partial: "/call_to_action/comment_interaction" %>
+    </div>  
+
+    <div class="row visible-xs">
+      <div class="col-md-2 col-md-offset-9 col-xs-12">
+        <button style="margin-top: 15px;" class="btn btn-primary btn-block registration__button" onclick="window.history.back()"><span>Indietro</span></button>
+      </div>
+    </div>
+
+  </div>
+</div>
