@@ -58,7 +58,7 @@ module ViewHelper
       url = "/#{$context_root}#{url}"
     end
 
-    html_options['href'] ||= url
+    html_options['ng-href'] ||= url
 
     content_tag(:a, url, html_options, &block)
   end
