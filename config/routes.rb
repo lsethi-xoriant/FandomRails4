@@ -35,6 +35,7 @@ Fandom::Application.routes.draw do
         match "/iur", to: "application#iur"
         match "/browse/full_search", :to => "browse#full_search"
         match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
+        match "/browse/search", :to => "browse#search"
         match "profile", :to => "profile#index"
         match "profile/index", :to => "profile#index_mobile"
         match "profile/rankings", :to => "profile#rankings"
@@ -49,6 +50,7 @@ Fandom::Application.routes.draw do
           match "/iur/sign_in", to: "registrations#iur"
           get "/users/sign_in", to: "application#iur"
           match "/users/sign_in_admin", to: "sessions#new"
+          get "/users/sign_up", to: "sessions#new"
         end
 
         resources :call_to_action

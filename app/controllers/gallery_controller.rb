@@ -10,7 +10,7 @@ class GalleryController < ApplicationController
       [get_gallery_ctas(), get_gallery_ctas_count()] 
     }
 
-    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share"])
+    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share", "vote"])
     @aux_other_params = { 
       "gallery" => true, 
       "gallery_calltoactions_count" => galleries_user_cta_count
@@ -31,7 +31,7 @@ class GalleryController < ApplicationController
       [get_gallery_ctas(@gallery_tag), get_gallery_ctas_count(@gallery_tag)]
     }
 
-    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share"])
+    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share", "vote"])
 
     @aux_other_params = { 
       "gallery" => build_call_to_action_info_list([cta]).first,
@@ -48,7 +48,9 @@ class GalleryController < ApplicationController
   
   def get_gallery_ctas(gallery = nil)
     if gallery.nil?
-      gallery_tag_ids = get_tags_with_tag("gallery").map{|t| t.id}
+      gallery_tags = get_tags_with_tag("gallery")
+      gallery_tags = order_elements("gallery", gallery_tags)
+      gallery_tag_ids = gallery_tags.map{|t| t.id}
       if gallery_tag_ids.blank?
         []
       else

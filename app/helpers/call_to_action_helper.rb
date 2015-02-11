@@ -130,7 +130,8 @@ module CallToActionHelper
         when "vote"
           vote_info = {
             min: interaction.resource.vote_min,
-            max: interaction.resource.vote_max
+            max: interaction.resource.vote_max,
+            total: get_cta_vote_info(interaction.call_to_action_id)['total']
           }
         end
 
