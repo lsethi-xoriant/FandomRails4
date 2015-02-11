@@ -39,6 +39,7 @@
               <th>Utente</th>
               <th>Tags</th>
               <th>Immagine</th>
+              <th>Carica nuova immagine</th>
               <th>Liberatoria</th>
               <th>Azioni</th>
             </tr>
@@ -59,16 +60,19 @@
                 <% end %>
               </td>
               <td>
+                <%= link_to "carica immagine", { :action => "edit_cta", :id => c.id, :part => "user_cta_image" }, { :class => "btn btn-primary btn-xs" } %>
+              </td>
+              <td>
                 <% if c.releasing_file.present? && c.releasing_file.file_content_type.split("/").first == "image" %>
                   <img src="<%= c.releasing_file.file.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
                 <% elsif c.releasing_file.present? && c.releasing_file.file_content_type.split("/").first != "image" %>
-                  <a href="<%= c.releasing_file.file.url %>" target="_blank">scarica</a>
+                  <a href="<%= c.releasing_file.file.url %>" class="btn btn-primary btn-xs" target="_blank">scarica</a>
                 <% else %>
                   --
                 <% end %>
               </td>
               <td>
-                <button type="button" class="btn btn-default btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>              
+                <button type="button" class="btn btn-success btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>              
               </td>           
             </tr>
           <% end %>

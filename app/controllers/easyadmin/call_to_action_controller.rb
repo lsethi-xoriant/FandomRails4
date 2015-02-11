@@ -52,6 +52,9 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
 
   def update_cta
+    if params[:part] == "user_cta_image"
+      params[:call_to_action]['thumbnail'] = params[:call_to_action]['media_image'] if params[:call_to_action]
+    end
     @cta = CallToAction.find(params[:id])
     create_and_link_attachment(params[:call_to_action], @cta)
     unless @cta.update_attributes(params[:call_to_action])
@@ -59,12 +62,14 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/edit_cta"
     else
-      tag_list = params[:tag_list].split(",")
-      @cta.call_to_action_tags.delete_all
-      tag_list.each do |t|
-        tag = Tag.find_by_name(t)
-        tag = Tag.create(name: t) unless tag
-        CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
+      if params[:tag_list]
+        tag_list = params[:tag_list].split(",")
+        @cta.call_to_action_tags.delete_all
+        tag_list.each do |t|
+          tag = Tag.find_by_name(t)
+          tag = Tag.create(name: t) unless tag
+          CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
+        end
       end
 
       flash[:notice] = "CallToAction aggiornata correttamente"
@@ -214,7 +219,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
 
     render template: "/easyadmin/call_to_action/index_cta"
-    
+
   end
 
   def new_cta
@@ -233,6 +238,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @tag_list = @tag_list_arr.join(",")
 
     @cta = restore_from_extra_fields(@cta)
+
+    render template: "/easyadmin/call_to_action/update_user_cta_image" if params[:part] == "user_cta_image"
   end
 
   def hide_cta
