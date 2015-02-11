@@ -25,6 +25,7 @@ gem "simple_form"
 gem "hamster"
 
 gem 'paperclip-watermark'
+gem 'paperclip-ffmpeg' 
 
 gem 'fastclick-rails', '~> 1.0.1'
 
