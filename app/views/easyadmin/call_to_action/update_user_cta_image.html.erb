@@ -1,0 +1,68 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "calltoaction" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>MODIFICA CALLTOACTION</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if @cta.errors.any? %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p>Errori nel salvataggio della CTA:</p>
+                <p>
+                  <ul>
+                    <% @cta.errors.full_messages.each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% elsif flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <h3>Carica nuova immagine</h3>
+    <hr/>
+    
+    <%= form_for @cta, url: { action: "update_cta" }, html: { multipart: true } do |f| %>
+      <%= hidden_field_tag :id, @cta.id %>
+      <%= hidden_field_tag :part, "user_cta_image" %>
+      <div class="row text-center">
+        <div class="form-group media-image-form-group col-md-4 col-md-offset-4">
+          <label class="text-input">Immagine copertina</label>
+          <div class="fileupload fileupload-new" data-provides="fileupload">
+            <div class="fileupload-preview thumbnail" style="width: 100%; height: 200px; line-height: 20px;">
+              <img src="<%= f.object.media_image.url %>">
+            </div>
+            <div class="text-center">
+              <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
+              <span class="fileupload-exists">Change</span><%= f.file_field :media_image %></span>
+              <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row text-center">
+        <div class="col-sm12">
+          <button type="submit" class="btn btn-primary btn-lg">AGGIORNA</button>
+        </div>
+      </div> 
+        
+    <% end %>
+  </div>
+</div>

@@ -226,6 +226,11 @@ Fandom::Application.routes.draw do
 
     match "/", :to => "easyadmin#index"
 
+    match "tag/filter", :to => "tag#filter"
+    match "tag/clone/:id", :to => "tag#clone"
+    match "tag/ordering", :to => "tag#ordering"
+    match "tag/retag", :to => "tag#retag_tag"
+
     resources :home_launchers
 
     resources :tag
@@ -233,10 +238,6 @@ Fandom::Application.routes.draw do
     resources :ranking
 
     resources :vote_ranking
-
-    match "tag/filter", :to => "tag#filter"
-    match "tag/clone/:id", :to => "tag#clone"
-    match "retag", :to => "tag#retag_tag"
 
     # USER
     match "user", :to => "easyadmin#index_user"
@@ -266,6 +267,7 @@ Fandom::Application.routes.draw do
     match "cta/update", :to => "call_to_action#update_cta"
     match "cta/hide/:id", :to => "call_to_action#hide_cta"
     match "cta/clone/:id", :to => "call_to_action#clone"
+    match "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
 
     # TAG CTA
     match "cta/tag/:id", :to => "easyadmin#tag_cta"
