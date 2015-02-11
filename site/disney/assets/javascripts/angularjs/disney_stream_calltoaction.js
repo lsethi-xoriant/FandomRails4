@@ -39,7 +39,7 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
       if(hasFlash) {
         $("#iframe-calltoaction-" + calltoaction.id).html(calltoaction.media_data);
       } else {
-        $("#iframe-calltoaction-" + calltoaction.id).html("Accedi da desktop per visualizzare questo contenuto");
+        $("#iframe-calltoaction-" + calltoaction.id).html("<p style=\"margin-bottom: 70px; margin-top: 70px;\">Accedi da desktop per visualizzare questo contenuto</p>");
         $("#iframe-calltoaction-" + calltoaction.id).removeClass();
         $("#iframe-calltoaction-" + calltoaction.id).addClass("text-center");
       }
