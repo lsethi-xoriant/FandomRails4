@@ -117,9 +117,7 @@ class BrowseController < ApplicationController
     tag = Tag.includes(:tags_tags).find(params[:id])
     @category = tag_to_category(tag)
     contents, @tags = get_contents_by_category_with_tags(tag)
-    
     @contents = compute_gallery_contents(contents)
-    
   end
   
   def index_category_load_more
@@ -215,10 +213,14 @@ class BrowseController < ApplicationController
   
   def search
     term = params[:q]
-    results = cache_short(get_browse_search_results_key(term)) { get_contents_by_query(term, get_search_tags_for_tenant).slice(0,8) }
+    results = cache_short(get_browse_search_results_key(get_search_cache_key_params(term))) { get_contents_by_query(term, get_search_tags_for_tenant).slice(0,8) }
     respond_to do |format|
       format.json { render :json => results.to_a.to_json }
     end
+  end
+  
+  def get_search_cache_key_params(term)
+    term
   end
   
   def get_search_tags_for_tenant
