@@ -10,7 +10,7 @@ class GalleryController < ApplicationController
       [get_gallery_ctas(), get_gallery_ctas_count()] 
     }
 
-    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share"])
+    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share", "vote"])
     @aux_other_params = { 
       "gallery" => true, 
       "gallery_calltoactions_count" => galleries_user_cta_count
