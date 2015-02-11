@@ -110,16 +110,16 @@ class Sites::Disney::CallToActionController < CallToActionController
                 "FROM call_to_actions LEFT OUTER JOIN interactions ON call_to_actions.id = interactions.call_to_action_id LEFT OUTER JOIN user_comment_interactions ON interactions.resource_id = user_comment_interactions.comment_id " +
                 "WHERE interactions.resource_type = 'Comment' AND call_to_actions.id in (#{calltoaction_ids}) " +
                 "GROUP BY call_to_actions.id " +
-                "ORDER BY sum DESC limit 3;"
+                "ORDER BY sum DESC limit 4;"
           execute_sql_and_get_ctas_ordered(sql)
         when "view"
           calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")
           sql = "SELECT call_to_actions.id " +
               "FROM call_to_actions LEFT OUTER JOIN view_counters ON call_to_actions.id = view_counters.ref_id " +
               "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'cta') AND call_to_actions.id in (#{calltoaction_ids}) " +
-              "ORDER BY (coalesce(view_counters.counter, 0) / (extract('epoch' from (now() - coalesce(call_to_actions.activated_at, call_to_actions.created_at) )) / 3600 / 24)), call_to_actions.activated_at DESC limit 3;"
+              "ORDER BY (coalesce(view_counters.counter, 0) / (extract('epoch' from (now() - coalesce(call_to_actions.activated_at, call_to_actions.created_at) )) / 3600 / 24)), call_to_actions.activated_at DESC limit 4;"
         else
-          calltoactions = calltoactions.limit(3).to_a
+          calltoactions = calltoactions.limit(4).to_a
         end
         calltoactions
       end
