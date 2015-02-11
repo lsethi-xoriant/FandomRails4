@@ -14,18 +14,25 @@
     <div class="col-md-7 main-row__covers-left-col">
       <%= render partial: "application/ordering" %>
 
-      <div ng-repeat="calltoaction_info in calltoactions" class="row">
+      <div ng-if="!ordering_in_progress" ng-repeat="calltoaction_info in calltoactions" class="row">
         <div class="col-sm-12">
           <%= render partial: "/call_to_action/cover_single_calltoaction" %>
         </div>
       </div>
-      <div class="row">
+      <div ng-if="!ordering_in_progress" class="row">
         <div class="col-sm-12">
           <div id="append-other" class="text-center" style="margin-bottom: 20px;">
             <button class="btn btn-primary" href="javascript: void(0)" ng-click="appendCallToAction();"><span>Carica altri</span></button>
           </div>
         </div>
       </div>
+
+      <div class="row text-center" ng-if="ordering_in_progress">
+        <div class="col-sm-12">
+          <img style="margin-top: 45px; margin-bottom: 45px;" src="<%= asset_path("loader.gif") %>"> 
+        </div>
+      </div>
+
     </div>
     <div class="col-md-5 text-center adv-square__container">
       <div class="row adv-square__row">
