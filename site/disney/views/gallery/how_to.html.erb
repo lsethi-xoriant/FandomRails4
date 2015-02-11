@@ -1,6 +1,6 @@
 <div class="container container--default">
 	<div class="row category-header">
-	    <img src="<%= @info['header_image'] if @info['header_image'] %>" class="img-responsive category-header__header-image" />
+	    <img src="<%= get_upload_extra_field_processor(@info['header_image'], :original) if @info['header_image'] %>" class="img-responsive category-header__header-image" />
 	  	<h1 class="category-header__title"><%= @gallery_tag.title %></h1>
 	  	<div class="category-header__filter-area">
 	  		<%= light_link_to "/gallery/#{@cta_id}", {"class" => "btn btn-primary"} do %>Partecipa<% end %>

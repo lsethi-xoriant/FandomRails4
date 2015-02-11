@@ -47,9 +47,9 @@
   
 	<div class="row">
 	  	<div class="col-xs-12 gallery-cta">
-	  		<div class="row" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image_upload'], :original) if get_extra_fields!(@gallery_tag)['background_image_upload'] %>); background-repeat: no-repeat; background-size: 100% auto; padding-top: 20px; padding-bottom: 20px;">
+	  		<div class="row gallery-cta__upload-area" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image_upload'], :original) if get_extra_fields!(@gallery_tag)['background_image_upload'] %>);">
 	  			<div class="col-sm-4">
-	  				<img class="img-responsive" src="<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['thumbnail'], :medium) if get_extra_fields!(@gallery_tag)['thumbnail'] && upload_extra_field_present?(get_extra_fields!(@gallery_tag)['thumbnail']) %>" />
+	  				<img class="img-responsive" src="<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['thumbnail_upload'], :medium) if get_extra_fields!(@gallery_tag)['thumbnail_upload'] && upload_extra_field_present?(get_extra_fields!(@gallery_tag)['thumbnail']) %>" />
 	  			</div>
 	  			<div class="col-sm-7">
 	  				<%= @gallery_tag.description.html_safe %>

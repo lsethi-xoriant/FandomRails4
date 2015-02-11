@@ -21,7 +21,7 @@
   </div>
   <div class="col-xs-12">
     <h1 class="cta__title" ng-if="calltoaction_info.calltoaction.user_id == null">{{calltoaction_info.calltoaction.title}}</h1>
-    <h1 class="cta__title" ng-if="calltoaction_info.calltoaction.user_id != null"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}}</h1>
+    <h1 class="cta__title" ng-if="calltoaction_info.calltoaction.user_id != null"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}} <span class="label label-default cta-cover__vote-count--header" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">{{interaction_info.interaction.resource.vote_info.total}} Voti</span></h1>
   </div>
 </div>
 <div class="row">

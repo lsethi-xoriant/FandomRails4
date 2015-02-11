@@ -72,5 +72,18 @@
   border: 2px solid #fff;
   color: #fff;
 }
+
+.gallery-cta__upload-area{
+  background-repeat: no-repeat; 
+  background-size: 100% auto; 
+  padding-top: 20px; 
+  padding-bottom: 20px;
+}
+
 .gallery-cta-list{}
 
+@media (max-width: $screen-sm-min) {
+  .gallery-cta__upload-area{
+    background-size: 100% 100%; 
+  }
+}

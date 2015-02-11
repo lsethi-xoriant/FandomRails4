@@ -1285,4 +1285,13 @@ module ApplicationHelper
     elements
   end
   
+  def get_cta_vote_info(cta_id)
+    result = CacheVote.where("call_to_action_id = ?", cta_id).order("version DESC").first
+    vote_info = {"total" => 0}
+    unless result.nil?
+      vote_info['total'] = result.vote_sum
+    end
+    vote_info
+  end
+  
 end

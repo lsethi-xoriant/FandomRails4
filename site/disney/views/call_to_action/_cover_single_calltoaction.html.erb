@@ -32,7 +32,14 @@
           <p>{{calltoaction_info.calltoaction.title}}</p>
         </div>
         <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id != null">
-          <p><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}}</p>
+        	<div class="row">
+        		<div class="col-xs-8">
+        			<p><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}}</p>
+        		</div>
+        		<div class="col-xs-4" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
+        			<span class="label label-default cta-cover__vote-count">{{interaction_info.interaction.resource.vote_info.total}} Voti</span>
+        		</div>
+        	</div>
         </div>
       <% end %>
     </div>
