@@ -1255,26 +1255,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           // Interaction after user response.
           if($scope.current_user) {           
             updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-            updateUserRewardInView(data.main_reward_counter.general);
             play_interaction_info.status = data.interaction_status;
             calltoaction_info.status = JSON.parse(data.calltoaction_status);
+            $scope.current_user.main_reward_counter = data.main_reward_counter;
           }
-
-          /*
-
-          interaction_point = data.outcome.attributes.reward_name_to_counter[MAIN_REWARD_NAME];
-          if(interaction_point) {
-            showAnimateFeedback(data.feedback, calltoaction_id);
-            updateUserRewardInView(data.main_reward_counter.general);
-          }
-
-          if(data.call_to_action_completed) {
-            showCallToActionCompletedFeedback(calltoaction_id);
-          } else {
-            updateCallToActionRewardCounter(calltoaction_id, data.winnable_reward_count);
-          }
-
-          */
           
         }).error(function() {
           // ERROR.

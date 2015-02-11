@@ -2,7 +2,7 @@
 <div class="col-lg-12 play-interaction">
   <div class="row" id="play-interaction-button-row">
     <div class="col-lg-4 col-lg-offset-8" style="padding: 0;"> 
-      <% if f.object.interactions.where("resource_type='Play'").blank? %>
+      <% unless f.object.interactions.find_by_resource_type('Play').blank? %>
         <%= link_to_add_play_fields "AGGIUNGI PLAY", f, :interactions %>
       <% end %>
     </div>
