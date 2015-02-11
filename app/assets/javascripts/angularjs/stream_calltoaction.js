@@ -751,7 +751,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     other_params = $scope.updateOrderingOtherParams();
 
-    $http.get("/ordering_ctas", { params: { "ordering": ordering, "other_params": other_params } })
+    ordering_ctas = "/ordering_ctas"
+    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+      ordering_ctas = "/" + $scope.aux.current_property_info.path + "" + ordering_ctas;
+    }
+
+    $scope.ordering_in_progress = true;
+
+    $http.get(ordering_ctas, { params: { "ordering": ordering, "other_params": other_params } })
       .success(function(data) { 
         $scope.calltoaction_ordering = ordering;
         $scope.calltoactions = data.calltoaction_info_list;
@@ -762,8 +769,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           $("#append-other button").show();
         }
 
+        $scope.ordering_in_progress = false;
+
       }).error(function() {
-        // nothing to do
+        $scope.ordering_in_progress = false;
       });
   };
 
@@ -1311,6 +1320,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
         updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
         $scope.current_user.main_reward_counter = data.main_reward_counter;  
+        updateUserRewardInView(data.main_reward_counter.general);
         interaction_info.status = data.interaction_status;
 
         $scope.aux.share_interaction_daily_done = true;
@@ -1367,6 +1377,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             if($scope.current_user) {
 
               $scope.current_user.main_reward_counter = data.main_reward_counter;
+              updateUserRewardInView(data.main_reward_counter.general);
 
             } else if(!$scope.current_user && $scope.aux.anonymous_interaction) {
 
