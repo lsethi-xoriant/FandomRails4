@@ -37,4 +37,12 @@ class Sites::Disney::BrowseController < BrowseController
     end
   end
   
+  def get_search_tags_for_tenant
+    if get_disney_property == "disney-channel" 
+      []
+    else
+      [Tag.find_by_name(get_disney_property)]
+    end
+  end
+  
 end
