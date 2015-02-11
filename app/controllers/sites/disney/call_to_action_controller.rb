@@ -34,7 +34,7 @@ class Sites::Disney::CallToActionController < CallToActionController
         execute_sql_and_get_ctas_ordered(sql)
       end
     else
-      calltoactions = cache_short(get_calltoactions_in_property_cache_key(property.id, gallery_calltoaction_id)) do
+      calltoactions = cache_medium(get_calltoactions_in_property_cache_key(property.id, gallery_calltoaction_id, get_cta_max_updated_at())) do
         get_disney_ctas(property, gallery_calltoaction_id).limit(init_ctas).to_a
       end
     end

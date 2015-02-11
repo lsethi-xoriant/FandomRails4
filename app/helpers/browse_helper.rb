@@ -171,13 +171,20 @@ module BrowseHelper
     [contents.slice(offset, 12), total]
   end
   
-  def get_contents_by_query(term)
+  def get_contents_by_query(term, tags)
     category_tag_ids = get_category_tag_ids()
-    tags = Tag.where("title ILIKE ? AND id IN (?)","%#{term}%", category_tag_ids).limit(8)
-    ctas = CallToAction.active.where("title ILIKE ?","%#{term}%").limit(8)
+    tag_ids_filter = tags.map{|t| t.id}
+    if tag_ids_filter.empty?
+      tags = Tag.where("title ILIKE ? AND id IN (?) ","%#{term}%", category_tag_ids).limit(8)
+      ctas = CallToAction.active.where("title ILIKE ?","%#{term}%").limit(8)
+    else
+      ids = category_tag_ids + tag_ids_filter
+      tags = Tag.includes(:tags_tags).where("title ILIKE ? AND tags_tags.other_tag_id IN (?)","%#{term}%", ids).limit(8)
+      ctas = CallToAction.active.includes(:call_to_action_tags).where("title ILIKE ? AND call_to_action_tags.tag_id in (?)","%#{term}%", tag_ids_filter).limit(8)
+    end
+    
     merge_contents_for_autocomplete(ctas, tags)
   end
-  
   
   def get_browse_tag_ids
     browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY).value

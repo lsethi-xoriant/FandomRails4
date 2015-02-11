@@ -29,7 +29,13 @@ function SearchCtrl($scope, $window, $filter, $http) {
 	};
 	
 	$scope.getResults = function(val) {
-	    return $http.get("/browse/search.json", {
+		
+		api_path = "/browse/search.json";
+        if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+        	api_path = "/" + $scope.aux.current_property_info.path + "" + api_path;
+        }
+		
+	    return $http.get(api_path, {
 	      params: {
 	        q: val,
 	        sensor: false

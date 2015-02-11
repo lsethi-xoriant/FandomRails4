@@ -52,7 +52,6 @@ class CallToAction < ActiveRecordWithJSON
           { }
         else # video
           {
-            :large => { :geometry => "1024x768", :format => 'mp4' },
             :medium => { :geometry => "640x480", :format => 'mp4' },
             :thumb => { :geometry => "300x300#", :format => 'jpg', :time => 1 }
           }

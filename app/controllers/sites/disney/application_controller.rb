@@ -25,7 +25,7 @@ class Sites::Disney::ApplicationController < ApplicationController
     init_ctas = $site.init_ctas
     property = get_tag_from_params(get_disney_property())
 
-    @calltoactions = cache_short(get_calltoactions_in_property_cache_key(property.id)) do
+    @calltoactions = cache_medium(get_calltoactions_in_property_cache_key(property.id, 0, get_cta_max_updated_at())) do
       get_disney_ctas(property).limit(init_ctas).to_a
     end
 
