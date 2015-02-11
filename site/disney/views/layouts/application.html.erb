@@ -33,6 +33,11 @@
 <script type="text/javascript" src="//analytics.disneyinternational.com/ads/dimgAdMaster.js"></script>
 <script type="text/javascript" src="http://analytics.disneyinternational.com/analytics/wdigWebAnalytics.js"></script>
 
+<script type="text/javascript">
+  cto = new CTO();
+  cto.track();
+</script>
+
 <%= render partial: "/application/style", locals: { aux: aux } %>
 
 <% calltoaction_info_list = (@calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {}) %>
