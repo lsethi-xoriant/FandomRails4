@@ -1311,6 +1311,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
         updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
         $scope.current_user.main_reward_counter = data.main_reward_counter;  
+        updateUserRewardInView(data.main_reward_counter.general);
         interaction_info.status = data.interaction_status;
 
         $scope.aux.share_interaction_daily_done = true;
@@ -1367,6 +1368,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             if($scope.current_user) {
 
               $scope.current_user.main_reward_counter = data.main_reward_counter;
+              updateUserRewardInView(data.main_reward_counter.general);
 
             } else if(!$scope.current_user && $scope.aux.anonymous_interaction) {
 
