@@ -35,13 +35,13 @@
   display: inline-block; 
   .vote-interaction__baloon__element-pin {
     background: transparent;
-    width: 80px; 
-    height: 80px; 
+    height: 60px;
+    width: 60px;
     border: 1px solid #fff; 
     color: #fff;
     border-radius: 50%; 
     p {
-      line-height: 80px;
+      line-height: 60px;
       font-size: 26px;
     }
   }
@@ -75,15 +75,12 @@
 
 @media (min-width: $screen-sm-min) { 
   .vote-interaction__reward {
-    position: absolute;
-    right: -80px;
-    top: 25px;
   }
 
   .vote-interaction__title {
     color: #fff;
     font-size: 28px;
-    margin-bottom: 15px;
+    margin-bottom: 0;
     text-shadow: 0 0 1px #000;
   }
 }

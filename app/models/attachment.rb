@@ -8,7 +8,6 @@ class Attachment < ActiveRecord::Base
 
   has_attached_file :data, 
     :styles => { 
-      :original => "100%", 
       :carousel => "1024x320^", 
       :medium => "524x393^", 
       :thumb => "262x147^" 
