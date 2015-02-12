@@ -33,7 +33,6 @@ def create_releasing_files(url_map, id_map)
   id_map_user_cta_hash.each do |old_id, new_id|
     start_time = Time.now
     begin
-      puts url_map_user_cta_hash
       url = url_map_user_cta_hash[old_id.to_s]["user_call_to_action_releasing_file_url"]
       cta = CallToAction.find(new_id)
       rf = ReleasingFile.new
