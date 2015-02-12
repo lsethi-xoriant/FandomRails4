@@ -2,9 +2,9 @@
 <div class="col-lg-12 play-interaction">
   <div class="row" id="play-interaction-button-row">
     <div class="col-lg-4 col-lg-offset-8" style="padding: 0;"> 
-      <% unless f.object.interactions.find_by_resource_type('Play').blank? %>
+      <%# unless f.object.interactions.find_by_resource_type('Play').blank? %>
         <%= link_to_add_play_fields "AGGIUNGI PLAY", f, :interactions %>
-      <% end %>
+      <%# end %>
     </div>
   </div>
 
@@ -15,7 +15,6 @@
         <% if builder.object.resource_type == "Play" %>
           <%= render 'play-form', :f => builder %>
         <% end %>
-        <label class="text-input">Visibile</label>
       <% end %>
     </div>
   </div>
