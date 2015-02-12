@@ -121,7 +121,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "TEST" %>
-          <%= render '/easyadmin/call_to_action/quiz-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/test-form', :f => builder %>
         <% end %>
       <% end %>
 

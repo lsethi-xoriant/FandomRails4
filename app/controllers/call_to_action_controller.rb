@@ -439,6 +439,8 @@ class CallToActionController < ApplicationController
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
       response[:ga][:label] = interaction.resource_type.downcase
 
+      response["vote_info"] = build_votes_for_resource(interaction) 
+
     else
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil)
       response[:ga][:label] = interaction.resource_type.downcase
