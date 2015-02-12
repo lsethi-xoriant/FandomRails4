@@ -1767,7 +1767,7 @@ CREATE TABLE votes (
     title character varying(255),
     vote_min integer DEFAULT 1,
     vote_max integer DEFAULT 10,
-    oneshot boolean,
+    one_shot boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -3483,7 +3483,7 @@ CREATE TABLE votes (
     title character varying(255),
     vote_min integer DEFAULT 1,
     vote_max integer DEFAULT 10,
-    oneshot boolean,
+    one_shot boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -5199,7 +5199,7 @@ CREATE TABLE votes (
     title character varying(255),
     vote_min integer DEFAULT 1,
     vote_max integer DEFAULT 10,
-    oneshot boolean,
+    one_shot boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -6915,7 +6915,7 @@ CREATE TABLE votes (
     title character varying(255),
     vote_min integer DEFAULT 1,
     vote_max integer DEFAULT 10,
-    oneshot boolean,
+    one_shot boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -8631,7 +8631,7 @@ CREATE TABLE votes (
     title character varying(255),
     vote_min integer DEFAULT 1,
     vote_max integer DEFAULT 10,
-    oneshot boolean,
+    one_shot boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -10347,7 +10347,7 @@ CREATE TABLE votes (
     title character varying(255),
     vote_min integer DEFAULT 1,
     vote_max integer DEFAULT 10,
-    oneshot boolean,
+    one_shot boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -12063,7 +12063,7 @@ CREATE TABLE votes (
     title character varying(255),
     vote_min integer DEFAULT 1,
     vote_max integer DEFAULT 10,
-    oneshot boolean,
+    one_shot boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -13333,7 +13333,8 @@ CREATE TABLE tags (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    title character varying(255),
+    slug character varying(255)
 );
 
 
@@ -22034,6 +22035,13 @@ CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
 
 
 --
+-- Name: index_tags_on_slug; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
+
+
+--
 -- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -22531,3 +22539,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150206170033');
 INSERT INTO schema_migrations (version) VALUES ('20150206170306');
 
 INSERT INTO schema_migrations (version) VALUES ('20150210144800');
+
+INSERT INTO schema_migrations (version) VALUES ('20150212101118');

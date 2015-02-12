@@ -58,6 +58,7 @@ module CallToActionHelper
         "calltoaction" => { 
           "id" => calltoaction.id,
           "name" => calltoaction.name,
+          "slug" => calltoaction.slug,
           "title" => calltoaction.title,
           "description" => calltoaction.description,
           "media_type" => calltoaction.media_type,

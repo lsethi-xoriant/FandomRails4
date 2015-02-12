@@ -11,7 +11,7 @@ class Tag < ActiveRecordWithJSON
   json_attributes [[:extra_fields, EmptyAux]]
 
   extend FriendlyId
-  friendly_id :name
+  friendly_id :slug, use: :slugged 
 
   validates_presence_of :name
   validates :name, uniqueness: true
