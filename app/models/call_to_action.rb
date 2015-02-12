@@ -14,7 +14,7 @@ class CallToAction < ActiveRecordWithJSON
   json_attributes [[:aux, EmptyAux], [:extra_fields, EmptyAux]]
 
   extend FriendlyId
-  friendly_id :name, use: :slugged 
+  friendly_id :slug, use: :slugged 
 
   attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required,
                   :button_label, :alternative_description, :enable_for_current_user, :shop_url

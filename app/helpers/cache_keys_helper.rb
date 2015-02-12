@@ -315,7 +315,7 @@ module CacheKeysHelper
   # ~~~~~~
   
   def get_browse_search_results_key(term)
-    "browse_search_result_#{term}"
+    "browse_search_result_#{term.gsub(/\s+/, "")}"
   end
   
   def get_full_search_results_key(term, extra_cache_key = "")

@@ -172,6 +172,7 @@ module DisneyHelper
         filter_info << {
           "id" => filter.id,
           "name" => filter.name,
+          "slug" => filter.slug,
           "background" => get_extra_fields!(filter)["label-background"],
           "icon" => get_extra_fields!(filter)["icon"],
           "title" => filter.title,
@@ -195,6 +196,7 @@ module DisneyHelper
 
     {
       "id" => calltoaction.id,
+      "slug" => calltoaction.slug,
       "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
       "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
       "thumbnail_medium_url" => calltoaction.thumbnail(:medium),

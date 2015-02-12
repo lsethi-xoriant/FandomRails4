@@ -23,7 +23,7 @@
       <div class="flex-viewport-shadow hidden-xs"></div>
       <ul class="slides">
         <li class="relateds-flexslider__item" ng-repeat="calltoaction in aux.related_calltoaction_info">
-          <%= light_link_to("/call_to_action/{{calltoaction.id}}") do %>
+          <%= light_link_to("/call_to_action/{{calltoaction.slug}}") do %>
             <div class="relateds-flexslider__item-panel"> 
               <div class="row">
                 <div class="col-xs-12">

@@ -37,6 +37,10 @@ class Sites::Disney::BrowseController < BrowseController
     end
   end
   
+  def get_search_cache_key_params(term)
+    "#{term}_#{get_disney_property}"
+  end
+  
   def get_search_tags_for_tenant
     if get_disney_property == "disney-channel" 
       []

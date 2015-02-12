@@ -56,6 +56,10 @@
               <label class="text-input">Nome</label>
               <%= f.text_field :name, :class => "form-control" %>
           </div>
+          <div class="form-group">
+              <label class="text-input">Slug</label>
+              <%= f.text_field :slug, :class => "form-control" %>
+          </div>
 
           <div class="form-group">
               <label class="text-input">Descrizione</label>
@@ -177,6 +181,7 @@
 
     initializeTextbox(json_field, null, formName, modelName, fieldName);
 
+    fillInputWithSlug($('#tag_title'), $('#tag_slug'));
     fillInputWithSlug($('#tag_title'), $('#tag_name'));
 
   });

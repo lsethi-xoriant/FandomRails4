@@ -3,7 +3,7 @@
     <div class="flex-viewport-shadow"></div>
     <ul class="slides">
       <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-desktop-item">
-        <%= light_link_to("/browse/category/{{filter.name}}", class: "filters__flexslider-a") do %>
+        <%= light_link_to("/browse/category/{{filter.slug}}", class: "filters__flexslider-a") do %>
           <img class="filters__flexslider-image" ng-src="{{filter.image}}">  
           <div class="filters__title hidden">{{filter.title}}</div>   
         <% end %>
@@ -20,7 +20,7 @@
   <div class="flexslider filters__flexslider-mobile visible-xs" ng-if="aux.filter_info">
     <ul class="slides">
       <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-mobile-item">
-        <%= light_link_to("/browse/category/{{filter.name}}") do %>
+        <%= light_link_to("/browse/category/{{filter.slug}}") do %>
           <p class="filters__title hidden">{{filter.title}}</p>
           <img  class="filters__flexslider-image" ng-src="{{filter.image}}">
         <% end %>

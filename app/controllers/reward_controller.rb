@@ -34,6 +34,7 @@ class RewardController < ApplicationController
         reward_info_list << {
           "calltoaction" => { 
             "id" => reward.call_to_action.id,
+            "slug" => reward.call_to_action.slug,
             "title" => reward.call_to_action.title,
             "thumbnail_url" => reward.call_to_action.thumbnail_url,
           },

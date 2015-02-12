@@ -58,6 +58,7 @@ module CallToActionHelper
         "calltoaction" => { 
           "id" => calltoaction.id,
           "name" => calltoaction.name,
+          "slug" => calltoaction.slug,
           "title" => calltoaction.title,
           "description" => calltoaction.description,
           "media_type" => calltoaction.media_type,
@@ -439,7 +440,7 @@ module CallToActionHelper
   def duplicate_interaction(new_cta, interaction, name = "")
     interaction_attributes = interaction.attributes
     interaction_attributes.delete("id")
-    interaction_attributes.delete("name") # TODO
+    interaction_attributes.delete("name")
     interaction_attributes.delete("rescource_type")
     interaction_attributes.delete("resource")
     new_interaction = new_cta.interactions.build(interaction_attributes, :without_protection => true)
@@ -448,8 +449,9 @@ module CallToActionHelper
     resource_type = interaction.resource_type
 
     if resource_type == "Play"
-      resource_attributes["name"] = "#{interaction.resource.attributes["title"][0..12]}T#{Time.now.strftime("%H%M")}"
+      resource_attributes["title"] = "#{interaction.resource.attributes["title"][0..12]}T#{Time.now.strftime("%H%M")}"
     end
+    
     resource_model = get_model_from_name(resource_type)
     new_interaction.resource = resource_model.new(resource_attributes, :without_protection => true)
     new_resource = new_interaction.resource 
