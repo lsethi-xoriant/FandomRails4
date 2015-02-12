@@ -3,7 +3,7 @@
 
 class Vote < ActiveRecord::Base
 
-  	attr_accessible :title, :vote_min, :vote_max, :oneshot
+  	attr_accessible :title, :vote_min, :vote_max, :one_shot
   
   	has_one :interaction, as: :resource
 

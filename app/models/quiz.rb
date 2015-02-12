@@ -28,6 +28,6 @@ class Quiz < ActiveRecord::Base
     end
 
   	def quiz_type_enum
-      ["TRIVIA", "VERSUS", "PENDING"]
+      ["TRIVIA", "VERSUS", "TEST", "PENDING"]
     end
 end

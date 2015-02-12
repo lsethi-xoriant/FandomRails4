@@ -1,5 +1,5 @@
 <div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="calltoaction in aux.sidebar_info.calltoaction_info_list">
-  <%= light_link_to("/call_to_action/{{calltoaction.id}}") do %>
+  <%= light_link_to("/call_to_action/{{calltoaction.slug}}") do %>
     <div class="row text-left">
       <div class="col-xs-12">
         <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
