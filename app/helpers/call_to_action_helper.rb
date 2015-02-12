@@ -439,7 +439,7 @@ module CallToActionHelper
   def duplicate_interaction(new_cta, interaction, name = "")
     interaction_attributes = interaction.attributes
     interaction_attributes.delete("id")
-    interaction_attributes.delete("name") # TODO
+    interaction_attributes.delete("name") rescue nil
     interaction_attributes.delete("rescource_type")
     interaction_attributes.delete("resource")
     new_interaction = new_cta.interactions.build(interaction_attributes, :without_protection => true)
