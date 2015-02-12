@@ -9,6 +9,7 @@ class Interaction < ActiveRecord::Base
   belongs_to :call_to_action
 
   has_many :user_interactions, dependent: :destroy
+  has_many :interaction_call_to_actions
 
   before_create :check_name
 

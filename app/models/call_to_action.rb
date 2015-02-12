@@ -71,6 +71,7 @@ class CallToAction < ActiveRecordWithJSON
       :thumb => " -gravity center -crop '262x147+0+0'" 
     }
 
+  has_many :interaction_call_to_actions
   has_many :interactions, dependent: :destroy
   has_many :call_to_action_tags, dependent: :destroy
   has_many :answers

@@ -366,9 +366,12 @@ module CallToActionHelper
   end
   
   def duplicate_user_generated_cta(params, watermark, cta_title)
+    unique_name = generate_unique_name()
+
     user_calltoaction = CallToAction.new(
         title: cta_title, 
-        name: generate_unique_name(), 
+        name: unique_name,
+        slug: unique_name, 
         user_id: current_user.id,
         media_image: params["upload"],
         thumbnail: (params["upload"] if params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}),
