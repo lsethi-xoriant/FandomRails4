@@ -145,7 +145,7 @@ module BrowseHelper
   end
   
   def get_contents_by_category_with_tags(filter_tags, offset = 0)
-    tags = get_tags_with_tags(filter_tags.map{|t| t.name}).sort_by { |tag| tag.created_at }
+    tags = get_tags_with_tags(filter_tags.map{|t| t.id}).sort_by { |tag| tag.created_at }
     ctas = get_ctas_with_tags(filter_tags.map{|t| t.id}).sort_by { |cta| cta.created_at }
     merge_contents_with_tags(ctas, tags, offset)
   end

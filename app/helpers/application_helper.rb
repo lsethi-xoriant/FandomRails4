@@ -444,14 +444,15 @@ module ApplicationHelper
     end
   end
   
-  def get_tags_with_tags(tags_name)
-    cache_short get_tags_with_tags_cache_key(tags_name) do
+  def get_tags_with_tags(tag_ids)
+    cache_short get_tags_with_tags_cache_key(tag_ids) do
       hidden_tags_ids = get_hidden_tag_ids
       if hidden_tags_ids.any?
-        Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name in (?) AND tags.id not in (?)", tags_name, hidden_tags_ids).to_a
+        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
       else
-        Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name in (?)", tags_name).to_a
+        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id}) )" }.join(' INTERSECT ')
       end
+      Tag.includes(:tags_tags).where("tags.id in (#{tag_ids_subselect})").to_a
     end
   end
   
