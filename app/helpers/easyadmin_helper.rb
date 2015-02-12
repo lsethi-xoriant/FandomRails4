@@ -128,8 +128,8 @@ module EasyadminHelper
     link_to_function(name, "add_vote_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-primary")
   end
 
-  def link_to_remove_fields(name, resource)
-    link_to_function(name, "remove_fields(this, \"#{resource}\")", class: "btn btn-warning btn-xs")
+  def link_to_remove_fields(name, resource, template = resource)
+    link_to_function(name, "remove_fields(this, \"#{template}\")", class: "btn btn-warning btn-xs")
   end
 
   def link_to_remove_check_fields(name)
