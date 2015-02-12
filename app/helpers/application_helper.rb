@@ -274,6 +274,7 @@ module ApplicationHelper
           aux_in_user_interaction["vote_info_list"][aux_parse["vote"]] = 1
         end
         aux = aux_in_user_interaction.to_json
+        expire_cache_key(get_cache_votes_for_interaction(interaction.id))
       end
 
       unless interaction.resource.one_shot
@@ -289,6 +290,7 @@ module ApplicationHelper
           aux_parse["vote"] => 1
         }
         aux = aux_parse.to_json
+        expire_cache_key(get_cache_votes_for_interaction(interaction.id))
       end
 
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
@@ -442,11 +444,22 @@ module ApplicationHelper
     end
   end
   
+  def get_tags_with_tags(tags_name)
+    cache_short get_tags_with_tags_cache_key(tags_name) do
+      hidden_tags_ids = get_hidden_tag_ids
+      if hidden_tags_ids.any?
+        Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name in (?) AND tags.id not in (?)", tags_name, hidden_tags_ids).to_a
+      else
+        Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name in (?)", tags_name).to_a
+      end
+    end
+  end
+  
   def get_tags_with_tag_with_match(tag_name, query = "")
     conditions = construct_conditions_from_query(query, "tags.title")
     category_tag_ids = get_category_tag_ids()
     if conditions.empty?
-      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions})", tag_name).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).order("tags.created_at DESC").to_a
     else
       tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions}) AND tags.id in (?)", tag_name, category_tag_ids).order("tags.created_at DESC").to_a
     end
@@ -506,11 +519,10 @@ module ApplicationHelper
   
   def get_ctas_with_tags(tags_name, with_user_cta = false)
     cache_short get_ctas_with_tags_cache_key(tags_name, with_user_cta) do
-      tag_ids = Tag.where("name in (?)", tags_name).pluck(:id)
       if with_user_cta
-        CallToAction.active.includes(call_to_action_tags: :tag).where("tags.id in (?) AND call_to_actions.user_id IS NULL", tag_ids).to_a
+        CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name in (?) AND call_to_actions.user_id IS NULL", tags_name).to_a
       else
-        CallToAction.active.includes(call_to_action_tags: :tag).where("tags.id in (?)", tag_ids).to_a
+        CallToAction.active.includes(call_to_action_tags: :tag).where("tags.name in (?)", tags_name).to_a
       end
     end
   end
@@ -1285,13 +1297,13 @@ module ApplicationHelper
     elements
   end
   
-  def get_cta_vote_info(cta_id)
-    result = CacheVote.where("call_to_action_id = ?", cta_id).order("version DESC").first
-    vote_info = {"total" => 0}
-    unless result.nil?
-      vote_info['total'] = result.vote_sum
+  def get_cta_vote_info(interaction_id)
+    cache_short(get_cache_votes_for_interaction(interaction_id)) do
+      result = UserInteraction.where("interaction_id = ? ", interaction_id).sum("CAST(aux->>'vote' as integer)")
+      vote_info = {"total" => 0}
+      vote_info['total'] = result
+      vote_info
     end
-    vote_info
   end
   
 end

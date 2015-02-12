@@ -197,6 +197,10 @@ module CacheKeysHelper
     "tags_with_tag_#{tag_name}"
   end
   
+  def get_tags_with_tags_cache_key(tags_name)
+    "tags_with_tags_#{tags_name.join("_")}"
+  end
+  
   def get_tags_with_tag_with_match_cache_key(tag_name, query)
     "tags_with_tag_with_match_#{tag_name}_#{query}"
   end
@@ -351,6 +355,13 @@ module CacheKeysHelper
 
   def get_share_interaction_daily_done_cache_key(user_id)
     "share_interaction_daily_done_for_user_#{user_id}"
+  end
+  
+  # Votes
+  # ~~~~~
+  
+  def get_cache_votes_for_interaction(interaction_id)
+    "cache_votes_for_interaction_#{interaction_id}"
   end
   
   # Disney

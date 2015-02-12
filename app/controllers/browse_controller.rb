@@ -27,9 +27,15 @@ class BrowseController < ApplicationController
     end
   end
   
+  # hook to redirect to browse in multitentant
+  def go_to_browse
+    redirect_to "/browse"
+  end
+  
   def full_search
     if params[:query].blank?
-      redirect_to "/browse"
+      go_to_browse()
+      return
     end
     contents, total = get_contents_with_match(params[:query])
     @total = total
@@ -116,14 +122,19 @@ class BrowseController < ApplicationController
   def index_category
     tag = Tag.includes(:tags_tags).find(params[:id])
     @category = tag_to_category(tag)
-    contents, @tags = get_contents_by_category_with_tags(tag)
+    contents, @tags = get_contents_by_category_with_tags(get_tags_for_category(tag))
     @contents = compute_gallery_contents(contents)
+  end
+  
+  # hook for tenant with multiproperty
+  def get_tags_for_category(tag)
+    [tag]
   end
   
   def index_category_load_more
     offset = params[:offset].to_i
     category = Tag.find(params[:tag_id])
-    contents, tags = get_contents_by_category_with_tags(category, offset)
+    contents, tags = get_contents_by_category_with_tags(get_tags_for_category(category), offset)
     
     contents = compute_gallery_contents(contents)
     
