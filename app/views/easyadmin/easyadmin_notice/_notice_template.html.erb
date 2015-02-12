@@ -7,7 +7,7 @@
 	</div>
 	<% if reward.media_type && reward.media_type.downcase == "calltoaction" %>
 		<div class="col-xs-6 col-sm-8">	  
-		  	<h5 class="notice__title">Complimenti! Hai sbloccato un contenuto esclusivo. <a href="/call_to_action/<%= reward.call_to_action_id %>" style="color: #fff; text-decoration: underline;">Guardalo qui</a></h5>
+		  	<h5 class="notice__title">Complimenti! Hai sbloccato un contenuto esclusivo. <a href="/call_to_action/<%= reward.call_to_action.slug %>" style="color: #fff; text-decoration: underline;">Guardalo qui</a></h5>
 		</div>
 	<% else %>
 		<div class="col-xs-6 col-sm-8">	  
