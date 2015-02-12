@@ -23,16 +23,16 @@ function BrowseCtrl($scope, $window, $filter, $http) {
        	});
     });
 	
-	$scope.init = function(category, elements, tags) {
+	$scope.init = function(category, elements, tags, total) {
 		$scope.isTagFilterOpen = false;
 		$scope.category = category.attributes;
 		$scope.elements = normalizeElements(elements);
 		$scope.elements_in_page = 12;
-		//$scope.visibleElements = $scope.elements.slice(0,$scope.elements_in_page);
 		$scope.visibleElements = $scope.elements;
 		$scope.tags = tags;
 		$scope.tagsEnabled = tags;
 		$scope.activeTags = {};
+		$scope.total = total;
 	};
 	
 	$scope.tagSelected = function(tag){

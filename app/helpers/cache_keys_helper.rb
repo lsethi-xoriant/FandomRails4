@@ -182,8 +182,8 @@ module CacheKeysHelper
     "last_rewards_with_tag_#{tag_name}_user_#{user_id}"
   end
   
-  def get_ctas_with_tags_cache_key(tags_name, with_user_cta)
-    "ctas_with_tags_#{tags_name.join("_")}_with_user_cta_#{with_user_cta}"
+  def get_ctas_with_tags_cache_key(tags_name, with_user_cta, operator)
+    "ctas_with_tags_#{tags_name.join("_")}_with_user_cta_#{with_user_cta}_#{operator}"
   end
 
   def get_all_active_ctas_cache_key()

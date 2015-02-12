@@ -146,7 +146,7 @@ module BrowseHelper
   
   def get_contents_by_category_with_tags(filter_tags, offset = 0)
     tags = get_tags_with_tags(filter_tags.map{|t| t.id}).sort_by { |tag| tag.created_at }
-    ctas = get_ctas_with_tags(filter_tags.map{|t| t.id}).sort_by { |cta| cta.created_at }
+    ctas = get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}).sort_by { |cta| cta.created_at }
     merge_contents_with_tags(ctas, tags, offset)
   end
   
@@ -268,7 +268,8 @@ module BrowseHelper
   def merge_contents_with_tags(ctas, tags, offset = 0)
     total = ctas.count + tags.count
     merged = (total > offset || offset == 0) ? (ctas + tags).sort_by(&:created_at).reverse.slice(offset, 12) : []
-    prepare_contents_with_related_tags(merged)
+    prepared_contents = prepare_contents_with_related_tags(merged)
+    prepared_contents + [total]
   end
   
   def merge_search_contents(ctas, tags)

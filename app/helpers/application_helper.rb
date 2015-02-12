@@ -518,13 +518,23 @@ module ApplicationHelper
     filtered_results
   end
   
-  def get_ctas_with_tags(tag_ids, with_user_cta = false)
-    cache_short get_ctas_with_tags_cache_key(tag_ids, with_user_cta) do
+  def get_ctas_with_tags_in_and(tag_ids, with_user_cta = false)
+    cache_short get_ctas_with_tags_cache_key(tag_ids, with_user_cta, "and") do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
       if with_user_cta
         CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) AND call_to_actions.user_id IS NULL").to_a
       else
         CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) ").to_a
+      end
+    end
+  end
+  
+  def get_ctas_with_tags_in_or(tag_ids, with_user_cta = false)
+    cache_short get_ctas_with_tags_cache_key(tag_ids, with_user_cta, "or") do
+      if with_user_cta
+        CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) AND call_to_actions.user_id IS NULL", tag_ids).to_a
+      else
+        CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) ", tag_ids).to_a
       end
     end
   end
