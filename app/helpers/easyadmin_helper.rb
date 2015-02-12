@@ -14,7 +14,7 @@ module EasyadminHelper
     link_to_add_fields(name, f, association, resource)
   end
 
-  def link_to_add_fields(name, f, association, resource)
+  def link_to_add_fields(name, f, association, resource, template = resource)
     new_object = Interaction.new
 
     attr = {}
@@ -26,10 +26,10 @@ module EasyadminHelper
 
     new_object.resource = resource.singularize.classify.constantize.new(attr)
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/#{resource}-form", f: builder)
+      render("/easyadmin/call_to_action/#{template}-form", f: builder)
     end
 
-    link_to_function(name, "add_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\", \"#{resource}\")", class: "btn btn-primary btn-block")
+    link_to_function(name, "add_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\", \"#{template}\")", class: "btn btn-primary btn-block")
   end
 
   def link_to_add_download_fields(name, f, association)

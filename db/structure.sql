@@ -1321,7 +1321,8 @@ CREATE TABLE tags (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    title character varying(255),
+    slug character varying(255)
 );
 
 
@@ -3037,7 +3038,8 @@ CREATE TABLE tags (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    title character varying(255),
+    slug character varying(255)
 );
 
 
@@ -4753,7 +4755,8 @@ CREATE TABLE tags (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    title character varying(255),
+    slug character varying(255)
 );
 
 
@@ -6469,7 +6472,8 @@ CREATE TABLE tags (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    title character varying(255),
+    slug character varying(255)
 );
 
 
@@ -8185,7 +8189,8 @@ CREATE TABLE tags (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    title character varying(255),
+    slug character varying(255)
 );
 
 
@@ -9901,7 +9906,8 @@ CREATE TABLE tags (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    title character varying(255),
+    slug character varying(255)
 );
 
 
@@ -11617,7 +11623,8 @@ CREATE TABLE tags (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    title character varying(255)
+    title character varying(255),
+    slug character varying(255)
 );
 
 
@@ -12638,6 +12645,39 @@ CREATE SEQUENCE instantwins_id_seq
 --
 
 ALTER SEQUENCE instantwins_id_seq OWNED BY instantwins.id;
+
+
+--
+-- Name: interaction_call_to_actions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE interaction_call_to_actions (
+    id integer NOT NULL,
+    interaction_id integer,
+    call_to_action_id integer,
+    condition json,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: interaction_call_to_actions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE interaction_call_to_actions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: interaction_call_to_actions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE interaction_call_to_actions_id_seq OWNED BY interaction_call_to_actions.id;
 
 
 --
@@ -16233,6 +16273,13 @@ ALTER TABLE ONLY instantwins ALTER COLUMN id SET DEFAULT nextval('instantwins_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY interaction_call_to_actions ALTER COLUMN id SET DEFAULT nextval('interaction_call_to_actions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY interactions ALTER COLUMN id SET DEFAULT nextval('interactions_id_seq'::regclass);
 
 
@@ -19222,6 +19269,14 @@ ALTER TABLE ONLY instantwins
 
 
 --
+-- Name: interaction_call_to_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY interaction_call_to_actions
+    ADD CONSTRAINT interaction_call_to_actions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: interactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -19669,6 +19724,13 @@ CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
 
 
 --
+-- Name: index_tags_on_slug; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
+
+
+--
 -- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -20004,6 +20066,13 @@ CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timest
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_on_slug; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
 
 
 --
@@ -20345,6 +20414,13 @@ CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
 
 
 --
+-- Name: index_tags_on_slug; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
+
+
+--
 -- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -20680,6 +20756,13 @@ CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timest
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_on_slug; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
 
 
 --
@@ -21021,6 +21104,13 @@ CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
 
 
 --
+-- Name: index_tags_on_slug; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
+
+
+--
 -- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -21356,6 +21446,13 @@ CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timest
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_on_slug; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
 
 
 --
@@ -21697,6 +21794,13 @@ CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
 
 
 --
+-- Name: index_tags_on_slug; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
+
+
+--
 -- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -21955,6 +22059,27 @@ CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
 --
 
 CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
+
+
+--
+-- Name: index_interaction_call_to_actions_on_call_to_action_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interaction_call_to_actions_on_call_to_action_id ON interaction_call_to_actions USING btree (call_to_action_id);
+
+
+--
+-- Name: index_interaction_call_to_actions_on_interaction_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_call_to_actions USING btree (interaction_id);
+
+
+--
+-- Name: index_interaction_ctas_on_interaction_id_and_cta_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
 
 
 --
@@ -22541,3 +22666,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150206170306');
 INSERT INTO schema_migrations (version) VALUES ('20150210144800');
 
 INSERT INTO schema_migrations (version) VALUES ('20150212101118');
+
+INSERT INTO schema_migrations (version) VALUES ('20150212111531');

@@ -1,0 +1,65 @@
+
+<div class="panel panel-default">
+    <% if f.object.id %>
+      <div class="panel-heading-dark">TEST</div>
+    <% else %>
+      <div class="panel-heading-dark">TEST 
+        <p style="float: right"><%= link_to_remove_fields "rimuovi", :quiz %></p>
+      </div>
+    <% end %>
+    <div class="panel-body">
+
+      <%= f.hidden_field :resource_type, :class => "form-control" %>
+
+      <%= f.fields_for :resource do |quizform| %>
+
+        <%= quizform.hidden_field :quiz_type, value: "TEST", :class => "form-control" %>
+        <div class="col-lg-12">
+          <div class="row" style="margin-bottom: 0px;">
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label class="text-input">Visibile</label>
+                 <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label class="text-input">Secondo di apparizione</label>
+                  <%= f.text_field :seconds, :class => "form-control" %>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label class="text-input">Richiesto per il completamento</label>
+                  <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label class="text-input">ONE SHOT</label>
+                  <%= quizform.select(:one_shot, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Domanda</label>
+             <%= quizform.text_field :question, :class => "form-control" %>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              RISPOSTE <p style="float: right"><%= link_to_add_answer_quiz_fields "AGGIUNGI", quizform, :answers %>   
+            </div>
+            <div class="panel-body answers-container">
+              <%= quizform.fields_for :answers do |answerform| %>
+                <%= render 'answer-quiz-form', :f => answerform %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+      <% end %>
+    </div>
+</div>
