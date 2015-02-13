@@ -100,7 +100,8 @@ CREATE TABLE answers (
     media_image_updated_at timestamp without time zone,
     media_data text,
     media_type character varying(255),
-    blocking boolean DEFAULT false
+    blocking boolean DEFAULT false,
+    aux json
 );
 
 
@@ -365,7 +366,8 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    "order" integer
 );
 
 
@@ -639,7 +641,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -1852,7 +1855,8 @@ CREATE TABLE answers (
     media_image_updated_at timestamp without time zone,
     media_data text,
     media_type character varying(255),
-    blocking boolean DEFAULT false
+    blocking boolean DEFAULT false,
+    aux json
 );
 
 
@@ -2117,7 +2121,8 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    "order" integer
 );
 
 
@@ -2391,7 +2396,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -3604,7 +3610,8 @@ CREATE TABLE answers (
     media_image_updated_at timestamp without time zone,
     media_data text,
     media_type character varying(255),
-    blocking boolean DEFAULT false
+    blocking boolean DEFAULT false,
+    aux json
 );
 
 
@@ -3869,7 +3876,8 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    "order" integer
 );
 
 
@@ -4143,7 +4151,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -5356,7 +5365,8 @@ CREATE TABLE answers (
     media_image_updated_at timestamp without time zone,
     media_data text,
     media_type character varying(255),
-    blocking boolean DEFAULT false
+    blocking boolean DEFAULT false,
+    aux json
 );
 
 
@@ -5621,7 +5631,8 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    "order" integer
 );
 
 
@@ -5895,7 +5906,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -7108,7 +7120,8 @@ CREATE TABLE answers (
     media_image_updated_at timestamp without time zone,
     media_data text,
     media_type character varying(255),
-    blocking boolean DEFAULT false
+    blocking boolean DEFAULT false,
+    aux json
 );
 
 
@@ -7373,7 +7386,8 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    "order" integer
 );
 
 
@@ -7647,7 +7661,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -8860,7 +8875,8 @@ CREATE TABLE answers (
     media_image_updated_at timestamp without time zone,
     media_data text,
     media_type character varying(255),
-    blocking boolean DEFAULT false
+    blocking boolean DEFAULT false,
+    aux json
 );
 
 
@@ -9125,7 +9141,8 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    "order" integer
 );
 
 
@@ -9399,7 +9416,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -10612,7 +10630,8 @@ CREATE TABLE answers (
     media_image_updated_at timestamp without time zone,
     media_data text,
     media_type character varying(255),
-    blocking boolean DEFAULT false
+    blocking boolean DEFAULT false,
+    aux json
 );
 
 
@@ -10877,7 +10896,8 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    "order" integer
 );
 
 
@@ -11151,7 +11171,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -12364,7 +12385,8 @@ CREATE TABLE answers (
     media_image_updated_at timestamp without time zone,
     media_data text,
     media_type character varying(255),
-    blocking boolean DEFAULT false
+    blocking boolean DEFAULT false,
+    aux json
 );
 
 
@@ -12628,8 +12650,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    "order" integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -12903,7 +12924,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -23270,3 +23292,9 @@ INSERT INTO schema_migrations (version) VALUES ('20150212131531');
 INSERT INTO schema_migrations (version) VALUES ('20150212140258');
 
 INSERT INTO schema_migrations (version) VALUES ('20150212143420');
+
+INSERT INTO schema_migrations (version) VALUES ('20150212143421');
+
+INSERT INTO schema_migrations (version) VALUES ('20150212162357');
+
+INSERT INTO schema_migrations (version) VALUES ('20150213081903');

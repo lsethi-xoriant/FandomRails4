@@ -392,7 +392,6 @@ class CallToActionController < ApplicationController
     end
 
     if interaction.resource_type.downcase == "quiz"
-      
       answer = Answer.find(params[:params])
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil)
       response["have_answer_media"] = answer.answer_with_media?
@@ -449,24 +448,9 @@ class CallToActionController < ApplicationController
     calltoaction = interaction.call_to_action
 
     if user_interaction
-      
       response["user_interaction"] = build_user_interaction_for_interaction_info(user_interaction)
 
       response['outcome'] = outcome
-
-
-      #if call_to_action_completed?(calltoaction)
-      #  response["call_to_action_completed"] = true
-      #else
-      #  winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user_interaction.user)
-      #  response['winnable_reward_count'] = winnable_outcome["reward_name_to_counter"][MAIN_REWARD_NAME]
-      #end
-
-      #if interaction.when_show_interaction == "SEMPRE_VISIBILE"
-      #  response["feedback"] = generate_response_for_interaction([interaction], calltoaction, params[:aux] || {}, outcome)[:render_interaction_str]
-      #else
-      #  response["feedback"] = render_to_string "/call_to_action/_feedback", locals: { outcome: outcome }, layout: false, formats: :html 
-      #end
 
       expire_user_interaction_cache_keys()
 
@@ -492,10 +476,79 @@ class CallToActionController < ApplicationController
     response["interaction_status"] = get_current_interaction_reward_status(get_main_reward_name(), interaction)
     response["calltoaction_status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction).to_json
 
+    if interaction.interaction_call_to_actions.any?
+      interaction_conditions = interaction.interaction_call_to_actions.order(:ordering, :created_at)
+      
+      answers_map_for_condition = {}
+
+      interaction_conditions.each do |interaction_condition|
+        if interaction_condition.condition.present?
+          if answers_map_for_condition.empty?
+            user_interactions_history = params[:user_interactions_history] + [user_interaction.id]
+            answers_map_for_condition = map_answers_in_user_history(user_interactions_history, params[:anonymous_user_storage])
+          end      
+          condition = JSON.parse(interaction_condition.condition)
+          if condition.has_key?("max")
+            max_key = max_key_in_answers_map_for_condition(answers_map_for_condition)
+            if max_key == condition["max"]
+              response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction_condition.call_to_action])
+            end
+          end
+        end
+      end
+
+      if answers_map_for_condition.empty?
+        response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction.interaction_call_to_actions.first.call_to_action])
+      end
+
+    end
+
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
   end 
+
+  def map_answers_in_user_history(user_interactions_history, anonymous_user_storage)
+
+    if current_user
+      answers_history = UserInteraction.where(id: user_interactions_history)
+    elsif $site.anonymous_interaction 
+      answers_history = []
+      anonymous_user_storage["user_interaction_info_list"].each do |user_interaction_info|
+        if user_interactions_history.include?(user_interaction_info["user_interaction"]["id"])
+          answers_history = answers_history + [user_interaction_info["user_interaction"]["answer"]["id"]]
+        end
+      end
+    end
+
+    answers = Answer.where(id: answers_history)
+    answers_map_for_condition = {}
+    answers.each do |answer|
+      value = JSON.parse(answer.aux)["value"]
+      if answers_map_for_condition.has_key?(value)
+        answers_map_for_condition[value] = answers_map_for_condition[value] + 1
+      else
+        answers_map_for_condition[value] = 1
+      end
+    end
+    answers_map_for_condition
+  end
+
+  def max_key_in_answers_map_for_condition(answers_map_for_condition)
+
+    current_key = ""
+    current_value = 0
+
+    answers_map_for_condition.each do |key, value|
+      if value > current_value
+        current_key = key
+        current_value = value
+      end
+    end
+
+    current_key
+
+  end
 
   def expire_user_interaction_cache_keys()
   end

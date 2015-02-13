@@ -173,7 +173,8 @@ module CallToActionHelper
 
   def build_user_interaction_for_interaction_info(user_interaction)
     outcome = JSON.parse(user_interaction.outcome)["win"]["attributes"] rescue nil
-    user_interaction_for_interaction_info = { 
+    user_interaction_for_interaction_info = {
+        "id" => user_interaction.id,
         "outcome" => outcome,
         "aux" => user_interaction.aux,
         "answer" => user_interaction.answer,
@@ -191,6 +192,7 @@ module CallToActionHelper
       answers_for_resurce << {
         "id" => answer.id,
         "text" => answer.text,
+        "aux" => answer.aux,
         "image_medium" => answer.image(:medium),
         "correct" => answer_correct,
         "percentage" => percentage

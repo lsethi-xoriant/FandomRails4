@@ -252,7 +252,8 @@ module ApplicationHelper
   end
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
-    if !anonymous_user?(user) || $site.anonymous_interaction
+
+    if !anonymous_user?(user) || ($site.anonymous_interaction && interaction.resource_type.downcase == "vote")
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
       expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
     end
@@ -295,7 +296,7 @@ module ApplicationHelper
 
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
   
-      if !(anonymous_user?(user) || $site.anonymous_interaction)
+      unless anonymous_user?(user)
         UserCounter.update_counters(interaction, user_interaction, user, true)
       end
     end
@@ -335,7 +336,7 @@ module ApplicationHelper
 
     user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
 
-    if !anonymous_user?(user) || $site.anonymous_interaction
+    if !anonymous_user?(user) || ($site.anonymous_interaction && interaction.resource_type.downcase == "vote")
       user_interaction.save
     end
   
