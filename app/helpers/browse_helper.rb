@@ -146,7 +146,7 @@ module BrowseHelper
   
   def get_contents_by_category_with_tags(filter_tags, offset = 0)
     tags = get_tags_with_tags(filter_tags.map{|t| t.id}).sort_by { |tag| tag.created_at }
-    ctas = get_ctas_with_tags(filter_tags.map{|t| t.id}).sort_by { |cta| cta.created_at }
+    ctas = get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}).sort_by { |cta| cta.created_at }
     merge_contents_with_tags(ctas, tags, offset)
   end
   
@@ -173,16 +173,15 @@ module BrowseHelper
   
   def get_contents_by_query(term, tags)
     category_tag_ids = get_category_tag_ids()
-    tag_ids_filter = tags.map{|t| t.id}
-    if tag_ids_filter.empty?
+    if tags.empty?
       tags = Tag.where("title ILIKE ? AND id IN (?) ","%#{term}%", category_tag_ids).limit(8)
       ctas = CallToAction.active.where("title ILIKE ?","%#{term}%").limit(8)
     else
-      ids = category_tag_ids + tag_ids_filter
-      tags = Tag.includes(:tags_tags).where("title ILIKE ? AND tags_tags.other_tag_id IN (?)","%#{term}%", ids).limit(8)
-      ctas = CallToAction.active.includes(:call_to_action_tags).where("title ILIKE ? AND call_to_action_tags.tag_id in (?)","%#{term}%", tag_ids_filter).limit(8)
+      tag_set = tags.map { |tag| "(select tag_id from tags_tags where other_tag_id = #{tag.id} AND tag_id in (#{category_tag_ids.join(",")}) )" }.join(' INTERSECT ')
+      cta_set = tags.map { |tag| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag.id} AND tag_id in (#{category_tag_ids.join(",")}) )" }.join(' INTERSECT ')
+      tags = Tag.where("title ILIKE ? AND id IN (#{tag_set})","%#{term}%").limit(8)
+      ctas = CallToAction.active.where("title ILIKE ? AND id in (#{cta_set})","%#{term}%").limit(8)
     end
-    
     merge_contents_for_autocomplete(ctas, tags)
   end
   
@@ -268,7 +267,8 @@ module BrowseHelper
   def merge_contents_with_tags(ctas, tags, offset = 0)
     total = ctas.count + tags.count
     merged = (total > offset || offset == 0) ? (ctas + tags).sort_by(&:created_at).reverse.slice(offset, 12) : []
-    prepare_contents_with_related_tags(merged)
+    prepared_contents = prepare_contents_with_related_tags(merged)
+    prepared_contents + [total]
   end
   
   def merge_search_contents(ctas, tags)
@@ -312,7 +312,12 @@ module BrowseHelper
   
   def get_category_tag_ids
     cache_short("category_tag_ids") do
-      Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'header_image' <> ''").map{|t| t.id}
+      hidden_tags_ids = get_hidden_tag_ids
+      if hidden_tags_ids.any?
+        Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'header_image' <> '' AND id not in (?)", hidden_tags_ids).map{|t| t.id}
+      else
+        Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'header_image' <> ''").map{|t| t.id}
+      end
     end
   end
 

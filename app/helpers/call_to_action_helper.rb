@@ -129,11 +129,7 @@ module CallToActionHelper
         when "upload"
           upload_info = build_uploads_for_resource(interaction)
         when "vote"
-          vote_info = {
-            min: interaction.resource.vote_min,
-            max: interaction.resource.vote_max,
-            total: get_cta_vote_info(interaction.id)['total']
-          }
+          vote_info = build_votes_for_resource(interaction)
         end
 
         if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
@@ -201,6 +197,14 @@ module CallToActionHelper
       }
     end
     answers_for_resurce
+  end
+
+  def build_votes_for_resource(interaction)
+    {
+      min: interaction.resource.vote_min,
+      max: interaction.resource.vote_max,
+      total: get_cta_vote_info(interaction.id)['total']
+    } 
   end
 
   def build_likes_for_resource(interaction)

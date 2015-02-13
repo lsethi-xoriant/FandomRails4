@@ -1,6 +1,6 @@
 class InteractionCallToAction < ActiveRecord::Base 
-  attr_accessible :call_to_action_id, :interaction_id, :condition 
+  attr_accessible :condition, :interaction_id, :call_to_action_id
 
-  has_one :interaction
-  has_one :call_to_action
+  belongs_to :interaction
+  belongs_to :call_to_action
 end

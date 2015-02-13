@@ -635,11 +635,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   function updateUserInteraction(calltoaction_id, interaction_id, user_interaction) {
     calltoaction_info = getCallToActionInfo(calltoaction_id);
-    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
-      if(interaction_info.interaction.id == interaction_id) {
-        interaction_info.user_interaction = user_interaction;
-      }
-    });
+    if(calltoaction_info) {
+      angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+        if(interaction_info.interaction.id == interaction_id) {
+          interaction_info.user_interaction = user_interaction;
+        }
+      });
+    }
   }
 
   function updateAnswersInInteractionInfo(interaction_info, answers) {
@@ -1474,8 +1476,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               window.location = interaction_info.interaction.resource.url;
             }
 
-            if(interaction_info.interaction.resource_type == "vote" && $scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-              interaction_info.anonymous_user_interaction_info = data.user_interaction;
+            if(interaction_info.interaction.resource_type == "vote") {
+              if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
+                interaction_info.anonymous_user_interaction_info = data.user_interaction;
+              }
+              interaction_info.interaction.resource.vote_info = data.vote_info;
             }
 
 
