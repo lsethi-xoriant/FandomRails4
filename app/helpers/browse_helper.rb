@@ -30,7 +30,7 @@ module BrowseHelper
     end
   end
 
-  def init_browse_sections()
+  def init_browse_sections(tags)
     browse_settings = get_browse_settings
     browse_sections_arr = []
     if browse_settings
@@ -44,7 +44,7 @@ module BrowseHelper
           if get_extra_fields!(tag_area).key? "contents"
             browse_sections_arr << get_featured(tag_area)
           else
-            browse_sections_arr << get_browse_area_by_category(tag_area)
+            browse_sections_arr << get_browse_area_by_category(tag_area, tags)
           end
         end
       end
@@ -112,8 +112,8 @@ module BrowseHelper
     )
   end
   
-  def get_browse_area_by_category(category)
-    contents = get_contents_by_category(category)
+  def get_browse_area_by_category(category, tags)
+    contents = get_contents_by_category(category, tags)
     extra_fields = get_extra_fields!(category)
     browse_section = ContentSection.new(
       key: category.name,
@@ -138,9 +138,10 @@ module BrowseHelper
     )
   end
   
-  def get_contents_by_category(category)
-    tags = get_tags_with_tag(category.name).slice(0,8).sort_by { |tag| tag.created_at }
-    ctas = get_ctas_with_tag(category.name).slice(0,8).sort_by { |cta| cta.created_at }
+  def get_contents_by_category(category, tags)
+    tag_ids = ([category] + tags).map{|tag| tag.id}
+    tags = get_tags_with_tags(tag_ids).slice(0,8).sort_by { |tag| tag.created_at }
+    ctas = get_ctas_with_tags_in_and(tag_ids).slice(0,8).sort_by { |cta| cta.created_at }
     merge_contents(ctas, tags)
   end
   

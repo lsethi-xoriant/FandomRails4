@@ -338,8 +338,8 @@ module CacheKeysHelper
     "index_category_cache_#{category_id}_key"
   end
   
-  def get_browse_sections_cache_key
-    "browse_page_sections"
+  def get_browse_sections_cache_key(tags)
+    "browse_page_sections_#{tags.map{|tag| tag.id}.join("_")}"
   end
 
   # Coin

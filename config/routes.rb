@@ -33,6 +33,7 @@ Fandom::Application.routes.draw do
         end
         
         match "/iur", to: "application#iur"
+        match "/browse", :to => "browse#index"
         match "/browse/full_search", :to => "browse#full_search"
         match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
         match "/browse/search", :to => "browse#search"
