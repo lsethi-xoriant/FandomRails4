@@ -84,20 +84,20 @@
         </div>
       </div>
 
-	  <div class="row">
+    <div class="row">
         <div class="col-md-10">
             <div class="form-group">
                 <h3>CAMPI EXTRA</h3>
             </div>
         </div>
         <div class="col-md-2">
-	  		<input type='button' value='AGGIUNGI CAMPO' id='add-button-for-extra_fields-fields' class='btn btn-primary'>
-	  	</div>
-	  </div>
-	  	<div class="row">
-	  <div id='text-boxes-for-extra_fields-fields' class="col-lg-12">
-	  	<div id="extra-fields-for-extra_fields-button_label"></div>
-	  </div>
+        <input type='button' value='AGGIUNGI CAMPO' id='add-button-for-extra_fields-fields' class='btn btn-primary'>
+      </div>
+    </div>
+      <div class="row">
+    <div id='text-boxes-for-extra_fields-fields' class="col-lg-12">
+      <div id="extra-fields-for-extra_fields-button_label"></div>
+    </div>
 
       <div class="row">
         <div class="col-md-10"><h3>TRIVIA</h3></div>
@@ -190,7 +190,7 @@
         <% end %>
       <% end %>
 
-	  <h3>UPLOAD <p style="float: right;"><%= link_to_add_upload_fields "AGGIUNGI UPLOAD", f, :interactions %></p></h3>
+    <h3>UPLOAD <p style="float: right;"><%= link_to_add_upload_fields "AGGIUNGI UPLOAD", f, :interactions %></p></h3>
       <hr/>
 
       <div id="tmp-upload-add"></div>
@@ -359,11 +359,11 @@
   
   var upload_counter = false;
   function add_upload_fields(link, association, content) {
-  	if(!upload_counter){
-	    var new_id = new Date().getTime();
-	    var regexp = new RegExp("new_" + association, "g");
-	    $("#tmp-upload-add").prepend(content.replace(regexp, new_id));
-	}
+    if(!upload_counter){
+      var new_id = new Date().getTime();
+      var regexp = new RegExp("new_" + association, "g");
+      $("#tmp-upload-add").prepend(content.replace(regexp, new_id));
+  }
   }
 
   function add_answer_fields(link, association, content) {
@@ -406,12 +406,12 @@
   
   var vote_counter = false;
   function add_vote_fields(link, association, content) {
-  	if(!vote_counter){
-	    var new_id = new Date().getTime();
-	    var regexp = new RegExp("new_" + association, "g");
-	    $("#tmp-vote-add").prepend(content.replace(regexp, new_id));
-	    vote_counter = true;
-	}
+    if(!vote_counter){
+      var new_id = new Date().getTime();
+      var regexp = new RegExp("new_" + association, "g");
+      $("#tmp-vote-add").prepend(content.replace(regexp, new_id));
+      vote_counter = true;
+  }
   }
 
   function remove_comment_fields(link) {
@@ -491,13 +491,15 @@
 
   $(document).ready(function() {
 
-	var json_field = <%= @extra_options.to_json.html_safe %>;
-	//var mandatory_fields = ["button_label", "alternative_description", "enable_for_current_user", "shop_url"];
-  	var formName = 'edit_call_to_action_' + <%= @cta.id.to_s %>
-    var modelName = "call_to_action";
-	  var fieldName = "extra_fields";
+  $('#call_to_action_description').jqte();
 
-	populateTextboxWithJsonField(json_field, null, formName, modelName, fieldName);
+  var json_field = <%= @extra_options.to_json.html_safe %>;
+  //var mandatory_fields = ["button_label", "alternative_description", "enable_for_current_user", "shop_url"];
+    var formName = 'edit_call_to_action_' + <%= @cta.id.to_s %>
+    var modelName = "call_to_action";
+    var fieldName = "extra_fields";
+
+  populateTextboxWithJsonField(json_field, null, formName, modelName, fieldName);
 
   });
 

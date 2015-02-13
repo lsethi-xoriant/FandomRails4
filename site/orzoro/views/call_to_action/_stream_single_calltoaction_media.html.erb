@@ -44,7 +44,8 @@
   <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
 
   <!-- DOWNLOAD INTERACTION -->
-  <div class="play-interaction__container" ng-if="(interaction_info = getDownloadInteraction(calltoaction_info.calltoaction.id))">
+  <div class="play-interaction__container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
+
     <div class="col-md-12 text-center hidden-xs" style="position: relative; top: 40%;">
       <a class="btn btn-lg btn-blue" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>DOWNLOAD</span></a>
     </div>
@@ -68,7 +69,7 @@
   </div>
 
   <!-- VOTE INTERACTION -->
-  <div class="play-interaction__container hidden-xs" ng-if="(interaction_info = getVoteInteraction(calltoaction_info.calltoaction.id))">
+  <div class="play-interaction__container hidden-xs text-center" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
     <div class="col-xs-12" style="position: absolute; bottom: 15px;">
       <%= render partial: "/call_to_action/vote_interaction" %>
     </div>

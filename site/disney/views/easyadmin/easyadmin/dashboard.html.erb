@@ -68,7 +68,6 @@
           </div> <!-- /.portlet-content -->
         </div> <!-- /.portlet -->
       </div> <!-- /.col -->
-
     </div> <!-- /.row -->
 
     <br/>
@@ -98,26 +97,26 @@
         </div>
       </div>
       <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat primary" style="background-color: #50A550;">
-            <div class="details">
-              <span class="content"> SBLOCCATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @total_rewards_to_date - @total_rewards_from_date %></span>
-            </div> <!-- /.details -->	
-            <div class="visual">
-            	<i class="fa fa-trophy" style="color: #FFF"></i>
-            </div>
-          </div> <!-- /.dashboard-stat -->
+        <div class="dashboard-stat primary" style="background-color: #50A550;">
+          <div class="details">
+            <span class="content"> SBLOCCATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value"><%= @total_rewards_to_date - @total_rewards_from_date %></span>
+          </div> <!-- /.details -->	
+          <div class="visual">
+          	<i class="fa fa-trophy" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
       <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
-            <div class="details">
-              <span class="content"> LASCIATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @total_comments_to_date - @total_comments_from_date %></span>
-            </div> <!-- /.details --> 
-            <div class="visual">
-              <i class="fa fa-comments" style="color: #FFF"></i>
-            </div>
-          </div> <!-- /.dashboard-stat -->
+        <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
+          <div class="details">
+            <span class="content"> LASCIATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value"><%= @total_comments_to_date - @total_comments_from_date %></span>
+          </div> <!-- /.details --> 
+          <div class="visual">
+            <i class="fa fa-comments" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
     </div> <!-- /.row -->
 
@@ -146,7 +145,7 @@
         <h4><%= "Versus #{@property_tag_name}" %></h4>
       </div>
       <div class="col-md-3">
-        <h4><%= "Video #{@property_tag_name}" %></h4>
+        <h4><%= "Check #{@property_tag_name}" %></h4>
       </div>
     </div> <!-- /.row -->
 
@@ -195,16 +194,16 @@
             </div>
           </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
-      <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat primary" style="background-color: #70AAFF;">
-            <div class="details">
-              <span class="content"> VISUALIZZAZIONI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_plays_to_date - @property_plays_from_date %></span>
-            </div> <!-- /.details --> 
-            <div class="visual">
-              <i class="fa fa-youtube-play" style="color: #FFF"></i>
-            </div>
-          </div> <!-- /.dashboard-stat -->
+      <div class="col-md-3">
+        <div class="dashboard-stat primary" style="background-color: #DDDDDD;">
+          <div class="details">
+            <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value"><%= @property_checks_to_date - @property_checks_from_date %></span>
+          </div>
+          <div class="visual">
+            <i class="fa fa-check" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
     </div> <!-- /.row -->
 
@@ -212,7 +211,7 @@
 
     <div class="row">
       <div class="col-md-3">
-        <h4><%= "Check #{@property_tag_name}" %></h4>
+        <h4><%= "Video #{@property_tag_name}" %></h4>
       </div>
       <div class="col-md-3">
         <h4><%= "Like #{@property_tag_name}" %></h4>
@@ -226,27 +225,27 @@
     </div> <!-- /.row -->
 
       <div class="row">
-        <div class="col-md-3">
-          <div class="dashboard-stat primary" style="background-color: #DDDDDD;">
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #70AAFF;">
             <div class="details">
-              <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_checks_to_date - @property_checks_from_date %></span>
-            </div>
+              <span class="content"> VISUALIZZAZIONI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_plays_to_date - @property_plays_from_date %></span>
+            </div> <!-- /.details --> 
             <div class="visual">
-              <i class="fa fa-check" style="color: #FFF"></i>
+              <i class="fa fa-youtube-play" style="color: #FFF"></i>
             </div>
           </div> <!-- /.dashboard-stat -->
         </div> <!-- /.col-md-3 -->
       <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat primary" style="background-color: #FF7A59;">
-            <div class="details">
-              <span class="content"> DATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_likes_to_date - @property_likes_from_date %></span>
-            </div> <!-- /.details --> 
-            <div class="visual">
-              <i class="fa fa-thumbs-up" style="color: #FFF"></i>
-            </div>
-          </div> <!-- /.dashboard-stat -->
+        <div class="dashboard-stat primary" style="background-color: #FF7A59;">
+          <div class="details">
+            <span class="content"> DATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value"><%= @property_likes_to_date - @property_likes_from_date %></span>
+          </div> <!-- /.details --> 
+          <div class="visual">
+            <i class="fa fa-thumbs-up" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
         <div class="col-md-3 col-sm-6">
           <div class="dashboard-stat primary" style="background-color: #99C1D6;">
@@ -260,21 +259,24 @@
           </div> <!-- /.dashboard-stat -->
         </div> <!-- /.col-md-3 -->
       <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
-            <div class="details">
-              <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_downloads_to_date - @property_downloads_from_date %></span>
-            </div> <!-- /.details --> 
-            <div class="visual">
-              <i class="fa fa-download" style="color: #FFF"></i>
-            </div>
-          </div> <!-- /.dashboard-stat -->
+        <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
+          <div class="details">
+            <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value"><%= @property_downloads_to_date - @property_downloads_from_date %></span>
+          </div> <!-- /.details --> 
+          <div class="visual">
+            <i class="fa fa-download" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
     </div> <!-- /.row -->
 
     <hr/>
 
     <div class="row">
+      <div class="col-md-3">
+        <h4><%= "Voti #{@property_tag_name}" %></h4>
+      </div>
       <div class="col-md-3">
         <h4><%= "Livelli #{@property_tag_name}" %></h4>
       </div>
@@ -284,6 +286,17 @@
     </div> <!-- /.row -->
 
       <div class="row">
+        <div class="col-md-3">
+          <div class="dashboard-stat primary" style="background-color: #555555;">
+            <div class="details">
+              <span class="content"> DATI <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value"><%= @property_votes_to_date - @property_votes_from_date %></span>
+            </div>
+            <div class="visual">
+              <i class="fa fa-star-half-o" style="color: #FFF"></i>
+            </div>
+          </div>
+        </div>
         <div class="col-md-3">
           <div class="dashboard-stat primary" style="background-color: #C89175;">
             <div class="details">

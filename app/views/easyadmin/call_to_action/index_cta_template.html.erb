@@ -26,11 +26,40 @@
         </div>
       <% end %>
 
-      <div class="row text-right">
-        <div class="col-md-12">
-          <a href="/easyadmin/cta/new"><button type="button" class="btn btn-primary">NUOVA</button></a>
+        <div class="row text-right">
+          <div class="col-md-12">
+            <a href="/easyadmin/cta/new"><button type="button" class="btn btn-primary">NUOVA</button></a>
+          </div>
+        </div>
+
+      <%= form_tag :action => 'filter', :call_to_actions => 'template', :method => 'post' do %>
+        <div class="row">
+          <div class="col-md-3">
+        <div class="form-group">
+          <label class="text-input">Filtra per TITOLO</label></br>
+            <%= text_field_tag :title_filter, @title_filter, :class => 'form-control' %>
         </div>
       </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="text-input">Filtra per TAG</label></br>
+          <%= render_html_tag_box("tag_list", params[:tag_list], "ATTENZIONE: Sono stati inseriti tag non esistenti!") %>
+          <span class="help-block">Per separare i TAG digita virgola</span>
+          <p id="tag_list_message"> </p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="form-group">
+          </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+    <% end %>
 
     <div class="row cta-to-show">
       <div class="col-md-12"> 
@@ -45,7 +74,7 @@
               <th>Azioni</th>
             </tr>
           </thead>
-          <% @cta_template_list.each do |calltoaction| %>
+          <% @cta_list.each do |calltoaction| %>
             <%= render partial: "/easyadmin/call_to_action/index_row", locals: { calltoaction: calltoaction } %>
           <% end %>
         </table>
