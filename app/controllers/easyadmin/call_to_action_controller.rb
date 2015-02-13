@@ -103,9 +103,6 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   def show_details
     @current_cta = CallToAction.find(params[:id])
 
-    @trivia_answer = Hash.new
-    @versus_answer = Hash.new
-
     @shares = build_cta_detail(@current_cta, "Share", "share-counter")
     @plays = build_cta_detail(@current_cta, "Play", "play-counter")
     @likes = build_cta_detail(@current_cta, "Like", "like-counter")
@@ -127,6 +124,9 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
         @votes[i] = { "title" => interaction_vote.resource.title, "total" => total, "mean" => sum.to_f/total }
       end
     end
+
+    @trivia_answer = Hash.new
+    @versus_answer = Hash.new
 
     @current_cta.interactions.where("resource_type='Quiz'").each do |q|
       if q.resource.quiz_type == "TRIVIA"
@@ -209,9 +209,9 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
     tag_template_id_list = Tag.where("name ilike 'template'").pluck("id") # should be only one
     cta_ids_with_tag_template = CallToActionTag.where("tag_id = ?", tag_template_id_list).pluck("call_to_action_id")
-    @cta_template_list = CallToAction.where(:id => cta_ids_with_tag_template).page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    @cta_list = CallToAction.where(:id => cta_ids_with_tag_template).page(page).per(per_page).order("activated_at DESC NULLS LAST")
 
-    @page_size = @cta_template_list.num_pages
+    @page_size = @cta_list.num_pages
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
   end
@@ -247,7 +247,14 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    @cta_list = CallToAction.where("user_id IS NULL").page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    if params[:call_to_actions] == "all"
+      @cta_list = CallToAction.where("user_id IS NULL").page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    elsif params[:call_to_actions] == "template"
+      tag_template_id_list = Tag.where("name ilike 'template'").pluck("id") # should be only one
+      cta_ids_with_tag_template = CallToActionTag.where("tag_id = ?", tag_template_id_list).pluck("call_to_action_id")
+      @cta_list = CallToAction.where(:id => cta_ids_with_tag_template).page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    end
+
     @title_filter = params[:title_filter]
     @tag_list = params[:tag_list]
 
@@ -255,7 +262,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       
       cta_ids = get_tagged_objects(@cta_list, params[:tag_list], CallToActionTag, 'call_to_action_id', 'tag_id')
 
-      where_conditions = "user_id IS NULL"
+      where_conditions = params[:call_to_actions] == "all" ? "user_id IS NULL" : "id in (#{cta_ids_with_tag_template.join(",")})"
       where_conditions << " AND title ILIKE '%#{@title_filter}%'" unless @title_filter.nil?
       unless @tag_list.blank?
         where_conditions << (cta_ids.blank? ? " AND id IS NULL" : " AND id in (#{cta_ids.inspect[1..-2]})")
@@ -273,7 +280,11 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
 
-    render template: "/easyadmin/call_to_action/index_cta"
+    if params[:call_to_actions] == "all"
+      render template: "/easyadmin/call_to_action/index_cta"
+    elsif params[:call_to_actions] == "template"
+      render template: "/easyadmin/call_to_action/index_cta_template"
+    end
 
   end
 
