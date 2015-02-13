@@ -118,6 +118,7 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
 
     $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "string">STRINGA</option>');
     $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "media">UPLOAD</option>');
+    $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "html">HTML</option>');
     //$('#type-for-' + fieldName + '-field-' + counter).append('<option value = "boolean">BOOLEANO</option>');
     //$('#type-for-' + fieldName + '-field-' + counter).append('<option value = "integer">INTERO</option>');
     //$('#type-for-' + fieldName + '-field-' + counter).append('<option value = "date">DATA</option>');
@@ -177,17 +178,14 @@ function updateValueElementType(elementName, fieldName) {
     }
     else {
         $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').hide();
-        if (selectedType == 'integer')
-          type = 'number';
-        else if (selectedType == 'boolean')
-            type = 'checkbox';
-        else
-            type = 'text';
+        type = 'text';            
     }
 
     $('#attachment-id-for-' + fieldName + '-field-' + identifier).remove();
     $('#url-for-' + fieldName + '-field-' + identifier).remove();
     relatedValueElement.attr('type', type);
+    if (selectedType == 'html')
+      relatedValueElement.jqte();
 };
 
 function removeImage(elementName, fieldName) {
@@ -215,10 +213,10 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
                 $('#value-for-' + fieldName + '-field-' + index).attr('type', 'text');
                 $('#value-for-' + fieldName + '-field-' + index).val(value);
             }
-            else {
+            else
+            if(value.type == 'media')  {
                 $('#type-for-' + fieldName + '-field-' + index).val('media');
                 $('#value-for-' + fieldName + '-field-' + index).attr('type', 'file');
-                $('#value-for-' + fieldName + '-field-' + index);
 
                 old_attachment_id_input = jQuery('<input/>', {
                   id : 'attachment-id-for-' + fieldName + '-field-' + index,
@@ -239,6 +237,13 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
                     heigth: '30%',
                     width: '30%'
                 }).prependTo('#extra-fields-value-div-for-' + fieldName + '-' + index);
+            }
+            else { // html
+                $('#type-for-' + fieldName + '-field-' + index).val('html');
+                $('#value-for-' + fieldName + '-field-' + index).attr('type', 'text');
+                $('#value-for-' + fieldName + '-field-' + index).val(value.value);
+                $('#value-for-' + fieldName + '-field-' + index).jqte();
+                $('#value-for-' + fieldName + '-field-' + index).jqteVal(value.value);
             }
         }
     });
