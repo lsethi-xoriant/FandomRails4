@@ -32,8 +32,13 @@ class BrowseController < ApplicationController
     redirect_to "/browse"
   end
   
+  def get_not_found_message
+    "Non ci sono risultati per la tua ricerca."
+  end
+  
   def full_search
     if params[:query].blank?
+      flash[:notice] = get_not_found_message()
       go_to_browse()
       return
     end

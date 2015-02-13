@@ -17,9 +17,22 @@
   color: #fff;
 }
 
+.category-header__title--gallery{
+  position: absolute;
+  bottom: 55px;
+  left: 50px;
+  color: #fff;
+}
+
 .category-header__filter-area{
   position: absolute;
   right: 58px;
+  bottom: 15px;
+}
+
+.category-header__filter-area--gallery{
+  position: absolute;
+  left: 50px;
   bottom: 15px;
 }
 

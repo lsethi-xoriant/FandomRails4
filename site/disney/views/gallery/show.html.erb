@@ -49,18 +49,18 @@
 	  	<div class="col-xs-12 gallery-cta">
 	  		<div class="row gallery-cta__upload-area" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image_upload'], :original) if get_extra_fields!(@gallery_tag)['background_image_upload'] %>);">
 	  			<div class="col-sm-4">
-	  				<img class="img-responsive" src="<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['thumbnail_upload'], :medium) if get_extra_fields!(@gallery_tag)['thumbnail_upload'] && upload_extra_field_present?(get_extra_fields!(@gallery_tag)['thumbnail_upload']) %>" />
+	  				<img class="img-responsive hidden-xs" src="<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['thumbnail_upload'], :medium) if get_extra_fields!(@gallery_tag)['thumbnail_upload'] && upload_extra_field_present?(get_extra_fields!(@gallery_tag)['thumbnail_upload']) %>" />
 	  			</div>
 	  			<div class="col-sm-7">
 	  				<%= @gallery_tag.description.html_safe %>
 	  				<p>&nbsp;</p>
 	  				<div class="row">
 	  					<div class="col-xs-12 text-left">
-	  						<% if @upload_active %>
-	  							<button id="partecipa" class="btn btn-primary <%= "hidden" if @error %>" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
-	  						<% end %>
 	  						<% if get_extra_fields!(@gallery_tag)['url_gallery_rules'] %>
 	  							<a href="/gallery/<%= get_extra_fields!(@gallery_tag)['url_gallery_rules'] %>/<%= @cta_id %>" class="btn btn-default gallery-cta__rule-button"><%= get_extra_fields!(@gallery_tag)['label_gallery_rules'] %></a>
+	  						<% end %>
+	  						<% if @upload_active %>
+	  							<button id="partecipa" class="btn btn-primary <%= "hidden" if @error %>" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
 	  						<% end %>
 	  					</div>
 	  				</div>
