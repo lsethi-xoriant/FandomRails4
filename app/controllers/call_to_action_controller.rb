@@ -387,13 +387,17 @@ class CallToActionController < ApplicationController
     response[:ga][:category] = "UserInteraction"
     response[:ga][:action] = "CreateOrUpdate"
 
+    aux = {
+      user_interactions_history: params[:user_interactions_history]
+    }
+
     if interaction.resource_type.downcase == "download" 
       response["download_interaction_attachment"] = interaction.resource.attachment.url
     end
 
     if interaction.resource_type.downcase == "quiz"
       answer = Answer.find(params[:params])
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil, aux.to_json)
       response["have_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
 
@@ -415,7 +419,9 @@ class CallToActionController < ApplicationController
       user_interaction = get_user_interaction_from_interaction(interaction, current_or_anonymous_user)
       like = user_interaction ? !user_interaction.like : true
 
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, { like: true }.to_json)
+      aux["like"] = true
+
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
 
       response[:ga][:label] = "Like"
 
@@ -423,7 +429,7 @@ class CallToActionController < ApplicationController
       provider = params[:provider]
       result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address], params[:facebook_message])
       if result
-        aux = { "#{provider}" => 1 }
+        aux["#{provider}"] = 1
         user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
         response[:ga][:label] = interaction.resource_type.downcase
       end
@@ -433,15 +439,16 @@ class CallToActionController < ApplicationController
       response[:share][:exception] = exception.to_s
     
     elsif interaction.resource_type.downcase == "vote"
-      vote = params[:params]
-      aux = { "call_to_action_id" => interaction.call_to_action.id, "vote" => vote }
+      aux["call_to_action_id"] = interaction.call_to_action.id
+      aux["vote"] = params[:params] 
+
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
       response[:ga][:label] = interaction.resource_type.downcase
 
       response["vote_info"] = build_votes_for_resource(interaction) 
 
     else
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil)
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
       response[:ga][:label] = interaction.resource_type.downcase
     end
 
@@ -449,11 +456,8 @@ class CallToActionController < ApplicationController
 
     if user_interaction
       response["user_interaction"] = build_user_interaction_for_interaction_info(user_interaction)
-
       response['outcome'] = outcome
-
       expire_user_interaction_cache_keys()
-
     end
 
     if anonymous_user?(current_or_anonymous_user)

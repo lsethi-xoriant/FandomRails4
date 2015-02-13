@@ -96,7 +96,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
     initCallToActionInfoList(calltoaction_info_list);
 
-    clearAnonymousUserStorage();
+    //clearAnonymousUserStorage();
 
     $scope.answer_in_progress = false;
 
@@ -1497,6 +1497,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             if(data.next_call_to_action_info_list) {
               if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
                 updateInteractionsHistory(anonymous_user_interaction_index);
+                console.log(getAnonymousUserStorage());
               } else {
                 updateInteractionsHistory(data.user_interaction.id);
               }       
