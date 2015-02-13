@@ -62,7 +62,7 @@ module CallToActionHelper
           "title" => calltoaction.title,
           "description" => calltoaction.description,
           "media_type" => calltoaction.media_type,
-          "media_image" => calltoaction.media_image, 
+          "media_image" => calltoaction.media_image(:extra_large), 
           "media_data" => calltoaction.media_data, 
           "thumbnail_url" => calltoaction.thumbnail_url,
           "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),

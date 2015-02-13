@@ -43,7 +43,8 @@ class CallToAction < ActiveRecordWithJSON
     styles: lambda { |image| 
         if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
           {
-            :large => { :geometry => "600x600>", :watermark_path => image.instance.get_watermark }, 
+            :extra_large => { :geometry => "1024x768>",  :quality => 90, :watermark_path => image.instance.get_watermark },
+            :large => { :geometry => "600x600>", :watermark_path => image.instance.get_watermark },
             :extra => { :geometry => '260x150#' },
             :medium => { :geometry => '300x300#' },
             :thumb => { :geometry => '100x100#' }
