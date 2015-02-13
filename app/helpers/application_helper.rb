@@ -124,7 +124,8 @@ module ApplicationHelper
       created_at: cta.created_at.to_time.to_i,
       comments: get_number_of_comments_for_cta(cta),
       likes: get_number_of_likes_for_cta(cta),
-      tags: get_tag_ids_for_cta(cta)
+      tags: get_tag_ids_for_cta(cta),
+      votes: get_votes_for_cta(cta.id)
     )
   end
   
@@ -450,7 +451,7 @@ module ApplicationHelper
       if hidden_tags_ids.any?
         tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
       else
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id}) )" }.join(' INTERSECT ')
+        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
       end
       Tag.includes(:tags_tags).where("tags.id in (#{tag_ids_subselect})").to_a
     end
