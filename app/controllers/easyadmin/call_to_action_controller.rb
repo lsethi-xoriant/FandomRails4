@@ -106,6 +106,28 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @trivia_answer = Hash.new
     @versus_answer = Hash.new
 
+    @shares = build_cta_detail(@current_cta, "Share", "share-counter")
+    @plays = build_cta_detail(@current_cta, "Play", "play-counter")
+    @likes = build_cta_detail(@current_cta, "Like", "like-counter")
+    @downloads = build_cta_detail(@current_cta, "Download", "download-counter")
+    @uploads = build_cta_detail(@current_cta, "Upload")
+    @checks = build_cta_detail(@current_cta, "Check")
+
+    @votes = Hash.new
+    interaction_votes = @current_cta.interactions.where("resource_type='Vote'")
+    if interaction_votes.any?
+      interaction_votes.each_with_index do |interaction_vote, i|
+        total = 0
+        sum = 0
+        user_interactions = UserInteraction.where(:interaction_id => interaction_vote.id)
+        user_interactions.each do |user_interaction|
+          total += 1
+          sum += JSON.parse(user_interaction.aux)["vote"]
+        end
+        @votes[i] = { "title" => interaction_vote.resource.title, "total" => total, "mean" => sum.to_f/total }
+      end
+    end
+
     @current_cta.interactions.where("resource_type='Quiz'").each do |q|
       if q.resource.quiz_type == "TRIVIA"
         correct_count = UserInteraction.where("interaction_id = #{q.id} AND outcome::json#>>'{win, attributes, matching_rules}' ILIKE '%TRIVIA_CORRECT%'").count
@@ -127,6 +149,39 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
 
     render :partial => 'show_cta_details'
+  end
+
+
+  def build_cta_detail(cta, resource_type, reward_name_to_counter = nil)
+    type_interactions_info = Hash.new
+    type_interactions = cta.interactions.where("resource_type='#{resource_type}'")
+    if type_interactions.any?
+      type_interactions.each_with_index do |interaction, i|
+        total = 0
+        if reward_name_to_counter
+          user_interaction_outcomes = UserInteraction.where(:interaction_id => interaction.id).pluck(:outcome)
+          user_interaction_outcomes.each do |out|
+            total += JSON.parse(out)["win"]["attributes"]["reward_name_to_counter"]["#{reward_name_to_counter}"]
+          end
+          if resource_type == "Share"
+            type_interactions_info[i] = { "total" => total, "providers" => JSON.parse(interaction.resource.providers) }
+          else
+            type_interactions_info[i] = { "title" => interaction.resource.title, "total" => total }
+          end
+        else # infos are not in outcome field
+          if resource_type == "Upload"
+            UserInteraction.where(:interaction_id => interaction.id).pluck(:counter).each do |counter|
+              total += counter
+            end
+            type_interactions_info[i] = { "title" => CallToAction.find(interaction.resource.call_to_action_id).title, "total" => total }
+          else
+            total = UserInteraction.where(:interaction_id => interaction.id).count
+            type_interactions_info[i] = { "title" => interaction.resource.title, "total" => total }
+          end
+        end
+      end
+    end
+    type_interactions_info
   end
 
   def update_activated_at

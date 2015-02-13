@@ -1,267 +1,230 @@
+<hr/>
+  <h3>Contatori</h3>
+<hr/>
 <div class="row">
-      <% play_inter = @current_cta.interactions.find_by_resource_type("Play") %>
-      <% if play_inter %>
-        <div class="col-md-2 col-sm-6">
-            <div class="dashboard-stat tertiary">
-              <div class="details">
-                <span class="content">PLAY</span>
-                <span class="value">TODO</span>
-              </div> <!-- /.details -->
-            </div> <!-- /.dashboard-stat -->
-        </div> <!-- /.col-md-3 -->
-      <% end %>
-      <% like_inter = @current_cta.interactions.find_by_resource_type("Like") %>
-      <% if like_inter %>
-        <div class="col-md-2 col-sm-6">
-            <div class="dashboard-stat tertiary">
-              <div class="details">
-                <span class="content">LIKE</span>
-                <span class="value">TODO</span>
-              </div> <!-- /.details -->
-            </div> <!-- /.dashboard-stat -->
-        </div> <!-- /.col-md-3 -->
-      <% end %>
+  <% @plays.each do |key, play| %>
+    <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
+      <div class="dashboard-stat primary" style="background-color: #70AAFF;">
+        <div class="details">
+          <span class="content">PLAY [<%= play["title"] %>]</span>
+          <span class="value"><%= play["total"] %></span>
+        </div> <!-- /.details -->
+        <div class="visual">
+          <i class="fa fa-youtube-play" style="color: #FFF"></i>
+        </div>
+      </div> <!-- /.dashboard-stat -->
+    </div> <!-- /.col-md-3 -->
+  <% end %>
+  
+  <% @likes.each do |key, like| %>
+    <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
+      <div class="dashboard-stat primary" style="background-color: #FF7A59;">
+        <div class="details">
+          <span class="content">LIKE [<%= like["title"] %>]</span>
+          <span class="value"><%= like["total"] %></span>
+        </div> <!-- /.details -->
+        <div class="visual">
+          <i class="fa fa-thumbs-up" style="color: #FFF"></i>
+        </div>
+      </div> <!-- /.dashboard-stat -->
+    </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% @checks.each do |key, check| %>
+    <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
+      <div class="dashboard-stat primary" style="background-color: #DDDDDD;">
+        <div class="details">
+          <span class="content">CHECK [<%= check["title"] %>]</span>
+          <span class="value"><%= check["total"] %></span>
+        </div> <!-- /.details -->
+        <div class="visual">
+          <i class="fa fa-check" style="color: #FFF"></i>
+        </div>
+      </div> <!-- /.dashboard-stat -->
+    </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% @downloads.each do |key, download| %>
+    <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
+      <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
+        <div class="details">
+          <span class="content">DOWNLOAD [<%= download["title"] %>]</span>
+          <span class="value"><%= download["total"] %></span>
+        </div> <!-- /.details -->
+        <div class="visual">
+          <i class="fa fa-download" style="color: #FFF"></i>
+        </div>
+      </div> <!-- /.dashboard-stat -->
+    </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% @uploads.each do |key, upload| %>
+    <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
+      <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
+        <div class="details">
+          <span class="content">UPLOAD [<%= upload["title"] %>]</span>
+          <span class="value"><%= upload["total"] %></span>
+        </div> <!-- /.details -->
+        <div class="visual">
+          <i class="fa fa-upload" style="color: #FFF"></i>
+        </div>
+      </div> <!-- /.dashboard-stat -->
+    </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% @votes.each do |key, vote| %>
+    <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
+      <div class="dashboard-stat primary" style="background-color: #555555;">
+        <div class="details">
+          <span class="content">VOTA [<%= vote["title"] %>]</span>
+          <span class="value"><%= vote["total"] %> (μ <%= vote["mean"] %>)</span>
+        </div> <!-- /.details -->
+        <div class="visual">
+          <i class="fa fa-star-half-o" style="color: #FFF"></i>
+        </div>
+      </div> <!-- /.dashboard-stat -->
+    </div> <!-- /.col-md-3 -->
+  <% end %>
+</div>
+
+<hr/>
+
+<% @current_cta.interactions.where("resource_type='Quiz'").each_with_index do |q, i| %>
+	<% if q.resource.quiz_type == "TRIVIA" %>
+		<% if i == 0 %>
+    		<h3>Trivia e versus</h3>
+			<hr/>
+		<% end %>
+    <div class="row">
+      <div class="col-lg-4">
+        <dl class="dl-horizontal">
+          <dt>Domanda</dt><dd><p><%= q.resource.question %></p></dd>
+          <dt>Tipologia</dt><dd><p><%= q.when_show_interaction %></p></dd>
+          <dt>Secondo di apparizione</dt><dd><p><%= q.seconds %></p></dd>
+          <dt>Risposte corrette</dt><dd><p><%= @trivia_answer[q.id]["answer_correct"] %></p></dd>
+          <dt>Risposte errate</dt><dd><p><%= @trivia_answer[q.id]["answer_wrong"] %></p></dd>
+        </dl>
+      </div>
+      <div class="col-lg-4">
+      	<dl class="dl-horizontal">
+      		<% q.resource.answers.each do |a| %>
+            <dt>Risposta</dt>
+              <dd>
+                <p><%= a.text %> (<%= a.user_interactions.count %>) <%= "<i class=\"fa fa-check\"></i>".html_safe if a.correct %></p>
+                <p><img src="<%= a.image.url %>" style="width: 100px; border: 1px solid black; border-radius: 10px;"></p>
+              </dd>		        
+        	<% end %> 
+        </dl>
+      </div>
+      <div class="col-lg-3">
+        <div class="portlet">
+          <div class="portlet-header">
+            <h3>
+              <i class="fa fa-bar-chart-o"></i>
+              RISPOSTE
+            </h3>
+          </div> <!-- /.portlet-header -->
+          <div class="portlet-content">
+            <div id="reg-donut-chart-<%= q.id %>" class="chart-holder"></div>             
+          </div> <!-- /.portlet-content -->
+        </div> <!-- /.portlet -->
+      </div>
+    </div> 
+    <hr/>
+  <% end %>
+<% end %>
+
+<% @current_cta.interactions.where("resource_type='Quiz'").each_with_index do |q, i| %>
+	<% if q.resource.quiz_type == "VERSUS" %>
+		<% if i == 0 %>
+    		<h3>VERSUS</h3>
+			<hr/>
+		<% end %>
+    <div class="row">
+      <div class="col-lg-4">
+        <dl class="dl-horizontal">
+          <dt>Domanda</dt><dd><p><%= q.resource.question %></p></dd>
+          <dt>Tipologia</dt><dd><p><%= q.when_show_interaction %></p></dd>
+          <dt>Secondo di apparizione</dt><dd><p><%= q.seconds %></p></dd>
+        </dl>
+      </div>
+      <div class="col-lg-4">
+      	<dl class="dl-horizontal">
+      		<% q.resource.answers.each do |a| %>
+            <dt>Risposta</dt>
+            	<dd>
+            		<p><%= a.text %> (<%= a.user_interactions.count %>)</p>
+            		<p><img src="<%= a.image.url %>" style="width: 100px; border: 1px solid black; border-radius: 10px;"></p>
+            	</dd>		        
+        	<% end %> 
+        </dl>
+      </div>
+      <div class="col-lg-3">
+        <div class="portlet">
+          <div class="portlet-header">
+            <h3>
+              <i class="fa fa-bar-chart-o"></i>
+              RISPOSTE
+            </h3>
+          </div> <!-- /.portlet-header -->
+          <div class="portlet-content">
+            <div id="reg-donut-chart-<%= q.id %>" class="chart-holder"></div>             
+          </div> <!-- /.portlet-content -->
+        </div> <!-- /.portlet -->
+      </div>
+    </div> 
+  <hr/>
+  <% end %>
+<% end %>
+
+<% @shares.each do |key, share| %>
+  <% if key == 0 %>
+    <h3>Share</h3>
+    <hr/>
+  <% end %>
+
+  <div class="row">
+
+    <div class="col-lg-4">
+    	<div class="dashboard-stat">
+      	<div class="details">
+       		<span class="content">SHARE TOTALI</span>
+      		<span class="value"><%= share["total"] %></span>
+      	</div>
+      	<div class="visual">
+      		<i class="fa fa-share-alt"></i>
+      	</div>
+      </div>
     </div>
 
-    <% @current_cta.interactions.where("resource_type='Quiz'").each_with_index do |q, i| %>
-    	<% if q.resource.quiz_type == "TRIVIA" %>
-    		<% if i == 0 %>
-        		<h3>TRIVIA</h3>
-    			<hr/>
-    		<% end %>
-		    <div class="row">
-		      <div class="col-lg-4">
-		          <dl class="dl-horizontal">
-		            <dt>Domanda</dt><dd><p><%= q.resource.question %></p></dd>
-		            <dt>Tipologia</dt><dd><p><%= q.when_show_interaction %></p></dd>
-		            <dt>Secondo di apparizione</dt><dd><p><%= q.seconds %></p></dd>
-		            <dt>Risposte corrette</dt><dd><p><%= @trivia_answer[q.id]["answer_correct"] %></p></dd>
-		            <dt>Risposte errate</dt><dd><p><%= @trivia_answer[q.id]["answer_wrong"] %></p></dd>
-		          </dl>
-		      </div>
-		      <div class="col-lg-4">
-		      	<dl class="dl-horizontal">
-		      		<% q.resource.answers.each do |a| %>
-			            <dt>Risposta</dt><dd><p><%= a.text %> (<%= a.user_interactions.count %>) <%= "<i class=\"fa fa-check\"></i>".html_safe if a.correct %></p></dd>		        
-		        	<% end %> 
-		        </dl>
-		      </div>
-		      <div class="col-lg-3">
-		        <div class="portlet">
-		          <div class="portlet-header">
-		            <h3>
-		              <i class="fa fa-bar-chart-o"></i>
-		              RISPOSTE
-		            </h3>
-		          </div> <!-- /.portlet-header -->
-		          <div class="portlet-content">
-		            <div id="reg-donut-chart-<%= q.id %>" class="chart-holder"></div>             
-		          </div> <!-- /.portlet-content -->
-		        </div> <!-- /.portlet -->
-		      </div>
-		    </div> 
-		    <hr/>
-	    <% end %>
-    <% end %>
+    <div class="col-lg-4">
+    	<div class="dashboard-stat primary" style="background-color: #43609c">
+  		  <div class="details">
+  		    <span class="content">FACEBOOK</span>
+  		    <span><p>Messaggio</p><%= share["providers"]["facebook"]["message"] %></span><hr/>
+  		    <span><p>Descrizione</p><%= share["providers"]["facebook"]["description"] %></span><hr/>
+  		    <span><p>Link</p><%= share["providers"]["facebook"]["link"] %></span>
+ 		    </div>
+ 		    <div class="visual">
+  		  	<i class="fa fa-facebook" style="color: #FFF"></i>
+ 		    </div>
+		  </div>
+    </div>
 
-    <% @current_cta.interactions.where("resource_type='Quiz'").each_with_index do |q, i| %>
-    	<% if q.resource.quiz_type == "VERSUS" %>
-    		<% if i == 0 %>
-        		<h3>VERSUS</h3>
-    			<hr/>
-    		<% end %>
-		    <div class="row">
-		      <div class="col-lg-4">
-		          <dl class="dl-horizontal">
-		            <dt>Domanda</dt><dd><p><%= q.resource.question %></p></dd>
-		            <dt>Tipologia</dt><dd><p><%= q.when_show_interaction %></p></dd>
-		            <dt>Secondo di apparizione</dt><dd><p><%= q.seconds %></p></dd>
-		          </dl>
-		      </div>
-		      <div class="col-lg-4">
-		      	<dl class="dl-horizontal">
-		      		<% q.resource.answers.each do |a| %>
-			            <dt>Risposta</dt>
-			            	<dd>
-			            		<p><%= a.text %> (<%= a.user_interactions.count %>)</p>
-			            		<p><img src="<%= a.image.url %>" style="width: 100px; border: 1px solid black; border-radius: 10px;"></p>
-			            	</dd>		        
-		        	<% end %> 
-		        </dl>
-		      </div>
-          <div class="col-lg-3">
-              <div class="portlet">
-                <div class="portlet-header">
-                  <h3>
-                    <i class="fa fa-bar-chart-o"></i>
-                    RISPOSTE
-                  </h3>
-                </div> <!-- /.portlet-header -->
-                <div class="portlet-content">
-                  <div id="reg-donut-chart-<%= q.id %>" class="chart-holder"></div>             
-                </div> <!-- /.portlet-content -->
-              </div> <!-- /.portlet -->
-          </div>
-		    </div> 
-		    <hr/>
-	    <% end %>
-    <% end %>
-    
-    <% @current_cta.interactions.where("resource_type='Check'").each_with_index do |c, i| %>
-    	<% if i == 0 %>
-        	<h3>CHECK</h3>
-    		<hr/>
-    	<% end %>
+    <div class="col-lg-4">
+      <div class="dashboard-stat primary" style="background-color: #5eaade">
+  		  <div class="details">
+  		    <span class="content">TWITTER</span>
+  		    <span><p>Messaggio</p><%= share["providers"]["message"] %></span><hr/>
+  		    <span><p>Link</p><%= share["providers"]["link"] %></span>
+ 		    </div>
+   		  <div class="visual">
+    		  <i class="fa fa-twitter" style="color: #FFF"></i>
+   		  </div>
+		  </div>
+    </div>
 
-	    <div class="row">
-	      <div class="col-lg-4">
-	          <dl class="dl-horizontal">
-	            <dt>Descrizione</dt><dd><p><%= c.resource.description %></p></dd>
-	            <dt>Testo</dt><dd><p><%= c.resource.title %></p></dd>
-	            <dt>Contatore check</dt><dd><p><%= UserInteraction.where(:interaction_id => Interaction.select(:id).where(:resource_id =>c.resource.id)).count %></p></dd>
-	          </dl>
-	      </div>
-	    </div> 
-		<hr/>
-
-    <% end %>
-
-    <% @current_cta.interactions.where("resource_type='Like'").each_with_index do |c, i| %>
-    	<% if i == 0 %>
-        	<h3>LIKE</h3>
-    		<hr/>
-    	<% end %>
-    	
-	    <div class="row">
-	      <div class="col-lg-4">
-	          <dl class="dl-horizontal">
-	            <dt>Testo</dt><dd><p><%= c.resource.title %></p></dd>
-	            <dt>Contatore like</dt><dd><p><%= UserInteraction.where(:interaction_id => Interaction.select(:id).where(:resource_id =>c.resource.id)).count %></p></dd>
-	          </dl>
-	      </div>
-	    </div> 
-		<hr/>
-
-    <% end %>
-
-    <% @current_cta.interactions.where("resource_type='Download'").each_with_index do |c, i| %>
-    	<% if i == 0 %>
-        	<h3>DOWNLOAD</h3>
-    		<hr/>
-    	<% end %>
-
-	    <div class="row">
-	      <div class="col-lg-4">
-	          <dl class="dl-horizontal">
-	            <dt>Testo</dt><dd><p><%= c.resource.title %></p></dd>
-	            <dt>File</dt><dd><p><%= c.resource.attachment_file_name %></p></dd>
-	            <dt>Tipo</dt><dd><p><%= c.resource.attachment_content_type %></p></dd>
-	            <dt>Dimensioni</dt><dd><p><%= c.resource.attachment_file_size %></p></dd>
-	            <dt>Contatore download</dt><dd><p><%= UserInteraction.where(:interaction_id => Interaction.select(:id).where(:resource_id =>c.resource.id)).count %></p></dd>
-	          </dl>
-	      </div>
-	    </div> 
-		<hr/>
-
-    <% end %>
-
-    <% @current_cta.interactions.where("resource_type='Upload'").each_with_index do |u, i| %>
-    	<% if i == 0 %>
-        	<h3>UPLOAD</h3>
-    		<hr/>
-    	<% end %>
-
-	    <div class="row">
-	      <div class="col-lg-4">
-	          <dl class="dl-horizontal">
-	            <dt>Template cta</dt><dd><p><%= u.resource.call_to_action.title %></p></dd>
-	            <dt>Numero upload</dt><dd><p><%= u.resource.upload_number %></p></dd>
-	            <dt>Titolo</dt><dd><p><%= u.resource.title_needed ? "Si" : "No" %></p></dd>
-	            <dt>Privacy</dt><dd><p><%= u.resource.privacy? ? "Si" : "No" %></p></dd>
-	            <dt>Liberatoria</dt><dd><p><%= u.resource.releasing? ? "Si" : "No" %></p></dd>
-	          </dl>
-	      </div>
-	    </div> 
-		<hr/>
-
-    <% end %>
-
-	<% @current_cta.interactions.where("resource_type='Vote'").each_with_index do |c, i| %>
-    	<% if i == 0 %>
-        	<h3>VOTA</h3>
-    		<hr/>
-    	<% end %>
-
-	    <div class="row">
-	      <div class="col-lg-4">
-	          <dl class="dl-horizontal">
-	            <dt>Titolo</dt><dd><p><%= c.resource.title %></p></dd>
-	            <dt>Voto minimo</dt><dd><p><%= c.resource.vote_min %></p></dd>
-	            <dt>Voto massimo</dt><dd><p><%= c.resource.vote_max %></p></dd>
-	            <dt>Contatore vota</dt><dd><p><%= UserInteraction.where(:interaction_id => Interaction.select(:id).where(:resource_id =>c.resource.id)).count %></p></dd>
-	          </dl>
-	      </div>
-	    </div> 
-		<hr/>
-
-    <% end %>
-
-	<% @current_cta.interactions.where("resource_type='Share'").each_with_index do |c, i| %>
-		<% providers = JSON.parse(c.resource.providers) %>
-		
-    	<% if i == 0 %>
-        	<h3>SHARE</h3>
-    		<hr/>
-    	<% end %>
-
-	    <div class="row">
-	      <div class="col-lg-4">
-
-	      	<div class="dashboard-stat">
-            	<div class="details">
-             		<span class="content">SHARE TOTALI</span>
-            		<span class="value"><%= UserInteraction.where(:interaction_id => Interaction.select(:id).where(:resource_id =>c.resource.id)).count %></span>
-            	</div>
-            	<div class="visual">
-            		<i class="fa fa-share-alt"></i>
-            	</div>
-          	</div><hr/>
-
-          </div>
-
-        <% if providers["facebook"].present? %>
-  	      <div class="col-lg-4">
-          	<div class="dashboard-stat primary" style="background-color: #43609c">
-        		  <div class="details">
-        		    <span class="content">FACEBOOK</span>
-        		    <span><p>Messaggio</p><%= providers["facebook"]["message"] %></span><hr/>
-        		    <span><p>Descrizione</p><%= providers["facebook"]["description"] %></span><hr/>
-        		    <span><p>Link</p><%= providers["facebook"]["link"] %></span>
-       		    </div>
-       		    <div class="visual">
-        		  	<i class="fa fa-facebook" style="color: #FFF"></i>
-       		    </div>
-      		  </div>
-  	      </div>
-        <% end %>
-
-        <% if providers["twitter"].present? %>
-  	      <div class="col-lg-4">
-            <div class="dashboard-stat primary" style="background-color: #5eaade">
-        		  <div class="details">
-        		    <span class="content">TWITTER</span>
-        		    <span><p>Messaggio</p><%= providers["twitter"]["message"] %></span><hr/>
-        		    <span><p>Link</p><%= providers["twitter"]["link"] %></span>
-       		    </div>
-         		  <div class="visual">
-          		  	<i class="fa fa-twitter" style="color: #FFF"></i>
-         		  </div>
-      		  </div>
-          </div>
-        <% end %>
-
-	      </div>
-	    </div> 
-		<hr/>
-
-    <% end %>
+  </div>
+  <hr/>
+  <% end %>
+</div> 
