@@ -105,9 +105,12 @@ end
 def cache_generate_votes(conn, tenant, logger)
   start_time = Time.now
 
-  votes = execute_query(conn, "select call_to_action_id, sum((user_interactions.aux::json->>'vote')::integer) as sum, count(*) as count
-                                FROM disney.interactions JOIN disney.user_interactions ON interactions.id = user_interactions.interaction_id 
-                                WHERE interactions.resource_type = 'Vote' GROUP BY call_to_action_id")
+  votes = execute_query(conn, "SELECT call_to_action_id, sum((user_interactions.aux::json->>'vote')::integer) AS sum, count(*) AS count 
+                                FROM #{tenant + '.' if tenant}interactions JOIN #{tenant + '.' if tenant}user_interactions 
+                                ON interactions.id = user_interactions.interaction_id 
+                                JOIN #{tenant + '.' if tenant}call_to_actions ON interactions.call_to_action_id = call_to_actions.id 
+                                WHERE interactions.resource_type = 'Vote' AND call_to_actions.activated_at IS NOT NULL 
+                                GROUP BY call_to_action_id")
 
   cache = execute_query(conn, "SELECT max(version) FROM #{tenant + '.' if tenant}cache_versions WHERE name = 'votes-chart'").first
 
