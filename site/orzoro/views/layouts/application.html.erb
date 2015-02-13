@@ -38,8 +38,6 @@
 
   <%= render partial: "/application/user_bar", locals: { aux: aux } %>
 
-  {{user_interactions_history}}---
-
   <%= yield %>
 
   <% unless cookies[:user_cookies] %>

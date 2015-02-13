@@ -25,15 +25,30 @@ class RegistrationsController < Devise::RegistrationsController
         set_flash_message :notice, :signed_up
         sign_up(resource_name, resource)
 
-        if get_site_from_request(request)["anonymous_interaction"] && params[:user_interaction_info_list].present?
-          JSON.parse(params[:user_interaction_info_list]).each do |user_interaction_info|
+        debugger
+
+        if $site.anonymous_interaction && params[:user_interaction_info_list].present?
+          anonymous_interaction_map = {}
+
+          JSON.parse(params[:user_interaction_info_list]).each_with_index do |user_interaction_info, index|
             begin
               interaction_id = user_interaction_info["interaction_id"]
               md5_to_validate_user_interaction = Digest::MD5.hexdigest("#{MD5_FANDOM_PREFIX}#{interaction_id}")
               if md5_to_validate_user_interaction == user_interaction_info["user_interaction"]["hash"] 
                 interaction = Interaction.find(interaction_id)
                 answer_id = user_interaction_info["user_interaction"]["answer"]["id"]
-                create_or_update_interaction(resource, interaction, answer_id, false)
+                aux = JSON.parse(user_interaction_info["user_interaction"]["aux"])
+                if aux.has_key?("user_interactions_history") && aux["user_interactions_history"].present?
+                  user_interactions_history_updated = []
+                  aux["user_interactions_history"].each do |user_interaction_history|
+                    if anonymous_interaction_map.has_key?(user_interaction_history)
+                      user_interactions_history_updated = user_interactions_history_updated + [anonymous_interaction_map[user_interaction_history]]
+                    end
+                  end
+                  aux["user_interactions_history"] = user_interactions_history_updated
+                end
+                user_interaction, outcome = create_or_update_interaction(resource, interaction, answer_id, nil, aux.to_json)
+                anonymous_interaction_map[index] = user_interaction.id
               end
             rescue Exception => exception
               log_error("registration with storage restore error", { exception: exception.to_s }) 
