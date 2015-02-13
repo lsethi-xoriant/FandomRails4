@@ -71,37 +71,32 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       # COMMENTS
       @total_comments_to_date = UserCommentInteraction.where("created_at <= '#{@to_date}'").count
       @total_comments_from_date = UserCommentInteraction.where("created_at <= '#{@from_date}'").count
-
       # QUIZZES
       @property_trivia_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", @to_date, true)
       @property_trivia_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", @from_date, true)
       @property_trivia_correct_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-correct-counter", @to_date, true)
       @property_trivia_correct_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-correct-counter", @from_date, true)
-
       # VERSUS
       @property_versus_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}versus-counter", @to_date)
       @property_versus_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}versus-counter", @from_date)
-
       # PLAYS
       @property_plays_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}play-counter", @to_date)
       @property_plays_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}play-counter", @from_date)
-
       # LIKES
       @property_likes_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}like-counter", @to_date)
       @property_likes_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}like-counter", @from_date)
-
       # CHECKS
       @property_checks_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}check-counter", @to_date)
       @property_checks_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}check-counter", @from_date)
-
       # SHARES
       @property_shares_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}share-counter", @to_date)
       @property_shares_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}share-counter", @from_date)
-
       # DOWNLOADS
       @property_downloads_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}download-counter", @to_date)
       @property_downloads_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}download-counter", @from_date)
-
+      # VOTES
+      @property_votes_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}vote-counter", @to_date)
+      @property_votes_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}vote-counter", @from_date)
       # ASSIGNED LEVELS AND BADGES
       property_reward_ids = Array.new
       property_tag_id = Tag.find_by_name(@property_tag_name).id
