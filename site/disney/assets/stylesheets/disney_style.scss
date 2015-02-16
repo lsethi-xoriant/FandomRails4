@@ -64,13 +64,6 @@ $navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 10%) !def
 $navbar-inverse-toggle-icon-bar-bg:         #fff !default;
 $navbar-inverse-toggle-border-color:        #999 !default;
 
-/*
-@font-face {
-  font-family: 'Matterhorn-Regular';
-  src: url('Matterhorn-Regular.otf');
-}
-*/
-
 @font-face {
   font-family: 'Matterhorn';
   font-style: normal;
@@ -87,7 +80,5 @@ $navbar-inverse-toggle-border-color:        #999 !default;
 
 //import style folders
 @import "bootstrap/bootstrap";
-@import "blocks/**/*";
-@import "buttons/**/*";
-@import "flexsliders/**/*";
-@import "reset";
+@import "disney/**/**/*";
+@import "disney_reset";

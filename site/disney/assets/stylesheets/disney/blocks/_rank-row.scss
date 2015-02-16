@@ -1,0 +1,65 @@
+/* STYLE FOR SINGLE PAGE RANKING */
+
+.rank-row{
+  border-top: 1px solid #dddddd;
+  padding: 10px 0;
+}
+
+.rank-row--myself{
+  background-color: $blu;
+  color: #fff !important;
+}
+
+.rank-row--grey{
+  background-color: whitesmoke; 
+}
+
+.rank-row__position{}
+
+.rank-row__avatar{
+  max-width: 40px;
+  display: block;
+  margin: 0 auto;
+}
+
+.rank-row__username{}
+
+.rank-row__points{
+  padding: 6px 12px 4px 12px;
+  color: #993300;
+  font-size: 14px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+@media (max-width: $screen-sm-min) {
+  .rank-row{
+    .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6,
+    .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12{
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  
+  .rank-row__position{
+    font-size: 13px;
+  }
+  
+  .rank-row__avatar{
+    max-width: 44px;
+  }
+  
+  .rank-row__username{
+    font-size: 13px;
+    margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  
+  .rank-row__points{
+    font-size: 12px;
+    padding: 5px;
+  }
+  
+}

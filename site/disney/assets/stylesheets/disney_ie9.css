@@ -1,0 +1,6 @@
+.trivia-interaction__answer--overvideo,
+.versus-interaction__answer--left,
+.versus-interaction__answer--right {
+  left: 0 !important;
+  opacity: 1 !important;
+}
