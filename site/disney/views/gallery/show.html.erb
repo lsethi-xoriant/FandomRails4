@@ -123,11 +123,15 @@
 	}
 	
 	function photoSelected(){
-		$(".gallery-cta__upload-photo").append('<i class="fa fa-check-circle"></i>');
+		if( $(".gallery-cta__upload-photo").find("i.fa-check-circle").length == 0){
+			$(".gallery-cta__upload-photo").append('<i class="fa fa-check-circle"></i>');
+		}
 	}
 	
 	function releaseSelected(){
-		$(".gallery-cta__upload-release").append('<i class="fa fa-check-circle"></i>');
+		if( $(".gallery-cta__upload-release").find("i.fa-check-circle").length == 0){
+			$(".gallery-cta__upload-release").append('<i class="fa fa-check-circle"></i>');
+		}
 	}
 	
 	function openLoadiongModal(){
