@@ -520,6 +520,13 @@ module ApplicationHelper
     end
     filtered_results
   end
+
+  def get_tags_with_tags_in_and(tag_ids)
+    cache_short get_tags_with_tags_cache_key(tag_ids) do
+      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
+      Tag.where("id IN (#{tag_ids_subselect})").to_a
+    end
+  end
   
   def get_ctas_with_tags_in_and(tag_ids, with_user_cta = false)
     cache_short get_ctas_with_tags_cache_key(tag_ids, with_user_cta, "and") do

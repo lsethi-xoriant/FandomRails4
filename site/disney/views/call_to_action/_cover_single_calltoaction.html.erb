@@ -31,13 +31,14 @@
           </span>
           <p>{{calltoaction_info.calltoaction.title}}</p>
         </div>
-        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id != null">
+        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id">
         	<div class="row">
-        		<div class="col-xs-8">
-        			<p><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}}</p>
+        		<div class="col-xs-10">
+        			<img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>
+              <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.user_name}}</p>
         		</div>
-        		<div class="col-xs-4 text-right" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
-        			<span class="label label-default cta-cover__vote-count">{{interaction_info.interaction.resource.vote_info.total}} Voti</span>
+        		<div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
+        			<span class="label label-default cta-cover__vote-count">{{interaction_info.interaction.resource.vote_info.total}} <span class="hidden-xs">Voti</span></span>
         		</div>
         	</div>
         </div>
@@ -59,7 +60,7 @@
     </div>
   </div>  
 
-  <div class="panel-footer cta-cover__card__footer">
+  <div class="panel-footer cta-cover__card__footer" ng-if="!isCommentEmpty(calltoaction_info)">
     <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
       <%= light_link_to("/call_to_action/{{calltoaction_info.calltoaction.slug}}") do %>
         <%= render partial: "/call_to_action/cover_comment_interaction" %>

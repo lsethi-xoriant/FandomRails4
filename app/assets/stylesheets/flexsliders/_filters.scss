@@ -22,6 +22,21 @@ $filters-item-margin-right: 15px;
     padding: 7px;
 }
 
+.filters__flexslider-image--short {
+    width: 260px !important;
+    border-radius: 0;
+    position: relative;
+    left: -50%;
+}
+
+.filters__gallery-item {
+    margin-left: 5px;
+    background-position: center center;
+    background-size: auto 100%;
+    border-radius: 5px;
+    height: 190px;
+}
+
 .filters__title {
     color: #fff;
     text-transform: capitalize;
@@ -32,6 +47,18 @@ $filters-item-margin-right: 15px;
     position: absolute;
     left: 0;
     right: 0;
+}
+
+.filters__title--gallery {
+    color: #fff;
+    text-transform: capitalize;
+    text-shadow: 0 1px #000;
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 25px;
 }
 
 .filters__flexslider-desktop-item, .filters__flexslider-mobile-item {

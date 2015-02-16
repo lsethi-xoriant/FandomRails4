@@ -436,6 +436,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return new Array(num);   
   };
 
+  $scope.isCommentEmpty = function(calltoaction_info) {
+    interaction_info = getCommentInteraction(calltoaction_info.calltoaction.id);
+    if(comment_interaction != null) {
+      return (interaction_info.interaction.resource.comment_info.comments.length > 0);
+    } else {
+      return true;
+    }
+  };
+
   function getCommentInteraction(calltoaction_id) {
     comment_interaction = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);

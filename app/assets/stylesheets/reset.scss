@@ -276,6 +276,21 @@ a{
 }
 
 @media (max-width: $screen-sm-min) { 
+  .modal-body--gallery {
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+    h1 {
+      font-size: 28px;
+    }
+    .modal__custom__text {
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    button {
+      min-width: 80px;
+    }
+  }
+
   .error__container {
     text-align: center;
   }
