@@ -1,51 +1,55 @@
 
 <div class="panel panel-default">
-		<% if f.object.id %>
-			<div class="panel-heading-dark">VOTA</div>
-		<% else %>
-			<div class="panel-heading-dark">VOTA 
-				<p style="float: right"><%= link_to_remove_vote_fields "rimuovi" %></p>
-			</div>
-		<% end %>
-		<div class="panel-body">
+	<% if f.object.id %>
+		<div class="panel-heading-dark">VOTA</div>
+	<% else %>
+		<div class="panel-heading-dark">VOTA 
+			<p style="float: right"><%= link_to_remove_vote_fields "rimuovi" %></p>
+		</div>
+	<% end %>
+	<div class="panel-body">
 
-			<%= f.hidden_field :resource_type, :class => "form-control" %>
+		<%= f.hidden_field :resource_type, :class => "form-control" %>
 
-			<%= f.fields_for :resource do |voteform| %>
-			<div class="row" style="margin-bottom: 0px;">
-						<div class="col-lg-6">
-							<div class="form-group">
-							  <label class="text-input">Visibile</label>
-							   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<div class="form-group">
-								<label class="text-input">Secondo di apparizione</label>
-						  		<%= f.text_field :seconds, :class => "form-control" %>
-							</div>
-						</div>
-					</div>
-			<div class="row">
-				<div class="col-lg-6">					
-						<div class="form-group">
-						  <label class="text-input">Titolo</label>
-						   <%= voteform.text_field :title, :class => "form-control" %>
-						</div>
-						<div class="form-group">
-						  <label class="text-input">Voto minimo</label>
-						   <%= voteform.text_field :vote_min, :class => "form-control" %>
-						</div>
-						<div class="form-group">
-						  <label class="text-input">Voto massimo</label>
-						   <%= voteform.text_field :vote_max, :class => "form-control" %>
-						</div>
-						<div class="form-group">
-						  <label class="text-input">One shot</label>
-						   <%= voteform.check_box :one_shot %>
-						</div>
+		<%= f.fields_for :resource do |voteform| %>
+		<div class="row" style="margin-bottom: 0px;">
+			<div class="col-lg-6">
+				<div class="form-group">
+				  <label class="text-input">Visibile</label>
+				   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
 				</div>
 			</div>
-			<% end %>
-  	</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label class="text-input">Secondo di apparizione</label>
+			  		<%= f.text_field :seconds, :class => "form-control" %>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="form-group">
+          <label class="text-input">Richiesto per il completamento</label>
+            <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+        </div>		
+				<div class="form-group">
+				  <label class="text-input">Titolo</label>
+				   <%= voteform.text_field :title, :class => "form-control" %>
+				</div>
+				<div class="form-group">
+				  <label class="text-input">Voto minimo</label>
+				   <%= voteform.text_field :vote_min, :class => "form-control" %>
+				</div>
+				<div class="form-group">
+				  <label class="text-input">Voto massimo</label>
+				   <%= voteform.text_field :vote_max, :class => "form-control" %>
+				</div>
+				<div class="form-group">
+				  <label class="text-input">One shot</label>
+				   <%= voteform.check_box :one_shot %>
+				</div>
+			</div>
+		</div>
+		<% end %>
+	</div>
 </div>
