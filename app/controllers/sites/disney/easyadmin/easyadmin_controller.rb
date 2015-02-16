@@ -71,6 +71,8 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       # COMMENTS
       @total_comments_to_date = UserCommentInteraction.where("created_at <= '#{@to_date}'").count
       @total_comments_from_date = UserCommentInteraction.where("created_at <= '#{@from_date}'").count
+      @approved_comments_to_date = UserCommentInteraction.where("approved = true AND created_at <= '#{@to_date}'").count
+      @approved_comments_from_date = UserCommentInteraction.where("approved = true AND created_at <= '#{@from_date}'").count
       # QUIZZES
       @property_trivia_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", @to_date, true)
       @property_trivia_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", @from_date, true)
