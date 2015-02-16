@@ -22,6 +22,31 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
+  def update_basic_share_interaction
+    response = Hash.new
+    
+    response[:ga] = Hash.new
+    response[:ga][:category] = "UserInteraction"
+    response[:ga][:action] = "CreateOrUpdate"
+    response[:ga][:label] = "Share"
+
+    interaction = Interaction.find(params[:interaction_id])
+
+    aux = {
+      user_interactions_history: params[:user_interactions_history],
+      "#{params[:provider]}" => 1
+    }
+
+    user_interaction, response[:outcome] = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
+    
+    response[:result] = user_interaction.errors.blank?
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+    
+  end
+
   def get_context()
     $context_root
   end

@@ -1307,8 +1307,38 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
+    if($scope.aux.free_provider_share && provider != "email") {
+      shareFree(calltoaction_info, interaction_info, provider)
+    } else {
+      shareWithApp(calltoaction_info, interaction_info, provider)
+    }
+   
+  };
 
-    if(interaction_info.user_interaction) {
+  function shareFree(calltoaction_info, interaction_info, provider) {
+
+    cta_url = encodeURI($scope.request_url + "call_to_action/" + calltoaction_info.calltoaction.id);
+    switch(provider) {
+      case "facebook":    
+        share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url;
+        break;
+      case "twitter":
+        share_url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + encodeURIComponent(calltoaction_info.calltoaction.title);
+        break;
+    }
+
+    if(share_url) {
+      window.open(share_url);
+      $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
+        .success(function(data) {
+          alert("share");
+        });
+    }
+
+  }
+
+  function shareWithApp(calltoaction_info, interaction_info, provider) {
+     if(interaction_info.user_interaction) {
       share_with_email_address = interaction_info.user_interaction.share_to_email;
       facebook_message = interaction_info.user_interaction.facebook_message;
     } else {
@@ -1359,7 +1389,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }).error(function() {
         // ERRORE
       });
-  };
+  }
 
   $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction) {
 

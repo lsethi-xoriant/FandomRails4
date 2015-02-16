@@ -55,6 +55,7 @@ module ConfigUtils
     attribute :allowed_context_roots, :default => []
     attribute :timezone, type: String, :default => "Europe/Rome"
     attribute :assets, :default => { "anon_avatar" => "anon.png", "community_logo" => nil }
+    attribute :free_provider_share, :default => false
 
     def unbranded?
       self.id == 'fandom'

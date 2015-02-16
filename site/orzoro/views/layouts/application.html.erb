@@ -8,11 +8,9 @@
   <title>Orzoro</title>
 
   <meta name="title" content="" />
-  <meta property="og:title" content="" /> 
-  <meta property="og:description" content="" />  
-  <meta name="description" content="" />
+  
+  <%= yield (:fb_meta_tags) %>
 
-  <meta property="og:image" content="" />
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 
   <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
