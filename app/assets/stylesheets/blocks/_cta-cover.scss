@@ -37,7 +37,6 @@
 .cta-cover__card__body {
   padding-top: 0;
   padding-bottom: 0;
-  margin-bottom: 5px;
   background: #fff;
   //-webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
   //-moz-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
@@ -45,6 +44,7 @@
 }
 
 .cta-cover__card__footer {
+  margin-top: 5px;
   border-top: 0;
   padding: 10px 22px;
 }
@@ -128,15 +128,20 @@
 }
 
 .cta-cover__user-avatar{
-  display: inline-block;
+  float: left;
   max-width: 35px;
   border-radius: 40px;
-  margin: 0 10px;
+  margin: 0 10px 0 0;
 }
 
 .cta-cover__vote-count{
   background-color: transparent;
   border: 1px solid #fff;
+  bottom: 15px;
+  padding-bottom: 7px;
+  padding-top: 7px;
+  position: absolute;
+  right: 15px;
 }
 
 .cta-cover__vote-count--header{
@@ -152,6 +157,16 @@
     position: absolute;
     top: -3px;
     z-index: 10;
+  }
+
+  .cta-cover__vote-username {
+    font-size: 16px;
+    margin-top: 8px;
+    text-overflow: ellipsis;
+  }
+
+  .cta-cover__user-avatar {
+    margin: 0 10px 3px 0;
   }
 
   .cta-cover__flag--carousel {
