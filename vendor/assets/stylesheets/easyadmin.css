@@ -10,4 +10,5 @@
 *= require ./easyadmin/custom
 *= require ./easyadmin/select2
 *= require ./datepicker.css
+*= require ./easyadmin/drag-and-drop-lists
 */
