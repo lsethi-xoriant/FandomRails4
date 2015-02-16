@@ -16,7 +16,7 @@ For instance, on amazon:
 2) Set the SSH keys of the app user: take the app_ssh_config.tgz archive (ask the sysadmin) and copy it as 
 the ~/.ssh folder of the app user 
 
-Also execute the following command to allow al hosts with the same key to log in any other host (needed for AWS autoscaling)
+Also execute the following command to allow all hosts with the same key to log in any other host (needed for AWS autoscaling)
 cat id_rsa.pub >> authorized_keys
 
 3) When finished, edit the system configuration appropriately: 
