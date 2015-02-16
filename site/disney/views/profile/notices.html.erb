@@ -1,0 +1,5 @@
+<% if small_mobile_device? %>
+  <%= render partial: "/profile/notices_mobile" %>
+<% else %>
+  <%= render partial: "/profile/notices_desktop" %>
+<% end %>

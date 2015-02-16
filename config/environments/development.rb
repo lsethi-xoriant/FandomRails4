@@ -41,7 +41,7 @@ Fandom::Application.configure do
   end
 
   config.after_initialize do
-    Bullet.enable = true
+    Bullet.enable = get_deploy_setting('bullet', false)
     #Bullet.alert = true
     Bullet.bullet_logger = true
     #Bullet.console = true

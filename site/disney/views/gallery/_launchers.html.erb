@@ -3,9 +3,9 @@
     <div class="flex-viewport-shadow"></div>
     <ul class="slides">
     	<% galleries.each do |gallery| %>
-	      <li class="text-center filters__flexslider-desktop-item">
+	      <li class="text-center filters__flexslider-desktop-item" id="<%= gallery.id%>">
     	    <%= light_link_to("/gallery/#{gallery.id}", class: "filters__flexslider-a") do %>
-        	  <img class="filters__flexslider-image" src="<%= gallery.thumbnail(:medium) %>">  
+        	  <img class="filters__flexslider-image <%= "filters__flexslider-image--active" if current_gallery_id && gallery.id == current_gallery_id %>" src="<%= gallery.thumbnail(:medium) %>">  
           	<p class="filters__title--gallery"><%= gallery.title %></p>   
         	<% end %>
       	  </li>
@@ -28,7 +28,7 @@
   <div class="flexslider filters__flexslider-mobile filters__flexslider-mobile--gallery visible-xs">
     <ul class="slides">
       <% galleries.each do |gallery| %>
-	      <li class="text-center filters__flexslider-mobile-item">
+	      <li class="text-center filters__flexslider-mobile-item" id="<%= gallery.id%>">
 	        <%= light_link_to("/gallery/#{gallery.id}") do %>
             <div class="filters__gallery-item" style="background-image: url('<%= gallery.thumbnail(:medium) %>')">
 	            <p class="filters__title--gallery"><%= gallery.title %></p>

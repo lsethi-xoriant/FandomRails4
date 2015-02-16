@@ -97,7 +97,8 @@ $filters-item-margin-right: 15px;
         transition: all 0.1s ease-in-out;
     }
 
-    .filters__flexslider-a:hover > .filters__flexslider-image {
+    .filters__flexslider-a:hover > .filters__flexslider-image,
+    .filters__flexslider-image--active {
         -ms-transform: scale(1.05);
         -webkit-transform: scale(1.05);
         transform: scale(1.05);

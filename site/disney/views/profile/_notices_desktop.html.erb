@@ -1,0 +1,60 @@
+<div class="container container--default" style="background-color: #fff;">
+  <%= render partial: "profile/profile_header" %>
+  <%= render partial: "profile/profile_navbar", locals: { page: "notices" } %>
+  <div class="row main-row" ng-controller="NoticePageCtrl" ng-init="init(<%= @notices_list.to_json %>)">
+    <div class="col-md-12">
+    	<div class="section-heading">
+	    	<h3>
+	    		<span class="section-heading__marker"><span class="glyphicon glyphicon-bell" aria-hidden="true"></span></span>
+	    		Notifiche
+	    	</h3>
+        </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div ng-repeat="notices in notice_list | groupBy: 'date' | toArray:true | orderBy:min">
+          	<h6>{{notices.$key}}</h6>
+          	<ul class="list-group">
+          		<li id="{{notice.notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.notice.read}" ng-repeat="notice in notices | orderBy:min">
+          			<div class="row">
+		              	<div class="col-xs-11">
+		              		<div class="row" ng-bind-html='notice.notice.html_notice'></div>
+		              	</div>
+		              	<div class="col-xs-1">
+		              		<i class="fa fa-circle" style="float: right;" ng-if="notice.notice.read"></i>
+		              		<a href="javascript:void(0)" ng-click="mark_as_read(notice.notice.id);" style="float: right; color: black;" ng-if="!notice.notice.read">
+		              			<i class="fa fa-circle-o"></i>
+		              		</a>
+		              	</div>
+		              </div>
+		          </li>
+          	</ul>
+          </div>
+        </div>
+      </div>
+            
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+	function mark_as_read(id){
+		$.ajax({
+	      type: "POST",
+	      url: "/profile/notices/mark_as_read",
+	      data: { notice_id: id },
+	      beforeSend: function(jqXHR, settings) {
+	        jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+	      },
+	      success: function(data) {
+	        if(data.success){
+	        	$("li#"+id).removeClass("notice--unread");
+	        	$("li#"+id+" i.fa").removeClass("fa-circle-o").addClass("fa-circle");
+	        }else{
+	        	alert(data.message);
+	        }
+	      } // success AJAX
+      	});
+	}
+</script>
+        

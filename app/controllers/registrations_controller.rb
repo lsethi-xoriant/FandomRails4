@@ -25,8 +25,6 @@ class RegistrationsController < Devise::RegistrationsController
         set_flash_message :notice, :signed_up
         sign_up(resource_name, resource)
 
-        debugger
-
         if $site.anonymous_interaction && params[:user_interaction_info_list].present?
           anonymous_interaction_map = {}
 

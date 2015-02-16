@@ -18,8 +18,16 @@ class GalleryController < ApplicationController
 
   end
   
+  def take_current_gallery_to_first_position(gallery_id, galleries)
+    index = galleries.index{ |gal| gal.id == gallery_id.to_i}
+    current_gallery = galleries[index]
+    galleries.delete_at(index)
+    galleries.unshift(current_gallery)
+  end
+  
   def show
-    @galleries_cta = get_gallery_ctas_carousel
+    galleries_cta = get_gallery_ctas_carousel
+    @galleries_cta = take_current_gallery_to_first_position(params[:id], galleries_cta)
     cta = CallToAction.find(params[:id])
     @cta_id = cta.id
     upload_interaction = cta.interactions.find_by_resource_type("Upload")
