@@ -146,6 +146,15 @@
   margin-left: 20px;
 }
 
+.cta-cover__vote-count--browse{
+  background-color: transparent;
+  border: 1px solid #fff;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 13px;
+}
+
 @media (max-width: $screen-sm-min) { 
   .cta-cover__flag {
     left: 10px;

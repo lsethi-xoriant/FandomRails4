@@ -21,6 +21,7 @@ module BrowseHelper
     attribute :status, type: String
     attribute :likes, type: Integer
     attribute :comments, type: Integer
+    attribute :votes, type: Integer
     attribute :tags
   end
   
