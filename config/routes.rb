@@ -59,7 +59,7 @@ Fandom::Application.routes.draw do
           get "/users/sign_up", to: "sessions#new"
         end
 
-        resources :call_to_action
+        resources :call_to_action, only: :show
         
         match "ordering_ctas", to: "call_to_action#ordering_ctas" , defaults: { format: 'json' }
         match "rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
@@ -431,7 +431,7 @@ Fandom::Application.routes.draw do
   match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
   match "get_overvideo_during_interaction", :to => "call_to_action#get_overvideo_during_interaction", defaults: { format: 'json' }
-  resources :call_to_action do
+  resources :call_to_action, only: :show do
     match "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }
   end
 
