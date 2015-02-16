@@ -169,4 +169,66 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     end
   end
 
+  def ordering
+
+    @ordered_elements = Array.new
+    @call_to_action_names = Array.new
+    @reward_names = Array.new
+    @tag_names = Array.new
+
+    if params[:commit] == "CERCA"
+
+      if params[:tag].include? ","
+        msg = "Inserire un solo tag"
+        flash.now[:error] = (flash.now[:error] ||= []) << msg
+      else
+        tag = Tag.find_by_name(params[:tag])
+        if !tag
+          msg = "Non esistono tag con nome '#{params[:tag]}'"
+          flash.now[:error] = (flash.now[:error] ||= []) << msg
+        else
+          tag_extra_fields = tag.extra_fields
+          if tag_extra_fields.present?
+            ordering = JSON.parse(tag_extra_fields)["ordering"]
+            if ordering
+              @ordered_elements = ordering.gsub(/\s+/, "").split(",")
+            end
+          end
+
+          tag_id = tag.id
+
+          CallToActionTag.where(:tag_id => tag_id).each do |ct|
+            name = CallToAction.find(ct.call_to_action_id).name
+            @call_to_action_names << name unless @ordered_elements.include?(name)
+          end
+
+          reward_ids = RewardTag.where(:tag_id => tag_id).each do |rt|
+            name = Reward.find(rt.reward_id).name
+            @reward_names << name unless @ordered_elements.include?(name)
+          end
+
+          tag_ids = TagsTag.where(:other_tag_id => tag_id).each do |tt|
+            name = Tag.find(tt.tag_id).name
+            @tag_names << name unless @ordered_elements.include?(name)
+          end
+        end
+      end
+
+    elsif params[:commit] == 'SALVA ORDINAMENTO'
+
+      ordering_array = JSON.parse(params["json_ordering"])["lists"]["orderedElements"]
+      ordering = ordering_array.map { |element| element.to_s }.join(", ")
+
+      tag = Tag.find_by_name(params[:tag])
+      extra_fields = JSON.parse(tag.extra_fields)
+      extra_fields["ordering"] = ordering
+      if tag.update_attribute(:extra_fields, extra_fields)
+        flash[:notice] = "Ordinamento per il tag '#{tag.name}' salvato con successo"
+      else
+        flash.now[:error] << "Errore nel salvataggio dell'ordinamento per il tag '#{tag.name}'"
+      end
+    end
+
+  end
+
 end

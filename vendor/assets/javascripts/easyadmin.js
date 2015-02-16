@@ -7,6 +7,7 @@
 //= require angularjs/fandom
 //= require angularjs/ng-table
 //= require angularjs/angular-filter
+//= require angularjs/angular-drag-and-drop-lists.min
 //= require angularjs/eventfilter
 //= require angularjs/fandom
 //= require angularjs/notice
@@ -16,6 +17,7 @@
 //= require angularjs/ranking
 //= require angularjs/search
 //= require angularjs/reward_catalogue
+//= require angularjs/ordering
 //= require bootstrap
 //= require bootstrap-notify
 //= require easyadmin/jquery-ui-1.9.2.custom.min

@@ -110,8 +110,8 @@
       <div class="col-md-3 col-sm-6">
         <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
           <div class="details">
-            <span class="content"> LASCIATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-            <span class="value"><%= @total_comments_to_date - @total_comments_from_date %></span>
+            <span class="content"> APPROVATI / LASCIATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value"><%= @approved_comments_to_date - @approved_comments_from_date %> / <%= @total_comments_to_date - @total_comments_from_date %></span>
           </div> <!-- /.details --> 
           <div class="visual">
             <i class="fa fa-comments" style="color: #FFF"></i>

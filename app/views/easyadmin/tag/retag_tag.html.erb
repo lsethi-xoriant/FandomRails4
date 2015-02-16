@@ -35,50 +35,50 @@
       </div>
     </div>
     	    
-	    <div class="row">
-    		<div class="col-lg-8 col-lg-offset-2">
-    			<div class="alert alert-info" role="alert">
-    				Avviando la funzione "RITAGGA", verrà aggiunto il tag inserito in "Nuovo tag" ai contenuti (Call to
-    				action, Reward, Tag) che presentano TUTTI i tag inseriti nel campo "Aggiorna contenuti taggati con".<br>
-    				Per aggiornare i contenuti che presentano ALMENO UNO fra i tag da ricercare, è necessario chiamare
-    				la funzione per ciascun tag da ricercare singolarmente.
-    				<dl class="dl-horizontal">
-    					<dt>Attenzione:</dt><dd>I tag attualmente non validi non risultano presenti negli elenchi a cascata.</dd>
-    				</dl>
-    			</div>
-    		</div>
-    	</div>
+    <div class="row">
+  		<div class="col-lg-8 col-lg-offset-2">
+  			<div class="alert alert-info" role="alert">
+  				Avviando la funzione "RITAGGA", verrà aggiunto il tag inserito in "Nuovo tag" ai contenuti (Call to
+  				action, Reward, Tag) che presentano TUTTI i tag inseriti nel campo "Aggiorna contenuti taggati con".<br>
+  				Per aggiornare i contenuti che presentano ALMENO UNO fra i tag da ricercare, è necessario chiamare
+  				la funzione per ciascun tag da ricercare singolarmente.
+  				<dl class="dl-horizontal">
+  					<dt>Attenzione:</dt><dd>I tag attualmente non validi non risultano presenti negli elenchi a cascata.</dd>
+  				</dl>
+  			</div>
+  		</div>
+  	</div>
 
-    	<%= form_tag :method => 'post' do %>
+  	<%= form_tag :method => 'post' do %>
 
-    	<h3>Aggiorna contenuti taggati con:</h3>
+  	<h3>Aggiorna contenuti taggati con:</h3>
 
-      <div class="row">
-        <div class="col-sm-6">
-          <%= render_html_tag_box("old_tag", nil, "Attenzione, inseriti tag non esistenti.") %>
-        </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <%= render_html_tag_box("old_tag", nil, "Attenzione, inseriti tag non esistenti.") %>
       </div>
-		  <span class="help-block">Per separare i TAG digita virgola</span>
+    </div>
+	  <span class="help-block">Per separare i TAG digita virgola</span>
 
-      <p id="old_tag_message"> </p>
-      <hr/>
+    <p id="old_tag_message"> </p>
+    <hr/>
 
-      <h3>Nuovo tag</h3>
-      <div class="row">
-        <div class="col-sm-6">
-      	  <%= render_html_tag_box("new_tag", nil, "Nuovi tag verranno creati.") %>
-        </div>
+    <h3>Nuovo tag</h3>
+    <div class="row">
+      <div class="col-sm-6">
+    	  <%= render_html_tag_box("new_tag", nil, "Nuovi tag verranno creati.") %>
       </div>
+    </div>
 
-    	<p id="new_tag_message"> </p>
-    	<hr/>
+  	<p id="new_tag_message"> </p>
+  	<hr/>
 
-    	<br/>
-    	<div class="row text-center">
-    	  	<div class="col-sm12">
-     	  		<%= submit_tag 'RITAGGA', class: 'btn btn-primary' %>
-    	 	</div>
-   	 </div> 
+  	<br/>
+  	<div class="row text-center">
+  	  	<div class="col-sm12">
+   	  		<%= submit_tag 'RITAGGA', class: 'btn btn-primary' %>
+  	 	</div>
+   	</div> 
       
 		<% end %>
 	</div>

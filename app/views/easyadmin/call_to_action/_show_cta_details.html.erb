@@ -44,6 +44,20 @@
     </div> <!-- /.col-md-3 -->
   <% end %>
 
+  <% @links.each do |key, link| %>
+    <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
+      <div class="dashboard-stat primary" style="background-color: #4D944D;">
+        <div class="details">
+          <span class="content">LINK [<%= link["title"][0..25] %>]</span>
+          <span class="value"><%= link["total"] %></span>
+        </div> <!-- /.details -->
+        <div class="visual">
+          <i class="fa fa-link" style="color: #FFF"></i>
+        </div>
+      </div> <!-- /.dashboard-stat -->
+    </div> <!-- /.col-md-3 -->
+  <% end %>
+
   <% @downloads.each do |key, download| %>
     <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
       <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
@@ -77,10 +91,24 @@
       <div class="dashboard-stat primary" style="background-color: #555555;">
         <div class="details">
           <span class="content">VOTA [<%= vote["title"] %>]</span>
-          <span class="value"><%= vote["total"] %> (μ <%= vote["mean"] %>)</span>
+          <span class="value"><%= vote["total"] %> <%= vote["mean"].nan? ? "" : "(μ #{vote["mean"]})" %></span>
         </div> <!-- /.details -->
         <div class="visual">
           <i class="fa fa-star-half-o" style="color: #FFF"></i>
+        </div>
+      </div> <!-- /.dashboard-stat -->
+    </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% @comments.each do |key, comment| %>
+    <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
+      <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
+        <div class="details">
+          <span class="content">COMMENTI APPROVATI / TOTALI <%= comment["title"] %></span>
+          <span class="value"><%= comment["approved"] %> / <%= comment["total"] %></span>
+        </div> <!-- /.details -->
+        <div class="visual">
+          <i class="fa fa-comments" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
@@ -228,3 +256,52 @@
   <hr/>
   <% end %>
 </div> 
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    buildTriviaDonut();
+    buildVersusDonut();
+  });
+
+  function buildTriviaDonut() {
+    trivia_answer = <%= raw(@trivia_answer.to_json) %>;
+    $.each(trivia_answer, function(key, value) {
+      correct_answers = trivia_answer[key]["answer_correct"]
+      wrong_answers = trivia_answer[key]["answer_wrong"]
+      Morris.Donut({
+            element: "reg-donut-chart-" + key,
+            data: [
+                { label: 'Risposte corrette', value: Math.round(correct_answers * 100 / (correct_answers + wrong_answers))},
+                { label: 'Risposte errate', value: Math.round(wrong_answers * 100 / (correct_answers + wrong_answers))}
+            ],
+            hideHover: true,
+            formatter: function (y) { return y + "%" }
+      });
+    });
+  };
+
+  function buildVersusDonut() {
+    versus_answer = <%= raw(@versus_answer.to_json) %>;
+
+    $.each(versus_answer, function(key, value) {
+
+      versus_arr = [];
+      $.each(value, function(k2, v2) {
+        versus_arr.push({
+          label: v2.answer,
+          value: Math.round(v2.perc)
+        });
+      });
+
+      Morris.Donut({
+            element: "reg-donut-chart-" + key,
+            data: versus_arr,
+            hideHover: true,
+            formatter: function (y) { return y + "%" }
+      });
+
+    });
+  };
+
+</script>

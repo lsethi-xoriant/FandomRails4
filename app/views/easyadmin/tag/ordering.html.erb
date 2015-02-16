@@ -1,0 +1,152 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "tags" } %>
+ 
+<div id="content">    
+  
+  <div id="content-header">
+    <h1>ORDERING</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+  <div class="row">
+    <div class="col-md-12">
+    <% if flash.now[:error] %>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="alert alert-danger">
+              <p>Errori:</p>
+              <p>
+                <ul>
+                  <% flash.now[:error].each do |msg| %>
+                    <li><%= msg %></li>
+                  <% end %>
+                </ul>
+              </p>
+            </div>
+          </div>
+        </div>
+        <% elsif flash.now[:notice] %>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="alert alert-success"><%= flash.now[:notice] %></div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%= form_tag :method => 'post' do %>
+
+    <h3>Riordina contenuti taggati con:</h3>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <%= render_html_tag_box("tag", params[:tag], "Attenzione, inseriti tag non esistenti.") %>
+      </div>
+    </div>
+
+    <p id="tag_message"> </p>
+
+    <div class="row text-center">
+      <div class="col-sm12">
+        <%= submit_tag 'CERCA', class: 'btn btn-primary' %>
+      </div>
+    </div>
+
+    <hr/>
+
+  <% if params[:commit] == "CERCA" and !flash.now[:error] %>
+    <div class="container dnd-lists" ng-controller="OrderingCtrl" ng-init="init_ordering(<%= array_or_string_for_javascript @ordered_elements %>, <%= array_or_string_for_javascript @call_to_action_names %>, <%= array_or_string_for_javascript @reward_names %>, <%= array_or_string_for_javascript @tag_names %>)">
+      <div class="col-sm-3">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title ng-binding text-center"> Ordinamento tag '<%= params[:tag] %>' </h3>
+          </div>
+          <div class="panel-body ng-scope" style="max-height:350px; overflow-y: auto;">
+            <ul dnd-list="models.lists.orderedElements" class="ng-scope">
+              <li ng-repeat="item in models.lists.orderedElements"
+              dnd-draggable="item"
+              dnd-moved="models.lists.orderedElements.splice($index, 1)"
+              dnd-effect-allowed="move"
+              dnd-selected="models.selected = item"
+              ng-class="{'selected': models.selected === item}">
+                {{item}}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row text-center">
+        <div class="col-sm12">
+          <%= submit_tag 'SALVA ORDINAMENTO', class: 'btn btn-primary' %>
+      </div>
+    </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <h3 class="panel-title ng-binding text-center"> Call to actions </h3>
+          </div>
+          <div class="panel-body ng-scope" style="max-height:350px; overflow-y: auto;">
+            <ul dnd-list="models.lists.taggedCallToActions" class="ng-scope">
+              <li ng-repeat="item in models.lists.taggedCallToActions"
+              dnd-draggable="item"
+              dnd-moved="models.lists.taggedCallToActions.splice($index, 1)"
+              dnd-effect-allowed="move"
+              dnd-selected="models.selected = item"
+              ng-class="{'selected': models.selected === item}">
+                {{item}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <h3 class="panel-title ng-binding text-center"> Rewards </h3>
+          </div>
+          <div class="panel-body ng-scope" style="max-height:350px; overflow-y: auto;">
+            <ul dnd-list="models.lists.taggedRewards" class="ng-scope">
+              <li ng-repeat="item in models.lists.taggedRewards"
+              dnd-draggable="item"
+              dnd-moved="models.lists.taggedRewards.splice($index, 1)"
+              dnd-effect-allowed="move"
+              dnd-selected="models.selected = item"
+              ng-class="{'selected': models.selected === item}">
+                {{item}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <h3 class="panel-title ng-binding text-center"> Tags </h3>
+          </div>
+          <div class="panel-body ng-scope" style="max-height:350px; overflow-y: auto;">
+            <ul dnd-list="models.lists.taggedTags" class="ng-scope">
+              <li ng-repeat="item in models.lists.taggedTags"
+              dnd-draggable="item"
+              dnd-moved="models.lists.taggedTags.splice($index, 1)"
+              dnd-effect-allowed="move"
+              dnd-selected="models.selected = item"
+              ng-class="{'selected': models.selected === item}">
+                {{item}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <%= hidden_field_tag('json_ordering', '{{modelAsJson}}') %>
+
+    </div>
+  <% end %>
+<% end %>
+
+  </div>
+</div>
