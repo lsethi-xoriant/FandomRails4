@@ -22,7 +22,7 @@ noticeModule.service("LatestNoticeService", function($scope, $resource){
 		       value.html_notice = $sce.trustAsHtml(value.html_notice);
 		    });
 		    $scope.notices = data.result;
-	});
+		});
 	};
 });
 
@@ -99,14 +99,28 @@ function NoticePageCtrl($scope, $resource, $sce, $filter) {
 	var Api = $resource('/profile/notices/load_more');
 	
 	$scope.init = function(notices) {
-		console.log(notices);
 		
 		angular.forEach(notices, function(value, key) {
 			angular.forEach(value, function(value, key) {
 	       		value.html_notice = $sce.trustAsHtml(value.html_notice);
 	     	});
 	    });
-	    $scope.notice_list = notices;
+	    
+	    result = new Array();
+	    currentDate = {'date': notices[0].date, notices: [] };
+	    
+	    angular.forEach(notices, function(value, key) {
+	    	
+	    	if(currentDate.date != value.date){
+	    		result.push(currentDate);
+	    		currentDate = {'date': value.date, notices: [] };
+	    		currentDate.notices.push(value.notice);
+	    	}else{
+	    		currentDate.notices.push(value.notice);
+	    	}
+	    });
+	    result.push(currentDate);
+	    $scope.notice_list = result;
 		$scope.notice_number = 20;
 	};
 	
