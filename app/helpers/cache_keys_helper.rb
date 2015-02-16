@@ -103,8 +103,12 @@ module CacheKeysHelper
     "evidence_calltoactions_in_property_#{property_id}_for_user_#{user_id}"
   end
 
-  def get_sidebar_for_property_for_user_cache_key(user_id, property_id)
-    "sidebar_calltoactions_in_property_#{property_id}_for_user_#{user_id}"
+  def get_sidebar_tags_cache_key(sidebar_tags)
+    "sidebar_tags_#{sidebar_tags.join("_")}"
+  end
+
+  def get_sidebar_calltoactions_for_user_cache_key(sidebar_tags, user_id)
+    "sidebar_calltoacitons_#{sidebar_tags.join("_")}_for_user_#{user_id}"
   end
 
   def get_calltoaction_last_comments_cache_key(cta_id)
@@ -184,6 +188,10 @@ module CacheKeysHelper
   
   def get_ctas_with_tags_cache_key(tags_name, with_user_cta, operator)
     "ctas_with_tags_#{tags_name.join("_")}_with_user_cta_#{with_user_cta}_#{operator}"
+  end
+
+  def get_tags_with_tags_cache_key(tags_name)
+    "tags_with_tags_#{tags_name.join("_")}"
   end
 
   def get_all_active_ctas_cache_key()

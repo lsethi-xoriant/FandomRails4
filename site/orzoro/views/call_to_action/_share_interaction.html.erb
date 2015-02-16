@@ -52,11 +52,9 @@
             <div class="col-md-12 share-interaction__modal-input-col" ng-if="current_user"> 
               <input ng-model="interaction_info.user_interaction.share_to_email" class="form-control" type="text" placeholder="mario@rossi.it" name="address">
             </div>
-            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="current_user">
+
+            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;">
               <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-primary btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'email')">CONDIVIDI</button>
-            </div>
-            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="!current_user">
-              <a class="btn btn-primary btn-block" href="/iur">ENTRA PER CONDIVIDERE</a>
             </div>
 
           </div>
@@ -67,8 +65,7 @@
 
   <!-- FACEBOOK -->   
 
-  <button ng-if="interaction_info.interaction.resource.providers.facebook && current_user" class="btn btn-fb share-interaction__cta__info__fb-button" data-toggle="modal" data-target="#modal-login" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></span></button>             
-  <button ng-if="interaction_info.interaction.resource.providers.facebook && !current_user" class="btn btn-fb share-interaction__cta__info__fb-button" data-toggle="modal" data-target="#modal-login" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></span></button>
+  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-fb share-interaction__cta__info__fb-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-facebook" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></span></button>
   
   <!-- MODAL SHARE INTERACTION -->
   <div ng-if="interaction_info.interaction.resource.providers.facebook" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-facebook" role="dialog" aria-hidden="true">
@@ -96,14 +93,10 @@
               <p>{{interaction_info.user_interaction.errors}}</p>
             </div>
 
-            <div ng-if="interaction_info.interaction.resource.providers.facebook && !current_user.facebook" class="col-md-6 col-md-offset-3"> 
-              <a target="_top" href="/anchor_provider_from_calltoaction/{{calltoaction_info.calltoaction.id}}" class="btn btn-facebook btn-block"><span class="fa fa-facebook"></span> CONNETTI CON FACEBOOK</a>
-            </div>
-
-            <div class="col-md-12" ng-if="interaction_info.interaction.resource.providers.facebook && current_user.facebook"> 
+            <div class="col-md-12" ng-if="interaction_info.interaction.resource.providers.facebook"> 
               <input ng-model="interaction_info.user_interaction.facebook_message" class="form-control" type="text" placeholder="Testo della condivisione" name="address">
             </div>
-            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook && current_user.facebook">
+            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook">
               <button id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-facebook btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')">CONDIVIDI</button>
             </div>
 

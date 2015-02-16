@@ -81,6 +81,16 @@ class ProfileController < ApplicationController
   
   def notices
     Notice.mark_all_as_viewed()
+    setting = Setting.find_by_key(NOTIFICATIONS_LIMIT_KEY)
+    if setting.nil?
+      notices_limit = NOTIFICATIONS_LIMIT_DEFAULT
+    else
+      notices_limit = setting.value.to_i
+    end
+
+    old_notices = Notice.where("user_id = ?", current_user.id).where("id NOT IN (SELECT id FROM notices WHERE user_id = ? ORDER BY created_at DESC LIMIT #{notices_limit})", current_user.id)
+    old_notices.destroy_all
+
     notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC").to_a
     @notices_list = group_notice_by_date(notices)
   end

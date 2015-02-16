@@ -162,6 +162,14 @@ class CallToActionController < ApplicationController
       end
 
       @aux = init_show_aux(calltoaction)
+
+      @fb_meta_tags = (
+          '<meta property="og:type" content="article" />' +
+          '<meta property="og:locale" content="it_IT" />' +
+          '<meta property="og:title" content="' + calltoaction.title + '" />' +
+          '<meta property="og:description" content="' + calltoaction.description + '" />' +
+          '<meta property="og:image" content="' + calltoaction.media_image.url + '" />'
+        ).html_safe
       
     else
 

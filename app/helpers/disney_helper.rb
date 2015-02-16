@@ -70,9 +70,19 @@ module DisneyHelper
     end
   end
 
-  def get_disney_sidebar_calltoactions(property, tag_sidebar)
-    if tag_sidebar
-      calltoactions = get_disney_calltoaction_active_with_tag_in_property(tag_sidebar, property, "DESC")
+  def get_disney_sidebar_calltoactions(sidebar_tags)
+    if sidebar_tags.present?
+      
+      tag_ids = []
+      sidebar_tags.each do |tag_name| 
+        tag = get_tag_from_params(tag_name)
+        if tag
+          tag_ids << tag.id
+        end
+      end
+
+      calltoactions = get_ctas_with_tags_in_and(tag_ids)
+
       calltoaction_info = []
       calltoactions.each do |calltoaction|
         calltoaction_info << build_thumb_calltoaction(calltoaction)
@@ -83,9 +93,19 @@ module DisneyHelper
     end
   end
 
-  def get_disney_sidebar_tags(property, tag_sidebar)
-    if tag_sidebar
-      tags = get_tags_with_tag(tag_sidebar.name)
+  def get_disney_sidebar_tags(sidebar_tags)
+    if sidebar_tags.present?
+
+      tag_ids = []
+      sidebar_tags.each do |tag_name| 
+        tag = get_tag_from_params(tag_name)
+        if tag
+          tag_ids << tag.id
+        end
+      end
+
+      tags = get_tags_with_tags_in_and(tag_ids)
+
       tag_info = []
       tags.each do |tag|
         tag_info << {
@@ -228,17 +248,22 @@ module DisneyHelper
     related_calltoaction_info
   end
 
-  def get_disney_sidebar_info(property)
-    cache_short(get_sidebar_for_property_for_user_cache_key(current_or_anonymous_user.id, property.id)) do  
-      
-      tag_sidebar = Tag.find_by_name("sidebar")
+  def get_disney_sidebar_info(sidebar_tags)
+    sidebar_tags = sidebar_tags + ["sidebar"]
 
-      {
-        "calltoaction_info_list" => get_disney_sidebar_calltoactions(property, tag_sidebar),
-        "tag_info_list" => get_disney_sidebar_tags(property, tag_sidebar)
-      }
-
+    tag_info_list = cache_short(get_sidebar_tags_cache_key(sidebar_tags)) do  
+      get_disney_sidebar_tags(sidebar_tags)
     end
+
+    cta_info_list = cache_short(get_sidebar_calltoactions_for_user_cache_key(sidebar_tags, current_or_anonymous_user.id)) do
+      get_disney_sidebar_calltoactions(sidebar_tags)
+    end
+
+    {
+      "calltoaction_info_list" => cta_info_list,
+      "tag_info_list" => tag_info_list
+    }
+
   end
 
   def disney_default_aux(other)
@@ -314,6 +339,12 @@ module DisneyHelper
       end
     end
 
+    if other && other.has_key?(:sidebar_tags)
+      sidebar_tags = other[:sidebar_tags] + [current_property.name]
+    else
+      sidebar_tags = [current_property.name]
+    end
+
     aux = {
       "tenant" => get_site_from_request(request)["id"],
       "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
@@ -327,7 +358,7 @@ module DisneyHelper
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
-      "sidebar_info" => get_disney_sidebar_info(current_property)
+      "sidebar_info" => get_disney_sidebar_info(sidebar_tags)
     }
 
     if other

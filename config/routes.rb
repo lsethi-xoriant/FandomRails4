@@ -188,6 +188,8 @@ Fandom::Application.routes.draw do
     end
   end
 
+  match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
+
   match "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
 
   match "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }

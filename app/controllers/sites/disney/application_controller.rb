@@ -33,7 +33,8 @@ class Sites::Disney::ApplicationController < ApplicationController
 
     @aux_other_params = { 
       filters: true,
-      calltoaction_evidence_info: false
+      calltoaction_evidence_info: false,
+      sidebar_tags: ["stream"]
     }
 
   end
