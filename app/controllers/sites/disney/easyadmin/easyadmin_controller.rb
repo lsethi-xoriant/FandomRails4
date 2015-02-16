@@ -65,8 +65,8 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
         total_level_or_badge_rewards_where_condition << "reward_id = #{reward_id}#{connector}"
       end
 
-      @total_rewards_to_date = UserReward.where("(#{total_level_or_badge_rewards_where_condition}) and created_at <= '#{@to_date}'").count
-      @total_rewards_from_date = UserReward.where("(#{total_level_or_badge_rewards_where_condition}) and created_at <= '#{@from_date}'").count
+      @total_rewards_to_date = UserReward.where("(#{total_level_or_badge_rewards_where_condition}) and created_at <= '#{@to_date}' and period_id is null").count
+      @total_rewards_from_date = UserReward.where("(#{total_level_or_badge_rewards_where_condition}) and created_at <= '#{@from_date}' and period_id is null").count
 
       # COMMENTS
       @total_comments_to_date = UserCommentInteraction.where("created_at <= '#{@to_date}'").count
@@ -74,10 +74,10 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       @approved_comments_to_date = UserCommentInteraction.where("approved = true AND created_at <= '#{@to_date}'").count
       @approved_comments_from_date = UserCommentInteraction.where("approved = true AND created_at <= '#{@from_date}'").count
       # QUIZZES
-      @property_trivia_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", @to_date, true)
-      @property_trivia_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", @from_date, true)
-      @property_trivia_correct_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-correct-counter", @to_date, true)
-      @property_trivia_correct_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-correct-counter", @from_date, true)
+      @property_trivia_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", @to_date)
+      @property_trivia_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", @from_date)
+      @property_trivia_correct_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-correct-counter", @to_date)
+      @property_trivia_correct_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-correct-counter", @from_date)
       # VERSUS
       @property_versus_answers_to_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}versus-counter", @to_date)
       @property_versus_answers_from_date = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}versus-counter", @from_date)
@@ -109,18 +109,17 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       property_level_reward_ids = property_reward_ids & level_reward_ids
       property_badge_reward_ids = property_reward_ids & badge_reward_ids
 
-      @property_assigned_levels_to_date = UserReward.where("reward_id in (#{property_level_reward_ids.to_s[1..-2]}) and created_at <= '#{@to_date}'").count
-      @property_assigned_levels_from_date = UserReward.where("reward_id in (#{property_level_reward_ids.to_s[1..-2]}) and created_at <= '#{@from_date}'").count
-      @property_assigned_badges_to_date = UserReward.where("reward_id in (#{property_badge_reward_ids.to_s[1..-2]}) and created_at <= '#{@to_date}'").count
-      @property_assigned_badges_from_date = UserReward.where("reward_id in (#{property_badge_reward_ids.to_s[1..-2]}) and created_at <= '#{@from_date}'").count
+      @property_assigned_levels_to_date = UserReward.where("reward_id in (#{property_level_reward_ids.to_s[1..-2]}) and created_at <= '#{@to_date}' and period_id is null").count
+      @property_assigned_levels_from_date = UserReward.where("reward_id in (#{property_level_reward_ids.to_s[1..-2]}) and created_at <= '#{@from_date}' and period_id is null").count
+      @property_assigned_badges_to_date = UserReward.where("reward_id in (#{property_badge_reward_ids.to_s[1..-2]}) and created_at <= '#{@to_date}' and period_id is null").count
+      @property_assigned_badges_from_date = UserReward.where("reward_id in (#{property_badge_reward_ids.to_s[1..-2]}) and created_at <= '#{@from_date}' and period_id is null").count
 
     end
   end
 
-  def find_user_reward_count_by_reward_name_at_date(reward_name, date, limit_to_total_period = nil)
+  def find_user_reward_count_by_reward_name_at_date(reward_name, date)
     reward_id = Reward.find_by_name(reward_name).id
-    where_condition = "reward_id = #{reward_id} and created_at <= '#{date}'"
-    where_condition << " and period_id is null" if limit_to_total_period
+    where_condition = "reward_id = #{reward_id} and created_at <= '#{date}' and period_id is null"
     UserReward.where(where_condition).count
   end
 end
