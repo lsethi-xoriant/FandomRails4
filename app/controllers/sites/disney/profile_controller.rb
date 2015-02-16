@@ -118,16 +118,6 @@ class Sites::Disney::ProfileController < ProfileController
     end
   end
   
-  def notices
-    Notice.mark_all_as_viewed()
-    expire_cache_key(notification_cache_key(current_user.id))
-    notices = Notice.where("user_id = ?", current_user.id).order("created_at ASC")
-    @notices_list = group_notice_by_date(notices)
-    if small_mobile_device?
-      render template: "/profile/notices_mobile"
-    end
-  end
-  
   def load_more_notice
     notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC").limit(params[:count])
     notices_list = group_notice_by_date(notices)
