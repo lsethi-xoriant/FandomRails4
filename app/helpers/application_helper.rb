@@ -1288,7 +1288,8 @@ module ApplicationHelper
       "related_calltoaction_info" => related_calltoaction_info,
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
-      "flash_notice" => flash[:notice]
+      "flash_notice" => flash[:notice],
+      "free_provider_share" => $site.free_provider_share
     }
 
     if other

@@ -1,4 +1,3 @@
- 
 <div class="container-fluid" ng-controller="BallandoStreamCalltoactionCtrl" ng-init="initBallando(<%= current_user.present? %>, <%= @calltoactions_with_current.to_json %>, <%= get_cta_active_count() %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', <%= @calltoactions_with_current.first.id %>, '<%= "#{request.protocol}#{request.host}/" %>', <%= @calltoactions_active_interaction.to_json %>, <%= @aux.to_json %>)">   
 
   <div class="row">
