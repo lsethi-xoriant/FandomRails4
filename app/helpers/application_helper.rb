@@ -255,7 +255,7 @@ module ApplicationHelper
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
 
-    if !anonymous_user?(user) || ($site.anonymous_interaction && interaction.resource_type.downcase == "vote")
+    if !anonymous_user?(user) || ($site.anonymous_interaction && interaction.stored_for_anonymous)
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
       expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
     end

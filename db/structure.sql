@@ -366,8 +366,7 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer,
-    "order" integer
+    interaction_call_to_action_id integer
 );
 
 
@@ -2121,8 +2120,7 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer,
-    "order" integer
+    interaction_call_to_action_id integer
 );
 
 
@@ -3876,8 +3874,7 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer,
-    "order" integer
+    interaction_call_to_action_id integer
 );
 
 
@@ -5631,8 +5628,7 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer,
-    "order" integer
+    interaction_call_to_action_id integer
 );
 
 
@@ -7386,8 +7382,7 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer,
-    "order" integer
+    interaction_call_to_action_id integer
 );
 
 
@@ -9141,8 +9136,7 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer,
-    "order" integer
+    interaction_call_to_action_id integer
 );
 
 
@@ -10896,8 +10890,7 @@ CREATE TABLE call_to_actions (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer,
-    "order" integer
+    interaction_call_to_action_id integer
 );
 
 
@@ -12961,7 +12954,8 @@ CREATE TABLE interactions (
     resource_id integer,
     resource_type character varying(255),
     call_to_action_id integer,
-    aux json
+    aux json,
+    stored_for_anonymous boolean
 );
 
 
@@ -23298,3 +23292,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150212143421');
 INSERT INTO schema_migrations (version) VALUES ('20150212162357');
 
 INSERT INTO schema_migrations (version) VALUES ('20150213081903');
+
+INSERT INTO schema_migrations (version) VALUES ('20150216160308');

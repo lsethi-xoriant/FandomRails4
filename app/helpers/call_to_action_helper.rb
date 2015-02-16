@@ -111,7 +111,7 @@ module CallToActionHelper
           end
         end
 
-        if ($site.anonymous_interaction && resource_type == "vote")
+        if ($site.anonymous_interaction && interaction.stored_for_anonymous)
           user_interaction = interaction.user_interactions.find_by_user_id(current_or_anonymous_user.id)
           if user_interaction
             anonymous_user_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
