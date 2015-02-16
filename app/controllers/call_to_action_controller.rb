@@ -166,9 +166,9 @@ class CallToActionController < ApplicationController
       @fb_meta_tags = (
           '<meta property="og:type" content="article" />' +
           '<meta property="og:locale" content="it_IT" />' +
-          '<meta property="og:title" content="' + (calltoaction.title rescue "") + '" />' +
-          '<meta property="og:description" content="' + (calltoaction.description rescue "") + '" />' +
-          '<meta property="og:image" content="' + (calltoaction.thumbnail.url rescue "") + '" />'
+          '<meta property="og:title" content="' + (calltoaction.title || "") + '" />' +
+          '<meta property="og:description" content="' + (calltoaction.description || "") + '" />' +
+          '<meta property="og:image" content="' + (calltoaction.thumbnail.url || "") + '" />'
         ).html_safe
       
     else

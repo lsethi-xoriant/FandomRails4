@@ -1,0 +1,64 @@
+/* INTERACTION */
+
+.interaction__winnable-reward {
+  margin-top: 35px;
+} 
+
+.interaction__winnable-reward--undervideo {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.interaction__feedback-text {
+  font-size: 24px;
+  color: #fff;
+  margin: 15px 0 0 0;
+}
+
+.interaction__feedback-reward {
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+  color: $red;
+  border-radius: 20px;
+  font-size: 32px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 5px;
+}
+
+.interaction__go-to-mobile {
+  font-size: 24px;
+  color: #fff;
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+
+@media (min-width: $screen-sm-min) { 
+  .undervideo-interaction__col {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+  }
+
+  .interaction__winnable-reward--undervideo__row {
+    margin-bottom: 15px;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .check-undervideo-interaction__row, 
+  .link-undervideo-interaction__row {
+    .interaction__winnable-reward--undervideo__row {
+      border: none !important;
+    }
+  }
+
+  .interaction__winnable-reward--undervideo {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}

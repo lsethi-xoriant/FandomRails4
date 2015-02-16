@@ -17,13 +17,13 @@
 
   <link rel="shortcut icon" href="<%= asset_path('disney/favicon.ico') %>">
 
-  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= stylesheet_link_tag "disney_application", :media => "all" %>
   <%= javascript_include_tag "disney_application" %>
 
   <!--[if lte IE 9]>
     <link href="<%= asset_path("application.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
     <script src="<%= asset_path("disney_application.js").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" type="text/javascript"></script>  
-    <link href="<%= asset_path("ie9.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
+    <link href="<%= asset_path("disney_ie9.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
   <![endif]-->
 
   <%= csrf_meta_tags %>

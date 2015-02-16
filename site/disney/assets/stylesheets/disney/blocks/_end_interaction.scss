@@ -1,0 +1,25 @@
+/* END */
+.end-interaction {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.end-interaction__title {
+  color: #fff;
+  font-size: 26px;
+  font-weight: bold;
+  margin: 15% 0 20px;
+  text-shadow: 0 1px #000;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .end-interaction__title {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 10% 0 20px;
+  }
+}
