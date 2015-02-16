@@ -166,9 +166,9 @@ class CallToActionController < ApplicationController
       @fb_meta_tags = (
           '<meta property="og:type" content="article" />' +
           '<meta property="og:locale" content="it_IT" />' +
-          '<meta property="og:title" content="' + calltoaction.title + '" />' +
-          '<meta property="og:description" content="' + calltoaction.description + '" />' +
-          '<meta property="og:image" content="' + calltoaction.media_image.url + '" />'
+          '<meta property="og:title" content="' + (calltoaction.title rescue "") + '" />' +
+          '<meta property="og:description" content="' + (calltoaction.description rescue "") + '" />' +
+          '<meta property="og:image" content="' + (calltoaction.thumbnail.url rescue "") + '" />'
         ).html_safe
       
     else
@@ -395,8 +395,38 @@ class CallToActionController < ApplicationController
     response[:ga][:category] = "UserInteraction"
     response[:ga][:action] = "CreateOrUpdate"
 
+    if interaction.interaction_call_to_actions.any?
+      interaction_conditions = interaction.interaction_call_to_actions.order(:ordering, :created_at)
+      
+      answers_map_for_condition = {}
+
+      interaction_conditions.each do |interaction_condition|
+        if interaction_condition.condition.present?
+          if answers_map_for_condition.empty?
+            user_interactions_history = params[:user_interactions_history] # + [user_interaction.id]
+            answers_map_for_condition = map_answers_in_user_history(user_interactions_history, params[:anonymous_user_storage])
+          end      
+          condition = JSON.parse(interaction_condition.condition)
+          if condition.has_key?("max")
+            max_key = max_key_in_answers_map_for_condition(answers_map_for_condition)
+            if max_key == condition["max"]
+              response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction_condition.call_to_action])
+            end
+          end
+        end
+      end
+
+      if answers_map_for_condition.empty?
+        response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction.interaction_call_to_actions.first.call_to_action])
+      end
+
+      next_calltoaction_id = response["next_call_to_action_info_list"][0]["calltoaction"]["id"] rescue nil
+
+    end
+
     aux = {
-      user_interactions_history: params[:user_interactions_history]
+      user_interactions_history: params[:user_interactions_history],
+      next_calltoaction_id: next_calltoaction_id
     }
 
     if interaction.resource_type.downcase == "download" 
@@ -487,33 +517,6 @@ class CallToActionController < ApplicationController
     
     response["interaction_status"] = get_current_interaction_reward_status(get_main_reward_name(), interaction)
     response["calltoaction_status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction).to_json
-
-    if interaction.interaction_call_to_actions.any?
-      interaction_conditions = interaction.interaction_call_to_actions.order(:ordering, :created_at)
-      
-      answers_map_for_condition = {}
-
-      interaction_conditions.each do |interaction_condition|
-        if interaction_condition.condition.present?
-          if answers_map_for_condition.empty?
-            user_interactions_history = params[:user_interactions_history] + [user_interaction.id]
-            answers_map_for_condition = map_answers_in_user_history(user_interactions_history, params[:anonymous_user_storage])
-          end      
-          condition = JSON.parse(interaction_condition.condition)
-          if condition.has_key?("max")
-            max_key = max_key_in_answers_map_for_condition(answers_map_for_condition)
-            if max_key == condition["max"]
-              response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction_condition.call_to_action])
-            end
-          end
-        end
-      end
-
-      if answers_map_for_condition.empty?
-        response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction.interaction_call_to_actions.first.call_to_action])
-      end
-
-    end
 
     respond_to do |format|
       format.json { render :json => response.to_json }

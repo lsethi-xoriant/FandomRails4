@@ -96,7 +96,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
     initCallToActionInfoList(calltoaction_info_list);
 
-    //clearAnonymousUserStorage();
+    clearAnonymousUserStorage();
 
     $scope.answer_in_progress = false;
 
