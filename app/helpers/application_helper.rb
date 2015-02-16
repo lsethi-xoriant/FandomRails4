@@ -143,7 +143,8 @@ module ApplicationHelper
       comments: nil,
       likes: nil,
       status: nil,
-      tags: nil
+      tags: nil,
+      votes: nil
     )
   end
   
