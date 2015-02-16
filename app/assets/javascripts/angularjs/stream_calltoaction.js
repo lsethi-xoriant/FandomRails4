@@ -1074,6 +1074,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   			player.playerManager = kdp;
   		}
      });
+     
+     mw.setConfig("Kaltura.ForceFlashOnIE10", true );
   	
   	this.play = function(){
   		this.playerManager.sendNotification('doPlay');
