@@ -109,6 +109,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @downloads = build_cta_detail(@current_cta, "Download", "download-counter")
     @uploads = build_cta_detail(@current_cta, "Upload")
     @checks = build_cta_detail(@current_cta, "Check")
+    @comments = build_cta_detail(@current_cta, "Comment")
+    @links = build_cta_detail(@current_cta, "Link")
 
     @votes = Hash.new
     interaction_votes = @current_cta.interactions.where("resource_type='Vote'")
@@ -151,7 +153,6 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     render :partial => 'show_cta_details'
   end
 
-
   def build_cta_detail(cta, resource_type, reward_name_to_counter = nil)
     type_interactions_info = Hash.new
     type_interactions = cta.interactions.where("resource_type='#{resource_type}'")
@@ -169,11 +170,20 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
             type_interactions_info[i] = { "title" => interaction.resource.title, "total" => total }
           end
         else # infos are not in outcome field
-          if resource_type == "Upload"
+          if resource_type == "Upload" or resource_type == "Link"
             UserInteraction.where(:interaction_id => interaction.id).pluck(:counter).each do |counter|
               total += counter
             end
-            type_interactions_info[i] = { "title" => CallToAction.find(interaction.resource.call_to_action_id).title, "total" => total }
+            type_interactions_info[i] = 
+              resource_type == "Upload" ?
+                { "title" => CallToAction.find(interaction.resource.call_to_action_id).title, "total" => total }
+              :
+                { "title" => interaction.resource.title, "total" => total }
+          elsif resource_type == "Comment"
+            user_comment_interactions = UserCommentInteraction.where(:comment_id => interaction.resource_id)
+            total = user_comment_interactions.count
+            approved = user_comment_interactions.where(:approved => true).count
+            type_interactions_info[i] = { "total" => total, "approved" => approved }
           else
             total = UserInteraction.where(:interaction_id => interaction.id).count
             type_interactions_info[i] = { "title" => interaction.resource.title, "total" => total }
