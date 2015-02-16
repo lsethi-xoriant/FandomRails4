@@ -15,6 +15,7 @@ class Tag < ActiveRecordWithJSON
 
   validates_presence_of :name
   validates :name, uniqueness: true
+  validate :uniqueness_of_name_field
 
   has_many :call_to_action_tags, dependent: :destroy
   has_many :reward_tags, dependent: :destroy
@@ -41,6 +42,14 @@ class Tag < ActiveRecordWithJSON
       write_attribute :valid_to, "#{datetime_utc}"
       valid_to_date = nil
       valid_to_time = nil
+    end
+  end
+
+  def uniqueness_of_name_field
+    if CallToAction.where(:name => self.name).any?
+      errors.add(name, 'presente come nome di una CallToAction')
+    elsif Reward.where(:name => self.name).any?
+      errors.add(name, 'presente come nome di un Reward')
     end
   end
 

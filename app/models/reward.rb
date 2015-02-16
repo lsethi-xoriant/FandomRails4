@@ -36,6 +36,7 @@ class Reward < ActiveRecordWithJSON
   validates_presence_of :title
   validates_presence_of :name
   validates_uniqueness_of :name
+  validate :uniqueness_of_name_field
 
   has_attached_file :main_image, :styles => { :medium => "400x400#", :thumb => "100x100#" }, 
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }, 
@@ -88,6 +89,14 @@ class Reward < ActiveRecordWithJSON
   def is_expired
     to_valid =  valid_to.nil? || Time.now.utc < valid_to
     return !to_valid
+  end
+
+  def uniqueness_of_name_field
+    if CallToAction.where(:name => self.name).any?
+      errors.add(name, 'presente come nome di una CallToAction')
+    elsif Tag.where(:name => self.name).any?
+      errors.add(name, 'presente come nome di un Tag')
+    end
   end
 
 end
