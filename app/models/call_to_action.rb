@@ -22,6 +22,7 @@ class CallToAction < ActiveRecordWithJSON
   validates_presence_of :title
   validates_presence_of :name
   validates_uniqueness_of :name
+  validate :uniqueness_of_name_field
   validates_presence_of :media_image, if: Proc.new { |c| user_id.present? }
   validates_associated :releasing_file, if: Proc.new { |c| release_required }
   validate :interaction_resource
@@ -156,6 +157,14 @@ class CallToAction < ActiveRecordWithJSON
         shop_url: shop_url,
         enable_for_current_user: enable_for_current_user
       }.to_json
+  end
+
+  def uniqueness_of_name_field
+    if Tag.where(:name => self.name).any?
+      errors.add(name, 'presente come nome di un Tag')
+    elsif Reward.where(:name => self.name).any?
+      errors.add(name, 'presente come nome di un Reward')
+    end
   end
 
 end
