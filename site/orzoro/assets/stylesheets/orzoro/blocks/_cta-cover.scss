@@ -1,0 +1,211 @@
+.cta-cover__card {
+  background: whitesmoke;
+  //-webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  //-moz-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  //box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.cta-cover__flag {
+  left: 6px;
+  position: absolute;
+  top: -6px;
+  z-index: 10;
+}
+
+.cta-cover__flag--carousel {
+  left: -11px;
+  position: absolute;
+  top: -7px;
+  z-index: 10;
+}
+
+.cta-cover__column-title {
+  font-size: 24px;
+  margin: 0 0 30px 0;
+  padding-top: 6px;
+}
+
+.cta-cover__card:hover {
+  -webkit-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+}
+
+.cta-cover__card__body {
+  padding-top: 0;
+  padding-bottom: 0;
+  background: #fff;
+  //-webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  //-moz-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  //box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+}
+
+.cta-cover__card__footer {
+  margin-top: 5px;
+  border-top: 0;
+  padding: 10px 22px;
+}
+
+.cta-cover__thumbnail-row {
+  height: 250px; 
+  overflow: hidden;
+  position: relative;
+}
+
+.cta-cover__thumbnail-column {
+  padding-top: 56.25%; 
+}
+
+.cta-cover__thumbnail {
+  width: 100%; 
+  position: absolute; 
+  top: -8px; 
+  left: 0;
+}
+
+.cta-cover__winnable-reward {
+  position: absolute; 
+  top: 20px;
+  z-index: 10;
+}
+
+.cta-cover__winnable-reward__label {
+  font-size: 14px;
+  border-radius: 15px;
+  color: $red;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+  padding-top: 7px;
+}
+
+.cta-cover__glyphicon-icon {
+  font-size: 10px !important;
+  margin-left: 3px;
+  position: relative;
+  top: -1px;
+}
+
+.cta-cover__title {
+  font-size: 22px;
+  color: #fff;
+  position: absolute; 
+  bottom: 0;
+  padding-top: 15px;
+  padding-bottom: 10px;
+
+  background: -webkit-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+  background: -o-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+  background: -moz-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+}
+
+.cta-cover__miniformat {
+  font-size: 10px;
+  text-transform: capitalize;
+  background-color: $blu;
+  color: #fff;
+  padding: 7px 7px 4px 7px;
+}
+
+.cta-cover__winnable-reward__label.label-success {
+  background: #47cd48; 
+  background: -webkit-linear-gradient(#47cd48, #37ba39);
+  background: -o-linear-gradient(#47cd48, #37ba39);
+  background: -moz-linear-gradient(#47cd48, #37ba39);
+  background: linear-gradient(#47cd48, #37ba39);
+  color: #fff;
+  padding-left: 10px;
+}
+
+.cta-cover__flag-img {
+  width: 107px;
+}
+
+.cta-cover__user-avatar{
+  float: left;
+  max-width: 35px;
+  border-radius: 40px;
+  margin: 0 10px 0 0;
+}
+
+.cta-cover__vote-count{
+  background-color: transparent;
+  border: 1px solid #fff;
+  bottom: 15px;
+  padding-bottom: 7px;
+  padding-top: 7px;
+  position: absolute;
+  right: 15px;
+}
+
+.cta-cover__vote-count--header{
+  background-color: transparent;
+  border: 1px solid #999;
+  color: #999;
+  margin-left: 20px;
+}
+
+.cta-cover__vote-count--browse{
+  background-color: transparent;
+  border: 1px solid #fff;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 13px;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .cta-cover__flag {
+    left: 10px;
+    position: absolute;
+    top: -3px;
+    z-index: 10;
+  }
+
+  .cta-cover__vote-username {
+    font-size: 16px;
+    margin-top: 8px;
+    text-overflow: ellipsis;
+  }
+
+  .cta-cover__user-avatar {
+    margin: 0 10px 3px 0;
+  }
+
+  .cta-cover__flag--carousel {
+    left: -11px;
+    position: absolute;
+    top: -8px;
+    z-index: 10;
+  }
+
+  .cta-cover__flag-img {
+    width: 70px;
+  }
+
+  .cta-cover__title {
+    font-size: 18px;
+  }
+
+  .cta-cover__thumbnail-row {
+    height: 200px; 
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .cta-cover__winnable-reward {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    z-index: 10;
+    padding: 0;
+    width: 80px;
+  }
+  
+}

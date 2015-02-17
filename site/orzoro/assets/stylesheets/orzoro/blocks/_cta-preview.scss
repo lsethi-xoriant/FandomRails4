@@ -1,0 +1,220 @@
+/* CTA PREVIEW BLOCK */
+
+.cta-preview__miniformat-container {
+  -ms-transform: rotate(-7deg); /* IE 9 */
+  -webkit-transform: rotate(-7deg); /* Chrome, Safari, Opera */
+  transform: rotate(-7deg);
+}
+
+.cta-preview__miniformat {
+  font-family: "BarmenoRegularBold";
+  font-size: 18px;
+  padding: 5px 25px;
+  position: relative;
+  text-transform: uppercase;
+  top: -15px;
+  color: #fff;
+}
+
+.cta-preview{
+	border: 1px solid #ccc;
+	position: relative;
+	margin-bottom: 20px;
+	height: 240px;
+	overflow: hidden;
+	background-color: #FFF;
+	position: relative;
+}
+
+.cta-preview--slider{
+  border: 1px solid #ccc;
+  position: relative;
+  width: 258px;
+  height: 240px;
+  overflow: hidden;
+  background-color: #FFF;
+  position: relative;
+}
+
+.cta-preview__image{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
+.cta_preview__link{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.cta-preview__points {
+  padding-top: 7px;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	font-size: 14px;
+	font-weight: bold;
+  border-radius: 15px;
+  color: $red;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+  padding-top: 7px;
+  z-index: 20;
+}
+
+.cta-preview__credits {
+  padding-top: 7px;
+  font-size: 14px;
+  border-radius: 15px;
+  color: #fff;
+  background-color: #b82423;
+  font-weight: bold;
+  z-index: 20;
+  .fa {
+    margin-left: 5px;
+  }
+}
+
+.cta-preview__credits--reward {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 15px;
+  color: #fff;
+  padding-top: 7px;
+  background-color: #b82423;
+  width: 13%;
+  margin: 20px auto;
+  .fa {
+    margin-left: 5px;
+  }
+}
+
+.cta-preview__title {
+  font-family: "BarmenoRegularBold";
+	color: #000 !important;
+	font-size: 20px !important;
+}
+
+.cta-preview--tag {
+  bottom: 0px;
+  left: 0;
+  position: absolute;
+  background: -webkit-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+  background: -o-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+  background: -moz-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+}
+
+.cta-preview__title--tag {
+  color: #fff !important;
+  font-size: 15px !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0 10px;
+  color: $blu;
+  font-size: 18px;
+  font-weight: normal;
+  max-height: 44px;
+  -webkit-transition: color 200ms ease 0s;
+  transition: color 200ms ease 0s;
+}
+
+.cta-preview__like{
+	font-size: 14px !important;
+}
+
+.cta-preview__thumbnail{
+	padding-top: 57%; //padding for aspect ratio 16:9
+	overflow: hidden;
+	position: relative;
+}
+
+.cta-preview__counter{
+  position: absolute;
+  width: 100%;
+  bottom: 10px;
+  margin: 0;
+}
+
+.cta-preview__comments{
+	font-size: 14px;
+}
+
+.cta-preview__thumbnail--category{
+  padding-top: 140%; //padding for aspect ratio 3:4
+  margin-left: -100px;
+}
+
+.cta-preview__title--category{
+  position: absolute;
+  bottom: 20px;
+  left: 10px;
+  color: #fff;
+  z-index: 1;
+}
+
+.cta-preview__image--category{
+  height: 100%;
+  width: auto;
+}
+
+.cta-preview__locked-layer{
+  padding-top: 20%;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  width: 100%;
+  bottom: 2px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 32px;
+}
+
+.cta-preview__locked-layer--reward{
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  padding-top: 14%;
+  line-height: 30px;
+}
+
+@media (min-width: $screen-sm-min) {
+  .cta-preview__credits--btn {
+    font-size: 18px;
+    line-height: 1.33;
+    padding: 10px 16px;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: $screen-sm-min) {
+  .cta-preview__credits--reward{
+    width: 30%;
+  }
+  .cta-preview__locked-layer--reward {
+    p {
+      font-size: 18px;
+    }
+  }
+  .cta-preview__unlocked-message {
+    font-size: 18px;
+  }
+}

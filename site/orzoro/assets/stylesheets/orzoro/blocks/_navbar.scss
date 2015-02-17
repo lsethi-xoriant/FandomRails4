@@ -1,0 +1,41 @@
+/* NAVBAR */
+
+.navbar-nav {
+  width: 100%;
+  text-align: center;
+}
+
+.navbar-nav li {
+  float: none;
+  display: inline-block;
+}
+
+.navbar__item-text {
+  text-transform: uppercase;
+  font-family: "BarmenoRegularBold";
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.navbar__container {
+  padding: 0;
+}
+
+.navbar__miniformat {
+  margin-top: 5px;
+  height: 30px;
+}
+
+.navbar__home-item {
+  margin-right: -4px;
+}
+
+.navbar__item a {
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+}
+
+.navbar-default {
+  margin-bottom: 0;
+  border: none;
+}

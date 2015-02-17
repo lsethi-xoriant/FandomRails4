@@ -1,0 +1,114 @@
+/* UNDERVIDEO */
+
+.interaction__main-col {
+  padding-left: 30px;
+}
+
+.interaction__feedback-text {
+  font-size: 18px;
+  margin: 7px 0 0 0;
+  color: #000;
+}
+
+.interaction__feedback-description {
+  margin: 0; 
+}
+
+.interaction__feedback-circle {
+  background: $blu;
+  border-radius: 50%;
+  float: left;
+  height: 40px;
+  margin: 8px 15px 8px 8px;
+  width: 40px;
+}
+
+.interaction__feedback-circle--green {
+  background: $green;
+}
+
+.interaction__feedback-circle--red {
+  background: red;
+}
+
+.interaction__feedback-text--red {
+  color: red;
+}
+
+.interaction__feedback-text--green {
+  color: $green;
+}
+
+.interaction__feedback-col {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background: #fff;
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-bottom: 3px;
+  -webkit-box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
+  box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
+}
+
+@-webkit-keyframes feedbackUndervideoSlideIn {
+  100% { bottom: 0; }
+}
+
+@keyframes feedbackUndervideoSlideIn {
+  100% { bottom: 0; }
+}
+
+@-webkit-keyframes feedbackUndervideoSlideOut {
+  0% { bottom: 0%; }
+  100% { bottom: -150%; }
+}
+
+@keyframes feedbackUndervideoSlideOut {
+  0% { bottom: 0%; }
+  100% { bottom: -150%; }
+}
+
+.interaction__feedback-text {
+  font-size: 14px;
+  margin: 12px 0 0 0;
+  color: #000;
+}
+
+.interaction__feedback-description {
+  font-size: 12px;
+  margin: 0 0 4px 0; 
+}
+
+.undervideo-interaction__feedback {
+  bottom: -150%;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  position: fixed;
+  z-index: 15;
+
+  .glyphicon {
+    font-size: 30px !important;
+    line-height: 40px !important;
+  }
+
+  .glyphicon-ok {
+    left: 0 !important;
+  }
+
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+
+  -webkit-animation: feedbackUndervideoSlideIn 1s forwards, feedbackUndervideoSlideOut 1s forwards;
+  animation: feedbackUndervideoSlideIn 1s forwards, feedbackUndervideoSlideOut 1s forwards;
+  -webkit-animation-delay: 0s, 5s;
+  animation-delay: 0s, 5s;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .interaction__main-col {
+    padding-left: 15px;
+  }
+}
