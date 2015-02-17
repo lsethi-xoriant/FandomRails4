@@ -37,11 +37,6 @@ function OrderingCtrl($scope) {
 
   };
 
-  // for (var i = 1; i <= 3; ++i) {
-  //   $scope.models.lists.A.push({label: "Item A" + i});
-  //   $scope.models.lists.B.push({label: "Item B" + i});
-  // };
-
   $scope.$watch('models', function(model) {
     $scope.modelAsJson = angular.toJson(model, true);
   }, true);
