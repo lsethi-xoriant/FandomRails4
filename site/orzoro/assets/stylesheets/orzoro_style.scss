@@ -1,9 +1,10 @@
-$red_brown: #6f1413;
-$red_brown_hover: #850e0d;
+$brown: #660206;
+$brown_hover: #850e0d;
 $red: red;
 $blu: #3399ff;
 $grey: #ececec;
 $green: #30bf43;
+$cream: #eae4d2;
 
 $container-tablet:             100% !default;
 $container-sm:                 $container-tablet !default;
@@ -19,13 +20,13 @@ $panel-border-radius:          0px !default;
 // Navbar
 
 $navbar-default-color:                      #fff !default;
-$navbar-default-bg:                         $red_brown !default;
+$navbar-default-bg:                         $brown !default;
 
 $navbar-default-link-color:                 #fff !default;
 $navbar-default-link-hover-color:           #fff !default;
-$navbar-default-link-hover-bg:              $red_brown_hover !default;
+$navbar-default-link-hover-bg:              $brown_hover !default;
 $navbar-default-link-active-color:          $navbar-default-link-hover-color !default;
-$navbar-default-link-active-bg:             $red_brown_hover !default;
+$navbar-default-link-active-bg:             $brown_hover !default;
 $navbar-default-link-disabled-color:        #444 !default;
 $navbar-default-link-disabled-bg:           transparent !default;
 
@@ -77,6 +78,10 @@ $navbar-inverse-toggle-border-color:        #999 !default;
   font-style: normal;
   font-weight: 400;
   src: url("barmeno_bold-webfont.eot") format("eot"), url("barmeno_bold-webfont.woff") format("woff"), url("barmeno_bold-webfont.ttf") format("truetype"), url("barmeno_bold-webfont.svg") format("svg");
+}
+
+.btn {
+  font-family: 'BarmenoRegularBold';
 }
 
 

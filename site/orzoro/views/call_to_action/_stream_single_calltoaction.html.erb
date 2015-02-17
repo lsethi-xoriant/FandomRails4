@@ -13,12 +13,17 @@
   <div class="col-sm-8 col-sm-offset-2 cta__media-container" ng-if="!calltoaction_info.prize">
     <!-- MEDIA -->
     <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
-    <!-- SHARE -->
+    <!-- SHARE: TODO -->
     <div class="share-interaction__container" ng-if="!aux.mobile">
       <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
         <%= render partial: "/call_to_action/share_interaction" %>
       </div>
     </div>
+  </div>
+
+  <!-- VOTE INTERACTION -->
+  <div class="col-sm-8 col-sm-offset-2 text-center" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
+    <%= render partial: "/call_to_action/vote_interaction" %>
   </div>
 
 </div>
@@ -31,8 +36,8 @@
       </div>
 
       <div class="col-sm-8 text-center cta__title-and-description-col">
-        <p class="cta__title">{{calltoaction_info.calltoaction.title}}</p>
-        <p class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></p>
+        <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
+        <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
       </div>
 
       <div class="col-sm-2 text-right">
@@ -63,7 +68,7 @@
 
 <div class="row main-row related__row">
 
-  <div class="col-md-4" ng-repeat="calltoaction in aux.related_calltoaction_info">
+  <div class="col-sm-4" ng-repeat="calltoaction in aux.related_calltoaction_info">
     <%= light_link_to("/call_to_action/{{calltoaction.slug}}") do %>
       <div class="relateds-flexslider__item-panel" ng-style="{'background-color': calltoaction.miniformat_info['label_background']}"> 
         <div class="row">
@@ -82,3 +87,23 @@
   </div>
 
 </div>
+
+<div class="row main-row footer__row text-center">
+  <div class="col-sm-4">
+    <img class="footer__img-pre" src="http://placehold.it/150x100">
+    <p class="footer__text-pre">Ricevi anche tu a casa le tazze del buonumore!</p>
+    <a href="#" class="btn btn-red footer__btn">LE VOGLIO!</a>
+  </div>
+  <div class="col-sm-4 footer__border-left">
+    <img class="footer__img-pre" src="http://placehold.it/150x100">
+    <p class="footer__text-pre">Tieniti informato su tutte le novità Orzoro</p>
+    <a href="#" class="btn btn-red footer__btn">SOTTOSCRIVI!</a>
+  </div>
+  <div class="col-sm-4 footer__border-left">
+    <img class="footer__img-pre" src="http://placehold.it/150x100">
+    <p class="footer__text-pre">Segui Dora e Miss Tressy sulla pagina Facebook di Orzoro</p>
+    <a href="#" class="btn btn-red footer__btn">FACEBOOK!</a>
+  </div>
+</div>
+
+
