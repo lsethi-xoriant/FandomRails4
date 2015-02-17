@@ -6,6 +6,45 @@
 
 .cta__fa-angle {
   font-size: 100px;
+  color: #999;
+}
+
+.media-image {
+  margin-top: 15px;
+}
+
+.cta__paper-group-right {
+  border: 1px solid #ccc;
+  padding: 10px;
+  position: absolute;
+  -ms-transform: rotate(3deg); /* IE 9 */
+  -webkit-transform: rotate(3deg); /* Chrome, Safari, Opera */
+  transform: rotate(3deg);
+  -webkit-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
+  -moz-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
+  box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
+}
+
+.cta__paper-group-left {
+  border: 1px solid #ccc;
+  padding: 10px;
+  position: absolute;
+  -ms-transform: rotate(-2deg); /* IE 9 */
+  -webkit-transform: rotate(-2deg); /* Chrome, Safari, Opera */
+  transform: rotate(-2deg);
+  -webkit-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
+  -moz-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
+  box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
+}
+
+.cta__media-img {
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  position: relative;
+  -webkit-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
+  -moz-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
+  box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
 }
 
 .cta__sidebar-panel {
@@ -61,7 +100,9 @@
 
 .cta__description {
   font-size: 18px;
-  color: #000;
+  color: #999;
+  margin-top: 0;
+  font-weight: 400;
 }
 
 .cta__title-and-description-col {
@@ -82,7 +123,8 @@
 
 .cta__title {
   font-size: 38px;
-  font-family: "BarmenoRegularBold"
+  font-family: "BarmenoRegularBold";
+  margin-top: 0;
 }
 
 .cta__miniformat-col {

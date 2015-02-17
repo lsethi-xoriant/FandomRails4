@@ -20,7 +20,9 @@
 
 <!-- MAIN MEDIA IMAGE -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
-  <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+  <img class="cta__paper-group-left" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
+  <img class="cta__paper-group-right" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
+  <img class="cta__media-img" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
 
   <!-- DOWNLOAD INTERACTION -->
   <div class="play-interaction__container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
@@ -47,14 +49,8 @@
     </div>
   </div>
 
-  <!-- VOTE INTERACTION -->
-  <div class="play-interaction__container hidden-xs text-center" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
-    <div class="col-xs-12" style="position: absolute; bottom: 15px;">
-      <%= render partial: "/call_to_action/vote_interaction" %>
-    </div>
-  </div>
-
 </div>
+
 <!-- IFRAME -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
   <!-- IFRAME -->
