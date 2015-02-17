@@ -195,15 +195,12 @@ class Easyadmin::EasyadminController < ApplicationController
 
   def update_tags_tag_table
 
-    old_tags = params[:old_tag].split(",").map { |name|
-        Tag.find_by_name(name)
-    }
-
     id_objects_to_update = []
 
-    old_tags.each do |old_tag|
-      id_objects_to_update << old_tag.id
-    end
+    params[:old_tag].split(",").map { |name|
+      other_tag = Tag.find_by_name(name)
+      id_objects_to_update = id_objects_to_update | TagsTag.where(:other_tag_id => other_tag.id).pluck(:tag_id)
+    }
 
     id_objects_to_update.each do |object_id|
       # TagsTag.delete_all(["tag_id = ?", object_id]) # uncomment if old tagging must be dismissed
