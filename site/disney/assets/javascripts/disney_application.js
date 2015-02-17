@@ -9,7 +9,6 @@
 //= require angular-animate
 //= require angularjs/ng-table
 //= require angularjs/angular-filter
-//= require angularjs/angular-drag-and-drop-lists.min
 //= require angularjs/fandom
 //= require angularjs/notice
 //= require angularjs/comment
@@ -18,7 +17,6 @@
 //= require angularjs/reward_catalogue
 //= require angularjs/eventfilter
 //= require angularjs/browse
-//= require angularjs/ordering
 //= require ui-bootstrap-0.12.min
 //= require bootstrap
 //= require bootstrap-notify
