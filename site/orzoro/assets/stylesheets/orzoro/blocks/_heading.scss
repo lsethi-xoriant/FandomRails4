@@ -1,0 +1,56 @@
+/* HEADING TITLE BLOCK */
+.section-heading {
+  padding-bottom: 20px;
+  h3 {
+    line-height: 40px;
+  }
+}
+
+.section-heading__icon{
+  float: left;
+  max-width: 35px;
+  margin-right: 15px;
+}
+
+.section-heading__marker{
+  background: $blu; 
+  background: -webkit-linear-gradient($blu, #2e78c5);
+  background: -o-linear-gradient($blu, #2e78c5);
+  background: -moz-linear-gradient($blu, #2e78c5);
+  background: linear-gradient($blu, #2e78c5);
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  display: inline-block;
+  text-align: center;
+  .fa, .glyphicon {
+    color: #fff;
+    font-size: 22px;
+    line-height: 40px;
+  }
+}
+
+.section-heading__title{
+  color: #000;
+  font-size: 14px;
+}
+
+.section-heading__subtitle{
+  font-size: 12px;
+}
+
+.section-heading__see-all{
+  display: inline-block;
+  color: $blu;
+  font-size: 16px;
+}
+
+@media (max-width: $screen-sm-min) {
+  .section-heading {
+    padding: 20px 0 20px 0;
+    h3 {
+      font-size: 18px;
+      line-height: 40px;
+    }
+  }
+}

@@ -15,8 +15,8 @@
 
   <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
 
-  <%= stylesheet_link_tag "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
+  <%= stylesheet_link_tag "orzoro_application", :media => "all" %>
+  <%= javascript_include_tag "orzoro_application" %>
 
   <!--[if lte IE 9]>
     <link href="<%= asset_path("application.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
@@ -34,6 +34,7 @@
 
 <body ng-cloak ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 
+  <%= render partial: "/application/header" %>
   <%= render partial: "/application/user_bar", locals: { aux: aux } %>
 
   <%= yield %>
@@ -42,7 +43,7 @@
     <div id="cookies-bar" class="navbar navbar-fixed-bottom cookies-footer">
       <div class="row">
         <div class="col-sm-11">
-          <p class="cookies-footer__description">Per migliorare la tua navigazione su questo sito, utilizziamo cookies ed altre tecnologie che ci permettono di riconoscerti.<br>Utilizzando questo sito, acconsenti agli utilizzi di cookies e delle altre tecnologie descritti nella nostra <a target="_blank" class="cookies-footer__link" href="http://www.disney.it/cookies/">Cookies Policy</a>.</p>
+          <p class="cookies-footer__description">Per migliorare la tua navigazione su questo sito, utilizziamo cookies ed altre tecnologie che ci permettono di riconoscerti.<br>Utilizzando questo sito, acconsenti agli utilizzi di cookies e delle altre tecnologie descritti nella nostra <a target="_blank" class="cookies-footer__link" href="http://#">Cookies Policy</a>.</p>
         </div>
         <div class="col-sm-1 text-right">
           <a class="btn btn-primary btn-xs" href="javascript: void(0)" ng-click="acceptCookies()"><span>CHIUDI</span></a>

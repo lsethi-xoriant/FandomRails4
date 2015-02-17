@@ -1,0 +1,32 @@
+<div class="container navbar__container">
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="navbar__item active navbar__home-item">
+            <a href="#">
+              <img class="navbar__miniformat" src="http://placehold.it/30x30">
+              <p class="navbar__item-text">home</p>
+            </a>
+          </li>
+          <li class="navbar__item" ng-repeat="miniformat in aux.miniformat_info_list">
+            <a href="#">
+              <img class="navbar__miniformat" ng-src="{{miniformat.icon}}">
+              <p class="navbar__item-text">{{miniformat.title}}</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
