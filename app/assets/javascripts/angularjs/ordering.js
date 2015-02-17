@@ -1,8 +1,6 @@
 var orderingModule = angular.module('OrderingModule', ['dndLists']);
 
-orderingModule.controller('OrderingCtrl', OrderingCtrl);
-
-function OrderingCtrl($scope) {
+orderingModule.controller('OrderingCtrl', ['$scope', function OrderingCtrl($scope) {
 
   $scope.models = {
     selected: null,
@@ -41,4 +39,4 @@ function OrderingCtrl($scope) {
     $scope.modelAsJson = angular.toJson(model, true);
   }, true);
 
-};
+}]);
