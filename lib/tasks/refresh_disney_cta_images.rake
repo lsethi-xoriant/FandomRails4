@@ -1,5 +1,5 @@
 require 'rake'
-require 'ruby-debug'
+#require 'ruby-debug'
 require 'open-uri'
 
 desc "Refresh disney call to action images to new style 'extra_large'"
