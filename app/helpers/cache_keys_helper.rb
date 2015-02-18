@@ -143,6 +143,10 @@ module CacheKeysHelper
     "likes_count_for_cta_#{cta_id}"
   end
 
+  def get_votes_count_for_cta_key(cta_id)
+    "votes_count_for_cta_#{cta_id}"
+  end
+
   def get_likes_count_for_interaction_cache_key(interaction_id)
     "likes_count_for_interaction_#{interaction_id}"
   end

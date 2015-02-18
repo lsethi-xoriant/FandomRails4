@@ -585,6 +585,17 @@ module CallToActionHelper
       end
     end
   end
+
+  def get_votes_thumb_for_cta(cta) 
+    cache_short(get_votes_count_for_cta_key(cta.id)) do
+      interaction = cta.interactions.find_by_resource_type("Vote")
+      if interaction
+        build_votes_for_resource(interaction)
+      else
+        0
+      end
+    end
+  end
   
   def get_number_of_likes_for_cta(cta)
     cache_short(get_likes_count_for_cta_key(cta.id)) do
