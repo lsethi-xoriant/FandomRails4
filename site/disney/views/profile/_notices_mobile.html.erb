@@ -11,19 +11,19 @@
         </div>
       <div class="row">
         <div class="col-xs-12">
-          <div ng-repeat="notices in notice_list | groupBy: 'date' | toArray:true | orderBy:min">
+          <div ng-repeat="notices in notice_list">
           	<div class="row brws-item">
           		<div class="col-xs-12">
-          			<h4>{{notices.$key}}</h4>
+          			<h4>{{notices.date}}</h4>
           		</div>
           	</div>
           	<div class="row">
           		<div class="col-xs-12">
 		          	<ul class="list-group" style="margin: 10px 0;">
-		          		<li id="{{notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.notice.read}" ng-repeat="notice in notices | orderBy:min">
+		          		<li id="{{notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.read}" ng-repeat="notice in notices.notices">
 		          			<div class="row">
 				              	<div class="col-xs-12">
-				              		<div class="row" ng-bind-html='notice.notice.html_notice'></div>
+				              		<div class="row" ng-bind-html='notice.html_notice'></div>
 				              	</div>
 				              </div>
 				          </li>
