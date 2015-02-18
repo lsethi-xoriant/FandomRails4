@@ -9,7 +9,7 @@ task :refresh_disney_cta_images => :environment do
 end
 
 def refresh_disney_cta_images
-  Apartment::Tenant.switch('disney')
+  switch_tenant('disney')
 
   start_time = Time.now
   count = 0
