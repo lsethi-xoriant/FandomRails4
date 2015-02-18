@@ -1,16 +1,6 @@
 <div class="row main-row">
 
-  <div class="col-sm-12 cta__media-container" ng-if="calltoaction_info.prize">
-		<img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" />
-	  <div class="cta-preview__locked-layer cta-preview__locked-layer--reward">
-			<p>Per sbloccare questo premio</p>
-			<span class="label label-warning cta-preview__credits--reward">+{{calltoaction_info.prize.cost}}<i class="fa fa-copyright"></i></span>
-			<button ng-if="current_user && calltoaction_info.prize.has_currency" class="btn btn-blue cta-preview__credits--btn" ng-click="buyReward(calltoaction_info.prize.id)"><span>Sblocca</span></button>
-			<button ng-if="!current_user" class="btn btn-blue cta-preview__credits--btn" onclick="$('#registrate-modal').modal('show');"><span>Sblocca</span></button>
-	  </div>
-  </div>
-
-  <div class="col-sm-8 col-sm-offset-2 cta__media-container" ng-if="!calltoaction_info.prize">
+  <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}}">
     <!-- MEDIA -->
     <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
     <!-- SHARE: TODO -->
@@ -19,6 +9,11 @@
         <%= render partial: "/call_to_action/share_interaction" %>
       </div>
     </div>
+
+    <div class="col-xs-12">
+      <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+    </div>
+
   </div>
 
   <!-- VOTE INTERACTION -->
@@ -42,12 +37,6 @@
 
       <div class="col-sm-2 text-right">
         <span class="fa fa-angle-right cta__fa-angle"></span>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-12">
-        <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
       </div>
     </div>
 
