@@ -4,7 +4,7 @@ class Tag < ActiveRecordWithJSON
   include DateMethods
 
   attr_accessible :name, :title, :description, :locked, :extra_fields, :created_at, :updated_at, :valid_from, :valid_to,
-                  :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time
+                  :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time, :slug
 
   attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time
 

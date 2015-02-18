@@ -171,21 +171,25 @@ function updateValueElementType(elementName, fieldName) {
     id = '#value-for-' + fieldName + '-field-' + identifier;
     relatedValueElement = $(id);
     selectedType = elementName.val();
-    var type;
     if (selectedType == 'media') {
-        type = 'file';
+        relatedValueElement.jqte({status:false});
         $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').show();
+        relatedValueElement.attr('type', 'text');
+        relatedValueElement.attr('type', 'file');
     }
-    else {
+    if (selectedType == 'string') {
+        relatedValueElement.jqte({status:false});
         $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').hide();
-        type = 'text';            
+        $('#attachment-id-for-' + fieldName + '-field-' + identifier).remove();
+        $('#url-for-' + fieldName + '-field-' + identifier).remove();
+        relatedValueElement.attr('type', 'text');
+    }
+    if (selectedType == 'html') {
+      relatedValueElement.attr('type', 'text');
+      relatedValueElement.jqte();
+      relatedValueElement.jqte({status:true});
     }
 
-    $('#attachment-id-for-' + fieldName + '-field-' + identifier).remove();
-    $('#url-for-' + fieldName + '-field-' + identifier).remove();
-    relatedValueElement.attr('type', type);
-    if (selectedType == 'html')
-      relatedValueElement.jqte();
 };
 
 function removeImage(elementName, fieldName) {
@@ -214,7 +218,7 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
                 $('#value-for-' + fieldName + '-field-' + index).val(value);
             }
             else
-            if(value.type == 'media')  {
+            if (value.type == 'media')  {
                 $('#type-for-' + fieldName + '-field-' + index).val('media');
                 $('#value-for-' + fieldName + '-field-' + index).attr('type', 'file');
 

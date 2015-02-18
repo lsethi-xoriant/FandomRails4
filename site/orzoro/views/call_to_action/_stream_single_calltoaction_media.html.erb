@@ -15,33 +15,22 @@
       <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-sm visible-xs"><span>COMMENTA</span></a>
     </div>
 
-    <!-- PLAY INTERACTION -->
-    <div class="play-interaction__container" ng-if="(interaction_info = getPlayInteraction(calltoaction_info.calltoaction.id)) && !interaction_info.hide">
-      <div class="col-md-12 text-center hidden-xs">
-        <p class="play-interaction__title">Guarda il video e guardagna i punti.</p>
-      </div>
-      <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row">
-        <div class="col-md-12 play-interaction__winnable-reward text-center">
-          <span class="label label-success cta-cover__winnable-reward__label">
-            Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
-          </span> 
-        </div>
-      </div>
-      <div ng-if="!interaction_info.user_interaction" class="row text-center">
-        <div class="col-md-12 play-interaction__winnable-reward">
-          <span class="label label-warning cta-cover__winnable-reward__label">
-            +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
-          </span>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 
 <!-- MAIN MEDIA IMAGE -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
-  <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+
+  <div ng-if="calltoaction_info.miniformat['name'] == 'ricette'">
+    <img class="cta__paper-group-left" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
+    <img class="cta__paper-group-right" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
+    <img class="cta__media-img" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+  </div>
+
+  <div ng-if="calltoaction_info.miniformat['name'] != 'ricette'">
+    <img ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+  </div>
+
 
   <!-- DOWNLOAD INTERACTION -->
   <div class="play-interaction__container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
@@ -68,14 +57,8 @@
     </div>
   </div>
 
-  <!-- VOTE INTERACTION -->
-  <div class="play-interaction__container hidden-xs text-center" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
-    <div class="col-xs-12" style="position: absolute; bottom: 15px;">
-      <%= render partial: "/call_to_action/vote_interaction" %>
-    </div>
-  </div>
-
 </div>
+
 <!-- IFRAME -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
   <!-- IFRAME -->

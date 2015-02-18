@@ -24,6 +24,15 @@ Fandom::Application.routes.draw do
       end
     end
   end
+
+  constraints(SiteMatcher.new('orzoro')) do
+    scope module: "sites" do
+      scope module: "orzoro" do
+        resources :call_to_action, only: :show
+      end
+    end
+  end
+
   constraints(SiteMatcher.new('disney')) do
     scope module: "sites" do
       scope module: "disney" do

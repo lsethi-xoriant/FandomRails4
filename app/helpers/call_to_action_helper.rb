@@ -10,6 +10,31 @@ module CallToActionHelper
     end
   end
 
+  def build_default_thumb_calltoaction(calltoaction)
+
+    miniformat = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
+    if miniformat.present?
+      miniformat_info = {
+        "label_background" => get_extra_fields!(miniformat)["label-background"],
+        "icon" => get_extra_fields!(miniformat)["icon"],
+        "label_color" => get_extra_fields!(miniformat)["label-color"],
+        "title" => miniformat.title,
+        "name" => miniformat.name
+      }
+    end
+      
+    {
+      "id" => calltoaction.id,
+      "slug" => calltoaction.slug,
+      "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
+      "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
+      "title" => calltoaction.title,
+      "description" => calltoaction.description,
+      "miniformat_info" => miniformat_info
+    }
+    
+  end
+
   def get_cta_max_updated_at()
     CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
   end
@@ -24,7 +49,8 @@ module CallToActionHelper
           "label_background" => get_extra_fields!(miniformat)["label-background"],
           "icon" => get_extra_fields!(miniformat)["icon"],
           "label_color" => get_extra_fields!(miniformat)["label-color"],
-          "title" => get_extra_fields!(miniformat)["title"]
+          "title" => get_extra_fields!(miniformat)["title"],
+          "name" => miniformat.name
         }
       end
 

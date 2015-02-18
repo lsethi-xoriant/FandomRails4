@@ -1,0 +1,44 @@
+/* CSS NOTICES */
+
+.notice{
+  
+}
+
+.notice--unread{
+   background-color: #f5f5f5;
+}
+
+.notice__property-icon{
+  padding: 5px; 
+  max-width: 85px;
+}
+
+.notice__reward-image{
+  padding: 5px; 
+  max-width: 85px;
+}
+
+.notice__reward-image--badge{}
+
+.notice__title{
+  line-height: 30px;
+}
+
+@media (max-width: $screen-sm-min) {
+  .notice__property-icon{
+    padding: 0px; 
+    max-width: 65px;
+  }
+  
+  .notice__reward-image{
+    padding: 5px; 
+    max-width: 40px;
+  }
+  
+  .notice__title{
+    font-size: 14px;
+    line-height: 16px;
+    margin: 4px 0;
+  }
+  
+}

@@ -1,0 +1,28 @@
+/** SEARCH STYLE **/
+  
+.search-bar{
+  padding: 20px 0;
+}
+
+.search-bar__field{}
+
+.search-bar__input {
+  background-image: url("disney/search.png");
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  background-size: 32px auto;
+  height: 46px !important;
+  font-size: 18px;
+}
+
+.search-bar__button {
+  font-size: 18px !important;
+  line-height: 1.33 !important;
+  padding: 10px 16px;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .search-bar__input {
+    background: none;
+  }
+}

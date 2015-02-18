@@ -1,0 +1,16 @@
+/* GENERAL */ 
+
+.flex-viewport-shadow {
+    background: radial-gradient(at 100% 50% , rgba(0, 0, 0, 0.5) 0%, transparent 75%);
+    bottom: -6px;
+    position: absolute;
+    right: -1px;
+    top: -6px;
+    width: 6px;
+    z-index: 100;
+    border-right: 1px solid transparent;
+}
+
+.flex-disabled {
+    display: none !important;
+}

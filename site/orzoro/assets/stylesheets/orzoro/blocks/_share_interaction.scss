@@ -1,0 +1,116 @@
+/* SHARE */
+
+.share-interaction__container {
+  position: absolute;
+  right: -70px;
+  top: 0;
+}
+
+.share-interaction__cover__col {
+  padding-top: 10px;
+}
+
+.share-interaction__cover__info {
+  padding: 0;
+  font-size: 14px;
+  color: #999;
+}
+
+.share-interaction__cta__info__fb-button {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  margin-bottom: 10px;
+}
+
+.share-interaction__cta__info__email-button {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  -webkit-box-shadow: 0px 3px 0px 0px #ccc;
+  -moz-box-shadow: 0px 3px 0px 0px #ccc;
+  box-shadow: 0px 3px 0px 0px #ccc;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.share-interaction__cta__info__tt-button {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.share-interaction__cta__info__fb-button:active, 
+.share-interaction__cta__info__email-button:active,
+.share-interaction__cta__info__tt-button:active {
+  top: 3px;
+  position: relative;
+}
+
+.share-interaction__cover__info__glyphicon-fb {
+  font-size: 24px !important;
+  position: relative;
+  top: 3px;
+}
+
+.share-interaction__cover__info__glyphicon-envelope {
+  font-size: 24px !important;
+  position: relative;
+  top: 1px;
+}
+
+.share-interaction__modal__panel {
+  margin: 0 25px 0 25px;
+}
+
+.share-interaction__modal__panel-body {
+  -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  padding-top: 0;
+}
+
+.share-interaction__modal__header-title {
+  color: #000;
+  font-size: 18px;
+  padding-bottom: 15px;
+}
+
+.share-interaction__modal__title {
+  padding-top: 15px;
+  color: #000;
+  font-size: 14px;
+}
+
+.share-interaction__modal__description {
+  color: #999;
+  font-size: 14px;
+}
+
+.share-interaction__modal-input-col {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.share-interaction__modal-feedback {
+  margin-bottom: 5px;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .share-interaction__modal__panel {
+    margin: 0;
+  }
+
+  .share-interaction__modal-input-col {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .share-interaction__modal__header-title {
+    font-size: 18px;
+    padding-bottom: 10px;
+    text-align: left;
+  }
+}

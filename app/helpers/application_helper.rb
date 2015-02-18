@@ -1256,10 +1256,47 @@ module ApplicationHelper
     end
   end
 
+  def get_related_calltoaction_info(current_calltoaction, related_tag_name = "miniformat")
+    calltoactions = cache_short(get_ctas_except_me_cache_key(current_calltoaction.id)) do
+      tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
+      if tag
+        CallToAction.active.includes(:call_to_action_tags)
+                    .where("call_to_actions.id <> ?", current_calltoaction.id)
+                    .where("call_to_action_tags.tag_id = ?", tag.id)
+                    .limit(8).to_a
+      else
+        CallToAction.active.where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
+      end
+    end 
+    related_calltoaction_info = []
+    calltoactions.each do |calltoaction|
+      related_calltoaction_info << build_default_thumb_calltoaction(calltoaction)
+    end
+    related_calltoaction_info
+  end
+
   def default_aux(other)
 
+    miniformat_items = get_tags_with_tag("miniformat")
+
+    if miniformat_items.any?
+      miniformat_tag = get_tag_from_params("miniformat")
+      miniformat_items = order_elements(miniformat_tag, miniformat_items)
+      
+      miniformat_info_list = []
+      miniformat_items.each do |miniformat_item|
+        miniformat_info_list << {
+          "id" => miniformat_item.id,
+          "slug" => miniformat_item.slug,
+          "title" => miniformat_item.title,
+          "icon" => (get_extra_fields!(miniformat_item)["icon"]["url"] rescue nil)
+        }
+      end
+    end
+
     if other && other.has_key?(:calltoaction)
-      related_calltoaction_info = "TODO" # get_disney_related_calltoaction_info(calltoaction, current_property, related_tag_name, in_gallery)
+      calltoaction = other[:calltoaction]
+      related_calltoaction_info = get_related_calltoaction_info(calltoaction, "miniformat")
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
@@ -1289,7 +1326,8 @@ module ApplicationHelper
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
-      "free_provider_share" => $site.free_provider_share
+      "free_provider_share" => $site.free_provider_share,
+      "miniformat_info_list" => miniformat_info_list
     }
 
     if other
