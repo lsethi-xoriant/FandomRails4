@@ -19,7 +19,7 @@
 </div>
 
 <!-- MAIN MEDIA IMAGE -->
-<div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
+<div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image media-image-{{calltoaction_info.miniformat['name']}}">
 
   <div ng-if="calltoaction_info.miniformat['name'] == 'ricette'">
     <img class="cta__paper-group-left" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>

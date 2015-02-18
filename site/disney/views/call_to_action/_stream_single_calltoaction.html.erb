@@ -29,20 +29,6 @@
   <div class="col-xs-9">
     <h1 class="cta__title" style="padding-top: 16px;"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}} <span class="label label-default cta-cover__vote-count--header" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">{{interaction_info.interaction.resource.vote_info.total}} Voti</span></h1>
   </div>
-  <div class="col-xs-3 text-right">
-    <!-- CALLTOACTION WINNABLE REWARD COUNT -->
-    <div ng-if="calltoaction_info.status && calltoaction_info.status.winnable_reward_count > 0" class="cta__winnable-reward cta__winnable-reward--single-page">
-      <span class="label label-warning cta-cover__winnable-reward__label">
-        +{{calltoaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
-      </span>  
-    </div> 
-    <!-- CALLTOACTION DONE -->
-    <div ng-if="!calltoaction_info.status" class="cta__winnable-reward cta__winnable-reward--single-page">
-      <span class="label label-success cta-cover__winnable-reward__label">
-        Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
-      </span>  
-    </div> 
-  </div>
 </div>
 
 <div class="row">

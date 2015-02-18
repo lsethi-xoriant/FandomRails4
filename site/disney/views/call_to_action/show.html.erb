@@ -39,6 +39,7 @@
                         Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span>
                       </span>  
                     </div> 
+                    <span ng-if="calltoaction.votes" class="label label-default cta-cover__vote-count">{{calltoaction.votes.total}} <span class="hidden-xs">Voti</span></span>
                   </div>
                   <p class="cta-preview__title">{{calltoaction.title | cut:true:70}}</p>
                 </div>
