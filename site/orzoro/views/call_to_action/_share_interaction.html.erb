@@ -1,4 +1,5 @@
  <div class="share-interaction__cover__info"> 
+
   <!-- EMAIL -->
   <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default share-interaction__cta__info__email-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email" ng-class="{'disabled': animation_in_progress}">
     <span class="fa fa-envelope share-interaction__cover__info__glyphicon-envelope"></span>
@@ -54,7 +55,7 @@
             </div>
 
             <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;">
-              <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-primary btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'email')">CONDIVIDI</button>
+              <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-primary btn-block" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'email')">CONDIVIDI</button>
             </div>
 
           </div>
@@ -97,7 +98,7 @@
               <input ng-model="interaction_info.user_interaction.facebook_message" class="form-control" type="text" placeholder="Testo della condivisione" name="address">
             </div>
             <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook">
-              <button id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-facebook btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')">CONDIVIDI</button>
+              <button id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-facebook btn-block" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'facebook')">CONDIVIDI</button>
             </div>
 
           </div>
@@ -140,7 +141,7 @@
               <input ng-model="interaction_info.user_interaction.facebook_message" class="form-control" type="text" placeholder="Testo della condivisione" name="address">
             </div>
             <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook">
-              <button id="twitter-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-twitter btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'twitter')">CONDIVIDI</button>
+              <button id="twitter-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-twitter btn-block" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'twitter')">CONDIVIDI</button>
             </div>
 
           </div>

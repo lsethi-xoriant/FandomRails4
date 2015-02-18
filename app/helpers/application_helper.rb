@@ -1316,7 +1316,7 @@ module ApplicationHelper
         calltoaction_evidence_info
       end
     end
-
+    
     aux = {
       "tenant" => $site.id,
       "anonymous_interaction" => $site.anonymous_interaction,
@@ -1327,7 +1327,8 @@ module ApplicationHelper
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
       "free_provider_share" => $site.free_provider_share,
-      "miniformat_info_list" => miniformat_info_list
+      "miniformat_info_list" => miniformat_info_list,
+      "root_url" => root_url
     }
 
     if other

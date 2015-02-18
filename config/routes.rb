@@ -441,6 +441,9 @@ Fandom::Application.routes.draw do
   match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
   match "get_overvideo_during_interaction", :to => "call_to_action#get_overvideo_during_interaction", defaults: { format: 'json' }
+  
+  match "/call_to_action/:id/:descendent_id", to: "call_to_action#show"
+
   resources :call_to_action, only: :show do
     match "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }
   end

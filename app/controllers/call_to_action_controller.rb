@@ -146,6 +146,7 @@ class CallToActionController < ApplicationController
   end
 
   def show
+
     calltoaction_id = params[:id]
     
     calltoaction = CallToAction.includes(interactions: :resource).active_with_media.find(calltoaction_id)
@@ -163,12 +164,26 @@ class CallToActionController < ApplicationController
 
       @aux = init_show_aux(calltoaction)
 
+      descendent_calltoaction_id = params[:descendent_id]
+      if(descendent_calltoaction_id)
+        calltoaction_to_share = CallToAction.find(descendent_calltoaction_id)
+        extra_fields = JSON.parse(calltoaction_to_share.extra_fields)
+        calltoaction_to_share_title = extra_fields["linked_result_title"] || ""
+        calltoaction_to_share_description = extra_fields["linked_result_description"] || ""
+        calltoaction_to_share_thumbnail = extra_fields["linked_result_image"]["url"] rescue ""
+      else
+        calltoaction_to_share = calltoaction
+        calltoaction_to_share_title = calltoaction_to_share.title || ""
+        calltoaction_to_share_description = calltoaction_to_share.description || ""
+        calltoaction_to_share_thumbnail = calltoaction_to_share.thumbnail.url || ""
+      end
+
       @fb_meta_tags = (
           '<meta property="og:type" content="article" />' +
           '<meta property="og:locale" content="it_IT" />' +
-          '<meta property="og:title" content="' + (calltoaction.title || "") + '" />' +
-          '<meta property="og:description" content="' + (calltoaction.description || "") + '" />' +
-          '<meta property="og:image" content="' + (calltoaction.thumbnail.url || "") + '" />'
+          '<meta property="og:title" content="' + calltoaction_to_share_title + '" />' +
+          '<meta property="og:description" content="' +calltoaction_to_share_description + '" />' +
+          '<meta property="og:image" content="' + calltoaction_to_share_thumbnail + '" />'
         ).html_safe
       
     else
