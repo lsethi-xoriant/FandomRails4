@@ -17,8 +17,7 @@
 			<div class="col-sm-12">
 			  <div class="row section-heading">
 	    		<div class="col-xs-12">  
-			      <div class="relateds__icon-container text-center">
-			        <span class="fa fa-star"></span>
+			      <div class="relateds__icon-container text-center" ng-bind-html="section.attributes.icon_url">
 			      </div>
 			      <p class="relateds__title">{{section.attributes.title}} <%= light_link_to("{{section.attributes.view_all_link}}", class: "section-heading__see-all") do %>
 		            Vedi tutti

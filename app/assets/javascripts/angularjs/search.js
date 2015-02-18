@@ -6,12 +6,17 @@ searchModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
-SearchCtrl.$inject = ['$scope', '$window', '$filter', '$http'];
+SearchCtrl.$inject = ['$scope', '$window', '$filter', '$http', '$sce'];
 searchModule.controller('searchCtrl', SearchCtrl);
 
-function SearchCtrl($scope, $window, $filter, $http) {
+function SearchCtrl($scope, $window, $filter, $http, $sce) {
 
 	$scope.init = function(browseSections) {
+		
+		angular.forEach(browseSections, function(value, key) {
+			console.log(value);
+       		value.attributes.icon_url = $sce.trustAsHtml(value.attributes.icon_url);
+     	});
 		$scope.sections = browseSections;
 	};
 	

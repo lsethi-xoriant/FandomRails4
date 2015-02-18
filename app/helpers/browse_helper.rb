@@ -59,7 +59,7 @@ module BrowseHelper
     browse_section = ContentSection.new(
       key: "recent",
       title: "I piu recenti",
-      icon_url: ActionController::Base.helpers.asset_path("icon-cat.png"),
+      icon_url: get_browse_section_icon(nil),
       contents: recent_contents,
       view_all_link: "/browse/view_recent",
       column_number: 12/4
@@ -94,7 +94,7 @@ module BrowseHelper
     browse_section = ContentSection.new(
       key: "featured",
       title: featured.title,
-      icon_url: ActionController::Base.helpers.asset_path("icon-cat.png"),
+      icon_url: get_browse_section_icon(nil),
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: 12/4 #featured_contents.count
@@ -106,7 +106,7 @@ module BrowseHelper
     browse_section = ContentSection.new(
       key: "featured",
       title: featured.title,
-      icon_url: ActionController::Base.helpers.asset_path("icon-cat.png"),
+      icon_url: get_browse_section_icon(nil),
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: 12/4 #featured_contents.count
@@ -119,11 +119,25 @@ module BrowseHelper
     browse_section = ContentSection.new(
       key: category.name,
       title:  extra_fields.fetch('title', category.name),
-      icon_url: extra_fields["icon"] && upload_extra_field_present?(extra_fields["icon"]) ? get_upload_extra_field_processor(extra_fields["icon"], :original) : ActionController::Base.helpers.asset_path("icon-cat.png"),
+      icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
       column_number: 12/4
     )
+  end
+  
+  def get_browse_section_icon(extra_fields)
+    if !extra_fields.nil?
+      if extra_fields["icon"] && upload_extra_field_present?(extra_fields["icon"])
+        "<img src='#{get_upload_extra_field_processor(extra_fields["icon"], :original)}' class='img-responsive' />"
+      elsif !extra_fields["icon"].nil?
+        "<span class=\"#{extra_fields["icon"]}\"></span>"
+      else
+        "<span class=\"fa fa-star\"></span>"
+      end
+    else
+      "<span class=\"fa fa-star\"></span>"
+    end      
   end
   
   def get_browse_area_by_category_with_match(category, query)
@@ -132,7 +146,7 @@ module BrowseHelper
     browse_section = ContentSection.new(
       key: category.name,
       title: extra_fields.fetch('title', category.name),
-      icon_url: (extra_fields["icon"] && upload_extra_field_present?(extra_fields["icon"])) ? get_upload_extra_field_processor(extra_fields["icon"], :original) : ActionController::Base.helpers.asset_path("icon-cat.png"),
+      icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
       column_number: 12/4
