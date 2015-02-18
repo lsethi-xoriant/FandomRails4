@@ -4,6 +4,10 @@ class BrowseController < ApplicationController
   def index
     @browse_section = cache_long(get_browse_sections_cache_key(get_search_tags_for_tenant)) do init_browse_sections(get_search_tags_for_tenant) end
     
+    if params[:query]
+      @query = params[:query]
+    end
+    
     cta_ids = []
     @browse_section.each do |bs|
       bs.contents.each do |content|

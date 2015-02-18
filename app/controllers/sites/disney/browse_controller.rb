@@ -10,7 +10,7 @@ class Sites::Disney::BrowseController < BrowseController
     if get_disney_property == "disney-channel"
       "Non ci sono risultati per la tua ricerca '#{query}'."
     else
-      "Non ci sono risultati per la tua ricerca '#{query}'.<br/> Prova a cercare su <a href='/browse'>DisneyChannel</a>"
+      "Non ci sono risultati per la tua ricerca '#{query}'.<br/> Prova a cercare su <a href='/browse/redirect/#{query}'>DisneyChannel</a>"
 =begin
       response = "Non ci sono risultati per la tua ricerca '#{query}'.<br/> Prova a cercare su "
       properties = get_tags_with_tag("property")

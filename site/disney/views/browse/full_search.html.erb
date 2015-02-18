@@ -1,6 +1,6 @@
 <div class="container container--default" ng-controller="SearchCtrl" ng-init="init_search(<%= @contents.to_json %>, <%= @total %>, '<%= @query %>')">
 	
-	<%= render partial: "/application/search" %>
+	<%= render partial: "/application/search", locals: {query: nil} %>
 	
 	<div class="row brws-item main-row">
 		<div class="col-xs-12">

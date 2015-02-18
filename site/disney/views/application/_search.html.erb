@@ -10,4 +10,11 @@
   <script type="text/ng-template" id="itemTpl.html">
     <%= render partial: "/application/search_template" %>
   </script>
+  <% if query %>
+  <script type="text/javascript">
+    $(document).ready(function(){
+    	$("#search").val("<%= query %>");
+    });
+  </script>
+  <% end %>
 </div>

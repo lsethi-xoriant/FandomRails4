@@ -4,7 +4,7 @@
     <%= render partial: "/application/evidence_ctas" %>
   </div>
 
-  <%= render partial: "/application/search" %>
+  <%= render partial: "/application/search", locals: {query: nil} %>
 
   <div class="row main-row filters__flexslider-main-row">
     <%= render partial: "/application/home_filters" %>

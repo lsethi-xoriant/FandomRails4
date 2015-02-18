@@ -37,6 +37,7 @@ Fandom::Application.routes.draw do
         match "/browse/full_search", :to => "browse#full_search"
         match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
         match "/browse/search", :to => "browse#search"
+        match "/browse/redirect/:query", :to => "browse#index"
         match "/browse/view_all/:id", :to => "browse#index_category"
         match "/browse/view_recent", :to => "browse#view_all_recent"
         match "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
