@@ -105,4 +105,10 @@
         }
 	    });
 	});
+	
+	function serchRedirect(query){
+		$("#search").val(query);
+		$("#full-search").attr("action", "/browse/full_search").submit();
+	}
+	
 </script>
