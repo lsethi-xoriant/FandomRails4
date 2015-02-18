@@ -90,8 +90,11 @@ class Sites::Disney::CallToActionController < CallToActionController
   end
 
   def append_calltoaction
+    page_elements = ["like", "comment", "share"]
+
     if params["other_params"] && params["other_params"]["gallery"]["calltoaction_id"]
       gallery_calltoaction_id = params["other_params"]["gallery"]["calltoaction_id"]
+      page_elements = page_elements + ["vote"]
     end
 
     calltoaction_ids_shown = params[:calltoaction_ids_shown]
@@ -126,7 +129,7 @@ class Sites::Disney::CallToActionController < CallToActionController
       end
       
       {
-        calltoaction_info_list: build_call_to_action_info_list(calltoactions, ["like", "comment", "share"])
+        calltoaction_info_list: build_call_to_action_info_list(calltoactions, page_elements)
       }.to_json
     end
     

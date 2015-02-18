@@ -222,10 +222,12 @@ module DisneyHelper
       "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
       "title" => calltoaction.title,
       "description" => calltoaction.description,
+      "votes" => get_votes_thumb_for_cta(calltoaction),
       "likes" => get_number_of_likes_for_cta(calltoaction),
       "comments" => get_number_of_comments_for_cta(calltoaction),
-      "flag" => flag_info 
+      "flag" => flag_info
     }
+
   end
 
   def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat", in_gallery)
