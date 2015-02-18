@@ -123,9 +123,6 @@ class Sites::Disney::ProfileController < ProfileController
     expire_cache_key(notification_cache_key(current_user.id))
     notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC")
     @notices_list = group_notice_by_date(notices)
-    if small_mobile_device?
-      render template: "/profile/notices_mobile"
-    end
   end
   
   def load_more_notice
