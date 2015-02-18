@@ -75,6 +75,10 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       flash[:notice] = "CallToAction aggiornata correttamente"
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
+    properties = get_tags_with_tag("property")
+    properties.each do |p|
+      expire_cache_key(get_evidence_calltoactions_in_property_for_user_cache_key(current_or_anonymous_user.id, p.id))
+    end
   end
 
   def tag_cta_update
