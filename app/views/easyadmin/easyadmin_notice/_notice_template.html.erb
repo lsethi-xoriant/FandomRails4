@@ -2,7 +2,7 @@
 	<div class="hidden-xs col-sm-2">
 		<img src="<%= get_notice_icon(reward) %>" class="img-responsive notice__property-icon">
 	</div>
-	<div class="col-xs-4 col-xs-offset-1 col-sm-2">
+	<div class="col-xs-4 col-xs-offset-1 col-sm-2 col-sm-offset-0">
 		<img src="<%= reward.main_image.url %>" class="img-responsive notice__reward-image">
 	</div>
 	<% if reward.media_type && reward.media_type.downcase == "calltoaction" %>
