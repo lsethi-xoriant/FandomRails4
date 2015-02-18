@@ -100,7 +100,7 @@
         <div class="dashboard-stat primary" style="background-color: #50A550;">
           <div class="details">
             <span class="content"> SBLOCCATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-            <span class="value"><%= @total_rewards_to_date - @total_rewards_from_date %></span>
+            <span class="value"><%= @total_rewards %></span>
           </div> <!-- /.details -->	
           <div class="visual">
           	<i class="fa fa-trophy" style="color: #FFF"></i>
@@ -111,7 +111,7 @@
         <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
           <div class="details">
             <span class="content"> APPROVATI / LASCIATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-            <span class="value"><%= @approved_comments_to_date - @approved_comments_from_date %> / <%= @total_comments_to_date - @total_comments_from_date %></span>
+            <span class="value"><%= @approved_comments %> / <%= @total_comments %></span>
           </div> <!-- /.details --> 
           <div class="visual">
             <i class="fa fa-comments" style="color: #FFF"></i>
@@ -167,7 +167,7 @@
           <div class="dashboard-stat primary" style="background-color: #FFB547;">
             <div class="details">
               <span class="content"> RISPOSTE TOTALI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_trivia_answers_to_date - @property_trivia_answers_from_date %></span>
+              <span class="value"><%= @property_trivia_answers %></span>
             </div>
             <div class="visual">
               <i class="fa fa-question" style="color: #FFF"></i>
@@ -176,7 +176,7 @@
           <div class="dashboard-stat primary" style="background-color: #FFB547;">
             <div class="details">
               <span class="content"> RISPOSTE ESATTE <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_trivia_correct_answers_to_date - @property_trivia_correct_answers_from_date %></span>
+              <span class="value"><%= @property_trivia_correct_answers %></span>
             </div>
             <div class="visual">
               <i class="fa fa-question" style="color: #FFF"></i>
@@ -187,7 +187,7 @@
           <div class="dashboard-stat primary" style="background-color: #C199EA;">
             <div class="details">
               <span class="content"> RISPOSTE TOTALI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_versus_answers_to_date - @property_versus_answers_from_date %></span>
+              <span class="value"><%= @property_versus_answers %></span>
             </div> <!-- /.details --> 
             <div class="visual">
               <i class="fa fa-random" style="color: #FFF"></i>
@@ -198,7 +198,7 @@
         <div class="dashboard-stat primary" style="background-color: #DDDDDD;">
           <div class="details">
             <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-            <span class="value"><%= @property_checks_to_date - @property_checks_from_date %></span>
+            <span class="value"><%= @property_checks %></span>
           </div>
           <div class="visual">
             <i class="fa fa-check" style="color: #FFF"></i>
@@ -229,7 +229,7 @@
           <div class="dashboard-stat primary" style="background-color: #70AAFF;">
             <div class="details">
               <span class="content"> VISUALIZZAZIONI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_plays_to_date - @property_plays_from_date %></span>
+              <span class="value"><%= @property_plays %></span>
             </div> <!-- /.details --> 
             <div class="visual">
               <i class="fa fa-youtube-play" style="color: #FFF"></i>
@@ -240,7 +240,7 @@
         <div class="dashboard-stat primary" style="background-color: #FF7A59;">
           <div class="details">
             <span class="content"> DATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-            <span class="value"><%= @property_likes_to_date - @property_likes_from_date %></span>
+            <span class="value"><%= @property_likes %></span>
           </div> <!-- /.details --> 
           <div class="visual">
             <i class="fa fa-thumbs-up" style="color: #FFF"></i>
@@ -251,7 +251,7 @@
           <div class="dashboard-stat primary" style="background-color: #99C1D6;">
             <div class="details">
               <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_shares_to_date - @property_shares_from_date %></span>
+              <span class="value"><%= @property_shares %></span>
             </div> <!-- /.details --> 
             <div class="visual">
               <i class="fa fa-share" style="color: #FFF"></i>
@@ -262,7 +262,7 @@
         <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
           <div class="details">
             <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-            <span class="value"><%= @property_downloads_to_date - @property_downloads_from_date %></span>
+            <span class="value"><%= @property_downloads %></span>
           </div> <!-- /.details --> 
           <div class="visual">
             <i class="fa fa-download" style="color: #FFF"></i>
@@ -290,7 +290,7 @@
           <div class="dashboard-stat primary" style="background-color: #555555;">
             <div class="details">
               <span class="content"> DATI <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_votes_to_date - @property_votes_from_date %></span>
+              <span class="value"><%= @property_votes %></span>
             </div>
             <div class="visual">
               <i class="fa fa-star-half-o" style="color: #FFF"></i>
@@ -301,7 +301,7 @@
           <div class="dashboard-stat primary" style="background-color: #C89175;">
             <div class="details">
               <span class="content"> ASSEGNATI <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_assigned_levels_to_date - @property_assigned_levels_from_date %></span>
+              <span class="value"><%= @property_assigned_levels %></span>
             </div>
             <div class="visual">
               <i class="fa fa-list-ol" style="color: #FFF"></i>
@@ -312,7 +312,7 @@
           <div class="dashboard-stat primary" style="background-color: #80CC80;">
             <div class="details">
               <span class="content"> ASSEGNATI <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-              <span class="value"><%= @property_assigned_badges_to_date - @property_assigned_badges_from_date %></span>
+              <span class="value"><%= @property_assigned_badges %></span>
             </div> <!-- /.details --> 
             <div class="visual">
               <i class="fa fa-certificate" style="color: #FFF"></i>
@@ -328,8 +328,8 @@
 
   var total_users = <%= @total_users %>;
   var social_reg_users = <%= @social_reg_users %>;
-  var property_trivia = <%= @property_trivia_answers_to_date - @property_trivia_answers_from_date %>
-  var property_correct_trivia = <%= @property_trivia_correct_answers_to_date - @property_trivia_correct_answers_from_date %>
+  var property_trivia = <%= @property_trivia_answers %>
+  var property_correct_trivia = <%= @property_trivia_correct_answers %>
 
   $(document).ready(function() {
     buildDonut();
