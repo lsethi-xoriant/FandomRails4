@@ -20,9 +20,17 @@
 
 <!-- MAIN MEDIA IMAGE -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
-  <img class="cta__paper-group-left" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
-  <img class="cta__paper-group-right" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
-  <img class="cta__media-img" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+
+  <div ng-if="calltoaction_info.miniformat['name'] == 'ricette'">
+    <img class="cta__paper-group-left" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
+    <img class="cta__paper-group-right" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
+    <img class="cta__media-img" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+  </div>
+
+  <div ng-if="calltoaction_info.miniformat['name'] != 'ricette'">
+    <img ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+  </div>
+
 
   <!-- DOWNLOAD INTERACTION -->
   <div class="play-interaction__container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">

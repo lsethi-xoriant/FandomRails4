@@ -18,7 +18,8 @@ module CallToActionHelper
         "label_background" => get_extra_fields!(miniformat)["label-background"],
         "icon" => get_extra_fields!(miniformat)["icon"],
         "label_color" => get_extra_fields!(miniformat)["label-color"],
-        "title" => miniformat.title
+        "title" => miniformat.title,
+        "name" => miniformat.name
       }
     end
       
@@ -48,7 +49,8 @@ module CallToActionHelper
           "label_background" => get_extra_fields!(miniformat)["label-background"],
           "icon" => get_extra_fields!(miniformat)["icon"],
           "label_color" => get_extra_fields!(miniformat)["label-color"],
-          "title" => get_extra_fields!(miniformat)["title"]
+          "title" => get_extra_fields!(miniformat)["title"],
+          "name" => miniformat.name
         }
       end
 

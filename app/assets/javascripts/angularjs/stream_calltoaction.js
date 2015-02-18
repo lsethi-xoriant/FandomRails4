@@ -1320,7 +1320,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     cta_url = encodeURI($scope.request_url + "call_to_action/" + calltoaction_info.calltoaction.id);
     switch(provider) {
       case "facebook":    
-        share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url;
+        share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url; // TODO: include meta
         break;
       case "twitter":
         share_url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + encodeURIComponent(calltoaction_info.calltoaction.title);
