@@ -37,17 +37,8 @@
 }
 
 @media (min-width: $screen-sm-min) { 
-  .undervideo-interaction__col {
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-  }
-
   .interaction__winnable-reward--undervideo__row {
     margin-bottom: 15px;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
   }
 
   .check-undervideo-interaction__row, 
