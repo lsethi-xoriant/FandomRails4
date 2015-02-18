@@ -14,6 +14,11 @@
 								<input name="title" class="form-control gallery-cta__title" id="title" type="text" placeholder="Dai un titolo alla foto" ng-if="upload.interaction.resource.upload_info.title_needed" />
 							</div>		
 		  				</div>
+		  				<div class="row gallery-cta__form-element">
+			  				<div class="col-sm-12">
+								<textarea name="description" class="form-control gallery-cta__title" id="description" placeholder="Inserisci una descrizione"></textarea>
+							</div>		
+		  				</div>
 		  				<div class="row">
 				  			<div class="col-sm-6 col-sm-offset-3 gallery-cta__upload-photo">
 			  					<input id="upload" name="upload" class="form-control hidden" type="file" onchange="photoSelected()">

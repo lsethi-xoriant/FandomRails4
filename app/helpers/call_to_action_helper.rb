@@ -366,7 +366,8 @@ module CallToActionHelper
   def clone_and_create_cta(upload_interaction, params, watermark)
     calltoaction_template = upload_interaction.call_to_action
     cta_title = calculate_cloned_cta_title(upload_interaction, calltoaction_template, params)
-    user_calltoaction = duplicate_user_generated_cta(params, watermark, cta_title)
+    cta_description = calculate_cloned_cta_description(upload_interaction, calltoaction_template, params)
+    user_calltoaction = duplicate_user_generated_cta(params, watermark, cta_title, cta_description)
 
     calltoaction_template.interactions.each do |i|
       duplicate_interaction(user_calltoaction, i)
@@ -397,11 +398,20 @@ module CallToActionHelper
     end
   end
   
-  def duplicate_user_generated_cta(params, watermark, cta_title)
+  def calculate_cloned_cta_description(upload_interaction, calltoaction_template, params)
+    if params[:description].blank?
+      calltoaction_template.description
+    else
+      params[:description]
+    end
+  end
+  
+  def duplicate_user_generated_cta(params, watermark, cta_title, description)
     unique_name = generate_unique_name()
 
     user_calltoaction = CallToAction.new(
-        title: cta_title, 
+        title: cta_title,
+        description: description,
         name: unique_name,
         slug: unique_name, 
         user_id: current_user.id,
