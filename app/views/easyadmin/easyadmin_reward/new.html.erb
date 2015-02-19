@@ -64,6 +64,7 @@
           <div class="form-group">
               <label class="text-input">Tipo currency</label>
               <% date_array = @currency_rewards.map { |currency| [currency.title, currency.id] } %>
+              <% date_array.unshift ["", ""] %>
               <%= f.select(:currency_id, date_array, {}, { :class => "form-control" }) %>
           </div>
           
