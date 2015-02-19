@@ -433,6 +433,7 @@ Fandom::Application.routes.draw do
   match "rss", :to => "rss#rss", defaults: { format: 'rss' }
 
   match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+  match "/last_linked_calltoaction", to: "call_to_action#last_linked_calltoaction", defaults: { format: 'json' }
 
   match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
   match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
