@@ -34,7 +34,8 @@ class Sites::Disney::ApplicationController < ApplicationController
     @aux_other_params = { 
       filters: true,
       calltoaction_evidence_info: false,
-      sidebar_tags: ["stream"]
+      sidebar_tags: ["stream"],
+      fan_of_the_day_widget: true
     }
 
   end

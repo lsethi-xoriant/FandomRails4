@@ -1,3 +1,38 @@
+<div class="col-xs-12 hidden-xs hidden-sm" ng-if="aux.sidebar_info.fan_of_the_day.counter != null">
+    <div class="row text-left">
+      <div class="col-xs-12">
+        <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
+          <p class="cta__sidebar-panel__header-title">Fan del giorno</p>
+        </div>
+      </div>
+    </div>
+    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel--ranking" style="border-top: none !important;"> 
+      <div class="row">
+        <div class="col-xs-12 text-center" style="padding: 10px 0;">
+          <p><img ng-src="{{aux.sidebar_info.fan_of_the_day.avatar}}" class="img-responsive ranking-widget__avatar" /></p>
+          <p><span class="gallery-widget__username" style="padding: 7px 0;"></span>{{aux.sidebar_info.fan_of_the_day.username}}</p>
+        <div class="label label-warning ranking-widget__points" style="width: auto; display: inline-block;">+ {{aux.sidebar_info.fan_of_the_day.counter}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+        </div>
+      </div>
+    </div>  
+</div>
+
+<div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="tag in aux.sidebar_info.tag_info_list">
+  <a target="_blank" href="{{tag.url}}"> 
+    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--tag"> 
+      <div class="row">
+        <div class="col-xs-12">
+          <p class="cta__sidebar-panel__header-title--tag">{{tag.title}}</p>
+        </div>
+        <div class="col-xs-12">
+          <img class="cta-preview__image--tag" ng-src="{{tag.image}}">            
+          <p class="cta-preview__title">{{tag.description | cut:true:70}}</p>
+        </div>
+      </div>
+    </div>  
+  </a>
+</div>
+
 <div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="calltoaction in aux.sidebar_info.calltoaction_info_list">
   <%= light_link_to("/call_to_action/{{calltoaction.slug}}") do %>
     <div class="row text-left">
@@ -38,22 +73,6 @@
   <% end %>  
 </div>
 
-<div class="col-xs-12 hidden-xs hidden-sm" ng-repeat="tag in aux.sidebar_info.tag_info_list">
-  <a target="_blank" href="{{tag.url}}"> 
-    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--tag"> 
-      <div class="row">
-        <div class="col-xs-12">
-          <p class="cta__sidebar-panel__header-title--tag">{{tag.title}}</p>
-        </div>
-        <div class="col-xs-12">
-          <img class="cta-preview__image--tag" ng-src="{{tag.image}}">            
-          <p class="cta-preview__title">{{tag.description | cut:true:70}}</p>
-        </div>
-      </div>
-    </div>  
-  </a>
-</div>
-
 <div class="col-xs-12 hidden-xs hidden-sm" ng-if="aux.sidebar_info.gallery_rank.rank_list != null">
     <div class="row text-left">
       <div class="col-xs-12">
@@ -89,7 +108,7 @@
     </div>  
 </div>
 
-<div class="col-xs-12 hidden-xs hidden-sm">
+<div class="col-xs-12 hidden-xs hidden-sm" ng-if="aux.sidebar_info.property_rank">
     <div class="row text-left">
       <div class="col-xs-12">
         <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
@@ -118,25 +137,6 @@
       	<div class="col-xs-10 col-xs-offset-1">
       		<a ng-href="/ranking/show/{{aux.sidebar_info.property_rank.rank_id}}"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Classifica completa</a>
       	</div>
-      </div>
-    </div>  
-</div>
-
-<div class="col-xs-12 hidden-xs hidden-sm" ng-if="aux.sidebar_info.fan_of_the_day.counter != null">
-    <div class="row text-left">
-      <div class="col-xs-12">
-        <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
-          <p class="cta__sidebar-panel__header-title">Fan del giorno</p>
-        </div>
-      </div>
-    </div>
-    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel--ranking" style="border-top: none !important;"> 
-      <div class="row">
-        <div class="col-xs-12 text-center" style="padding: 10px 0;">
-        	<p><img ng-src="{{aux.sidebar_info.fan_of_the_day.avatar}}" class="img-responsive ranking-widget__avatar" /></p>
-        	<p><span class="gallery-widget__username" style="padding: 7px 0;"></span>{{aux.sidebar_info.fan_of_the_day.username}}</p>
-   			<div class="label label-warning ranking-widget__points" style="width: 45%;">+ {{aux.sidebar_info.fan_of_the_day.counter}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-        </div>
       </div>
     </div>  
 </div>
