@@ -274,7 +274,7 @@ module DisneyHelper
     rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
     property_rank = get_ranking(rank, 1)
     
-    day = Time.now
+    day = Time.now - 1.day
     winner_of_the_day = get_winner_of_day(day)
     winner = {avatar: user_avatar(winner_of_the_day.user), username: winner_of_the_day.user.username, counter: winner_of_the_day.counter}
     
