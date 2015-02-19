@@ -255,6 +255,10 @@ module CacheKeysHelper
     "#{ranking_name}_user_#{user_id}_position_rank_#{version}"
   end
   
+  def get_fan_of_the_day_widget_cache_key
+    "fan_of_the_day_widget"
+  end
+  
   # Profile
   # ~~~~~~~
   def get_current_user_key(user_id)

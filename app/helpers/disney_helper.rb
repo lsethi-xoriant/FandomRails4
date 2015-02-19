@@ -275,8 +275,14 @@ module DisneyHelper
     property_rank = get_ranking(rank, 1)
     
     day = Time.now - 1.day
-    winner_of_the_day = get_winner_of_day(day)
-    winner = {avatar: user_avatar(winner_of_the_day.user), username: winner_of_the_day.user.username, counter: winner_of_the_day.counter}
+    winner = cache_long(get_fan_of_the_day_widget_cache_key()) do
+      winner_of_the_day = get_winner_of_day(day)
+      if winner_of_the_day
+        {avatar: user_avatar(winner_of_the_day.user), username: winner_of_the_day.user.username, counter: winner_of_the_day.counter}
+      else
+        {}
+      end
+    end
     
     {
       "calltoaction_info_list" => cta_info_list,
