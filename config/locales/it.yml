@@ -236,6 +236,10 @@ it:
           attributes:
             media_image:
               blank: "deve essere caricato"
+        releasing_file:
+          attributes:
+            file:
+              blank: "deve essere caricata."
         user:
           attributes:
             email:
@@ -261,6 +265,8 @@ it:
         media_image: "Il media"
       user_comment_interaction:
         text: "Il testo del commento"
+      releasing_file:
+        file: "La liberatoria"
       user:
         first_name: "Nome"
         last_name: "Cognome"
