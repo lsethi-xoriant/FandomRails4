@@ -10,6 +10,58 @@ class CallToActionController < ApplicationController
   include CaptchaHelper
   include CommentHelper
 
+  def last_linked_calltoaction 
+    calltoaction = CallToAction.find(params[:calltoaction_id])
+    linked_interaction = calltoaction.interactions.includes(:interaction_call_to_actions).where("interaction_call_to_actions.interaction_id IS NOT NULL")[0] 
+
+    if !current_user && $site.anonymous_interaction 
+      user_interaction_info_list = params[:anonymous_user_interactions]
+      
+      calltoaction_id_to_return = calltoaction.id
+      next_calltoaction_id = calltoaction.id
+      linked_call_to_actions_index = 0
+      user_interactions_history = []
+      while next_calltoaction_id.present?
+        calltoaction_id_to_return = next_calltoaction_id
+        linked_call_to_actions_index = linked_call_to_actions_index + 1
+        if user_interaction_info_list["user_interaction_info_list"]
+          user_interaction_info_list["user_interaction_info_list"].each_with_index do |user_interaction_info, index|
+            if user_interaction_info["calltoaction_id"] == next_calltoaction_id
+              current_interaction = user_interaction_info["user_interaction"]
+              user_interactions_history = user_interactions_history + [index]
+              next_calltoaction_id = JSON.parse(current_interaction["aux"])["next_calltoaction_id"]
+              break
+            end
+          end
+          if next_calltoaction_id == calltoaction_id_to_return
+            break
+          end
+        else
+          calltoaction_id_to_return = next_calltoaction_id
+          break
+        end
+      end
+
+      go_on = calltoaction.id != calltoaction_id_to_return
+      if go_on
+        calltoaction = CallToAction.find(calltoaction_id_to_return)
+      end
+
+      response = {
+        go_on: go_on,
+        linked_call_to_actions_index: linked_call_to_actions_index,
+        calltoaction_info_list: build_call_to_action_info_list([calltoaction]),
+        user_interactions_history: user_interactions_history
+      }
+      
+      respond_to do |format|
+        format.json { render json: response.to_json }
+      end 
+
+    end
+
+  end
+
   def random_calltoaction
     except_calltoaction_id = params["except_calltoaction_id"]
     
