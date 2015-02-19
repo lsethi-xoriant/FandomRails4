@@ -19,6 +19,10 @@ module CacheKeysHelper
     "tag_with_tag_about_reward_#{reward_id}_#{tag_name}"
   end
 
+  def get_profanity_words_cache_key(tenant = "")
+    "#{tenant.blank? ? "" : tenant + "_"}profanities"
+  end
+
   # Rewards
   # ~~~~~~~
   
@@ -227,6 +231,7 @@ module CacheKeysHelper
   
   # Rankings
   # ~~~~~
+
   def get_general_position_key(user_id)
     "user_#{user_id}_general_position"
   end
@@ -257,6 +262,7 @@ module CacheKeysHelper
   
   # Profile
   # ~~~~~~~
+
   def get_current_user_key(user_id)
     "current_user_#{user_id}"
   end

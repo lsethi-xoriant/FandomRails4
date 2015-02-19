@@ -27,6 +27,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   BROWSE_SETTINGS_KEY = 'browse.setting'
   RANKING_SETTINGS_KEY = 'ranking.setting'
   NOTIFICATIONS_SETTINGS_KEY = 'notifications.setting'
+  PROFANITIES_SETTINGS_KEY = 'profanity.words'
   NOTIFICATIONS_LIMIT_DEFAULT = 50
   NOTIFICATIONS_LIMIT_KEY = 'notifications.limit'
 

@@ -260,7 +260,7 @@ class CallToActionController < ApplicationController
 
     user_comment_text = user_comment.text.downcase
 
-    @profanities_regexp = cache_short("profanities") do
+    @profanities_regexp = cache_short(get_profanity_words_cache_key()) do
       pattern_array = Array.new
 
       profanity_words = Setting.find_by_key("profanity.words")

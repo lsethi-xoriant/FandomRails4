@@ -58,6 +58,97 @@ class Sites::Disney::CallToActionController < CallToActionController
     build_disney_current_user()
   end
 
+  def check_profanity_words(text)
+
+    user_comment_text = text.downcase
+    @profanities_regexp = cache_short(get_profanity_words_cache_key("disney")) do
+      pattern_array = Array.new
+
+      profanity_words = Setting.find_by_key("profanity.words")
+      if profanity_words
+        profanity_words.value.split(",").each do |exp|
+          pattern_array.push(build_regexp(exp))
+        end
+      end
+      Regexp.union(pattern_array)
+    end
+
+    user_comment_text =~ @profanities_regexp
+  end
+
+  def build_regexp(line)
+    string = "(\\W+|^)"
+    line.strip.each_char do |c|
+      if REGEX_SPECIAL_CHARS.include? c
+        c = "\\" + c
+      end
+      if c != " "
+        string += "(\\W*)" + c
+      end
+    end
+    Regexp.new(string)
+  end
+
+  def add_comment
+    interaction = Interaction.find(params[:interaction_id])
+    comment_resource = interaction.resource
+
+    must_be_approved = comment_resource.must_be_approved
+    approved = must_be_approved == false ? true : nil
+    user_text = params[:comment_info][:user_text]
+    profanity_filter_automatic_setting = Setting.find_by_key('profanity.filter.automatic')
+    apply_profanity_filter_automatic = profanity_filter_automatic_setting.nil? ? false : (profanity_filter_automatic_setting.value == "true")
+
+    if apply_profanity_filter_automatic
+      has_profanities = check_profanity_words(user_text)
+      aux = has_profanities ? { "profanity" => true }.to_json : "{}"
+      approved = false if has_profanities
+    else
+      aux = "{}"
+    end
+    
+    response = Hash.new
+
+    response[:approved] = must_be_approved
+
+    response[:ga] = Hash.new
+    response[:ga][:category] = "UserCommentInteraction"
+    response[:ga][:action] = "AddComment"
+
+    if current_user
+      user_comment = UserCommentInteraction.new(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id, aux: aux)
+      user_comment.save
+      response[:comment] = build_comment_for_comment_info(user_comment, true)
+      if approved && user_comment.errors.blank?
+        user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
+        expire_cache_key(get_comments_approved_cache_key(interaction.id))
+      end
+    else
+      captcha_enabled = get_deploy_setting("captcha", true)
+      response[:captcha] = captcha_enabled
+      response[:captcha_evaluate] = !captcha_enabled || params[:session_storage_captcha] == Digest::MD5.hexdigest(params[:comment_info][:user_captcha] || "")
+      if response[:captcha_evaluate]
+        user_comment = UserCommentInteraction.new(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+        user_comment.save unless check_profanity_words_in_comment(user_comment).errors.any?
+        response[:comment] = build_comment_for_comment_info(user_comment, true)
+        if approved && user_comment.errors.blank?
+          user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
+          expire_cache_key(get_comments_approved_cache_key(interaction.id))
+        end
+      end
+      response[:captcha] = generate_captcha_response
+    end
+
+    if user_comment && user_comment.errors.any?
+      response[:errors] = user_comment.errors.full_messages.join(", ")
+    end
+
+    respond_to do |format|
+      format.json { render :json => response.to_json }
+    end
+
+  end
+
   def get_context()
     get_disney_property()
   end

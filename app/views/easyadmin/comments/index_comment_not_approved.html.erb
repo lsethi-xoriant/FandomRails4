@@ -44,6 +44,7 @@
           <tr>
             <th>Utente</th>
             <th>CTA</th>
+            <th>Profanity</th>
             <th>Testo</th>
             <th>Scritto il</th>
             <th>Azioni</th>
@@ -53,6 +54,13 @@
           <tr id="comment-<%= c.id %>-tr">
             <td class="col-md-1"><%= c.user ? c.user.id : "Anonimo" %></td>
             <td class="col-md-1"><%= link_to "CTA", easyadmin_cta_show_path(Interaction.select(:call_to_action_id).where(:resource_id => c.comment_id, :resource_type => 'Comment').first.call_to_action_id), class: "btn btn-primary btn-xs" %></a></td>
+            <td class="col-md-1"> 
+            <% unless c.aux.nil? %>
+              <% if JSON.parse(c.aux)["profanity"]  %>
+                <i class="fa fa-check"></i>
+              <% end %>
+            <% end %>
+            </td>
             <td class="col-md-6"><%= c.text %></td>
             <td class="col-md-2"><%= c.created_at %></td>
             <td id="comment-<%= c.id %>" class="col-md-3">

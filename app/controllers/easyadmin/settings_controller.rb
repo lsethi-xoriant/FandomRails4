@@ -66,4 +66,24 @@ class Easyadmin::SettingsController < Easyadmin::EasyadminController
     render template: "/easyadmin/settings/notifications_settings"
   end
 
+  def profanities_settings
+    setting = Setting.find_by_key(PROFANITIES_SETTINGS_KEY)
+    @saved = true
+    if !setting
+      @setting = Setting.create(:key => PROFANITIES_SETTINGS_KEY, :value => "")
+      @setting_value = @setting.value
+    else
+      @setting_value = setting.value
+    end
+  end
+
+  def save_profanities_settings
+    setting = Setting.find_by_key(params[:key])
+    setting.update_attribute(:value, params[:setting])
+    @saved = true
+    @setting_value = setting.value
+    flash[:notice] = "Parole salvate correttamente"
+    render template: "/easyadmin/settings/profanities_settings"
+  end
+
 end

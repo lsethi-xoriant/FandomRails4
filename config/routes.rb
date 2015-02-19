@@ -67,6 +67,7 @@ Fandom::Application.routes.draw do
           get "/users/sign_in", to: "application#iur"
           match "/users/sign_in_admin", to: "sessions#new"
           get "/users/sign_up", to: "sessions#new"
+          match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
         end
 
         resources :call_to_action, only: :show
@@ -353,6 +354,8 @@ Fandom::Application.routes.draw do
     match "settings/ranking/save", :to => "settings#save_ranking_settings"
     match "settings/notifications", :to => "settings#notifications_settings"
     match "settings/notifications/save", :to => "settings#save_notifications_settings"
+    match "settings/profanities", :to => "settings#profanities_settings"
+    match "settings/profanities/save", :to => "settings#save_profanities_settings"
   end
 
   match '/facebook_app', to: "application#facebook_app"
