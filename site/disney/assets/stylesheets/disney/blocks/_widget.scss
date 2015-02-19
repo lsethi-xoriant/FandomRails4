@@ -1,0 +1,74 @@
+/* WIDGET STYLE */
+//gallery rank widget
+.gallery-widget__row{
+  border-bottom: 1px solid #ececec;
+  padding: 10px 0;
+  background-color: #f6f6f6;
+}
+
+.gallery-widget__row--grey{
+  border-bottom: 1px solid #ececec;
+  background-color: #fdfdfd;
+}
+
+.gallery-widget__position{
+  font-size: 22px;
+  color: #00a1d9;
+}
+
+.gallery-widget__username{
+  font-size: 22px;
+  line-height: 12px;
+}
+
+.gallery-widget__image{
+  padding: 0 10px;
+}
+
+.gallery-widget__votes{
+  margin-top: 10px;
+}
+
+.gallery-widget__view-all{
+  padding: 10px 0;
+  border-bottom: 1px solid #ececec;
+}
+
+.gallery-widget__row--grey{
+  background-color: #fdfdfd;
+}
+
+//ranking widget
+
+.ranking-widget__avatar{
+  display: block;
+  margin: 0px auto;
+  max-width: 40px;
+}
+
+.ranking-widget__username{
+  font-size: 20px;
+}
+
+.ranking-widget__points{
+  font-size: 14px;
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+  border-radius: 15px;
+  color: $red;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+  padding-top: 7px;
+  .glyphicon{
+    font-size: 11px !important;
+  }
+}
+
+.ranking-widget__col-position,
+.ranking-widget__col-counter{
+  padding-top: 18px;
+}

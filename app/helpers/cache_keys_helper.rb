@@ -320,6 +320,10 @@ module CacheKeysHelper
     "galleries_for_property_#{property}"
   end
   
+  def get_sidebar_gallery_rank_cache_key(tag_name)
+    "sidebar_gallery_rank_#{tag_name}"
+  end
+  
   # Instantwin
   # ~~~~~~~~~~
   

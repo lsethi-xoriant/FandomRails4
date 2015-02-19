@@ -9,11 +9,11 @@
 	
 	<div class="row reward-catalogue-header" style="background-color: #fafafa; margin-bottom: 40px;">
 		<div class="col-xs-12 text-center">
-			<h1>Come partecipare al concorso</h1>
+			<h2>Come partecipare al concorso</h2>
 		</div>
 	</div>
 	
-	<div class="row main-row">
+	<div class="row">
 		<div class="col-xs-12">
 			<% if @info['image_row_1'] && @info['text_row_1'] %>
 				<div class="row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_1'], :original) if @info['background_image_row_1'] %>);">
