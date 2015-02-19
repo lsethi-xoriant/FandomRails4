@@ -250,7 +250,7 @@ module DisneyHelper
     related_calltoaction_info
   end
 
-  def get_disney_sidebar_info(sidebar_tags)
+  def get_disney_sidebar_info(sidebar_tags, gallery_cta = nil )
     sidebar_tags = sidebar_tags + ["sidebar"]
 
     tag_info_list = cache_short(get_sidebar_tags_cache_key(sidebar_tags)) do  
@@ -260,10 +260,36 @@ module DisneyHelper
     cta_info_list = cache_short(get_sidebar_calltoactions_for_user_cache_key(sidebar_tags, current_or_anonymous_user.id)) do
       get_disney_sidebar_calltoactions(sidebar_tags)
     end
-
+    
+    gallery_rank = nil
+    
+    if gallery_cta
+      gallery_tag = get_tag_with_tag_about_call_to_action(gallery_cta, "gallery").first
+      gallery_tag_id = gallery_tag.id
+      gallery_rank, total  = cache_short(get_sidebar_gallery_rank_cache_key(gallery_tag.id)) do
+        get_vote_ranking(gallery_tag.name, 1)
+      end
+    end
+    
+    rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
+    property_rank = get_ranking(rank, 1)
+    
+    day = Time.now - 1.day
+    winner = cache_long(get_fan_of_the_day_widget_cache_key()) do
+      winner_of_the_day = get_winner_of_day(day)
+      if winner_of_the_day
+        {avatar: user_avatar(winner_of_the_day.user), username: winner_of_the_day.user.username, counter: winner_of_the_day.counter}
+      else
+        {}
+      end
+    end
+    
     {
       "calltoaction_info_list" => cta_info_list,
-      "tag_info_list" => tag_info_list
+      "tag_info_list" => tag_info_list,
+      "gallery_rank" => { rank_list: gallery_rank, gallery_id: gallery_tag_id  },
+      "property_rank" => { rank: property_rank, rank_id: rank.id },
+      "fan_of_the_day" => winner
     }
 
   end
@@ -360,7 +386,7 @@ module DisneyHelper
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
-      "sidebar_info" => get_disney_sidebar_info(sidebar_tags)
+      "sidebar_info" => get_disney_sidebar_info(sidebar_tags, gallery_calltoaction)
     }
 
     if other

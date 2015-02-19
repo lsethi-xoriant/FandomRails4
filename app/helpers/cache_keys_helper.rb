@@ -260,6 +260,10 @@ module CacheKeysHelper
     "#{ranking_name}_user_#{user_id}_position_rank_#{version}"
   end
   
+  def get_fan_of_the_day_widget_cache_key
+    "fan_of_the_day_widget"
+  end
+  
   # Profile
   # ~~~~~~~
 
@@ -324,6 +328,10 @@ module CacheKeysHelper
   
   def get_galleries_for_property_cache_key(property)
     "galleries_for_property_#{property}"
+  end
+  
+  def get_sidebar_gallery_rank_cache_key(tag_name)
+    "sidebar_gallery_rank_#{tag_name}"
   end
   
   # Instantwin

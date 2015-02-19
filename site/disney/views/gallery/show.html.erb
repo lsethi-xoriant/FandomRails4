@@ -10,7 +10,7 @@
 
 <div class="container main-container">
 
-	<div class="row main-row filters__flexslider-main-row" style="border-bottom: 1px solid #ccc; margin-bottom: 20px;">
+	<div class="row main-row filters__flexslider-main-row" style="border-bottom: 1px solid #ccc;">
 		<%= render partial: "/gallery/launchers", locals: { galleries: @galleries_cta, current_gallery_id: @cta_id }  %>		
 	</div>
 	
@@ -45,7 +45,7 @@
     	</div>
   	</div>
   
-	<div class="row" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image_upload'], :original) if get_extra_fields!(@gallery_tag)['background_image_upload'] %>);">
+	<div class="row" style="margin-bottom: 20px; background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image_upload'], :original) if get_extra_fields!(@gallery_tag)['background_image_upload'] %>);">
 	  	<div class="col-xs-12 gallery-cta">
 	  		<div class="row main-row gallery-cta__upload-area">
 	  			<div class="col-sm-4">

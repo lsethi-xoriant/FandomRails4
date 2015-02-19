@@ -80,13 +80,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.angularReady = function() {
   };
 
-  function initCallToActionInfoList(calltoaction_info_list) {
+  $scope.initCallToActionInfoList = function(calltoaction_info_list) {
     $scope.calltoactions = calltoaction_info_list;
 
     if($scope.calltoactions.length == 1) {
       $scope.calltoaction_info = $scope.calltoactions[0];
     }
-  }
+  };
 
   $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
     FastClick.attach(document.body);
@@ -94,7 +94,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.aux = aux;
     $scope.current_user = current_user;
     
-    initCallToActionInfoList(calltoaction_info_list);
+    $scope.initCallToActionInfoList(calltoaction_info_list);
 
     if($scope.calltoaction_info) {
       $scope.linked_call_to_actions_count = $scope.calltoaction_info.calltoaction.extra_fields.linked_call_to_actions_count;
@@ -103,7 +103,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
     }
 
-    clearAnonymousUserStorage();
+    //clearAnonymousUserStorage();
 
     $scope.answer_in_progress = false;
 
@@ -250,7 +250,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   				  $scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
 				    setTimeout(function() {
               $scope.$apply(function() {
-                initCallToActionInfoList(data.calltoaction_info_list);
+                $scope.initCallToActionInfoList(data.calltoaction_info_list);
                 $scope.animation_in_progress = false;
               });
        			}, 1500);
@@ -651,7 +651,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
 
     if(!$scope.current_user && $scope.aux.anonymous_interaction) {
-      updateCallToActionInfoWithAnonymousUserStorage();
+      $scope.updateCallToActionInfoWithAnonymousUserStorage();
     }
   }
 
@@ -660,14 +660,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     localStorage.removeItem($scope.aux.tenant);
   }
 
-  function updateCallToActionInfoWithAnonymousUserStorage() {
+  $scope.updateCallToActionInfoWithAnonymousUserStorage = function() {
     anonymous_user = getAnonymousUserStorage();
     if(anonymous_user.user_interaction_info_list) {
       angular.forEach(anonymous_user.user_interaction_info_list, function(user_interaction_info) { 
         updateUserInteraction(user_interaction_info.calltoaction_id, user_interaction_info.interaction_id, user_interaction_info.user_interaction);
       });
     }
-  }
+  };
 
   function updateUserInteraction(calltoaction_id, interaction_id, user_interaction) {
     calltoaction_info = getCallToActionInfo(calltoaction_id);
@@ -708,7 +708,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         
         $scope.current_tag_id = tag_id; 
 
-        initCallToActionInfoList(data.calltoaction_info_list);
+        $scope.initCallToActionInfoList(data.calltoaction_info_list);
         $scope.calltoactions_count = data.calltoactions_count;
 
         $scope.calltoactions_during_video_interactions_second = data.calltoactions_during_video_interactions_second;
@@ -799,7 +799,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $http.get(ordering_ctas, { params: { "ordering": ordering, "other_params": other_params } })
       .success(function(data) { 
         $scope.calltoaction_ordering = ordering;
-        initCallToActionInfoList(data.calltoaction_info_list);
+        $scope.initCallToActionInfoList(data.calltoaction_info_list);
 
         if($scope.calltoactions.length >= $scope.calltoactions_count) {
           $("#append-other button").hide();
@@ -840,7 +840,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         });
 
         if(!$scope.current_user && $scope.aux.anonymous_interaction) {
-          updateCallToActionInfoWithAnonymousUserStorage();
+          $scope.updateCallToActionInfoWithAnonymousUserStorage();
         }
 
         hash_to_append = data.calltoactions_during_video_interactions_second;
@@ -1562,7 +1562,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               } else {
                 updateInteractionsHistory(data.user_interaction.id);
               }       
-              initCallToActionInfoList(data.next_call_to_action_info_list);
+              $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
             }
 
           }).error(function() {
