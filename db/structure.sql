@@ -678,7 +678,8 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    stored_for_anonymous boolean
 );
 
 
@@ -2432,7 +2433,8 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    stored_for_anonymous boolean
 );
 
 
@@ -4186,7 +4188,8 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    stored_for_anonymous boolean
 );
 
 
@@ -5940,7 +5943,8 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    stored_for_anonymous boolean
 );
 
 
@@ -7694,7 +7698,8 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    stored_for_anonymous boolean
 );
 
 
@@ -9448,7 +9453,8 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    stored_for_anonymous boolean
 );
 
 
@@ -11202,7 +11208,8 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer
+    interaction_call_to_action_id integer,
+    stored_for_anonymous boolean
 );
 
 
@@ -13744,7 +13751,8 @@ CREATE TABLE user_comment_interactions (
     text text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    approved boolean
+    approved boolean,
+    aux json
 );
 
 
@@ -23294,3 +23302,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150212162357');
 INSERT INTO schema_migrations (version) VALUES ('20150213081903');
 
 INSERT INTO schema_migrations (version) VALUES ('20150216160308');
+
+INSERT INTO schema_migrations (version) VALUES ('20150219101047');

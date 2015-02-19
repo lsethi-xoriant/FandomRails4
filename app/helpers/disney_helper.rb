@@ -250,7 +250,7 @@ module DisneyHelper
     related_calltoaction_info
   end
 
-  def get_disney_sidebar_info(sidebar_tags, gallery_cta = nil )
+  def get_disney_sidebar_info(sidebar_tags, gallery_cta, other)
     sidebar_tags = sidebar_tags + ["sidebar"]
 
     tag_info_list = cache_short(get_sidebar_tags_cache_key(sidebar_tags)) do  
@@ -271,16 +271,20 @@ module DisneyHelper
       end
     end
     
-    rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
-    property_rank = get_ranking(rank, 1)
-    
-    day = Time.now - 1.day
-    winner = cache_long(get_fan_of_the_day_widget_cache_key()) do
-      winner_of_the_day = get_winner_of_day(day)
-      if winner_of_the_day
-        {avatar: user_avatar(winner_of_the_day.user), username: winner_of_the_day.user.username, counter: winner_of_the_day.counter}
-      else
-        {}
+    if false # TODO: change this when property_rank will be activate
+      rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
+      property_rank = { rank: get_ranking(rank, 1), rank_id: rank.id }
+    end
+
+    if other && other[:fan_of_the_day_widget]
+      day = Time.now - 1.day
+      winner = cache_long(get_fan_of_the_day_widget_cache_key()) do
+        winner_of_the_day = get_winner_of_day(day)
+        if winner_of_the_day
+          {avatar: user_avatar(winner_of_the_day.user), username: winner_of_the_day.user.username, counter: winner_of_the_day.counter}
+        else
+          {}
+        end
       end
     end
     
@@ -288,7 +292,7 @@ module DisneyHelper
       "calltoaction_info_list" => cta_info_list,
       "tag_info_list" => tag_info_list,
       "gallery_rank" => { rank_list: gallery_rank, gallery_id: gallery_tag_id  },
-      "property_rank" => { rank: property_rank, rank_id: rank.id },
+      "property_rank" => property_rank,
       "fan_of_the_day" => winner
     }
 
@@ -386,7 +390,7 @@ module DisneyHelper
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
-      "sidebar_info" => get_disney_sidebar_info(sidebar_tags, gallery_calltoaction)
+      "sidebar_info" => get_disney_sidebar_info(sidebar_tags, gallery_calltoaction, other)
     }
 
     if other
