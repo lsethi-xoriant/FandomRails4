@@ -17,9 +17,9 @@
             </div>
           </li>
       </ul>
-      <button ng-disabled="currentPage == 1" ng-click="perv_page(<%= rankings %>.current_page, <%= rankings %>)">Previous</button>
+      <button ng-disabled="currentPage == 1" ng-click="perv_vote_page(<%= rankings %>.current_page, <%= rankings %>)">Previous</button>
       {{<%= rankings %>.current_page}}/{{<%= rankings %>.number_of_pages}}
-      <button ng-disabled="currentPage >= total_page" ng-click="next_page(<%= rankings %>.current_page, <%= rankings %>)">Next</button>
+      <button ng-disabled="currentPage >= total_page" ng-click="next_vote_page(<%= rankings %>.current_page, <%= rankings %>)">Next</button>
     </div>
 
 </div>

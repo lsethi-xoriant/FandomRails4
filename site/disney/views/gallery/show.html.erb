@@ -21,7 +21,7 @@
 			    <% if flash[:error] %>
 			      <div class="row">
 			        <div class="col-lg-12">
-			          <div class="alert alert-danger">
+			          <div class="alert alert-danger" style="margin-top: 20px;">
 			            <p>Errori processo di upload:</p>
 			            <p>
 			              <ul>
@@ -36,7 +36,7 @@
 			    <% elsif flash[:notice] %>
 			      <div class="row">
 			        <div class="col-lg-12">
-			          <div class="alert alert-success"><%= flash[:notice] %></div>
+			          <div class="alert alert-success" style="margin-top: 20px;"><%= flash[:notice] %></div>
 			        </div>
 			      </div>
 			    <% end %>
