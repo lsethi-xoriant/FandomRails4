@@ -96,6 +96,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
     initCallToActionInfoList(calltoaction_info_list);
 
+    if($scope.calltoaction_info) {
+      $scope.linked_call_to_actions_count = $scope.calltoaction_info.calltoaction.extra_fields.linked_call_to_actions_count;
+      if($scope.linked_call_to_actions_count) {
+        $scope.linked_call_to_actions_index = 1;
+      }
+    }
+
     clearAnonymousUserStorage();
 
     $scope.answer_in_progress = false;
@@ -438,8 +445,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.isCommentEmpty = function(calltoaction_info) {
     interaction_info = getCommentInteraction(calltoaction_info.calltoaction.id);
-    if(comment_interaction != null) {
-      return (interaction_info.interaction.resource.comment_info.comments.length > 0);
+    if(interaction_info) {
+      return !(interaction_info.interaction.resource.comment_info.comments.length > 0);
     } else {
       return true;
     }
@@ -573,6 +580,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.filterRemoveShareInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type != "share");
+  };
+
+  $scope.isLastStepInLinkedCallToAction = function() {
+    return ($scope.linked_call_to_actions_count && $scope.linked_call_to_actions_count == $scope.linked_call_to_actions_index);
+  };
+
+  $scope.filterRemoveShareInteractionsExceptLastStep = function(interaction_info) {
+    is_last_step = $scope.isLastStepInLinkedCallToAction();
+    return (interaction_info.interaction.resource_type != "share" || is_last_step);
   };
 
   $scope.filterRemovePlayInteractions = function(interaction_info) {
@@ -1317,13 +1333,19 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   function shareFree(calltoaction_info, interaction_info, provider) {
 
-    cta_url = encodeURI($scope.request_url + "call_to_action/" + calltoaction_info.calltoaction.id);
+    url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.id;
+    if($scope.calltoaction_info.calltoaction.extra_fields.linked_result_title) {
+      url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
+    }
+
+    cta_url = encodeURI(url_to_share);
+
     switch(provider) {
       case "facebook":    
         share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url; // TODO: include meta
         break;
       case "twitter":
-        share_url = "https://twitter.com/intent/tweet?url=" + ctaUrl + "&text=" + encodeURIComponent(calltoaction_info.calltoaction.title);
+        share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(calltoaction_info.calltoaction.title);
         break;
     }
 
@@ -1534,9 +1556,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
             // Next calltoaction for test interaction.
             if(data.next_call_to_action_info_list) {
+               $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
               if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
                 updateInteractionsHistory(anonymous_user_interaction_index);
-                console.log(getAnonymousUserStorage());
               } else {
                 updateInteractionsHistory(data.user_interaction.id);
               }       

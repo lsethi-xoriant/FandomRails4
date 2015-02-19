@@ -6,6 +6,18 @@
   top: 0;
 }
 
+.share-interaction__extra-title {
+  color: #660206;
+  font-family: "BarmenoRegularBold";
+  font-size: 32px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.share-interaction__extra-description {
+  font-size: 16px;
+}
+
 .share-interaction__cover__col {
   padding-top: 10px;
 }
@@ -40,6 +52,18 @@
   width: 40px;
   display: block;
   margin-bottom: 10px;
+}
+
+.share-undervideo-interaction__row .share-interaction__cta__info__email-button, 
+.share-undervideo-interaction__row .share-interaction__cta__info__tt-button,
+.share-undervideo-interaction__row .share-interaction__cover__info {
+  display: inline;
+}
+
+.share-interaction__extra-share {
+  font-size: 16px; 
+  margin-right: 15px;
+  display: inline;
 }
 
 .share-interaction__cta__info__fb-button:active, 
