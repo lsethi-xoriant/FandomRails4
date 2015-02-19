@@ -36,7 +36,7 @@
   bottom: 15px;
 }
 
-@media (max-width: $screen-sm-min) { 
+@media (max-width: $screen-sm-min) {
   .category-header {
     height: auto;
     overflow: hidden;
@@ -53,6 +53,10 @@
     font-size: 18px;
     left: 15px;
     position: absolute;
+  }
+  
+  .category-header__title--gallery{
+    font-size: 24px;
   }
 
 }
