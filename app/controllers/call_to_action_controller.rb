@@ -25,11 +25,14 @@ class CallToActionController < ApplicationController
         calltoaction_id_to_return = next_calltoaction_id
         linked_call_to_actions_index = linked_call_to_actions_index + 1
         if user_interaction_info_list["user_interaction_info_list"]
-          user_interaction_info_list["user_interaction_info_list"].each_with_index do |user_interaction_info, index|
+          user_interaction_info_list["user_interaction_info_list"].each do |index, user_interaction_info|
             if user_interaction_info["calltoaction_id"] == next_calltoaction_id
               current_interaction = user_interaction_info["user_interaction"]
-              user_interactions_history = user_interactions_history + [index]
-              next_calltoaction_id = JSON.parse(current_interaction["aux"])["next_calltoaction_id"]
+              aux_parse =  JSON.parse(current_interaction["aux"])
+              if aux_parse["to_redo"] == false
+                user_interactions_history = user_interactions_history + [index]
+                next_calltoaction_id = aux_parse["next_calltoaction_id"]
+              end
               break
             end
           end
@@ -493,7 +496,8 @@ class CallToActionController < ApplicationController
 
     aux = {
       user_interactions_history: params[:user_interactions_history],
-      next_calltoaction_id: next_calltoaction_id
+      next_calltoaction_id: next_calltoaction_id,
+      to_redo: false
     }
 
     if interaction.resource_type.downcase == "download" 
@@ -596,7 +600,7 @@ class CallToActionController < ApplicationController
       answers_history = UserInteraction.where(id: user_interactions_history)
     elsif $site.anonymous_interaction 
       answers_history = []
-      anonymous_user_storage["user_interaction_info_list"].each do |user_interaction_info|
+      anonymous_user_storage["user_interaction_info_list"].each do |index, user_interaction_info|
         if user_interactions_history.include?(user_interaction_info["user_interaction"]["id"])
           answers_history = answers_history + [user_interaction_info["user_interaction"]["answer"]["id"]]
         end

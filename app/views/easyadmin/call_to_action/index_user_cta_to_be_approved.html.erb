@@ -55,7 +55,7 @@
               </td>
               <td class="col-md-1">
                 <% if c.media_image.present? %>
-                  <img src="<%= c.media_image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+                  <img src="<%= c.media_image.url(:extra) %>" class="img-responsive" style="max-width: 200px; width: 100%;">
                 <% end %>
               </td>
               <td class="col-md-1">

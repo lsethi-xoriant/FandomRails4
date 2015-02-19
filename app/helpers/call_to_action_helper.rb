@@ -203,6 +203,7 @@ module CallToActionHelper
         "id" => user_interaction.id,
         "outcome" => outcome,
         "aux" => user_interaction.aux,
+        "interaction_id" => user_interaction.interaction_id,
         "answer" => user_interaction.answer,
         "hash" => Digest::MD5.hexdigest("#{MD5_FANDOM_PREFIX}#{user_interaction.interaction_id}")
       }

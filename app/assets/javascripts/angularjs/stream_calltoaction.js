@@ -614,39 +614,37 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $window.getAnonymousUserStorage = function() {
-    return $scope.current_user ? null : JSON.parse(localStorage[$scope.aux.tenant]);
+    return $scope.current_user ? null : JSON.parse(localStorage["anonymous_user_storage"]);
   };
 
   $window.setAnonymousUserStorageAttr = function(name, value) {
     anonymous_user = getAnonymousUserStorage();
-    eval("anonymous_user." + name + " = " + value);
-    localStorage.setItem($scope.aux.tenant, JSON.stringify(anonymous_user));
+    anonymous_user[name] = value; //eval("anonymous_user." + name + " = " + value);
+    localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user));
   };
 
-  function updateAnonymousUserStorageUserInteractions(user_interaction) {
-    anonymous_user = getAnonymousUserStorage();
+  $scope.updateAnonymousUserStorageUserInteractions = function(user_interaction) {
+    anonymous_user_storage = getAnonymousUserStorage();
 
-    if(!anonymous_user.user_interaction_info_list) {
-      anonymous_user.user_interaction_info_list = new Array(user_interaction);
-    } else {
-      anonymous_user.user_interaction_info_list.push(user_interaction);
+    if(!anonymous_user_storage.user_interaction_info_list) {
+      anonymous_user_storage.user_interaction_info_list = new Object();
     }
 
-    localStorage.setItem($scope.aux.tenant, JSON.stringify(anonymous_user));
+    anonymous_user_storage.user_interaction_info_list[user_interaction.interaction_id] = user_interaction
+    localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user_storage));
 
-    return (anonymous_user.user_interaction_info_list.length - 1);
   }
 
   function initAnonymousUserStorage() {
-    anonymous_user = new Object();
-    localStorage.setItem($scope.aux.tenant, JSON.stringify(anonymous_user));
+    anonymous_user_storage = new Object();
+    localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user_storage));
   }
 
   function initAnonymousUser() {
 
-    if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage[$scope.aux.tenant] == null) {
+    if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage["anonymous_user_storage"] == null) {
       initAnonymousUserStorage();      
-    } else if ($scope.current_user && localStorage[$scope.aux.tenant] != null) {
+    } else if ($scope.current_user && localStorage["anonymous_user_storage"] != null) {
       clearAnonymousUserStorage();
     }
 
@@ -657,7 +655,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
 
   function clearAnonymousUserStorage() {
-    localStorage.removeItem($scope.aux.tenant);
+    localStorage.removeItem("anonymous_user_storage");
   }
 
   $scope.updateCallToActionInfoWithAnonymousUserStorage = function() {
@@ -1292,11 +1290,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
             
             user_interaction_for_storage = new Object();
-            user_interaction_for_storage.calltoaction_id = calltoaction_id;
-            user_interaction_for_storage.interaction_id = interaction_id;
-            user_interaction_for_storage.user_interaction = data.user_interaction;
+            user_interaction_for_storage["user_interaction"] = data.user_interaction;
+            user_interaction_for_storage["calltoaction_id"] = calltoaction_id;
+            user_interaction_for_storage["interaction_id"] = interaction_id;
   
-            anonymous_user_interaction_index = updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
+            $scope.updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
           } 
 
           // Interaction after user response.
@@ -1459,11 +1457,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
          
               user_interaction_for_storage = new Object();
-              user_interaction_for_storage.calltoaction_id = calltoaction_id;
-              user_interaction_for_storage.interaction_id = interaction_id;
-              user_interaction_for_storage.user_interaction = data.user_interaction;
+              user_interaction_for_storage["user_interaction"] = data.user_interaction;
+              user_interaction_for_storage["calltoaction_id"] = calltoaction_id;
+              user_interaction_for_storage["interaction_id"] = interaction_id;
     
-              anonymous_user_interaction_index = updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
+              $scope.updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
             } else {
               // Nothing to do.
             }
@@ -1558,7 +1556,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             if(data.next_call_to_action_info_list) {
                $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
               if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-                updateInteractionsHistory(anonymous_user_interaction_index);
+                console.log(data.user_interaction);
+                updateInteractionsHistory(data.user_interaction.interaction_id);
               } else {
                 updateInteractionsHistory(data.user_interaction.id);
               }       
