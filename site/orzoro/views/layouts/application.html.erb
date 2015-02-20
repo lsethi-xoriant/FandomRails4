@@ -4,7 +4,7 @@
 
   <meta charset="utf-8">
 
-  <% aux = default_aux(@aux_other_params) %>  
+  <% aux = default_orzoro_aux(@aux_other_params) %>  
   <title><%= yield (:title) || "Orzoro" %></title>
 
   <meta name="title" content="" />
@@ -39,6 +39,26 @@
   <%= render partial: "/application/user_bar", locals: { aux: aux } %>
 
   <%= yield %>
+
+  <div class="container">
+    <div class="row main-row footer__row text-center">
+      <div class="col-sm-4">
+        <img class="footer__img-pre" src="http://placehold.it/150x100">
+        <p class="footer__text-pre">Ricevi anche tu a casa le tazze del buonumore!</p>
+        <a href="#" class="btn btn-red footer__btn">LE VOGLIO!</a>
+      </div>
+      <div class="col-sm-4 footer__border-left">
+        <img class="footer__img-pre" src="http://placehold.it/150x100">
+        <p class="footer__text-pre">Tieniti informato su tutte le novità Orzoro</p>
+        <a href="#" class="btn btn-red footer__btn">SOTTOSCRIVI!</a>
+      </div>
+      <div class="col-sm-4 footer__border-left">
+        <img class="footer__img-pre" src="http://placehold.it/150x100">
+        <p class="footer__text-pre">Segui Dora e Miss Tressy sulla pagina Facebook di Orzoro</p>
+        <a href="#" class="btn btn-red footer__btn">FACEBOOK!</a>
+      </div>
+    </div>
+  </div>
 
   <% unless cookies[:user_cookies] %>
     <div id="cookies-bar" class="navbar navbar-fixed-bottom cookies-footer">

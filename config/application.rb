@@ -97,7 +97,7 @@ module Fandom
       puts("using ElastiCache automatic node discovery: #{servers}") 
     end
 
-    config.cache_store = :dalli_store, *servers.split(','), {
+    config.cache_store = :dalli_store, servers, {
       :expires_in => 120,
       # If a cache expires and due to heavy load several different processes will try
       # to read data natively and then they all will try to write to cache. To avoid

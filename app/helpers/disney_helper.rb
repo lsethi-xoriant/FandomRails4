@@ -1,5 +1,15 @@
 module DisneyHelper
 
+  def get_disney_calltoactions_count(calltoactions_in_page, aux)
+    if calltoactions_in_page < $site.init_ctas
+      calltoactions_in_page
+    else
+      cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
+        CallToAction.active.count
+      end
+    end
+  end
+
   def get_disney_property
     $context_root || "disney-channel"
   end
@@ -243,9 +253,11 @@ module DisneyHelper
         get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
       end
     end 
-    related_calltoaction_info = []
-    calltoactions.each do |calltoaction|
-      related_calltoaction_info << build_thumb_calltoaction(calltoaction)
+    related_calltoaction_info = cache_short(get_related_calltoactions_cache_key(current_or_anonymous_user.id, current_calltoaction.id)) do
+      related_calltoaction_info = []
+      calltoactions.each do |calltoaction|
+        related_calltoaction_info << build_thumb_calltoaction(calltoaction)
+      end
     end
     related_calltoaction_info
   end

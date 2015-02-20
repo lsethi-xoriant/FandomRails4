@@ -1,8 +1,8 @@
 /* CTA RELATED */
 
 .related__row {
+  background-image: url("orzoro/texture.png");
   background-color: $cream;
-  margin-top: 30px;
   padding-top: 30px;
   padding-bottom: 30px;
 }
@@ -71,12 +71,24 @@
 .relateds-flexslider__item-panel {
   background-color: #fff;
   height: 270px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
   overflow: hidden;
   position: relative;
   -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.col-sm-8 .relateds-flexslider__item-panel, .col-md-8 .relateds-flexslider__item-panel {
+  height: 560px;
+  .cta-preview__miniformat {
+    font-size: 28px;
+    top: -25px;
+  }
+  .cta-preview__title {
+    font-size: 28px !important;
+  }
 }
 
 .relateds-flexslider__item-panel--full-search {
@@ -86,7 +98,7 @@
 
 .relateds-flexslider__thumbnail {
   overflow: hidden;
-  padding-top: 57%;
+  padding-top: 65%; /*57%;*/
   position: relative;
 }
 
