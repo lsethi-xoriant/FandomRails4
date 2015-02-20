@@ -102,6 +102,14 @@ module EasyadminHelper
     link_to_function(name, "add_answer_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-secondary btn-xs")
   end
 
+  def link_to_add_answer_test_fields(name, f, association)
+    new_object = Answer.new
+    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
+      render("/easyadmin/call_to_action/answer-test-form", f: builder)
+    end
+    link_to_function(name, "add_answer_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", class: "btn btn-secondary btn-xs")
+  end
+
   def link_to_add_contest_fields(name, f, association)
     new_object = f.object.class.reflect_on_association(association).klass.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
