@@ -12,6 +12,17 @@ orzoroStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
+  $scope.fromCallToActionToThumb = function() {
+    thumb_calltoactions = [];
+    angular.forEach($scope.calltoactions, function(calltoaction_info) {
+      calltoaction = calltoaction_info.calltoaction;
+      calltoaction["miniformat"] = calltoaction_info["miniformat"];
+      thumb_calltoactions.push(calltoaction);
+    });
+    console.log(thumb_calltoactions);
+    return thumb_calltoactions;
+  }
+
   $scope.resetToRedo = function(interaction_info) {
     anonymous_user_interactions = getAnonymousUserStorage();
     angular.forEach($scope.user_interactions_history, function(index) {

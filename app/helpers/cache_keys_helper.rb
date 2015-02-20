@@ -75,6 +75,10 @@ module CacheKeysHelper
   # CTA
   # ~~~~~
 
+  def get_calltoactions_count_cache_key()
+    "calltoactions_count"
+  end
+
   def get_rss_ctas_in_property_cache_key(property_id)
     "rss_ctas_in_property_#{property_id}"
   end

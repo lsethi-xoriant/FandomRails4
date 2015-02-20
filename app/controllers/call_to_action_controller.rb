@@ -98,22 +98,52 @@ class CallToActionController < ApplicationController
     end
   end
 
+  def append_calltoaction_page_elements
+    ["like", "comment", "share"]
+  end
+
   def append_calltoaction
+    page_elements = append_calltoaction_page_elements()
+
     calltoaction_ids_shown = params[:calltoaction_ids_shown]
     calltoaction_ids_shown_qmarks = (["?"] * calltoaction_ids_shown.count).join(", ")
 
-    context_tag = get_tag_from_params(get_context())
+    ordering = params[:ordering]
 
-    calltoactions = cache_short(get_next_ctas_stream_cache_key(context_tag.id, calltoaction_ids_shown.last, get_cta_max_updated_at())) do
-      CallToAction.active.where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown).limit(3).to_a
+    init_ctas = request.site.init_ctas
+
+    response = cache_short(get_next_ctas_stream_for_user_cache_key(current_or_anonymous_user.id, nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do
+      calltoactions = cache_short(get_next_ctas_stream_cache_key(nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do     
+        calltoactions = CallToAction.active.where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)
+        case ordering
+        when "comment"
+          calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")
+          sql = "SELECT call_to_actions.id, sum((user_comment_interactions.approved is not null and user_comment_interactions.approved)::integer) " +
+                "FROM call_to_actions LEFT OUTER JOIN interactions ON call_to_actions.id = interactions.call_to_action_id LEFT OUTER JOIN user_comment_interactions ON interactions.resource_id = user_comment_interactions.comment_id " +
+                "WHERE interactions.resource_type = 'Comment' AND call_to_actions.id in (#{calltoaction_ids}) " +
+                "GROUP BY call_to_actions.id " +
+                "ORDER BY sum DESC limit #{init_ctas};"
+          execute_sql_and_get_ctas_ordered(sql)
+        when "view"
+          calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")
+          sql = "SELECT call_to_actions.id " +
+              "FROM call_to_actions LEFT OUTER JOIN view_counters ON call_to_actions.id = view_counters.ref_id " +
+              "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'cta') AND call_to_actions.id in (#{calltoaction_ids}) " +
+              "ORDER BY (coalesce(view_counters.counter, 0) / (extract('epoch' from (now() - coalesce(call_to_actions.activated_at, call_to_actions.created_at) )) / 3600 / 24)), call_to_actions.activated_at DESC limit #{init_ctas};"
+        else
+          calltoactions = calltoactions.limit(init_ctas).to_a
+        end
+        calltoactions
+      end
+      
+      {
+        calltoaction_info_list: build_call_to_action_info_list(calltoactions, page_elements)
+      }.to_json
+
     end
-
-    response = {
-      calltoaction_info_list: build_call_to_action_info_list(calltoactions)
-    }
     
     respond_to do |format|
-      format.json { render json: response.to_json }
+      format.json { render json: response }
     end 
   end
 

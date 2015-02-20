@@ -1,5 +1,15 @@
 <% content_for :fb_meta_tags, @fb_meta_tags %>
 
 <div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" >   
+
   <%= render partial: "/call_to_action/stream_single_calltoaction" %>
+
+  <div class="row main-row related__row container-shadow">
+    <div class="col-sm-12 text-center" ng-repeat="miniformat in [calltoaction_info.miniformat]">
+      <%= render partial: "application/ribbon" %>
+    </div>
+    <div class="col-sm-4" ng-repeat="calltoaction in aux.related_calltoaction_info">
+      <%= render partial: "/call_to_action/calltoaction_thumb" %> 
+    </div>
+  </div>
 </div>

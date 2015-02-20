@@ -1,5 +1,15 @@
 module DisneyHelper
 
+  def get_disney_calltoactions_count(calltoactions_in_page, aux)
+    if calltoactions_in_page < $site.init_ctas
+      calltoactions_in_page
+    else
+      cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
+        CallToAction.active.count
+      end
+    end
+  end
+
   def get_disney_property
     $context_root || "disney-channel"
   end
