@@ -253,11 +253,9 @@ module DisneyHelper
         get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
       end
     end 
-    related_calltoaction_info = cache_short(get_related_calltoactions_cache_key(current_or_anonymous_user.id, current_calltoaction.id)) do
-      related_calltoaction_info = []
-      calltoactions.each do |calltoaction|
-        related_calltoaction_info << build_thumb_calltoaction(calltoaction)
-      end
+    related_calltoaction_info = []
+    calltoactions.each do |calltoaction|
+      related_calltoaction_info << build_thumb_calltoaction(calltoaction)
     end
     related_calltoaction_info
   end
