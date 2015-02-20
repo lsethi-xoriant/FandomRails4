@@ -1,63 +1,69 @@
 <%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "calltoaction" } %>
  
-  <div id="content">    
-    
-    <div id="content-header">
-      <h1>ELENCO CALLTOACTION</h1>
-    </div> <!-- #content-header --> 
+<div id="content">    
+  
+  <div id="content-header">
+    <h1>ELENCO CALLTOACTION</h1>
+  </div> <!-- #content-header --> 
 
-    <div id="content-container">
+  <div id="content-container">
 
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="/easyadmin/cta">Elenco</a></li>
-      <li><a href="/easyadmin/cta/template">Template</a></li>
-  </ul>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="/easyadmin/cta">Elenco</a></li>
+    <li><a href="/easyadmin/cta/template">Template</a></li>
+</ul>
 
-      <% if flash[:notice] %>
-        <div class="row">
-          <div class="col-md-12">         
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="alert alert-success"><%= flash[:notice] %></div>
-              </div>
+    <% if flash[:notice] %>
+      <div class="row">
+        <div class="col-md-12">         
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
             </div>
           </div>
         </div>
-      <% end %>
+      </div>
+    <% end %>
 
-      <div class="row text-right">
-        <div class="col-md-12">
-          <a href="/easyadmin/cta/new"><button type="button" class="btn btn-primary">NUOVA</button></a>
-        </div>
-      </div>
-
-      <%= form_tag :action => 'filter', :call_to_actions => 'all', :method => 'post' do %>
-        <div class="row">
-          <div class="col-md-3">
-        <div class="form-group">
-          <label class="text-input">Filtra per TITOLO</label></br>
-            <%= text_field_tag :title_filter, @title_filter, :class => 'form-control' %>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label class="text-input">Filtra per TAG</label></br>
-          <%= render_html_tag_box("tag_list", params[:tag_list], "ATTENZIONE: Sono stati inseriti tag non esistenti!") %>
-          <span class="help-block">Per separare i TAG digita virgola</span>
-          <p id="tag_list_message"> </p>
-        </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
-        </div>
-      </div>
-      <div class="col-md-1">
-        <div class="form-group">
-          </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
-        </div>
+    <div class="row text-right">
+      <div class="col-md-12">
+        <a href="/easyadmin/cta/new"><button type="button" class="btn btn-primary">NUOVA</button></a>
       </div>
     </div>
+
+    <%= form_tag :action => 'filter', :call_to_actions => 'all', :method => 'post' do %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+          <label class="text-input">Filtra per TITOLO</label></br>
+          <%= text_field_tag :title_filter, @title_filter, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+          <label class="text-input">Filtra per SLUG</label></br>
+          <%= text_field_tag :slug_filter, @slug_filter, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="text-input">Filtra per TAG</label></br>
+            <%= render_html_tag_box("tag_list", params[:tag_list], "ATTENZIONE: Sono stati inseriti tag non esistenti!") %>
+            <span class="help-block">Per separare i TAG digita virgola</span>
+            <p id="tag_list_message"> </p>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="form-group">
+            </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+          </div>
+        </div>
+      </div>
     <% end %>
 
     <div class="row cta-to-show">
@@ -65,12 +71,14 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Titolo</th>
+              <th>ID</th>
+              <th class="col-md-3">Titolo</th>
+              <th class="col-md-2">Slug</th>
               <th class="hidden-xs hidden-sm">Data attivazione</th>
-              <th>TAG</th>
-              <th>Padre</th>
-              <th>Immagine</th>
-              <th>Azioni</th>
+              <th class="col-md-2">TAG</th>
+              <th class="col-md-1">Padre</th>
+              <th class="col-md-2">Immagine</th>
+              <th class="col-md-2">Azioni</th>
             </tr>
           </thead>
           <% @cta_list.each do |calltoaction| %>

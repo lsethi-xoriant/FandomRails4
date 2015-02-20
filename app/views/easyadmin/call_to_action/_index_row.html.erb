@@ -1,19 +1,23 @@
 <tr>
-  <td><%= calltoaction.title %></td>
-  <td class="hidden-xs hidden-sm"><%= calltoaction.activated_at.in_time_zone("Rome").strftime("%d/%m/%Y %H:%M") if calltoaction.activated_at %></td>
 
+  <td><%= calltoaction.id %></td>
+
+  <td><%= calltoaction.title %></td>
+
+  <td><%= calltoaction.slug %></td>
+
+  <td class="hidden-xs hidden-sm"><%= calltoaction.activated_at.in_time_zone("Rome").strftime("%d/%m/%Y %H:%M") if calltoaction.activated_at %></td>
 
   <td><%= (calltoaction.call_to_action_tags.map { |call_to_action_tag| call_to_action_tag.tag.name }).join(", ") %></td>
 
-
   <td><%= (calltoaction.answers.map { |answer| answer.quiz.interaction.call_to_action.title }).join(", ") %></td>
-
 
   <td>
     <% if calltoaction.thumbnail.present? %>
       <img src="<%= calltoaction.thumbnail.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
     <% end %>
   </td>
+
   <td>
     <div class="row">
 
@@ -39,4 +43,5 @@
 
     </div>
   </td>
+
 </tr>
