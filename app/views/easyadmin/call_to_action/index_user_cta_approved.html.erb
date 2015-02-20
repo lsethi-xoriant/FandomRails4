@@ -59,12 +59,14 @@
                 <% end %>
               </td>
               <td>
-                <% if c.releasing_file.present? && c.releasing_file.file_content_type.split("/").first == "image" %>
-                  <img src="<%= c.releasing_file.file.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
-                <% elsif c.releasing_file.present? && c.releasing_file.file_content_type.split("/").first != "image" %>
-                  <a href="<%= c.releasing_file.file.url %>" target="_blank">scarica</a>
-                <% else %>
-                  --
+                <% if c.releasing_file.present? && c.releasing_file.file_content_type.present? %> 
+                  <% if c.releasing_file.file_content_type.split("/").first == "image" %>
+                    <img src="<%= c.releasing_file.file.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+                  <% elsif c.releasing_file.file_content_type.split("/").first != "image" %>
+                    <a href="<%= c.releasing_file.file.url %>" target="_blank">scarica</a>
+                  <% else %>
+                    --
+                  <% end %>
                 <% end %>
               </td>
               <td>
