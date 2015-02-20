@@ -177,7 +177,7 @@ class FandomMiddleware
   def configure_mailer_for_site(site, mailer)
     mailer_conf = get_deploy_setting("sites/#{site.id}/mailer", nil)
     if mailer_conf.nil?
-      log_error("missing mailer configuration for tenant", {})
+      #log_error("missing mailer configuration for tenant", {})
       mailer.perform_deliveries = false
     else
       mailer.default from: mailer_conf.fetch("default_from", MAILER_DEFAULT_FROM)
