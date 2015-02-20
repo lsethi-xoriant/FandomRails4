@@ -35,19 +35,19 @@
 				      <nav class="text-center">
 						  <ul class="pagination">
 						    <li>
-						      <a href="javascript:void(0);" aria-label="Previous" ng-click="prev_page(rankings.current_page, rankings.ranking.name)">
+						      <a href="javascript:void(0);" aria-label="Previous" ng-click="prev_vote_page(rankings.current_page, rankings.ranking.name)">
 						        <span aria-hidden="true">&laquo;</span>
 						      </a>
 						    </li>
 						    <li ng-repeat="page in get_pagination_page_before(rankings.current_page)">
-						    	<a href="javascript:void(0)" ng-click="get_rank_page(page, rankings)">{{page}}</a>
+						    	<a href="javascript:void(0)" ng-click="get_vote_rank_page(page, rankings)">{{page}}</a>
 						    </li>
 						    <li class="active"><a href="javascript:void(0);">{{rankings.current_page}}</a></li>
 						    <li ng-repeat="page in get_pagination_page_after(rankings.current_page, rankings.number_of_pages)">
-						    	<a href="javascript:void(0)" ng-click="get_rank_page(page, rankings)">{{page}}</a>
+						    	<a href="javascript:void(0)" ng-click="get_vote_rank_page(page, rankings)">{{page}}</a>
 						    </li>
 						    <li>
-						      <a href="javascript:void(0);" aria-label="Next" ng-click="next_page(rankings.current_page, rankings)">
+						      <a href="javascript:void(0);" aria-label="Next" ng-click="next_vote_page(rankings.current_page, rankings)">
 						        <span aria-hidden="true">&raquo;</span>
 						      </a>
 						    </li>
