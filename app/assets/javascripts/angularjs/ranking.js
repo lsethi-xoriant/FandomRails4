@@ -26,6 +26,7 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 				$scope.user_offset = user_off - 1;
 			}
 		}
+		console.log($scope.rankings);
 	};
 	
 	$scope.init_vote = function(rankings, user, single_rank) {
@@ -44,14 +45,14 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 		$scope.get_rank_page(page, rank);
 	};
 	
-	$scope.prev_vote_page = function(current_page, rank_name){
+	$scope.prev_vote_page = function(current_page, rank){
 		page = parseInt(current_page) - 1;
-		$scope.get_vote_rank_page(page, rank_name);
+		$scope.get_vote_rank_page(page, rank);
 	};
 	
-	$scope.next_vote_page = function(current_page, rank_name){
+	$scope.next_vote_page = function(current_page, rank){
 		page = parseInt(current_page) + 1;
-		$scope.get_vote_rank_page(page, rank_name);
+		$scope.get_vote_rank_page(page, rank);
 	};
 	
 	$scope.get_rank_page = function(page, rank){
@@ -71,9 +72,9 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 		}
 	};
 	
-	$scope.get_vote_rank_page = function(page, rank_name){
-		if(page >= 1 && page <= rankings.number_of_pages){
-			VoteApi.save({ page: page, name: rank_name }, function(data) {
+	$scope.get_vote_rank_page = function(page, rank){
+		if(page >= 1 && page <= rank.number_of_pages){
+			VoteApi.save({ page: page, name: rank.ranking.name }, function(data) {
 				var newData = {
 					current_page: data.current_page,
 					number_of_pages: data.number_of_pages,

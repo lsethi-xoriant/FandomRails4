@@ -1250,7 +1250,7 @@ module ApplicationHelper
     elsif elements < per_page
       1
     elsif elements % per_page == 0
-      elemetns / per_page
+      elements / per_page
     else
       (elements / per_page) + 1
     end
