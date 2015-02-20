@@ -343,7 +343,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         denominator = denominator + value;
         numerator = numerator + (parseInt(key) * value);
       });
-      return (numerator/denominator).toFixed(2);
+      return (numerator/denominator).toFixed(0);
     } else {
       return 0;
     }

@@ -33,6 +33,18 @@
       <div class="col-sm-8 text-center cta__title-and-description-col">
         <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
         <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
+
+        <div class="row cta__extra-description__container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description">
+        </div>
+
+        <!-- DOWNLOAD INTERACTION -->
+        <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
+          <div class="col-md-12 text-center" >
+            <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span><span class="glyphicon glyphicon-download-alt"></span>{{interaction_info.interaction.resource.title}}</span></a>
+          </div>
+        </div>
+
+
       </div>
 
       <div class="col-sm-2 text-right">
@@ -40,6 +52,9 @@
       </div>
     </div>
 
+
+
+    <!-- MOBILE -->
     <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row visible-xs">
       <div id="share-interaction-{{interaction_info.interaction.id}}">
         <%= render partial: "/call_to_action/share_interaction" %>
