@@ -56,39 +56,13 @@
 </div>
 
 <div class="row main-row related__row">
-  <div class="col-sm-12 text-center">
-
-    <div class="ribbon__container-main">
-      <div class="ribbon__container_before" ng-style="{'border-color': calltoaction_info.miniformat['label_background']}"></div>
-      <div class="ribbon__container_after" ng-style="{'border-color': calltoaction_info.miniformat['label_background']}"></div>
-      <div class="ribbon__container" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}">
-        <div class="ribbon-stitches-top"></div>
-        <div class="ribbon-content">
-          <p class="ribbon__text">Contenuti correlati</p>
-        </div>
-        <div class="ribbon-stitches-bottom"></div>
-      </div>
-    </div>
-
+  <div class="col-sm-12 text-center" ng-repeat="miniformat in [calltoaction_info.miniformat]">
+    <%= render partial: "application/ribbon" %>
   </div>
 
 
   <div class="col-sm-4" ng-repeat="calltoaction in aux.related_calltoaction_info">
-    <%= light_link_to("/call_to_action/{{calltoaction.slug}}") do %>
-      <div class="relateds-flexslider__item-panel" ng-style="{'background-color': calltoaction.miniformat_info['label_background']}"> 
-        <div class="row">
-          <div class="col-xs-12 text-center">
-            <div class="relateds-flexslider__thumbnail">
-              <img class="img-responsive cta-preview__image" ng-src="{{calltoaction.thumbnail_medium_url}}">            
-            </div>
-            <div class="cta-preview__miniformat-container">
-              <span class="cta-preview__miniformat" ng-style="{'background-color': calltoaction.miniformat_info['label_background']}">{{calltoaction.miniformat_info['title']}}</span>
-            </div>
-            <p class="cta-preview__title">{{calltoaction.title | cut:true:70}}</p>
-          </div>
-        </div>
-      </div>  
-    <% end %>  
+    <%= render partial: "/call_to_action/calltoaction_thumb" %> 
   </div>
 
 </div>
