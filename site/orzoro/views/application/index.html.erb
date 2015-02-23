@@ -1,7 +1,21 @@
 <div class="container main-container">   
 
-  <div class="row">
+  <div class="row main-row">
     <%= render partial: "/application/evidence_ctas" %>
+  </div>
+
+  <div class="row main-row">
+    <div class="col-sm-4" ng-repeat="calltoaction in fromCallToActionToThumb()">
+      <%= render partial: "/call_to_action/calltoaction_thumb" %> 
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div id="append-other" class="text-center">
+        <button class="btn btn-red" href="javascript: void(0)" ng-click="appendCallToAction();"><span>Carica altri</span></button>
+      </div>
+    </div>
   </div>
 
 </div>

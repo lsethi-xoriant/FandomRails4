@@ -1347,7 +1347,7 @@ module ApplicationHelper
     if calltoactions_in_page < $site.init_ctas
       calltoactions_in_page
     else
-      cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
+      cache_short(get_calltoactions_count_cache_key()) do
         CallToAction.active.count
       end
     end

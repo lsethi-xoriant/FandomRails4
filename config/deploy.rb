@@ -75,6 +75,7 @@ namespace :deploy do
       
       puts "restarting log daemon..."
       execute "/usr/bin/supervisorctl restart log_daemon"
+      execute "/usr/bin/supervisorctl restart cache_update_daemon"
       sleep 1
       puts "are they running? Look at this ps!"
       execute "ps aux | grep -e 'unicorn\\|log_daemon'"

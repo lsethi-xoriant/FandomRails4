@@ -30,7 +30,7 @@ module CallToActionHelper
       "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
       "title" => calltoaction.title,
       "description" => calltoaction.description,
-      "miniformat_info" => miniformat_info
+      "miniformat" => miniformat_info
     }
     
   end
@@ -49,7 +49,7 @@ module CallToActionHelper
           "label_background" => get_extra_fields!(miniformat)["label-background"],
           "icon" => get_extra_fields!(miniformat)["icon"],
           "label_color" => get_extra_fields!(miniformat)["label-color"],
-          "title" => get_extra_fields!(miniformat)["title"],
+          "title" => miniformat.title,
           "name" => miniformat.name
         }
       end
@@ -80,32 +80,37 @@ module CallToActionHelper
         end
       end
 
-      calltoaction_info_list << {
-        "calltoaction" => { 
-          "id" => calltoaction.id,
-          "name" => calltoaction.name,
-          "slug" => calltoaction.slug,
-          "title" => calltoaction.title,
-          "description" => calltoaction.description,
-          "media_type" => calltoaction.media_type,
-          "media_image" => calltoaction.media_image(:extra_large), 
-          "media_data" => calltoaction.media_data, 
-          "thumbnail_url" => calltoaction.thumbnail_url,
-          "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
-          "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
-          "interaction_info_list" => build_interaction_info_list(calltoaction, interactions_to_compute),
-          "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}"),
-          "activated_at" => calltoaction.activated_at,
-          "user_id" => calltoaction.user_id,
-          "user_name" => calltoaction.user.nil? ? "" : calltoaction.user.username,
-          "user_avatar" => user_avatar(calltoaction.user)
-        },
-        "prize" => prize,
-        "flag" => flag_info,
-        "miniformat" => miniformat_info,
-        "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
-        "reward_info" => calltoaction_reward_info
-      }
+      interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("-") : "all"
+      calltoaction_info = cache_short(get_calltoaction_info_cache_key(current_or_anonymous_user.id, calltoaction.id, interactions_to_compute_key)) do
+        {
+          "calltoaction" => { 
+            "id" => calltoaction.id,
+            "name" => calltoaction.name,
+            "slug" => calltoaction.slug,
+            "title" => calltoaction.title,
+            "description" => calltoaction.description,
+            "media_type" => calltoaction.media_type,
+            "media_image" => calltoaction.media_image(:extra_large), 
+            "media_data" => calltoaction.media_data, 
+            "thumbnail_url" => calltoaction.thumbnail_url,
+            "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
+            "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
+            "interaction_info_list" => build_interaction_info_list(calltoaction, interactions_to_compute),
+            "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}"),
+            "activated_at" => calltoaction.activated_at,
+            "user_id" => calltoaction.user_id,
+            "user_name" => calltoaction.user.nil? ? "" : calltoaction.user.username,
+            "user_avatar" => user_avatar(calltoaction.user)
+          },
+          "prize" => prize,
+          "flag" => flag_info,
+          "miniformat" => miniformat_info,
+          "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
+          "reward_info" => calltoaction_reward_info
+        }
+      end
+
+      calltoaction_info_list << calltoaction_info
     
     end
 
@@ -135,9 +140,7 @@ module CallToActionHelper
           if user_interaction
             user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
           end
-        end
-
-        if ($site.anonymous_interaction && interaction.stored_for_anonymous)
+        elsif ($site.anonymous_interaction && interaction.stored_for_anonymous)
           user_interaction = interaction.user_interactions.find_by_user_id(current_or_anonymous_user.id)
           if user_interaction
             anonymous_user_interaction_info = build_user_interaction_for_interaction_info(user_interaction)

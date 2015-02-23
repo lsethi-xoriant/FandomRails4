@@ -180,8 +180,12 @@ class Sites::Disney::CallToActionController < CallToActionController
     SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
   end
 
+  def append_calltoaction_page_elements
+    ["like", "comment", "share"]
+  end
+
   def append_calltoaction
-    page_elements = ["like", "comment", "share"]
+    page_elements = append_calltoaction_page_elements()
 
     if params["other_params"] && params["other_params"]["gallery"]["calltoaction_id"]
       gallery_calltoaction_id = params["other_params"]["gallery"]["calltoaction_id"]

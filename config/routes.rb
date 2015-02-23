@@ -28,6 +28,8 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('orzoro')) do
     scope module: "sites" do
       scope module: "orzoro" do
+        root :to => "application#index"
+        match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         resources :call_to_action, only: :show
       end
     end
