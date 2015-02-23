@@ -27,7 +27,13 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li class="<%= "active" if "#{controller_name}##{action_name}" == "application#index" %>"><a href="/<%= $context_root %>">Home</a></li>
+            <li class="<%= "active" if "#{controller_name}##{action_name}" == "application#index" %>"><a href="/<%= $context_root %>">Home</a>
+            </li>
+            <li class="<%= "active" if "#{controller_name}##{action_name}" == "gallery#index" %>">
+              <a href="/gallery">
+                Gallery
+              </a>
+            </li>
             <li class="<%= "active" if "#{controller_name}##{action_name}" == "reward#index" %>">
               <%= light_link_to("/reward/catalogue") do %>
                 Premi
@@ -42,11 +48,6 @@
               <%= light_link_to("/browse") do %>
                 Cerca
               <% end %>
-            </li>
-            <li class="<%= "active" if "#{controller_name}##{action_name}" == "gallery#index" %>">
-              <a href="/gallery">
-                Gallery
-              </a>
             </li>
             <li class="<%= "active" if "#{controller_name}##{action_name}" == "registrations#edit" || "#{controller_name}##{action_name}" == "profile#rewards" || "#{controller_name}##{action_name}" == "profile#notices" %>">
               <%= light_link_to("/profile") do %>
@@ -88,6 +89,11 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="<%= "active" if "#{controller_name}##{action_name}" == "application#index" %>"><a href="/<%= $context_root %>">Home</a>
         </li>
+        <li class="<%= "active" if "#{controller_name}##{action_name}" == "gallery#index" %>">
+          <a href="/gallery">
+            Gallery
+          </a>
+        </li>
         <li class="<%= "active" if "#{controller_name}##{action_name}" == "reward#index" %>">
           <%= light_link_to("/reward/catalogue") do %>
             Premi
@@ -102,11 +108,6 @@
           <%= light_link_to("/browse") do %>
             Cerca
           <% end %>
-        </li>
-        <li class="<%= "active" if "#{controller_name}##{action_name}" == "gallery#index" %>">
-          <a href="/gallery">
-            Gallery
-          </a>
         </li>
         <li class="<%= "active" if "#{controller_name}##{action_name}" == "registrations#edit" || "#{controller_name}##{action_name}" == "profile#rewards" || "#{controller_name}##{action_name}" == "profile#notices" %>">
           <%= light_link_to("/profile") do %>
