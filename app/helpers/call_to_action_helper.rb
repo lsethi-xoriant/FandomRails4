@@ -10,19 +10,11 @@ module CallToActionHelper
     end
   end
 
-  def build_default_thumb_calltoaction(calltoaction)
+  def get_cta_max_updated_at()
+    CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
+  end
 
-    miniformat = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
-    if miniformat.present?
-      miniformat_info = {
-        "label_background" => get_extra_fields!(miniformat)["label-background"],
-        "icon" => get_extra_fields!(miniformat)["icon"],
-        "label_color" => get_extra_fields!(miniformat)["label-color"],
-        "title" => miniformat.title,
-        "name" => miniformat.name
-      }
-    end
-      
+  def build_default_thumb_calltoaction(calltoaction)    
     {
       "id" => calltoaction.id,
       "slug" => calltoaction.slug,
@@ -30,23 +22,24 @@ module CallToActionHelper
       "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
       "title" => calltoaction.title,
       "description" => calltoaction.description,
-      "miniformat" => miniformat_info
+      "miniformat" => build_grafitag(calltoaction, "miniformat")
     }
-    
   end
 
-  def get_cta_max_updated_at()
-    CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
-  end
-
-  def build_miniformat(miniformat)
-    {
-      "label_background" => get_extra_fields!(miniformat)["label-background"],
-      "icon" => get_extra_fields!(miniformat)["icon"],
-      "label_color" => get_extra_fields!(miniformat)["label-color"],
-      "title" => miniformat.title,
-      "name" => miniformat.name
-    }
+  def build_grafitag(calltoaction, tag_name)
+    grafitag = get_tag_with_tag_about_call_to_action(calltoaction, tag_name).first
+    if grafitag.present?
+      {
+        "label_background" => get_extra_fields!(grafitag)["label-background"],
+        "icon" => get_extra_fields!(grafitag)["icon"],
+        "image" => (get_extra_fields!(flag)["image"]["url"] rescue nil),
+        "label_color" => get_extra_fields!(grafitag)["label-color"],
+        "title" => grafitag.title,
+        "name" => grafitag.name
+      }
+    else
+      nil
+    end
   end
 
   def build_call_to_action_info_list(calltoactions, interactions_to_compute = nil)
@@ -60,19 +53,7 @@ module CallToActionHelper
       interactions = {}
 
       calltoactions.each do |calltoaction|
-
-        miniformat = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
-        if miniformat.present?
-          miniformat_info = build_miniformat(miniformat)
-        end
-
-        flag = get_tag_with_tag_about_call_to_action(calltoaction, "flag").first
-        if flag.present?
-          flag_info = {
-            "icon" => (get_extra_fields!(flag)["icon"]["url"] rescue nil),
-          }
-        end
-      
+    
         interaction_info_list, interactions_for_calltoaction = build_interaction_info_list(calltoaction, interactions_to_compute)
         interactions_for_calltoaction.each do |key, value|
           interactions[key] = value
@@ -92,6 +73,11 @@ module CallToActionHelper
           }
         end
 
+        if calltoaction.user.present?
+          user_name = calltoaction.user.username
+          user_user_avatar = user_avatar(calltoaction.user)
+        end
+
         calltoaction_info = {
             "calltoaction" => { 
               "id" => calltoaction.id,
@@ -109,11 +95,11 @@ module CallToActionHelper
               "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}"),
               "activated_at" => calltoaction.activated_at,
               "user_id" => calltoaction.user_id,
-              "user_name" => calltoaction.user.nil? ? "" : calltoaction.user.username,
-              "user_avatar" => user_avatar(calltoaction.user)
+              "user_name" => user_name,
+              "user_avatar" => user_user_avatar
             },
-            "flag" => flag_info,
-            "miniformat" => miniformat_info,
+            "flag" => build_grafitag(calltoaction, "flag"),
+            "miniformat" => build_grafitag(calltoaction, "miniformat"),
             "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, anonymous_user),
             "reward_info" => calltoaction_reward_info,
             "prize" => prize
@@ -125,7 +111,7 @@ module CallToActionHelper
 
       result = { calltoaction_info_list: calltoaction_info_list , interactions: interactions }
       # This hack is needed to avoid a strange "@new_record" string being serialized instead of an object id
-      Marshal.dump(result)  
+      #Marshal.dump(result)  
       result
 
     end
