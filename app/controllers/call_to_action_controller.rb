@@ -341,11 +341,9 @@ class CallToActionController < ApplicationController
     end
   end
 
-  def check_profanity_words_in_comment(user_comment)
-
-    user_comment_text = user_comment.text.downcase
-
-    @profanities_regexp = cache_short(get_profanity_words_cache_key()) do
+  def check_profanity_words_in_comment(text)
+    user_comment_text = text.downcase
+    profanities_regexp = cache_short(get_profanity_words_cache_key()) do
       pattern_array = Array.new
 
       profanity_words = Setting.find_by_key("profanity.words")
@@ -354,16 +352,10 @@ class CallToActionController < ApplicationController
           pattern_array.push(build_regexp(exp))
         end
       end
-
       Regexp.union(pattern_array)
     end
 
-    if user_comment_text =~ @profanities_regexp
-      user_comment.errors.add(:text, "contiene parole non ammesse")
-      return user_comment
-    end
-
-    user_comment
+    user_comment_text =~ profanities_regexp
   end
 
   def build_regexp(line)
@@ -385,6 +377,16 @@ class CallToActionController < ApplicationController
 
     approved = comment_resource.must_be_approved ? nil : true
     user_text = params[:comment_info][:user_text]
+
+    profanity_filter_automatic_setting = Setting.find_by_key('profanity.filter.automatic')
+    apply_profanity_filter_automatic = profanity_filter_automatic_setting.nil? ? false : (profanity_filter_automatic_setting.value == "true")
+
+    if apply_profanity_filter_automatic && check_profanity_words_in_comment(user_text)
+      aux = { "profanity" => true }.to_json
+      approved = false
+    else
+      aux = "{}"
+    end
     
     response = Hash.new
 
@@ -395,10 +397,7 @@ class CallToActionController < ApplicationController
     response[:ga][:action] = "AddComment"
 
     if current_user
-      user_comment = UserCommentInteraction.new(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
-      unless check_profanity_words_in_comment(user_comment).errors.any?
-        user_comment.save
-      end
+      user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
       response[:comment] = build_comment_for_comment_info(user_comment, true)
       if approved && user_comment.errors.blank?
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
@@ -409,10 +408,7 @@ class CallToActionController < ApplicationController
       response[:captcha] = captcha_enabled
       response[:captcha_evaluate] = !captcha_enabled || params[:session_storage_captcha] == Digest::MD5.hexdigest(params[:comment_info][:user_captcha] || "")
       if response[:captcha_evaluate]
-        user_comment = UserCommentInteraction.new(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
-        unless check_profanity_words_in_comment(user_comment).errors.any?
-          user_comment.save
-        end
+        user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
         response[:comment] = build_comment_for_comment_info(user_comment, true)
         if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
