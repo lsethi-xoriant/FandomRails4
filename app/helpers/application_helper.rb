@@ -651,8 +651,8 @@ module ApplicationHelper
     end
   end
 
-  def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction)
-    call_to_action_completed_or_reward_status = cache_short(get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, current_or_anonymous_user.id)) do
+  def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, user = current_or_anonymous_user)
+    call_to_action_completed_or_reward_status = cache_short(get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, user.id)) do
       if call_to_action_completed?(calltoaction)
         CACHED_NIL
       else
@@ -711,17 +711,13 @@ module ApplicationHelper
     }.to_json
   end
 
-  def get_current_interaction_reward_status(reward_name, interaction)
+  def get_current_interaction_reward_status(reward_name, interaction, user = current_user)
     reward = get_reward_by_name(reward_name)
 
     reward_status_images = Array.new 
 
-    if current_user
-      user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)
-    else
-      user_interaction = nil
-    end
-
+    user_interaction = user ? UserInteraction.find_by_user_id_and_interaction_id(user.id, interaction.id) : nil
+    
     if user_interaction
       win_reward_count = (JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) rescue 0)
       correct_answer_outcome = (JSON.parse(user_interaction.outcome)["correct_answer"] rescue nil)
