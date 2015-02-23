@@ -657,7 +657,11 @@ module ApplicationHelper
     end
   end
 
-  def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, user = current_or_anonymous_user)
+  def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, user = nil)
+    if user.nil?
+      user = current_or_anonymous_user
+    end
+
     call_to_action_completed_or_reward_status = cache_short(get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, user.id)) do
       if call_to_action_completed?(calltoaction, user)
         CACHED_NIL
@@ -674,7 +678,11 @@ module ApplicationHelper
   end
 
   # Generates an hash with reward information.
-  def compute_current_call_to_action_reward_status(reward_name, calltoaction, user = current_user)
+  def compute_current_call_to_action_reward_status(reward_name, calltoaction, user = nil)
+    if user.nil?
+      user = current_user
+    end
+
     reward = get_reward_from_cache(reward_name)
     
     winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user)
