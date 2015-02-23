@@ -640,7 +640,11 @@ module ApplicationHelper
   end
 
 
-  def call_to_action_completed?(cta, user = current_user)
+  def call_to_action_completed?(cta, user = nil)
+    if user.nil?
+      user = current_user
+    end
+
     if !anonymous_user?(user)
       require_to_complete_interactions = interactions_required_to_complete(cta)
 
