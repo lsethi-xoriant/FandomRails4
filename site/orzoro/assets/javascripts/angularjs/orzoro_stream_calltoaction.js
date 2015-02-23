@@ -21,7 +21,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     });
     console.log(thumb_calltoactions);
     return thumb_calltoactions;
-  }
+  };
 
   $scope.resetToRedo = function(interaction_info) {
     anonymous_user_interactions = getAnonymousUserStorage();
