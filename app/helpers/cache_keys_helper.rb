@@ -19,8 +19,8 @@ module CacheKeysHelper
     "tag_with_tag_about_reward_#{reward_id}_#{tag_name}"
   end
 
-  def get_profanity_words_cache_key(tenant = "")
-    "#{tenant.blank? ? "" : tenant + "_"}profanities"
+  def get_profanity_words_cache_key()
+    "profanities"
   end
 
   # Rewards

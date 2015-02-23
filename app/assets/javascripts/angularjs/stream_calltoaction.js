@@ -1858,7 +1858,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $http.post("/add_comment", { interaction_id: interaction_id, comment_info: comment_info, session_storage_captcha: session_storage_captcha })
       .success(function(data) {
-
         if(data.errors) {
           alert("ERROR");
         } else if(!$scope.current_user && !data.captcha_evaluate) {
