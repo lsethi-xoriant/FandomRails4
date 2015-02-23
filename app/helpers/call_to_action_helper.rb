@@ -65,7 +65,7 @@ module CallToActionHelper
     calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
     interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("-") : "all"
 
-    calltoaction_info_list_and_interactions = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key)) do
+    calltoaction_info_list_and_interactions = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key, current_or_anonymous_user.id)) do
       
       calltoaction_info_list = Array.new
       interactions = {}
