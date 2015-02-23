@@ -642,7 +642,7 @@ module ApplicationHelper
 
   def call_to_action_completed?(cta, user = nil)
     if user.nil?
-      user = current_user
+      user = current_or_anonymous_user
     end
 
     if !anonymous_user?(user)
@@ -653,7 +653,7 @@ module ApplicationHelper
       end
 
       require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
-      interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", current_user.id, require_to_complete_interactions_ids)
+      interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", user.id, require_to_complete_interactions_ids)
       require_to_complete_interactions.count == interactions_done.count
 
     else
