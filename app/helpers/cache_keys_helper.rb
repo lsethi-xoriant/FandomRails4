@@ -190,6 +190,10 @@ module CacheKeysHelper
     "tag_with_tag_about_call_to_action_#{cta_id}_#{tag_name}"
   end
 
+  def get_tag_with_tag_about_tag_cache_key(tag_id, tag_name)
+    "tag_with_tag_about_tag_#{tag_id}_#{tag_name}"
+  end
+
   def get_ctas_with_tag_cache_key(tag_name, cta_max_updated_at = "")
     "ctas_with_tag_#{tag_name}_#{cta_max_updated_at}"
   end
