@@ -1,3 +1,3 @@
-<div ng-repeat="calltoaction in aux.calltoaction_evidence_info" ng-class="{'col-sm-8': ($index == 0), 'col-sm-4': ($index != 0)}">
-  <%= render partial: "/call_to_action/calltoaction_thumb" %>
+<div ng-repeat="content in aux.calltoaction_evidence_info" ng-class="{'col-sm-8': ($index == 0), 'col-sm-4': ($index != 0)}">
+  <%= render partial: "/application/content_preview" %>
 </div>

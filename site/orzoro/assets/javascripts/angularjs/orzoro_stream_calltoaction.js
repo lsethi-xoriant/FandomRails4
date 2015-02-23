@@ -12,14 +12,19 @@ orzoroStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
-  $scope.fromCallToActionToThumb = function() {
+  $scope.fromCallToActionInfoToContentPreview = function() {
     thumb_calltoactions = [];
     angular.forEach($scope.calltoactions, function(calltoaction_info) {
-      calltoaction = calltoaction_info.calltoaction;
-      calltoaction["miniformat"] = calltoaction_info["miniformat"];
-      thumb_calltoactions.push(calltoaction);
+      content = new Object();
+      content["attributes"] = new Object();
+      content["attributes"]["type"] = "cta";
+      content["attributes"]["detail_url"] = "/call_to_action/" + calltoaction_info["calltoaction"]["slug"];
+      content["attributes"]["thumb_url"] = calltoaction_info["calltoaction"]["thumbnail_medium_url"];
+      content["attributes"]["title"] = calltoaction_info["calltoaction"]["title"];
+      content["attributes"]["aux"] = new Object();
+      content["attributes"]["aux"]["miniformat"] = calltoaction_info["miniformat"]
+      thumb_calltoactions.push(content);
     });
-    console.log(thumb_calltoactions);
     return thumb_calltoactions;
   };
 
