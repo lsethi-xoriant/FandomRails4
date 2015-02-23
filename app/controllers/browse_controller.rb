@@ -2,22 +2,22 @@ class BrowseController < ApplicationController
   include BrowseHelper
   
   def index
-    tag_browse = get_tag_browse(params[:tagname])
+    @tag_browse = get_tag_browse(params[:tagname])
     
-    if tag_browse
+    if @tag_browse
       @aux_other_params = { 
         page_tag: {
-          "miniformat" => build_grafitag_for_tag(tag_browse, "miniformat"),
-          "header_image" => (get_upload_extra_field_processor(get_extra_fields!(tag_browse)["header_image"])rescue nil)
+          "miniformat" => build_grafitag_for_tag(@tag_browse, "miniformat"),
+          "header_image" => (get_upload_extra_field_processor(get_extra_fields!(@tag_browse)["header_image"])rescue nil)
         }
       }
-      extra_cache_key = tag_browse.name
+      extra_cache_key = @tag_browse.name
     else
       extra_cache_key = ""
     end
     
     @browse_section = cache_long(get_browse_sections_cache_key(get_search_tags_for_tenant, extra_cache_key)) do 
-      init_browse_sections(get_search_tags_for_tenant, tag_browse) 
+      init_browse_sections(get_search_tags_for_tenant, @tag_browse) 
     end
     
     if params[:query]

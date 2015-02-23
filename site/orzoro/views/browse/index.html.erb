@@ -1,21 +1,29 @@
 <div class="container container--default" ng-controller="SearchCtrl" ng-init="init(<%= @browse_section.to_json %> )">
-	<% if flash[:notice] %>
-		<div class="row brws-item">
-			<div class="col-xs-12">
-				<h3 class="text-center"><%= flash[:notice].html_safe %></h3>
+	<% if @tag_browse %>
+		<div class="row" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@tag_browse)["header_image"], :original) rescue nil %>)">
+			<div class="col-xs-12 text-center">
+				<h1><%= @tag_browse.title %></h1>
+				<h2><%= @tag_browse.description %></h2>
 			</div>
 		</div>
 	<% end %>
 	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.attributes.contents.length > 0">
 		<div class="row brws-item main-row" style="margin-top: 30px;">
 			  <!-- HEADING -->
-			<div class="col-sm-12">
+			<div class="col-sm-12 text-center">
 			  <%= render partial: "/application/ribbon", locals: { title: "{{section.attributes.title}}", background: "{{aux.page_tag.miniformat['label_background']}}"}%>
 			</div>
 
-	    <div class="col-xs-12" ng-repeat="contents in [section.attributes.contents]">
-		    <%= render partial: "/application/content_carousel" %>
-		  </div>
+		    <div class="col-xs-12" ng-repeat="contents in [section.attributes.contents]">
+			    <%= render partial: "/application/content_carousel" %>
+			    <div calss="row text-center" ng-if="section.attributes.total > section.attributes.per_page">
+			    	<div class="col-xs-2 col-xs-offset-5">
+				    	<%= light_link_to("{{section.attributes.view_all_link}}", class: "btn btn-primary") do %>
+				    		Vedi tutti
+				    	<% end %>
+				    </div>
+			    </div>
+			</div>
 		</div>
 	</div>
 	
