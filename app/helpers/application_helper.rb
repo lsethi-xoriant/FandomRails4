@@ -56,7 +56,7 @@ module ApplicationHelper
     has_category_icon_field = !category_icon_field.blank? && upload_extra_field_present?(category_icon_field)
     category_icon = get_upload_extra_field_processor(category_icon_field,"medium") if has_category_icon_field
     
-    BrowseCategory.new(
+    ContentPreview.new(
       type: "tag",
       id: tag.id,
       has_thumb: has_thumb, 
@@ -69,7 +69,8 @@ module ApplicationHelper
       header_image_url: header_image,
       icon: icon,
       category_icon: category_icon,
-      tags: needs_related_tags ? get_tag_ids_for_tag(tag) : []
+      tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
+      aux: build_content_preview_aux(tag)
     )
   end
   
@@ -96,7 +97,7 @@ module ApplicationHelper
     has_category_icon_field = !category_icon_field.blank? && upload_extra_field_present?(category_icon_field)
     category_icon = get_upload_extra_field_processor(category_icon_field,"medium") if has_category_icon_field
     
-    BrowseCategory.new(
+    ContentPreview.new(
       type: "tag",
       id: tag.id,
       has_thumb: has_thumb, 
@@ -114,7 +115,7 @@ module ApplicationHelper
   end
   
   def cta_to_category(cta, populate_desc = true)
-    BrowseCategory.new(
+    ContentPreview.new(
       type: "cta",
       id: cta.id, 
       has_thumb: cta.thumbnail.present?, 
@@ -127,12 +128,13 @@ module ApplicationHelper
       comments: get_number_of_comments_for_cta(cta),
       likes: get_number_of_likes_for_cta(cta),
       tags: get_tag_ids_for_cta(cta),
-      votes: get_votes_for_cta(cta.id)
+      votes: get_votes_for_cta(cta.id),
+      aux: build_content_preview_aux(cta)
     )
   end
   
   def cta_to_category_light(cta, populate_desc = true)
-    BrowseCategory.new(
+    ContentPreview.new(
       type: "cta",
       id: cta.id, 
       has_thumb: cta.thumbnail.present?, 
@@ -148,6 +150,20 @@ module ApplicationHelper
       tags: nil,
       votes: nil
     )
+  end
+  
+  def build_content_preview_aux(obj)
+    if obj.class.name == "CallToAction"
+      {
+        "miniformat" => build_grafitag_from_calltoaction(obj, "miniformat"),
+        "flag" => build_grafitag_from_calltoaction(obj, "flag")
+      }
+    else
+      {
+        "miniformat" => build_grafitag_from_tag(obj, "miniformat"),
+        "flag" => build_grafitag_from_tag(obj, "flag")
+      }
+    end
   end
   
   def get_tag_ids_for_cta(cta)
