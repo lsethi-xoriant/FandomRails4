@@ -5,6 +5,12 @@ class BrowseController < ApplicationController
     tag_browse = get_tag_browse(params[:tagname])
     
     if tag_browse
+      @aux_other_params = { 
+        page_tag: {
+          "miniformat" => build_grafitag_for_tag(tag_browse, "miniformat"),
+          "header_image" => (get_upload_extra_field_processor(get_extra_fields!(tag_browse)["header_image"])rescue nil)
+        }
+      }
       extra_cache_key = tag_browse.name
     else
       extra_cache_key = ""

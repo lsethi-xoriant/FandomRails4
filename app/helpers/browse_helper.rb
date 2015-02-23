@@ -1,5 +1,6 @@
 module BrowseHelper
-  class BrowseCategory
+  
+  class ContentPreview
     include ActiveAttr::TypecastedAttributes
     include ActiveAttr::MassAssignment
     include ActiveAttr::AttributeDefaults
@@ -9,9 +10,9 @@ module BrowseHelper
     # html id of this field
     attribute :id, type: String
     attribute :type, type: String
-    attribute :has_thumb, type: Boolean
+    attribute :has_thumb, type: Boolean #to trash
     attribute :thumb_url, type: String
-    attribute :description, type: String
+    attribute :description, type: String #check if can truncate after
     attribute :long_description, type: String
     attribute :detail_url, type: String
     attribute :created_at, type: Integer
@@ -23,6 +24,7 @@ module BrowseHelper
     attribute :comments, type: Integer
     attribute :votes, type: Integer
     attribute :tags
+    attribute :aux
   end
   
   def get_browse_settings(tag_browse)
@@ -133,7 +135,7 @@ module BrowseHelper
     extra_fields = get_extra_fields!(category)
     browse_section = ContentSection.new(
       key: category.name,
-      title:  extra_fields.fetch('title', category.name),
+      title:  category.title,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
@@ -162,7 +164,7 @@ module BrowseHelper
     extra_fields = get_extra_fields!(category)
     browse_section = ContentSection.new(
       key: category.name,
-      title: extra_fields.fetch('title', category.name),
+      title: category.title,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",

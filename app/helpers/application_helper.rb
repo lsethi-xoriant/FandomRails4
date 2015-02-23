@@ -155,13 +155,13 @@ module ApplicationHelper
   def build_content_preview_aux(obj)
     if obj.class.name == "CallToAction"
       {
-        "miniformat" => build_grafitag_from_calltoaction(obj, "miniformat"),
-        "flag" => build_grafitag_from_calltoaction(obj, "flag")
+        "miniformat" => build_grafitag_for_calltoaction(obj, "miniformat"),
+        "flag" => build_grafitag_for_calltoaction(obj, "flag")
       }
     else
       {
-        "miniformat" => build_grafitag_from_tag(obj, "miniformat"),
-        "flag" => build_grafitag_from_tag(obj, "flag")
+        "miniformat" => build_grafitag_for_tag(obj, "miniformat"),
+        "flag" => build_grafitag_for_tag(obj, "flag")
       }
     end
   end
@@ -437,7 +437,7 @@ module ApplicationHelper
 
   def get_tag_with_tag_about_tag(tag, parent_tag_name)
     cache_short get_tag_with_tag_about_call_to_action_cache_key(tag.id, parent_tag_name) do
-      Tag.includes(tags_tags: :other_tag).includes(:tag_tags).where("other_tags_tags_tags.name = ? AND tag_tags.tag_id = ?", parent_tag_name, tag.id).order("tag_tags.updated_at DESC").to_a
+      Tag.includes(tags_tags: :other_tag).includes(:tags_tags).where("other_tags_tags_tags.name = ? AND tags_tags.tag_id = ?", parent_tag_name, tag.id).order("tags_tags.updated_at DESC").to_a
     end
   end
   

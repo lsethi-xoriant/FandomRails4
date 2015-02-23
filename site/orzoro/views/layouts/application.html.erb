@@ -72,7 +72,44 @@
       </div>
     </div>
   <% end %>
-
+  
+  <script type="text/javascript">
+	$(document).ready(function() {
+      is_last_rewards_flexslider_slide = new Object();
+	    $('.rewards-flexslider').flexslider({
+	      animation: "slide",
+        slideshow: false,
+        animationLoop: false,
+        touch: true,
+        itemWidth: 258,
+        itemMargin: 15,
+        controlNav: false,
+        prevText: "",
+        nextText: "",
+        start: function(slider) {
+          if(slider.pagingCount == 1) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          }
+        },
+        before: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }
+        },
+        end: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+        }
+	    });
+	});
+	
+  </script>
+  
   <%= render partial: "/application/ga" %>
 
 </body>
