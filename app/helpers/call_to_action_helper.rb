@@ -125,7 +125,7 @@ module CallToActionHelper
 
       result = { calltoaction_info_list: calltoaction_info_list , interactions: interactions }
       # This hack is needed to avoid a strange "@new_record" string being serialized instead of an object id
-      Marshal.dump(result)  
+      #Marshal.dump(result)  
       result
 
     end
