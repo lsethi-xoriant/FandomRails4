@@ -39,93 +39,175 @@ module CallToActionHelper
     CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
   end
 
+  def build_miniformat(miniformat)
+    {
+      "label_background" => get_extra_fields!(miniformat)["label-background"],
+      "icon" => get_extra_fields!(miniformat)["icon"],
+      "label_color" => get_extra_fields!(miniformat)["label-color"],
+      "title" => miniformat.title,
+      "name" => miniformat.name
+    }
+  end
+
   def build_call_to_action_info_list(calltoactions, interactions_to_compute = nil)
-    calltoaction_info_list = Array.new
-    calltoactions.each do |calltoaction|
 
-      miniformat = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
-      if miniformat.present?
-        miniformat_info = {
-          "label_background" => get_extra_fields!(miniformat)["label-background"],
-          "icon" => get_extra_fields!(miniformat)["icon"],
-          "label_color" => get_extra_fields!(miniformat)["label-color"],
-          "title" => miniformat.title,
-          "name" => miniformat.name
-        }
-      end
+    calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
+    interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("-") : "all"
 
-      flag = get_tag_with_tag_about_call_to_action(calltoaction, "flag").first
-      if flag.present?
-        flag_info = {
-          "icon" => (get_extra_fields!(flag)["icon"]["url"] rescue nil),
-        }
-      end
+    calltoaction_info_list_and_interactions = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key)) do
       
-      unless calltoaction.rewards.empty?
-        reward = calltoaction.rewards.first
-        calltoaction_reward_info = {
-          "cost" => reward.cost,
-          "status" => get_user_reward_status(reward)
-        }
-      end 
+      calltoaction_info_list = Array.new
+      interactions = {}
 
-      if !interactions_to_compute || interactions_to_compute.include?("prize")
-        if cta_is_a_reward(calltoaction) && (!current_user || !user_has_reward(calltoaction.rewards.first.name))
-          reward = calltoaction.rewards.first
+      calltoactions.each do |calltoaction|
+
+        miniformat = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
+        if miniformat.present?
+          miniformat_info = build_miniformat(miniformat)
+        end
+
+        flag = get_tag_with_tag_about_call_to_action(calltoaction, "flag").first
+        if flag.present?
+          flag_info = {
+            "icon" => (get_extra_fields!(flag)["icon"]["url"] rescue nil),
+          }
+        end
+      
+        interaction_info_list, interactions_for_calltoaction = build_interaction_info_list(calltoaction, interactions_to_compute)
+        interactions_for_calltoaction.each do |key, value|
+          interactions[key] = value
+        end
+
+        reward = Reward.includes(:currency).where(call_to_action_id: calltoaction.id).first
+        if reward.present?
+          calltoaction_reward_info = {
+            "cost" => reward.cost,
+            "status" => "locked",
+            "has_currency" => false,
+            "reward" => reward          
+          }
           prize = {
             "id" => reward.id,
             "cost" => reward.cost,
-            "has_currency" => current_user ? user_has_currency_for_reward(reward) : false
           }
         end
-      end
 
-      interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("-") : "all"
-      calltoaction_info = cache_short(get_calltoaction_info_cache_key(current_or_anonymous_user.id, calltoaction.id, interactions_to_compute_key)) do
-        {
-          "calltoaction" => { 
-            "id" => calltoaction.id,
-            "name" => calltoaction.name,
-            "slug" => calltoaction.slug,
-            "title" => calltoaction.title,
-            "description" => calltoaction.description,
-            "media_type" => calltoaction.media_type,
-            "media_image" => calltoaction.media_image(:extra_large), 
-            "media_data" => calltoaction.media_data, 
-            "thumbnail_url" => calltoaction.thumbnail_url,
-            "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
-            "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
-            "interaction_info_list" => build_interaction_info_list(calltoaction, interactions_to_compute),
-            "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}"),
-            "activated_at" => calltoaction.activated_at,
-            "user_id" => calltoaction.user_id,
-            "user_name" => calltoaction.user.nil? ? "" : calltoaction.user.username,
-            "user_avatar" => user_avatar(calltoaction.user)
-          },
-          "prize" => prize,
-          "flag" => flag_info,
-          "miniformat" => miniformat_info,
-          "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
-          "reward_info" => calltoaction_reward_info
+        calltoaction_info = {
+            "calltoaction" => { 
+              "id" => calltoaction.id,
+              "name" => calltoaction.name,
+              "slug" => calltoaction.slug,
+              "title" => calltoaction.title,
+              "description" => calltoaction.description,
+              "media_type" => calltoaction.media_type,
+              "media_image" => calltoaction.media_image(:extra_large), 
+              "media_data" => calltoaction.media_data, 
+              "thumbnail_url" => calltoaction.thumbnail_url,
+              "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
+              "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
+              "interaction_info_list" => interaction_info_list,
+              "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}"),
+              "activated_at" => calltoaction.activated_at,
+              "user_id" => calltoaction.user_id,
+              "user_name" => calltoaction.user.nil? ? "" : calltoaction.user.username,
+              "user_avatar" => user_avatar(calltoaction.user)
+            },
+            "flag" => flag_info,
+            "miniformat" => miniformat_info,
+            "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, anonymous_user),
+            "reward_info" => calltoaction_reward_info,
+            "prize" => prize
         }
+
+        calltoaction_info_list << calltoaction_info
+
       end
 
-      calltoaction_info_list << calltoaction_info
-    
+      result = { calltoaction_info_list: calltoaction_info_list , interactions: interactions }
+      # This hack is needed to avoid a strange "@new_record" string being serialized instead of an object id
+      Marshal.dump(result)  
+      result
+
     end
 
-    return calltoaction_info_list
+    calltoaction_info_list, interactions = calltoaction_info_list_and_interactions[:calltoaction_info_list], 
+                                           calltoaction_info_list_and_interactions[:interactions]
 
+    if current_user
+      calltoaction_info_list_for_current_user = [] 
+      calltoaction_info_list.each do |calltoaction_info|
+
+        interaction_info_list = []
+        calltoaction = find_in_calltoactions(calltoactions, calltoaction_info["calltoaction"]["id"])
+
+        if calltoaction_info["reward_info"]
+          reward = calltoaction_info["reward_info"]["reward"]
+          calltoaction_info["reward_info"] = {
+            "cost" => reward.cost,
+            "status" => get_user_reward_status(reward)
+          }
+          if !user_has_reward(reward.name)
+            calltoaction_info["prize"] = {
+              "id" => reward.id,
+              "cost" => reward.cost,
+              "has_currency" => user_has_currency_for_reward(reward)
+            }
+          else 
+            calltoaction_info["prize"] = nil
+          end
+        end
+
+        user_interactions = UserInteraction.where(interaction_id: interactions.keys, user_id: current_user.id)
+        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+          user_interaction = find_in_user_interactions(user_interactions, interaction_info["interaction"]["id"])
+          if user_interaction
+            user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
+          end
+          interaction_info["user_interaction"] = user_interaction_for_interaction_info
+          interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interactions[interaction_info["interaction"]["id"]])
+          interaction_info_list << interaction_info
+        end
+        calltoaction_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, current_user)
+        calltoaction_info["calltoaction"]["interaction_info_list"] = interaction_info_list
+        calltoaction_info_list_for_current_user << calltoaction_info
+      end
+      calltoaction_info_list = calltoaction_info_list_for_current_user
+    end
+    calltoaction_info_list
+  end
+
+  def find_in_calltoactions(calltoactions, calltoaction_id)
+    calltoaction_to_return = nil
+    calltoactions.each do |calltoaction|
+      if calltoaction.id == calltoaction_id
+        calltoaction_to_return = calltoaction 
+      end
+    end
+    calltoaction_to_return
+  end
+
+  def find_in_user_interactions(user_interactions, interaction_id)
+    user_interaction_to_return = nil
+    user_interactions.each do |user_interaction|
+      if user_interaction.interaction_id == interaction_id
+        user_interaction_to_return = user_interaction 
+      end
+    end
+    user_interaction_to_return
   end
 
   def build_interaction_info_list(calltoaction, interactions_to_compute)
 
     interaction_info_list = Array.new
+    interactions = {}
+
     enable_interactions(calltoaction).each do |interaction|
 
       resource_type = interaction.resource_type.downcase
 
       if !interactions_to_compute || interactions_to_compute.include?(resource_type)
+
+        interactions[interaction.id] = interaction
 
         resource = interaction.resource
         resource_question = resource.question rescue nil
@@ -135,12 +217,7 @@ module CallToActionHelper
         resource_providers = JSON.parse(resource.providers) rescue nil
         resource_url = resource.url rescue "/"
 
-        if current_user
-          user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)
-          if user_interaction
-            user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
-          end
-        elsif ($site.anonymous_interaction && interaction.stored_for_anonymous)
+        if ($site.anonymous_interaction && interaction.stored_for_anonymous)
           user_interaction = interaction.user_interactions.find_by_user_id(current_or_anonymous_user.id)
           if user_interaction
             anonymous_user_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
@@ -188,15 +265,15 @@ module CallToActionHelper
               "url" => resource_url
             }
           },
-          "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction),
-          "user_interaction" => user_interaction_for_interaction_info,
+          "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction, nil),
+          "user_interaction" => nil,
           "anonymous_user_interaction_info" => anonymous_user_interaction_info
         }
       end
 
     end
 
-    interaction_info_list
+    [interaction_info_list, interactions]
 
   end
 
