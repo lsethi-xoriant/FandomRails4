@@ -360,16 +360,16 @@ module CacheKeysHelper
     "recent_contents_cache_key_#{query}"
   end
   
-  def get_browse_settings_key
-    "browse_settings_key"
+  def get_browse_settings_key(extra_cache_key = "")
+    "browse_settings_key_#{extra_cache_key}"
   end
   
   def get_index_category_cache_key(category_id)
     "index_category_cache_#{category_id}_key"
   end
   
-  def get_browse_sections_cache_key(tags)
-    "browse_page_sections_#{tags.map{|tag| tag.id}.join("_")}"
+  def get_browse_sections_cache_key(tags, extra_cache_key = "")
+    "browse_page_sections_#{tags.map{|tag| tag.id}.join("_")}_#{extra_cache_key}"
   end
 
   # Coin

@@ -22,6 +22,8 @@ module ApplicationHelper
     attribute :contents
     attribute :view_all_link, type: String
     attribute :column_number, type: Integer
+    attribute :total, type: Integer
+    attribute :per_page, type: Integer
   end
   
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method

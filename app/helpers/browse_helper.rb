@@ -25,27 +25,41 @@ module BrowseHelper
     attribute :tags
   end
   
-  def get_browse_settings
-    cache_short(get_browse_settings_key) do
-      Setting.find_by_key(BROWSE_SETTINGS_KEY)
+  def get_browse_settings(tag_browse)
+    if tag_browse
+      extra_cache_key = tag_browse.name
+    else
+      extra_cache_key = ""
+    end
+    
+    cache_short(get_browse_settings_key(extra_cache_key)) do
+      if tag_browse
+        get_extra_fields!(tag_browse)['browse_contents']
+      elsif Setting.find_by_key(BROWSE_SETTINGS_KEY)
+        Setting.find_by_key(BROWSE_SETTINGS_KEY).value
+      else
+        ""
+      end
     end
   end
 
-  def init_browse_sections(tags)
-    browse_settings = get_browse_settings
+  def init_browse_sections(tags, tag_browse)
+    browse_settings = get_browse_settings(tag_browse)
     browse_sections_arr = []
+    carousel_elements = get_elements_for_browse_carousel(tag_browse)
+    
     if browse_settings
-      browse_areas = browse_settings.value.split(",")
+      browse_areas = browse_settings.split(",")
       browse_areas.each do |area|
         if area.start_with?("$")
           func = "get_#{area[1..area.length]}"
-          browse_sections_arr << send(func)
+          browse_sections_arr << send(func, 0, carousel_elements)
         else
           tag_area = Tag.find_by_name(area)
           if get_extra_fields!(tag_area).key? "contents"
-            browse_sections_arr << get_featured(tag_area)
+            browse_sections_arr << get_featured(tag_area, carousel_elements)
           else
-            browse_sections_arr << get_browse_area_by_category(tag_area, tags)
+            browse_sections_arr << get_browse_area_by_category(tag_area, tags, carousel_elements)
           end
         end
       end
@@ -89,15 +103,16 @@ module BrowseHelper
     end
   end
   
-  def get_featured(featured)
-    featured_contents = get_featured_content(featured)
+  def get_featured(featured, carousel_elements)
+    featured_contents, total = get_featured_content(featured, carousel_elements)
     browse_section = ContentSection.new(
       key: "featured",
       title: featured.title,
       icon_url: get_browse_section_icon(nil),
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
-      column_number: 12/4 #featured_contents.count
+      column_number: 12/4,
+      total: total
     )
   end
   
@@ -113,8 +128,8 @@ module BrowseHelper
     )
   end
   
-  def get_browse_area_by_category(category, tags)
-    contents = get_contents_by_category(category, tags)
+  def get_browse_area_by_category(category, tags, carousel_elements)
+    contents, total = get_contents_by_category(category, tags, carousel_elements)
     extra_fields = get_extra_fields!(category)
     browse_section = ContentSection.new(
       key: category.name,
@@ -122,7 +137,9 @@ module BrowseHelper
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.id}",
-      column_number: 12/4
+      column_number: 12/4,
+      total: total,
+      per_page: carousel_elements
     )
   end
   
@@ -153,11 +170,14 @@ module BrowseHelper
     )
   end
   
-  def get_contents_by_category(category, tags)
+  def get_contents_by_category(category, tags, carousel_elements)
     tag_ids = ([category] + tags).map{|tag| tag.id}
-    tags = get_tags_with_tags(tag_ids).slice(0,8).sort_by { |tag| tag.created_at }
-    ctas = get_ctas_with_tags_in_and(tag_ids).slice(0,8).sort_by { |cta| cta.created_at }
-    merge_contents(ctas, tags)
+    tags = get_tags_with_tags(tag_ids)
+    ctas = get_ctas_with_tags_in_and(tag_ids)
+    total = tags.count + ctas.count
+    tags = tags.slice!(0, carousel_elements).sort_by { |tag| tag.created_at }
+    ctas = ctas.slice!(0, carousel_elements).sort_by { |cta| cta.created_at }
+    [merge_contents(ctas, tags), total]
   end
   
   def get_contents_by_category_with_tags(filter_tags, offset = 0)
@@ -213,7 +233,7 @@ module BrowseHelper
     ids
   end
 
-  def get_featured_content(featured)
+  def get_featured_content(featured, carousel_elements)
     contents = Array.new
     get_extra_fields!(featured)["contents"].split(",").each do |name|
       cta = CallToAction.find_by_name(name)
@@ -224,7 +244,9 @@ module BrowseHelper
         contents << tag
       end
     end
-    contents = prepare_contents(contents)
+    total = contents.count
+    contents = prepare_contents(contents.slice(0, carousel_elements))
+    [contents, total]
   end
   
   def get_featured_content_with_match(featured, query)
@@ -334,6 +356,16 @@ module BrowseHelper
       else
         Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'header_image' <> ''").map{|t| t.id}
       end
+    end
+  end
+  
+  def get_elements_for_browse_carousel(tag_browse)
+    if tag_browse
+      get_extra_fields!(tag_browse)['carousel_elements'].to_i
+    elsif Setting.find_by_key(BROWSE_CAROUSEL_SETTING_KEY)
+      Setting.find_by_key(BROWSE_CAROUSEL_SETTING_KEY).to_i
+    else
+      DEFAULT_BROWSE_ELEMENT_CAROUSEL
     end
   end
 

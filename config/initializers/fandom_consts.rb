@@ -25,6 +25,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   
   REWARDING_RULE_SETTINGS_KEY = 'rewarding.rules'
   BROWSE_SETTINGS_KEY = 'browse.setting'
+  BROWSE_CAROUSEL_SETTING_KEY = 'browse.carousel.setting'
   RANKING_SETTINGS_KEY = 'ranking.setting'
   NOTIFICATIONS_SETTINGS_KEY = 'notifications.setting'
   PROFANITIES_SETTINGS_KEY = 'profanity.words'
@@ -95,5 +96,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   FULL_SEARCH_CTA_STATUS_ACTIVE = true
   
   AUTOCOMPLETE_DELAY = 300
+  
+  DEFAULT_BROWSE_ELEMENT_CAROUSEL = 8
 
 end

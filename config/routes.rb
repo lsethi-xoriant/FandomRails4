@@ -216,6 +216,7 @@ Fandom::Application.routes.draw do
   match "/upload", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
+  match "/browse/:tagname", :to => "browse#index"
   match "/browse/search", :to => "browse#search"
   match "/browse/full_search", :to => "browse#full_search"
   match "/browse/fullscreen", :to => "browse#index_fullscreen"
