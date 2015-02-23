@@ -434,6 +434,12 @@ module ApplicationHelper
       Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).order("call_to_action_tags.updated_at DESC").to_a
     end
   end
+
+  def get_tag_with_tag_about_tag(tag, parent_tag_name)
+    cache_short get_tag_with_tag_about_call_to_action_cache_key(tag.id, parent_tag_name) do
+      Tag.includes(tags_tags: :other_tag).includes(:tag_tags).where("other_tags_tags_tags.name = ? AND tag_tags.tag_id = ?", parent_tag_name, tag.id).order("tag_tags.updated_at DESC").to_a
+    end
+  end
   
   def get_tag_with_tag_about_reward(reward, tag_name)
     cache_short get_tag_with_tag_about_reward_cache_key(reward.id, tag_name) do
@@ -652,8 +658,12 @@ module ApplicationHelper
   end
 
 
-  def call_to_action_completed?(cta)
-    if current_user
+  def call_to_action_completed?(cta, user = nil)
+    if user.nil?
+      user = current_or_anonymous_user
+    end
+
+    if !anonymous_user?(user)
       require_to_complete_interactions = interactions_required_to_complete(cta)
 
       if require_to_complete_interactions.count == 0
@@ -661,7 +671,7 @@ module ApplicationHelper
       end
 
       require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
-      interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", current_user.id, require_to_complete_interactions_ids)
+      interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", user.id, require_to_complete_interactions_ids)
       require_to_complete_interactions.count == interactions_done.count
 
     else
@@ -669,12 +679,16 @@ module ApplicationHelper
     end
   end
 
-  def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, user = current_or_anonymous_user)
+  def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, user = nil)
+    if user.nil?
+      user = current_or_anonymous_user
+    end
+
     call_to_action_completed_or_reward_status = cache_short(get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, user.id)) do
-      if call_to_action_completed?(calltoaction)
+      if call_to_action_completed?(calltoaction, user)
         CACHED_NIL
       else
-        compute_current_call_to_action_reward_status(reward_name, calltoaction)
+        compute_current_call_to_action_reward_status(reward_name, calltoaction, nil)
       end
     end
 
@@ -686,20 +700,24 @@ module ApplicationHelper
   end
 
   # Generates an hash with reward information.
-  def compute_current_call_to_action_reward_status(reward_name, calltoaction)
+  def compute_current_call_to_action_reward_status(reward_name, calltoaction, user = nil)
+    if user.nil?
+      user = current_user
+    end
+
     reward = get_reward_from_cache(reward_name)
     
-    winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, current_user)
+    winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user)
     
     interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
 
     reward_status_images = Array.new
     total_win_reward_count = 0
 
-    if current_user
+    if user
 
       interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
-        user_interaction = interaction.user_interactions.find_by_user_id(current_user.id)        
+        user_interaction = interaction.user_interactions.find_by_user_id(user.id)        
   
         if user_interaction && user_interaction.outcome.present?
           win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)

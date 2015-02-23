@@ -22,24 +22,37 @@ module CallToActionHelper
       "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
       "title" => calltoaction.title,
       "description" => calltoaction.description,
-      "miniformat" => build_grafitag(calltoaction, "miniformat")
+      "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat")
     }
   end
 
-  def build_grafitag(calltoaction, tag_name)
-    grafitag = get_tag_with_tag_about_call_to_action(calltoaction, tag_name).first
+  def build_grafitag_for_tag(tag, tag_name)
+    grafitag = get_tag_with_tag_about_tag(tag, tag_name).first
     if grafitag.present?
-      {
-        "label_background" => get_extra_fields!(grafitag)["label-background"],
-        "icon" => get_extra_fields!(grafitag)["icon"],
-        "image" => (get_extra_fields!(flag)["image"]["url"] rescue nil),
-        "label_color" => get_extra_fields!(grafitag)["label-color"],
-        "title" => grafitag.title,
-        "name" => grafitag.name
-      }
+      build_grafitag(grafitag)
     else
       nil
     end
+  end
+
+  def build_grafitag_for_calltoaction(calltoaction, tag_name)
+    grafitag = get_tag_with_tag_about_call_to_action(calltoaction, tag_name).first
+    if grafitag.present?
+      build_grafitag(grafitag)
+    else
+      nil
+    end
+  end
+
+  def build_grafitag(grafitag)
+    {
+      "label_background" => get_extra_fields!(grafitag)["label-background"],
+      "icon" => get_extra_fields!(grafitag)["icon"],
+      "image" => (get_extra_fields!(flag)["image"]["url"] rescue nil),
+      "label_color" => get_extra_fields!(grafitag)["label-color"],
+      "title" => grafitag.title,
+      "name" => grafitag.name
+    }
   end
 
   def build_call_to_action_info_list(calltoactions, interactions_to_compute = nil)
@@ -98,8 +111,8 @@ module CallToActionHelper
               "user_name" => user_name,
               "user_avatar" => user_user_avatar
             },
-            "flag" => build_grafitag(calltoaction, "flag"),
-            "miniformat" => build_grafitag(calltoaction, "miniformat"),
+            "flag" => build_grafitag_for_calltoaction(calltoaction, "flag"),
+            "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat"),
             "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, anonymous_user),
             "reward_info" => calltoaction_reward_info,
             "prize" => prize
