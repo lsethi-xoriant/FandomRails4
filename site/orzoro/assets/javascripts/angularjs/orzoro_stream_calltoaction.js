@@ -48,34 +48,62 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     });
   };
 
+  $scope.nextCallToActionInCategory = function(direction) {
+    $http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})
+        .success(function(data) { 
+          $scope.initCallToActionInfoList(data.calltoaction);
+
+          $scope.initAnonymousUser();
+
+          if($scope.calltoaction_info) {
+            $scope.linked_call_to_actions_count = $scope.calltoaction_info.calltoaction.extra_fields.linked_call_to_actions_count;
+            if($scope.linked_call_to_actions_count) {
+              $scope.linked_call_to_actions_index = 1;
+            }
+          }
+
+          $timeout(function() { 
+            angular.forEach($scope.calltoactions, function(sc) {
+              appendYTIframe(sc);
+            });
+          }, 0); // To execute code after page is render
+
+          goToLastLinkedCallToAction();
+
+        }).error(function() {
+          // ERROR.
+        });
+  };
+
+  function goToLastLinkedCallToAction() {
+    $scope.parent_calltoaction_info = $scope.calltoaction_info;
+    $scope.compute_in_progress = true;
+
+    // Too long for get.
+    $http.post("/last_linked_calltoaction", { "anonymous_user_interactions": getAnonymousUserStorage(), "calltoaction_id": $scope.calltoaction_info.calltoaction.id })
+    .success(function(data) { 
+
+      if(data.go_on) {
+        $scope.initCallToActionInfoList(data.calltoaction_info_list);
+        $scope.linked_call_to_actions_index = data.linked_call_to_actions_index;
+        $scope.user_interactions_history = data.user_interactions_history;
+        $scope.updateCallToActionInfoWithAnonymousUserStorage();
+      }
+
+      $scope.compute_in_progress = false;
+
+    }).error(function() {
+
+      $scope.compute_in_progress = false;
+
+    });
+  }
+
   $scope.extraInit = function() {
     if($scope.calltoaction_info) {
-      $scope.parent_calltoaction_info = $scope.calltoaction_info;
-
-      $scope.compute_in_progress = true;
-
-      // Too long for get.
-      $http.post("/last_linked_calltoaction", { "anonymous_user_interactions": getAnonymousUserStorage(), "calltoaction_id": $scope.calltoaction_info.calltoaction.id })
-      .success(function(data) { 
-
-        if(data.go_on) {
-          $scope.initCallToActionInfoList(data.calltoaction_info_list);
-          $scope.linked_call_to_actions_index = data.linked_call_to_actions_index;
-          $scope.user_interactions_history = data.user_interactions_history;
-          $scope.updateCallToActionInfoWithAnonymousUserStorage();
-        }
-
-        $scope.compute_in_progress = false;
-
-      }).error(function() {
-
-        $scope.compute_in_progress = false;
-
-      });
-
-
+      $scope.calltoaction_ids_shown = $scope.calltoaction_info["calltoaction"]["id"]
+      goToLastLinkedCallToAction();
     }
-
   };
 
 }

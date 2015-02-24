@@ -142,7 +142,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $scope.form_data = {};
 
-    initAnonymousUser();
+    $scope.initAnonymousUser();
 
     $scope.animation_in_progress = false;
     
@@ -255,7 +255,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               });
        			}, 1500);
     			});
-	    		initAnonymousUser();
+	    		$scope.initAnonymousUser();
         }, 6000);
         
       }).error(function() {
@@ -640,7 +640,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user_storage));
   }
 
-  function initAnonymousUser() {
+  $scope.initAnonymousUser = function() {
 
     if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage["anonymous_user_storage"] == null) {
       initAnonymousUserStorage();      
@@ -744,9 +744,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $window.appendYTIframe = function(calltoaction_info) {
     if(calltoaction_info.calltoaction.media_type == "YOUTUBE" && $scope.youtube_api_ready) {
-      
+
       player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_data);
-      calltoaction_info.calltoaction["player"] =  player;
+      calltoaction_info.calltoaction["player"] = player;
 
       $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
       $scope.current_user_answer_response_correct[calltoaction_info.calltoaction.id] = false;
