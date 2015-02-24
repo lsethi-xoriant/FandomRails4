@@ -79,8 +79,8 @@ module CacheKeysHelper
     "related_calltoactions_for_calltoaction_#{calltoaction_id}_for_user_#{user_id}"
   end
 
-  def get_calltoactions_info_cache_key(calltoaction_ids, interactions_to_compute, user_id) 
-    "calltoactions_info_#{calltoaction_ids}_interactions_#{interactions_to_compute}_#{user_id}"
+  def get_calltoactions_info_cache_key(calltoaction_ids, interactions_to_compute) 
+    "calltoactions_info_#{calltoaction_ids}_interactions_#{interactions_to_compute}"
   end
 
   def get_calltoactions_count_cache_key()

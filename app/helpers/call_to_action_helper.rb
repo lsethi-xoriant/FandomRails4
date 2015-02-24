@@ -65,7 +65,7 @@ module CallToActionHelper
     calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
     interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("-") : "all"
 
-    calltoaction_info_list_and_interactions = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key, current_or_anonymous_user.id)) do
+    calltoaction_info_list_and_interactions = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key)) do
       
       calltoaction_info_list = Array.new
       interactions = {}
@@ -133,13 +133,14 @@ module CallToActionHelper
 
       result = { calltoaction_info_list: calltoaction_info_list , interactions: interactions, interaction_id_to_answers: interaction_id_to_answers }
       # This hack is needed to avoid a strange "@new_record" string being serialized instead of an object id
-      #Marshal.dump(result)  
+      # Marshal.dump(result)  
       result
 
     end
 
-    calltoaction_info_list, interactions = calltoaction_info_list_and_interactions[:calltoaction_info_list], 
-                                           calltoaction_info_list_and_interactions[:interactions]
+    calltoaction_info_list, interactions, interaction_id_to_answers = calltoaction_info_list_and_interactions[:calltoaction_info_list], 
+                                                                      calltoaction_info_list_and_interactions[:interactions],
+                                                                      calltoaction_info_list_and_interactions[:interaction_id_to_answers]                                                         
 
     if current_user
       calltoaction_info_list_for_current_user = [] 
@@ -168,12 +169,13 @@ module CallToActionHelper
         user_interactions = UserInteraction.where(interaction_id: interactions.keys, user_id: current_user.id)
         calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
           interaction = interactions[interaction_info["interaction"]["id"]]
-          user_interaction = find_in_user_interactions(user_interactions, interaction_info["interaction"]["id"])
+          user_interaction = find_in_user_interactions(user_interactions, interaction.id)
           if user_interaction
             user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
-            answers = calltoaction_info["calltoaction"]["interaction_id_to_answers"][interaction.id]
+            answers = interaction_id_to_answers[interaction.id]
             if answers
-              interaction_info["interaction"]["resource"]["answers"] = build_answers_for_resource(interaction, answers, interaction.resource_type, user_interaction)
+              resource_type = interaction_info["interaction"]["resource_type"]
+              interaction_info["interaction"]["resource"]["answers"] = build_answers_for_resource(interaction, answers, resource_type, user_interaction)
             end
           end
           interaction_info["user_interaction"] = user_interaction_for_interaction_info
@@ -237,12 +239,13 @@ module CallToActionHelper
             anonymous_user_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
           end
         end
-        
+
         case resource_type
         when "quiz"
           resource_type = resource.quiz_type.downcase
-          answers = build_answers_for_resource(interaction, resource.answers, resource_type, user_interaction)
-          interaction_id_to_answers[interaction.id] = answers
+          resource_answers = resource.answers
+          answers = build_answers_for_resource(interaction, resource_answers, resource_type, user_interaction)
+          interaction_id_to_answers[interaction.id] = resource_answers
         when "comment"
           comment_info = build_comments_for_resource(interaction)
         when "like"

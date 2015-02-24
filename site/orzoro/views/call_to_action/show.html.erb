@@ -8,8 +8,8 @@
     <div class="col-sm-12 text-center" ng-repeat="miniformat in [calltoaction_info.miniformat]">
       <%= render partial: "/application/ribbon", locals: { title: "Contenuti correlati", background: "{{miniformat['label_background']}}"}%>
     </div>
-    <div class="col-sm-4" ng-repeat="calltoaction in aux.related_calltoaction_info">
-      <%= render partial: "/application/content_preview" %> 
+    <div class="col-sm-12" ng-repeat="contents in [aux.related_calltoaction_info]">
+      <%= render partial: "/application/content_carousel" %> 
     </div>
   </div>
 </div>
