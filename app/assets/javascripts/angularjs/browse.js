@@ -35,6 +35,10 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.total = total;
 	};
 	
+	$scope.init_light = function(elements) {
+		$scope.elements = elements;
+	};
+	
 	$scope.tagSelected = function(tag){
 		if(tag in $scope.activeTags){
 			delete $scope.activeTags[tag];

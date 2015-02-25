@@ -34,6 +34,7 @@ Fandom::Application.routes.draw do
         match "/cup_redeemer/step_2", to: "cup_redeemer#step_2"
         match "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+        match "/browse/full_search", :to => "browse#full_search"
         resources :call_to_action, only: :show
       end
     end

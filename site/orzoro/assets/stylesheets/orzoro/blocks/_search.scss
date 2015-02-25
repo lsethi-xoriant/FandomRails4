@@ -21,8 +21,17 @@
   padding: 10px 16px;
 }
 
+.search-bar__message{
+  font-weight: bold;
+}
+
 @media (max-width: $screen-sm-min) { 
   .search-bar__input {
-    background: none;
   }
+  
+  .ctas__search{
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+  }
+  
 }
