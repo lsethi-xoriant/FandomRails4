@@ -1,6 +1,6 @@
 module OrzoroHelper
-  def default_orzoro_aux(other)
 
+  def get_miniformat_info_list()
     miniformat_items = get_tags_with_tag("miniformat")
 
     if miniformat_items.any?
@@ -19,7 +19,16 @@ module OrzoroHelper
         }
       end
     end
+  end
 
+  def default_orzoro_aux(other)
+
+    miniformat_info_list, assets = cache_medium("layout_info") do
+      miniformat_info_list = get_miniformat_info_list()
+      layout_assets_tag = Tag.find_by_name('assets')
+      get_extra_fields!(layout_assets_tag)
+      [miniformat_info_list, layout_assets_tag.extra_fields]
+    end
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
       related_calltoaction_info = get_related_calltoaction_info(calltoaction, "miniformat")
@@ -51,6 +60,7 @@ module OrzoroHelper
       "flash_notice" => flash[:notice],
       "free_provider_share" => $site.free_provider_share,
       "miniformat_info_list" => miniformat_info_list,
+      "assets" => assets,
       "root_url" => root_url
     }
 
