@@ -27,7 +27,13 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li class="<%= "active" if "#{controller_name}##{action_name}" == "application#index" %>"><a href="/<%= $context_root %>">Home</a></li>
+            <li class="<%= "active" if "#{controller_name}##{action_name}" == "application#index" %>"><a href="/<%= $context_root %>">Home</a>
+            </li>
+            <li class="<%= "active" if "#{controller_name}##{action_name}" == "gallery#index" %>">
+              <a href="/gallery">
+                Gallery
+              </a>
+            </li>
             <li class="<%= "active" if "#{controller_name}##{action_name}" == "reward#index" %>">
               <%= light_link_to("/reward/catalogue") do %>
                 Premi
@@ -82,6 +88,11 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
         <li class="<%= "active" if "#{controller_name}##{action_name}" == "application#index" %>"><a href="/<%= $context_root %>">Home</a>
+        </li>
+        <li class="<%= "active" if "#{controller_name}##{action_name}" == "gallery#index" %>">
+          <a href="/gallery">
+            Gallery
+          </a>
         </li>
         <li class="<%= "active" if "#{controller_name}##{action_name}" == "reward#index" %>">
           <%= light_link_to("/reward/catalogue") do %>

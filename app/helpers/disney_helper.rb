@@ -217,13 +217,6 @@ module DisneyHelper
 
   def build_thumb_calltoaction(calltoaction)
 
-    flag = get_tag_with_tag_about_call_to_action(calltoaction, "flag").first
-    if flag.present?
-      flag_info = {
-        "icon" => (get_extra_fields!(flag)["icon"]["url"] rescue nil),
-      }
-    end
-
     {
       "id" => calltoaction.id,
       "slug" => calltoaction.slug,
@@ -235,7 +228,7 @@ module DisneyHelper
       "votes" => get_votes_thumb_for_cta(calltoaction),
       "likes" => get_number_of_likes_for_cta(calltoaction),
       "comments" => get_number_of_comments_for_cta(calltoaction),
-      "flag" => flag_info
+      "flag" => build_grafitag_for_calltoaction(calltoaction, "flag")
     }
 
   end
@@ -253,11 +246,9 @@ module DisneyHelper
         get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
       end
     end 
-    related_calltoaction_info = cache_short(get_related_calltoactions_cache_key(current_or_anonymous_user.id, current_calltoaction.id)) do
-      related_calltoaction_info = []
-      calltoactions.each do |calltoaction|
-        related_calltoaction_info << build_thumb_calltoaction(calltoaction)
-      end
+    related_calltoaction_info = []
+    calltoactions.each do |calltoaction|
+      related_calltoaction_info << build_thumb_calltoaction(calltoaction)
     end
     related_calltoaction_info
   end

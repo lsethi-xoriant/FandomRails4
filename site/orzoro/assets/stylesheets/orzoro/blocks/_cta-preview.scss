@@ -4,6 +4,17 @@
   -ms-transform: rotate(-7deg); /* IE 9 */
   -webkit-transform: rotate(-7deg); /* Chrome, Safari, Opera */
   transform: rotate(-7deg);
+  display: inline-block;
+}
+
+.cta-preview__miniformat-container--header {
+  margin-top: 35px;
+  margin-bottom: 10px;
+  padding-top: 4px;
+  padding-bottom: 2px;
+  span {
+    top: 0 !important;
+  }
 }
 
 .cta-preview__miniformat {

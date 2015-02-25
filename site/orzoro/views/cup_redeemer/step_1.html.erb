@@ -1,0 +1,126 @@
+<%= form_for @cup_redeemer, url: "/cup_redeemer/step_1/update", html: { class: "cup__form" } do |f| %> 
+  <div class="container main-container main-container--cream">   
+    <div class="row main-row">
+      <div class="col-sm-12 cup__header-col text-center">
+        <p class="cup__title">COMPLETA LA REGISTRAZIONE PER PARTECIPARE</p>
+        <%= render partial: "/application/ribbon", locals: { title: "Dati personali", background: "#ceb5e2"}%>
+      </div>
+      <div class="col-sm-12"> 
+
+        <% if @cup_redeemer.errors.any? %>
+          <div class="row">
+            <div class="col-sm-12">
+              <p>Errori nella compilazione del modulo:</p>
+              <ul>
+                <% @cup_redeemer.errors.full_messages.each do |error_message| %>
+                    <li><%= error_message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Nome</label>
+              <%= f.text_field :first_name, class: "form-control" %>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-12">
+                  <label>Data di nascita</label>  
+                </div>       
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <% date_array = (1..31).map { |date| [date, date] } %>
+                      <% date_array.unshift ["Giorno", ""] %>
+                      <%= f.select :day_of_birth, options_for_select(date_array), {}, { class: "form-control"} %>
+                    </div>
+                    <div class="col-sm-4">
+                      <% date_array = (1..12).map { |date| [date, date] } %>
+                      <% date_array.unshift ["Mese", ""] %>
+                      <%= f.select :month_of_birth, options_for_select(date_array), {}, { class: "form-control"} %>
+                    </div>
+                    <div class="col-sm-4">
+                      <% date_array = (1900..2020).map { |date| [date, date] } %>
+                      <% date_array.unshift ["Anno", ""] %>
+                      <%= f.select :year_of_birth, options_for_select(date_array), {}, { class: "form-control"} %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> 
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Cognome</label>
+              <%= f.text_field :last_name, class: "form-control" %>
+            </div>
+            <div class="form-group">
+              <label>Genere</label>
+              <div class="row">
+                <div class="col-sm-12 cup__radio">
+                  <label class="radio-inline">
+                    <%= f.radio_button :gender, "M" %> M
+                  </label>
+                  <label class="radio-inline">
+                     <%= f.radio_button :gender, "F" %> F
+                  </label> 
+                </div>   
+              </div>  
+            </div>
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Stato</label>
+              <%= f.text_field :state, class: "form-control" %>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Provincia</label>
+              <%= f.text_field :province, class: "form-control" %>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Cellulare</label>
+              <%= f.text_field :phone, class: "form-control" %>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Email</label>
+              <%= f.text_field :email, class: "form-control" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container main-container container-shadow">
+    <div class="row main-row">
+      <div class="col-sm-12">
+        <div class="checkbox">
+          <label><%= f.check_box :terms %> Si, voglio ricevere notizie sui nuovi prodotti, promozioni e offerte di Orzoro dedicate a me</label>
+        </div>
+        <div class="checkbox">
+          <label><%= f.check_box :newsletter %> Si, voglio essere aggiornato anche sulle novità e le offerte degli altri prodotti Nestlè Italiana S.p.A e SanPellegrino S.p.A</label>
+        </div>
+        <div class="checkbox">
+          <label><%= f.check_box :privacy %> Dichiaro di aver preso visione dell’informativa e acconsento al
+          trattamento dei dati personali*</label>
+        </div>
+      </div> 
+      <div class="col-sm-12 text-center">
+        <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
+      </div>   
+    </div>
+  </div>
+<% end %>

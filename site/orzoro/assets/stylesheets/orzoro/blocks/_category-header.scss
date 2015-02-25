@@ -10,11 +10,10 @@
   margin-top: -20px;
 }
 
-.category-header__title{
-  position: absolute;
-  bottom: 15px;
-  left: 50px;
-  color: #fff;
+.category-header__title,
+.category-header__subtitle{
+  color: $brown;
+  padding: 0 20%;
 }
 
 .category-header__title--gallery{
@@ -36,7 +35,17 @@
   bottom: 15px;
 }
 
-@media (max-width: $screen-sm-min) { 
+.category-header__launch{
+  text-transform: uppercase;
+  color: $brown;
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+  width: 100%;
+  font-weight: bold;
+}
+
+@media (max-width: $screen-xs) { 
   .category-header {
     height: auto;
     overflow: hidden;
@@ -48,11 +57,11 @@
     bottom: 15px;
   }
   .category-header__title {
-    bottom: 10px;
-    color: #fff;
     font-size: 18px;
-    left: 15px;
-    position: absolute;
+  }
+  
+  .category-header__subtitle{
+    font-size: 13px;
   }
 
 }

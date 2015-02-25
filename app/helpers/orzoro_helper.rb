@@ -21,6 +21,7 @@ module OrzoroHelper
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
       related_calltoaction_info = get_related_calltoaction_info(calltoaction, "miniformat")
+      calltoaction_category = get_tag_with_tag_about_call_to_action(calltoaction, "category").first
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
@@ -38,6 +39,7 @@ module OrzoroHelper
     
     aux = {
       "tenant" => $site.id,
+      "calltoaction_category" => calltoaction_category,
       "anonymous_interaction" => $site.anonymous_interaction,
       "main_reward_name" => MAIN_REWARD_NAME,
       "calltoaction_evidence_info" => calltoaction_evidence_info,

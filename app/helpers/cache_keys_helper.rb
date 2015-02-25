@@ -19,8 +19,8 @@ module CacheKeysHelper
     "tag_with_tag_about_reward_#{reward_id}_#{tag_name}"
   end
 
-  def get_profanity_words_cache_key(tenant = "")
-    "#{tenant.blank? ? "" : tenant + "_"}profanities"
+  def get_profanity_words_cache_key()
+    "profanities"
   end
 
   # Rewards
@@ -79,8 +79,8 @@ module CacheKeysHelper
     "related_calltoactions_for_calltoaction_#{calltoaction_id}_for_user_#{user_id}"
   end
 
-  def get_calltoaction_info_cache_key(user_id, calltoaction_id, interactions_to_compute) 
-    "calltoaction_info_#{calltoaction_id}_interactions_#{interactions_to_compute}_for_user_#{user_id}"
+  def get_calltoactions_info_cache_key(calltoaction_ids, interactions_to_compute) 
+    "calltoactions_info_#{calltoaction_ids}_interactions_#{interactions_to_compute}"
   end
 
   def get_calltoactions_count_cache_key()
@@ -188,6 +188,10 @@ module CacheKeysHelper
   
   def get_tag_with_tag_about_call_to_action_cache_key(cta_id, tag_name)
     "tag_with_tag_about_call_to_action_#{cta_id}_#{tag_name}"
+  end
+
+  def get_tag_with_tag_about_tag_cache_key(tag_id, tag_name)
+    "tag_with_tag_about_tag_#{tag_id}_#{tag_name}"
   end
 
   def get_ctas_with_tag_cache_key(tag_name, cta_max_updated_at = "")
@@ -372,16 +376,16 @@ module CacheKeysHelper
     "recent_contents_cache_key_#{query}"
   end
   
-  def get_browse_settings_key
-    "browse_settings_key"
+  def get_browse_settings_key(extra_cache_key = "")
+    "browse_settings_key_#{extra_cache_key}"
   end
   
   def get_index_category_cache_key(category_id)
     "index_category_cache_#{category_id}_key"
   end
   
-  def get_browse_sections_cache_key(tags)
-    "browse_page_sections_#{tags.map{|tag| tag.id}.join("_")}"
+  def get_browse_sections_cache_key(tags, extra_cache_key = "")
+    "browse_page_sections_#{tags.map{|tag| tag.id}.join("_")}_#{extra_cache_key}"
   end
 
   # Coin

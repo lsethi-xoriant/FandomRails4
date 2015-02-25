@@ -1,10 +1,10 @@
 <div class="ribbon__container-main">
-  <div class="ribbon__container_before" ng-style="{'border-color': miniformat['label_background']}"></div>
-  <div class="ribbon__container_after" ng-style="{'border-color': miniformat['label_background']}"></div>
-  <div class="ribbon__container" ng-style="{'background-color': miniformat['label_background']}">
+  <div class="ribbon__container_before" ng-style="{'border-color': '<%= background %>'}"></div>
+  <div class="ribbon__container_after" ng-style="{'border-color': '<%= background %>'}"></div>
+  <div class="ribbon__container" ng-style="{'background-color': '<%= background %>'}">
     <div class="ribbon-stitches-top"></div>
     <div class="ribbon-content">
-      <p class="ribbon__text">Contenuti correlati</p>
+      <p class="ribbon__text"><%= title %></p>
     </div>
     <div class="ribbon-stitches-bottom"></div>
   </div>

@@ -285,11 +285,14 @@ class ApplicationController < ActionController::Base
     calltoactions_during_video_interactions_second
   end
 
-  before_filter :authenticate_admin, :if => proc {|c| Rails.env == "production" && Rails.configuration.deploy_settings.fetch('http_security', true) }
+  before_filter :authenticate_admin
 
   def authenticate_admin
-    authenticate_or_request_with_http_basic do |username, password|
-      username == "admin" && password == "supersecret"
+    if Rails.env == "production" && Rails.configuration.deploy_settings.fetch('http_security', true)
+      credentials = Rails.configuration.deploy_settings.fetch('http_security_credentials', { 'username' => 'admin', 'password' => 'supersecret'})
+      authenticate_or_request_with_http_basic do |username, password|
+        username == credentials['username'] && password == credentials['password']
+      end
     end
   end
 

@@ -2,7 +2,23 @@ class BrowseController < ApplicationController
   include BrowseHelper
   
   def index
-    @browse_section = cache_long(get_browse_sections_cache_key(get_search_tags_for_tenant)) do init_browse_sections(get_search_tags_for_tenant) end
+    @tag_browse = get_tag_browse(params[:tagname])
+    
+    if @tag_browse
+      @aux_other_params = { 
+        page_tag: {
+          "miniformat" => build_grafitag_for_tag(@tag_browse, "miniformat"),
+          "header_image" => (get_upload_extra_field_processor(get_extra_fields!(@tag_browse)["header_image"])rescue nil)
+        }
+      }
+      extra_cache_key = @tag_browse.name
+    else
+      extra_cache_key = ""
+    end
+    
+    @browse_section = cache_long(get_browse_sections_cache_key(get_search_tags_for_tenant, extra_cache_key)) do 
+      init_browse_sections(get_search_tags_for_tenant, @tag_browse) 
+    end
     
     if params[:query]
       @query = params[:query]
@@ -28,6 +44,14 @@ class BrowseController < ApplicationController
           content["status"] = cta_statuses[content["id"].to_i]
         end
       end
+    end
+  end
+  
+  def get_tag_browse(tag_name)
+    if tag_name.nil?
+      nil
+    else
+      Tag.find_by_name(tag_name)
     end
   end
   
@@ -140,9 +164,8 @@ class BrowseController < ApplicationController
   end
   
   def index_category
-    tag = Tag.includes(:tags_tags).find(params[:id])
-    @category = tag_to_category(tag)
-    contents, @tags, @total = get_contents_by_category_with_tags(get_tags_for_category(tag))
+    @category = Tag.includes(:tags_tags).find(params[:id])
+    contents, @tags, @total = get_contents_by_category_with_tags(get_tags_for_category(@category))
     @contents = compute_gallery_contents(contents)
   end
   
@@ -187,8 +210,6 @@ class BrowseController < ApplicationController
   end
   
   def view_all
-    @tag = Tag.find(params[:id])
-    @contents = get_contents_by_category(@tag)
   end
   
   def view_all_recent
