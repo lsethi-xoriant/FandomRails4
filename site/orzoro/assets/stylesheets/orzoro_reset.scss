@@ -1,4 +1,7 @@
 /* RESET CSS */
+*{
+  font-family: "BarmenoRegularBold";
+}
 
 hr {
   border-color: #ccc;
@@ -6,6 +9,14 @@ hr {
 
 h1, h2, h3, h4, h5{
   color: $brown;
+}
+
+h1{
+  font-size: 38px;
+}
+
+h2{
+  font-size: 18px;
 }
 
 #append-other {
