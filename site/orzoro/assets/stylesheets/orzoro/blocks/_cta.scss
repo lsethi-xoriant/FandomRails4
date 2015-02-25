@@ -1,9 +1,39 @@
 /* CTA */
 
+.cta__table {
+  .table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td {
+    border-bottom: 1px solid $brown;
+  }
+  .table > thead > tr > th {
+    border-top: 2px solid $brown !important;
+    border-bottom: 2px solid $brown;
+    color: $brown;
+    font-size: 12px;
+  }
+  th {
+    color: $brown;
+    font-size: 12px;
+  }
+  td {
+    font-size: 12px;
+    color: #999;
+  }
+  table {
+    margin-bottom: 5px !important;
+  }
+}
+
+.cta__table-footer {
+  color: $brown;
+  font-size: 8px;
+}
+
 .cta__extra-description__title {
   color: $brown;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
+  padding-top: 20px;
+  padding-bottom: 15px;
 }
 
 .cta__extra-description__container {
@@ -44,6 +74,7 @@
 .cta__fa-angle {
   font-size: 100px;
   color: #999;
+  cursor: pointer;
 }
 
 .media-image-ricette {
@@ -242,8 +273,8 @@
   }
 }
 
-
 @media (max-width: $screen-sm-min) { 
+
   .cta__media-footer {
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;

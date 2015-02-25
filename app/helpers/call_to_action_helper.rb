@@ -14,15 +14,20 @@ module CallToActionHelper
     CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
   end
 
-  def build_default_thumb_calltoaction(calltoaction)    
+  def build_default_thumb_calltoaction(calltoaction)   
     {
-      "id" => calltoaction.id,
-      "slug" => calltoaction.slug,
-      "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
-      "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
-      "title" => calltoaction.title,
-      "description" => calltoaction.description,
-      "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat")
+      "attributes" => {
+        "id" => calltoaction.id,
+        "detail_url" => "/call_to_action/" + calltoaction.slug,
+        "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
+        "thumb_url" => calltoaction.thumbnail(:medium),
+        "title" => calltoaction.title,
+        "description" => calltoaction.description,
+        "type" => "cta",
+        "aux" => {
+          "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat")
+        }
+      }
     }
   end
 
@@ -48,7 +53,7 @@ module CallToActionHelper
     {
       "label_background" => get_extra_fields!(grafitag)["label-background"],
       "icon" => get_extra_fields!(grafitag)["icon"],
-      "image" => (get_extra_fields!(flag)["image"]["url"] rescue nil),
+      "image" => (get_extra_fields!(grafitag)["image"]["url"] rescue nil),
       "label_color" => get_extra_fields!(grafitag)["label-color"],
       "title" => grafitag.title,
       "name" => grafitag.name
@@ -64,12 +69,16 @@ module CallToActionHelper
       
       calltoaction_info_list = Array.new
       interactions = {}
+      interaction_id_to_answers = {}
 
       calltoactions.each do |calltoaction|
     
-        interaction_info_list, interactions_for_calltoaction = build_interaction_info_list(calltoaction, interactions_to_compute)
+        interaction_info_list, interactions_for_calltoaction, interaction_id_to_answers_for_calltoaction = build_interaction_info_list(calltoaction, interactions_to_compute)
         interactions_for_calltoaction.each do |key, value|
           interactions[key] = value
+        end
+        interaction_id_to_answers_for_calltoaction.each do |key, value|
+          interaction_id_to_answers[key] = value
         end
 
         reward = Reward.includes(:currency).where(call_to_action_id: calltoaction.id).first
@@ -122,15 +131,16 @@ module CallToActionHelper
 
       end
 
-      result = { calltoaction_info_list: calltoaction_info_list , interactions: interactions }
+      result = { calltoaction_info_list: calltoaction_info_list , interactions: interactions, interaction_id_to_answers: interaction_id_to_answers }
       # This hack is needed to avoid a strange "@new_record" string being serialized instead of an object id
-      #Marshal.dump(result)  
+      # Marshal.dump(result)  
       result
 
     end
 
-    calltoaction_info_list, interactions = calltoaction_info_list_and_interactions[:calltoaction_info_list], 
-                                           calltoaction_info_list_and_interactions[:interactions]
+    calltoaction_info_list, interactions, interaction_id_to_answers = calltoaction_info_list_and_interactions[:calltoaction_info_list], 
+                                                                      calltoaction_info_list_and_interactions[:interactions],
+                                                                      calltoaction_info_list_and_interactions[:interaction_id_to_answers]                                                         
 
     if current_user
       calltoaction_info_list_for_current_user = [] 
@@ -158,12 +168,18 @@ module CallToActionHelper
 
         user_interactions = UserInteraction.where(interaction_id: interactions.keys, user_id: current_user.id)
         calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-          user_interaction = find_in_user_interactions(user_interactions, interaction_info["interaction"]["id"])
+          interaction = interactions[interaction_info["interaction"]["id"]]
+          user_interaction = find_in_user_interactions(user_interactions, interaction.id)
           if user_interaction
             user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
+            answers = interaction_id_to_answers[interaction.id]
+            if answers
+              resource_type = interaction_info["interaction"]["resource_type"]
+              interaction_info["interaction"]["resource"]["answers"] = build_answers_for_resource(interaction, answers, resource_type, user_interaction)
+            end
           end
           interaction_info["user_interaction"] = user_interaction_for_interaction_info
-          interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interactions[interaction_info["interaction"]["id"]])
+          interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
           interaction_info_list << interaction_info
         end
         calltoaction_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, current_user)
@@ -199,6 +215,7 @@ module CallToActionHelper
 
     interaction_info_list = Array.new
     interactions = {}
+    interaction_id_to_answers = {}
 
     enable_interactions(calltoaction).each do |interaction|
 
@@ -222,11 +239,13 @@ module CallToActionHelper
             anonymous_user_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
           end
         end
-        
+
         case resource_type
         when "quiz"
           resource_type = resource.quiz_type.downcase
-          answers = build_answers_for_resource(interaction, resource.answers, resource_type, user_interaction)
+          resource_answers = resource.answers
+          answers = build_answers_for_resource(interaction, resource_answers, resource_type, user_interaction)
+          interaction_id_to_answers[interaction.id] = resource_answers
         when "comment"
           comment_info = build_comments_for_resource(interaction)
         when "like"
@@ -272,7 +291,7 @@ module CallToActionHelper
 
     end
 
-    [interaction_info_list, interactions]
+    [interaction_info_list, interactions, interaction_id_to_answers]
 
   end
 
@@ -289,13 +308,13 @@ module CallToActionHelper
   end
 
   def build_answers_for_resource(interaction, answers, resource_type, user_interaction)
-    answers_for_resurce = Array.new
+    answers_for_resource = Array.new
     answers.each do |answer|
       if resource_type == "versus" && user_interaction
         percentage = interaction_answer_percentage(interaction, answer) 
       end
       answer_correct = user_interaction ? answer.correct : false
-      answers_for_resurce << {
+      answers_for_resource << {
         "id" => answer.id,
         "text" => answer.text,
         "aux" => answer.aux,
@@ -304,7 +323,7 @@ module CallToActionHelper
         "percentage" => percentage
       }
     end
-    answers_for_resurce
+    answers_for_resource
   end
 
   def build_votes_for_resource(interaction)

@@ -21,13 +21,20 @@
     <%= render partial: "/call_to_action/vote_interaction" %>
   </div>
 
+  <div class="col-md-12 text-center" if="aux.calltoaction_category">
+    <div class="cta-preview__miniformat-container cta-preview__miniformat-container--header" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}">
+      <span class="cta-preview__miniformat">{{aux.calltoaction_category.title}}</span>
+    </div>
+  </div>
+
 </div>
+
 <div class="row main-row cta__undervideo">
   <div class="col-md-12">
     <div class="row">
 
       <div class="col-sm-2 text-left">
-        <span class="fa fa-angle-left cta__fa-angle"></span>
+        <span class="fa fa-angle-left cta__fa-angle" ng-click="nextCallToActionInCategory('prev')"></span>
       </div>
 
       <div class="col-sm-8 text-center cta__title-and-description-col">
@@ -43,15 +50,12 @@
             <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span><span class="glyphicon glyphicon-download-alt"></span>{{interaction_info.interaction.resource.title}}</span></a>
           </div>
         </div>
-
-
       </div>
 
       <div class="col-sm-2 text-right">
-        <span class="fa fa-angle-right cta__fa-angle"></span>
+        <span class="fa fa-angle-right cta__fa-angle" ng-click="nextCallToActionInCategory('next')"></span>
       </div>
     </div>
-
 
 
     <!-- MOBILE -->
