@@ -3,7 +3,7 @@ var orzoroStreamCalltoactionModule = angular.module('OrzoroStreamCalltoactionMod
 OrzoroStreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce'];
 orzoroStreamCalltoactionModule.controller('OrzoroStreamCalltoactionCtrl', OrzoroStreamCalltoactionCtrl);
 
-// Gestione del csrf-token nelle chiamate ajax.
+// csrf-token handling in ajax calls
 orzoroStreamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
