@@ -948,8 +948,8 @@ module ApplicationHelper
           "this.page.api_key = \"#{ ENV['DISQUS_PUBLIC_KEY'] }\";" +
           "this.sso = {" +
                   "name:   \"SampleNews\"," +
-                  "button:  \"http://placehold.it/50x50\"," +
-                  "icon:     \"http://placehold.it/50x50\"," +
+                  "button:  \"//placehold.it/50x50\"," +
+                  "icon:     \"//placehold.it/50x50\"," +
                   "url:        \"http://example.com/login/\"," +
                   "logout:  \"http://example.com/logout/\"," +
                   "width:   \"800\"," +
