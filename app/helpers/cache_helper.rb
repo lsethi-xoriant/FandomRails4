@@ -49,6 +49,11 @@ module CacheHelper
     Rails.cache.write(actual_key, value, :expires_in => expires_in, :race_condition_ttl => 30)
   end
 
+  def cache_read(key)
+    actual_key = get_cache_key(key)
+    Rails.cache.read(actual_key)
+  end
+
   def get_cache_key(key = nil)
     if key.nil?
       # WARNING: this statement assumes that get_cache_key is used at a certain call stack depth. 
