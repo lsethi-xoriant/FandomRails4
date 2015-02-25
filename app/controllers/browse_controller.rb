@@ -164,9 +164,8 @@ class BrowseController < ApplicationController
   end
   
   def index_category
-    tag = Tag.includes(:tags_tags).find(params[:id])
-    @category = tag_to_category(tag)
-    contents, @tags, @total = get_contents_by_category_with_tags(get_tags_for_category(tag))
+    @category = Tag.includes(:tags_tags).find(params[:id])
+    contents, @tags, @total = get_contents_by_category_with_tags(get_tags_for_category(@category))
     @contents = compute_gallery_contents(contents)
   end
   

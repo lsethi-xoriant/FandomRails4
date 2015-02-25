@@ -1,0 +1,26 @@
+<div class="container container--default" ng-controller="BrowseCtrl" ng-init="init(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @total %>)">
+  
+  <div class="row category-header" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@category)["header_image"], :original) rescue nil %>)">
+		<div class="col-xs-12 text-center">
+			<h1 class="category-header__title"><%= @category.title %></h1>
+			<h2 class="category-header__subtitle"><%= @category.description %></h2>
+		</div>
+		<% if get_extra_fields!(@category)["subtitle"] %>
+			<p class="category-header__launch hidden-xs"><%= get_extra_fields!(@category)["subtitle"] %><br/> <i class="fa fa-chevron-down"></i></p>
+		<% end %>
+  </div>
+
+  <div class="row main-row brws-item">
+    <div class="col-md-12">
+     
+	      <div class="row">
+      		<div class="col-xs-12 col-md-3 col-sm-4" ng-repeat="content in visibleElements">
+				<%= render partial: "/application/content_preview" %>
+			</div>
+			<div class="col-xs-12 text-center" ng-if="total > elements_in_page">
+				<a class="btn btn-primary btn-load-more" ng-click="load_more(elements_in_page)">Carica Altri</a>
+			</div>
+	      </div>
+	  </div>
+   </div>
+</div>

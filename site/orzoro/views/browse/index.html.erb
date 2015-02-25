@@ -5,10 +5,13 @@
 				<h1 class="category-header__title"><%= @tag_browse.title %></h1>
 				<h2 class="category-header__subtitle"><%= @tag_browse.description %></h2>
 			</div>
+			<% if get_extra_fields!(@tag_browse)["subtitle"] %>
+				<p class="category-header__launch hidden-xs"><%= get_extra_fields!(@tag_browse)["subtitle"] %><br/> <i class="fa fa-chevron-down"></i></p>
+			<% end %>
 		</div>
 	<% end %>
 	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.attributes.contents.length > 0">
-		<div class="row brws-item main-row">
+		<div class="row brws-item main-row" ng-class-odd="'brws-item--dark'">
 			  <!-- HEADING -->
 			<div class="col-sm-12 text-center">
 			  <%= render partial: "/application/ribbon", locals: { title: "{{section.attributes.title}}", background: "{{aux.page_tag.miniformat['label_background']}}"}%>

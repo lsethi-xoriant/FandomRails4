@@ -183,6 +183,10 @@ a{
   background-image: url("orzoro/texture.png");
 }
 
+.brws-item--dark{
+  background-color: #f6f0dd;
+}
+
 .container--default {
   background-color: #FFF;
   border-left: 1px solid #ccc;
@@ -282,6 +286,12 @@ a{
     float: right;
   }
   
+}
+
+@media (max-width: $screen-xs) {
+  .brws-item {
+    padding-bottom: 20px !important;
+  }
 }
 
 @media (max-width: $screen-sm-min) { 

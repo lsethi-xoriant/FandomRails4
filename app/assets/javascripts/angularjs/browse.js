@@ -15,7 +15,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 	$scope.$watch('visibleElements', function() {
 		$scope.tagsEnabled = {};
        	angular.forEach($scope.visibleElements, function(element){
-       		angular.forEach(element.tags, function(tag){
+       		angular.forEach(element.attributes.tags, function(tag){
        			if(!(tag in $scope.tagsEnabled)){
        				$scope.tagsEnabled[tag] = tag;
        			}
@@ -23,10 +23,10 @@ function BrowseCtrl($scope, $window, $filter, $http) {
        	});
     });
 	
-	$scope.init = function(category, elements, tags, total) {
+	$scope.init = function(category_id, elements, tags, total) {
 		$scope.isTagFilterOpen = false;
-		$scope.category = category.attributes;
-		$scope.elements = normalizeElements(elements);
+		$scope.category_id = category_id;
+		$scope.elements = elements;
 		$scope.elements_in_page = 12;
 		$scope.visibleElements = $scope.elements;
 		$scope.tags = tags;
@@ -55,7 +55,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 	function updateContents(){
 		var visibleContents = [];
 		angular.forEach($scope.elements, function(elem, key){
-			if(isElementVisible(elem)){
+			if(isElementVisible(elem.attributes)){
 				visibleContents.push(elem);
 			}
 		});
@@ -90,10 +90,10 @@ function BrowseCtrl($scope, $window, $filter, $http) {
   		$http.get("/browse/index_category_load_more.json", {
 	      params: {
 	        offset: offset,
-	        tag_id: $scope.category.id
+	        tag_id: $scope.category_id
 	      }
 	    }).then(function(response){
-	      $scope.elements = $scope.elements.concat(normalizeElements(response.data));
+	      $scope.elements = $scope.elements.concat(response.data);
 	      $scope.elements_in_page = offset + 12;
 	      updateContents();
 	      if (response.data.length == 0){
