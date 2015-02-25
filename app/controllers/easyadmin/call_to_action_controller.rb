@@ -14,7 +14,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   layout "admin"
 
   def clone
-    clone_cta(params)
+    is_linking?(params[:id]) ? clone_linking_cta(params[:id]) : clone_cta(params[:id])
   end
 
   def restore_from_extra_fields(calltoaction)
@@ -90,7 +90,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     tag_list.each do |t|
       tag = Tag.find_by_name(t)
       tag = Tag.create(name: t) unless tag
-      CallToActionTag.create(tag_id: tag.id, calltoaction_id: calltoaction.id)
+      CallToActionTag.create(tag_id: tag.id, call_to_action_id: calltoaction.id)
     end
     flash[:notice] = "CallToAction taggata"
     redirect_to "/easyadmin/cta/tag/#{ calltoaction.id }"
@@ -270,6 +270,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
 
     @title_filter = params[:title_filter]
+    @slug_filter = params[:slug_filter]
     @tag_list = params[:tag_list]
 
     if params[:commit] == "APPLICA FILTRO"
@@ -278,6 +279,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
       where_conditions = params[:call_to_actions] == "all" ? "user_id IS NULL" : "id in (#{cta_ids_with_tag_template.join(",")})"
       where_conditions << " AND title ILIKE '%#{@title_filter}%'" unless @title_filter.nil?
+      where_conditions << " AND slug ILIKE '%#{@slug_filter}%'" unless @slug_filter.nil?
       unless @tag_list.blank?
         where_conditions << (cta_ids.blank? ? " AND id IS NULL" : " AND id in (#{cta_ids.inspect[1..-2]})")
       end
@@ -288,6 +290,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     if params[:commit] == "RESET"
       @tag_list = nil
       @title_filter = nil
+      @slug_filter = nil
     end
 
     @page_size = @cta_list.num_pages

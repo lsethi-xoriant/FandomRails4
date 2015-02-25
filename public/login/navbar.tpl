@@ -10,7 +10,7 @@
                 <a href="">7 <span class="glyphicon glyphicon-star"></span> <button class="btn btn-danger btn-xs">Gioca Subito</button></a>
               </div>
               <button class="navbar-toggle nav-avatar" type="button" data-toggle="collapse" data-target=".dx-navbar-collapse">
-                <img src="http://placehold.it/36x36">
+                <img src="//placehold.it/36x36">
               </button>
               <!--<a href="../" class="navbar-brand"><span class="glyphicon glyphicon-tower"></span> Fandom</a>-->
             </div>
@@ -120,14 +120,14 @@
                     <li role="presentation" class="divider"></li>
                     <li class="container-fluid">
                       <div class="row" style="width: 300px">
-                        <div class="col-xs-3"><img src="http://placehold.it/50x50"></div>
+                        <div class="col-xs-3"><img src="//placehold.it/50x50"></div>
                         <div class="col-xs-9"><a href="#">Hai guadagnato un nuovo badge!</a></div>
                       </div>
                     </li>
                     <li role="presentation" class="divider"></li>
                     <li class="container-fluid">
                       <div class="row" style="width: 300px">
-                        <div class="col-xs-3"><img src="http://placehold.it/50x50"></div>
+                        <div class="col-xs-3"><img src="//placehold.it/50x50"></div>
                         <div class="col-xs-9"><a href="#">Hai guadagnato un nuovo badge!</a></div>
                       </div>
                     </li>

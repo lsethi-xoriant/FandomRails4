@@ -554,12 +554,12 @@ module CallToActionHelper
     end
     "UGC_" + name
   end
-  
-  def clone_cta(params)
-    old_cta = CallToAction.find(params[:id])
-    new_cta = duplicate_cta(old_cta.id)
+
+  def clone_cta(old_cta_id)
+    old_cta = CallToAction.find(old_cta_id)
+    new_cta = duplicate_cta(old_cta_id)
     old_cta.interactions.each do |i|
-      duplicate_interaction(new_cta,i)
+      duplicate_interaction(new_cta, i)
     end
     old_cta.call_to_action_tags.each do |tag|
       duplicate_cta_tag(new_cta, tag)
@@ -570,7 +570,43 @@ module CallToActionHelper
     @tag_list = tag_array.join(",")
     render template: "/easyadmin/call_to_action/new_cta"
   end
-  
+
+  def clone_linking_cta(old_cta_id)
+    @current_cta = CallToAction.find(old_cta_id)
+    if params[:commit] == "SALVA"
+      ActiveRecord::Base.transaction do
+        begin
+          @cloned_cta_map = {@current_cta.name => params[:cloned_cta_name]}.merge(params[:cloned_cta])
+          cloned_interactions_map = {}
+          @cloned_cta_map.each do |old_cta_name, new_cta_name|
+            old_cta = CallToAction.find_by_name(old_cta_name)
+            new_cta = duplicate_cta(old_cta.id)
+            old_cta.interactions.each do |i|
+              new_interaction = duplicate_interaction(new_cta, i)
+              cloned_interactions_map[i.id] = new_interaction
+            end
+            old_cta.call_to_action_tags.each do |tag|
+              duplicate_cta_tag(new_cta, tag)
+            end
+            new_cta.name = new_cta_name
+            new_cta.save
+          end
+          duplicate_interaction_call_to_actions(@cloned_cta_map, cloned_interactions_map)
+        rescue Exception => e
+          flash[:error] = "Errore: #{e}"
+          raise ActiveRecord::Rollback
+        end
+        flash[:notice] = "CallToAction '#{@current_cta.name}' e collegate clonate con successo"
+      end
+    else
+      @linked_cta_set = Set.new
+      @trees = [[@current_cta]]
+      next_call_to_action_linked_to(@current_cta, @trees)
+      @linked_cta_set = build_linked_cta_names_set(@current_cta, @trees)
+    end
+    render :template => "/easyadmin/call_to_action/clone_linked_cta"
+  end
+
   def duplicate_cta(old_cta_id)
     cta = CallToAction.find(old_cta_id)
     cta.title = "Copy of " + cta.title
@@ -580,8 +616,24 @@ module CallToActionHelper
     cta_attributes.delete("id")
     CallToAction.new(cta_attributes, :without_protection => true)
   end
-  
-  def duplicate_interaction(new_cta, interaction, name = "")
+
+  def duplicate_interaction_call_to_actions(cloned_cta_map, cloned_interactions_map)
+    cloned_cta_map.each do |old_cta_name, new_cta_name|
+      old_cta = CallToAction.find_by_name(old_cta_name)
+      old_cta.interactions.each do |old_interaction|
+        old_interaction_id = old_interaction.id
+        InteractionCallToAction.where(:interaction_id => old_interaction_id).each do |old_icta|
+          new_icta = InteractionCallToAction.new(
+            :interaction_id => cloned_interactions_map[old_interaction_id].id, 
+            :call_to_action_id => CallToAction.find_by_name(cloned_cta_map[CallToAction.find(old_icta.call_to_action_id).name]).id
+            )
+          new_icta.save
+        end
+      end
+    end
+  end
+
+  def duplicate_interaction(new_cta, interaction)
     interaction_attributes = interaction.attributes
     interaction_attributes.delete("id")
     interaction_attributes.delete("name")
@@ -602,8 +654,9 @@ module CallToActionHelper
     if resource_type == "Quiz"
       duplicate_quiz_answers(new_resource,interaction.resource)
     end
+    new_interaction
   end
-  
+
   def duplicate_quiz_answers(new_quiz, old_quiz)
     old_quiz.answers.each do |a|
       answer_attributes = a.attributes
@@ -611,21 +664,21 @@ module CallToActionHelper
       new_quiz.answers.build(answer_attributes, :without_protection => true)
     end
   end
-  
+
   def duplicate_cta_tag(new_cta, tag)
     unless tag.tag.name.downcase == "template"
       new_cta.call_to_action_tags.build(:tag_id => tag.tag_id)
     end
   end
-  
+
   def get_max_upload_size
     MAX_UPLOAD_SIZE * BYTES_IN_MEGABYTE
   end
-  
+
   def is_call_to_action_gallery(calltoaction)
     return has_tag_recursive(calltoaction.call_to_action_tags.map{|c| c.tag}, "gallery")
   end
-  
+
   def has_tag_recursive(tags, tag_name)
     tags.each do |t|
       if t.name == tag_name
@@ -638,17 +691,17 @@ module CallToActionHelper
     end
     return false
   end
-  
+
   def cta_is_a_reward(cta)
     cache_short("cta_#{cta.id}_is_a_reward") do
       cta.rewards.any?
     end
   end
-  
+
   def cta_locked?(cta)
     cta_is_a_reward(cta) && !cta_is_unlocked(cta)
   end
-  
+
   def cta_is_unlocked(cta)
     unlocked = false
     cta.rewards.each do |r|
@@ -659,7 +712,7 @@ module CallToActionHelper
     end
     unlocked
   end
-  
+
   def has_done_share_interaction(calltoaction)
     share_interactions = get_share_from_calltoaction(calltoaction)
     if share_interactions.any?
@@ -673,17 +726,17 @@ module CallToActionHelper
       [nil, nil]
     end
   end
-  
+
   def get_share_from_calltoaction(calltoaction)
     cache_short("share_interaction_cta_#{calltoaction.id}") do
       calltoaction.interactions.where("when_show_interaction = 'SEMPRE_VISIBILE' AND resource_type = 'Share'").to_a
     end
   end
-  
+
   def get_random_cta_by_tag(tag_name)
     get_ctas_with_tag(tag_name).sample
   end
-  
+
   def get_number_of_comments_for_cta(cta)
     cache_short(get_comments_count_for_cta_key(cta.id)) do
       comment_interaction = cta.interactions.find_by_resource_type("Comment")
@@ -705,7 +758,7 @@ module CallToActionHelper
       end
     end
   end
-  
+
   def get_number_of_likes_for_cta(cta)
     cache_short(get_likes_count_for_cta_key(cta.id)) do
       like_interaction = cta.interactions.find_by_resource_type("Like")
@@ -716,7 +769,7 @@ module CallToActionHelper
       end
     end
   end
-  
+
   def get_votes_for_cta(cta_id)
     result = UserInteraction.select("SUM((aux->>'vote')::int) as votes").where("(aux->>'call_to_action_id')::int = ?", cta_id).first
     if result.votes.blank?
@@ -725,5 +778,77 @@ module CallToActionHelper
       result.votes
     end
   end
-  
+
+  def is_linking?(cta_id)
+    CallToAction.find(cta_id).interactions.each do |interaction|
+      return true if InteractionCallToAction.find_by_interaction_id(interaction.id)
+    end
+    false
+  end
+
+  def is_linked?(cta_id)
+    return true if InteractionCallToAction.find_by_call_to_action_id(cta_id)
+    false
+  end
+
+  def build_html_jstree(tree_array, current_cta_id = 0)
+    res = ""
+    tree_array.each_with_index do |tree, i|
+      res += i == 0 ? "<div id='tree#{i}' class='tree'>" : "<hr/><div id='tree#{i}' class='tree'>"
+      tree.each do |cta|
+        icon = cta.id == current_cta_id ? "fa fa-circle" : "fa fa-long-arrow-right"
+        res += "<ul><li data-jstree='{\"icon\":\"#{icon}\"}'>#{cta.name}</ul>"
+      end
+      res += "</div>"
+    end
+    res.html_safe
+  end
+
+  def build_tree(cta)
+    res = [[cta]]
+    next_call_to_action_linked_to(cta, res)
+    previous_call_to_action_linked_to(cta, res)
+    return res
+  end
+
+  def build_linked_cta_names_set(root_cta, trees)
+    linked_cta_set = Set.new
+    trees.each do |cta_tree|
+      cta_tree.each do |cta|
+        linked_cta_set << cta.name unless cta.name == root_cta.name
+      end
+    end
+    return linked_cta_set
+  end
+
+  def next_call_to_action_linked_to(cta, res)
+    return if cta.interactions.nil?
+    cta.interactions.each do |interaction|
+      next_call_to_actions = InteractionCallToAction.where(:interaction_id => interaction.id).pluck(:call_to_action_id)
+      if next_call_to_actions.any?
+        old_res = res.dup
+        next_call_to_actions.each_with_index do |cta_id, i|
+          next_cta = CallToAction.find(cta_id)
+          res[i] = old_res[0] + [next_cta]
+        end
+        res.each_with_index do |path, i|
+          next_call_to_action_linked_to(res[i][-1], res)
+        end
+      end
+    end
+  end
+
+  def previous_call_to_action_linked_to(cta, res)
+    previous_interactions = InteractionCallToAction.where(:call_to_action_id => cta.id).pluck(:interaction_id)
+    return if previous_interactions.blank?
+    old_res = res.dup
+    previous_interactions.each_with_index do |interaction_id, i|
+      previous_cta = CallToAction.find(Interaction.find(interaction_id).call_to_action_id)
+      res[i] = [previous_cta] + old_res[0]
+    end
+    res.each_with_index do |path, i|
+      previous_call_to_action_linked_to(res[i][0], res)
+    end
+  end
+
 end

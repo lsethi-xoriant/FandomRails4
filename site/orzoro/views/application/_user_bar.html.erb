@@ -15,12 +15,12 @@
         <ul class="nav navbar-nav">
           <li class="navbar__item active navbar__home-item">
             <a href="#">
-              <img class="navbar__miniformat" src="http://placehold.it/30x30">
+              <img class="navbar__miniformat" src="//placehold.it/30x30">
               <p class="navbar__item-text">home</p>
             </a>
           </li>
           <li class="navbar__item" ng-repeat="miniformat in aux.miniformat_info_list">
-            <a href="#">
+            <a href="{{miniformat.browse_url}}">
               <img class="navbar__miniformat" ng-src="{{miniformat.icon}}">
               <p class="navbar__item-text">{{miniformat.title}}</p>
             </a>

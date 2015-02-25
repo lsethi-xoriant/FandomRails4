@@ -1,5 +1,8 @@
 <%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "calltoaction" } %>
 
+<!-- Modal -->
+<%= render partial: "/easyadmin/easyadmin/linked_cta_tree" %>
+
 <div id="content">   
 
   <div id="content-header">
@@ -20,36 +23,40 @@
       </div>
     <% end %>
 
-   <% if can? :manage, :all %>
-     <div class="row text-right">
-        <div class="col-md-12">
-          <a href="/easyadmin/cta/edit/<%= @current_cta.id %>"><button type="button" class="btn btn-primary">MODIFICA</button></a>
+    <div class="row text-right">
+      <% if can? :manage, :all %>
+        <div class="col-md-1 col-md-offset-9">
+          <a href="/easyadmin/cta/edit/<%= @current_cta.id %>"><button type="button" class="btn btn-primary"> MODIFICA </button></a>
         </div>
-      </div>
       <% end %>
+      <!-- Button trigger modal -->
+      <div id="show-tree-button" class="col-md-2">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#treeModal"> CTA COLLEGATE </button>
+      </div>
+    </div>
 
     <h3>Dati generali</h3>
     <hr/>
 
     <div class="row">
       <div class="col-sm-5">
-          <dl class="dl-horizontal">
-            <dt>Nome</dt><dd><p><%= @current_cta.name %></p></dd>
-            <dt>Titolo</dt><dd><p><%= @current_cta.title %></p></dd>
+        <dl class="dl-horizontal">
+          <dt>Nome</dt><dd><p><%= @current_cta.name %></p></dd>
+          <dt>Titolo</dt><dd><p><%= @current_cta.title %></p></dd>
 
-            <dt>Disqus</dt><dd><p><%= @current_cta.enable_disqus ? "abilitato" : "non abilitato" %></p></dd>
+          <dt>Disqus</dt><dd><p><%= @current_cta.enable_disqus ? "abilitato" : "non abilitato" %></p></dd>
 
-            <% unless @current_cta.media_data.blank? %>
-              <dt>Video</dt><dd><p><%= @current_cta.media_data %></p></dd>
-            <% end %>
+          <% unless @current_cta.media_data.blank? %>
+            <dt>Video</dt><dd><p><%= @current_cta.media_data %></p></dd>
+          <% end %>
 
-            <% unless @tag_list.blank? %>
-              <dt>Tag</dt><dd><p><%= @tag_list %></p></dd>
-            <% end %>
-
-          </dl>
+          <% unless @tag_list.blank? %>
+            <dt>Tag</dt><dd><p><%= @tag_list %></p></dd>
+          <% end %>
+        </dl>
       </div>
-      <% if  @current_cta.media_image.present? %>
+
+      <% if @current_cta.media_image.present? %>
         <div class="col-sm-2 col-sm-offset-2 text-center">
           <label>Immagine</label>
           <img class="img-responsive" src="<%= @current_cta.media_image %>" style="border: 1px solid #ccc; border-radius: 10px;">
@@ -76,11 +83,16 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-      $("#details-button").click(function() {
-        $("#details-button-div").remove();
-        cta_id = <%= @current_cta.id %>
-        $("#details").load("/easyadmin/cta/show_details/" + cta_id);
-      });
+
+    if($("#trees").find("li").length <= 1) {
+      $("#show-tree-button").hide();
+    }
+
+    $("#details-button").click(function() {
+      $("#details-button-div").remove();
+      cta_id = <%= @current_cta.id %>
+      $("#details").load("/easyadmin/cta/show_details/" + cta_id);
+    });
 
   });
 

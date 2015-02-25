@@ -30,6 +30,7 @@
 //= require easyadmin/fullcalendar
 //= require easyadmin/jquery.magnific-popup
 //= require easyadmin/howl
+//= require easyadmin/jstree.min
 //= require easyadmin/raphael-2.1.2.min
 //= require easyadmin/morris.min
 //= require easyadmin/jquery-te-1.4.0.min
