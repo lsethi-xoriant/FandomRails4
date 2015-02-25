@@ -9,11 +9,13 @@ module OrzoroHelper
       
       miniformat_info_list = []
       miniformat_items.each do |miniformat_item|
+        extra_fields = get_extra_fields!(miniformat_item)
         miniformat_info_list << {
           "id" => miniformat_item.id,
           "slug" => miniformat_item.slug,
+          "browse_url" => (extra_fields['browse_url'] rescue '#'),
           "title" => miniformat_item.title,
-          "icon" => (get_extra_fields!(miniformat_item)["icon"]["url"] rescue nil)
+          "icon" => (extra_fields["icon"]["url"] rescue nil)
         }
       end
     end

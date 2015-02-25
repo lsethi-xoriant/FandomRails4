@@ -20,7 +20,7 @@
             </a>
           </li>
           <li class="navbar__item" ng-repeat="miniformat in aux.miniformat_info_list">
-            <a href="#">
+            <a href="{{miniformat.browse_url}}">
               <img class="navbar__miniformat" ng-src="{{miniformat.icon}}">
               <p class="navbar__item-text">{{miniformat.title}}</p>
             </a>
