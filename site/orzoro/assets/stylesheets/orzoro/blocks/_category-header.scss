@@ -10,11 +10,9 @@
   margin-top: -20px;
 }
 
-.category-header__title{
-  position: absolute;
-  bottom: 15px;
-  left: 50px;
-  color: #fff;
+.category-header__title,
+.category-header__subtitle{
+  color: $brown;
 }
 
 .category-header__title--gallery{

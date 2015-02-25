@@ -176,13 +176,11 @@ a{
 }
 
 .brws-item {
-  background: $grey; 
-  background: -webkit-linear-gradient(#FFFFFF, $grey);
-  background: -o-linear-gradient(#FFFFFF, $grey);
-  background: -moz-linear-gradient(#FFFFFF, $grey);
-  background: linear-gradient(#FFFFFF, $grey);
-  border-bottom: 1px solid #d1d2d4;
+  background: $grey;
+  padding-top: 30px;
   padding-bottom: 30px;
+  border-bottom: 1px solid #d1d2d4;
+  background-image: url("orzoro/texture.png");
 }
 
 .container--default {
