@@ -1,13 +1,14 @@
 module OrzoroHelper
 
   def get_miniformat_info_list()
+    miniformat_info_list = []
+
     miniformat_items = get_tags_with_tag("miniformat")
 
     if miniformat_items.any?
       miniformat_tag = get_tag_from_params("miniformat")
       miniformat_items = order_elements(miniformat_tag, miniformat_items)
       
-      miniformat_info_list = []
       miniformat_items.each do |miniformat_item|
         extra_fields = get_extra_fields!(miniformat_item)
         miniformat_info_list << {
@@ -19,6 +20,8 @@ module OrzoroHelper
         }
       end
     end
+
+    miniformat_info_list
   end
 
   def default_orzoro_aux(other)
@@ -29,6 +32,7 @@ module OrzoroHelper
       get_extra_fields!(layout_assets_tag)
       [miniformat_info_list, layout_assets_tag.extra_fields]
     end
+
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
       related_calltoaction_info = get_related_calltoaction_info(calltoaction, "miniformat")
