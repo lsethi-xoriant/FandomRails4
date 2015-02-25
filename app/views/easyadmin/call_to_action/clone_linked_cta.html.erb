@@ -1,0 +1,155 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "calltoaction" } %>
+
+<div id="content">
+
+  <div id="content-header">
+    <h1>CLONA LINKED CTA</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2">
+            <div class="alert alert-success"><%= flash[:notice] %></div>
+          </div>
+        </div>
+      <% elsif flash[:error] %>
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2">
+            <div class="alert alert-danger"><%= flash[:error] %></div>
+          </div>
+        </div>
+      <% end %>
+
+    <% if params[:commit] %>
+
+    </div>
+
+    <% else %>
+
+      <div class="col-lg-8 col-lg-offset-2">
+        <div class="alert alert-info" role="alert">
+          È stata selezionata la clonatura di una CTA con collegamenti: al salvataggio verranno clonate anche le CTA collegate
+          ad essa, visualizzabili nel diagramma di destra.
+          <dl class="dl-horizontal">
+            <dt>Nota:</dt><dd>Inserito il nome della prima CTA, i nomi delle CTA collegate verranno settati automaticamente.</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+
+      <%= form_tag :method => 'post' do %>
+
+        <div class="col-md-6">
+          <h3>Prima CTA</h3>
+          <hr/>
+
+          <label class="text-input">Nome prima CTA</label>
+          <%= text_field_tag :cloned_cta_name, @current_cta.name, :class => "form-control" %>
+          <hr/>
+
+          <% if @linked_cta_set %>
+            <h3>CTA collegate</h3>
+            <hr/>
+            <% @linked_cta_set.each do |old_cta_name| %>
+              <label class="text-input"><%= "Nome CTA copia di '#{old_cta_name}'" %></label>
+              <%= text_field_tag "cloned_cta[#{old_cta_name}]", old_cta_name, :class => "form-control", 
+                    :tagged_as_step => get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('step'), 
+                    :tagged_as_ending => get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('ending') %>
+              <br/>
+            <% end %>
+          <% end %>
+
+          <div class="row text-center">
+            <%= submit_tag 'SALVA', class: 'btn btn-primary' %>
+          </div>
+        </div>
+
+        <% if @trees %>
+          <div id="trees" class="col-md-6">
+            <h3>Collegamenti alla CTA da clonare</h3>
+            <hr/>
+            <%= build_html_jstree(@trees, @current_cta.id) %> 
+          </div>
+        <% end %>
+
+      <% end %>
+
+    </div>
+
+    <% end %>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  $('.tree').bind('loaded.jstree', function (e, data) {
+    data.instance.open_all();
+  });
+
+  $('.tree').jstree();
+
+  function fillLinkedCtaName(srcInputElement, destInputElement, taggedAsStep, taggedAsEnding, counter) {
+    var nameManuallyModified = false;
+
+    srcInputElement.on('input', function() { 
+      if (!nameManuallyModified) {
+        var text = this.value;
+        text = text.toLowerCase();
+        if(taggedAsStep == "true")
+          text = text + "-step-" + counter;
+        else 
+          if(taggedAsEnding == "true")
+            text = text + "-eding-" + counter;
+          else
+            text = text + "-" + counter;
+
+        text = text.replace(/[^a-zA-Z0-9]+/g,'-').replace(/-+/g,'-').replace(/-$/g,'').replace(/^-/g,'');
+        destInputElement.val(text);
+      }
+    });
+
+    destInputElement.keyup(function() {
+      nameManuallyModified = true;
+      if (destInputElement.val() == "")
+        nameManuallyModified = false;
+    });
+  };
+
+  $(document).ready(function() {
+
+    stepLinkedCounter = 0;
+    endingLinkedCounter = 0;
+    linkedCounter = 0;
+
+    $("input[name^='cloned_cta[']").each(function() {
+      taggedAsStep = $(this).attr("tagged_as_step");
+      taggedAsEnding = $(this).attr("tagged_as_ending");
+      if(taggedAsStep == "true") {
+        stepLinkedCounter += 1;
+        counter = stepLinkedCounter;
+      }
+      else
+        if(taggedAsEnding == "true") {
+          endingLinkedCounter += 1;
+          counter = endingLinkedCounter;
+        }
+        else {
+          linkedCounter += 1;
+          counter = linkedCounter;
+        }
+
+      fillLinkedCtaName($("#cloned_cta_name"), $(this), taggedAsStep, taggedAsEnding, counter);
+    });
+
+  });
+
+</script>

@@ -11,4 +11,5 @@
 *= require ./easyadmin/select2
 *= require ./datepicker.css
 *= require ./easyadmin/drag-and-drop-lists
+*= require ./easyadmin/jstree.min
 */
