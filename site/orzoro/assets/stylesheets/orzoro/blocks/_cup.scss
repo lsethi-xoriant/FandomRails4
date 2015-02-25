@@ -1,0 +1,46 @@
+/* CUP */
+
+.cup__title {
+  color: #660206;
+  font-family: "BarmenoRegularBold";
+  font-size: 28px;
+  padding: 0 10px 15px 10px;
+}
+
+.cup__package {
+  border: 2px solid #999;
+  border-radius: 5px;
+  margin-right: 30px;
+  padding: 10px;
+}
+
+.cup__subtitle {
+  color: $brown;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.cup__header-col {
+  margin-bottom: 30px;
+}
+
+.cup__form {
+  label {
+    color: $brown;
+  }
+  .checkbox label {
+   font-weight: bold; 
+  }
+  .main-container--cream {
+    padding-bottom: 30px;
+  }
+}
+
+.cup__submit {
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+.cup__radio {
+  padding-top: 5px;
+}
