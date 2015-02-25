@@ -73,9 +73,11 @@ class BrowseController < ApplicationController
     if params[:query].blank?
       handle_no_result("")
       return
+    else
+      @query = params[:query]
     end
     
-    contents, total = get_contents_with_match(params[:query])
+    contents, total = get_contents_with_match(params[:query], get_current_property)
     
     if total == 0
       handle_no_result(params[:query])
@@ -264,6 +266,10 @@ class BrowseController < ApplicationController
   end
   
   def search
+    
+  end
+  
+  def autocomplete_search
     term = params[:q]
     results = cache_short(get_browse_search_results_key(get_search_cache_key_params(term))) { get_contents_by_query(term, get_search_tags_for_tenant).slice(0,8) }
     respond_to do |format|
@@ -277,6 +283,11 @@ class BrowseController < ApplicationController
   
   def get_search_tags_for_tenant
     []
+  end
+  
+  #hook for filter search result in specific property if multiproperty site
+  def get_current_property
+    nil
   end
   
 end

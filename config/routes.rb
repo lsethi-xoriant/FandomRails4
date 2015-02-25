@@ -51,7 +51,7 @@ Fandom::Application.routes.draw do
         match "/browse", :to => "browse#index"
         match "/browse/full_search", :to => "browse#full_search"
         match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
-        match "/browse/search", :to => "browse#search"
+        match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
         match "/browse/redirect/:query", :to => "browse#index"
         match "/browse/view_all/:id", :to => "browse#index_category"
         match "/browse/view_recent", :to => "browse#view_all_recent"
@@ -222,8 +222,9 @@ Fandom::Application.routes.draw do
   match "/upload", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
-  match "/browse/:tagname", :to => "browse#index"
+  match "/browse/contents/:tagname", :to => "browse#index"
   match "/browse/search", :to => "browse#search"
+  match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
   match "/browse/full_search", :to => "browse#full_search"
   match "/browse/fullscreen", :to => "browse#index_fullscreen"
   match "/browse/view_all/:id", :to => "browse#index_category"

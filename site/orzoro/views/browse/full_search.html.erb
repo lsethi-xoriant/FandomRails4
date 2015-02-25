@@ -1,0 +1,25 @@
+<div class="container container--default" ng-controller="SearchCtrl" ng-init="init_search(<%= @contents.to_json %>, <%= @total %>, '<%= @query %>')">
+	
+	<%= render partial: "/application/search", locals: {query: @query} %>
+	
+	<div class="row brws-item main-row">
+		<div class="col-xs-12">
+	      <div class="section-heading">
+	        	<h3 class="text-center">
+	        		Risultati suggeriti
+	        	</h3>
+	      </div>
+	    </div>
+
+		<div class="col-xs-12 col-md-3" ng-repeat="content in contents">
+			<%= render partial: "/application/content_preview" %>
+		</div>
+	</div>
+	<div class="row row-load-more text-center" ng-if="total > offset">
+		<div class="col-xs-4 col-xs-offset-4">
+			<a class="btn btn-primary btn-block" ng-click="load_more(offset)">Carica Altri</a>
+		</div>
+	</div>
+</div>
+	
+</div>

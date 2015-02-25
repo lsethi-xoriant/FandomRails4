@@ -4,6 +4,10 @@ hr {
   border-color: #ccc;
 }
 
+h1, h2, h3, h4, h5{
+  color: $brown;
+}
+
 #append-other {
   margin-top: 15px;
   padding-bottom: 30px;
@@ -193,9 +197,6 @@ a{
 
 .container--default {
   background-color: #FFF;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-top: 1px solid #ccc;
 }
 
 @-webkit-keyframes comment_evidence_animation { /* Chrome, Safari, Opera */

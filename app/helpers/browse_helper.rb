@@ -194,10 +194,9 @@ module BrowseHelper
     merge_contents(ctas, tags)
   end
   
-  def get_contents_with_match(query, offset = 0)
-    property = get_disney_property
+  def get_contents_with_match(query, offset = 0, property)
     contents, total = cache_medium(get_full_search_results_key(query, property)) do
-      if property != "disney-channel"
+      unless property.nil?
         tags = get_tags_with_tag_with_match(property, query)
         ctas = get_ctas_with_tag_with_match(property, query).sort_by { |cta| cta.created_at }
       else
