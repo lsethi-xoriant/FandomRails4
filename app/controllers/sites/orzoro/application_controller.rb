@@ -23,5 +23,8 @@ class Sites::Orzoro::ApplicationController < ApplicationController
 
   end
 
+  def faq
+    
+  end
   
 end
