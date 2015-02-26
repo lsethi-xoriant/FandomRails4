@@ -67,7 +67,36 @@ unless defined? FILTER_OPERATOR_CONTAINS
   
   USER_TIME_ZONE = "Rome"
   USER_TIME_ZONE_ABBREVIATION = "CET"
-  
+
+  WORLD_STATES = ["Italia", "Abcasia", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua e Barbuda", "Arabia Saudita", 
+    "Argentina", "Armenia", "Australia", "Austria", "Azawad", "Azerbaigian", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belgio", 
+    "Belize", "Benin", "Bhutan", "Bielorussia", "Bolivia", "Bosnia ed Erzegovina", "Botswana", "Brasile", "Brunei", "Bulgaria", 
+    "Burkina Faso", "Burundi", "Cambogia", "Camerun", "Canada", "Capo Verde", "Ciad", "Cile", "Cina", "Cipro", "Cipro del Nord", 
+    "Citta' del Vaticano", "Colombia", "Comore", "Corea del Nord", "Corea del Sud", "Costa d'Avorio", "Costa Rica", "Croazia", 
+    "Cuba", "Danimarca", "Dominica", "Ecuador", "Egitto", "El Salvador", "Emirati Arabi Uniti", "Eritrea", "Estonia", "Etiopia", "Figi", 
+    "Filippine", "Finlandia", "Francia", "Gabon", "Gambia", "Georgia", "Germania", "Ghana", "Giamaica", "Giappone", "Gibuti", "Giordania", 
+    "Grecia", "Grenada", "Guatemala", "Guinea", "Guinea Equatoriale", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", 
+    "Iran", "Iraq", "Irlanda", "Islanda", "Isole Marshall", "Isole Salomone", "Israele", "Kazakistan", "Kenya", "Kirghizistan", "Kiribati", 
+    "Kosovo", "Kuwait", "Laos", "Lesotho", "Lettonia", "Libano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Lussemburgo", 
+    "Madagascar", "Malawi", "Maldive", "Malesia", "Mali", "Malta", "Marocco", "Mauritania", "Mauritius", "Messico", "Micronesia", 
+    "Moldavia", "Mongolia", "Montenegro", "Mozambico", "Myanmar", "Nagorno-Karabakh", "Namibia", "Nauru Yaren", "Nepal", "Nicaragua", 
+    "Niger", "Nigeria", "Norvegia", "Nuova Zelanda", "Oman", "Ossezia del Sud", "Paesi Bassi", "Pakistan", "Palau", "Panama", 
+    "Papua Nuova Guinea", "Paraguay", "Peru", "Polonia", "Portogallo", "Principato di Monaco", "Qatar", "Regno Unito", "Repubblica Ceca", 
+    "Repubblica Centrafricana", "Repubblica del Congo", "Repubblica Democratica del Congo", "Repubblica di Macedonia", 
+    "Repubblica Dominicana", "Romania", "Ruanda", "Russia", "Saint Kittse Nevis", "Saint Vincent e Grenadine", "Samoa", "San Marino", 
+    "Santa Lucia", "Sao Tomee Principe", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Siria", "Slovacchia", "Slovenia", 
+    "Somalia", "Somaliland", "Spagna", "SriLanka", "Stati Uniti d'America", "Sudafrica", "Sudan", "Sudan del Sud", "Suriname", "Svezia", 
+    "Svizzera", "Swaziland", "Tagikistan", "Taiwan", "Tanzania", "Thailandia", "Timor Est", "Togo", "Tonga", "Transnistria", 
+    "Trinidad e Tobago", "Tunisia", "Turchia", "Turkmenistan", "Tuvalu", "Ucraina", "Uganda", "Ungheria", "Uruguay", "Uzbekistan", "Vanuatu", 
+    "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"]
+
+  ITALIAN_PROVINCES = ["AG", "AL", "AN", "AO", "AP", "AQ", "AR", "AT", "AV", "BA", "BG", "BI", "BL", "BN", "BO", "BR", "BS", "BT", "BZ", 
+    "CA", "CB", "CE", "CH", "CI", "CL", "CN", "CO", "CR", "CS", "CT", "CZ", "EN", "FC", "FE", "FG", "FI", "FO", "FR", "GE", "GO", "GR", 
+    "IM", "IS", "KR", "LC", "LE", "LI", "LO", "LT", "LU", "MB", "MC", "ME", "MI", "MN", "MO", "MS", "MT", "NA", "NO", "NU", "OG", "OR", 
+    "OT", "PA", "PC", "PD", "PE", "PG", "PI", "PN", "PO", "PR", "PS", "PT", "PV", "PZ", "RA", "RC", "RE", "RG", "RI", "RM", "RN", "RO", 
+    "SA", "SI", "SO", "SP", "SR", "SS", "SV", "TA", "TE", "TN", "TO", "TP", "TR", "TS", "TV", "UD", "VA", "VB", "VC", "VE", "VI", "VR", 
+    "VS", "VT", "VV"]
+
   MONTH_NAMES = ["", "gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"]
   
   SUPERFAN_CONTEST_REWARD = "contest-point"

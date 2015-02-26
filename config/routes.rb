@@ -29,9 +29,14 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "orzoro" do
         root :to => "application#index"
+        match "/cup_redeemer/index", to: "cup_redeemer#index"
         match "/cup_redeemer/step_1", to: "cup_redeemer#step_1"
         match "/cup_redeemer/step_1/update", to: "cup_redeemer#step_1_update"
         match "/cup_redeemer/step_2", to: "cup_redeemer#step_2"
+        match "/cup_redeemer/step_2/update", to: "cup_redeemer#step_2_update"
+        match "/cup_redeemer/step_3", to: "cup_redeemer#step_3"
+        match "/cup_redeemer/step_3/update", to: "cup_redeemer#step_3_update"
+        match "/cup_redeemer/request_completed", to: "cup_redeemer#request_completed"
         match "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         resources :call_to_action, only: :show

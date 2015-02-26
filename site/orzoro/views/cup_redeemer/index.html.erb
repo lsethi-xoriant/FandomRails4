@@ -1,0 +1,47 @@
+<div class="container main-container main-container--purple text-center">   
+  <div class="row main-row">
+    <div class="col-sm-12 cup__header-col text-center">
+      <p class="cup__title">Le Tazze di Dora & Miss Tressy</p>
+      <p class="cup__subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam blandit fermentum ligula quis rhoncus. Sed mattis accumsan purus a elementum. Nunc porttitor tincidunt massa et pretium. Mauris eu magna dolor. Aliquam ut lacus felis. Aliquam leo risus, sollicitudin et tempus vitae, scelerisque sed diam.</p>
+    </div>
+    <div class="col-sm-12 cup__header-col text-center">
+      <div class="row main-row">
+        <img class="img-responsive" src="<%= @cup_tag_extra_fields["form_steps"]["url"] rescue nil %>">
+      </div>
+    </div>
+  </div>
+  <div class="cup__submit">
+
+  <%= link_to "RICHIEDI LA TAZZA", "step_1", { :class => "btn btn-red btn-lg" } %>
+
+  </div>
+</div>
+
+<div class="container main-container text-center">
+  <div class="row main-row text-center">
+    <img src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+  </div>
+  <div class="row main-row">
+    <p class="cup__title">Hai già acquistato almeno 2 confezioni?</p>
+    <p class="cup__subtitle">Due confezioni per ricevere una tazza, tre confezioni per due tazze.</p>
+  </div>
+</div>
+
+<div class="container main-container text-center">
+  <div class="row main-row">
+    <div class="col-xs-6">
+      <img src="<%= @cup_tag_extra_fields["two_packages"]["url"] rescue nil %>">
+    </div>
+    <div class="col-xs-6">
+      <img src="<%= @cup_tag_extra_fields["three_packages"]["url"] rescue nil %>">
+    </div>
+  </div>
+</div>
+<div class="container main-container text-center">
+  <div class="row main-row">
+    <p class="cup__footer">
+      I prodotti Orzoro che partecipano alla promozione sono Orzoro Classico, Orzoro Ecco, Orzoro e Cacao, Orzoro e Caffè.
+      Puoi acquistare questi prodotti con le combinazioni che preferisci.
+    </p>
+  </div>
+</div>

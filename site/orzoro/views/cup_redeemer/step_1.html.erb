@@ -5,8 +5,8 @@
         <p class="cup__title">COMPLETA LA REGISTRAZIONE PER PARTECIPARE</p>
         <%= render partial: "/application/ribbon", locals: { title: "Dati personali", background: "#ceb5e2"}%>
       </div>
-      <div class="col-sm-12"> 
 
+      <div class="col-sm-12"> 
         <% if @cup_redeemer.errors.any? %>
           <div class="row">
             <div class="col-sm-12">
@@ -24,7 +24,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>Nome</label>
-              <%= f.text_field :first_name, class: "form-control" %>
+              <%= f.text_field :first_name, :class => "form-control", :required => true %>
             </div>
             <div class="form-group">
               <div class="row">
@@ -36,17 +36,17 @@
                     <div class="col-sm-4">
                       <% date_array = (1..31).map { |date| [date, date] } %>
                       <% date_array.unshift ["Giorno", ""] %>
-                      <%= f.select :day_of_birth, options_for_select(date_array), {}, { class: "form-control"} %>
+                      <%= f.select :day_of_birth, options_for_select(date_array, @cup_redeemer[:day_of_birth]), {}, { class: "form-control", :required => true } %>
                     </div>
                     <div class="col-sm-4">
                       <% date_array = (1..12).map { |date| [date, date] } %>
                       <% date_array.unshift ["Mese", ""] %>
-                      <%= f.select :month_of_birth, options_for_select(date_array), {}, { class: "form-control"} %>
+                      <%= f.select :month_of_birth, options_for_select(date_array, @cup_redeemer[:month_of_birth]), {}, { class: "form-control", :required => true } %>
                     </div>
                     <div class="col-sm-4">
                       <% date_array = (1900..2020).map { |date| [date, date] } %>
                       <% date_array.unshift ["Anno", ""] %>
-                      <%= f.select :year_of_birth, options_for_select(date_array), {}, { class: "form-control"} %>
+                      <%= f.select :year_of_birth, options_for_select(date_array, @cup_redeemer[:year_of_birth]), {}, { class: "form-control", :required => true } %>
                     </div>
                   </div>
                 </div>
@@ -77,13 +77,13 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>Stato</label>
-              <%= f.text_field :state, class: "form-control" %>
+              <%= f.select :state, options_for_select(@states_array, @cup_redeemer[:state]), {}, { class: "form-control", :required => true } %>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
               <label>Provincia</label>
-              <%= f.text_field :province, class: "form-control" %>
+              <%= f.select :province, options_for_select(@provinces_array, @cup_redeemer[:province]), {}, { class: "form-control", :required => true } %>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>Email</label>
-              <%= f.text_field :email, class: "form-control" %>
+              <%= f.text_field :email, class: "form-control", :required => true, :pattern => "[^@]+@[^@]+\.[a-zA-Z]{2,6}" %>
             </div>
           </div>
         </div>
@@ -108,16 +108,19 @@
     <div class="row main-row">
       <div class="col-sm-12">
         <div class="checkbox">
-          <label><%= f.check_box :terms %> Si, voglio ricevere notizie sui nuovi prodotti, promozioni e offerte di Orzoro dedicate a me</label>
+          <label><%= f.check_box :terms, :required => true %> Si, voglio ricevere notizie sui nuovi prodotti, promozioni e offerte di Orzoro dedicate a me</label>
         </div>
         <div class="checkbox">
-          <label><%= f.check_box :newsletter %> Si, voglio essere aggiornato anche sulle novità e le offerte degli altri prodotti Nestlè Italiana S.p.A e SanPellegrino S.p.A</label>
+          <label><%= f.check_box :newsletter, :required => true %> Si, voglio essere aggiornato anche sulle novità e le offerte degli altri prodotti Nestlè Italiana S.p.A e SanPellegrino S.p.A</label>
         </div>
         <div class="checkbox">
-          <label><%= f.check_box :privacy %> Dichiaro di aver preso visione dell’informativa e acconsento al
+          <label><%= f.check_box :privacy, :required => true %> Dichiaro di aver preso visione dell’informativa e acconsento al
           trattamento dei dati personali*</label>
         </div>
-      </div> 
+      </div>
+      <div class="col-sm-2">
+        <%= link_to "Indietro", "index" %>
+      </div>
       <div class="col-sm-12 text-center">
         <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
       </div>   
