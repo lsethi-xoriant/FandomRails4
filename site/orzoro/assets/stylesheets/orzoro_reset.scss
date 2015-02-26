@@ -1,5 +1,6 @@
 /* RESET CSS */
 *{
+  font-family: 'Roboto';
 }
 
 hr {
@@ -8,11 +9,11 @@ hr {
 
 h1, h2, h3, h4, h5{
   color: $brown;
-  font-family: "BarmenoRegularBold";
 }
 
 h1{
   font-size: 38px;
+  font-family: "BarmenoRegularBold";
 }
 
 h2{
