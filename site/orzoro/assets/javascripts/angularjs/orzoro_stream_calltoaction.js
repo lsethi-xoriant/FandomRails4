@@ -22,7 +22,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
       content["attributes"]["thumb_url"] = calltoaction_info["calltoaction"]["thumbnail_medium_url"];
       content["attributes"]["title"] = calltoaction_info["calltoaction"]["title"];
       content["attributes"]["aux"] = new Object();
-      content["attributes"]["aux"]["miniformat"] = calltoaction_info["miniformat"]
+      content["attributes"]["aux"]["miniformat"] = calltoaction_info["miniformat"];
       thumb_calltoactions.push(content);
     });
     return thumb_calltoactions;
@@ -104,7 +104,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     $scope.appendCallToAction();
     $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
     if($scope.calltoaction_info) {
-      $scope.calltoaction_ids_shown = $scope.calltoaction_info["calltoaction"]["id"]
+      $scope.calltoaction_ids_shown = $scope.calltoaction_info["calltoaction"]["id"];
       goToLastLinkedCallToAction();
     }
   };
