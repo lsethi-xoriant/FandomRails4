@@ -366,6 +366,7 @@ Fandom::Application.routes.draw do
     match "settings/notifications/save", :to => "settings#save_notifications_settings"
     match "settings/profanities", :to => "settings#profanities_settings"
     match "settings/profanities/save", :to => "settings#save_profanities_settings"
+    match "/settings/clear_cache", :to => "cache#clear_cache"
   end
 
   match '/facebook_app', to: "application#facebook_app"

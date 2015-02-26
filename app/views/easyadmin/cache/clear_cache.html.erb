@@ -1,0 +1,26 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "settings" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>CANCELLA LA CACHE</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+          <% end %>
+      </div>
+    </div>
+    
+    <div class="row">
+    	<div class="col-xs-12 text-center"><a href="/easyadmin/settings/clear_cache" class="btn btn-primary">Cancella Cache</a></div>
+    </div>
+</div>
