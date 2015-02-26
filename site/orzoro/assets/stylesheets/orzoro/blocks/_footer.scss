@@ -17,8 +17,46 @@
   font-size: 18px;
   font-family: "BarmenoRegularBold";
   margin-top: 15px;
+  color: #fff;
 }
 
 .footer__btn {
   margin-top: 15px;
 }
+
+//FOOTER VECCHIO
+.footer {
+  text-align: center;
+  padding: 45px 0;
+  font-size: 10px;
+  background-color: #fff;
+}
+
+.footer a {
+  color: #600;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 15px;
+  padding: 0 8px;
+  border-left: solid 1px #600;
+}
+
+.footer li:first-child a {
+  border: none;
+}
+
+.footer ul, .footer li {
+  display: inline;
+}
+
+.footer p {
+  color: #999;
+  font-weight: bold;
+}
+
+.texture-3 {
+  background-color: $brown;
+}
+

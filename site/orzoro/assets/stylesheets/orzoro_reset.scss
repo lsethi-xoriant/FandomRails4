@@ -1,6 +1,5 @@
 /* RESET CSS */
 *{
-  font-family: "BarmenoRegularBold";
 }
 
 hr {
@@ -9,6 +8,7 @@ hr {
 
 h1, h2, h3, h4, h5{
   color: $brown;
+  font-family: "BarmenoRegularBold";
 }
 
 h1{
