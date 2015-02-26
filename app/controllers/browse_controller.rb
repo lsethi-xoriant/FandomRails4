@@ -73,9 +73,11 @@ class BrowseController < ApplicationController
     if params[:query].blank?
       handle_no_result("")
       return
+    else
+      @query = params[:query]
     end
     
-    contents, total = get_contents_with_match(params[:query])
+    contents, total = get_contents_with_match(params[:query], get_current_property)
     
     if total == 0
       handle_no_result(params[:query])
@@ -209,14 +211,7 @@ class BrowseController < ApplicationController
     end
   end
   
-  def view_all
-  end
-  
-  def view_all_recent
-    contents = get_recent_ctas()
-    @total = contents.count
-    contents = prepare_contents(contents.slice(0, 12))
-    
+  def add_cta_status_to_contents(contents)
     cta_ids = []
     contents.each do |content|
       if content["type"] == "cta"
@@ -232,7 +227,18 @@ class BrowseController < ApplicationController
         content["status"] = cta_statuses[content["id"].to_i]
       end
     end
-    @contents = contents
+    contents
+  end
+  
+  def view_all
+  end
+  
+  def view_all_recent
+    contents = get_recent_ctas()
+    @total = contents.count
+    contents = prepare_contents(contents.slice(0, 12))
+    
+    @contents = add_cta_status_to_contents(contents)
     
     @per_page = 12
   end
@@ -242,21 +248,7 @@ class BrowseController < ApplicationController
     offset = params[:offset].to_i
     contents = prepare_contents(contents.slice(offset, 12))
     
-    cta_ids = []
-    contents.each do |content|
-      if content["type"] == "cta"
-        cta_ids << content["id"]
-      end
-    end
-    cta_statuses = {}
-    unless cta_ids.empty?
-      cta_statuses = cta_to_reward_statuses_by_user(current_or_anonymous_user, CallToAction.includes(:interactions).where("id in (?)", cta_ids).to_a, 'point')
-    end
-    contents.each do |content|
-      if content["type"] == "cta"
-        content["status"] = cta_statuses[content["id"].to_i]
-      end
-    end
+    contents = add_cta_status_to_contents(contents)
     
     respond_to do |format|
       format.json { render :json => contents.to_json }
@@ -264,6 +256,14 @@ class BrowseController < ApplicationController
   end
   
   def search
+    if flash[:notice]
+      contents = get_recent_ctas()
+      contents = prepare_contents(contents.slice(0, 12))
+      @contents = add_cta_status_to_contents(contents)
+    end
+  end
+  
+  def autocomplete_search
     term = params[:q]
     results = cache_short(get_browse_search_results_key(get_search_cache_key_params(term))) { get_contents_by_query(term, get_search_tags_for_tenant).slice(0,8) }
     respond_to do |format|
@@ -277,6 +277,11 @@ class BrowseController < ApplicationController
   
   def get_search_tags_for_tenant
     []
+  end
+  
+  #hook for filter search result in specific property if multiproperty site
+  def get_current_property
+    nil
   end
   
 end

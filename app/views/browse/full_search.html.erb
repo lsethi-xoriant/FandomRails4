@@ -33,7 +33,7 @@
 						<div class="cta-preview__thumbnail">
 							<%= light_link_to {{content.attributes.detail_url}} do %>
 								<img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
-								<img class="img-responsive cta-preview__image" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
+								<img class="img-responsive cta-preview__image" src="//placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
 							<% end %>
 							<div class="label label-warning cta-preview__points" ng-if="content.attributes.status != undefined">+ {{content.attributes.status.winnable_reward_count}} <span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
 						</div>
@@ -54,7 +54,7 @@
 						<div class="cta-preview__thumbnail cta-preview__thumbnail--category">
 							<%= light_link_to {{content.attributes.detail_url}} do %>
 								<img class="cta-preview__image cta-preview__image--category" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
-								<img class="cta-preview__image cta-preview__image--category" src="http://placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
+								<img class="cta-preview__image cta-preview__image--category" src="//placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
 							<% end %>
 						</div>
 					</div>

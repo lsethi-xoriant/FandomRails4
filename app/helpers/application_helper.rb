@@ -119,7 +119,7 @@ module ApplicationHelper
       type: "cta",
       id: cta.id, 
       has_thumb: cta.thumbnail.present?, 
-      thumb_url: cta.thumbnail(:thumb), 
+      thumb_url: cta.thumbnail(:medium), 
       title: cta.title, 
       description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
       long_description: populate_desc ? cta.description : nil,
@@ -138,7 +138,7 @@ module ApplicationHelper
       type: "cta",
       id: cta.id, 
       has_thumb: cta.thumbnail.present?, 
-      thumb_url: cta.thumbnail(:thumb), 
+      thumb_url: cta.thumbnail(:medium), 
       title: cta.title, 
       description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
       long_description: populate_desc ? cta.description : nil,
@@ -948,8 +948,8 @@ module ApplicationHelper
           "this.page.api_key = \"#{ ENV['DISQUS_PUBLIC_KEY'] }\";" +
           "this.sso = {" +
                   "name:   \"SampleNews\"," +
-                  "button:  \"http://placehold.it/50x50\"," +
-                  "icon:     \"http://placehold.it/50x50\"," +
+                  "button:  \"//placehold.it/50x50\"," +
+                  "icon:     \"//placehold.it/50x50\"," +
                   "url:        \"http://example.com/login/\"," +
                   "logout:  \"http://example.com/logout/\"," +
                   "width:   \"800\"," +

@@ -51,4 +51,14 @@ class Sites::Disney::BrowseController < BrowseController
     end
   end
   
+  #hook for filter search result in specific property if multiproperty site
+  def get_current_property
+    property = get_disney_property
+    if property == "disney_channel"
+      nil
+    else
+      property
+    end
+  end
+  
 end

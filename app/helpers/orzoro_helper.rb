@@ -1,5 +1,7 @@
 module OrzoroHelper
-  def default_orzoro_aux(other)
+
+  def get_miniformat_info_list()
+    miniformat_info_list = []
 
     miniformat_items = get_tags_with_tag("miniformat")
 
@@ -7,15 +9,32 @@ module OrzoroHelper
       miniformat_tag = get_tag_from_params("miniformat")
       miniformat_items = order_elements(miniformat_tag, miniformat_items)
       
-      miniformat_info_list = []
       miniformat_items.each do |miniformat_item|
+        extra_fields = get_extra_fields!(miniformat_item)
         miniformat_info_list << {
           "id" => miniformat_item.id,
           "slug" => miniformat_item.slug,
+          "browse_url" => (extra_fields['browse_url'] rescue '#'),
           "title" => miniformat_item.title,
-          "icon" => (get_extra_fields!(miniformat_item)["icon"]["url"] rescue nil)
+          "icon" => (extra_fields["icon"]["url"] rescue nil)
         }
       end
+    end
+
+    miniformat_info_list
+  end
+
+  def default_orzoro_aux(other)
+
+    miniformat_info_list, assets = cache_medium("layout_info") do
+      miniformat_info_list = get_miniformat_info_list()
+      layout_assets_tag = Tag.find_by_name('assets')
+      if layout_assets_tag.nil?
+        extra_fields = {}
+      else
+        extra_fields = get_extra_fields!(layout_assets_tag)
+      end
+      [miniformat_info_list, extra_fields]
     end
 
     if other && other.has_key?(:calltoaction)
@@ -49,6 +68,7 @@ module OrzoroHelper
       "flash_notice" => flash[:notice],
       "free_provider_share" => $site.free_provider_share,
       "miniformat_info_list" => miniformat_info_list,
+      "assets" => assets,
       "root_url" => root_url
     }
 

@@ -365,8 +365,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -640,8 +639,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -678,7 +676,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -2120,8 +2117,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -2395,8 +2391,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2433,7 +2428,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -3875,8 +3869,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -4150,8 +4143,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -4188,7 +4180,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -5630,8 +5621,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -5763,7 +5753,7 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    "timestamp" timestamp without time zone,
+    "timestamp" character varying(255),
     level character varying(255),
     tenant character varying(255),
     user_id integer,
@@ -5905,8 +5895,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -5943,7 +5932,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -6213,7 +6201,9 @@ CREATE TABLE plays (
     id integer NOT NULL,
     title character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    text_before character varying(255),
+    text_after character varying(255)
 );
 
 
@@ -7385,8 +7375,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -7660,8 +7649,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -7698,7 +7686,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -9140,8 +9127,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -9415,8 +9401,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -9453,7 +9438,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -10895,8 +10879,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -11170,8 +11153,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -11208,7 +11190,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -11998,7 +11979,8 @@ CREATE TABLE user_comment_interactions (
     text text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    approved boolean
+    approved boolean,
+    aux json
 );
 
 
@@ -12924,8 +12906,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -19987,13 +19968,6 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -20047,13 +20021,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -20367,13 +20334,6 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -20427,13 +20387,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -20747,13 +20700,6 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -20807,13 +20753,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -21127,13 +21066,6 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -21187,13 +21119,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -21507,13 +21432,6 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -21567,13 +21485,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -21887,13 +21798,6 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -21947,13 +21851,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -22267,13 +22164,6 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -22327,13 +22217,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -23289,13 +23172,7 @@ INSERT INTO schema_migrations (version) VALUES ('20150212101118');
 
 INSERT INTO schema_migrations (version) VALUES ('20150212111531');
 
-INSERT INTO schema_migrations (version) VALUES ('20150212131531');
-
-INSERT INTO schema_migrations (version) VALUES ('20150212140258');
-
 INSERT INTO schema_migrations (version) VALUES ('20150212143420');
-
-INSERT INTO schema_migrations (version) VALUES ('20150212143421');
 
 INSERT INTO schema_migrations (version) VALUES ('20150212162357');
 

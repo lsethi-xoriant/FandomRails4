@@ -39,6 +39,8 @@ Fandom::Application.routes.draw do
         match "/cup_redeemer/request_completed", to: "cup_redeemer#request_completed"
         match "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+        match "/browse/full_search", :to => "browse#full_search"
+        match "/faq", :to => "application#faq"
         resources :call_to_action, only: :show
       end
     end
@@ -56,7 +58,7 @@ Fandom::Application.routes.draw do
         match "/browse", :to => "browse#index"
         match "/browse/full_search", :to => "browse#full_search"
         match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
-        match "/browse/search", :to => "browse#search"
+        match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
         match "/browse/redirect/:query", :to => "browse#index"
         match "/browse/view_all/:id", :to => "browse#index_category"
         match "/browse/view_recent", :to => "browse#view_all_recent"
@@ -227,8 +229,9 @@ Fandom::Application.routes.draw do
   match "/upload", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
-  match "/browse/:tagname", :to => "browse#index"
+  match "/browse/contents/:tagname", :to => "browse#index"
   match "/browse/search", :to => "browse#search"
+  match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
   match "/browse/full_search", :to => "browse#full_search"
   match "/browse/fullscreen", :to => "browse#index_fullscreen"
   match "/browse/view_all/:id", :to => "browse#index_category"
@@ -368,6 +371,7 @@ Fandom::Application.routes.draw do
     match "settings/notifications/save", :to => "settings#save_notifications_settings"
     match "settings/profanities", :to => "settings#profanities_settings"
     match "settings/profanities/save", :to => "settings#save_profanities_settings"
+    match "/settings/clear_cache", :to => "cache#clear_cache"
   end
 
   match '/facebook_app', to: "application#facebook_app"

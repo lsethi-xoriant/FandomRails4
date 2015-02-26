@@ -111,7 +111,6 @@ class CallToActionController < ApplicationController
     ordering = params[:ordering]
 
     init_ctas = request.site.init_ctas
-
     response = cache_short(get_next_ctas_stream_for_user_cache_key(current_or_anonymous_user.id, nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do
       calltoactions = cache_short(get_next_ctas_stream_cache_key(nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do     
         calltoactions = CallToAction.active.where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)

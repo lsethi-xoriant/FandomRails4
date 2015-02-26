@@ -1,0 +1,30 @@
+<div class="container container--default" ng-controller="SearchCtrl" ng-init="init(<%= @browse_section.to_json %> )">
+	
+	<%= render partial: "/application/search", locals: { query: (defined? @query).nil? ? nil : @query } %>
+	
+	<% if @contents %>
+	<div class="row main-row brws-item" ng-controller="BrowseCtrl" ng-init="init_light(<%= @contents.to_json %>)">
+		<div class="col-xs-12">
+	      <div class="section-heading">
+	        	<h1 class="text-center">
+	        		Contenuti suggeriti
+	        	</h1>
+	      </div>
+	    </div>
+    	<div class="col-md-12">
+		      <div class="row">
+	      		<div class="col-xs-12 col-sm-4" ng-repeat="content in elements">
+					<%= render partial: "/application/content_preview" %>
+				</div>
+		      </div>
+	  	</div>
+   	</div>
+   	<% else %>
+   	<div class="row main-row brws-item" ng-controller="BrowseCtrl" ng-init="init_light(<%= @contents.to_json %>)">
+		<div class="col-xs-12">
+	    	<div style="height: 300px;"></div>
+	  	</div>
+   	</div>
+   	<% end %>
+	
+</div>
