@@ -1,0 +1,148 @@
+<%= form_for @cup_redeemer, url: "/cup_redeemer/step_2/update", html: { class: "cup__form" } do |f| %> 
+  <div class="container main-container">   
+    <div class="row main-row">
+      <div class="col-sm-12 cup__header-col text-center">
+        <%= render partial: "/application/ribbon", locals: { title: "Quante confezioni Orzoro hai acquistato?", background: "#ceb5e2"}%>
+        <p class="cup__subtitle">Seleziona il numero di confezioni</p>
+      </div>
+
+      <div class="col-sm-12">
+        <% if @cup_redeemer.errors.any? %>
+          <div class="row">
+            <div class="col-sm-12">
+              <p>Errori nella compilazione del modulo:</p>
+              <ul>
+                <% @cup_redeemer.errors.full_messages.each do |error_message| %>
+                    <li><%= error_message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="col-sm-12 cup__header-col text-center">
+        <img class="cup__package" src="<%= @cup_tag_extra_fields["two_packages"]["url"] rescue nil %>" onclick="selectNumberOfPackages(2)">
+        <img class="cup__package" src="<%= @cup_tag_extra_fields["three_packages"]["url"] rescue nil %>" onclick="selectNumberOfPackages(3)">
+        <%= f.hidden_field :package_count, class: "form-control" %>
+      </div>
+    </div>
+  </div>
+  <div class="container main-container main-container--cream container-shadow">
+    <p class="cup__subtitle cup__header-col text-center">Scegli la tua tazza</p>
+
+    <div id="one-cup-selected" class="col-sm-12 cup__header-col text-center">
+      <div class="col-sm-6">
+        <img src="<%= @cup_tag_extra_fields["dora_cup"]["url"] rescue nil %>">
+        <%= f.radio_button :cup_selected, "dora", :checked => true %> 
+      </div>
+      <div class="col-sm-6">
+        <img src="<%= @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil %>">
+        <%= f.radio_button :cup_selected, "miss_tressy" %> 
+      </div>
+    </div>
+
+    <div id="two-cups-selected" class="col-sm-12 cup__header-col text-center">
+      <img src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+    </div>
+
+    <div class="col-sm-12 cup__header-col text-center">
+      <%= render partial: "/application/ribbon", locals: { title: "Dati Scontrini", background: "#ceb5e2"}%>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Numero scontrino</label>
+          <%= f.text_field :receipt_number, :class => "form-control", :required => true %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label>Data di emissione</label>  
+            </div>       
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-4">
+                  <% date_array = (1..31).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Giorno", ""] %>
+                  <%= f.select :day_of_emission, options_for_select(date_array, @cup_redeemer[:day_of_emission]), {}, { class: "form-control", :required => true} %>
+                </div>
+                <div class="col-sm-4">
+                  <% date_array = (1..12).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Mese", ""] %>
+                  <%= f.select :month_of_emission, options_for_select(date_array, @cup_redeemer[:month_of_emission]), {}, { class: "form-control", :required => true} %>
+                </div>
+                <div class="col-sm-4">
+                  <% date_array = (2014..2015).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Anno", ""] %>
+                  <%= f.select :year_of_emission, options_for_select(date_array, @cup_redeemer[:year_of_emission]), {}, { class: "form-control", :required => true} %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label>Ora e minuto di emissione</label>  
+            </div>       
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-6">
+                  <% date_array = (0..23).map { |hour| [hour, hour] } %>
+                  <% date_array.unshift ["Ora", ""] %>
+                  <%= f.select :hour_of_emission, options_for_select(date_array, @cup_redeemer[:hour_of_emission]), {}, { class: "form-control", :required => true} %>
+                </div>
+                <div class="col-sm-6">
+                  <% date_array = (0..59).map { |minute| [(sprintf '%02d', minute), (sprintf '%02d', minute)] } %>
+                  <% date_array.unshift ["Minuto", ""] %>
+                  <%= f.select :minute_of_emission, options_for_select(date_array, @cup_redeemer[:minute_of_emission]), {}, { class: "form-control", :required => true} %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Importo scontrino (compresi i decimali)</label>
+          <%= f.text_field :receipt_total, :class => "form-control", :required => true %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <%= link_to "Indietro", "step_1" %>
+    </div>
+    <div class="col-sm-12 text-center">
+      <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
+    </div>   
+  </div>
+<% end %>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  $("#two-cups-selected").hide();
+  $("#one-cup-selected").show();
+  $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(2);
+});
+
+function selectNumberOfPackages(n) {
+  if(n == 2) {
+    $("#two-cups-selected").hide();
+    $("#one-cup-selected").show();
+    $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(2);
+  }
+  if(n == 3) {
+    $("#one-cup-selected").hide();
+    $("#two-cups-selected").show();
+    $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(3);
+  }
+}
+
+</script>
