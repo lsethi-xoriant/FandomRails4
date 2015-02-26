@@ -29,8 +29,12 @@ module OrzoroHelper
     miniformat_info_list, assets = cache_medium("layout_info") do
       miniformat_info_list = get_miniformat_info_list()
       layout_assets_tag = Tag.find_by_name('assets')
-      get_extra_fields!(layout_assets_tag)
-      [miniformat_info_list, layout_assets_tag.extra_fields]
+      if layout_assets_tag.nil?
+        extra_fields = {}
+      else
+        extra_fields = get_extra_fields!(layout_assets_tag)
+      end
+      [miniformat_info_list, extra_fields]
     end
 
     if other && other.has_key?(:calltoaction)
