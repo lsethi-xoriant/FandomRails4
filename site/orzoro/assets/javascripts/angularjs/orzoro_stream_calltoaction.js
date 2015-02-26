@@ -100,6 +100,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   }
 
   $scope.extraInit = function() {
+    $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
     if($scope.calltoaction_info) {
       $scope.calltoaction_ids_shown = $scope.calltoaction_info["calltoaction"]["id"]
       goToLastLinkedCallToAction();
