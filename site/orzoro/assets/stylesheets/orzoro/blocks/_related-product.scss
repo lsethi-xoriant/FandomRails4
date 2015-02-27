@@ -1,0 +1,19 @@
+.related-product__title {
+  color: $brown;
+  font-size: 26px;
+  font-family: "BarmenoRegularBold";
+  margin-top: 0;
+  text-transform: uppercase;
+}
+
+.related-product__description {
+  font-size: 14px;
+  color: $brown;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.related-product__img {
+  width: 100%;
+}
