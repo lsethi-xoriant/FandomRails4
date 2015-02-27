@@ -65,7 +65,6 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   end
 
   def index
-    debugger
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     render template: "cup_redeemer/index"
   end
