@@ -44,7 +44,7 @@
 }
 
 .vote-interaction__active .vote-interaction__baloon:hover > .vote-interaction__baloon__element > .vote-interaction__baloon__element-pin {
-  color: #FAF600;
+  color: #f1d11a;
 }
 
 .vote-interaction__active .vote-interaction__baloon__element:hover ~ .vote-interaction__baloon__element > .vote-interaction__baloon__element-pin {
@@ -52,7 +52,7 @@
 }
 
 .vote-interaction__baloon__element-pin__active {
-  color: #FAF600 !important;
+  color: #f1d11a !important;
 }
 
 .vote-interaction__title {
@@ -69,4 +69,13 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .vote-interaction__baloon-container {
+    background: transparent;
+    margin-top: 15px;
+    display: inline-block;
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
 }

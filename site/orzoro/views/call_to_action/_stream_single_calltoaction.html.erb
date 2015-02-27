@@ -1,86 +1,95 @@
-<div class="row main-row">
-
-  <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}}">
-    <!-- MEDIA -->
-    <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
-    <!-- SHARE: TODO -->
-    <div class="share-interaction__container" ng-if="!aux.mobile">
-      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
-        <%= render partial: "/call_to_action/share_interaction" %>
-      </div>
-    </div>
-
-    <div class="col-xs-12">
-      <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
-    </div>
-
-  </div>
-
-  <!-- VOTE INTERACTION -->
-  <div class="col-sm-8 col-sm-offset-2 text-center" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
-    <%= render partial: "/call_to_action/vote_interaction" %>
-  </div>
-
-  <div class="col-md-12 text-center" if="aux.calltoaction_category">
-    <div class="cta-preview__miniformat-container cta-preview__miniformat-container--header" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}">
-      <span class="cta-preview__miniformat">{{aux.calltoaction_category.title}}</span>
-    </div>
-  </div>
-
+<div ng-if="aux.mobile" class="container main-container main-container-{{calltoaction_info.miniformat['name']}} main-container--fluid" > 
+  <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
 </div>
 
-<div class="row main-row cta__undervideo">
-  <div class="col-md-12">
-    <div class="row">
+<div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" > 
+  <div class="row main-row">
 
-      <div class="col-sm-2 text-left">
-        <span class="fa fa-angle-left cta__fa-angle" ng-click="nextCallToActionInCategory('prev')"></span>
+    <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}}">
+      <!-- MEDIA -->
+      <div ng-if="!aux.mobile">
+        <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
       </div>
-
-      <div class="col-sm-8 text-center cta__title-and-description-col">
-        <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
-        <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
-
-        <div class="row cta__extra-description__container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description">
-        </div>
-
-        <div class="row cta__extra-description__container" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1 && calltoaction_info.calltoaction.extra_fields.extra_description_2">
-          <div class="col-sm-12">
-            <hr>           
-          </div>           
-          <div class="col-sm-6 text-left" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description_1">
-          </div>
-          <div class="col-sm-6 text-left" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description_2">
-          </div>
-        </div>
-
-        <!-- DOWNLOAD INTERACTION -->
-        <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
-          <div class="col-md-12 text-center" >
-            <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span><span class="glyphicon glyphicon-download-alt"></span>{{interaction_info.interaction.resource.title}}</span></a>
-          </div>
+      <!-- SHARE: TODO -->
+      <div class="share-interaction__container hidden-xs">
+        <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+          <%= render partial: "/call_to_action/share_interaction" %>
         </div>
       </div>
 
-      <div class="col-sm-2 text-right">
-        <span class="fa fa-angle-right cta__fa-angle" ng-click="nextCallToActionInCategory('next')"></span>
+      <div class="col-xs-12">
+        <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
+      </div>
+
+    </div>
+
+    <!-- VOTE INTERACTION -->
+    <div class="col-sm-8 col-sm-offset-2 text-center" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
+      <%= render partial: "/call_to_action/vote_interaction" %>
+    </div>
+
+    <div class="col-md-12 text-center" if="aux.calltoaction_category">
+      <div class="cta-preview__miniformat-container cta-preview__miniformat-container--header" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}">
+        <span class="cta-preview__miniformat">{{aux.calltoaction_category.title}}</span>
       </div>
     </div>
 
+  </div>
 
-    <!-- MOBILE -->
-    <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row visible-xs">
-      <div id="share-interaction-{{interaction_info.interaction.id}}">
-        <%= render partial: "/call_to_action/share_interaction" %>
-      </div>
-    </div>  
+  <div class="row main-row cta__undervideo">
+    <div class="col-md-12">
+      <div class="row">
 
-    <div class="row visible-xs">
-      <div class="col-md-2 col-md-offset-9 col-xs-12">
-        <button style="margin-top: 15px;" class="btn btn-primary btn-block registration__button" onclick="window.history.back()"><span>Indietro</span></button>
+        <div class="col-sm-2 text-left hidden-xs">
+          <span class="fa fa-angle-left cta__fa-angle" ng-click="nextCallToActionInCategory('prev')"></span>
+        </div>
+
+        <div class="col-sm-8 col-xs-12 text-center cta__title-and-description-col">
+          <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
+          <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
+
+          <!-- MOBILE -->
+          <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row visible-xs">
+            <div id="share-interaction-{{interaction_info.interaction.id}}" class="share-undervideo-interaction__row">
+              <%= render partial: "/call_to_action/share_interaction" %>
+            </div>
+          </div>  
+
+          <div class="row cta__extra-description__container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description">
+          </div>
+
+          <div class="row cta__extra-description__container" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1 && calltoaction_info.calltoaction.extra_fields.extra_description_2">
+            <div class="col-sm-12">
+              <hr>           
+            </div>           
+            <div class="col-sm-6 text-left" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description_1">
+            </div>
+            <div class="col-sm-6 text-left" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description_2">
+            </div>
+          </div>
+
+          <!-- DOWNLOAD INTERACTION -->
+          <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
+            <div class="col-xs-12 text-center" >
+              <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span><span class="glyphicon glyphicon-download-alt"></span>{{interaction_info.interaction.resource.title}}</span></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-2 text-right hidden-xs">
+          <span class="fa fa-angle-right cta__fa-angle" ng-click="nextCallToActionInCategory('next')"></span>
+        </div>
       </div>
+
+      <!--
+      <div class="row visible-xs">
+        <div class="col-md-2 col-md-offset-9 col-xs-12">
+          <button style="margin-top: 15px;" class="btn btn-primary btn-block registration__button" onclick="window.history.back()"><span>Indietro</span></button>
+        </div>
+      </div>
+      -->
+
     </div>
-
   </div>
 </div>
 

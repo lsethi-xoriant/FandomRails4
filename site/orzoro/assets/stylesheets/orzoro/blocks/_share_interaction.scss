@@ -122,9 +122,25 @@
   margin-bottom: 5px;
 }
 
+.share-interaction__cta__info__email-button, 
+.share-interaction__cta__info__tt-button,
+.share-interaction__cta__info__fb-button {
+  padding: 0;
+}
+
 @media (max-width: $screen-sm-min) { 
   .share-interaction__modal__panel {
     margin: 0;
+  }
+
+  .share-interaction__cta__info__email-button, 
+  .share-interaction__cta__info__tt-button,
+  .share-interaction__cta__info__fb-button {
+    margin-right: 10px;
+  }
+
+  .share-undervideo-interaction__row {
+    margin-top: 15px;
   }
 
   .share-interaction__modal-input-col {
