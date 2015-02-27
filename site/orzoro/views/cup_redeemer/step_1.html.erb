@@ -6,7 +6,7 @@
         <%= render partial: "/application/ribbon", locals: { title: "Dati personali", background: "#ceb5e2"}%>
       </div>
 
-      <div class="col-sm-12"> 
+      <div class="col-sm-10 col-sm-offset-1"> 
         <% if @cup_redeemer.errors.any? %>
           <div class="row">
             <div class="col-sm-12">
@@ -106,7 +106,7 @@
   </div>
   <div class="container main-container container-shadow">
     <div class="row main-row">
-      <div class="col-sm-12">
+      <div class="col-sm-10 col-sm-offset-1">
         <div class="checkbox">
           <label><%= f.check_box :terms, :required => true %> Si, voglio ricevere notizie sui nuovi prodotti, promozioni e offerte di Orzoro dedicate a me</label>
         </div>
@@ -118,10 +118,10 @@
           trattamento dei dati personali*</label>
         </div>
       </div>
-      <div class="col-sm-2">
-        <%= link_to "Indietro", "index" %>
+      <div class="col-sm-2 col-sm-offset-1">
+        <%= link_to "Indietro", "index", {class: "cup__back" } %>
       </div>
-      <div class="col-sm-12 text-center">
+      <div class="col-sm-6 text-center">
         <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
       </div>   
     </div>

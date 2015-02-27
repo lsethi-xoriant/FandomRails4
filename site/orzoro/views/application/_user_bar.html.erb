@@ -13,12 +13,6 @@
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li class="navbar__item active navbar__home-item">
-            <a href="#">
-              <img class="navbar__miniformat" ng-src="{{aux.assets.menu_home.url}}">
-              <p class="navbar__item-text">home</p>
-            </a>
-          </li>
           <li class="navbar__item" ng-repeat="miniformat in aux.miniformat_info_list">
             <a href="{{miniformat.browse_url}}">
               <img class="navbar__miniformat" ng-src="{{miniformat.icon}}">
