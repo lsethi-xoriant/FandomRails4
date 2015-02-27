@@ -1459,7 +1459,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             } else if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
 
               // Update local storage for anonymous user.
-              setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
+              if(data.main_reward_counter) {
+                setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
+              }
          
               user_interaction_for_storage = new Object();
               user_interaction_for_storage["user_interaction"] = data.user_interaction;

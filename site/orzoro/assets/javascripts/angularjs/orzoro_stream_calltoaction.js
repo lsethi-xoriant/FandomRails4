@@ -49,7 +49,8 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   };
 
   $scope.nextCallToActionInCategory = function(direction) {
-    $http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})
+    //$http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})
+      $http.post("/next_calltoaction" , { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction })  
         .success(function(data) { 
 
           $scope.initCallToActionInfoList(data.calltoaction);
