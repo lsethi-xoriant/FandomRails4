@@ -137,11 +137,13 @@ function selectNumberOfPackages(n) {
     $("#two-cups-selected").hide();
     $("#one-cup-selected").show();
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(2);
+    $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_dora").attr("checked", "checked");
   }
   if(n == 3) {
     $("#one-cup-selected").hide();
     $("#two-cups-selected").show();
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(3);
+    $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_dora").attr("checked", false);
   }
 }
 

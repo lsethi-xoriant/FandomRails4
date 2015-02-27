@@ -37,7 +37,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     attribute :minute_of_emission, type: String
     attribute :receipt_total, type: Float
 
-    validates_presence_of :package_count, :cup_selected, :receipt_number, :day_of_emission, :month_of_emission, :year_of_emission, 
+    validates_presence_of :package_count, :receipt_number, :day_of_emission, :month_of_emission, :year_of_emission, 
                           :hour_of_emission, :minute_of_emission, :receipt_total
   end
 
@@ -63,16 +63,20 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   end
 
   def step_1
-    @provinces_array = ITALIAN_PROVINCES.map { |province| [province, province] }.unshift(["Provincia", ""])
-    # @states_array = states_array = WORLD_STATES.map { |state| [state, state] }.unshift(["Stato", ""])
-    @states_array = ["Italia"]
-    cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
-    if cache_value
-      @cup_redeemer = CupRedeemerStep1.new(cache_value["identity"])
+    if session[:session_id].nil?
+      redirect_to "/cup_redeemer/index"
     else
-      @cup_redeemer = CupRedeemerStep1.new
+      @provinces_array = ITALIAN_PROVINCES.map { |province| [province, province] }.unshift(["Provincia", ""])
+      # @states_array = states_array = WORLD_STATES.map { |state| [state, state] }.unshift(["Stato", ""])
+      @states_array = ["Italia"]
+      cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
+      if cache_value
+        @cup_redeemer = CupRedeemerStep1.new(cache_value["identity"])
+      else
+        @cup_redeemer = CupRedeemerStep1.new
+      end
+      render template: "cup_redeemer/step_1"
     end
-    render template: "cup_redeemer/step_1"
   end
 
   def step_1_update
@@ -89,7 +93,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   def step_2
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
-    if cache_value.nil? || cache_value["identity"].nil?
+    if session[:session_id].nil? || cache_value.nil? || cache_value["identity"].nil?
       redirect_to "/cup_redeemer/step_1"
     else
       @cup_redeemer = CupRedeemerStep2.new(cache_value["receipt"])
@@ -97,7 +101,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     end
   end
 
-  def step_2_update   
+  def step_2_update
     @cup_redeemer = CupRedeemerStep2.new(params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2])
     if @cup_redeemer.valid?
       cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
@@ -114,7 +118,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   def step_3
     @cup_redeemer = CupRedeemerStep3.new
     cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
-    if cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil?
+    if session[:session_id].nil? || cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil?
       redirect_to "/cup_redeemer/step_1"
     else
       @cup_redeemer = CupRedeemerStep3.new(cache_value["address"])
@@ -138,7 +142,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
 
   def request_completed
     cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
-    if cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil? || cache_value["address"].nil?
+    if session[:session_id].nil? || cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil? || cache_value["address"].nil?
       redirect_to "/cup_redeemer/step_1"
     else
       infos = build_infos(cache_value)
