@@ -1,8 +1,8 @@
 <div class="container container--default" ng-controller="BrowseCtrl" ng-init="init(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @total %>)">
   
-  <div class="row category-header" style="background-color: <%= get_extra_fields!(@tag_browse)["label-background"] %>; background-image: url(<%= (get_upload_extra_field_processor(get_extra_fields!(@tag_browse)["header_image"], :original) rescue nil) unless small_mobile_device? %>)">
+  <div class="row category-header" style="background-color: <%= get_extra_fields!(@category)["label-background"] %>; background-image: url(<%= (get_upload_extra_field_processor(get_extra_fields!(@category)["header_image"], :original) rescue nil) unless small_mobile_device? %>)">
 		<div class="col-xs-12 text-center">
-			<h1 class="category-header__title"><%= @category.title %></h1>
+			<h1 class="category-header__title"><%= get_extra_fields!(@category)["title"] %></h1>
 			<h2 class="category-header__subtitle"><%= @category.description %></h2>
 		</div>
 		<% if get_extra_fields!(@category)["subtitle"] %>
