@@ -2,7 +2,7 @@
 
   <!-- EMAIL -->
   <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default share-interaction__cta__info__email-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email" ng-class="{'disabled': animation_in_progress}">
-    <span class="fa fa-envelope share-interaction__cover__info__glyphicon-envelope"></span>
+    <i class="fa fa-envelope share-interaction__cover__info__glyphicon-envelope"></i>
   </button>
 
   <!-- MODAL SHARE INTERACTION -->
@@ -66,7 +66,7 @@
 
   <!-- FACEBOOK -->   
 
-  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-facebook share-interaction__cta__info__fb-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-facebook" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></span></button>
+  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-facebook share-interaction__cta__info__fb-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-facebook" ng-class="{'disabled': animation_in_progress}"><i class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></i></button>
   
   <!-- MODAL SHARE INTERACTION -->
   <div ng-if="interaction_info.interaction.resource.providers.facebook" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-facebook" role="dialog" aria-hidden="true">
@@ -109,7 +109,7 @@
 
   <!-- TWITTER -->   
 
-  <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-twitter share-interaction__cta__info__tt-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-twitter" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-twitter share-interaction__cover__info__glyphicon-tt"></span></button>
+  <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-twitter share-interaction__cta__info__tt-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-twitter" ng-class="{'disabled': animation_in_progress}"><i class="fa fa-twitter share-interaction__cover__info__glyphicon-tt"></i></button>
   
   <!-- MODAL SHARE INTERACTION -->
   <div ng-if="interaction_info.interaction.resource.providers.twitter" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-twitter" role="dialog" aria-hidden="true">
