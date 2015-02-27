@@ -11,7 +11,7 @@
 		</div>
 	<% end %>
 	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.attributes.contents.length > 0">
-		<div class="row brws-item main-row" ng-class-odd="'brws-item--dark'">
+		<div class="row brws-item main-row container-shadow" ng-class-odd="'brws-item--dark'">
 			  <!-- HEADING -->
 			<div class="col-sm-12 text-center">
 			  <%= render partial: "/application/ribbon", locals: { title: "{{section.attributes.title}}", background: "{{aux.page_tag.miniformat['label_background']}}"}%>
