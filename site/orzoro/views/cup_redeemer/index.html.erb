@@ -19,7 +19,7 @@
 
 <div class="container main-container text-center">
   <div class="row main-row text-center">
-    <img src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+    <img class="img-responsive cup__select-cup-image" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
   </div>
   <div class="row main-row">
     <p class="cup__title">Hai già acquistato almeno 2 confezioni?</p>
@@ -29,11 +29,11 @@
 
 <div class="container main-container text-center">
   <div class="row main-row">
-    <div class="col-xs-6">
-      <img src="<%= @cup_tag_extra_fields["two_packages"]["url"] rescue nil %>">
+    <div class="col-sm-6">
+      <img class="img-responsive cup__select-cup-image" src="<%= @cup_tag_extra_fields["two_packages"]["url"] rescue nil %>">
     </div>
-    <div class="col-xs-6">
-      <img src="<%= @cup_tag_extra_fields["three_packages"]["url"] rescue nil %>">
+    <div class="col-sm-6">
+      <img class="img-responsive cup__select-cup-image" src="<%= @cup_tag_extra_fields["three_packages"]["url"] rescue nil %>">
     </div>
   </div>
 </div>

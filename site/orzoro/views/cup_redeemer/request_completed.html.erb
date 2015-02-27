@@ -12,7 +12,7 @@
     <% else %>
       <div class="col-sm-12 cup__header-col text-center">
         <%= render partial: "/application/ribbon", locals: { title: "Grazie per aver compilato la richiesta!", background: "#ceb5e2"}%>
-        <p class="cup__title">Controlla la tua casella di posta elettronica per la conferma.</p>
+        <h2>Controlla la tua casella di posta elettronica per la conferma.</h2>
         <div id="two-cups-selected" class="col-sm-12 cup__header-col text-center">
           <img src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
         </div>

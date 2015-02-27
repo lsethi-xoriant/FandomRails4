@@ -49,7 +49,8 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   };
 
   $scope.nextCallToActionInCategory = function(direction) {
-    $http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})
+    //$http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})
+      $http.post("/next_calltoaction" , { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction })  
         .success(function(data) { 
 
           $scope.initCallToActionInfoList(data.calltoaction);
@@ -61,6 +62,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
             if($scope.linked_call_to_actions_count) {
               $scope.linked_call_to_actions_index = 1;
             }
+            window.history.pushState(null, $scope.calltoaction_info.calltoaction.title, "/call_to_action/" + $scope.calltoaction_info.calltoaction.slug);
           }
 
           $timeout(function() { 
@@ -109,19 +111,19 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   }
 
   $scope.extraInit = function() {
-    // TODO: temporary workaround
-    $scope.appendCallToAction();
-    $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
     if($scope.calltoaction_info) {
       $scope.calltoaction_ids_shown = $scope.calltoaction_info["calltoaction"]["id"];
       goToLastLinkedCallToAction();
+    } else {
+      $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
     }
   };
 
 
   $scope.orzoroAppendCallToAction = function() {
-    $scope.appendCallToAction();
-    $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
+    $scope.appendCallToAction(function() {
+      $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
+    });
   };
 
 

@@ -20,6 +20,15 @@ h2{
   font-size: 18px;
 }
 
+a{
+  color: $brown;
+}
+
+a:hover{
+  text-decoration: underline;
+  color: $brown;
+}
+
 #append-other {
   margin-top: 15px;
   padding-bottom: 30px;

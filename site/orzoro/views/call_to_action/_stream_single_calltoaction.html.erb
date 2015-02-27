@@ -44,6 +44,16 @@
         <div class="row cta__extra-description__container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description">
         </div>
 
+        <div class="row cta__extra-description__container" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1 && calltoaction_info.calltoaction.extra_fields.extra_description_2">
+          <div class="col-sm-12">
+            <hr>           
+          </div>           
+          <div class="col-sm-6 text-left" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description_1">
+          </div>
+          <div class="col-sm-6 text-left" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description_2">
+          </div>
+        </div>
+
         <!-- DOWNLOAD INTERACTION -->
         <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
           <div class="col-md-12 text-center" >
