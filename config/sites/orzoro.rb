@@ -5,6 +5,7 @@ module Fandom
       domains: ['orzoro.fandom.localdomain', 'orzoro.stage.fandomlab.com', 'orzoro.live.fandomlab.com', 'orzoro.dev.fandomlab.com', 'preprod.orzoro.it'],
       assets_precompile: ['orzoro_application.css', 'orzoro_application.js', 'ie9.css'],
       anonymous_interaction: true,
+      periodicity_kinds: [PERIOD_KIND_DAILY],
       free_provider_share: true,
       init_ctas: 3
     )      

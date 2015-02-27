@@ -325,7 +325,7 @@ module ApplicationHelper
       expire_cache_key(get_cta_completed_or_reward_status_cache_key(get_main_reward_name, interaction.call_to_action_id, user.id))
     end
 
-    if anonymous_user?(user) # TODO: this branch is not tested!
+    if anonymous_user?(user) && !$site.anonymous_interaction
       outcome = compute_outcome(user_interaction)
     else
       outcome = compute_save_and_notify_outcome(user_interaction)
