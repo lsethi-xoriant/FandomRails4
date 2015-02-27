@@ -22,9 +22,9 @@
       </div>
 
       <div class="col-sm-12 cup__header-col text-center">
-      	<div id="two_package" class="cup__package">
+      	<div id="two_package" class="cup__package cup__package--selected">
       		<img class="img-responsive" src="<%= @cup_tag_extra_fields["two_packages"]["url"] rescue nil %>" onclick="selectNumberOfPackages(2)">
-      		<i class="fa fa-check-circle cup__checked hidden"></i>
+      		<i class="fa fa-check-circle cup__checked"></i>
       	</div>
       	<div id="three_package" class="cup__package">
         	<img class="img-responsive" src="<%= @cup_tag_extra_fields["three_packages"]["url"] rescue nil %>" onclick="selectNumberOfPackages(3)">
@@ -39,12 +39,12 @@
 
     <div id="one-cup-selected" class="col-sm-12 cup__header-col text-center">
       <div class="col-sm-6">
-        <img src="<%= @cup_tag_extra_fields["dora_cup"]["url"] rescue nil %>">
-        <%= f.radio_button :cup_selected, "dora", :checked => true %> 
+        <img class="cup__select-cup-image img-responsive" src="<%= @cup_tag_extra_fields["dora_cup"]["url"] rescue nil %>">
+        <%= f.radio_button :cup_selected, "dora", :checked => true %> <span class="cup__checkbox"> Dora Barley</span> 
       </div>
       <div class="col-sm-6">
-        <img src="<%= @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil %>">
-        <%= f.radio_button :cup_selected, "miss_tressy" %> 
+        <img class="cup__select-cup-image img-responsive" src="<%= @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil %>">
+        <%= f.radio_button :cup_selected, "miss_tressy" %><span class="cup__checkbox"> Miss Tressy</span>
       </div>
     </div>
 
@@ -141,12 +141,19 @@ $(document).ready(function() {
 function selectNumberOfPackages(n) {
   if(n == 2) {
   	$("#two_package").addClass("cup__package--selected");
+  	$("#two_package .cup__checked").removeClass("hidden");
+  	$("#three_package").removeClass("cup__package--selected");
+  	$("#three_package .cup__checked").addClass("hidden");
     $("#two-cups-selected").hide();
     $("#one-cup-selected").show();
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(2);
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_dora").attr("checked", "checked");
   }
   if(n == 3) {
+  	$("#three_package").addClass("cup__package--selected");
+  	$("#three_package .cup__checked").removeClass("hidden");
+  	$("#two_package").removeClass("cup__package--selected");
+  	$("#two_package .cup__checked").addClass("hidden");
     $("#one-cup-selected").hide();
     $("#two-cups-selected").show();
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(3);

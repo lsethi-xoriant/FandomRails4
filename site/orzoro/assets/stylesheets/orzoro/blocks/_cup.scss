@@ -15,6 +15,7 @@
   padding: 10px 50px;
   display: inline-block;
   position: relative;
+  cursor: pointer;
 }
 
 .cup__package--selected{
@@ -24,7 +25,7 @@
 .cup__checked{
   position: absolute;
   color: $brown;
-  top: -16px;
+  top: -17px;
   right: -11px;
   font-size: 23px;
 }
@@ -55,6 +56,16 @@
   .main-container--cream {
     padding-bottom: 30px;
   }
+}
+
+.cup__select-cup-image{
+  display: block;
+  margin: 5px auto;
+}
+
+.cup__checkbox{
+  color: $brown;
+  font-weight: bold;
 }
 
 .cup__submit {
