@@ -207,25 +207,18 @@ module ApplicationHelper
   end
 
   def order_elements_by_ordering_meta(meta_ordering, elements)
-    ordered_element_names = meta_ordering.split(",")
-    if ordered_element_names.any?         
-      ordered_elements = Array.new
-      ordered_element_names.each do |element_name|
-        elements.each do |element|
-          if element.name == element_name
-            ordered_elements << element
-          end
-        end
-      end
-      elements.each do |element|
-        unless ordered_element_names.include?(element.name) 
-          ordered_elements << element
-        end
-      end
-      ordered_elements
-    else
-      elements
+    name_to_element = {}
+    elements.each do |e| 
+      name_to_element[e.name] = e
     end
+    result = []
+    meta_ordering.split(",").each do |name|
+      name = name.strip
+      if name_to_element.key? name
+        result << name_to_element.delete(name)
+      end
+    end
+    result + name_to_element.values
   end
 
   def get_highlight_calltoactions()
