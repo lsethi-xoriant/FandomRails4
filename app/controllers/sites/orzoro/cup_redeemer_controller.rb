@@ -38,12 +38,13 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     attribute :receipt_total, type: Float
 
     validates_presence_of :package_count, :receipt_number, :day_of_emission, :month_of_emission, :year_of_emission, 
-                          :hour_of_emission, :minute_of_emission, :receipt_total
+                          :hour_of_emission, :minute_of_emission
+    validates :receipt_total, presence: true, numericality: { only_float: true }
     validates_presence_of :cup_selected, :if => :two_packages_selected?
 
-  def two_packages_selected?
-    package_count == 2
-  end
+    def two_packages_selected?
+      package_count == 2
+    end
 
   end
 
@@ -108,9 +109,11 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   end
 
   def step_2_update
+    @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     @cup_redeemer = CupRedeemerStep2.new(params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2])
+    cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
+    debugger
     if @cup_redeemer.valid?
-      cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
       new_cache_value = cache_value.merge({ "receipt" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2] }) if cache_value
       cache_write("cup-redeemer-#{session[:session_id]}", new_cache_value, 1.hour)
       redirect_to "/cup_redeemer/step_3"
@@ -134,8 +137,8 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
 
   def step_3_update
     @cup_redeemer = CupRedeemerStep3.new(params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step3])
+    cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
     if @cup_redeemer.valid?
-      cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
       new_cache_value = cache_value.merge({ "address" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step3] }) if cache_value
       cache_write("cup-redeemer-#{session[:session_id]}", new_cache_value, 1.hour)
       redirect_to "/cup_redeemer/request_completed"
@@ -147,6 +150,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   end
 
   def request_completed
+    @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
     if session[:session_id].nil? || cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil? || cache_value["address"].nil?
       redirect_to "/cup_redeemer/step_1"

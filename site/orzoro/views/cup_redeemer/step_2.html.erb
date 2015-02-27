@@ -111,7 +111,7 @@
       <div class="col-sm-6">
         <div class="form-group">
           <label>Importo scontrino (compresi i decimali)</label>
-          <%= f.text_field :receipt_total, :class => "form-control", :required => true %>
+          <%= f.text_field :receipt_total, :class => "form-control", :required => true, :type => "number", :step => "any" %>
         </div>
       </div>
     </div>
