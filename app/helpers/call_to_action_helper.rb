@@ -20,7 +20,7 @@ module CallToActionHelper
         "id" => calltoaction.id,
         "detail_url" => "/call_to_action/" + calltoaction.slug,
         "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
-        "thumb_url" => calltoaction.thumbnail(:medium),
+        "thumb_url" => calltoaction.thumbnail(:thumb),
         "title" => calltoaction.title,
         "description" => calltoaction.description,
         "type" => "cta",
