@@ -1,5 +1,5 @@
 <div class="row {{interaction_info.interaction.resource_type}}-undervideo-interaction__row">
-  <div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-12 undervideo-interaction__col">
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-12">
     <%= render partial: "/call_to_action/trivia_interaction" %>
   </div>
   <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-sm-12 undervideo-interaction__col">
@@ -34,7 +34,8 @@
     <%= render partial: "/call_to_action/vote_interaction" %>
   </div>  
 
-  <div class="col-sm-12 undervideo-interaction__col" ng-if="linked_call_to_actions_count && !isLastStepInLinkedCallToAction()">
+  <div class="row">
+  <div class="col-sm-12" ng-if="linked_call_to_actions_count && !isLastStepInLinkedCallToAction()" style="margin-top: 15px; margin-bottom: 15px;">
     <div class="row">
       <div class="col-xs-10 col-xs-offset-1 text-center">
         <p class="undervideo-interaction__progress-text">{{linked_call_to_actions_index}} / {{linked_call_to_actions_count}}</p>
@@ -44,7 +45,8 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div> 
+  </div> 
 
   <div class="col-sm-12 undervideo-interaction__col text-center" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()">
     <span ng-click="resetToRedo(interaction_info)">Rifai il test <span class="fa fa-refresh undervideo-interaction__fa-refresh"></span></span>
