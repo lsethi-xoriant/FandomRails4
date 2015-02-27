@@ -156,7 +156,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.secondary_video_players = {};
     $scope.play_event_tracked = {};
     $scope.current_user_answer_response_correct = {};
-    $scope.calltoactions_during_video_interactions_second = calltoactions_during_video_interactions_second;
+    $scope.calltoactions_during_video_interactions_second = []; // FIX THIS calltoactions_during_video_interactions_second;
     $scope.current_calltoaction = current_calltoaction;
     $scope.calltoactions_count = calltoactions_count;
     $scope.google_analytics_code = google_analytics_code;

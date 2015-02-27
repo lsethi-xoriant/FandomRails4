@@ -51,6 +51,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   $scope.nextCallToActionInCategory = function(direction) {
     $http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})
         .success(function(data) { 
+
           $scope.initCallToActionInfoList(data.calltoaction);
 
           $scope.initAnonymousUser();
@@ -63,9 +64,17 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
           }
 
           $timeout(function() { 
+
+            if($scope.calltoaction_info.calltoaction.media_type == 'YOUTUBE') {
+              $(".media-youtube iframe").remove();
+              iframe = "<div id=\"main-media-iframe-" + $scope.calltoaction_info.calltoaction.id + "\" main-media=\"main\" calltoaction-id=\"" + $scope.calltoaction_info.calltoaction.id + "\" class=\"embed-responsive-item\"></div>";
+              $(".media-youtube").html(iframe);
+            }
+
             angular.forEach($scope.calltoactions, function(sc) {
               appendYTIframe(sc);
             });
+
           }, 0); // To execute code after page is render
 
           goToLastLinkedCallToAction();
