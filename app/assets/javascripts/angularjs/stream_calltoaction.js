@@ -812,7 +812,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
   };
 
-  $scope.appendCallToAction = function() {
+  $scope.appendCallToAction = function(callback) {
+
     if($scope.calltoactions.length < $scope.calltoactions_count) {
 
       $("#append-other button").attr('disabled', true);
@@ -855,6 +856,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         //updateSecondaryVideoPlayers(data.calltoactions);
 
         $("#append-other button").attr('disabled', false);
+
+        if (callback !== 'undefined') {
+          callback();
+        }
 
       });
       

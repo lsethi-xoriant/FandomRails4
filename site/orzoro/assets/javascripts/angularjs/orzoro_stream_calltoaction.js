@@ -109,19 +109,19 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   }
 
   $scope.extraInit = function() {
-    // TODO: temporary workaround
-    $scope.appendCallToAction();
-    $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
     if($scope.calltoaction_info) {
       $scope.calltoaction_ids_shown = $scope.calltoaction_info["calltoaction"]["id"];
       goToLastLinkedCallToAction();
+    } else {
+      $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
     }
   };
 
 
   $scope.orzoroAppendCallToAction = function() {
-    $scope.appendCallToAction();
-    $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
+    $scope.appendCallToAction(function() {
+      $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
+    });
   };
 
 

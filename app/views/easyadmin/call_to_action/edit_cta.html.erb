@@ -125,6 +125,21 @@
         <% end %>
       <% end %>
 
+       <div class="row">
+        <div class="col-md-10"><h3>TEST</h3></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI TEST", f, :interactions, "quiz", "test" %></div>
+      </div>
+
+      <div id="tmp-test-add"></div>
+
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "TEST" %>
+          <%= render '/easyadmin/call_to_action/test-form', :f => builder %>
+        <% end %>
+      <% end %>
+
+      <hr>
+
       <div class="row">
         <div class="col-md-10"><h3>CHECK</h3></div>
         <div class="col-md-2"><%= link_to_add_check_fields "AGGIUNGI CHECK", f, :interactions %></div>
