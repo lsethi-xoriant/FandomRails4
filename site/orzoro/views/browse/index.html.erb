@@ -1,6 +1,6 @@
 <div class="container container--default" ng-controller="SearchCtrl" ng-init="init(<%= @browse_section.to_json %> )">
 	<% if @tag_browse %>
-		<div class="row category-header" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@tag_browse)["header_image"], :original) rescue nil %>)">
+		<div class="row category-header" style="background-color: <%= get_extra_fields!(@tag_browse)["label-background"] %>; background-image: url(<%= (get_upload_extra_field_processor(get_extra_fields!(@tag_browse)["header_image"], :original) rescue nil) unless small_mobile_device? %>)">
 			<div class="col-xs-12 text-center">
 				<h1 class="category-header__title"><%= get_extra_fields!(@tag_browse)["title"] %></h1>
 				<h2 class="category-header__subtitle"><%= @tag_browse.description %></h2>
