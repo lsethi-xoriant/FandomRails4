@@ -61,6 +61,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
             if($scope.linked_call_to_actions_count) {
               $scope.linked_call_to_actions_index = 1;
             }
+            window.history.pushState(null, $scope.calltoaction_info.calltoaction.title, "/call_to_action/" + $scope.calltoaction_info.calltoaction.slug);
           }
 
           $timeout(function() { 
