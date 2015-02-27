@@ -60,7 +60,19 @@
   background-color: $brown;
 }
 
+.footer__corner-nestle{
+  position: absolute; 
+  width: 250px; 
+  right: 0; 
+  bottom: 0; 
+  z-index: 9999;
+}
+
 @media (max-width: $screen-sm-min) {
+  .footer ul{
+    margin-top: 10px;
+  }
+  
   .footer ul, .footer li {
     padding: 0;
     display: block;
@@ -73,5 +85,12 @@
   
   .fix-footer{
     text-align: left !important;
+  }
+  .footer__corner-nestle{
+    position: absolute; 
+    width: 150px; 
+    right: 0; 
+    bottom: 0; 
+    z-index: 9999;
   }
 }

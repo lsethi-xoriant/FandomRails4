@@ -608,13 +608,11 @@ module CallToActionHelper
   end
 
   def duplicate_cta(old_cta_id)
-    cta = CallToAction.find(old_cta_id)
+    cta = CallToAction.find(old_cta_id).clone
     cta.title = "Copy of " + cta.title
     cta.name = "copy-of-" + cta.name
     cta.activated_at = DateTime.now
-    cta_attributes = cta.attributes
-    cta_attributes.delete("id")
-    CallToAction.new(cta_attributes, :without_protection => true)
+    cta
   end
 
   def duplicate_interaction_call_to_actions(cloned_cta_map, cloned_interactions_map)
