@@ -83,3 +83,15 @@
   font-weight: bold;
   text-transform: uppercase;
 }
+
+@media(max-width: $screen-sm-min) {
+  .form-control{
+    margin: 10px 0;
+  }
+  
+  .cup__package{
+    margin-left: 0;
+    margin-right: 0;
+    padding: 10px 20px;
+  }
+}
