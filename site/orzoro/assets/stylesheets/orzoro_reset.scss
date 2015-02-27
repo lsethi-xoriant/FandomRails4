@@ -327,6 +327,14 @@ a{
 }
 
 @media (max-width: $screen-sm-min) { 
+  .main-container--fluid {
+    padding: 0 !important;
+  }
+
+  .main-container {
+    padding-top: 0 !important;
+  }
+
   .modal-body--gallery {
     margin-top: 10px !important;
     margin-bottom: 20px !important;

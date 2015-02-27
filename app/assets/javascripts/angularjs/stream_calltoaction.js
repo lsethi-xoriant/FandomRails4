@@ -603,6 +603,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (interaction_info.interaction.resource_type != "download");
   };
 
+  $scope.filterRemoveVoteInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type != "vote");
+  };
+
   $window.update_ga_event = function(category, action, label, value) {
     if($scope.aux && $scope.aux.current_property_info && $scope.aux.current_property_info.path) {
       category = $scope.aux.current_property_info.path + "_" + category;
