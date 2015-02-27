@@ -34,9 +34,12 @@
 <% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
 
 <body ng-cloak ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="OrzoroStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
-
+<% unless small_mobile_device? %>
   <%= render partial: "/application/header" %>
   <%= render partial: "/application/user_bar", locals: { aux: aux } %>
+<% else %>
+  <%= render partial: "/application/user_bar_mobile", locals: { aux: aux } %>
+<% end %>
 
   <%= yield %>
 

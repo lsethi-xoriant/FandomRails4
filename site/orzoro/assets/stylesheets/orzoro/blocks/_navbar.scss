@@ -40,3 +40,49 @@
   margin-bottom: 0;
   border: none;
 }
+
+@media (max-width: $screen-xs-min) {
+  .navbar-default {
+    margin-bottom: 0;
+    border: none;
+    background-color: #FFA500;
+    min-height: 140px;
+  }
+  
+  .navbar-nav li{
+    display: block;
+  }
+  
+  .header__logo{
+    display: block;
+    position: absolute;
+    left: 30%;
+    top: 0;
+    max-width:130px;
+  }
+  
+  .navbar-collapse{
+    border: none;
+    background-color: #222;
+  }
+  
+  .navbar-nav{
+    width: auto;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .navbar-header{
+    height: 140px;
+  }
+  
+  .navbar-toggle{
+    margin-top: 46px;
+    border: none;
+  }
+  
+  .navbar-toggle .icon-bar{
+    height: 3px;
+  }
+}
