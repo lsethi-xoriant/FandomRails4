@@ -112,7 +112,6 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     @cup_redeemer = CupRedeemerStep2.new(params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2])
     cache_value = cache_read("cup-redeemer-#{session[:session_id]}")
-    debugger
     if @cup_redeemer.valid?
       new_cache_value = cache_value.merge({ "receipt" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2] }) if cache_value
       cache_write("cup-redeemer-#{session[:session_id]}", new_cache_value, 1.hour)
