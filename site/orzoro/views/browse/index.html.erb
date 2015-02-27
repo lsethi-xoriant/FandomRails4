@@ -1,6 +1,6 @@
 <div class="container container--default" ng-controller="SearchCtrl" ng-init="init(<%= @browse_section.to_json %> )">
 	<% if @tag_browse %>
-		<div class="row category-header" style="background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@tag_browse)["header_image"], :original) rescue nil %>)">
+		<div class="row category-header" style="background-color: <%= get_extra_fields!(@tag_browse)["label-background"] %>; background-image: url(<%= (get_upload_extra_field_processor(get_extra_fields!(@tag_browse)["header_image"], :original) rescue nil) unless small_mobile_device? %>)">
 			<div class="col-xs-12 text-center">
 				<h1 class="category-header__title"><%= get_extra_fields!(@tag_browse)["title"] %></h1>
 				<h2 class="category-header__subtitle"><%= @tag_browse.description %></h2>
@@ -11,7 +11,7 @@
 		</div>
 	<% end %>
 	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.attributes.contents.length > 0">
-		<div class="row brws-item main-row" ng-class-odd="'brws-item--dark'">
+		<div class="row brws-item main-row container-shadow" ng-class-odd="'brws-item--dark'">
 			  <!-- HEADING -->
 			<div class="col-sm-12 text-center">
 			  <%= render partial: "/application/ribbon", locals: { title: "{{section.attributes.title}}", background: "{{aux.page_tag.miniformat['label_background']}}"}%>

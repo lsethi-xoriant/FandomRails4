@@ -640,8 +640,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2396,8 +2395,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -4152,8 +4150,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -5908,8 +5905,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -7664,8 +7660,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -9420,8 +9415,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -11176,8 +11170,7 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    ordering integer
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -23311,3 +23304,7 @@ INSERT INTO schema_migrations (version) VALUES ('20150213081903');
 INSERT INTO schema_migrations (version) VALUES ('20150216160308');
 
 INSERT INTO schema_migrations (version) VALUES ('20150219101047');
+
+INSERT INTO schema_migrations (version) VALUES ('20150227151410');
+
+INSERT INTO schema_migrations (version) VALUES ('20150227151546');

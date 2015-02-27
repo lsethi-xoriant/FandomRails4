@@ -24,7 +24,7 @@ module OrzoroHelper
     miniformat_info_list
   end
 
-  def default_orzoro_aux(other)
+  def default_orzoro_aux(other, calltoaction_info_list = nil)
 
     miniformat_info_list, assets = cache_medium("layout_info") do
       miniformat_info_list = get_miniformat_info_list()
@@ -41,6 +41,17 @@ module OrzoroHelper
       calltoaction = other[:calltoaction]
       related_calltoaction_info = get_related_calltoaction_info(calltoaction, "miniformat")
       calltoaction_category = get_tag_with_tag_about_call_to_action(calltoaction, "category").first
+      if calltoaction_info_list.first["miniformat"]["title"] == "ricette"
+        related_product = get_tag_with_tag_about_call_to_action(calltoaction, "related-product").first
+        if related_product
+          related_product = {
+            "title" => related_product.name,
+            "description" => related_product.description,
+            "image" => (get_extra_fields!(related_product)["image"]["url"] rescue nil),
+            "browse_url" => (get_extra_fields!(related_product)['browse_url'] rescue '#')
+          }
+        end
+      end
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
@@ -69,6 +80,7 @@ module OrzoroHelper
       "free_provider_share" => $site.free_provider_share,
       "miniformat_info_list" => miniformat_info_list,
       "assets" => assets,
+      "related_product" => related_product,
       "root_url" => root_url
     }
 
