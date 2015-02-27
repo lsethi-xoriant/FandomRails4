@@ -51,19 +51,34 @@
           <h3>Prima CTA</h3>
           <hr/>
 
+          <label class="text-input">Titolo prima CTA</label>
+          <%= text_field_tag :cloned_cta_title, @current_cta.title, :class => "form-control" %>
           <label class="text-input">Nome prima CTA</label>
           <%= text_field_tag :cloned_cta_name, @current_cta.name, :class => "form-control" %>
+          <label class="text-input">Slug prima CTA</label>
+          <%= text_field_tag :cloned_cta_slug, @current_cta.slug, :class => "form-control" %>
           <hr/>
 
           <% if @linked_cta_set %>
             <h3>CTA collegate</h3>
             <hr/>
-            <% @linked_cta_set.each do |old_cta_name| %>
+            <% @linked_cta_set.each do |old_cta_attributes| %>
+              <% old_cta_name = old_cta_attributes['name'] %>
+              <% tagged_as_step = get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('step') %>
+              <% tagged_as_ending = get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('ending') %>
+
+              <label class="text-input"><%= "Titolo CTA copia di '#{old_cta_attributes['title']}'" %></label>
+              <%= text_field_tag "cloned_cta[#{old_cta_name}][title]", old_cta_attributes['title'], :class => "form-control", 
+                    :tagged_as_step => tagged_as_step, :tagged_as_ending => tagged_as_ending %>
+
               <label class="text-input"><%= "Nome CTA copia di '#{old_cta_name}'" %></label>
-              <%= text_field_tag "cloned_cta[#{old_cta_name}]", old_cta_name, :class => "form-control", 
-                    :tagged_as_step => get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('step'), 
-                    :tagged_as_ending => get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('ending') %>
-              <br/>
+              <%= text_field_tag "cloned_cta[#{old_cta_name}][name]", old_cta_name, :class => "form-control", 
+                    :tagged_as_step => tagged_as_step, :tagged_as_ending => tagged_as_ending %>
+
+              <label class="text-input"><%= "Slug CTA copia di '#{old_cta_attributes['slug']}'" %></label>
+              <%= text_field_tag "cloned_cta[#{old_cta_name}][slug]", old_cta_attributes['slug'], :class => "form-control", 
+                    :tagged_as_step => tagged_as_step, :tagged_as_ending => tagged_as_ending %>
+              <hr/>
             <% end %>
           <% end %>
 
@@ -97,10 +112,38 @@
 
   $('.tree').jstree();
 
-  function fillLinkedCtaName(srcInputElement, destInputElement, taggedAsStep, taggedAsEnding, counter) {
+  function fillClonedCtaNameAndSlug() {
     var nameManuallyModified = false;
 
-    srcInputElement.on('input', function() { 
+    $("#cloned_cta_title").on("input", function() { 
+      if (!nameManuallyModified) {
+        var text = this.value;
+        text = text.toLowerCase();
+
+        text = text.replace(/[^a-zA-Z0-9]+/g,'-').replace(/-+/g,'-').replace(/-$/g,'').replace(/^-/g,'');
+        $("#cloned_cta_name").val(text);
+        $("#cloned_cta_slug").val(text);
+      }
+      $("#cloned_cta_name").trigger("input");
+      $("#cloned_cta_slug").trigger("input");
+    });
+
+    $("#cloned_cta_name").keyup(function() {
+      nameManuallyModified = true;
+      if ($("#cloned_cta_name").val() == "")
+        nameManuallyModified = false;
+    });
+    $("#cloned_cta_slug").keyup(function() {
+      nameManuallyModified = true;
+      if ($("#cloned_cta_slug").val() == "")
+        nameManuallyModified = false;
+    });
+  };
+
+  function fillLinkedCtaNameAndSlug(srcInputElement, destInputElement, taggedAsStep, taggedAsEnding, counter) {
+    var nameManuallyModified = false;
+
+    srcInputElement.on("input", function() { 
       if (!nameManuallyModified) {
         var text = this.value;
         text = text.toLowerCase();
@@ -117,7 +160,34 @@
       }
     });
 
-    destInputElement.keyup(function() {
+    destInputElement.on("input", function() {
+      nameManuallyModified = true;
+      if (destInputElement.val() == "")
+        nameManuallyModified = false;
+    });
+  };
+
+  function fillLinkedCtaTitle(srcInputElement, destInputElement, taggedAsStep, taggedAsEnding, counter) {
+    var titleManuallyModified = false;
+
+    srcInputElement.on("input", function() { 
+      if (!titleManuallyModified) {
+        var text = this.value;
+        //text = text.toLowerCase();
+        if(taggedAsStep == "true")
+          text = text + " [step " + counter + "]";
+        else 
+          if(taggedAsEnding == "true")
+            text = text + " [eding " + counter + "]";
+          else
+            text = text + " [" + counter + "]";
+
+        //text = text.replace(/[^a-zA-Z0-9]+/g,'-').replace(/-+/g,'-').replace(/-$/g,'').replace(/^-/g,'');
+        destInputElement.val(text);
+      }
+    });
+
+    destInputElement.on("input", function() {
       nameManuallyModified = true;
       if (destInputElement.val() == "")
         nameManuallyModified = false;
@@ -133,22 +203,32 @@
     $("input[name^='cloned_cta[']").each(function() {
       taggedAsStep = $(this).attr("tagged_as_step");
       taggedAsEnding = $(this).attr("tagged_as_ending");
+      name = $(this).attr("name");
+      attribute = name.substr(name.indexOf("]"), name.length)
+      attribute = attribute.substr(2, attribute.length - 3)
       if(taggedAsStep == "true") {
-        stepLinkedCounter += 1;
+        if(attribute == "title")
+          stepLinkedCounter += 1;
         counter = stepLinkedCounter;
       }
       else
         if(taggedAsEnding == "true") {
-          endingLinkedCounter += 1;
+          if(attribute == "title")
+            endingLinkedCounter += 1;
           counter = endingLinkedCounter;
         }
         else {
-          linkedCounter += 1;
+          if(attribute == "title")
+            linkedCounter += 1;
           counter = linkedCounter;
         }
-
-      fillLinkedCtaName($("#cloned_cta_name"), $(this), taggedAsStep, taggedAsEnding, counter);
+      if(attribute == "title")
+        fillLinkedCtaTitle($("#cloned_cta_title"), $(this), taggedAsStep, taggedAsEnding, counter);
+      else
+        fillLinkedCtaNameAndSlug($("#cloned_cta_name"), $(this), taggedAsStep, taggedAsEnding, counter);
     });
+
+  fillClonedCtaNameAndSlug();
 
   });
 

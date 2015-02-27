@@ -576,9 +576,12 @@ module CallToActionHelper
     if params[:commit] == "SALVA"
       ActiveRecord::Base.transaction do
         begin
-          @cloned_cta_map = {@current_cta.name => params[:cloned_cta_name]}.merge(params[:cloned_cta])
+          @cloned_cta_map = { @current_cta.name => { "title" => params[:cloned_cta_title], 
+                                                      "name" => params[:cloned_cta_name],
+                                                      "slug" => params[:cloned_cta_slug] } 
+                            }.merge(params[:cloned_cta])
           cloned_interactions_map = {}
-          @cloned_cta_map.each do |old_cta_name, new_cta_name|
+          @cloned_cta_map.each do |old_cta_name, new_params|
             old_cta = CallToAction.find_by_name(old_cta_name)
             new_cta = duplicate_cta(old_cta.id)
             old_cta.interactions.each do |i|
@@ -588,7 +591,9 @@ module CallToActionHelper
             old_cta.call_to_action_tags.each do |tag|
               duplicate_cta_tag(new_cta, tag)
             end
-            new_cta.name = new_cta_name
+            new_cta.title = new_params["title"]
+            new_cta.name = new_params["name"]
+            new_cta.slug = new_params["slug"]
             new_cta.save
           end
           duplicate_interaction_call_to_actions(@cloned_cta_map, cloned_interactions_map)
@@ -602,28 +607,30 @@ module CallToActionHelper
       @linked_cta_set = Set.new
       @trees = [[@current_cta]]
       next_call_to_action_linked_to(@current_cta, @trees)
-      @linked_cta_set = build_linked_cta_names_set(@current_cta, @trees)
+      @linked_cta_set = build_linked_cta_attr_set(@current_cta, @trees)
     end
     render :template => "/easyadmin/call_to_action/clone_linked_cta"
   end
 
   def duplicate_cta(old_cta_id)
-    cta = CallToAction.find(old_cta_id).clone
+    cta = CallToAction.find(old_cta_id)
     cta.title = "Copy of " + cta.title
     cta.name = "copy-of-" + cta.name
     cta.activated_at = DateTime.now
-    cta
+    cta_attributes = cta.attributes
+    cta_attributes.delete("id")
+    CallToAction.new(cta_attributes, :without_protection => true)
   end
 
   def duplicate_interaction_call_to_actions(cloned_cta_map, cloned_interactions_map)
-    cloned_cta_map.each do |old_cta_name, new_cta_name|
+    cloned_cta_map.each do |old_cta_name, new_params|
       old_cta = CallToAction.find_by_name(old_cta_name)
       old_cta.interactions.each do |old_interaction|
         old_interaction_id = old_interaction.id
         InteractionCallToAction.where(:interaction_id => old_interaction_id).each do |old_icta|
           new_icta = InteractionCallToAction.new(
             :interaction_id => cloned_interactions_map[old_interaction_id].id, 
-            :call_to_action_id => CallToAction.find_by_name(cloned_cta_map[CallToAction.find(old_icta.call_to_action_id).name]).id
+            :call_to_action_id => CallToAction.find_by_name(cloned_cta_map[CallToAction.find(old_icta.call_to_action_id).name]["name"]).id
             )
           new_icta.save
         end
@@ -809,11 +816,11 @@ module CallToActionHelper
     return res
   end
 
-  def build_linked_cta_names_set(root_cta, trees)
+  def build_linked_cta_attr_set(root_cta, trees)
     linked_cta_set = Set.new
     trees.each do |cta_tree|
       cta_tree.each do |cta|
-        linked_cta_set << cta.name unless cta.name == root_cta.name
+        linked_cta_set << { "title" => cta.title, "name" => cta.name, "slug" => cta.slug } unless cta.name == root_cta.name
       end
     end
     return linked_cta_set
