@@ -60,3 +60,18 @@
   background-color: $brown;
 }
 
+@media (max-width: $screen-sm-min) {
+  .footer ul, .footer li {
+    padding: 0;
+    display: block;
+    border: none;
+  }
+  
+  .footer a {
+    border: none;
+  }
+  
+  .fix-footer{
+    text-align: left !important;
+  }
+}
