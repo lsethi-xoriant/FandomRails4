@@ -39,6 +39,12 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
 
     validates_presence_of :package_count, :receipt_number, :day_of_emission, :month_of_emission, :year_of_emission, 
                           :hour_of_emission, :minute_of_emission, :receipt_total
+    validates_presence_of :cup_selected, :if => :two_packages_selected?
+
+  def two_packages_selected?
+    package_count == 2
+  end
+
   end
 
   class CupRedeemerStep3
