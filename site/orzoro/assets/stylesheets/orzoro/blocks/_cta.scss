@@ -274,6 +274,10 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .cta__title-and-description-col {
+    padding: 15px;
+  }
+
   .media-image-ricette {
     margin-top: 0;
   }
