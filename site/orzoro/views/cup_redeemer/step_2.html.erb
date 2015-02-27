@@ -22,8 +22,14 @@
       </div>
 
       <div class="col-sm-12 cup__header-col text-center">
-        <img class="cup__package" src="<%= @cup_tag_extra_fields["two_packages"]["url"] rescue nil %>" onclick="selectNumberOfPackages(2)">
-        <img class="cup__package" src="<%= @cup_tag_extra_fields["three_packages"]["url"] rescue nil %>" onclick="selectNumberOfPackages(3)">
+      	<div id="two_package" class="cup__package">
+      		<img class="img-responsive" src="<%= @cup_tag_extra_fields["two_packages"]["url"] rescue nil %>" onclick="selectNumberOfPackages(2)">
+      		<i class="fa fa-check-circle cup__checked hidden"></i>
+      	</div>
+      	<div id="three_package" class="cup__package">
+        	<img class="img-responsive" src="<%= @cup_tag_extra_fields["three_packages"]["url"] rescue nil %>" onclick="selectNumberOfPackages(3)">
+        	<i class="fa fa-check-circle cup__checked hidden"></i>
+        </div>
         <%= f.hidden_field :package_count, class: "form-control" %>
       </div>
     </div>
@@ -134,6 +140,7 @@ $(document).ready(function() {
 
 function selectNumberOfPackages(n) {
   if(n == 2) {
+  	$("#two_package").addClass("cup__package--selected");
     $("#two-cups-selected").hide();
     $("#one-cup-selected").show();
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(2);
