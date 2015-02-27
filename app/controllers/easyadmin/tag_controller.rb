@@ -217,7 +217,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     elsif params[:commit] == 'SALVA ORDINAMENTO'
 
       ordering_array = JSON.parse(params["json_ordering"])["lists"]["orderedElements"]
-      ordering = ordering_array.map { |element| element.to_s }.join(", ")
+      ordering = ordering_array.map { |element| element.to_s }.join(",")
 
       tag = Tag.find_by_name(params[:tag])
       extra_fields = JSON.parse(tag.extra_fields)
