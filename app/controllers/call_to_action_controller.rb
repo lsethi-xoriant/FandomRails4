@@ -499,7 +499,8 @@ class CallToActionController < ApplicationController
         if interaction_condition.condition.present?
           if answers_map_for_condition.empty?
             user_interactions_history = params[:user_interactions_history] # + [user_interaction.id]
-            answers_map_for_condition = map_answers_in_user_history(user_interactions_history, params[:anonymous_user_storage])
+            current_answer = params[:params]
+            answers_map_for_condition = map_answers_in_user_history(current_answer, user_interactions_history, params[:anonymous_user_storage])
           end      
           condition = JSON.parse(interaction_condition.condition)
           if condition.has_key?("max")
@@ -619,10 +620,10 @@ class CallToActionController < ApplicationController
     end
   end 
 
-  def map_answers_in_user_history(user_interactions_history, anonymous_user_storage)
+  def map_answers_in_user_history(current_answer, user_interactions_history, anonymous_user_storage)
 
     if current_user
-      answers_history = UserInteraction.where(id: user_interactions_history)
+      answers_history = UserInteraction.where(id: user_interactions_history).map { |ui| ui.answer_id }
     elsif $site.anonymous_interaction 
       answers_history = []
       anonymous_user_storage["user_interaction_info_list"].each do |index, user_interaction_info|
@@ -631,6 +632,8 @@ class CallToActionController < ApplicationController
         end
       end
     end
+
+    answers_history = answers_history + [current_answer]
 
     answers = Answer.where(id: answers_history)
     answers_map_for_condition = {}

@@ -8,7 +8,7 @@
   <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-sm-12">
     <%= render partial: "/call_to_action/check_interaction" %>
   </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12 undervideo-interaction__col">
+  <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12">
     
     <div class="text-center">
       <p class="share-interaction__extra-title">{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
@@ -48,7 +48,7 @@
   </div> 
   </div> 
 
-  <div class="col-sm-12 undervideo-interaction__col text-center" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()">
+  <div class="col-sm-12 text-center" style="margin-bottom: 15px;" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()">
     <span ng-click="resetToRedo(interaction_info)">Rifai il test <span class="fa fa-refresh undervideo-interaction__fa-refresh"></span></span>
 
   </div>
