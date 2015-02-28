@@ -626,8 +626,9 @@ class CallToActionController < ApplicationController
       answers_history = UserInteraction.where(id: user_interactions_history).map { |ui| ui.answer_id }
     elsif $site.anonymous_interaction 
       answers_history = []
+      debugger
       anonymous_user_storage["user_interaction_info_list"].each do |index, user_interaction_info|
-        if user_interactions_history.include?(user_interaction_info["user_interaction"]["id"])
+        if user_interactions_history.include?(user_interaction_info["user_interaction"]["interaction_id"]) # For anonymous the user_interaction id is the interaction id. He must be only one user interaction for interaction.
           answers_history = answers_history + [user_interaction_info["user_interaction"]["answer"]["id"]]
         end
       end
@@ -638,7 +639,7 @@ class CallToActionController < ApplicationController
     answers = Answer.where(id: answers_history)
     answers_map_for_condition = {}
     answers.each do |answer|
-      value = JSON.parse(answer.aux)["value"]
+      value = JSON.parse(answer.aux)["symbolic_name"]
       if answers_map_for_condition.has_key?(value)
         answers_map_for_condition[value] = answers_map_for_condition[value] + 1
       else
