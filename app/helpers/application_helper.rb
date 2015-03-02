@@ -429,7 +429,7 @@ module ApplicationHelper
   end
 
   def get_tag_with_tag_about_tag(tag, parent_tag_name)
-    cache_short get_tag_with_tag_about_call_to_action_cache_key(tag.id, parent_tag_name) do
+    cache_short get_tag_with_tag_about_tag_cache_key(tag.id, parent_tag_name) do
       Tag.includes(tags_tags: :other_tag).includes(:tags_tags).where("other_tags_tags_tags.name = ? AND tags_tags.tag_id = ?", parent_tag_name, tag.id).order("tags_tags.updated_at DESC").to_a
     end
   end
