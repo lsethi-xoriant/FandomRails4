@@ -28,7 +28,7 @@ class CallToActionController < ApplicationController
           user_interaction_info_list["user_interaction_info_list"].each do |index, user_interaction_info|
             if user_interaction_info["calltoaction_id"] == next_calltoaction_id
               current_interaction = user_interaction_info["user_interaction"]
-              aux_parse =  JSON.parse(current_interaction["aux"])
+              aux_parse = JSON.parse(current_interaction["aux"])
               if aux_parse["to_redo"] == false
                 user_interactions_history = user_interactions_history + [index]
                 next_calltoaction_id = aux_parse["next_calltoaction_id"]
@@ -626,7 +626,6 @@ class CallToActionController < ApplicationController
       answers_history = UserInteraction.where(id: user_interactions_history).map { |ui| ui.answer_id }
     elsif $site.anonymous_interaction 
       answers_history = []
-      debugger
       anonymous_user_storage["user_interaction_info_list"].each do |index, user_interaction_info|
         if user_interactions_history.include?(user_interaction_info["user_interaction"]["interaction_id"]) # For anonymous the user_interaction id is the interaction id. He must be only one user interaction for interaction.
           answers_history = answers_history + [user_interaction_info["user_interaction"]["answer"]["id"]]

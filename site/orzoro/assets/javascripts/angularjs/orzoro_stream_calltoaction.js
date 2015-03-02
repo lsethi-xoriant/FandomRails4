@@ -54,6 +54,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
         .success(function(data) { 
 
           $scope.initCallToActionInfoList(data.calltoaction);
+          $scope.aux["related_product"] = data.related_product;
 
           $scope.initAnonymousUser();
 
