@@ -253,15 +253,15 @@
   });
   
   function getSelectValue(select){
-  return $(select).find("option:selected").val();
+    return $(select).find("option:selected").val();
   }
   
   function changeMetadataType(type_element){
-  var value = getSelectValue(type_element);
-  if(value == "CALLTOACTION"){
-    $(type_element).parents(".metadata-form-container").find(".string-metadata").hide();
-    $(type_element).parents(".metadata-form-container").find(".media-metadata").show();
-  }
+    var value = getSelectValue(type_element);
+    if(value == "CALLTOACTION"){
+      $(type_element).parents(".metadata-form-container").find(".string-metadata").hide();
+      $(type_element).parents(".metadata-form-container").find(".media-metadata").show();
+    }
   }
 
   $(document).ready(function() {
@@ -278,6 +278,6 @@
       json_field = <%= @reward.extra_fields.to_s.html_safe %>;
     <% end %>
 
-    initializeTextbox(json_field, mandatory_fields, formName, modelName, fieldName);
+    initializeTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName);
   });
 </script>

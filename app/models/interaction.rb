@@ -3,7 +3,7 @@
 
 class Interaction < ActiveRecord::Base
   attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :call_to_action_id, :resource_attributes,
-    :points, :added_points, :when_show_interaction, :required_to_complete, :stored_for_anonymous
+    :points, :added_points, :when_show_interaction, :required_to_complete, :stored_for_anonymous, :linked_cta
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
   belongs_to :call_to_action
@@ -67,10 +67,10 @@ class Interaction < ActiveRecord::Base
   # Override del resource_attributes per gestire il accepts_nested_attributes_for con polimorfismo.
   def resource_attributes=(attributes)
     if attributes[:id].blank?
-      self.resource = eval(resource_type).new(attributes)
+      self.resource = eval(resource_type).new(attributes.except(:linked_cta))
     else
       self.resource = eval(resource_type).find(attributes[:id])
-      self.resource.update_attributes(attributes.except(:id)) 
+      self.resource.update_attributes(attributes.except(:id, :linked_cta)) 
     end
   end
 

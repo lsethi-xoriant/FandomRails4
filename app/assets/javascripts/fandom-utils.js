@@ -1,4 +1,3 @@
-
 function showTagboxAlert(idTextField, unactiveTagsName, allTagsName, newTagMessage) {
 
   values = $(idTextField).select2("val");
@@ -254,7 +253,7 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
     addButtonHandlerForJsonFields(modelName, fieldName);
 };
 
-function initializeTextbox(json_field, mandatory_fields, formName, modelName, fieldName) {
+function initializeTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName) {
     if(json_field != null) // for cloning
         populateTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName);
     else {
@@ -273,4 +272,90 @@ function addMandatoryFieldsElements(mandatory_fields, modelName, fieldName) {
         updateValueElementName($("#name-for-" + fieldName + "-field-" + mandatory_field), modelName, fieldName, 'value');
         $('#value-for-' + fieldName + '-field-' + mandatory_field).val(null);
     });
+};
+
+function addButtonHandlerForInteractionCallToActionFields(fieldName, linkedCta) {
+  var elementRemoved = 0;
+  $('#add-button-for-' + fieldName + '-fields').click(function(e) {
+    e.preventDefault();
+    var counter = $('#text-boxes-for-' + fieldName + '-fields').children().length + 1 + elementRemoved;
+      addInteractionCallToActionFieldElements(fieldName, null, counter, true);
+  });
+
+  $('#text-boxes-for-' + fieldName + '-fields').on('click','.btn', function(e) {
+    e.preventDefault();
+    $(this).parent().remove();
+    elementRemoved++;
+  });
+
+  if(linkedCta != null) {
+    cnt = 1;
+    linkedCta.forEach(function(ctaId) {
+      addInteractionCallToActionFieldElements(fieldName, ctaId, cnt, true)
+      cnt += 1;
+    });
+  };
+
+};
+
+function addInteractionCallToActionFieldElements(fieldName, icta, counter, addRemoveButton) {
+  attributeIndex = fieldName.substring(fieldName.indexOf("-") + 1, fieldName.length)
+
+  jQuery('<div/>', {
+    id: 'extra-fields-for-' + fieldName + '-' + counter,
+    class: 'row'
+  }).appendTo('#text-boxes-for-' + fieldName + '-fields');
+
+  // *** CONDITION *** //
+  jQuery('<div/>', {
+    id: 'extra-fields-condition-for-' + fieldName + '-' + counter,
+    class: 'form-group col-lg-3'
+  }).appendTo('#extra-fields-for-' + fieldName + '-' + counter);
+
+  jQuery('<label/>', {
+    class: 'text-input',
+    text: 'Condition'
+  }).appendTo('#extra-fields-condition-for-' + fieldName + '-' + counter);
+
+  conditionSelect = jQuery('<select/>', {
+    id: 'condition-for-' + fieldName + '-field-' + counter,
+    name: 'call_to_action[interactions_attributes][' + attributeIndex + '][resource_attributes][linked_cta][' + counter + '][condition]',
+    class: 'form-control'
+  }).appendTo('#extra-fields-condition-for-' + fieldName + '-' + counter);
+
+  $('#condition-for-' + fieldName + '-field-' + counter).append('<option value = "A">A</option>');
+  $('#condition-for-' + fieldName + '-field-' + counter).append('<option value = "B">B</option>');
+  $('#condition-for-' + fieldName + '-field-' + counter).append('<option value = "C">C</option>');
+  $('#condition-for-' + fieldName + '-field-' + counter).append('<option value = "D">D</option>');
+
+  // *** CALL TO ACTION ID *** //
+  jQuery('<div/>', {
+    id: 'extra-fields-cta-id-for-' + fieldName + '-' + counter,
+    class: 'form-group col-lg-3'
+  }).appendTo('#extra-fields-for-' + fieldName + '-' + counter);
+
+  jQuery('<label/>', {
+    class: 'text-input',
+    text: 'ID CTA'
+  }).appendTo('#extra-fields-cta-id-for-' + fieldName + '-' + counter);
+
+  ctaIdInput = jQuery('<input/>', {
+    type: 'text',
+    id: 'cta-id-for-' + fieldName + '-field-' + counter,
+    name: 'call_to_action[interactions_attributes][' + attributeIndex + '][resource_attributes][linked_cta][' + counter + '][cta_id]',
+    class: 'form-control col-lg-3'
+  }).appendTo('#extra-fields-cta-id-for-' + fieldName + '-' + counter);
+
+  if(icta != null) {
+    console.log(icta[0]);
+    ctaIdInput.val(icta[0]);
+    conditionSelect.val(icta[1]);
+  }
+
+  // *** REMOVE *** //
+  if(addRemoveButton != false) {
+    $('#extra-fields-for-' + fieldName + '-' + counter).append('<label id ="remove-button-label-for-' + fieldName + '-field-' + counter + '" class="col-lg-6">Elimina</label>');
+    $('#extra-fields-for-' + fieldName + '-' + counter).append('<a id = "remove-link-for-' + fieldName + '-field-' + counter + '" href="#" class="col-lg-1 btn btn-primary btn-xs">Rimuovi</a>');
+  }
+
 };

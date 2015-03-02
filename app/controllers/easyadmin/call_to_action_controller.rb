@@ -33,7 +33,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   def save_cta
     create_and_link_attachment(params[:call_to_action], nil)
     @cta = CallToAction.create(params[:call_to_action])
-    if @cta.errors.any?
+    if @cta.errors.any? or !save_interaction_call_to_action_linking(params[:call_to_action])
       @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/new_cta"     
@@ -57,7 +57,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
     @cta = CallToAction.find(params[:id])
     create_and_link_attachment(params[:call_to_action], @cta)
-    unless @cta.update_attributes(params[:call_to_action])
+    unless @cta.update_attributes(params[:call_to_action]) and save_interaction_call_to_action_linking(params[:call_to_action])
       @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/edit_cta"
@@ -315,6 +315,12 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       @extra_options = {}
     else
       @extra_options = JSON.parse(@cta.extra_fields)
+    end
+    @interaction_call_to_actions = []
+    @cta.interactions.each do |interaction|
+      InteractionCallToAction.where(:interaction_id => interaction.id).each do |icta|
+        @interaction_call_to_actions += [[icta.call_to_action_id, JSON.parse(icta.condition)["more"]]]
+      end
     end
     @tag_list_arr = Array.new
     @cta.call_to_action_tags.each { |t| @tag_list_arr << t.tag.name }

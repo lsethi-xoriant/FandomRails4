@@ -857,4 +857,21 @@ module CallToActionHelper
     end
   end
 
+  def save_interaction_call_to_action_linking(params)
+    begin
+      interaction_attributes = params["interactions_attributes"]
+      interaction_attributes.each do |key, interaction_attribute|
+        InteractionCallToAction.where(:interaction_id => interaction_attribute["id"]).destroy_all
+        interaction_attribute["resource_attributes"]["linked_cta"].each do |key, link|
+          InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => { "more" => link["condition"] }.to_json )
+        end
+      end
+      true
+    rescue Exception => e
+      flash[:error] = "Errore: #{e}"
+      raise ActiveRecord::Rollback
+      false
+    end
+  end
+
 end
