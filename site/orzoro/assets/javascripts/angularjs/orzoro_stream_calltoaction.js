@@ -113,9 +113,13 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
 
   $scope.extraInit = function() {
     if($scope.calltoaction_info) {
+      $scope.menu_field = $scope.calltoaction_info.miniformat.name;
       $scope.calltoaction_ids_shown = $scope.calltoaction_info["calltoaction"]["id"];
       goToLastLinkedCallToAction();
     } else {
+      if($scope.aux.page_tag) {
+        $scope.menu_field = $scope.aux.page_tag.miniformat.name;
+      }
       $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
     }
   };

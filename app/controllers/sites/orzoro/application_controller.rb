@@ -18,7 +18,12 @@ class Sites::Orzoro::ApplicationController < ApplicationController
     @calltoaction_info_list = build_call_to_action_info_list(@calltoactions, ["empty"])
 
     @aux_other_params = { 
-      calltoaction_evidence_info: true
+      calltoaction_evidence_info: true,
+      page_tag: {
+        miniformat: {
+          name: "home"
+        }
+      }
     }
 
   end

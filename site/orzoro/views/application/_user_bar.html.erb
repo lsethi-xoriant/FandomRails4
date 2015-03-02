@@ -1,3 +1,5 @@
+
+
 <div class="container navbar__container">
   <nav class="navbar navbar-default">
     <div class="container">
@@ -13,7 +15,7 @@
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li class="navbar__item" ng-repeat="miniformat in aux.miniformat_info_list">
+          <li class="navbar__item" ng-class="{'active': (menu_field == miniformat.name)}" ng-repeat="miniformat in aux.miniformat_info_list">
             <a href="{{miniformat.browse_url}}">
               <img class="navbar__miniformat" ng-src="{{miniformat.icon}}">
               <p class="navbar__item-text">{{miniformat.title}}</p>

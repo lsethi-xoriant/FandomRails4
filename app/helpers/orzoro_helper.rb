@@ -13,6 +13,7 @@ module OrzoroHelper
         extra_fields = get_extra_fields!(miniformat_item)
         miniformat_info_list << {
           "id" => miniformat_item.id,
+          "name" => miniformat_item.name,
           "slug" => miniformat_item.slug,
           "browse_url" => (extra_fields['browse_url'] rescue '#'),
           "title" => miniformat_item.title,
@@ -59,8 +60,9 @@ module OrzoroHelper
         calltoactions = get_highlight_calltoactions()
           
         calltoaction_evidence_info = []
-        calltoactions.each do |calltoaction|
-          calltoaction_evidence_info << build_default_thumb_calltoaction(calltoaction)
+        calltoactions.each_with_index do |calltoaction, index|
+          thumb_format = (index == 0 && !small_mobile_device?()) ? :medium : :thumb
+          calltoaction_evidence_info << build_default_thumb_calltoaction(calltoaction, thumb_format)
         end
 
         calltoaction_evidence_info

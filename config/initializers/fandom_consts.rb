@@ -17,7 +17,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   MAXIBON_PARTY_NIGHT = 3
   
   # Trivia and Versus are just subtypes of Quiz
-  INTERACTION_TYPES = Set.new(['Link', 'Quiz', 'Trivia', 'Versus', 'Check', 'Comment', 'Like', 'Play', 'Share', 'Download', 'Upload', 'Vote'])
+  INTERACTION_TYPES = Set.new(['Link', 'Quiz', 'Trivia', 'Versus', 'Check', 'Comment', 'Like', 'Play', 'Share', 'Download', 'Upload', 'Vote', 'Test'])
   
   COUNTER_NAMES = INTERACTION_TYPES.map { |x| "ALL_#{x.upcase}" } + INTERACTION_TYPES.map { |x| "UNIQUE_#{x.upcase}" } + ['UNIQUE_TRIVIA_CORRECT_ANSWER', 'ALL_TRIVIA_CORRECT_ANSWER']
   

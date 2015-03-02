@@ -1,5 +1,17 @@
 class Sites::Orzoro::CupRedeemerController < ApplicationController
 
+  before_filter :set_menu
+
+  def set_menu
+    @aux_other_params = { 
+      page_tag: {
+        miniformat: {
+          name: "tazze"
+        }
+      }
+    }
+  end
+
   class CupRedeemerStep1
     include ActiveAttr::Attributes
     include ActiveAttr::Model

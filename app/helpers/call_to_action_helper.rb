@@ -14,13 +14,13 @@ module CallToActionHelper
     CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
   end
 
-  def build_default_thumb_calltoaction(calltoaction)   
+  def build_default_thumb_calltoaction(calltoaction, thumb_format = :thumb)   
     {
       "attributes" => {
         "id" => calltoaction.id,
         "detail_url" => "/call_to_action/" + calltoaction.slug,
         "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
-        "thumb_url" => calltoaction.thumbnail(:thumb),
+        "thumb_url" => calltoaction.thumbnail(thumb_format),
         "title" => calltoaction.title,
         "description" => calltoaction.description,
         "type" => "cta",
