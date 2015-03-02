@@ -25,7 +25,8 @@ module CallToActionHelper
         "description" => calltoaction.description,
         "type" => "cta",
         "aux" => {
-          "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat")
+          "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat"),
+          "flag" => build_grafitag_for_calltoaction(calltoaction, "flag")
         }
       }
     }

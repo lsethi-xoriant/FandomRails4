@@ -1,33 +1,66 @@
-<div class="container" style="position: relative; padding: 0;">	
-	<div class="footer">
-	  <img src="<%= aux['assets']['logo_nestle']['url'] rescue nil %>" alt="Nestle Orzoro">
-	  <p>©2013 Nestlè Orzoro. Tutti i diritti riservati.<br>Partita IVA 00777280157</p>
-	  <ul>
-	    <li><a target="_blank" href="<%= aux['assets']['regolamento_url'] %>">Regolamento</a></li>
-	    <li><a target="_blank" href="<%= aux['assets']['netiquette_url'] %>">Netiquette</a></li>
-	    <li><a target="_blank" href="http://www.buonalavita.it/nestle/service/note_legali/default.aspx">Privacy Policy</a></li>
-	    <li><a target="_blank" href="https://www.buonalavita.it/contatti/scrivici">Contattaci</a></li>
-	  </ul>
+<div class="container">
+  <div class="row main-row footer__row text-center">
+    <div class="col-sm-4 col-xs-12">
+    	<a href="/cup_redeemer/index">
+	      <img class="footer__img-pre img-responsive" ng-src="{{aux.assets.footer_1.url}}">
+	      <p class="footer__text-pre">Ricevi anche tu a casa le tazze del buonumore!</p>
+	      <a href="/cup_redeemer/index" class="btn btn-red footer__btn hidden-xs">LE VOGLIO!</a>
+	    </a>
+    </div>
+    <div class="col-xs-12 visible-xs">
+    	<hr class="footer__hr">
+    </div>
+    <div class="col-sm-4 col-xs-12 footer__border-left">
+    	<a href="#">
+	      <img class="footer__img-pre img-responsive" ng-src="{{aux.assets.footer_2.url}}">
+	      <p class="footer__text-pre">Tieniti informato su tutte le novità Orzoro</p>
+	      <a href="" class="btn btn-red footer__btn hidden-xs">SOTTOSCRIVI!</a>
+      </a>
+    </div>
+    <div class="col-xs-12 visible-xs">
+    	<hr class="footer__hr">
+    </div>
+    <div class="col-sm-4 col-xs-12 footer__border-left">
+    	<a href="https://www.facebook.com/Orzoro">
+	      <img class="footer__img-pre img-responsive" ng-src="{{aux.assets.footer_3.url}}">
+	      <p class="footer__text-pre">Segui Dora e Miss Tressy sulla pagina Facebook di Orzoro</p>
+	      <a target="_blank" href="https://www.facebook.com/Orzoro" class="btn btn-red footer__btn hidden-xs">FACEBOOK!</a>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container">	
+	<div class="row">
+		<div class="col-xs-12 footer__container">
+		  <img src="<%= aux['assets']['logo_nestle']['url'] rescue nil %>" alt="Nestle Orzoro">
+		  <p style="margin-bottom: 15px; margin-top: 15px;">&copy;2015 Nestlè Orzoro. Tutti i diritti riservati.<br>Partita IVA 00777280157</p>
+		  <a class="footer__a" target="_blank" href="<%= aux['assets']['regolamento_url'] %>">Regolamento</a>
+		  <a class="footer__a footer__left-pipe" target="_blank" href="<%= aux['assets']['netiquette_url'] %>">Netiquette</a>
+		  <a class="footer__a footer__left-pipe" target="_blank" href="http://www.buonalavita.it/nestle/service/note_legali/default.aspx">Privacy Policy</a>
+		  <a class="footer__a footer__left-pipe" target="_blank" href="https://www.buonalavita.it/contatti/scrivici">Contattaci</a>
+		  <a class="footer__a footer__left-pipe" target="_blank" href="/faq">FAQ</a>
+		  <a class="footer__a footer__left-pipe visible-xs" target="_blank" href="https://www.buonalavita.it/promozioni/in-corso">rRegolamento concorsi</a>
+		  <a class="footer__a footer__left-pipe visible-xs" target="_blank" href="https://www.buonalavita.it/note-legali">Note legali</a>
+		  <a class="visible-xs" target="_blank" href="http://www.nestle.it/">
+				<img class="footer__corner-nestle" src="<%= aux['assets']['corner_footer']['url'] rescue nil %>">
+			</a>
+	  </div>
 	</div>
-	<div class="row fix-footer texture-3" style="padding-top: 5px; margin: 0; text-align: center; z-index: 9999; -webkit-box-shadow: inset 0px 5px 10px 2px rgba(50, 50, 50, 0.5); -moz-box-shadow:    inset 0px 5px 10px 2px rgba(50, 50, 50, 0.5); box-shadow: inset 0px 5px 10px 2px rgba(50, 50, 50, 0.5);">
-	      <div class="col-xs-12">
-		      <div class="centered"> 
-		        <div class="row" style="text-align: center">
-		          <a target="_blank" href="https://www.buonalavita.it/">
-		            <img src="<%= aux['assets']['footer_text']['url'] rescue nil %>" style="width: 600px;" class="hidden-xs">
-		          </a>
-		        </div>
-		        <div class="row">
-		          <div class="col-xs-12">
-		            <p style="color: white; font-size: 9px; margin-left: 10px; margin-bottom: 10px;">Copyright 2014 - Nestlè italiana S.p.A - Partita IVA 00777280157 - 
-		            <a style="text-decoration: inherit; color: white;" target="_blank" href="https://www.buonalavita.it/note-legali">note legali</a> - 
-		            <a style="text-decoration: inherit; color: white;" target="_blank" href="https://www.buonalavita.it/promozioni/in-corso">regolamento concorsi</a></p>
-		          </div>
-		        </div>
-		      </div>
-		   </div>
+
+	<div class="row footer__row footer__row--bottom text-center hidden-xs">
+    <div class="col-sm-8 col-sm-offset-2"> 
+      <a target="_blank" href="https://www.buonalavita.it/">
+        <img class="footer__img--bottom" src="<%= aux['assets']['footer_text']['url'] rescue nil %>">
+      </a>
+    </div>
+    <div class="col-sm-12">
+      <p class="footer__text--bottom">&copy;2015 - Nestlè italiana S.p.A - Partita IVA 00777280157 - 
+      <a style="text-decoration: none; color: white;" target="_blank" href="https://www.buonalavita.it/note-legali">note legali</a> - 
+      <a style="text-decoration: none; color: white;" target="_blank" href="https://www.buonalavita.it/promozioni/in-corso">regolamento concorsi</a></p>
+    </div>
+    <a target="_blank" href="http://www.nestle.it/">
+			<img class="footer__corner-nestle" src="<%= aux['assets']['corner_footer']['url'] rescue nil %>">
+		</a>
 	</div>
-	<a target="_blank" href="http://www.nestle.it/" style="z-index: 9999;">
-		<img class="footer__corner-nestle" src="<%= aux['assets']['corner_footer']['url'] rescue nil %>">
-	</a>
 </div>

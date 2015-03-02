@@ -23,6 +23,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
       content["attributes"]["title"] = calltoaction_info["calltoaction"]["title"];
       content["attributes"]["aux"] = new Object();
       content["attributes"]["aux"]["miniformat"] = calltoaction_info["miniformat"];
+      content["attributes"]["aux"]["flag"] = calltoaction_info["flag"];
       thumb_calltoactions.push(content);
     });
     return thumb_calltoactions;

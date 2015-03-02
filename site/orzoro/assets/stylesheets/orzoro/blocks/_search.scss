@@ -4,6 +4,21 @@
   padding: 20px 0;
 }
 
+.search__container {
+  background: #450104;
+  border-radius: 50%;
+  height: 40px;
+  position: absolute;
+  right: 23px;
+  top: 23px;
+  width: 40px;
+  span {
+    color: $brown;
+    line-height: 40px;
+    font-size: 22px;
+  }
+}
+
 .search-bar__field{}
 
 .search-bar__input {

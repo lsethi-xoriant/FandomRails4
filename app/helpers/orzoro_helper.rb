@@ -46,7 +46,8 @@ module OrzoroHelper
         related_product = get_tag_with_tag_about_call_to_action(calltoaction, "related-product").first
         if related_product
           related_product = {
-            "title" => related_product.name,
+            "title" => related_product.title,
+            "name" => related_product.name,
             "description" => related_product.description,
             "image" => (get_extra_fields!(related_product)["image"]["url"] rescue nil),
             "browse_url" => (get_extra_fields!(related_product)['browse_url'] rescue '#')

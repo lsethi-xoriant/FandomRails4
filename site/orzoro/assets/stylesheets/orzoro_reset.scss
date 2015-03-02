@@ -327,6 +327,10 @@ a{
 }
 
 @media (max-width: $screen-sm-min) { 
+  .container-shadow {
+    padding-top: 5px;
+  }
+
   .main-container--fluid {
     padding: 0 !important;
   }

@@ -7,7 +7,16 @@
   padding-bottom: 25px;
 } 
 
+.footer__row--bottom {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  position: relative;
+}
+
 .footer__img-pre {
+  max-width: 220px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .footer__border-left {
@@ -16,7 +25,7 @@
 .footer__text-pre {
   font-size: 18px;
   font-family: "BarmenoRegularBold";
-  margin-top: 15px;
+  margin-top: 0;
   color: #fff;
 }
 
@@ -24,23 +33,24 @@
   margin-top: 15px;
 }
 
-//FOOTER VECCHIO
-.footer {
+.footer__container {
   text-align: center;
   padding: 45px 0;
   font-size: 10px;
   background-color: #fff;
 }
 
-.footer a {
-  color: #600;
+.footer__a {
+  color: $brown;
   text-decoration: none;
   text-transform: uppercase;
   font-weight: bold;
-  display: inline-block;
-  line-height: 15px;
+  line-height: 16px;
   padding: 0 8px;
-  border-left: solid 1px #600;
+}
+
+.footer__left-pipe {
+  border-left: solid 1px $brown;
 }
 
 .footer li:first-child a {
@@ -60,17 +70,61 @@
   background-color: $brown;
 }
 
-.footer__corner-nestle{
+.footer__corner-nestle {
   position: absolute; 
-  width: 250px; 
+  width: 200px; 
   right: 0; 
   bottom: 0; 
   z-index: 9999;
 }
 
+.footer__img--bottom {
+  max-width: 600px; 
+  width: 100%;
+}
+
+.footer__text--bottom {
+  color: white; 
+  font-size: 9px; 
+  margin-left: 10px; 
+  margin-bottom: 10px;
+}
+
 @media (max-width: $screen-sm-min) {
-  .footer ul{
-    margin-top: 10px;
+
+  .footer__img--bottom {
+    max-width: 600px; 
+    width: 100%;
+    padding-right: 65px;
+  }
+
+  .footer__text--bottom {
+    color: white;
+    font-size: 6px;
+    margin-bottom: 0;
+    margin-left: 10px;
+    padding-right: 80px;
+  }
+
+  .footer__hr {
+    margin: 5px 0 15px 0;
+    border-color: #850e0d;
+  }
+
+  .footer__left-pipe {
+    display: block;
+    border: none;
+    margin-top: 5px;
+  }
+
+  .footer__img-pre {
+    float: left;
+    max-width: 140px;
+  }
+
+  .footer__text-pre {
+    font-size: 14px;
+    margin-top: 25px;
   }
 
   .footer__btn {
@@ -87,12 +141,12 @@
     border: none;
   }
   
-  .fix-footer{
+  .fix-footer {
     text-align: left !important;
   }
   .footer__corner-nestle{
     position: absolute; 
-    width: 150px; 
+    width: 120px; 
     right: 0; 
     bottom: 0; 
     z-index: 9999;

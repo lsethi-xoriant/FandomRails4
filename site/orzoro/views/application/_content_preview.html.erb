@@ -3,7 +3,8 @@
     <div class="row">
       <div class="col-xs-12 text-center">
         <div class="relateds-flexslider__thumbnail">
-          <img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}">            
+          <img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}"> 
+          <div class="text-center flag__container" ng-if="content.attributes.aux.flag" ng-style="{'background-color': content.attributes.aux.flag['label_background']}"><p>{{content.attributes.aux.flag["title"]}}</p></div>           
         </div>
         <div class="cta-preview__miniformat-container">
           <span class="cta-preview__miniformat" ng-style="{'background-color': content.attributes.aux.miniformat['label_background']}">{{content.attributes.aux.miniformat['title']}}</span>
