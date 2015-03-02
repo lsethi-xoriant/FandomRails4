@@ -24,27 +24,10 @@ class BrowseController < ApplicationController
       @query = params[:query]
     end
     
-    cta_ids = []
     @browse_section.each do |bs|
-      bs.contents.each do |content|
-        if content["type"] == "cta"
-          cta_ids << content["id"]
-        end
-      end
+      bs.contents = compute_gallery_contents(bs.contents)
     end
 
-    cta_statuses = {}
-    unless cta_ids.empty?
-      cta_statuses = cta_to_reward_statuses_by_user(current_or_anonymous_user, CallToAction.includes(:interactions).where("id in (?)", cta_ids).to_a, 'point')
-    end
-    
-    @browse_section.each do |bs|
-      bs.contents.each do |content|
-        if content["type"] == "cta"
-          content["status"] = cta_statuses[content["id"].to_i]
-        end
-      end
-    end
   end
   
   def get_tag_browse(tag_name)
