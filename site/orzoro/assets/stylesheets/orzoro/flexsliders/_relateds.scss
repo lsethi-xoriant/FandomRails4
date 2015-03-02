@@ -137,7 +137,7 @@
 }
 
 @media (min-width: $screen-sm-min) { 
-  .col-sm-8 .relateds-flexslider__item-panel, .col-md-8 .relateds-flexslider__item-panel {
+  .row-evidence_ctas .col-sm-8 .relateds-flexslider__item-panel, .row-evidence_ctas .col-md-8 .relateds-flexslider__item-panel {
     height: 560px;
     .cta-preview__miniformat {
       font-size: 28px;

@@ -1,56 +1,51 @@
-<div class="row {{interaction_info.interaction.resource_type}}-undervideo-interaction__row">
-  <div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-12">
-    <%= render partial: "/call_to_action/trivia_interaction" %>
+<div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-12">
+  <%= render partial: "/call_to_action/trivia_interaction" %>
+</div>
+<div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-sm-12 undervideo-interaction__col">
+  <%= render partial: "/call_to_action/versus_interaction" %>
+</div>
+<div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-sm-12">
+  <%= render partial: "/call_to_action/check_interaction" %>
+</div>  
+<div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12">
+  
+  <div class="text-center">
+    <p class="share-interaction__extra-title">{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
   </div>
-  <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-sm-12 undervideo-interaction__col">
-    <%= render partial: "/call_to_action/versus_interaction" %>
+  <p class="share-interaction__extra-description">{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
+
+  <div class="text-center" style="margin-top: 15px;">
+    <p class="share-interaction__extra-share">Condividi il risultato:</p>
+    <%= render partial: "/call_to_action/share_interaction" %>
   </div>
-  <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-sm-12">
-    <%= render partial: "/call_to_action/check_interaction" %>
-  </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12">
-    
-    <div class="text-center">
-      <p class="share-interaction__extra-title">{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
-    </div>
-    <p class="share-interaction__extra-description">{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
 
-    <div class="text-center" style="margin-top: 15px;">
-      <p class="share-interaction__extra-share">Condividi il risultato:</p>
-      <%= render partial: "/call_to_action/share_interaction" %>
-    </div>
+</div>  
+<div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-sm-12 undervideo-interaction__col">
+  <%= render partial: "/call_to_action/upload_interaction" %>
+</div>  
+<div ng-if="interaction_info.interaction.resource_type == 'download'" class="col-sm-12 undervideo-interaction__col">
+  <%= render partial: "/call_to_action/download_interaction" %>
+</div>  
+<div ng-if="interaction_info.interaction.resource_type == 'link'" class="col-sm-12">
+  <%= render partial: "/call_to_action/link_interaction" %>
+</div> 
+<div ng-if="interaction_info.interaction.resource_type == 'vote'" class="col-sm-12 text-center visible-xs">
+  <%= render partial: "/call_to_action/vote_interaction" %>
+</div>  
 
-  </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-sm-12 undervideo-interaction__col">
-    <%= render partial: "/call_to_action/upload_interaction" %>
-  </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'download'" class="col-sm-12 undervideo-interaction__col">
-    <%= render partial: "/call_to_action/download_interaction" %>
-  </div>  
-  <div ng-if="interaction_info.interaction.resource_type == 'link'" class="col-sm-12">
-    <%= render partial: "/call_to_action/link_interaction" %>
-  </div> 
-  <div ng-if="interaction_info.interaction.resource_type == 'vote'" class="col-sm-12 text-center visible-xs">
-    <%= render partial: "/call_to_action/vote_interaction" %>
-  </div>  
-
+<div class="col-sm-12" ng-if="linked_call_to_actions_count && !isLastStepInLinkedCallToAction()" style="margin-top: 15px; margin-bottom: 15px;">
   <div class="row">
-  <div class="col-sm-12" ng-if="linked_call_to_actions_count && !isLastStepInLinkedCallToAction()" style="margin-top: 15px; margin-bottom: 15px;">
-    <div class="row">
-      <div class="col-xs-10 col-xs-offset-1 text-center">
-        <p class="undervideo-interaction__progress-text">{{linked_call_to_actions_index}} / {{linked_call_to_actions_count}}</p>
-        <div class="progress undervideo-interaction__progress">
-          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': (linked_call_to_actions_index/linked_call_to_actions_count*100) + '%' }">
-          </div>
+    <div class="col-xs-10 col-xs-offset-1 text-center">
+      <p class="undervideo-interaction__progress-text">{{linked_call_to_actions_index}} / {{linked_call_to_actions_count}}</p>
+      <div class="progress undervideo-interaction__progress">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': (linked_call_to_actions_index/linked_call_to_actions_count*100) + '%' }">
         </div>
       </div>
     </div>
-  </div> 
-  </div> 
-
-  <div class="col-sm-12 text-center" style="margin-bottom: 15px;" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()">
-    <span ng-click="resetToRedo(interaction_info)">Rifai il test <span class="fa fa-refresh undervideo-interaction__fa-refresh"></span></span>
-
   </div>
+</div> 
+
+<div class="col-sm-12 text-center" style="margin-bottom: 15px;" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()">
+  <span ng-click="resetToRedo(interaction_info)">Rifai il test <span class="fa fa-refresh undervideo-interaction__fa-refresh"></span></span>
 
 </div>

@@ -94,9 +94,6 @@
               <p>{{interaction_info.user_interaction.errors}}</p>
             </div>
 
-            <div class="col-md-12" ng-if="interaction_info.interaction.resource.providers.facebook"> 
-              <input ng-model="interaction_info.user_interaction.facebook_message" class="form-control" type="text" placeholder="Testo della condivisione" name="address">
-            </div>
             <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook">
               <button id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-facebook btn-block" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'facebook')">CONDIVIDI</button>
             </div>
@@ -137,9 +134,6 @@
               <p>{{interaction_info.user_interaction.errors}}</p>
             </div>
 
-            <div class="col-md-12" ng-if="interaction_info.interaction.resource.providers.facebook"> 
-              <input ng-model="interaction_info.user_interaction.facebook_message" class="form-control" type="text" placeholder="Testo della condivisione" name="address">
-            </div>
             <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook">
               <button id="twitter-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-twitter btn-block" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'twitter')">CONDIVIDI</button>
             </div>

@@ -65,7 +65,6 @@
   background: $cream;
   border: 5px solid #fff !important;
   border-radius: 3px;
-  padding: 0;
   -webkit-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
   -moz-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
   box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
@@ -276,6 +275,10 @@
 @media (max-width: $screen-sm-min) { 
   .cta__title-and-description-col {
     padding: 15px;
+  }
+
+  .cta__media-container-test {
+    border: none !important;
   }
 
   .cta__undervideo {

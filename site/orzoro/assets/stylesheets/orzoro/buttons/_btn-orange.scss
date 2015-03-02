@@ -17,7 +17,7 @@
 .btn-orange.active, 
 .open .dropdown-toggle.btn-orange { 
   color: #660206; 
-  background-color: #EBAE78; 
+  background: #EBAE78; 
   border-color: #EB842A; 
 } 
  
@@ -45,11 +45,11 @@ fieldset[disabled] .btn-orange:active,
 .btn-orange.disabled.active, 
 .btn-orange[disabled].active, 
 fieldset[disabled] .btn-orange.active { 
-  background-color: #F89F51; 
+  background: #F89F51; 
   border-color: #EB842A; 
 } 
  
 .btn-orange .badge { 
   color: #F89F51; 
-  background-color: #660206; 
+  background: #660206; 
 }

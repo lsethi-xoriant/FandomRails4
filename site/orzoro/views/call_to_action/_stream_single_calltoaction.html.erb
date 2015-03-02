@@ -1,5 +1,5 @@
 <div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" > 
-  <div class="row main-row">
+  <div class="row">
 
     <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}}">
       <!-- MEDIA -->
@@ -10,13 +10,7 @@
           <%= render partial: "/call_to_action/share_interaction" %>
         </div>
       </div>
-
-      <div class="row">
-        <div class="col-xs-12">
-          <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
-        </div>
-      </div>
-
+      <%= render partial: "/call_to_action/stream_single_calltoaction_interactions" %>
     </div>
 
     <!-- VOTE INTERACTION -->
