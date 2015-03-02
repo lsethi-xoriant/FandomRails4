@@ -106,3 +106,6 @@ gem 'spring'
 gem "aws-ses", "~> 0.5.0", :require => 'aws/ses'
 
 gem 'sys-proctable'
+
+# used to prevent BREACH attacks when the HTTP compression is active
+gem 'breach-mitigation-rails'

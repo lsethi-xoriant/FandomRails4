@@ -173,5 +173,9 @@ module Fandom
       end
     end
 
+    # this extra security of the breach-mitigation-rails gem is disabled for performance reason;
+    # the basic added security (the CSRF token encrypted with a "nonce") should be enough to pass Fortify checks  
+    Rails.application.config.exclude_breach_length_hiding = true
   end
+
 end
