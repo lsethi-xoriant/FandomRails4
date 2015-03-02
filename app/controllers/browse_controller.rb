@@ -169,6 +169,14 @@ class BrowseController < ApplicationController
     @category = Tag.includes(:tags_tags).find(params[:id])
     contents, @tags, @total = get_contents_by_category_with_tags(get_tags_for_category(@category))
     @contents = compute_gallery_contents(contents)
+    
+    @aux_other_params = { 
+      page_tag: {
+        miniformat: {
+          name: @category.name
+        }
+      }
+    }
   end
   
   # hook for tenant with multiproperty
