@@ -43,9 +43,6 @@ module FandomUtils
     unless $site.x_frame_options_header.nil?
       response.headers['X-Frame-Options'] = $site.x_frame_options_header
     end
-    if $site.force_ssl
-      force_ssl()
-    end
 
     if session[:redirect_path]
       session_redirect_path = session[:redirect_path]

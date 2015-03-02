@@ -43,6 +43,7 @@ module ConfigUtils
     # this option shall be set to false to have the site working under facebook, but it's a security hazard!
     attribute :x_frame_options_header, :default => nil
     # if the site is reached through HTTP redirects to HTTPS, and every other redirect will be set to HTTPS as well
+    # TODO: currenty force_ssl is unused because it doesn't work with multi-tenancy! The deploy setting "secure_cookies" is used instead
     attribute :force_ssl, :default => false
     attribute :force_facebook_tab, type: String
     attribute :public_pages, :default => Set.new([])
