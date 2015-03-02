@@ -38,5 +38,13 @@ class SystemMailer < ActionMailer::Base
     @body = html_message
     mail(to: email, subject: subject)
   end
+  
+  def orzoro_cup_redeem_confirmation(cup_obj)
+    subject = "Congratulazioni! Hai ordinato le tazze"
+    @form_cup = cup_obj
+    @cup_tag = Tag.find_by_name("cup-redeemer")
+    @assets = Tag.find_by_name("assets")
+    mail(to: cup_obj['identity']['email'], subject: subject)
+  end
 
 end

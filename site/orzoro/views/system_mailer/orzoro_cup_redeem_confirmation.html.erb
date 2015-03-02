@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <link href='//fonts.googleapis.com/css?family=Allan:700' rel='stylesheet' type='text/css'>
+  	<link href='//fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+  </head>
+  <body style="font-family: 'Roboto', helvetica, arial, sans-serif; background-color: #faaa16;">
+  	<div style="max-width: 600px; margin-left: auto; margin-right: auto;">
+  		<img src="<%= @assets['logo_orzoro']['url'] rescue nil %>" style="display: block; margin: 10px auto;" />
+  		<h1 style="text-align: center; color: #fff;">Benessere è Buonumore</h1>
+  	</div>
+      <div style="max-width: 600px; margin-left: auto; margin-right: auto; background-color: #fff;">
+        <div style="text-align: center;">
+        	<h1 style="font-family: 'BarmenoRegularBold'; color: #660206;">Compliemnti, <%= @form_cup['identity']['first_name'] %></h1>
+        	<h2 style="font-family: 'Roboto'; color: #818181;">Ti confermiamo di aver ricevuto i tuoi dati per la<br /> ricezione delle tazze</h2>
+          	<img style="max-width: 600px;" src="<%= @cup_tag["two_cups"]["url"] rescue nil %>">
+        </div>
+        
+        <div style="background-color: #f6f0dd;">
+        	<div style="float: left; width: 50%;">
+        		<% if @form_cup['receipt']['package_count'] == 2 %>
+        			<img src="<%= @cup_tag["two_packages"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
+        		<% else %>
+        			<img src="<%= @cup_tag["three_packages"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
+        		<% end %>
+        	</div>
+        	<div style="float: left; width: 50%;">
+        		<% if @form_cup['receipt']['package_count'] == 2 %>
+        			<% if @form_cup['receipt']['cup_selected'] == 'dora' %>
+        				<img src="<%= @cup_tag["dora_cup"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
+        			<% else %>
+        				<img src="<%= @cup_tag["miss_tressy_cup"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
+        			<% end %>
+        		<% else %>
+        			<img src="<%= @cup_tag["two_cups"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
+        		<% end %>
+        	</div>
+        </div>
+        
+        <div>
+        	<p style="text-align: center; color: #818181;">Sarai notificato non appena verifichiamo tutti i dati</p>
+        	<div style="text-align: center;">
+        		<img src="<%= @assets['logo_nestle']['url'] rescue nil %>" />
+        	</div>
+        	<p style="text-align: center; color: #818181;">Se pensi ci sia un errore non considerare le presente mail.</p>
+        </div>
+        
+      </div>
+  </body>
+</html>
