@@ -65,7 +65,8 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   end
 
   def index
-    @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
+    @cup_tag = Tag.find_by_name("cup-redeemer")
+    @cup_tag_extra_fields = get_extra_fields!(@cup_tag)
     render template: "cup_redeemer/index"
   end
 
@@ -172,6 +173,8 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         user.update_attributes(infos) if (!user_created_flag and redeem_array.size == 1)
         user.save(:validate => false)
       end
+
+      SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
       render template: "cup_redeemer/request_completed"
     end
   end
