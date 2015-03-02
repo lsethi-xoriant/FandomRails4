@@ -121,8 +121,8 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
       if($scope.aux.page_tag) {
         $scope.menu_field = $scope.aux.page_tag.miniformat.name;
       }
-      $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
     }
+    $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
   };
 
 

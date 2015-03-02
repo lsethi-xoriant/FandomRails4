@@ -9,6 +9,7 @@ module ApplicationHelper
   include NoticeHelper
   include BrowseHelper
   include LogHelper
+  include SeoHelper
 
   class ContentSection
     include ActiveAttr::TypecastedAttributes

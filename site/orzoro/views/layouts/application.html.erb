@@ -8,9 +8,9 @@
   <% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
 
   <% aux = default_orzoro_aux(@aux_other_params, @calltoaction_info_list) %>  
-  <title><%= yield (:title) || "Orzoro" %></title>
-
-  <meta name="title" content="" />
+  <title><%= @ceo_info.title rescue "Orzoro - Dora & Miss Tressy" %></title>
+  <meta name="description" content="<%= @ceo_info.meta_description rescue "Entra nel mondo di Orzoro e scopri i segreti di Benessere e Buonumore." %>">
+  <meta name="keywords" content="<%= @ceo_info.keywords rescue "" %>">
   
   <%= yield (:fb_meta_tags) %>
 

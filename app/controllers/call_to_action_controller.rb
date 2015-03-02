@@ -269,6 +269,8 @@ class CallToActionController < ApplicationController
           '<meta property="og:description" content="' +calltoaction_to_share_description + '" />' +
           '<meta property="og:image" content="' + calltoaction_to_share_thumbnail + '" />'
         ).html_safe
+
+      set_seo_info_for_cta(calltoaction)
       
     else
 
