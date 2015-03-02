@@ -48,7 +48,7 @@ function fillInputWithSlug(srcInputElement, destInputElement) {
 };
 
 function getButtonHandlerForJsonFieldsName(fieldName) {
-  return  'text-boxes-for-' + fieldName + '-fields';  
+  return 'text-boxes-for-' + fieldName + '-fields';  
 };
 
 function addButtonHandlerForJsonFields(modelName, fieldName) {
@@ -172,13 +172,13 @@ function updateValueElementType(elementName, fieldName) {
     relatedValueElement = $(id);
     selectedType = elementName.val();
     if (selectedType == 'media') {
-        relatedValueElement.jqte({status:false});
+        //relatedValueElement.jqte({status:false});
         $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').show();
         relatedValueElement.attr('type', 'text');
         relatedValueElement.attr('type', 'file');
     }
     if (selectedType == 'string') {
-        relatedValueElement.jqte({status:false});
+        //relatedValueElement.jqte({status:false});
         $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').hide();
         $('#attachment-id-for-' + fieldName + '-field-' + identifier).remove();
         $('#url-for-' + fieldName + '-field-' + identifier).remove();
@@ -186,8 +186,8 @@ function updateValueElementType(elementName, fieldName) {
     }
     if (selectedType == 'html') {
       relatedValueElement.attr('type', 'text');
-      relatedValueElement.jqte();
-      relatedValueElement.jqte({status:true});
+      //relatedValueElement.jqte();
+      //relatedValueElement.jqte({status:true});
     }
 
 };
@@ -246,8 +246,8 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
                 $('#type-for-' + fieldName + '-field-' + index).val('html');
                 $('#value-for-' + fieldName + '-field-' + index).attr('type', 'text');
                 $('#value-for-' + fieldName + '-field-' + index).val(value.value);
-                $('#value-for-' + fieldName + '-field-' + index).jqte();
-                $('#value-for-' + fieldName + '-field-' + index).jqteVal(value.value);
+                //$('#value-for-' + fieldName + '-field-' + index).jqte();
+                //$('#value-for-' + fieldName + '-field-' + index).jqteVal(value.value);
             }
         }
     });
