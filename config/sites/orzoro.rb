@@ -7,7 +7,8 @@ module Fandom
       anonymous_interaction: true,
       periodicity_kinds: [PERIOD_KIND_DAILY],
       free_provider_share: true,
-      init_ctas: 3
+      init_ctas: 3,
+      x_frame_options_header: X_FRAME_OPTIONS_HEADER_SAME_ORIGIN
     )      
   end
 end

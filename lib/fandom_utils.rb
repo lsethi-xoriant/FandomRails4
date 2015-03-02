@@ -40,9 +40,8 @@ module FandomUtils
       render template: 'application/url_mistyped'
       return
     end
-    
-    unless $site.enable_x_frame_options_header
-      response.headers.except! 'X-Frame-Options'      
+    unless $site.x_frame_options_header.nil?
+      response.headers['X-Frame-Options'] = $site.x_frame_options_header
     end
     if $site.force_ssl
       force_ssl()

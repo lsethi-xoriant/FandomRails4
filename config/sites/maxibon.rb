@@ -8,7 +8,6 @@ module Fandom
       environment: { 
         'EMAIL_ADDRESS' => 'noreply@maxibon.it', 
       },
-      enable_x_frame_options_header: false,
       force_facebook_tab: 'https://apps.facebook.com/shadostage', #'https://www.facebook.com/testshado/app_354949221264454'
       public_pages: Set.new(["calltoaction#share_free", "calltoaction#update_play_interaction"])
     )
@@ -33,7 +32,6 @@ end
 
         logged_url: 'https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732'
 
-        #enable_x_frame_options_header: false
         #force_facebook_tab: 'https://www.facebook.com/MaxibonMaxiconoItalia/app_597403706967732' 
       )
     end

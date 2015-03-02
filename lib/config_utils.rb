@@ -41,7 +41,7 @@ module ConfigUtils
     attribute :assets_precompile, :default => []
     attribute :environment, :default => {}
     # this option shall be set to false to have the site working under facebook, but it's a security hazard!
-    attribute :enable_x_frame_options_header, :default => true
+    attribute :x_frame_options_header, :default => nil
     # if the site is reached through HTTP redirects to HTTPS, and every other redirect will be set to HTTPS as well
     attribute :force_ssl, :default => false
     attribute :force_facebook_tab, type: String
