@@ -44,7 +44,7 @@
                       <%= f.select :month_of_birth, options_for_select(date_array, @cup_redeemer[:month_of_birth]), {}, { class: "form-control", :required => true } %>
                     </div>
                     <div class="col-sm-4">
-                      <% date_array = (1900..2020).map { |date| [date, date] } %>
+                      <% date_array = (1900..2015).map { |date| [date, date] } %>
                       <% date_array.unshift ["Anno", ""] %>
                       <%= f.select :year_of_birth, options_for_select(date_array, @cup_redeemer[:year_of_birth]), {}, { class: "form-control", :required => true } %>
                     </div>
@@ -63,7 +63,7 @@
               <div class="row">
                 <div class="col-sm-12 cup__radio">
                   <label class="radio-inline">
-                    <%= f.radio_button :gender, "M" %> M
+                    <%= f.radio_button :gender, "M", :required => true %> M
                   </label>
                   <label class="radio-inline">
                      <%= f.radio_button :gender, "F" %> F
