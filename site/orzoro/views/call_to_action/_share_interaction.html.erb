@@ -12,6 +12,6 @@
   <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-twitter share-interaction__cta__info__tt-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'twitter')"><i class="fa fa-twitter share-interaction__cover__info__glyphicon-tt"></i></button>
 
     <!-- TWITTER -->   
-  <button ng-if="interaction_info.interaction.resource.providers.whatsapp" class="btn btn-green share-interaction__cta__info__wa-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'whatsapp')"><i class="fa fa-whatsapp share-interaction__cover__info__glyphicon-tt"></i></button>
+  <button ng-if="interaction_info.interaction.resource.providers.whatsapp && aux.mobile" class="btn btn-green share-interaction__cta__info__wa-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'whatsapp')"><i class="fa fa-whatsapp share-interaction__cover__info__glyphicon-tt"></i></button>
   
 </div>
