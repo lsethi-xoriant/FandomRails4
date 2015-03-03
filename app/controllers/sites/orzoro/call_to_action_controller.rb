@@ -45,7 +45,8 @@ class Sites::Orzoro::CallToActionController < CallToActionController
 
     response = { 
       "calltoaction" => calltoaction_info_list,
-      "related_product" => related_product
+      "related_product" => related_product,
+      "seo_info" => set_seo_info_for_cta(calltoaction)
     }
 
     respond_to do |format|
