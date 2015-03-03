@@ -5,7 +5,7 @@
 }
 
 .search__container {
-  background: #450104;
+  background: #c96b21;
   border-radius: 50%;
   height: 40px;
   position: absolute;
@@ -13,9 +13,16 @@
   top: 23px;
   width: 40px;
   span {
-    color: $brown;
+    color: #f38128;
     line-height: 40px;
     font-size: 22px;
+  }
+}
+
+.search__container--active{
+  background: #f38128;
+  span {
+    color: #c96b21;
   }
 }
 
