@@ -22,6 +22,10 @@
   padding: 0;
 }
 
+.navbar__search{
+  display: none;
+}
+
 .navbar__miniformat {
   margin-top: 5px;
   height: 35px;
@@ -41,7 +45,7 @@
   border: none;
 }
 
-@media (max-width: $screen-xs-min) {
+@media (max-width: $screen-sm-min) {
   .navbar-default {
     margin-bottom: 0;
     border: none;
@@ -56,9 +60,9 @@
   .header__logo{
     display: block;
     position: absolute;
-    left: 30%;
+    left: 40%;
     top: 0;
-    max-width:130px;
+    max-width:140px;
   }
   
   .navbar-collapse{
@@ -84,5 +88,16 @@
   
   .navbar-toggle .icon-bar{
     height: 3px;
+  }
+}
+
+
+@media (max-width: $screen-xs-min){
+  .header__logo{
+    display: block;
+    position: absolute;
+    left: 30%;
+    top: 0;
+    max-width:130px;
   }
 }
