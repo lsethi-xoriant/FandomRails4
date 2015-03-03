@@ -8,9 +8,9 @@
   <% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
 
   <% aux = default_orzoro_aux(@aux_other_params, @calltoaction_info_list) %>  
-  <title><%= @ceo_info.title rescue "Orzoro - Dora & Miss Tressy" %></title>
-  <meta name="description" content="<%= @ceo_info.meta_description rescue "Entra nel mondo di Orzoro e scopri i segreti di Benessere e Buonumore." %>">
-  <meta name="keywords" content="<%= @ceo_info.keywords rescue "" %>">
+  <title><%= @seo_info["title"] rescue "Orzoro - Dora & Miss Tressy" %></title>
+  <meta name="description" content="<%= @seo_info["meta_description"] rescue "Entra nel mondo di Orzoro e scopri i segreti di Benessere e Buonumore." %>">
+  <meta name="keywords" content="<%= @seo_info["keywords"] rescue "" %>">
   
   <%= yield (:fb_meta_tags) %>
 
@@ -44,19 +44,6 @@
   <%= yield %>
 
   <%= render partial: "/application/footer", locals: { aux: aux } %>
-
-  <% unless cookies[:user_cookies] %>
-    <div id="cookies-bar" class="navbar navbar-fixed-bottom cookies-footer">
-      <div class="row">
-        <div class="col-sm-11">
-          <p class="cookies-footer__description">Per migliorare la tua navigazione su questo sito, utilizziamo cookies ed altre tecnologie che ci permettono di riconoscerti.<br>Utilizzando questo sito, acconsenti agli utilizzi di cookies e delle altre tecnologie descritti nella nostra <a target="_blank" class="cookies-footer__link" href="http://#">Cookies Policy</a>.</p>
-        </div>
-        <div class="col-sm-1 text-right">
-          <a class="btn btn-primary btn-xs" href="javascript: void(0)" ng-click="acceptCookies()"><span>CHIUDI</span></a>
-        </div>
-      </div>
-    </div>
-  <% end %>
   
   <script type="text/javascript">
 	$(document).ready(function() {

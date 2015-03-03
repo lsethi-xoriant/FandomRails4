@@ -5,7 +5,7 @@
       <!-- MEDIA -->
       <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
       <!-- SHARE: TODO -->
-      <div class="share-interaction__container hidden-xs">
+      <div class="share-interaction__container" ng-if="!aux.mobile">
         <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
           <%= render partial: "/call_to_action/share_interaction" %>
         </div>
@@ -17,13 +17,14 @@
     <div class="col-sm-8 col-sm-offset-2 text-center" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
       <%= render partial: "/call_to_action/vote_interaction" %>
     </div>
+  </div>
 
-    <div class="col-md-12 text-center" if="aux.calltoaction_category">
+  <div class="row" if="aux.calltoaction_category">
+    <div class="col-md-12 text-center">
       <div class="cta-preview__miniformat-container cta-preview__miniformat-container--header" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}">
         <span class="cta-preview__miniformat">{{aux.calltoaction_category.title}}</span>
       </div>
     </div>
-
   </div>
 
   <div class="row main-row cta__undervideo">

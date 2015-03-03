@@ -30,7 +30,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     attribute :newsletter, type: Boolean
     attribute :privacy, type: Boolean
 
-    validates_presence_of :first_name, :last_name, :email, :day_of_birth, :month_of_birth, :year_of_birth, 
+    validates_presence_of :first_name, :last_name, :gender, :email, :day_of_birth, :month_of_birth, :year_of_birth, 
                           :state, :province, :terms, :newsletter, :privacy
     validates :email, format: { with: %r{.+@.+\..+} }
   end
