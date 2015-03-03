@@ -1360,7 +1360,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       window.open(share_url);
       $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
         .success(function(data) {
-          alert("share");
         });
     }
 
