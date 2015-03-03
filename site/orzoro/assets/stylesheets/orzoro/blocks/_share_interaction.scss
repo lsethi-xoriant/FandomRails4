@@ -47,7 +47,7 @@
   margin-bottom: 10px;
 }
 
-.share-interaction__cta__info__tt-button, .share-interaction__cta__info__wa-button {
+.share-interaction__cta__info__tt-button, .share-interaction__cta__info__wa-button, .share-interaction__cta__info__gplus-button {
   border-radius: 50%;
   height: 40px;
   width: 40px;
@@ -58,6 +58,7 @@
 .share-undervideo-interaction__row .share-interaction__cta__info__email-button, 
 .share-undervideo-interaction__row .share-interaction__cta__info__tt-button,
 .share-undervideo-interaction__row .share-interaction__cta__info__wa-button,
+.share-undervideo-interaction__row .share-interaction__cta__info__gplus-button,
 .share-undervideo-interaction__row .share-interaction__cover__info {
   display: inline;
 }

@@ -1359,6 +1359,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       case "whatsapp":
         share_url = "whatsapp://send?text=" + message + " " + cta_url;
         break;
+      case "gplus":
+        share_url = "https://plus.google.com/share?url=" + cta_url;
+        break;
     }
 
     if(share_url) {
