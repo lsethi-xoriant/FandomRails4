@@ -32,4 +32,8 @@ class Sites::Orzoro::ApplicationController < ApplicationController
     
   end
   
+  def netiquette
+    
+  end
+  
 end
