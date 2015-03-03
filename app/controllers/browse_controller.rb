@@ -60,7 +60,7 @@ class BrowseController < ApplicationController
       @query = params[:query]
     end
     
-    contents, total = get_contents_with_match(params[:query], get_current_property)
+    contents, total = get_contents_with_match(params[:query], 0, get_current_property)
     
     if total == 0
       handle_no_result(params[:query])
@@ -100,7 +100,7 @@ class BrowseController < ApplicationController
   
   def full_search_load_more
     offset = params[:offset].to_i
-    contents, total = get_contents_with_match(params[:query], offset)
+    contents, total = get_contents_with_match(params[:query], offset, get_current_property)
     contents = prepare_contents(contents)
     
     if FULL_SEARCH_CTA_STATUS_ACTIVE

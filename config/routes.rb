@@ -41,6 +41,8 @@ Fandom::Application.routes.draw do
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         match "/browse/full_search", :to => "browse#full_search"
         match "/faq", :to => "application#faq"
+        match "/netiquette", :to => "application#netiquette"
+        match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
         resources :call_to_action, only: :show
       end
     end

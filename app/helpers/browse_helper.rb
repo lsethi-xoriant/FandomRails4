@@ -138,7 +138,7 @@ module BrowseHelper
       title:  category.title,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
-      view_all_link: "/browse/view_all/#{category.id}",
+      view_all_link: "/browse/view_all/#{category.slug}",
       column_number: 12/4,
       total: total,
       per_page: carousel_elements
@@ -167,7 +167,7 @@ module BrowseHelper
       title: category.title,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
-      view_all_link: "/browse/view_all/#{category.id}",
+      view_all_link: "/browse/view_all/#{category.slug}",
       column_number: 12/4
     )
   end

@@ -445,10 +445,12 @@ module ApplicationHelper
     query.gsub!(/\W+/, ' ')
     conditions = ""
     query.split(" ").each do |term|
-      unless conditions.blank?
-        conditions += " OR #{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
-      else
-        conditions += "#{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
+      if term.length > 3
+        unless conditions.blank?
+          conditions += " OR #{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
+        else
+          conditions += "#{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
+        end
       end
     end
     conditions

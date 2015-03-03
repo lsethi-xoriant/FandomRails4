@@ -31,7 +31,7 @@ class Sites::Orzoro::CallToActionController < CallToActionController
 
     calltoaction_info_list = build_call_to_action_info_list([calltoaction])
 
-   if calltoaction_info_list.first["miniformat"]["name"] == "ricette"
+    if calltoaction_info_list.first["miniformat"]["name"] == "ricette"
       related_product = get_tag_with_tag_about_call_to_action(calltoaction, "related-product").first
       if related_product
         related_product = {
