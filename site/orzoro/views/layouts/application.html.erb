@@ -8,7 +8,7 @@
   <% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
 
   <% aux = default_orzoro_aux(@aux_other_params, @calltoaction_info_list) %>  
-  <title><%= @seo_info["title"] rescue "Orzoro - Dora & Miss Tressy" %></title>
+  <title><%= "#{@seo_info["title"]} | Orzoro" rescue "Dora & Miss Tressy | Orzoro" %></title>
   <meta name="description" content="<%= @seo_info["meta_description"] rescue "Entra nel mondo di Orzoro e scopri i segreti di Benessere e Buonumore." %>">
   <meta name="keywords" content="<%= @seo_info["keywords"] rescue "" %>">
   
@@ -19,6 +19,8 @@
   <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
   <link href='//fonts.googleapis.com/css?family=Allan:700' rel='stylesheet' type='text/css'>
   <link href='//fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
   <%= stylesheet_link_tag "orzoro_application", :media => "all" %>
   <%= javascript_include_tag "orzoro_application" %>

@@ -1,147 +1,17 @@
  <div class="share-interaction__cover__info"> 
 
   <!-- EMAIL -->
-  <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default share-interaction__cta__info__email-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email" ng-class="{'disabled': animation_in_progress}">
+  <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default share-interaction__cta__info__email-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'email')">
     <i class="fa fa-envelope share-interaction__cover__info__glyphicon-envelope"></i>
   </button>
 
-  <!-- MODAL SHARE INTERACTION -->
-  <div ng-if="interaction_info.interaction.resource.providers.email" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-email" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body">
-
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
-          <div class="row">
-
-            <div class="col-md-12 text-center"> 
-              <p class="share-interaction__modal__header-title">Condividi questo contenuto con un amico</p>
-            </div>
-
-            <div class="col-md-12">
-              <div class="panel panel-default share-interaction__modal__panel">
-                <div class="panel-body share-interaction__modal__panel-body"> 
-                  <div class="row cta-cover__thumbnail-row">
-                    <!-- CALLTOACTION THUMBNAIL -->
-                    <div class="col-xs-12 cta-cover__thumbnail-column">
-                      <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
-                    </div> 
-                  </div>
-                  <div class="row">
-                    <div class="col-xs-12 text-left">
-                      <p class="share-interaction__modal__title">{{calltoaction_info.calltoaction.title}}</p>
-                      <p class="share-interaction__modal__description hidden-xs">{{calltoaction_info.calltoaction.description | cut:true:70}}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-12" style="padding: 0;"> 
-              <hr>
-            </div>
-
-            <div ng-if="interaction_info.user_interaction.errors" class="col-md-12 share-interaction__modal-input-col text-left"> 
-              <p class="share-interaction__modal-feedback">{{interaction_info.user_interaction.errors}}</p>
-            </div>
-
-            <div ng-if="interaction_info.user_interaction.success" class="col-md-12 share-interaction__modal-input-col text-left"> 
-              <p class="share-interaction__modal-feedback">{{interaction_info.user_interaction.success}}</p>
-            </div>
-
-            <div class="col-md-12 share-interaction__modal-input-col" ng-if="current_user"> 
-              <input ng-model="interaction_info.user_interaction.share_to_email" class="form-control" type="text" placeholder="mario@rossi.it" name="address">
-            </div>
-
-            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;">
-              <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-primary btn-block" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'email')">CONDIVIDI</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- FACEBOOK -->   
-
-  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-facebook share-interaction__cta__info__fb-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-facebook" ng-class="{'disabled': animation_in_progress}"><i class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></i></button>
-  
-  <!-- MODAL SHARE INTERACTION -->
-  <div ng-if="interaction_info.interaction.resource.providers.facebook" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-facebook" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content text-center">
-        <div class="modal-body">
-
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
-          <div class="row">
-
-            <div class="col-md-12" style="margin-top: 10px;"> 
-              <p class="call-to-action__share__modal-title">Condividi questo contenuto con un amico</p>
-            </div>
-
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-body"> 
-                  <img style="width: 100%" ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}">
-                </div>
-              </div>
-            </div>
-
-            <div ng-if="interaction_info.user_interaction.errors" class="col-md-12"> 
-              <p>{{interaction_info.user_interaction.errors}}</p>
-            </div>
-
-            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook">
-              <button id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-facebook btn-block" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'facebook')">CONDIVIDI</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-facebook share-interaction__cta__info__fb-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'facebook')"><i class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></i></button>
 
   <!-- TWITTER -->   
+  <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-twitter share-interaction__cta__info__tt-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'twitter')"><i class="fa fa-twitter share-interaction__cover__info__glyphicon-tt"></i></button>
 
-  <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-twitter share-interaction__cta__info__tt-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-twitter" ng-class="{'disabled': animation_in_progress}"><i class="fa fa-twitter share-interaction__cover__info__glyphicon-tt"></i></button>
-  
-  <!-- MODAL SHARE INTERACTION -->
-  <div ng-if="interaction_info.interaction.resource.providers.twitter" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-twitter" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content text-center">
-        <div class="modal-body">
-
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
-          <div class="row">
-
-            <div class="col-md-12" style="margin-top: 10px;"> 
-              <p class="call-to-action__share__modal-title">Condividi questo contenuto con un amico</p>
-            </div>
-
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-body"> 
-                  <img style="width: 100%" ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}">
-                </div>
-              </div>
-            </div>
-
-            <div ng-if="interaction_info.user_interaction.errors" class="col-md-12"> 
-              <p>{{interaction_info.user_interaction.errors}}</p>
-            </div>
-
-            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook">
-              <button id="twitter-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-twitter btn-block" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'twitter')">CONDIVIDI</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <!-- TWITTER -->   
+  <button ng-if="interaction_info.interaction.resource.providers.whatsapp" class="btn btn-green share-interaction__cta__info__wa-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'whatsapp')"><i class="fa fa-whatsapp share-interaction__cover__info__glyphicon-tt"></i></button>
   
 </div>

@@ -252,14 +252,14 @@ class CallToActionController < ApplicationController
       if(descendent_calltoaction_id)
         calltoaction_to_share = CallToAction.find(descendent_calltoaction_id)
         extra_fields = JSON.parse(calltoaction_to_share.extra_fields)
-        calltoaction_to_share_title = extra_fields["linked_result_title"] || ""
-        calltoaction_to_share_description = extra_fields["linked_result_description"] || ""
-        calltoaction_to_share_thumbnail = extra_fields["linked_result_image"]["url"] rescue ""
+        calltoaction_to_share_title = strip_tags(extra_fields["linked_result_title"]) rescue ""
+        calltoaction_to_share_description = strip_tags(extra_fields["linked_result_description"]) rescue ""
+        calltoaction_to_share_thumbnail = strip_tags(extra_fields["linked_result_image"]["url"]) rescue ""
       else
         calltoaction_to_share = calltoaction
-        calltoaction_to_share_title = calltoaction_to_share.title || ""
-        calltoaction_to_share_description = calltoaction_to_share.description || ""
-        calltoaction_to_share_thumbnail = calltoaction_to_share.thumbnail.url || ""
+        calltoaction_to_share_title = strip_tags(calltoaction_to_share.title) rescue ""
+        calltoaction_to_share_description = strip_tags(calltoaction_to_share.description) rescue ""
+        calltoaction_to_share_thumbnail = strip_tags(calltoaction_to_share.thumbnail.url) rescue ""
       end
 
       @fb_meta_tags = (

@@ -1340,9 +1340,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   function shareFree(calltoaction_info, interaction_info, provider) {
 
+    message = calltoaction_info.calltoaction.title;
     url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.id;
     if($scope.calltoaction_info.calltoaction.extra_fields.linked_result_title) {
       url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
+      message = $scope.calltoaction_info.calltoaction.title;
     }
 
     cta_url = encodeURI(url_to_share);
@@ -1352,7 +1354,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url; // TODO: include meta
         break;
       case "twitter":
-        share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(calltoaction_info.calltoaction.title);
+        share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(message);
+        break;
+      case "whatsapp":
+        share_url = "whatsapp://send?text=" + message + " " + cta_url;
         break;
     }
 
