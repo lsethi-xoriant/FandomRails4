@@ -57,7 +57,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
     @cta = CallToAction.find(params[:id])
     create_and_link_attachment(params[:call_to_action], @cta)
-    unless @cta.update_attributes(params[:call_to_action]) and save_interaction_call_to_action_linking(params[:call_to_action])
+    unless @cta.update_attributes(params[:call_to_action]) and save_interaction_call_to_action_linking(params[:call_to_action], @cta)
       @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/edit_cta"
@@ -319,7 +319,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @interaction_call_to_actions = []
     @cta.interactions.each do |interaction|
       InteractionCallToAction.where(:interaction_id => interaction.id).each do |icta|
-        @interaction_call_to_actions += [[icta.call_to_action_id, JSON.parse(icta.condition)["more"]]]
+        @interaction_call_to_actions += [[icta.call_to_action_id, (JSON.parse(icta.condition)["more"] rescue "null")]]
       end
     end
     @tag_list_arr = Array.new

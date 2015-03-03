@@ -799,22 +799,40 @@ module CallToActionHelper
 
   def build_html_jstree(tree_array, current_cta_id = 0)
     res = ""
-    tree_array.each_with_index do |tree, i|
-      res += i == 0 ? "<div id='tree#{i}' class='tree'>" : "<hr/><div id='tree#{i}' class='tree'>"
-      tree.each do |cta|
-        icon = cta.id == current_cta_id ? "fa fa-circle" : "fa fa-long-arrow-right"
-        res += "<ul><li data-jstree='{\"icon\":\"#{icon}\"}'>#{cta.name}</ul>"
+    unless tree_array.nil?
+      tree_array.each_with_index do |tree, i|
+        res += i == 0 ? "<div id='tree#{i}' class='tree'>" : "<hr/><div id='tree#{i}' class='tree'>"
+        tree.each do |cta|
+          icon = cta.id == current_cta_id ? "fa fa-circle" : "fa fa-long-arrow-right"
+          res += "<ul><li data-jstree='{\"icon\":\"#{icon}\"}'>#{cta.name}</ul>"
+        end
+        res += "</div>"
       end
-      res += "</div>"
     end
     res.html_safe
   end
 
   def build_tree(cta)
-    res = [[cta]]
-    next_call_to_action_linked_to(cta, res)
-    previous_call_to_action_linked_to(cta, res)
-    return res
+    begin
+      res = [[cta]]
+      next_call_to_action_linked_to(cta, res)
+      previous_call_to_action_linked_to(cta, res)
+      return res
+    rescue
+      message = "Hai introdotto un ciclo di call to action collegate: "
+      res.each_with_index do |path, index|
+        message += "Albero #{index + 1} ---> "
+        path.each_with_index do |cta, i|
+          if i == path.size - 1 
+            message += "'#{cta.name}'. "
+          else
+            message += "'#{cta.name}' - "
+          end
+        end
+      end
+      cta.errors.add(:base, message)
+      return [[cta]]
+    end
   end
 
   def build_linked_cta_attr_set(root_cta, trees)
@@ -836,6 +854,9 @@ module CallToActionHelper
         next_call_to_actions.each_with_index do |cta_id, i|
           next_cta = CallToAction.find(cta_id)
           res[i] = old_res[0] + [next_cta]
+          if res[i][0].id == cta_id
+            raise "Cycle detected"
+          end
         end
         res.each_with_index do |path, i|
           next_call_to_action_linked_to(res[i][-1], res)
@@ -857,21 +878,23 @@ module CallToActionHelper
     end
   end
 
-  def save_interaction_call_to_action_linking(params)
-    begin
+  def save_interaction_call_to_action_linking(params, cta)
+    ActiveRecord::Base.transaction do
       interaction_attributes = params["interactions_attributes"]
       interaction_attributes.each do |key, interaction_attribute|
         InteractionCallToAction.where(:interaction_id => interaction_attribute["id"]).destroy_all
-        interaction_attribute["resource_attributes"]["linked_cta"].each do |key, link|
-          InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => { "more" => link["condition"] }.to_json )
+        unless interaction_attribute["resource_attributes"]["linked_cta"].nil?
+          interaction_attribute["resource_attributes"]["linked_cta"].each do |key, link|
+            InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => { "more" => link["condition"] }.to_json )
+          end
         end
       end
-      true
-    rescue Exception => e
-      flash[:error] = "Errore: #{e}"
-      raise ActiveRecord::Rollback
-      false
+      build_tree(cta)
+      if cta.errors.any?
+        raise ActiveRecord::Rollback
+      end
     end
+    return cta.errors.empty?
   end
 
 end
