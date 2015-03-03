@@ -134,9 +134,7 @@
       left: -30px;
     }
   }
-}
 
-@media (min-width: $screen-sm-min) { 
   .row-evidence_ctas .col-sm-8 .relateds-flexslider__item-panel, .row-evidence_ctas .col-md-8 .relateds-flexslider__item-panel {
     height: 560px;
     .cta-preview__miniformat {
@@ -150,6 +148,10 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .relateds-flexslider__item-panel {
+    height: auto;
+  }
+
   .relateds-flexslider {
     padding-left: 0;
     margin-right: 0;

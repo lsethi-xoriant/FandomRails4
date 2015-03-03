@@ -1,0 +1,45 @@
+/* HOME */
+.header__container {
+  position: relative;
+}
+
+.home__title {
+  font-size: 38px;
+  font-family: "BarmenoRegularBold";
+  margin-top: 30px;
+}
+
+.home__description {
+  font-size: 18px; 
+  margin-bottom: 30px;
+  margin-top: 0;
+  color: $brown;
+  line-height: 24px;
+}
+
+.home__dora, .home__misstressy {
+  position: absolute;
+  max-width: 280px;
+  bottom: 0;
+}
+
+.home__misstressy {
+  right: 15px;
+}
+
+.home__dora {
+  left: 15px;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .home__title {
+    font-size: 24px;
+    margin-top: 15px;
+  }
+
+  .home__description {
+    font-size: 14px; 
+    margin-bottom: 15px;
+    line-height: 16px;
+  }
+}
