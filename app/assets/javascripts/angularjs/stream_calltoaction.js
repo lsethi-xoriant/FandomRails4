@@ -1341,7 +1341,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   function shareFree(calltoaction_info, interaction_info, provider) {
 
     message = calltoaction_info.calltoaction.title;
-    url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.id;
+    url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.slug;
     if($scope.calltoaction_info.calltoaction.extra_fields.linked_result_title) {
       url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
       message = $scope.calltoaction_info.calltoaction.title;
