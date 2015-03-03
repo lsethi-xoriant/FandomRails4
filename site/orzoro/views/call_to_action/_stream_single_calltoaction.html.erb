@@ -81,7 +81,7 @@
 
     </div>
   </div>
-  <div class="row" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.comic" style="background-color: rgb(241, 115, 115);">
-    <img ng-src="{{calltoaction_info.calltoaction.extra_fields.comic.url}}" class="img-responsive hidden-xs">
+  <div class="row text-center" ng-style="{'background-color': calltoaction_info.miniformat['label_background'], 'background-image': 'url(\"orzoro/texture.png\")'}" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.comic">
+    <img ng-src="{{calltoaction_info.calltoaction.extra_fields.comic.url}}" class="hidden-xs">
   </div>
 </div>
