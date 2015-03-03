@@ -26,38 +26,38 @@
               <label>Nome</label>
               <%= f.text_field :first_name, :class => "form-control", :required => true %>
             </div>
-            <div class="form-group">
-              <div class="row">
-                <div class="col-sm-12">
-                  <label>Data di nascita</label>  
-                </div>       
-                <div class="col-sm-12">
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <% date_array = (1..31).map { |date| [date, date] } %>
-                      <% date_array.unshift ["Giorno", ""] %>
-                      <%= f.select :day_of_birth, options_for_select(date_array, @cup_redeemer[:day_of_birth]), {}, { class: "form-control", :required => true } %>
-                    </div>
-                    <div class="col-sm-4">
-                      <% date_array = (1..12).map { |date| [date, date] } %>
-                      <% date_array.unshift ["Mese", ""] %>
-                      <%= f.select :month_of_birth, options_for_select(date_array, @cup_redeemer[:month_of_birth]), {}, { class: "form-control", :required => true } %>
-                    </div>
-                    <div class="col-sm-4">
-                      <% date_array = (1900..2015).map { |date| [date, date] } %>
-                      <% date_array.unshift ["Anno", ""] %>
-                      <%= f.select :year_of_birth, options_for_select(date_array, @cup_redeemer[:year_of_birth]), {}, { class: "form-control", :required => true } %>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> 
+          </div>
           <div class="col-sm-6">
             <div class="form-group">
               <label>Cognome</label>
               <%= f.text_field :last_name, class: "form-control" %>
             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Data di nascita</label>  
+              <div class="row">
+                <div class="col-sm-4">
+                  <% date_array = (1..31).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Giorno", ""] %>
+                  <%= f.select :day_of_birth, options_for_select(date_array, @cup_redeemer[:day_of_birth]), {}, { class: "form-control", :required => true } %>
+                </div>
+                <div class="col-sm-4">
+                  <% date_array = (1..12).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Mese", ""] %>
+                  <%= f.select :month_of_birth, options_for_select(date_array, @cup_redeemer[:month_of_birth]), {}, { class: "form-control", :required => true } %>
+                </div>
+                <div class="col-sm-4">
+                  <% date_array = (1900..2015).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Anno", ""] %>
+                  <%= f.select :year_of_birth, options_for_select(date_array, @cup_redeemer[:year_of_birth]), {}, { class: "form-control", :required => true } %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
             <div class="form-group">
               <label>Genere</label>
               <div class="row">
@@ -71,8 +71,8 @@
                 </div>   
               </div>  
             </div>
-          </div> 
-        </div>
+          </div>
+        </div> 
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
@@ -114,7 +114,7 @@
           <label><%= f.check_box :newsletter, :required => true %> Si, voglio essere aggiornato anche sulle novità e le offerte degli altri prodotti Nestlè Italiana S.p.A e SanPellegrino S.p.A</label>
         </div>
         <div class="checkbox">
-          <label><%= f.check_box :privacy, :required => true %> Dichiaro di aver preso visione dell’<a target="_blank" style="color: ##660206; text-decoration: underline;" href="http://www.buonalavita.it/nestle/service/note_legali/default.aspx">informativa</a> e acconsento al
+          <label><%= f.check_box :privacy, :required => true %> Dichiaro di aver preso visione dell’<a target="_blank" style="color: #660206; text-decoration: underline;" href="http://www.buonalavita.it/nestle/service/note_legali/default.aspx">informativa</a> e acconsento al
           trattamento dei dati personali*</label>
         </div>
       </div>
