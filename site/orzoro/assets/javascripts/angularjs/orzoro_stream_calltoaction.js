@@ -57,7 +57,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
           $scope.initCallToActionInfoList(data.calltoaction);
           $scope.aux["related_product"] = data.related_product;
 
-          document.title = data.seo_info.title;
+          document.title = data.seo_info.title + " | Orzoro";
           $('meta[name=description]').attr('content', data.seo_info.meta_description);
 
           $scope.initAnonymousUser();
