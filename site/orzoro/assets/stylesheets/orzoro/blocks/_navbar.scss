@@ -85,13 +85,27 @@
   }
   
   .navbar-toggle{
-    margin-top: 46px;
     border: none;
   }
   
   .navbar-toggle .icon-bar{
     height: 3px;
   }
+  
+  .navbar__item-text {
+    font-size: 14px;
+    font-size: 17px;
+    padding: 14px 0;
+  }
+  
+  .navbar__back-link{
+    color: #fff;
+    font-size: 25px;
+    position: absolute;
+    top: 5px;
+    left: 10px;
+  }
+  
 }
 
 
@@ -103,4 +117,5 @@
     top: 0;
     max-width:130px;
   }
+  
 }

@@ -14,6 +14,9 @@
   -ms-transform: rotate(-3deg); /* IE 9 */
   -webkit-transform: rotate(-3deg); /* Chrome, Safari, Opera */
   transform: rotate(-3deg);
+  -webkit-box-shadow: -1px 1px 26px 0px rgba(28, 28, 28, 0.75);
+  -moz-box-shadow:    -1px 1px 26px 0px rgba(28, 28, 28, 0.75);
+  box-shadow:         -1px 1px 26px 0px rgba(28, 28, 28, 0.75);
   display: inline-block;
   background-color: rgb(160, 198, 117);
   background-image: url("orzoro/texture.png");
