@@ -16,7 +16,7 @@
 
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 
-  <link rel="shortcut icon" href="<%= asset_path('favicon.ico') %>">
+  <link rel="shortcut icon" href="<%= (aux["assets"]["favicon"]["url"] rescue asset_path('favicon.ico')) %>">
   <link href='//fonts.googleapis.com/css?family=Allan:700' rel='stylesheet' type='text/css'>
   <link href='//fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
 
