@@ -59,7 +59,7 @@ module CallToActionHelper
       "label_background" => get_extra_fields!(grafitag)["label-background"],
       "icon" => get_extra_fields!(grafitag)["icon"],
       "image" => (get_extra_fields!(grafitag)["image"]["url"] rescue nil),
-      "label_color" => get_extra_fields!(grafitag)["label-color"],
+      "label_color" => get_extra_fields!(grafitag)["label-color"] || "#fff",
       "title" => grafitag.title,
       "name" => grafitag.name
     }
