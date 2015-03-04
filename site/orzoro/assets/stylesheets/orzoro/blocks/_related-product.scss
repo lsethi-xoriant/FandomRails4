@@ -4,7 +4,6 @@
   font-family: "BarmenoRegularBold";
   margin-top: 0;
   text-transform: uppercase;
-  text-align: center;
 }
 
 .related-product__description {
@@ -13,7 +12,6 @@
   margin-top: 5px;
   margin-bottom: 15px;
   font-weight: bold;
-  text-align: center;
 }
 
 .related-product__img {
@@ -26,6 +24,11 @@
     margin-left: auto;
     margin-right: auto;
     max-width: 250px;
+  }
+  
+  .related-product__description,
+  .related-product__title {
+    text-align: center;
   }
 
   .related-product__btn {
