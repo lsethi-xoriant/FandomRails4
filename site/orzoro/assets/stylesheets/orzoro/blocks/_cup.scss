@@ -50,6 +50,12 @@
   label {
     color: $brown;
   }
+  label.error,
+  .checkbox label.error{
+    font-weight: normal;
+    display: block;
+    color: red;
+  }
   .checkbox label {
    font-weight: bold; 
   }

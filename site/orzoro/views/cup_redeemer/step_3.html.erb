@@ -68,7 +68,7 @@
   		          <%= f.text_field :cap, class: "form-control", :required => true, :pattern => "[0-9]{5}" %>
   		        </div>
   		      </div>
-  		      <div class="col-sm-2 text-center">
+  		      <div class="col-sm-2">
   		      	<a href="step_2" class="cup__back"><i class="fa fa-arrow-left"></i> Indietro</a>
   		      </div>
   		      <div class="col-sm-8 text-center">
@@ -81,3 +81,8 @@
     </div>
   </div>
 <% end %>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".cup__form").validate();
+	});
+</script>

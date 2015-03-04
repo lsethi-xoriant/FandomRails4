@@ -32,3 +32,5 @@
 //= require angularjs/stream_calltoaction
 //= require angularjs/orzoro_stream_calltoaction
 //= require fastclick
+//= require jquery.validate.min
+//= require validation_message

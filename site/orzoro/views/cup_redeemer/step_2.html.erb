@@ -125,9 +125,8 @@
     		</div>
     	</div>
     </div>
-    <div class="col-sm-2 col-sm-offset-1 text-center">
+    <div class="col-sm-2 col-sm-offset-1">
     	<a href="step_1" class="cup__back"><i class="fa fa-arrow-left"></i> Indietro</a>
-      <%= link_to "Indietro", "step_1", {class: "cup__back" } %>
     </div>
     <div class="col-sm-6 text-center">
       <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
@@ -139,6 +138,7 @@
 
 $(document).ready(function() {
   selectNumberOfPackages(2);
+  $(".cup__form").validate();
 });
 
 function selectNumberOfPackages(n) {
@@ -165,5 +165,4 @@ function selectNumberOfPackages(n) {
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_miss_tressy").prop("checked", false);
   }
 }
-
 </script>
