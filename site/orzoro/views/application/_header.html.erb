@@ -13,10 +13,10 @@
       		<img class="header__right-img" ng-src="{{aux.assets.header_2.url}}">
       	</a>
     </div>
-    <div class="col-sm-12 text-center">
+    <div class="col-sm-12 text-center" ng-if="menu_field == 'home'">
       <p class="header__title">Benessere è Buonumore</p>
     </div>
-    <img class="home__left" ng-src="{{aux.assets.header_left.url}}">
-    <img class="home__right" ng-src="{{aux.assets.header_right.url}}">
+    <img class="home__left" ng-src="{{aux.assets.header_left.url}}" ng-if="menu_field == 'home'">
+    <img class="home__right" ng-src="{{aux.assets.header_right.url}}" ng-if="menu_field == 'home'">
   </div>
 </div>
