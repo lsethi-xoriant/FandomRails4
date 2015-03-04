@@ -19,10 +19,10 @@
   }
 }
 
-.search__container--active{
-  background: #f38128;
+.search__container--active,
+.search__container:hover{
   span {
-    color: #c96b21;
+    color: #fff;
   }
 }
 

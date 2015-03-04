@@ -16,6 +16,7 @@
   margin-top: 5px;
   font-size: 12px;
   color: #fff;
+  margin-top: -6px;
 }
 
 .navbar__container {
@@ -28,7 +29,7 @@
 
 .navbar__miniformat {
   margin-top: 5px;
-  height: 35px;
+  height: 75px;
 }
 
 .navbar__home-item {
@@ -36,8 +37,10 @@
 }
 
 .navbar__item a {
-  padding-left: 25px !important;
-  padding-right: 25px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
 }
 
 .navbar-default {
