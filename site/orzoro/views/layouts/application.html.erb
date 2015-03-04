@@ -86,5 +86,31 @@
   
   <%= render partial: "/application/ga" %>
 
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+
+    _gaq.push(['_setAccount', 'UA-35527363-1'],
+    ['_trackPageview'],
+    ['_gat._anonymizeIp'],
+
+    ['_nesglobalhqtag._setAccount', 'UA-27534376-1'],
+    ['_nesglobalhqtag._setCustomVar',1,'Zone','EUR',3],
+    ['_nesglobalhqtag._setCustomVar',2,'Country','Italy',3],
+    ['_nesglobalhqtag._setCustomVar',3,'Business','Beverages',3],
+    ['_nesglobalhqtag._setCustomVar',4,'Brand','ORZORO',3],
+    ['_nesglobalhqtag._setCustomVar',5,'Site','Orzoro Italy',3],
+    ['_nesglobalhqtag._setCustomVar',6,'Properties','Brand',3],
+    ['_nesglobalhqtag._setCustomVar',7,'Type','Site',3],
+    ['_nesglobalhqtag._setCustomVar',8,'U',location.pathname.substr(0,63),3],
+    ['_nesglobalhqtag._setCustomVar',9,'Language','Italian',3],
+    ['_nesglobalhqtag._trackPageview','/eur/italy/orzoro italy']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 </body>
 </html>
