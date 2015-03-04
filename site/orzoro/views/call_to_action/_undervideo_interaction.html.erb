@@ -15,7 +15,7 @@
   <p class="share-interaction__extra-description">{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
 
   <div class="text-center" style="margin-top: 15px;">
-    <p class="share-interaction__extra-share">Condividi il risultato:</p>
+    <p class="share-interaction__extra-share hidden-xs">Condividi il risultato:</p>
     <%= render partial: "/call_to_action/share_interaction" %>
   </div>
 
@@ -45,7 +45,6 @@
   </div>
 </div> 
 
-<div class="col-sm-12 text-center" style="margin-bottom: 15px; margin-top: 15px;" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()">
-  <span ng-click="resetToRedo(interaction_info)">Rifai il test <span class="fa fa-refresh undervideo-interaction__fa-refresh"></span></span>
-
+<div class="col-sm-12 text-center interaction__redo-col" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()" ng-click="resetToRedo(interaction_info)">
+  <span >Rifai il test <span class="fa fa-refresh undervideo-interaction__fa-refresh"></span></span>
 </div>

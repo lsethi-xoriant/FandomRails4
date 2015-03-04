@@ -4,6 +4,14 @@ require 'digest/md5'
 module CallToActionHelper
   include ViewHelper
 
+  def cta_url(cta)
+    if $context_root
+      "/#{$context_root}/call_to_action/#{cta.slug}"
+    else 
+      "/call_to_action/#{cta.slug}"
+    end
+  end
+
   def get_cta_active_count()
     cache_short("cta_active_count") do
       CallToAction.active.count
@@ -18,7 +26,7 @@ module CallToActionHelper
     {
       "attributes" => {
         "id" => calltoaction.id,
-        "detail_url" => "/call_to_action/" + calltoaction.slug,
+        "detail_url" => cta_url(calltoaction),
         "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
         "thumb_url" => calltoaction.thumbnail(thumb_format),
         "title" => calltoaction.title,
@@ -55,7 +63,7 @@ module CallToActionHelper
       "label_background" => get_extra_fields!(grafitag)["label-background"],
       "icon" => get_extra_fields!(grafitag)["icon"],
       "image" => (get_extra_fields!(grafitag)["image"]["url"] rescue nil),
-      "label_color" => get_extra_fields!(grafitag)["label-color"],
+      "label_color" => get_extra_fields!(grafitag)["label-color"] || "#fff",
       "title" => grafitag.title,
       "name" => grafitag.name
     }
@@ -106,6 +114,7 @@ module CallToActionHelper
               "id" => calltoaction.id,
               "name" => calltoaction.name,
               "slug" => calltoaction.slug,
+              "detail_url" => cta_url(calltoaction),
               "title" => calltoaction.title,
               "description" => calltoaction.description,
               "media_type" => calltoaction.media_type,

@@ -266,7 +266,6 @@
   }
 
   .trivia-interaction__question {
-    color: #000;
     font-size: 20px;
     margin: 5px 0;
   }
@@ -274,6 +273,7 @@
   .trivia-interaction__answer {
     margin: 0 0 10px 0;
     white-space: normal;
+    font-size: 16px;
   }
 
   .trivia-interaction__avatar {

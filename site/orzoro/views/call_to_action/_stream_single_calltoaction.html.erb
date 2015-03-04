@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <div class="row" if="aux.calltoaction_category">
+  <div class="row hidden-xs" if="aux.calltoaction_category">
     <div class="col-md-12 text-center">
       <div class="cta-preview__miniformat-container cta-preview__miniformat-container--header" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}">
         <span class="cta-preview__miniformat">{{aux.calltoaction_category.title}}</span>
@@ -82,7 +82,7 @@
 
     </div>
   </div>
-  <div class="row text-center" ng-style="{'background-color': calltoaction_info.miniformat['label_background'], 'background-image': 'url(\"orzoro/texture.png\")'}" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.comic">
+  <div class="row text-center cta__comic" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.comic">
     <img ng-src="{{calltoaction_info.calltoaction.extra_fields.comic.url}}" class="hidden-xs">
   </div>
 </div>
