@@ -43,7 +43,14 @@ Fandom::Application.routes.draw do
         match "/faq", :to => "application#faq"
         match "/netiquette", :to => "application#netiquette"
         match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
-        resources :call_to_action, only: :show
+        
+        #resources :call_to_action, only: :show
+        match "/call_to_action/:id", to: "call_to_action#show"
+        match "/ricette/:id", to: "call_to_action#show"
+        match "/prodotti/:id", to: "call_to_action#show"
+
+        match "/users/sign_up", to: redirect('/')
+
       end
     end
   end

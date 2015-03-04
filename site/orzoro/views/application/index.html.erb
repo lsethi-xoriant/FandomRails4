@@ -1,10 +1,22 @@
-<div class="container main-container">   
+<div class="container main-container">  
+
+  <div class="row main-row text-center" ng-if="aux.mobile">
+    <div class="col-sm-12">
+      <h1 class="home__title">Entra nel mondo di Orzoro</h1>
+    </div>
+    <div class="col-sm-12">
+      <h2 class="home__description">
+        Scopri le avventure di Dora e Miss Tressy.<br>
+        Guarda la serie, scatenati con i balli, prova le ricette e richiedi le tazze!
+      </h2>
+    </div>
+  </div> 
 
   <div class="row main-row row-evidence_ctas">
     <%= render partial: "/application/evidence_ctas" %>
   </div>
 
-  <div class="row main-row text-center">
+  <div class="row main-row text-center" ng-if="!aux.mobile">
     <div class="col-sm-12">
       <h1 class="home__title">Entra nel mondo di Orzoro</h1>
     </div>

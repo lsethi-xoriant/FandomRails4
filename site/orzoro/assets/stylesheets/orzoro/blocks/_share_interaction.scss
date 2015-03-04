@@ -53,6 +53,7 @@
   width: 40px;
   display: block;
   margin-bottom: 10px;
+  font-size: 18px;
 }
 
 .share-undervideo-interaction__row .share-interaction__cta__info__email-button, 
@@ -131,17 +132,17 @@
   padding: 0;
 }
 
+.share-interaction__cta__info__email-button, 
+.share-interaction__cta__info__gplus-button,
+.share-interaction__cta__info__wa-button,
+.share-interaction__cta__info__tt-button,
+.share-interaction__cta__info__fb-button {
+  margin-right: 10px;
+}
+
 @media (max-width: $screen-sm-min) { 
   .share-interaction__modal__panel {
     margin: 0;
-  }
-
-  .share-interaction__cta__info__email-button, 
-  .share-interaction__cta__info__gplus-button,
-  .share-interaction__cta__info__wa-button,
-  .share-interaction__cta__info__tt-button,
-  .share-interaction__cta__info__fb-button {
-    margin-right: 10px;
   }
 
   .share-undervideo-interaction__row {

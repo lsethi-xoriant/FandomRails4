@@ -4,6 +4,10 @@ require 'digest/md5'
 module CallToActionHelper
   include ViewHelper
 
+  def cta_url(cta)
+    "/#{$context_root}/call_to_action/#{cta.slug}"
+  end
+
   def get_cta_active_count()
     cache_short("cta_active_count") do
       CallToAction.active.count

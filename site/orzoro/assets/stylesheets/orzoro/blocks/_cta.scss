@@ -1,5 +1,12 @@
 /* CTA */
 
+.cta__comic {
+  background-image: url("orzoro/texture.png");
+  img {
+    margin-bottom: -30px;
+  }
+}
+
 .cta__table {
   .table > tbody > tr:nth-of-type(2n) {
     background-color: #e9e3e3;
@@ -63,7 +70,7 @@
 
 .cta__extra-description__sub-title {
   font-weight: bold;
-  margin-top: 5px;
+  margin-top: 10px;
   margin-bottom: 5px;
   font-size: 12px;
   color: #999;
@@ -73,7 +80,7 @@
   padding: 0;
 }
 
-.cta__media-container-test {
+.cta__media-container-test, .media-youtube {
   background: $cream;
   border: 5px solid #fff !important;
   border-radius: 3px;
@@ -289,7 +296,7 @@
     padding: 15px;
   }
 
-  .cta__media-container-test {
+  .cta__media-container-test, .media-youtube {
     border: none !important;
   }
 
@@ -326,7 +333,7 @@
   .cta__title {
     margin-bottom: 10px;
     padding-top: 5px;
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .cta__description {

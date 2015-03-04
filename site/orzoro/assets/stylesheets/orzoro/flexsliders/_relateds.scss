@@ -75,6 +75,7 @@
   margin-top: 10px;
   overflow: hidden;
   position: relative;
+  background-image: url("orzoro/texture.png");
   -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
@@ -110,6 +111,12 @@
 }
 
 @media (min-width: $screen-sm-min) { 
+  .relateds-flexslider__item-panel:hover {
+    -webkit-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+  }
+
   .relateds-flexslider {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -148,6 +155,10 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .row-evidence_ctas {
+    margin-bottom: -10px;
+  }
+
   .relateds-flexslider__item-panel {
     height: auto;
   }

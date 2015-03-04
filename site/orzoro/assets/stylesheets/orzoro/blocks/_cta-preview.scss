@@ -1,8 +1,8 @@
 /* CTA PREVIEW BLOCK */
 
 .cta-preview__miniformat-container {
-  -ms-transform: rotate(-7deg); /* IE 9 */
-  -webkit-transform: rotate(-7deg); /* Chrome, Safari, Opera */
+  -ms-transform: rotate(-5deg); /* IE 9 */
+  -webkit-transform: rotate(-5deg); /* Chrome, Safari, Opera */
   transform: rotate(-7deg);
   display: inline-block;
 }
@@ -18,7 +18,9 @@
 }
 
 .cta-preview__miniformat {
+  background-image: url("orzoro/texture.png");
   font-family: "Allan";
+  font-weight: "700";
   font-size: 18px;
   padding: 5px 25px;
   position: relative;
@@ -112,8 +114,11 @@
 
 .cta-preview__title {
   font-family: "BarmenoRegularBold";
-	color: #000 !important;
+	color: $brown !important;
 	font-size: 20px !important;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
 }
 
 .cta-preview--tag {
