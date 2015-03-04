@@ -175,7 +175,7 @@ module BrowseHelper
   def get_contents_by_category(category, tags, carousel_elements)
     tag_ids = ([category] + tags).map{|tag| tag.id}
     tags = order_elements(category, get_tags_with_tags(tag_ids))
-    ctas = order_elements(get_ctas_with_tags_in_and(tag_ids))
+    ctas = order_elements(category, get_ctas_with_tags_in_and(tag_ids))
     total = tags.count + ctas.count
     tags = tags.slice!(0, carousel_elements).sort_by { |tag| tag.created_at }
     ctas = ctas.slice!(0, carousel_elements).sort_by { |cta| cta.activated_at }
