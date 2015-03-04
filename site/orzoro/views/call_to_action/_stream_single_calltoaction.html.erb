@@ -31,11 +31,11 @@
     <div class="col-md-12">
       <div class="row">
     
-        <!--[if gt IE 9 | !IE ]><!-->
+        <!--[if gt IE 9 | !IE ]><!-->      
+          <div class="col-sm-2 text-left hidden-xs">
+            <span class="fa fa-angle-left cta__fa-angle" ng-click="nextCallToActionInCategory('prev')"></span>
+          </div>
         <![endif]-->
-        <div class="col-sm-2 text-left hidden-xs">
-          <span class="fa fa-angle-left cta__fa-angle" ng-click="nextCallToActionInCategory('prev')"></span>
-        </div>
 
         <div class="col-sm-8 col-xs-12 text-center cta__title-and-description-col">
           <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
@@ -69,11 +69,11 @@
           </div>
         </div>
 
-        <!--[if gt IE 9 | !IE ]><!-->
+        <!--[if gt IE 9 | !IE ]><!-->    
+          <div class="col-sm-2 text-right hidden-xs">
+            <span class="fa fa-angle-right cta__fa-angle" ng-click="nextCallToActionInCategory('next')"></span>
+          </div>
         <![endif]-->
-        <div class="col-sm-2 text-right hidden-xs">
-          <span class="fa fa-angle-right cta__fa-angle" ng-click="nextCallToActionInCategory('next')"></span>
-        </div>
         
       </div>
 
