@@ -78,10 +78,14 @@
 }
 
 .cup__back{
-  color: $brown;
+  color: grey;
   line-height: 60px;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+.cup__back:hover{
+  color: grey;
 }
 
 @media(max-width: $screen-sm-min) {

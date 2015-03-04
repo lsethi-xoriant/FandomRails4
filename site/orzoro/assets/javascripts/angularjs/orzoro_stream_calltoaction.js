@@ -135,5 +135,14 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     });
   };
 
+  $scope.showSearch = function(hidden){
+  		if('search' != $scope.menu_field){
+	  		if($(".navbar__search").is(":visible")){
+	  			$(".navbar__search").slideUp();
+	  		}else{
+	  			$(".navbar__search").slideDown();
+	  		}
+	  	}
+  	};
 
 }

@@ -91,11 +91,20 @@ class BrowseController < ApplicationController
       @contens = contents
     end
     
+    @aux_other_params = { 
+      calltoaction_evidence_info: true,
+      page_tag: {
+        miniformat: {
+          name: "search"
+        }
+      }
+    }
     
     @query = params[:query]
     if @contents.empty?
       redirect_to "/browse"
     end
+    
   end
   
   def full_search_load_more
@@ -252,6 +261,16 @@ class BrowseController < ApplicationController
       contents = prepare_contents(contents.slice(0, 12))
       @contents = add_cta_status_to_contents(contents)
     end
+    
+    @aux_other_params = { 
+      calltoaction_evidence_info: true,
+      page_tag: {
+        miniformat: {
+          name: "search"
+        }
+      }
+    }
+    
   end
   
   def autocomplete_search
