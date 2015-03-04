@@ -75,7 +75,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
           if($scope.calltoaction_info.calltoaction.media_type == 'YOUTUBE') {
             $(".media-youtube iframe").remove();
             iframe = "<div id=\"main-media-iframe-" + $scope.calltoaction_info.calltoaction.id + "\" main-media=\"main\" calltoaction-id=\"" + $scope.calltoaction_info.calltoaction.id + "\" class=\"embed-responsive-item\"></div>";
-            $(".media-youtube").html(iframe);
+            $(".media-youtube").append(iframe);
           }
 
           angular.forEach($scope.calltoactions, function(sc) {
