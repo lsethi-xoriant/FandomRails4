@@ -1,8 +1,5 @@
 class Sites::Orzoro::CallToActionController < CallToActionController
-
-  def cta_url(cta)
-    "/#{cta.slug}"
-  end
+  include OrzoroHelper
 
   def init_show_aux(calltoaction)
     @aux_other_params = { 

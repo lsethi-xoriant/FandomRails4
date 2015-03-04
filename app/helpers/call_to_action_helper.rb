@@ -5,7 +5,11 @@ module CallToActionHelper
   include ViewHelper
 
   def cta_url(cta)
-    "/#{$context_root}/call_to_action/#{cta.slug}"
+    if $context_root
+      "/#{$context_root}/call_to_action/#{cta.slug}"
+    else 
+      "/call_to_action/#{cta.slug}"
+    end
   end
 
   def get_cta_active_count()
@@ -22,7 +26,7 @@ module CallToActionHelper
     {
       "attributes" => {
         "id" => calltoaction.id,
-        "detail_url" => "/call_to_action/" + calltoaction.slug,
+        "detail_url" => cta_url(calltoaction),
         "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
         "thumb_url" => calltoaction.thumbnail(thumb_format),
         "title" => calltoaction.title,
@@ -110,6 +114,7 @@ module CallToActionHelper
               "id" => calltoaction.id,
               "name" => calltoaction.name,
               "slug" => calltoaction.slug,
+              "detail_url" => cta_url(calltoaction),
               "title" => calltoaction.title,
               "description" => calltoaction.description,
               "media_type" => calltoaction.media_type,

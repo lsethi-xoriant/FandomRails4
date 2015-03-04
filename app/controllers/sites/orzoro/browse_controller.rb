@@ -1,5 +1,5 @@
 class Sites::Orzoro::BrowseController < BrowseController
-  include DisneyHelper
+  include OrzoroHelper
   
   # hook to redirect to browse on the base of current property
   def go_to_browse

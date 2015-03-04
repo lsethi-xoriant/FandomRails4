@@ -39,10 +39,21 @@ Fandom::Application.routes.draw do
         match "/cup_redeemer/request_completed", to: "cup_redeemer#request_completed"
         match "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
-        match "/browse/full_search", :to => "browse#full_search"
+        
         match "/faq", :to => "application#faq"
         match "/netiquette", :to => "application#netiquette"
+
+        match "/browse", :to => "browse#index"
+        match "/browse/contents/:tagname", :to => "browse#index"
+        match "/browse/search", :to => "browse#search"
+        match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
+        match "/browse/view_all/:id", :to => "browse#index_category"
+        match "/browse/view_recent", :to => "browse#view_all_recent"
+        match "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
+        match "/browse/index_category_load_more", :to => "browse#index_category_load_more"
+        match "/browse/category/:id", :to => "browse#index_category"
         match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
+        match "/browse/full_search", :to => "browse#full_search"
         
         #resources :call_to_action, only: :show
         match "/call_to_action/:id", to: "call_to_action#show"

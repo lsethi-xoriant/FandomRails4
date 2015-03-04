@@ -1,4 +1,12 @@
 module OrzoroHelper
+  def cta_url(cta)
+    miniformat = get_tag_with_tag_about_call_to_action(cta, "miniformat").first
+    prefix = "call_to_action"
+    if(miniformat.name == "prodotti" || miniformat.name == "ricette")
+      prefix = miniformat.name
+    end
+    "/#{prefix}/#{cta.slug}"
+  end
 
   def get_miniformat_info_list()
     miniformat_info_list = []
