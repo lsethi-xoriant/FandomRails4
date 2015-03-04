@@ -174,23 +174,23 @@ module BrowseHelper
   
   def get_contents_by_category(category, tags, carousel_elements)
     tag_ids = ([category] + tags).map{|tag| tag.id}
-    tags = get_tags_with_tags(tag_ids)
-    ctas = get_ctas_with_tags_in_and(tag_ids)
+    tags = order_elements(category, get_tags_with_tags(tag_ids))
+    ctas = order_elements(get_ctas_with_tags_in_and(tag_ids))
     total = tags.count + ctas.count
     tags = tags.slice!(0, carousel_elements).sort_by { |tag| tag.created_at }
-    ctas = ctas.slice!(0, carousel_elements).sort_by { |cta| cta.created_at }
+    ctas = ctas.slice!(0, carousel_elements).sort_by { |cta| cta.activated_at }
     [merge_contents(ctas, tags), total]
   end
   
   def get_contents_by_category_with_tags(filter_tags, offset = 0)
     tags = get_tags_with_tags(filter_tags.map{|t| t.id}).sort_by { |tag| tag.created_at }
-    ctas = get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}).sort_by { |cta| cta.created_at }
+    ctas = get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}).sort_by { |cta| cta.activated_at }
     merge_contents_with_tags(ctas, tags, offset)
   end
   
   def get_contents_by_category_with_match(category, query)
     tags = get_tags_with_tag_with_match(category.name, query).sort_by { |tag| tag.created_at }
-    ctas = get_ctas_with_tag_with_match(category.name, query).sort_by { |cta| cta.created_at }
+    ctas = get_ctas_with_tag_with_match(category.name, query).sort_by { |cta| cta.activated_at }
     merge_contents(ctas, tags)
   end
   
@@ -198,7 +198,7 @@ module BrowseHelper
     contents, total = cache_medium(get_full_search_results_key(query, property)) do
       unless property.nil?
         tags = get_tags_with_tag_with_match(property, query)
-        ctas = get_ctas_with_tag_with_match(property, query).sort_by { |cta| cta.created_at }
+        ctas = get_ctas_with_tag_with_match(property, query).sort_by { |cta| cta.activated_at }
       else
         tags = get_tags_with_match(query)
         ctas = get_ctas_with_match(query)
