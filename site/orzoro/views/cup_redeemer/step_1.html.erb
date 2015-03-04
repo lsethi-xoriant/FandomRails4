@@ -120,12 +120,21 @@
           <label id="sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[privacy]-error" class="error" for="sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[privacy]"></label>
         </div>
       </div>
-      <div class="col-sm-2 col-sm-offset-1">
-      	<a href="index" class="cup__back"><i class="fa fa-arrow-left"></i> Indietro</a>
-      </div>
-      <div class="col-sm-6 text-center">
-        <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
-      </div>   
+      <% if small_mobile_device? %>
+      	  <div class="col-sm-6 text-center">
+	        <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
+	      </div>
+	      <div class="col-sm-2 col-sm-offset-1 text-center">
+	      	<a href="index" class="cup__back"><i class="fa fa-arrow-left"></i> Indietro</a>
+	      </div>
+	  <% else %>
+	      <div class="col-sm-2 col-sm-offset-1">
+	      	<a href="index" class="cup__back"><i class="fa fa-arrow-left"></i> Indietro</a>
+	      </div>
+	      <div class="col-sm-6 text-center">
+	        <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
+	      </div>
+	  <% end %>   
     </div>
   </div>
 <% end %>
