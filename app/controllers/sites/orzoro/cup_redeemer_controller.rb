@@ -31,7 +31,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     attribute :privacy, type: Boolean
 
     validates_presence_of :first_name, :last_name, :gender, :email, :day_of_birth, :month_of_birth, :year_of_birth, 
-                          :state, :province, :terms, :newsletter, :privacy
+                          :state, :province, :privacy
     validates :email, format: { with: %r{.+@.+\..+} }
   end
 
@@ -87,8 +87,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       redirect_to "/cup_redeemer/index"
     else
       @provinces_array = ITALIAN_PROVINCES.map { |province| [province, province] }.unshift(["Provincia", ""])
-      # @states_array = states_array = WORLD_STATES.map { |state| [state, state] }.unshift(["Stato", ""])
-      @states_array = ["Italia"]
+      @states_array = states_array = WORLD_STATES.map { |state| [state, state] }#.unshift(["Stato", ""])
       cache_value = cache_read("cup-redeemer-#{getSessionId}")
       if cache_value
         @cup_redeemer = CupRedeemerStep1.new(cache_value["identity"])
@@ -167,26 +166,26 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     if getSessionId.nil? || cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil? || cache_value["address"].nil?
       redirect_to "/cup_redeemer/step_1"
     else
-      infos = build_infos(cache_value)
+      info = build_info(cache_value)
       user = User.find_by_email(cache_value["identity"]["email"])
       if user.nil?
-        infos[:email] = cache_value["identity"]["email"]
-        # infos[:password] = (0...8).map { (97 + rand(26)).chr }.join # random generated
-        user = User.create(infos)
+        info[:email] = cache_value["identity"]["email"]
+        user = User.new(info)
         user_created_flag = true
+        aux_hash = {}
+      else
+        aux_hash = JSON.parse(user.aux) rescue {}
       end
-      aux_hash = user.aux.nil? ? {} : JSON.parse(user.aux)
       if receipt_already_redeemed(aux_hash, cache_value["receipt"]["receipt_number"])
         flash[:error] = "Hai gia' richiesto tazze per questo scontrino"
       else
         redeem_array = aux_hash["cup_redeem"].nil? ? [cache_value] : aux_hash["cup_redeem"] + [cache_value]
         aux_hash["cup_redeem"] = redeem_array
         user.aux = aux_hash.to_json
-        user.update_attributes(infos) if (!user_created_flag and redeem_array.size == 1)
+        user.assign_attributes(info) if (!user_created_flag && redeem_array.size == 1)
         user.save(:validate => false)
+        SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
       end
-
-      SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
       render template: "cup_redeemer/request_completed"
     end
   end
@@ -204,7 +203,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     end
   end
 
-  def build_infos(cache_value)
+  def build_info(cache_value)
     { :first_name => cache_value["identity"]["first_name"], :last_name => cache_value["identity"]["last_name"], 
         :cap => cache_value["address"]["cap"], :location => cache_value["address"]["city"], 
         :province => cache_value["address"]["province"], :address => cache_value["address"]["address"], 
