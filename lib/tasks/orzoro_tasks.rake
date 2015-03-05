@@ -1,15 +1,21 @@
-namespace :orzoro do
+#!/bin/env ruby
+# encoding: utf-8
+namespace :orzoro_tasks do
  
- desc "Esportazione ogni 15 giorni dei dati utente con term impostato a true"
-  task :export => :environment do
+  desc "Esportazione bisettimanale degli utenti con TERM impostato a true"
+  task :export, [:path] => :environment do |t, args|
+
+    switch_tenant("orzoro")
+
     timestamp = "#{ DateTime.now.strftime("%Y%m%d") }235959"
-    file = "/srv/www/www.orzoro.it/csv/IN/orzoro_#{ timestamp }_IN.csv"
+    file_with_path = "#{args.path}orzoro_#{ timestamp }_IN.csv"
 
     # TODO: take users with terms true and completed true
 
     File.open(file, "w:UTF-8") do |csv|
       csv << compute_in(utente_gen).gsub(/\n/,"\r\n")    
     end
+    
   end
 
   def compute_in(utente_gen)

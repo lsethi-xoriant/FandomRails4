@@ -1357,7 +1357,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(message);
         break;
       case "whatsapp":
-        share_url = "whatsapp://send?text=" + message + " " + cta_url;
+        share_url = "whatsapp://send?text=" + encodeURIComponent(message) + " " + cta_url;
         break;
       case "gplus":
         share_url = "https://plus.google.com/share?url=" + cta_url;

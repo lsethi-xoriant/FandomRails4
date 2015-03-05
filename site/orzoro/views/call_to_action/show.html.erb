@@ -5,10 +5,10 @@
 <div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" > 
 
   <div class="row main-row related__row container-shadow" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}" ng-if="aux.related_product">
-    <div class="col-md-3 text-center">
+    <div class="col-sm-3 text-center">
       <img class="related-product__img" ng-src="{{aux.related_product['image']}}">
     </div>
-    <div class="col-md-9">
+    <div class="col-sm-9">
       <p class="related-product__title">{{aux.related_product["title"]}}</p>
       <p class="related-product__description">{{aux.related_product["description"]}}</p>
       <a class="btn btn-red related-product__btn" href="{{aux.related_product['browse_url']}}">SCOPRI IL PRODOTTO</a>

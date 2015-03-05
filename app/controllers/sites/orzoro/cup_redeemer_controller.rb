@@ -172,7 +172,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         info[:email] = cache_value["identity"]["email"]
         user = User.new(info)
         user_created_flag = true
-        aux_hash = {}
+        aux_hash = {} #{ "terms" => cache_value["identity"]["terms"] }.to_json
       else
         aux_hash = JSON.parse(user.aux) rescue {}
       end
