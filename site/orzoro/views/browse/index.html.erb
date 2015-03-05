@@ -2,7 +2,7 @@
 	<% if @tag_browse %>
 		<div class="row category-header" style="background-color: <%= get_extra_fields!(@tag_browse)["label-background"] %>; background-image: url(<%= (get_upload_extra_field_processor(get_extra_fields!(@tag_browse)["header_image"], :original) rescue nil) unless small_mobile_device? %>)">
 			<div class="col-xs-12 text-center">
-				<div class="category-header__title-container" style="background-color: <%= get_extra_fields!(@tag_browse)["label-background"] %>">
+				<div class="category-header__title-container" style="background-color: #84120a">
 					<h1 class="category-header__title"><%= get_extra_fields!(@tag_browse)["title"] %></h1>
 				</div>
 				<div class="category-header__subtitle-container">
