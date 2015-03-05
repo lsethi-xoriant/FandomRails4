@@ -12,20 +12,20 @@ class Sites::Orzoro::CallToActionController < CallToActionController
   end
 
   def next_calltoaction_in_category
-    calltoaction_id = params[:calltoaction_id]
-    category_id = params[:category_id]
+    calltoaction_id = params[:calltoaction_id].to_i
+    category_id = params[:category_id].to_i
 
-    calltoaction = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", category_id).order("call_to_action_tags.id ASC")
+    calltoaction = CallToAction.order("call_to_actions.id ASC").active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", category_id)
     if params[:direction] == "next"
       calltoaction = calltoaction.where("call_to_actions.id > ?", calltoaction_id).first  
       unless calltoaction
-        calltoaction = CallToAction.active.includes(:call_to_action_tags)
+        calltoaction = CallToAction.order("call_to_actions.id ASC").active.includes(:call_to_action_tags)
           .where("call_to_action_tags.tag_id = ?", category_id).first
       end                                                        
     else 
       calltoaction = calltoaction.where("call_to_actions.id < ?", calltoaction_id).last
       unless calltoaction
-        calltoaction = CallToAction.active.includes(:call_to_action_tags)
+        calltoaction = CallToAction.order("call_to_actions.id ASC").active.includes(:call_to_action_tags)
           .where("call_to_action_tags.tag_id = ?", category_id).last
       end  
     end
