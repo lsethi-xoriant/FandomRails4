@@ -1,5 +1,5 @@
 <div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" > 
-  <div class="row">
+  <div class="row {{calltoaction_info.hide_class}}">
 
     <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}}">
       <!-- MEDIA -->
@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <div class="row hidden-xs" if="aux.calltoaction_category">
+  <div class="row hidden-xs {{calltoaction_info.hide_class}}" if="aux.calltoaction_category">
     <div class="col-md-12 text-center">
       <div class="cta-preview__miniformat-container cta-preview__miniformat-container--header" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}">
         <span class="cta-preview__miniformat">{{aux.calltoaction_category.title}}</span>
@@ -30,14 +30,12 @@
   <div class="row main-row cta__undervideo">
     <div class="col-md-12">
       <div class="row">
-    
-        <!--[if gt IE 9 | !IE ]><!-->
-        <![endif]-->
+         
         <div class="col-sm-2 text-left hidden-xs">
           <span class="fa fa-angle-left cta__fa-angle" ng-click="nextCallToActionInCategory('prev')"></span>
         </div>
 
-        <div class="col-sm-8 col-xs-12 text-center cta__title-and-description-col">
+        <div class="col-sm-8 col-xs-12 text-center cta__title-and-description-col {{calltoaction_info.hide_class}}">
           <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
           <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
 
@@ -48,10 +46,10 @@
             </div>
           </div>  
 
-          <div class="row cta__extra-description__container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description">
+          <div class="row cta__extra-description__container {{calltoaction_info.hide_class}}" ng-bind-html="calltoaction_info.calltoaction.extra_fields.extra_description" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description">
           </div>
 
-          <div class="row cta__extra-description__container" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1 && calltoaction_info.calltoaction.extra_fields.extra_description_2">
+          <div class="row cta__extra-description__container {{calltoaction_info.hide_class}}" ng-if="calltoaction_info.calltoaction.extra_fields.extra_description_1 && calltoaction_info.calltoaction.extra_fields.extra_description_2">
             <div class="col-sm-12">
               <hr>           
             </div>           
@@ -62,19 +60,17 @@
           </div>
 
           <!-- DOWNLOAD INTERACTION -->
-          <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
+          <div class="row {{calltoaction_info.hide_class}}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
             <div class="col-xs-12 text-center" >
               <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span><i class="glyphicon glyphicon-download-alt"></i>{{interaction_info.interaction.resource.title}}</span></a>
             </div>
           </div>
         </div>
-
-        <!--[if gt IE 9 | !IE ]><!-->
-        <![endif]-->
+   
         <div class="col-sm-2 text-right hidden-xs">
           <span class="fa fa-angle-right cta__fa-angle" ng-click="nextCallToActionInCategory('next')"></span>
         </div>
-        
+      
       </div>
 
       <!--
@@ -87,7 +83,7 @@
 
     </div>
   </div>
-  <div class="row text-center cta__comic" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.comic">
+  <div class="row text-center cta__comic {{calltoaction_info.hide_class}}" ng-style="{'background-color': calltoaction_info.miniformat['label_background']}" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.comic">
     <img ng-src="{{calltoaction_info.calltoaction.extra_fields.comic.url}}" class="hidden-xs">
   </div>
 </div>
