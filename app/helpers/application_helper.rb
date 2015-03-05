@@ -475,7 +475,7 @@ module ApplicationHelper
       else
         tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
       end
-      Tag.includes(:tags_tags).where("tags.id in (#{tag_ids_subselect})").to_a
+      Tag.includes(:tags_tags).where("tags.id in (#{tag_ids_subselect})").order("created_at DESC").to_a
     end
   end
   
@@ -544,7 +544,7 @@ module ApplicationHelper
   def get_tags_with_tags_in_and(tag_ids)
     cache_short get_tags_with_tags_cache_key(tag_ids) do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      Tag.where("id IN (#{tag_ids_subselect})").to_a
+      Tag.where("id IN (#{tag_ids_subselect})").order("created_at DESC").to_a
     end
   end
   
@@ -552,9 +552,9 @@ module ApplicationHelper
     cache_short get_ctas_with_tags_cache_key(tag_ids, with_user_cta, "and") do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
       if with_user_cta
-        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) AND call_to_actions.user_id IS NULL").to_a
+        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) AND call_to_actions.user_id IS NULL").order("activated_at DESC").to_a
       else
-        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) ").to_a
+        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) ").order("activated_at DESC").to_a
       end
     end
   end
@@ -562,16 +562,16 @@ module ApplicationHelper
   def get_ctas_with_tags_in_or(tag_ids, with_user_cta = false)
     cache_short get_ctas_with_tags_cache_key(tag_ids, with_user_cta, "or") do
       if with_user_cta
-        CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) AND call_to_actions.user_id IS NULL", tag_ids).to_a
+        CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) AND call_to_actions.user_id IS NULL", tag_ids).order("call_to_actions.activated_at DESC").to_a
       else
-        CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) ", tag_ids).to_a
+        CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) ", tag_ids).order("call_to_actions.activated_at DESC").to_a
       end
     end
   end
   
   def get_all_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).to_a
+      CallToAction.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).order("activated_at DESC").to_a
     end
   end
 

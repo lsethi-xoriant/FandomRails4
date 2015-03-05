@@ -177,14 +177,14 @@ module BrowseHelper
     tags = order_elements(category, get_tags_with_tags(tag_ids))
     ctas = order_elements(category, get_ctas_with_tags_in_and(tag_ids))
     total = tags.count + ctas.count
-    tags = tags.slice!(0, carousel_elements).sort_by { |tag| tag.created_at }
-    ctas = ctas.slice!(0, carousel_elements).sort_by { |cta| cta.activated_at }
+    tags = tags.slice!(0, carousel_elements)
+    ctas = ctas.slice!(0, carousel_elements)
     [merge_contents(ctas, tags), total]
   end
   
-  def get_contents_by_category_with_tags(filter_tags, offset = 0)
-    tags = get_tags_with_tags(filter_tags.map{|t| t.id}).sort_by { |tag| tag.created_at }
-    ctas = get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}).sort_by { |cta| cta.activated_at }
+  def get_contents_by_category_with_tags(filter_tags, category, offset = 0)
+    tags = order_elements(category, get_tags_with_tags(filter_tags.map{|t| t.id}))
+    ctas = order_elements(category, get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}))
     merge_contents_with_tags(ctas, tags, offset)
   end
   
@@ -289,12 +289,8 @@ module BrowseHelper
     contents
   end
 
-  def merge_contents(ctas, tags, qty = 8, offset = 0)
-    if qty > 0
-      merged = (ctas + tags).sort_by(&:created_at).reverse.slice(offset, qty)
-    else
-      merged = (ctas + tags).sort_by(&:created_at).reverse
-    end
+  def merge_contents(ctas, tags)
+    merged = (tags + ctas)
     prepare_contents(merged)
   end
   
@@ -305,7 +301,7 @@ module BrowseHelper
   
   def merge_contents_with_tags(ctas, tags, offset = 0)
     total = ctas.count + tags.count
-    merged = (total > offset || offset == 0) ? (ctas + tags).sort_by(&:created_at).reverse.slice(offset, 12) : []
+    merged = (total > offset || offset == 0) ? (tags + ctas).slice(offset, 12) : []
     prepared_contents = prepare_contents_with_related_tags(merged)
     prepared_contents + [total]
   end

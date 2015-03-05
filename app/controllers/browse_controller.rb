@@ -159,7 +159,7 @@ class BrowseController < ApplicationController
   
   def index_category
     @category = Tag.includes(:tags_tags).find(params[:id])
-    contents, @tags, @total = get_contents_by_category_with_tags(get_tags_for_category(@category))
+    contents, @tags, @total = get_contents_by_category_with_tags(get_tags_for_category(@category), @category)
     @contents = compute_gallery_contents(contents)
     
     @aux_other_params = { 
@@ -179,7 +179,7 @@ class BrowseController < ApplicationController
   def index_category_load_more
     offset = params[:offset].to_i
     category = Tag.find(params[:tag_id])
-    contents, tags, total = get_contents_by_category_with_tags(get_tags_for_category(category), offset)
+    contents, tags, total = get_contents_by_category_with_tags(get_tags_for_category(category), category, offset)
     
     contents = compute_gallery_contents(contents)
     
