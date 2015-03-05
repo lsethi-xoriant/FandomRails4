@@ -104,9 +104,12 @@ class User < ActiveRecordWithJSON
     end
   end
 
+  def self.has_age?(year_of_birth, month_of_birth, day_of_birth, now, age)
+    return (Time.parse(now) - Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}"))/1.year >= age
+  end
+
   def major
-    if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present? &&
-       (Time.parse(major_date) - Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}"))/1.year < 18
+    unless self.has_age?(year_of_birth, month_of_birth, day_of_birth, major_date, 18)
       errors.add(:birth_date, :major)
     end
   end

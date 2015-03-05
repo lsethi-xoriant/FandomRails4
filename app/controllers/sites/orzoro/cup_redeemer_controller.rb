@@ -33,6 +33,14 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     validates_presence_of :first_name, :last_name, :gender, :email, :day_of_birth, :month_of_birth, :year_of_birth, 
                           :state, :province, :privacy
     validates :email, format: { with: %r{.+@.+\..+} }
+    validate :is_13?
+
+    def is_13?
+      unless User.has_age?(self.year_of_birth, self.month_of_birth, self.day_of_birth, Time.now.to_s, 13)
+        errors.add(:base, "Devi aver compiuto 13 anni per poter richiedere le tazze")
+      end
+    end
+
   end
 
   class CupRedeemerStep2
@@ -99,6 +107,8 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   end
 
   def step_1_update
+    @provinces_array = ITALIAN_PROVINCES.map { |province| [province, province] }.unshift(["Provincia", ""])
+    @states_array = states_array = WORLD_STATES.map { |state| [state, state] }#.unshift(["Stato", ""])
     @cup_redeemer = CupRedeemerStep1.new(params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step1])
     if @cup_redeemer.valid?
       cache_value = { "identity" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step1] }
@@ -172,7 +182,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         info[:email] = cache_value["identity"]["email"]
         user = User.new(info)
         user_created_flag = true
-        aux_hash = {} #{ "terms" => cache_value["identity"]["terms"] }.to_json
+        aux_hash = {}
       else
         aux_hash = JSON.parse(user.aux) rescue {}
       end
