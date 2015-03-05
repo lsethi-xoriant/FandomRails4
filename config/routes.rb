@@ -37,6 +37,7 @@ Fandom::Application.routes.draw do
         match "/cup_redeemer/step_3", to: "cup_redeemer#step_3"
         match "/cup_redeemer/step_3/update", to: "cup_redeemer#step_3_update"
         match "/cup_redeemer/request_completed", to: "cup_redeemer#request_completed"
+        match "/complete_registration/:email/:token", to: "cup_redeemer#complete_registration", :constraints => { :email => /.*/ }
         match "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         

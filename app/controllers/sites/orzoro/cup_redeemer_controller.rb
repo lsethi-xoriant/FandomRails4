@@ -180,6 +180,8 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       user = User.find_by_email(cache_value["identity"]["email"])
       if user.nil?
         info[:email] = cache_value["identity"]["email"]
+        info[:confirmation_token] = Digest::MD5.hexdigest(info[:email] + Rails.configuration.secret_token)[0..31]
+        info[:confirmation_sent_at] = Time.now
         user = User.new(info)
         user_created_flag = true
         aux_hash = {}
@@ -194,7 +196,11 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         user.aux = aux_hash.to_json
         user.assign_attributes(info) if (!user_created_flag && redeem_array.size == 1)
         user.save(:validate => false)
-        SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
+        if user_created_flag
+          SystemMailer.orzoro_registration_confirmation(cache_value, user).deliver
+        else
+          SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
+        end
       end
       render template: "cup_redeemer/request_completed"
     end
@@ -226,6 +232,27 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
 
   def getSessionId
     request.session_options[:id]
+  end
+
+  def complete_registration
+    if Digest::MD5.hexdigest(params[:email] + Rails.configuration.secret_token)[0..31] == params[:token]
+      user = User.find_by_email(params[:email])
+      if user.present?
+        if Time.now - user.confirmation_sent_at < 7.days
+          if user.confirmation_token
+            user.update_attributes(:confirmation_token => nil, :confirmed_at => Time.now)
+            @message = "Complimenti! Hai confermato la tua registrazione."
+          else
+            @message = "Indirizzo mail verificato in precedenza."
+          end
+        else
+          @message = "Token di conferma scaduto. Compila nuovamente la richiesta."
+        end
+      end
+    else
+      @message = "Link non valido."
+    end
+    render template: "cup_redeemer/complete_registration"
   end
 
 end

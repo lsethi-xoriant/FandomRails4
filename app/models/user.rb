@@ -10,7 +10,7 @@ class User < ActiveRecordWithJSON
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
     :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url,
-    :major_date, :gender, :aux
+    :major_date, :gender, :aux, :confirmation_token, :confirmation_sent_at, :confirmed_at
 
   json_attributes [[:aux, EmptyAux]]
 
