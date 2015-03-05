@@ -1,5 +1,10 @@
 /* VOTE */
 
+.vote-interaction__feedback-text {
+  color: $brown;
+  margin-top: 10px;
+}
+
 .vote-interaction {
   position: absolute;
   height: 100%;
@@ -43,16 +48,16 @@
   }
 }
 
+.vote-interaction__baloon__element-pin__active {
+  color: #f1d11a !important;
+}
+
 .vote-interaction__active .vote-interaction__baloon:hover > .vote-interaction__baloon__element > .vote-interaction__baloon__element-pin {
-  color: #f1d11a;
+  color: $brown !important; /* f1d11a */
 }
 
 .vote-interaction__active .vote-interaction__baloon__element:hover ~ .vote-interaction__baloon__element > .vote-interaction__baloon__element-pin {
-  color: #ccc;
-}
-
-.vote-interaction__baloon__element-pin__active {
-  color: #f1d11a !important;
+  color: #ccc !important;
 }
 
 .vote-interaction__title {

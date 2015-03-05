@@ -11,7 +11,7 @@
   <div class="vote-interaction__baloon text-center">
     <div ng-repeat="i in range(interaction_info.interaction.resource.vote_info.min, interaction_info.interaction.resource.vote_info.max)" class="vote-interaction__baloon__element">
       <!-- NOT DONE -->
-      <div  ng-if="!interaction_info.user_interaction" class="vote-interaction__baloon__element-pin" ng-click="updateAnswer(calltoaction_info, interaction_info, i, interaction_info.interaction.when_show_interaction)">
+      <div  ng-if="!interaction_info.user_interaction" class="vote-interaction__baloon__element-pin" ng-click="updateAnswer(calltoaction_info, interaction_info, i, interaction_info.interaction.when_show_interaction)" ng-class="{'vote-interaction__baloon__element-pin__active': (computeAvgForVoteInteraction(interaction_info) >= i)}">
         <span class="fa fa-star"></span>
       </div>
       <!-- ALREADY DONE -->
@@ -20,5 +20,10 @@
       </div>
     </div>
   </div>
+</div>
 
+<div class="row text-center" ng-if="interaction_info.user_interaction.feedback || interaction_info.user_interaction">
+  <div class="col-xs-12">
+    <p class="vote-interaction__feedback-text">Grazie per aver votato</p>
+  </div>
 </div>
