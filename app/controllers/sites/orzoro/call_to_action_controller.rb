@@ -15,18 +15,18 @@ class Sites::Orzoro::CallToActionController < CallToActionController
     calltoaction_id = params[:calltoaction_id]
     category_id = params[:category_id]
 
-    calltoaction = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", category_id)
+    calltoaction = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", category_id).order("call_to_action_tags.id ASC")
     if params[:direction] == "next"
-      calltoaction = calltoaction.where("call_to_actions.id > ?", calltoaction_id).last  
-      unless calltoaction
-        calltoaction = CallToAction.active.includes(:call_to_action_tags)
-          .where("call_to_action_tags.tag_id = ?", category_id).last
-      end                                                        
-    else 
-      calltoaction = calltoaction.where("call_to_actions.id < ?", calltoaction_id).first
+      calltoaction = calltoaction.where("call_to_actions.id > ?", calltoaction_id).first  
       unless calltoaction
         calltoaction = CallToAction.active.includes(:call_to_action_tags)
           .where("call_to_action_tags.tag_id = ?", category_id).first
+      end                                                        
+    else 
+      calltoaction = calltoaction.where("call_to_actions.id < ?", calltoaction_id).last
+      unless calltoaction
+        calltoaction = CallToAction.active.includes(:call_to_action_tags)
+          .where("call_to_action_tags.tag_id = ?", category_id).last
       end  
     end
 
