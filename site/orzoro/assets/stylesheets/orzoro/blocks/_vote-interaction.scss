@@ -1,5 +1,10 @@
 /* VOTE */
 
+.vote-interaction__feedback-text {
+  color: $brown;
+  margin-top: 10px;
+}
+
 .vote-interaction {
   position: absolute;
   height: 100%;
