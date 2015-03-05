@@ -334,7 +334,7 @@ a{
 }
 
 @media (max-width: $screen-sm-min) { 
-  .test-undervideo-interaction__row {
+  .test-undervideo-interaction__row, .share-undervideo-interaction__row {
     margin: 0;
     padding: 0;
   }
