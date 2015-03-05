@@ -57,9 +57,9 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
         .success(function(data) { 
 
           $scope.initCallToActionInfoList(data.calltoaction);
+          $scope.calltoaction_info.hide_class = "hide_content";
+          
           $scope.aux["related_product"] = data.related_product;
-
-          $scope.calltoaction_info.hide_class = "hide_content fadein_animation";
 
           document.title = data.seo_info.title + " | Orzoro";
           $('meta[name=description]').attr('content', data.seo_info.meta_description);
@@ -90,10 +90,14 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
 
           goToLastLinkedCallToAction();
 
+          $timeout(function() { 
+            $scope.calltoaction_info.hide_class = "hide_content fadein_animation";
+          }, 500);
+
         }).error(function() {
           // ERROR.
         });
-    }, 1000);
+    }, 500);
   };
 
   function goToLastLinkedCallToAction() {
