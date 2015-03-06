@@ -92,7 +92,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
 
   def step_1
     if getSessionId.nil?
-      redirect_to "/cup_redeemer/index"
+      redirect_to "/tazze"
     else
       @provinces_array = ITALIAN_PROVINCES.map { |province| [province, province] }.unshift(["Provincia", ""])
       @states_array = states_array = WORLD_STATES.map { |state| [state, state] }#.unshift(["Stato", ""])
@@ -113,7 +113,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     if @cup_redeemer.valid?
       cache_value = { "identity" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step1] }
       cache_write("cup-redeemer-#{getSessionId}", cache_value, 1.hour)
-      redirect_to "/cup_redeemer/step_2"
+      redirect_to "/tazze/step_2"
     else
       render template: "cup_redeemer/step_1"
     end
@@ -123,7 +123,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     cache_value = cache_read("cup-redeemer-#{getSessionId}")
     if getSessionId.nil? || cache_value.nil? || cache_value["identity"].nil?
-      redirect_to "/cup_redeemer/step_1"
+      redirect_to "/tazze/step_1"
     else
       @cup_redeemer = CupRedeemerStep2.new(cache_value["receipt"])
       render template: "cup_redeemer/step_2"
@@ -137,9 +137,9 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     if @cup_redeemer.valid?
       new_cache_value = cache_value.merge({ "receipt" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2] }) if cache_value
       cache_write("cup-redeemer-#{getSessionId}", new_cache_value, 1.hour)
-      redirect_to "/cup_redeemer/step_3"
+      redirect_to "/tazze/step_3"
     elsif cache_value.nil?
-      redirect_to "/cup_redeemer/step_1"
+      redirect_to "/tazze/step_1"
     else
       render template: "cup_redeemer/step_2"
     end
@@ -149,7 +149,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     @cup_redeemer = CupRedeemerStep3.new
     cache_value = cache_read("cup-redeemer-#{getSessionId}")
     if getSessionId.nil? || cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil?
-      redirect_to "/cup_redeemer/step_1"
+      redirect_to "/tazze/step_1"
     else
       @cup_redeemer = CupRedeemerStep3.new(cache_value["address"])
       render template: "cup_redeemer/step_3"
@@ -162,9 +162,9 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     if @cup_redeemer.valid?
       new_cache_value = cache_value.merge({ "address" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step3] }) if cache_value
       cache_write("cup-redeemer-#{getSessionId}", new_cache_value, 1.hour)
-      redirect_to "/cup_redeemer/request_completed"
+      redirect_to "/tazze/request_completed"
     elsif cache_value.nil?
-      redirect_to "/cup_redeemer/step_1"
+      redirect_to "/tazze/step_1"
     else
       render template: "cup_redeemer/step_3"
     end
@@ -174,14 +174,13 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     cache_value = cache_read("cup-redeemer-#{getSessionId}")
     if getSessionId.nil? || cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil? || cache_value["address"].nil?
-      redirect_to "/cup_redeemer/step_1"
+      redirect_to "/tazze/step_1"
     else
       info = build_info(cache_value)
       user = User.find_by_email(cache_value["identity"]["email"])
       if user.nil?
         info[:email] = cache_value["identity"]["email"]
         info[:confirmation_token] = Digest::MD5.hexdigest(info[:email] + Rails.configuration.secret_token)[0..31]
-        info[:confirmation_sent_at] = Time.now
         user = User.new(info)
         user_created_flag = true
         aux_hash = { "terms" => cache_value["identity"]["terms"], "sync_timestamp" => "" }
@@ -195,8 +194,9 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         aux_hash["cup_redeem"] = redeem_array
         user.aux = aux_hash.to_json
         user.assign_attributes(info) if (!user_created_flag && redeem_array.size == 1)
+        user.confirmation_sent_at = Time.now if user.confirmation_token.present?
         user.save(:validate => false)
-        if user_created_flag
+        if user.confirmation_token.present?
           SystemMailer.orzoro_registration_confirmation(cache_value, user).deliver
         else
           SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver

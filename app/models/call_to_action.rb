@@ -9,7 +9,8 @@ class CallToAction < ActiveRecordWithJSON
   					:activation_date, :activation_time, :slug, :enable_disqus, :secondary_id, :description, 
   					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required,
             :privacy_required, :privacy, :valid_from, :valid_to, :aux, :extra_fields,
-            :button_label, :alternative_description, :enable_for_current_user, :shop_url
+            :button_label, :alternative_description, :enable_for_current_user, :shop_url,
+            :aws_transcoding
 
   json_attributes [[:aux, EmptyAux], [:extra_fields, EmptyAux]]
 
@@ -17,7 +18,7 @@ class CallToAction < ActiveRecordWithJSON
   friendly_id :slug, use: :slugged 
 
   attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required,
-                  :button_label, :alternative_description, :enable_for_current_user, :shop_url
+                :button_label, :alternative_description, :enable_for_current_user, :shop_url, :aws_transcoding
 
   validates_presence_of :title
   validates_presence_of :name
@@ -32,13 +33,21 @@ class CallToAction < ActiveRecordWithJSON
 
   before_save :set_activated_at # handles the activated_at fields when updating the model from easyadmin
   #before_save :set_extra_options
+
+  after_save :save_video_url_for_aws_transcoding, if: Proc.new { |c| aws_transcoding }
+
+  def save_video_url_for_aws_transcoding
+    debugger
+    #https://s3-eu-west-1.amazonaws.com/dev.fandomlab.com/ets/capturedvideo.mov
+    aux = JSON.parse(self.aux || "{}")
+    aux["aws_transcoding"] = self.media_image
+    self.update_attributes(aux: aux.to_json, aws_transcoding: false)
+  end
   
   has_attached_file :media_image,
     processors: lambda { |calltoaction|
       if calltoaction.media_image_content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
         [:watermark]
-      else
-        [:ffmpeg] #libav
       end
     },
     styles: lambda { |image| 
@@ -52,11 +61,8 @@ class CallToAction < ActiveRecordWithJSON
           }
         elsif image.content_type =~ %r{^(image|(x-)?application)/(pdf)$}
           { }
-        else # video
-          {
-            :medium => { :geometry => "640x480", :format => 'mp4' },
-            :thumb => { :geometry => "300x300#", :format => 'jpg', :time => 1 }
-          }
+        else
+          { }
         end
      },
      default_url: "/assets/media-image-default.jpg"
