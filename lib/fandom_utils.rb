@@ -133,11 +133,11 @@ module FandomUtils
   
   
   def switch_tenant(tenant)
-    puts "The Apartment gem and the $site global variable have been set to tenant #{tenant}"
     init_global_variables
     $site = Rails.configuration.id_to_site[tenant]
     Apartment::Tenant.switch(tenant);
-    nil
+    FandomMiddleware.configure_all_mailers_for_site($site)
+    "The Apartment gem and the $site global variable have been set to tenant #{tenant}"
   end
 
   def all_site_ids_with_db
