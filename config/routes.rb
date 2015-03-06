@@ -29,14 +29,14 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "orzoro" do
         root :to => "application#index"
-        match "/cup_redeemer/index", to: "cup_redeemer#index"
-        match "/cup_redeemer/step_1", to: "cup_redeemer#step_1"
-        match "/cup_redeemer/step_1/update", to: "cup_redeemer#step_1_update"
-        match "/cup_redeemer/step_2", to: "cup_redeemer#step_2"
-        match "/cup_redeemer/step_2/update", to: "cup_redeemer#step_2_update"
-        match "/cup_redeemer/step_3", to: "cup_redeemer#step_3"
-        match "/cup_redeemer/step_3/update", to: "cup_redeemer#step_3_update"
-        match "/cup_redeemer/request_completed", to: "cup_redeemer#request_completed"
+        match "/tazze", to: "cup_redeemer#index"
+        match "/tazze/step_1", to: "cup_redeemer#step_1"
+        match "/tazze/step_1/update", to: "cup_redeemer#step_1_update"
+        match "/tazze/step_2", to: "cup_redeemer#step_2"
+        match "/tazze/step_2/update", to: "cup_redeemer#step_2_update"
+        match "/tazze/step_3", to: "cup_redeemer#step_3"
+        match "/tazze/step_3/update", to: "cup_redeemer#step_3_update"
+        match "/tazze/request_completed", to: "cup_redeemer#request_completed"
         match "/complete_registration/:email/:token", to: "cup_redeemer#complete_registration", :constraints => { :email => /.*/ }
         match "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
@@ -45,10 +45,10 @@ Fandom::Application.routes.draw do
         match "/netiquette", :to => "application#netiquette"
 
         match "/browse", :to => "browse#index"
-        match "/browse/contents/:tagname", :to => "browse#index"
+        
         match "/browse/search", :to => "browse#search"
         match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
-        match "/browse/view_all/:id", :to => "browse#index_category"
+
         match "/browse/view_recent", :to => "browse#view_all_recent"
         match "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
         match "/browse/index_category_load_more", :to => "browse#index_category_load_more"
@@ -58,8 +58,24 @@ Fandom::Application.routes.draw do
         
         #resources :call_to_action, only: :show
         match "/call_to_action/:id", to: "call_to_action#show"
+
         match "/ricette/:id", to: "call_to_action#show"
+        match "/ricette", :to => "browse#index", defaults: { tagname: 'ricette' }
+
+        match "/prodotti", :to => "browse#index_category", defaults: { id: 'prodotti' }
         match "/prodotti/:id", to: "call_to_action#show"
+
+        match "/storie/:id", to: "call_to_action#show"
+        match "/storie", :to => "browse#index", defaults: { tagname: 'storie' }
+
+        match "/test/:id", to: "call_to_action#show"
+        match "/test", :to => "browse#index_category", defaults: { id: 'test' }
+
+        match "/balli/:id", to: "call_to_action#show"
+        match "/balli", :to => "browse#index", defaults: { tagname: 'balli' }
+
+        match "/browse/view_all/:id", :to => "browse#index_category"
+        match "/browse/contents/:tagname", :to => "browse#index"
 
         match "/users/sign_up", to: redirect('/')
 
