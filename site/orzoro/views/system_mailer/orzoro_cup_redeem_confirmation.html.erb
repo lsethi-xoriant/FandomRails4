@@ -26,14 +26,10 @@
         		<% end %>
         	</div>
         	<div style="float: left; width: 50%;">
-        		<% debugger %>
         		<% if @form_cup['receipt']['package_count'].to_i == 2 %>
-        			<% debugger %>
         			<% if @form_cup['receipt']['cup_selected'] == 'dora' %>
-        				<% debugger %>
         				<img src="<%= @cup_tag_extra_fields["dora_cup"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
         			<% else %>
-        				<% debugger %>
         				<img src="<%= @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
         			<% end %>
         		<% else %>
