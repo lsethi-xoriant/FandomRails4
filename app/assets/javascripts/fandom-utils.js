@@ -347,7 +347,6 @@ function addInteractionCallToActionFieldElements(fieldName, icta, counter, addRe
   }).appendTo('#extra-fields-cta-id-for-' + fieldName + '-' + counter);
 
   if(icta != null) {
-    console.log(icta[0]);
     ctaIdInput.val(icta[0]);
     conditionSelect.val(icta[1]);
   }
