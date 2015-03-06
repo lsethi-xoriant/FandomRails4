@@ -6,7 +6,7 @@
     	</a>
     </div>
     <div class="col-sm-4 text-center">
-      <a href="/"><img class="header__logo" ng-src="{{aux.assets.logo.url}}"></a>
+      <a href="/"><img class="header__logo" ng-class="{'header__logo--small': (menu_field != 'home')}" ng-src="{{aux.assets.logo.url}}"></a>
     </div>
     <div class="col-sm-4 text-right">
     	<a href="/browse/view_all/prodotti">

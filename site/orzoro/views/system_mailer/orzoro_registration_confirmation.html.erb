@@ -7,7 +7,7 @@
   </head>
   <body style="font-family: 'Roboto', helvetica, arial, sans-serif; background-color: #faaa16;">
     <div style="max-width: 600px; margin-left: auto; margin-right: auto;">
-      <img src="<%= @assets_extra_fields['logo']['url'] rescue nil %>" style="display: block; margin: 10px auto;" />
+      <img src="<%= @assets_extra_fields['logo']['url'] rescue nil %>" style="display: block; margin: 10px auto; max-width: 200px;" />
       <h1 style="text-align: center; color: #fff;">Benessere è Buonumore</h1>
     </div>
       <div style="max-width: 600px; margin-left: auto; margin-right: auto; background-color: #fff;">
@@ -15,20 +15,20 @@
           <h1 style="font-family: 'BarmenoRegularBold'; color: #660206;">Complimenti, <%= @form_cup['identity']['first_name'] %></h1>
           <h2 style="font-family: 'Roboto'; color: #818181;">Abbiamo ricevuto i tuoi dati per la ricezione delle tazze.</h2>
           <p> La tua richiesta sarà elaborata non appena confermerai la tua iscrizione cliccando <a href="<%= @link %>">qui</a>.</p>
-          <p> Se non vedi il collegamento, connettiti alla pagina <%= @link %> </p>
-            <img style="max-width: 600px;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+          <p> Se non vedi il collegamento, connettiti alla pagina <br /><%= @link %> </p>
+          <img style="max-width: 600px;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
         </div>
 
         <div style="background-color: #f6f0dd;">
           <div style="float: left; width: 50%; padding-top: 60px;">
-            <% if @form_cup['receipt']['package_count'] == 2 %>
+            <% if @form_cup['receipt']['package_count'].to_i == 2 %>
               <img src="<%= @cup_tag_extra_fields["two_packages"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
             <% else %>
               <img src="<%= @cup_tag_extra_fields["three_packages"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
             <% end %>
           </div>
           <div style="float: left; width: 50%;">
-            <% if @form_cup['receipt']['package_count'] == 2 %>
+            <% if @form_cup['receipt']['package_count'].to_i == 2 %>
               <% if @form_cup['receipt']['cup_selected'] == 'dora' %>
                 <img src="<%= @cup_tag_extra_fields["dora_cup"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
               <% else %>
@@ -45,9 +45,11 @@
           <div style="text-align: center;">
             <img src="<%= @assets_extra_fields['logo_nestle']['url'] rescue nil %>" />
           </div>
-          <p style="text-align: center; color: #818181;">Se pensi ci sia un errore non considerare le presente mail.</p>
+          <p style="text-align: center; color: #818181; padding: 20px 0;">Se pensi ci sia un errore non considerare le presente mail.</p>
         </div>
-
+      </div>
+      <div style="max-width: 600px; margin-left: auto; margin-right: auto;">
+      	<p style="text-align: center; color: #fff;">Copyright 2014 - Nestlè S.p.A. - Partita IVA 00777280157 - <a href="https://www.buonalavita.it/note-legali" style="color: #fff; text-decoration: underline;">note legali</a> - <a href="https://www.buonalavita.it/promozioni/in-corso" style="color: #fff; text-decoration: underline;">regolamento concorsi</a></p>
       </div>
   </body>
 </html>

@@ -15,6 +15,8 @@ class FandomMiddleware
 
   LOG_DIRECTORY = "log/events"
   TIMESTAMP_FMT = "%Y%m%d_%H%M%S_%N"
+  # this constant cannot be put in fandom_consts because Devise::Mailer is not available there
+  ALL_MAILERS = [Devise::Mailer, SystemMailer]
 
   def initialize(app)
     @app = app
@@ -132,8 +134,7 @@ class FandomMiddleware
     unless $site.nil?
       configure_context_root($site, env)
       configure_view_paths_for_site($site)
-      configure_mailer_for_site($site, Devise::Mailer)
-      configure_mailer_for_site($site, SystemMailer)
+      self.class.configure_all_mailers_for_site($site)
       configure_environment_for_site($site)
       configure_omniauth_for_site($site)
     end
@@ -174,7 +175,13 @@ class FandomMiddleware
     end
   end
   
-  def configure_mailer_for_site(site, mailer)
+  def self.configure_all_mailers_for_site(site)
+    ALL_MAILERS.each do |mailer|
+      configure_mailer_for_site(mailer, site)
+    end
+  end
+
+  def self.configure_mailer_for_site(mailer, site)
     mailer_conf = get_deploy_setting("sites/#{site.id}/mailer", nil)
     if mailer_conf.nil?
       #log_error("missing mailer configuration for tenant", {})

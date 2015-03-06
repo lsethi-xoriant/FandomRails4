@@ -183,7 +183,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         info[:confirmation_token] = Digest::MD5.hexdigest(info[:email] + Rails.configuration.secret_token)[0..31]
         user = User.new(info)
         user_created_flag = true
-        aux_hash = {}
+        aux_hash = { "terms" => cache_value["identity"]["terms"], "sync_timestamp" => "" }
       else
         aux_hash = JSON.parse(user.aux) rescue {}
       end
