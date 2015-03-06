@@ -10,7 +10,7 @@ class User < ActiveRecordWithJSON
   attr_accessible :email, :password, :password_confirmation, :remember_me, :role, :role, :first_name, :last_name, :privacy,
     :avatar_selected, :avatar, :swid, :cap, :location, :province, :address, :phone, :number, :rule, :birth_date,
     :day_of_birth, :month_of_birth, :year_of_birth, :user_counter_id, :username, :newsletter, :required_attrs, :avatar_selected_url,
-    :major_date, :gender, :aux
+    :major_date, :gender, :aux, :confirmation_token, :confirmation_sent_at, :confirmed_at
 
   json_attributes [[:aux, EmptyAux]]
 
@@ -104,9 +104,12 @@ class User < ActiveRecordWithJSON
     end
   end
 
+  def self.has_age?(year_of_birth, month_of_birth, day_of_birth, now, age)
+    return (Time.parse(now) - Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}"))/1.year >= age
+  end
+
   def major
-    if self.year_of_birth.present? && self.month_of_birth.present? && self.day_of_birth.present? &&
-       (Time.parse(major_date) - Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}"))/1.year < 18
+    unless self.has_age?(year_of_birth, month_of_birth, day_of_birth, major_date, 18)
       errors.add(:birth_date, :major)
     end
   end

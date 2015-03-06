@@ -24,3 +24,35 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var $table = $('.table');
+	var $fixedColumn = $table.clone().insertBefore($table).addClass('fixed-column');
+	
+	$fixedColumn.find('th:not(:first-child),td:not(:first-child)').remove();
+	
+	$fixedColumn.find('tr').each(function (i, elem) {
+	    $(this).height($table.find('tr:eq(' + i + ')').height());
+	});
+});
+</script>
+<style>
+	.table-responsive>.fixed-column {
+    position: absolute;
+    display: inline-block;
+    width: auto;
+}
+@media(min-width:768px) {
+    .table-responsive>.fixed-column {
+        display: none;
+    }
+}
+
+@media(max-width: 768px){
+	th:first-child {
+    	background-color: #fff;
+    }
+}
+    
+</style>

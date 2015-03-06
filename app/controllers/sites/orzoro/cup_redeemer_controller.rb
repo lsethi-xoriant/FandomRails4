@@ -33,6 +33,14 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     validates_presence_of :first_name, :last_name, :gender, :email, :day_of_birth, :month_of_birth, :year_of_birth, 
                           :state, :province, :privacy
     validates :email, format: { with: %r{.+@.+\..+} }
+    validate :is_13?
+
+    def is_13?
+      unless User.has_age?(self.year_of_birth, self.month_of_birth, self.day_of_birth, Time.now.to_s, 13)
+        errors.add(:base, "Devi aver compiuto 13 anni per poter richiedere le tazze")
+      end
+    end
+
   end
 
   class CupRedeemerStep2
@@ -99,6 +107,8 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   end
 
   def step_1_update
+    @provinces_array = ITALIAN_PROVINCES.map { |province| [province, province] }.unshift(["Provincia", ""])
+    @states_array = states_array = WORLD_STATES.map { |state| [state, state] }#.unshift(["Stato", ""])
     @cup_redeemer = CupRedeemerStep1.new(params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step1])
     if @cup_redeemer.valid?
       cache_value = { "identity" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step1] }
@@ -170,6 +180,8 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       user = User.find_by_email(cache_value["identity"]["email"])
       if user.nil?
         info[:email] = cache_value["identity"]["email"]
+        info[:confirmation_token] = Digest::MD5.hexdigest(info[:email] + Rails.configuration.secret_token)[0..31]
+        info[:confirmation_sent_at] = Time.now
         user = User.new(info)
         user_created_flag = true
         aux_hash = { "terms" => cache_value["identity"]["terms"], "sync_timestamp" => "" }
@@ -184,7 +196,11 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         user.aux = aux_hash.to_json
         user.assign_attributes(info) if (!user_created_flag && redeem_array.size == 1)
         user.save(:validate => false)
-        SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
+        if user_created_flag
+          SystemMailer.orzoro_registration_confirmation(cache_value, user).deliver
+        else
+          SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
+        end
       end
       render template: "cup_redeemer/request_completed"
     end
@@ -216,6 +232,27 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
 
   def getSessionId
     request.session_options[:id]
+  end
+
+  def complete_registration
+    if Digest::MD5.hexdigest(params[:email] + Rails.configuration.secret_token)[0..31] == params[:token]
+      user = User.find_by_email(params[:email])
+      if user.present?
+        if Time.now - user.confirmation_sent_at < 7.days
+          if user.confirmation_token
+            user.update_attributes(:confirmation_token => nil, :confirmed_at => Time.now)
+            @message = "Complimenti! Hai confermato la tua registrazione."
+          else
+            @message = "Indirizzo mail verificato in precedenza."
+          end
+        else
+          @message = "Token di conferma scaduto. Compila nuovamente la richiesta."
+        end
+      end
+    else
+      @message = "Link non valido."
+    end
+    render template: "cup_redeemer/complete_registration"
   end
 
 end
