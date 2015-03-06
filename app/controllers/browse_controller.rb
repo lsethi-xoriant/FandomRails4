@@ -25,7 +25,7 @@ class BrowseController < ApplicationController
     end
     
     @browse_section.each do |bs|
-      bs.contents = compute_gallery_contents(bs.contents)
+      bs.contents = compute_cta_status_contents(bs.contents)
     end
 
   end
@@ -70,26 +70,7 @@ class BrowseController < ApplicationController
     @total = total
     contents = prepare_contents(contents)
     
-    if FULL_SEARCH_CTA_STATUS_ACTIVE
-      cta_ids = []
-      contents.each do |content|
-        if content["type"] == "cta"
-          cta_ids << content["id"]
-        end
-      end
-      cta_statuses = {}
-      unless cta_ids.empty?
-        cta_statuses = cta_to_reward_statuses_by_user(current_or_anonymous_user, CallToAction.includes(:interactions).where("id in (?)", cta_ids).to_a, 'point')
-      end
-      contents.each do |content|
-        if content["type"] == "cta"
-          content["status"] = cta_statuses[content["id"].to_i]
-        end
-      end
-      @contents = contents
-    else
-      @contens = contents
-    end
+    @contents = compute_cta_status_contents(contents)
     
     @aux_other_params = { 
       calltoaction_evidence_info: true,
@@ -112,26 +93,7 @@ class BrowseController < ApplicationController
     contents, total = get_contents_with_match(params[:query], offset, get_current_property)
     contents = prepare_contents(contents)
     
-    if FULL_SEARCH_CTA_STATUS_ACTIVE
-      cta_ids = []
-      contents.each do |content|
-        if content["type"] == "cta"
-          cta_ids << content["id"]
-        end
-      end
-      cta_statuses = {}
-      unless cta_ids.empty?
-        cta_statuses = cta_to_reward_statuses_by_user(current_or_anonymous_user, CallToAction.includes(:interactions).where("id in (?)", cta_ids).to_a, 'point')
-      end
-      contents.each do |content|
-        if content["type"] == "cta"
-          content["status"] = cta_statuses[content["id"].to_i]
-        end
-      end
-      contents = contents
-    else
-      contens = contents
-    end
+    contents = compute_cta_status_contents(contents)
     
     respond_to do |format|
       format.json { render :json => contents.to_json }
@@ -160,7 +122,7 @@ class BrowseController < ApplicationController
   def index_category
     @category = Tag.includes(:tags_tags).find(params[:id])
     contents, @tags, @total = get_contents_by_category_with_tags(get_tags_for_category(@category), @category)
-    @contents = compute_gallery_contents(contents)
+    @contents = compute_cta_status_contents(contents)
     
     @aux_other_params = { 
       page_tag: {
@@ -181,37 +143,14 @@ class BrowseController < ApplicationController
     category = Tag.find(params[:tag_id])
     contents, tags, total = get_contents_by_category_with_tags(get_tags_for_category(category), category, offset)
     
-    contents = compute_gallery_contents(contents)
+    contents = compute_cta_status_contents(contents)
     
     respond_to do |format|
       format.json { render :json => contents.to_json }
     end
   end
 
-  def compute_gallery_contents(contents)
-    if INDEX_CATEGORY_CTA_STATUS_ACTIVE
-      cta_ids = []
-      contents.each do |content|
-        if content["type"] == "cta"
-          cta_ids << content["id"]
-        end
-      end
-      cta_statuses = {}
-      unless cta_ids.empty?
-        cta_statuses = cta_to_reward_statuses_by_user(current_or_anonymous_user, CallToAction.includes(:interactions).where("id in (?)", cta_ids).to_a, 'point')
-      end
-      contents.each do |content|
-        if content["type"] == "cta"
-          content["status"] = cta_statuses[content["id"].to_i]
-        end
-      end
-      contents
-    else
-      contents
-    end
-  end
-  
-  def add_cta_status_to_contents(contents)
+  def compute_cta_status_contents(contents)
     cta_ids = []
     contents.each do |content|
       if content["type"] == "cta"
@@ -238,7 +177,7 @@ class BrowseController < ApplicationController
     @total = contents.count
     contents = prepare_contents(contents.slice(0, 12))
     
-    @contents = add_cta_status_to_contents(contents)
+    @contents = compute_cta_status_contents(contents)
     
     @per_page = 12
   end
@@ -248,7 +187,7 @@ class BrowseController < ApplicationController
     offset = params[:offset].to_i
     contents = prepare_contents(contents.slice(offset, 12))
     
-    contents = add_cta_status_to_contents(contents)
+    contents = compute_cta_status_contents(contents)
     
     respond_to do |format|
       format.json { render :json => contents.to_json }
@@ -259,7 +198,7 @@ class BrowseController < ApplicationController
     if flash[:notice]
       contents = get_recent_ctas()
       contents = prepare_contents(contents.slice(0, 12))
-      @contents = add_cta_status_to_contents(contents)
+      @contents = compute_cta_status_contents(contents)
     end
     
     @aux_other_params = { 
@@ -285,6 +224,8 @@ class BrowseController < ApplicationController
     term
   end
   
+  # Get an array of tags to use to filter contents. 
+  # This is a hook is expected to be override by a multiproperty project   
   def get_search_tags_for_tenant
     []
   end

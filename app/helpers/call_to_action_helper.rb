@@ -96,11 +96,8 @@ module CallToActionHelper
             "cost" => reward.cost,
             "status" => "locked",
             "has_currency" => false,
-            "reward" => reward          
-          }
-          prize = {
-            "id" => reward.id,
-            "cost" => reward.cost,
+            "reward" => reward,
+            "id" => reward.id          
           }
         end
 
@@ -133,8 +130,7 @@ module CallToActionHelper
             "flag" => build_grafitag_for_calltoaction(calltoaction, "flag"),
             "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat"),
             "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, anonymous_user),
-            "reward_info" => calltoaction_reward_info,
-            "prize" => prize
+            "reward_info" => calltoaction_reward_info
         }
 
         calltoaction_info_list << calltoaction_info
@@ -163,17 +159,9 @@ module CallToActionHelper
           reward = calltoaction_info["reward_info"]["reward"]
           calltoaction_info["reward_info"] = {
             "cost" => reward.cost,
-            "status" => get_user_reward_status(reward)
+            "status" => get_user_reward_status(reward),
+            "id" => reward.id,
           }
-          if !user_has_reward(reward.name)
-            calltoaction_info["prize"] = {
-              "id" => reward.id,
-              "cost" => reward.cost,
-              "has_currency" => user_has_currency_for_reward(reward)
-            }
-          else 
-            calltoaction_info["prize"] = nil
-          end
         end
 
         user_interactions = UserInteraction.where(interaction_id: interactions.keys, user_id: current_user.id)

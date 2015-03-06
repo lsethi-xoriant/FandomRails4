@@ -6,8 +6,16 @@ class Upload < ActiveRecord::Base
   belongs_to :call_to_action
   has_many :user_upload_interactions
   
+  before_save :default_values
+  
   has_attached_file :watermark, :styles => { :normalized => "200x112#" }
 
+  def default_values
+    if self.aux.empty? 
+      self.aux = '{}'
+    end
+  end
+  
   def one_shot
     false
   end

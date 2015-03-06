@@ -34,6 +34,8 @@ class Sites::Disney::BrowseController < BrowseController
     "#{term}_#{get_disney_property}"
   end
   
+  # Get an array of tags to use to filter contents. 
+  # Filter contents in base of current property
   def get_search_tags_for_tenant
     if get_disney_property == "disney-channel" 
       []

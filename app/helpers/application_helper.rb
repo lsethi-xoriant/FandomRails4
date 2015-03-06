@@ -34,7 +34,7 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
   
-  def tag_to_category(tag, needs_related_tags = false, populate_desc = true)
+  def tag_to_content_preview(tag, needs_related_tags = false, populate_desc = true)
     thumb_field = get_extra_fields!(tag)["thumbnail"]
     has_thumb = !thumb_field.blank? && upload_extra_field_present?(thumb_field)
     thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if has_thumb
@@ -75,7 +75,7 @@ module ApplicationHelper
     )
   end
   
-  def tag_to_category_light(tag, needs_related_tags = false, populate_desc = true)
+  def tag_to_content_preview_light(tag, needs_related_tags = false, populate_desc = true)
     thumb_field = get_extra_fields!(tag)["thumbnail"]
     has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
     thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if has_thumb
@@ -115,7 +115,7 @@ module ApplicationHelper
     )
   end
   
-  def cta_to_category(cta, populate_desc = true)
+  def cta_to_content_preview(cta, populate_desc = true)
     ContentPreview.new(
       type: "cta",
       id: cta.id, 
@@ -134,7 +134,7 @@ module ApplicationHelper
     )
   end
   
-  def cta_to_category_light(cta, populate_desc = true)
+  def cta_to_content_preview_light(cta, populate_desc = true)
     ContentPreview.new(
       type: "cta",
       id: cta.id, 
@@ -622,7 +622,12 @@ module ApplicationHelper
       array << element
     end
   end
-
+  
+  # Get an hash cta_id => status for a list of ctas. Needed for separate and caching ctas information 
+  # not depending to user
+  #   user           - the user for which calculate cta statuses
+  #   ctas           - list of ctas to evaluate
+  #   reward_name    - name of the reward that ctas contribute to obtain 
   def cta_to_reward_statuses_by_user(user, ctas, reward_name) 
     cta_to_reward_statuses = cache_long(get_cta_to_reward_statuses_by_user_cache_key(user.id)) do
       result = {}
