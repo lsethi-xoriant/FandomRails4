@@ -36,7 +36,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     if @cta.errors.any?
       @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
-      render template: "/easyadmin/call_to_action/new_cta"     
+      render template: "/easyadmin/call_to_action/new_cta"
     else
       tag_list = params[:tag_list].split(",")
       @cta.call_to_action_tags.delete_all
@@ -57,7 +57,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
     @cta = CallToAction.find(params[:id])
     create_and_link_attachment(params[:call_to_action], @cta)
-    unless @cta.update_attributes(params[:call_to_action]) and save_interaction_call_to_action_linking(params[:call_to_action], @cta)
+    unless @cta.update_attributes(params[:call_to_action])
       @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/edit_cta"
