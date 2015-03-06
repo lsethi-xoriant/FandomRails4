@@ -4,18 +4,26 @@
 namespace :orzoro_tasks do
  
   desc "Esportazione bisettimanale degli utenti con TERM impostato a true"
-  task :export, [:path] => :environment do |t, args|
+  task :export, [:in_path] => :environment do |t, args|
 
     switch_tenant("orzoro")
 
     timestamp = "#{DateTime.now.strftime("%Y%m%d")}235959"
-    file_with_path = "#{args.path}orzoro_#{ timestamp }_IN.csv"
+    file_with_path = "#{args.in_path}orzoro_#{ timestamp }_IN.csv"
 
     users = User.where("aux->>'terms' = '1' AND aux->>'sync_timestamp' = ''")
 
     File.open(file_with_path, "w:UTF-8") do |csv|
       csv << compute_in(users)  
     end
+    
+  end
+
+  desc "Esportazione bisettimanale degli utenti con TERM impostato a true"
+  task :export, [:out_path, :out_mv_path] => :environment do |t, args|
+
+    switch_tenant("orzoro")
+    #compute_out(args.out_path, args.out_mv_path)
     
   end
 
@@ -100,7 +108,7 @@ namespace :orzoro_tasks do
     csv.gsub(/\n/,"\r\n") # Windows new line
   end 
 
-  def compute_out
+  def compute_out(out_path, out_mv_path)
     Dir['/srv/www/www.orzoro.it/csv/OUT/*.csv'].sort.each do |file|
       File.open(file, "r").each_with_index do |row, index|
 
