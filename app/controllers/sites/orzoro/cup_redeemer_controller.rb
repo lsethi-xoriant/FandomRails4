@@ -181,7 +181,6 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       if user.nil?
         info[:email] = cache_value["identity"]["email"]
         info[:confirmation_token] = Digest::MD5.hexdigest(info[:email] + Rails.configuration.secret_token)[0..31]
-        info[:confirmation_sent_at] = Time.now
         user = User.new(info)
         user_created_flag = true
         aux_hash = {}
@@ -195,8 +194,9 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         aux_hash["cup_redeem"] = redeem_array
         user.aux = aux_hash.to_json
         user.assign_attributes(info) if (!user_created_flag && redeem_array.size == 1)
+        user.confirmation_sent_at = Time.now if user.confirmation_token.present?
         user.save(:validate => false)
-        if user_created_flag
+        if user.confirmation_token.present?
           SystemMailer.orzoro_registration_confirmation(cache_value, user).deliver
         else
           SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
