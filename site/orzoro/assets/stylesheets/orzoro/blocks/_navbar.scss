@@ -10,6 +10,10 @@
   display: inline-block;
 }
 
+.navbar-nav li a{
+  padding-bottom: 10px !important;
+} 
+
 .navbar__item-text {
   text-transform: uppercase;
   font-family: "BarmenoRegularBold";
@@ -21,6 +25,7 @@
 
 .navbar__container {
   padding: 0;
+  
 }
 
 .navbar__search{
@@ -46,6 +51,7 @@
 .navbar-default {
   margin-bottom: 0;
   border: none;
+  background-image: url("orzoro/texture.png");
 }
 
 @media (max-width: $screen-sm-min) {
