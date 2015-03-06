@@ -12,7 +12,7 @@ namespace :orzoro_tasks do
     file_with_path = "#{args.in_path}orzoro_#{ timestamp }_IN.csv"
 
     # Send users with terms 1 (accepted) or -1 (accepted and unaccepted)
-    users = User.where("aux->>'terms' <> '0' AND aux->>'sync_timestamp' = ''")
+    users = User.where("aux->>'terms' <> '0' AND aux->>'sync_timestamp' = '' AND confirmed_at IS NOT NULL")
 
     File.open(file_with_path, "w:UTF-8") do |csv|
       csv << compute_in(users)  
