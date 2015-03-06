@@ -11,7 +11,8 @@ namespace :orzoro_tasks do
     timestamp = "#{DateTime.now.strftime("%Y%m%d")}235959"
     file_with_path = "#{args.in_path}orzoro_#{ timestamp }_IN.csv"
 
-    users = User.where("aux->>'terms' = '1' AND aux->>'sync_timestamp' = ''")
+    # Send users with terms 1 (accepted) or -1 (accepted and unaccepted)
+    users = User.where("aux->>'terms' <> '0' AND aux->>'sync_timestamp' = ''")
 
     File.open(file_with_path, "w:UTF-8") do |csv|
       csv << compute_in(users)  
@@ -19,11 +20,11 @@ namespace :orzoro_tasks do
     
   end
 
-  desc "Esportazione bisettimanale degli utenti con TERM impostato a true"
-  task :export, [:out_path, :out_mv_path] => :environment do |t, args|
+  desc "Importazione utenti modificati da Orzoro"
+  task :import, [:out_path, :out_mv_path] => :environment do |t, args|
 
     switch_tenant("orzoro")
-    #compute_out(args.out_path, args.out_mv_path)
+    compute_out(args.out_path, args.out_mv_path)
     
   end
 
@@ -109,14 +110,16 @@ namespace :orzoro_tasks do
   end 
 
   def compute_out(out_path, out_mv_path)
-    Dir['/srv/www/www.orzoro.it/csv/OUT/*.csv'].sort.each do |file|
+    puts "From #{out_path} to #{out_mv_path}"
+
+    Dir["#{out_path}*.csv"].sort.each do |file|
       File.open(file, "r").each_with_index do |row, index|
 
         if index > 0
 
           id_tprov, 
           id_iprov, 
-          id_cprov, 
+          id_cprov, # user_id
           privacy_nes, 
           privacy_nwi, 
           optin_cmz_brand, 
@@ -124,47 +127,52 @@ namespace :orzoro_tasks do
           optin_cmz_nwi_cross, 
           optin_mobile = row.gsub("\"", "").split(";")
 
-          user_id, cup = compute_fandom_id(id_cprov)
-
-          if cup
-            user_redeem_cup = ::Experience::UserRedeemCup.find_by_id(user_id)
-            user = Core::User.where("LOWER(email) = ? ", user_redeem_cup.email.downcase).first
-          else
-            user = Core::User.find_by_id(user_id)
-          end
+          user = User.find(id_cprov)
 
           if user.present?
-            puts "#{index - 1} #{user.email}"
-            update_user = false
+
+            puts "#{index} - #{user.email}"
+
+            aux = JSON.parse(user.aux)
+            terms = compute_terms_or_newsletter_value(aux["cup_redeem"][0]["identity"]["terms"])
+
+            save_user = false
             
-            if user.terms_for_in_out == "G" && (optin_cmz_nes_cross == "D" || optin_cmz_nwi_cross == "D")
-              user.terms_for_in_out = "D"
-              update_user = true
-            elsif user.terms_for_in_out == "D" && (optin_cmz_nes_cross == "G" && optin_cmz_nwi_cross == "G")
-              user.terms = true
-              user.terms_for_in_out = "G"
-              update_user = true
+            if terms == "G" && (optin_cmz_nes_cross == "D" || optin_cmz_nwi_cross == "D")
+              terms = "-1"
+              save_user = true
+            elsif terms == "D" && (optin_cmz_nes_cross == "G" && optin_cmz_nwi_cross == "G")
+              terms = "1"
+              save_user = true
             end
 
-            if user.newsletter_for_in_out == "G" && optin_cmz_brand == "D"
-              user.newsletter_for_in_out = "D"
-              update_user = true
+            newsletter = compute_terms_or_newsletter_value(aux["cup_redeem"][0]["identity"]["newsletter"])
+
+            if newsletter == "G" && optin_cmz_brand == "D"
+              newsletter = "-1"
+              save_user = true
             elsif user.newsletter_for_in_out == "D" && optin_cmz_brand == "G"
-              user.newsletter = true
-              user.newsletter_for_in_out = "G"
-              update_user = true
+              newsletter = "1"
+              save_user = true
             end
 
-            if update_user
-              user.updated_at_for_in_out = Time.now
-              user.save
+            if save_user
+              aux["terms"] = terms
+              aux["cup_redeem"][0]["identity"]["terms"] = terms
+              aux["cup_redeem"][0]["identity"]["newsletter"] = newsletter
+              aux["sync_timestamp"] = ""
+
+              user.update_attribute(:aux, aux.to_json)
             end
+
           end
 
         end
 
       end
-      FileUtils.mv(file, "/srv/www/www.orzoro.it/CSV-OUT-CLOSE")
+
+      FileUtils.mv(file, "#{out_mv_path}")
+
     end
   end
 
