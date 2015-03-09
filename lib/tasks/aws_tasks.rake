@@ -1,5 +1,4 @@
 require 'aws-sdk'
-require 'Digest'
 
 #!/bin/env ruby
 # encoding: utf-8
@@ -44,7 +43,7 @@ namespace :aws_tasks do
     video_url = "call_to_actions/media_images/000/000/041/original/open-uri20150306-3380-14giikk" #.path
 
     # Setup the job outputs using the presets.
-    output_key = Digest::SHA256.hexdigest(video_url.encode('UTF-8'))
+    output_key = video_url.encode('UTF-8')
 
     job = transcoder_client.create_job(
       pipeline_id: pipeline_id,
