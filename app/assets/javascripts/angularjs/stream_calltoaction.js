@@ -869,7 +869,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
         $("#append-other button").attr('disabled', false);
 
-        if (callback !== 'undefined') {
+        if (!angular.isUndefined(callback)) {
           callback();
         }
 
@@ -1448,7 +1448,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
         enableWaitingAudio("stop");
 
-        if (before_callback !== 'undefined') {
+        if(!angular.isUndefined(before_callback)) {
           before_callback();
         }
 
@@ -1456,7 +1456,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           newWindow = window.open();
         }
 
-        if (before_callback_timeout !== 'undefined') {
+        if (!angular.isUndefined(before_callback_timeout)) {
           $timeout(function() {
             $scope.updateAnswerAjax(calltoaction_info, interaction_info, params, when_show_interaction);
           }, before_callback_timeout);

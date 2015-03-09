@@ -9,21 +9,22 @@ namespace :aws_tasks do
 
     transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
 
-    AWS.config(
-      access_key_id: transcoding_settings[:access_key_id],
-      secret_access_key: transcoding_settings[:secret_access_key]
-    )
-  
-      s3 = AWS::S3.new()
-      #(
-      #  access_key_id: transcoding_settings[:access_key_id],
-      #  secret_access_key: transcoding_settings[:secret_access_key]
-      #)
+    puts "s3-#{transcoding_settings[:region]}.amazonaws.com"
+      s3 = AWS::S3.new(
+        access_key_id: transcoding_settings[:access_key_id],
+        secret_access_key: transcoding_settings[:secret_access_key],
+        s3_endpoint: "s3-#{transcoding_settings[:region]}.amazonaws.com"
+      )
 
       bucket = s3.buckets[transcoding_settings[:bucket]]
-      tree = bucket.as_tree
-      directories = tree.children.select(&:branch?).collect(&:prefix)
-      puts directories      
+
+      bucket.objects.with_prefix('elastic-transcoder-dev/web_mp4').each do |object|
+        puts object.key
+      end
+
+      #tree = bucket.as_tree
+      #directories = tree.children.select(&:branch?).collect(&:prefix)
+      #puts directories      
 
 
       #image_to_backup = open(gallery.picture.url)
