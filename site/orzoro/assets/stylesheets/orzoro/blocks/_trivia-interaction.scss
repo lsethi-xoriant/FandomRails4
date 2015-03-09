@@ -158,6 +158,29 @@
   opacity: 1;
 }
 
+.trivia-interaction__update-answer--fade_out {
+  position: relative;
+  -webkit-animation: triviaElemFadeOut 0.5s forwards;
+  animation: triviaElemFadeOut 0.5s forwards;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+}
+
+.trivia-interaction__update-answer--hide { 
+  opacity: 0;
+}
+
+.trivia-interaction__update-answer--show { 
+  opacity: 1;
+}
+
+.trivia-interaction__update-answer--fade_in { 
+  -webkit-animation: triviaAnswerFadeIn 0.5s forwards;
+  animation: triviaAnswerFadeIn 0.5s forwards;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s; 
+}
+
 .trivia-interaction__answer-slide-in {
   -webkit-animation: triviaAnswerSlideIn 0.5s forwards, triviaAnswerFadeIn 0.5s forwards;
   animation: triviaAnswerSlideIn 0.5s forwards, triviaAnswerFadeIn 0.5s forwards;

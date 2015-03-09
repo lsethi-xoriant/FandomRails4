@@ -1435,168 +1435,187 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
   }
 
-  $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction) {
-
+  $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction, before_callback, before_callback_timeout) {
     if($scope.current_user || $scope.aux.anonymous_interaction) {
 
-      if($scope.answer_in_progress) {
-        return;
+      if(!$scope.answer_in_progress) {
+        $scope.answer_in_progress = true;
+
+        enableWaitingAudio("stop");
+
+        if (before_callback !== 'undefined') {
+          before_callback();
+        }
+
+        if(interaction_info.interaction.resource_type == "download") {
+          newWindow = window.open();
+        }
+
+        if (before_callback_timeout !== 'undefined') {
+          $timeout(function() {
+            $scope.updateAnswerAjax(calltoaction_info, interaction_info, params, when_show_interaction);
+          }, before_callback_timeout);
+        } else {
+          $scope.updateAnswerAjax(calltoaction_info, interaction_info, params, when_show_interaction);
+        }
+
       }
-
-      $scope.answer_in_progress = true;
-
-      calltoaction_id = calltoaction_info.calltoaction.id;
-      interaction_id = interaction_info.interaction.id;
-
-      enableWaitingAudio("stop");
-
-      if(interaction_info.interaction.resource_type == "download") {
-        newWindow = window.open();
-      }
-
-      update_interaction_path = "/update_interaction";
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
-      }
-  	  
-      $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.user_interactions_history, anonymous_user_storage: getAnonymousUserStorage() })
-          .success(function(data) {
-
-            // Google analytics.
-            if(data.ga) {
-              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-              });
-            }
-
-            if($scope.current_user) {
-
-              $scope.current_user.main_reward_counter = data.main_reward_counter;
-              updateUserRewardInView(data.main_reward_counter.general);
-
-            } else if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-
-              // Update local storage for anonymous user.
-              if(data.main_reward_counter) {
-                setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
-              }
-         
-              user_interaction_for_storage = new Object();
-              user_interaction_for_storage["user_interaction"] = data.user_interaction;
-              user_interaction_for_storage["calltoaction_id"] = calltoaction_id;
-              user_interaction_for_storage["interaction_id"] = interaction_id;
-    
-              $scope.updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
-            } else {
-              // Nothing to do.
-            }
-
-            // Interaction after user response.
-            updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-            calltoaction_info.status = JSON.parse(data.calltoaction_status);
-            
-            if(data.answers) {
-              updateAnswersInInteractionInfo(interaction_info, data.answers);
-            }
-
-            if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
-              
-              interaction_info.feedback = true;
-
-              if(interaction_info.interaction.resource_type == "trivia") {
-                getPlayer(calltoaction_id).play();
-                if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING") {
-                //       
-                }
- 
-                $timeout(function() { 
-                  interaction_info.feedback = false;
-                  interaction_info.interaction.overvideo_active = false;
-                  $scope.answer_in_progress = false;
-                }, 3000);                
-
-                // Answer exit animation
-                //angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
-                //  answer.class = "trivia-interaction__answer--visible";
-                //});
-
-              } else if(interaction_info.interaction.resource_type == "versus") {
-  
-                interaction_info.feedback = true;
-
-                if(interaction_info.interaction.resource_type == "versus") {
-                  index = 0;
-                  angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
-                    if(index % 2 == 0) {
-                      answer.class = "versus-interaction__answer--visible-left";
-                    } else {
-                      answer.class = "versus-interaction__answer--visible-right";
-                    }
-                    index += 1;
-                  });
-                }
-
-                $timeout(function() { 
-                  interaction_info.feedback = false;
-                  $timeout(function() { 
-                    $scope.answer_in_progress = false;
-                    removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
-                  }, 3000);
-                }, 1000);
-
-              } else {
-                removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
-                $scope.answer_in_progress = false;
-              }
-
-            } else {
-              interaction_info.user_interaction.feedback = data.user_interaction.outcome;
-
-              if(interaction_info.interaction.resource_type == "like") {
-                if(JSON.parse(interaction_info.user_interaction.aux)["like"]) {
-                  interaction_info.interaction.resource.like_info += 1;
-                } else {
-                  interaction_info.interaction.resource.like_info -= 1;
-                } 
-              }
-
-              $scope.answer_in_progress = false;
-            }
-            
-            if(interaction_info.interaction.resource_type == "download") {
-              // Fix to ignore block popup.
-              newWindow.location = data.download_interaction_attachment; //window.open(data.download_interaction_attachment, '_blank');
-            } else if(interaction_info.interaction.resource_type == "link") {
-              window.location = interaction_info.interaction.resource.url;
-            }
-
-            if(interaction_info.interaction.resource_type == "vote") {
-              if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-                interaction_info.anonymous_user_interaction_info = data.user_interaction;
-              }
-              interaction_info.interaction.resource.vote_info = data.vote_info;
-            }
-
-            // Next calltoaction for test interaction.
-            if(data.next_call_to_action_info_list) {
-               $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
-              if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-                console.log(data.user_interaction);
-                updateInteractionsHistory(data.user_interaction.interaction_id);
-              } else {
-                updateInteractionsHistory(data.user_interaction.id);
-              }       
-              $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
-            }
-
-          }).error(function() {
-            $scope.answer_in_progress = false;
-          });
           
     } else {
 
       showRegistrateView();
+
+    }
+  };
+
+  $scope.updateAnswerAjax = function(calltoaction_info, interaction_info, params, when_show_interaction) {
+    interaction_id = interaction_info.interaction.id;
+
+    update_interaction_path = "/update_interaction";
+    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+      update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
+    }
+
+    $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.user_interactions_history, anonymous_user_storage: getAnonymousUserStorage() })
+      .success(function(data) {
+        $scope.updateAnswerAjaxSuccess(data, calltoaction_info, interaction_info, when_show_interaction);
+      }).error(function() {
+        $scope.answer_in_progress = false;
+      });
+  }
+
+  $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction) {
+    calltoaction_id = calltoaction_info.calltoaction.id;
+    interaction_id = interaction_info.interaction.id;
+
+    // Google analytics.
+    if(data.ga) {
+      update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+      angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+        update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+      });
+    }
+
+    if($scope.current_user) {
+
+      $scope.current_user.main_reward_counter = data.main_reward_counter;
+      updateUserRewardInView(data.main_reward_counter.general);
+
+    } else if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
+
+      // Update local storage for anonymous user.
+      if(data.main_reward_counter) {
+        setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
+      }
+ 
+      user_interaction_for_storage = new Object();
+      user_interaction_for_storage["user_interaction"] = data.user_interaction;
+      user_interaction_for_storage["calltoaction_id"] = calltoaction_id;
+      user_interaction_for_storage["interaction_id"] = interaction_id;
+
+      $scope.updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
+    } else {
+      // Nothing to do.
+    }
+
+    // Interaction after user response.
+    updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+    calltoaction_info.status = JSON.parse(data.calltoaction_status);
+    
+    if(data.answers) {
+      updateAnswersInInteractionInfo(interaction_info, data.answers);
+    }
+
+    if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
+      
+      interaction_info.feedback = true;
+
+      if(interaction_info.interaction.resource_type == "trivia") {
+        getPlayer(calltoaction_id).play();
+        if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING") {
+        //       
+        }
+
+        $timeout(function() { 
+          interaction_info.feedback = false;
+          interaction_info.interaction.overvideo_active = false;
+          $scope.answer_in_progress = false;
+        }, 3000);                
+
+        // Answer exit animation
+        //angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
+        //  answer.class = "trivia-interaction__answer--visible";
+        //});
+
+      } else if(interaction_info.interaction.resource_type == "versus") {
+
+        interaction_info.feedback = true;
+
+        if(interaction_info.interaction.resource_type == "versus") {
+          index = 0;
+          angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
+            if(index % 2 == 0) {
+              answer.class = "versus-interaction__answer--visible-left";
+            } else {
+              answer.class = "versus-interaction__answer--visible-right";
+            }
+            index += 1;
+          });
+        }
+
+        $timeout(function() { 
+          interaction_info.feedback = false;
+          $timeout(function() { 
+            $scope.answer_in_progress = false;
+            removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
+          }, 3000);
+        }, 1000);
+
+      } else {
+        removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
+        $scope.answer_in_progress = false;
+      }
+
+    } else {
+      interaction_info.user_interaction.feedback = data.user_interaction.outcome;
+
+      if(interaction_info.interaction.resource_type == "like") {
+        if(JSON.parse(interaction_info.user_interaction.aux)["like"]) {
+          interaction_info.interaction.resource.like_info += 1;
+        } else {
+          interaction_info.interaction.resource.like_info -= 1;
+        } 
+      }
+
+      $scope.answer_in_progress = false;
+    }
+    
+    if(interaction_info.interaction.resource_type == "download") {
+      // Fix to ignore block popup.
+      newWindow.location = data.download_interaction_attachment; //window.open(data.download_interaction_attachment, '_blank');
+    } else if(interaction_info.interaction.resource_type == "link") {
+      window.location = interaction_info.interaction.resource.url;
+    }
+
+    if(interaction_info.interaction.resource_type == "vote") {
+      if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
+        interaction_info.anonymous_user_interaction_info = data.user_interaction;
+      }
+      interaction_info.interaction.resource.vote_info = data.vote_info;
+    }
+
+    // Next calltoaction for test interaction.
+    if(data.next_call_to_action_info_list) {
+      $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
+      if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
+        updateInteractionsHistory(data.user_interaction.interaction_id);
+      } else {
+        updateInteractionsHistory(data.user_interaction.id);
+      }     
+
+      $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
+      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
+      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
 
     }
   };

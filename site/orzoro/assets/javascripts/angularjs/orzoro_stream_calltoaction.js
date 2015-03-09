@@ -30,23 +30,29 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   };
 
   $scope.resetToRedo = function(interaction_info) {
-    anonymous_user_interactions = getAnonymousUserStorage();
-    angular.forEach($scope.user_interactions_history, function(index) {
-      user_interaction_info = anonymous_user_interactions["user_interaction_info_list"][index];
-      if(user_interaction_info) {
-        aux_parse = JSON.parse(user_interaction_info.user_interaction.aux);
-        aux_parse.to_redo = true;
-        user_interaction_info.user_interaction.aux = JSON.stringify(aux_parse);
-      }
+    $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
+    
+    $timeout(function() { 
+      anonymous_user_interactions = getAnonymousUserStorage();
+      angular.forEach($scope.user_interactions_history, function(index) {
+        user_interaction_info = anonymous_user_interactions["user_interaction_info_list"][index];
+        if(user_interaction_info) {
+          aux_parse = JSON.parse(user_interaction_info.user_interaction.aux);
+          aux_parse.to_redo = true;
+          user_interaction_info.user_interaction.aux = JSON.stringify(aux_parse);
+        }
+      });
 
       $scope.updateAnonymousUserStorageUserInteractions(user_interaction_info);
 
       $scope.initCallToActionInfoList([$scope.parent_calltoaction_info]);
+      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+
       $scope.linked_call_to_actions_index = 1;
       $scope.user_interactions_history = [];
       $scope.updateCallToActionInfoWithAnonymousUserStorage();
-      
-    });
+    }, 500);
+    
   };
 
   $scope.nextCallToActionInCategory = function(direction) {
@@ -136,6 +142,21 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     }
     $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
   };
+
+  $scope.orzoroUpdateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction) {
+    $scope.updateAnswer(
+        calltoaction_info, 
+        interaction_info, 
+        params, 
+        when_show_interaction, 
+        function() {
+          if(interaction_info.interaction.resource_type == "test") {
+            $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
+          }
+        },
+        500
+      );
+  }
 
 
   $scope.orzoroAppendCallToAction = function() {
