@@ -16,14 +16,14 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     thumb_calltoactions = [];
     angular.forEach($scope.calltoactions, function(calltoaction_info) {
       content = new Object();
-      content["attributes"] = new Object();
-      content["attributes"]["type"] = "cta";
-      content["attributes"]["detail_url"] = calltoaction_info["calltoaction"]["detail_url"];
-      content["attributes"]["thumb_url"] = calltoaction_info["calltoaction"]["thumbnail_url"];
-      content["attributes"]["title"] = calltoaction_info["calltoaction"]["title"];
-      content["attributes"]["aux"] = new Object();
-      content["attributes"]["aux"]["miniformat"] = calltoaction_info["miniformat"];
-      content["attributes"]["aux"]["flag"] = calltoaction_info["flag"];
+      content = new Object();
+      content["type"] = "cta";
+      content["detail_url"] = calltoaction_info["calltoaction"]["detail_url"];
+      content["thumb_url"] = calltoaction_info["calltoaction"]["thumbnail_url"];
+      content["title"] = calltoaction_info["calltoaction"]["title"];
+      content["aux"] = new Object();
+      content["aux"]["miniformat"] = calltoaction_info["miniformat"];
+      content["aux"]["flag"] = calltoaction_info["flag"];
       thumb_calltoactions.push(content);
     });
     return thumb_calltoactions;
