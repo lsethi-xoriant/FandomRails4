@@ -12,19 +12,28 @@ module ApplicationHelper
   include SeoHelper
 
   class ContentSection
-    include ActiveAttr::TypecastedAttributes
-    include ActiveAttr::MassAssignment
-    include ActiveAttr::AttributeDefaults
     
     # key can be either tag name or special keyword such as $recent
-    attribute :key, type: String
-    attribute :title, type: String
-    attribute :icon_url, type: String
-    attribute :contents
-    attribute :view_all_link, type: String
-    attribute :column_number, type: Integer
-    attribute :total, type: Integer
-    attribute :per_page, type: Integer
+    attr_accessor :key
+    attr_accessor :title 
+    attr_accessor :icon_url
+    attr_accessor :contents
+    attr_accessor :view_all_link
+    attr_accessor :column_number
+    attr_accessor :total
+    attr_accessor :per_page
+    
+    def initialize(params)
+      @key = params[:key]
+      @title = params[:title]
+      @icon_url = params[:icon_url]
+      @contents = params[:contents]
+      @view_all_link = params[:view_all_link]
+      @column_number = params[:column_number]
+      @total = params[:total]
+      @per_page = params[:per_page]
+    end
+    
   end
   
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method

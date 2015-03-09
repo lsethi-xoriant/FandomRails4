@@ -12,9 +12,8 @@ searchModule.controller('searchCtrl', SearchCtrl);
 function SearchCtrl($scope, $window, $filter, $http, $sce) {
 
 	$scope.init = function(browseSections) {
-		
 		angular.forEach(browseSections, function(value, key) {
-       		value.attributes.icon_url = $sce.trustAsHtml(value.attributes.icon_url);
+       		value.icon_url = $sce.trustAsHtml(value.icon_url);
      	});
 		$scope.sections = browseSections;
 	};

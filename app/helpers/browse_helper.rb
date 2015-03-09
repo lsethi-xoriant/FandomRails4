@@ -1,30 +1,49 @@
 module BrowseHelper
   
   class ContentPreview
-    include ActiveAttr::TypecastedAttributes
-    include ActiveAttr::MassAssignment
-    include ActiveAttr::AttributeDefaults
 
     # human readable name of this field
-    attribute :title, type: String
+    attr_accessor :title
     # html id of this field
-    attribute :id, type: String
-    attribute :type, type: String
-    attribute :has_thumb, type: Boolean #to trash
-    attribute :thumb_url, type: String
-    attribute :description, type: String #check if can truncate after
-    attribute :long_description, type: String
-    attribute :detail_url, type: String
-    attribute :created_at, type: Integer
-    attribute :header_image_url, type: String
-    attribute :icon, type: String
-    attribute :category_icon, type: String
-    attribute :status, type: String
-    attribute :likes, type: Integer
-    attribute :comments, type: Integer
-    attribute :votes, type: Integer
-    attribute :tags
-    attribute :aux
+    attr_accessor :id
+    attr_accessor :type
+    attr_accessor :has_thumb
+    attr_accessor :thumb_url
+    attr_accessor :description
+    attr_accessor :long_description
+    attr_accessor :detail_url
+    attr_accessor :created_at
+    attr_accessor :header_image_url
+    attr_accessor :icon
+    attr_accessor :category_icon
+    attr_accessor :status
+    attr_accessor :likes
+    attr_accessor :comments
+    attr_accessor :votes
+    attr_accessor :tags
+    attr_accessor :aux
+    
+    def initialize(params)
+      @id = params[:id]
+      @title = params[:title]
+      @type = params[:type]
+      @has_thumb = params[:has_thumb]
+      @thumb_url = params[:thumb_url]
+      @description = params[:description]
+      @long_description = params[:long_description]
+      @detail_url = params[:detail_url]
+      @created_at = params[:created_at]
+      @header_image_url = params[:header_image_url]
+      @icon = params[:icon]
+      @category_icon = params[:category_icon]
+      @status = params[:status]
+      @likes = params[:likes]
+      @comments = params[:comments]
+      @votes = params[:votes]
+      @tags = params[:tags]
+      @aux = params[:aux]
+    end
+    
   end
   
   def get_browse_settings(tag_browse)
@@ -73,12 +92,14 @@ module BrowseHelper
     recent = get_recent_ctas(query).slice(offset, per_page)
     recent_contents = prepare_contents(recent)
     browse_section = ContentSection.new(
+    {
       key: "recent",
       title: "I piu recenti",
       icon_url: get_browse_section_icon(nil),
       contents: recent_contents,
       view_all_link: "/browse/view_recent",
       column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
+    }
     )
   end
 
@@ -108,6 +129,7 @@ module BrowseHelper
   def get_featured(featured, carousel_elements)
     featured_contents, total = get_featured_content(featured, carousel_elements)
     browse_section = ContentSection.new(
+    {
       key: "featured",
       title: featured.title,
       icon_url: get_browse_section_icon(nil),
@@ -115,25 +137,25 @@ module BrowseHelper
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: DEFAULT_VIEW_ALL_ELEMENTS/4,
       total: total
-    )
+    })
   end
   
   def get_featured_with_match(featured, query)
     featured_contents = get_featured_content_with_match(featured, query)
-    browse_section = ContentSection.new(
+    browse_section = ContentSection.new({
       key: "featured",
       title: featured.title,
       icon_url: get_browse_section_icon(nil),
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
       column_number: DEFAULT_VIEW_ALL_ELEMENTS/4 #featured_contents.count
-    )
+    })
   end
   
   def get_browse_area_by_category(category, tags, carousel_elements)
     contents, total = get_contents_by_category(category, tags, carousel_elements)
     extra_fields = get_extra_fields!(category)
-    browse_section = ContentSection.new(
+    browse_section = ContentSection.new({
       key: category.name,
       title:  category.title,
       icon_url: get_browse_section_icon(extra_fields),
@@ -142,7 +164,7 @@ module BrowseHelper
       column_number: DEFAULT_VIEW_ALL_ELEMENTS/4,
       total: total,
       per_page: carousel_elements
-    )
+    })
   end
   
   def get_browse_section_icon(extra_fields)
@@ -162,14 +184,14 @@ module BrowseHelper
   def get_browse_area_by_category_with_match(category, query)
     contents = get_contents_by_category_with_match(category, query)
     extra_fields = get_extra_fields!(category)
-    browse_section = ContentSection.new(
+    browse_section = ContentSection.new({
       key: category.name,
       title: category.title,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.slug}",
       column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
-    )
+    })
   end
   
   def get_contents_by_category(category, tags, carousel_elements)

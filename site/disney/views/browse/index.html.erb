@@ -10,16 +10,16 @@
 		</div>
 	<% end %>
 	
-	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.attributes.contents.length > 0">	
+	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.contents.length > 0">	
 		<div class="row brws-item main-row" style="margin-top: 30px;">
 		  
 			  <!-- HEADING -->
 			<div class="col-sm-12">
 			  <div class="row section-heading">
 	    		<div class="col-xs-12">  
-			      <div class="relateds__icon-container text-center" ng-bind-html="section.attributes.icon_url">
+			      <div class="relateds__icon-container text-center" ng-bind-html="section.icon_url">
 			      </div>
-			      <p class="relateds__title">{{section.attributes.title}} <%= light_link_to("{{section.attributes.view_all_link}}", class: "section-heading__see-all") do %>
+			      <p class="relateds__title">{{section.title}} <%= light_link_to("{{section.view_all_link}}", class: "section-heading__see-all") do %>
 		            Vedi tutti
 		          <% end %></p>
 			    </div>
@@ -30,32 +30,32 @@
 		    <div class="rewards-flexslider" id="browse-{{$index}}--flexslider">
 		      <div class="flex-viewport-shadow hidden-xs"></div>
 		      <ul class="slides">
-		        <li class="relateds-flexslider__item" ng-repeat="content in section.attributes.contents">
-		          <%= light_link_to("{{content.attributes.detail_url}}") do %>	
-			          <div class="relateds-flexslider__item-panel" ng-if="content.attributes.type == 'cta'"> 
+		        <li class="relateds-flexslider__item" ng-repeat="content in section.contents">
+		          <%= light_link_to("{{content.detail_url}}") do %>	
+			          <div class="relateds-flexslider__item-panel" ng-if="content.type == 'cta'"> 
 			            <div class="row">
 			              <div class="col-xs-12">
 			                <div class="relateds-flexslider__thumbnail">
-			                  <img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}">            
+			                  <img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}">            
 			                  <!-- STATUS -->
-			                  <div class="label label-warning cta-preview__points" ng-if="content.attributes.status > 0">+ {{content.attributes.status}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-							  <div class="col-xs-12 cta-cover__winnable-reward text-right ng-scope" ng-if="content.attributes.status == null"><span class="label label-success cta-cover__winnable-reward__label">Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span></span></div>
-							  <span class="label label-default cta-cover__vote-count--browse" ng-if="content.attributes.votes != null">{{content.attributes.votes}} Voti</span>
+			                  <div class="label label-warning cta-preview__points" ng-if="content.status > 0">+ {{content.status}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+							  <div class="col-xs-12 cta-cover__winnable-reward text-right ng-scope" ng-if="content.status == null"><span class="label label-success cta-cover__winnable-reward__label">Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span></span></div>
+							  <span class="label label-default cta-cover__vote-count--browse" ng-if="content.votes != null">{{content.votes}} Voti</span>
 			                </div>
-			                <p class="cta-preview__title">{{content.attributes.title | cut:true:70}}</p>
+			                <p class="cta-preview__title">{{content.title | cut:true:70}}</p>
 			              </div>
 			            </div>
 			            <div class="row relateds-flexslider__footer">
 			              <div class="col-xs-12">
-			                <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.attributes.likes}}</p>
-			                <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.attributes.comments}}</p>
+			                <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.likes}}</p>
+			                <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.comments}}</p>
 			              </div>
 			            </div>
 			          </div>
-			          <div class="relateds-flexslider__item-panel" ng-if="content.attributes.type == 'tag'" ng-style ="{'background-image': 'url('+content.attributes.thumb_url+')'" style="background-position: center center; background-size: auto 100%;"> 
+			          <div class="relateds-flexslider__item-panel" ng-if="content.type == 'tag'" ng-style ="{'background-image': 'url('+content.thumb_url+')'" style="background-position: center center; background-size: auto 100%;"> 
 				          <div class="row">
 				            <div class="col-xs-12 text-center cta-preview--tag">
-				              <p class="cta-preview__title--tag">{{content.attributes.title | cut:true:70}}</p>
+				              <p class="cta-preview__title--tag">{{content.title | cut:true:70}}</p>
 				            </div>
 				          </div>
 				      </div>

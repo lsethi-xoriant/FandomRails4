@@ -15,7 +15,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 	$scope.$watch('visibleElements', function() {
 		$scope.tagsEnabled = {};
        	angular.forEach($scope.visibleElements, function(element){
-       		angular.forEach(element.attributes.tags, function(tag){
+       		angular.forEach(element.tags, function(tag){
        			if(!(tag in $scope.tagsEnabled)){
        				$scope.tagsEnabled[tag] = tag;
        			}
@@ -48,18 +48,10 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		updateContents();
 	};
 	
-	function normalizeElements(elements){
-		normalizedElements = [];
-		angular.forEach(elements, function(element){
-			normalizedElements.push(element.attributes);
-		});
-		return normalizedElements;
-	}
-	
 	function updateContents(){
 		var visibleContents = [];
 		angular.forEach($scope.elements, function(elem, key){
-			if(isElementVisible(elem.attributes)){
+			if(isElementVisible(elem)){
 				visibleContents.push(elem);
 			}
 		});
