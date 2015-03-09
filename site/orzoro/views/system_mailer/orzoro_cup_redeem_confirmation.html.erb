@@ -2,6 +2,17 @@
 <html>
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style type="text/css">
+    	h1{
+    		font-size: 22px;
+    	}
+    	h2{
+    		font-size: 18px;
+    	}
+    	p{
+    		font-size: 12px;
+    	}
+    </style>
   </head>
   <body style="font-family: arial, helvetica, sans-serif; background-color: #faaa16;">
   	<div style="max-width: 600px; margin-left: auto; margin-right: auto;">
@@ -12,7 +23,7 @@
         <div style="text-align: center; padding-top: 10px;">
         	<h1 style="font-family: arial, helvetica, sans-serif; color: #660206;">Complimenti, <%= @form_cup['identity']['first_name'] %></h1>
         	<h2 style="font-family: arial, helvetica, sans-serif; color: #818181;">Ti confermiamo di aver ricevuto i tuoi dati per la<br /> ricezione delle tazze</h2>
-          	<img style="max-width: 600px;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+          	<img style="max-width: 550px;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
         </div>
         
         <div style="background-color: #f6f0dd;">
