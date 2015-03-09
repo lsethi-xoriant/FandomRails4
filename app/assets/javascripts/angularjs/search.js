@@ -45,7 +45,7 @@ function SearchCtrl($scope, $window, $filter, $http, $sce) {
 	      }
 	    }).then(function(response){
 	      return response.data.map(function(item){
-	        return item.attributes;
+	        return item;
 	      });
 	    });
   	};
