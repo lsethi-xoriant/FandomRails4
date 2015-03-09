@@ -14,8 +14,8 @@
         <div style="text-align: center; padding-top: 10px;">
           <h1 style="font-family: arial, helvetica, sans-serif; color: #660206;">Complimenti, <%= @form_cup['identity']['first_name'] %></h1>
           <h2 style="font-family: arial, helvetica, sans-serif; color: #818181;">Abbiamo ricevuto i tuoi dati per la ricezione delle tazze.</h2>
-          <p> La tua richiesta sarà elaborata non appena confermerai la tua iscrizione cliccando <a href="<%= @link %>">qui</a>.</p>
-          <p> Se non vedi il collegamento, connettiti alla pagina <br /><%= @link %> </p>
+          <h2 style="font-family: arial, helvetica, sans-serif; color: #818181;">La tua richiesta sarà elaborata non appena confermerai la tua iscrizione.</h2>
+          <p><a href="<%= @link %>">CLICCA QUI PER CONFERMARE</a></p>
           <img style="max-width: 600px;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
         </div>
 
