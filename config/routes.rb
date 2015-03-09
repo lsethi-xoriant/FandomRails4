@@ -70,6 +70,7 @@ Fandom::Application.routes.draw do
 
         match "/test/:id", to: "call_to_action#show"
         match "/test", :to => "browse#index_category", defaults: { id: 'test' }
+        match "/test/:id/:descendent_id", to: "call_to_action#show"
 
         match "/balli/:id", to: "call_to_action#show"
         match "/balli", :to => "browse#index", defaults: { tagname: 'balli' }
