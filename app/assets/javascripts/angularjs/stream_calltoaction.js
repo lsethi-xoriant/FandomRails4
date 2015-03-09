@@ -530,6 +530,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (interaction_info.interaction.resource_type == "like");
   };
 
+  $scope.filterLinkInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "link");
+  };
+
   $scope.filterVoteInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "vote");
   };
@@ -597,6 +601,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.filterRemoveLikeInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type != "like");
+  };
+
+  $scope.filterRemoveLinkInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type != "link");
   };
 
   $scope.filterRemoveDownloadInteractions = function(interaction_info) {

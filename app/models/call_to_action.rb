@@ -34,13 +34,11 @@ class CallToAction < ActiveRecordWithJSON
   before_save :set_activated_at # handles the activated_at fields when updating the model from easyadmin
   #before_save :set_extra_options
 
-  after_save :save_video_url_for_aws_transcoding, if: Proc.new { |c| aws_transcoding }
+  after_save :save_video_path_for_aws_transcoding, if: Proc.new { |c| aws_transcoding }
 
-  def save_video_url_for_aws_transcoding
-    debugger
-    #https://s3-eu-west-1.amazonaws.com/dev.fandomlab.com/ets/capturedvideo.mov
+  def save_video_path_for_aws_transcoding
     aux = JSON.parse(self.aux || "{}")
-    aux["aws_transcoding"] = self.media_image
+    aux["aws_transcoding"] = self.media_image.path
     self.update_attributes(aux: aux.to_json, aws_transcoding: false)
   end
   

@@ -22,13 +22,15 @@ namespace :aws_tasks do
       # This is the ID of the Elastic Transcoder pipeline that was created when
       # setting up your AWS environment:
       # http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/sample-code.html#ruby-pipeline
+      # https://console.aws.amazon.com/elastictranscoder/home?region=eu-west-1#
       pipeline_id = transcoding_settings[:pipeline_id]
 
       ctas = CallToAction.where("aux->>'aws_transcoding' <> ''")
       ctas.each do |cta|
         puts "Transcoding #{cta.name}"
         video_url = JSON.parse(cta.aux)["aws_transcoding"]
-        video_transcoding(video_url, transcoder_client, pipeline_id)
+        output_key = "aws_transcoding-#{cta.id}"
+        video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
       end
 
     end
@@ -36,14 +38,11 @@ namespace :aws_tasks do
 
   end
 
-  def video_transcoding(video_url, transcoder_client, pipeline_id)
-    # HLS Presets that will be used to create an adaptive bitrate playlist.
+  def video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
     web_mp4_preset_id = '1351620000001-100070' # web_mp4
+    
     # video_url = "ets/capturedvideo.mov" 
-    video_url = "call_to_actions/media_images/000/000/041/original/open-uri20150306-3380-14giikk" #.path
-
-    # Setup the job outputs using the presets.
-    output_key = video_url.encode('UTF-8')
+    video_url[0] = '' if video_url[0] == "/"
 
     job = transcoder_client.create_job(
       pipeline_id: pipeline_id,
