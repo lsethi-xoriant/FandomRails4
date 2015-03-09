@@ -94,6 +94,11 @@
   color: grey;
 }
 
+.form-errors{
+  color: red;
+  text-align: center;
+}
+
 @media(max-width: $screen-sm-min) {
   .form-control{
     margin: 10px 0;

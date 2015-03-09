@@ -122,6 +122,7 @@
       </div>
       <% if small_mobile_device? %>
       	  <div class="col-sm-6 text-center">
+      	  	<p class="form-errors"></p>
 	        <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
 	      </div>
 	      <div class="col-sm-2 col-sm-offset-1 text-center">
@@ -141,29 +142,33 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-    jQuery.validator.addMethod("is13", function(value, element) {
-      var day = $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step1_day_of_birth").val();
-      var month = $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step1_month_of_birth").val();
-      var year = $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step1_year_of_birth").val();
-      var age =  13;
-
-      if(day == "" || month == "" || year == "")
-        return true;
-
-      var mydate = new Date();
-      mydate.setFullYear(year, month - 1, day);
-
-      var currdate = new Date();
-      currdate.setFullYear(currdate.getFullYear() - age);
-
-      return (mydate <= currdate)
-
-    }, "Devi aver compiuto 13 anni per poter richiedere le tazze.");
-
+	    jQuery.validator.addMethod("is13", function(value, element) {
+	      var day = $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step1_day_of_birth").val();
+	      var month = $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step1_month_of_birth").val();
+	      var year = $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step1_year_of_birth").val();
+	      var age =  13;
+	
+	      if(day == "" || month == "" || year == "")
+	        return true;
+	
+	      var mydate = new Date();
+	      mydate.setFullYear(year, month - 1, day);
+	
+	      var currdate = new Date();
+	      currdate.setFullYear(currdate.getFullYear() - age);
+	
+	      return (mydate <= currdate)
+	
+	    }, "Devi aver compiuto 13 anni per poter richiedere le tazze.");
+	
 		$(".cup__form").validate({
-      rules: {
-        'sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[year_of_birth]': { is13: true }
-      }
-    });
+	      rules: {
+	        'sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[year_of_birth]': { is13: true }
+	      },
+	      invalidHandler: function(event, validator){
+	      	var errors = validator.numberOfInvalids();
+	      	$(".form-errors").html("Ci sono " + errors +" errori nel form, controlla i dati inseriti.").show();
+	      }
+	    });
 	});
 </script>
