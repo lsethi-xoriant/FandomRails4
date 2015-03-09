@@ -1614,7 +1614,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }     
 
       $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
-      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide"
+      $timeout(function() { 
+        $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+      }, 200);
 
     }
   };

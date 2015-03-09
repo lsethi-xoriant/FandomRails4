@@ -46,12 +46,15 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
       $scope.updateAnonymousUserStorageUserInteractions(user_interaction_info);
 
       $scope.initCallToActionInfoList([$scope.parent_calltoaction_info]);
-      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide"
+      $timeout(function() { 
+        $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+      }, 500);
 
       $scope.linked_call_to_actions_index = 1;
       $scope.user_interactions_history = [];
       $scope.updateCallToActionInfoWithAnonymousUserStorage();
-    }, 500);
+    }, 200);
     
   };
 
