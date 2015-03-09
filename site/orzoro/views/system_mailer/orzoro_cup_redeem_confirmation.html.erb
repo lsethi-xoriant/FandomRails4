@@ -5,15 +5,15 @@
     <link href='//fonts.googleapis.com/css?family=Allan:700' rel='stylesheet' type='text/css'>
   	<link href='//fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
   </head>
-  <body style="font-family: 'Roboto', helvetica, arial, sans-serif; background-color: #faaa16;">
+  <body style="font-family: arial, helvetica, sans-serif; background-color: #faaa16;">
   	<div style="max-width: 600px; margin-left: auto; margin-right: auto;">
   		<img src="<%= @assets_extra_fields['logo']['url'] rescue nil %>" style="display: block; margin: 10px auto; max-width:200px;" />
   		<h1 style="text-align: center; color: #fff;">Benessere è Buonumore</h1>
   	</div>
       <div style="max-width: 600px; margin-left: auto; margin-right: auto; background-color: #fff;">
         <div style="text-align: center; padding-top: 10px;">
-        	<h1 style="font-family: 'BarmenoRegularBold'; color: #660206;">Complimenti, <%= @form_cup['identity']['first_name'] %></h1>
-        	<h2 style="font-family: 'Roboto'; color: #818181;">Ti confermiamo di aver ricevuto i tuoi dati per la<br /> ricezione delle tazze</h2>
+        	<h1 style="font-family: arial, helvetica, sans-serif; color: #660206;">Complimenti, <%= @form_cup['identity']['first_name'] %></h1>
+        	<h2 style="font-family: arial, helvetica, sans-serif; color: #818181;">Ti confermiamo di aver ricevuto i tuoi dati per la<br /> ricezione delle tazze</h2>
           	<img style="max-width: 600px;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
         </div>
         
