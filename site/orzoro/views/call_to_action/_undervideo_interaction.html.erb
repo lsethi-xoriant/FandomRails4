@@ -1,4 +1,4 @@
-<div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-12">
+<div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-12 {{calltoaction_info.class}}">
   <%= render partial: "/call_to_action/trivia_interaction" %>
 </div>
 
@@ -10,7 +10,7 @@
   <%= render partial: "/call_to_action/check_interaction" %>
 </div>  
 
-<div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12">
+<div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12 {{calltoaction_info.class}}">
   <div class="row">
     <div class="col-xs-12 text-center">
         <p class="share-interaction__extra-title">{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
