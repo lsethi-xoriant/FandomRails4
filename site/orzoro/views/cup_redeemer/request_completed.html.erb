@@ -14,7 +14,7 @@
         <%= render partial: "/application/ribbon", locals: { title: "Grazie per aver compilato la richiesta!", background: "#ceb5e2"}%>
         <h2>Controlla la tua casella di posta elettronica per la conferma.</h2>
         <div id="two-cups-selected" class="col-sm-12 cup__header-col text-center">
-          <img src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+          <img class="img-responsive" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>" style="margin: 0 auto;">
         </div>
       </div>
     <% end %>
