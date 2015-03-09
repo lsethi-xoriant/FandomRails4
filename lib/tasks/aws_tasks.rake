@@ -4,6 +4,34 @@ require 'aws-sdk'
 # encoding: utf-8
 
 namespace :aws_tasks do
+
+  task :restore_media_from_transcoding, [:tenant] => :environment do |t, args|
+
+    transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
+
+    AWS.config(
+      access_key_id: transcoding_settings[:access_key_id],
+      secret_access_key: transcoding_settings[:secret_access_key]
+    )
+  
+      s3 = AWS::S3.new()
+      #(
+      #  access_key_id: transcoding_settings[:access_key_id],
+      #  secret_access_key: transcoding_settings[:secret_access_key]
+      #)
+
+      bucket = s3.buckets[transcoding_settings[:bucket]]
+      tree = bucket.as_tree
+      directories = tree.children.select(&:branch?).collect(&:prefix)
+      puts directories      
+
+
+      #image_to_backup = open(gallery.picture.url)
+      #object_img = bucket.objects[ "gallery_backup/#{ gallery.id }_#{ gallery.picture_file_name }" ]
+      #object_img.write(image_to_backup, :acl => :public_read)
+
+
+  end
  
   task :transcoding, [:tenant] => :environment do |t, args|
 
@@ -40,8 +68,6 @@ namespace :aws_tasks do
 
   def video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
     web_mp4_preset_id = '1351620000001-100070' # web_mp4
-    
-    # video_url = "ets/capturedvideo.mov" 
     video_url[0] = '' if video_url[0] == "/"
 
     job = transcoder_client.create_job(
@@ -57,7 +83,6 @@ namespace :aws_tasks do
     )[:job]
 
     puts 'Job has been created: ' + JSON.pretty_generate(job)
-
   end
 
 

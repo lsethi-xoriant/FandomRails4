@@ -1339,21 +1339,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
     if($scope.aux.free_provider_share && provider != "email") {
-      shareFree(calltoaction_info, interaction_info, provider);
+      $scope.shareFree(calltoaction_info, interaction_info, provider);
     } else {
       shareWithApp(calltoaction_info, interaction_info, provider);
     }
    
   };
 
-  function shareFree(calltoaction_info, interaction_info, provider) {
+  $scope.shareFree = function(calltoaction_info, interaction_info, provider) {
 
     message = calltoaction_info.calltoaction.title;
-    url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.slug;
-    if($scope.calltoaction_info.calltoaction.extra_fields.linked_result_title) {
-      url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
-      message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
-    }
+    url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
 
     cta_url = encodeURI(url_to_share);
 
@@ -1379,7 +1375,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         });
     }
 
-  }
+  };
+
+  $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
+    url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.slug;
+    if($scope.calltoaction_info.calltoaction.extra_fields.linked_result_title) {
+      url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
+      message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
+    }
+    return url_to_share;
+  };
 
   function shareWithApp(calltoaction_info, interaction_info, provider) {
      if(interaction_info.user_interaction) {

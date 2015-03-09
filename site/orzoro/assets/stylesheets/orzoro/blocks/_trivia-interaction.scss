@@ -236,6 +236,12 @@
     100% { opacity: 0; }
 }
 
+@media (min-width: $screen-md-min) {
+  .trivia-interaction__question-col {
+    min-height: 115px;
+  }
+}
+
 @media (max-width: $screen-md-min) {
   .trivia-interaction__feedback__glyphicon {
     color: #fff;

@@ -161,6 +161,14 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
       );
   }
 
+  $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
+    url_to_share = $scope.aux.root_url + "" + $scope.menu_field + "/" + calltoaction_info.calltoaction.slug;
+    if($scope.calltoaction_info.calltoaction.extra_fields.linked_result_title) {
+      url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
+      message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
+    }
+    return url_to_share;
+  };
 
   $scope.orzoroAppendCallToAction = function() {
     $scope.appendCallToAction(function() {
@@ -169,13 +177,15 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   };
 
   $scope.showSearch = function(hidden){
-  		if('search' != $scope.menu_field){
-	  		if($(".navbar__search").is(":visible")){
-	  			$(".navbar__search").slideUp();
-	  		}else{
-	  			$(".navbar__search").slideDown();
-	  		}
-	  	}
-  	};
+		if('search' != $scope.menu_field){
+  		if($(".navbar__search").is(":visible")){
+  			$(".navbar__search").slideUp();
+  		}else{
+  			$(".navbar__search").slideDown();
+  		}
+  	}
+	};
+
+
 
 }
