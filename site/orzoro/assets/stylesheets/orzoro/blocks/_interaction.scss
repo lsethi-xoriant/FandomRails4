@@ -5,7 +5,13 @@
 } 
 
 .interaction__redo-col {
-  padding-top: 15px; 
+  padding-left: 30px; 
+  padding-right: 30px;
+}
+
+.interaction__redo-span-col {
+  background-color: #f5f2ea;
+  padding-top: 15px;
   padding-bottom: 15px;
 }
 
@@ -60,7 +66,8 @@
 }
 
 @media (max-width: $screen-sm-min) { 
-  .interaction__redo-col {
-    background-color: #f5f2ea;
+  .interaction__redo-col { 
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }

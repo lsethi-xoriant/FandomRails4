@@ -1,7 +1,6 @@
 <div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" > 
   <div class="row {{calltoaction_info.hide_class}}">
-
-    <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}}">
+    <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}} cta__media-container-{{calltoaction_info.calltoaction.media_type | lowercase}}">
       <!-- MEDIA -->
       <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
 
