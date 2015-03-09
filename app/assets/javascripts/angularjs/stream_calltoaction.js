@@ -1339,9 +1339,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
     if($scope.aux.free_provider_share && provider != "email") {
-      shareFree(calltoaction_info, interaction_info, provider)
+      shareFree(calltoaction_info, interaction_info, provider);
     } else {
-      shareWithApp(calltoaction_info, interaction_info, provider)
+      shareWithApp(calltoaction_info, interaction_info, provider);
     }
    
   };
@@ -1482,7 +1482,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }).error(function() {
         $scope.answer_in_progress = false;
       });
-  }
+  };
 
   $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction) {
     calltoaction_id = calltoaction_info.calltoaction.id;
