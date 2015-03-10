@@ -6,7 +6,7 @@ Fandom::Application.routes.draw do
 
   use_doorkeeper
 
-  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
+  mount RailsAdmin::Engine => '/rails_admin/'
 
   constraints(SiteMatcher.new('coin')) do
     match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
