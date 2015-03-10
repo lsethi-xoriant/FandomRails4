@@ -64,7 +64,7 @@
 }
 
 .cta__extra-description {
-  font-size: 12px;
+  font-size: 14px;
   color: #999;
 }
 
@@ -80,7 +80,7 @@
   padding: 0;
 }
 
-.cta__media-container-test, .media-youtube {
+.cta__media-container-youtube, .cta__media-container-test {
   background: $cream;
   border: 5px solid #fff !important;
   border-radius: 3px;
@@ -188,7 +188,7 @@
 
 .cta__description {
   font-size: 18px;
-  color: #999;
+  color: #6B6B6B;
   margin-top: 0;
   font-weight: 400;
 }
@@ -296,8 +296,9 @@
     padding: 15px;
   }
 
-  .cta__media-container-test, .media-youtube {
+  .cta__media-container-youtube, .cta__media-container-test {
     border: none !important;
+    border-radius: 0;
   }
 
   .cta__undervideo {

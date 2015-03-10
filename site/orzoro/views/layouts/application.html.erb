@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style> html { display: none; } </style>
+
+  <style id="antiClickjack">body{display:none !important;}</style>
   <script>
-     if(self == top) {
-         document.documentElement.style.display = 'block'; 
-     } else {
-         top.location = self.location; 
-     }
+  if (self === top) {
+     var antiClickjack = document.getElementById("antiClickjack");
+     antiClickjack.parentNode.removeChild(antiClickjack);
+  } else {
+     top.location = self.location;
+  }
   </script>
 
   <meta charset="utf-8">
@@ -43,7 +45,9 @@
 
 </head>
 
-<body ng-cloak ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="OrzoroStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="OrzoroStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
+<div ng-cloak>
+
 <% unless small_mobile_device? %>
   <%= render partial: "/application/header" %>
   <%= render partial: "/application/user_bar", locals: { aux: aux } %>
@@ -55,6 +59,7 @@
 
   <%= render partial: "/application/footer", locals: { aux: aux } %>
 
+</div>
   <script type="text/javascript">
 	$(document).ready(function() {
       is_last_rewards_flexslider_slide = new Object();

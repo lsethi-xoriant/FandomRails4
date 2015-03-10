@@ -14,18 +14,18 @@
 			<% end %>
 		</div>
 	<% end %>
-	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.attributes.contents.length > 0">
+	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.contents.length > 0">
 		<div class="row brws-item main-row container-shadow" ng-class-odd="'brws-item--dark'">
 			  <!-- HEADING -->
 			<div class="col-sm-12 text-center">
-			  <%= render partial: "/application/ribbon", locals: { title: "{{section.attributes.title}}", background: "{{aux.page_tag.miniformat['label_background']}}"}%>
+			  <%= render partial: "/application/ribbon", locals: { title: "{{section.title}}", background: "{{aux.page_tag.miniformat['label_background']}}"}%>
 			</div>
 
-		    <div class="col-xs-12" ng-repeat="contents in [section.attributes.contents]">
+		    <div class="col-xs-12" ng-repeat="contents in [section.contents]">
 			    <%= render partial: "/application/content_carousel" %>
-			    <div calss="row text-center" ng-if="section.attributes.total > section.attributes.per_page">
+			    <div calss="row text-center" ng-if="section.total > section.per_page">
 			    	<div class="col-sm-2 col-sm-offset-5 col-xs-4 col-xs-offset-4">
-				    	<%= light_link_to("{{section.attributes.view_all_link}}", class: "btn btn-block btn-red") do %>
+				    	<%= light_link_to("{{section.view_all_link}}", class: "btn btn-block btn-red") do %>
 				    		Vedi tutti
 				    	<% end %>
 				    </div>

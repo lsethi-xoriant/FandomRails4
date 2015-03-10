@@ -10,6 +10,10 @@
   display: inline-block;
 }
 
+.navbar-nav li a{
+  padding-bottom: 10px !important;
+} 
+
 .navbar__item-text {
   text-transform: uppercase;
   font-family: "BarmenoRegularBold";
@@ -21,6 +25,7 @@
 
 .navbar__container {
   padding: 0;
+  
 }
 
 .navbar__search{
@@ -46,6 +51,7 @@
 .navbar-default {
   margin-bottom: 0;
   border: none;
+  background-image: url("orzoro/texture.png");
 }
 
 @media (max-width: $screen-sm-min) {
@@ -70,7 +76,7 @@
   
   .navbar-collapse{
     border: none;
-    background-color: #222;
+    background-color: #660206;
   }
   
   .navbar-nav{
@@ -95,7 +101,12 @@
   .navbar__item-text {
     font-size: 14px;
     font-size: 17px;
-    padding: 14px 0;
+    padding-top: 14px;
+    margin-top: 0;
+  }
+  
+  .navbar-nav li a{
+    padding-bottom: 14px !important;
   }
   
   .navbar__back-link{

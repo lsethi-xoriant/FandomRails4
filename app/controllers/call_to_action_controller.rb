@@ -10,7 +10,7 @@ class CallToActionController < ApplicationController
   include CaptchaHelper
   include CommentHelper
 
-  def last_linked_calltoaction 
+  def last_linked_calltoaction
     calltoaction = CallToAction.find(params[:calltoaction_id])
     linked_interaction = calltoaction.interactions.includes(:interaction_call_to_actions).where("interaction_call_to_actions.interaction_id IS NOT NULL")[0] 
 
@@ -110,7 +110,7 @@ class CallToActionController < ApplicationController
 
     ordering = params[:ordering]
 
-    init_ctas = $site.init_ctas * 3
+    init_ctas = $site.init_ctas * 2
     response = cache_short(get_next_ctas_stream_for_user_cache_key(current_or_anonymous_user.id, nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do
       calltoactions = cache_short(get_next_ctas_stream_cache_key(nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do     
         calltoactions = CallToAction.active.where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)

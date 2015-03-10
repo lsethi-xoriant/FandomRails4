@@ -45,8 +45,8 @@ module OrzoroHelper
 
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
-      related_calltoaction_info = get_related_calltoaction_info(calltoaction, "miniformat")
       calltoaction_category = get_tag_with_tag_about_call_to_action(calltoaction, "category").first
+      related_calltoaction_info = get_related_calltoaction_info(calltoaction, "category")
       if calltoaction_info_list.first["miniformat"]["name"] == "ricette"
         related_product = get_tag_with_tag_about_call_to_action(calltoaction, "related-product").first
         if related_product

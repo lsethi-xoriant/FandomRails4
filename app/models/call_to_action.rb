@@ -18,7 +18,7 @@ class CallToAction < ActiveRecordWithJSON
   friendly_id :slug, use: :slugged 
 
   attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required,
-                :button_label, :alternative_description, :enable_for_current_user, :shop_url, :aws_transcoding
+                :button_label, :alternative_description, :enable_for_current_user, :shop_url
 
   validates_presence_of :title
   validates_presence_of :name
@@ -34,13 +34,14 @@ class CallToAction < ActiveRecordWithJSON
   before_save :set_activated_at # handles the activated_at fields when updating the model from easyadmin
   #before_save :set_extra_options
 
-  after_save :save_video_url_for_aws_transcoding, if: Proc.new { |c| aws_transcoding }
+  after_save :save_video_path_for_aws_transcoding
 
-  def save_video_url_for_aws_transcoding
-    #https://s3-eu-west-1.amazonaws.com/dev.fandomlab.com/ets/capturedvideo.mov
+  def save_video_path_for_aws_transcoding
     aux = JSON.parse(self.aux || "{}")
-    aux["aws_transcoding"] = self.media_image
-    self.update_attributes(aux: aux.to_json, aws_transcoding: false)
+    if aux["aws_transcoding_enabled"]
+      aux["aws_transcoding_media_path"] = self.media_image.path
+      self.update_column(:aux, aux.to_json)
+    end 
   end
   
   has_attached_file :media_image,

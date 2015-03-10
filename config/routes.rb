@@ -6,7 +6,7 @@ Fandom::Application.routes.draw do
 
   use_doorkeeper
 
-  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
+  mount RailsAdmin::Engine => '/rails_admin/'
 
   constraints(SiteMatcher.new('coin')) do
     match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
@@ -70,6 +70,7 @@ Fandom::Application.routes.draw do
 
         match "/test/:id", to: "call_to_action#show"
         match "/test", :to => "browse#index_category", defaults: { id: 'test' }
+        match "/test/:id/:descendent_id", to: "call_to_action#show"
 
         match "/balli/:id", to: "call_to_action#show"
         match "/balli", :to => "browse#index", defaults: { tagname: 'balli' }

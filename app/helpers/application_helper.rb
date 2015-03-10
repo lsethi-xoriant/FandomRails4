@@ -12,19 +12,28 @@ module ApplicationHelper
   include SeoHelper
 
   class ContentSection
-    include ActiveAttr::TypecastedAttributes
-    include ActiveAttr::MassAssignment
-    include ActiveAttr::AttributeDefaults
     
     # key can be either tag name or special keyword such as $recent
-    attribute :key, type: String
-    attribute :title, type: String
-    attribute :icon_url, type: String
-    attribute :contents
-    attribute :view_all_link, type: String
-    attribute :column_number, type: Integer
-    attribute :total, type: Integer
-    attribute :per_page, type: Integer
+    attr_accessor :key
+    attr_accessor :title 
+    attr_accessor :icon_url
+    attr_accessor :contents
+    attr_accessor :view_all_link
+    attr_accessor :column_number
+    attr_accessor :total
+    attr_accessor :per_page
+    
+    def initialize(params)
+      @key = params[:key]
+      @title = params[:title]
+      @icon_url = params[:icon_url]
+      @contents = params[:contents]
+      @view_all_link = params[:view_all_link]
+      @column_number = params[:column_number]
+      @total = params[:total]
+      @per_page = params[:per_page]
+    end
+    
   end
   
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
@@ -34,7 +43,7 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
   
-  def tag_to_category(tag, needs_related_tags = false, populate_desc = true)
+  def tag_to_content_preview(tag, needs_related_tags = false, populate_desc = true)
     thumb_field = get_extra_fields!(tag)["thumbnail"]
     has_thumb = !thumb_field.blank? && upload_extra_field_present?(thumb_field)
     thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if has_thumb
@@ -75,7 +84,7 @@ module ApplicationHelper
     )
   end
   
-  def tag_to_category_light(tag, needs_related_tags = false, populate_desc = true)
+  def tag_to_content_preview_light(tag, needs_related_tags = false, populate_desc = true)
     thumb_field = get_extra_fields!(tag)["thumbnail"]
     has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
     thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if has_thumb
@@ -115,7 +124,7 @@ module ApplicationHelper
     )
   end
   
-  def cta_to_category(cta, populate_desc = true)
+  def cta_to_content_preview(cta, populate_desc = true)
     ContentPreview.new(
       type: "cta",
       id: cta.id, 
@@ -134,7 +143,7 @@ module ApplicationHelper
     )
   end
   
-  def cta_to_category_light(cta, populate_desc = true)
+  def cta_to_content_preview_light(cta, populate_desc = true)
     ContentPreview.new(
       type: "cta",
       id: cta.id, 
@@ -622,7 +631,12 @@ module ApplicationHelper
       array << element
     end
   end
-
+  
+  # Get an hash cta_id => status for a list of ctas. Needed for separate and caching ctas information 
+  # not depending to user
+  #   user           - the user for which calculate cta statuses
+  #   ctas           - list of ctas to evaluate
+  #   reward_name    - name of the reward that ctas contribute to obtain 
   def cta_to_reward_statuses_by_user(user, ctas, reward_name) 
     cta_to_reward_statuses = cache_long(get_cta_to_reward_statuses_by_user_cache_key(user.id)) do
       result = {}

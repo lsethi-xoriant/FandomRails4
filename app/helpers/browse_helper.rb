@@ -1,30 +1,49 @@
 module BrowseHelper
   
   class ContentPreview
-    include ActiveAttr::TypecastedAttributes
-    include ActiveAttr::MassAssignment
-    include ActiveAttr::AttributeDefaults
 
     # human readable name of this field
-    attribute :title, type: String
+    attr_accessor :title
     # html id of this field
-    attribute :id, type: String
-    attribute :type, type: String
-    attribute :has_thumb, type: Boolean #to trash
-    attribute :thumb_url, type: String
-    attribute :description, type: String #check if can truncate after
-    attribute :long_description, type: String
-    attribute :detail_url, type: String
-    attribute :created_at, type: Integer
-    attribute :header_image_url, type: String
-    attribute :icon, type: String
-    attribute :category_icon, type: String
-    attribute :status, type: String
-    attribute :likes, type: Integer
-    attribute :comments, type: Integer
-    attribute :votes, type: Integer
-    attribute :tags
-    attribute :aux
+    attr_accessor :id
+    attr_accessor :type
+    attr_accessor :has_thumb
+    attr_accessor :thumb_url
+    attr_accessor :description
+    attr_accessor :long_description
+    attr_accessor :detail_url
+    attr_accessor :created_at
+    attr_accessor :header_image_url
+    attr_accessor :icon
+    attr_accessor :category_icon
+    attr_accessor :status
+    attr_accessor :likes
+    attr_accessor :comments
+    attr_accessor :votes
+    attr_accessor :tags
+    attr_accessor :aux
+    
+    def initialize(params)
+      @id = params[:id]
+      @title = params[:title]
+      @type = params[:type]
+      @has_thumb = params[:has_thumb]
+      @thumb_url = params[:thumb_url]
+      @description = params[:description]
+      @long_description = params[:long_description]
+      @detail_url = params[:detail_url]
+      @created_at = params[:created_at]
+      @header_image_url = params[:header_image_url]
+      @icon = params[:icon]
+      @category_icon = params[:category_icon]
+      @status = params[:status]
+      @likes = params[:likes]
+      @comments = params[:comments]
+      @votes = params[:votes]
+      @tags = params[:tags]
+      @aux = params[:aux]
+    end
+    
   end
   
   def get_browse_settings(tag_browse)
@@ -69,16 +88,18 @@ module BrowseHelper
     browse_sections_arr
   end
 
-  def get_recent(offset = 0, per_page = 8, query = "")
+  def get_recent(offset = 0, per_page = DEFAULT_BROWSE_ELEMENT_CAROUSEL, query = "")
     recent = get_recent_ctas(query).slice(offset, per_page)
     recent_contents = prepare_contents(recent)
     browse_section = ContentSection.new(
+    {
       key: "recent",
       title: "I piu recenti",
       icon_url: get_browse_section_icon(nil),
       contents: recent_contents,
       view_all_link: "/browse/view_recent",
-      column_number: 12/4
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
+    }
     )
   end
 
@@ -108,41 +129,42 @@ module BrowseHelper
   def get_featured(featured, carousel_elements)
     featured_contents, total = get_featured_content(featured, carousel_elements)
     browse_section = ContentSection.new(
+    {
       key: "featured",
       title: featured.title,
       icon_url: get_browse_section_icon(nil),
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
-      column_number: 12/4,
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4,
       total: total
-    )
+    })
   end
   
   def get_featured_with_match(featured, query)
     featured_contents = get_featured_content_with_match(featured, query)
-    browse_section = ContentSection.new(
+    browse_section = ContentSection.new({
       key: "featured",
       title: featured.title,
       icon_url: get_browse_section_icon(nil),
       contents: featured_contents,
       view_all_link: "/browse/view_all/#{featured.id}",
-      column_number: 12/4 #featured_contents.count
-    )
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4 #featured_contents.count
+    })
   end
   
   def get_browse_area_by_category(category, tags, carousel_elements)
     contents, total = get_contents_by_category(category, tags, carousel_elements)
     extra_fields = get_extra_fields!(category)
-    browse_section = ContentSection.new(
+    browse_section = ContentSection.new({
       key: category.name,
       title:  category.title,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.slug}",
-      column_number: 12/4,
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4,
       total: total,
       per_page: carousel_elements
-    )
+    })
   end
   
   def get_browse_section_icon(extra_fields)
@@ -162,14 +184,14 @@ module BrowseHelper
   def get_browse_area_by_category_with_match(category, query)
     contents = get_contents_by_category_with_match(category, query)
     extra_fields = get_extra_fields!(category)
-    browse_section = ContentSection.new(
+    browse_section = ContentSection.new({
       key: category.name,
       title: category.title,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.slug}",
-      column_number: 12/4
-    )
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
+    })
   end
   
   def get_contents_by_category(category, tags, carousel_elements)
@@ -205,19 +227,19 @@ module BrowseHelper
       end
       [merge_search_contents(ctas, tags), tags.count + ctas.count]
     end
-    [contents.slice(offset, 12), total]
+    [contents.slice(offset, DEFAULT_VIEW_ALL_ELEMENTS), total]
   end
   
   def get_contents_by_query(term, tags)
     category_tag_ids = get_category_tag_ids()
     if tags.empty?
-      tags = Tag.where("title ILIKE ? AND id IN (?) ","%#{term}%", category_tag_ids).limit(8)
-      ctas = CallToAction.active.where("title ILIKE ?","%#{term}%").limit(8)
+      tags = Tag.where("title ILIKE ? AND id IN (?) ","%#{term}%", category_tag_ids).limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
+      ctas = CallToAction.active.where("title ILIKE ?","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
     else
       tag_set = tags.map { |tag| "(select tag_id from tags_tags where other_tag_id = #{tag.id} AND tag_id in (#{category_tag_ids.join(",")}) )" }.join(' INTERSECT ')
       cta_set = tags.map { |tag| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag.id} AND tag_id in (#{category_tag_ids.join(",")}) )" }.join(' INTERSECT ')
-      tags = Tag.where("title ILIKE ? AND id IN (#{tag_set})","%#{term}%").limit(8)
-      ctas = CallToAction.active.where("title ILIKE ? AND id in (#{cta_set})","%#{term}%").limit(8)
+      tags = Tag.where("title ILIKE ? AND id IN (#{tag_set})","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
+      ctas = CallToAction.active.where("title ILIKE ? AND id in (#{cta_set})","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
     end
     merge_contents_for_autocomplete(ctas, tags)
   end
@@ -269,9 +291,9 @@ module BrowseHelper
     contents = []
     elements.each do |element|
       if element.class.name == "CallToAction"
-        contents << cta_to_category(element)
+        contents << cta_to_content_preview(element)
       else
-        contents << tag_to_category(element)
+        contents << tag_to_content_preview(element)
       end
     end
     contents
@@ -281,9 +303,9 @@ module BrowseHelper
     contents = []
     elements.each do |element|
       if element.class.name == "CallToAction"
-        contents << cta_to_category_light(element, false)
+        contents << cta_to_content_preview_light(element, false)
       else
-        contents << tag_to_category_light(element, false, false)
+        contents << tag_to_content_preview_light(element, false, false)
       end
     end
     contents
@@ -301,7 +323,7 @@ module BrowseHelper
   
   def merge_contents_with_tags(ctas, tags, offset = 0)
     total = ctas.count + tags.count
-    merged = (total > offset || offset == 0) ? (tags + ctas).slice(offset, 12) : []
+    merged = (total > offset || offset == 0) ? (tags + ctas).slice(offset, DEFAULT_VIEW_ALL_ELEMENTS) : []
     prepared_contents = prepare_contents_with_related_tags(merged)
     prepared_contents + [total]
   end
@@ -315,10 +337,10 @@ module BrowseHelper
     tags = {}
     elements.each do |element|
       if element.class.name == "CallToAction"
-        contents << cta_to_category(element)
+        contents << cta_to_content_preview(element)
         tags = addCtaTags(tags, element)
       else
-        contents << tag_to_category(element, true)
+        contents << tag_to_content_preview(element, true)
         tags = addTagTags(tags, element)
       end
     end

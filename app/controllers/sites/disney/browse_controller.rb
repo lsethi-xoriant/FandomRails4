@@ -11,22 +11,6 @@ class Sites::Disney::BrowseController < BrowseController
       "Non ci sono risultati per la tua ricerca '#{query}'."
     else
       "Non ci sono risultati per la tua ricerca '#{query}'.<br/> Prova a cercare su <a href='javascript:void(0);' onclick=\"serchRedirect('#{query}')\">DisneyChannel</a>"
-=begin
-      response = "Non ci sono risultati per la tua ricerca '#{query}'.<br/> Prova a cercare su "
-      properties = get_tags_with_tag("property")
-      properties.each do |p|
-        
-        if get_disney_property != p.name
-          if p.name != "disney-channel"
-            response = response + "<a href='#{get_disney_root_path_for_property_name(p.name)}/browse'>#{p.title}</a> "
-          else
-            response = response + "<a href='/browse'>#{p.title}</a> "
-          end
-        end
-        
-      end
-      response 
-=end
     end
   end
   
@@ -34,6 +18,8 @@ class Sites::Disney::BrowseController < BrowseController
     "#{term}_#{get_disney_property}"
   end
   
+  # Get an array of tags to use to filter contents. 
+  # Filter contents in base of current property
   def get_search_tags_for_tenant
     if get_disney_property == "disney-channel" 
       []

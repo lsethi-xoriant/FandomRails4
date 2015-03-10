@@ -39,17 +39,17 @@
 
     <div id="one-cup-selected" class="col-sm-12 cup__header-col text-center">
       <div class="col-sm-6">
-        <img class="cup__select-cup-image img-responsive" src="<%= @cup_tag_extra_fields["dora_cup"]["url"] rescue nil %>">
+        <img onclick="checkDoraCup()" class="cup__select-cup-image img-responsive" src="<%= @cup_tag_extra_fields["dora_cup"]["url"] rescue nil %>">
         <%= f.radio_button :cup_selected, "dora" %> <span class="cup__checkbox"> Dora Barley</span> 
       </div>
       <div class="col-sm-6">
-        <img class="cup__select-cup-image img-responsive" src="<%= @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil %>">
+        <img onclick="checkTressyCup()" class="cup__select-cup-image img-responsive" src="<%= @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil %>">
         <%= f.radio_button :cup_selected, "miss_tressy" %><span class="cup__checkbox"> Miss Tressy</span>
       </div>
     </div>
 
     <div id="two-cups-selected" class="col-sm-12 cup__header-col text-center">
-      <img src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+      <img class="img-responsive" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>" style="margin: 0 auto;">
     </div>
 
     <div class="col-sm-12 cup__header-col text-center">
@@ -149,6 +149,14 @@ $(document).ready(function() {
   selectNumberOfPackages(2);
   $(".cup__form").validate();
 });
+
+function checkDoraCup() {
+  $('#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_dora').prop("checked", true);
+}
+
+function checkTressyCup() {
+  $('#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_miss_tressy').prop("checked", true);
+}
 
 function selectNumberOfPackages(n) {
   if(n == 2) {

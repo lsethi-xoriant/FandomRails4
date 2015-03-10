@@ -7,8 +7,8 @@
 .header__title {
   font-family: "BarmenoRegularBold";
   font-size: 22px;
-  margin-top: 5px;
-  margin-bottom: 15px;
+  margin-top: -8px;
+  margin-bottom: 25px;
 } 
 
 .header__logo {
@@ -25,4 +25,13 @@
 .header__left-img, .header__right-img {
   margin-top: 15px;
   max-width: 100%;
+}
+
+.header__title--mobile{
+  text-align: center;
+  font-size: 22px;
+  position: absolute;
+  top: 103px;
+  width: 100%;
+  font-family: "BarmenoRegularBold";
 }

@@ -1,7 +1,6 @@
 <div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" > 
   <div class="row {{calltoaction_info.hide_class}}">
-
-    <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}}">
+    <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}} cta__media-container-{{calltoaction_info.calltoaction.media_type | lowercase}}">
       <!-- MEDIA -->
       <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
 
@@ -64,6 +63,12 @@
           <div class="row {{calltoaction_info.hide_class}}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
             <div class="col-xs-12 text-center" >
               <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span><i class="glyphicon glyphicon-download-alt"></i>{{interaction_info.interaction.resource.title}}</span></a>
+            </div>
+          </div>
+          <!-- LINK INTERACTION -->
+          <div class="row {{calltoaction_info.hide_class}}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLinkInteractions">
+            <div class="col-xs-12 text-center" >
+              <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>{{interaction_info.interaction.resource.title}}</span></a>
             </div>
           </div>
         </div>

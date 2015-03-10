@@ -2,21 +2,30 @@
 <html>
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-    <link href='//fonts.googleapis.com/css?family=Allan:700' rel='stylesheet' type='text/css'>
-    <link href='//fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+    	h1{
+    		font-size: 22px;
+    	}
+    	h2{
+    		font-size: 18px;
+    	}
+    	p{
+    		font-size: 12px;
+    	}
+    </style>
   </head>
-  <body style="font-family: 'Roboto', helvetica, arial, sans-serif; background-color: #faaa16;">
+  <body style="font-family: arial, helvetica, sans-serif; background-color: #faaa16;">
     <div style="max-width: 600px; margin-left: auto; margin-right: auto;">
       <img src="<%= @assets_extra_fields['logo']['url'] rescue nil %>" style="display: block; margin: 10px auto; max-width: 200px;" />
       <h1 style="text-align: center; color: #fff;">Benessere è Buonumore</h1>
     </div>
       <div style="max-width: 600px; margin-left: auto; margin-right: auto; background-color: #fff;">
         <div style="text-align: center; padding-top: 10px;">
-          <h1 style="font-family: 'BarmenoRegularBold'; color: #660206;">Complimenti, <%= @form_cup['identity']['first_name'] %></h1>
-          <h2 style="font-family: 'Roboto'; color: #818181;">Abbiamo ricevuto i tuoi dati per la ricezione delle tazze.</h2>
-          <p> La tua richiesta sarà elaborata non appena confermerai la tua iscrizione cliccando <a href="<%= @link %>">qui</a>.</p>
-          <p> Se non vedi il collegamento, connettiti alla pagina <br /><%= @link %> </p>
-          <img style="max-width: 600px;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+          <h1 style="font-family: arial, helvetica, sans-serif; color: #660206;">Complimenti, <%= @form_cup['identity']['first_name'] %></h1>
+          <h2 style="font-family: arial, helvetica, sans-serif; color: #818181;">Abbiamo ricevuto i tuoi dati per la ricezione delle tazze.</h2>
+          <p style="text-align: center; font-weight: bold; margin: 15px 0;"><a href="<%= @link %>" style="color: #cc0000; font-size: 14px;">CLICCA QUI PER CONFERMARE</a></p>
+          <p>La tua richiesta verrà elaborata non appena confermerai la tua iscrizione al sito di Orzoro. In caso contrario non potremmo procedere con la memorizzazione dei tuoi dati per il relativo invio delle tazze.</p>
+          <img style="max-width: 350px;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
         </div>
 
         <div style="background-color: #f6f0dd;">
@@ -42,7 +51,7 @@
         </div>
 
         <div>
-          <div style="text-align: center;">
+          <div style="text-align: center; margin-top: 20px;">
             <img src="<%= @assets_extra_fields['logo_nestle']['url'] rescue nil %>" />
           </div>
           <p style="text-align: center; color: #818181; padding: 20px 0;">Se pensi ci sia un errore non considerare le presente mail.</p>

@@ -16,37 +16,47 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     thumb_calltoactions = [];
     angular.forEach($scope.calltoactions, function(calltoaction_info) {
       content = new Object();
-      content["attributes"] = new Object();
-      content["attributes"]["type"] = "cta";
-      content["attributes"]["detail_url"] = calltoaction_info["calltoaction"]["detail_url"];
-      content["attributes"]["thumb_url"] = calltoaction_info["calltoaction"]["thumbnail_url"];
-      content["attributes"]["title"] = calltoaction_info["calltoaction"]["title"];
-      content["attributes"]["aux"] = new Object();
-      content["attributes"]["aux"]["miniformat"] = calltoaction_info["miniformat"];
-      content["attributes"]["aux"]["flag"] = calltoaction_info["flag"];
+      content = new Object();
+      content["type"] = "cta";
+      content["detail_url"] = calltoaction_info["calltoaction"]["detail_url"];
+      content["thumb_url"] = calltoaction_info["calltoaction"]["thumbnail_url"];
+      content["title"] = calltoaction_info["calltoaction"]["title"];
+      content["aux"] = new Object();
+      content["aux"]["miniformat"] = calltoaction_info["miniformat"];
+      content["aux"]["flag"] = calltoaction_info["flag"];
       thumb_calltoactions.push(content);
     });
     return thumb_calltoactions;
   };
 
   $scope.resetToRedo = function(interaction_info) {
-    anonymous_user_interactions = getAnonymousUserStorage();
-    angular.forEach($scope.user_interactions_history, function(index) {
-      user_interaction_info = anonymous_user_interactions["user_interaction_info_list"][index];
-      if(user_interaction_info) {
-        aux_parse = JSON.parse(user_interaction_info.user_interaction.aux);
-        aux_parse.to_redo = true;
-        user_interaction_info.user_interaction.aux = JSON.stringify(aux_parse);
-      }
+    $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
 
-      $scope.updateAnonymousUserStorageUserInteractions(user_interaction_info);
+    $timeout(function() { 
+      anonymous_user_interactions = getAnonymousUserStorage();
+      angular.forEach($scope.user_interactions_history, function(index) {
+        user_interaction_info = anonymous_user_interactions["user_interaction_info_list"][index];
+        if(user_interaction_info) {
+          aux_parse = JSON.parse(user_interaction_info.user_interaction.aux);
+          aux_parse.to_redo = true;
+          user_interaction_info.user_interaction.aux = JSON.stringify(aux_parse);
+          $scope.updateAnonymousUserStorageUserInteractions(user_interaction_info);
+        }
+      });
+
 
       $scope.initCallToActionInfoList([$scope.parent_calltoaction_info]);
+      $scope.calltoaction_info.hide_class = "";
+      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide"
+      $timeout(function() { 
+        $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+      }, 500);
+
       $scope.linked_call_to_actions_index = 1;
       $scope.user_interactions_history = [];
       $scope.updateCallToActionInfoWithAnonymousUserStorage();
-      
-    });
+    }, 200);
+    
   };
 
   $scope.nextCallToActionInCategory = function(direction) {
@@ -137,6 +147,29 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     $scope.contentPreviews = $scope.fromCallToActionInfoToContentPreview();
   };
 
+  $scope.orzoroUpdateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction) {
+    $scope.updateAnswer(
+        calltoaction_info, 
+        interaction_info, 
+        params, 
+        when_show_interaction, 
+        function() {
+          if(interaction_info.interaction.resource_type == "test") {
+            $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
+          }
+        },
+        500
+      );
+  }
+
+  $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
+    url_to_share = $scope.aux.root_url + "" + $scope.menu_field + "/" + calltoaction_info.calltoaction.slug;
+    if($scope.calltoaction_info.calltoaction.extra_fields.linked_result_title) {
+      url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
+      message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
+    }
+    return url_to_share;
+  };
 
   $scope.orzoroAppendCallToAction = function() {
     $scope.appendCallToAction(function() {
@@ -145,13 +178,15 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   };
 
   $scope.showSearch = function(hidden){
-  		if('search' != $scope.menu_field){
-	  		if($(".navbar__search").is(":visible")){
-	  			$(".navbar__search").slideUp();
-	  		}else{
-	  			$(".navbar__search").slideDown();
-	  		}
-	  	}
-  	};
+		if('search' != $scope.menu_field){
+  		if($(".navbar__search").is(":visible")){
+  			$(".navbar__search").slideUp();
+  		}else{
+  			$(".navbar__search").slideDown();
+  		}
+  	}
+	};
+
+
 
 }

@@ -12,15 +12,17 @@
     <% else %>
       <div class="col-sm-12 cup__header-col text-center">
         <%= render partial: "/application/ribbon", locals: { title: "Grazie per aver compilato la richiesta!", background: "#ceb5e2"}%>
-        <h2>Controlla la tua casella di posta elettronica per la conferma.</h2>
+        <h1 class="cup__end-title"><%= @message_title %></h1>
+        <p class="cup__end-description"><%= @message_description %></p>
+
         <div id="two-cups-selected" class="col-sm-12 cup__header-col text-center">
-          <img src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+          <img class="img-responsive" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>" style="margin: 0 auto;">
         </div>
       </div>
     <% end %>
     <div class="col-sm-12 text-center">
 
-    <%= link_to "HAI ANCORA SCONTRINI?", "step_1", { :class => "btn btn-red cup__submit" } %>
+    <%= link_to "HAI ANCORA SCONTRINI?", "/tazze", { :class => "btn btn-red cup__submit" } %>
 
     </div>
 

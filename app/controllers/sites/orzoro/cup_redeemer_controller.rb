@@ -178,7 +178,9 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     else
       info = build_info(cache_value)
       user = User.find_by_email(cache_value["identity"]["email"])
-      if user.nil?
+      new_user = user.nil?
+
+      if new_user
         info[:email] = cache_value["identity"]["email"]
         info[:confirmation_token] = Digest::MD5.hexdigest(info[:email] + Rails.configuration.secret_token)[0..31]
         user = User.new(info)
@@ -187,6 +189,14 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       else
         aux_hash = JSON.parse(user.aux) rescue {}
       end
+
+      if new_user || user.confirmation_token
+        @message_title = "Controlla la tua casella di posta elettronica"
+        @message_description = "per confermare la registrazione e completare la tua richiesta"
+      else
+        @message_title = "Ti abbiamo inviato una e-mail di conferma nella tua casella di posta"
+      end
+
       if receipt_already_redeemed(aux_hash, cache_value["receipt"]["receipt_number"])
         flash[:error] = "Hai gia' richiesto tazze per questo scontrino"
       else
@@ -202,6 +212,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
           SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
         end
       end
+
       render template: "cup_redeemer/request_completed"
     end
   end

@@ -25,47 +25,47 @@
 			<div class="col-xs-12">
 		      <div class="section-heading">
 		        	<h3>
-		        		<img ng-src="{{section.attributes.icon_url}}" class="img-circle section-heading__icon" />
-		        		{{section.attributes.title}} <a href="{{section.attributes.view_all_link}}" class="section-heading__see-all">View all</a>
+		        		<img ng-src="{{section.icon_url}}" class="img-circle section-heading__icon" />
+		        		{{section.title}} <a href="{{section.view_all_link}}" class="section-heading__see-all">View all</a>
 		        	</h3>
 		      </div>
 		    </div>
-			<div class="col-xs-12 col-md-{{section.attributes.column_number}}" ng-repeat="content in section.attributes.contents">
-				<div class="cta-preview" ng-if="content.attributes.type == 'cta'">
+			<div class="col-xs-12 col-md-{{section.column_number}}" ng-repeat="content in section.contents">
+				<div class="cta-preview" ng-if="content.type == 'cta'">
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="cta-preview__thumbnail">
-								<a href="{{content.attributes.detail_url}}">
-									<img class="img-responsive cta-preview__image" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
-									<img class="img-responsive cta-preview__image" src="//placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
+								<a href="{{content.detail_url}}">
+									<img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}" alt="..." ng-if="content.has_thumb">
+									<img class="img-responsive cta-preview__image" src="//placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
 								</a>
-								<div class="label label-warning cta-preview__points" ng-if="content.attributes.status != undefined">+ {{content.attributes.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+								<div class="label label-warning cta-preview__points" ng-if="content.status != undefined">+ {{content.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
 							</div>
 						</div>
 						<div class="col-xs-12">
-							<h3 class="cta-preview__title">{{content.attributes.title | cut:true:70}}</h3>
+							<h3 class="cta-preview__title">{{content.title | cut:true:70}}</h3>
 						</div>
 					</div>
 					<div class="row relateds-flexslider__footer">
 			            <div class="col-xs-12">
-			              <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.attributes.likes}}</p>
-			              <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.attributes.comments}}</p>
+			              <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.likes}}</p>
+			              <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.comments}}</p>
 			            </div>
 			        </div> 
 				</div>
 				
-				<div class="cta-preview cta-preview--category" ng-if="content.attributes.type == 'tag'">
+				<div class="cta-preview cta-preview--category" ng-if="content.type == 'tag'">
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="cta-preview__thumbnail cta-preview__thumbnail--category">
-								<a href="{{content.attributes.detail_url}}">
-									<img class="cta-preview__image cta-preview__image--category" ng-src="{{content.attributes.thumb_url}}" alt="..." ng-if="content.attributes.has_thumb">
-									<img class="cta-preview__image cta-preview__image--category" src="//placehold.it/420x300" alt="..." ng-if="!content.attributes.has_thumb">
+								<a href="{{content.detail_url}}">
+									<img class="cta-preview__image cta-preview__image--category" ng-src="{{content.thumb_url}}" alt="..." ng-if="content.has_thumb">
+									<img class="cta-preview__image cta-preview__image--category" src="//placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
 								</a>
 							</div>
 						</div>
 					</div>
-					<h3 class="cta-preview__title--category">{{content.attributes.title}}</h3>
+					<h3 class="cta-preview__title--category">{{content.title}}</h3>
 				</div>
 			</div>
 		</div>
