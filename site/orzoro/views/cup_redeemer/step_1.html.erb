@@ -98,7 +98,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label>Email</label>
-              <%= f.text_field :email, class: "form-control", :required => true, :pattern => "[^@]+@[^@]+\.[a-zA-Z]{2,6}" %>
+              <%= f.email_field :email, class: "form-control", :required => true, :pattern => "[^@]+@[^@]+\.[a-zA-Z]{2,6}" %>
             </div>
           </div>
         </div>

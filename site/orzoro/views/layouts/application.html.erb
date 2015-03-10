@@ -20,7 +20,7 @@
   <% aux = default_orzoro_aux(@aux_other_params, @calltoaction_info_list) %>  
   <title><%= "#{@seo_info["title"]} | Orzoro" rescue "Dora & Miss Tressy | Orzoro" %></title>
   <meta name="description" content="<%= @seo_info["meta_description"] rescue "Entra nel mondo di Orzoro e scopri i segreti di Benessere e Buonumore." %>">
-  <meta name="keywords" content="<%= @seo_info["keywords"] rescue "" %>">
+  <meta name="keywords" content="<%= @seo_info["keywords"] rescue get_default_keywords() %>">
   
   <%= yield (:fb_meta_tags) %>
 
