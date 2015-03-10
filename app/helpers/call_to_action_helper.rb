@@ -614,12 +614,24 @@ module CallToActionHelper
         flash[:notice] = "CallToAction '#{@current_cta.name}' e collegate clonate con successo"
       end
     else
+      @tree, cycles = CtaForest.add_next_cta({}, Node.new(old_cta_id), [], [old_cta_id])
       @linked_cta_set = Set.new
-      @trees = [[@current_cta]]
-      next_call_to_action_linked_to(@current_cta, @trees)
-      @linked_cta_set = build_linked_cta_attr_set(@current_cta, @trees)
+      build_linked_cta_attr_set(@linked_cta_set, @tree)
     end
     render :template => "/easyadmin/call_to_action/clone_linked_cta"
+  end
+
+  def build_linked_cta_attr_set(linked_cta_set, tree)
+    cta = CallToAction.find(tree.value)
+    unless linked_cta_set.any? { |cta_attributes| cta_attributes["name"] == cta.name }
+      linked_cta_set << { "title" => cta.title, "name" => cta.name, "slug" => cta.slug }
+    end
+    if tree.children.any?
+      tree.children.each do |child|
+        build_linked_cta_attr_set(linked_cta_set, child)
+      end
+    end
+    return
   end
 
   def duplicate_cta(old_cta_id)
@@ -806,87 +818,6 @@ module CallToActionHelper
     false
   end
 
-  def build_html_jstree(tree_array, current_cta_id = 0)
-    res = ""
-    unless tree_array.nil?
-      tree_array.each_with_index do |tree, i|
-        res += i == 0 ? "<div id='tree#{i}' class='tree'>" : "<hr/><div id='tree#{i}' class='tree'>"
-        tree.each do |cta|
-          icon = cta.id == current_cta_id ? "fa fa-circle" : "fa fa-long-arrow-right"
-          res += "<ul><li data-jstree='{\"icon\":\"#{icon}\"}'>#{cta.name}</ul>"
-        end
-        res += "</div>"
-      end
-    end
-    res.html_safe
-  end
-
-  def build_tree(cta)
-    begin
-      res = [[cta]]
-      next_call_to_action_linked_to(cta, res)
-      previous_call_to_action_linked_to(cta, res)
-      return res
-    rescue
-      message = "Hai introdotto un ciclo di call to action collegate: "
-      res.each_with_index do |path, index|
-        message += "Albero #{index + 1} ---> "
-        path.each_with_index do |cta, i|
-          if i == path.size - 1 
-            message += "'#{cta.name}'. "
-          else
-            message += "'#{cta.name}' - "
-          end
-        end
-      end
-      cta.errors.add(:base, message)
-      return [[cta]]
-    end
-  end
-
-  def build_linked_cta_attr_set(root_cta, trees)
-    linked_cta_set = Set.new
-    trees.each do |cta_tree|
-      cta_tree.each do |cta|
-        linked_cta_set << { "title" => cta.title, "name" => cta.name, "slug" => cta.slug } unless cta.name == root_cta.name
-      end
-    end
-    return linked_cta_set
-  end
-
-  def next_call_to_action_linked_to(cta, res)
-    return if cta.interactions.nil?
-    cta.interactions.each do |interaction|
-      next_call_to_actions = InteractionCallToAction.where(:interaction_id => interaction.id).pluck(:call_to_action_id)
-      if next_call_to_actions.any?
-        old_res = res.dup
-        next_call_to_actions.each_with_index do |cta_id, i|
-          next_cta = CallToAction.find(cta_id)
-          res[i] = old_res[0] + [next_cta]
-          if res[i][0].id == cta_id
-            raise "Cycle detected"
-          end
-        end
-        res.each_with_index do |path, i|
-          next_call_to_action_linked_to(res[i][-1], res)
-        end
-      end
-    end
-  end
-
-  def previous_call_to_action_linked_to(cta, res)
-    previous_interactions = InteractionCallToAction.where(:call_to_action_id => cta.id).pluck(:interaction_id)
-    return if previous_interactions.blank?
-    old_res = res.dup
-    previous_interactions.each_with_index do |interaction_id, i|
-      previous_cta = CallToAction.find(Interaction.find(interaction_id).call_to_action_id)
-      res[i] = [previous_cta] + old_res[0]
-    end
-    res.each_with_index do |path, i|
-      previous_call_to_action_linked_to(res[i][0], res)
-    end
-  end
-
   def save_interaction_call_to_action_linking(params, cta)
     ActiveRecord::Base.transaction do
       interaction_attributes = params["interactions_attributes"]
@@ -894,16 +825,163 @@ module CallToActionHelper
         InteractionCallToAction.where(:interaction_id => interaction_attribute["id"]).destroy_all
         unless interaction_attribute["resource_attributes"]["linked_cta"].nil?
           interaction_attribute["resource_attributes"]["linked_cta"].each do |key, link|
-            InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => { "more" => link["condition"] }.to_json )
+            condition = link["condition"].blank? ? nil : { "more" => link["condition"] }.to_json
+            InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => condition )
           end
         end
       end
-      build_tree(cta)
+      build_html_jstree(cta)
       if cta.errors.any?
         raise ActiveRecord::Rollback
       end
     end
     return cta.errors.empty?
+  end
+
+  def build_html_jstree(current_cta)
+    current_cta_id = current_cta.id
+    trees, cycles = CtaForest.build_trees(current_cta_id)
+    data = []
+    trees.each do |root|
+      data << build_node_entries(root, current_cta_id) 
+    end
+    res = { "core" => { "data" => data } }
+    if cycles.any?
+      message = "Sono presenti cicli: \n"
+      cycles.each do |cycle|
+        cycle.each_with_index do |cta_id, i|
+          message += (i + 1) != cycle.size ? "#{CallToAction.find(cta_id).name} --> " 
+            : "#{CallToAction.find(cta_id).name} --> #{CallToAction.find(cycle[0]).name}\n"
+        end
+      end
+      current_cta.errors[:base] << message
+    end
+    res.to_json
+  end
+
+  def build_node_entries(node, current_cta_id)
+    if node.value == current_cta_id
+      icon = "fa fa-circle"
+    else
+      cta_tags = get_cta_tags_from_cache(CallToAction.find(node.value))
+      if cta_tags.include?('step')
+        icon = "fa fa-step-forward"
+      elsif cta_tags.include?('ending')
+        icon = "fa fa-flag-checkered"
+      else
+        icon = "fa fa-long-arrow-right"
+      end
+    end
+    res = { "text" => "#{CallToAction.find(node.value).name}", "icon" => icon }
+    if node.children.any?
+      res.merge!({ "state" => { "opened" => true }, 
+                "children" => (node.children.map do |child| build_node_entries(child, current_cta_id) end) })
+    end
+    res
+  end
+
+
+
+
+  class CtaForest
+
+    def self.build_trees(starting_cta_id)
+      neighbourhood_map = {}
+      InteractionCallToAction.all.each do |interaction_call_to_action|
+        if interaction_call_to_action.interaction_id.present?
+          cta_linking = Interaction.find(interaction_call_to_action.interaction_id).call_to_action_id
+          cta_linked = interaction_call_to_action.call_to_action_id
+          add_neighbour(neighbourhood_map, cta_linking, cta_linked)
+          add_neighbour(neighbourhood_map, cta_linked, cta_linking)
+        end
+      end
+      reachable_cta_id_set = build_reachable_cta_set(starting_cta_id, Set.new([starting_cta_id]), neighbourhood_map, [])
+      seen_nodes = {}
+      cycles = []
+      reachable_cta_id_set.each do |cta_id|
+        if seen_nodes[cta_id].nil? and !in_cycles(cta_id, cycles)
+          tree = Node.new(cta_id)
+          tree, cycles = add_next_cta(seen_nodes, tree, cycles, [cta_id])
+        end
+      end
+      trees = []
+      reachable_cta_id_set.each do |cta_id|
+        if InteractionCallToAction.find_by_call_to_action_id(cta_id).nil? or (cycles.any? and cta_id == starting_cta_id) # add roots
+          trees << seen_nodes[cta_id]
+        end
+      end
+      return trees, cycles
+    end
+
+    def self.in_cycles(cta_id, cycles)
+      cycles.each do |cycle|
+        return true if cycle.include?(cta_id)
+      end
+      false
+    end
+
+    def self.add_neighbour(neighbourhood_map, cta1, cta2)
+      if neighbourhood_map[cta1].nil?
+        neighbourhood_map[cta1] = Set.new [cta2]
+      else
+        neighbourhood_map[cta1].add(cta2)
+      end
+    end
+
+    def self.build_reachable_cta_set(cta_id, reachable_cta_id_set, neighbourhood_map, visited)
+      neighbours = neighbourhood_map[cta_id]
+      unless neighbours.nil?
+        reachable_cta_id_set += neighbours
+        visited << cta_id
+        neighbours.each do |neighbour|
+          unless visited.include?(neighbour)
+            reachable_cta_id_set += build_reachable_cta_set(neighbour, reachable_cta_id_set, neighbourhood_map, visited)
+          end
+        end
+      end
+      reachable_cta_id_set
+    end
+
+    def self.add_next_cta(seen_nodes, tree, cycles, path)
+      cta = CallToAction.find(tree.value)
+      if seen_nodes[tree.value].nil?
+        seen_nodes.merge!({ tree.value => tree })
+        if cta.interactions.any?
+          cta.interactions.each do |interaction|
+            children_cta_ids = InteractionCallToAction.where(:interaction_id => interaction.id).pluck(:call_to_action_id)
+            children_cta_ids.each do |cta_id|
+              if path.include?(cta_id) # cycle
+                cycles << path
+                return seen_nodes[path[0]], cycles
+              else
+                path << cta_id
+                if seen_nodes[cta_id].nil?
+                  cta_child = CallToAction.find(cta_id)
+                  cta_child_node = Node.new(cta_child.id)
+                else
+                  cta_child_node = seen_nodes[cta_id]
+                end
+                tree.children << cta_child_node
+                add_next_cta(seen_nodes, cta_child_node, cycles, path)
+              end
+            end
+          end
+        end
+      end
+      return tree, cycles
+    end
+
+  end
+
+  class Node
+
+    attr_accessor :value, :children
+
+    def initialize(value = nil)
+      @value = value
+      @children = []
+    end
+
   end
 
 end

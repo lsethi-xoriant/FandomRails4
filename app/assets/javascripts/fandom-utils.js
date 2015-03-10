@@ -323,6 +323,7 @@ function addInteractionCallToActionFieldElements(fieldName, icta, counter, addRe
     class: 'form-control'
   }).appendTo('#extra-fields-condition-for-' + fieldName + '-' + counter);
 
+  $('#condition-for-' + fieldName + '-field-' + counter).append('<option value = ""> </option>');
   $('#condition-for-' + fieldName + '-field-' + counter).append('<option value = "A">A</option>');
   $('#condition-for-' + fieldName + '-field-' + counter).append('<option value = "B">B</option>');
   $('#condition-for-' + fieldName + '-field-' + counter).append('<option value = "C">C</option>');

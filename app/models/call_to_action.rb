@@ -37,7 +37,6 @@ class CallToAction < ActiveRecordWithJSON
   after_save :save_video_url_for_aws_transcoding, if: Proc.new { |c| aws_transcoding }
 
   def save_video_url_for_aws_transcoding
-    debugger
     #https://s3-eu-west-1.amazonaws.com/dev.fandomlab.com/ets/capturedvideo.mov
     aux = JSON.parse(self.aux || "{}")
     aux["aws_transcoding"] = self.media_image
