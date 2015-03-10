@@ -7,6 +7,8 @@ namespace :aws_tasks do
 
   task :restore_media_from_transcoding, [:tenant] => :environment do |t, args|
 
+    switch_tenant(args.tenant)
+
     transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
 
     puts "s3-#{transcoding_settings[:region]}.amazonaws.com"
@@ -19,7 +21,16 @@ namespace :aws_tasks do
       bucket = s3.buckets[transcoding_settings[:bucket]]
 
       bucket.objects.with_prefix('elastic-transcoder-dev/web_mp4').each do |object|
-        puts object.key
+        name = object.key
+        if name.include?("aws_transcoding")
+          debugger
+          cta_id = name.split("aws_transcoding-").last
+          cta = CallToAction.find(cta_id)
+          cta.media_image = open(object.public_url.to_s)
+          aux = JSON.parse(cta.aux || "{}")
+          aux.delete("aws_transcoding")
+          cta.aux = a
+        end
       end
 
       #tree = bucket.as_tree
@@ -54,10 +65,10 @@ namespace :aws_tasks do
       # https://console.aws.amazon.com/elastictranscoder/home?region=eu-west-1#
       pipeline_id = transcoding_settings[:pipeline_id]
 
-      ctas = CallToAction.where("aux->>'aws_transcoding' <> ''")
+      ctas = CallToAction.where("aux->>'aws_transcoding_media_path' <> ''")
       ctas.each do |cta|
         puts "Transcoding #{cta.name}"
-        video_url = JSON.parse(cta.aux)["aws_transcoding"]
+        video_url = JSON.parse(cta.aux)["aws_transcoding_media_path"]
         output_key = "aws_transcoding-#{cta.id}"
         video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
       end

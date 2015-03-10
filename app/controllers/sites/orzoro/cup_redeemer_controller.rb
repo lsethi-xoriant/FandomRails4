@@ -190,6 +190,13 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         aux_hash = JSON.parse(user.aux) rescue {}
       end
 
+      if new_user || user.confirmation_token
+        @message_title = "Controlla la tua casella di posta elettronica"
+        @message_description = "per confermare la registrazione e completare la tua richiesta"
+      else
+        @message_title = "Ti abbiamo inviato una e-mail di conferma nella tua casella di posta"
+      end
+
       if receipt_already_redeemed(aux_hash, cache_value["receipt"]["receipt_number"])
         flash[:error] = "Hai gia' richiesto tazze per questo scontrino"
       else
@@ -206,7 +213,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         end
       end
 
-      render template: "cup_redeemer/request_completed", locals: { new_user: new_user }
+      render template: "cup_redeemer/request_completed"
     end
   end
 
