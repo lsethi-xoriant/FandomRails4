@@ -23,30 +23,23 @@ namespace :aws_tasks do
       bucket.objects.with_prefix('elastic-transcoder-dev/web_mp4').each do |object|
         name = object.key
         if name.include?("aws_transcoding")
-          debugger
           cta_id = name.split("aws_transcoding-").last
           cta = CallToAction.find(cta_id)
+          puts "Restore #{cta.name}"
           cta.media_image = open(object.public_url.to_s)
           aux = JSON.parse(cta.aux || "{}")
-          aux.delete("aws_transcoding")
-          cta.aux = a
+          aux.delete("aws_transcoding_media_path")
+          cta.aux = aux.to_json
+          cta.save(validate: false)
+          #bucket.objects.delete(name)
         end
       end
-
-      #tree = bucket.as_tree
-      #directories = tree.children.select(&:branch?).collect(&:prefix)
-      #puts directories      
-
-
-      #image_to_backup = open(gallery.picture.url)
-      #object_img = bucket.objects[ "gallery_backup/#{ gallery.id }_#{ gallery.picture_file_name }" ]
-      #object_img.write(image_to_backup, :acl => :public_read)
-
 
   end
  
   task :transcoding, [:tenant] => :environment do |t, args|
 
+    # https://console.aws.amazon.com/elastictranscoder/home?region=eu-west-1#
     switch_tenant(args.tenant)
 
     transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
