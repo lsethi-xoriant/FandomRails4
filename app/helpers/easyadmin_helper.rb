@@ -1,5 +1,11 @@
 module EasyadminHelper
 
+  def aws_trasconding_not_required_or_completed(cta)
+    aux = JSON.parse(cta.aux || "{}")
+    @aws_transcoding_media_status = aux["aws_transcoding_media_status"]
+    !@aws_transcoding_media_status || @aws_transcoding_media_status == "done"
+  end
+
   def link_to_add_check_fields(name, f, association)
     new_object = Interaction.new
     new_object.resource = Check.new
