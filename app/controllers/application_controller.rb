@@ -57,7 +57,13 @@ class ApplicationController < ActionController::Base
   end
 
   def user_cookies
-    cookies[:user_cookies] = { value: true, expires: 1.year.from_now }
+    user_cookies = { value: true, expires: 1.year.from_now } 
+    secure_cookies = get_deploy_setting('secure_cookies', false)
+    if secure_cookies
+      user_cookies[:secure] = secure_cookies
+    end
+    cookies[:user_cookies] = user_cookies
+     
     respond_to do |format|
       format.json { render json: {}.to_json }
     end

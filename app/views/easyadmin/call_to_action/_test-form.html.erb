@@ -46,8 +46,8 @@
         </div>
       </div>
 
-      <% quizform_index = quizform.object_name.gsub(/[^0-9]+/, '').blank? ? f.options[:child_index] : quizform.object_name.gsub(/[^0-9]+/, '') %>
-      <% if quizform_index != "new_interactions" %>
+      <% unless quizform.object_name.gsub(/[^0-9]+/, '').blank? %>
+        <% quizform_index = quizform.object_name.gsub(/[^0-9]+/, '').blank? ? f.options[:child_index] : quizform.object_name.gsub(/[^0-9]+/, '') %>
         <div class="row" style="margin-bottom: 0px;">
           <div class="col-md-10">
             <div class="form-group">

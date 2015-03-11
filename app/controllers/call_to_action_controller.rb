@@ -10,7 +10,7 @@ class CallToActionController < ApplicationController
   include CaptchaHelper
   include CommentHelper
 
-  def last_linked_calltoaction 
+  def last_linked_calltoaction
     calltoaction = CallToAction.find(params[:calltoaction_id])
     linked_interaction = calltoaction.interactions.includes(:interaction_call_to_actions).where("interaction_call_to_actions.interaction_id IS NOT NULL")[0] 
 

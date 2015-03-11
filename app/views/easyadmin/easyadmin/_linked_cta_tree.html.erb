@@ -9,7 +9,6 @@
 
       <div class="modal-body">
         <div id="trees">
-          <%= build_html_jstree(build_tree(cta), cta.id) %> 
         </div>
       </div>
 
@@ -23,11 +22,11 @@
 
 <script type="text/javascript">
 
-  $('.tree').bind('loaded.jstree', function (e, data) {
+  $('#trees').bind('loaded.jstree', function (e, data) {
     data.instance.open_all();
   });
 
-  $('.tree').on('select_node.jstree', function (e, data) {
+  $('#trees').on('select_node.jstree', function (e, data) {
     var i, j, r = [];
     for(i = 0, j = data.selected.length; i < j; i++) {
       r.push(data.instance.get_node(data.selected[i]).text);
@@ -36,6 +35,6 @@
       window.location.replace(r)
   });
 
-  $('.tree').jstree();
+  $('#trees').jstree(<%= raw build_html_jstree(cta) %>);
 
 </script>

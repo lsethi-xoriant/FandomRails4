@@ -17,7 +17,13 @@
 		<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-12 col-sm-5">
-					<img class="img-responsive" src="<%= @info['image_row_1'] %>" />
+					<%= if @info['image_row_1']['type'] == 'media' %>
+						<img class="img-responsive" src="<%= @info['image_row_1'] %>" />
+					<% elsif @info['image_row_1']['type'] == 'html' %>
+						<%= @info['image_row_1']['value'].html_safe %>
+					<% else %>
+						<%= @info['image_row_1'].html_safe %>
+					<% end %>
 				</div>			
 				<div class="col-xs-12 col-sm-7">
 					<%= @info['text_row_1'].html_safe %>
@@ -29,13 +35,25 @@
 					<%= @info['text_row_2'].html_safe %>
 				</div>
 				<div class="col-xs-12 col-sm-5">
-					<img class="img-responsive" src="<%= @info['image_row_2'] %>" />
+					<%= if @info['image_row_2']['type'] == 'media' %>
+						<img class="img-responsive" src="<%= @info['image_row_2'] %>" />
+					<% elsif @info['image_row_2']['type'] == 'html' %>
+						<%= @info['image_row_2']['value'].html_safe %>
+					<% else %>
+						<%= @info['image_row_2'].html_safe %>
+					<% end %>
 				</div>
 			</div>
 			
 			<div class="row">
 				<div class="col-xs-12 col-sm-5">
-					<img class="img-responsive" src="<%= @info['image_row_3'] %>" />
+					<%= if @info['image_row_3']['type'] == 'media' %>
+						<img class="img-responsive" src="<%= @info['image_row_3'] %>" />
+					<% elsif @info['image_row_3']['type'] == 'html' %>
+						<%= @info['image_row_3']['value'].html_safe %>
+					<% else %>
+						<%= @info['image_row_3'].html_safe %>
+					<% end %>
 				</div>			
 				<div class="col-xs-12 col-sm-7">
 					<%= @info['text_row_3'].html_safe %>

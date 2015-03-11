@@ -51,12 +51,18 @@
           <h3>Prima CTA</h3>
           <hr/>
 
-          <label class="text-input">Titolo prima CTA</label>
-          <%= text_field_tag :cloned_cta_title, @current_cta.title, :class => "form-control" %>
-          <label class="text-input">Nome prima CTA</label>
-          <%= text_field_tag :cloned_cta_name, @current_cta.name, :class => "form-control" %>
-          <label class="text-input">Slug prima CTA</label>
-          <%= text_field_tag :cloned_cta_slug, @current_cta.slug, :class => "form-control" %>
+          <div class="form-group">
+            <label class="text-input">Titolo prima CTA</label>
+            <%= text_field_tag :cloned_cta_title, @current_cta.title, :class => "form-control" %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Nome prima CTA</label>
+            <%= text_field_tag :cloned_cta_name, @current_cta.name, :class => "form-control" %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Slug prima CTA</label>
+            <%= text_field_tag :cloned_cta_slug, @current_cta.slug, :class => "form-control" %>
+          </div>
           <hr/>
 
           <% if @linked_cta_set %>
@@ -67,17 +73,21 @@
               <% tagged_as_step = get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('step') %>
               <% tagged_as_ending = get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('ending') %>
 
-              <label class="text-input"><%= "Titolo CTA copia di '#{old_cta_attributes['title']}'" %></label>
-              <%= text_field_tag "cloned_cta[#{old_cta_name}][title]", old_cta_attributes['title'], :class => "form-control", 
+              <div class="form-group">
+                <label class="text-input"><%= "Titolo CTA copia di '#{old_cta_attributes['title']}'" %></label>
+                <%= text_field_tag "cloned_cta[#{old_cta_name}][title]", old_cta_attributes['title'], :class => "form-control", 
                     :tagged_as_step => tagged_as_step, :tagged_as_ending => tagged_as_ending %>
-
-              <label class="text-input"><%= "Nome CTA copia di '#{old_cta_name}'" %></label>
-              <%= text_field_tag "cloned_cta[#{old_cta_name}][name]", old_cta_name, :class => "form-control", 
+              </div>
+              <div class="form-group">
+                <label class="text-input"><%= "Nome CTA copia di '#{old_cta_name}'" %></label>
+                <%= text_field_tag "cloned_cta[#{old_cta_name}][name]", old_cta_name, :class => "form-control", 
                     :tagged_as_step => tagged_as_step, :tagged_as_ending => tagged_as_ending %>
-
-              <label class="text-input"><%= "Slug CTA copia di '#{old_cta_attributes['slug']}'" %></label>
-              <%= text_field_tag "cloned_cta[#{old_cta_name}][slug]", old_cta_attributes['slug'], :class => "form-control", 
+              </div>
+              <div class="form-group">
+                <label class="text-input"><%= "Slug CTA copia di '#{old_cta_attributes['slug']}'" %></label>
+                <%= text_field_tag "cloned_cta[#{old_cta_name}][slug]", old_cta_attributes['slug'], :class => "form-control", 
                     :tagged_as_step => tagged_as_step, :tagged_as_ending => tagged_as_ending %>
+              </div>
               <hr/>
             <% end %>
           <% end %>
@@ -87,11 +97,12 @@
           </div>
         </div>
 
-        <% if @trees %>
-          <div id="trees" class="col-md-6">
+        <% if @tree %>
+          <div class="col-md-6">
             <h3>Collegamenti alla CTA da clonare</h3>
             <hr/>
-            <%= build_html_jstree(@trees, @current_cta.id) %> 
+            <div id="trees">
+            </div>
           </div>
         <% end %>
 
@@ -106,11 +117,20 @@
 
 <script type="text/javascript">
 
-  $('.tree').bind('loaded.jstree', function (e, data) {
+  $('#trees').bind('loaded.jstree', function (e, data) {
     data.instance.open_all();
   });
 
-  $('.tree').jstree();
+  $('#trees').on('select_node.jstree', function (e, data) {
+    var i, j, r = [];
+    for(i = 0, j = data.selected.length; i < j; i++) {
+      r.push(data.instance.get_node(data.selected[i]).text);
+    }
+    if (r.length == 1)
+      window.location.replace(r)
+  });
+
+  $('#trees').jstree(<%= raw build_html_jstree(@current_cta) %>);
 
   function fillClonedCtaNameAndSlug() {
     var nameManuallyModified = false;

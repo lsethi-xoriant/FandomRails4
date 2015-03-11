@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style> html { display: none; } </style>
+
+  <style id="antiClickjack">body{display:none !important;}</style>
   <script>
-     if(self == top) {
-         document.documentElement.style.display = 'block'; 
-     } else {
-         top.location = self.location; 
-     }
+  if (self === top) {
+     var antiClickjack = document.getElementById("antiClickjack");
+     antiClickjack.parentNode.removeChild(antiClickjack);
+  } else {
+     top.location = self.location;
+  }
   </script>
 
   <meta charset="utf-8">
@@ -18,7 +20,7 @@
   <% aux = default_orzoro_aux(@aux_other_params, @calltoaction_info_list) %>  
   <title><%= "#{@seo_info["title"]} | Orzoro" rescue "Dora & Miss Tressy | Orzoro" %></title>
   <meta name="description" content="<%= @seo_info["meta_description"] rescue "Entra nel mondo di Orzoro e scopri i segreti di Benessere e Buonumore." %>">
-  <meta name="keywords" content="<%= @seo_info["keywords"] rescue "" %>">
+  <meta name="keywords" content="<%= @seo_info["keywords"] rescue get_default_keywords() %>">
   
   <%= yield (:fb_meta_tags) %>
 
@@ -34,9 +36,9 @@
   <%= javascript_include_tag "orzoro_application" %>
 
   <!--[if lte IE 9]>
-    <link href="<%= asset_path("orzoro_application.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
-    <script src="<%= asset_path("orzoro_application.js").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" type="text/javascript"></script>  
-    <link href="<%= asset_path("orzoro_ie9.css").sub("#{Rails.configuration.deploy_settings["asset_host"]}", "") %>" media="all" rel="stylesheet" type="text/css" />
+    <link href="<%= asset_path("orzoro_application.css").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" media="all" rel="stylesheet" type="text/css" />
+    <script src="<%= asset_path("orzoro_application.js").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" type="text/javascript"></script>  
+    <link href="<%= asset_path("orzoro_ie9.css").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" media="all" rel="stylesheet" type="text/css" />
   <![endif]-->
 
   <%= csrf_meta_tags %>

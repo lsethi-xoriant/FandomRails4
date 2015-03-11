@@ -7,35 +7,40 @@ namespace :aws_tasks do
 
   task :restore_media_from_transcoding, [:tenant] => :environment do |t, args|
 
+    switch_tenant(args.tenant)
+
     transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
 
-    puts "s3-#{transcoding_settings[:region]}.amazonaws.com"
-      s3 = AWS::S3.new(
-        access_key_id: transcoding_settings[:access_key_id],
-        secret_access_key: transcoding_settings[:secret_access_key],
-        s3_endpoint: "s3-#{transcoding_settings[:region]}.amazonaws.com"
-      )
+    s3 = AWS::S3.new(
+      access_key_id: transcoding_settings[:access_key_id],
+      secret_access_key: transcoding_settings[:secret_access_key],
+      s3_endpoint: "s3-#{transcoding_settings[:region]}.amazonaws.com"
+    )
 
-      bucket = s3.buckets[transcoding_settings[:bucket]]
+    bucket = s3.buckets[transcoding_settings[:bucket]]
 
-      bucket.objects.with_prefix('elastic-transcoder-dev/web_mp4').each do |object|
-        puts object.key
+    bucket.objects.with_prefix('elastic-transcoder-dev/web_mp4').each do |object|
+      name = object.key
+      if name.include?("aws_transcoding")
+        puts "Restore #{name}"
+        cta_id = name.split("aws_transcoding-").last
+        cta = CallToAction.find(cta_id)
+        debugger
+        aux = JSON.parse(cta.aux || "{}")
+        aux["aws_transcoding_media_status"] = "done"
+        # Replace with s3 command the not transcoding media with mp4 media
+        cta.update_attributes(aux: aux.to_json, media_image: open(object.public_url.to_s))
+        if cta.save
+          bucket.objects.delete(name)
+        end
       end
-
-      #tree = bucket.as_tree
-      #directories = tree.children.select(&:branch?).collect(&:prefix)
-      #puts directories      
-
-
-      #image_to_backup = open(gallery.picture.url)
-      #object_img = bucket.objects[ "gallery_backup/#{ gallery.id }_#{ gallery.picture_file_name }" ]
-      #object_img.write(image_to_backup, :acl => :public_read)
-
+    end
 
   end
  
   task :transcoding, [:tenant] => :environment do |t, args|
 
+    # https://console.aws.amazon.com/elastictranscoder/home?region=eu-west-1#
     switch_tenant(args.tenant)
 
     transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
@@ -54,12 +59,19 @@ namespace :aws_tasks do
       # https://console.aws.amazon.com/elastictranscoder/home?region=eu-west-1#
       pipeline_id = transcoding_settings[:pipeline_id]
 
-      ctas = CallToAction.where("aux->>'aws_transcoding' <> ''")
+      ctas = CallToAction.where("aux->>'aws_transcoding_media_status' = 'requested'")
       ctas.each do |cta|
+
         puts "Transcoding #{cta.name}"
-        video_url = JSON.parse(cta.aux)["aws_transcoding"]
+        video_url = cta.media_image.path
         output_key = "aws_transcoding-#{cta.id}"
+
         video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
+
+        aux = JSON.parse(cta.aux)
+        aux["aws_transcoding_media_status"] = "inprogress"
+        cta.update_attribute(:aux, aux.to_json)
+
       end
 
     end
@@ -82,6 +94,7 @@ namespace :aws_tasks do
       },
       output_key_prefix: "elastic-transcoder-dev/"
     )[:job]
+
 
     puts 'Job has been created: ' + JSON.pretty_generate(job)
   end

@@ -12,8 +12,8 @@ module SeoHelper
     set_seo_info(cta.title, cta.description, get_default_keywords())
   end
 
-  def get_default_keywords
-    Setting.find_by_keys("keywords").value rescue ""
+  def get_default_keywords()
+    Setting.find_by_key("keywords").value rescue ""
   end
 
 end

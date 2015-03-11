@@ -31,7 +31,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
 
   $scope.resetToRedo = function(interaction_info) {
     $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
-    
+
     $timeout(function() { 
       anonymous_user_interactions = getAnonymousUserStorage();
       angular.forEach($scope.user_interactions_history, function(index) {
@@ -40,12 +40,13 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
           aux_parse = JSON.parse(user_interaction_info.user_interaction.aux);
           aux_parse.to_redo = true;
           user_interaction_info.user_interaction.aux = JSON.stringify(aux_parse);
+          $scope.updateAnonymousUserStorageUserInteractions(user_interaction_info);
         }
       });
 
-      $scope.updateAnonymousUserStorageUserInteractions(user_interaction_info);
 
       $scope.initCallToActionInfoList([$scope.parent_calltoaction_info]);
+      $scope.calltoaction_info.hide_class = "";
       $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide"
       $timeout(function() { 
         $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
@@ -62,7 +63,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     $scope.calltoaction_info.hide_class = "fadeout_animation";
     $timeout(function() { 
       //$http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})   
-      $http.post("/next_calltoaction" , { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction })  
+      $http.post("/next_calltoaction" , { calltoaction_id: $scope.parent_calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction })  
         .success(function(data) { 
 
           $scope.initCallToActionInfoList(data.calltoaction);
