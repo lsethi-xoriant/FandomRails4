@@ -26,7 +26,7 @@ namespace :aws_tasks do
     }.to_yaml
   end
 
-  task :restore_media_from_transcoding, [:tenant, :app_root_path] => :environment do |t, args|
+  task :finalize_transcoding, [:tenant, :app_root_path] => :environment do |t, args|
 
     logger = Logger.new("#{args.app_root_path}/log/restore_media_from_transcoding.log")
     logger.info "restore media from transcoding start"
@@ -120,7 +120,7 @@ namespace :aws_tasks do
     media_image_path
   end
  
-  task :transcoding, [:tenant, :app_root_path] => :environment do |t, args|
+  task :initialize_transcoding, [:tenant, :app_root_path] => :environment do |t, args|
 
     # https://console.aws.amazon.com/elastictranscoder/home?region=eu-west-1#
     switch_tenant(args.tenant)
