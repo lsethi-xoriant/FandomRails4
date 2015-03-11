@@ -10,7 +10,7 @@ class CallToAction < ActiveRecordWithJSON
   					:approved, :user_id, :interaction_watermark_url, :name, :thumbnail, :releasing_file_id, :release_required,
             :privacy_required, :privacy, :valid_from, :valid_to, :aux, :extra_fields,
             :button_label, :alternative_description, :enable_for_current_user, :shop_url,
-            :aws_transcoding
+            :aws_transcoding, :media_image_content_type, :media_image_file_size, :media_image_file_name
 
   json_attributes [[:aux, EmptyAux], [:extra_fields, EmptyAux]]
 

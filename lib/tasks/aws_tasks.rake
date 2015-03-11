@@ -1,47 +1,132 @@
 require 'aws-sdk'
+require 'logger'
 
 #!/bin/env ruby
 # encoding: utf-8
 
+# deploy_setting
+# transcoding:
+#   :access_key_id: access_key_id
+#   :secret_access_key: secret_access_key
+#   :region: region
+#   :pipeline_id: pipeline_id
+#   :bucket: bucket
+
 namespace :aws_tasks do
 
-  task :restore_media_from_transcoding, [:tenant] => :environment do |t, args|
+  def deploy_settings_example()
+    { 
+      "transcoding" => {
+        :access_key_id => "access_key_id",
+        :secret_access_key => "secret_access_key",
+        :region => "region",
+        :pipeline_id => "pipeline_id",
+        :bucket => "bucket"
+      }
+    }.to_yaml
+  end
+
+  task :restore_media_from_transcoding, [:tenant, :app_root_path] => :environment do |t, args|
+
+    logger = Logger.new("#{args.app_root_path}/log/restore_media_from_transcoding.log")
+    logger.info "restore media from transcoding start"
 
     switch_tenant(args.tenant)
 
     transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
+    if transcoding_settings
 
-    s3 = AWS::S3.new(
-      access_key_id: transcoding_settings[:access_key_id],
-      secret_access_key: transcoding_settings[:secret_access_key],
-      s3_endpoint: "s3-#{transcoding_settings[:region]}.amazonaws.com"
-    )
+      s3 = AWS::S3.new(
+        access_key_id: transcoding_settings[:access_key_id],
+        secret_access_key: transcoding_settings[:secret_access_key],
+        s3_endpoint: "s3-#{transcoding_settings[:region]}.amazonaws.com"
+      )
 
-    bucket = s3.buckets[transcoding_settings[:bucket]]
+      bucket = s3.buckets[transcoding_settings[:bucket]]
 
-    bucket.objects.with_prefix('elastic-transcoder-dev/web_mp4').each do |object|
-      name = object.key
-      if name.include?("aws_transcoding")
-        puts "Restore #{name}"
-        cta_id = name.split("aws_transcoding-").last
-        cta = CallToAction.find(cta_id)
-        debugger
+      ctas = CallToAction.where("aux->>'aws_transcoding_media_status' = 'inprogress'")
+
+      ctas.each do |cta|
+        object = bucket.objects["elastic-transcoder-dev/web_mp4/aws_transcoding-#{cta.id}"]
+        
         aux = JSON.parse(cta.aux || "{}")
-        aux["aws_transcoding_media_status"] = "done"
-        # Replace with s3 command the not transcoding media with mp4 media
-        cta.update_attributes(aux: aux.to_json, media_image: open(object.public_url.to_s))
-        if cta.save
-          bucket.objects.delete(name)
+
+        if object.exists?
+          
+          begin
+
+            time_start = Time.now.utc
+            logger.info "restore media transcoded in cta #{cta.id} start"
+
+            media_image_key = remove_head_slash(cta.media_image.path)
+            media_file_name = "media-#{cta.id}"
+            media_destination = remove_head_slash("#{cta.media_image.path.sub(cta.media_image_file_name, "")}#{media_file_name}")
+
+            # Save original media in another folder and replace this media with transcoded media
+            bucket.objects[media_image_key].copy_to("elastic-transcoder-dev/original/#{cta.id}-#{cta.media_image_file_name}", acl: :public_read)
+            object.copy_to(media_destination, acl: :public_read)
+
+            aux["aws_transcoding_media_status"] = "done"
+
+            cta.update_attributes(
+              aux: aux.to_json, 
+              media_image_content_type: object.content_type, 
+              media_image_file_size: object.content_length,
+              media_image_file_name: media_file_name
+            )
+
+            if cta.errors.empty?
+              delete_duplicate_medias(bucket, [object.key, media_image_key])
+              time_end = Time.now.utc
+              logger.info "restore media transcoded in cta #{cta.id} done -- time #{time_end - time_start}"
+            else
+              logger.error("errors in cta #{cta.id} saving")
+            end
+
+          rescue Exception => exception
+            logger.error("exception in media replace block: #{exception} - #{exception.backtrace[0, 5]}")
+          end
+
+        else
+
+          if transcoding_error?(aux["aws_transcoding_media_start_time"].to_time) 
+            logger.error("errors in cta #{cta.id} transcoding")
+            aux["aws_transcoding_media_status"] = "error"
+            cta.update_attribute(:aux, aux.to_json)
+          end
+
         end
       end
+    else
+      logger.error("missing deploy setting configuration: #{deploy_settings_example}")
     end
 
+    logger.info "restore media from transcoding end"
+
+  end
+
+  def transcoding_error?(transcoding_start_time)
+    (Time.now.utc - transcoding_start_time)/1.hour >= 1
+  end
+
+  def delete_duplicate_medias(bucket, medias)
+    medias.each do |media|
+      bucket.objects.delete(media)
+    end
+  end
+
+  def remove_head_slash(media_image_path)
+    media_image_path[0] = '' if media_image_path[0] == "/"
+    media_image_path
   end
  
-  task :transcoding, [:tenant] => :environment do |t, args|
+  task :transcoding, [:tenant, :app_root_path] => :environment do |t, args|
 
     # https://console.aws.amazon.com/elastictranscoder/home?region=eu-west-1#
     switch_tenant(args.tenant)
+
+    logger = Logger.new("#{args.app_root_path}/log/transcoding.log")
+    logger.info "transcoding start"
 
     transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
     if transcoding_settings
@@ -62,26 +147,29 @@ namespace :aws_tasks do
       ctas = CallToAction.where("aux->>'aws_transcoding_media_status' = 'requested'")
       ctas.each do |cta|
 
-        puts "Transcoding #{cta.name}"
-        video_url = cta.media_image.path
+        logger.info "start transcoding job for cta #{cta.id}"
+        video_url = remove_head_slash(cta.media_image.path)
         output_key = "aws_transcoding-#{cta.id}"
 
-        video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
+        job = video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
+        logger.info "cta #{cta.id} job created: #{JSON.pretty_generate(job)}"
 
         aux = JSON.parse(cta.aux)
         aux["aws_transcoding_media_status"] = "inprogress"
+        aux["aws_transcoding_media_start_time"] = Time.now.utc
         cta.update_attribute(:aux, aux.to_json)
 
       end
-
+    else
+      logger.error("missing deploy setting configuration: #{deploy_settings_example}")
     end
 
+    logger.info "transcoding end"
 
   end
 
   def video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
     web_mp4_preset_id = '1351620000001-100070' # web_mp4
-    video_url[0] = '' if video_url[0] == "/"
 
     job = transcoder_client.create_job(
       pipeline_id: pipeline_id,
@@ -95,10 +183,10 @@ namespace :aws_tasks do
       output_key_prefix: "elastic-transcoder-dev/"
     )[:job]
 
+    #puts 'Job has been created: ' + JSON.pretty_generate(job)
 
-    puts 'Job has been created: ' + JSON.pretty_generate(job)
+    job
   end
-
 
 end
 
