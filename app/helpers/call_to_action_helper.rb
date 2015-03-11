@@ -114,7 +114,7 @@ module CallToActionHelper
               "description" => calltoaction.description,
               "media_type" => calltoaction.media_type,
               "media_image" => calltoaction.media_image(:extra_large), 
-              "media_data" => calltoaction.media_data, 
+              "media_data" => get_cta_media_data(calltoaction), 
               "thumbnail_url" => calltoaction.thumbnail_url,
               "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
               "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
@@ -185,6 +185,14 @@ module CallToActionHelper
       calltoaction_info_list = calltoaction_info_list_for_current_user
     end
     calltoaction_info_list
+  end
+  
+  def get_cta_media_data(cta)
+    if cta.media_type == "FLOWPLAYER" && cta.media_data.blank? 
+      cta.media_image.url
+    else
+      cta.media_data
+    end
   end
 
   def find_in_calltoactions(calltoactions, calltoaction_id)
