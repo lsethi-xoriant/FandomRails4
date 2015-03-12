@@ -65,7 +65,7 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
         total_level_or_badge_rewards_where_condition << "reward_id = #{reward_id}#{connector}"
       end
 
-      @total_rewards = UserReward.where("(#{total_level_or_badge_rewards_where_condition}) and created_at >= '#{@from_date}' and created_at <= '#{@to_date}' and period_id is null").count
+      @total_rewards = UserReward.where("(#{total_level_or_badge_rewards_where_condition}) and period_id is null").count
 
       # COMMENTS
       @total_comments = UserCommentInteraction.where("created_at >= '#{@from_date}' and created_at <= '#{@to_date}'").count
@@ -97,15 +97,15 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       property_level_reward_ids = property_reward_ids & level_reward_ids
       property_badge_reward_ids = property_reward_ids & badge_reward_ids
 
-      @property_assigned_levels = UserReward.where("reward_id in (#{property_level_reward_ids.to_s[1..-2]}) and created_at >= '#{@from_date}' and created_at <= '#{@to_date}' and period_id is null").count
-      @property_assigned_badges = UserReward.where("reward_id in (#{property_badge_reward_ids.to_s[1..-2]}) and created_at >= '#{@from_date}' and created_at <= '#{@to_date}' and period_id is null").count
+      @property_assigned_levels = UserReward.where("reward_id in (#{property_level_reward_ids.to_s[1..-2]}) and period_id is null").count
+      @property_assigned_badges = UserReward.where("reward_id in (#{property_badge_reward_ids.to_s[1..-2]}) and period_id is null").count
 
     end
   end
 
   def find_user_reward_count_by_reward_name_at_date(reward_name, from_date, to_date)
     reward_id = Reward.find_by_name(reward_name).id
-    where_condition = "reward_id = #{reward_id} and created_at >= '#{from_date}' and created_at <= '#{to_date}' and period_id is null"
-    UserReward.where(where_condition).count
+    where_condition = "reward_id = #{reward_id} and period_id is null"
+    UserReward.where(where_condition).pluck("sum(counter)").first.to_i
   end
 end
