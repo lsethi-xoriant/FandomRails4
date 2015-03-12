@@ -65,7 +65,7 @@
 	  					</div>
 	  				</div>
 	  				<% if @upload_active %>
-	  					<%= render partial: "/gallery/gallery_calltoaction", locals: { gallery_tag: @gallery_tag, interaction_id: @upload_interaction_id, uploaded: @uploaded, error: @error } %>
+	  					<%= render partial: "/gallery/gallery_calltoaction", locals: { gallery_tag: @gallery_tag, interaction_id: @upload_interaction_id, uploaded: @uploaded, error: @error, extra_fields: @extra_fields } %>
 	  				<% end %>
 	  			</div>
 	  		</div>

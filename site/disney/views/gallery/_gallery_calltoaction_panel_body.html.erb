@@ -52,6 +52,17 @@
 			  				<a class="btn btn-primary btn-block" onclick="loadRelease();"><i class="fa fa-pencil"></i> Carica la liberatoria firmata</a>
 			  		</div>
 		  		</div>
+		  		
+		  		<% if !extra_fields.blank? %>
+			  		<div class="row form-group gallery-cta__first-step">
+		  				<div class="col-xs-12">
+					  		<% extra_fields.each do |field| %>
+					  			<%= extra_field_to_html(field).html_safe %>
+					  		<% end %>
+						</div>
+					</div>
+				<% end %>
+		  		
 		  		<div class="row form-group gallery-cta__last-step">
 		  			<div class="col-sm-8 text-left" ng-if="upload.interaction.resource.upload_info.privacy.required">
 		  				<input id="privacy" class="" name="privacy" type="checkbox" value="1">

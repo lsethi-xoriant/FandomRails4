@@ -45,6 +45,13 @@ class GalleryController < ApplicationController
       "gallery" => build_call_to_action_info_list([cta]).first,
       "gallery_calltoactions_count" => galleries_user_cta_count
     }
+    
+    if get_extra_fields!(cta)['form_extra_fields']
+      @extra_fields = JSON.parse(get_extra_fields!(cta)['form_extra_fields'].squeeze(" "))['fields']
+    else
+      @extra_fields = nil
+    end
+    
     @uploaded = false
     @error = false
     if !flash[:notice].blank?

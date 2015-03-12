@@ -144,12 +144,22 @@ class Sites::Disney::CallToActionController < CallToActionController
   
   def upload
     upload_interaction = Interaction.find(params[:interaction_id]).resource
+    extra_fields = JSON.parse(get_extra_fields!(upload_interaction.interaction.call_to_action)['form_extra_fields'])['fields'] rescue nil;
     cloned_cta = create_user_calltoactions(upload_interaction)
     calltoaction = CallToAction.find(params[:cta_id])
     
+    extra_fields_valid, extra_field_errors, cloned_cta_extra_fields = validate_upload_extra_fileds(params, extra_fields)
+    
     if cloned_cta.errors.any?
-      flash[:error] = cloned_cta.errors.full_messages.join(", ")
+      if !extra_fields_valid
+        flash[:error] = (cloned_cta.errors.full_messages + extra_field_errors).join(", ")
+      else
+        flash[:error] = cloned_cta.errors.full_messages.join(", ")
+      end
+    elsif !extra_fields_valid
+      flash[:error] = extra_field_errors.join(", ")
     else
+      cloned_cta.update_attribute(:extra_fields, cloned_cta_extra_fields.to_json)
       flash[:notice] = "Caricamento completato con successo"
     end
 
@@ -159,6 +169,27 @@ class Sites::Disney::CallToActionController < CallToActionController
       redirect_to "/call_to_action/#{params[:cta_id]}"
     end
     
+  end
+  
+  def validate_upload_extra_fileds(params, extra_fields)
+    if extra_fields.nil?
+      [true, [], nil]
+    else
+      errors = []
+      cloned_cta_extra_fields = {}
+      extra_fields.each do |ef|
+        if ef['required'] && params["extra_fields_#{ef['name']}"].blank?
+          if ef['type'] == "textfield"
+            errors << "#{ef['label']} non puo' essere lasciato in bianco"
+          elsif
+            errors << "#{ef['label']} deve essere accettato"
+          end
+        else
+          cloned_cta_extra_fields["#{ef['name']}"] = params["extra_fields_#{ef['name']}"]
+        end
+      end
+      [errors.empty?, errors, cloned_cta_extra_fields]
+    end
   end
   
   def create_user_calltoactions(upload_interaction)
