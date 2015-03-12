@@ -15,7 +15,7 @@ require 'logger'
 namespace :aws_tasks do
 
   def current_timestamp()
-    "[#{Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")}]"
+    "[#{Time.now.utc.strftime("%Y-%m-%d %H:%M:%S.%6N")}]"
   end
 
   def deploy_settings_example()
