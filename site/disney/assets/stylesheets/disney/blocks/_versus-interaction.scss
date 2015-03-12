@@ -59,6 +59,10 @@
   padding: 0 0 0 15px;
 }
 
+.versus-answer--newline {
+  padding-top: 60px;
+}
+
 .versus-interaction__question--overvideo {
   color: #fff;
   font-size: 28px;
@@ -79,6 +83,15 @@
   left: 0;
   position: absolute;
   right: 0;
+}
+
+.versus-interaction__vs--undervideo {
+  bottom: 95px;
+  color: #000;
+  font-size: 18px;
+  font-weight: bold;
+  position: absolute;
+  right: -11px;
 }
 
 .versus-interaction__answer--left {
@@ -115,7 +128,6 @@
 
 .versus-interaction__button {
   margin-top: 15px;
-  margin-bottom: 25px;
   width: 155px;
 }
 
