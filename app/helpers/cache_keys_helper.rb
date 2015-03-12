@@ -123,12 +123,16 @@ module CacheKeysHelper
     "evidence_calltoactions_in_property_#{property_id}_for_user_#{user_id}"
   end
 
+  def get_evidence_calltoactions_in_property_cache_key(property_id)
+    "evidence_calltoactions_in_property_#{property_id}"
+  end
+
   def get_sidebar_tags_cache_key(sidebar_tags)
     "sidebar_tags_#{sidebar_tags.join("_")}"
   end
 
-  def get_sidebar_calltoactions_for_user_cache_key(sidebar_tags, user_id)
-    "sidebar_calltoacitons_#{sidebar_tags.join("_")}_for_user_#{user_id}"
+  def get_sidebar_calltoactions_cache_key(sidebar_tags)
+    "sidebar_calltoacitons_#{sidebar_tags.join("_")}"
   end
 
   def get_calltoaction_last_comments_cache_key(cta_id)
