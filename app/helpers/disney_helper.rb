@@ -241,6 +241,7 @@ module DisneyHelper
                     .where("call_to_actions.id <> ?", current_calltoaction.id)
                     .where("call_to_action_tags.tag_id = ?", tag.id)
                     .where("call_to_actions.id IN (?)", get_disney_ctas(property, in_gallery).map { |calltoaction| calltoaction.id })
+                    .order("call_to_actions.activated_at DESC")
                     .limit(8).to_a
       else
         get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
