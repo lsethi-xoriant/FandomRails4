@@ -82,7 +82,7 @@ module DisneyHelper
 
   def get_disney_sidebar_calltoactions(sidebar_tags)
     if sidebar_tags.present?
-      cta_info_list, calltoactions = cache_short(get_sidebar_calltoactions_cache_key(sidebar_tags)) do       
+      cta_info_list, calltoaction_ids = cache_short(get_sidebar_calltoactions_cache_key(sidebar_tags)) do       
         tag_ids = []
         sidebar_tags.each do |tag_name| 
           tag = get_tag_from_params(tag_name)
@@ -98,10 +98,11 @@ module DisneyHelper
           calltoaction_info << build_disney_thumb_calltoaction(calltoaction)
         end
 
-        [calltoaction_info, calltoactions]
+        [calltoaction_info, calltoactions.map { |cta| cta.id }]
       end
 
       if current_user && cta_info_list.any?
+        calltoactions = CallToAction.where(id: calltoaction_ids)
         cta_info_list = adjust_disney_thumb_calltoaction_for_current_user(cta_info_list, calltoactions)
       end
 
@@ -243,7 +244,7 @@ module DisneyHelper
   end
 
   def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat", in_gallery)
-    related_calltoaction_info, calltoactions = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
+    related_calltoaction_info, calltoaction_ids = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
       
       tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
       if tag
@@ -262,11 +263,12 @@ module DisneyHelper
         related_calltoaction_info << build_disney_thumb_calltoaction(calltoaction)
       end
 
-      [related_calltoaction_info, calltoactions]
+      [related_calltoaction_info, calltoactions.map { |cta| cta.id }]
 
     end 
 
     if current_user
+      calltoactions = CallToAction.where(id: calltoaction_ids)
       related_calltoaction_info = adjust_disney_thumb_calltoaction_for_current_user(related_calltoaction_info, calltoactions)
     end
 
@@ -383,7 +385,7 @@ module DisneyHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      calltoaction_evidence_info, calltoactions = cache_short(get_evidence_calltoactions_in_property_cache_key(current_property.id)) do  
+      calltoaction_evidence_info, calltoaction_ids = cache_short(get_evidence_calltoactions_in_property_cache_key(current_property.id)) do  
         highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
         calltoactions_in_property = get_disney_ctas(current_property)
         if highlight_calltoactions.any?
@@ -396,10 +398,11 @@ module DisneyHelper
           calltoaction_evidence_info << build_disney_thumb_calltoaction(calltoaction)
         end
 
-        [calltoaction_evidence_info, calltoactions]
+        [calltoaction_evidence_info, calltoactions.map { |cta| cta.id }]
       end
 
       if current_user
+        calltoactions = CallToAction.where(id: calltoaction_ids)
         calltoaction_evidence_info = adjust_disney_thumb_calltoaction_for_current_user(calltoaction_evidence_info, calltoactions)
       end
 
