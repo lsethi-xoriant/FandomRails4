@@ -1,3 +1,11 @@
 .cta__fa-angle {
   display: none;
 }
+
+.trivia-interaction__update-answer--fade_out {
+  opacity: 0 !important;
+}
+
+.trivia-interaction__update-answer--fade_in {
+  opacity: 1 !important;
+}

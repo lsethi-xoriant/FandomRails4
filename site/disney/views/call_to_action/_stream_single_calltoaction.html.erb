@@ -32,7 +32,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-12 cta__media-container" ng-if="calltoaction_info.reward_info.status != 'gained'">
+  <div class="col-sm-12 cta__media-container" ng-if="calltoaction_info.reward_info && calltoaction_info.reward_info.status != 'gained'">
 		<img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" />
 	  	<div class="cta-preview__locked-layer cta-preview__locked-layer--reward">
 			<p>Per sbloccare questo premio</p>

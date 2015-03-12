@@ -70,9 +70,13 @@
                 <% end %>
               </td>
               <td class="col-md-2">
-                <button type="button" class="btn btn-success btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>
-                &nbsp;&nbsp;
-                <button type="button" class="btn btn-primary btn-xs" onclick="updateCta(false, <%= c.id %>)">Rifiuta</button>             
+                <% if aws_trasconding_not_required_or_completed(c) %>
+                  <button type="button" class="btn btn-success btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>
+                  &nbsp;&nbsp;
+                  <button type="button" class="btn btn-primary btn-xs" onclick="updateCta(false, <%= c.id %>)">Rifiuta</button>  
+                <% else %>
+                  <p>aws transconding status: <%= @aws_transcoding_media_status %></p>
+                <% end %>           
               </td>       
               </tr>
           <% end %>

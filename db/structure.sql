@@ -640,7 +640,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -2395,7 +2396,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -4150,7 +4152,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -5905,7 +5908,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -7660,7 +7664,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -9415,7 +9420,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -11170,7 +11176,8 @@ CREATE TABLE interaction_call_to_actions (
     call_to_action_id integer,
     condition json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
 );
 
 
@@ -22640,6 +22647,13 @@ CREATE INDEX index_cache_votes_on_version ON cache_votes USING btree (version);
 
 
 --
+-- Name: index_call_to_actions_on_aux_aws_transcoding_media_status; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_aws_transcoding_media_status ON call_to_actions USING btree (((aux ->> 'aws_transcoding_media_status'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -23308,3 +23322,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150219101047');
 INSERT INTO schema_migrations (version) VALUES ('20150227151410');
 
 INSERT INTO schema_migrations (version) VALUES ('20150227151546');
+
+INSERT INTO schema_migrations (version) VALUES ('20150311143324');

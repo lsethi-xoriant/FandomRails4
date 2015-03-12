@@ -20,10 +20,10 @@
   		<h1 style="text-align: center; color: #fff;">Benessere è Buonumore</h1>
   	</div>
       <div style="max-width: 600px; margin-left: auto; margin-right: auto; background-color: #fff;">
-        <div style="text-align: center; padding-top: 10px;">
+        <div style="text-align: center; padding: 10px;">
         	<h1 style="font-family: arial, helvetica, sans-serif; color: #660206;">Complimenti, <%= @form_cup['identity']['first_name'] %></h1>
-        	<h2 style="font-family: arial, helvetica, sans-serif; color: #818181;">Ti confermiamo di aver ricevuto i tuoi dati per la<br /> ricezione delle tazze</h2>
-          	<img style="width: 350px;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
+        	<h2 style="font-family: arial, helvetica, sans-serif; color: #660206;">Ti confermiamo di aver ricevuto i tuoi dati per la<br /> ricezione delle tazze</h2>
+          	<img style="width: 80%; display: block; margin: 10px auto;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
         </div>
         
         <div style="background-color: #f6f0dd;">
@@ -49,11 +49,11 @@
         </div>
         
         <div>
-        	<p style="text-align: center; color: #818181;">Sarai notificato non appena verifichiamo tutti i dati</p>
+        	<p style="text-align: center; color: #818181;">Sarai notificato non appena avremo verificato tutti i dati</p>
         	<div style="text-align: center; margin-top: 20px;">
         		<img src="<%= @assets_extra_fields['logo_nestle']['url'] rescue nil %>" />
         	</div>
-        	<p style="text-align: center; color: #818181; padding: 20px 0;">Se pensi ci sia un errore non considerare le presente mail.</p>
+        	<p style="text-align: center; color: #818181; padding: 20px 0;">Se pensi ci sia un errore non considerare la presente mail.</p>
         </div>
       </div>
       <div style="max-width: 600px; margin-left: auto; margin-right: auto;">
