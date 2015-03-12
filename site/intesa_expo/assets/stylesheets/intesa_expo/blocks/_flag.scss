@@ -1,0 +1,40 @@
+/* FLAG */
+.flag__container {
+  position: absolute; 
+  width: 40px; 
+  height: 40px; 
+  top: 5px; 
+  left: 5px; 
+  border-radius: 50%;
+  p { 
+    font-family: "Allan"; 
+    font-weight: "700";
+    color: #fff; 
+    text-transform: uppercase;
+    line-height: 40px; 
+  }
+  .fa, .glyphicon {
+    font-size: 30px;
+    line-height: 40px;
+  }
+}
+
+@media (min-width: $screen-sm-min) {
+
+  .col-sm-8, .col-md-8 {
+    .flag__container {
+      width: 60px; 
+      height: 60px; 
+      top: 15px; 
+      left: 15px; 
+      p { 
+        line-height: 60px; 
+        font-size: 22px;
+      }
+      .fa, .glyphicon {
+        line-height: 60px;
+      }
+    }
+  }
+
+}

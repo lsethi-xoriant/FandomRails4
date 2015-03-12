@@ -1,0 +1,61 @@
+/** SEARCH STYLE **/
+  
+.search-bar{
+  padding: 20px 0;
+}
+
+.search__container {
+  background: #c96b21;
+  border-radius: 50%;
+  height: 40px;
+  position: absolute;
+  right: 23px;
+  top: 23px;
+  width: 40px;
+  span {
+    color: #f38128;
+    line-height: 40px;
+    font-size: 22px;
+  }
+}
+
+.search__container--active,
+.search__container:hover{
+  span {
+    color: #fff;
+  }
+}
+
+.search-bar__field{}
+
+.search-bar__input {
+  background-image: url("disney/search.png");
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  background-size: 32px auto;
+  height: 46px !important;
+  font-size: 18px;
+}
+
+.search-bar__button {
+  font-size: 18px !important;
+  line-height: 1.33 !important;
+  padding: 10px 16px;
+}
+
+.search-bar__message{
+  font-weight: bold;
+  font-size: 20px;
+  color: rgb(214, 33, 48);
+}
+
+@media (max-width: $screen-sm-min) { 
+  .search-bar__input {
+  }
+  
+  .ctas__search{
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+  }
+  
+}
