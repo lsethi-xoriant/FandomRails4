@@ -82,25 +82,35 @@ module DisneyHelper
 
   def get_disney_sidebar_calltoactions(sidebar_tags)
     if sidebar_tags.present?
-      
-      tag_ids = []
-      sidebar_tags.each do |tag_name| 
-        tag = get_tag_from_params(tag_name)
-        if tag
-          tag_ids << tag.id
+      cta_info_list, calltoaction_ids = cache_short(get_sidebar_calltoactions_cache_key(sidebar_tags)) do       
+        tag_ids = []
+        sidebar_tags.each do |tag_name| 
+          tag = get_tag_from_params(tag_name)
+          if tag
+            tag_ids << tag.id
+          end
         end
+
+        calltoactions = get_ctas_with_tags_in_and(tag_ids)
+
+        calltoaction_info = []
+        calltoactions.each do |calltoaction|
+          calltoaction_info << build_disney_thumb_calltoaction(calltoaction)
+        end
+
+        [calltoaction_info, calltoactions.map { |cta| cta.id }]
       end
 
-      calltoactions = get_ctas_with_tags_in_and(tag_ids)
-
-      calltoaction_info = []
-      calltoactions.each do |calltoaction|
-        calltoaction_info << build_thumb_calltoaction(calltoaction)
+      if current_user && cta_info_list.any?
+        calltoactions = CallToAction.where(id: calltoaction_ids)
+        cta_info_list = adjust_disney_thumb_calltoaction_for_current_user(cta_info_list, calltoactions)
       end
-      calltoaction_info
+
+      cta_info_list
     else
       []
     end
+
   end
 
   def get_disney_sidebar_tags(sidebar_tags)
@@ -215,12 +225,12 @@ module DisneyHelper
     end
   end
 
-  def build_thumb_calltoaction(calltoaction)
+  def build_disney_thumb_calltoaction(calltoaction)
 
     {
       "id" => calltoaction.id,
       "slug" => calltoaction.slug,
-      "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
+      "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, anonymous_user),
       "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
       "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
       "title" => calltoaction.title,
@@ -234,23 +244,43 @@ module DisneyHelper
   end
 
   def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat", in_gallery)
-    calltoactions = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
+    related_calltoaction_info, calltoaction_ids = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
+      
       tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
       if tag
-        CallToAction.includes(:call_to_action_tags)
+        calltoactions = CallToAction.includes(:call_to_action_tags)
                     .where("call_to_actions.id <> ?", current_calltoaction.id)
                     .where("call_to_action_tags.tag_id = ?", tag.id)
                     .where("call_to_actions.id IN (?)", get_disney_ctas(property, in_gallery).map { |calltoaction| calltoaction.id })
+                    .order("call_to_actions.activated_at DESC")
                     .limit(8).to_a
       else
-        get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
+        calltoactions = get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
       end
+
+      related_calltoaction_info = []
+      calltoactions.each do |calltoaction|
+        related_calltoaction_info << build_disney_thumb_calltoaction(calltoaction)
+      end
+
+      [related_calltoaction_info, calltoactions.map { |cta| cta.id }]
+
     end 
-    related_calltoaction_info = []
-    calltoactions.each do |calltoaction|
-      related_calltoaction_info << build_thumb_calltoaction(calltoaction)
+
+    if current_user
+      calltoactions = CallToAction.where(id: calltoaction_ids)
+      related_calltoaction_info = adjust_disney_thumb_calltoaction_for_current_user(related_calltoaction_info, calltoactions)
     end
+
     related_calltoaction_info
+  end
+
+  def adjust_disney_thumb_calltoaction_for_current_user(calltoaction_info_list, calltoactions)
+    calltoaction_info_list.each do |cta_info|
+      cta = find_in_calltoactions(calltoactions, cta_info["id"])
+      cta_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), cta)
+    end
+    calltoaction_info_list
   end
 
   def get_disney_sidebar_info(sidebar_tags, gallery_cta, other)
@@ -260,9 +290,7 @@ module DisneyHelper
       get_disney_sidebar_tags(sidebar_tags)
     end
 
-    cta_info_list = cache_short(get_sidebar_calltoactions_for_user_cache_key(sidebar_tags, current_or_anonymous_user.id)) do
-      get_disney_sidebar_calltoactions(sidebar_tags)
-    end
+    cta_info_list = get_disney_sidebar_calltoactions(sidebar_tags)
     
     gallery_rank = nil
     
@@ -357,7 +385,7 @@ module DisneyHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_for_user_cache_key(current_or_anonymous_user.id, current_property.id)) do  
+      calltoaction_evidence_info, calltoaction_ids = cache_short(get_evidence_calltoactions_in_property_cache_key(current_property.id)) do  
         highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
         calltoactions_in_property = get_disney_ctas(current_property)
         if highlight_calltoactions.any?
@@ -367,11 +395,18 @@ module DisneyHelper
         calltoactions = highlight_calltoactions + calltoactions_in_property.limit(3).to_a
         calltoaction_evidence_info = []
         calltoactions.each do |calltoaction|
-          calltoaction_evidence_info << build_thumb_calltoaction(calltoaction)
+          calltoaction_evidence_info << build_disney_thumb_calltoaction(calltoaction)
         end
 
-        calltoaction_evidence_info
+        [calltoaction_evidence_info, calltoactions.map { |cta| cta.id }]
       end
+
+      if current_user
+        calltoactions = CallToAction.where(id: calltoaction_ids)
+        calltoaction_evidence_info = adjust_disney_thumb_calltoaction_for_current_user(calltoaction_evidence_info, calltoactions)
+      end
+
+      calltoaction_evidence_info
     end
 
     if other && other.has_key?(:sidebar_tags)

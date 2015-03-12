@@ -783,7 +783,7 @@ module ApplicationHelper
       win_reward_count: win_reward_count,
       winnable_reward_count: winnable_reward_count,
       reward_status_images: reward_status_images,
-      reward: reward
+      reward: reward.to_json
     }
 
   end

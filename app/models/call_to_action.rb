@@ -33,7 +33,7 @@ class CallToAction < ActiveRecordWithJSON
 
   before_save :set_activated_at # handles the activated_at fields when updating the model from easyadmin
   #before_save :set_extra_options
-  
+
   has_attached_file :media_image,
     processors: lambda { |calltoaction|
       if calltoaction.media_image_content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
@@ -100,6 +100,11 @@ class CallToAction < ActiveRecordWithJSON
 
   def media_type_enum
     MEDIA_TYPES
+  end
+
+  def clear_paperclip_attachments
+    self.media_image = nil
+    self.thumbnail = nil
   end
 
   def check_video_interaction

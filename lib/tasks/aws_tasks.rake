@@ -14,6 +14,10 @@ require 'logger'
 
 namespace :aws_tasks do
 
+  def current_timestamp()
+    "[#{Time.now.utc.strftime("%Y-%m-%d %H:%M:%S.%6N")}]"
+  end
+
   def deploy_settings_example()
     { 
       "transcoding" => {
@@ -26,10 +30,10 @@ namespace :aws_tasks do
     }.to_yaml
   end
 
-  task :restore_media_from_transcoding, [:tenant, :app_root_path] => :environment do |t, args|
+  task :finalize_transcoding, [:tenant, :app_root_path] => :environment do |t, args|
 
     logger = Logger.new("#{args.app_root_path}/log/restore_media_from_transcoding.log")
-    logger.info "restore media from transcoding start"
+    logger.info "#{current_timestamp} finalize transcoding start"
 
     switch_tenant(args.tenant)
 
@@ -56,7 +60,7 @@ namespace :aws_tasks do
           begin
 
             time_start = Time.now.utc
-            logger.info "restore media transcoded in cta #{cta.id} start"
+            logger.info "#{current_timestamp} move media transcoded in cta #{cta.id} start"
 
             media_image_key = remove_head_slash(cta.media_image.path)
             media_file_name = "media-#{cta.id}"
@@ -78,19 +82,19 @@ namespace :aws_tasks do
             if cta.errors.empty?
               delete_duplicate_medias(bucket, [object.key, media_image_key])
               time_end = Time.now.utc
-              logger.info "restore media transcoded in cta #{cta.id} done -- time #{time_end - time_start}"
+              logger.info "#{current_timestamp} move media transcoded in cta #{cta.id} end [content_length #{object.content_length}]"
             else
               logger.error("errors in cta #{cta.id} saving")
             end
 
           rescue Exception => exception
-            logger.error("exception in media replace block: #{exception} - #{exception.backtrace[0, 5]}")
+            logger.error("#{current_timestamp} exception in media replace block: #{exception} - #{exception.backtrace[0, 5]}")
           end
 
         else
 
           if transcoding_error?(aux["aws_transcoding_media_start_time"].to_time) 
-            logger.error("errors in cta #{cta.id} transcoding")
+            logger.error("#{current_timestamp} errors in cta #{cta.id} transcoding")
             aux["aws_transcoding_media_status"] = "error"
             cta.update_attribute(:aux, aux.to_json)
           end
@@ -98,10 +102,10 @@ namespace :aws_tasks do
         end
       end
     else
-      logger.error("missing deploy setting configuration: #{deploy_settings_example}")
+      logger.error("#{current_timestamp} missing deploy setting configuration: #{deploy_settings_example}")
     end
 
-    logger.info "restore media from transcoding end"
+    logger.info "#{current_timestamp} finalize transcoding end"
 
   end
 
@@ -120,13 +124,13 @@ namespace :aws_tasks do
     media_image_path
   end
  
-  task :transcoding, [:tenant, :app_root_path] => :environment do |t, args|
+  task :initialize_transcoding, [:tenant, :app_root_path] => :environment do |t, args|
 
     # https://console.aws.amazon.com/elastictranscoder/home?region=eu-west-1#
     switch_tenant(args.tenant)
 
     logger = Logger.new("#{args.app_root_path}/log/transcoding.log")
-    logger.info "transcoding start"
+    logger.info "#{current_timestamp} initialize transcoding start"
 
     transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
     if transcoding_settings
@@ -147,12 +151,11 @@ namespace :aws_tasks do
       ctas = CallToAction.where("aux->>'aws_transcoding_media_status' = 'requested'")
       ctas.each do |cta|
 
-        logger.info "start transcoding job for cta #{cta.id}"
+        logger.info "#{current_timestamp} start transcoding job for cta #{cta.id}"
         video_url = remove_head_slash(cta.media_image.path)
         output_key = "aws_transcoding-#{cta.id}"
 
         job = video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
-        logger.info "cta #{cta.id} job created: #{JSON.pretty_generate(job)}"
 
         aux = JSON.parse(cta.aux)
         aux["aws_transcoding_media_status"] = "inprogress"
@@ -161,10 +164,10 @@ namespace :aws_tasks do
 
       end
     else
-      logger.error("missing deploy setting configuration: #{deploy_settings_example}")
+      logger.error("#{current_timestamp} missing deploy setting configuration: #{deploy_settings_example}")
     end
 
-    logger.info "transcoding end"
+    logger.info "#{current_timestamp} initialize transcoding end"
 
   end
 

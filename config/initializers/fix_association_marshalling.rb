@@ -1,3 +1,4 @@
+=begin
 module ActiveRecord
   module Associations
     class CollectionProxy
@@ -14,3 +15,4 @@ module ActiveRecord
     end
   end
 end
+=end
