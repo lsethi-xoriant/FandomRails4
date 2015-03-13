@@ -29,6 +29,9 @@ gem 'paperclip-ffmpeg'
 
 gem 'fastclick-rails', '~> 1.0.1'
 
+# ical
+gem 'icalendar'
+
 group :assets do
   gem 'turbo-sprockets-rails3'
   gem 'sprockets'

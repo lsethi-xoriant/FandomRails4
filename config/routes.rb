@@ -25,6 +25,8 @@ Fandom::Application.routes.draw do
     end
   end
 
+  match "/ical", to: "calendar#get_ical", defaults: { format: 'ics' }
+
   constraints(SiteMatcher.new('orzoro')) do
     scope module: "sites" do
       scope module: "orzoro" do

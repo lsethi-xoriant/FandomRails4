@@ -1,0 +1,40 @@
+<div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA' || calltoaction_info.calltoaction.media_type == 'FLOWPLAYER'" id="main-media-{{calltoaction_info.calltoaction.id}}">
+  <div class="media-youtube embed-responsive embed-responsive-16by9">             
+    
+    <!-- IFRAME VIDEO -->
+    <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
+
+    <!-- OVERVIDEO AREA -->
+    <%= render partial: "/call_to_action/overvideo_interaction" %>
+
+    <!-- DEFAULT END -->
+    <div class="col-xs-12 end-interaction text-center" ng-if="calltoaction_info.active_end_interaction">
+      <p class="end-interaction__title" ng-if="!calltoaction_info.calltoaction.extra_fields['end-video']">Cosa ne pensi? Dì la tua!<br>Lascia subito il tuo commento su questo argomento.</p>
+      <p class="end-interaction__title" ng-if="calltoaction_info.calltoaction.extra_fields['end-video']">{{calltoaction_info.calltoaction.extra_fields['end-video']}}</p>
+      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-lg hidden-xs"><span>COMMENTA</span></a>
+      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-sm visible-xs"><span>COMMENTA</span></a>
+    </div>
+
+  </div>
+</div>
+
+<!-- MAIN MEDIA IMAGE -->
+<div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image media-image-{{calltoaction_info.miniformat['name']}} {{calltoaction_info.class}}">
+
+  <div ng-if="calltoaction_info.miniformat['name'] == 'ricette'">
+    <img class="cta__paper-group-left hidden-xs" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
+    <img class="cta__paper-group-right hidden-xs" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;"></img>
+    <img class="cta__media-img" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+  </div>
+
+  <div ng-if="calltoaction_info.miniformat['name'] != 'ricette'">
+    <img ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+  </div>
+
+</div>
+
+<!-- IFRAME -->
+<div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
+  <!-- IFRAME -->
+  <div class="embed-responsive embed-responsive-16by9 text-center" id="iframe-calltoaction-{{calltoaction_info.calltoaction.id}}"></div>
+</div>
