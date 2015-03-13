@@ -83,7 +83,13 @@ function BrowseCtrl($scope, $window, $filter, $http) {
     };
     
     $scope.load_more = function(offset){
-  		$http.get("/browse/index_category_load_more.json", {
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+      	var loadMoreUrl = "/" + $scope.aux.current_property_info.path + "/browse/index_category_load_more.json"
+      } else {
+      	var loadMoreUrl = "/browse/index_category_load_more.json"
+      } 
+
+  		$http.get(loadMoreUrl, {
 	      params: {
 	        offset: offset,
 	        tag_id: $scope.category_id
