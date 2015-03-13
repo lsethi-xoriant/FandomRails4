@@ -257,16 +257,16 @@ class CallToActionController < ApplicationController
         calltoaction_to_share_thumbnail = strip_tags(extra_fields["linked_result_image"]["url"]) rescue ""
       else
         calltoaction_to_share = calltoaction
-        calltoaction_to_share_title = strip_tags(calltoaction_to_share.title) rescue ""
-        calltoaction_to_share_description = strip_tags(calltoaction_to_share.description) rescue ""
-        calltoaction_to_share_thumbnail = strip_tags(calltoaction_to_share.thumbnail.url) rescue ""
+        calltoaction_to_share_title = strip_tags(calltoaction_to_share.title) || ""
+        calltoaction_to_share_description = strip_tags(calltoaction_to_share.description) || ""
+        calltoaction_to_share_thumbnail = calltoaction_to_share.thumbnail.url rescue ""
       end
 
       @fb_meta_tags = (
           '<meta property="og:type" content="article" />' +
           '<meta property="og:locale" content="it_IT" />' +
           '<meta property="og:title" content="' + calltoaction_to_share_title + '" />' +
-          '<meta property="og:description" content="' +calltoaction_to_share_description + '" />' +
+          '<meta property="og:description" content="' + calltoaction_to_share_description + '" />' +
           '<meta property="og:image" content="' + calltoaction_to_share_thumbnail + '" />'
         ).html_safe
 
