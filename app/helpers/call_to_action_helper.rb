@@ -258,6 +258,8 @@ module CallToActionHelper
           upload_info = build_uploads_for_resource(interaction)
         when "vote"
           vote_info = build_votes_for_resource(interaction)
+        when "download"
+          download_info = resource.ical_fields
         end
 
         if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
@@ -283,6 +285,7 @@ module CallToActionHelper
               "comment_info" => comment_info,
               "like_info" => like_info,
               "upload_info" => upload_info,
+              "download_info" => download_info,
               "vote_info" => vote_info,
               "url" => resource_url
             }
