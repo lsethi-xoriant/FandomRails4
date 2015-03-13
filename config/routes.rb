@@ -30,6 +30,11 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('orzoro')) do
     scope module: "sites" do
       scope module: "orzoro" do
+        namespace :easyadmin do
+          match "/cups", :to => "easyadmin#index_cup_requests"
+          match "/cups/filter", :to => "easyadmin#filter_cup_requests"
+          match "export_cup_requests", :to => "easyadmin#export_cup_requests"
+        end
         root :to => "application#index"
         match "/tazze", to: "cup_redeemer#index"
         match "/tazze/step_1", to: "cup_redeemer#step_1"

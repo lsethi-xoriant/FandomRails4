@@ -1,0 +1,28 @@
+<tr>
+
+  <td><%= Time.parse(request["request_timestamp"]).strftime("%d/%m/%Y") rescue nil %></td>
+  <td><%= request["address"]["first_name"] %></td>
+  <td><%= request["address"]["last_name"] %></td>
+  <td><%= request["identity"]["email"] %></td>
+  <td><%= request["address"]["address"] %></td>
+  <td><%= request["address"]["street_number"] %></td>
+  <td><%= request["address"]["city"] %></td>
+  <td><%= request["address"]["province"] %></td>
+  <td><%= request["address"]["cap"] %></td>
+  <td><%= request["receipt"]["package_count"] %></td>
+  <td><%= request["receipt"]["cup_selected"] %></td>
+  <td><%= request["receipt"]["receipt_number"] %></td>
+  <td>
+    <%= "#{(sprintf '%02d', request["receipt"]["day_of_emission"])}/#{(sprintf '%02d', request["receipt"]["month_of_emission"])}/#{request["receipt"]["year_of_emission"]} #{(sprintf '%02d', request["receipt"]["hour_of_emission"])}:#{request["receipt"]["minute_of_emission"]}" 
+    %>
+  </td>
+  <td><%= request["receipt"]["receipt_total"] %></td>
+  <td>
+    <div class="row">
+      <div class="col-sm-1" style="margin: 0;">
+        <a href="<%= root_url %>/easyadmin/user/show/<%= User.find_by_email(request["identity"]["email"]).id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+      </div>
+    </div>
+  </td>
+
+</tr>

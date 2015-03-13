@@ -57,6 +57,7 @@ module ConfigUtils
     attribute :timezone, type: String, :default => "Europe/Rome"
     attribute :assets, :default => { "anon_avatar" => "anon.png", "community_logo" => nil }
     attribute :free_provider_share, :default => false
+    attribute :aws_transcoding, :default => false
 
     def unbranded?
       self.id == 'fandom'

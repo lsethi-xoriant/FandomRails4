@@ -20,7 +20,7 @@
 		  				<div class="row">
 				  			<div class="col-sm-6 col-sm-offset-3 gallery-cta__upload-photo">
 			  					<input id="upload" name="upload" class="form-control hidden" type="file" onchange="photoSelected()">
-			  					<a class="btn btn-primary btn-block" onclick="loadPhoto();"><i class="fa fa-camera"></i> Carica la tua foto</a>
+			  					<a class="btn btn-primary btn-block" onclick="loadPhoto();"><i class="fa fa-camera"></i> <%= get_extra_fields!(gallery_tag)['label_button'].nil? ? "Carica il tuo media" : get_extra_fields!(gallery_tag)['label_button'] %></a>
 			  				</div>
 				  		</div>
 	  				</div>
