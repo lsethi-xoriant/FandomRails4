@@ -200,6 +200,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       if receipt_already_redeemed(aux_hash, cache_value["receipt"]["receipt_number"])
         flash[:error] = "Hai gia' richiesto tazze per questo scontrino"
       else
+        cache_value["request_timestamp"] = Time.now
         redeem_array = aux_hash["cup_redeem"].nil? ? [cache_value] : aux_hash["cup_redeem"] + [cache_value]
         aux_hash["cup_redeem"] = redeem_array
         user.aux = aux_hash.to_json

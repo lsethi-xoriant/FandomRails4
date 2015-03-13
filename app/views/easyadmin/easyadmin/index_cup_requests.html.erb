@@ -1,0 +1,110 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "user" } %>
+ 
+  <div id="content">    
+    
+    <div id="content-header">
+      <h1>ELENCO RICHIESTE TAZZE</h1>
+    </div> <!-- #content-header --> 
+
+      <div id="content-container">
+
+      <% if flash[:notice] %>
+        <div class="row">
+          <div class="col-md-12">         
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="alert alert-success"><%= flash[:notice] %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+      <div class="row text-right">
+        <div class="col-md-12">
+          <%= link_to "ESPORTA CSV", { :action => "export_cup_requests",
+                :from_date => @from_date, :to_date => @to_date, :where_conditions => @where_conditions }, :class => "btn btn-primary" %>
+        </div>
+      </div>
+
+      <%= form_tag :action => 'filter_cup_requests', :method => 'post' do %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="text-input">Filtra per EMAIL</label></br>
+            <%= text_field_tag :email_filter, @email_filter, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="text-input">Dal giorno</label></br>
+            <%= text_field_tag :datepicker_from_date, @from_date_string, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="text-input">Al giorno</label></br>
+            <%= text_field_tag :datepicker_to_date, @from_to_string, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="form-group">
+            </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+          </div>
+        </div>
+      </div> 
+    <% end %>
+
+    <% unless @request_list.blank? %>
+      <div class="row">
+        <div class="table-responsive"> 
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Data invio</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Email</th>
+                <th>Indirizzo</th>
+                <th>Civico</th>
+                <th>Città</th>
+                <th>Prov</th>
+                <th>CAP</th>
+                <th>Conf</th>
+                <th>Tazza</th>
+                <th>Scontrino</th>
+                <th>Data emissione</th>
+                <th>Importo</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <% @request_list.each do |request| %>
+              <%= render partial: "/easyadmin/easyadmin/cup_request_rows", locals: { request: request } %>
+            <% end %>
+          </table>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="row">
+      <div class="col-md-8">
+        
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+    
+  $(document).ready(function() {
+    $("#datepicker_from_date").datepicker();
+    $("#datepicker_to_date").datepicker();
+  });
+
+</script>

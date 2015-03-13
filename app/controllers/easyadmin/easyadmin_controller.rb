@@ -76,6 +76,71 @@ class Easyadmin::EasyadminController < ApplicationController
     render template: "/easyadmin/easyadmin/index_user" 
   end
 
+  def index_cup_requests
+
+    @request_list = []
+    User.all.each do |user|
+      cups_redeemed = JSON.parse(user.aux)["cup_redeem"] rescue nil
+      @request_list += cups_redeemed unless cups_redeemed.nil?
+    end
+
+  end
+
+  def export_cup_requests
+    @request_list = build_request_list(params[:where_conditions], params[:from_date], params[:to_date])
+    csv = "Nome;Cognome;Email;Indirizzo;N.Civico;Citta;Provincia;CAP;Confezioni;Tazza;N.Scontrino;Data emissione;Importo;Data richiesta\n"
+    @request_list.each do |request|
+    csv << "#{request["address"]["first_name"]};#{request["address"]["last_name"]};#{request["identity"]["email"]};" +
+            "#{request["address"]["address"]};#{request["address"]["street_number"]};#{request["address"]["city"]};#{request["address"]["province"]};" +
+            "#{request["address"]["cap"]};#{request["receipt"]["package_count"]};#{request["receipt"]["cup_selected"]};#{request["receipt"]["receipt_number"]};" + 
+            "#{(sprintf '%02d', request["receipt"]["day_of_emission"])}/#{(sprintf '%02d', request["receipt"]["month_of_emission"])}/#{request["receipt"]["year_of_emission"]} #{(sprintf '%02d', request["receipt"]["hour_of_emission"])}:#{request["receipt"]["minute_of_emission"]};" +
+            "#{request["receipt"]["receipt_total"]};#{Time.parse(request["request_timestamp"]).strftime("%d/%m/%Y") rescue ''}\n"
+    end
+    send_data(csv, :type => 'text/csv; charset=utf-8; header=present', :filename => "cup_requests.csv")
+  end
+
+  def filter_cup_requests
+
+    @email_filter = params[:email_filter]
+    @from_date = params[:datepicker_from_date]
+    @to_date = params[:datepicker_to_date]
+    @where_conditions = "true"
+
+    if params[:commit] == "APPLICA FILTRO"
+      @where_conditions << " AND email ILIKE '%#{@email_filter}%'" unless @email_filter.blank?
+    else
+      @email_filter = nil
+      @from_date = nil
+      @to_date = nil
+    end
+    @request_list = build_request_list(@where_conditions, @from_date, @to_date)
+
+    render template: "/easyadmin/easyadmin/index_cup_requests" 
+  end
+
+  def build_request_list(where_conditions, from_date, to_date)
+    request_list = []
+    User.where(where_conditions).each do |user|
+      cups_redeemed = JSON.parse(user.aux)["cup_redeem"] rescue nil
+      if cups_redeemed.present?
+        cups_redeemed.each do |request|
+          request_list += [request] if request_timestamp_between_dates(request["request_timestamp"], from_date, to_date)
+        end
+      end
+    end
+    request_list
+  end
+
+  def request_timestamp_between_dates(timestamp, from_date, to_date)
+    if timestamp.nil?
+      return false
+    end
+    request_timestamp = Time.parse(timestamp)
+    after_from_date = from_date.nil? ? true : request_timestamp >= Time.parse(from_date)
+    before_to_date = to_date.nil? ? true : request_timestamp <= Time.parse(to_date)
+    return after_from_date && before_to_date
+  end
+
   def filter_tags
     conditions_string = ""
     conditions_string << "tags.title ILIKE '%#{params[:title_filter]}%'" if params[:title_filter] != "nil_title_filter"

@@ -36,11 +36,18 @@
                 <i class="fa fa-ticket"></i>Vincitori concorso
               </a>
             </li>
+            <% if $site.id == "orzoro" %>
+              <li>
+                <a href="/easyadmin/cups">
+                  <i class="fa fa-coffee"></i>Richieste tazze
+                </a>
+              </li>
+            <% end %>
           </ul>
         </li>
 
         <% if can? :manage, :all %>
-            <li class="<%= "active" if page == "pubblished" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>
+            <li class="<%= "active" if page == "published" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>
             </li>
         <% end %>
 
