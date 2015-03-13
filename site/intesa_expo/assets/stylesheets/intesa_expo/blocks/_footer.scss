@@ -1,0 +1,156 @@
+/* FOOTER */
+
+.footer__row {
+  background-color: $brown;
+  color: #fff;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  background-image: url("orzoro/texture.png");
+} 
+
+.footer__row--bottom {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  position: relative;
+}
+
+.footer__img-pre {
+  max-width: 260px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer__border-left {
+}
+
+.footer__text-pre {
+  font-size: 18px;
+  font-family: "BarmenoRegularBold";
+  margin-top: 0;
+  color: #fff;
+}
+
+.footer__btn {
+  margin-top: 15px;
+}
+
+.footer__container {
+  text-align: center;
+  padding: 45px 0;
+  font-size: 10px;
+  background-color: #fff;
+}
+
+.footer__a {
+  color: $brown;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  line-height: 16px;
+  padding: 0 8px;
+}
+
+.footer__left-pipe {
+  border-left: solid 1px $brown;
+}
+
+.footer li:first-child a {
+  border: none;
+}
+
+.footer ul, .footer li {
+  display: inline;
+}
+
+.footer p {
+  color: #999;
+  font-weight: bold;
+}
+
+.texture-3 {
+  background-color: $brown;
+}
+
+.footer__corner-nestle {
+  position: absolute; 
+  width: 200px; 
+  right: 0; 
+  bottom: 0; 
+  z-index: 9999;
+}
+
+.footer__img--bottom {
+  max-width: 600px; 
+  width: 100%;
+}
+
+.footer__text--bottom {
+  color: white; 
+  font-size: 9px; 
+  margin-left: 10px; 
+  margin-bottom: 10px;
+}
+
+@media (max-width: $screen-sm-min) {
+
+  .footer__img--bottom {
+    max-width: 600px; 
+    width: 100%;
+    padding-right: 65px;
+  }
+
+  .footer__text--bottom {
+    color: white;
+    font-size: 6px;
+    margin-bottom: 0;
+    margin-left: 10px;
+    padding-right: 80px;
+  }
+
+  .footer__hr {
+    margin: 5px 0 15px 0;
+    border-color: #850e0d;
+  }
+
+  .footer__left-pipe {
+    display: block;
+    border: none;
+    margin-top: 5px;
+  }
+
+  .footer__img-pre {
+    float: left;
+    max-width: 140px;
+  }
+
+  .footer__text-pre {
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .footer__btn {
+    margin-bottom: 15px;
+  }
+  
+  .footer ul, .footer li {
+    padding: 0;
+    display: block;
+    border: none;
+  }
+  
+  .footer__a {
+    border: none;
+    line-height: 24px;
+  }
+  
+  .fix-footer {
+    text-align: left !important;
+  }
+  .footer__corner-nestle{
+    position: absolute; 
+    width: 120px; 
+    right: 0; 
+    bottom: 0; 
+    z-index: 9999;
+  }
+}

@@ -1,0 +1,137 @@
+/* CUP */
+
+.cup__title {
+  color: #660206;
+  font-family: "BarmenoRegularBold";
+  font-size: 28px;
+  padding: 0 10px 15px 10px;
+}
+
+.cup__end-title {
+  font-size: 26px; 
+  margin-top: 45px;
+}
+
+.cup__end-description {
+  font-size: 18px; 
+  margin-bottom: 45px; 
+  font-family: 'Roboto';
+}
+
+.cup__package {
+  border: 2px solid #999;
+  border-radius: 5px;
+  margin-left: 15px;
+  margin-right: 15px;
+  padding: 10px 50px;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.cup__package--selected{
+  border-color: $brown;
+}
+
+.cup__checked{
+  position: absolute;
+  color: $brown;
+  top: -17px;
+  right: -11px;
+  font-size: 23px;
+}
+
+.cup__subtitle {
+  color: $brown;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.cup__footer {
+  color: $dark_grey;
+  font-size: 14px;
+  margin: 20px 80px;
+}
+
+.cup__header-col {
+  margin-bottom: 30px;
+}
+
+.cup__form {
+  label {
+    color: $brown;
+  }
+  label.error,
+  .checkbox label.error{
+    font-weight: normal;
+    display: block;
+    color: red;
+  }
+  .checkbox label {
+   font-weight: bold; 
+  }
+  .main-container--cream {
+    padding-bottom: 30px;
+  }
+}
+
+.cup__select-cup-image{
+  display: block;
+  margin: 5px auto;
+}
+
+.cup__checkbox{
+  color: $brown;
+  font-weight: bold;
+}
+
+.cup__submit {
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+.cup__radio {
+  padding-top: 5px;
+}
+
+.cup__back{
+  color: grey;
+  line-height: 60px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.cup__back:hover{
+  color: grey;
+}
+
+.form-errors{
+  color: red;
+  text-align: center;
+}
+
+@media(max-width: $screen-sm-min) {
+  .form-control{
+    margin: 10px 0;
+  }
+
+  .cup__package{
+    margin-left: 0;
+    margin-right: 0;
+    padding: 10px 20px;
+  }
+  
+  .cup__header-col {
+    margin-bottom: 0px;
+    padding-top: 20px;
+  }
+  
+  .cup__select-cup-image{
+    display: block;
+    margin: 30px auto;
+  }
+  
+  .cup__footer{
+    margin: 20px 10px;
+  }
+}

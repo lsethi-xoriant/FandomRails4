@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+
+  <% calltoaction_info_list = (@calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {}) %>
+  <% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
+
+  <% aux = default_intesa_expo_aux(@aux_other_params, @calltoaction_info_list) %>  
+  <title><%= "#{@seo_info["title"]} | Intesa" rescue "" %></title>
+  <meta name="description" content="<%= @seo_info["meta_description"] rescue "" %>">
+  <meta name="keywords" content="<%= @seo_info["keywords"] rescue get_default_keywords() %>">
+  
+  <%= yield (:fb_meta_tags) %>
+
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+  <link rel="shortcut icon" href="<%= (aux["assets"]["favicon"]["url"] rescue asset_path('favicon.ico')) %>">
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  <%= stylesheet_link_tag "intesa_expo_application", :media => "all" %>
+  <%= javascript_include_tag "intesa_expo_application" %>
+
+  <!--[if lte IE 9]>
+    <link href="<%= asset_path("intesa_expo_application.css").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" media="all" rel="stylesheet" type="text/css" />
+    <script src="<%= asset_path("intesa_expo_application.js").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" type="text/javascript"></script>  
+    <link href="<%= asset_path("intesa_expo_ie9.css").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" media="all" rel="stylesheet" type="text/css" />
+  <![endif]-->
+
+  <%= csrf_meta_tags %>
+
+</head>
+
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
+<div ng-cloak>
+
+  <%= render partial: "/application/user_bar", locals: { aux: aux } %>
+
+  <%= yield %>
+
+  <%= render partial: "/application/footer", locals: { aux: aux } %>
+
+</div>
+  <script type="text/javascript">
+	$(document).ready(function() {
+      is_last_rewards_flexslider_slide = new Object();
+	    $('.rewards-flexslider').flexslider({
+	      animation: "slide",
+        slideshow: false,
+        animationLoop: false,
+        touch: true,
+        itemWidth: 258,
+        itemMargin: 15,
+        controlNav: false,
+        prevText: "",
+        nextText: "",
+        start: function(slider) {
+          if(slider.pagingCount == 1) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          }
+        },
+        before: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }
+        },
+        end: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+        }
+	    });
+	});
+	
+  </script>
+  
+  <%= render partial: "/application/ga" %>
+
+</body>
+</html>

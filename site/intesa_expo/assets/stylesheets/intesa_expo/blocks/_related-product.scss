@@ -1,0 +1,37 @@
+.related-product__title {
+  color: $brown;
+  font-size: 26px;
+  font-family: "BarmenoRegularBold";
+  margin-top: 0;
+  text-transform: uppercase;
+}
+
+.related-product__description {
+  font-size: 14px;
+  color: $brown;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.related-product__img {
+  width: 100%;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .related-product__img {
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 250px;
+  }
+  
+  .related-product__description,
+  .related-product__title {
+    text-align: center;
+  }
+
+  .related-product__btn {
+    width: 100%;
+  }
+}

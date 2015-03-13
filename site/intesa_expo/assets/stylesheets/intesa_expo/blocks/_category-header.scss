@@ -1,0 +1,130 @@
+/* CATEGORY HEADER BLOCK */
+
+.category-header {
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.category-header__header-image{
+  margin-top: -20px;
+}
+
+.category-header__title-container {
+  -ms-transform: rotate(-3deg); /* IE 9 */
+  -webkit-transform: rotate(-3deg); /* Chrome, Safari, Opera */
+  transform: rotate(-3deg);
+  display: inline-block;
+  background-color: rgb(160, 198, 117);
+  background-image: url("orzoro/texture.png");
+  padding: 0 10px;
+  margin-top: 20px;
+  h1{
+    color: #fff;
+    text-transform: uppercase;
+    font-family: "Allan";
+    font-size: 25px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+.paper-shadow
+{
+  position: relative;
+}
+.paper-shadow:before
+{
+  z-index: -1;
+  position: absolute;
+  content: "";
+  bottom: 15px;
+  left: 10px;
+  width: 50%;
+  top: 80%;
+  max-width:300px;
+  background: #777;
+  -webkit-box-shadow: 0 15px 10px #777;
+  -moz-box-shadow: 0 15px 10px #777;
+  box-shadow: 0 15px 10px #777;
+  -webkit-transform: rotate(-3deg);
+  -moz-transform: rotate(-3deg);
+  -o-transform: rotate(-3deg);
+  -ms-transform: rotate(-3deg);
+  transform: rotate(-3deg);
+}
+
+.category-header__subtitle-container{
+  background-color: #ebe6d3;
+  background-image: url("orzoro/texture.png");
+  width: 40%;
+  margin: 0 auto;
+  padding: 2px 15px;
+  margin-top: -10px;
+}
+
+.category-header__title,
+.category-header__subtitle{
+  color: $brown;
+  padding: 0;
+}
+
+.category-header__title--gallery{
+  position: absolute;
+  bottom: 55px;
+  left: 50px;
+  color: #fff;
+}
+
+.category-header__filter-area{
+  position: absolute;
+  right: 58px;
+  bottom: 15px;
+}
+
+.category-header__filter-area--gallery{
+  position: absolute;
+  left: 50px;
+  bottom: 15px;
+}
+
+.category-header__launch{
+  text-transform: uppercase;
+  color: $brown;
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+  width: 100%;
+  font-weight: bold;
+}
+
+@media (max-width: $screen-xs) { 
+  .category-header {
+    height: auto;
+    overflow: hidden;
+    position: relative;
+  }
+  .category-header__filter-area{
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+  }
+  .category-header__title {
+    font-size: 18px;
+  }
+  
+  .category-header__subtitle{
+    font-size: 13px;
+  }
+  
+  .category-header__title,
+  .category-header__subtitle{
+    padding: 0;
+  }
+  
+  .category-header__subtitle-container{
+    width:95%;
+    margin-bottom: 20px;
+  }
+
+}
