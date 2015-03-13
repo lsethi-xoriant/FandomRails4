@@ -485,6 +485,7 @@ module DisneyHelper
           prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => progress, "status" => level_before_status }
         end
         index += 1
+        level_before_point = level.cost
       end
     end
     prepared_levels
