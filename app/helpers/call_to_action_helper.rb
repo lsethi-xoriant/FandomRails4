@@ -530,6 +530,15 @@ module CallToActionHelper
         user_calltoaction.interaction_watermark_url = watermark.path(:normalized)
       end
     end
+    
+    if $site.aws_transcoding
+      if params["upload"].content_type.start_with? "video"
+        aux_fields = JSON.parse(user_calltoaction.aux) rescue {}
+        aux_fields['aws_transcoding_media_status'] = "requested"
+        user_calltoaction.aux = aux_fields.to_json
+      end
+    end
+    
     user_calltoaction
   end
   

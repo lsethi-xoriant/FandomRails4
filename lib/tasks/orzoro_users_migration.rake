@@ -1,6 +1,6 @@
 require 'rake'
 require 'csv'
-require 'ruby-debug'
+#require 'ruby-debug'
 
 desc "Migrate old orzoro users to new users table"
 
@@ -35,7 +35,7 @@ def migrate_orzoro_users(users_csv_file, user_redeem_cups_csv_file)
       terms = user_["terms"] == "t" ? true : false
       newsletter = user["newsletter"] == "t" ? true : false
       aux = { "terms" => terms, 
-              "sync_timestamp" => Time.now
+              "sync_timestamp" => Time.now,
               "cup_redeem" => [{ "identity" => { "terms" => terms, "newsletter" => newsletter } }]
             }.to_json
 

@@ -145,7 +145,6 @@ class Sites::Disney::CallToActionController < CallToActionController
     calltoaction = CallToAction.find(params[:cta_id])
     
     extra_fields_valid, extra_field_errors, cloned_cta_extra_fields = validate_upload_extra_fileds(params, extra_fields)
-    
     if cloned_cta.errors.any?
       if !extra_fields_valid
         flash[:error] = (cloned_cta.errors.full_messages + extra_field_errors).join(", ")

@@ -1,0 +1,139 @@
+/* PROFILE HEADER BLOCK */
+.profile-header-mobile{
+  background-color: #fff;
+  border-top: 2px solid #ddd;
+}
+
+.profile-header-mobile__item{
+  border-right: 1px solid #ccc;
+  padding-top: 10px;
+  position: relative;
+  height: 95px;
+  padding-top: 20px !important;
+}
+
+.profile-header-mobile__item--level{
+  border-right: 1px solid #ccc;
+  padding-top: 10px;
+  position: relative;
+  height: 95px;
+  .profile-header-mobile__glyphicon-icon--big{
+    line-height: 90px;
+  }
+}
+
+.profile-header-mobile__item--rewards{
+  border-right: 1px solid #ccc;
+  padding-top: 10px;
+  position: relative;
+  height: 95px;
+  padding-top: 30px !important;
+}
+
+.profile-header-mobile__item--last{
+  border-right: none;
+}
+
+.profile-header-mobile__item__image {
+  display: block;
+  width: 65px;
+  margin: 15px 2px 0 10px;
+}
+
+.profile-header-mobile__item__image--main {
+  margin-top: 0px;
+}
+
+.profile-header-mobile__item__title{
+  color: #373737;
+  font-size: 20px;
+  margin: 10px 0 0 0;
+  line-height: 35px;
+}
+
+.profile-header-mobile__item__subtitle{
+  color: #8a8a8a;
+  font-size: 14px;
+  margin: 0;
+}
+
+.profile-header-mobile__item__subtitle--rank{
+  color: #8a8a8a;
+  font-size: 14px;
+  margin: 10px 0 0 0;
+}
+
+.profile-header-mobile__item__rank-position{
+  font-size: 26px;
+  margin-top: -5px;
+}
+
+.profile-header-mobile__item__reward{
+  font-size: 16px;
+  color: #373737;
+  margin-top: 20px;
+  padding: 0 10px;
+}
+
+.profile-header-mobile__item__counter{
+  padding: 6px 15px 6px 15px;
+  font-size: 18px;
+  color: #993300;
+  margin: 0 10px;
+  border-radius: 60px;
+  display: inline-block;
+  width:90%;
+}
+
+.profile-header-mobile__item__counter--credits{
+  padding: 4px 13px 4px 13px;
+  font-size: 18px;
+  color: #fff;
+  margin: 0 10px;
+  border-radius: 60px;
+  display: inline-block;
+  background-color: #b82423;
+  border: 2px solid #b82423;
+  width:90%;
+}
+
+.profile-header-mobile__item__counter--credit{
+  color: #c72726;
+  border-color: #c72726;
+  background-color: #fff;
+}
+
+.profile-header-mobile__item__counter-label{
+  line-height: 20px;
+}
+
+.profile-header-mobile__glyphicon-icon{
+  font-size: 18px;
+}
+
+.profile-header-mobile__glyphicon-icon--big{
+  font-size: 22px;
+  line-height: 60px;
+}
+
+.profile-header-mobile__glyphicon-icon--blue{
+  font-size: 30px;
+  line-height: 60px;
+  color: $blu
+}
+
+.profile-header-mobile__arrow{
+  font-size: 30px;
+  line-height: 75px;
+}
+
+.profile-header-mobile__link{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-indent: -9000px;
+  z-index: 100;
+}

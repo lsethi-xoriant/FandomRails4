@@ -30,9 +30,9 @@ namespace :aws_tasks do
     }.to_yaml
   end
 
-  task :finalize_transcoding, [:tenant, :app_root_path] => :environment do |t, args|
+  task :finalize_transcoding, [:tenant, :app_root_path, :s3_output_folder] => :environment do |t, args|
 
-    logger = Logger.new("#{args.app_root_path}/log/restore_media_from_transcoding.log")
+    logger = Logger.new("#{args.app_root_path}/log/finalize_transcoding.log")
     logger.info "#{current_timestamp} finalize transcoding start"
 
     switch_tenant(args.tenant)
@@ -51,7 +51,7 @@ namespace :aws_tasks do
       ctas = CallToAction.where("aux->>'aws_transcoding_media_status' = 'inprogress'")
 
       ctas.each do |cta|
-        object = bucket.objects["elastic-transcoder-dev/web_mp4/aws_transcoding-#{cta.id}"]
+        object = bucket.objects["#{args.s3_output_folder}/web_mp4/aws_transcoding-#{cta.id}"]
         
         aux = JSON.parse(cta.aux || "{}")
 
@@ -67,7 +67,7 @@ namespace :aws_tasks do
             media_destination = remove_head_slash("#{cta.media_image.path.sub(cta.media_image_file_name, "")}#{media_file_name}")
 
             # Save original media in another folder and replace this media with transcoded media
-            bucket.objects[media_image_key].copy_to("elastic-transcoder-dev/original/#{cta.id}-#{cta.media_image_file_name}", acl: :public_read)
+            bucket.objects[media_image_key].copy_to("#{args.s3_output_folder}/original/#{cta.id}-#{cta.media_image_file_name}", acl: :public_read)
             object.copy_to(media_destination, acl: :public_read)
 
             aux["aws_transcoding_media_status"] = "done"
@@ -124,12 +124,12 @@ namespace :aws_tasks do
     media_image_path
   end
  
-  task :initialize_transcoding, [:tenant, :app_root_path] => :environment do |t, args|
+  task :initialize_transcoding, [:tenant, :app_root_path, :s3_output_folder] => :environment do |t, args|
 
     # https://console.aws.amazon.com/elastictranscoder/home?region=eu-west-1#
     switch_tenant(args.tenant)
 
-    logger = Logger.new("#{args.app_root_path}/log/transcoding.log")
+    logger = Logger.new("#{args.app_root_path}/log/initialize_transcoding.log")
     logger.info "#{current_timestamp} initialize transcoding start"
 
     transcoding_settings = get_deploy_setting("sites/disney/transcoding", false)
@@ -155,7 +155,7 @@ namespace :aws_tasks do
         video_url = remove_head_slash(cta.media_image.path)
         output_key = "aws_transcoding-#{cta.id}"
 
-        job = video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
+        job = video_transcoding(output_key, video_url, transcoder_client, pipeline_id, args.s3_output_folder)
 
         aux = JSON.parse(cta.aux)
         aux["aws_transcoding_media_status"] = "inprogress"
@@ -171,7 +171,7 @@ namespace :aws_tasks do
 
   end
 
-  def video_transcoding(output_key, video_url, transcoder_client, pipeline_id)
+  def video_transcoding(output_key, video_url, transcoder_client, pipeline_id, s3_output_folder)
     web_mp4_preset_id = '1351620000001-100070' # web_mp4
 
     job = transcoder_client.create_job(
@@ -183,7 +183,7 @@ namespace :aws_tasks do
         key: 'web_mp4/' + output_key,
         preset_id: web_mp4_preset_id
       },
-      output_key_prefix: "elastic-transcoder-dev/"
+      output_key_prefix: "#{s3_output_folder}/"
     )[:job]
 
     #puts 'Job has been created: ' + JSON.pretty_generate(job)

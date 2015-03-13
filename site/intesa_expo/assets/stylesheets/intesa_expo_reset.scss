@@ -1,0 +1,493 @@
+/* RESET CSS */
+
+*{
+  font-family: 'Roboto';
+}
+
+.btn-orange > span {
+  font-family: 'Roboto' !important;
+}
+
+hr {
+  border-color: #ccc;
+}
+
+h1, h2, h3, h4, h5{
+  color: $brown;
+}
+
+h1{
+  font-size: 38px;
+  font-family: "BarmenoRegularBold";
+}
+
+h2{
+  font-size: 18px;
+  color: #6B6B6B;
+}
+
+a{
+  color: $brown;
+}
+
+a:hover{
+  text-decoration: underline;
+  color: $brown;
+}
+
+.btn-xlg{
+  font-size: 22px;
+  padding: 15px 20px;
+}
+
+#append-other {
+  margin-top: 15px;
+  padding-bottom: 30px;
+  .btn { 
+    text-transform: uppercase;
+  }
+}
+
+body {
+  padding-top: 0;
+  background-color: #f7b033;
+  background-image: url("orzoro/texture.png");
+}
+
+.form-error {
+  color: red;
+}
+
+.disney-js-mh-footer-logo {
+    background: url("http://navbar.disneyinternational.com/disney-logo-dark.png") no-repeat scroll 0 0 / contain rgba(0, 0, 0, 0) !important;
+}
+
+.disney-js-mh-footer-menu.disney-js-mh-footer-about > li > a {
+  color: #000 !important;
+}
+
+p{
+  margin: 0;
+  line-height: inherit;
+  color: $brown;
+}
+
+.row-load-more{
+  padding: 20px 0 !important;
+  text-align: center;
+}
+
+#goc-body {
+  background: transparent !important;
+}
+
+.adv-square__container {
+  //padding: 0;
+}
+
+.main-row__covers {
+  padding-top: 40px;
+  background-image: url("disney/bg-shadow.png");
+  background-color: #ffffff;
+  background-image: url("http://cdnvideo.dolimg.com/cdn_assets/2e50c273c01614fbe457f8ef521884397b600fe5.jpg");
+  background-position: left top;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin-bottom: 0;
+}
+
+.adv__square {
+  p {
+    background: none repeat scroll 0 0 #000;
+    color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+  }
+  margin-bottom: 15px;
+}
+
+.adv__horizontal {
+  p {
+    bottom: 8px;
+    color: #fff;
+    left: -25px;
+    margin-left: -5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    position: absolute;
+    -ms-transform: rotate(270deg); /* IE 9 */
+    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
+    transform: rotate(270deg);
+    background: #000;
+  }
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  position: relative;
+  width: 728px;
+}
+
+//.flowplayer.is-paused {
+//  opacity: 0.9;
+//}
+
+.container--footer {
+  background: #ebebeb;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.main-container {
+  background-color: $white;
+  padding-top: 30px;
+  background-image: url("orzoro/texture.png");
+}
+
+.main-container-test {
+  background-color: $white;
+}
+
+.main-container--cream {
+  background-color: $cream;
+}
+
+.main-container--purple {
+  background-color: $purple;
+}
+
+.main-row {
+  padding-left: 43px;
+  padding-right: 43px;
+}
+
+.container-shadow {
+  padding-top: 30px;
+  -webkit-box-shadow: 0 1px 16px -8px rgba(100, 100, 100, 0.7) inset;
+  -moz-box-shadow: 0 1px 16px -8px rgba(100, 100, 100, 0.7) inset;
+  box-shadow: 0 1px 16px -8px rgba(100, 100, 100, 0.7) inset;
+}
+
+a{
+  color: $blu;
+}
+
+.btn-back{
+  margin: 20px 0;
+}
+
+.glyphicon-blu{
+  color: $blu;
+}
+
+/********************* COOKIES FOOTER *********************/
+
+.cookies-footer {
+  background: rgba(0, 0, 0, 0.6); 
+  color: #fff; 
+  min-height: 0; 
+  padding: 10px;
+}
+
+.cookies-footer__description {
+  margin: 0; 
+  font-size: 11px;
+}
+
+.cookies-footer__link {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.btn {
+  span {
+    position: relative; top: 2px;
+    font-family: "BarmenoRegularBold"
+  }
+}
+
+.comment_evidence {
+    -webkit-animation: comment_evidence_animation 5s; /* Chrome, Safari, Opera */
+    animation: comment_evidence_animation 3s;
+}
+
+.spacer {
+  margin: 20px 0;
+}
+
+.brws-item {
+  background: $grey;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #d1d2d4;
+  background-image: url("orzoro/texture.png");
+}
+
+.brws-item--dark{
+  background-color: #f6f0dd;
+}
+
+.container--default {
+  background-color: #FFF;
+}
+
+@-webkit-keyframes comment_evidence_animation { /* Chrome, Safari, Opera */
+  0% { background: transparent; }
+  50% { background: yellow; }
+  100% { background: transparent; }
+}
+
+@keyframes comment_evidence_animation { /* Standard syntax */
+  0% { background: transparent; }
+  50% { background: yellow; }
+  100% { background: transparent; }
+}
+
+/********************* ERRORS *********************/
+
+.error__container {
+  background-image: url('bg-modal.png'); 
+  background-size: 100% 100%;
+  background-color: #fff;
+}
+
+.error__image {
+  margin-top: 155px;
+  max-width: 240px;
+  width: 100%;
+}
+
+.error__title {
+  margin-top: 220px;
+}
+
+.error__description {
+  margin-bottom: 220px;
+}
+
+
+/********************* MODALS *********************/
+
+.modal__custom {
+  .modal-header {
+    border: none;
+  }
+  .modal-body {
+    margin-top: 40px;
+    margin-bottom: 60px;
+  }
+}
+
+.modal__custom__button-sign-in, .modal__custom__button-sign-up {
+  width: 110px;
+}
+
+.modal__custom__button-sign-in {
+  margin-right: 10px;
+}
+
+.modal__custom__image {
+  margin-bottom: 15px;
+  max-width: 170px;
+  width: 100%;
+}
+
+.modal__custom__text {
+  margin-bottom: 10px;
+  font-size: 18px;
+  span {
+    font-weight: bold;
+  }
+}
+
+.modal__custom__text--ie8 {
+  font-size: 18px;
+}
+
+.modal__custom__text--ie8-description {
+  margin-bottom: 15px;
+}
+
+.modal--bg {
+  background-image: url('bg-modal.png'); 
+  background-size: 100% 100%;
+}
+
+@media (min-width: $screen-md-min) { 
+
+  .main-row__covers-left-col {
+    padding-right: 0;
+  }
+
+  .adv__square {
+    float: right;
+  }
+  
+}
+
+@media (max-width: $screen-xs) {
+  .brws-item {
+    padding-bottom: 20px !important;
+  }
+}
+
+@media (max-width: $screen-sm-min) { 
+  .test-undervideo-interaction__row, .share-undervideo-interaction__row {
+    margin: 0;
+    padding: 0;
+  }
+
+  .container-shadow {
+    padding-top: 5px;
+  }
+
+  .main-container--fluid {
+    padding: 0 !important;
+  }
+
+  .main-container {
+    padding-top: 0 !important;
+  }
+
+  .modal-body--gallery {
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+    h1 {
+      font-size: 28px;
+    }
+    .modal__custom__text {
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    button {
+      min-width: 80px;
+    }
+  }
+
+  .error__container {
+    text-align: center;
+  }
+
+  .error__image {
+    max-width: 120px;
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  .error__title {
+    margin-top: 45px;
+  }
+
+  .error__description {
+    margin-bottom: 45px;
+  }
+
+  button.close {
+    position: relative;
+    z-index: 10;
+  }
+
+  .flex-direction-nav {
+    display: none !important;
+  }
+
+  .adv__horizontal {
+    margin-bottom: 10px;
+    margin-top: 25px;
+    display: inline-block;
+    width: auto;
+    text-align: center;
+    p {
+      bottom: auto;
+      font-size: 12px;
+      left: 5px;
+      top: -19px;
+      width: 100%;
+      -ms-transform: none; /* IE 9 */
+      -webkit-transform: none; /* Chrome, Safari, Opera */
+      transform: none;
+    }
+  }
+  
+  .brws-item {
+    padding: 0;
+  }
+
+  .adv-square__container {
+    padding: 0;
+  }
+
+  .adv-square__row {
+    margin: 0;
+  }
+
+  .adv__square {
+    p {
+      bottom: auto;
+      font-size: 12px;
+      left: 5px;
+      top: -19px;
+      width: 100%;
+      -ms-transform: none; /* IE 9 */
+      -webkit-transform: none; /* Chrome, Safari, Opera */
+      transform: none;
+    }
+    margin-left: 10px auto;
+    display: inline-block;
+    width: auto;
+    text-align: center;
+  }
+
+  .adv__square-col {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .main-row {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* ANIMATION */
+
+.fadeout_animation {
+  -webkit-animation: fadeOut 0.6s forwards; /* Chrome, Safari, Opera */
+  animation: fadeOut 0.6s forwards;
+}
+
+@-webkit-keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+} 
+
+.hide_content {
+  opacity: 0;
+}
+
+.fadein_animation {
+  -webkit-animation: fadeIn 0.6s forwards; /* Chrome, Safari, Opera */
+  animation: fadeIn 0.6s forwards;
+}
+
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+} 

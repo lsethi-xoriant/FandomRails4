@@ -1,0 +1,91 @@
+/* PROFILE HEADER BLOCK */
+.profile-header{
+  background-color: #fff;
+  padding-right: 43px;
+}
+
+.profile-header__item{
+  height: 190px;
+  border-right: 1px solid #ccc;
+  padding-top: 25px;
+}
+
+.profile-header__item--level{
+  padding-top: 15px;
+}
+
+.profile-header__item--last{
+  border-right: none;
+}
+
+.profile-header__item__image{
+  display: block;
+  max-width: 65px;
+  margin: 0 auto 10px auto;
+  
+}
+
+.profile-header__item__title{
+  color: #373737;
+  text-align: center;
+  font-size: 24px;
+}
+
+.profile-header__item__subtitle{
+  color: #8a8a8a;
+  text-align: center;
+  font-size: 14px;
+}
+
+.profile-header__item__rank-position{
+  font-size: 40px;
+  color: #1478e8;
+  text-align: center;
+}
+
+.profile-header__item__reward{
+  font-size: 16px;
+  color: #373737;
+  margin-top: 20px;
+  padding: 0 10px;
+}
+
+.profile-header__item__counter{
+  padding: 4px 25px 4px 25px;
+  font-size: 23px;
+  margin: 0 10px;
+  display: inline-block;
+  width:95%;
+  border-radius: 15px;
+  color: $red;
+  background: #fcc839; 
+  background: -webkit-linear-gradient(#fcc839, #ecb62d);
+  background: -o-linear-gradient(#fcc839, #ecb62d);
+  background: -moz-linear-gradient(#fcc839, #ecb62d);
+  background: linear-gradient(#fcc839, #ecb62d);
+}
+
+.profile-header__item__counter--credits{
+  padding: 4px 25px 4px 25px;
+  font-size: 23px;
+  margin: 0 10px;
+  display: inline-block;
+  background-color: #b82423;
+  width:95%;
+  border-radius: 15px;
+  color: #fff;
+}
+
+.profile-header__item__counter--credit{
+  color: #c72726;
+  border-color: #c72726;
+  background-color: #fff;
+}
+
+.profile-header__item__counter-label{
+  line-height: 40px;
+}
+
+.profile-header__glyphicon-icon{
+  font-size: 24px;
+}
