@@ -522,8 +522,8 @@ module CallToActionHelper
         slug: unique_name, 
         user_id: current_user.id,
         media_image: params["upload"],
-        thumbnail: (params["upload"] if params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}),
-        media_type: params["upload"].content_type.start_with?("video") ? "FLOWPLAYER" : "IMAGE",
+        thumbnail: (params["upload"] if params["upload"] && params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}),
+        media_type: params["upload"] && params["upload"].content_type.start_with?("video") ? "FLOWPLAYER" : "IMAGE",
         extra_fields: cta_template.extra_fields.nil? ? {} : cta_template.extra_fields 
         )
 
@@ -536,7 +536,7 @@ module CallToActionHelper
     end
     
     if $site.aws_transcoding
-      if params["upload"].content_type.start_with? "video"
+      if params["upload"] && params["upload"].content_type.start_with?("video")
         aux_fields = JSON.parse(user_calltoaction.aux) rescue {}
         aux_fields['aws_transcoding_media_status'] = "requested"
         user_calltoaction.aux = aux_fields.to_json
