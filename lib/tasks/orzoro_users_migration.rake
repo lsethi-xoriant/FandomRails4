@@ -1,6 +1,6 @@
 require 'rake'
 require 'csv'
-require 'ruby-debug'
+#require 'ruby-debug'
 
 desc "Migrate old orzoro users to new users table"
 
