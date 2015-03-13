@@ -470,7 +470,7 @@ module CallToActionHelper
     calltoaction_template = upload_interaction.call_to_action
     cta_title = calculate_cloned_cta_title(upload_interaction, calltoaction_template, params)
     cta_description = calculate_cloned_cta_description(upload_interaction, calltoaction_template, params)
-    user_calltoaction = duplicate_user_generated_cta(params, watermark, cta_title, cta_description)
+    user_calltoaction = duplicate_user_generated_cta(params, watermark, cta_title, cta_description, calltoaction_template)
 
     calltoaction_template.interactions.each do |i|
       duplicate_interaction(user_calltoaction, i)
@@ -509,7 +509,7 @@ module CallToActionHelper
     end
   end
   
-  def duplicate_user_generated_cta(params, watermark, cta_title, description)
+  def duplicate_user_generated_cta(params, watermark, cta_title, description, cta_template)
     unique_name = generate_unique_name()
 
     user_calltoaction = CallToAction.new(
@@ -520,7 +520,8 @@ module CallToActionHelper
         user_id: current_user.id,
         media_image: params["upload"],
         thumbnail: (params["upload"] if params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}),
-        media_type: "IMAGE"
+        media_type: params["upload"].content_type.start_with?("video") ? "FLOWPLAYER" : "IMAGE",
+        extra_fields: cta_template.extra_fields.nil? ? {} : cta_template.extra_fields 
         )
 
     if watermark.exists?
