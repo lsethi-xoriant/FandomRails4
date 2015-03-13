@@ -7,6 +7,7 @@ module Fandom
       twitter_integration: true,
       allowed_context_roots: ["violetta"],
       init_ctas: 6,
+      aws_transcoding: true,
       assets:{
         "anon_avatar" => "disney_anon.png",
         "community_logo" => "disney_community_logo.png"
