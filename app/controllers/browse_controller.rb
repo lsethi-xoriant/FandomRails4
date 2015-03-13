@@ -131,6 +131,9 @@ class BrowseController < ApplicationController
         }
       }
     }
+    
+    set_seo_info_for_tag(@category)
+    
   end
   
   # hook for tenant with multiproperty

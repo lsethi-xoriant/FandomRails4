@@ -12,6 +12,10 @@ module SeoHelper
   def set_seo_info_for_cta(cta)
     set_seo_info(cta.title, cta.description, get_default_keywords(), cta.thumbnail)
   end
+  
+  def set_seo_info_for_tag(tag)
+    set_seo_info(tag.title, tag.description, get_default_keywords(), tag.thumbnail)
+  end
 
   def get_default_keywords()
     Setting.find_by_key("keywords").value rescue ""
