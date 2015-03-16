@@ -2,12 +2,6 @@
 class Sites::Disney::CallToActionController < CallToActionController
   include DisneyHelper
 
-  def execute_sql_and_get_ctas_ordered(sql)
-    cta_ids = ActiveRecord::Base.connection.execute(sql)
-    order =  cta_ids.map { |r| "call_to_actions.id = #{r["id"].to_i} DESC" }
-    CallToAction.where("call_to_actions.id" => cta_ids.map { |r| r["id"].to_i }).order("#{order.join(",")}").to_a
-  end
-
   def build_current_user() 
     build_disney_current_user()
   end
@@ -59,13 +53,15 @@ class Sites::Disney::CallToActionController < CallToActionController
     ordering = params[:ordering]
 
     calltoactions = cache_short(get_next_ctas_stream_cache_key(property.id, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, gallery_calltoaction_id)) do     
+      
       calltoactions = get_disney_ctas(property, gallery_calltoaction_id).where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)
+
       case ordering
       when "comment"
-        calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")
+        calltoaction_ids = calltoactions.joins(:call_to_action_tags, :rewards).select("call_to_actions.id").to_sql
         gets_ctas_ordered_by_comments(calltoaction_ids, 4)
       when "view"
-        calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")
+        calltoaction_ids = calltoactions.joins(:call_to_action_tags, :rewards).select("call_to_actions.id").to_sql
         gets_ctas_ordered_by_views(calltoaction_ids, 4)
       else
         calltoactions = calltoactions.limit(4).to_a
@@ -90,23 +86,25 @@ class Sites::Disney::CallToActionController < CallToActionController
     property = get_tag_from_params(get_disney_property())
     init_ctas = $site.init_ctas
 
-    calltoactions = []
+    calltoactions = get_disney_ctas(property, gallery_calltoaction_id)
     ordering = params["ordering"]
+
+
 
     case ordering
     when "comment"
       calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering, gallery_calltoaction_id)) do
-        calltoaction_ids = get_disney_ctas(property, gallery_calltoaction_id).map { |calltoaction| calltoaction.id }.join(",")
+        calltoaction_ids = calltoactions.joins(:call_to_action_tags, :rewards).select("call_to_actions.id").to_sql
         gets_ctas_ordered_by_comments(calltoaction_ids, init_ctas)
       end
     when "view"
       calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering, gallery_calltoaction_id)) do
-        calltoaction_ids = get_disney_ctas(property, gallery_calltoaction_id).map { |calltoaction| calltoaction.id }.join(",")
+        calltoaction_ids = calltoactions.joins(:call_to_action_tags, :rewards).select("call_to_actions.id").to_sql
         gets_ctas_ordered_by_views(calltoaction_ids, init_ctas)
       end
     else
       calltoactions = cache_medium(get_calltoactions_in_property_cache_key(property.id, gallery_calltoaction_id, get_cta_max_updated_at())) do
-        get_disney_ctas(property, gallery_calltoaction_id).limit(init_ctas).to_a
+        calltoactions.limit(init_ctas).to_a
       end
     end
 
