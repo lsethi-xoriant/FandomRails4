@@ -397,7 +397,7 @@ class CallToActionController < ApplicationController
     response[:ga][:action] = "AddComment"
 
     if current_user
-      user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+      user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id, aux: aux)
       response[:comment] = build_comment_for_comment_info(user_comment, true)
       if approved && user_comment.errors.blank?
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
@@ -408,7 +408,7 @@ class CallToActionController < ApplicationController
       response[:captcha] = captcha_enabled
       response[:captcha_evaluate] = !captcha_enabled || params[:session_storage_captcha] == Digest::MD5.hexdigest(params[:comment_info][:user_captcha] || "")
       if response[:captcha_evaluate]
-        user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id)
+        user_comment = UserCommentInteraction.create(user_id: current_or_anonymous_user.id, approved: approved, text: user_text, comment_id: comment_resource.id, aux: aux)
         response[:comment] = build_comment_for_comment_info(user_comment, true)
         if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
