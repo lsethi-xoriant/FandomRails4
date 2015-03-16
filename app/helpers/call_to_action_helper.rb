@@ -258,6 +258,8 @@ module CallToActionHelper
           upload_info = build_uploads_for_resource(interaction)
         when "vote"
           vote_info = build_votes_for_resource(interaction)
+        when "download"
+          download_info = resource.ical_fields
         end
 
         if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
@@ -283,6 +285,7 @@ module CallToActionHelper
               "comment_info" => comment_info,
               "like_info" => like_info,
               "upload_info" => upload_info,
+              "download_info" => download_info,
               "vote_info" => vote_info,
               "url" => resource_url
             }
@@ -470,7 +473,7 @@ module CallToActionHelper
     calltoaction_template = upload_interaction.call_to_action
     cta_title = calculate_cloned_cta_title(upload_interaction, calltoaction_template, params)
     cta_description = calculate_cloned_cta_description(upload_interaction, calltoaction_template, params)
-    user_calltoaction = duplicate_user_generated_cta(params, watermark, cta_title, cta_description)
+    user_calltoaction = duplicate_user_generated_cta(params, watermark, cta_title, cta_description, calltoaction_template)
 
     calltoaction_template.interactions.each do |i|
       duplicate_interaction(user_calltoaction, i)
@@ -509,7 +512,7 @@ module CallToActionHelper
     end
   end
   
-  def duplicate_user_generated_cta(params, watermark, cta_title, description)
+  def duplicate_user_generated_cta(params, watermark, cta_title, description, cta_template)
     unique_name = generate_unique_name()
 
     user_calltoaction = CallToAction.new(
@@ -519,8 +522,9 @@ module CallToActionHelper
         slug: unique_name, 
         user_id: current_user.id,
         media_image: params["upload"],
-        thumbnail: (params["upload"] if params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}),
-        media_type: "IMAGE"
+        thumbnail: (params["upload"] if params["upload"] && params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}),
+        media_type: params["upload"] && params["upload"].content_type.start_with?("video") ? "FLOWPLAYER" : "IMAGE",
+        extra_fields: cta_template.extra_fields.nil? ? {} : cta_template.extra_fields 
         )
 
     if watermark.exists?
@@ -532,7 +536,7 @@ module CallToActionHelper
     end
     
     if $site.aws_transcoding
-      if params["upload"].content_type.start_with? "video"
+      if params["upload"] && params["upload"].content_type.start_with?("video")
         aux_fields = JSON.parse(user_calltoaction.aux) rescue {}
         aux_fields['aws_transcoding_media_status'] = "requested"
         user_calltoaction.aux = aux_fields.to_json

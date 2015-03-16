@@ -18,7 +18,8 @@ class GalleryController < ApplicationController
 
   end
   
-  def take_current_gallery_to_first_position(gallery_id, galleries)
+  def take_current_gallery_to_first_position(gallery_slug, galleries)
+    gallery_id = CallToAction.find(gallery_slug).id
     index = galleries.index{ |gal| gal.id == gallery_id.to_i}
     current_gallery = galleries[index]
     galleries.delete_at(index)

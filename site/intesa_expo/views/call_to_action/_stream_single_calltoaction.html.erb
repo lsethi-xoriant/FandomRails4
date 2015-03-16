@@ -1,0 +1,47 @@
+<div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" > 
+  <div class="row {{calltoaction_info.hide_class}}">
+    <div class="col-sm-8 col-sm-offset-2 cta__media-container cta__media-container-{{calltoaction_info.miniformat['name']}} cta__media-container-{{calltoaction_info.calltoaction.media_type | lowercase}}">
+      <!-- MEDIA -->
+      <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
+    </div>
+
+    <!-- VOTE INTERACTION -->
+    <div class="col-sm-8 col-sm-offset-2 text-center" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
+      <%= render partial: "/call_to_action/vote_interaction" %>
+    </div>
+  </div>
+
+  <div class="row main-row cta__undervideo">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-sm-8 col-xs-12 text-center cta__title-and-description-col {{calltoaction_info.hide_class}}">
+          <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
+          <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
+
+          <!-- SHARE -->
+          <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row">
+            <div id="share-interaction-{{interaction_info.interaction.id}}" class="share-undervideo-interaction__row">
+              <%= render partial: "/call_to_action/share_interaction" %>
+            </div>
+          </div>
+
+          <!-- DOWNLOAD INTERACTION -->
+          <div class="row {{calltoaction_info.hide_class}}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
+            <div class="col-xs-12 text-center" >
+              {{interaction_info.interaction.resource}}----
+              <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span><i class="glyphicon glyphicon-download-alt"></i>{{interaction_info.interaction.resource.title}}</span></a>
+            </div>
+          </div>
+
+          <!-- LINK INTERACTION -->
+          <div class="row {{calltoaction_info.hide_class}}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLinkInteractions">
+            <div class="col-xs-12 text-center" >
+              <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>{{interaction_info.interaction.resource.title}}</span></a>
+            </div>
+          </div>
+        </div>      
+      </div>
+
+    </div>
+  </div>
+</div>

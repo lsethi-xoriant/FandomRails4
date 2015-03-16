@@ -30,9 +30,9 @@
             <li class="<%= "active" if "#{controller_name}##{action_name}" == "application#index" %>"><a href="/<%= $context_root %>">Home</a>
             </li>
             <li class="<%= "active" if "#{controller_name}##{action_name}" == "gallery#index" %>">
-              <a href="/gallery">
+              <%= light_link_to("/gallery") do %>
                 Gallery
-              </a>
+              <% end %>
             </li>
             <li class="<%= "active" if "#{controller_name}##{action_name}" == "reward#index" %>">
               <%= light_link_to("/reward/catalogue") do %>

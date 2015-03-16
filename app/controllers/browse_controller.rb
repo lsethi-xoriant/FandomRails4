@@ -1,5 +1,4 @@
 class BrowseController < ApplicationController
-  include BrowseHelper
   
   def index
     @tag_browse = get_tag_browse(params[:tagname])
@@ -131,6 +130,9 @@ class BrowseController < ApplicationController
         }
       }
     }
+    
+    set_seo_info_for_tag(@category)
+    
   end
   
   # hook for tenant with multiproperty

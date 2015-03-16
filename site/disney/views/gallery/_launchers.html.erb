@@ -4,7 +4,7 @@
     <ul class="slides">
     	<% galleries.each do |gallery| %>
 	      <li class="text-center filters__flexslider-desktop-item" id="<%= gallery.id%>">
-    	    <%= light_link_to("/gallery/#{gallery.id}", class: "filters__flexslider-a") do %>
+    	    <%= light_link_to("/gallery/#{gallery.slug}", class: "filters__flexslider-a") do %>
         	  <img class="filters__flexslider-image <%= "filters__flexslider-image--active" if current_gallery_id && gallery.id == current_gallery_id %>" src="<%= gallery.thumbnail(:medium) %>">  
           	<p class="filters__title--gallery"><%= gallery.title %></p>   
         	<% end %>
@@ -29,7 +29,7 @@
     <ul class="slides">
       <% galleries.each do |gallery| %>
 	      <li class="text-center filters__flexslider-mobile-item" id="<%= gallery.id%>">
-	        <%= light_link_to("/gallery/#{gallery.id}") do %>
+	        <%= light_link_to("/gallery/#{gallery.slug}") do %>
             <div class="filters__gallery-item" style="background-image: url('<%= gallery.thumbnail(:medium) %>')">
 	            <p class="filters__title--gallery"><%= gallery.title %></p>
             </div>
