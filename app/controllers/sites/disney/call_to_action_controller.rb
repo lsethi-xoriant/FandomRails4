@@ -58,10 +58,10 @@ class Sites::Disney::CallToActionController < CallToActionController
 
       case ordering
       when "comment"
-        calltoaction_ids = calltoactions.joins(:call_to_action_tags, :rewards).select("call_to_actions.id").to_sql
+        calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
         gets_ctas_ordered_by_comments(calltoaction_ids, 4)
       when "view"
-        calltoaction_ids = calltoactions.joins(:call_to_action_tags, :rewards).select("call_to_actions.id").to_sql
+        calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
         gets_ctas_ordered_by_views(calltoaction_ids, 4)
       else
         calltoactions = calltoactions.limit(4).to_a
@@ -86,25 +86,23 @@ class Sites::Disney::CallToActionController < CallToActionController
     property = get_tag_from_params(get_disney_property())
     init_ctas = $site.init_ctas
 
-    calltoactions = get_disney_ctas(property, gallery_calltoaction_id)
+    calltoactions = []
     ordering = params["ordering"]
-
-
 
     case ordering
     when "comment"
       calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering, gallery_calltoaction_id)) do
-        calltoaction_ids = calltoactions.joins(:call_to_action_tags, :rewards).select("call_to_actions.id").to_sql
-        gets_ctas_ordered_by_comments(calltoaction_ids, init_ctas)
+        calltoaction_ids = from_ctas_to_cta_ids_sql(get_disney_ctas(property, gallery_calltoaction_id))
+        calltoactions = gets_ctas_ordered_by_comments(calltoaction_ids, init_ctas)
       end
     when "view"
       calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering, gallery_calltoaction_id)) do
-        calltoaction_ids = calltoactions.joins(:call_to_action_tags, :rewards).select("call_to_actions.id").to_sql
+        calltoaction_ids = from_ctas_to_cta_ids_sql(get_disney_ctas(property, gallery_calltoaction_id))
         gets_ctas_ordered_by_views(calltoaction_ids, init_ctas)
       end
     else
       calltoactions = cache_medium(get_calltoactions_in_property_cache_key(property.id, gallery_calltoaction_id, get_cta_max_updated_at())) do
-        calltoactions.limit(init_ctas).to_a
+        get_disney_ctas(property, gallery_calltoaction_id).limit(init_ctas).to_a
       end
     end
 
@@ -115,6 +113,12 @@ class Sites::Disney::CallToActionController < CallToActionController
     respond_to do |format|
       format.json { render json: response.to_json }
     end 
+  end
+
+  def from_ctas_to_cta_ids_sql(calltoactions)
+    calltoactions.joins("LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id")
+                 .joins("LEFT OUTER JOIN rewards ON rewards.call_to_action_id = call_to_actions.id")
+                 .select("call_to_actions.id").to_sql
   end
   
   def upload
