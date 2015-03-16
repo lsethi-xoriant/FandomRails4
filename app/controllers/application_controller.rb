@@ -15,6 +15,8 @@ class ApplicationController < ActionController::Base
   include CallToActionHelper
   include CaptchaHelper
   include CalendarHelper
+  include BrowseHelper
+  include ActionView::Helpers::SanitizeHelper
 
   before_filter :fandom_before_filter
   

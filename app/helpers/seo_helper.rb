@@ -14,7 +14,8 @@ module SeoHelper
   end
   
   def set_seo_info_for_tag(tag)
-    set_seo_info(tag.title, tag.description, get_default_keywords(), tag.thumbnail)
+    thumbnail = get_upload_extra_field_processor(get_extra_fields!(tag)['thumbnail'], :medium) rescue nil
+    set_seo_info(tag.title, tag.description, get_default_keywords(), thumbnail)
   end
 
   def get_default_keywords()

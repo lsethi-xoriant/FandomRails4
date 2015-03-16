@@ -3,7 +3,6 @@
 
 class CallToActionController < ApplicationController
   
-  include ActionView::Helpers::SanitizeHelper
   include RewardingSystemHelper
   include CallToActionHelper
   include ApplicationHelper

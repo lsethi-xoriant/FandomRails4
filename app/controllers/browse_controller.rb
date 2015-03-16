@@ -1,5 +1,4 @@
 class BrowseController < ApplicationController
-  include BrowseHelper
   
   def index
     @tag_browse = get_tag_browse(params[:tagname])
