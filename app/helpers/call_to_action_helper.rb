@@ -12,6 +12,23 @@ module CallToActionHelper
     end
   end
 
+  def gets_ctas_ordered_by_comments(calltoaction_ids, cta_count)
+    sql = "SELECT call_to_actions.id,  sum((user_comment_interactions.approved is not null and user_comment_interactions.approved)::integer) " +
+          "FROM call_to_actions LEFT OUTER JOIN interactions ON call_to_actions.id = interactions.call_to_action_id LEFT OUTER JOIN user_comment_interactions ON interactions.resource_id = user_comment_interactions.comment_id " +
+          "WHERE interactions.resource_type = 'Comment' AND call_to_actions.id in (#{calltoaction_ids}) " +
+          "GROUP BY call_to_actions.id " +
+          "ORDER BY sum DESC limit #{cta_count};"
+    execute_sql_and_get_ctas_ordered(sql)
+  end
+
+  def gets_ctas_ordered_by_views(calltoaction_ids, cta_count)
+    sql = "SELECT call_to_actions.id " +
+          "FROM call_to_actions LEFT OUTER JOIN view_counters ON call_to_actions.id = view_counters.ref_id " +
+          "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'cta') AND call_to_actions.id in (#{calltoaction_ids}) " +
+          "ORDER BY (coalesce(view_counters.counter, 0) / (extract('epoch' from (now() - coalesce(call_to_actions.activated_at, call_to_actions.created_at) )) / 3600 / 24)), call_to_actions.activated_at DESC limit #{cta_count};"
+    execute_sql_and_get_ctas_ordered(sql)
+  end
+
   def get_cta_active_count()
     cache_short("cta_active_count") do
       CallToAction.active.count
