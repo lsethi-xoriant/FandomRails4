@@ -25,37 +25,37 @@
       		<div class="row">
       			<div class="col-sm-6">
   		        <div class="form-group">
-  		          <label>Nome</label>
+  		          <label>Nome * </label>
   		          <%= f.text_field :first_name, class: "form-control", :required => true %>
   		        </div>
             </div>
             <div class="col-sm-6">
   		        <div class="form-group">
-                <label>Cognome</label>
+                <label>Cognome * </label>
                 <%= f.text_field :last_name, class: "form-control", :required => true %>
   		        </div>
   		      </div> 
   		      <div class="col-sm-6">
   		        <div class="form-group">
-  		          <label>Indirizzo</label>
+  		          <label>Indirizzo * </label>
                 <%= f.text_field :address, class: "form-control", :required => true %>  
   		        </div>
             </div>
             <div class="col-sm-6">
   		        <div class="form-group">
-  		          <label>N. Civico</label>
+  		          <label>N. Civico * </label>
   		          <%= f.text_field :street_number, class: "form-control", :required => true %>
   		        </div>
   		      </div>
   		      <div class="col-sm-6">
   		        <div class="form-group">
-  		          <label>Città</label>
+  		          <label>Città * </label>
   		          <%= f.text_field :city, class: "form-control", :required => true %>
   		        </div>
   		      </div>
   		      <div class="col-sm-3">
   		        <div class="form-group">
-  		          <label>Provincia</label>
+  		          <label>Provincia * </label>
   		          <% provinces_array = ITALIAN_PROVINCES.map { |province| [province, province] } %>
   		          <% provinces_array.unshift(["Provincia", ""]) %>
   		          <%= f.select :province, options_for_select(provinces_array, @cup_redeemer[:province]), {}, { class: "form-control", :required => true} %>
@@ -63,7 +63,7 @@
   		      </div>
   		      <div class="col-sm-3">
   		        <div class="form-group">
-  		          <label>CAP</label>
+  		          <label>CAP * </label>
   		          <%= f.text_field :cap, class: "form-control", :required => true, :pattern => "[0-9]{5}" %>
   		        </div>
   		      </div>

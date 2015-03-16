@@ -25,13 +25,13 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Nome</label>
+              <label>Nome * </label>
               <%= f.text_field :first_name, :class => "form-control", :required => true %>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Cognome</label>
+              <label>Cognome * </label>
               <%= f.text_field :last_name, class: "form-control", :required => true %>
             </div>
           </div>
@@ -39,7 +39,7 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Data di nascita</label>  
+              <label>Data di nascita * </label>  
               <div class="row">
                 <div class="col-sm-4">
                   <% date_array = (1..31).map { |date| [date, date] } %>
@@ -61,7 +61,7 @@
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Genere</label>
+              <label>Genere * </label>
               <div class="row">
                 <div class="col-sm-12 cup__radio">
                   <label class="radio-inline"></label>
@@ -77,13 +77,13 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Stato</label>
+              <label>Stato * </label>
               <%= f.select :state, options_for_select(@states_array, @cup_redeemer[:state]), {}, { class: "form-control", :required => true } %>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Provincia</label>
+              <label>Provincia * </label>
               <%= f.select :province, options_for_select(@provinces_array, @cup_redeemer[:province]), {}, { class: "form-control", :required => true } %>
             </div>
           </div>
@@ -97,7 +97,7 @@
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Email</label>
+              <label>Email * </label>
               <%= f.email_field :email, class: "form-control", :required => true, :pattern => "[^@]+@[^@]+\.[a-zA-Z]{2,6}" %>
             </div>
           </div>
@@ -116,7 +116,7 @@
         </div>
         <div class="checkbox">
           <%= f.check_box :privacy, :required => true %> 
-          <label>Dichiaro di aver preso visione dell’<a target="_blank" style="color: #660206; text-decoration: underline;" href="http://www.buonalavita.it/nestle/service/note_legali/default.aspx">informativa</a> e acconsento al trattamento dei dati personali*</label>
+          <label>Dichiaro di aver preso visione dell’<a target="_blank" style="color: #660206; text-decoration: underline;" href="http://www.buonalavita.it/nestle/service/note_legali/default.aspx">informativa</a> e acconsento al trattamento dei dati personali * </label>
           <label id="sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[privacy]-error" class="error" for="sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[privacy]"></label>
         </div>
       </div>

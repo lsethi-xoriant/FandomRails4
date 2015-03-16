@@ -3,7 +3,7 @@
     <div class="row main-row">
       <div class="col-sm-12 cup__header-col text-center">
         <%= render partial: "/application/ribbon", locals: { title: "Quante confezioni Orzoro hai acquistato?", background: "#ceb5e2"} %>
-        <p class="cup__subtitle">Seleziona il numero di confezioni</p>
+        <p class="cup__subtitle">Seleziona il numero di confezioni * </p>
       </div>
 
       <div class="col-sm-12">
@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="container main-container main-container--cream container-shadow">
-    <p class="cup__subtitle cup__header-col text-center">Scegli la tua tazza</p>
+    <p class="cup__subtitle cup__header-col text-center">Scegli la tua tazza * </p>
 
     <div id="one-cup-selected" class="col-sm-12 cup__header-col text-center">
       <div class="col-sm-6">
@@ -61,7 +61,7 @@
     		<div class="row">
     			<div class="col-sm-6">
 		        <div class="form-group">
-		          <label>Numero scontrino</label>
+		          <label>Numero scontrino * </label>
 		          <%= f.text_field :receipt_number, :class => "form-control", :required => true %>
 		        </div>
 		      </div>
@@ -69,7 +69,7 @@
 		        <div class="form-group">
 		          <div class="row">
 		            <div class="col-sm-12">
-		              <label>Data di emissione</label>  
+		              <label>Data di emissione * </label>  
 		            </div>       
 		            <div class="col-sm-12">
 		              <div class="row">
@@ -97,7 +97,7 @@
 		        <div class="form-group">
 		          <div class="row">
 		            <div class="col-sm-12">
-		              <label>Ora e minuto di emissione</label>  
+		              <label>Ora e minuto di emissione * </label>  
 		            </div>       
 		            <div class="col-sm-12">
 		              <div class="row">
@@ -118,7 +118,7 @@
 		      </div>
 		      <div class="col-sm-6">
 		        <div class="form-group">
-		          <label>Importo scontrino (compresi i decimali)</label>
+		          <label>Importo scontrino (compresi i decimali) * </label>
 		          <%= f.text_field :receipt_total, :class => "form-control", :required => true, :type => "number", :step => "any" %>
 		        </div>
 		      </div>
