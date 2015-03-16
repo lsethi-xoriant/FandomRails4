@@ -137,13 +137,10 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
         id: 'extra-fields-value-div-for-' + fieldName + '-' + counter,
     }).appendTo('#extra-fields-value-for-' + fieldName + '-' + counter);
 
-    jQuery('<input/>', {
-        type: 'text', // default
-        id: 'value-for-' + fieldName + '-field-' + counter,
-        name: 'empty-value',
-        class: 'form-control',
-        change: function() { removeImage($(this), fieldName); }
-    }).appendTo('#extra-fields-value-div-for-' + fieldName + '-' + counter);
+    jQuery('<input/>', { id: 'value-for-' + fieldName + '-field-' + counter, class: 'form-control' })
+      .appendTo('#extra-fields-value-div-for-' + fieldName + '-' + counter);
+
+    buildValueElement('value-for-' + fieldName + '-field-' + counter, 'string');
 
     // *** REMOVE *** //
     if(addRemoveButton != false) {
@@ -166,28 +163,73 @@ function updateValueElementName(elementName, modelName, fieldName, inputBoxKind)
 };
 
 function updateValueElementType(elementName, fieldName) {
-    identifier = elementName.attr('id').replace('type-for-' + fieldName + '-field-','');
-    id = '#value-for-' + fieldName + '-field-' + identifier;
-    relatedValueElement = $(id);
-    selectedType = elementName.val();
-    if (selectedType == 'media') {
-        //relatedValueElement.jqte({status:false});
-        $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').show();
-        relatedValueElement.attr('type', 'text');
-        relatedValueElement.attr('type', 'file');
+  identifier = elementName.attr('id').replace('type-for-' + fieldName + '-field-','');
+  id = 'value-for-' + fieldName + '-field-' + identifier;
+  relatedValueElement = $("#" + id);
+  selectedType = elementName.val();
+  if(selectedType == 'media') {
+    $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').show();
+  }
+  if(selectedType == 'string') {
+    $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').hide();
+    $('#attachment-id-for-' + fieldName + '-field-' + identifier).remove();
+    $('#url-for-' + fieldName + '-field-' + identifier).remove();
+  }
+  if(selectedType == 'html') {
+  }
+
+  buildValueElement(id, selectedType);
+};
+
+function buildValueElement(elementId, selectedType) {
+
+  oldElement = $("#" + elementId);
+  oldElementName = oldElement.attr("name");
+  oldElementValue = oldElement.val();
+
+  if(selectedType == "string" || selectedType == "media" ) {
+    if(selectedType == "string")
+      type = "text";
+    else
+      type = "file";
+
+    newElement = jQuery('<input/>', {
+      type: type,
+      id: elementId,
+      name: oldElementName,
+      class: 'form-control',
+      change: function() { 
+        removeImage($(this), elementId.substr(elementId.indexOf("value-for-") + 10, elementId.indexOf("-field-") - 10)); 
+      }
+    });
+    if(selectedType == "string") {
+      newElement.val(oldElementValue);
     }
-    if (selectedType == 'string') {
-        //relatedValueElement.jqte({status:false});
-        $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').hide();
-        $('#attachment-id-for-' + fieldName + '-field-' + identifier).remove();
-        $('#url-for-' + fieldName + '-field-' + identifier).remove();
-        relatedValueElement.attr('type', 'text');
+
+    var instance = CKEDITOR.instances[elementId];
+    if(instance) {
+      CKEDITOR.remove(instance);
     }
-    if (selectedType == 'html') {
-      relatedValueElement.attr('type', 'text');
-      //relatedValueElement.jqte();
-      //relatedValueElement.jqte({status:true});
-    }
+    oldElement.replaceWith(newElement);
+    $("#cke_" + elementId).remove();
+
+  };
+
+  if(selectedType == "html") {
+    newElement = jQuery('<textarea/>', {
+      id: elementId,
+      name: oldElementName
+    });
+    newElement.val(oldElementValue);
+    oldElement.replaceWith(newElement);
+    CKEDITOR.replace(elementId);
+
+    CKEDITOR.instances[elementId].on("instanceReady", function() {                    
+      this.document.on("keyup", function() {
+        $("#" + elementId).val(CKEDITOR.instances[elementId].getData());
+      });
+    });
+  };
 
 };
 
@@ -245,8 +287,7 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
                 $('#type-for-' + fieldName + '-field-' + index).val('html');
                 $('#value-for-' + fieldName + '-field-' + index).attr('type', 'text');
                 $('#value-for-' + fieldName + '-field-' + index).val(value.value);
-                //$('#value-for-' + fieldName + '-field-' + index).jqte();
-                //$('#value-for-' + fieldName + '-field-' + index).jqteVal(value.value);
+                buildValueElement('value-for-' + fieldName + '-field-' + index, 'html');
             }
         }
     });

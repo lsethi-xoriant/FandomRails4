@@ -38,3 +38,4 @@
 //= require fandom-utils
 //= require angular-animate
 //= require ui-bootstrap-0.12.min
+//= require ckeditor/init

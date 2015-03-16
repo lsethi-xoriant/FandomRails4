@@ -31,3 +31,4 @@
 //= require jquery.jcarousel
 //= require jquery.flexslider
 //= require fastclick
+//= require ckeditor/config
