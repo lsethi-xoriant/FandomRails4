@@ -387,5 +387,12 @@ module BrowseHelper
       DEFAULT_BROWSE_ELEMENT_CAROUSEL
     end
   end
-
+  
+  def get_content_preview_stripe(stripe_tag_name)
+    #carousel elements if setted in content tag, if in section tag needs to be passed as function params
+    stripe_tag = Tag.find_by_name(stripe_tag_name)
+    carousel_elements = get_elements_for_browse_carousel(stripe_tag)
+    get_browse_area_by_category(stripe_tag, [], carousel_elements)
+  end
+  
 end
