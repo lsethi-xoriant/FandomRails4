@@ -28,7 +28,7 @@ gem 'paperclip-watermark'
 gem 'paperclip-ffmpeg' 
 
 gem 'fastclick-rails', '~> 1.0.1'
-
+gem 'icalendar'
 gem 'ckeditor'
 
 group :assets do
