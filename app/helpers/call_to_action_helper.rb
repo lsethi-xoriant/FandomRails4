@@ -29,6 +29,12 @@ module CallToActionHelper
     execute_sql_and_get_ctas_ordered(sql)
   end
 
+  def execute_sql_and_get_ctas_ordered(sql)
+    cta_ids = ActiveRecord::Base.connection.execute(sql)
+    order =  cta_ids.map { |r| "call_to_actions.id = #{r["id"].to_i} DESC" }
+    CallToAction.where("call_to_actions.id" => cta_ids.map { |r| r["id"].to_i }).order("#{order.join(",")}").to_a
+  end
+
   def get_cta_active_count()
     cache_short("cta_active_count") do
       CallToAction.active.count
