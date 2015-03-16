@@ -24,6 +24,16 @@
 					</label>
 				</div>
 				<div class="checkbox">
+					<input class="google-plus-checkbox" type="checkbox" value="googlePlus" onchange="updateJsonForShare(this)">
+						Google+
+					</label>
+				</div>
+				<div class="checkbox">
+					<input class="whatsapp-checkbox" type="checkbox" value="whatsapp" onchange="updateJsonForShare(this)">
+						WhatsApp
+					</label>
+				</div>
+				<div class="checkbox">
 					<input class="email-checkbox" type="checkbox" value="twitter" onchange="updateJsonForShare(this)">
 						Email
 					</label>
@@ -75,6 +85,34 @@
               <%= text_field_tag :twitter_link, nil, class: "form-control twitter-link", id: nil, onkeyup: "updateProviderJson(this)" %>
           	</div>
 				</div>
+				<div class="google-plus-share hidden">
+						<label>Google+</label>
+						<hr>
+					 	<div class="form-group">
+              <label class="text-input">Titolo</label>
+              <%= text_field_tag :google_plus_message, nil, class: "form-control google-plus-message", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+          	<div class="form-group">
+              <label class="text-input">Descrizione</label>
+              <%= text_field_tag :google_plus_description, nil, class: "form-control google-plus-description", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+          	<div class="form-group">
+              <label class="text-input">Link</label>
+              <%= text_field_tag :google_plus_link, nil, class: "form-control google-plus-link", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+         </div>
+         <div class="whatsapp-share hidden">
+						<label>WhatsApp</label>
+						<hr>
+					 	<div class="form-group">
+              <label class="text-input">Messaggio</label>
+              <%= text_field_tag :whatsapp_message, nil, class: "form-control whatsapp-message", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+          	<div class="form-group">
+              <label class="text-input">Link</label>
+              <%= text_field_tag :whatsapp_link, nil, class: "form-control whatsapp-link", id: nil, onkeyup: "updateProviderJson(this)" %>
+          	</div>
+         </div>
 			</div>
 
 			<div class="col-lg-4 text-center">
@@ -130,6 +168,27 @@
 				$(provider_div).find(".twitter-share").addClass("hidden");
 			}
 
+			if(json.google_plus) {
+				$(provider_div).find(".google-plus-message").val(json.facebook.message); 
+				$(provider_div).find(".google-plus-description").val(json.facebook.description); 
+				$(provider_div).find(".google-plus-link").val(json.facebook.link); 
+
+				$(provider_div).find(".google-plus-checkbox").attr("checked", "checked");
+				$(provider_div).find(".google-plus-share").removeClass("hidden");
+			} else {
+				$(provider_div).find(".google-plus-share").addClass("hidden");
+			}
+
+			if(json.whatsapp) {
+				$(provider_div).find(".whatsapp-message").val(json.twitter.message); 
+				$(provider_div).find(".whatsapp-link").val(json.twitter.link); 
+
+				$(provider_div).find(".whatsapp-checkbox").attr("checked", "checked");
+				$(provider_div).find(".whatsapp-share").removeClass("hidden");
+			} else {
+				$(provider_div).find(".whatsapp-share").addClass("hidden");
+			}
+
 			if(json.email) {
 				$(provider_div).find(".email-checkbox").attr("checked", "checked");
 			}
@@ -146,6 +205,8 @@
 
 		facebook_checkbox = $(element).parent().parent().parent().parent().find(".facebook-checkbox")[0];
 		twitter_checkbox = $(element).parent().parent().parent().parent().find(".twitter-checkbox")[0];
+		google_plus_checkbox = $(element).parent().parent().parent().parent().find(".google-plus-checkbox")[0];
+		whatsapp_checkbox = $(element).parent().parent().parent().parent().find(".whatsapp-checkbox")[0];
 		email_checkbox = $(element).parent().parent().parent().parent().find(".email-checkbox")[0];
 		
 		if(facebook_checkbox.checked) {
@@ -169,6 +230,27 @@
 			$(provider_div).find(".twitter-share").addClass("hidden");
 		}
 
+		if(google_plus_checkbox.checked) {
+			json.gplus = {}
+			json.gplus.message = provider_div.find(".google-plus-message").val(); 
+			json.gplus.description = provider_div.find(".google-plus-description").val(); 
+			json.gplus.link = provider_div.find(".google-plus-link").val(); 
+
+			$(provider_div).find(".google-plus-share").removeClass("hidden");
+		} else {
+			$(provider_div).find(".google-plus-share").addClass("hidden");
+		}
+
+		if(whatsapp_checkbox.checked) {
+			json.whatsapp = {}
+			json.whatsapp.message = provider_div.find(".whatsapp-message").val(); 
+			json.whatsapp.link = provider_div.find(".whatsapp-link").val(); 
+
+			$(provider_div).find(".whatsapp-share").removeClass("hidden");
+		} else {
+			$(provider_div).find(".whatsapp-share").addClass("hidden");
+		}
+
 		if(email_checkbox.checked) { 
 			json.email = {};
 		}
@@ -180,12 +262,16 @@
 	function updateProviderJson(element) {
 		facebook_share = $(element).parent().parent().parent().find(".facebook-share");
 		twitter_share = $(element).parent().parent().parent().find(".twitter-share");
-		email_checkbox = $(element).parent().parent().parent().parent().find(".email-checkbox")[0];
+		google_plus_share = $(element).parent().parent().parent().find(".google-plus-share");
+		whatsapp_share = $(element).parent().parent().parent().find(".whatsapp-share");
 
 		json = {};
 
 		facebook_checkbox = $(element).parent().parent().parent().parent().find(".facebook-checkbox")[0];
 		twitter_checkbox = $(element).parent().parent().parent().parent().find(".twitter-checkbox")[0];
+		google_plus_checkbox = $(element).parent().parent().parent().parent().find(".google-plus-checkbox")[0];
+		whatsapp_checkbox = $(element).parent().parent().parent().parent().find(".whatsapp-checkbox")[0];
+		email_checkbox = $(element).parent().parent().parent().parent().find(".email-checkbox")[0];
 	
 		if(facebook_checkbox.checked) {
 			json.facebook = {};
@@ -198,6 +284,19 @@
 			json.twitter = {};
 			json.twitter.message = twitter_share.find(".twitter-message").val(); 
 			json.twitter.link = twitter_share.find(".twitter-link").val(); 
+		}
+
+		if(google_plus_checkbox.checked) {
+			json.gplus = {};
+			json.gplus.message = google_plus_share.find(".google-plus-message").val();
+			json.gplus.description = google_plus_share.find(".google-plus-description").val();
+			json.gplus.link = google_plus_share.find(".google-plus-link").val(); 
+		}
+
+		if(whatsapp_checkbox.checked) {
+			json.whatsapp = {};
+			json.whatsapp.message = twitter_share.find(".whatsapp-message").val(); 
+			json.whatsapp.link = twitter_share.find(".whatsapp-link").val(); 
 		}
 
 		if(email_checkbox.checked) { 
