@@ -1,0 +1,17 @@
+<div class="row brws-item main-row container-shadow" ng-class-odd="'brws-item--dark'">
+	  <!-- HEADING -->
+	<div class="col-sm-12 text-center">
+	  <h2>{{stripe.title}}</h2>
+	</div>
+
+    <div class="col-xs-12" ng-repeat="contents in [stripe.contents]">
+	    <%= render partial: "/application/content_carousel" %>
+	    <div calss="row text-center" ng-if="stripe.total > stripe.per_page">
+	    	<div class="col-sm-2 col-sm-offset-5 col-xs-4 col-xs-offset-4">
+		    	<%= light_link_to("{{stripe.view_all_link}}", class: "btn btn-block btn-red") do %>
+		    		Vedi tutti
+		    	<% end %>
+		    </div>
+	    </div>
+	</div>
+</div>
