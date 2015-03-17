@@ -127,7 +127,7 @@ module CallToActionHelper
           user_name = calltoaction.user.username
           user_user_avatar = user_avatar(calltoaction.user)
         end
-
+        
         calltoaction_info = {
             "calltoaction" => { 
               "id" => calltoaction.id,
