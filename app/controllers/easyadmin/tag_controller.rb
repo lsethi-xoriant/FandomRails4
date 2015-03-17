@@ -109,7 +109,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     @tag.tags_tags.delete_all
     tag_list.each do |t|
       tag_tag = Tag.find_by_name(t)
-      tag_tag = Tag.create(name: t) unless tag_tag
+      tag_tag = Tag.create(name: t, slug: t) unless tag_tag
       TagsTag.create(tag_id: @tag.id, other_tag_id: tag_tag.id)
     end
 
