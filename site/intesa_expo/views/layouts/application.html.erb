@@ -36,9 +36,11 @@
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 <div ng-cloak>
 
-  <%= render partial: "/application/header", locals: { aux: aux } %>
+  <%= render partial: "/application/header" %>
 
   <%= yield %>
+
+  <%= render partial: "/application/footer" %>
 
 </div>
   <script type="text/javascript">
