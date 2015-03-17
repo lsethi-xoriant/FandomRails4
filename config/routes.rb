@@ -140,7 +140,15 @@ Fandom::Application.routes.draw do
     end  
   end
   
-  
+  constraints(SiteMatcher.new('intesa_expo')) do
+    scope module: "sites" do
+      scope module: "intesa_expo" do
+        root :to => "application#index"
+        mach "/calendar", :to => "application#calendar"
+      end
+    end
+  end
+          
   constraints(SiteMatcher.new('ballando')) do
     match "/profile", :to => "profile#badges"
 
