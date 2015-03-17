@@ -45,10 +45,24 @@ CREATE SCHEMA forte;
 
 
 --
+-- Name: intesa_expo; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA intesa_expo;
+
+
+--
 -- Name: maxibon; Type: SCHEMA; Schema: -; Owner: -
 --
 
 CREATE SCHEMA maxibon;
+
+
+--
+-- Name: orzoro; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA orzoro;
 
 
 --
@@ -358,7 +372,8 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json
+    extra_fields json DEFAULT '{}'::json,
+    interaction_call_to_action_id integer
 );
 
 
@@ -457,7 +472,8 @@ CREATE TABLE downloads (
     attachment_file_name character varying(255),
     attachment_content_type character varying(255),
     attachment_file_size integer,
-    attachment_updated_at timestamp without time zone
+    attachment_updated_at timestamp without time zone,
+    ical_fields json
 );
 
 
@@ -670,6 +686,7 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
+    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -2112,7 +2129,8 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json
+    extra_fields json DEFAULT '{}'::json,
+    interaction_call_to_action_id integer
 );
 
 
@@ -2211,7 +2229,8 @@ CREATE TABLE downloads (
     attachment_file_name character varying(255),
     attachment_content_type character varying(255),
     attachment_file_size integer,
-    attachment_updated_at timestamp without time zone
+    attachment_updated_at timestamp without time zone,
+    ical_fields json
 );
 
 
@@ -2424,6 +2443,7 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
+    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -3866,7 +3886,8 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json
+    extra_fields json DEFAULT '{}'::json,
+    interaction_call_to_action_id integer
 );
 
 
@@ -4179,6 +4200,7 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
+    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -5621,7 +5643,8 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json
+    extra_fields json DEFAULT '{}'::json,
+    interaction_call_to_action_id integer
 );
 
 
@@ -5720,7 +5743,8 @@ CREATE TABLE downloads (
     attachment_file_name character varying(255),
     attachment_content_type character varying(255),
     attachment_file_size integer,
-    attachment_updated_at timestamp without time zone
+    attachment_updated_at timestamp without time zone,
+    ical_fields json
 );
 
 
@@ -5933,6 +5957,7 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
+    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -7375,7 +7400,8 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json
+    extra_fields json DEFAULT '{}'::json,
+    interaction_call_to_action_id integer
 );
 
 
@@ -7474,7 +7500,8 @@ CREATE TABLE downloads (
     attachment_file_name character varying(255),
     attachment_content_type character varying(255),
     attachment_file_size integer,
-    attachment_updated_at timestamp without time zone
+    attachment_updated_at timestamp without time zone,
+    ical_fields json
 );
 
 
@@ -7687,6 +7714,7 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
+    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -8840,6 +8868,1761 @@ CREATE SEQUENCE votes_id_seq
 ALTER SEQUENCE votes_id_seq OWNED BY votes.id;
 
 
+SET search_path = intesa_expo, pg_catalog;
+
+--
+-- Name: answers; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE answers (
+    id integer NOT NULL,
+    quiz_id integer NOT NULL,
+    text character varying(255) NOT NULL,
+    correct boolean,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    image_file_name character varying(255),
+    image_content_type character varying(255),
+    image_file_size integer,
+    image_updated_at timestamp without time zone,
+    call_to_action_id integer,
+    media_image_file_name character varying(255),
+    media_image_content_type character varying(255),
+    media_image_file_size integer,
+    media_image_updated_at timestamp without time zone,
+    media_data text,
+    media_type character varying(255),
+    blocking boolean DEFAULT false,
+    aux json
+);
+
+
+--
+-- Name: answers_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE answers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: answers_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE answers_id_seq OWNED BY answers.id;
+
+
+--
+-- Name: attachments; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE attachments (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data_file_name character varying(255),
+    data_content_type character varying(255),
+    data_file_size integer,
+    data_updated_at timestamp without time zone
+);
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE attachments_id_seq OWNED BY attachments.id;
+
+
+--
+-- Name: authentications; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE authentications (
+    id integer NOT NULL,
+    uid character varying(255),
+    name character varying(255),
+    oauth_token character varying(255),
+    oauth_secret character varying(255),
+    provider character varying(255),
+    avatar character varying(255),
+    oauth_expires_at timestamp without time zone,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    new boolean,
+    aux json
+);
+
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE authentications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
+
+
+--
+-- Name: cache_rankings; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    user_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE cache_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
+
+
+--
+-- Name: cache_versions; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_versions (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE cache_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
+
+
+--
+-- Name: cache_votes; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_votes (
+    id integer NOT NULL,
+    version integer,
+    call_to_action_id integer,
+    vote_count integer,
+    vote_sum integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json DEFAULT '{}'::json,
+    gallery_name text
+);
+
+
+--
+-- Name: cache_votes_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE cache_votes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_votes_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE cache_votes_id_seq OWNED BY cache_votes.id;
+
+
+--
+-- Name: call_to_action_tags; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE call_to_action_tags (
+    id integer NOT NULL,
+    call_to_action_id integer,
+    tag_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: call_to_action_tags_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE call_to_action_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: call_to_action_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE call_to_action_tags_id_seq OWNED BY call_to_action_tags.id;
+
+
+--
+-- Name: call_to_actions; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE call_to_actions (
+    id integer NOT NULL,
+    name character varying(255),
+    title character varying(255),
+    description text,
+    media_type character varying(255),
+    enable_disqus boolean DEFAULT false,
+    activated_at timestamp without time zone,
+    secondary_id character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    slug character varying(255),
+    media_image_file_name character varying(255),
+    media_image_content_type character varying(255),
+    media_image_file_size integer,
+    media_image_updated_at timestamp without time zone,
+    media_data text,
+    releasing_file_id integer,
+    approved boolean,
+    thumbnail_file_name character varying(255),
+    thumbnail_content_type character varying(255),
+    thumbnail_file_size integer,
+    thumbnail_updated_at timestamp without time zone,
+    user_id integer,
+    aux json,
+    valid_from timestamp without time zone,
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: call_to_actions_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE call_to_actions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: call_to_actions_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE call_to_actions_id_seq OWNED BY call_to_actions.id;
+
+
+--
+-- Name: checks; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE checks (
+    id integer NOT NULL,
+    title character varying(255),
+    description text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: checks_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE checks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: checks_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
+
+
+--
+-- Name: comments; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comments (
+    id integer NOT NULL,
+    must_be_approved boolean DEFAULT false,
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
+
+
+--
+-- Name: downloads; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE downloads (
+    id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    attachment_file_name character varying(255),
+    attachment_content_type character varying(255),
+    attachment_file_size integer,
+    attachment_updated_at timestamp without time zone,
+    ical_fields json
+);
+
+
+--
+-- Name: downloads_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE downloads_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: downloads_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
+
+
+--
+-- Name: events; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE events (
+    id integer NOT NULL,
+    session_id character varying(255),
+    pid integer,
+    message character varying(255),
+    request_uri character varying(255),
+    "timestamp" timestamp without time zone,
+    level character varying(255),
+    tenant character varying(255),
+    user_id integer,
+    data json
+);
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE events_id_seq OWNED BY events.id;
+
+
+--
+-- Name: home_launchers; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE home_launchers (
+    id integer NOT NULL,
+    description text,
+    button character varying(255),
+    url character varying(255),
+    enable boolean DEFAULT true,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    image_file_name character varying(255),
+    image_content_type character varying(255),
+    image_file_size integer,
+    image_updated_at timestamp without time zone,
+    anchor boolean
+);
+
+
+--
+-- Name: home_launchers_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE home_launchers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: home_launchers_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
+
+
+--
+-- Name: instantwin_interactions; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE instantwin_interactions (
+    id integer NOT NULL,
+    reward_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: instantwin_interactions_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE instantwin_interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: instantwin_interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE instantwin_interactions_id_seq OWNED BY instantwin_interactions.id;
+
+
+--
+-- Name: instantwins; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE instantwins (
+    id integer NOT NULL,
+    valid_from timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    valid_to timestamp without time zone,
+    reward_info json,
+    won boolean,
+    instantwin_interaction_id integer
+);
+
+
+--
+-- Name: instantwins_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE instantwins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: instantwins_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE instantwins_id_seq OWNED BY instantwins.id;
+
+
+--
+-- Name: interaction_call_to_actions; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE interaction_call_to_actions (
+    id integer NOT NULL,
+    interaction_id integer,
+    call_to_action_id integer,
+    condition json,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
+);
+
+
+--
+-- Name: interaction_call_to_actions_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE interaction_call_to_actions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: interaction_call_to_actions_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE interaction_call_to_actions_id_seq OWNED BY interaction_call_to_actions.id;
+
+
+--
+-- Name: interactions; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE interactions (
+    id integer NOT NULL,
+    name character varying(255),
+    seconds integer DEFAULT 0,
+    when_show_interaction character varying(255),
+    required_to_complete boolean,
+    resource_id integer,
+    resource_type character varying(255),
+    call_to_action_id integer,
+    aux json,
+    stored_for_anonymous boolean
+);
+
+
+--
+-- Name: interactions_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE interactions_id_seq OWNED BY interactions.id;
+
+
+--
+-- Name: likes; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE likes (
+    id integer NOT NULL,
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
+
+
+--
+-- Name: links; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE links (
+    id integer NOT NULL,
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE links_id_seq OWNED BY links.id;
+
+
+--
+-- Name: notices; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE notices (
+    id integer NOT NULL,
+    user_id integer,
+    html_notice text,
+    last_sent timestamp without time zone,
+    viewed boolean DEFAULT false,
+    read boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    aux json
+);
+
+
+--
+-- Name: notices_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE notices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notices_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE notices_id_seq OWNED BY notices.id;
+
+
+--
+-- Name: oauth_access_grants; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE oauth_access_grants (
+    id integer NOT NULL,
+    resource_owner_id integer NOT NULL,
+    application_id integer NOT NULL,
+    token character varying(255) NOT NULL,
+    expires_in integer NOT NULL,
+    redirect_uri text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    revoked_at timestamp without time zone,
+    scopes character varying(255)
+);
+
+
+--
+-- Name: oauth_access_grants_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE oauth_access_grants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: oauth_access_grants_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE oauth_access_grants_id_seq OWNED BY oauth_access_grants.id;
+
+
+--
+-- Name: oauth_access_tokens; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE oauth_access_tokens (
+    id integer NOT NULL,
+    resource_owner_id integer,
+    application_id integer,
+    token character varying(255) NOT NULL,
+    refresh_token character varying(255),
+    expires_in integer,
+    revoked_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    scopes character varying(255)
+);
+
+
+--
+-- Name: oauth_access_tokens_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE oauth_access_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: oauth_access_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE oauth_access_tokens_id_seq OWNED BY oauth_access_tokens.id;
+
+
+--
+-- Name: oauth_applications; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE oauth_applications (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    uid character varying(255) NOT NULL,
+    secret character varying(255) NOT NULL,
+    redirect_uri text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: oauth_applications_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE oauth_applications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: oauth_applications_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE oauth_applications_id_seq OWNED BY oauth_applications.id;
+
+
+--
+-- Name: periods; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE periods (
+    id integer NOT NULL,
+    kind character varying(255),
+    start_datetime timestamp without time zone,
+    end_datetime timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: periods_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE periods_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: periods_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
+
+
+--
+-- Name: plays; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE plays (
+    id integer NOT NULL,
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: plays_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE plays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plays_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE plays_id_seq OWNED BY plays.id;
+
+
+--
+-- Name: promocodes; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE promocodes (
+    id integer NOT NULL,
+    title character varying(255),
+    code character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: promocodes_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE promocodes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: promocodes_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE promocodes_id_seq OWNED BY promocodes.id;
+
+
+--
+-- Name: quizzes; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE quizzes (
+    id integer NOT NULL,
+    question character varying(255) NOT NULL,
+    cache_correct_answer integer DEFAULT 0,
+    cache_wrong_answer integer DEFAULT 0,
+    quiz_type character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    one_shot boolean DEFAULT true
+);
+
+
+--
+-- Name: quizzes_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE quizzes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: quizzes_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
+
+
+--
+-- Name: rankings; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE rankings (
+    id integer NOT NULL,
+    reward_id integer NOT NULL,
+    name character varying(255),
+    title character varying(255),
+    period character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    rank_type character varying(255),
+    people_filter character varying(255)
+);
+
+
+--
+-- Name: rankings_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE rankings_id_seq OWNED BY rankings.id;
+
+
+--
+-- Name: registrations; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE registrations (
+    id integer NOT NULL,
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: registrations_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE registrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registrations_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE registrations_id_seq OWNED BY registrations.id;
+
+
+--
+-- Name: releasing_files; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE releasing_files (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    file_file_name character varying(255),
+    file_content_type character varying(255),
+    file_file_size integer,
+    file_updated_at timestamp without time zone
+);
+
+
+--
+-- Name: releasing_files_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE releasing_files_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: releasing_files_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE releasing_files_id_seq OWNED BY releasing_files.id;
+
+
+--
+-- Name: reward_tags; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE reward_tags (
+    id integer NOT NULL,
+    tag_id integer,
+    reward_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: reward_tags_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE reward_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reward_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE reward_tags_id_seq OWNED BY reward_tags.id;
+
+
+--
+-- Name: rewards; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE rewards (
+    id integer NOT NULL,
+    title character varying(255),
+    short_description text,
+    long_description text,
+    button_label character varying(255),
+    cost integer,
+    valid_from timestamp without time zone,
+    valid_to timestamp without time zone,
+    video_url character varying(255),
+    media_type character varying(255),
+    currency_id integer,
+    spendable boolean,
+    countable boolean,
+    numeric_display boolean,
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    preview_image_file_name character varying(255),
+    preview_image_content_type character varying(255),
+    preview_image_file_size integer,
+    preview_image_updated_at timestamp without time zone,
+    main_image_file_name character varying(255),
+    main_image_content_type character varying(255),
+    main_image_file_size integer,
+    main_image_updated_at timestamp without time zone,
+    media_file_file_name character varying(255),
+    media_file_content_type character varying(255),
+    media_file_file_size integer,
+    media_file_updated_at timestamp without time zone,
+    not_awarded_image_file_name character varying(255),
+    not_awarded_image_content_type character varying(255),
+    not_awarded_image_file_size integer,
+    not_awarded_image_updated_at timestamp without time zone,
+    not_winnable_image_file_name character varying(255),
+    not_winnable_image_content_type character varying(255),
+    not_winnable_image_file_size integer,
+    not_winnable_image_updated_at timestamp without time zone,
+    call_to_action_id integer,
+    aux json,
+    extra_fields json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: rewards_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE rewards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rewards_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE rewards_id_seq OWNED BY rewards.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE schema_migrations (
+    version character varying(255) NOT NULL
+);
+
+
+--
+-- Name: settings; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE settings (
+    id integer NOT NULL,
+    key character varying(255),
+    value text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
+
+
+--
+-- Name: shares; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE shares (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    picture_file_name character varying(255),
+    picture_content_type character varying(255),
+    picture_file_size integer,
+    picture_updated_at timestamp without time zone,
+    providers json
+);
+
+
+--
+-- Name: shares_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE shares_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: shares_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE shares_id_seq OWNED BY shares.id;
+
+
+--
+-- Name: synced_log_files; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE synced_log_files (
+    id integer NOT NULL,
+    pid character varying(255),
+    server_hostname character varying(255),
+    "timestamp" timestamp without time zone
+);
+
+
+--
+-- Name: synced_log_files_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE synced_log_files_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: synced_log_files_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
+
+
+--
+-- Name: tags; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tags (
+    id integer NOT NULL,
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description text,
+    locked boolean,
+    valid_from timestamp without time zone,
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json,
+    title character varying(255),
+    slug character varying(255)
+);
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
+
+
+--
+-- Name: tags_tags; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tags_tags (
+    id integer NOT NULL,
+    tag_id integer,
+    other_tag_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: tags_tags_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE tags_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE tags_tags_id_seq OWNED BY tags_tags.id;
+
+
+--
+-- Name: uploads; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE uploads (
+    id integer NOT NULL,
+    call_to_action_id integer NOT NULL,
+    releasing boolean,
+    releasing_description text,
+    privacy boolean,
+    privacy_description text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    upload_number integer,
+    watermark_file_name character varying(255),
+    watermark_content_type character varying(255),
+    watermark_file_size integer,
+    watermark_updated_at timestamp without time zone,
+    title_needed boolean DEFAULT false,
+    aux json
+);
+
+
+--
+-- Name: uploads_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE uploads_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: uploads_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE uploads_id_seq OWNED BY uploads.id;
+
+
+--
+-- Name: user_comment_interactions; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_comment_interactions (
+    id integer NOT NULL,
+    user_id integer,
+    comment_id integer,
+    text text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    approved boolean,
+    aux json
+);
+
+
+--
+-- Name: user_comment_interactions_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE user_comment_interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_comment_interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE user_comment_interactions_id_seq OWNED BY user_comment_interactions.id;
+
+
+--
+-- Name: user_counters; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_counters (
+    id integer NOT NULL,
+    name character varying(255),
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    counters json
+);
+
+
+--
+-- Name: user_counters_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE user_counters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_counters_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE user_counters_id_seq OWNED BY user_counters.id;
+
+
+--
+-- Name: user_interactions; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_interactions (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    interaction_id integer NOT NULL,
+    answer_id integer,
+    counter integer DEFAULT 1,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "like" boolean,
+    outcome text,
+    aux json
+);
+
+
+--
+-- Name: user_interactions_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE user_interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE user_interactions_id_seq OWNED BY user_interactions.id;
+
+
+--
+-- Name: user_rewards; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_rewards (
+    id integer NOT NULL,
+    user_id integer,
+    reward_id integer,
+    available boolean,
+    counter integer DEFAULT 0,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    period_id integer
+);
+
+
+--
+-- Name: user_rewards_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE user_rewards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_rewards_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE user_rewards_id_seq OWNED BY user_rewards.id;
+
+
+--
+-- Name: user_upload_interactions; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_upload_interactions (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    call_to_action_id integer NOT NULL,
+    upload_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    aux json
+);
+
+
+--
+-- Name: user_upload_interactions_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE user_upload_interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_upload_interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE user_upload_interactions_id_seq OWNED BY user_upload_interactions.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    email character varying(255) DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying(255) DEFAULT ''::character varying,
+    reset_password_token character varying(255),
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip character varying(255),
+    last_sign_in_ip character varying(255),
+    first_name character varying(255),
+    last_name character varying(255),
+    avatar_selected character varying(255) DEFAULT 'upload'::character varying,
+    swid character varying(255),
+    privacy boolean,
+    confirmation_token character varying(255),
+    confirmed_at timestamp without time zone,
+    confirmation_sent_at timestamp without time zone,
+    unconfirmed_email character varying(255),
+    role character varying(255),
+    authentication_token character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    avatar_file_name character varying(255),
+    avatar_content_type character varying(255),
+    avatar_file_size integer,
+    avatar_updated_at timestamp without time zone,
+    cap character varying(255),
+    location character varying(255),
+    province character varying(255),
+    address character varying(255),
+    phone character varying(255),
+    number character varying(255),
+    rule boolean,
+    birth_date date,
+    username character varying(255),
+    newsletter boolean,
+    avatar_selected_url character varying(255),
+    aux json,
+    gender character varying(255)
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: view_counters; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE view_counters (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    ref_type character varying(255),
+    ref_id integer,
+    counter integer
+);
+
+
+--
+-- Name: view_counters_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE view_counters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: view_counters_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE view_counters_id_seq OWNED BY view_counters.id;
+
+
+--
+-- Name: vote_ranking_tags; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE vote_ranking_tags (
+    id integer NOT NULL,
+    tag_id integer,
+    vote_ranking_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: vote_ranking_tags_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE vote_ranking_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: vote_ranking_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE vote_ranking_tags_id_seq OWNED BY vote_ranking_tags.id;
+
+
+--
+-- Name: vote_rankings; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE vote_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    title character varying(255),
+    period character varying(255),
+    rank_type character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: vote_rankings_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE vote_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: vote_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE vote_rankings_id_seq OWNED BY vote_rankings.id;
+
+
+--
+-- Name: votes; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE votes (
+    id integer NOT NULL,
+    title character varying(255),
+    vote_min integer DEFAULT 1,
+    vote_max integer DEFAULT 10,
+    one_shot boolean,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: votes_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE votes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: votes_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE votes_id_seq OWNED BY votes.id;
+
+
 SET search_path = maxibon, pg_catalog;
 
 --
@@ -9129,7 +10912,8 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json
+    extra_fields json DEFAULT '{}'::json,
+    interaction_call_to_action_id integer
 );
 
 
@@ -9228,7 +11012,8 @@ CREATE TABLE downloads (
     attachment_file_name character varying(255),
     attachment_content_type character varying(255),
     attachment_file_size integer,
-    attachment_updated_at timestamp without time zone
+    attachment_updated_at timestamp without time zone,
+    ical_fields json
 );
 
 
@@ -9441,6 +11226,7 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
+    interaction_call_to_action_id integer,
     stored_for_anonymous boolean
 );
 
@@ -10589,6 +12375,1763 @@ CREATE SEQUENCE votes_id_seq
 
 --
 -- Name: votes_id_seq; Type: SEQUENCE OWNED BY; Schema: maxibon; Owner: -
+--
+
+ALTER SEQUENCE votes_id_seq OWNED BY votes.id;
+
+
+SET search_path = orzoro, pg_catalog;
+
+--
+-- Name: answers; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE answers (
+    id integer NOT NULL,
+    quiz_id integer NOT NULL,
+    text character varying(255) NOT NULL,
+    correct boolean,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    image_file_name character varying(255),
+    image_content_type character varying(255),
+    image_file_size integer,
+    image_updated_at timestamp without time zone,
+    call_to_action_id integer,
+    media_image_file_name character varying(255),
+    media_image_content_type character varying(255),
+    media_image_file_size integer,
+    media_image_updated_at timestamp without time zone,
+    media_data text,
+    media_type character varying(255),
+    blocking boolean DEFAULT false,
+    aux json
+);
+
+
+--
+-- Name: answers_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE answers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: answers_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE answers_id_seq OWNED BY answers.id;
+
+
+--
+-- Name: attachments; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE attachments (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data_file_name character varying(255),
+    data_content_type character varying(255),
+    data_file_size integer,
+    data_updated_at timestamp without time zone
+);
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE attachments_id_seq OWNED BY attachments.id;
+
+
+--
+-- Name: authentications; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE authentications (
+    id integer NOT NULL,
+    uid character varying(255),
+    name character varying(255),
+    oauth_token character varying(255),
+    oauth_secret character varying(255),
+    provider character varying(255),
+    avatar character varying(255),
+    oauth_expires_at timestamp without time zone,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    new boolean,
+    aux json
+);
+
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE authentications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: authentications_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
+
+
+--
+-- Name: cache_rankings; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    user_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE cache_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
+
+
+--
+-- Name: cache_versions; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_versions (
+    id integer NOT NULL,
+    name character varying(255),
+    version integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json
+);
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE cache_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE cache_versions_id_seq OWNED BY cache_versions.id;
+
+
+--
+-- Name: cache_votes; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cache_votes (
+    id integer NOT NULL,
+    version integer,
+    call_to_action_id integer,
+    vote_count integer,
+    vote_sum integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data json DEFAULT '{}'::json,
+    gallery_name text
+);
+
+
+--
+-- Name: cache_votes_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE cache_votes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cache_votes_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE cache_votes_id_seq OWNED BY cache_votes.id;
+
+
+--
+-- Name: call_to_action_tags; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE call_to_action_tags (
+    id integer NOT NULL,
+    call_to_action_id integer,
+    tag_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: call_to_action_tags_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE call_to_action_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: call_to_action_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE call_to_action_tags_id_seq OWNED BY call_to_action_tags.id;
+
+
+--
+-- Name: call_to_actions; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE call_to_actions (
+    id integer NOT NULL,
+    name character varying(255),
+    title character varying(255),
+    description text,
+    media_type character varying(255),
+    enable_disqus boolean DEFAULT false,
+    activated_at timestamp without time zone,
+    secondary_id character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    slug character varying(255),
+    media_image_file_name character varying(255),
+    media_image_content_type character varying(255),
+    media_image_file_size integer,
+    media_image_updated_at timestamp without time zone,
+    media_data text,
+    releasing_file_id integer,
+    approved boolean,
+    thumbnail_file_name character varying(255),
+    thumbnail_content_type character varying(255),
+    thumbnail_file_size integer,
+    thumbnail_updated_at timestamp without time zone,
+    user_id integer,
+    aux json,
+    valid_from timestamp without time zone,
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json,
+    interaction_call_to_action_id integer
+);
+
+
+--
+-- Name: call_to_actions_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE call_to_actions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: call_to_actions_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE call_to_actions_id_seq OWNED BY call_to_actions.id;
+
+
+--
+-- Name: checks; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE checks (
+    id integer NOT NULL,
+    title character varying(255),
+    description text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: checks_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE checks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: checks_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
+
+
+--
+-- Name: comments; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comments (
+    id integer NOT NULL,
+    must_be_approved boolean DEFAULT false,
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
+
+
+--
+-- Name: downloads; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE downloads (
+    id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    attachment_file_name character varying(255),
+    attachment_content_type character varying(255),
+    attachment_file_size integer,
+    attachment_updated_at timestamp without time zone,
+    ical_fields json
+);
+
+
+--
+-- Name: downloads_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE downloads_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: downloads_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
+
+
+--
+-- Name: events; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE events (
+    id integer NOT NULL,
+    session_id character varying(255),
+    pid integer,
+    message character varying(255),
+    request_uri character varying(255),
+    "timestamp" timestamp without time zone,
+    level character varying(255),
+    tenant character varying(255),
+    user_id integer,
+    data json
+);
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE events_id_seq OWNED BY events.id;
+
+
+--
+-- Name: home_launchers; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE home_launchers (
+    id integer NOT NULL,
+    description text,
+    button character varying(255),
+    url character varying(255),
+    enable boolean DEFAULT true,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    image_file_name character varying(255),
+    image_content_type character varying(255),
+    image_file_size integer,
+    image_updated_at timestamp without time zone,
+    anchor boolean
+);
+
+
+--
+-- Name: home_launchers_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE home_launchers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: home_launchers_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
+
+
+--
+-- Name: instantwin_interactions; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE instantwin_interactions (
+    id integer NOT NULL,
+    reward_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: instantwin_interactions_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE instantwin_interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: instantwin_interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE instantwin_interactions_id_seq OWNED BY instantwin_interactions.id;
+
+
+--
+-- Name: instantwins; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE instantwins (
+    id integer NOT NULL,
+    valid_from timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    valid_to timestamp without time zone,
+    reward_info json,
+    won boolean,
+    instantwin_interaction_id integer
+);
+
+
+--
+-- Name: instantwins_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE instantwins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: instantwins_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE instantwins_id_seq OWNED BY instantwins.id;
+
+
+--
+-- Name: interaction_call_to_actions; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE interaction_call_to_actions (
+    id integer NOT NULL,
+    interaction_id integer,
+    call_to_action_id integer,
+    condition json,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    ordering integer
+);
+
+
+--
+-- Name: interaction_call_to_actions_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE interaction_call_to_actions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: interaction_call_to_actions_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE interaction_call_to_actions_id_seq OWNED BY interaction_call_to_actions.id;
+
+
+--
+-- Name: interactions; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE interactions (
+    id integer NOT NULL,
+    name character varying(255),
+    seconds integer DEFAULT 0,
+    when_show_interaction character varying(255),
+    required_to_complete boolean,
+    resource_id integer,
+    resource_type character varying(255),
+    call_to_action_id integer,
+    aux json,
+    interaction_call_to_action_id integer,
+    stored_for_anonymous boolean
+);
+
+
+--
+-- Name: interactions_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE interactions_id_seq OWNED BY interactions.id;
+
+
+--
+-- Name: likes; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE likes (
+    id integer NOT NULL,
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
+
+
+--
+-- Name: links; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE links (
+    id integer NOT NULL,
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE links_id_seq OWNED BY links.id;
+
+
+--
+-- Name: notices; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE notices (
+    id integer NOT NULL,
+    user_id integer,
+    html_notice text,
+    last_sent timestamp without time zone,
+    viewed boolean DEFAULT false,
+    read boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    aux json
+);
+
+
+--
+-- Name: notices_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE notices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notices_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE notices_id_seq OWNED BY notices.id;
+
+
+--
+-- Name: oauth_access_grants; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE oauth_access_grants (
+    id integer NOT NULL,
+    resource_owner_id integer NOT NULL,
+    application_id integer NOT NULL,
+    token character varying(255) NOT NULL,
+    expires_in integer NOT NULL,
+    redirect_uri text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    revoked_at timestamp without time zone,
+    scopes character varying(255)
+);
+
+
+--
+-- Name: oauth_access_grants_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE oauth_access_grants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: oauth_access_grants_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE oauth_access_grants_id_seq OWNED BY oauth_access_grants.id;
+
+
+--
+-- Name: oauth_access_tokens; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE oauth_access_tokens (
+    id integer NOT NULL,
+    resource_owner_id integer,
+    application_id integer,
+    token character varying(255) NOT NULL,
+    refresh_token character varying(255),
+    expires_in integer,
+    revoked_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    scopes character varying(255)
+);
+
+
+--
+-- Name: oauth_access_tokens_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE oauth_access_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: oauth_access_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE oauth_access_tokens_id_seq OWNED BY oauth_access_tokens.id;
+
+
+--
+-- Name: oauth_applications; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE oauth_applications (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    uid character varying(255) NOT NULL,
+    secret character varying(255) NOT NULL,
+    redirect_uri text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: oauth_applications_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE oauth_applications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: oauth_applications_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE oauth_applications_id_seq OWNED BY oauth_applications.id;
+
+
+--
+-- Name: periods; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE periods (
+    id integer NOT NULL,
+    kind character varying(255),
+    start_datetime timestamp without time zone,
+    end_datetime timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: periods_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE periods_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: periods_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
+
+
+--
+-- Name: plays; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE plays (
+    id integer NOT NULL,
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: plays_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE plays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plays_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE plays_id_seq OWNED BY plays.id;
+
+
+--
+-- Name: promocodes; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE promocodes (
+    id integer NOT NULL,
+    title character varying(255),
+    code character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: promocodes_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE promocodes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: promocodes_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE promocodes_id_seq OWNED BY promocodes.id;
+
+
+--
+-- Name: quizzes; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE quizzes (
+    id integer NOT NULL,
+    question character varying(255) NOT NULL,
+    cache_correct_answer integer DEFAULT 0,
+    cache_wrong_answer integer DEFAULT 0,
+    quiz_type character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    one_shot boolean DEFAULT true
+);
+
+
+--
+-- Name: quizzes_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE quizzes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: quizzes_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
+
+
+--
+-- Name: rankings; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE rankings (
+    id integer NOT NULL,
+    reward_id integer NOT NULL,
+    name character varying(255),
+    title character varying(255),
+    period character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    rank_type character varying(255),
+    people_filter character varying(255)
+);
+
+
+--
+-- Name: rankings_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE rankings_id_seq OWNED BY rankings.id;
+
+
+--
+-- Name: registrations; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE registrations (
+    id integer NOT NULL,
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: registrations_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE registrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registrations_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE registrations_id_seq OWNED BY registrations.id;
+
+
+--
+-- Name: releasing_files; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE releasing_files (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    file_file_name character varying(255),
+    file_content_type character varying(255),
+    file_file_size integer,
+    file_updated_at timestamp without time zone
+);
+
+
+--
+-- Name: releasing_files_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE releasing_files_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: releasing_files_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE releasing_files_id_seq OWNED BY releasing_files.id;
+
+
+--
+-- Name: reward_tags; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE reward_tags (
+    id integer NOT NULL,
+    tag_id integer,
+    reward_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: reward_tags_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE reward_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reward_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE reward_tags_id_seq OWNED BY reward_tags.id;
+
+
+--
+-- Name: rewards; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE rewards (
+    id integer NOT NULL,
+    title character varying(255),
+    short_description text,
+    long_description text,
+    button_label character varying(255),
+    cost integer,
+    valid_from timestamp without time zone,
+    valid_to timestamp without time zone,
+    video_url character varying(255),
+    media_type character varying(255),
+    currency_id integer,
+    spendable boolean,
+    countable boolean,
+    numeric_display boolean,
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    preview_image_file_name character varying(255),
+    preview_image_content_type character varying(255),
+    preview_image_file_size integer,
+    preview_image_updated_at timestamp without time zone,
+    main_image_file_name character varying(255),
+    main_image_content_type character varying(255),
+    main_image_file_size integer,
+    main_image_updated_at timestamp without time zone,
+    media_file_file_name character varying(255),
+    media_file_content_type character varying(255),
+    media_file_file_size integer,
+    media_file_updated_at timestamp without time zone,
+    not_awarded_image_file_name character varying(255),
+    not_awarded_image_content_type character varying(255),
+    not_awarded_image_file_size integer,
+    not_awarded_image_updated_at timestamp without time zone,
+    not_winnable_image_file_name character varying(255),
+    not_winnable_image_content_type character varying(255),
+    not_winnable_image_file_size integer,
+    not_winnable_image_updated_at timestamp without time zone,
+    call_to_action_id integer,
+    aux json,
+    extra_fields json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: rewards_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE rewards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rewards_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE rewards_id_seq OWNED BY rewards.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE schema_migrations (
+    version character varying(255) NOT NULL
+);
+
+
+--
+-- Name: settings; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE settings (
+    id integer NOT NULL,
+    key character varying(255),
+    value text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
+
+
+--
+-- Name: shares; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE shares (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    picture_file_name character varying(255),
+    picture_content_type character varying(255),
+    picture_file_size integer,
+    picture_updated_at timestamp without time zone,
+    providers json
+);
+
+
+--
+-- Name: shares_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE shares_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: shares_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE shares_id_seq OWNED BY shares.id;
+
+
+--
+-- Name: synced_log_files; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE synced_log_files (
+    id integer NOT NULL,
+    pid character varying(255),
+    server_hostname character varying(255),
+    "timestamp" timestamp without time zone
+);
+
+
+--
+-- Name: synced_log_files_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE synced_log_files_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: synced_log_files_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
+
+
+--
+-- Name: tags; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tags (
+    id integer NOT NULL,
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description text,
+    locked boolean,
+    valid_from timestamp without time zone,
+    valid_to timestamp without time zone,
+    extra_fields json DEFAULT '{}'::json,
+    title character varying(255),
+    slug character varying(255)
+);
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
+
+
+--
+-- Name: tags_tags; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tags_tags (
+    id integer NOT NULL,
+    tag_id integer,
+    other_tag_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: tags_tags_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE tags_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE tags_tags_id_seq OWNED BY tags_tags.id;
+
+
+--
+-- Name: uploads; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE uploads (
+    id integer NOT NULL,
+    call_to_action_id integer NOT NULL,
+    releasing boolean,
+    releasing_description text,
+    privacy boolean,
+    privacy_description text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    upload_number integer,
+    watermark_file_name character varying(255),
+    watermark_content_type character varying(255),
+    watermark_file_size integer,
+    watermark_updated_at timestamp without time zone,
+    title_needed boolean DEFAULT false,
+    aux json
+);
+
+
+--
+-- Name: uploads_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE uploads_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: uploads_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE uploads_id_seq OWNED BY uploads.id;
+
+
+--
+-- Name: user_comment_interactions; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_comment_interactions (
+    id integer NOT NULL,
+    user_id integer,
+    comment_id integer,
+    text text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    approved boolean,
+    aux json
+);
+
+
+--
+-- Name: user_comment_interactions_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE user_comment_interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_comment_interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE user_comment_interactions_id_seq OWNED BY user_comment_interactions.id;
+
+
+--
+-- Name: user_counters; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_counters (
+    id integer NOT NULL,
+    name character varying(255),
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    counters json
+);
+
+
+--
+-- Name: user_counters_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE user_counters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_counters_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE user_counters_id_seq OWNED BY user_counters.id;
+
+
+--
+-- Name: user_interactions; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_interactions (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    interaction_id integer NOT NULL,
+    answer_id integer,
+    counter integer DEFAULT 1,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "like" boolean,
+    outcome text,
+    aux json
+);
+
+
+--
+-- Name: user_interactions_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE user_interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE user_interactions_id_seq OWNED BY user_interactions.id;
+
+
+--
+-- Name: user_rewards; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_rewards (
+    id integer NOT NULL,
+    user_id integer,
+    reward_id integer,
+    available boolean,
+    counter integer DEFAULT 0,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    period_id integer
+);
+
+
+--
+-- Name: user_rewards_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE user_rewards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_rewards_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE user_rewards_id_seq OWNED BY user_rewards.id;
+
+
+--
+-- Name: user_upload_interactions; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_upload_interactions (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    call_to_action_id integer NOT NULL,
+    upload_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    aux json
+);
+
+
+--
+-- Name: user_upload_interactions_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE user_upload_interactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_upload_interactions_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE user_upload_interactions_id_seq OWNED BY user_upload_interactions.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    email character varying(255) DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying(255) DEFAULT ''::character varying,
+    reset_password_token character varying(255),
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip character varying(255),
+    last_sign_in_ip character varying(255),
+    first_name character varying(255),
+    last_name character varying(255),
+    avatar_selected character varying(255) DEFAULT 'upload'::character varying,
+    swid character varying(255),
+    privacy boolean,
+    confirmation_token character varying(255),
+    confirmed_at timestamp without time zone,
+    confirmation_sent_at timestamp without time zone,
+    unconfirmed_email character varying(255),
+    role character varying(255),
+    authentication_token character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    avatar_file_name character varying(255),
+    avatar_content_type character varying(255),
+    avatar_file_size integer,
+    avatar_updated_at timestamp without time zone,
+    cap character varying(255),
+    location character varying(255),
+    province character varying(255),
+    address character varying(255),
+    phone character varying(255),
+    number character varying(255),
+    rule boolean,
+    birth_date date,
+    username character varying(255),
+    newsletter boolean,
+    avatar_selected_url character varying(255),
+    aux json,
+    gender character varying(255)
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: view_counters; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE view_counters (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    ref_type character varying(255),
+    ref_id integer,
+    counter integer
+);
+
+
+--
+-- Name: view_counters_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE view_counters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: view_counters_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE view_counters_id_seq OWNED BY view_counters.id;
+
+
+--
+-- Name: vote_ranking_tags; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE vote_ranking_tags (
+    id integer NOT NULL,
+    tag_id integer,
+    vote_ranking_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: vote_ranking_tags_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE vote_ranking_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: vote_ranking_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE vote_ranking_tags_id_seq OWNED BY vote_ranking_tags.id;
+
+
+--
+-- Name: vote_rankings; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE vote_rankings (
+    id integer NOT NULL,
+    name character varying(255),
+    title character varying(255),
+    period character varying(255),
+    rank_type character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: vote_rankings_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE vote_rankings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: vote_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE vote_rankings_id_seq OWNED BY vote_rankings.id;
+
+
+--
+-- Name: votes; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE votes (
+    id integer NOT NULL,
+    title character varying(255),
+    vote_min integer DEFAULT 1,
+    vote_max integer DEFAULT 10,
+    one_shot boolean,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: votes_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE votes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: votes_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
 --
 
 ALTER SEQUENCE votes_id_seq OWNED BY votes.id;
@@ -14039,6 +17582,344 @@ ALTER TABLE ONLY vote_rankings ALTER COLUMN id SET DEFAULT nextval('vote_ranking
 ALTER TABLE ONLY votes ALTER COLUMN id SET DEFAULT nextval('votes_id_seq'::regclass);
 
 
+SET search_path = intesa_expo, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY answers ALTER COLUMN id SET DEFAULT nextval('answers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY attachments ALTER COLUMN id SET DEFAULT nextval('attachments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY cache_votes ALTER COLUMN id SET DEFAULT nextval('cache_votes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY call_to_action_tags ALTER COLUMN id SET DEFAULT nextval('call_to_action_tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY call_to_actions ALTER COLUMN id SET DEFAULT nextval('call_to_actions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY home_launchers ALTER COLUMN id SET DEFAULT nextval('home_launchers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY instantwin_interactions ALTER COLUMN id SET DEFAULT nextval('instantwin_interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY instantwins ALTER COLUMN id SET DEFAULT nextval('instantwins_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY interaction_call_to_actions ALTER COLUMN id SET DEFAULT nextval('interaction_call_to_actions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY interactions ALTER COLUMN id SET DEFAULT nextval('interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY links ALTER COLUMN id SET DEFAULT nextval('links_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY notices ALTER COLUMN id SET DEFAULT nextval('notices_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY oauth_access_grants ALTER COLUMN id SET DEFAULT nextval('oauth_access_grants_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY oauth_access_tokens ALTER COLUMN id SET DEFAULT nextval('oauth_access_tokens_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY oauth_applications ALTER COLUMN id SET DEFAULT nextval('oauth_applications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY plays ALTER COLUMN id SET DEFAULT nextval('plays_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY promocodes ALTER COLUMN id SET DEFAULT nextval('promocodes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY rankings ALTER COLUMN id SET DEFAULT nextval('rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY registrations ALTER COLUMN id SET DEFAULT nextval('registrations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY releasing_files ALTER COLUMN id SET DEFAULT nextval('releasing_files_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY reward_tags ALTER COLUMN id SET DEFAULT nextval('reward_tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY rewards ALTER COLUMN id SET DEFAULT nextval('rewards_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY settings ALTER COLUMN id SET DEFAULT nextval('settings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY shares ALTER COLUMN id SET DEFAULT nextval('shares_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY synced_log_files ALTER COLUMN id SET DEFAULT nextval('synced_log_files_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY tags_tags ALTER COLUMN id SET DEFAULT nextval('tags_tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY uploads ALTER COLUMN id SET DEFAULT nextval('uploads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY user_comment_interactions ALTER COLUMN id SET DEFAULT nextval('user_comment_interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY user_counters ALTER COLUMN id SET DEFAULT nextval('user_counters_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY user_interactions ALTER COLUMN id SET DEFAULT nextval('user_interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY user_rewards ALTER COLUMN id SET DEFAULT nextval('user_rewards_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY user_upload_interactions ALTER COLUMN id SET DEFAULT nextval('user_upload_interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY view_counters ALTER COLUMN id SET DEFAULT nextval('view_counters_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY vote_ranking_tags ALTER COLUMN id SET DEFAULT nextval('vote_ranking_tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY vote_rankings ALTER COLUMN id SET DEFAULT nextval('vote_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY votes ALTER COLUMN id SET DEFAULT nextval('votes_id_seq'::regclass);
+
+
 SET search_path = maxibon, pg_catalog;
 
 --
@@ -14372,6 +18253,344 @@ ALTER TABLE ONLY vote_rankings ALTER COLUMN id SET DEFAULT nextval('vote_ranking
 
 --
 -- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
+--
+
+ALTER TABLE ONLY votes ALTER COLUMN id SET DEFAULT nextval('votes_id_seq'::regclass);
+
+
+SET search_path = orzoro, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY answers ALTER COLUMN id SET DEFAULT nextval('answers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY attachments ALTER COLUMN id SET DEFAULT nextval('attachments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY cache_versions ALTER COLUMN id SET DEFAULT nextval('cache_versions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY cache_votes ALTER COLUMN id SET DEFAULT nextval('cache_votes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY call_to_action_tags ALTER COLUMN id SET DEFAULT nextval('call_to_action_tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY call_to_actions ALTER COLUMN id SET DEFAULT nextval('call_to_actions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY home_launchers ALTER COLUMN id SET DEFAULT nextval('home_launchers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY instantwin_interactions ALTER COLUMN id SET DEFAULT nextval('instantwin_interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY instantwins ALTER COLUMN id SET DEFAULT nextval('instantwins_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY interaction_call_to_actions ALTER COLUMN id SET DEFAULT nextval('interaction_call_to_actions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY interactions ALTER COLUMN id SET DEFAULT nextval('interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY links ALTER COLUMN id SET DEFAULT nextval('links_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY notices ALTER COLUMN id SET DEFAULT nextval('notices_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY oauth_access_grants ALTER COLUMN id SET DEFAULT nextval('oauth_access_grants_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY oauth_access_tokens ALTER COLUMN id SET DEFAULT nextval('oauth_access_tokens_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY oauth_applications ALTER COLUMN id SET DEFAULT nextval('oauth_applications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY plays ALTER COLUMN id SET DEFAULT nextval('plays_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY promocodes ALTER COLUMN id SET DEFAULT nextval('promocodes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY rankings ALTER COLUMN id SET DEFAULT nextval('rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY registrations ALTER COLUMN id SET DEFAULT nextval('registrations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY releasing_files ALTER COLUMN id SET DEFAULT nextval('releasing_files_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY reward_tags ALTER COLUMN id SET DEFAULT nextval('reward_tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY rewards ALTER COLUMN id SET DEFAULT nextval('rewards_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY settings ALTER COLUMN id SET DEFAULT nextval('settings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY shares ALTER COLUMN id SET DEFAULT nextval('shares_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY synced_log_files ALTER COLUMN id SET DEFAULT nextval('synced_log_files_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY tags_tags ALTER COLUMN id SET DEFAULT nextval('tags_tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY uploads ALTER COLUMN id SET DEFAULT nextval('uploads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY user_comment_interactions ALTER COLUMN id SET DEFAULT nextval('user_comment_interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY user_counters ALTER COLUMN id SET DEFAULT nextval('user_counters_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY user_interactions ALTER COLUMN id SET DEFAULT nextval('user_interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY user_rewards ALTER COLUMN id SET DEFAULT nextval('user_rewards_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY user_upload_interactions ALTER COLUMN id SET DEFAULT nextval('user_upload_interactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY view_counters ALTER COLUMN id SET DEFAULT nextval('view_counters_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY vote_ranking_tags ALTER COLUMN id SET DEFAULT nextval('vote_ranking_tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY vote_rankings ALTER COLUMN id SET DEFAULT nextval('vote_rankings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
 --
 
 ALTER TABLE ONLY votes ALTER COLUMN id SET DEFAULT nextval('votes_id_seq'::regclass);
@@ -16645,6 +20864,392 @@ ALTER TABLE ONLY votes
     ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
 
 
+SET search_path = intesa_expo, pg_catalog;
+
+--
+-- Name: answers_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY answers
+    ADD CONSTRAINT answers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: attachments_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY attachments
+    ADD CONSTRAINT attachments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: authentications_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY authentications
+    ADD CONSTRAINT authentications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_rankings
+    ADD CONSTRAINT cache_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_versions_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_versions
+    ADD CONSTRAINT cache_versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_votes_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_votes
+    ADD CONSTRAINT cache_votes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: call_to_action_tags_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY call_to_action_tags
+    ADD CONSTRAINT call_to_action_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: call_to_actions_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY call_to_actions
+    ADD CONSTRAINT call_to_actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: checks_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY checks
+    ADD CONSTRAINT checks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comments_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: downloads_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY downloads
+    ADD CONSTRAINT downloads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: home_launchers_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY home_launchers
+    ADD CONSTRAINT home_launchers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: instantwin_interactions_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY instantwin_interactions
+    ADD CONSTRAINT instantwin_interactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: instantwins_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY instantwins
+    ADD CONSTRAINT instantwins_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: interaction_call_to_actions_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY interaction_call_to_actions
+    ADD CONSTRAINT interaction_call_to_actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: interactions_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY interactions
+    ADD CONSTRAINT interactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: likes_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY likes
+    ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: links_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notices_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY notices
+    ADD CONSTRAINT notices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: oauth_access_grants_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY oauth_access_grants
+    ADD CONSTRAINT oauth_access_grants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: oauth_access_tokens_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY oauth_access_tokens
+    ADD CONSTRAINT oauth_access_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: oauth_applications_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY oauth_applications
+    ADD CONSTRAINT oauth_applications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: periods_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY periods
+    ADD CONSTRAINT periods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plays_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY plays
+    ADD CONSTRAINT plays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: promocodes_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY promocodes
+    ADD CONSTRAINT promocodes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: quizzes_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY quizzes
+    ADD CONSTRAINT quizzes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rankings_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY rankings
+    ADD CONSTRAINT rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registrations_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY registrations
+    ADD CONSTRAINT registrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: releasing_files_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY releasing_files
+    ADD CONSTRAINT releasing_files_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reward_tags_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY reward_tags
+    ADD CONSTRAINT reward_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rewards_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY rewards
+    ADD CONSTRAINT rewards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: settings_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY settings
+    ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: shares_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY shares
+    ADD CONSTRAINT shares_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: synced_log_files_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY synced_log_files
+    ADD CONSTRAINT synced_log_files_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags_tags_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tags_tags
+    ADD CONSTRAINT tags_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: uploads_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY uploads
+    ADD CONSTRAINT uploads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_comments_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_comment_interactions
+    ADD CONSTRAINT user_comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_counters_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_counters
+    ADD CONSTRAINT user_counters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_interactions_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_interactions
+    ADD CONSTRAINT user_interactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_rewards_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_rewards
+    ADD CONSTRAINT user_rewards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_upload_interactions_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_upload_interactions
+    ADD CONSTRAINT user_upload_interactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: view_counters_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY view_counters
+    ADD CONSTRAINT view_counters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: vote_ranking_tags_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY vote_ranking_tags
+    ADD CONSTRAINT vote_ranking_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: vote_rankings_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY vote_rankings
+    ADD CONSTRAINT vote_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: votes_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY votes
+    ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
+
+
 SET search_path = maxibon, pg_catalog;
 
 --
@@ -17025,6 +21630,392 @@ ALTER TABLE ONLY vote_rankings
 
 --
 -- Name: votes_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY votes
+    ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
+
+
+SET search_path = orzoro, pg_catalog;
+
+--
+-- Name: answers_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY answers
+    ADD CONSTRAINT answers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: attachments_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY attachments
+    ADD CONSTRAINT attachments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: authentications_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY authentications
+    ADD CONSTRAINT authentications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_rankings
+    ADD CONSTRAINT cache_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_versions_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_versions
+    ADD CONSTRAINT cache_versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cache_votes_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cache_votes
+    ADD CONSTRAINT cache_votes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: call_to_action_tags_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY call_to_action_tags
+    ADD CONSTRAINT call_to_action_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: call_to_actions_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY call_to_actions
+    ADD CONSTRAINT call_to_actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: checks_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY checks
+    ADD CONSTRAINT checks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comments_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: downloads_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY downloads
+    ADD CONSTRAINT downloads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: home_launchers_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY home_launchers
+    ADD CONSTRAINT home_launchers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: instantwin_interactions_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY instantwin_interactions
+    ADD CONSTRAINT instantwin_interactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: instantwins_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY instantwins
+    ADD CONSTRAINT instantwins_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: interaction_call_to_actions_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY interaction_call_to_actions
+    ADD CONSTRAINT interaction_call_to_actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: interactions_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY interactions
+    ADD CONSTRAINT interactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: likes_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY likes
+    ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: links_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notices_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY notices
+    ADD CONSTRAINT notices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: oauth_access_grants_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY oauth_access_grants
+    ADD CONSTRAINT oauth_access_grants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: oauth_access_tokens_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY oauth_access_tokens
+    ADD CONSTRAINT oauth_access_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: oauth_applications_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY oauth_applications
+    ADD CONSTRAINT oauth_applications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: periods_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY periods
+    ADD CONSTRAINT periods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plays_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY plays
+    ADD CONSTRAINT plays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: promocodes_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY promocodes
+    ADD CONSTRAINT promocodes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: quizzes_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY quizzes
+    ADD CONSTRAINT quizzes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rankings_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY rankings
+    ADD CONSTRAINT rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registrations_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY registrations
+    ADD CONSTRAINT registrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: releasing_files_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY releasing_files
+    ADD CONSTRAINT releasing_files_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reward_tags_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY reward_tags
+    ADD CONSTRAINT reward_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rewards_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY rewards
+    ADD CONSTRAINT rewards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: settings_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY settings
+    ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: shares_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY shares
+    ADD CONSTRAINT shares_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: synced_log_files_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY synced_log_files
+    ADD CONSTRAINT synced_log_files_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags_tags_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tags_tags
+    ADD CONSTRAINT tags_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: uploads_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY uploads
+    ADD CONSTRAINT uploads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_comments_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_comment_interactions
+    ADD CONSTRAINT user_comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_counters_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_counters
+    ADD CONSTRAINT user_counters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_interactions_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_interactions
+    ADD CONSTRAINT user_interactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_rewards_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_rewards
+    ADD CONSTRAINT user_rewards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_upload_interactions_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_upload_interactions
+    ADD CONSTRAINT user_upload_interactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: view_counters_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY view_counters
+    ADD CONSTRAINT view_counters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: vote_ranking_tags_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY vote_ranking_tags
+    ADD CONSTRAINT vote_ranking_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: vote_rankings_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY vote_rankings
+    ADD CONSTRAINT vote_rankings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: votes_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY votes
@@ -17504,6 +22495,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -17557,6 +22555,13 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
+
+
+--
+-- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -17877,6 +22882,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -17930,6 +22942,13 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
+
+
+--
+-- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -18250,6 +23269,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -18303,6 +23329,13 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
+
+
+--
+-- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -18623,6 +23656,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -18676,6 +23716,13 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
+
+
+--
+-- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -18996,6 +24043,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -19049,6 +24103,13 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
+
+
+--
+-- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -19282,6 +24343,379 @@ CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type)
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
 
 
+SET search_path = intesa_expo, pg_catalog;
+
+--
+-- Name: index_answers_on_call_to_action_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_answers_on_call_to_action_id ON answers USING btree (call_to_action_id);
+
+
+--
+-- Name: index_answers_on_quiz_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
+
+
+--
+-- Name: index_authentications_on_user_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_name; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_name ON cache_rankings USING btree (name);
+
+
+--
+-- Name: index_cache_rankings_on_position; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_position ON cache_rankings USING btree ("position");
+
+
+--
+-- Name: index_cache_rankings_on_user_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_user_id ON cache_rankings USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_version; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_version ON cache_rankings USING btree (version);
+
+
+--
+-- Name: index_cache_versions_on_name; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
+
+
+--
+-- Name: index_cache_votes_on_call_to_action_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_votes_on_call_to_action_id ON cache_votes USING btree (call_to_action_id);
+
+
+--
+-- Name: index_cache_votes_on_version; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_votes_on_version ON cache_votes USING btree (version);
+
+
+--
+-- Name: index_call_to_actions_on_aux_aws_transcoding_media_status; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_aws_transcoding_media_status ON call_to_actions USING btree (((aux ->> 'aws_transcoding_media_status'::text)));
+
+
+--
+-- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_call_to_actions_on_name; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
+
+
+--
+-- Name: index_call_to_actions_on_slug; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
+
+
+--
+-- Name: index_events_on_message; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_message ON events USING btree (message);
+
+
+--
+-- Name: index_events_on_request_uri; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
+
+
+--
+-- Name: index_events_on_timestamp; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
+
+
+--
+-- Name: index_interaction_call_to_actions_on_call_to_action_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interaction_call_to_actions_on_call_to_action_id ON interaction_call_to_actions USING btree (call_to_action_id);
+
+
+--
+-- Name: index_interaction_call_to_actions_on_interaction_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_call_to_actions USING btree (interaction_id);
+
+
+--
+-- Name: index_interaction_ctas_on_interaction_id_and_cta_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
+
+
+--
+-- Name: index_interactions_on_name; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_interactions_on_name ON interactions USING btree (name);
+
+
+--
+-- Name: index_oauth_access_grants_on_token; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_oauth_access_grants_on_token ON oauth_access_grants USING btree (token);
+
+
+--
+-- Name: index_oauth_access_tokens_on_refresh_token; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_oauth_access_tokens_on_refresh_token ON oauth_access_tokens USING btree (refresh_token);
+
+
+--
+-- Name: index_oauth_access_tokens_on_resource_owner_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_oauth_access_tokens_on_resource_owner_id ON oauth_access_tokens USING btree (resource_owner_id);
+
+
+--
+-- Name: index_oauth_access_tokens_on_token; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_oauth_access_tokens_on_token ON oauth_access_tokens USING btree (token);
+
+
+--
+-- Name: index_oauth_applications_on_uid; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_oauth_applications_on_uid ON oauth_applications USING btree (uid);
+
+
+--
+-- Name: index_periods_on_end_datetime; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_periods_on_end_datetime ON periods USING btree (end_datetime);
+
+
+--
+-- Name: index_periods_on_start_datetime; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_periods_on_start_datetime ON periods USING btree (start_datetime);
+
+
+--
+-- Name: index_rewards_on_name; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_rewards_on_name ON rewards USING btree (name);
+
+
+--
+-- Name: index_synced_log_files_on_pid_and_server_hostname_and_timestamp; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timestamp ON synced_log_files USING btree (pid, server_hostname, "timestamp");
+
+
+--
+-- Name: index_tags_on_name; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_on_slug; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
+
+
+--
+-- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag_id);
+
+
+--
+-- Name: index_tags_tags_on_tag_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
+
+
+--
+-- Name: index_uploads_on_aux_fields; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
+
+
+--
+-- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
+
+
+--
+-- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree ((((aux ->> 'call_to_action_id'::text))::integer));
+
+
+--
+-- Name: index_user_interactions_on_aux_like; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_like ON user_interactions USING btree (((aux ->> 'like'::text)));
+
+
+--
+-- Name: index_user_interactions_on_aux_share; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_user_interactions_on_interaction_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_interaction_id ON user_interactions USING btree (interaction_id);
+
+
+--
+-- Name: index_user_interactions_on_user_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_user_id ON user_interactions USING btree (user_id);
+
+
+--
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
+
+
+--
+-- Name: index_user_uploads_on_aux_fields; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING btree (((aux ->> 'extra_fields'::text)));
+
+
+--
+-- Name: index_users_on_authentication_token; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_authentication_token ON users USING btree (authentication_token);
+
+
+--
+-- Name: index_users_on_confirmation_token; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_confirmation_token ON users USING btree (confirmation_token);
+
+
+--
+-- Name: index_users_on_email; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+
+
+--
+-- Name: index_users_on_reset_password_token; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
+
+
+--
+-- Name: index_users_on_username; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
+-- Name: index_view_counters_on_ref_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_ref_id ON view_counters USING btree (ref_id);
+
+
+--
+-- Name: index_view_counters_on_type; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
 SET search_path = maxibon, pg_catalog;
 
 --
@@ -19369,6 +24803,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -19422,6 +24863,13 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
+
+
+--
+-- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -19650,6 +25098,393 @@ CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type)
 
 --
 -- Name: unique_schema_migrations; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+SET search_path = orzoro, pg_catalog;
+
+--
+-- Name: index_answers_on_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_answers_on_call_to_action_id ON answers USING btree (call_to_action_id);
+
+
+--
+-- Name: index_answers_on_quiz_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_answers_on_quiz_id ON answers USING btree (quiz_id);
+
+
+--
+-- Name: index_authentications_on_user_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_name; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_name ON cache_rankings USING btree (name);
+
+
+--
+-- Name: index_cache_rankings_on_position; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_position ON cache_rankings USING btree ("position");
+
+
+--
+-- Name: index_cache_rankings_on_user_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_user_id ON cache_rankings USING btree (user_id);
+
+
+--
+-- Name: index_cache_rankings_on_version; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_rankings_on_version ON cache_rankings USING btree (version);
+
+
+--
+-- Name: index_cache_versions_on_name; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_versions_on_name ON cache_versions USING btree (name);
+
+
+--
+-- Name: index_cache_votes_on_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_votes_on_call_to_action_id ON cache_votes USING btree (call_to_action_id);
+
+
+--
+-- Name: index_cache_votes_on_version; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_cache_votes_on_version ON cache_votes USING btree (version);
+
+
+--
+-- Name: index_call_to_actions_on_aux_aws_transcoding_media_status; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_aws_transcoding_media_status ON call_to_actions USING btree (((aux ->> 'aws_transcoding_media_status'::text)));
+
+
+--
+-- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
+
+
+--
+-- Name: index_call_to_actions_on_name; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_call_to_actions_on_name ON call_to_actions USING btree (name);
+
+
+--
+-- Name: index_call_to_actions_on_slug; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug);
+
+
+--
+-- Name: index_events_on_message; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_message ON events USING btree (message);
+
+
+--
+-- Name: index_events_on_request_uri; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
+
+
+--
+-- Name: index_events_on_timestamp; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
+
+
+--
+-- Name: index_interaction_call_to_actions_on_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interaction_call_to_actions_on_call_to_action_id ON interaction_call_to_actions USING btree (call_to_action_id);
+
+
+--
+-- Name: index_interaction_call_to_actions_on_interaction_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_call_to_actions USING btree (interaction_id);
+
+
+--
+-- Name: index_interaction_ctas_on_interaction_id_and_cta_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
+
+
+--
+-- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
+
+
+--
+-- Name: index_interactions_on_name; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_interactions_on_name ON interactions USING btree (name);
+
+
+--
+-- Name: index_oauth_access_grants_on_token; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_oauth_access_grants_on_token ON oauth_access_grants USING btree (token);
+
+
+--
+-- Name: index_oauth_access_tokens_on_refresh_token; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_oauth_access_tokens_on_refresh_token ON oauth_access_tokens USING btree (refresh_token);
+
+
+--
+-- Name: index_oauth_access_tokens_on_resource_owner_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_oauth_access_tokens_on_resource_owner_id ON oauth_access_tokens USING btree (resource_owner_id);
+
+
+--
+-- Name: index_oauth_access_tokens_on_token; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_oauth_access_tokens_on_token ON oauth_access_tokens USING btree (token);
+
+
+--
+-- Name: index_oauth_applications_on_uid; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_oauth_applications_on_uid ON oauth_applications USING btree (uid);
+
+
+--
+-- Name: index_periods_on_end_datetime; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_periods_on_end_datetime ON periods USING btree (end_datetime);
+
+
+--
+-- Name: index_periods_on_start_datetime; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_periods_on_start_datetime ON periods USING btree (start_datetime);
+
+
+--
+-- Name: index_rewards_on_name; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_rewards_on_name ON rewards USING btree (name);
+
+
+--
+-- Name: index_synced_log_files_on_pid_and_server_hostname_and_timestamp; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_synced_log_files_on_pid_and_server_hostname_and_timestamp ON synced_log_files USING btree (pid, server_hostname, "timestamp");
+
+
+--
+-- Name: index_tags_on_name; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
+
+
+--
+-- Name: index_tags_on_slug; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_tags_on_slug ON tags USING btree (slug);
+
+
+--
+-- Name: index_tags_tags_on_other_tag_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag_id);
+
+
+--
+-- Name: index_tags_tags_on_tag_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
+
+
+--
+-- Name: index_uploads_on_aux_fields; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
+
+
+--
+-- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
+
+
+--
+-- Name: index_user_interactions_on_aux_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_call_to_action_id ON user_interactions USING btree ((((aux ->> 'call_to_action_id'::text))::integer));
+
+
+--
+-- Name: index_user_interactions_on_aux_like; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_like ON user_interactions USING btree (((aux ->> 'like'::text)));
+
+
+--
+-- Name: index_user_interactions_on_aux_share; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_aux_share ON user_interactions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_user_interactions_on_interaction_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_interaction_id ON user_interactions USING btree (interaction_id);
+
+
+--
+-- Name: index_user_interactions_on_user_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_user_id ON user_interactions USING btree (user_id);
+
+
+--
+-- Name: index_user_rewards_on_reward_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_reward_id ON user_rewards USING btree (reward_id);
+
+
+--
+-- Name: index_user_rewards_on_user_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id);
+
+
+--
+-- Name: index_user_uploads_on_aux_fields; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING btree (((aux ->> 'extra_fields'::text)));
+
+
+--
+-- Name: index_users_on_authentication_token; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_authentication_token ON users USING btree (authentication_token);
+
+
+--
+-- Name: index_users_on_confirmation_token; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_confirmation_token ON users USING btree (confirmation_token);
+
+
+--
+-- Name: index_users_on_email; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+
+
+--
+-- Name: index_users_on_reset_password_token; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
+
+
+--
+-- Name: index_users_on_username; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
+-- Name: index_view_counters_on_ref_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_ref_id ON view_counters USING btree (ref_id);
+
+
+--
+-- Name: index_view_counters_on_type; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
@@ -19921,6 +25756,13 @@ CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_inter
 --
 
 CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
+
+
+--
+-- Name: index_user_interactions_on_answer_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_interactions_on_answer_id ON user_interactions USING btree (answer_id);
 
 
 --
@@ -20391,7 +26233,13 @@ INSERT INTO schema_migrations (version) VALUES ('20150212101118');
 
 INSERT INTO schema_migrations (version) VALUES ('20150212111531');
 
+INSERT INTO schema_migrations (version) VALUES ('20150212131531');
+
+INSERT INTO schema_migrations (version) VALUES ('20150212140258');
+
 INSERT INTO schema_migrations (version) VALUES ('20150212143420');
+
+INSERT INTO schema_migrations (version) VALUES ('20150212143421');
 
 INSERT INTO schema_migrations (version) VALUES ('20150212162357');
 
@@ -20400,6 +26248,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150213081903');
 INSERT INTO schema_migrations (version) VALUES ('20150216160308');
 
 INSERT INTO schema_migrations (version) VALUES ('20150219101047');
+
+INSERT INTO schema_migrations (version) VALUES ('20150227151410');
 
 INSERT INTO schema_migrations (version) VALUES ('20150227151546');
 

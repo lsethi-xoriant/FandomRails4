@@ -115,8 +115,12 @@ module CacheKeysHelper
     "calltoactions_count_in_property_#{property_id}"
   end
 
-  def get_evidence_calltoactions_cache_key()
-    "evidence_calltoactions"
+  def get_evidence_calltoactions_cache_key(context_root = nil)
+    if context_root
+      "evidence_calltoactions_in_context_#{context_root}"
+    else
+      "evidence_calltoactions"
+    end
   end
 
   def get_evidence_calltoactions_in_property_for_user_cache_key(user_id, property_id)

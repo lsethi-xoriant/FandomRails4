@@ -2,7 +2,7 @@ module CalendarHelper
   
   def build_ical(dt_start, dt_end, summary, description)
     cal = Icalendar::Calendar.new
-    cal.version = "1.0"
+    cal.version = "2.0"
     cal.prodid = $site.id
     cal.event do |e|
       e.dtstart = Icalendar::Values::Date.new(dt_start)

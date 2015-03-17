@@ -1,8 +1,9 @@
 class CalendarController < ApplicationController
 
   def get_ical
-    current_time = Time.now.utc.strftime("%Y%m%d")
-    cal = build_ical(current_time, current_time, "summary", "description")
+    start_date = Time.now.utc.strftime("%Y%m%d")
+    end_date = start_date
+    cal = build_ical(start_date, end_date, "summary", "description")
     render :text => cal.to_ical
   end
 

@@ -187,37 +187,25 @@
 }
 
 .cta__description {
-  font-size: 18px;
-  color: #6B6B6B;
-  margin-top: 0;
-  font-weight: 400;
+  font-size: 16px;
+  font-style: oblique;
+  margin-bottom: 30px;
 }
 
-.cta__title-and-description-col {
-  padding: 0;
-  padding-bottom: 30px;
+.cta__sub_description {
+  font-size: 12px;
+  span {
+    font-weight: bold;
+  }
 }
 
-.cta__winnable-reward {
-  padding-top: 20px
-}
-
-.cta__winnable-reward--single-page {
-  padding-top: 30px
-}
-
-.cta__undervideo {
+.cta__long_description {
   margin-top: 30px;
+  font-style: oblique;
 }
 
 .cta__title {
-  font-size: 38px;
-  font-family: "BarmenoRegularBold";
-  margin-top: 0;
-}
-
-.cta__miniformat-col {
-  padding-top: 30px;
+  font-size: 26px;
 }
 
 .ctas__search {

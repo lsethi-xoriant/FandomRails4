@@ -1,0 +1,51 @@
+<div class="container main-container">
+  <div class="row main-row">
+    <!-- SLIDER START -->
+    <div class="col-sm-9 ctas__flexslider__container" style="padding-left: 0; padding-right: 0;" ng-if="aux.calltoaction_evidence_info">
+      <div class="flexslider ctas__flexslider">
+        <ul class="slides">
+          <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
+            <%= light_link_to("/call_to_action/{{calltoaction.slug}}", style: "text-decoration: none;" ) do %>
+              <div class="col-xs-12 cta-cover__thumbnail-column">
+                <img class="cta-cover__thumbnail" ng-src="{{calltoaction.thumb_url}}">
+              </div>
+              <div class="col-xs-12 ctas__info">
+                <p class="ctas__flexslider__title">{{calltoaction.title}}</p>
+                <p class="ctas__flexslider__description" ng-bind-html="calltoaction.description | cut:true:70"></p>
+              </div>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- SLIDER END -->
+    <div class="col-sm-3 cta__evidence-right__col">
+      <hr class="cta__evidence-right__hr">
+      <p class="cta__evidence-right__title">Acquista qui i biglietti per Expo 2015</p>
+    </div>
+    <div class="col-sm-3 cta__evidence-right__col cta__evidence-right__col--light">
+      <hr class="cta__evidence-right__hr">
+      <p class="cta__evidence-right__title">Eventi nello spazio Intesa Sanpaolo</p>
+    </div>
+    <div class="col-sm-3 cta__evidence-right__col">
+      <hr class="cta__evidence-right__hr">
+      <p class="cta__evidence-right__title">LIVE NOW<br>Le sfide dell’innovazione alimentare</p>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.ctas__flexslider').flexslider({
+      animation: "fade",
+      slideshow: false,
+      animationLoop: true,
+      touch: true,
+      itemWidth: "100%",
+      itemMargin: 0,
+      controlNav: true,
+      prevText: "",
+      nextText: ""
+    });
+  });
+</script>
