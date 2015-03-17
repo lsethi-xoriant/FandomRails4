@@ -2,6 +2,11 @@ class Sites::Orzoro::ApplicationController < ApplicationController
   include RewardHelper
   include RankingHelper
   include OrzoroHelper
+
+  # Overridden from the base controller
+  def cta_url(cta)
+    orzoro_cta_url(cta)
+  end
   
   def index
     if current_user

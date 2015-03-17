@@ -13,7 +13,15 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
   layout "admin"
 
+  before_filter :authorize_user
+
+  def authorize_user
+    (can? :manage, :user_call_to_actions) || (can? :manage, :user_call_to_actions)
+  end
+
   def clone
+    authorize! :manage, :call_to_actions
+
     is_linking?(params[:id]) ? clone_linking_cta(params[:id]) : clone_cta(params[:id])
   end
 
@@ -31,6 +39,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
 
   def save_cta
+    authorize! :manage, :call_to_actions
+
     create_and_link_attachment(params[:call_to_action], nil)
     @cta = CallToAction.create(params[:call_to_action])
     # save_interaction_call_to_action_linking(params[:call_to_action], @cta) unless @cta.errors.any?
@@ -43,7 +53,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       @cta.call_to_action_tags.delete_all
       tag_list.each do |t|
         tag = Tag.find_by_name(t)
-        tag = Tag.create(name: t) unless tag
+        tag = Tag.create(name: t, slug: t) unless tag
         CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
       end
 
@@ -95,6 +105,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   
   def show_cta
     @current_cta = CallToAction.find(params[:id])
+    authorize! :manage, :call_to_actions if @current_cta.user_id.nil?
 
     tag_list_arr = Array.new
     @current_cta.call_to_action_tags.each { |t| tag_list_arr << t.tag.name }
@@ -102,6 +113,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
 
   def show_details
+    authorize! :manage, :call_to_actions
+
     @current_cta = CallToAction.find(params[:id])
 
     @shares = build_cta_detail(@current_cta, "Share", "share-counter")
@@ -204,6 +217,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
 
   def index_cta
+    authorize! :manage, :call_to_actions
+
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
@@ -215,6 +230,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
   
   def index_cta_template
+    authorize! :manage, :call_to_actions
+
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
@@ -254,6 +271,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
 
   def filter
+    authorize! :manage, :call_to_actions
 
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
@@ -338,11 +356,14 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
 
   def new_cta
+    authorize! :manage, :call_to_actions
+
     @cta = CallToAction.new
   end
 
   def edit_cta
     @cta = CallToAction.find(params[:id])
+    authorize! :manage, :call_to_actions if @cta.user_id.nil?
     if @cta.extra_fields.blank?
       @extra_options = {}
     else

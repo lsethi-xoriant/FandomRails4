@@ -25,7 +25,13 @@ Fandom::Application.routes.draw do
     end
   end
 
-  match "/ical", to: "calendar#get_ical", defaults: { format: 'ics' }
+  constraints(SiteMatcher.new('intesa_expo')) do
+    scope module: "sites" do
+      scope module: "intesa_expo" do
+        root :to => "application#index"
+      end
+    end
+  end
 
   constraints(SiteMatcher.new('orzoro')) do
     scope module: "sites" do
@@ -340,7 +346,6 @@ Fandom::Application.routes.draw do
     match "cta", :to => "call_to_action#index_cta"
     match "cta/filter", :to => "call_to_action#filter"
     match "cta/template", :to => "call_to_action#index_cta_template"
-    match "cta_user", :to => "call_to_action#index_user_generated_cta"
     match "cta/to_approve", :to => "call_to_action#index_user_cta_to_be_approved"
     match "cta/approved", :to => "call_to_action#index_user_cta_approved"
     match "cta/not_approved", :to => "call_to_action#index_user_cta_not_approved"
@@ -523,6 +528,9 @@ Fandom::Application.routes.draw do
 
   match "/newsletter_unsubscribe/:email/:security_token", :to => "newsletter#unsubscribe", :constraints => { :email => /.*/ }
   match "email_notifications_unsubscribe/:username/:security_token", :to => "notice#unsubscribe", :constraints => { :username => /.*/ }
+
+  # ICAL
+  match "/ical", to: "calendar#get_ical", defaults: { format: 'ics' }
 
   match "/tag/:name", :to => "application#index"
   root :to => "application#index"

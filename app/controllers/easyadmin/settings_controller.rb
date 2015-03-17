@@ -3,6 +3,12 @@ class Easyadmin::SettingsController < Easyadmin::EasyadminController
 
   layout "admin"
 
+  before_filter :authorize_user
+
+  def authorize_user
+    authorize! :manage, :settings
+  end
+
   def browse_settings
     setting = Setting.find_by_key(BROWSE_SETTINGS_KEY)
     @saved = true

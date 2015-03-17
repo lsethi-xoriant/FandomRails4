@@ -2,6 +2,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
   include RewardHelper
   include RankingHelper
   include OrzoroHelper
+  include IntesaExpoHelper
   
   def index
     if current_user
@@ -10,12 +11,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
     return if cookie_based_redirect?
     
-    init_ctas = $site.init_ctas
-     @calltoactions = cache_medium(get_calltoactions_in_property_cache_key(nil, 0, get_cta_max_updated_at())) do
-      CallToAction.active.limit(init_ctas).to_a
-    end
-
-    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions, ["empty"])
+    @calltoaction_info_list = {}
 
     @aux_other_params = { 
       calltoaction_evidence_info: true,
@@ -25,11 +21,9 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         }
       }
     }
-
   end
 
   def calendar
-    
   end
   
 end

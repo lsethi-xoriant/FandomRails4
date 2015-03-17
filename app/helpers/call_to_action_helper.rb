@@ -52,6 +52,7 @@ module CallToActionHelper
       "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
       "thumb_url" => calltoaction.thumbnail(thumb_format),
       "title" => calltoaction.title,
+      "slug" => calltoaction.slug,
       "description" => calltoaction.description,
       "type" => "cta",
       "aux" => {
@@ -126,7 +127,7 @@ module CallToActionHelper
           user_name = calltoaction.user.username
           user_user_avatar = user_avatar(calltoaction.user)
         end
-
+        
         calltoaction_info = {
             "calltoaction" => { 
               "id" => calltoaction.id,
@@ -282,7 +283,7 @@ module CallToActionHelper
         when "vote"
           vote_info = build_votes_for_resource(interaction)
         when "download"
-          download_info = resource.ical_fields
+          ical = JSON.parse(resource.ical_fields) if resource.ical_fields
         end
 
         if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
@@ -308,7 +309,7 @@ module CallToActionHelper
               "comment_info" => comment_info,
               "like_info" => like_info,
               "upload_info" => upload_info,
-              "download_info" => download_info,
+              "ical" => ical,
               "vote_info" => vote_info,
               "url" => resource_url
             }
@@ -851,18 +852,20 @@ module CallToActionHelper
   def save_interaction_call_to_action_linking(params, cta)
     ActiveRecord::Base.transaction do
       interaction_attributes = params["interactions_attributes"]
-      interaction_attributes.each do |key, interaction_attribute|
-        InteractionCallToAction.where(:interaction_id => interaction_attribute["id"]).destroy_all
-        unless interaction_attribute["resource_attributes"]["linked_cta"].nil?
-          interaction_attribute["resource_attributes"]["linked_cta"].each do |key, link|
-            condition = link["condition"].blank? ? nil : { "more" => link["condition"] }.to_json
-            InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => condition )
+      if interaction_attributes
+        interaction_attributes.each do |key, interaction_attribute|
+          InteractionCallToAction.where(:interaction_id => interaction_attribute["id"]).destroy_all
+          unless interaction_attribute["resource_attributes"]["linked_cta"].nil?
+            interaction_attribute["resource_attributes"]["linked_cta"].each do |key, link|
+              condition = link["condition"].blank? ? nil : { "more" => link["condition"] }.to_json
+              InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => condition )
+            end
           end
         end
-      end
-      build_html_jstree(cta)
-      if cta.errors.any?
-        raise ActiveRecord::Rollback
+        build_html_jstree(cta)
+        if cta.errors.any?
+          raise ActiveRecord::Rollback
+        end
       end
     end
     return cta.errors.empty?

@@ -15,10 +15,9 @@
     </div>
   </div>
 
-  <div class="row">
-  <% if can? :manage, :all %>
+  <% if can? :access, :dashboard %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
           <h3> Dashboard </h3>
 
@@ -37,9 +36,11 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
-<% end %>
+  <% end %>
+
+  <% if can? :manage, :users %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
       <h3> Utenti </h3>
 
@@ -60,9 +61,11 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
-<% if can? :manage, :all %>
+  <% end %>
+
+  <% if can? :manage, :published %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
           <h3> Pubblicazioni </h3>
 
@@ -75,8 +78,11 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% if can? :manage, :carousel %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
         <h3> Carosello </h3>
 
@@ -93,32 +99,39 @@
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
   <% end %>
-  </div> <!-- /.row -->
 
-  <div class="row">
-  <% if can? :manage, :all %>
+  <% if (can? :manage, :call_to_actions) || (can? :manage, :user_call_to_actions) %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
         <h3> CallToAction </h3>
 
-        <a href="/easyadmin/cta" style="color: #FFF">
-          <i class="fa fa-list" style="color: #FFF"></i> Tutte <br/>
-        </a>
-        <a href="/easyadmin/cta/to_approve" style="color: #FFF">
-          <i class="fa fa-users" style="color: #FFF"></i> CallToAction utente <br/>
-        </a>
-        <a href="/easyadmin/cta/new" style="color: #FFF">
-          <i class="fa fa-gears" style="color: #FFF"></i> Nuova <br/>
-        </a>
+        <% if can? :manage, :call_to_actions %>
+          <a href="/easyadmin/cta" style="color: #FFF">
+            <i class="fa fa-list" style="color: #FFF"></i> Tutte <br/>
+          </a>
+          <a href="/easyadmin/cta/to_approve" style="color: #FFF">
+            <i class="fa fa-users" style="color: #FFF"></i> CallToAction utente <br/>
+          </a>
+          <a href="/easyadmin/cta/new" style="color: #FFF">
+            <i class="fa fa-gears" style="color: #FFF"></i> Nuova <br/>
+          </a>
+        <% else %>
+          <a href="/easyadmin/cta/to_approve" style="color: #FFF">
+            <i class="fa fa-users" style="color: #FFF"></i> CallToAction utente <br/>
+          </a>
+        <% end %>
       </div> <!-- /.details --> 
         <div class="visual">
           <i class="fa fa-futbol-o" style="color: #FFF"></i>
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% if can? :manage, :promocodes %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
         <h3> Promocode </h3>
 
@@ -131,8 +144,11 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% if can? :manage, :rewards %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
         <h3> Rewards </h3>
 
@@ -148,8 +164,11 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% if can? :manage, :tags %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
         <h3> Tag </h3>
 
@@ -168,13 +187,11 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
-    <% end %>
-  </div> <!-- /.row -->
+  <% end %>
 
-  <div class="row">
-  <% if (can? :manage, :all) || (can? :manage, :comments) %>
+  <% if can? :manage, :comments %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
         <h3> Commenti </h3>
 
@@ -194,9 +211,10 @@
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
   <% end %>
-  <% if can? :manage, :all %>
+
+  <% if can? :manage, :notices %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
           <h3> Notifiche </h3>
 
@@ -212,8 +230,11 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% if can? :manage, :rankings %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
           <h3> Classifiche </h3>
 
@@ -229,8 +250,11 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+  <% end %>
+
+  <% if can? :manage, :settings %>
     <div class="col-md-3 col-sm-6">
-      <div class="dashboard-stat tertiary" style="min-height: 175px">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
         <div class="details">
           <h3> Impostazioni </h3>
 
@@ -253,6 +277,5 @@
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
     <% end %>
-  </div> <!-- /.row -->
 
 </div>

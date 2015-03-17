@@ -4,6 +4,12 @@ class Easyadmin::EasyadminRewardingRulesController < Easyadmin::EasyadminControl
 
   layout "admin"
 
+  before_filter :authorize_user
+
+  def authorize_user
+    authorize! :manage, :settings
+  end
+
   def index
     rules = Setting.find_by_key(REWARDING_RULE_SETTINGS_KEY)
     @saved = true

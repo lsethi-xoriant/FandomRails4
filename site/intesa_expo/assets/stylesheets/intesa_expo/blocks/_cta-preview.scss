@@ -1,32 +1,25 @@
 /* CTA PREVIEW BLOCK */
 
-.cta-preview__miniformat-container {
-  -ms-transform: rotate(-5deg); /* IE 9 */
-  -webkit-transform: rotate(-5deg); /* Chrome, Safari, Opera */
-  transform: rotate(-7deg);
-  display: inline-block;
+.cta__evidence-right__col {
+  border-bottom: 2px solid #fff;
+  background-color: #ccc;
+  height: 132px;
 }
 
-.cta-preview__miniformat-container--header {
-  margin-top: 35px;
+.cta__evidence-right__col--light {
+  background-color: #ddd;
+}
+
+.cta__evidence-right__title {
+  font-size: 16px;
+  color: $blu;
+  font-weight: bold;
+}
+
+.cta__evidence-right__hr {
+  border-top: 3px solid $blu;
+  margin-top: 10px;
   margin-bottom: 10px;
-  padding-top: 4px;
-  padding-bottom: 2px;
-  span {
-    top: 0 !important;
-  }
-}
-
-.cta-preview__miniformat {
-  background-image: url("orzoro/texture.png");
-  font-family: "Allan";
-  font-weight: "700";
-  font-size: 18px;
-  padding: 5px 25px;
-  position: relative;
-  text-transform: uppercase;
-  top: -15px;
-  color: #fff;
 }
 
 .cta-preview{
