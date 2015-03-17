@@ -1,6 +1,11 @@
 class Sites::Orzoro::CallToActionController < CallToActionController
   include OrzoroHelper
 
+  # Overridden from the base controller
+  def cta_url(cta)
+    orzoro_cta_url(cta)
+  end
+
   def init_show_aux(calltoaction)
     @aux_other_params = { 
       calltoaction: calltoaction

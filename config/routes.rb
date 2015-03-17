@@ -27,6 +27,14 @@ Fandom::Application.routes.draw do
 
   match "/ical", to: "calendar#get_ical", defaults: { format: 'ics' }
 
+  constraints(SiteMatcher.new('intesa_expo')) do
+    scope module: "sites" do
+      scope module: "intesa_expo" do
+        root :to => "application#index"
+      end
+    end
+  end
+
   constraints(SiteMatcher.new('orzoro')) do
     scope module: "sites" do
       scope module: "orzoro" do

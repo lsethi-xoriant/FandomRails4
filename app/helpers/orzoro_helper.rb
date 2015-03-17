@@ -1,5 +1,5 @@
 module OrzoroHelper
-  def cta_url(cta)
+  def orzoro_cta_url(cta)
     miniformat = get_tag_with_tag_about_call_to_action(cta, "miniformat").first
     prefix = miniformat.name
     "/#{prefix}/#{cta.slug}"

@@ -1,10 +1,10 @@
 $brown: #660206;
 $brown_hover: #850e0d;
 $red: red;
-$blu: #3399ff;
+$blu: #383AB0;
 $purple: #c5a3da;
-$grey: #ececec;
-$dark_grey: #6B6B6B; 
+$gray: #ececec;
+$darkgray: #ABABAB;
 $green: #30bf43;
 $cream: #eae4d2;
 $white: #f5f4f2;
@@ -23,18 +23,18 @@ $panel-border-radius:          0px !default;
 // Navbar
 
 $navbar-default-color:                      #fff !default;
-$navbar-default-bg:                         #f38128 !default;
+$navbar-default-bg:                         $gray !default;
 
 $navbar-default-link-color:                 #fff !default;
 $navbar-default-link-hover-color:           #fff !default;
-$navbar-default-link-hover-bg:              #c96b21 !default;
+$navbar-default-link-hover-bg:              $blu !default;
 $navbar-default-link-active-color:          $navbar-default-link-hover-color !default;
-$navbar-default-link-active-bg:             #c96b21 !default;
+$navbar-default-link-active-bg:             $blu !default;
 $navbar-default-link-disabled-color:        #444 !default;
-$navbar-default-link-disabled-bg:           transparent !default;
+$navbar-default-link-disabled-bg:           $darkgray !default;
 
 $navbar-default-brand-color:                $navbar-default-link-color !default;
-$navbar-default-brand-hover-color:          #42C5ED !default;
+$navbar-default-brand-hover-color:          #000 !default;
 $navbar-default-brand-hover-bg:             transparent !default;
 
 $navbar-default-toggle-hover-bg:            darken($navbar-default-bg, 10%) !default;
@@ -69,27 +69,8 @@ $navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 10%) !def
 $navbar-inverse-toggle-icon-bar-bg:         #fff !default;
 $navbar-inverse-toggle-border-color:        #999 !default;
 
-@font-face {
-  font-family: 'BarmenoRegular';
-  font-style: normal;
-  font-weight: 400;
-  src: url("barmeno_regular-webfont.eot") format("eot"), url("barmeno_regular-webfont.woff") format("woff"), url("barmeno_regular-webfont.ttf") format("truetype"), url("barmeno_regular-webfont.svg") format("svg");
-}
-
-@font-face {
-  font-family: 'BarmenoRegularBold';
-  font-style: normal;
-  font-weight: 400;
-  src: url("barmeno_bold-webfont.eot") format("eot"), url("barmeno_bold-webfont.woff") format("woff"), url("barmeno_bold-webfont.ttf") format("truetype"), url("barmeno_bold-webfont.svg") format("svg");
-}
-
-.btn {
-  font-family: 'BarmenoRegularBold';
-}
-
-
 //import style folders
 @import "bootstrap/bootstrap";
-@import "orzoro/**/**/*";
-@import "orzoro_reset";
+@import "intesa_expo/**/**/*";
+@import "intesa_expo_reset";
 
