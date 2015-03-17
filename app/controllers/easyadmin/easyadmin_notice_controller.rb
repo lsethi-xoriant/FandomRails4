@@ -4,6 +4,12 @@ class Easyadmin::EasyadminNoticeController < Easyadmin::EasyadminController
   include NoticeHelper
 
   layout "admin"
+
+  before_filter :authorize_user
+
+  def authorize_user
+    authorize! :manage, :notices
+  end
   
   # Constant that describe the filter available
   FIELD_DESCS = {

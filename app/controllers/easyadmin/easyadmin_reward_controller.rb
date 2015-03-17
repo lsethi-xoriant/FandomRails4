@@ -4,6 +4,12 @@ class Easyadmin::EasyadminRewardController < Easyadmin::EasyadminController
 
   layout "admin"
 
+  before_filter :authorize_user
+
+  def authorize_user
+    authorize! :manage, :rewards
+  end
+
   def index
     @reward_list = Reward.order("cost ASC")
   end

@@ -5,6 +5,12 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
 
   layout "admin"
 
+  before_filter :authorize_user
+
+  def authorize_user
+    authorize! :manage, :tags
+  end
+
   def index
     @tags = Tag.all
   end

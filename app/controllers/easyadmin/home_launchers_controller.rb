@@ -3,6 +3,12 @@ class Easyadmin::HomeLaunchersController < Easyadmin::EasyadminController
 
   layout "admin"
 
+  before_filter :authorize_user
+
+  def authorize_user
+    authorize! :manage, :carousel
+  end
+
   def index
     @home_launchers = HomeLauncher.all
   end

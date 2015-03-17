@@ -22,6 +22,7 @@ class Easyadmin::EasyadminController < ApplicationController
   end
   
   def index_user
+    authorize! :manage, :users
 
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
@@ -35,6 +36,8 @@ class Easyadmin::EasyadminController < ApplicationController
   end
   
   def export_users
+    authorize! :manage, :users
+
     csv = "id;email;remember_created_at;sign_in_count;current_sign_in_at;last_sign_in_at;"+
         "current_sign_in_ip;last_sign_in_ip;first_name;last_name;avatar_selected;swid;privacy;confirmation_token;confirmed_at;confirmation_sent_at;"+
         "unconfirmed_email;role;authentication_token;created_at;updated_at;avatar_file_name;avatar_content_type;avatar_file_size;avatar_updated_at;"+
@@ -51,6 +54,8 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def filter_user
+    authorize! :manage, :users
+
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
     @user_list = User.page(page).per(per_page)
@@ -196,14 +201,19 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def index_promocode
+    authorize! :manage, :promocodes
   end
 
   def new_promocode
+    authorize! :manage, :promocodes
+
     @inter_promocode = Interaction.new(name: "#PRCODE#{ DateTime.now.strftime('%FT%T') }")
     @inter_promocode.resource = Promocode.new
   end
 
   def create_promocode
+    authorize! :manage, :promocodes
+
     @inter_promocode = Interaction.create(params[:interaction])
     if @inter_promocode.errors.any?
       render template: "/easyadmin/easyadmin/new_promocode"     
@@ -317,6 +327,7 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def dashboard
+    authorize! :access, :dashboard
     @user_week_list = Hash.new
     if User.any? 
       if (params[:datepicker_from_date].blank? || params[:commit] == "Reset") 
@@ -379,6 +390,7 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def published
+    authorize! :manage, :published
   end
 
   def show_cta

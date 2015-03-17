@@ -851,18 +851,20 @@ module CallToActionHelper
   def save_interaction_call_to_action_linking(params, cta)
     ActiveRecord::Base.transaction do
       interaction_attributes = params["interactions_attributes"]
-      interaction_attributes.each do |key, interaction_attribute|
-        InteractionCallToAction.where(:interaction_id => interaction_attribute["id"]).destroy_all
-        unless interaction_attribute["resource_attributes"]["linked_cta"].nil?
-          interaction_attribute["resource_attributes"]["linked_cta"].each do |key, link|
-            condition = link["condition"].blank? ? nil : { "more" => link["condition"] }.to_json
-            InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => condition )
+      if interaction_attributes
+        interaction_attributes.each do |key, interaction_attribute|
+          InteractionCallToAction.where(:interaction_id => interaction_attribute["id"]).destroy_all
+          unless interaction_attribute["resource_attributes"]["linked_cta"].nil?
+            interaction_attribute["resource_attributes"]["linked_cta"].each do |key, link|
+              condition = link["condition"].blank? ? nil : { "more" => link["condition"] }.to_json
+              InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => condition )
+            end
           end
         end
-      end
-      build_html_jstree(cta)
-      if cta.errors.any?
-        raise ActiveRecord::Rollback
+        build_html_jstree(cta)
+        if cta.errors.any?
+          raise ActiveRecord::Rollback
+        end
       end
     end
     return cta.errors.empty?

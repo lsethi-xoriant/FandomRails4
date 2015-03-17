@@ -3,6 +3,12 @@ class Easyadmin::RankingController < Easyadmin::EasyadminController
 
   layout "admin"
 
+  before_filter :authorize_user
+
+  def authorize_user
+    authorize! :manage, :rankings
+  end
+
   def index
     @rankings = Ranking.all
   end

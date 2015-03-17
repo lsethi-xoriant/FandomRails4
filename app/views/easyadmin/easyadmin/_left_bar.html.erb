@@ -1,57 +1,59 @@
 <div id="sidebar-wrapper" class="collapse sidebar-collapse">
     <nav id="sidebar">       
       <ul id="main-nav" class="open-active">      
-          
-        <li class="dropdown <%= "active opened" if page == "dashboard" %>"><a href="javascript:void(0);"><i class="fa fa-th-large"></i>Dashboard<span class="caret"></span></a>
-          <ul class="sub-nav">
-            <li>
-              <a href="/easyadmin/dashboard">
-                <i class="fa fa-pie-chart"></i>Statistiche generali
-              </a>
-            </li>
-            <li>
-              <a href="/easyadmin/most_clicked_interactions">
-                <i class="fa fa-hand-o-up"></i>Statistiche contenuti
-              </a>
-            </li>
-            <% if can? :manage, :all %>
-                <li>
-                  <a href="/easyadmin/reward_cta_unlocked">
-                    <i class="fa fa-trophy"></i>CTA reward sbloccate
-                  </a>
-                </li>
-            <% end %>
-          </ul>
-        </li>
-           
-        <li class="dropdown <%= "active opened" if page == "user" %>"><a href="javascript:void(0);"><i class="fa fa-users"></i>Utenti<span class="caret"></span></a>
-          <ul class="sub-nav">
-            <li>
-              <a href="/easyadmin/user">
-                <i class="fa fa-list"></i>Tutti
-              </a>
-            </li>
-            <li>
-              <a href="/easyadmin/winner">
-                <i class="fa fa-ticket"></i>Vincitori concorso
-              </a>
-            </li>
-            <% if $site.id == "orzoro" %>
+
+        <% if can? :access, :dashboard %>
+          <li class="dropdown <%= "active opened" if page == "dashboard" %>"><a href="javascript:void(0);"><i class="fa fa-th-large"></i>Dashboard<span class="caret"></span></a>
+            <ul class="sub-nav">
               <li>
-                <a href="/easyadmin/cups">
-                  <i class="fa fa-coffee"></i>Richieste tazze
+                <a href="/easyadmin/dashboard">
+                  <i class="fa fa-pie-chart"></i>Statistiche generali
                 </a>
               </li>
-            <% end %>
-          </ul>
-        </li>
+              <li>
+                <a href="/easyadmin/most_clicked_interactions">
+                  <i class="fa fa-hand-o-up"></i>Statistiche contenuti
+                </a>
+              </li>
+              <li>
+                <a href="/easyadmin/reward_cta_unlocked">
+                  <i class="fa fa-trophy"></i>CTA reward sbloccate
+                </a>
+              </li>
+            </ul>
+          </li>
+        <% end %>
 
-        <% if can? :manage, :all %>
+        <% if can? :manage, :users %>
+          <li class="dropdown <%= "active opened" if page == "user" %>"><a href="javascript:void(0);"><i class="fa fa-users"></i>Utenti<span class="caret"></span></a>
+            <ul class="sub-nav">
+              <li>
+                <a href="/easyadmin/user">
+                  <i class="fa fa-list"></i>Tutti
+                </a>
+              </li>
+              <li>
+                <a href="/easyadmin/winner">
+                  <i class="fa fa-ticket"></i>Vincitori concorso
+                </a>
+              </li>
+              <% if $site.id == "orzoro" %>
+                <li>
+                  <a href="/easyadmin/cups">
+                    <i class="fa fa-coffee"></i>Richieste tazze
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+          </li>
+        <% end %>
+
+        <% if can? :manage, :published %>
             <li class="<%= "active" if page == "published" %>"><a href="/easyadmin/published"><i class="fa fa-calendar"></i>Pubblicazioni</a>
             </li>
         <% end %>
 
-        <% if can? :manage, :all %>
+        <% if can? :manage, :carousel %>
             <li class="dropdown <%= "active opened" if page == "carousel" %>"><a href="javascript:void(0);"><i class="fa fa-flag"></i>Carosello<span class="caret"></span></a>
               <ul class="sub-nav">
                 <li>
@@ -68,29 +70,35 @@
             </li>
         <% end %>
 
-        <% if can? :manage, :all %>
+        <% if (can? :manage, :call_to_actions) || (can? :manage, :user_call_to_actions) %>
             <li class="dropdown <%= "active opened" if page == "calltoaction" %>"><a href="javascript:void(0);"><i class="fa fa-futbol-o"></i>CallToAction<span class="caret"></span></a>
               <ul class="sub-nav">
                 <li>
-                  <a href="/easyadmin/cta">
-                    <i class="fa fa-list"></i>Tutte
-                  </a>
-                  <a href="/easyadmin/cta/to_approve">
-                    <i class="fa fa-users"></i>CallToAction utente
-                  </a>
-                  <a href="/easyadmin/cta/new">
-                    <i class="fa fa-gears"></i>Nuova
-                  </a>
+                  <% if can? :manage, :call_to_actions %>
+                    <a href="/easyadmin/cta">
+                      <i class="fa fa-list"></i>Tutte
+                    </a>
+                    <a href="/easyadmin/cta/to_approve">
+                      <i class="fa fa-users"></i>CallToAction utente
+                    </a>
+                    <a href="/easyadmin/cta/new">
+                      <i class="fa fa-gears"></i>Nuova
+                    </a>
+                  <% else %>
+                    <a href="/easyadmin/cta/to_approve">
+                      <i class="fa fa-users"></i>CallToAction utente
+                    </a>
+                  <% end %>
                 </li>
               </ul>
             </li>
         <% end %>
 
-        <% if can? :manage, :all %>
+        <% if can? :manage, :promocodes %>
             <li class="<%= "active" if page == "promocode" %>"><a href="/easyadmin/promocode"><i class="fa fa-ticket"></i>Promocode</a>
             </li>
         <% end %>
-        <% if can? :manage, :all %>
+        <% if can? :manage, :rewards %>
         <li class="dropdown <%= "active opened" if page == "prize" %>"><a href="javascript:void(0);"><i class="fa fa-trophy"></i>Rewards<span class="caret"></span></a>
           <ul class="sub-nav">
             <li>
@@ -106,7 +114,7 @@
           </ul>
         </li>
         <% end %>
-        <% if can? :manage, :all %>
+        <% if can? :manage, :tags %>
             <li class="dropdown <%= "active opened" if page == "tags" %>"><a href="javascript:void(0);"><i class="fa fa-tags"></i>Tag<span class="caret"></span></a>
               <ul class="sub-nav">
                 <li>
@@ -155,7 +163,7 @@
             </li>
         <% end %>
         
-        <% if can? :manage, :all %>
+        <% if can? :manage, :notices %>
             <li class="dropdown <%= "active opened" if page == "notice" %>"><a href="javascript:void(0);"><i class="fa fa-envelope"></i>Notifiche<span class="caret"></span></a>
               <ul class="sub-nav">
                 <li>
@@ -172,7 +180,7 @@
             </li>
         <% end %>
         
-        <% if can? :manage, :all %>
+        <% if can? :manage, :rankings %>
             <li class="dropdown <%= "active opened" if page == "ranking" %>"><a href="javascript:void(0);"><i class="fa fa-star"></i>Classifiche<span class="caret"></span></a>
               <ul class="sub-nav">
                 <li >
@@ -185,7 +193,7 @@
             </li>
         <% end %>
         
-        <% if can? :manage, :all %>
+        <% if can? :manage, :settings %>
             <li class="dropdown <%= "active opened" if page == "settings" %>"><a href="javascript:void(0);"><i class="fa fa-gear"></i>Impostazioni<span class="caret"></span></a>
               <ul class="sub-nav">
                 <li >

@@ -332,7 +332,6 @@ Fandom::Application.routes.draw do
     match "cta", :to => "call_to_action#index_cta"
     match "cta/filter", :to => "call_to_action#filter"
     match "cta/template", :to => "call_to_action#index_cta_template"
-    match "cta_user", :to => "call_to_action#index_user_generated_cta"
     match "cta/to_approve", :to => "call_to_action#index_user_cta_to_be_approved"
     match "cta/approved", :to => "call_to_action#index_user_cta_approved"
     match "cta/not_approved", :to => "call_to_action#index_user_cta_not_approved"
