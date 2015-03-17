@@ -302,6 +302,41 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
   end
 
+  def filter_ugc
+
+    page = params[:page].blank? ? 1 : params[:page].to_i
+    per_page = 20
+
+    if params[:approvation_status] == 'approved'
+      where_conditions = "user_id IS NOT NULL AND approved = 't'"
+    elsif params[:approvation_status] == 'not_approved'
+      where_conditions = "user_id IS NOT NULL AND approved = 'f'"
+    else
+      where_conditions = "user_id IS NOT NULL AND approved IS NULL"
+    end
+
+    @title_filter = params[:title_filter]
+    @slug_filter = params[:slug_filter]
+
+    if params[:commit] == "APPLICA FILTRO"
+      where_conditions << " AND title ILIKE '%#{@title_filter}%'" unless @title_filter.nil?
+      where_conditions << " AND slug ILIKE '%#{@slug_filter}%'" unless @slug_filter.nil?
+    end
+    @ctas = CallToAction.where(where_conditions).page(page).per(per_page).order("activated_at DESC NULLS LAST")
+
+    if params[:commit] == "RESET"
+      @title_filter = nil
+      @slug_filter = nil
+    end
+
+    @page_size = @ctas.num_pages
+    @page_current = page
+    @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+
+    render template: "/easyadmin/call_to_action/index_user_cta_#{params[:approvation_status]}"
+
+  end
+
   def new_cta
     @cta = CallToAction.new
   end

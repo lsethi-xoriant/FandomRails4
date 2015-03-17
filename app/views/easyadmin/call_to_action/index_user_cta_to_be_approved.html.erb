@@ -26,8 +26,35 @@
       <li><a href="/easyadmin/cta/not_approved">Contenuti oscurati</a></li>
     </ul>
 
-      <h3>Contenuti da moderare</h3>
-      <hr/>
+    <h3>Contenuti da moderare</h3>
+    <hr/>
+
+    <%= form_tag :action => 'filter_ugc', :approvation_status => 'to_be_approved', :method => 'post' do %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+          <label class="text-input">Filtra per TITOLO</label></br>
+          <%= text_field_tag :title_filter, @title_filter, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+          <label class="text-input">Filtra per SLUG</label></br>
+          <%= text_field_tag :slug_filter, @slug_filter, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="form-group">
+            </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
 
     <div class="row cta-to-show">
       <div class="col-md-12"> 
@@ -35,6 +62,7 @@
           <thead>
             <tr>
               <th>Titolo</th>
+              <th>Slug</th>
               <th class="hidden-xs hidden-sm">Data immissione</th>
               <th>Utente</th>
               <th>Tags</th>
@@ -46,6 +74,7 @@
           <% @ctas.each do |c| %>
             <tr id="cta-<%= c.id %>">
               <td class="col-md-3"><%= c.title %></td>
+              <td class="col-md-1"><%= c.slug %></td>
               <td class="hidden-xs hidden-sm col-md-1"><%= c.created_at.strftime("%d/%m/%Y %H:%M") %></td>
               <td class="col-md-2"><%= "#{c.user.username}" %> <br/> <%= "(#{c.user.email})" %></td>
               <td class="col-md-1">
