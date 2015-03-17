@@ -14,7 +14,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
 
   $scope.extraInit = function() {
     if($scope.calltoaction_info) {
-      $scope.menu_field = $scope.calltoaction_info.miniformat.name;
+      $scope.menu_field = "";
     } else {
       if($scope.aux.page_tag) {
         $scope.menu_field = $scope.aux.page_tag.miniformat.name;

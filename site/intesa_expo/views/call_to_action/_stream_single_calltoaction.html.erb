@@ -28,7 +28,6 @@
           <!-- DOWNLOAD INTERACTION -->
           <div class="row {{calltoaction_info.hide_class}}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
             <div class="col-xs-12 text-center" >
-              {{interaction_info.interaction.resource}}----
               <a class="btn btn-red download-interaction__button" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span><i class="glyphicon glyphicon-download-alt"></i>{{interaction_info.interaction.resource.title}}</span></a>
             </div>
           </div>

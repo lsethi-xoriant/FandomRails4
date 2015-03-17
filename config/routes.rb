@@ -25,8 +25,6 @@ Fandom::Application.routes.draw do
     end
   end
 
-  match "/ical", to: "calendar#get_ical", defaults: { format: 'ics' }
-
   constraints(SiteMatcher.new('intesa_expo')) do
     scope module: "sites" do
       scope module: "intesa_expo" do
@@ -523,6 +521,9 @@ Fandom::Application.routes.draw do
 
   match "/newsletter_unsubscribe/:email/:security_token", :to => "newsletter#unsubscribe", :constraints => { :email => /.*/ }
   match "email_notifications_unsubscribe/:username/:security_token", :to => "notice#unsubscribe", :constraints => { :username => /.*/ }
+
+  # ICAL
+  match "/ical", to: "calendar#get_ical", defaults: { format: 'ics' }
 
   match "/tag/:name", :to => "application#index"
   root :to => "application#index"

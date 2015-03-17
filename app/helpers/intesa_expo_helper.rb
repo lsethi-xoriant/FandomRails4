@@ -3,10 +3,12 @@ module IntesaExpoHelper
   def get_menu_items()
     result = []
 
-    menu_items = get_tags_with_tag("menu-item")
+    menu_item_tag = get_tag_from_params("menu-item")
+    language_tag = get_tag_from_params($context_root || "it")
+    menu_items = get_tags_with_tags_in_and([menu_item_tag.id, language_tag.id])
 
     if menu_items.any?
-      menu_item_tag = get_tag_from_params("menu-item")
+      
       menu_items = order_elements(menu_item_tag, menu_items)
       
       menu_items.each do |item|
@@ -24,9 +26,29 @@ module IntesaExpoHelper
     result
   end
 
+  def get_intesa_expo_ctas(with_tag = nil)
+    language = get_tag_from_params($context_root || "it")
+    ctas = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", language.id)
+    if with_tag
+      ctas_with_param_tag = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", with_tag.id)
+      ctas = ctas.where("call_to_actions.id" => ctas_with_param_tag.map { |cta| cta.id })
+    end
+    ctas
+  end
+
+  def get_intesa_expo_highlight_calltoactions()
+    tag_highlight = Tag.find_by_name("highlight")
+    if tag_highlight
+      ctas = get_intesa_expo_ctas(tag_highlight)
+      order_elements(tag_highlight, ctas)
+    else
+      []
+    end
+  end
+
   def default_intesa_expo_aux(other, calltoaction_info_list = nil)
 
-    menu_items, assets = cache_medium("layout_info") do
+    menu_items, assets = cache_medium("layout_info_#{$context_root}") do
       menu_items = get_menu_items()
       layout_assets_tag = Tag.find_by_name('assets')
       if layout_assets_tag.nil?
@@ -43,13 +65,12 @@ module IntesaExpoHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key()) do  
-        highlight_calltoactions = get_highlight_calltoactions()
-        ctas = CallToAction.includes(:rewards, :interactions).active.where("rewards.id IS NULL")
+      calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key($context_root)) do  
+        highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
         if highlight_calltoactions.any?
-          ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
+          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
         else
-          ctas = ctas.active.limit(3).to_a
+          ctas = get_intesa_expo_ctas().limit(3).to_a
         end
         ctas = highlight_calltoactions + ctas
         calltoaction_evidence_info = []

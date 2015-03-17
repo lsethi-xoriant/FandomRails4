@@ -578,9 +578,11 @@ class CallToActionController < ApplicationController
       response[:ga][:label] = interaction.resource_type.downcase
 
       response["vote_info"] = build_votes_for_resource(interaction) 
-    elsif interaction.resource_type.downcase == "download" 
-      response["download_interaction_attachment"] = interaction.resource.attachment.url
     else
+      if interaction.resource_type.downcase == "download" 
+        response["download_interaction_attachment"] = interaction.resource.attachment.url
+      end
+
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
       response[:ga][:label] = interaction.resource_type.downcase
     end

@@ -1596,8 +1596,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
     
     if(interaction_info.interaction.resource_type == "download") {
-      // Fix to ignore block popup.
-      newWindow.location = data.download_interaction_attachment; //window.open(data.download_interaction_attachment, '_blank');
+
+      if(interaction_info.interaction.resource.ical) {
+        newWindow.location = "/ical"
+      } else {
+        newWindow.location = data.download_interaction_attachment;
+      }
+
     } else if(interaction_info.interaction.resource_type == "link") {
       window.location = interaction_info.interaction.resource.url;
     }
