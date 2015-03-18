@@ -150,7 +150,7 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "intesa_expo" do
         root :to => "application#index"
-        mach "/calendar", :to => "application#calendar"
+        match "/calendar", :to => "application#calendar"
       end
     end
   end
