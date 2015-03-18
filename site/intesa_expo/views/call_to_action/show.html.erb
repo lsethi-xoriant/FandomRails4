@@ -1,1 +1,11 @@
 <%= render partial: "/call_to_action/stream_single_calltoaction" %>
+
+<div class="container main-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="browse-sections" ng-repeat="stripe in [aux.relateds]">
+        <%= render partial: "/application/stripe" %>
+      </div>
+    </div>
+  </div>
+</div>

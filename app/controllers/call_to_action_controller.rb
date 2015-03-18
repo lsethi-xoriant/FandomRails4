@@ -247,6 +247,10 @@ class CallToActionController < ApplicationController
 
       @aux = init_show_aux(calltoaction)
 
+      @aux_other_params = { 
+        calltoaction: calltoaction,
+      }
+
       descendent_calltoaction_id = params[:descendent_id]
       if(descendent_calltoaction_id)
         calltoaction_to_share = CallToAction.find(descendent_calltoaction_id)

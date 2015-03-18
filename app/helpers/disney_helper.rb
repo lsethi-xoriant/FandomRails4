@@ -244,35 +244,10 @@ module DisneyHelper
   end
 
   def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat", in_gallery)
-    related_calltoaction_info, calltoaction_ids = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
-      
-      tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
-      if tag
-        calltoactions = CallToAction.includes(:call_to_action_tags)
-                    .where("call_to_actions.id <> ?", current_calltoaction.id)
-                    .where("call_to_action_tags.tag_id = ?", tag.id)
-                    .where("call_to_actions.id IN (?)", get_disney_ctas(property, in_gallery).map { |calltoaction| calltoaction.id })
-                    .order("call_to_actions.activated_at DESC")
-                    .limit(8).to_a
-      else
-        calltoactions = get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
-      end
-
-      related_calltoaction_info = []
-      calltoactions.each do |calltoaction|
-        related_calltoaction_info << build_disney_thumb_calltoaction(calltoaction)
-      end
-
-      [related_calltoaction_info, calltoactions.map { |cta| cta.id }]
-
-    end 
-
-    if current_user
-      calltoactions = CallToAction.where(id: calltoaction_ids)
-      related_calltoaction_info = adjust_disney_thumb_calltoaction_for_current_user(related_calltoaction_info, calltoactions)
-    end
-
-    related_calltoaction_info
+    menu_item_tag = get_tag_from_params("next-live")
+    language_tag = get_tag_from_params($context_root || "it")
+    today_event_tags = get_tags_with_tags_in_and([menu_item_tag.id, language_tag.id])
+    get_content_preview_stripe(today_event_tags.first.name)
   end
 
   def adjust_disney_thumb_calltoaction_for_current_user(calltoaction_info_list, calltoactions)

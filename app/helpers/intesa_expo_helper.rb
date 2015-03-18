@@ -1,10 +1,19 @@
 module IntesaExpoHelper
 
-  def get_next_lives()
-    menu_item_tag = get_tag_from_params("next-live")
+  def get_intesa_expo_ctas_with_tag(tag_name)
+    param_tag = get_tag_from_params(tag_name)
     language_tag = get_tag_from_params($context_root || "it")
-    today_event_tags = get_tags_with_tags_in_and([menu_item_tag.id, language_tag.id])
-    get_content_preview_stripe(today_event_tags.first.name)
+    tagged_tags = get_tags_with_tags_in_and([param_tag.id, language_tag.id])
+    get_content_preview_stripe(tagged_tags.first.name)
+  end
+
+  def get_intesa_expo_related_ctas(cta)
+    tag_tagged_with_related = get_tag_with_tag_about_call_to_action(cta, "related").first      
+    if tag_tagged_with_related
+      relateds = get_content_preview_stripe(tag_tagged_with_related.name)
+    else
+      nil
+    end
   end
 
   def get_menu_items()
@@ -66,22 +75,24 @@ module IntesaExpoHelper
       [menu_items, extra_fields]
     end
 
-
     if other && other.has_key?(:calltoaction)
-      calltoaction = other[:calltoaction]
+      cta = other[:calltoaction]
+      relateds = get_intesa_expo_related_ctas(cta)
     end
 
     if other && other.has_key?(:next_live)
-      today_events = get_next_lives()
+      next_lives = get_intesa_expo_ctas_with_tag("next-live")
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
+      limit = 4
       calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key($context_root)) do  
         highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
         if highlight_calltoactions.any?
-          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
+          limit = limit - highlight_calltoactions.count
+          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(limit).to_a
         else
-          ctas = get_intesa_expo_ctas().limit(3).to_a
+          ctas = get_intesa_expo_ctas().limit(limit).to_a
         end
         ctas = highlight_calltoactions + ctas
         calltoaction_evidence_info = []
@@ -105,7 +116,8 @@ module IntesaExpoHelper
       "assets" => assets,
       "root_url" => root_url,
       "menu_items" => menu_items,
-      "today_events" => today_events
+      "next_lives" => next_lives,
+      "relateds" => relateds
     }
 
     if other
