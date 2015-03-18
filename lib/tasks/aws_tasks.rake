@@ -47,7 +47,7 @@ namespace :aws_tasks do
       ctas = CallToAction.where("aux->>'aws_transcoding_media_status' = 'inprogress'")
 
       ctas.each do |cta|
-        object = bucket.objects["#{args.s3_output_folder}/web_mp4/aws_transcoding-#{cta.id}"]
+        object = bucket.objects["#{s3_output_folder}/web_mp4/aws_transcoding-#{cta.id}"]
         
         aux = JSON.parse(cta.aux || "{}")
 

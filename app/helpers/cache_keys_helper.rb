@@ -64,8 +64,8 @@ module CacheKeysHelper
     "ctas_except_#{calltoaction_id}_in_property_#{property_id}"
   end
 
-  def get_ctas_except_me_cache_key(calltoaction_id)
-    "ctas_except_#{calltoaction_id}"
+  def get_ctas_except_me_cache_key(calltoaction_id, context_root = "all")
+    "ctas_except_#{calltoaction_id}_in_context_#{context_root}"
   end
 
   def get_cta_completed_or_reward_status_cache_key(reward_name, cta_id, user_id)

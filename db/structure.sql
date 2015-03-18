@@ -22670,10 +22670,24 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_approved; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_approved ON user_comment_interactions USING btree (approved);
+
+
+--
 -- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_comment_interactions_on_created_at; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
 
 
 --
@@ -23057,10 +23071,24 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_approved; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_approved ON user_comment_interactions USING btree (approved);
+
+
+--
 -- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_comment_interactions_on_created_at; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
 
 
 --
@@ -23444,10 +23472,24 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_approved; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_approved ON user_comment_interactions USING btree (approved);
+
+
+--
 -- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_comment_interactions_on_created_at; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
 
 
 --
@@ -23831,10 +23873,24 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_approved; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_approved ON user_comment_interactions USING btree (approved);
+
+
+--
 -- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_comment_interactions_on_created_at; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
 
 
 --
@@ -24218,10 +24274,24 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_approved; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_approved ON user_comment_interactions USING btree (approved);
+
+
+--
 -- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_comment_interactions_on_created_at; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
 
 
 --
@@ -24591,10 +24661,24 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_approved; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_approved ON user_comment_interactions USING btree (approved);
+
+
+--
 -- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_comment_interactions_on_created_at; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
 
 
 --
@@ -24978,10 +25062,24 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_approved; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_approved ON user_comment_interactions USING btree (approved);
+
+
+--
 -- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_comment_interactions_on_created_at; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
 
 
 --
@@ -25365,10 +25463,24 @@ CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extr
 
 
 --
+-- Name: index_user_comment_interactions_on_approved; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_approved ON user_comment_interactions USING btree (approved);
+
+
+--
 -- Name: index_user_comment_interactions_on_comment_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_user_comment_interactions_on_comment_id ON user_comment_interactions USING btree (comment_id);
+
+
+--
+-- Name: index_user_comment_interactions_on_created_at; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
 
 
 --
