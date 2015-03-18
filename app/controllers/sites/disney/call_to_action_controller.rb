@@ -137,7 +137,8 @@ class Sites::Disney::CallToActionController < CallToActionController
     elsif !extra_fields_valid
       flash[:error] = extra_field_errors.join(", ")
     else
-      cloned_cta.update_attribute(:extra_fields, cloned_cta_extra_fields.to_json)
+      get_extra_fields!(cloned_cta).merge!(cloned_cta_extra_fields)
+      cloned_cta.save
       flash[:notice] = "Caricamento completato con successo"
     end
 
@@ -151,7 +152,7 @@ class Sites::Disney::CallToActionController < CallToActionController
   
   def validate_upload_extra_fileds(params, extra_fields)
     if extra_fields.nil?
-      [true, [], nil]
+      [true, [], {}]
     else
       errors = []
       cloned_cta_extra_fields = {}

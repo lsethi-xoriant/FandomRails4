@@ -538,7 +538,7 @@ module CallToActionHelper
   
   def duplicate_user_generated_cta(params, watermark, cta_title, description, cta_template)
     unique_name = generate_unique_name()
-
+    
     user_calltoaction = CallToAction.new(
         title: cta_title,
         description: description,
@@ -548,7 +548,7 @@ module CallToActionHelper
         media_image: params["upload"],
         thumbnail: (params["upload"] if params["upload"] && params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}),
         media_type: params["upload"] && params["upload"].content_type.start_with?("video") ? "FLOWPLAYER" : "IMAGE",
-        extra_fields: cta_template.extra_fields.nil? ? {} : cta_template.extra_fields 
+        extra_fields: cta_template.extra_fields.nil? ? "{}" : cta_template.extra_fields 
         )
 
     if watermark.exists?
