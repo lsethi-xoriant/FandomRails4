@@ -1,0 +1,26 @@
+<%= light_link_to("{{content.detail_url}}") do %>
+  <div class="relateds-flexslider__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta'"> 
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        <div class="relateds-flexslider__thumbnail">
+          <img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}"> 
+          <div class="text-center flag__container" ng-if="content.aux.flag" ng-style="{'background-color': content.aux.flag['label_background']}"><p ng-style="{'color': content.aux.flag['label_color']}" ng-bind-html="content.aux.flag['title']"></p></div>           
+        </div>
+        <div class="cta-preview__miniformat-container">
+          <span class="cta-preview__miniformat" ng-style="{'background-color': content.aux.miniformat['label_background']}">{{content.aux.miniformat['title']}}</span>
+        </div>
+        <p class="cta-preview__title">{{content.title | cut:true:70}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="relateds-flexslider__item-panel" ng-if="content.type == 'tag'">
+  	  <div class="row">
+	      <div class="col-xs-12 text-center">
+	        <div class="relateds-flexslider__thumbnail">
+	          <img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}"> 
+	        </div>
+	        <p class="cta-preview__title cta-preview__title--tag">{{content.title | cut:true:70}}</p>
+	      </div>
+      </div> 
+  </div>  
+<% end %>

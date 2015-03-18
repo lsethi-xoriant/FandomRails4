@@ -1,1 +1,11 @@
 <%= render partial: "/application/evidence_ctas" %>
+
+<div class="container main-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="browse-sections" ng-repeat="stripe in [aux.today_events]">
+        <%= render partial: "/application/stripe" %>
+      </div>
+    </div>
+  </div>
+</div>

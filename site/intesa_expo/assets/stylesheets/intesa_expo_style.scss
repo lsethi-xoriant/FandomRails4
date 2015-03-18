@@ -7,7 +7,7 @@ $gray: #ececec;
 $darkgray: #ABABAB;
 $green: #30bf43;
 $cream: #eae4d2;
-$white: #f5f4f2;
+$white: #fff;
 
 $container-tablet:             100% !default;
 $container-sm:                 $container-tablet !default;
@@ -22,16 +22,16 @@ $panel-border-radius:          0px !default;
 
 // Navbar
 
-$navbar-default-color:                      #fff !default;
-$navbar-default-bg:                         $gray !default;
+$navbar-default-color:                      #999 !default;
+$navbar-default-bg:                         $white !default;
 
-$navbar-default-link-color:                 #fff !default;
-$navbar-default-link-hover-color:           #fff !default;
-$navbar-default-link-hover-bg:              $blu !default;
+$navbar-default-link-color:                 #999 !default;
+$navbar-default-link-hover-color:           $blu !default;
+$navbar-default-link-hover-bg:              $white !default;
 $navbar-default-link-active-color:          $navbar-default-link-hover-color !default;
-$navbar-default-link-active-bg:             $blu !default;
+$navbar-default-link-active-bg:             $white !default;
 $navbar-default-link-disabled-color:        #444 !default;
-$navbar-default-link-disabled-bg:           $darkgray !default;
+$navbar-default-link-disabled-bg:           $white !default;
 
 $navbar-default-brand-color:                $navbar-default-link-color !default;
 $navbar-default-brand-hover-color:          #000 !default;

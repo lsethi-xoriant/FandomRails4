@@ -73,12 +73,9 @@ p{
     transform: rotate(270deg);
     background: #000;
   }
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 15px;
-  margin-top: 15px;
+  display: inline-block;
+  margin: 15px auto;
   position: relative;
-  width: 728px;
 }
 
 //.flowplayer.is-paused {
