@@ -1,5 +1,12 @@
 module IntesaExpoHelper
 
+  def get_next_lives()
+    menu_item_tag = get_tag_from_params("next-live")
+    language_tag = get_tag_from_params($context_root || "it")
+    today_event_tags = get_tags_with_tags_in_and([menu_item_tag.id, language_tag.id])
+    get_content_preview_stripe(today_event_tags.first.name)
+  end
+
   def get_menu_items()
     result = []
 
@@ -64,6 +71,10 @@ module IntesaExpoHelper
       calltoaction = other[:calltoaction]
     end
 
+    if other && other.has_key?(:next_live)
+      today_events = get_next_lives()
+    end
+
     if other && other.has_key?(:calltoaction_evidence_info)
       calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key($context_root)) do  
         highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
@@ -93,7 +104,8 @@ module IntesaExpoHelper
       "free_provider_share" => $site.free_provider_share,
       "assets" => assets,
       "root_url" => root_url,
-      "menu_items" => menu_items
+      "menu_items" => menu_items,
+      "today_events" => today_events
     }
 
     if other
