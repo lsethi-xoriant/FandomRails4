@@ -22,7 +22,11 @@
 			<% if @info['image_row_1'] && @info['text_row_1'] %>
 				<div class="row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_1'], :original) if @info['background_image_row_1'] %>);">
 					<div class="col-xs-12 col-sm-5">
-						<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_1'], :original) %>" />
+						<% if @info['image_row_1']['type'] && @info['image_row_1']['type'] == 'media' %>
+							<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_1'], :original) %>" />
+						<% elsif @info['image_row_1']['type'] && @info['image_row_1']['type'] == 'html' %>
+							<%= @info['image_row_1']['type'].html_safe %>
+						<% end %>
 					</div>			
 					<div class="col-xs-12 col-sm-7">
 						<%= @info['text_row_1'].html_safe %>
@@ -36,7 +40,11 @@
 						<%= @info['text_row_2'].html_safe %>
 					</div>
 					<div class="col-xs-12 col-sm-5">
-						<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_2'], :original) %>" />
+						<% if @info['image_row_2']['type'] && @info['image_row_2']['type'] == 'media' %>
+							<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_2'], :original) %>" />
+						<% elsif @info['image_row_2']['type'] && @info['image_row_2']['type'] == 'html' %>
+							<%= @info['image_row_2']['type'].html_safe %>
+						<% end %>
 					</div>
 				</div>
 			<% end %>
@@ -44,7 +52,11 @@
 			<% if @info['image_row_3'] && @info['text_row_3'] %>
 				<div class="row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_3'], :original) if @info['background_image_row_3'] %>);">
 					<div class="col-xs-12 col-sm-5">
-						<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_3'], :original) %>" />
+						<% if @info['image_row_3']['type'] && @info['image_row_3']['type'] == 'media' %>
+							<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_3'], :original) %>" />
+						<% elsif @info['image_row_3']['type'] && @info['image_row_3']['type'] == 'html' %>
+							<%= @info['image_row_3']['type'].html_safe %>
+						<% end %>
 					</div>			
 					<div class="col-xs-12 col-sm-7">
 						<%= @info['text_row_3'].html_safe %>
