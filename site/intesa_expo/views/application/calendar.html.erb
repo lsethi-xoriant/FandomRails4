@@ -1,14 +1,42 @@
-<div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" > 
-  <div class="row {{calltoaction_info.hide_class}}">
-    <div id="calendar"></div>
-  </div>
+<div class="container main-container" > 
+  <div class="row">
+      <div class="col-md-12">
+          <div class="portlet">
+            <div class="portlet-header">
+
+              <h3>
+                <i class="fa fa-calendar"></i>
+                Calendario pubblicazioni
+              </h3>
+
+            </div> <!-- /.portlet-header -->
+            <div class="portlet-content">
+              
+              <div id="full-calendar"></div> <!-- /#full-calendar -->             
+
+            </div> <!-- /.portlet-content -->
+          </div> <!-- /.portlet -->
+        </div> <!-- /.col-md-8 -->
+    </div>
 </div>
 
 
 <script type="text/javascript">
-	$(document).ready(function(){
-		var calendar = $("#calendar").calendar(
-            {
-            });
-	});
+  $(document).ready(function() {
+    buildCalendar();
+  });
+
+  function buildCalendar() {
+
+    $('#full-calendar').fullCalendar({
+      header: {
+        left: 'prev,next',
+        center: 'title',
+        right: ''
+      },
+      editable: true,
+      disableResizing: true
+    });
+
+  }
 </script>

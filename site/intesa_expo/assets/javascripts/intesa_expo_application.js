@@ -33,4 +33,4 @@
 //= require angularjs/intesa_expo_stream_calltoaction
 //= require fastclick
 //= require underscore-min
-//= require calendar-min
+//= require easyadmin/fullcalendar
