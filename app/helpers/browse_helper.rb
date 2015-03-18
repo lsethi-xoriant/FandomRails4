@@ -379,12 +379,10 @@ module BrowseHelper
   end
   
   def get_elements_for_browse_carousel(tag_browse)
-    if tag_browse
+    if tag_browse && get_extra_fields!(tag_browse)['carousel_elements']
       get_extra_fields!(tag_browse)['carousel_elements'].to_i
-    elsif Setting.find_by_key(BROWSE_CAROUSEL_SETTING_KEY)
-      Setting.find_by_key(BROWSE_CAROUSEL_SETTING_KEY).to_i
     else
-      DEFAULT_BROWSE_ELEMENT_CAROUSEL
+      Setting.find_by_key(BROWSE_CAROUSEL_SETTING_KEY).value.to_i rescue DEFAULT_BROWSE_ELEMENT_CAROUSEL
     end
   end
   

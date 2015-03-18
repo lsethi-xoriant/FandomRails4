@@ -1346,6 +1346,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
    
   };
 
+  function stripTags(text) {
+    return String(text).replace(/<[^>]+>/gm, '');
+  }
+
   $scope.shareFree = function(calltoaction_info, interaction_info, provider) {
 
     message = calltoaction_info.calltoaction.title;
@@ -1365,6 +1369,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         break;
       case "gplus":
         share_url = "https://plus.google.com/share?url=" + cta_url;
+        break;
+      case "linkedin":
+        share_url = "http://www.linkedin.com/shareArticle?mini=true&url=" + cta_url + "&title=" + encodeURIComponent(message) + "&summary=" + encodeURIComponent(stripTags(calltoaction_info.calltoaction.description || ""));
         break;
     }
 

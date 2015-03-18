@@ -1,16 +1,20 @@
-<div class="container main-container main-container-{{calltoaction_info.miniformat['name']}}" > 
+<div class="container main-container"> 
   <div class="row main-row">
+
+    <div class="col-sm-12" ng-if="calltoaction_info.calltoaction.media_type != 'VOID'">
+      <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
+    </div>
+
+    <!-- MEDIA -->
+    <div class="col-sm-12" ng-if="calltoaction_info.calltoaction.media_type != 'VOID'">
+      <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
+    </div>
+
     <div class="col-sm-8">
       <div class="row">
 
-        <!-- HEADER -->
-        <div class="col-sm-12">
+        <div class="col-sm-12" ng-if="calltoaction_info.calltoaction.media_type == 'VOID'">
           <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
-        </div>
-
-        <!-- MEDIA -->
-        <div class="col-sm-12">
-          <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
         </div>
 
         <!-- UNDER MEDIA -->
@@ -43,6 +47,9 @@
         </div>
 
       </div>
+    </div>
+    <div class="col-sm-4">
+      <%= render partial: "/application/right_contents" %>
     </div>
   </div>
 </div>
