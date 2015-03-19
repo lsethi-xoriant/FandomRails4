@@ -830,9 +830,13 @@ module ApplicationHelper
   
   def get_reward_with_periods(reward_name)
     reward = Reward.find_by_name(reward_name)
-    user_reward = UserReward.includes(:period)
-      .where("user_rewards.reward_id = ? AND user_rewards.user_id = ?", reward.id, current_user.id)
-      .where("periods.id IS NULL OR (periods.start_datetime < ? AND periods.end_datetime > ?)", Time.now.utc, Time.now.utc)
+    if reward
+      user_reward = UserReward.includes(:period)
+        .where("user_rewards.reward_id = ? AND user_rewards.user_id = ?", reward.id, current_user.id)
+        .where("periods.id IS NULL OR (periods.start_datetime < ? AND periods.end_datetime > ?)", Time.now.utc, Time.now.utc)
+    else
+      []
+    end
   end
 
   def user_has_reward(reward_name)
