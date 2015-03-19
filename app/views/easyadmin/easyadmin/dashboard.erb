@@ -90,7 +90,7 @@
           <div class="dashboard-stat primary">
             <div class="details">
               <span class="content">REGISTRATI TOTALI</span>
-              <span class="value"><%= total_users = User.where(:created_at => @from_date..@to_date).count %></span>
+              <span class="value-sm"><%= total_users = User.where(:created_at => @from_date..@to_date).count %></span>
             </div>
             <div class="visual">
             	<i class="fa fa-user"></i>
@@ -99,7 +99,7 @@
           <div class="dashboard-stat secondary">
             <div class="details">
               <span class="content">UTENTI REGISTRATI CON SOCIAL</span>
-              <span class="value"><%= social_reg_users = User.where(:created_at => @from_date..@to_date).includes(:authentications).where("authentications.user_id IS NOT NULL").count %></span>
+              <span class="value-sm"><%= social_reg_users = User.where(:created_at => @from_date..@to_date).includes(:authentications).where("authentications.user_id IS NOT NULL").count %></span>
             </div>
             <div class="visual">
             	<i class="fa fa-group"></i>
@@ -111,7 +111,7 @@
             <div class="dashboard-stat primary" style="background: #6ECCA0;">
               <div class="details">
                 <span class="content">BIGLIETTI GIOCATI</span>
-                <span class="value"><%= UserInteraction.where("interaction_id = ?", interaction_id).sum(:counter) %></span>
+                <span class="value-sm"><%= UserInteraction.where("interaction_id = ?", interaction_id).sum(:counter) %></span>
               </div>
               <div class="visual">
                 <i class="fa fa-ticket" style="color: #30B376;"></i>
@@ -137,7 +137,7 @@
           <div class="dashboard-stat primary" style="background-color: #ccc;">
             <div class="details">
               <span class="content">SHARE EMAIL</span>
-              <span class="value"><%= email_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'email')::int") %></span>
+              <span class="value-sm"><%= email_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'email')::int") %></span>
             </div> <!-- /.details --> 
             <div class="visual">
               <i class="fa fa-envelope" style="color: #FFF"></i>
@@ -146,7 +146,7 @@
           <div class="dashboard-stat primary" style="background-color: #43609c;">
             <div class="details">
               <span class="content">SHARE FACEBOOK</span>
-              <span class="value"><%= fb_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'facebook')::int") %></span>
+              <span class="value-sm"><%= fb_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'facebook')::int") %></span>
             </div> <!-- /.details -->	
             <div class="visual">
             	<i class="fa fa-facebook" style="color: #FFF"></i>
@@ -155,7 +155,7 @@
           <div class="dashboard-stat primary" style="background-color: #5eaade;">
             <div class="details">
               <span class="content">SHARE TWITTER</span>
-              <span class="value"><%= twitter_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'twitter')::int") %></span>
+              <span class="value-sm"><%= twitter_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'twitter')::int") %></span>
             </div> <!-- /.details -->
             <div class="visual">
             	<i class="fa fa-twitter" style="color: #FFF"></i>
@@ -198,7 +198,7 @@
                 <div class="dashboard-stat">
                   <div class="details">
                     <span class="content">TRIVIA RISPOSTI</span>
-                    <span class="value"><%= all_trivia %></span>
+                    <span class="value-sm"><%= all_trivia %></span>
                   </div>
                   <div class="visual">
                   	<i class="fa fa-question"></i>
@@ -207,7 +207,7 @@
                 <div class="dashboard-stat">
                   <div class="details">
                     <span class="content">TRIVIA RISPOSTI CORRETTAMENTE</span>
-                    <span class="value"><%= correct_answers_trivia %></span>
+                    <span class="value-sm"><%= correct_answers_trivia %></span>
                   </div>
                   <div class="visual">
                   	<i class="fa fa-question"></i>
@@ -241,7 +241,7 @@
                 <div class="dashboard-stat secondary">
                   <div class="details">
                     <span class="content">VERSUS RISPOSTI</span>
-                    <span class="value"><%= all_versus %></span>
+                    <span class="value-sm"><%= all_versus %></span>
                   </div>
                   <div class="visual">
                   	<i class="fa fa-thumbs-o-up"></i>
@@ -261,7 +261,7 @@
                <div class="dashboard-stat secondary">
                   <div class="details">
                     <span class="content">CHECK RISPOSTI</span>
-                    <span class="value"><%= all_check %></span>
+                    <span class="value-sm"><%= all_check %></span>
                   </div>
                   <div class="visual">
                     <i class="fa fa-check"></i>

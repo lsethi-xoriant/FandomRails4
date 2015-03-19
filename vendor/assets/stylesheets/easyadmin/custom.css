@@ -11,3 +11,9 @@
 .tag-box-property {
   background-image: -webkit-linear-gradient(top, #ffcc88 20%, #ffbb44 50%, #ffaa22 52%, #ff9900 100%) !important;
 }
+
+.dashboard-stat .value-sm {
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+}

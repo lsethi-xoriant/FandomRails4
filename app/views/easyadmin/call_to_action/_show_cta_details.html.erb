@@ -7,7 +7,7 @@
       <div class="dashboard-stat primary" style="background-color: #70AAFF;">
         <div class="details">
           <span class="content">PLAY [<%= play["title"] %>]</span>
-          <span class="value"><%= play["total"] %></span>
+          <span class="value-sm"><%= play["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
           <i class="fa fa-youtube-play" style="color: #FFF"></i>
@@ -21,7 +21,7 @@
       <div class="dashboard-stat primary" style="background-color: #FF7A59;">
         <div class="details">
           <span class="content">LIKE [<%= like["title"] %>]</span>
-          <span class="value"><%= like["total"] %></span>
+          <span class="value-sm"><%= like["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
           <i class="fa fa-thumbs-up" style="color: #FFF"></i>
@@ -35,7 +35,7 @@
       <div class="dashboard-stat primary" style="background-color: #DDDDDD;">
         <div class="details">
           <span class="content">CHECK [<%= check["title"] %>]</span>
-          <span class="value"><%= check["total"] %></span>
+          <span class="value-sm"><%= check["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
           <i class="fa fa-check" style="color: #FFF"></i>
@@ -49,7 +49,7 @@
       <div class="dashboard-stat primary" style="background-color: #4D944D;">
         <div class="details">
           <span class="content">LINK [<%= link["title"][0..25] %>]</span>
-          <span class="value"><%= link["total"] %></span>
+          <span class="value-sm"><%= link["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
           <i class="fa fa-link" style="color: #FFF"></i>
@@ -63,7 +63,7 @@
       <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
         <div class="details">
           <span class="content">DOWNLOAD [<%= download["title"] %>]</span>
-          <span class="value"><%= download["total"] %></span>
+          <span class="value-sm"><%= download["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
           <i class="fa fa-download" style="color: #FFF"></i>
@@ -77,7 +77,7 @@
       <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
         <div class="details">
           <span class="content">UPLOAD [<%= upload["title"] %>]</span>
-          <span class="value"><%= upload["total"] %></span>
+          <span class="value-sm"><%= upload["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
           <i class="fa fa-upload" style="color: #FFF"></i>
@@ -91,7 +91,7 @@
       <div class="dashboard-stat primary" style="background-color: #555555;">
         <div class="details">
           <span class="content">VOTA [<%= vote["title"] %>]</span>
-          <span class="value"><%= vote["total"] %> <%= vote["mean"].nan? ? "" : "(μ #{vote["mean"]})" %></span>
+          <span class="value-sm"><%= vote["total"] %> <%= vote["mean"].nan? ? "" : "(μ #{vote["mean"]})" %></span>
         </div> <!-- /.details -->
         <div class="visual">
           <i class="fa fa-star-half-o" style="color: #FFF"></i>
@@ -105,7 +105,7 @@
       <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
         <div class="details">
           <span class="content">COMMENTI APPROVATI / TOTALI <%= comment["title"] %></span>
-          <span class="value"><%= comment["approved"] %> / <%= comment["total"] %></span>
+          <span class="value-sm"><%= comment["approved"] %> / <%= comment["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
           <i class="fa fa-comments" style="color: #FFF"></i>
@@ -217,7 +217,7 @@
     	<div class="dashboard-stat">
       	<div class="details">
        		<span class="content">SHARE TOTALI</span>
-      		<span class="value"><%= share["total"] %></span>
+      		<span class="value-sm"><%= share["total"] %></span>
       	</div>
       	<div class="visual">
       		<i class="fa fa-share-alt"></i>
