@@ -829,6 +829,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if($scope.calltoactions.length < $scope.calltoactions_count) {
 
       $("#append-other button").attr('disabled', true);
+      $scope.append_ctas_in_progress = true;
 
       append_calltoaction_path = "/append_calltoaction"
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
@@ -868,6 +869,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         //updateSecondaryVideoPlayers(data.calltoactions);
 
         $("#append-other button").attr('disabled', false);
+        $scope.append_ctas_in_progress = false;
 
         if (!angular.isUndefined(callback)) {
           callback();
