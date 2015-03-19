@@ -716,41 +716,44 @@ module ApplicationHelper
     end
 
     reward = get_reward_from_cache(reward_name)
+    if reward
+      winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user)
+      
+      interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
+
+      reward_status_images = Array.new
+      total_win_reward_count = 0
+
+      if user
+
+        interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
+          user_interaction = interaction.user_interactions.find_by_user_id(user.id)        
     
-    winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user)
-    
-    interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
+          if user_interaction && user_interaction.outcome.present?
+            win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
+            correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
+            correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
 
-    reward_status_images = Array.new
-    total_win_reward_count = 0
+            total_win_reward_count += win_reward_count;
 
-    if user
+            push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
+            push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
+            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+          else 
+            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+          end       
 
-      interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
-        user_interaction = interaction.user_interactions.find_by_user_id(user.id)        
-  
-        if user_interaction && user_interaction.outcome.present?
-          win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
-          correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
-          correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
+        end
 
-          total_win_reward_count += win_reward_count;
-
-          push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
-          push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
-          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-        else 
-          push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-        end       
-
+      else
+        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
       end
 
-    else
-      push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
+      winnable_reward_count = winnable_outcome["reward_name_to_counter"][reward_name]
     end
 
     {
-      winnable_reward_count: winnable_outcome["reward_name_to_counter"][reward_name],
+      winnable_reward_count: winnable_reward_count,
       win_reward_count: total_win_reward_count,
       reward_status_images: reward_status_images,
       reward: reward

@@ -122,6 +122,7 @@ module IntesaExpoHelper
       "relateds" => relateds,
       "galleries" => galleries,
       "articles" => articles,
+      "context_root" => $context_root,
       "language" => $context_root || "it"
     }
 

@@ -24,7 +24,7 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="browse-sections" ng-repeat="stripe in [aux.articles]">
-        <%= render partial: "/application/stripe" %>
+        <%= render partial: "/application/stripe", locals: { article: true } %>
       </div>
     </div>
   </div>

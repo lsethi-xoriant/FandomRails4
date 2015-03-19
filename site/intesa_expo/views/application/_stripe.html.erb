@@ -1,0 +1,9 @@
+<div class="row brws-item main-row container-shadow" ng-class-odd="'brws-item--dark'">
+	  <!-- HEADING -->
+	<div class="col-sm-12 text-center">
+	  <h2>{{stripe.title}}</h2>
+	</div>
+    <div class="col-xs-12" ng-repeat="contents in [stripe.contents]">
+	    <%= render partial: "/application/content_carousel" %>
+	</div>
+</div>
