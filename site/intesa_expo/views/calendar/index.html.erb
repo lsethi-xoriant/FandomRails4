@@ -1,0 +1,68 @@
+<div class="container main-container" > 
+  <div class="row">
+      <div class="col-md-12">
+          <div class="portlet">
+            <div class="portlet-header">
+            </div> <!-- /.portlet-header -->
+            <div class="portlet-content">
+              
+              <div id="full-calendar"></div> <!-- /#full-calendar -->             
+
+            </div> <!-- /.portlet-content -->
+          </div> <!-- /.portlet -->
+        </div> <!-- /.col-md-8 -->
+    </div>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    buildCalendar();
+  });
+
+  function buildCalendar() {
+
+    $('#full-calendar').fullCalendar({
+      header: {
+        left: 'prev',
+        center: 'title',
+        right: 'next'
+      },
+      viewRender: function(view, element) {
+        console.log(view);
+      },
+      editable: false,
+      disableResizing: true,
+      events: [
+        {
+            title  : 'event2',
+            start  : '2015-03-01',
+            description: 'Evento di questa ceppa 2',
+            image: ''
+        },
+        {
+            title  : 'event1',
+            start  : '2015-03-01',
+            description: 'Evento di questa ceppa 1',
+            image: 'http://www.gema.it/blog/wp-content/uploads/2013/03/evento.jpg'
+        },
+        {
+            title  : 'event3',
+            start  : '2015-03-01',
+            description: 'Evento di questa ceppa 3',
+            image: ''
+        }
+	    ],
+	    eventRender: function(event, element, view) {
+	    	html = $('<div class="calendar-event"></div>');
+	    	html.append('<span class="calendar-event__title">'+ event.title +'</span>');
+	    	if(! (_.isEmpty(event.image) )){
+	    		html.append('<img class="hidden-xs" style="height: 60px; margin: 0 auto; display: block;" src="'+ event.image +'" />')
+	    	}
+	    	html.append('<p>'+ event.description +'</p>');
+	        return html;
+	    }
+    });
+
+  }
+</script>

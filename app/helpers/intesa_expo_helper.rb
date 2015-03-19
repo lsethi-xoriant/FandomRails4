@@ -129,4 +129,16 @@ module IntesaExpoHelper
     aux
 
   end
+  
+  def get_intesa_expo_event_ctas_in_period(tag_ids, start_date, end_date)
+    cache_short get_ctas_with_tags_cache_key(tag_ids, "#{start_date}_#{end_date}", "and") do
+      tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
+      if with_user_cta
+        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) AND call_to_actions.user_id IS NULL AND (call_to_actions.valid_from BETWEEN ? and ?)", start_date, end_date).order("call_to_actions.valid_from ASC").to_a
+      else
+        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) AND (call_to_actions.valid_from BETWEEN ? and ?)", start_date, end_date).order("call_to_actions.valid_from ASC").to_a
+      end
+    end
+  end
+  
 end
