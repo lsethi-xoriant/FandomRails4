@@ -282,6 +282,10 @@ module ApplicationHelper
     end
     
     if user_interaction
+      if interaction.resource.one_shot
+        log_error('one shot interaction attempted more than once', { user_id: user_interaction.user.id, interaction_id: user_interaction.interaction.id, cta_id: user_interaction.interaction.call_to_action.id })
+        raise Exception.new("one shot interaction attempted more than once")
+      end
 
       case interaction.resource_type.downcase
       when "share"
@@ -301,10 +305,8 @@ module ApplicationHelper
         expire_cache_key(get_cache_votes_for_interaction(interaction.id))
       end
 
-      unless interaction.resource.one_shot
-        user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
-        UserCounter.update_counters(interaction, user_interaction, user, false) 
-      end
+      user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
+      UserCounter.update_counters(interaction, user_interaction, user, false) 
 
     else
 
