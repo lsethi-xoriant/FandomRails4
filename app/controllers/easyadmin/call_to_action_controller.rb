@@ -16,7 +16,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   before_filter :authorize_user
 
   def authorize_user
-    (can? :manage, :user_call_to_actions) || (can? :manage, :user_call_to_actions)
+    can? :manage, :user_call_to_actions
   end
 
   def clone
