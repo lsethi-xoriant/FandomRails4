@@ -19,7 +19,7 @@
 
         <!-- UNDER MEDIA -->
         <div class="col-md-12">         
-          <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
+          <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.extra_fields['subtitle']"></h2>
 
           <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.valid_from">Data: <span>{{formatDate(calltoaction_info.calltoaction.valid_from, aux.language)}}</span></p>
           <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.valid_from">Ora: <span>{{extractTimeFromDate(calltoaction_info.calltoaction.valid_from)}}</span></p>
@@ -34,7 +34,7 @@
             </div>
           </div>
 
-          <p class="cta__long_description">{{calltoaction_info.calltoaction.extra_fields["long_description"]}}</p>
+          <p class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description"></p>
 
           <!-- DOWNLOAD INTERACTION
           <div class="row {{calltoaction_info.hide_class}}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">

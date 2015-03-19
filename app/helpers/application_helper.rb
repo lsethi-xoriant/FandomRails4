@@ -764,24 +764,25 @@ module ApplicationHelper
 
   def get_current_interaction_reward_status(reward_name, interaction, user = current_user)
     reward = get_reward_by_name(reward_name)
+    if reward
+      reward_status_images = Array.new 
 
-    reward_status_images = Array.new 
+      user_interaction = user ? UserInteraction.find_by_user_id_and_interaction_id(user.id, interaction.id) : nil
+      
+      if user_interaction
+        win_reward_count = (JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) rescue 0)
+        correct_answer_outcome = (JSON.parse(user_interaction.outcome)["correct_answer"] rescue nil)
+        correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
 
-    user_interaction = user ? UserInteraction.find_by_user_id_and_interaction_id(user.id, interaction.id) : nil
-    
-    if user_interaction
-      win_reward_count = (JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) rescue 0)
-      correct_answer_outcome = (JSON.parse(user_interaction.outcome)["correct_answer"] rescue nil)
-      correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
+        winnable_reward_count = 0
 
-      winnable_reward_count = 0
-
-      push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
-      push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
-    else
-      win_reward_count = 0
-      winnable_reward_count = predict_outcome(interaction, nil, true).reward_name_to_counter[reward_name]
-      push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_reward_count)
+        push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
+        push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
+      else
+        win_reward_count = 0
+        winnable_reward_count = predict_outcome(interaction, nil, true).reward_name_to_counter[reward_name]
+        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_reward_count)
+      end
     end
 
     {
@@ -829,9 +830,13 @@ module ApplicationHelper
   
   def get_reward_with_periods(reward_name)
     reward = Reward.find_by_name(reward_name)
-    user_reward = UserReward.includes(:period)
-      .where("user_rewards.reward_id = ? AND user_rewards.user_id = ?", reward.id, current_user.id)
-      .where("periods.id IS NULL OR (periods.start_datetime < ? AND periods.end_datetime > ?)", Time.now.utc, Time.now.utc)
+    if reward
+      user_reward = UserReward.includes(:period)
+        .where("user_rewards.reward_id = ? AND user_rewards.user_id = ?", reward.id, current_user.id)
+        .where("periods.id IS NULL OR (periods.start_datetime < ? AND periods.end_datetime > ?)", Time.now.utc, Time.now.utc)
+    else
+      []
+    end
   end
 
   def user_has_reward(reward_name)
