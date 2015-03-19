@@ -21,8 +21,8 @@
         <div class="col-md-12">         
           <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
 
-          <p class="cta__sub_description">Data: <span>{{calltoaction_info.calltoaction.extra_fields["date"]}}</span></p>
-          <p class="cta__sub_description">Ora: <span>{{calltoaction_info.calltoaction.extra_fields["hour"]}}</span></p>
+          <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.valid_from">Data: <span>{{formatDate(calltoaction_info.calltoaction.valid_from, aux.language)}}</span></p>
+          <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.valid_from">Ora: <span>{{extractTimeFromDate(calltoaction_info.calltoaction.valid_from)}}</span></p>
           <p class="cta__sub_description">Location: <span>{{calltoaction_info.calltoaction.extra_fields["location"]}}</span></p>
           <p class="cta__sub_description">Categoria eventi: <span>{{calltoaction_info.calltoaction.extra_fields["category"]}}</span></p>
           <p class="cta__sub_description">Ospiti: <span>{{calltoaction_info.calltoaction.extra_fields["guests"]}}</span></p>

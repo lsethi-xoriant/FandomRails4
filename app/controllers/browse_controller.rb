@@ -57,6 +57,7 @@ class BrowseController < ApplicationController
       return
     else
       @query = params[:query]
+      log_info('full search', { query: @query })
     end
     
     contents, total = get_contents_with_match(params[:query], 0, get_current_property)
@@ -216,7 +217,10 @@ class BrowseController < ApplicationController
   
   def autocomplete_search
     term = params[:q]
-    results = cache_short(get_browse_search_results_key(get_search_cache_key_params(term))) { get_contents_by_query(term, get_search_tags_for_tenant).slice(0,8) }
+    log_info("autocomplete", { query: term } )
+    results = cache_short(get_browse_search_results_key(get_search_cache_key_params(term))) do 
+      get_contents_by_query(term, get_search_tags_for_tenant).slice(0,8) 
+    end
     respond_to do |format|
       format.json { render :json => results.to_a.to_json }
     end
