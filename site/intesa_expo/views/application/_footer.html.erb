@@ -4,7 +4,7 @@
       <p class="footer__container__title">Scopri Un Mondo Possibile</p>
     </div>
     <div class="col-sm-3" ng-repeat="n in getNumber(4) track by $index">
-      <a href="{{aux.assets['footer_external_url_' + ($index + 1)]}}">
+      <a href="{{aux.assets['footer_url_' + ($index + 1)]}}">
         <img class="img-responsive footer__container__img" ng-src="{{aux.assets['footer_img_' + ($index + 1)].url}}">
         <p class="footer__container__description">{{aux.assets['footer_description_' + ($index + 1)]}}</p>
       </a>
