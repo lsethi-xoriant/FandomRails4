@@ -83,17 +83,18 @@ module IntesaExpoHelper
     if other && other.has_key?(:home)
       next_lives = get_intesa_expo_ctas_with_tag("next-live")
       galleries = get_intesa_expo_ctas_with_tag("gallery")
+      articles = get_intesa_expo_ctas_with_tag("article")
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      limit = 4
+      ctas_evidence_count = 4
       calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key($context_root)) do  
         highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
         if highlight_calltoactions.any?
-          limit = limit - highlight_calltoactions.count
-          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(limit).to_a
+          ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
+          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(ctas_evidence_count).to_a
         else
-          ctas = get_intesa_expo_ctas().limit(limit).to_a
+          ctas = get_intesa_expo_ctas().limit(ctas_evidence_count).to_a
         end
         ctas = highlight_calltoactions + ctas
         calltoaction_evidence_info = []
@@ -119,7 +120,9 @@ module IntesaExpoHelper
       "menu_items" => menu_items,
       "next_lives" => next_lives,
       "relateds" => relateds,
-      "galleries" => galleries
+      "galleries" => galleries,
+      "articles" => articles,
+      "language" => $context_root || "it"
     }
 
     if other
