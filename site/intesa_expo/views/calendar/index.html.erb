@@ -28,40 +28,25 @@
         center: 'title',
         right: 'next'
       },
+      dayClick: function() {
+        alert('a day has been clicked!');
+      },
       viewRender: function(view, element) {
-        console.log(view);
+        console.log(view.intervalStart._d);
       },
       editable: false,
       disableResizing: true,
-      events: [
-        {
-            title  : 'event2',
-            start  : '2015-03-01',
-            description: 'Evento di questa ceppa 2',
-            image: ''
-        },
-        {
-            title  : 'event1',
-            start  : '2015-03-01',
-            description: 'Evento di questa ceppa 1',
-            image: 'http://www.gema.it/blog/wp-content/uploads/2013/03/evento.jpg'
-        },
-        {
-            title  : 'event3',
-            start  : '2015-03-01',
-            description: 'Evento di questa ceppa 3',
-            image: ''
-        }
-	    ],
-	    eventRender: function(event, element, view) {
-	    	html = $('<div class="calendar-event"></div>');
-	    	html.append('<span class="calendar-event__title">'+ event.title +'</span>');
-	    	if(! (_.isEmpty(event.image) )){
-	    		html.append('<img class="hidden-xs" style="height: 60px; margin: 0 auto; display: block;" src="'+ event.image +'" />')
-	    	}
-	    	html.append('<p>'+ event.description +'</p>');
-	        return html;
+      events: <%= @calendar_events.html_safe %>,
+	  eventRender: function(event, element, view) {
+	  	html = $('<div class="calendar-event"></div>');
+	  	html.append('<p class="calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
+	    html.append('<span class="calendar-event__title">'+ event.title +'</span>');
+	    if(! (_.isEmpty(event.image) )){
+	    	html.append('<img class="hidden-xs" style="height: 60px; margin: 0 auto; display: block;" src="'+ event.image +'" />')
 	    }
+	    html.append('<p>'+ event.description +'</p>');
+	    return html;
+	  }
     });
 
   }
