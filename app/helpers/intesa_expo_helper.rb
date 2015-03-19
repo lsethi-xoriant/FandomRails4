@@ -80,8 +80,9 @@ module IntesaExpoHelper
       relateds = get_intesa_expo_related_ctas(cta)
     end
 
-    if other && other.has_key?(:next_live)
+    if other && other.has_key?(:home)
       next_lives = get_intesa_expo_ctas_with_tag("next-live")
+      galleries = get_intesa_expo_ctas_with_tag("gallery")
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
@@ -117,7 +118,8 @@ module IntesaExpoHelper
       "root_url" => root_url,
       "menu_items" => menu_items,
       "next_lives" => next_lives,
-      "relateds" => relateds
+      "relateds" => relateds,
+      "galleries" => galleries
     }
 
     if other

@@ -15,7 +15,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
     @aux_other_params = { 
       calltoaction_evidence_info: true,
-      next_live: true,
+      home: true,
       page_tag: {
         miniformat: {
           name: "home"

@@ -64,9 +64,9 @@ class Sites::Disney::CallToActionController < CallToActionController
         calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
         gets_ctas_ordered_by_views(calltoaction_ids, 4)
       else
-        calltoactions = calltoactions.limit(4).to_a
+        calltoactions.limit(4).to_a
       end
-      calltoactions
+
     end
 
     response = {

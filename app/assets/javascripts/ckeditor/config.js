@@ -3,6 +3,9 @@ CKEDITOR.editorConfig = function( config )
   
   config.toolbar = 'Mini';
 
+  config.autoParagraph = false;
+  config.entities = false;
+
   config.toolbar_Mini =
     [
       { name: 'document', items : [ 'Source' ] },

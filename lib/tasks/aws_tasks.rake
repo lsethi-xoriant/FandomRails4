@@ -85,7 +85,7 @@ namespace :aws_tasks do
               medias_to_delete = [object.key, media_image_key] + get_thumbnail_keys_to_delete(cta.id, bucket, s3_output_folder)
               delete_duplicate_medias(cta.id, bucket, medias_to_delete)
               time_end = Time.now.utc
-              logger.info "#{current_timestamp} move media transcoded in cta #{cta.id} end [content_length #{object.content_length}]"
+              logger.info "#{current_timestamp} move media transcoded in cta #{cta.id} end"
             else
               logger.error("errors in cta #{cta.id} saving")
             end
