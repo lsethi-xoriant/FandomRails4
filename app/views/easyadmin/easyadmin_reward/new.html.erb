@@ -275,7 +275,7 @@
 
     var json_field = null;
     <% if @reward.extra_fields.present? %>
-      json_field = <%= @reward.extra_fields.to_s.html_safe %>;
+      json_field = <%= @reward.extra_fields.to_json.gsub("</", "<\\/").html_safe %>;
     <% end %>
 
     initializeTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName);

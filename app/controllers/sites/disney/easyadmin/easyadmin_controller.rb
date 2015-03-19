@@ -4,6 +4,7 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
 
   def dashboard
     authorize! :access, :dashboard
+
     @user_week_list = Hash.new
     if User.any? 
       if (params[:datepicker_from_date].blank? || params[:commit] == "Reset") 

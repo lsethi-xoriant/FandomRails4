@@ -2021,6 +2021,27 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 	    });
   };
 
+  function computeMonthName(n, language) {
+    if(language == "en") {
+      monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+        'July', 'August', 'September', 'October', 'November', 'December'];
+    } else {
+      monthNames = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 
+        'luglio', 'agosto', 'settembre', 'ottobre', 'novembre','dicembre'];
+    }
+    return monthNames[n - 1];
+  };
+
+  $scope.formatDate = function(date, language) {
+    date = new Date(date);
+    return date.getDay() + " " + computeMonthName(date.getMonth(), language) + " " + date.getYear();
+  };
+
+  $scope.extractTimeFromDate = function(date) {
+    date = new Date(date);
+    return date.getHours() + ":" + date.getMinutes();
+  };
+
   //////////////////////// CAPTCHA ////////////////////////
 
   function initCaptcha() {

@@ -13,7 +13,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     
     @calltoaction_info_list = {}
 
-    @aux_other_params = { 
+    @aux_other_params = {
       calltoaction_evidence_info: true,
       home: true,
       page_tag: {

@@ -178,7 +178,7 @@
 
     var json_field = null;
     <% if @tag.extra_fields.present? %>
-      json_field = <%= @tag.extra_fields.to_s.html_safe %>;
+      json_field = <%= @tag.extra_fields.gsub("</", "<\\/").html_safe %>;
     <% end %>
 
     var formName = "edit_tag_" + <%= @tag.id.to_s %>;

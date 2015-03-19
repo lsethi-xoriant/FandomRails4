@@ -22,4 +22,22 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     }
   };
 
+  $scope.linkTo = function(url, stripe_name) {
+    if(angular.isUndefined(stripe_name)) {
+      stripe_name = "";
+    }
+    if(stripe_name == "article-it") {
+      if($scope.aux.context_root && url.indexOf("/" + $scope.aux.context_root + "/") > -1) {
+        url = url.replace("/" + $scope.aux.context_root + "/", "/imprese/");
+      } else {
+        url = "/imprese" + url;
+      }
+    } else {
+      if($scope.aux.context_root && url.indexOf("/" + $scope.aux.context_root + "/") < 0) {
+        url = "/" + $scope.aux.context_root + "" + url;
+      }
+    }
+    return url;
+  };
+
 }

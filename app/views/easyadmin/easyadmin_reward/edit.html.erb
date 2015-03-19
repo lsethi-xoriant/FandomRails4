@@ -263,7 +263,7 @@
 
   $(document).ready(function() {
 
-  var json_field = <%= @extra_options.to_json.html_safe %>;
+  var json_field = <%= @extra_options.to_json.gsub("</", "<\\/").html_safe %>;
   var mandatory_fields = null;
   var formName = 'edit_reward_' + <%= @reward.id.to_s %>
   var modelName = "reward";
