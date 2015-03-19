@@ -1,10 +1,10 @@
-CKEDITOR.editorConfig = function( config )
-{
-  
+CKEDITOR.editorConfig = function(config) {
+
   config.toolbar = 'Mini';
 
   config.autoParagraph = false;
-  config.entities = false;
+  config.allowedContent = true;
+  config.fillEmptyBlocks = "&#8203;";
 
   config.toolbar_Mini =
     [
@@ -19,4 +19,8 @@ CKEDITOR.editorConfig = function( config )
       { name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
       { name: 'colors', items : [ 'TextColor' ] },
     ];
+
 }
+
+CKEDITOR.dtd.$removeEmpty['span'] = false;
+CKEDITOR.dtd.$removeEmpty['i'] = false;

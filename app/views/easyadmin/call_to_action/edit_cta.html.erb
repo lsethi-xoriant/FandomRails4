@@ -520,7 +520,7 @@
 
     // $('#call_to_action_description').jqte();
 
-    var json_field = <%= @extra_options.to_json.html_safe %>;
+    var json_field = <%= @extra_options.to_json.gsub("</", "<\\/").html_safe %>;
     // var mandatory_fields = ["button_label", "alternative_description", "enable_for_current_user", "shop_url"];
     var formName = 'edit_call_to_action_' + <%= @cta.id.to_s %>
     var modelName = "call_to_action";
