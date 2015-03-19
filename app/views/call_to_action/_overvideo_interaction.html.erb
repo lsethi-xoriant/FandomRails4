@@ -23,7 +23,7 @@
       <p class="interaction__go-to-mobile">ACCEDI DA MOBILE</p>
     </div>
 
-    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && !interaction_info.feedback && interaction_info.status.winnable_reward_count > 0" class="row {{interaction_info.reward_class}}">
+    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && !interaction_info.feedback" class="row {{interaction_info.reward_class}}">
       <div class="col-md-12 interaction__winnable-reward text-center">
         <span class="label label-success cta-cover__winnable-reward__label">
           Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
