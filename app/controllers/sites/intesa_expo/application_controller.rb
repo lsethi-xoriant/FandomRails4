@@ -24,7 +24,4 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     }
   end
 
-  def calendar
-  end
-  
 end

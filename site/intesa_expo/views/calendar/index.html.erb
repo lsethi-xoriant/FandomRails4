@@ -1,0 +1,53 @@
+<div class="container main-container" > 
+  <div class="row">
+      <div class="col-md-12">
+          <div class="portlet">
+            <div class="portlet-header">
+            </div> <!-- /.portlet-header -->
+            <div class="portlet-content">
+              
+              <div id="full-calendar"></div> <!-- /#full-calendar -->             
+
+            </div> <!-- /.portlet-content -->
+          </div> <!-- /.portlet -->
+        </div> <!-- /.col-md-8 -->
+    </div>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    buildCalendar();
+  });
+
+  function buildCalendar() {
+
+    $('#full-calendar').fullCalendar({
+      header: {
+        left: 'prev',
+        center: 'title',
+        right: 'next'
+      },
+      dayClick: function() {
+        alert('a day has been clicked!');
+      },
+      viewRender: function(view, element) {
+        console.log(view.intervalStart._d);
+      },
+      editable: false,
+      disableResizing: true,
+      events: <%= @calendar_events.html_safe %>,
+	  eventRender: function(event, element, view) {
+	  	html = $('<div class="calendar-event"></div>');
+	  	html.append('<p class="calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
+	    html.append('<span class="calendar-event__title">'+ event.title +'</span>');
+	    if(! (_.isEmpty(event.image) )){
+	    	html.append('<img class="hidden-xs" style="height: 60px; margin: 0 auto; display: block;" src="'+ event.image +'" />')
+	    }
+	    html.append('<p>'+ event.description +'</p>');
+	    return html;
+	  }
+    });
+
+  }
+</script>

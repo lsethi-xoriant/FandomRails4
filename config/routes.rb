@@ -25,14 +25,6 @@ Fandom::Application.routes.draw do
     end
   end
 
-  constraints(SiteMatcher.new('intesa_expo')) do
-    scope module: "sites" do
-      scope module: "intesa_expo" do
-        root :to => "application#index"
-      end
-    end
-  end
-
   constraints(SiteMatcher.new('orzoro')) do
     scope module: "sites" do
       scope module: "orzoro" do
@@ -150,7 +142,8 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "intesa_expo" do
         root :to => "application#index"
-        match "/calendar", :to => "application#calendar"
+        match "/calendar", :to => "calendar#index"
+        match "/calendar/:day", :to => "calendar#index"
       end
     end
   end
