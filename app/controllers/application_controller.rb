@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   before_filter :fandom_before_filter
   
   rescue_from CanCan::AccessDenied do |exception|
-    flash[:error] = "Access denied!"
+    log_error('authorization denied', { 'exception' => exception.to_s, 'backtrace' => exception.backtrace })
     redirect_to "/"
   end
 
