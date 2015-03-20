@@ -29,6 +29,7 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "orzoro" do
         namespace :easyadmin do
+          match "/dashboard", :to => "easyadmin#dashboard"
           match "/cups", :to => "easyadmin#index_cup_requests"
           match "/cups/filter", :to => "easyadmin#filter_cup_requests"
           match "export_cup_requests", :to => "easyadmin#export_cup_requests"
