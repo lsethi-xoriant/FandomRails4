@@ -14,7 +14,6 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     @aux_other_params = {
       today_events: prepare_contents(get_calendar_events(start_time, end_time))
     }
-    debugger
     @calendar_events = prepare_events_for_calendar(get_calendar_events(month_start, month_end))
     
   end

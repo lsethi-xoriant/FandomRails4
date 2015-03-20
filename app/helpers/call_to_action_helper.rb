@@ -32,7 +32,6 @@ module CallToActionHelper
   def execute_sql_and_get_ctas_ordered(sql)
     cta_ids = ActiveRecord::Base.connection.execute(sql)
     order =  cta_ids.map { |r| "call_to_actions.id = #{r["id"].to_i} DESC" }
-    debugger
     CallToAction.where("call_to_actions.id" => cta_ids.map { |r| r["id"].to_i }).order("#{order.join(",")}").to_a
   end
 
