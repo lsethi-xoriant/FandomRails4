@@ -15,12 +15,29 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   $scope.extraInit = function() {
     if($scope.calltoaction_info) {
       $scope.menu_field = "";
+
+      if($scope.calltoaction_info.calltoaction.extra_fields) {
+        contents = [];
+        angular.forEach($scope.calltoaction_info.calltoaction.extra_fields, function(value, key) {
+          if(key.indexOf("content_") > -1) {
+            content = { key: key, value: value }; 
+            contents.push(content);
+          }
+        });
+        if(contents.length > 0) {
+          $scope.calltoaction_info.calltoaction.contents = contents;
+        }
+      }
     } else {
       if($scope.aux.page_tag) {
         $scope.menu_field = $scope.aux.page_tag.miniformat.name;
       }
     }
   };
+
+  $scope.orderContent = function(content) {
+    return content["key"];
+  }
 
   $scope.linkTo = function(url, stripe_name) {
     if(angular.isUndefined(stripe_name)) {
