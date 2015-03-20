@@ -1,0 +1,45 @@
+<div class="container main-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1 ng-bind-html="calltoaction_info.calltoaction.title"></h1>
+      <p ng-bind-html="calltoaction_info.calltoaction.description"></p>
+      <p>Guarda i video della partnership</p>
+
+      <div class="media-youtube embed-responsive embed-responsive-16by9"> 
+        <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
+      </div>
+
+      <div ng-repeat="vcode in calltoaction_info.calltoaction.vcodes">
+        <button ng-click="updateYTIframe(calltoaction_info, vcode, false)" class="btn btn-default" >
+          {{$index}}
+        </button>
+        <p>Titolo: {{calltoaction_info.calltoaction.extra_fields[vcode + '_title']}}</p>
+        <img style="width: 40px;" ng-src="{{calltoaction_info.calltoaction.extra_fields[vcode + '_img']['url']}}">
+      </div>
+
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+        <div id="share-interaction-{{interaction_info.interaction.id}}" class="share-undervideo-interaction__row">
+          <%= render partial: "/call_to_action/share_interaction" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <button class="btn btn-default" onclick="showContent('intesa-container')">INTESA</button>
+      <button class="btn btn-default" onclick="showContent('expo-container')">EXPO</button>
+    </div>
+
+    <div id="intesa-container" class="about-container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.intesa_container"></div>
+    <div id="expo-container" class="about-container hidden" ng-bind-html="calltoaction_info.calltoaction.extra_fields.expo_container"></div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  function showContent(content_name) {
+    $(".about-container").addClass("hidden");
+    $("#" + content_name).removeClass("hidden");
+  }
+
+</script>
