@@ -484,7 +484,7 @@ Fandom::Application.routes.draw do
     match "auth/:provider/callback", :to => "sessions#create"
     match "/auth/failure" => "sessions#omniauth_failure"
     match "/profile/edit", :to => "registrations#edit"
-    match "/user/login-as/:id", :to => "sessions#login_as"
+    match "/user/sign_in_as/:id", :to => "sessions#sign_in_as"
   end
 
   match "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }

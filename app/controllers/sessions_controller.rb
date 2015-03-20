@@ -7,11 +7,11 @@ class SessionsController < Devise::SessionsController
   prepend_before_filter :anchor_provider_to_current_user, only: :create, :if => proc {|c| current_user && env["omniauth.auth"].present? }
   skip_before_filter :iur_authenticate
 
-  def login_as
+  def sign_in_as
     authorize! :manage, :user
     user = User.find(params[:id])
     sign_in(user)
-    log_audit('login as', { 'original_user' => current_user.id, 'logged_in_user' => user.id})
+    log_audit('sign in as', { 'original_user' => current_user.id, 'logged_in_user' => user.id})
     redirect_to root_url
   end
 
