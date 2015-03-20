@@ -3,7 +3,7 @@
 <div class="container main-container">
   <div class="row">
     <div class="col-sm-12">
-      <div class="browse-sections" ng-repeat="stripe in [aux.next_lives]">
+      <div class="browse-sections" ng-repeat="stripe in [aux.next_live_stripe]">
         <%= render partial: "/application/stripe" %>
       </div>
     </div>
@@ -13,7 +13,7 @@
 <div class="container main-container">
   <div class="row">
     <div class="col-sm-12">
-      <div class="browse-sections" ng-repeat="stripe in [aux.galleries]">
+      <div class="browse-sections" ng-repeat="stripe in [aux.gallery_stripe]">
         <%= render partial: "/application/stripe" %>
       </div>
     </div>
@@ -23,8 +23,8 @@
 <div class="container main-container">
   <div class="row">
     <div class="col-sm-12">
-      <div class="browse-sections" ng-repeat="stripe in [aux.articles]">
-        <%= render partial: "/application/stripe", locals: { article: true } %>
+      <div class="browse-sections" ng-repeat="stripe in [aux.article_stripe]">
+        <%= render partial: "/application/stripe" %>
       </div>
     </div>
   </div>

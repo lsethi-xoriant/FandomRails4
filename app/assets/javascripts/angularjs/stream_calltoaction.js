@@ -8,6 +8,8 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
+streamCalltoactionModule.filter('unsafe', function($sce) { return $sce.trustAsHtml; });
+
 /* COIN */
 streamCalltoactionModule.animation('.slide-left', function() {
   return {

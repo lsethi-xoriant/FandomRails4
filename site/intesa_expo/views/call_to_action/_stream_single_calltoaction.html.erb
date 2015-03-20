@@ -10,6 +10,10 @@
       <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
     </div>
 
+    <div class="col-sm-12 ctas__flexslider__container" ng-if="calltoaction_info.calltoaction.gallery">
+      <%= render partial: "/application/photo_gallery" %>
+    </div>
+
     <div class="col-sm-8">
       <div class="row">
 
@@ -27,7 +31,7 @@
           </p>
           <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.valid_from">Data: <span>{{formatDate(calltoaction_info.calltoaction.valid_from, aux.language)}}</span></p>
           <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.valid_from">Ora: <span>{{extractTimeFromDate(calltoaction_info.calltoaction.valid_from)}}</span></p>
-          <p class="cta__sub_description">Location: <span>{{calltoaction_info.calltoaction.extra_fields["location"]}}</span></p>
+          <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.extra_fields['location']">Location: <span>{{calltoaction_info.calltoaction.extra_fields["location"]}}</span></p>
           <p class="cta__sub_description">Categoria eventi: <span>{{calltoaction_info.calltoaction.extra_fields["category"]}}</span></p>
           <p class="cta__sub_description">Ospiti: <span>{{calltoaction_info.calltoaction.extra_fields["guests"]}}</span></p>
 
@@ -40,9 +44,9 @@
 
           <p class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description"></p>
 
-          <div ng-repeat="content in calltoaction_info.calltoaction.contents | orderBy:orderContent">
-            <img ng-src="{{content['value']['url']}}" ng-if="content['value']['type'] == 'media'" style="max-width: 100%;">
-            <div ng-if="content['value']['type'] != 'media'" ng-bind-html="content['value']"></div>
+          <div class="cta__contents" ng-repeat="content in calltoaction_info.calltoaction.contents | orderBy:orderContent">
+            <img ng-src="{{content['value']['url']}}" ng-if="content['value']['type'] == 'media'">
+            <div ng-if="content['value']['type'] != 'media'" ng-bind-html="content['value'] | unsafe"></div>
           </div>
 
           <!-- DOWNLOAD INTERACTION
@@ -58,6 +62,7 @@
       </div>
     </div>
     <div class="col-sm-4">
+      <div ng-if="calltoaction_info.flag">FLAG: {{calltoaction_info.flag.title}}</div>
       <%= render partial: "/application/right_contents" %>
     </div>
   </div>
