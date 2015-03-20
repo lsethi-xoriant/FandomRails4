@@ -8,7 +8,7 @@ class SessionsController < Devise::SessionsController
   skip_before_filter :iur_authenticate
 
   def sign_in_as
-    authorize! :manage, :user
+    authorize! :manage, :users
     user = User.find(params[:id])
     sign_in(user)
     log_audit('sign in as', { 'original_user' => current_user.id, 'logged_in_user' => user.id})

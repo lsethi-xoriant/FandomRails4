@@ -24,7 +24,7 @@
           </li>
         <% end %>
 
-        <% if can? :manage, :users %>
+        <% if can? :read, :users %>
           <li class="dropdown <%= "active opened" if page == "user" %>"><a href="javascript:void(0);"><i class="fa fa-users"></i>Utenti<span class="caret"></span></a>
             <ul class="sub-nav">
               <li>

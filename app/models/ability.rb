@@ -18,15 +18,17 @@ class Ability
       cannot :manage, :rewards
       cannot :manage, :rankings
       cannot :manage, :settings
+      cannot :manage, :users
+      can :read, :users
     elsif user && user.role == "viewer"
       can :access, :easyadmin
       can :access, :dashboard
-      can :manage, :users
+      can :read, :users
     elsif user && user.role == "moderator"
       can :access, :easyadmin
       can :manage, :user_call_to_actions
       can :manage, :comments
     end
-    
+ 
   end
 end
