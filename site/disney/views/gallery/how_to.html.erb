@@ -19,6 +19,11 @@
 	
 	<div class="row">
 		<div class="col-xs-12">
+			
+			<% if @info['custom_html'] %>
+				<%= @info['custom_html']['value'].html_safe %>
+			<% end %>
+			
 			<% if @info['image_row_1'] && @info['text_row_1'] %>
 				<div class="row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_1'], :original) if @info['background_image_row_1'] %>);">
 					<div class="col-xs-12 col-sm-5">
@@ -29,7 +34,11 @@
 						<% end %>
 					</div>			
 					<div class="col-xs-12 col-sm-7">
-						<%= @info['text_row_1'].html_safe %>
+						<% if @info['text_row_1']['type'] && @info['text_row_1']['type'] == 'html' %>
+							<%= @info['text_row_1']['value'].html_safe %>
+						<% else %>
+							<%= @info['text_row_1'].html_safe %>
+						<% end %>
 					</div>
 				</div>
 			<% end %>
@@ -37,7 +46,11 @@
 			<% if @info['image_row_2'] && @info['text_row_2'] %>
 				<div class="row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_2'], :original) if @info['background_image_row_2'] %>);">
 					<div class="col-xs-12 col-sm-7">
-						<%= @info['text_row_2'].html_safe %>
+						<% if @info['text_row_2']['type'] && @info['text_row_2']['type'] == 'html' %>
+							<%= @info['text_row_2']['value'].html_safe %>
+						<% else %>
+							<%= @info['text_row_2'].html_safe %>
+						<% end %>
 					</div>
 					<div class="col-xs-12 col-sm-5">
 						<% if @info['image_row_2']['type'] && @info['image_row_2']['type'] == 'media' %>
@@ -59,7 +72,11 @@
 						<% end %>
 					</div>			
 					<div class="col-xs-12 col-sm-7">
-						<%= @info['text_row_3'].html_safe %>
+						<% if @info['text_row_3']['type'] && @info['text_row_3']['type'] == 'html' %>
+							<%= @info['text_row_3']['value'].html_safe %>
+						<% else %>
+							<%= @info['text_row_3'].html_safe %>
+						<% end %>
 					</div>
 				</div>
 			<% end %>
