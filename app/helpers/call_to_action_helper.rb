@@ -174,6 +174,16 @@ module CallToActionHelper
                                                                       calltoaction_info_list_and_interactions[:interaction_id_to_answers]                                                         
 
     if current_user
+
+      full_answers = []
+      interaction_id_to_answers.each do |key, value|
+        full_answers = full_answers + value
+      end
+
+      if full_answers.any?
+        full_answers = Answer.where(id: full_answers).order("updated_at DESC")
+      end
+
       calltoaction_info_list_for_current_user = [] 
       calltoaction_info_list.each do |calltoaction_info|
 
@@ -195,8 +205,9 @@ module CallToActionHelper
           user_interaction = find_in_user_interactions(user_interactions, interaction.id)
           if user_interaction
             user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
-            answers = interaction_id_to_answers[interaction.id]
-            if answers
+            answer_ids = interaction_id_to_answers[interaction.id]
+            if answer_ids
+              answers = find_in_answers(answer_ids, full_answers)
               resource_type = interaction_info["interaction"]["resource_type"]
               interaction_info["interaction"]["resource"]["answers"] = build_answers_for_resource(interaction, answers, resource_type, user_interaction)
             end
@@ -220,6 +231,16 @@ module CallToActionHelper
     else
       cta.media_data
     end
+  end
+
+  def find_in_answers(answer_ids, answers)
+    answers_to_return = []
+    answers.each do |answer|
+      if answer_ids.include?(answer.id)
+        answers_to_return << answer
+      end
+    end
+    answers_to_return
   end
 
   def find_in_calltoactions(calltoactions, calltoaction_id)
@@ -276,7 +297,7 @@ module CallToActionHelper
           resource_type = resource.quiz_type.downcase
           resource_answers = resource.answers
           answers = build_answers_for_resource(interaction, resource_answers, resource_type, user_interaction)
-          interaction_id_to_answers[interaction.id] = resource_answers
+          interaction_id_to_answers[interaction.id] = resource_answers.map { |cta| cta.id }
         when "comment"
           comment_info = build_comments_for_resource(interaction)
         when "like"
