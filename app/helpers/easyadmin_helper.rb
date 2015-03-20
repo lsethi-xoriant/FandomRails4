@@ -241,5 +241,16 @@ module EasyadminHelper
     end
   end
 
+  def get_period_ids(from_date, to_date)
+    Period.where("start_datetime >= '#{from_date.strftime('%Y-%m-%d 00:00:00')}' 
+                    AND end_datetime <= '#{to_date.strftime('%Y-%m-%d 23:59:59')}'
+                    AND kind = 'daily'").pluck(:id)
+  end
+
+  def find_user_reward_count_by_reward_name_at_date(reward_name, period_ids)
+    reward_id = Reward.find_by_name(reward_name).id rescue 0
+    period_ids.empty? ? 0 : UserReward.where("reward_id = #{reward_id} AND period_id IN (#{period_ids.join(', ')})").pluck("sum(counter)").first.to_i
+  end
+
 end
 

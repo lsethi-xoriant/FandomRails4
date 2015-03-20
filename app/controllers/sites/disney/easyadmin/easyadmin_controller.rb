@@ -40,13 +40,17 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
           "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", to).count
           }
 
-      if params[:commit] == "VIOLETTA"
-        @property_tag_name = "violetta"
-        @property_prefix = "violetta-"
-      else
+      @properties = Setting.find_by_key(PROPERTIES_LIST_KEY).value.split(',')
+
+      if (params[:commit] == "DISNEY-CHANNEL") || (params[:commit].nil?)
         @property_tag_name = "disney-channel"
         @property_prefix = ""
+      else
+        @property_tag_name = params[:commit].downcase
+        @property_prefix = @property_tag_name + "-"
       end
+
+      period_ids = get_period_ids(@from_date, @to_date)
 
       # TOTAL USER REWARDS
       level_tag_id = Tag.find_by_name('level').id
@@ -63,35 +67,35 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
 
       total_level_or_badge_rewards_where_condition = ""
       (level_reward_ids | badge_reward_ids).each_with_index do |reward_id, i|
-        connector = (i != (level_reward_ids | badge_reward_ids).length - 1) ? " or " : " "
+        connector = (i != (level_reward_ids | badge_reward_ids).length - 1) ? " OR " : " "
         total_level_or_badge_rewards_where_condition << "reward_id = #{reward_id}#{connector}"
       end
 
-      @total_rewards = UserReward.where("(#{total_level_or_badge_rewards_where_condition}) and period_id is null").count
+      @total_rewards = UserReward.where("(#{total_level_or_badge_rewards_where_condition}) AND period_id IS NULL").count
 
       # COMMENTS
       @total_comments = UserCommentInteraction.where("created_at >= '#{@from_date}' and created_at <= '#{@to_date}'").count
       @approved_comments = UserCommentInteraction.where("approved = true and created_at >= '#{@from_date}' and created_at <= '#{@to_date}'").count
       # QUIZZES
-      @property_trivia_answers = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", @from_date, @to_date)
-      @property_trivia_correct_answers = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-correct-counter", @from_date, @to_date)
+      @property_trivia_answers = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", period_ids)
+      @property_trivia_correct_answers = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-correct-counter", period_ids)
       # VERSUS
-      @property_versus_answers = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}versus-counter", @from_date, @to_date)
+      @property_versus_answers = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}versus-counter", period_ids)
       # PLAYS
-      @property_plays = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}play-counter", @from_date, @to_date)
+      @property_plays = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}play-counter", period_ids)
       # LIKES
-      @property_likes = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}like-counter", @from_date, @to_date)
+      @property_likes = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}like-counter", period_ids)
       # CHECKS
-      @property_checks = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}check-counter", @from_date, @to_date)
+      @property_checks = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}check-counter", period_ids)
       # SHARES
-      @property_shares = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}share-counter", @from_date, @to_date)
+      @property_shares = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}share-counter", period_ids)
       # DOWNLOADS
-      @property_downloads = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}download-counter", @from_date, @to_date)
+      @property_downloads = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}download-counter", period_ids)
       # VOTES
-      @property_votes = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}vote-counter", @from_date, @to_date)
+      @property_votes = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}vote-counter", period_ids)
       # ASSIGNED LEVELS AND BADGES
       property_reward_ids = Array.new
-      property_tag_id = Tag.find_by_name(@property_tag_name).id
+      property_tag_id = Tag.find_by_name(@property_tag_name).id rescue 0
       RewardTag.find(:all, :conditions => ["tag_id = #{property_tag_id}"]).each do |rt|
         property_reward_ids << rt.reward_id
       end
@@ -99,15 +103,12 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       property_level_reward_ids = property_reward_ids & level_reward_ids
       property_badge_reward_ids = property_reward_ids & badge_reward_ids
 
-      @property_assigned_levels = UserReward.where("reward_id in (#{property_level_reward_ids.to_s[1..-2]}) and period_id is null").count
-      @property_assigned_badges = UserReward.where("reward_id in (#{property_badge_reward_ids.to_s[1..-2]}) and period_id is null").count
+      @property_assigned_levels = (period_ids.empty? || property_level_reward_ids.empty?) ? 0 : 
+        UserReward.where("reward_id IN (#{property_level_reward_ids.join(', ')}) AND period_id IN (#{period_ids.join(', ')})").pluck("sum(counter)").first.to_i
+      @property_assigned_badges = (period_ids.empty? || property_badge_reward_ids.empty?) ? 0 : 
+        UserReward.where("reward_id IN (#{property_badge_reward_ids.join(', ')}) AND period_id IN (#{period_ids.join(', ')})").pluck("sum(counter)").first.to_i
 
     end
   end
 
-  def find_user_reward_count_by_reward_name_at_date(reward_name, from_date, to_date)
-    reward_id = Reward.find_by_name(reward_name).id
-    where_condition = "reward_id = #{reward_id} and period_id is null"
-    UserReward.where(where_condition).pluck("sum(counter)").first.to_i
-  end
 end

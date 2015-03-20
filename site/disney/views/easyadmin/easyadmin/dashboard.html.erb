@@ -89,7 +89,7 @@
         <div class="dashboard-stat primary" style="background-color: #E5412D;">
           <div class="details">
             <span class="content"> UTENTI REGISTRATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
-            <span class="value-sm"><%= @total_users %></span>
+            <span class="value-sm"><%= @total_users %>/<%= User.all.count %></span>
           </div>
           <div class="visual">
             <i class="fa fa-user" style="color: #FFF"></i>
@@ -126,16 +126,22 @@
       <div class="col-md-3">
         <h3>Statistiche per property</h3>
       </div>
-      <div class="col-md-2">
-        <%= submit_tag 'DISNEY-CHANNEL', class: 'btn btn-primary btn-block' %>
-      </div>
-      <div class="col-md-2">
-        <%= submit_tag 'VIOLETTA', class: 'btn btn-primary btn-block' %>
-      </div>
-      <% end %> <!-- form-post -->
     </div>
 
     <hr/>
+
+    <ul id="property-selectors" class="nav nav-tabs">
+      <li>
+        <input class="btn btn-default<%= (params[:commit] == "DISNEY-CHANNEL") || (params[:commit].nil?) ? " active" : "" %>" name="commit" type="submit" value="DISNEY-CHANNEL">
+      </li>
+      <% @properties.each do |p| %>
+        <li>
+          <input class="btn btn-default<%= params[:commit] == p.upcase ? " active" : "" %>" name="commit" type="submit" value="<%= p.upcase %>">
+        </li>
+      <% end %>
+    </ul>
+
+    <% end %> <!-- form-post -->
 
     <div class="row">
       <div class="col-md-4 col-md-offset-2">
@@ -350,27 +356,29 @@
   function buildLine() {
     $('#line-chart').empty();
 
-      var data_arr = [];
-      user_arr = <%= raw(@user_week_list.to_json) %>;
+    var data_arr = [];
+    user_arr = <%= raw(@user_week_list.to_json) %>;
+    first_day_total = <%= @user_week_list.values[0]["tot"] %>;
+    first_day_simple = <%= @user_week_list.values[0]["simple"] %>;
 
-      $.each(user_arr, function(key, value) {
-        data_arr.push({
-          time: key,
-          tot: value.tot,
-          provider: (value.tot - value.simple),
-          simple: value.simple
-        });
+    $.each(user_arr, function(key, value) {
+      data_arr.push({
+        time: key,
+        tot: (value.tot - first_day_total),
+        provider: (value.tot - value.simple),
+        simple: (value.simple - first_day_simple)
       });
+    });
 
-      Morris.Line({
-        element: 'line-chart',
-        data: data_arr,
-        xLabelFormat: function (x) { return (x.getMonth() + 1) + "/" + x.getFullYear(); },
-        xkey: 'time',
-        ykeys: ['tot', 'provider', 'simple'],
-        labels: ['Registrati totali', 'Registrati via social', 'Registrati via email'],
-        lineColors: ["#000", "#f0ad4e", "#e5412d"]
-      });
+    Morris.Line({
+      element: 'line-chart',
+      data: data_arr,
+      xLabelFormat: function (x) { return (x.getMonth() + 1) + "/" + x.getFullYear(); },
+      xkey: 'time',
+      ykeys: ['tot', 'provider', 'simple'],
+      labels: ['Registrati totali', 'Registrati via social', 'Registrati via email'],
+      lineColors: ["#000", "#f0ad4e", "#e5412d"]
+    });
 
   }
 

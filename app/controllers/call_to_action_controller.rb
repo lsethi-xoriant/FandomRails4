@@ -245,11 +245,7 @@ class CallToActionController < ApplicationController
         @current_user_info = build_current_user()
       end
 
-      @aux = init_show_aux(calltoaction)
-
-      @aux_other_params = { 
-        calltoaction: calltoaction,
-      }
+      @aux_other_params = init_show_aux(calltoaction)
 
       descendent_calltoaction_id = params[:descendent_id]
       if(descendent_calltoaction_id)
@@ -310,12 +306,8 @@ class CallToActionController < ApplicationController
 =end
 
   def init_show_aux(calltoaction)
-    {
-      "tenant" => get_site_from_request(request)["id"],
-      "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
-      "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
-      "init_captcha" => true,
-      "mobile" => small_mobile_device?()
+    { 
+      calltoaction: calltoaction
     }
   end
   

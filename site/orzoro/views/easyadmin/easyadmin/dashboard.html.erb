@@ -1,0 +1,234 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "dashboard" } %>
+ 
+  <div id="content">    
+    
+  <div id="content-header">
+    <h1>Statistiche generali</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+  <div class="row">
+    <div class="col-md-2">
+      <%= form_tag :method => 'post' do %>
+        <div class="form-group">
+          <label class="text-input">DAL GIORNO</label></br>
+          <%= text_field_tag :datepicker_from_date, @from_date_string, :class => "form-control" %>
+        </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label class="text-input">AL GIORNO</label></br>
+        <%= text_field_tag :datepicker_to_date, @to_date_string, :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div>
+        <label class="text-input">PERIODO</label></br>
+        <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
+        <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        </br><%= submit_tag 'RESET', class: 'btn btn-primary btn-block' %>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        </br><a href="/easyadmin/export_users" class="btn btn-primary btn-block">ESPORTA CSV</a>
+      </div>
+    </div>
+    <% end %>
+  </div> <!-- /.row -->
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="portlet">
+          <div class="portlet-header">
+            <h3>
+              <i class="fa fa-bar-chart-o"></i>
+              UTENTI REGISTRATI DAL <%= @from_date_string %> AL <%= @to_date_string %>
+            </h3>
+          </div> <!-- /.portlet-header -->
+          <div class="portlet-content">
+            <div id="line-chart" class="chart-holder">
+            </div>
+          </div> <!-- /.portlet-content -->
+        </div> <!-- /.portlet -->
+      </div> <!-- /.col -->
+    </div> <!-- /.row -->
+
+    <hr/>
+    
+    <div class="row">
+      <div class="col-md-3">
+        <h4> Registrazioni </h4>
+      </div>
+      <div class="col-md-3">
+        <h4> Richieste gadget </h4>
+      </div>
+      <div class="col-md-3">
+        <h4> Test </h4>
+      </div>
+      <div class="col-md-3">
+        <h4> Link </h4>
+      </div>
+    </div> <!-- /.row -->
+    
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat primary" style="background-color: #E5412D;">
+          <div class="details">
+            <span class="content"> UTENTI REGISTRATI/TOTALI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
+            <span class="value-sm"><%= @total_users %>/<%= User.all.count %></span>
+          </div>
+          <div class="visual">
+            <i class="fa fa-user" style="color: #FFF"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat primary" style="background-color: #916C47;">
+          <div class="details">
+            <span class="content"> EFFETTUATE <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value-sm"><%= @cup_requests %></span>
+          </div> <!-- /.details --> 
+          <div class="visual">
+            <i class="fa fa-coffee" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat primary" style="background-color: #FFB547;">
+          <div class="details">
+            <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value-sm"><%= @tests %></span>
+          </div> <!-- /.details --> 
+          <div class="visual">
+            <i class="fa fa-question" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat primary" style="background-color: #4D944D;">
+          <div class="details">
+            <span class="content"> CLICK <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value-sm"><%= @links %></span>
+          </div> <!-- /.details --> 
+          <div class="visual">
+            <i class="fa fa-link" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div> <!-- /.row -->
+
+    <hr/>
+
+    <div class="row">
+      <div class="col-md-3">
+        <h4> Play </h4>
+      </div>
+      <div class="col-md-3">
+        <h4> Download </h4>
+      </div>
+      <div class="col-md-3">
+        <h4> Share </h4>
+      </div>
+    </div> <!-- /.row -->
+
+      <div class="row">
+        <div class="col-md-3">
+          <div class="dashboard-stat primary" style="background-color: #70AAFF;">
+            <div class="details">
+              <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value-sm"><%= @plays %></span>
+            </div>
+            <div class="visual">
+              <i class="fa fa-youtube-play" style="color: #FFF"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
+            <div class="details">
+              <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value-sm"><%= @downloads %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-download" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+        <div class="col-md-3">
+          <div class="dashboard-stat primary" style="background-color: #99C1D6;">
+            <div class="details">
+              <span class="content"> FATTI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value-sm"><%= @shares %></span>
+            </div>
+            <div class="visual">
+              <i class="fa fa-share" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+      </div> <!-- /.row -->
+
+    </div>
+  </div>
+
+<script type="text/javascript">
+
+  var total_users = <%= @total_users %>;
+  var social_reg_users = <%= @social_reg_users %>;
+
+  $(document).ready(function() {
+    buildLine();
+
+    $(window).resize(App.debounce(buildLine, 325));
+
+  });
+
+  function scrollToElement(ele) {
+    $(window).scrollTop(ele.offset().top).scrollLeft(ele.offset().left);
+  }
+
+  function buildLine() {
+    $('#line-chart').empty();
+
+    var data_arr = [];
+    user_arr = <%= raw(@user_week_list.to_json) %>;
+    first_day_total = <%= @user_week_list.values[0]["tot"] %>;
+    first_day_simple = <%= @user_week_list.values[0]["simple"] %>;
+
+    $.each(user_arr, function(key, value) {
+      data_arr.push({
+        time: key,
+        tot: (value.tot - first_day_total),
+        provider: (value.tot - value.simple),
+        simple: (value.simple - first_day_simple)
+      });
+    });
+
+    Morris.Line({
+      element: 'line-chart',
+      data: data_arr,
+      xLabelFormat: function (x) { return (x.getMonth() + 1) + "/" + x.getFullYear(); },
+      xkey: 'time',
+      ykeys: ['tot', 'provider', 'simple'],
+      labels: ['Registrati totali', 'Registrati via social', 'Registrati via email'],
+      lineColors: ["#000", "#f0ad4e", "#e5412d"]
+    });
+
+  }
+
+  $(function() {
+    $("#datepicker_from_date").datepicker();
+    $("#datepicker_to_date").datepicker();
+  });
+
+</script>

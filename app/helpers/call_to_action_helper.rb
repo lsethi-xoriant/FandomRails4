@@ -32,7 +32,6 @@ module CallToActionHelper
   def execute_sql_and_get_ctas_ordered(sql)
     cta_ids = ActiveRecord::Base.connection.execute(sql)
     order =  cta_ids.map { |r| "call_to_actions.id = #{r["id"].to_i} DESC" }
-    debugger
     CallToAction.where("call_to_actions.id" => cta_ids.map { |r| r["id"].to_i }).order("#{order.join(",")}").to_a
   end
 
@@ -135,8 +134,8 @@ module CallToActionHelper
               "name" => calltoaction.name,
               "slug" => calltoaction.slug,
               "detail_url" => cta_url(calltoaction),
-              "valid_from" => calltoaction.valid_from,
-              "valid_to" => calltoaction.valid_to,
+              "valid_from" => (calltoaction.valid_from.in_time_zone($site.timezone) rescue nil),
+              "valid_to" => (calltoaction.valid_to.in_time_zone($site.timezone) rescue nil),
               "valid_to" => cta_url(calltoaction),
               "title" => calltoaction.title,
               "description" => calltoaction.description,

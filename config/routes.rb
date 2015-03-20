@@ -29,6 +29,7 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "orzoro" do
         namespace :easyadmin do
+          match "/dashboard", :to => "easyadmin#dashboard"
           match "/cups", :to => "easyadmin#index_cup_requests"
           match "/cups/filter", :to => "easyadmin#filter_cup_requests"
           match "export_cup_requests", :to => "easyadmin#export_cup_requests"
@@ -95,6 +96,8 @@ Fandom::Application.routes.draw do
 
         namespace :easyadmin do
           match "/dashboard", :to => "easyadmin#dashboard"
+          match "settings/properties", :to => "settings#properties_settings"
+          match "settings/properties/save", :to => "settings#save_properties_settings"
         end
         
         match "/iur", to: "application#iur"
@@ -481,6 +484,7 @@ Fandom::Application.routes.draw do
     match "auth/:provider/callback", :to => "sessions#create"
     match "/auth/failure" => "sessions#omniauth_failure"
     match "/profile/edit", :to => "registrations#edit"
+    match "/user/sign_in_as/:id", :to => "sessions#sign_in_as"
   end
 
   match "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }

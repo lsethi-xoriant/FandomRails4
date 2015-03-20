@@ -11,7 +11,7 @@ class Sites::Disney::CallToActionController < CallToActionController
   end
 
   def init_show_aux(calltoaction)
-    @aux_other_params = { 
+    { 
       init_captcha: true,
       calltoaction: calltoaction,
       sidebar_tags: ["detail"]

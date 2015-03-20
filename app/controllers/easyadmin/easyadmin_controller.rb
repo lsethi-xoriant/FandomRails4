@@ -22,7 +22,7 @@ class Easyadmin::EasyadminController < ApplicationController
   end
   
   def index_user
-    authorize! :manage, :users
+    authorize! :read, :users
 
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
@@ -36,7 +36,7 @@ class Easyadmin::EasyadminController < ApplicationController
   end
   
   def export_users
-    authorize! :manage, :users
+    authorize! :read, :users
 
     csv = "id;email;remember_created_at;sign_in_count;current_sign_in_at;last_sign_in_at;"+
         "current_sign_in_ip;last_sign_in_ip;first_name;last_name;avatar_selected;swid;privacy;confirmation_token;confirmed_at;confirmation_sent_at;"+
@@ -54,7 +54,7 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def filter_user
-    authorize! :manage, :users
+    authorize! :read, :users
 
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20

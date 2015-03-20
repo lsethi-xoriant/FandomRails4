@@ -1,0 +1,60 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "settings" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>IMPOSTAZIONI PROPERTY</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if @saved %>
+          <% if flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-success"><%= flash[:notice] %></div>
+            </div>
+          </div>
+          <% end %>
+        <% else %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-danger">
+                <p>Errori nel salvataggio:</p>
+                <p>
+                  <ul>
+                    <% flash[:error].each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%= form_tag("/easyadmin/settings/properties/save", method: "post") do %>
+      <%= hidden_field_tag :key, PROPERTIES_LIST_KEY %>
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+          <div class="alert alert-info" role="alert">
+            In questo campo si possono inserire i nomi delle property per attivare le relative statistiche in dashboard.
+            "Disneychannel" è sempre attiva di default.
+          </div>
+        </div>
+      </div>
+      <div class="row form-group">
+          <div class="col-lg-2"><%= label_tag(:rules, "Property:") %></div>
+          <div class="col-lg-8"><%= text_area_tag(:setting, @setting_value, :class => "form-control", size: "60x5") %> </div>
+      </div>
+      <div class="row">
+        <div class="col-sm12 text-center">
+            <button type="submit" class="btn btn-primary">SALVA</button>
+        </div>
+      </div>
+    <% end %>
+</div>

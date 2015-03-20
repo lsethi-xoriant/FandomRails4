@@ -78,12 +78,20 @@ module IntesaExpoHelper
     if other && other.has_key?(:calltoaction)
       cta = other[:calltoaction]
       relateds = get_intesa_expo_related_ctas(cta)
+      if cta.extra_fields
+        page_stripes = []
+        JSON.parse(cta.extra_fields).each do |key, value|
+          if(key.include?("_stripe") && value)
+            page_stripes << get_intesa_expo_ctas_with_tag(key.sub("_stripe", "")) 
+          end
+        end
+      end
     end
 
     if other && other.has_key?(:home)
-      next_lives = get_intesa_expo_ctas_with_tag("next-live")
-      galleries = get_intesa_expo_ctas_with_tag("gallery")
-      articles = get_intesa_expo_ctas_with_tag("article")
+      next_live_stripe = get_intesa_expo_ctas_with_tag("next-live")
+      gallery_stripe = get_intesa_expo_ctas_with_tag("gallery")
+      article_stripe = get_intesa_expo_ctas_with_tag("article")
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
@@ -118,10 +126,11 @@ module IntesaExpoHelper
       "assets" => assets,
       "root_url" => root_url,
       "menu_items" => menu_items,
-      "next_lives" => next_lives,
       "relateds" => relateds,
-      "galleries" => galleries,
-      "articles" => articles,
+      "gallery_stripe" => gallery_stripe,
+      "article_stripe" => article_stripe,
+      "next_live_stripe" => next_live_stripe,
+      "page_stripes" => page_stripes,
       "context_root" => $context_root,
       "language" => $context_root || "it"
     }

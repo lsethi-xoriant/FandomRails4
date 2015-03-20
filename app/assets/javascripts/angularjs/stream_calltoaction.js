@@ -8,6 +8,8 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
+streamCalltoactionModule.filter('unsafe', function($sce) { return $sce.trustAsHtml; });
+
 /* COIN */
 streamCalltoactionModule.animation('.slide-left', function() {
   return {
@@ -60,10 +62,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $('html, body').animate({
         scrollTop: $("#"+ el_id).offset().top
     }, 500);
-  };
-
-  $scope.unsafe = function(value) {
-     return $sce.trustAsHtml(value);
   };
 
   $scope.sanitizeText = function(text) {

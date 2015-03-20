@@ -1,1 +1,20 @@
 <%= render partial: "/call_to_action/stream_single_calltoaction" %>
+
+<div class="container main-container" ng-repeat="stripes in aux.page_stripes">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="browse-sections" ng-repeat="stripe in [stripes]">
+        <%= render partial: "/application/stripe" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container main-container" nf-if="calltoaction_info.calltoaction.extra_fields.interview_banner_title">
+  <div class="row">
+    <div class="col-sm-12">
+      <p>{{calltoaction_info.calltoaction.extra_fields.interview_banner_title}}</p>
+      <img ng-src="{{calltoaction_info.calltoaction.extra_fields.interview_banner_img.url}}">
+    </div>
+  </div>
+</div>
