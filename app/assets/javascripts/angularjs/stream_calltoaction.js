@@ -62,10 +62,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }, 500);
   };
 
-  $scope.unsafe = function(value) {
-     return $sce.trustAsHtml(value);
-  };
-
   $scope.sanitizeText = function(text) {
     return String(text).replace(/<[^>]+>/gm, '');
   };
