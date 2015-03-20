@@ -96,6 +96,8 @@ Fandom::Application.routes.draw do
 
         namespace :easyadmin do
           match "/dashboard", :to => "easyadmin#dashboard"
+          match "settings/properties", :to => "settings#properties_settings"
+          match "settings/properties/save", :to => "settings#save_properties_settings"
         end
         
         match "/iur", to: "application#iur"

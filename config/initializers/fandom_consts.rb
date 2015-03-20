@@ -31,6 +31,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   PROFANITIES_SETTINGS_KEY = 'profanity.words'
   NOTIFICATIONS_LIMIT_DEFAULT = 50
   NOTIFICATIONS_LIMIT_KEY = 'notifications.limit'
+  PROPERTIES_LIST_KEY = 'properties.list'
 
   UPLOAD_APPROVED_LABEL = "Upload approvato"
   COMMENT_APPROVED_LABEL = "Commento approvato"

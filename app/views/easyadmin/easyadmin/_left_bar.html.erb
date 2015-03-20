@@ -183,10 +183,10 @@
         <% if can? :manage, :rankings %>
             <li class="dropdown <%= "active opened" if page == "ranking" %>"><a href="javascript:void(0);"><i class="fa fa-star"></i>Classifiche<span class="caret"></span></a>
               <ul class="sub-nav">
-                <li >
+                <li>
                     <a href="/easyadmin/ranking"><i class="fa fa-th-list"></i>Elenco classifiche</a>
                 </li>
-                <li >
+                <li>
                     <a href="/easyadmin/ranking/new"><i class="fa fa-save"></i>Nuova classifica</a>
                 </li>
               </ul>
@@ -196,22 +196,27 @@
         <% if can? :manage, :settings %>
             <li class="dropdown <%= "active opened" if page == "settings" %>"><a href="javascript:void(0);"><i class="fa fa-gear"></i>Impostazioni<span class="caret"></span></a>
               <ul class="sub-nav">
-                <li >
+                <li>
                     <a href="/easyadmin/rules"><i class="fa fa-comment"></i>Regole Reward</a>
                 </li>
-                <li >
+                <li>
                     <a href="/easyadmin/settings/browse"><i class="fa fa-th-large"></i>Pagina Browse</a>
                 </li>
-                <li >
+                <li>
                     <a href="/easyadmin/settings/ranking"><i class="fa fa-sort-amount-asc"></i>Pagina Classifiche</a>
                 </li>
-                <li >
+                <% if $site.id == "disney" %>
+                  <li>
+                      <a href="/easyadmin/settings/properties"><i class="fa fa-cubes"></i>Impostazioni property</a>
+                  </li>
+                <% end %>
+                <li>
                     <a href="/easyadmin/settings/notifications"><i class="fa fa-paper-plane"></i>Impostazioni notifiche</a>
                 </li>
-                <li >
+                <li>
                     <a href="/easyadmin/settings/profanities"><i class="fa fa-ban"></i>Dizionario parole vietate</a>
                 </li>
-                <li >
+                <li>
                     <a href="/easyadmin/settings/clear_cache"><i class="fa fa-ban"></i>Cancella la cache</a>
                 </li>
               </ul>
