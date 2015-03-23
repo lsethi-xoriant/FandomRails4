@@ -95,16 +95,8 @@ module IntesaExpoHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      ctas_evidence_count = 4
       calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key($context_root)) do  
-        highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
-        if highlight_calltoactions.any?
-          ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
-          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(ctas_evidence_count).to_a
-        else
-          ctas = get_intesa_expo_ctas().limit(ctas_evidence_count).to_a
-        end
-        ctas = highlight_calltoactions + ctas
+        ctas = get_intesa_expo_highlight_calltoactions()
         calltoaction_evidence_info = []
         ctas.each_with_index do |calltoaction, index|
           calltoaction_evidence_info << build_default_thumb_calltoaction(calltoaction, :medium)

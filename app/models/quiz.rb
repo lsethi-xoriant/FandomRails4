@@ -7,7 +7,8 @@ class Quiz < ActiveRecord::Base
 	# Il valore deve essere aggiornato alla creazione di ogni
 	# user_interaction tenendo conto che per i TRIVIA la risposta non puo' essere modificata.
 
-  	attr_accessible :question, :answers_attributes, :cache_wrong_answer, :cache_correct_answer, :quiz_type, :one_shot
+  	attr_accessible :question, :answers_attributes, :cache_wrong_answer, :cache_correct_answer, :quiz_type, :one_shot, :linked_cta
+    attr_accessor :linked_cta
   
   	has_one :interaction, as: :resource
   	has_many :answers, dependent: :destroy

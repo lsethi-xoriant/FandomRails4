@@ -3,6 +3,7 @@ require 'digest/md5'
 
 module CallToActionHelper
   include ViewHelper
+  include LinkedCallToActionHelper
 
   def cta_url(cta)
     if $context_root
@@ -96,7 +97,7 @@ module CallToActionHelper
     calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
     interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("-") : "all"
 
-    calltoaction_info_list_and_interactions = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key)) do
+    calltoaction_info_list = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key)) do
       
       calltoaction_info_list = Array.new
       interactions = {}
@@ -104,13 +105,7 @@ module CallToActionHelper
 
       calltoactions.each do |calltoaction|
     
-        interaction_info_list, interactions_for_calltoaction, interaction_id_to_answers_for_calltoaction = build_interaction_info_list(calltoaction, interactions_to_compute)
-        interactions_for_calltoaction.each do |key, value|
-          interactions[key] = value
-        end
-        interaction_id_to_answers_for_calltoaction.each do |key, value|
-          interaction_id_to_answers[key] = value
-        end
+        interaction_info_list = build_interaction_info_list(calltoaction, interactions_to_compute)
 
         reward = Reward.includes(:currency).where(call_to_action_id: calltoaction.id).first
         if reward.present?
@@ -162,18 +157,22 @@ module CallToActionHelper
 
       end
 
-      result = { calltoaction_info_list: calltoaction_info_list , interactions: interactions, interaction_id_to_answers: interaction_id_to_answers }
+      calltoaction_info_list
       # This hack is needed to avoid a strange "@new_record" string being serialized instead of an object id
       # Marshal.dump(result)  
-      result
 
-    end
-
-    calltoaction_info_list, interactions, interaction_id_to_answers = calltoaction_info_list_and_interactions[:calltoaction_info_list], 
-                                                                      calltoaction_info_list_and_interactions[:interactions],
-                                                                      calltoaction_info_list_and_interactions[:interaction_id_to_answers]                                                         
+    end                                                    
 
     if current_user
+      interaction_ids = []
+      calltoaction_info_list.each do |calltoaction_info|
+        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+          interaction_ids << interaction_info["interaction"]["id"]
+        end
+      end
+
+      user_interactions = UserInteraction.includes(interaction: :resource).where(interaction_id: interaction_ids, user_id: current_user.id)
+
       calltoaction_info_list_for_current_user = [] 
       calltoaction_info_list.each do |calltoaction_info|
 
@@ -181,33 +180,35 @@ module CallToActionHelper
         calltoaction = find_in_calltoactions(calltoactions, calltoaction_info["calltoaction"]["id"])
 
         if calltoaction_info["reward_info"]
-          reward = calltoaction_info["reward_info"]["reward"]
-          calltoaction_info["reward_info"] = {
-            "cost" => reward.cost,
-            "status" => get_user_reward_status(reward),
-            "id" => reward.id,
-          }
+          calltoaction_info["reward_info"] = update_current_user_reward(calltoaction_info["reward_info"]["reward"])
         end
 
-        user_interactions = UserInteraction.where(interaction_id: interactions.keys, user_id: current_user.id)
         calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-          interaction = interactions[interaction_info["interaction"]["id"]]
-          user_interaction = find_in_user_interactions(user_interactions, interaction.id)
+          
+          interaction_id = interaction_info["interaction"]["id"]
+          user_interaction = find_in_user_interactions(user_interactions, interaction_id)
+
           if user_interaction
             user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
-            answers = interaction_id_to_answers[interaction.id]
-            if answers
+            interaction = user_interaction.interaction
+            interaction_info["user_interaction"] = user_interaction_for_interaction_info
+            interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
+            begin
+              answers = user_interaction.interaction.resource.answers
               resource_type = interaction_info["interaction"]["resource_type"]
               interaction_info["interaction"]["resource"]["answers"] = build_answers_for_resource(interaction, answers, resource_type, user_interaction)
+            rescue Exception => exception
+              # resource without answers
             end
           end
-          interaction_info["user_interaction"] = user_interaction_for_interaction_info
-          interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
           interaction_info_list << interaction_info
+
         end
+
         calltoaction_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, current_user)
         calltoaction_info["calltoaction"]["interaction_info_list"] = interaction_info_list
         calltoaction_info_list_for_current_user << calltoaction_info
+
       end
       calltoaction_info_list = calltoaction_info_list_for_current_user
     end
@@ -220,6 +221,24 @@ module CallToActionHelper
     else
       cta.media_data
     end
+  end
+
+  def update_current_user_reward(reward)
+    {
+      "cost" => reward.cost,
+      "status" => get_user_reward_status(reward),
+      "id" => reward.id,
+    }
+  end
+
+  def find_in_answers(answer_ids, answers)
+    answers_to_return = []
+    answers.each do |answer|
+      if answer_ids.include?(answer.id)
+        answers_to_return << answer
+      end
+    end
+    answers_to_return
   end
 
   def find_in_calltoactions(calltoactions, calltoaction_id)
@@ -245,16 +264,12 @@ module CallToActionHelper
   def build_interaction_info_list(calltoaction, interactions_to_compute)
 
     interaction_info_list = Array.new
-    interactions = {}
-    interaction_id_to_answers = {}
 
     enable_interactions(calltoaction).each do |interaction|
 
       resource_type = interaction.resource_type.downcase
 
       if !interactions_to_compute || interactions_to_compute.include?(resource_type)
-
-        interactions[interaction.id] = interaction
 
         resource = interaction.resource
         resource_question = resource.question rescue nil
@@ -276,7 +291,6 @@ module CallToActionHelper
           resource_type = resource.quiz_type.downcase
           resource_answers = resource.answers
           answers = build_answers_for_resource(interaction, resource_answers, resource_type, user_interaction)
-          interaction_id_to_answers[interaction.id] = resource_answers
         when "comment"
           comment_info = build_comments_for_resource(interaction)
         when "like"
@@ -325,7 +339,7 @@ module CallToActionHelper
 
     end
 
-    [interaction_info_list, interactions, interaction_id_to_answers]
+    interaction_info_list
 
   end
 
@@ -852,23 +866,31 @@ module CallToActionHelper
     false
   end
 
-  def save_interaction_call_to_action_linking(params, cta)
+  def save_interaction_call_to_action_linking(cta)
     ActiveRecord::Base.transaction do
-      interaction_attributes = params["interactions_attributes"]
-      if interaction_attributes
-        interaction_attributes.each do |key, interaction_attribute|
-          InteractionCallToAction.where(:interaction_id => interaction_attribute["id"]).destroy_all
-          unless interaction_attribute["resource_attributes"]["linked_cta"].nil?
-            interaction_attribute["resource_attributes"]["linked_cta"].each do |key, link|
+      cta.interactions.each do |interaction|
+        interaction.save!
+        InteractionCallToAction.where(:interaction_id => interaction.id).destroy_all
+        links = interaction.resource.linked_cta rescue nil
+        unless links
+          params["call_to_action"]["interactions_attributes"].each do |key, value|
+            links = value["resource_attributes"]["linked_cta"] if value["id"] == interaction.id.to_s
+          end
+        end
+        if links
+          links.each do |key, link|
+            if CallToAction.exists?(link["cta_id"].to_i)
               condition = link["condition"].blank? ? nil : { "more" => link["condition"] }.to_json
-              InteractionCallToAction.create(:interaction_id => interaction_attribute["id"], :call_to_action_id => link["cta_id"], :condition => condition )
+              InteractionCallToAction.create(:interaction_id => interaction.id, :call_to_action_id => link["cta_id"], :condition => condition )
+            else
+              cta.errors.add(:base, "Non esiste una call to action con id #{link["cta_id"]}")
             end
           end
         end
-        build_html_jstree(cta)
-        if cta.errors.any?
-          raise ActiveRecord::Rollback
-        end
+      end
+      build_html_jstree(cta)
+      if cta.errors.any?
+        raise ActiveRecord::Rollback
       end
     end
     return cta.errors.empty?
@@ -914,110 +936,6 @@ module CallToActionHelper
                 "children" => (node.children.map do |child| build_node_entries(child, current_cta_id) end) })
     end
     res
-  end
-
-
-
-
-  class CtaForest
-
-    def self.build_trees(starting_cta_id)
-      neighbourhood_map = {}
-      InteractionCallToAction.all.each do |interaction_call_to_action|
-        if interaction_call_to_action.interaction_id.present?
-          cta_linking = Interaction.find(interaction_call_to_action.interaction_id).call_to_action_id
-          cta_linked = interaction_call_to_action.call_to_action_id
-          add_neighbour(neighbourhood_map, cta_linking, cta_linked)
-          add_neighbour(neighbourhood_map, cta_linked, cta_linking)
-        end
-      end
-      reachable_cta_id_set = build_reachable_cta_set(starting_cta_id, Set.new([starting_cta_id]), neighbourhood_map, [])
-      seen_nodes = {}
-      cycles = []
-      reachable_cta_id_set.each do |cta_id|
-        if seen_nodes[cta_id].nil? and !in_cycles(cta_id, cycles)
-          tree = Node.new(cta_id)
-          tree, cycles = add_next_cta(seen_nodes, tree, cycles, [cta_id])
-        end
-      end
-      trees = []
-      reachable_cta_id_set.each do |cta_id|
-        if InteractionCallToAction.find_by_call_to_action_id(cta_id).nil? or (cycles.any? and cta_id == starting_cta_id) # add roots
-          trees << seen_nodes[cta_id]
-        end
-      end
-      return trees, cycles
-    end
-
-    def self.in_cycles(cta_id, cycles)
-      cycles.each do |cycle|
-        return true if cycle.include?(cta_id)
-      end
-      false
-    end
-
-    def self.add_neighbour(neighbourhood_map, cta1, cta2)
-      if neighbourhood_map[cta1].nil?
-        neighbourhood_map[cta1] = Set.new [cta2]
-      else
-        neighbourhood_map[cta1].add(cta2)
-      end
-    end
-
-    def self.build_reachable_cta_set(cta_id, reachable_cta_id_set, neighbourhood_map, visited)
-      neighbours = neighbourhood_map[cta_id]
-      unless neighbours.nil?
-        reachable_cta_id_set += neighbours
-        visited << cta_id
-        neighbours.each do |neighbour|
-          unless visited.include?(neighbour)
-            reachable_cta_id_set += build_reachable_cta_set(neighbour, reachable_cta_id_set, neighbourhood_map, visited)
-          end
-        end
-      end
-      reachable_cta_id_set
-    end
-
-    def self.add_next_cta(seen_nodes, tree, cycles, path)
-      cta = CallToAction.find(tree.value)
-      if seen_nodes[tree.value].nil?
-        seen_nodes.merge!({ tree.value => tree })
-        if cta.interactions.any?
-          cta.interactions.each do |interaction|
-            children_cta_ids = InteractionCallToAction.where(:interaction_id => interaction.id).pluck(:call_to_action_id)
-            children_cta_ids.each do |cta_id|
-              if path.include?(cta_id) # cycle
-                cycles << path
-                return seen_nodes[path[0]], cycles
-              else
-                path << cta_id
-                if seen_nodes[cta_id].nil?
-                  cta_child = CallToAction.find(cta_id)
-                  cta_child_node = Node.new(cta_child.id)
-                else
-                  cta_child_node = seen_nodes[cta_id]
-                end
-                tree.children << cta_child_node
-                add_next_cta(seen_nodes, cta_child_node, cycles, path)
-              end
-            end
-          end
-        end
-      end
-      return tree, cycles
-    end
-
-  end
-
-  class Node
-
-    attr_accessor :value, :children
-
-    def initialize(value = nil)
-      @value = value
-      @children = []
-    end
-
   end
 
 end
