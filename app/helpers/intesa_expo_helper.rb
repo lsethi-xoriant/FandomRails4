@@ -88,12 +88,6 @@ module IntesaExpoHelper
       end
     end
 
-    if other && other.has_key?(:home)
-      next_live_stripe = get_intesa_expo_ctas_with_tag("next-live")
-      gallery_stripe = get_intesa_expo_ctas_with_tag("gallery")
-      article_stripe = get_intesa_expo_ctas_with_tag("article")
-    end
-
     if other && other.has_key?(:calltoaction_evidence_info)
       calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key($context_root)) do  
         ctas = get_intesa_expo_highlight_calltoactions()
@@ -119,9 +113,6 @@ module IntesaExpoHelper
       "root_url" => root_url,
       "menu_items" => menu_items,
       "relateds" => relateds,
-      "gallery_stripe" => gallery_stripe,
-      "article_stripe" => article_stripe,
-      "next_live_stripe" => next_live_stripe,
       "page_stripes" => page_stripes,
       "context_root" => $context_root,
       "language" => $context_root || "it"

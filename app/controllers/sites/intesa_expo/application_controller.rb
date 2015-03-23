@@ -9,18 +9,35 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     end
 
     return if cookie_based_redirect?
-    
-    @calltoaction_info_list = {}
 
-    @aux_other_params = {
-      calltoaction_evidence_info: true,
-      home: true,
-      page_tag: {
-        miniformat: {
-          name: "home"
+    if $context_root == "imprese"
+      @aux_other_params = {
+        "calltoaction_evidence_info" => true,
+        "next-live_stripe" => get_intesa_expo_ctas_with_tag("next-live"),
+        "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
+        "interview_stripe" => get_intesa_expo_ctas_with_tag("interview"),
+        "story_stripe" => get_intesa_expo_ctas_with_tag("story"),
+        "enterprise-in-evidence_stripe" => get_intesa_expo_ctas_with_tag("enterprise-in-evidence"),
+        page_tag: {
+          miniformat: {
+            name: "imprese-home"
+          }
         }
       }
-    }
+      render template: "/application/imprese_index"
+    else
+      @aux_other_params = {
+        calltoaction_evidence_info: true,
+        "next-live_stripe" => get_intesa_expo_ctas_with_tag("next-live"),
+        "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
+        "article_stripe" => get_intesa_expo_ctas_with_tag("article"),
+        page_tag: {
+          miniformat: {
+            name: "home"
+          }
+        }
+      }
+    end
   end
 
   def about
