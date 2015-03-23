@@ -312,18 +312,18 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def tag_cta_update
-    calltoaction = CallToAction.find(params[:id])
+    cta = CallToAction.find(params[:id])
     tag_list = params[:tag_list].split(",")
 
-    calltoaction.call_to_action_tags.delete_all
+    cta.call_to_action_tags.delete_all
 
     tag_list.each do |t|
       tag = Tag.find_by_name(t)
-      tag = Tag.create(name: t) unless tag
-      CallToActionTag.create(tag_id: tag.id, calltoaction_id: calltoaction.id)
+      tag = Tag.create(name: t, slug: t) unless tag
+      CallToActionTag.create(tag_id: tag.id, call_to_action_id: cta.id)
     end
     flash[:notice] = "CallToAction taggata"
-    redirect_to "/easyadmin/cta/tag/#{ calltoaction.id }"
+    redirect_to "/easyadmin/cta/tag/#{ cta.id }"
   end
 
   def dashboard
