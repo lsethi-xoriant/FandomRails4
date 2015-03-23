@@ -118,7 +118,7 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
     $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "string">STRINGA</option>');
     $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "media">UPLOAD</option>');
     $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "html">HTML</option>');
-    //$('#type-for-' + fieldName + '-field-' + counter).append('<option value = "boolean">BOOLEANO</option>');
+    $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "boolean">BOOLEANO</option>');
     //$('#type-for-' + fieldName + '-field-' + counter).append('<option value = "integer">INTERO</option>');
     //$('#type-for-' + fieldName + '-field-' + counter).append('<option value = "date">DATA</option>');
 
@@ -170,12 +170,10 @@ function updateValueElementType(elementName, fieldName) {
   if(selectedType == 'media') {
     $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').show();
   }
-  if(selectedType == 'string') {
+  else {
     $('#extra-fields-value-div-for-' + fieldName + '-' + identifier).children('img').hide();
     $('#attachment-id-for-' + fieldName + '-field-' + identifier).remove();
     $('#url-for-' + fieldName + '-field-' + identifier).remove();
-  }
-  if(selectedType == 'html') {
   }
 
   buildValueElement(id, selectedType);
@@ -186,34 +184,6 @@ function buildValueElement(elementId, selectedType) {
   oldElement = $("#" + elementId);
   oldElementName = oldElement.attr("name");
   oldElementValue = oldElement.val();
-
-  if(selectedType == "string" || selectedType == "media" ) {
-    if(selectedType == "string")
-      type = "text";
-    else
-      type = "file";
-
-    newElement = jQuery('<input/>', {
-      type: type,
-      id: elementId,
-      name: oldElementName,
-      class: 'form-control',
-      change: function() { 
-        removeImage($(this), elementId.substr(elementId.indexOf("value-for-") + 10, elementId.indexOf("-field-") - 10)); 
-      }
-    });
-    if(selectedType == "string") {
-      newElement.val(oldElementValue);
-    }
-
-    var instance = CKEDITOR.instances[elementId];
-    if(instance) {
-      CKEDITOR.remove(instance);
-    }
-    oldElement.replaceWith(newElement);
-    $("#cke_" + elementId).remove();
-
-  };
 
   if(selectedType == "html") {
     newElement = jQuery('<textarea/>', {
@@ -229,6 +199,41 @@ function buildValueElement(elementId, selectedType) {
         $("#" + elementId).val(CKEDITOR.instances[elementId].getData());
       });
     });
+  }
+  else {
+    if(selectedType == "string")
+      type = "text";
+    if(selectedType == "media")
+      type = "file";
+    if(selectedType == "boolean")
+      type = "checkbox";
+
+    newElement = jQuery('<input/>', {
+      type: type,
+      id: elementId,
+      name: oldElementName,
+      class: 'form-control',
+      change: function() { 
+        removeImage($(this), elementId.substr(elementId.indexOf("value-for-") + 10, elementId.indexOf("-field-") - 10)); 
+      }
+    });
+    if(oldElement.attr("type") != "checkbox" && oldElement.attr("type") != "media") {
+      newElement.val(oldElementValue);
+    }
+    if(selectedType == "boolean") {
+      newElement.val("false");
+      newElement.change(function() {
+        newElement.val(newElement.prop('checked'));
+      });
+    }
+
+    var instance = CKEDITOR.instances[elementId];
+    if(instance) {
+      CKEDITOR.remove(instance);
+    }
+    oldElement.replaceWith(newElement);
+    $("#cke_" + elementId).remove();
+
   };
 
 };
@@ -253,15 +258,16 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
             $('#name-for-' + fieldName + '-field-' + index).val(key);
             updateValueElementName($('#name-for-' + fieldName + '-field-' + index), modelName, fieldName, 'value');
             updateValueElementName($('#name-for-' + fieldName + '-field-' + index), modelName, fieldName, 'type');
+            valueElement = $('#value-for-' + fieldName + '-field-' + index);
             if (typeof value == 'string') {
                 $('#type-for-' + fieldName + '-field-' + index).val('string');
                 $('#value-for-' + fieldName + '-field-' + index).attr('type', 'text');
-                $('#value-for-' + fieldName + '-field-' + index).val(value);
+                valueElement.val(value);
             }
             else
             if (value.type == 'media')  {
                 $('#type-for-' + fieldName + '-field-' + index).val('media');
-                $('#value-for-' + fieldName + '-field-' + index).attr('type', 'file');
+                valueElement.attr('type', 'file');
 
                 old_attachment_id_input = jQuery('<input/>', {
                   id : 'attachment-id-for-' + fieldName + '-field-' + index,
@@ -283,11 +289,22 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
                     width: '30%'
                 }).prependTo('#extra-fields-value-div-for-' + fieldName + '-' + index);
             }
-            else { // html
+            else
+            if (value.type == 'html') {
                 $('#type-for-' + fieldName + '-field-' + index).val('html');
-                $('#value-for-' + fieldName + '-field-' + index).attr('type', 'text');
-                $('#value-for-' + fieldName + '-field-' + index).val(value.value);
+                valueElement.attr('type', 'text');
+                valueElement.val(value.value);
                 buildValueElement('value-for-' + fieldName + '-field-' + index, 'html');
+            }
+            else
+            if (value.type == 'bool') {
+                $('#type-for-' + fieldName + '-field-' + index).val('boolean');
+                valueElement.attr('type', 'checkbox');
+                valueElement.attr('checked', value.value == true);
+                valueElement.val(value.value);
+                valueElement.change(function() {
+                    valueElement.val(valueElement.prop('checked'));
+                });
             }
         }
     });
