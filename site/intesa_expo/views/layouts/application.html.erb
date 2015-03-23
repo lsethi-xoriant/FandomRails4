@@ -29,6 +29,9 @@
     <link href="<%= asset_path("intesa_expo_ie9.css").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" media="all" rel="stylesheet" type="text/css" />
   <![endif]-->
 
+
+  <link href="http://unmondopossibile.intesasanpaolo.com/stylesheets/header-footer.css" media="screen" rel="stylesheet" type="text/css">
+
   <%= csrf_meta_tags %>
 
 </head>
@@ -36,51 +39,61 @@
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 <div ng-cloak>
 
+  <div id="header"></div>
+
   <%= render partial: "/application/header" %>
 
   <%= yield %>
 
   <%= render partial: "/application/footer" %>
 
+  <div id="footer"></div>
+
 </div>
-  <script type="text/javascript">
+
+<script type="text/javascript">
 	$(document).ready(function() {
-      is_last_rewards_flexslider_slide = new Object();
-	    $('.rewards-flexslider').flexslider({
-	      animation: "slide",
-        slideshow: false,
-        animationLoop: false,
-        touch: true,
-        itemWidth: 258,
-        itemMargin: 15,
-        controlNav: false,
-        prevText: "",
-        nextText: "",
-        start: function(slider) {
-          if(slider.pagingCount == 1) {
-            $(slider).find(".flex-viewport-shadow").addClass("hidden");
-          }
-        },
-        before: function(slider) {
-          is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
-          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
-        },
-        after: function(slider) {
-          if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
-            $(slider).find(".flex-viewport-shadow").addClass("hidden");
-          } else {
-            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
-          }
-        },
-        end: function(slider) {
-          is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+    is_last_rewards_flexslider_slide = new Object();
+    $('.rewards-flexslider').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: false,
+      touch: true,
+      itemWidth: 258,
+      itemMargin: 15,
+      controlNav: false,
+      prevText: "",
+      nextText: "",
+      start: function(slider) {
+        if(slider.pagingCount == 1) {
+          $(slider).find(".flex-viewport-shadow").addClass("hidden");
         }
-	    });
+      },
+      before: function(slider) {
+        is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
+        $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+      },
+      after: function(slider) {
+        if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
+          $(slider).find(".flex-viewport-shadow").addClass("hidden");
+        } else {
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        }
+      },
+      end: function(slider) {
+        is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+      }
+    });
+
+    $.ajaxSettings.cache = false;
+    $('#header').load("http://unmondopossibile.intesasanpaolo.com/snippets/header?color=105832"); 
+    $('#footer').load("http://unmondopossibile.intesasanpaolo.com/snippets/footer");
+    
 	});
-	
-  </script>
+
+</script>
   
-  <%= render partial: "/application/ga" %>
+<%= render partial: "/application/ga" %>
 
 </body>
 </html>
