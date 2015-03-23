@@ -131,11 +131,6 @@ class CallToAction < ActiveRecordWithJSON
     MEDIA_TYPES
   end
 
-  def clear_paperclip_attachments
-    self.media_image = nil
-    self.thumbnail = nil
-  end
-
   def check_video_interaction
     play_inter = false
     interactions.each do |i|

@@ -95,16 +95,8 @@ module IntesaExpoHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      ctas_evidence_count = 4
       calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key($context_root)) do  
-        highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
-        if highlight_calltoactions.any?
-          ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
-          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(ctas_evidence_count).to_a
-        else
-          ctas = get_intesa_expo_ctas().limit(ctas_evidence_count).to_a
-        end
-        ctas = highlight_calltoactions + ctas
+        ctas = get_intesa_expo_highlight_calltoactions()
         calltoaction_evidence_info = []
         ctas.each_with_index do |calltoaction, index|
           calltoaction_evidence_info << build_default_thumb_calltoaction(calltoaction, :medium)
@@ -145,10 +137,14 @@ module IntesaExpoHelper
 
   end
   
-  def get_intesa_expo_event_ctas_in_period(tag_ids, start_date, end_date)
+  def get_intesa_expo_event_ctas_in_period(tag_ids, start_date, end_date = nil)
     cache_short get_ctas_with_tags_cache_key(tag_ids, "#{start_date}_#{end_date}", "and") do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
-      CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) AND (call_to_actions.valid_from BETWEEN ? and ?)", start_date, end_date).order("call_to_actions.valid_from ASC").to_a
+      if end_date.nil?
+        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) AND (call_to_actions.valid_from > ?)", start_date).order("call_to_actions.valid_from ASC").to_a
+      else
+        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) AND (call_to_actions.valid_from BETWEEN ? and ?)", start_date, end_date).order("call_to_actions.valid_from ASC").to_a
+      end
     end
   end
   

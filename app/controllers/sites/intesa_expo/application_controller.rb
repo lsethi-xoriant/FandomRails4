@@ -1,7 +1,6 @@
 class Sites::IntesaExpo::ApplicationController < ApplicationController
   include RewardHelper
   include RankingHelper
-  include OrzoroHelper
   include IntesaExpoHelper
   
   def index
@@ -22,6 +21,13 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         }
       }
     }
+  end
+
+  def about
+    language = $context_root || "it"
+    cta = CallToAction.find("about-#{language}")
+
+    @calltoaction_info_list = build_call_to_action_info_list([cta])
   end
 
 end

@@ -9,6 +9,7 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
 }]);
 
 streamCalltoactionModule.filter('unsafe', function($sce) { return $sce.trustAsHtml; });
+streamCalltoactionModule.filter('trustAsResourceUrl', function($sce) { return $sce.trustAsResourceUrl; });
 
 /* COIN */
 streamCalltoactionModule.animation('.slide-left', function() {
@@ -755,7 +756,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $window.appendYTIframe = function(calltoaction_info) {
     if(calltoaction_info.calltoaction.media_type == "YOUTUBE" && $scope.youtube_api_ready) {
 
-      player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_data);
+      vcode = calltoaction_info.calltoaction.media_data;
+      if(vcode.indexOf(",") > -1) {
+        $scope.$apply(function() {
+          calltoaction_info.calltoaction.vcodes = vcode.split(",");
+          vcode = calltoaction_info.calltoaction.vcodes[0];
+        });
+      }
+
+      player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, vcode);
       calltoaction_info.calltoaction["player"] = player;
 
       $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
@@ -881,14 +890,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
   };
 
-  $window.updateYTIframe = function(calltoaction_video_code, calltoaction_id, autoplay) {
-    current_video_player = getPlayer(calltoaction_id);
-    if($scope.youtube_api_ready && current_video_player) {
-      $scope.play_event_tracked[calltoaction_id] = false;
+  $scope.updateYTIframe = function(calltoaction_info, vcode, autoplay) {
+    player = calltoaction_info.calltoaction.player;
+    if($scope.youtube_api_ready && player) {
+      $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
       if(autoplay) {
-        current_video_player.playerManager.loadVideoById(calltoaction_video_code);
+        player.playerManager.loadVideoById(vcode);
       } else {
-        current_video_player.playerManager.cueVideoById(calltoaction_video_code);
+        player.playerManager.cueVideoById(vcode);
       }
     }
   };

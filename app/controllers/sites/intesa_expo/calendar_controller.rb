@@ -7,13 +7,16 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     if params[:day]
       @today = DateTime.parse(params[:day]).utc
     end
+    
     start_time = @today.beginning_of_day
     end_time = @today.end_of_day
     month_start = @today.beginning_of_month
     month_end = @today.end_of_month
+    
     @aux_other_params = {
       today_events: prepare_contents(get_calendar_events(start_time, end_time))
     }
+
     @calendar_events = prepare_events_for_calendar(get_calendar_events(month_start, month_end))
     
   end
@@ -44,6 +47,10 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     respond_to do |format|
       format.json { render :json => prepare_events_for_calendar(get_calendar_events(start_date, end_date)) }
     end
+  end
+  
+  def find_nearest_day_with_event(direction)
+    
   end
   
 end
