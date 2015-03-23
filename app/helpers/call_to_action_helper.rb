@@ -97,7 +97,7 @@ module CallToActionHelper
     calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
     interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("-") : "all"
 
-    calltoaction_info_list_and_interactions = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key)) do
+    calltoaction_info_list = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key)) do
       
       calltoaction_info_list = Array.new
       interactions = {}
@@ -105,13 +105,7 @@ module CallToActionHelper
 
       calltoactions.each do |calltoaction|
     
-        interaction_info_list, interactions_for_calltoaction, interaction_id_to_answers_for_calltoaction = build_interaction_info_list(calltoaction, interactions_to_compute)
-        interactions_for_calltoaction.each do |key, value|
-          interactions[key] = value
-        end
-        interaction_id_to_answers_for_calltoaction.each do |key, value|
-          interaction_id_to_answers[key] = value
-        end
+        interaction_info_list = build_interaction_info_list(calltoaction, interactions_to_compute)
 
         reward = Reward.includes(:currency).where(call_to_action_id: calltoaction.id).first
         if reward.present?
@@ -163,26 +157,21 @@ module CallToActionHelper
 
       end
 
-      result = { calltoaction_info_list: calltoaction_info_list , interactions: interactions, interaction_id_to_answers: interaction_id_to_answers }
+      calltoaction_info_list
       # This hack is needed to avoid a strange "@new_record" string being serialized instead of an object id
       # Marshal.dump(result)  
-      result
 
-    end
-
-    calltoaction_info_list, interactions, interaction_id_to_answers = calltoaction_info_list_and_interactions[:calltoaction_info_list], 
-                                                                      calltoaction_info_list_and_interactions[:interactions],
-                                                                      calltoaction_info_list_and_interactions[:interaction_id_to_answers]                                                         
+    end                                                    
 
     if current_user
-
-      full_answers = []
-      if interaction_id_to_answers && interaction_id_to_answers.any?
-        interaction_id_to_answers.each do |key, value|
-          full_answers = full_answers + value
+      interaction_ids = []
+      calltoaction_info_list.each do |calltoaction_info|
+        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+          interaction_ids << interaction_info["interaction"]["id"]
         end
-        full_answers = Answer.where(id: full_answers).order("updated_at DESC")
       end
+
+      user_interactions = UserInteraction.includes(interaction: :resource).where(interaction_id: interaction_ids, user_id: current_user.id)
 
       calltoaction_info_list_for_current_user = [] 
       calltoaction_info_list.each do |calltoaction_info|
@@ -191,34 +180,35 @@ module CallToActionHelper
         calltoaction = find_in_calltoactions(calltoactions, calltoaction_info["calltoaction"]["id"])
 
         if calltoaction_info["reward_info"]
-          reward = calltoaction_info["reward_info"]["reward"]
-          calltoaction_info["reward_info"] = {
-            "cost" => reward.cost,
-            "status" => get_user_reward_status(reward),
-            "id" => reward.id,
-          }
+          calltoaction_info["reward_info"] = update_current_user_reward(calltoaction_info["reward_info"]["reward"])
         end
 
-        user_interactions = UserInteraction.where(interaction_id: interactions.keys, user_id: current_user.id)
         calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-          interaction = interactions[interaction_info["interaction"]["id"]]
-          user_interaction = find_in_user_interactions(user_interactions, interaction.id)
+          
+          interaction_id = interaction_info["interaction"]["id"]
+          user_interaction = find_in_user_interactions(user_interactions, interaction_id)
+
           if user_interaction
             user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
-            answer_ids = interaction_id_to_answers[interaction.id]
-            if answer_ids
-              answers = find_in_answers(answer_ids, full_answers)
+            interaction = user_interaction.interaction
+            interaction_info["user_interaction"] = user_interaction_for_interaction_info
+            interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
+            begin
+              answers = user_interaction.interaction.resource.answers
               resource_type = interaction_info["interaction"]["resource_type"]
               interaction_info["interaction"]["resource"]["answers"] = build_answers_for_resource(interaction, answers, resource_type, user_interaction)
+            rescue Exception => exception
+              # resource without answers
             end
           end
-          interaction_info["user_interaction"] = user_interaction_for_interaction_info
-          interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
           interaction_info_list << interaction_info
+
         end
+
         calltoaction_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, current_user)
         calltoaction_info["calltoaction"]["interaction_info_list"] = interaction_info_list
         calltoaction_info_list_for_current_user << calltoaction_info
+
       end
       calltoaction_info_list = calltoaction_info_list_for_current_user
     end
@@ -231,6 +221,14 @@ module CallToActionHelper
     else
       cta.media_data
     end
+  end
+
+  def update_current_user_reward(reward)
+    {
+      "cost" => reward.cost,
+      "status" => get_user_reward_status(reward),
+      "id" => reward.id,
+    }
   end
 
   def find_in_answers(answer_ids, answers)
@@ -266,16 +264,12 @@ module CallToActionHelper
   def build_interaction_info_list(calltoaction, interactions_to_compute)
 
     interaction_info_list = Array.new
-    interactions = {}
-    interaction_id_to_answers = {}
 
     enable_interactions(calltoaction).each do |interaction|
 
       resource_type = interaction.resource_type.downcase
 
       if !interactions_to_compute || interactions_to_compute.include?(resource_type)
-
-        interactions[interaction.id] = interaction
 
         resource = interaction.resource
         resource_question = resource.question rescue nil
@@ -297,7 +291,6 @@ module CallToActionHelper
           resource_type = resource.quiz_type.downcase
           resource_answers = resource.answers
           answers = build_answers_for_resource(interaction, resource_answers, resource_type, user_interaction)
-          interaction_id_to_answers[interaction.id] = resource_answers.map { |cta| cta.id }
         when "comment"
           comment_info = build_comments_for_resource(interaction)
         when "like"
@@ -346,7 +339,7 @@ module CallToActionHelper
 
     end
 
-    [interaction_info_list, interactions, interaction_id_to_answers]
+    interaction_info_list
 
   end
 
