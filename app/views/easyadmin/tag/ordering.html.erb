@@ -3,7 +3,7 @@
 <div id="content">    
   
   <div id="content-header">
-    <h1>ORDERING</h1>
+    <h1>ORDINAMENTO</h1>
   </div> <!-- #content-header --> 
 
   <div id="content-container">
@@ -66,9 +66,8 @@
             <ul dnd-list="models.lists.orderedElements" class="ng-scope">
               <li ng-repeat="item in models.lists.orderedElements"
               dnd-draggable="item"
-              dnd-moved="models.lists.orderedElements.splice($index, 1)"
+              dnd-dragstart="models.lists.orderedElements.splice($index, 1)"
               dnd-effect-allowed="move"
-              dnd-selected="models.selected = item"
               ng-class="{'selected': models.selected === item}">
                 {{item}}
               </li>
@@ -76,10 +75,10 @@
           </div>
         </div>
         <div class="row text-center">
-        <div class="col-sm12">
-          <%= submit_tag 'SALVA ORDINAMENTO', class: 'btn btn-primary' %>
-      </div>
-    </div>
+          <div class="col-sm12">
+            <%= submit_tag 'SALVA ORDINAMENTO', class: 'btn btn-primary' %>
+          </div>
+        </div>
       </div>
 
       <div class="col-sm-3">
@@ -91,9 +90,8 @@
             <ul dnd-list="models.lists.taggedCallToActions" class="ng-scope">
               <li ng-repeat="item in models.lists.taggedCallToActions"
               dnd-draggable="item"
-              dnd-moved="models.lists.taggedCallToActions.splice($index, 1)"
+              dnd-dragstart="models.lists.taggedCallToActions.splice($index, 1)"
               dnd-effect-allowed="move"
-              dnd-selected="models.selected = item"
               ng-class="{'selected': models.selected === item}">
                 {{item}}
               </li>
@@ -111,9 +109,8 @@
             <ul dnd-list="models.lists.taggedRewards" class="ng-scope">
               <li ng-repeat="item in models.lists.taggedRewards"
               dnd-draggable="item"
-              dnd-moved="models.lists.taggedRewards.splice($index, 1)"
+              dnd-dragstart="models.lists.taggedRewards.splice($index, 1)"
               dnd-effect-allowed="move"
-              dnd-selected="models.selected = item"
               ng-class="{'selected': models.selected === item}">
                 {{item}}
               </li>
@@ -131,9 +128,8 @@
             <ul dnd-list="models.lists.taggedTags" class="ng-scope">
               <li ng-repeat="item in models.lists.taggedTags"
               dnd-draggable="item"
-              dnd-moved="models.lists.taggedTags.splice($index, 1)"
+              dnd-dragstart="models.lists.taggedTags.splice($index, 1)"
               dnd-effect-allowed="move"
-              dnd-selected="models.selected = item"
               ng-class="{'selected': models.selected === item}">
                 {{item}}
               </li>
@@ -141,6 +137,8 @@
           </div>
         </div>
       </div>
+
+      <p>{{modelAsJson}}</p>
 
       <%= hidden_field_tag('json_ordering', '{{modelAsJson}}') %>
 
