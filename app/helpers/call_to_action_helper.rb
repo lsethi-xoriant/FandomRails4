@@ -176,11 +176,10 @@ module CallToActionHelper
     if current_user
 
       full_answers = []
-      interaction_id_to_answers.each do |key, value|
-        full_answers = full_answers + value
-      end
-
-      if full_answers.any?
+      if interaction_id_to_answers && interaction_id_to_answers.any?
+        interaction_id_to_answers.each do |key, value|
+          full_answers = full_answers + value
+        end
         full_answers = Answer.where(id: full_answers).order("updated_at DESC")
       end
 
