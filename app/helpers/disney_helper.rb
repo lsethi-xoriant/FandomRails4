@@ -495,7 +495,7 @@ module DisneyHelper
     current_level = cache_short(get_current_level_by_user(current_user.id, get_disney_property)) do
       levels, levels_use_prop = rewards_by_tag("level")
       property_levels = disney_prepare_levels_to_show(levels)
-      current_level = property_levels.select{|key, hash| hash["status"] == "progress" }.first
+      current_level = property_levels.select{|key, hash| hash["status"] == "progress" }.first || property_levels.select{|key, hash| hash["status"] == "gained" }.to_a.last 
       unless current_level.nil?
         current_level[1]
       else
