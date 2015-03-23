@@ -42,7 +42,7 @@ namespace :disney_tasks do
         gallery_backup += "\"##{index}\",\"#{user.id}\",\"#{user.email}\",\"#{user.first_name }\",\"#{user.last_name}\",\"#{user.swid}\",\"#{backup_media_file_name}\",\"#{cta.media_image.url}\"\n"
         
         begin
-          copy_media(prefix, bucket, backup_media_file_name, cta.media_image.path, logger)
+          copy_media(prefix, bucket, backup_media_file_name, cta.media_image.path, gallery_tag.name, logger)
         rescue Exception => exception
           logger.error("#{log_head(gallery_tag.name)} exception in copy media block: #{exception} - #{exception.backtrace[0, 10]}")
         end
@@ -69,7 +69,7 @@ namespace :disney_tasks do
     media_image_path
   end
 
-  def copy_media(prefix, bucket, backup_media_file_name, original_media_path, logger)
+  def copy_media(prefix, bucket, backup_media_file_name, original_media_path, gallery_name, logger)
     original_media_path = remove_head_slash(original_media_path)
     backup_object_destination = "#{prefix}#{backup_media_file_name}"
 
@@ -78,7 +78,7 @@ namespace :disney_tasks do
 
     unless backup_object.exists?
       original_object.copy_to(backup_object_destination, acl: :public_read)
-      logger.info "#{log_head(args.gallery_name)} media copy into backup folder"
+      logger.info "#{log_head(gallery_name)} media copy into backup folder"
     end
   end
 
