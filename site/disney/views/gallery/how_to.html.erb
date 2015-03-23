@@ -9,7 +9,7 @@
 <% end %>
 
 <div class="container container--default">
-	<div class="row category-header">
+	<div class="row main-row category-header">
 	    <img src="<%= get_upload_extra_field_processor(@info['header_image'], :original) if @info['header_image'] %>" class="img-responsive category-header__header-image" />
 	  	<h1 class="category-header__title--gallery"><%= @gallery_tag.title %></h1>
 	  	<div class="category-header__filter-area--gallery">
@@ -21,13 +21,13 @@
 	    </div>
 	</div>
 	
-	<div class="row reward-catalogue-header" style="background-color: #fafafa; margin-bottom: 40px;">
+	<div class="row main-row reward-catalogue-header" style="background-color: #fafafa; margin-bottom: 40px;">
 		<div class="col-xs-12 text-center">
 			<h2>Come partecipare al concorso</h2>
 		</div>
 	</div>
 	
-	<div class="row">
+	<div class="row main-row">
 		<div class="col-xs-12">
 			
 			<% if @info['custom_html'] %>
@@ -35,7 +35,7 @@
 			<% end %>
 			
 			<% if @info['image_row_1'] && @info['text_row_1'] %>
-				<div class="row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_1'], :original) if @info['background_image_row_1'] %>);">
+				<div class="row main-row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_1'], :original) if @info['background_image_row_1'] %>);">
 					<div class="col-xs-12 col-sm-5">
 						<% if @info['image_row_1']['type'] && @info['image_row_1']['type'] == 'media' %>
 							<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_1'], :original) %>" />
@@ -54,7 +54,7 @@
 			<% end %>
 			
 			<% if @info['image_row_2'] && @info['text_row_2'] %>
-				<div class="row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_2'], :original) if @info['background_image_row_2'] %>);">
+				<div class="row main-row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_2'], :original) if @info['background_image_row_2'] %>);">
 					<div class="col-xs-12 col-sm-7">
 						<% if @info['text_row_2']['type'] && @info['text_row_2']['type'] == 'html' %>
 							<%= @info['text_row_2']['value'].html_safe %>
@@ -73,7 +73,7 @@
 			<% end %>
 			
 			<% if @info['image_row_3'] && @info['text_row_3'] %>
-				<div class="row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_3'], :original) if @info['background_image_row_3'] %>);">
+				<div class="row main-row gallery-cta__how-to-row" style="background-image: url(<%= get_upload_extra_field_processor(@info['background_image_row_3'], :original) if @info['background_image_row_3'] %>);">
 					<div class="col-xs-12 col-sm-5">
 						<% if @info['image_row_3']['type'] && @info['image_row_3']['type'] == 'media' %>
 							<img class="img-responsive" src="<%= get_upload_extra_field_processor(@info['image_row_3'], :original) %>" />
