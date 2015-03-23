@@ -22,6 +22,8 @@ module BrowseHelper
     attr_accessor :votes
     attr_accessor :tags
     attr_accessor :aux
+    attr_accessor :start
+    attr_accessor :end
     
     def initialize(params)
       @id = params[:id]
@@ -42,6 +44,8 @@ module BrowseHelper
       @votes = params[:votes]
       @tags = params[:tags]
       @aux = params[:aux]
+      @start = params[:start]
+      @end = params[:end]
     end
     
   end
@@ -234,12 +238,12 @@ module BrowseHelper
     category_tag_ids = get_category_tag_ids()
     if tags.empty?
       tags = Tag.where("title ILIKE ? AND id IN (?) ","%#{term}%", category_tag_ids).limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
-      ctas = CallToAction.active.where("title ILIKE ?","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
+      ctas = CallToAction.active.where("title ILIKE ? AND user_id is null","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
     else
       tag_set = tags.map { |tag| "(select tag_id from tags_tags where other_tag_id = #{tag.id} AND tag_id in (#{category_tag_ids.join(",")}) )" }.join(' INTERSECT ')
       cta_set = tags.map { |tag| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag.id} AND tag_id in (#{category_tag_ids.join(",")}) )" }.join(' INTERSECT ')
       tags = Tag.where("title ILIKE ? AND id IN (#{tag_set})","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
-      ctas = CallToAction.active.where("title ILIKE ? AND id in (#{cta_set})","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
+      ctas = CallToAction.active.where("title ILIKE ? AND id in (#{cta_set}) AND user_id is null","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
     end
     merge_contents_for_autocomplete(ctas, tags)
   end

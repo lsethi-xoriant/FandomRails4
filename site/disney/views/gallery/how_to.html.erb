@@ -1,3 +1,13 @@
+<% if @info['background_image'] %>
+	<style type="text/css">
+	  body {
+	    background-image: url("<%= get_upload_extra_field_processor(@info['background_image'], :original) %>");
+	    background-position: top center;
+	    background-repeat: no-repeat;
+	  }
+	</style>
+<% end %>
+
 <div class="container container--default">
 	<div class="row category-header">
 	    <img src="<%= get_upload_extra_field_processor(@info['header_image'], :original) if @info['header_image'] %>" class="img-responsive category-header__header-image" />
