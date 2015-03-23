@@ -66,7 +66,7 @@
               <th class="hidden-xs hidden-sm">Data immissione</th>
               <th>Utente</th>
               <th>Tags</th>
-              <th>Immagine</th>
+              <th>Thumbnail</th>
               <th>Liberatoria</th>
               <th>Azioni</th>
             </tr>
@@ -78,13 +78,15 @@
               <td class="hidden-xs hidden-sm"><%= c.created_at.strftime("%d/%m/%Y %H:%M") %></td>
               <td><%= "#{c.user.username}" %> <br/> <%= "(#{c.user.email})" %></td>
               <td>
-                <% c.call_to_action_tags.each do |ctatag| %>
-                  <%= ctatag.tag.name %>
-                <% end  %>
+                <%= (c.call_to_action_tags.map { |ctatag| ctatag.tag.name }).join(", ") %>
               </td>
               <td>
                 <% if c.media_image.present? %>
-                  <img src="<%= c.media_image.url(:extra) %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+                  <% if !c.media_image.content_type.start_with?("video") %>
+                    <img src="<%= c.media_image.url(:extra) %>" class="img-responsive" style="max-width: 200px; width: 100%;">
+                  <% elsif aws_trasconding_not_required_or_completed(c) %>
+                    <a href="<%= c.media_image.url %>"><i class="fa fa-play-circle-o fa-2x" style="color:red"></i></a>
+                  <% end %>
                 <% end %>
               </td>
               <td>
