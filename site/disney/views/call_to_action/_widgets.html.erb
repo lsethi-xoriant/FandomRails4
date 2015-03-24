@@ -135,7 +135,9 @@
     </div>
     <div class="row gallery-widget__view-all">
     	<div class="col-xs-10 col-xs-offset-1">
-    		<a ng-href="/ranking/show/{{aux.sidebar_info.property_rank.rank_id}}"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Classifica completa</a>
+        <%= light_link_to("/ranking/show/{{aux.sidebar_info.property_rank.rank_id}}") do %>
+          <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Classifica completa
+        <% end %>
     	</div>
     </div>
   </div>  
