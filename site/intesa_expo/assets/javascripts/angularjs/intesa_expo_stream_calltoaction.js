@@ -48,7 +48,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
 
   $scope.orderContent = function(content) {
     return content["key"];
-  }
+  };
 
   $scope.linkTo = function(url, stripe_name) {
     if(angular.isUndefined(stripe_name)) {

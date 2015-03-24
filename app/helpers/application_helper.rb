@@ -80,7 +80,9 @@ module ApplicationHelper
       icon: icon,
       category_icon: category_icon,
       tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
-      aux: build_content_preview_aux(tag)
+      aux: build_content_preview_aux(tag),
+      start: tag.valid_from,
+      end: tag.valid_to
     )
   end
   
@@ -120,7 +122,9 @@ module ApplicationHelper
       header_image_url: header_image,
       icon: icon,
       category_icon: category_icon,
-      tags: needs_related_tags ? get_tag_ids_for_tag(tag) : []
+      tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
+      start: tag.valid_from,
+      end: tag.valid_to
     )
   end
   
@@ -139,7 +143,9 @@ module ApplicationHelper
       likes: get_number_of_likes_for_cta(cta),
       tags: get_tag_ids_for_cta(cta),
       votes: get_votes_for_cta(cta.id),
-      aux: build_content_preview_aux(cta)
+      aux: build_content_preview_aux(cta),
+      start: cta.valid_from,
+      end: cta.valid_to
     )
   end
   
@@ -158,7 +164,9 @@ module ApplicationHelper
       likes: nil,
       status: nil,
       tags: nil,
-      votes: nil
+      votes: nil,
+      start: cta.valid_from,
+      end: cta.valid_to
     )
   end
   

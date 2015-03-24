@@ -425,4 +425,11 @@ module CacheKeysHelper
     "property_rankings_thumbnails_#{extra_key}"
   end
   
+  # Calendar
+  # ~~~~~~~~~~
+  
+  def get_month_calendar_cache_key(extra_key)
+    "month_#{extra_key}_events"
+  end
+    
 end
