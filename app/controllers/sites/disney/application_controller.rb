@@ -36,6 +36,7 @@ class Sites::Disney::ApplicationController < ApplicationController
       calltoaction_evidence_info: false,
       sidebar_tags: ["stream"],
       fan_of_the_day_widget: true,
+      rank_widget: true,
       ctas_most_viewed_widget: get_ctas_most_viewed_widget(property)
     }
 
