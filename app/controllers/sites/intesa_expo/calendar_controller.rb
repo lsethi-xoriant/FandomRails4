@@ -119,9 +119,9 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   end
   
   def get_calendar_events(start_date, end_date)
-    language_tag_id = get_tag_from_params($context_root || "it").id
-    event_tad_id = Tag.find_by_name("event").id
-    get_intesa_expo_event_ctas_in_period([language_tag_id, event_tad_id], start_date, end_date)
+    language_tag_id = get_tag_from_params(get_intesa_property).id
+    event_tag_id = Tag.find_by_name("event-#{get_intesa_property}").id
+    get_intesa_expo_event_ctas_in_period([language_tag_id, event_tag_id], start_date, end_date)
   end
   
   def prepare_events_for_calendar(events)

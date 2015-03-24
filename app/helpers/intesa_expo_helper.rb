@@ -139,4 +139,8 @@ module IntesaExpoHelper
     end
   end
   
+  def get_intesa_property
+    $context_root || "it"
+  end
+  
 end

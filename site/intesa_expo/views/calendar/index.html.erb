@@ -28,7 +28,7 @@
 	 
 	<div class="row">
       	<div class="col-md-12">
-      		<div class="calendar-event__popover" onmouseout="hide_event_info(this)"></div>
+      		<div class="calendar-event__popover"></div>
 			<div id="full-calendar"></div> <!-- /#full-calendar -->             
 		</div>
 	</div>
@@ -42,6 +42,9 @@
   $(document).ready(function() {
     buildCalendar();
 	$('[data-toggle="tooltip"]').tooltip();
+	$('div.calendar-event__popover').mouseleave(function(){
+		$('div.calendar-event__popover').hide();
+	});
   });
   
   function show_event_info(elem, id){
@@ -53,7 +56,7 @@
 	  	eventinfo = '<p><b>'+ selected_event.title +'</b></p>';
 	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive" />';
 	  	eventinfo += '<p>'+ selected_event.description +'</p>';
-	  	eventinfo += '<a class="btn btn-primary" href="#">SCHEDA EVENTO</a>';
+	  	eventinfo += '<a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a>';
 	  	$("div.calendar-event__popover").html(eventinfo);
 	  	
 	  	position = $(elem).parent().position();
@@ -61,10 +64,6 @@
 	  	$("div.calendar-event__popover").css({'left': (position.left-220).toString() + 'px', 'top': (position.top+200).toString() + 'px',});
 	  	$("div.calendar-event__popover").show();
 	}
-  }
-  
-  function hide_event_info(elem){
-  	$(elem).hide();
   }
 
   function buildCalendar() {
