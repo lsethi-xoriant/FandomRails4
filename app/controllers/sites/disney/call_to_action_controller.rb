@@ -118,24 +118,23 @@ class Sites::Disney::CallToActionController < CallToActionController
   def upload
     upload_interaction = Interaction.find(params[:interaction_id]).resource
     extra_fields = JSON.parse(get_extra_fields!(upload_interaction.interaction.call_to_action)['form_extra_fields'])['fields'] rescue nil;
-    cloned_cta = create_user_calltoactions(upload_interaction)
     calltoaction = CallToAction.find(params[:cta_id])
     
     extra_fields_valid, extra_field_errors, cloned_cta_extra_fields = validate_upload_extra_fileds(params, extra_fields)
-    if cloned_cta.errors.any?
-      if !extra_fields_valid
-        flash[:error] = (cloned_cta.errors.full_messages + extra_field_errors).join(", ")
-      else
-        flash[:error] = cloned_cta.errors.full_messages.join(", ")
-      end
-    elsif !extra_fields_valid
+    
+    if !extra_fields_valid
       flash[:error] = extra_field_errors.join(", ")
     else
-      get_extra_fields!(cloned_cta).merge!(cloned_cta_extra_fields)
-      cloned_cta.save
-      flash[:notice] = "Caricamento completato con successo"
+      cloned_cta = create_user_calltoactions(upload_interaction)
+      if cloned_cta.errors.any?
+        flash[:error] = cloned_cta.errors.full_messages.join(", ")
+      else
+        get_extra_fields!(cloned_cta).merge!(cloned_cta_extra_fields)
+        cloned_cta.save
+        flash[:notice] = "Caricamento completato con successo"
+      end
     end
-
+    
     if is_call_to_action_gallery(calltoaction)
       redirect_to "/gallery/#{params[:cta_id]}"
     else
