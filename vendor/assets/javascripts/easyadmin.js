@@ -24,6 +24,7 @@
 //= require easyadmin/jquery.icheck.min
 //= require easyadmin/bootstrap-datepicker
 //= require easyadmin/bootstrap-timepicker
+//= require easyadmin/jquery.datetimepicker
 //= require easyadmin/select2.min
 //= require easyadmin/bootstrap-fileupload.min
 //= require easyadmin/app

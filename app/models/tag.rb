@@ -4,9 +4,9 @@ class Tag < ActiveRecordWithJSON
   include DateMethods
 
   attr_accessible :name, :title, :description, :locked, :extra_fields, :created_at, :updated_at, :valid_from, :valid_to,
-                  :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time, :slug
+                  :valid_from_date_time, :valid_to_date_time, :slug
 
-  attr_accessor :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time
+  attr_accessor :valid_from_date_time, :valid_to_date_time
 
   json_attributes [[:extra_fields, EmptyAux]]
 
@@ -26,22 +26,18 @@ class Tag < ActiveRecordWithJSON
   before_save :set_expire_at # Costruisco la data di disattivazione se arrivo dall'easyadmin.
 
   def set_active_at
-    if valid_from_date.present? && valid_from_time.present?
-      # write_attribute :valid_from, Time.parse("#{valid_from_date} #{valid_from_time} Rome")
-      datetime_utc = time_parsed_to_utc("#{valid_from_date} #{valid_from_time}")
+    if valid_from_date_time.present?
+      datetime_utc = time_parsed_to_utc("#{valid_from_date_time}")
       write_attribute :valid_from, "#{datetime_utc}"
-      valid_from_date = nil
-      valid_from_time = nil
+      valid_from_date_time = nil
     end
   end
 
   def set_expire_at
-    if valid_to_date.present? && valid_to_time.present?
-      #write_attribute :valid_to, Time.parse("#{valid_to_date} #{valid_to_time} Rome")
-      datetime_utc = time_parsed_to_utc("#{valid_to_date} #{valid_to_time}")
+    if valid_to_date_time.present?
+      datetime_utc = time_parsed_to_utc("#{valid_to_date_time}")
       write_attribute :valid_to, "#{datetime_utc}"
-      valid_to_date = nil
-      valid_to_time = nil
+      valid_to_date_time = nil
     end
   end
 
