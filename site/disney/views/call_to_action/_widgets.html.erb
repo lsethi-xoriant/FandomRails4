@@ -148,7 +148,7 @@
         <p class="cta__sidebar-panel__header-title--tag">Post più popolari</p>
       </div>
       <div class="col-xs-12" ng-repeat="cta in aux.ctas_most_viewed_widget" style="margin-bottom: 10px;">
-        <%= light_link_to("call_to_action/{{cta.slug}}") do %>
+        <%= light_link_to("/call_to_action/{{cta.slug}}") do %>
           <img class="cta-preview__image--tag" ng-src="{{cta.thumb_url}}" style="width: 130px; float: left;">
           <p class="cta__sidebar__most-viewed__title">{{cta.title}}</p>
         <% end %>
