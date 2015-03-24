@@ -321,7 +321,7 @@ module DisneyHelper
       end
     end
     
-    if false # TODO: change this when property_rank will be activate
+    if other && other[:rank_widget] # TODO: change this when property_rank will be activate
       rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
       property_rank = { rank: get_ranking(rank, 1), rank_id: rank.id }
     end

@@ -1,24 +1,71 @@
-<div class="container main-container" > 
-  <div class="row">
-      <div class="col-md-12">
-          <div class="portlet">
-            <div class="portlet-header">
-            </div> <!-- /.portlet-header -->
-            <div class="portlet-content">
-              
-              <div id="full-calendar"></div> <!-- /#full-calendar -->             
-
-            </div> <!-- /.portlet-content -->
-          </div> <!-- /.portlet -->
-        </div> <!-- /.col-md-8 -->
-    </div>
+<div class="container main-container" >
+	
+	<div class="row">
+		<div class="col-xs-12 col-sm-8 col-sm-offset-2">
+			<div class="row">
+				<div class="col-xs-8 col-xs-offset-2">
+					<p class="text-center">AGENDA GIORNALIERA</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-2 text-right">
+					<%= light_link_to "/calendar/#{(@today-1).strftime('%d-%m-%Y')}?dir=prev" do %><i class="fa fa-chevron-left"></i><% end %>
+				</div>
+				<div class="col-xs-8">
+					<h2 class="text-center"><%= @today.strftime("%A %d %B %Y")%></h2>
+				</div>
+				<div class="col-xs-2 text-left">
+					<%= light_link_to "/calendar/#{(@today+1).strftime('%d-%m-%Y')}?dir=next" do %><i class="fa fa-chevron-right"></i><% end %>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class="browse-sections" ng-repeat="contents in [aux.today_events]">
+				<%= render partial: "/application/content_carousel" %>
+			</div>
+		</div>
+	</div>
+	 
+	<div class="row">
+      	<div class="col-md-12">
+      		<div class="calendar-event__popover" onmouseout="hide_event_info(this)"></div>
+			<div id="full-calendar"></div> <!-- /#full-calendar -->             
+		</div>
+	</div>
 </div>
 
 
 <script type="text/javascript">
+
+  var current_event_id = -1;
+
   $(document).ready(function() {
     buildCalendar();
+	$('[data-toggle="tooltip"]').tooltip();
   });
+  
+  function show_event_info(elem, id){
+  	
+  	if(! $("div.calendar-event__popover").is(":visible") || id != current_event_id ) {
+  		current_event_id = id;
+	  	selected_event = $('#full-calendar').fullCalendar('clientEvents', id)[0];
+	  	
+	  	eventinfo = '<p><b>'+ selected_event.title +'</b></p>';
+	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive" />';
+	  	eventinfo += '<p>'+ selected_event.description +'</p>';
+	  	eventinfo += '<a class="btn btn-primary" href="#">SCHEDA EVENTO</a>';
+	  	$("div.calendar-event__popover").html(eventinfo);
+	  	
+	  	position = $(elem).parent().position();
+	  	console.log(position);
+	  	$("div.calendar-event__popover").css({'left': (position.left-220).toString() + 'px', 'top': (position.top+200).toString() + 'px',});
+	  	$("div.calendar-event__popover").show();
+	}
+  }
+  
+  function hide_event_info(elem){
+  	$(elem).hide();
+  }
 
   function buildCalendar() {
 
@@ -28,8 +75,8 @@
         center: 'title',
         right: 'next'
       },
-      dayClick: function() {
-        alert('a day has been clicked!');
+      dayClick: function(date, jsEvent, view ) {
+        window.location.href = "/<%= $context_root %>/calendar/" + date.format("DD-MM-YYYY")
       },
       viewRender: function(view, element) {
         console.log(view.intervalStart._d);
@@ -38,13 +85,13 @@
       disableResizing: true,
       events: <%= @calendar_events.html_safe %>,
 	  eventRender: function(event, element, view) {
+	  	console.log(event.id);
 	  	html = $('<div class="calendar-event"></div>');
 	  	html.append('<p class="calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
-	    html.append('<span class="calendar-event__title">'+ event.title +'</span>');
+	    html.append('<a href="javascript:void(0);" class="calendar-event__title" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
 	    if(! (_.isEmpty(event.image) )){
 	    	html.append('<img class="hidden-xs" style="height: 60px; margin: 0 auto; display: block;" src="'+ event.image +'" />')
 	    }
-	    html.append('<p>'+ event.description +'</p>');
 	    return html;
 	  }
     });
