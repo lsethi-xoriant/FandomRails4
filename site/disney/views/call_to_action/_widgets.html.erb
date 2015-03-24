@@ -109,34 +109,50 @@
 </div>
 
 <div class="col-xs-12 hidden-xs hidden-sm" ng-if="aux.sidebar_info.property_rank">
-    <div class="row text-left">
-      <div class="col-xs-12">
-        <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
-          <p class="cta__sidebar-panel__header-title">{{aux.sidebar_info.property_rank.rank.attributes.title}}</p>
-        </div>
+  <div class="row text-left">
+    <div class="col-xs-12">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
+        <p class="cta__sidebar-panel__header-title">{{aux.sidebar_info.property_rank.rank.attributes.title}}</p>
       </div>
     </div>
-    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel--ranking" style="border-top: none !important;"> 
-      <div class="row">
-        <div class="col-xs-12">
-        	<div class="row gallery-widget__row" ng-class-even="'gallery-widget__row--grey'" ng-repeat="rank in aux.sidebar_info.property_rank.rank.attributes.rankings.slice(0, 5)">
-	    		<div class="col-xs-3 text-right ranking-widget__col-position">
-	    			<span class="gallery-widget__position">#{{rank.position}}</span>
-	    		</div>
-	    		<div class="col-xs-4 text-center">
-	    			<p><img ng-src="{{rank.avatar}}" class="img-responsive ranking-widget__avatar" /></p>
-	    			<p><span class="ranking-widget__username"></span>{{rank.user}}</p>
-	    		</div>
-	    		<div class="col-xs-5 ranking-widget__col-counter">
-	    			<div class="label label-warning ranking-widget__points">+ {{rank.counter}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-	    		</div>
-	    	</div>
-        </div>
+  </div>
+  <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel--ranking" style="border-top: none !important;"> 
+    <div class="row">
+      <div class="col-xs-12">
+      	<div class="row gallery-widget__row" ng-class-even="'gallery-widget__row--grey'" ng-repeat="rank in aux.sidebar_info.property_rank.rank.attributes.rankings.slice(0, 5)">
+    		<div class="col-xs-3 text-right ranking-widget__col-position">
+    			<span class="gallery-widget__position">#{{rank.position}}</span>
+    		</div>
+    		<div class="col-xs-4 text-center">
+    			<p><img ng-src="{{rank.avatar}}" class="img-responsive ranking-widget__avatar" /></p>
+    			<p><span class="ranking-widget__username"></span>{{rank.user}}</p>
+    		</div>
+    		<div class="col-xs-5 ranking-widget__col-counter">
+    			<div class="label label-warning ranking-widget__points">+ {{rank.counter}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+    		</div>
+    	</div>
       </div>
-      <div class="row gallery-widget__view-all">
-      	<div class="col-xs-10 col-xs-offset-1">
-      		<a ng-href="/ranking/show/{{aux.sidebar_info.property_rank.rank_id}}"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Classifica completa</a>
-      	</div>
+    </div>
+    <div class="row gallery-widget__view-all">
+    	<div class="col-xs-10 col-xs-offset-1">
+    		<a ng-href="/ranking/show/{{aux.sidebar_info.property_rank.rank_id}}"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Classifica completa</a>
+    	</div>
+    </div>
+  </div>  
+</div>
+
+<div class="col-xs-12 hidden-xs hidden-sm" ng-if="aux.ctas_most_viewed_widget">
+  <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--most-viewed"> 
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="cta__sidebar-panel__header-title--tag">Post più popolari</p>
       </div>
-    </div>  
+      <div class="col-xs-12" ng-repeat="cta in aux.ctas_most_viewed_widget" style="margin-bottom: 10px;">
+        <%= light_link_to("call_to_action/{{cta.slug}}") do %>
+          <img class="cta-preview__image--tag" ng-src="{{cta.thumb_url}}" style="width: 130px; float: left;">
+          <p class="cta__sidebar__most-viewed__title">{{cta.title}}</p>
+        <% end %>
+      </div>
+    </div>
+  </div>  
 </div>

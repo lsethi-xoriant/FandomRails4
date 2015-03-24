@@ -13,6 +13,12 @@ module CallToActionHelper
     end
   end
 
+  def from_ctas_to_cta_ids_sql(calltoactions)
+    calltoactions.joins("LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id")
+                 .joins("LEFT OUTER JOIN rewards ON rewards.call_to_action_id = call_to_actions.id")
+                 .select("call_to_actions.id").to_sql
+  end
+
   def gets_ctas_ordered_by_comments(calltoaction_ids, cta_count)
     sql = "SELECT call_to_actions.id,  sum((user_comment_interactions.approved is not null and user_comment_interactions.approved)::integer) " +
           "FROM call_to_actions LEFT OUTER JOIN interactions ON call_to_actions.id = interactions.call_to_action_id LEFT OUTER JOIN user_comment_interactions ON interactions.resource_id = user_comment_interactions.comment_id " +

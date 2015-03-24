@@ -1949,6 +1949,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           if(!$scope.current_user) {
             interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           }
+
+          // GOOGLE ANALYTICS
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+          }
+
         } else {
           interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
 
@@ -1957,6 +1963,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           if(!$scope.current_user) {
             interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           }
+
+          // GOOGLE ANALYTICS
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+          }
+
         }
 
       }).error(function() {

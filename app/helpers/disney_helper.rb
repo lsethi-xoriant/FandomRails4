@@ -1,5 +1,24 @@
 module DisneyHelper
 
+  def get_ctas_most_viewed_widget(property)
+    result = cache_huge(get_ctas_most_viewed_cache_key(property.id)) do
+
+      ctas = get_disney_ctas(property)
+      cta_ids = from_ctas_to_cta_ids_sql(ctas)
+
+      result = []
+      gets_ctas_ordered_by_views(cta_ids, 4).each do |cta|
+        result << {
+          "id" => cta.id,
+          "slug" => cta.slug,
+          "title" => cta.title,
+          "thumb_url" => cta.thumbnail(:thumb)
+        }
+      end 
+      result
+    end
+  end
+
   def get_disney_calltoactions_count(calltoactions_in_page, aux)
     if calltoactions_in_page < $site.init_ctas
       calltoactions_in_page

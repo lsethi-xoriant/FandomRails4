@@ -114,12 +114,6 @@ class Sites::Disney::CallToActionController < CallToActionController
       format.json { render json: response.to_json }
     end 
   end
-
-  def from_ctas_to_cta_ids_sql(calltoactions)
-    calltoactions.joins("LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id")
-                 .joins("LEFT OUTER JOIN rewards ON rewards.call_to_action_id = call_to_actions.id")
-                 .select("call_to_actions.id").to_sql
-  end
   
   def upload
     upload_interaction = Interaction.find(params[:interaction_id]).resource
