@@ -204,8 +204,10 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
           tag_id = tag.id
 
           CallToActionTag.where(:tag_id => tag_id).each do |ct|
-            name = CallToAction.find(ct.call_to_action_id).name
-            @call_to_action_names << name unless @ordered_elements.include?(name)
+            if ct.call_to_action_id
+              name = CallToAction.find(ct.call_to_action_id).name
+              @call_to_action_names << name unless @ordered_elements.include?(name)
+            end
           end
 
           reward_ids = RewardTag.where(:tag_id => tag_id).each do |rt|

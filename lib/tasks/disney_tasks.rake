@@ -27,7 +27,7 @@ namespace :disney_tasks do
         .where("(aux->>'aws_transcoding_media_status') IS NULL OR (aux->>'aws_transcoding_media_status') = 'done'")
         .order("call_to_actions.created_at DESC")
 
-      logger.info "#{log_head(gallery_tag.name)} galleries contest backup start"
+      logger.info "#{log_head(gallery_tag.name)} backup start"
 
       prefix = "gallery_backup/" + gallery_tag.name + "/"
 
@@ -46,10 +46,10 @@ namespace :disney_tasks do
         rescue Exception => exception
           logger.error("#{log_head(gallery_tag.name)} exception in copy media block: #{exception} - #{exception.backtrace[0, 10]}")
         end
-
-        logger.info "#{log_head(gallery_tag.name)} backup end"
       
       end
+
+      logger.info "#{log_head(gallery_tag.name)} backup end"
 
       object.write(gallery_backup, :acl => :public_read)
     end

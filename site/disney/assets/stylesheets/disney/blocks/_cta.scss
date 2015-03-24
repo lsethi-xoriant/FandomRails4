@@ -21,6 +21,20 @@
   height: 290px !important;
 }
 
+.cta__sidebar-panel--most-viewed {
+  border-radius: 0 !important;
+  height: auto !important;
+}
+
+.cta__sidebar__most-viewed__title {
+  font-size: 12px;
+  color: #000;
+}
+
+.cta__sidebar-panel--most-viewed a, .cta__sidebar-panel--most-viewed a:hover {
+  text-decoration: none;
+}
+
 .cta__sidebar-panel--ranking {
   max-width: 300px; 
   margin-left: auto; 

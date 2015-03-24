@@ -11,8 +11,7 @@ class CallToAction < ActiveRecordWithJSON
     :media_type, 
     :activated_at, 
     :interactions_attributes,
-  	:activation_date, 
-    :activation_time, 
+  	:activation_date_time, 
     :slug, 
     :enable_disqus, 
     :description, 
@@ -26,10 +25,8 @@ class CallToAction < ActiveRecordWithJSON
     :privacy, 
     :valid_from, 
     :valid_to, 
-    :valid_from_date, 
-    :valid_from_time, 
-    :valid_to_date, 
-    :valid_to_time, 
+    :valid_from_date_time, 
+    :valid_to_date_time, 
     :aux, :extra_fields,
     :button_label, 
     :alternative_description, 
@@ -43,11 +40,11 @@ class CallToAction < ActiveRecordWithJSON
   json_attributes [[:aux, EmptyAux], [:extra_fields, EmptyAux]]
 
   extend FriendlyId
-  friendly_id :slug, use: :slugged 
+  friendly_id :name, use: :slugged 
 
-  attr_accessor :activation_date, :activation_time, :interaction_watermark_url, :release_required, :privacy_required,
-                :button_label, :alternative_description, :enable_for_current_user, :shop_url, :aws_transcoding,
-                :valid_from_date, :valid_from_time, :valid_to_date, :valid_to_time
+  attr_accessor :activation_date_time, :interaction_watermark_url, :release_required, :privacy_required,
+                :button_label, :alternative_description, :enable_for_current_user, :shop_url, 
+                :aws_transcoding, :valid_from_date_time, :valid_to_date_time
 
   validates_presence_of :title
   validates_presence_of :name
@@ -151,27 +148,22 @@ class CallToAction < ActiveRecordWithJSON
   end
 
   def set_activated_at
-    if self.activation_date.present? && self.activation_time.present?
-      datetime_utc = time_parsed_to_utc("#{activation_date} #{activation_time}")
+    if self.activation_date_time.present?
+      datetime_utc = time_parsed_to_utc("#{activation_date_time}")
       write_attribute :activated_at, "#{datetime_utc}"
-      activation_date = nil
-      activation_time = nil
+      activation_date_time = nil
     end
 
-    if valid_from_date.present? && valid_from_time.present?
-      # write_attribute :valid_from, Time.parse("#{valid_from_date} #{valid_from_time} Rome")
-      datetime_utc = time_parsed_to_utc("#{valid_from_date} #{valid_from_time}")
+    if valid_from_date_time.present?
+      datetime_utc = time_parsed_to_utc("#{valid_from_date_time}")
       write_attribute :valid_from, "#{datetime_utc}"
-      valid_from_date = nil
-      valid_from_time = nil
+      valid_from_date_time = nil
     end
 
-    if valid_to_date.present? && valid_to_time.present?
-      #write_attribute :valid_to, Time.parse("#{valid_to_date} #{valid_to_time} Rome")
-      datetime_utc = time_parsed_to_utc("#{valid_to_date} #{valid_to_time}")
+    if valid_to_date_time.present?
+      datetime_utc = time_parsed_to_utc("#{valid_to_date_time}")
       write_attribute :valid_to, "#{datetime_utc}"
-      valid_to_date = nil
-      valid_to_time = nil
+      valid_to_date_time = nil
     end
   end
   

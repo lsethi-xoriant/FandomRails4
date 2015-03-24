@@ -8,7 +8,7 @@
 //= require angular-route
 //= require angular-animate
 //= require angularjs/ng-table
-//= require angularjs/angular-drag-and-drop-lists.min
+//= require angularjs/angular-drag-and-drop-lists
 //= require angularjs/angular-filter
 //= require angularjs/fandom
 //= require angularjs/notice

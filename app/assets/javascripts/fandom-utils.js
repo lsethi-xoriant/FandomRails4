@@ -119,9 +119,9 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
     $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "media">UPLOAD</option>');
     $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "html">HTML</option>');
     $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "boolean">BOOLEANO</option>');
+    $('#type-for-' + fieldName + '-field-' + counter).append('<option value = "date">DATA</option>');
     //$('#type-for-' + fieldName + '-field-' + counter).append('<option value = "integer">INTERO</option>');
-    //$('#type-for-' + fieldName + '-field-' + counter).append('<option value = "date">DATA</option>');
-
+    
     // *** VALUE *** //
     jQuery('<div/>', {
         id: 'extra-fields-value-for-' + fieldName + '-' + counter,
@@ -201,7 +201,7 @@ function buildValueElement(elementId, selectedType) {
     });
   }
   else {
-    if(selectedType == "string")
+    if(selectedType == "string" || selectedType == "date")
       type = "text";
     if(selectedType == "media")
       type = "file";
@@ -217,7 +217,7 @@ function buildValueElement(elementId, selectedType) {
         removeImage($(this), elementId.substr(elementId.indexOf("value-for-") + 10, elementId.indexOf("-field-") - 10)); 
       }
     });
-    if(oldElement.attr("type") != "checkbox" && oldElement.attr("type") != "media") {
+    if(oldElement.attr("type") != "checkbox" && oldElement.attr("type") != "media" && oldElement.attr("type") != "date") {
       newElement.val(oldElementValue);
     }
     if(selectedType == "boolean") {
@@ -225,6 +225,10 @@ function buildValueElement(elementId, selectedType) {
       newElement.change(function() {
         newElement.val(newElement.prop('checked'));
       });
+    }
+    if(selectedType == "date") {
+      newElement.datetimepicker();
+      newElement.val(null);
     }
 
     var instance = CKEDITOR.instances[elementId];
@@ -305,6 +309,13 @@ function populateTextboxWithJsonField(json_field, mandatory_fields, formName, mo
                 valueElement.change(function() {
                     valueElement.val(valueElement.prop('checked'));
                 });
+            }
+            else
+            if (value.type == 'date') {
+                $('#type-for-' + fieldName + '-field-' + index).val('date');
+                valueElement.attr('type', 'text');
+                valueElement.val(value.value);
+                valueElement.datetimepicker();
             }
         }
     });

@@ -1,0 +1,51 @@
+<%= render partial: "/application/imprese_evidence_ctas" %>
+
+<div class="container main-container" ng-if="aux.story_stripe.contents">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="browse-sections" ng-repeat="stripe in [aux.story_stripe]">
+        <%= render partial: "/application/stripe" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container main-container" ng-if="aux.interview_stripe.contents">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="browse-sections" ng-repeat="stripe in [aux.interview_stripe]">
+        <%= render partial: "/application/stripe" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container main-container" ng-if="aux['enterprise-in-evidence']['contents']">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="browse-sections" ng-repeat="stripe in [aux['enterprise-in-evidence']]">
+        <%= render partial: "/application/stripe" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container main-container" ng-if="aux['next-live_stripe']['contents']">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="browse-sections" ng-repeat="stripe in [aux['next-live_stripe']]">
+        <%= render partial: "/application/stripe" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container main-container" ng-if="aux.gallery.contents">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="browse-sections" ng-repeat="stripe in [aux.gallery]">
+        <%= render partial: "/application/stripe" %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,6 @@
 //= require angular-animate
 //= require angularjs/ng-table
 //= require angularjs/angular-filter
-//= require angularjs/angular-drag-and-drop-lists.min
 //= require angularjs/fandom
 //= require angularjs/notice
 //= require angularjs/comment
