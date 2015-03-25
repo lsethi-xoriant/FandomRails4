@@ -157,14 +157,14 @@ class Sites::Disney::CallToActionController < CallToActionController
       errors = []
       cloned_cta_extra_fields = {}
       extra_fields.each do |ef|
-        if ef['required'] && params["extra_fields_#{ef['name']}"].blank?
+        if ef['required'] && params["#{ef['name']}"].blank?
           if ef['type'] == "textfield"
             errors << "#{ef['label']} non puo' essere lasciato in bianco"
           elsif
             errors << "#{ef['label']} deve essere accettato"
           end
         else
-          cloned_cta_extra_fields["#{ef['name']}"] = params["extra_fields_#{ef['name']}"]
+          cloned_cta_extra_fields["#{ef['name']}"] = params["#{ef['name']}"]
         end
       end
       [errors.empty?, errors, cloned_cta_extra_fields]
