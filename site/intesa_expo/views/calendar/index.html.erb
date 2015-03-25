@@ -1,35 +1,62 @@
 <div class="container main-container" >
 	
-	<div class="row">
-		<div class="col-xs-12 col-sm-8 col-sm-offset-2">
-			<div class="row">
-				<div class="col-xs-8 col-xs-offset-2">
-					<p class="text-center">AGENDA GIORNALIERA</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-2 text-right">
-					<%= light_link_to "/calendar/#{(@today-1).strftime('%d-%m-%Y')}?dir=prev" do %><i class="fa fa-chevron-left"></i><% end %>
-				</div>
-				<div class="col-xs-8">
-					<h2 class="text-center"><%= @today.strftime("%A %d %B %Y")%></h2>
-				</div>
-				<div class="col-xs-2 text-left">
-					<%= light_link_to "/calendar/#{(@today+1).strftime('%d-%m-%Y')}?dir=next" do %><i class="fa fa-chevron-right"></i><% end %>
+	<% if $context_root == 'imprese' %>
+		<div class="row row-discover">
+			<div class="col-xs-12">
+				<h1>EVENTI</h1>
+				<h2>Scopri gli eventi imprese nello spazio<br />intesa san paolo a Expo Milano 2015</h2>
+				<div class="browse-sections" ng-repeat="contents in [aux.expo_events]">
+					<%= render partial: "/application/content_carousel" %>
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-12">
-			<div class="browse-sections" ng-repeat="contents in [aux.today_events]">
-				<%= render partial: "/application/content_carousel" %>
+		
+		<div class="row">
+			<div class="col-xs-12">
+				<h2>Gallery Eventi</h2>
+				<div class="browse-sections" ng-repeat="contents in [aux.gallery_events]">
+					<%= render partial: "/application/content_carousel" %>
+				</div>
 			</div>
 		</div>
-	</div>
-	 
+	<% else %>
+		<div class="row">
+			<div class="col-xs-12 col-sm-8 col-sm-offset-2">
+				<div class="row">
+					<div class="col-xs-8 col-xs-offset-2">
+						<p class="text-center">AGENDA GIORNALIERA</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-2 text-right">
+						<%= light_link_to "/calendar/#{(@today-1).strftime('%d-%m-%Y')}?dir=prev" do %><i class="fa fa-chevron-left"></i><% end %>
+					</div>
+					<div class="col-xs-8">
+						<h2 class="text-center"><%= @today.strftime("%A %d %B %Y")%></h2>
+					</div>
+					<div class="col-xs-2 text-left">
+						<%= light_link_to "/calendar/#{(@today+1).strftime('%d-%m-%Y')}?dir=next" do %><i class="fa fa-chevron-right"></i><% end %>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="browse-sections" ng-repeat="contents in [aux.today_events]">
+					<%= render partial: "/application/content_carousel" %>
+				</div>
+			</div>
+		</div>
+	<% end %>
+	
 	<div class="row">
       	<div class="col-md-12">
       		<div class="calendar-event__popover"></div>
 			<div id="full-calendar"></div> <!-- /#full-calendar -->             
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-xs-12 text-center">
+			<a class="btn btn-primary" href="#">Torna su</a>
 		</div>
 	</div>
 </div>

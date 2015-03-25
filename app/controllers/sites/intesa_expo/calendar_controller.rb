@@ -32,6 +32,13 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     
     @today = month_calendar.today
     
+    if get_intesa_property == "imprese"
+      @aux_other_params = {
+        "expo_events" => get_intesa_expo_ctas_with_tag("event-imprese"),
+        "gallery_events" => get_intesa_expo_ctas_with_tag("gallery-imprese")
+      }
+    end
+    
   end
   
   def initialize_calendar(today)
