@@ -584,10 +584,10 @@ module ApplicationHelper
       where_clause, limit = get_where_clause_from_params(params)
       tags = Tag.where("id IN (#{tag_ids_subselect})")
       if !where_clause.empty?
-        tags.where("#{where_clause}")
+        tags = tags.where("#{where_clause}")
       end
       if limit
-        tags.limit(limit)
+        tags = tags.limit(limit)
       end
       tags.order("created_at DESC").to_a
     end
@@ -610,13 +610,12 @@ module ApplicationHelper
   end
   
   def get_ctas_with_tags_in_or(tag_ids, params = {})
-    debugger
     extra_key = get_extra_key_from_params(params)
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
       where_clause, limit = get_where_clause_from_params(params)
       ctas = CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) ", tag_ids)
       if !where_clause.empty?
-        ctas.where("#{where_clause}")
+        ctas = ctas.where("#{where_clause}")
       end
       if limit
         ctas = ctas.limit(limit)
