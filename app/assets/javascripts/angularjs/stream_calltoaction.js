@@ -1,6 +1,6 @@
 var streamCalltoactionModule = angular.module('StreamCalltoactionModule', ['ngRoute', 'ngSanitize', 'ngAnimate']);
 
-StreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce'];
+StreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce', '$upload'];
 streamCalltoactionModule.controller('StreamCalltoactionCtrl', StreamCalltoactionCtrl);
 
 // Gestione del csrf-token nelle chiamate ajax.
@@ -57,7 +57,63 @@ angular.module('ng').filter('cut', function () {
   };
 });
 
-function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
+function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
+
+  /*
+  <form>
+    <fieldset><legend>Upload on form submit</legend>
+      {{form_data.attachment[0].progress + '%'}}
+
+      Title: <input type="text" name="title" ng-model="form_data.title">
+      Immagine/video: <input type="file" ng-file-select="" ng-model="form_data.attachment" name="attachment">
+      <span ng-if="form_data.attachment[0].result">Upload 1 {{form_data.attachment[0].result}}</span>
+
+      Immagine2/video2: <input type="file" ng-file-select="" ng-model="form_data.release" name="release">
+
+      <button ng-click="upload([form_data.attachment[0], form_data.release[0]])">Submit</button> 
+    </fieldset>
+  </form>
+  */
+  $scope.upload = function (files) {
+      if (files && files.length) {
+        console.log(files)
+        fields = { obj: $scope.form_data };
+        $upload.upload({
+            url: '/tmp/upload',
+            fields: fields,
+            file: files,
+            fileFormDataName: ["attachment", "release"]
+        }).progress(function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            evt.config.file[0].progress = progressPercentage;
+            console.log('progress: ' + progressPercentage + '% ' + evt.config.file[0].name);
+        }).success(function (data, status, headers, config) {
+            console.log('file ' + config.file[0].name + 'uploaded. Response: ' + data.result);
+        });
+      }
+  };
+
+  $scope.generateThumb = function(file) { 
+    // ng-file-change="generateThumb(picFile[0], $files)"
+    // <img ng-if="picFile[0].dataUrl != null" ng-src="{{picFile[0].dataUrl}}" class="thumb">
+    if (file != null) {
+      if (fileReaderSupported() && file.type.indexOf('image') > -1) {
+        $timeout(function() {
+          var fileReader = new FileReader();
+          fileReader.readAsDataURL(file);
+          fileReader.onload = function(e) {
+            $timeout(function() {
+              file.dataUrl = e.target.result;
+            });
+          }
+        });
+      }
+    }
+  };
+
+  function fileReaderSupported() {
+    return window.FileReader != null && (window.FileAPI == null || FileAPI.html5 != false);
+  }
 
   $scope.scrollTo = function(el_id) {
     $('html, body').animate({
