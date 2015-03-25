@@ -74,9 +74,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     </fieldset>
   </form>
   */
-  $scope.upload = function (files, url) {
+  $scope.upload = function (files, url, extra_fields) {
     delete $scope.form_data.errors;
-    if(files[0] && files[1]) {
+    $scope.form_data.errors = getFormUploadErrors(files, extra_fields)
+    if(!$scope.form_data.errors) {
       $upload.upload({
           url: url,
           fields: { obj: $scope.form_data },
@@ -86,26 +87,55 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             $scope.form_data.progress = progressPercentage; // evt.config.file[0].progress
         }).success(function (data, status, headers, config) {
-            alert(xhr.status); //413 (Request Entity Too Large)
             if(data.errors) {
               $scope.form_data.errors = data.errors;
             } else {
               $("#ugc-feedback").modal('show');
               $("#upload-form").addClass("hidden");
               $("#partecipa").show();
+              $scope.form_data = {};
             }
             delete $scope.form_data.progress;
         }).error(function (data, status, headers, config) {
-          if(status == "413") {
+          if(status == "413") { //413 (Request Entity Too Large)
             $scope.form_data.errors = "Ricorda che il tuo file non deve pesare più di 100MB";
           } else {
             $scope.form_data.errors = status;
           }
+          delete $scope.form_data.progress;
         })
-      } else {
-        $scope.form_data.errors = "non hai caricato entrambi i contenuti";
       }
   };
+
+  function getFormUploadErrors(files, extra_fields) {
+    
+    errors = []
+
+    angular.forEach(extra_fields, function(extra_field) {
+      if(extra_field['required'] && !$scope.form_data[extra_field['name']]) {
+        errors.push(extra_field['label']);
+      }
+    });
+
+    if(!$scope.form_data['title']) { 
+      errors.push("Titolo non può essere lasciato in bianco");
+    }
+
+    if(!files[0]) {
+      errors.push("Il media deve essere caricato");
+    }
+
+    if(!files[1]) {
+      errors.push("La liberatoria deve essere caricata");
+    }
+
+    if(errors.length > 0) {
+      return errors.join(",");
+    } else {
+      return null;
+    }
+
+  }
 
   $scope.generateThumb = function(file) { 
     // ng-file-change="generateThumb(picFile[0], $files)"

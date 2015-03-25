@@ -76,7 +76,7 @@
 		  			</div>
 
 		  			<div class="col-sm-12 text-center" ng-if="!form_data.progress">
-		  				<button class="btn btn-primary" ng-if="current_user != undefined" ng-click="upload([form_data.attachment[0], form_data.releasing[0]], ('/upload_interaction/create/' + aux.gallery.calltoaction.id + '/' + upload_interaction.interaction.id))">CARICA</button>
+		  				<button class="btn btn-primary" ng-if="current_user != undefined" ng-click="upload([form_data.attachment[0], form_data.releasing[0]], ('/upload_interaction/create/' + aux.gallery.calltoaction.id + '/' + upload_interaction.interaction.id), <%= (extra_fields || {}).to_json %>)">CARICA</button>
 							
 							<a class="btn btn-primary" data-toggle="modal" data-target="#registrate-modal" ng-if="current_user == undefined">CARICA</a>
 			  		</div>
