@@ -226,12 +226,12 @@ module CacheKeysHelper
     "last_rewards_with_tag_#{tag_name}_user_#{user_id}"
   end
   
-  def get_ctas_with_tags_cache_key(tag_names, with_user_cta, operator)
-    "ctas_with_tags_#{tag_names.join("_")}_with_user_cta_#{with_user_cta}_#{operator}"
+  def get_ctas_with_tags_cache_key(tag_names, extra_key, operator)
+    "ctas_with_tags_#{tag_names.join("_")}_#{extra_key}_#{operator}"
   end
 
-  def get_tags_with_tags_cache_key(tag_names)
-    "tags_with_tags_#{tag_names.join("_")}"
+  def get_tags_with_tags_cache_key(tag_names, extra_key = "")
+    "tags_with_tags_#{tag_names.join("_")}_#{extra_key}"
   end
 
   def get_all_active_ctas_cache_key()
@@ -243,10 +243,6 @@ module CacheKeysHelper
   
   def get_tags_with_tag_cache_key(tag_name)
     "tags_with_tag_#{tag_name}"
-  end
-  
-  def get_tags_with_tags_cache_key(tag_names)
-    "tags_with_tags_#{tag_names.join("_")}"
   end
   
   def get_tags_with_tag_with_match_cache_key(tag_name, query)

@@ -93,7 +93,12 @@ class GalleryController < ApplicationController
   def get_gallery_ctas_carousel
     cache_medium(get_carousel_gallery_cache_key) do
       gallery_tag_ids = get_tags_with_tag("gallery").map{ |t| t.id}
-      get_ctas_with_tags_in_or(gallery_tag_ids, true)
+      params = {
+        conditions: { 
+          without_user_cta: true 
+        }
+      }
+      get_ctas_with_tags_in_or(gallery_tag_ids, prams)
     end
   end
   

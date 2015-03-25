@@ -156,8 +156,8 @@ module BrowseHelper
     })
   end
   
-  def get_browse_area_by_category(category, tags, carousel_elements)
-    contents, total = get_contents_by_category(category, tags, carousel_elements)
+  def get_browse_area_by_category(category, tags, carousel_elements, params = {})
+    contents, total = get_contents_by_category(category, tags, carousel_elements, params)
     extra_fields = get_extra_fields!(category)
     browse_section = ContentSection.new({
       key: category.name,
@@ -198,10 +198,14 @@ module BrowseHelper
     })
   end
   
-  def get_contents_by_category(category, tags, carousel_elements)
+  def get_contents_by_category(category, tags, carousel_elements, params = {})
+    params['limit'] = {
+      offset: 0,
+      perpage: carousel_elements
+    }
     tag_ids = ([category] + tags).map{|tag| tag.id}
     tags = order_elements(category, get_tags_with_tags(tag_ids))
-    ctas = order_elements(category, get_ctas_with_tags_in_and(tag_ids))
+    ctas = order_elements(category, get_ctas_with_tags_in_and(tag_ids, params))
     total = tags.count + ctas.count
     tags = tags.slice!(0, carousel_elements)
     ctas = ctas.slice!(0, carousel_elements)
@@ -209,8 +213,14 @@ module BrowseHelper
   end
   
   def get_contents_by_category_with_tags(filter_tags, category, offset = 0)
-    tags = order_elements(category, get_tags_with_tags(filter_tags.map{|t| t.id}))
-    ctas = order_elements(category, get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}))
+    params = {
+      limit: {
+        offset: offset,
+        perpage: DEFAULT_VIEW_ALL_ELEMENTS
+      }
+    }
+    tags = order_elements(category, get_tags_with_tags(filter_tags.map{|t| t.id}, params))
+    ctas = order_elements(category, get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}, params))
     merge_contents_with_tags(ctas, tags, offset)
   end
   
@@ -390,11 +400,11 @@ module BrowseHelper
     end
   end
   
-  def get_content_preview_stripe(stripe_tag_name)
+  def get_content_preview_stripe(stripe_tag_name, params = {})
     #carousel elements if setted in content tag, if in section tag needs to be passed as function params
     stripe_tag = Tag.find_by_name(stripe_tag_name)
     carousel_elements = get_elements_for_browse_carousel(stripe_tag)
-    get_browse_area_by_category(stripe_tag, [], carousel_elements)
+    get_browse_area_by_category(stripe_tag, [], carousel_elements, params)
   end
   
 end

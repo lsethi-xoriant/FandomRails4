@@ -487,7 +487,7 @@ module ApplicationHelper
   end
   
   def get_tags_with_tags(tag_ids)
-    cache_short get_tags_with_tags_cache_key(tag_ids) do
+    cache_short get_tags_with_tags_cache_key(tag_ids, "") do
       hidden_tags_ids = get_hidden_tag_ids
       if hidden_tags_ids.any?
         tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
@@ -559,33 +559,100 @@ module ApplicationHelper
     end
     filtered_results
   end
+  
+  def get_extra_key_from_params(params)
+    extra_key = []
+    if params['conditions']
+      params['conditions'].map do |k,v|
+        if v.kind_of?(Array)
+          extra_key << "#{k}_#{v.join("_")}"
+        else
+          extra_key << "#{k}_#{v}"
+        end
+      end
+    end
+    if params['limit']
+      extra_key << "limit_#{params['limit']['offset']}_#{params['limit']['perpage']}"
+    end
+    extra_key.join("_")
+  end
 
-  def get_tags_with_tags_in_and(tag_ids)
-    cache_short get_tags_with_tags_cache_key(tag_ids) do
+  def get_tags_with_tags_in_and(tag_ids, params = {})
+    extra_key = get_extra_key_from_params(params)
+    cache_short get_tags_with_tags_cache_key(tag_ids, extra_key) do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      Tag.where("id IN (#{tag_ids_subselect})").order("created_at DESC").to_a
+      where_clause, limit = get_where_clause_from_params(params)
+      tags = Tag.where("id IN (#{tag_ids_subselect})")
+      if !where_clause.empty?
+        tags.where("#{where_clause}")
+      end
+      if limit
+        tags.limit(limit)
+      end
+      tags.order("created_at DESC").to_a
     end
   end
   
-  def get_ctas_with_tags_in_and(tag_ids, with_user_cta = false)
-    cache_short get_ctas_with_tags_cache_key(tag_ids, with_user_cta, "and") do
+  def get_ctas_with_tags_in_and(tag_ids, params = {})
+    extra_key = get_extra_key_from_params(params)
+    cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "and") do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
-      if with_user_cta
-        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) AND call_to_actions.user_id IS NULL").order("activated_at DESC").to_a
-      else
-        CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) ").order("activated_at DESC").to_a
+      where_clause, limit = get_where_clause_from_params(params)
+      ctas = CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) ")
+      if !where_clause.empty?
+        ctas = ctas.where("#{where_clause}")
       end
+      if limit
+        ctas = ctas.limit(limit)
+      end
+      ctas.order("activated_at DESC").to_a
     end
   end
   
-  def get_ctas_with_tags_in_or(tag_ids, with_user_cta = false)
-    cache_short get_ctas_with_tags_cache_key(tag_ids, with_user_cta, "or") do
-      if with_user_cta
-        CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) AND call_to_actions.user_id IS NULL", tag_ids).order("call_to_actions.activated_at DESC").to_a
-      else
-        CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) ", tag_ids).order("call_to_actions.activated_at DESC").to_a
+  def get_ctas_with_tags_in_or(tag_ids, params = {})
+    extra_key = get_extra_key_from_params(params)
+    cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
+      where_clause, limit = get_where_clause_from_params(params)
+      ctas = CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) ", tag_ids)
+      if !where_clause.empty?
+        ctas.where("#{where_clause}")
+      end
+      if limit
+        ctas = ctas.limit(limit)
+      end
+      ctas.order("activated_at DESC").to_a
+    end
+  end
+  
+  # Public: Construct an sql condition string from hash of params
+  #
+  # params  - The Hash with params
+  #           params hash is so formed: { conditions: { condition_name: condition_value, ... }, limit: { offset: offset_value, perpage: perpage_elements } }
+  #           conditions_name accepted:
+  #             without_user_cta: exclude cta user generated
+  #             exclude_cta_ids: exclude from results cta with listed ids
+  #             exclude_tag_ids: exclude from results tag with listed ids
+  #
+  # Returns the where conditions string
+  def get_where_clause_from_params(params)
+    where_clause = []
+    limit = nil
+    if params['conditions']
+      if params['conditions']['without_user_cta'] && params['without_user_cta'] 
+        where_clause << "call_to_actions.user_id IS NULL"
+      end
+      if params['conditions']['exclude_cta_ids']
+        where_clause << "call_to_actions.id NOT IN (#{params['exclude_cta_ids'].join(',')})"
+      end
+      if params['conditions']['exclude_tag_ids']
+        where_clause << "tags.id NOT IN (#{params['exclude_tag_ids'].join(',')})"
       end
     end
+    where_clause = where_clause.join(" AND ")
+    if params['limit']
+      limit = (params['limit']['offset'].to_i + 1) * params['limit']['perpage']
+    end
+    [where_clause, limit]
   end
   
   def get_all_ctas_with_tag(tag_name)

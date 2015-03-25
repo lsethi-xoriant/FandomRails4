@@ -1,10 +1,10 @@
 module IntesaExpoHelper
 
-  def get_intesa_expo_ctas_with_tag(tag_name)
+  def get_intesa_expo_ctas_with_tag(tag_name, params = {})
     param_tag = get_tag_from_params(tag_name)
     language_tag = get_tag_from_params($context_root || "it")
-    tagged_tags = get_tags_with_tags_in_and([param_tag.id, language_tag.id])
-    get_content_preview_stripe(tagged_tags.first.name)
+    tagged_tags = get_tags_with_tags_in_and([param_tag.id, language_tag.id], params)
+    get_content_preview_stripe(tagged_tags.first.name, params)
   end
 
   def get_intesa_expo_related_ctas(cta)
