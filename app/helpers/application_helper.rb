@@ -562,8 +562,8 @@ module ApplicationHelper
   
   def get_extra_key_from_params(params)
     extra_key = []
-    if params['conditions']
-      params['conditions'].map do |k,v|
+    if params[:conditions]
+      params[:conditions].map do |k,v|
         if v.kind_of?(Array)
           extra_key << "#{k}_#{v.join("_")}"
         else
@@ -610,6 +610,7 @@ module ApplicationHelper
   end
   
   def get_ctas_with_tags_in_or(tag_ids, params = {})
+    debugger
     extra_key = get_extra_key_from_params(params)
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
       where_clause, limit = get_where_clause_from_params(params)
@@ -637,15 +638,15 @@ module ApplicationHelper
   def get_where_clause_from_params(params)
     where_clause = []
     limit = nil
-    if params['conditions']
-      if params['conditions'][:without_user_cta] && params['conditions'][:without_user_cta] 
+    if params[:conditions]
+      if params[:conditions][:without_user_cta] && params[:conditions][:without_user_cta] 
         where_clause << "call_to_actions.user_id IS NULL"
       end
-      if params['conditions'][:exclude_cta_ids]
-        where_clause << "call_to_actions.id NOT IN (#{params['conditions'][:exclude_cta_ids].join(',')})"
+      if params[:conditions][:exclude_cta_ids]
+        where_clause << "call_to_actions.id NOT IN (#{params[:conditions][:exclude_cta_ids].join(',')})"
       end
-      if params['conditions'][:exclude_tag_ids]
-        where_clause << "tags.id NOT IN (#{params['conditions'][:exclude_tag_ids].join(',')})"
+      if params[:conditions][:exclude_tag_ids]
+        where_clause << "tags.id NOT IN (#{params[:conditions][:exclude_tag_ids].join(',')})"
       end
     end
     where_clause = where_clause.join(" AND ")
