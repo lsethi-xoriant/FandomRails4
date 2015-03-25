@@ -74,22 +74,28 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     </fieldset>
   </form>
   */
-  $scope.upload = function (files) {
-      if (files && files.length) {
-        console.log(files)
-        fields = { obj: $scope.form_data };
-        $upload.upload({
-            url: '/tmp/upload',
-            fields: fields,
-            file: files,
-            fileFormDataName: ["attachment", "release"]
+  $scope.upload = function (files, url) {
+    if(files[0] && files[1]) {
+      $upload.upload({
+          url: url,
+          fields: { obj: $scope.form_data },
+          file: files,
+          fileFormDataName: ["attachment", "releasing"]
         }).progress(function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            evt.config.file[0].progress = progressPercentage;
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.file[0].name);
+            $scope.form_data.progress = progressPercentage; // evt.config.file[0].progress
         }).success(function (data, status, headers, config) {
-            console.log('file ' + config.file[0].name + 'uploaded. Response: ' + data.result);
+            if(data.errors) {
+              $scope.form_data.errors = data.errors;
+            } else {
+              $("#ugc-feedback").modal('show');
+              $("#upload-form").addClass("hidden");
+              $("#partecipa").show();
+            }
+            delete $scope.form_data.progress;
         });
+      } else {
+        $scope.form_data.errors = "non hai caricato entrambi i contenuti";
       }
   };
 

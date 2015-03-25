@@ -531,10 +531,10 @@ module CallToActionHelper
     end
 
       user_calltoaction.release_required = upload_interaction.releasing? 
-      user_calltoaction.build_releasing_file(file: params[:releasing])
+      user_calltoaction.build_releasing_file(file: params["releasing"])
 
       user_calltoaction.privacy_required = upload_interaction.privacy? 
-      user_calltoaction.privacy = !params[:privacy].blank?
+      user_calltoaction.privacy = !params["privacy"].blank?
 
       #user_calltoaction.releasing_file_id = releasing.id
 
@@ -542,20 +542,20 @@ module CallToActionHelper
   end
   
   def calculate_cloned_cta_title(upload_interaction, calltoaction_template, params)
-    if upload_interaction.title_needed && params[:title].blank?
+    if upload_interaction.title_needed && params["title"].blank?
       nil
-    elsif upload_interaction.title_needed && params[:title].present?
-      params[:title]
+    elsif upload_interaction.title_needed && params["title"].present?
+      params["title"]
     else
       calltoaction_template.title
     end
   end
   
   def calculate_cloned_cta_description(upload_interaction, calltoaction_template, params)
-    if params[:description].blank?
+    if params["description"].blank?
       calltoaction_template.description
     else
-      params[:description]
+      params["description"]
     end
   end
   

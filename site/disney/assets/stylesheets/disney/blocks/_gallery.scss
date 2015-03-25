@@ -1,4 +1,26 @@
 /* GALLERY STILE CLASS*/
+
+.gallery__errors {
+  margin-top: 15px; 
+  color: red;
+  ul {
+    padding-left: 0;
+    li {
+      list-style-type: none;
+    }
+  }
+}
+
+.gallery__progress {
+  margin-top: 15px;
+  .progress {
+    margin-bottom: 0;
+    .progress-bar {
+      border-radius: 4px !important;
+    }
+  }
+}
+
 .gallery-cta{
   margin-bottom: 20px;
   color: #fff;
