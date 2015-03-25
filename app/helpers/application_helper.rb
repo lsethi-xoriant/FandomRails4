@@ -638,14 +638,14 @@ module ApplicationHelper
     where_clause = []
     limit = nil
     if params['conditions']
-      if params['conditions'][:without_user_cta] && params['without_user_cta'] 
+      if params['conditions'][:without_user_cta] && params['conditions'][:without_user_cta] 
         where_clause << "call_to_actions.user_id IS NULL"
       end
       if params['conditions'][:exclude_cta_ids]
-        where_clause << "call_to_actions.id NOT IN (#{params['exclude_cta_ids'].join(',')})"
+        where_clause << "call_to_actions.id NOT IN (#{params['conditions'][:exclude_cta_ids].join(',')})"
       end
       if params['conditions'][:exclude_tag_ids]
-        where_clause << "tags.id NOT IN (#{params['exclude_tag_ids'].join(',')})"
+        where_clause << "tags.id NOT IN (#{params['conditions'][:exclude_tag_ids].join(',')})"
       end
     end
     where_clause = where_clause.join(" AND ")
