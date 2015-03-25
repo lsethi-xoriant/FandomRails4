@@ -98,7 +98,7 @@ class GalleryController < ApplicationController
           without_user_cta: true 
         }
       }
-      get_ctas_with_tags_in_or(gallery_tag_ids, prams)
+      get_ctas_with_tags_in_or(gallery_tag_ids, params)
     end
   end
   
