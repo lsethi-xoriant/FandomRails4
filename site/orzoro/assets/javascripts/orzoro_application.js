@@ -18,6 +18,7 @@
 //= require angularjs/eventfilter
 //= require angularjs/browse
 //= require angularjs/ordering
+//= require angularjs/angular-file-upload
 //= require ui-bootstrap-0.12.min
 //= require bootstrap
 //= require bootstrap-notify

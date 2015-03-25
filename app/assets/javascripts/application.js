@@ -21,6 +21,7 @@
 //= require angularjs/eventfilter
 //= require angularjs/browse
 //= require angularjs/ordering
+//= require angularjs/angular-file-upload
 //= require bootstrap
 //= require bootstrap-notify
 //= require bootstrap-fileupload
