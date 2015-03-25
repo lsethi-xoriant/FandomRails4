@@ -13,7 +13,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     if $context_root == "imprese"
       @aux_other_params = {
         "calltoaction_evidence_info" => true,
-        "next-live_stripe" => get_intesa_expo_ctas_with_tag("next-live"),
+        "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
         "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
         "interview_stripe" => get_intesa_expo_ctas_with_tag("interview"),
         "story_stripe" => get_intesa_expo_ctas_with_tag("story"),
@@ -28,7 +28,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     else
       @aux_other_params = {
         calltoaction_evidence_info: true,
-        "next-live_stripe" => get_intesa_expo_ctas_with_tag("next-live"),
+        "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
         "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
         "article_stripe" => get_intesa_expo_ctas_with_tag("article"),
         page_tag: {
