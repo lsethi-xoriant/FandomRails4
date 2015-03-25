@@ -102,14 +102,15 @@
         right: 'next'
       },
       dayClick: function(date, jsEvent, view ) {
-        window.location.href = "/<%= $context_root %>/calendar/" + date.format("DD-MM-YYYY")
+        window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
       },
       viewRender: function(view, element) {
         console.log(view.intervalStart._d);
+        //updateEventListInCalendar(view.intervalStart._d);
       },
       editable: false,
       disableResizing: true,
-      events: <%= @calendar_events.html_safe %>,
+      events: '/calendar/fetch/events.json',
 	  eventRender: function(event, element, view) {
 	  	console.log(event.id);
 	  	html = $('<div class="calendar-event"></div>');
@@ -121,6 +122,6 @@
 	    return html;
 	  }
     });
-
+    
   }
 </script>

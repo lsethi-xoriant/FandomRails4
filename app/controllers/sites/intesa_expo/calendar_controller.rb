@@ -28,8 +28,6 @@ class Sites::IntesaExpo::CalendarController < CalendarController
       today_events: month_calendar.today_events
     }
     
-    @calendar_events = prepare_events_for_calendar(month_calendar.events)
-    
     @today = month_calendar.today
     
     if get_intesa_property == "imprese"
@@ -42,8 +40,16 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   end
   
   def initialize_calendar(today)
+    cal_events = init_calendar_events(today)
+    day_of_month = today.day
+    if cal_events[today.day].nil?
+      day_of_month = find_nearest_day_with_event(today, cal_events)
+    end
+    Calendar.new(cal_events, DateTime.parse("#{day_of_month}-#{today.month}-#{today.year}"))
+  end
+  
+  def init_calendar_events(today)
     month_key = "#{today.month}_#{today.year}"
-    
     cal_events = cache_medium(get_month_calendar_cache_key(month_key)) do
       events = get_calendar_events(today.beginning_of_month, today.end_of_month)
       cal_events = []
@@ -55,13 +61,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
       end
       cal_events
     end
-      
-    day_of_month = today.day
-    if cal_events[today.day].nil?
-      day_of_month = find_nearest_day_with_event(today, cal_events)
-    end
-    
-    Calendar.new(cal_events, DateTime.parse("#{day_of_month}-#{today.month}-#{today.year}"))
+    cal_events
   end
   
   def find_next_event_day(starting_day, events)
@@ -143,12 +143,11 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     calendar_events.to_json
   end
   
-  # TODO: rewrite method after refactoring calendar object
-  def get_calendar_events_json
-    start_date = DateTime.parse(params[:start_time]).utc
-    end_date = DateTime.parse(params[:end_time]).utc
+  def fetch_events
+    start_date = DateTime.parse(params[:start]).utc
+    month_calendar = initialize_calendar(start_date)
     respond_to do |format|
-      format.json { render :json => prepare_events_for_calendar(get_calendar_events(start_date, end_date)) }
+      format.json { render :json => prepare_events_for_calendar(month_calendar.events) }
     end
   end
   

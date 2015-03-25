@@ -148,6 +148,7 @@ Fandom::Application.routes.draw do
         match "/about", :to => "application#about"
         match "/calendar", :to => "calendar#index"
         match "/calendar/:day", :to => "calendar#index"
+        match "/calendar/fetch/events", :to => "calendar#fetch_events"
       end
     end
   end
