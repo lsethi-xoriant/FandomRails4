@@ -1,6 +1,6 @@
 var disneyStreamCalltoactionModule = angular.module('DisneyStreamCalltoactionModule', ['ngRoute', 'ngSanitize', 'ngAnimate']);
 
-DisneyStreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce'];
+DisneyStreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce', '$upload'];
 disneyStreamCalltoactionModule.controller('DisneyStreamCalltoactionCtrl', DisneyStreamCalltoactionCtrl);
 
 // Gestione del csrf-token nelle chiamate ajax.
@@ -9,8 +9,8 @@ disneyStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 }]);
 
 
-function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
-  angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
+function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
+  angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload));
 
   $scope.extraInit = function() {
     if($scope.current_user && !$scope.current_user.profile_completed) {

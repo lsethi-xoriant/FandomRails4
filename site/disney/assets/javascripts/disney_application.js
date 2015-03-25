@@ -9,6 +9,7 @@
 //= require angular-animate
 //= require angularjs/ng-table
 //= require angularjs/angular-filter
+//= require angularjs/angular-file-upload
 //= require angularjs/fandom
 //= require angularjs/notice
 //= require angularjs/comment

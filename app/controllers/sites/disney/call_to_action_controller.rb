@@ -120,26 +120,33 @@ class Sites::Disney::CallToActionController < CallToActionController
     extra_fields = JSON.parse(get_extra_fields!(upload_interaction.interaction.call_to_action)['form_extra_fields'])['fields'] rescue nil;
     calltoaction = CallToAction.find(params[:cta_id])
     
-    extra_fields_valid, extra_field_errors, cloned_cta_extra_fields = validate_upload_extra_fileds(params, extra_fields)
-    
+    params_obj = JSON.parse(params["obj"])
+    params_obj["releasing"] = params["releasing"]
+    params_obj["upload"] = params["attachment"]
+
+    extra_fields_valid, extra_field_errors, cloned_cta_extra_fields = validate_upload_extra_fileds(params_obj, extra_fields)
+
     if !extra_fields_valid
-      flash[:error] = extra_field_errors.join(", ")
+      response = { "errors" => extra_field_errors.join(", ") }
     else
-      cloned_cta = create_user_calltoactions(upload_interaction)
+      cloned_cta = create_user_calltoactions(upload_interaction, params_obj)
       if cloned_cta.errors.any?
-        flash[:error] = cloned_cta.errors.full_messages.join(", ")
+        response = { "errors" => cloned_cta.errors.full_messages.join(", ") }
       else
         get_extra_fields!(cloned_cta).merge!(cloned_cta_extra_fields)
         cloned_cta.save
-        flash[:notice] = "Caricamento completato con successo"
       end
     end
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end 
     
-    if is_call_to_action_gallery(calltoaction)
-      redirect_to "/gallery/#{params[:cta_id]}"
-    else
-      redirect_to "/call_to_action/#{params[:cta_id]}"
-    end
+    #if is_call_to_action_gallery(calltoaction)
+    #  redirect_to "/gallery/#{params[:cta_id]}"
+    #else
+    #  redirect_to "/call_to_action/#{params[:cta_id]}"
+    #end
     
   end
   
@@ -164,7 +171,7 @@ class Sites::Disney::CallToActionController < CallToActionController
     end
   end
   
-  def create_user_calltoactions(upload_interaction)
+  def create_user_calltoactions(upload_interaction, params)
     cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
     cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)
     cloned_cta.save
