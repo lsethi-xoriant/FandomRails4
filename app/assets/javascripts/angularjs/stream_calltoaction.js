@@ -93,6 +93,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               $("#ugc-feedback").modal('show');
               $("#upload-form").addClass("hidden");
               $("#partecipa").show();
+              $scope.form_data = {};
             }
             delete $scope.form_data.progress;
         }).error(function (data, status, headers, config) {
@@ -101,6 +102,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           } else {
             $scope.form_data.errors = status;
           }
+          delete $scope.form_data.progress;
         })
       }
   };
