@@ -75,6 +75,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   </form>
   */
   $scope.upload = function (files, url) {
+    delete $scope.form_data.errors;
     if(files[0] && files[1]) {
       $upload.upload({
           url: url,
@@ -85,6 +86,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             $scope.form_data.progress = progressPercentage; // evt.config.file[0].progress
         }).success(function (data, status, headers, config) {
+            alert(xhr.status); //413 (Request Entity Too Large)
             if(data.errors) {
               $scope.form_data.errors = data.errors;
             } else {
@@ -93,7 +95,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               $("#partecipa").show();
             }
             delete $scope.form_data.progress;
-        });
+        }).error(function (data, status, headers, config) {
+          if(status == "413") {
+            $scope.form_data.errors = "Ricorda che il tuo file non deve pesare più di 100MB";
+          } else {
+            $scope.form_data.errors = status;
+          }
+        })
       } else {
         $scope.form_data.errors = "non hai caricato entrambi i contenuti";
       }

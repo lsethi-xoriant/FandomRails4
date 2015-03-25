@@ -1,6 +1,6 @@
 <div class="row form-group">
 	<div class="col-sm-12 text-center">
-		<%= check_box_tag "extra_fields_#{name}" %>
+    <input id="extra_fields_age_<%= name %>" name="extra_fields_age" type="checkbox" value="1" ng-model="form_data.<%= name %>">
 		<label style="color: #555555;"><%= label %></label>
 	</div>
 </div>
