@@ -219,7 +219,7 @@ module BrowseHelper
         perpage: DEFAULT_VIEW_ALL_ELEMENTS
       }
     }
-    tags = order_elements(category, get_tags_with_tags(filter_tags.map{|t| t.id}))
+    tags = order_elements(category, get_tags_with_tags(filter_tags.map{|t| t.id}, params))
     ctas = order_elements(category, get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}, params))
     merge_contents_with_tags(ctas, tags, offset)
   end
