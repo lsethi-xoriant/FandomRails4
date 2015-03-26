@@ -40,7 +40,7 @@ namespace :disney_tasks do
 
       prefix_destination = gallery_tag.name + "/"
 
-      gallery_backup = "\"#;\",\"USER_ID\",\"EMAIL\",\"NOME\",\"COGNOME\",\"SWID\",\"> 17\",\"NOME IMMAGINE BACKUP\",\"INDIRIZZO IMMAGINE S3\"\n"
+      gallery_backup = "\"#;\",\"USER_ID\",\"EMAIL\",\"NOME\",\"COGNOME\",\"SWID\",\"ANNI < 17\",\"NOME IMMAGINE BACKUP\",\"INDIRIZZO IMMAGINE S3\"\n"
       
       gallery_ctas.each_with_index do |cta, index|
         logger.info "#{log_head(gallery_tag.name)} cta #{cta.id} tracking start"

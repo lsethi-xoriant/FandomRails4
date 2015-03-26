@@ -59,11 +59,11 @@ namespace :aws_tasks do
             logger.info "#{current_timestamp} move media transcoded in cta #{cta.id} start"
 
             media_image_key = remove_head_slash(cta.media_image.path)
-            media_file_name = "media-#{cta.id}.mp4"
+            media_file_name = "#{cta.user_id}-#{cta.id}-media.mp4"
             media_destination = remove_head_slash("#{cta.media_image.path.sub(cta.media_image_file_name, "")}#{media_file_name}")
 
             # Save original media in another folder and replace this media with transcoded media
-            bucket.objects[media_image_key].copy_to("#{s3_output_folder}/original/#{cta.id}-#{cta.media_image_file_name}", acl: :public_read)
+            bucket.objects[media_image_key].copy_to("#{s3_output_folder}/original/#{cta.media_image_file_name}", acl: :public_read)
             object.copy_to(media_destination, acl: :public_read)
 
             thumb_object = bucket.objects["#{s3_output_folder}/thumbnail/00001_aws_transcoding-#{cta.id}.jpg"] #sprintf '%05d', 1
@@ -177,7 +177,7 @@ namespace :aws_tasks do
 
         logger.info "#{current_timestamp} start transcoding job for cta #{cta.id}"
         video_url = remove_head_slash(cta.media_image.path)
-        output_key = "aws_transcoding-#{cta.id}.mp4"
+        output_key = "aws_transcoding-#{cta.id}"
 
         job = video_transcoding(output_key, video_url, transcoder_client, pipeline_id, s3_output_folder, preset)
 
@@ -204,7 +204,7 @@ namespace :aws_tasks do
         key: video_url
       },
       output: {
-        key: "web_mp4/#{output_key}",
+        key: "web_mp4/#{output_key}.mp4",
         preset_id: web_mp4_preset_id,
         thumbnail_pattern: "thumbnail/{count}_#{output_key}",
       },
