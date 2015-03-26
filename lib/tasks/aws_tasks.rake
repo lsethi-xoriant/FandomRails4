@@ -47,7 +47,7 @@ namespace :aws_tasks do
       ctas = CallToAction.where("aux->>'aws_transcoding_media_status' = 'inprogress'")
 
       ctas.each do |cta|
-        object = bucket.objects["#{s3_output_folder}/web_mp4/aws_transcoding-#{cta.id}"]
+        object = bucket.objects["#{s3_output_folder}/web_mp4/aws_transcoding-#{cta.id}.mp4"]
         
         aux = JSON.parse(cta.aux || "{}")
 
@@ -177,7 +177,7 @@ namespace :aws_tasks do
 
         logger.info "#{current_timestamp} start transcoding job for cta #{cta.id}"
         video_url = remove_head_slash(cta.media_image.path)
-        output_key = "aws_transcoding-#{cta.id}"
+        output_key = "aws_transcoding-#{cta.id}.mp4"
 
         job = video_transcoding(output_key, video_url, transcoder_client, pipeline_id, s3_output_folder, preset)
 
@@ -204,7 +204,7 @@ namespace :aws_tasks do
         key: video_url
       },
       output: {
-        key: "web_mp4/#{output_key}.mp4",
+        key: "web_mp4/#{output_key}",
         preset_id: web_mp4_preset_id,
         thumbnail_pattern: "thumbnail/{count}_#{output_key}",
       },
