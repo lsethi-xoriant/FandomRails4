@@ -59,7 +59,7 @@ namespace :aws_tasks do
             logger.info "#{current_timestamp} move media transcoded in cta #{cta.id} start"
 
             media_image_key = remove_head_slash(cta.media_image.path)
-            media_file_name = "media-#{cta.id}"
+            media_file_name = "media-#{cta.id}.mp4"
             media_destination = remove_head_slash("#{cta.media_image.path.sub(cta.media_image_file_name, "")}#{media_file_name}")
 
             # Save original media in another folder and replace this media with transcoded media
