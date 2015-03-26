@@ -3,9 +3,11 @@
 
 namespace :disney_tasks do
  
-  task :gallery_contest_backup, [:app_root_path] => :environment do |t, args|
+  task :gallery_contest_backup, [:app_root_path, :tmp_path] => :environment do |t, args|
 
     switch_tenant("disney")
+
+    tmp_path = args.tmp_path
 
     logger = Logger.new("#{args.app_root_path}/log/gallery_contest_backup.log")
 
@@ -20,10 +22,10 @@ namespace :disney_tasks do
     aruba_s3 = AWS::S3.new(
       access_key_id: aruba_settings[:access_key_id],
       secret_access_key: aruba_settings[:secret_access_key],
-      s3_endpoint: aruba_settings[:region]
+      s3_endpoint: aruba_settings[:s3_endpoint]
     )
 
-    aruba_bucket = aruba_s3.buckets[aws_settings[:bucket]]
+    aruba_bucket = aruba_s3.buckets[aruba_settings[:bucket]]
     bucket = s3.buckets[aws_settings[:bucket]]
 
     gallery_tags = Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ?", "gallery-with-contest")
@@ -37,7 +39,7 @@ namespace :disney_tasks do
 
       logger.info "#{log_head(gallery_tag.name)} backup start"
 
-      prefix_destination = "/" + gallery_tag.name + "/"
+      prefix_destination = gallery_tag.name + "/"
 
       gallery_backup = "\"#;\",\"USER_ID\",\"EMAIL\",\"NOME\",\"COGNOME\",\"SWID\",\"NOME IMMAGINE BACKUP\",\"INDIRIZZO IMMAGINE S3\"\n"
       
@@ -49,20 +51,19 @@ namespace :disney_tasks do
         gallery_backup += "\"##{index}\",\"#{user.id}\",\"#{user.email}\",\"#{user.first_name }\",\"#{user.last_name}\",\"#{user.swid}\",\"#{backup_media_file_name}\",\"#{cta.media_image.url}\"\n"
         
         begin
-          copy_media(prefix_destination, bucket, aruba_bucket, backup_media_file_name, cta.media_image.path)
+          copy_media(prefix_destination, bucket, aruba_bucket, backup_media_file_name, cta.media_image.path, tmp_path)
         rescue Exception => exception
           logger.error("#{log_head(gallery_tag.name)} exception in copy media block: #{exception} - #{exception.backtrace[0, 10]}")
         end
       
       end
 
-      File.open("/home/app/tmp/info.csv", 'wb') do |file|
+      File.open("#{tmp_path}/info.csv", 'wb') do |file|
         file.write(gallery_backup)
       end
 
-      aruba_bucket.objects["/home/app/tmp/info.csv"].write(:file => "/home/app/tmp/info.csv", :sigle_request => true)
+      aruba_bucket.objects["#{prefix_destination}info.csv"].write(:file => "#{tmp_path}/info.csv", :sigle_request => true)
       logger.info "#{log_head(gallery_tag.name)} backup end"
-
     end
 
   end
@@ -80,19 +81,19 @@ namespace :disney_tasks do
     media_image_path
   end
 
-  def copy_media(prefix_destination, bucket, aruba_bucket, backup_media_file_name, original_media_path)
+  def copy_media(prefix_destination, bucket, aruba_bucket, backup_media_file_name, original_media_path, tmp_path)
     original_media_path = remove_head_slash(original_media_path)
     original_object = bucket.objects["#{original_media_path}"]
 
     unless aruba_bucket.objects["#{prefix_destination}#{backup_media_file_name}"].exists?
       if original_object.exists?
-        File.open("/home/app/tmp/tmp", 'wb') do |file|
+        File.open("#{tmp_path}/tmp_media", 'wb') do |file|
           original_object.read do |obj_r|
              file.write(obj_r)
           end
         end
       end    
-      aruba_bucket.objects["#{prefix_destination}#{backup_media_file_name}"].write(:file => "/home/app/tmp/tmp", :sigle_request => true)
+      aruba_bucket.objects["#{prefix_destination}#{backup_media_file_name}"].write(:file => "#{tmp_path}/tmp_media", :sigle_request => true)
     end
   end
 
