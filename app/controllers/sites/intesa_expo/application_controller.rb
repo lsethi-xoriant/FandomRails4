@@ -11,13 +11,24 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     return if cookie_based_redirect?
 
     if $context_root == "imprese"
+
+      home_stripes = cache_short(get_home_stripes_cache_key($context_root)) do
+        {
+          "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
+          "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
+          "interview_stripe" => get_intesa_expo_ctas_with_tag("interview"),
+          "story_stripe" => get_intesa_expo_ctas_with_tag("story"),
+          "enterprise-in-evidence_stripe" => get_intesa_expo_ctas_with_tag("enterprise-in-evidence"),
+        }
+      end
+
       @aux_other_params = {
         "calltoaction_evidence_info" => true,
-        "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
-        "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
-        "interview_stripe" => get_intesa_expo_ctas_with_tag("interview"),
-        "story_stripe" => get_intesa_expo_ctas_with_tag("story"),
-        "enterprise-in-evidence_stripe" => get_intesa_expo_ctas_with_tag("enterprise-in-evidence"),
+        "live-event_stripe" => home_stripes["live-event_stripe"],
+        "gallery_stripe" => home_stripes["gallery_stripe"],
+        "interview_stripe" => home_stripes["interview_stripe"],
+        "story_stripe" => home_stripes["story_stripe"],
+        "enterprise-in-evidence_stripe" => home_stripes["enterprise-in-evidence_stripe"],
         page_tag: {
           miniformat: {
             name: "imprese-home"
@@ -25,18 +36,29 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         }
       }
       render template: "/application/imprese_index"
+
     else
+
+      home_stripes = cache_short(get_home_stripes_cache_key($context_root || "it")) do
+        {
+          "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
+          "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
+          "article_stripe" => get_intesa_expo_ctas_with_tag("article")
+        }
+      end
+
       @aux_other_params = {
         calltoaction_evidence_info: true,
-        "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
-        "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
-        "article_stripe" => get_intesa_expo_ctas_with_tag("article"),
+        "live-event_stripe" => home_stripes["live-event_stripe"],
+        "gallery_stripe" => home_stripes["gallery_stripe"],
+        "article_stripe" => home_stripes["article_stripe"],
         page_tag: {
           miniformat: {
             name: "home"
           }
         }
       }
+
     end
   end
 

@@ -79,6 +79,10 @@ module CacheKeysHelper
   # CTA
   # ~~~~~
 
+  def get_home_stripes_cache_key(context_root = nil)
+    "#{context_root}_home_stripes"
+  end
+
   def get_related_calltoactions_cache_key(user_id, calltoaction_id)
     "related_calltoactions_for_calltoaction_#{calltoaction_id}_for_user_#{user_id}"
   end
