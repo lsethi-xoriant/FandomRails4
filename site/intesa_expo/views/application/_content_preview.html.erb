@@ -1,5 +1,5 @@
 <a href="{{linkTo(content.detail_url, stripe.key)}}">
-  <div class="relateds-flexslider__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta'"> 
+  <div class="relateds-flexslider__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta' && content.layout == 'default'"> 
     <div class="row">
       <div class="col-xs-12 text-center">
         <div class="relateds-flexslider__thumbnail">
@@ -13,7 +13,7 @@
       </div>
     </div>
   </div>
-  <div class="relateds-flexslider__item-panel" ng-if="content.type == 'tag'">
+  <div class="relateds-flexslider__item-panel" ng-if="content.type == 'tag' && content.layout == 'default'">
   	  <div class="row">
 	      <div class="col-xs-12 text-center">
 	        <div class="relateds-flexslider__thumbnail">
@@ -22,5 +22,14 @@
 	        <p class="cta-preview__title cta-preview__title--tag">{{content.title | cut:true:70}}</p>
 	      </div>
       </div> 
-  </div>  
+  </div>
+  
+  <div class="relateds-flexslider__item-panel" ng-if="content.layout == 'interview'">
+  	  <div class="row">
+	      <div class="col-xs-12 text-center">
+	      	<p class="cta-preview__title cta-preview__title--tag">{{content.title | cut:true:30}}</p>
+	        <img class="img-responsive" ng-src="{{content.thumb_url}}"> 
+	      </div>
+      </div> 
+  </div>
 </a>

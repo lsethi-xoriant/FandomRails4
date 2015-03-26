@@ -22,6 +22,7 @@ module BrowseHelper
     attr_accessor :votes
     attr_accessor :tags
     attr_accessor :aux
+    attr_accessor :layout
     attr_accessor :start
     attr_accessor :end
     
@@ -44,6 +45,7 @@ module BrowseHelper
       @votes = params[:votes]
       @tags = params[:tags]
       @aux = params[:aux]
+      @layout = params[:layout]
       @start = params[:start]
       @end = params[:end]
     end

@@ -81,6 +81,7 @@ module ApplicationHelper
       category_icon: category_icon,
       tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
       aux: build_content_preview_aux(tag),
+      layout: get_content_preview_layout(tag),
       start: tag.valid_from,
       end: tag.valid_to
     )
@@ -123,6 +124,7 @@ module ApplicationHelper
       icon: icon,
       category_icon: category_icon,
       tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
+      layout: get_content_preview_layout(tag),
       start: tag.valid_from,
       end: tag.valid_to
     )
@@ -144,6 +146,7 @@ module ApplicationHelper
       tags: get_tag_ids_for_cta(cta),
       votes: get_votes_for_cta(cta.id),
       aux: build_content_preview_aux(cta),
+      layout: get_content_preview_layout(cta),
       start: cta.valid_from,
       end: cta.valid_to
     )
@@ -165,9 +168,14 @@ module ApplicationHelper
       status: nil,
       tags: nil,
       votes: nil,
+      layout: get_content_preview_layout(cta),
       start: cta.valid_from,
       end: cta.valid_to
     )
+  end
+  
+  def get_content_preview_layout(content)
+    get_extra_fields!(content)['layout'] || "default"
   end
   
   def build_content_preview_aux(obj)
