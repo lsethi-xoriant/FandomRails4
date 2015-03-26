@@ -1,6 +1,6 @@
-<div class="row form-group">
-	<div class="col-sm-12 text-center">
+<div class="row text-left">
+	<div class="col-sm-12">
     <input id="extra_fields_age_<%= name %>" name="extra_fields_age" type="checkbox" value="1" ng-model="form_data.<%= name %>">
-		<label style="color: #555555;"><%= label %></label>
+		<label style="color: #555555;"><%= label %><%= "*" if is_required %></label>
 	</div>
 </div>
