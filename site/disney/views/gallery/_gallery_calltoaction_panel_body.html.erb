@@ -11,7 +11,7 @@
 					  			<img class="img-responsive gallery-cta__avatar" src="<%= current_avatar %>" />
 					  		</div>
 					  		<div class="col-sm-10">
-									<input name="title" ng-model="form_data.title" class="form-control gallery-cta__title" id="title" type="text" placeholder="Dai un titolo" ng-if="upload_interaction.interaction.resource.upload_info.title_needed" />
+									<input name="title" ng-model="form_data.title" class="form-control gallery-cta__title" id="title" type="text" placeholder="Dai un titolo*" ng-if="upload_interaction.interaction.resource.upload_info.title_needed" />
 								</div>	
 								<div class="col-sm-12" style="margin-top: 10px;">
 									<textarea name="description" ng-model="form_data.description" class="form-control gallery-cta__title" id="description" placeholder="Inserisci una descrizione"></textarea>
@@ -20,7 +20,7 @@
 				  		<div class="row">
 						  	<div class="col-sm-6 col-sm-offset-3 gallery-cta__upload-photo">
 					  			<input id="upload" name="attachment" ng-file-select="" ng-model="form_data.attachment" class="form-control hidden" type="file"> <!-- onchange="photoSelected()" -->
-					  			<a class="btn btn-primary btn-block" onclick="loadPhoto();"><i class="fa fa-upload"></i> <%= get_extra_fields!(gallery_tag)['label_button'].nil? ? "Carica il tuo media" : get_extra_fields!(gallery_tag)['label_button'] %>
+					  			<a class="btn btn-primary btn-block" onclick="loadPhoto();"><i class="fa fa-upload"></i> <%= get_extra_fields!(gallery_tag)['label_button'].nil? ? "Carica il tuo media*" : "#{get_extra_fields!(gallery_tag)['label_button']}*" %>
 					  			</a>
 					  			<i class="fa fa-check-circle" ng-if="form_data.attachment"></i>
 					  		</div>
@@ -52,7 +52,7 @@
 					  </div>
 					  <div class="col-xs-12 col-sm-6 col-sm-offset-3 gallery-cta__upload-release">
 					  	<input id="releasing" name="releasing" ng-file-select="" ng-model="form_data.releasing" class="hidden" type="file"> <!-- onchange="releaseSelected();" -->
-					  	<a class="btn btn-primary btn-block" onclick="loadRelease();"><i class="fa fa-pencil"></i> Carica la liberatoria firmata
+					  	<a class="btn btn-primary btn-block" onclick="loadRelease();"><i class="fa fa-pencil"></i> Carica la liberatoria firmata*
 					  	</a>
 					  	<i class="fa fa-check-circle" ng-if="form_data.releasing"></i>
 					  </div>
@@ -79,6 +79,10 @@
 		  				<button class="btn btn-primary" ng-if="current_user != undefined" ng-click="upload([form_data.attachment[0], form_data.releasing[0]], ('/upload_interaction/create/' + aux.gallery.calltoaction.id + '/' + upload_interaction.interaction.id), <%= (extra_fields || {}).to_json %>)">CARICA</button>
 							
 							<a class="btn btn-primary" data-toggle="modal" data-target="#registrate-modal" ng-if="current_user == undefined">CARICA</a>
+			  		</div>
+
+			  		<div class="col-sm-12 text-left" ng-if="!form_data.progress">
+			  			<p class="gallery__required-info">*campi obbligatori</p>
 			  		</div>
 
 			  		<div class="col-sm-12 gallery__progress" ng-if="form_data.progress">

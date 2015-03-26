@@ -1234,7 +1234,7 @@ module ApplicationHelper
   
   def extra_field_to_html(field)
     ac = ActionController::Base.new()
-    ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", locals: { label: field['label'], name: field['name']  }, layout: false, formats: :html
+    ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", locals: { label: field['label'], name: field['name'], is_required: field['required']  }, layout: false, formats: :html
   end
 
   def not_logged_from_omniauth(auth, provider)  

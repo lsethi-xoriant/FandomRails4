@@ -232,7 +232,7 @@ class CallToActionController < ApplicationController
 
     calltoaction_id = params[:id]
     
-    calltoaction = CallToAction.includes(interactions: :resource).active_with_media.find(calltoaction_id)
+    calltoaction = CallToAction.includes(interactions: :resource).active.find(calltoaction_id)
 
     if calltoaction
       log_call_to_action_viewed(calltoaction)
