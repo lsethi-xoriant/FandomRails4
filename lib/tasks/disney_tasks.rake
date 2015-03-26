@@ -3,11 +3,9 @@
 
 namespace :disney_tasks do
  
-  task :gallery_contest_backup, [:app_root_path, :tmp_path] => :environment do |t, args|
+  task :gallery_contest_backup, [:app_root_path] => :environment do |t, args|
 
     switch_tenant("disney")
-
-    tmp_path = args.tmp_path
 
     logger = Logger.new("#{args.app_root_path}/log/gallery_contest_backup.log")
 
@@ -18,12 +16,13 @@ namespace :disney_tasks do
       s3_endpoint: "s3-#{aws_settings[:region]}.amazonaws.com"
     )
 
-    aruba_settings = get_deploy_setting("sites/disney/aruba_aws", false)
+    aruba_settings = get_deploy_setting("sites/disney/disney_backup_aws", false)
     aruba_s3 = AWS::S3.new(
       access_key_id: aruba_settings[:access_key_id],
       secret_access_key: aruba_settings[:secret_access_key],
       s3_endpoint: aruba_settings[:s3_endpoint]
     )
+    tmp_path = aruba_settings[:download_temp_file]
 
     aruba_bucket = aruba_s3.buckets[aruba_settings[:bucket]]
     bucket = s3.buckets[aws_settings[:bucket]]
