@@ -8,7 +8,11 @@ module IntesaExpoHelper
     if tag_name == "live-event"
       current_time = Time.now.utc.strftime("%Y/%m/%d %H:%M:%S")
       exclude_cta_ids = CallToAction.active.where("cast(\"extra_fields\"->>'valid_from' AS timestamp) < ?", current_time).map { |cta| cta.id }
-      params = { conditions: { exclude_cta_ids: exclude_cta_ids } }   
+      if exclude_cta_ids.any?
+        params = { conditions: { exclude_cta_ids: exclude_cta_ids } }   
+      else
+        params = {}
+      end
     else
       params = {}
     end
