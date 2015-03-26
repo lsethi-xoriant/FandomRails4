@@ -1200,7 +1200,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   		'uiconf_id': $scope.aux.kaltura.uiconf_id,
   		'entry_id': media_data,
   		'flashvars':{
-  			'autoPlay': false
+  			'autoPlay': false,
+  			'doubleClick': { 
+  				'adTagUrl': "http://pubads.g.doubleclick.net/gampad/ads?env=vp&gdfp_req=1&impl=s&output=xml_vast2&unviewed_position_start =1&description_url=http%3A%2F%2Fdisney.co.uk&iu=/165891808/disney.it/video/watch&sz=1920x480&url=[REFERRER_ URL]&correlator=[TIMESTAMP]&ad_rule=1&cmsid=13728&ciu_szs=320x50,300x250&cust_params=contenttype%3Dvideos%26disneycms%3DMH&vid=1_w7b1ppxw",
+				'htmlCompanions': 'div-video-mpu:300:250;' 
+			}
   		},
   		'params':{
   			'wmode': 'transparent' 
