@@ -204,7 +204,7 @@ module BrowseHelper
       perpage: carousel_elements
     }
     tag_ids = ([category] + tags).map{|tag| tag.id}
-    tags = order_elements(category, get_tags_with_tags(tag_ids), params)
+    tags = order_elements(category, get_tags_with_tags(tag_ids, params))
     ctas = order_elements(category, get_ctas_with_tags_in_and(tag_ids, params))
     total = tags.count + ctas.count
     tags = tags.slice!(0, carousel_elements)
