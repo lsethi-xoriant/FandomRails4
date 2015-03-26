@@ -40,14 +40,17 @@ namespace :disney_tasks do
 
       prefix_destination = gallery_tag.name + "/"
 
-      gallery_backup = "\"#;\",\"USER_ID\",\"EMAIL\",\"NOME\",\"COGNOME\",\"SWID\",\"NOME IMMAGINE BACKUP\",\"INDIRIZZO IMMAGINE S3\"\n"
+      gallery_backup = "\"#;\",\"USER_ID\",\"EMAIL\",\"NOME\",\"COGNOME\",\"SWID\",\"> 17\",\"NOME IMMAGINE BACKUP\",\"INDIRIZZO IMMAGINE S3\"\n"
       
       gallery_ctas.each_with_index do |cta, index|
         logger.info "#{log_head(gallery_tag.name)} cta #{cta.id} tracking start"
 
+        extra_fields = JSON.parse(cta.extra_fields || "{}")
+        check_age = extra_fields["age"].present?
+
         user = cta.user
         backup_media_file_name = generate_backup_media_file_name(cta)
-        gallery_backup += "\"##{index}\",\"#{user.id}\",\"#{user.email}\",\"#{user.first_name }\",\"#{user.last_name}\",\"#{user.swid}\",\"#{backup_media_file_name}\",\"#{cta.media_image.url}\"\n"
+        gallery_backup += "\"##{index}\",\"#{user.id}\",\"#{user.email}\",\"#{user.first_name }\",\"#{user.last_name}\",\"#{user.swid}\",\"#{check_age}\",\"#{backup_media_file_name}\",\"#{cta.media_image.url}\"\n"
         
         begin
           copy_media(prefix_destination, bucket, aruba_bucket, backup_media_file_name, cta.media_image.path, tmp_path)

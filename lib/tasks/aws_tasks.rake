@@ -204,10 +204,9 @@ namespace :aws_tasks do
         key: video_url
       },
       output: {
-        key: "web_mp4/#{output_key}",
+        key: "web_mp4/#{output_key}.mp4",
         preset_id: web_mp4_preset_id,
         thumbnail_pattern: "thumbnail/{count}_#{output_key}",
-
       },
       output_key_prefix: "#{s3_output_folder}/"
     )[:job]
