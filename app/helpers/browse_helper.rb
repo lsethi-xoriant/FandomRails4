@@ -167,10 +167,18 @@ module BrowseHelper
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.slug}",
-      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4,
+      column_number: get_section_column_number(extra_fields),
       total: total,
       per_page: carousel_elements
     })
+  end
+  
+  def get_section_column_number(extra_fields)
+    if extra_fields['column_number'].nil?
+      DEFAULT_VIEW_ALL_ELEMENTS / 4
+    else
+      DEFAULT_VIEW_ALL_ELEMENTS / extra_fields['column_number'].to_i
+    end
   end
   
   def get_browse_section_icon(extra_fields)
@@ -196,7 +204,7 @@ module BrowseHelper
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.slug}",
-      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
+      column_number: get_section_column_number(extra_fields)
     })
   end
   
