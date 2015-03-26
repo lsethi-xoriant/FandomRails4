@@ -8,9 +8,10 @@ module IntesaExpoHelper
   end
 
   def get_intesa_expo_related_ctas(cta)
-    tag_tagged_with_related = get_tag_with_tag_about_call_to_action(cta, "related").first      
+    tag_tagged_with_related = get_tag_with_tag_about_call_to_action(cta, "related").first   
+    params = { conditions: { exclude_cta_ids: [cta.id] } }   
     if tag_tagged_with_related
-      relateds = get_content_preview_stripe(tag_tagged_with_related.name)
+      relateds = get_content_preview_stripe(tag_tagged_with_related.name, params)
     else
       nil
     end
