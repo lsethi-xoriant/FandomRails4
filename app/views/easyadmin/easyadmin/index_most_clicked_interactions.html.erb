@@ -41,35 +41,15 @@
             </tr>
           </thead>            
           
-          <% @interaction_list.each do |interaction| %>
+          <% @interactions.each do |interaction| %>
             <tr>
+                    <td>[<%= interaction.resource_type %>]</td>
+                    <td><%= interaction.count %></td>
                     <td>
-                      <% case interaction.resource_type
-                        when "Share" %>
-                        <%= "Share" %>
-                      <% when "Check" %>
-                        <%= "#{Check.where(:id => interaction.resource_id).first.title} [Check]" %>
-                      <% when "Comment" %>
-                        <%= "#{Comment.where(:id => interaction.resource_id).first.title} [Commento]" %>
-                      <% when "Quiz" %>
-                        <%= "#{Quiz.where(:id => interaction.resource_id).first.question} [Quiz]" %>
-                      <% when "Like" %>
-                        <%= "[Like]" %>
-                      <% when "Play" %>
-                        <%= "[Play]" %>
-                      <% when "Vote" %>
-                        <%= "[Vote]" %>
-                      <% end %>
+                <%= link_to "#{interaction.call_to_action.title} [id: #{interaction.call_to_action.id}]", easyadmin_cta_show_path(interaction.call_to_action.id), class: "btn btn-secondary btn-xs" %></a>
                     </td>
                     <td>
-                      <%= UserInteraction.where(:interaction_id => interaction.id).sum("counter") %>
-                    </td>
-                    <td>
-                <%= link_to "#{CallToAction.where(:id => interaction.call_to_action_id).first.title} [id: #{interaction.call_to_action_id}]", easyadmin_cta_show_path(interaction.call_to_action_id), class: "btn btn-secondary btn-xs" %></a>
-                    </td>
-                    <td><% if CallToAction.where(:id => interaction.call_to_action_id).first.media_image.present? %>
-                        <img src="<%= CallToAction.where(:id => interaction.call_to_action_id).first.media_image.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
-                      <% end %>
+                        <img src="<%= interaction.call_to_action.thumbnail.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
                     </td>
                   </tr>
           <% end %>
