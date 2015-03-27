@@ -1,0 +1,56 @@
+.btn-provider { 
+  color: #FFFFFF; 
+  background-color: #3D6B80; 
+  border-color: #3D6B80; 
+  height: 30px;
+  width: 30px;
+  margin-left: -2px;
+  border-radius: 0;
+  .fa-facebook {
+    font-size: 14px;
+  }
+  .fa-twitter {
+    font-size: 18px;
+  }
+  padding: 0;
+} 
+ 
+.btn-provider:hover, 
+.btn-provider:focus, 
+.btn-provider:active, 
+.btn-provider.active, 
+.open .dropdown-toggle.btn-provider { 
+  color: #FFFFFF; 
+  background-color: #507E94; 
+  border-color: #3D6B80; 
+} 
+ 
+.btn-provider:active, 
+.btn-provider.active, 
+.open .dropdown-toggle.btn-provider { 
+  background-image: none; 
+} 
+ 
+.btn-provider.disabled, 
+.btn-provider[disabled], 
+fieldset[disabled] .btn-provider, 
+.btn-provider.disabled:hover, 
+.btn-provider[disabled]:hover, 
+fieldset[disabled] .btn-provider:hover, 
+.btn-provider.disabled:focus, 
+.btn-provider[disabled]:focus, 
+fieldset[disabled] .btn-provider:focus, 
+.btn-provider.disabled:active, 
+.btn-provider[disabled]:active, 
+fieldset[disabled] .btn-provider:active, 
+.btn-provider.disabled.active, 
+.btn-provider[disabled].active, 
+fieldset[disabled] .btn-provider.active { 
+  background-color: #3D6B80; 
+  border-color: #3D6B80; 
+} 
+ 
+.btn-provider .badge { 
+  color: #3D6B80; 
+  background-color: #FFFFFF; 
+}

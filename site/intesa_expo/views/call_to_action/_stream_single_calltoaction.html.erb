@@ -1,20 +1,29 @@
-<div class="container main-container"> 
+<div class="container" ng-if="calltoaction_info.calltoaction.media_type != 'VOID'"> 
   <div class="row main-row">
-
-    <div class="col-sm-12" ng-if="calltoaction_info.calltoaction.media_type != 'VOID'">
+    <div class="col-sm-12">
       <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
     </div>
+  </div>
+</div>
 
-    <!-- MEDIA -->
-    <div class="col-sm-12" ng-if="calltoaction_info.calltoaction.media_type != 'VOID'">
-      <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
+<div class="container-fluid__blue">
+  <div class="container" ng-if="calltoaction_info.calltoaction.media_type != 'VOID'"> 
+    <div class="row main-row">
+      <div class="col-sm-12">
+        <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="container main-container"> 
+  <div class="row main-row">
 
     <div class="col-sm-12 ctas__flexslider__container" ng-if="calltoaction_info.calltoaction.gallery">
       <%= render partial: "/application/photo_gallery" %>
     </div>
 
-    <div class="col-sm-8">
+    <div class="col-sm-8 cta__main-column">
       <div class="row">
 
         <div class="col-sm-12" ng-if="calltoaction_info.calltoaction.media_type == 'VOID'">
@@ -23,26 +32,36 @@
 
         <!-- UNDER MEDIA -->
         <div class="col-md-12">         
-          <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.extra_fields['subtitle']"></h2>
+          <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.extra_fields['subtitle'] | unsafe"></h2>
+        </div>
 
-          <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields['author']">
-            <img style="max-width: 30px;" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
-            Autore: <span>{{calltoaction_info.calltoaction.extra_fields['author']}}</span>
-          </p>
-          <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.valid_from">Data: <span>{{formatDate(calltoaction_info.calltoaction.valid_from, aux.language)}}</span></p>
-          <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.valid_from">Ora: <span>{{extractTimeFromDate(calltoaction_info.calltoaction.valid_from)}}</span></p>
-          <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.extra_fields['location']">Location: <span>{{calltoaction_info.calltoaction.extra_fields["location"]}}</span></p>
-          <p class="cta__sub_description">Categoria eventi: <span>{{calltoaction_info.calltoaction.extra_fields["category"]}}</span></p>
-          <p class="cta__sub_description">Ospiti: <span>{{calltoaction_info.calltoaction.extra_fields["guests"]}}</span></p>
+        <div class="col-md-12 cta__column-custom">
+          <div class="cta__hr_top"></div>
+          <div class="row">
+            
 
-          <!-- SHARE -->
-          <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
-            <div id="share-interaction-{{interaction_info.interaction.id}}" class="share-undervideo-interaction__row">
-              <%= render partial: "/call_to_action/share_interaction" %>
+            <div class="col-md-7"> 
+              <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields['author']">
+              <img style="max-width: 30px;" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
+              Autore: <span>{{calltoaction_info.calltoaction.extra_fields['author']}}</span>
+              </p>
+            </div>
+
+            <div class="col-md-5 text-right">
+              <div class="cta__hr_center"></div> 
+              <!-- SHARE -->
+              <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+                <div id="share-interaction-{{interaction_info.interaction.id}}" class="share-undervideo-interaction__row">
+                  <%= render partial: "/call_to_action/share_interaction" %>
+                </div>
+              </div>
             </div>
           </div>
+          <div class="cta__hr_bottom"></div>
+        </div>
 
-          <p class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description"></p>
+        <div class="col-md-12"> 
+          <p class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></p>
 
           <div class="cta__contents" ng-repeat="content in calltoaction_info.calltoaction.contents | orderBy:orderContent">
             <img ng-src="{{content['value']['url']}}" ng-if="content['value']['type'] == 'media'">
@@ -61,6 +80,23 @@
 
       </div>
     </div>
+    <div class="col-sm-4">
+      <div class="cta__extra_fields">
+
+        <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.start || calltoaction_info.calltoaction.extra_fields.location">DOVE E QUANDO</p>
+
+        <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.start"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{formatDate(calltoaction_info.calltoaction.extra_fields.start, aux.language)}}</span></p>
+        <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.start"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{extractTimeFromDate(calltoaction_info.calltoaction.extra_fields.start)}}</span></p>
+
+        <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.location"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields["location"]}}</span></p>
+
+        <p class="cta__extra_fields__title cta__extra_fields__title--margin-top" ng-if="calltoaction_info.calltoaction.extra_fields.guests">OSPITI</p>
+
+        <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
+
+      </div>
+    </div>
+
     <div class="col-sm-4">
       <div ng-if="calltoaction_info.flag">FLAG: {{calltoaction_info.flag.title}}</div>
       <%= render partial: "/application/right_contents" %>

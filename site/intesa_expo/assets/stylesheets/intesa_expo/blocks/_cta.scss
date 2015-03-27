@@ -1,5 +1,29 @@
 /* CTA */
 
+.cta__hr_top {
+  height: 1px; 
+  background-color: #eee; 
+  margin: 30px 0 10px 0;
+}
+
+.cta__hr_bottom {
+  height: 1px; 
+  background-color: #eee; 
+  margin: 10px 0 30px 0;
+}
+
+.cta__hr_center {
+  width: 1px; 
+  position: absolute; 
+  top: -10px; 
+  bottom: -10px; 
+  background-color: #eee;
+}
+
+.cta__column-custom--left-border {
+  border-left: 1px solid #eee;
+}
+
 .cta__contents {
   img {
     width: 100%;
@@ -9,6 +33,38 @@
     width: 100%;
     margin: 15px 0;
   }
+}
+
+.cta__main-column {
+  border-right: 1px solid #eee;
+}
+
+.cta__extra_fields {
+  margin-top: 15px;
+  background-color: $blue;
+  padding: 25px;
+  color: #fff;
+}
+
+.cta__extra_fields__title {
+  color: #99a9b6;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.cta__extra_fields__title--margin-top {
+  margin-top: 15px;
+}
+
+.cta__extra_fields__description {
+  color: #fff;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.cta__extra_fields__description__content {
+  color: #fff;
+  margin-left: 5px;
 }
 
 .cta__table-footer {
@@ -157,8 +213,17 @@
 
 .cta__description {
   font-size: 16px;
-  font-style: oblique;
-  margin-bottom: 30px;
+  margin-bottom: 0;
+}
+
+.cta__long_description {
+}
+
+.cta__long_description::first-letter { 
+  float: left;
+  font-size: 52px;
+  line-height: 52px;
+  padding-right: 8px;
 }
 
 .cta__sub_description {
@@ -168,14 +233,11 @@
   }
 }
 
-.cta__long_description {
-  margin-top: 30px;
-  margin-bottom: 30px;
-  font-style: oblique;
-}
-
 .cta__title {
+  text-transform: uppercase;
   font-size: 26px;
+  color: $lightblue;
+  margin-bottom: 15px;
 }
 
 .ctas__search {

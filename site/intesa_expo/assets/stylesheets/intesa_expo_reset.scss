@@ -5,6 +5,13 @@ hr {
 }
 
 * {
+  font-family: "Helvetica"
+}
+
+h1, h2, 
+.ctas__flexslider__title, 
+.cta__extra_fields__title, 
+.cta__long_description::first-letter {
   font-family: 'Gnuolane';
 }
 
@@ -48,9 +55,14 @@ p {
     color: #99a9b6;
   }
 
+  .fc-content-skeleton {
+    padding-bottom: 0;
+    margin-bottom: 2px;
+  }
+
   .fc-widget-header {
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: 10px;
     margin-bottom: 5px;
   }
 

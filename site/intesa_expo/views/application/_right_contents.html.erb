@@ -4,7 +4,7 @@
   </div>
   <div class="col-xs-12" ng-repeat="content in aux.relateds.contents" ng-if="content.type == 'cta'">
     <%= light_link_to("{{content.detail_url}}") do %>
-      <img class="img-responsive" ng-src="{{content.thumb_url}}">
+      <img class="img-responsive" ng-src="{{content.thumb_url}}" style="width: 100%;">
       <p>{{content.title | cut:true:70}}</p>
       <p ng-bind-html="content.description | cut:true:70"></p>
     <% end %>

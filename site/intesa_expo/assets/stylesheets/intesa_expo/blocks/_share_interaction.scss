@@ -1,120 +1,14 @@
-/* SHARE */
-
-.share-interaction__container {
-  position: absolute;
-  right: -70px;
-  top: 0;
-}
-
-.share-interaction__extra-title {
-  color: #660206;
-  font-family: "BarmenoRegularBold";
-  font-size: 32px;
-  margin-bottom: 15px;
-  margin-top: 15px;
-}
-
-.share-interaction__extra-description {
-  font-size: 16px;
-  padding: 15px;
-}
-
-.share-interaction__cover__col {
-  padding-top: 10px;
-}
-
-.share-interaction__cover__info {
-  padding: 0;
-  font-size: 14px;
-  color: #999;
-}
-
-.share-interaction__btn {
-  height: 40px;
-  width: 40px;
-  font-size: 18px;
-  margin-top: 30px;
-}
-
-.share-interaction__cta__info__fb-button:active, 
-.share-interaction__cta__info__email-button:active,
-.share-interaction__cta__info__tt-button:active {
-  top: 3px;
-  position: relative;
-}
-
-.share-interaction__cover__info__glyphicon-fb {
-  font-size: 24px !important;
-  position: relative;
-  top: 3px;
-}
-
-.share-interaction__cover__info__glyphicon-envelope {
-  font-size: 24px !important;
+.share-interaction__title {
+  background-color: #666;
+  color: #fff;
+  display: inline-block;
+  line-height: 30px;
+  margin-right: 2px;
+  padding-left: 8px;
+  padding-right: 8px;
   position: relative;
   top: 1px;
-}
-
-.share-interaction__modal__panel {
-  margin: 0 25px 0 25px;
-}
-
-.share-interaction__modal__panel-body {
-  -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
-  padding-top: 0;
-}
-
-.share-interaction__modal__header-title {
-  color: #000;
-  font-size: 18px;
-  padding-bottom: 15px;
-}
-
-.share-interaction__modal__title {
-  padding-top: 15px;
-  color: #000;
-  font-size: 14px;
-}
-
-.share-interaction__modal__description {
-  color: #999;
-  font-size: 14px;
-}
-
-.share-interaction__modal-input-col {
-  padding-left: 40px;
-  padding-right: 40px;
-}
-
-.share-interaction__modal-feedback {
-  margin-bottom: 5px;
-}
-
-.share-interaction__cta__info__email-button, 
-.share-interaction__cta__info__tt-button,
-.share-interaction__cta__info__fb-button {
-  padding: 0;
-}
-
-@media (max-width: $screen-sm-min) { 
-  .share-interaction__modal__panel {
-    margin: 0;
-  }
-
-  .share-undervideo-interaction__row {
-    margin-top: 15px;
-  }
-
-  .share-interaction__modal-input-col {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
-  .share-interaction__modal__header-title {
-    font-size: 18px;
-    padding-bottom: 10px;
-    text-align: left;
+  p {
+    font-family: 'Gnuolane';
   }
 }

@@ -12,7 +12,7 @@
               <div class="col-xs-12 ctas__info">
                 <div class="ctas__info--bottom">
                   <p class="ctas__flexslider__title">{{calltoaction.title}}</p>
-                  <p class="ctas__flexslider__description" ng-if="calltoaction.extra_fields.start"><span class="fa fa-calendar"></span> <span class="ctas__flexslider__extra-field">{{formatDate(calltoaction.extra_fields.start, aux.language)}}</span></p>
+                  <p class="ctas__flexslider__description" ng-if="calltoaction.extra_fields.start"><span class="fa fa-calendar-o"></span> <span class="ctas__flexslider__extra-field">{{formatDate(calltoaction.extra_fields.start, aux.language)}}</span></p>
                   <p class="ctas__flexslider__description" ng-if="calltoaction.extra_fields.start"><span class="fa fa-clock-o"></span> <span class="ctas__flexslider__extra-field">{{extractTimeFromDate(calltoaction.extra_fields.start)}}</span></p>
                   <p class="ctas__flexslider__description" ng-if="calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="ctas__flexslider__extra-field">{{calltoaction.extra_fields.guests}}</span></p>
                 </div>
