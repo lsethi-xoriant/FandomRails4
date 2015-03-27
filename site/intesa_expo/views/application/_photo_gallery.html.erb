@@ -1,4 +1,4 @@
-<div class="flexslider ctas__flexslider">
+<div id="gallery-slider" class="flexslider ctas__flexslider">
   <ul class="slides">
     <li ng-repeat="content in calltoaction_info.calltoaction.gallery | orderBy:orderContent" class="filters__flexslider-item">
         <div class="col-xs-12 cta-cover__thumbnail-column">
@@ -8,18 +8,51 @@
   </ul>
 </div>
 
+<div id="gallery-carousel" class="flexslider">
+  <ul class="slides">
+    <li ng-repeat="content in calltoaction_info.calltoaction.gallery | orderBy:orderContent" style="margin-right: 15px;">
+      <div style="width: 135px; height: 80px; background-size: 110% auto; background-position: center; background-repeat: no-repeat;" ng-style="{'background-image': 'url(\'' + content['value']['url'] + '\')'}">
+        <!--<img ng-src="{{content['value']['url']}}">-->
+      </div>
+    </li>
+  </ul>
+</div>
+
 <script type="text/javascript">
   $(document).ready(function() {
-    $('.ctas__flexslider').flexslider({
+    $('.g').flexslider({
       animation: "fade",
       slideshow: false,
       animationLoop: true,
       touch: true,
       itemWidth: "100%",
-      itemMargin: 0,
+      itemMargin: 15,
       controlNav: true,
       prevText: "",
       nextText: ""
     });
+
+
+  $('#gallery-carousel').flexslider({
+    animation: "slide",
+    controlNav: false,
+    animationLoop: false,
+    slideshow: false,
+    itemWidth: 135,
+    itemMargin: 15,
+    asNavFor: '#gallery-slider'
+  });
+
+  $('#gallery-slider').flexslider({
+    animation: "fade",
+    controlNav: false,
+    directionNav: false,
+    slideshow: false,
+    itemWidth: "100%",
+    itemMargin: 0,
+    sync: "#gallery-carousel"
+  });
+
+
   });
 </script>
