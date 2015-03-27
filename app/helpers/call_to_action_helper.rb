@@ -62,6 +62,7 @@ module CallToActionHelper
       "slug" => calltoaction.slug,
       "description" => calltoaction.description,
       "type" => "cta",
+      "extra_fields" => JSON.parse(calltoaction.extra_fields || "{}"),
       "aux" => {
         "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat"),
         "flag" => build_grafitag_for_calltoaction(calltoaction, "flag")

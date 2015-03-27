@@ -2152,17 +2152,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       monthNames = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 
         'luglio', 'agosto', 'settembre', 'ottobre', 'novembre','dicembre'];
     }
-    return monthNames[n - 1];
+    return monthNames[n];
   };
 
   $scope.formatDate = function(date, language) {
     date = new Date(date);
-    return date.getDay() + " " + computeMonthName(date.getMonth(), language) + " " + date.getYear();
+    return date.getDay() + " " + computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
   };
 
   $scope.extractTimeFromDate = function(date) {
     date = new Date(date);
-    return date.getHours() + ":" + date.getMinutes();
+    return ("0" + date.getHours()).slice(-2) + ":" +("0" + date.getMinutes()).slice(-2);
   };
 
   //////////////////////// CAPTCHA ////////////////////////
