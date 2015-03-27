@@ -1,23 +1,31 @@
 /* CTA PREVIEW BLOCK */
 
-.cta__evidence-right__col {
-  border-bottom: 2px solid #fff;
-  background-color: #ccc;
-  height: 132px;
+.cta__evidence-banner {
+  padding-left: 5px;
 }
 
-.cta__evidence-right__col--light {
-  background-color: #ddd;
+.cta__evidence-calendar {
+  padding-left: 5px;
+}
+
+.cta__evidence-banner__img {
+  img {
+    width: 100%;
+  }
+  overflow: hidden;
+  border: 2px solid #fff;
+  border-radius: 2px;
+  height: 163px;
 }
 
 .cta__evidence-right__title {
   font-size: 16px;
-  color: $blu;
+  color: $blue;
   font-weight: bold;
 }
 
 .cta__evidence-right__hr {
-  border-top: 3px solid $blu;
+  border-top: 3px solid $blue;
   margin-top: 10px;
   margin-bottom: 10px;
 }

@@ -19,13 +19,14 @@
       </div>
     </div>
     <!-- SLIDER END -->
-    <div class="col-sm-3 cta__evidence-right__col">
+    <div class="col-sm-3 cta__evidence-banner">
       <a href="{{aux.assets.banner_url_1}}">
-        <hr class="cta__evidence-right__hr">
-        <p class="cta__evidence-right__title">{{aux.assets.banner_title_1}}</p>
+        <div class="cta__evidence-banner__img">
+          <img ng-src="{{aux.assets.banner_img_1.url}}">
+        </div>
       </a>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-3 cta__evidence-calendar">
       <div id="widget-calendar"></div>    
     </div>
   </div>
@@ -44,12 +45,13 @@
         center: 'title',
         right: 'next'
       },
-      dayClick: function() {
-        alert('a day has been clicked!');
+      dayClick: function(date, jsEvent, view ) {
+        window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
       },
+      height: "auto",
+      lang: "<%= $context_root || 'it' %>",
       editable: false,
       disableResizing: true
-      //events: <%#= @calendar_events.html_safe %> 
     });
 
   }
@@ -65,6 +67,7 @@
       itemWidth: "100%",
       itemMargin: 0,
       controlNav: true,
+      directionNav: false,
       prevText: "",
       nextText: ""
     });

@@ -4,6 +4,10 @@ hr {
   border-color: #ccc;
 }
 
+* {
+  font-family: 'Gnuolane';
+}
+
 
 body {
   padding-top: 0;
@@ -14,7 +18,10 @@ p {
   margin: 0;
 }
 
-.main-container {
+.main-row__evidence {
+  padding-top: 30px;
+  padding-left: 43px;
+  padding-right: 43px;
 }
 
 .main-row {
@@ -22,9 +29,93 @@ p {
   padding-right: 43px;
 }
 
-.main-row__evidence {
-  padding-left: 60px;
-  padding-right: 60px;
+.container-fluid__blue, .container--blue {
+  background: $blue !important;
+}
+
+#widget-calendar {
+  background-color: #132332;
+  padding: 10px;
+  margin-top: 10px;
+
+  .fc-widget-header, .fc-widget-content {
+    border-width: 0;
+    color: #fff;
+  }
+
+  .fc-other-month, .fc-widget-header {
+    opacity: 1;
+    color: #99a9b6;
+  }
+
+  .fc-widget-header {
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  .fc-basic-view .fc-body .fc-row {
+    min-height: 0;
+  }
+
+  .fc-center {
+    h2 {
+      text-transform: uppercase;
+      color: #fff;
+      font-size: 18px;
+      margin-top: 0;
+    }
+  }
+
+  .fc-button {
+    outline: 0;
+    background-color: transparent;
+    background-image: none;
+    border-radius: 0;
+    border: 0;
+    text-shadow: none;
+    box-shadow: none;
+    color: #fff;
+  }
+
+  .fc-day-number {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .fc-state-highlight {
+    background-color: $orange;
+  }
+
+  .fc-icon:after {
+    margin: 0 !important;
+  }
+
+  .fc-icon-left-single-arrow:after, .fc-icon-right-single-arrow:after {
+    content: '';
+  }
+
+  .fc-button {
+    height: auto !important;
+    padding: 0 !important;
+  }
+
+  .fc-icon {
+    @extend .glyphicon;
+    overflow: visible;
+    line-height: 0;
+    margin: 0;
+    top: 0;
+  }
+
+  .fc-icon-left-single-arrow {
+    @extend .glyphicon-chevron-left;
+  }
+
+  .fc-icon-right-single-arrow {
+    @extend .glyphicon-chevron-right;
+  }
+
 }
 
 /********************* COOKIES FOOTER *********************/

@@ -1,10 +1,14 @@
-<%= render partial: "/application/evidence_ctas" %>
+<div class="container-fluid__blue">
+  <%= render partial: "/application/evidence_ctas" %>
+</div>
 
-<div class="container main-container">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="browse-sections" ng-repeat="stripe in [aux['live-event_stripe']]">
-        <%= render partial: "/application/stripe" %>
+<div class="container-fluid__blue">
+  <div class="container main-container container--blue">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="browse-sections" ng-repeat="stripe in [aux['live-event_stripe']]">
+          <%= render partial: "/application/stripe" %>
+        </div>
       </div>
     </div>
   </div>

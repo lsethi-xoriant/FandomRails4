@@ -1,13 +1,15 @@
 $brown: #660206;
 $brown_hover: #850e0d;
 $red: red;
-$blu: #383AB0;
+$blue: #152b3f;
+$lightblue: #3d6b80;
 $purple: #c5a3da;
 $gray: #ececec;
 $darkgray: #ABABAB;
 $green: #30bf43;
 $cream: #eae4d2;
 $white: #fff;
+$orange: #fb8024;
 
 $container-tablet:             100% !default;
 $container-sm:                 $container-tablet !default;
@@ -26,7 +28,7 @@ $navbar-default-color:                      #999 !default;
 $navbar-default-bg:                         $white !default;
 
 $navbar-default-link-color:                 #999 !default;
-$navbar-default-link-hover-color:           $blu !default;
+$navbar-default-link-hover-color:           $blue !default;
 $navbar-default-link-hover-bg:              $white !default;
 $navbar-default-link-active-color:          $navbar-default-link-hover-color !default;
 $navbar-default-link-active-bg:             $white !default;
@@ -73,3 +75,10 @@ $navbar-inverse-toggle-border-color:        #999 !default;
 @import "bootstrap/bootstrap";
 @import "intesa_expo/**/**/*";
 @import "intesa_expo_reset";
+
+@font-face {
+  font-family: 'Gnuolane';
+  font-style: normal;
+  font-weight: 400;
+  src: url("gnuolane.ttf") format("truetype");
+}

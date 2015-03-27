@@ -35,3 +35,4 @@
 //= require underscore-min
 //= require moment.min
 //= require fullcalendar-v2
+//= require fullcalendar-v2-lang
