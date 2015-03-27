@@ -41,10 +41,12 @@
             
 
             <div class="col-md-7"> 
-              <p class="cta__sub_description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields['author']">
-              <img style="max-width: 30px;" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
-              Autore: <span>{{calltoaction_info.calltoaction.extra_fields['author']}}</span>
-              </p>
+              <div class="cta__sub_description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.author_name">
+                <img class="cta__author-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
+                <p class="cta__author-title">{{calltoaction_info.calltoaction.extra_fields.author_name}}</p>
+                <p class="cta__author-category">{{calltoaction_info.calltoaction.extra_fields.author_category}}</p>
+                <p class="cta__author-address"><a href="{{calltoaction_info.calltoaction.extra_fields.author_address}}">{{calltoaction_info.calltoaction.extra_fields.author_address}}</a></p>
+              </div>
             </div>
 
             <div class="col-md-5 text-right">
@@ -61,7 +63,7 @@
         </div>
 
         <div class="col-md-12"> 
-          <p class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></p>
+          <div class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></div>
 
           <div class="cta__contents" ng-repeat="content in calltoaction_info.calltoaction.contents | orderBy:orderContent">
             <img ng-src="{{content['value']['url']}}" ng-if="content['value']['type'] == 'media'">
@@ -95,9 +97,6 @@
         <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
 
       </div>
-    </div>
-
-    <div class="col-sm-4">
       <div ng-if="calltoaction_info.flag">FLAG: {{calltoaction_info.flag.title}}</div>
       <%= render partial: "/application/right_contents" %>
     </div>
