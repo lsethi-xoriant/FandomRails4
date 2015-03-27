@@ -1,5 +1,9 @@
-<div class="container container--default" ng-controller="BrowseCtrl" ng-init="init(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @total %>)">
-  <% if @use_filter %>
+<% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
+	<div class="container container--default" ng-controller="BrowseCtrl" ng-init="init_intesa_browse(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @total %>, <%= get_section_column_number(get_extra_fields!(@category)) %>)">
+<% else %>
+	<div class="container container--default" ng-controller="BrowseCtrl" ng-init="init(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @total %>)">
+<% end %>
+<% if @use_filter %>
 	  <div class="row category-header">
 	    <img src="<%= get_upload_extra_field_processor(get_extra_fields!(@category)["header_image"], :original) rescue nil %>" class="img-responsive category-header__header-image" />
 	  	<h1 class="category-header__title"><%= @category.title %></h1>
@@ -21,12 +25,12 @@
 				</div>
 			</div>
 	  </div>
-  <% else %>
+<% else %>
   	<div class="row category-header">
 	    <img src="<%= get_upload_extra_field_processor(get_extra_fields!(@category)["header_image"], :original) rescue nil %>" class="img-responsive category-header__header-image" />
 	  	<h1 class="category-header__title"><%= @category.title %></h1>
 	</div>
-  <% end %>
+<% end %>
 
   <div class="row" ng-if="aux.top_stripe">
     <div class="col-sm-12">
@@ -35,21 +39,40 @@
       </div>
     </div>
   </div>
-
-  <div class="row main-row brws-item">
-    <div class="col-md-12">
-     
-	      <div class="row">
-      		<div class="col-xs-12 col-md-<%= get_section_column_number(get_extra_fields!(@category)) %>" ng-repeat="content in visibleElements">
-				<%= render partial: "/application/content_preview" %>
-			</div>
+  
+  <% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
+	  <div class="row main-row brws-item">
+	    <div class="col-xs-3" ng-repeat="column in getNumber(column_number)">
+		      <div class="row">
+	      		<div class="col-xs-12" ng-repeat="column_element in getNumber(elements_per_column)">
+	      			<div ng-repeat="content in [visibleElements[getColumnIndexElement(column, column_element)-1]]">
+						<%= render partial: "/application/content_preview" %>
+					</div>
+				</div>
+		      </div>
+		  </div>
+	   </div>
+	   <div class="row">
 			<div class="col-xs-12 text-center" ng-if="total > elements_in_page">
 				<a class="btn btn-primary btn-load-more" ng-click="load_more(elements_in_page)">Carica Altri</a>
 			</div>
-	      </div>
-	  </div>
-   </div>
-   
+	   </div>
+  <% else %>
+	   <div class="row main-row brws-item">
+	    <div class="col-md-12">
+		      <div class="row">
+	      		<div class="col-xs-12 col-md-<%= 12/get_section_column_number(get_extra_fields!(@category)) %>" ng-repeat="content in visibleElements">
+					<%= render partial: "/application/content_preview" %>
+				</div>
+				<div class="col-xs-12 text-center" ng-if="total > elements_in_page">
+					<a class="btn btn-primary btn-load-more" ng-click="load_more(elements_in_page)">Carica Altri</a>
+				</div>
+		      </div>
+		  </div>
+	   </div>
+  <% end %>
+
+
    <div class="row" ng-if="aux.bottom_stripe">
     <div class="col-sm-12">
       <div class="browse-sections" ng-repeat="stripe in [aux.bottom_stripe]">

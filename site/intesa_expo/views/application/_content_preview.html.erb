@@ -1,35 +1,40 @@
 <a href="{{linkTo(content.detail_url, stripe.key)}}">
-  <div class="relateds-flexslider__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta' && content.layout == 'default'"> 
+  <div class="content-preview__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta' && content.layout == 'default'"> 
     <div class="row">
       <div class="col-xs-12 text-center">
-        <div class="relateds-flexslider__thumbnail">
-          <img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}"> 
-          <div class="text-center flag__container" ng-if="content.aux.flag" ng-style="{'background-color': content.aux.flag['label_background']}"><p ng-style="{'color': content.aux.flag['label_color']}" ng-bind-html="content.aux.flag['title']"></p></div>           
+        <div class="content-preview__thumbnail">
+          <img class="img-responsive content-preview__image" ng-src="{{content.thumb_url}}"> 
+          <div class="text-center flag__container" ng-if="content.aux.flag" ng-style="{'background-color': content.aux.flag['label_background']}"><p ng-style="{'color': content.aux.flag['label_color']}" ng-bind-html="content.aux.flag['title']"></p></div>
+          <div class="content-preview__icon-container">
+          	<i class="fa fa-picture-o content-preview__icon" ng-if="content.media_type == 'IMAGE'"></i>
+          	<i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == ''"></i> 
+          </div>
         </div>
-        <div class="cta-preview__miniformat-container">
-          <span class="cta-preview__miniformat" ng-style="{'background-color': content.aux.miniformat['label_background']}">{{content.aux.miniformat['title']}}</span>
-        </div>
-        <p class="cta-preview__title">{{content.title | cut:true:70}}</p>
+        <span class="content-preview__miniformat" ng-style="{'background-color': content.aux.miniformat['label_background']}">{{content.aux.miniformat['title']}}</span>
+        <p class="content-preview__title">{{content.title | cut:true:70}}</p>
       </div>
     </div>
+    <div class="content-preview__event-info-container" ng-if="content.start">
+        <p class="content-preview__event-info"><i class="fa fa-calendar-o"></i> {{formatDate(content.start, aux.language)}}</p>
+        <p class="content-preview__event-info"><i class="fa fa-clock-o"></i> {{extractTimeFromDate(content.start)}}</p>
+    </div>
   </div>
-  <div class="relateds-flexslider__item-panel" ng-if="content.type == 'tag' && content.layout == 'default'">
+  <div class="content-preview__item-panel" ng-if="content.type == 'tag' && content.layout == 'default'">
   	  <div class="row">
 	      <div class="col-xs-12 text-center">
-	        <div class="relateds-flexslider__thumbnail">
-	          <img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}"> 
+	        <div class="content-preview__thumbnail">
+	          <img class="img-responsive content-preview__image" ng-src="{{content.thumb_url}}"> 
 	        </div>
-	        <p class="cta-preview__title cta-preview__title--tag">{{content.title | cut:true:70}}</p>
+	        <p class="content-preview__title content-preview__title--tag">{{content.title | cut:true:70}}</p>
 	      </div>
       </div> 
   </div>
   
-  <div class="relateds-flexslider__item-panel" ng-if="content.layout == 'interview'">
-  	  <div class="row">
-	      <div class="col-xs-12 text-center">
-	      	<p class="cta-preview__title cta-preview__title--tag">{{content.title | cut:true:30}}</p>
-	        <img class="img-responsive" ng-src="{{content.thumb_url}}"> 
-	      </div>
-      </div> 
+  <div class="content-preview__item-panel content-preview__item-panel--press" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta' && content.layout == 'press'"> 
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        <p class="content-preview__title">{{content.title | cut:true:140}}</p>
+      </div>
+    </div>
   </div>
 </a>

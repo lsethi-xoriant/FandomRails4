@@ -35,6 +35,25 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.total = total;
 	};
 	
+	$scope.init_intesa_browse = function(category_id, elements, tags, total, column_number) {
+		$scope.isTagFilterOpen = false;
+		$scope.category_id = category_id;
+		$scope.elements = elements;
+		$scope.elements_in_page = 12;
+		$scope.visibleElements = $scope.elements;
+		$scope.tags = tags;
+		$scope.tagsEnabled = tags;
+		$scope.activeTags = {};
+		$scope.total = total;
+		$scope.column_number = column_number;
+		$scope.column_class = "col-sm-" + (12/column_number).toString;
+		$scope.elements_per_column = $scope.elements_in_page / $scope.column_number;
+		$scope.$watch('elements_in_page', function(){
+			$scope.elements_per_column = $scope.elements_in_page / $scope.column_number;
+			console.log($scope.elements_per_column);
+		});
+	};
+	
 	$scope.init_light = function(elements) {
 		$scope.elements = elements;
 	};
@@ -48,6 +67,18 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		updateContents();
 	};
 	
+	$scope.getNumber = function(num){
+		var numArray = [];
+		for(i=1; i<= num; i++){
+			numArray.push(i);
+		}
+		return numArray;
+	};
+	
+	$scope.getColumnIndexElement = function(col, elem){
+		return ((elem - 1) * $scope.column_number) + col;
+	};
+	
 	function updateContents(){
 		var visibleContents = [];
 		angular.forEach($scope.elements, function(elem, key){
@@ -55,6 +86,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 				visibleContents.push(elem);
 			}
 		});
+		console.log($scope.visibleElements);
 		$scope.visibleElements = visibleContents;
 	}
 	

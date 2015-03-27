@@ -17,7 +17,7 @@ class Sites::IntesaExpo::BrowseController < BrowseController
       @aux_other_params['bottom_stripe'] = get_content_preview_stripe(extra_fields['bottom_stripe']) 
     end
     
-    @use_filter = extra_fields['use_filter'] || false
+    @use_filter = extra_fields['use_filter'].nil? ? false : extra_fields['use_filter']['value']
     
   end
   

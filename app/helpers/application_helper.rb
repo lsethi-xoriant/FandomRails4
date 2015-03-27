@@ -81,6 +81,7 @@ module ApplicationHelper
       category_icon: category_icon,
       tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
       aux: build_content_preview_aux(tag),
+      extra_fields: get_extra_fields!(tag),
       layout: get_content_preview_layout(tag),
       start: tag.valid_from,
       end: tag.valid_to
@@ -124,6 +125,7 @@ module ApplicationHelper
       icon: icon,
       category_icon: category_icon,
       tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
+      extra_fields: get_extra_fields!(tag),
       layout: get_content_preview_layout(tag),
       start: tag.valid_from,
       end: tag.valid_to
@@ -133,6 +135,7 @@ module ApplicationHelper
   def cta_to_content_preview(cta, populate_desc = true)
     ContentPreview.new(
       type: "cta",
+      media_type: cta.media_type,
       id: cta.id, 
       has_thumb: cta.thumbnail.present?, 
       thumb_url: cta.thumbnail(:thumb), 
@@ -146,6 +149,7 @@ module ApplicationHelper
       tags: get_tag_ids_for_cta(cta),
       votes: get_votes_for_cta(cta.id),
       aux: build_content_preview_aux(cta),
+      extra_fields: get_extra_fields!(cta),
       layout: get_content_preview_layout(cta),
       start: cta.valid_from,
       end: cta.valid_to
@@ -155,6 +159,7 @@ module ApplicationHelper
   def cta_to_content_preview_light(cta, populate_desc = true)
     ContentPreview.new(
       type: "cta",
+      media_type: cta.media_type,
       id: cta.id, 
       has_thumb: cta.thumbnail.present?, 
       thumb_url: cta.thumbnail(:medium), 
@@ -168,6 +173,7 @@ module ApplicationHelper
       status: nil,
       tags: nil,
       votes: nil,
+      extra_fields: get_extra_fields!(cta),
       layout: get_content_preview_layout(cta),
       start: cta.valid_from,
       end: cta.valid_to

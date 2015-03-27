@@ -7,6 +7,7 @@ module BrowseHelper
     # html id of this field
     attr_accessor :id
     attr_accessor :type
+    attr_accessor :media_type
     attr_accessor :has_thumb
     attr_accessor :thumb_url
     attr_accessor :description
@@ -22,6 +23,7 @@ module BrowseHelper
     attr_accessor :votes
     attr_accessor :tags
     attr_accessor :aux
+    attr_accessor :extra_fields
     attr_accessor :layout
     attr_accessor :start
     attr_accessor :end
@@ -30,6 +32,7 @@ module BrowseHelper
       @id = params[:id]
       @title = params[:title]
       @type = params[:type]
+      @media_type = params[:media_type]
       @has_thumb = params[:has_thumb]
       @thumb_url = params[:thumb_url]
       @description = params[:description]
@@ -45,6 +48,7 @@ module BrowseHelper
       @votes = params[:votes]
       @tags = params[:tags]
       @aux = params[:aux]
+      @extra_fields = params[:extra_fields]
       @layout = params[:layout]
       @start = params[:start]
       @end = params[:end]
@@ -167,7 +171,7 @@ module BrowseHelper
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.slug}",
-      column_number: get_section_column_number(extra_fields),
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
       total: total,
       per_page: carousel_elements
     })
@@ -175,9 +179,9 @@ module BrowseHelper
   
   def get_section_column_number(extra_fields)
     if extra_fields['column_number'].nil?
-      DEFAULT_VIEW_ALL_ELEMENTS / 4
+      4
     else
-      DEFAULT_VIEW_ALL_ELEMENTS / extra_fields['column_number'].to_i
+      extra_fields['column_number'].to_i
     end
   end
   
@@ -204,7 +208,7 @@ module BrowseHelper
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.slug}",
-      column_number: get_section_column_number(extra_fields)
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields)
     })
   end
   
