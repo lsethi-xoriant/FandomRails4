@@ -5,9 +5,9 @@
         <div class="content-preview__thumbnail">
           <img class="img-responsive content-preview__image" ng-src="{{content.thumb_url}}"> 
           <div class="text-center flag__container" ng-if="content.aux.flag" ng-style="{'background-color': content.aux.flag['label_background']}"><p ng-style="{'color': content.aux.flag['label_color']}" ng-bind-html="content.aux.flag['title']"></p></div>
-          <div class="content-preview__icon-container">
+          <div class="content-preview__icon-container" ng-if="content.media_type != 'VOID'">
           	<i class="fa fa-picture-o content-preview__icon" ng-if="content.media_type == 'IMAGE'"></i>
-          	<i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == ''"></i> 
+          	<i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == 'KALTURA' || content.media_type == 'YOUTUBE' || content.media_type == 'FLOWPLAYER'"></i> 
           </div>
         </div>
         <span class="content-preview__miniformat" ng-style="{'background-color': content.aux.miniformat['label_background']}">{{content.aux.miniformat['title']}}</span>

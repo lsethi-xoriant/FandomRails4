@@ -49,7 +49,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   end
   
   def init_calendar_events(today)
-    month_key = "#{today.month}_#{today.year}"
+    month_key = "#{get_intesa_property}_#{today.month}_#{today.year}"
     cal_events = cache_medium(get_month_calendar_cache_key(month_key)) do
       events = get_calendar_events(today.beginning_of_month, today.end_of_month)
       cal_events = []
@@ -144,7 +144,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   end
   
   def fetch_events
-    start_date = DateTime.parse(params[:start]).utc
+    start_date = DateTime.parse(params[:start]).utc + 1.month
     month_calendar = initialize_calendar(start_date)
     respond_to do |format|
       format.json { render :json => prepare_events_for_calendar(month_calendar.events) }

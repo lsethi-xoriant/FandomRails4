@@ -130,7 +130,7 @@
     .flex-direction-nav a:hover:before, .flex-direction-nav a:focus:before {
       -webkit-transition: color 300ms ease 0s;
       transition: color 300ms ease 0s;
-      color: #303030;
+      color: $lightblue;
     }
     .flex-direction-nav .flex-next {
       right: -30px;

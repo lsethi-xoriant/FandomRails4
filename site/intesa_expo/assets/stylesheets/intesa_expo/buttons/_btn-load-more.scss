@@ -1,4 +1,7 @@
-.btn-load-more{
+.btn-load-more, .btn-load-more:hover{
   margin: 20px 0;
   text-transform: uppercase;
+  background-color: $orange;
+  border-color: $orange;
+  color: $blue;
 }
