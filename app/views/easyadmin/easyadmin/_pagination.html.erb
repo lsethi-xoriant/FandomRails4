@@ -1,37 +1,37 @@
 <% if @page_size > 1 %>
 	<div style="text-align: center; width: 100%;">
-			<ul class="pagination">
-			<% if @page_current != 1 %>
-				<li><a href="<%= request.path %>?page=1<%= @param_list %>">1</a></li>
-			<% end %>
+		<ul class="pagination">
+		<% if @page_current != 1 %>
+			<li><a href="<%= request.path %>?page=1<%= @param_list %>">1</a></li>
+		<% end %>
 
-			<% if @page_current - 2 > 2 %>
-				<li><a href="javascript:void(0)">...</a></li>
-			<% end %>
+		<% if @page_current - 2 > 2 %>
+			<li><a href="javascript:void(0)">...</a></li>
+		<% end %>
 
-			<% 2.times do |i| %>
-			<% indice = @page_current - (2 - i) %>
-				<% if indice > 1 && indice < @page_size %>
-					<li><a href="<%= request.path %>?page=<%= indice %><%= @param_list %>"><%= indice %></a></li>
-				<% end %>
+		<% 2.times do |i| %>
+		<% index = @page_current - (2 - i) %>
+			<% if index > 1 && index < @page_size %>
+				<li><a href="<%= request.path %>?page=<%= index %><%= @param_list %>"><%= index %></a></li>
 			<% end %>
+		<% end %>
 
-			<li class="active"><a href="javascript:void(0)"><%= @page_current %></a></li>
+		<li class="active"><a href="javascript:void(0)"><%= @page_current %></a></li>
 
-			<% 2.times do |i| %>
-				<% indice = @page_current + (i + 1) %>
-				<% if indice > 1 && indice < @page_size %>
-					<li><a href="<%= request.path %>?page=<%= indice %><%= @param_list %>"><%= indice %></a></li>
-				<% end %>
+		<% 2.times do |i| %>
+			<% index = @page_current + (i + 1) %>
+			<% if index > 1 && index < @page_size %>
+				<li><a href="<%= request.path %>?page=<%= index %><%= @param_list %>"><%= index %></a></li>
 			<% end %>
+		<% end %>
 
-			<% if @page_current + 2 < @page_size - 1 %>
-				<li><a href="javascript:void(0)">...</a></li>
-			<% end %>
+		<% if @page_current + 2 < @page_size - 1 %>
+			<li><a href="javascript:void(0)">...</a></li>
+		<% end %>
 
-			<% if @page_current != @page_size %>
-				<li><a href="<%= request.path %>?page=<%= @page_size %><%= @param_list %>"><%= @page_size %></a></li>
-			<% end %>
+		<% if @page_current != @page_size %>
+			<li><a href="<%= request.path %>?page=<%= @page_size %><%= @param_list %>"><%= @page_size %></a></li>
+		<% end %>
 		</ul>
-    </div>
+  </div>
 <% end %>
