@@ -41,6 +41,10 @@ p {
   background: $blue !important;
 }
 
+.container-fluid__lightblue, .container--lightblue {
+  background: $lightblue !important;
+}
+
 .center-logo {
   margin: 15px auto; 
   max-width: 160px;
