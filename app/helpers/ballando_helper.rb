@@ -3,6 +3,19 @@ module BallandoHelper
   include PeriodicityHelper
   include ApplicationHelper
   
+  class RankingElement
+    include ActiveAttr::TypecastedAttributes
+    include ActiveAttr::MassAssignment
+    include ActiveAttr::AttributeDefaults
+    
+    attribute :period, type: String
+    attribute :title, type: String
+    attribute :rankings
+    attribute :user_to_position
+    attribute :total, type: Integer
+    attribute :number_of_pages, type: Integer
+  end
+  
   def get_superfan_reward
     cache_short("weekly_superfan") do
       Reward.includes({ :reward_tags => :tag }).where("tags.name = 'superfan' and rewards.valid_from < ? and rewards.valid_to > ?", Time.now.utc, Time.now.utc).first  
@@ -37,8 +50,9 @@ module BallandoHelper
   
   def ballando_get_my_general_position
     users_positions = cache_short(get_ranking_page_key){ ballando_populate_rankings(get_ranking_settings) }
-    if users_positions['general_user_position']
-      [users_positions['general_user_position'][current_user.id], users_positions['general_user_position'].count] 
+    debugger
+    if users_positions['general_chart'][:my_position]
+      [users_positions['general_chart'][:my_position], users_positions['general_chart'][:total]] 
     else
       [nil, nil]
     end
@@ -67,7 +81,7 @@ module BallandoHelper
   end
   
   def ballando_get_full_rank(ranking)
-    rank = get_ranking(ranking)
+    rank = ballando_get_ranking(ranking)
     if current_user
       my_position = rank.user_to_position[current_user.id]
     else
@@ -134,7 +148,7 @@ module BallandoHelper
         if rank.people_filter != "all"
           rankings[rn] = send("get_#{rank.people_filter}_rank", rank)
         else
-          rankings[rn] = get_full_rank(rank)
+          rankings[rn] = ballando_get_full_rank(rank)
         end
       end
       rankings['general_user_position'] = ballando_create_general_user_position($context_root)
