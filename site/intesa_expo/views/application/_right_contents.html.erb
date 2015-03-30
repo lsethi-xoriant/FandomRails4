@@ -3,18 +3,24 @@
     <h2 class="cta__related__title">{{aux.relateds.title}}</h2>
   </div>
   <div class="col-xs-12" ng-repeat="content in aux.relateds.contents" ng-if="content.type == 'cta'" style="margin-bottom: 10px;">
-    <%= light_link_to("{{content.detail_url}}", class: "cta__related__a") do %>
-      <div class="cta__related__icon-container">
-        <i class="fa fa-picture-o cta__related__icon" ng-if="content.media_type == 'IMAGE'"></i>
-        <i class="fa fa-video-camera cta__related__icon" ng-if="content.media_type == 'YOUTUBE'"></i> 
+    <div class="row">
+      <div class="col-xs-12">
+        <%= light_link_to("{{content.detail_url}}", class: "cta__related__a") do %>
+          <div class="cta__related__icon-container">
+            <i class="fa fa-picture-o cta__related__icon" ng-if="content.media_type == 'IMAGE'"></i>
+            <i class="fa fa-video-camera cta__related__icon" ng-if="content.media_type == 'YOUTUBE'"></i> 
+          </div>
+          <img class="cta__related__img" ng-src="{{content.thumb_url}}" style="width: 100%;">
+          <p class="cta__related__title-content">
+            <span class="cta__related__type" ng-if="content.media_type == 'IMAGE'">FOTO</span>
+            <span class="cta__related__type" ng-if="content.media_type == 'YOUTUBE'">VIDEO</span>
+            {{content.title | cut:true:70}}
+          </p>
+        <% end %>
       </div>
-      <img class="cta__related__img" ng-src="{{content.thumb_url}}" style="width: 100%;">
-      <p class="cta__related__title-content">
-        <span class="cta__related__type" ng-if="content.media_type == 'IMAGE'">FOTO</span>
-        <span class="cta__related__type" ng-if="content.media_type == 'YOUTUBE'">VIDEO</span>
-        {{content.title | cut:true:70}}
-      </p>
-    <% end %>
-    <hr class="cta__related__hr">
+      <div class="col-xs-12">
+        <hr class="cta__related__hr">
+      </div>
+    </div>
   </div>
 </div>
