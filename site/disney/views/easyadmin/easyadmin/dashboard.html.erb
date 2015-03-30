@@ -8,42 +8,49 @@
 
   <div id="content-container">
 
-  <div class="row">
-    <div class="col-md-2">
-    	<%= form_tag :method => 'post' do %>
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-warning"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2">
+        <%= form_tag :method => 'post' do %>
+          <div class="form-group">
+            <label class="text-input">DAL GIORNO</label></br>
+            <%= text_field_tag :datepicker_from_date, @from_date_string, :class => "form-control" %>
+          </div>
+      </div>
+      <div class="col-md-2">
         <div class="form-group">
-          <label class="text-input">DAL GIORNO</label></br>
-          <%= text_field_tag :datepicker_from_date, @from_date_string, :class => "form-control" %>
+          <label class="text-input">AL GIORNO</label></br>
+          <%= text_field_tag :datepicker_to_date, @to_date_string, :class => "form-control" %>
         </div>
-    </div>
-    <div class="col-md-2">
-      <div class="form-group">
-        <label class="text-input">AL GIORNO</label></br>
-        <%= text_field_tag :datepicker_to_date, @to_date_string, :class => "form-control" %>
       </div>
-    </div>
-    <div class="col-md-2">
-      <div>
-        <label class="text-input">PERIODO</label></br>
-        <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
-        <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
+      <div class="col-md-2">
+        <div>
+          <label class="text-input">PERIODO</label></br>
+          <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
+          <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
+        </div>
       </div>
-    </div>
-    <div class="col-md-2">
-      <div class="form-group">
-        </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
+      <div class="col-md-2">
+        <div class="form-group">
+          </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
+        </div>
       </div>
-    </div>
-    <div class="col-md-2">
-      <div class="form-group">
-        </br><%= submit_tag 'RESET', class: 'btn btn-primary btn-block' %>
+      <div class="col-md-2">
+        <div class="form-group">
+          </br><%= submit_tag 'RESET', class: 'btn btn-primary btn-block' %>
+        </div>
       </div>
-    </div>
-    <div class="col-md-2">
-      <div class="form-group">
-        </br><a href="/easyadmin/export_users" class="btn btn-primary btn-block">ESPORTA CSV</a>
-      </div>
-    </div>
     </div> <!-- /.row -->
 
     <div class="row">
@@ -73,12 +80,12 @@
     <br/>
     
     <div class="row">
-    	<div class="col-md-3">
-    		<h4> Registrazioni totali </h4>
-   		</div>
-   		<div class="col-md-3">
-    		<h4> Premi totali </h4>
-   		</div>
+      <div class="col-md-3">
+        <h4> Registrazioni totali </h4>
+      </div>
+      <div class="col-md-3">
+        <h4> Premi totali </h4>
+      </div>
       <div class="col-md-3">
         <h4> Commenti totali </h4>
       </div>
@@ -89,7 +96,7 @@
         <div class="dashboard-stat primary" style="background-color: #E5412D;">
           <div class="details">
             <span class="content"> UTENTI REGISTRATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
-            <span class="value-sm"><%= @total_users %>/<%= User.all.count %></span>
+            <span class="value-sm"><%= @total_users %>/<%= User.count %></span>
           </div>
           <div class="visual">
             <i class="fa fa-user" style="color: #FFF"></i>
@@ -101,9 +108,9 @@
           <div class="details">
             <span class="content"> SBLOCCATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
             <span class="value-sm"><%= @total_rewards %></span>
-          </div> <!-- /.details -->	
+          </div> <!-- /.details --> 
           <div class="visual">
-          	<i class="fa fa-trophy" style="color: #FFF"></i>
+            <i class="fa fa-trophy" style="color: #FFF"></i>
           </div>
         </div> <!-- /.dashboard-stat -->
       </div> <!-- /.col-md-3 -->
@@ -132,15 +139,16 @@
 
     <ul id="property-selectors" class="nav nav-tabs">
       <li>
-        <input class="btn btn-default<%= (params[:commit] == "DISNEY-CHANNEL") || (params[:commit].nil?) ? " active" : "" %>" name="commit" type="submit" value="DISNEY-CHANNEL">
+        <input class="btn btn-default<%= @property_tag_name == "Disney Channel" ? " active" : "" %>" name="commit" type="submit" value="DISNEY-CHANNEL">
       </li>
       <% @properties.each do |p| %>
         <li>
-          <input class="btn btn-default<%= params[:commit] == p.upcase ? " active" : "" %>" name="commit" type="submit" value="<%= p.upcase %>">
+          <input class="btn btn-default<%= @property_tag_name == "Violetta" ? " active" : "" %>" name="commit" type="submit" value="<%= p.upcase %>">
         </li>
       <% end %>
     </ul>
 
+    <%= hidden_field_tag :property, @property_tag_name || "Disney Channel" %>
     <% end %> <!-- form-post -->
 
     <div class="row">
@@ -386,7 +394,7 @@
     $('#trivia-donut-chart').empty();
     if(property_trivia > 0) {
       Morris.Donut({
-			element: 'trivia-donut-chart',
+      element: 'trivia-donut-chart',
             data: [
                 { label: 'Trivia risposti correttamente', value: Math.round(((property_correct_trivia * 100)/property_trivia)) },
                 { label: 'Trivia risposti erroneamente', value: Math.round((((property_trivia - property_correct_trivia) * 100)/property_trivia)) }

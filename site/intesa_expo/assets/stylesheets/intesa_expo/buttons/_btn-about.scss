@@ -3,6 +3,10 @@
   background-color: #FFFFFF; 
   border-color: #ccc; 
   font-family: 'Gnuolane';
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-left: 25px;
+  padding-right: 25px;
 } 
  
 .btn-about:hover, 
@@ -43,4 +47,53 @@ fieldset[disabled] .btn-about.active {
 .btn-about .badge { 
   color: #FFFFFF; 
   background-color: #CCCCCC; 
+}
+
+.btn-about-v2 { 
+  color: #FFFFFF; 
+  background-color: #3D6B80; 
+  border-color: #3E6273; 
+  font-family: 'Gnuolane';
+  margin-top: 15px;
+  margin-bottom: 15px;
+} 
+ 
+.btn-about-v2:hover, 
+.btn-about-v2:focus, 
+.btn-about-v2:active, 
+.btn-about-v2.active, 
+.open .dropdown-toggle.btn-about-v2 { 
+  color: #FFFFFF; 
+  background-color: #578AA1; 
+  border-color: #3E6273; 
+} 
+ 
+.btn-about-v2:active, 
+.btn-about-v2.active, 
+.open .dropdown-toggle.btn-about-v2 { 
+  background-image: none; 
+} 
+ 
+.btn-about-v2.disabled, 
+.btn-about-v2[disabled], 
+fieldset[disabled] .btn-about-v2, 
+.btn-about-v2.disabled:hover, 
+.btn-about-v2[disabled]:hover, 
+fieldset[disabled] .btn-about-v2:hover, 
+.btn-about-v2.disabled:focus, 
+.btn-about-v2[disabled]:focus, 
+fieldset[disabled] .btn-about-v2:focus, 
+.btn-about-v2.disabled:active, 
+.btn-about-v2[disabled]:active, 
+fieldset[disabled] .btn-about-v2:active, 
+.btn-about-v2.disabled.active, 
+.btn-about-v2[disabled].active, 
+fieldset[disabled] .btn-about-v2.active { 
+  background-color: #3D6B80; 
+  border-color: #3E6273; 
+} 
+ 
+.btn-about-v2 .badge { 
+  color: #3D6B80; 
+  background-color: #FFFFFF; 
 }
