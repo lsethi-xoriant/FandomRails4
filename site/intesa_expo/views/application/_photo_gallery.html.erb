@@ -11,7 +11,7 @@
 <div id="gallery-carousel" class="flexslider">
   <ul class="slides">
     <li ng-repeat="content in calltoaction_info.calltoaction.gallery | orderBy:orderContent" style="margin-right: 15px;">
-      <div style="width: 135px; height: 80px; background-size: 110% auto; background-position: center; background-repeat: no-repeat;" ng-style="{'background-image': 'url(\'' + content['value']['url'] + '\')'}">
+      <div class="gallery-carousel__img" ng-style="{'background-image': 'url(\'' + content['value']['url'] + '\')'}">
         <!--<img ng-src="{{content['value']['url']}}">-->
       </div>
     </li>
@@ -20,39 +20,26 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $('.g').flexslider({
-      animation: "fade",
+    $('#gallery-carousel').flexslider({
+      animation: "slide",
+      controlNav: false,
+      animationLoop: false,
       slideshow: false,
-      animationLoop: true,
-      touch: true,
-      itemWidth: "100%",
+      itemWidth: 122,
       itemMargin: 15,
-      controlNav: true,
+      asNavFor: '#gallery-slider',
       prevText: "",
       nextText: ""
     });
 
-
-  $('#gallery-carousel').flexslider({
-    animation: "slide",
-    controlNav: false,
-    animationLoop: false,
-    slideshow: false,
-    itemWidth: 135,
-    itemMargin: 15,
-    asNavFor: '#gallery-slider'
-  });
-
-  $('#gallery-slider').flexslider({
-    animation: "fade",
-    controlNav: false,
-    directionNav: false,
-    slideshow: false,
-    itemWidth: "100%",
-    itemMargin: 0,
-    sync: "#gallery-carousel"
-  });
-
-
+    $('#gallery-slider').flexslider({
+      animation: "fade",
+      controlNav: false,
+      directionNav: false,
+      slideshow: false,
+      itemWidth: "100%",
+      itemMargin: 0,
+      sync: "#gallery-carousel"
+    });
   });
 </script>
