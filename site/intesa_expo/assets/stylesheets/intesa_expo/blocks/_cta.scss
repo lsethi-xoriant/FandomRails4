@@ -62,6 +62,24 @@
   color: #fff;
 }
 
+.cta__related__type {
+  color: $orange;
+  font-family: 'Gnuolane';
+}
+
+.cta__related__icon-container{
+  position: absolute;
+  top: 0;
+  left: 15px;
+  background-color: $orange;
+  padding: 4px;
+}
+
+.cta__related__icon{
+  color: #fff;
+  font-size: 24px;
+}
+
 .cta__related__hr {
   border-color: #eee;
   margin-top: 30px;
