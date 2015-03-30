@@ -9,9 +9,45 @@
 }
 
 .navbar__container-fluid {
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
 
 .navbar__container {
   padding: 0;
+}
+
+.navbar-nav-center {
+  width: 100%;
+  text-align: center;
+}
+
+.navbar-nav li {
+  float: none;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.navbar__item-text {
+  font-family: 'Gnuolane';
+}
+
+.navbar-nav li.active {
+  .navbar__item-text {
+    color: $lightblue;
+  }
+}
+
+.navbar-right {
+  position: absolute; 
+  right: 75px;
+}
+
+.navbar-right a {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.navbar-right li:first-child p {
+  border-left: 1px solid #eee; padding-left: 15px;
 }
