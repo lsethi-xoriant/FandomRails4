@@ -50,7 +50,6 @@ module BallandoHelper
   
   def ballando_get_my_general_position
     users_positions = cache_short(get_ranking_page_key){ ballando_populate_rankings(get_ranking_settings) }
-    debugger
     if users_positions['general_chart'][:my_position]
       [users_positions['general_chart'][:my_position], users_positions['general_chart'][:total]] 
     else
