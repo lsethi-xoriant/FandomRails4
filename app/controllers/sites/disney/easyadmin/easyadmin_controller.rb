@@ -19,8 +19,15 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       @from_date = datetime_parsed_to_utc(DateTime.strptime("#{@from_date_string} 00:00:00 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
       @to_date = datetime_parsed_to_utc(DateTime.strptime("#{@to_date_string} 23:59:59 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
 
-      @total_users = User.where(:created_at => @from_date..@to_date).count
-      @social_reg_users = User.where(:created_at => @from_date..@to_date).includes(:authentications).where("authentications.user_id IS NOT NULL").count
+      @values = fill_values_hash(@from_date, @to_date)
+
+      flash[:notice] = @values["migration_day"] == true ? 
+                        "Hai selezionato un periodo che comprende o precede il giorno di migrazione,
+                          dunque i dati visualizzati comprendono tutte le statistiche precedenti a quel giorno"
+                        : nil
+
+      @total_users = @values["total_users"]
+      @social_reg_users = @values["social_reg_users"]
       from = @from_date
       to = @to_date
 
@@ -42,72 +49,86 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
 
       @properties = Setting.find_by_key(PROPERTIES_LIST_KEY).value.split(',')
 
-      if (params[:commit] == "DISNEY-CHANNEL") || (params[:commit].nil?)
-        @property_tag_name = "disney-channel"
-        @property_prefix = ""
+      if params[:commit] == "APPLICA FILTRO"
+        @property_tag_name = params[:property] || "Disney Channel"
+        @property_values = @property_values || @values["disney_channel"]
+      elsif (params[:commit] == "DISNEY-CHANNEL") || (params[:commit].nil?)
+        @property_tag_name = "Disney Channel"
+        @property_values = @values["disney_channel"] || {}
       else
-        @property_tag_name = params[:commit].downcase
-        @property_prefix = @property_tag_name + "-"
+        @property_tag_name = "Violetta"
+        @property_values = @values["violetta"] || {}
       end
 
-      period_ids = get_period_ids(@from_date, @to_date)
-
-      # TOTAL USER REWARDS
-      level_tag_id = Tag.find_by_name('level').id
-      badge_tag_id = Tag.find_by_name('badge').id
-
-      level_reward_ids = Array.new
-      badge_reward_ids = Array.new
-      RewardTag.find(:all, :conditions => ["tag_id = #{level_tag_id}"]).each do |rt|
-        level_reward_ids << rt.reward_id
-      end
-      RewardTag.find(:all, :conditions => ["tag_id = #{badge_tag_id}"]).each do |rt|
-        badge_reward_ids << rt.reward_id
-      end
-
-      total_level_or_badge_rewards_where_condition = ""
-      (level_reward_ids | badge_reward_ids).each_with_index do |reward_id, i|
-        connector = (i != (level_reward_ids | badge_reward_ids).length - 1) ? " OR " : " "
-        total_level_or_badge_rewards_where_condition << "reward_id = #{reward_id}#{connector}"
-      end
-
-      @total_rewards = UserReward.where("(#{total_level_or_badge_rewards_where_condition}) AND period_id IS NULL").count
-
+      # REWARDS
+      @total_rewards = @values["rewards"]
       # COMMENTS
-      @total_comments = UserCommentInteraction.where("created_at >= '#{@from_date}' and created_at <= '#{@to_date}'").count
-      @approved_comments = UserCommentInteraction.where("approved = true and created_at >= '#{@from_date}' and created_at <= '#{@to_date}'").count
+      @total_comments = @values["total_comments"]
+      @approved_comments = @values["approved_comments"]
       # QUIZZES
-      @property_trivia_answers = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-counter", period_ids)
-      @property_trivia_correct_answers = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}trivia-correct-counter", period_ids)
+      @property_trivia_answers = @property_values["trivia_answers"]
+      @property_trivia_correct_answers = @property_values["trivia_correct_answers"]
       # VERSUS
-      @property_versus_answers = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}versus-counter", period_ids)
+      @property_versus_answers = @property_values["versus_answers"]
       # PLAYS
-      @property_plays = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}play-counter", period_ids)
+      @property_plays = @property_values["plays"]
       # LIKES
-      @property_likes = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}like-counter", period_ids)
+      @property_likes = @property_values["likes"]
       # CHECKS
-      @property_checks = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}check-counter", period_ids)
+      @property_checks = @property_values["checks"]
       # SHARES
-      @property_shares = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}share-counter", period_ids)
+      @property_shares = @property_values["shares"]
       # DOWNLOADS
-      @property_downloads = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}download-counter", period_ids)
+      @property_downloads = @property_values["downloads"]
       # VOTES
-      @property_votes = find_user_reward_count_by_reward_name_at_date("#{@property_prefix}vote-counter", period_ids)
-      # ASSIGNED LEVELS AND BADGES
-      property_reward_ids = Array.new
-      property_tag_id = Tag.find_by_name(@property_tag_name).id rescue 0
-      RewardTag.find(:all, :conditions => ["tag_id = #{property_tag_id}"]).each do |rt|
-        property_reward_ids << rt.reward_id
+      @property_votes = @property_values["votes"]
+      # LEVELS AND BADGES
+      @property_assigned_levels = @property_values["assigned_levels"]
+      @property_assigned_badges = @property_values["assigned_badges"]
+    end
+  end
+
+  def fill_values_hash(from_date, to_date)
+    migration_date = UserReward.where("period_id IS NOT NULL").minimum(:created_at).to_date
+    values = {}
+    if to_date > migration_date
+      if from_date < migration_date
+        from_date = migration_date 
       end
+      EasyadminStats.where("date >= '#{from_date}' AND date <= '#{to_date}'").each_with_index do |stats, i|
+        next_values_hash = JSON.parse(stats.values)
+        if i == 0
+          values = next_values_hash
+        else
+          values = sum_hashes_values(values, next_values_hash)
+        end
+      end
+    else
+      values = JSON.parse(EasyadminStats.find_by_date(migration_date).values)
+    end
+    return values
+  end
 
-      property_level_reward_ids = property_reward_ids & level_reward_ids
-      property_badge_reward_ids = property_reward_ids & badge_reward_ids
-
-      @property_assigned_levels = (period_ids.empty? || property_level_reward_ids.empty?) ? 0 : 
-        UserReward.where("reward_id IN (#{property_level_reward_ids.join(', ')}) AND period_id IN (#{period_ids.join(', ')})").pluck("sum(counter)").first.to_i
-      @property_assigned_badges = (period_ids.empty? || property_badge_reward_ids.empty?) ? 0 : 
-        UserReward.where("reward_id IN (#{property_badge_reward_ids.join(', ')}) AND period_id IN (#{period_ids.join(', ')})").pluck("sum(counter)").first.to_i
-
+# Public: Recursive method to sum integer values of same structured hashes.
+# More precisely, second hash keys have to be a subset of first's.
+#
+# Examples
+# 
+#    sum_hashes_values({ "eggs" => 2, "chocolate_bars" => 1 }, { "eggs" => 3, "chocolate_bars" => 3 })
+#    # => { "eggs" => 5, "chocolate_bars => 4" }
+#
+#    sum_hashes_values({ "pears" => 2, "apples" => { "red" => 1, "yellow" => 2 }, "bananas" => 4 }, 
+#                      { "pears" => 3, "apples" => { "red" => 3, "yellow" => 2 } })
+#    # => { "pears" => 5, "apples" => { "red" => 4, "yellow" => 4 }, "bananas" => 4 }
+#
+# Returns the summed values hash
+  def sum_hashes_values(hash_1, hash_2)
+    hash_1.merge(hash_2) do |k, value_1, value_2|
+      if value_1.class == Hash
+        sum_hashes_values(value_1, value_2)
+      else
+        value_1 + value_2
+      end
     end
   end
 
