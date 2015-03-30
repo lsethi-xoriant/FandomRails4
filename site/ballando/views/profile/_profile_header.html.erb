@@ -54,8 +54,9 @@
 		<span class="label label-warning"><%= get_counter_about_user_reward(MAIN_REWARD_NAME) %> <span class="glyphicon glyphicon-star" style="padding-left: 5px; font-size: 25px;"></span></span>
 		<h4>PUNTI TOTALI</h4>
 		<span class="label label-default">
-			<% if get_my_general_position %>
-				<%= get_my_general_position()[0] %>°
+			<% my_position = ballando_get_my_position %>
+			<% if my_position %>
+				<%= my_position[0] %>°
 			<% else %>
 				---
 			<% end %>
