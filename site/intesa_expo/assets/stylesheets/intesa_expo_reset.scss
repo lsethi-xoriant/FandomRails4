@@ -4,7 +4,7 @@ hr {
   border-color: #ccc;
 }
 
-* {
+*::not(.title-header) {
   font-family: "Helvetica"
 }
 
@@ -39,6 +39,26 @@ p {
 
 .container-fluid__blue, .container--blue {
   background: $blue !important;
+}
+
+.center-logo {
+  margin: 15px auto; 
+  max-width: 160px;
+  width: 100%;
+}
+
+.left-logo {
+  margin: 15px 0; 
+  max-width: 220px;
+  width: 100%;
+  border: 1px solid #eee;
+}
+
+.right-logo {
+  margin: 15px 0; 
+  max-width: 220px;
+  width: 100%;
+  border: 1px solid #eee;
 }
 
 #widget-calendar {
