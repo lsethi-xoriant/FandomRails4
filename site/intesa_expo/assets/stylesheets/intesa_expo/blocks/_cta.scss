@@ -193,11 +193,12 @@
   }
 }
 
-.cta__long_description::first-letter { 
+.cta__long_description::first-letter, .cta__extra-content__description--about::first-letter { 
   float: left;
   font-size: 52px;
   line-height: 52px;
   padding-right: 8px;
+  font-family: 'Gnuolane';
 }
 
 .cta__sub_description {
@@ -248,6 +249,27 @@
   margin-bottom: 30px;
 }
 
+.cta__extra-content__title--about {
+  text-transform: uppercase;
+  font-size: 26px;
+  color: $lightblue;
+  margin-bottom: 15px;
+  margin-top: 0;
+  font-family: 'Gnuolane';
+}
+
+.cta__extra-content__subtitle--about {
+  font-size: 16px;
+  color: $lightblue;
+  margin-bottom: 25px;
+  margin-top: 15px;
+}
+
+.cta__extra-content__img {
+  margin-bottom: 25px;
+  width: 100%;
+}
+
 .cta__title--about {
   text-transform: uppercase;
   font-size: 26px;
@@ -255,6 +277,35 @@
   margin-bottom: 15px;
   margin-top: 45px;
   font-family: 'Gnuolane';
+}
+
+.cta__extra-content__li-title {
+  font-size: 16px;
+  color: $lightblue;
+  font-family: 'Gnuolane'; 
+}
+
+.cta__extra-content-text-col {
+  border-left: 1px solid $lightblue;
+  margin-bottom: 25px;
+}
+
+.cta__extra-content__hr {
+  height: 1px;
+  position: absolute;
+  left: -40px;
+  right: 0;
+  bottom: -13px;
+  background: #eee;
+}
+
+.cta__extra-content__li-description {
+  font-size: 12px;
+}
+
+.cta__extra-content__li-number {
+  color: $orange;
+  font-size: 28px;
 }
 
 .media-youtube--about {
@@ -277,7 +328,7 @@
   margin-bottom: 15px;
 }
 
-.cta__description--about {
+.cta__description--about, .cta__description--about-v2 {
   color: #fff;
   font-size: 14px;
   font-family: "Helvetica";
@@ -286,6 +337,11 @@
   line-height: inherit;
 }
 
+.cta__extra-content__container-fluid--about {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+}
 
 .ctas__search {
     background: whitesmoke; 

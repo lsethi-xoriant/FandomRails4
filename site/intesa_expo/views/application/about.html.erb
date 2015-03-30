@@ -49,14 +49,20 @@
   <div class="row main-row">
     <div class="col-sm-12 text-center">
       <div class="btn-group blocks">
-        <button id="intesa-button" class="btn btn-about active" onclick="showContent('intesa-container')">ABOUT INTESA</button>
-        <button id="expo-button" class="btn btn-about" onclick="showContent('expo-container')">ABOUT EXPO</button>
+        <button id="intesa-button" class="btn btn-about active" onclick="showContent('intesa')">ABOUT INTESA</button>
+        <button id="expo-button" class="btn btn-about" onclick="showContent('expo')">ABOUT EXPO</button>
       </div>
     </div>
+  </div>
+</div>
 
-    <div id="intesa-container" class="about-container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.intesa_container"></div>
-    <div id="expo-container" class="about-container hidden" ng-bind-html="calltoaction_info.calltoaction.extra_fields.expo_container"></div>
+<div class="about-container" id="intesa-container">
+  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.intesa_container">
+  </div>
+</div>
 
+<div class="about-container hidden" id="expo-container">
+  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.expo_container">
   </div>
 </div>
 
@@ -64,7 +70,9 @@
 
   function showContent(content_name) {
     $(".about-container").addClass("hidden");
-    $("#" + content_name).removeClass("hidden");
+    $("#" + content_name + "-container").removeClass("hidden");
+    $(".btn-about").removeClass("active");
+    $("#" + content_name + "-button").addClass("active"); 
   }
 
 </script>
