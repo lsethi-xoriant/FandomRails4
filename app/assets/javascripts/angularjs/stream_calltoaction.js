@@ -125,6 +125,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       errors.push("Il media deve essere caricato");
     }
 
+    if(files[0] && files[0].type == "application/zip") {
+      errors.push("Formato del media non valido");
+    }
+
     if(!files[1]) {
       errors.push("La liberatoria deve essere caricata");
     }
