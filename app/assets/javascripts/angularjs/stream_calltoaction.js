@@ -860,11 +860,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       if(vcode.indexOf(",") > -1) {
         $scope.$apply(function() {
           calltoaction_info.calltoaction.vcodes = vcode.split(",");
-          vcode = calltoaction_info.calltoaction.vcodes[0];
+          calltoaction_info.calltoaction.vcode = calltoaction_info.calltoaction.vcodes[0];
         });
       }
 
-      player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, vcode);
+      player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.vcode);
       calltoaction_info.calltoaction["player"] = player;
 
       $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
@@ -993,6 +993,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.updateYTIframe = function(calltoaction_info, vcode, autoplay) {
     player = calltoaction_info.calltoaction.player;
     if($scope.youtube_api_ready && player) {
+      calltoaction_info.calltoaction.vcode = vcode;
       $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
       if(autoplay) {
         player.playerManager.loadVideoById(vcode);

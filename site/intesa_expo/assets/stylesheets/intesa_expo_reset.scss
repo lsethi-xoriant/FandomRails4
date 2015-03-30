@@ -38,11 +38,13 @@ p {
 }
 
 .container-fluid__blue, .container--blue {
-  background: $blue !important;
+  background-color: $blue !important; 
+  background-image: url("intesa_expo/texture.png");
 }
 
 .container-fluid__lightblue, .container--lightblue {
-  background: $lightblue !important;
+  background-color: $lightblue !important;
+  background-image: url("intesa_expo/texture.png");
 }
 
 .center-logo {

@@ -1,5 +1,9 @@
 /* CTA */
 
+.cta__miniformat-col {
+  margin-top: 15px;
+}
+
 .cta__miniformat-text {
   padding: 3px 5px;
   font-size: 12px;
@@ -176,112 +180,6 @@
   padding: 0;
 }
 
-.cta__media-container-youtube, .cta__media-container-test {
-  background: $cream;
-  border: 5px solid #fff !important;
-  border-radius: 3px;
-  -webkit-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-  -moz-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-  box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-}
-
-.cta__fa-angle {
-  font-size: 100px;
-  color: #999;
-  cursor: pointer;
-}
-
-.media-image-ricette {
-  margin-top: 15px;
-}
-
-.cta__paper-group-right {
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
-  position: absolute;
-  -ms-transform: rotate(3deg); /* IE 9 */
-  -webkit-transform: rotate(3deg); /* Chrome, Safari, Opera */
-  transform: rotate(3deg);
-  -webkit-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-  -moz-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-  box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-}
-
-.cta__paper-group-left {
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
-  position: absolute;
-  -ms-transform: rotate(-2deg); /* IE 9 */
-  -webkit-transform: rotate(-2deg); /* Chrome, Safari, Opera */
-  transform: rotate(-2deg);
-  -webkit-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-  -moz-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-  box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-}
-
-.cta__media-img {
-  padding: 10px;
-  border: 1px solid #ccc;
-  background: #fff;
-  position: relative;
-  -webkit-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-  -moz-box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-  box-shadow: 0px 2px 2px 0px rgba(204, 204, 204, 0.8);
-}
-
-.cta__sidebar-panel {
-  max-width: 300px; 
-  margin-left: auto; 
-  margin-bottom: 15px !important;
-  height: 310px !important;
-  background-color: whitesmoke !important;
-}
-
-.cta__sidebar-panel--tag {
-  border-radius: 0 !important;
-  height: 290px !important;
-}
-
-.cta-preview__image--tag {
-  padding-left: 10px;
-  padding-right: 10px;
-  width: 100%;
-}
-
-.cta__sidebar-panel__header {
-  background-image: url("disney/points-bg.png");
-  background-position: right top;
-  background-repeat: no-repeat;
-  border-radius: 10px 10px 0 0 !important;
-  max-width: 300px;
-  margin-left: auto; 
-}
-
-.cta__sidebar-panel__header-title {
-  font-size: 18px; 
-  padding: 12px 15px 10px; 
-  color: #fff;
-}
-
-.cta__sidebar-panel__header-title--tag {
-  color: #000;
-  font-size: 18px; 
-  padding: 12px 10px 10px;
-}
-
-.cta__media-footer {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
-  background: #f3f3f5; 
-  background: -webkit-linear-gradient(#fdfdfd, #f3f3f5);
-  background: -o-linear-gradient(#fdfdfd, #f3f3f5);
-  background: -moz-linear-gradient(#fdfdfd, #f3f3f5);
-  background: linear-gradient(#fdfdfd, #f3f3f5);
-}
-
 .cta__description {
   font-size: 16px;
   margin-bottom: 0;
@@ -316,6 +214,78 @@
   margin-bottom: 15px;
   margin-top: 10px;
 }
+
+.cta__video-subtitle--about {
+  color: #fff;
+  padding-top: 30px;
+  font-size: 12px;
+}
+
+.media-youtube-col {
+  padding-right: 0;
+}
+
+.cta__video-img--about {
+  width: 105px; 
+  float: left; 
+  margin: 30px 15px;
+  border: 2px solid #fff;
+}
+
+.cta__video-col--about {
+  height: 117px;
+  background: #132332;
+  background-image: url("intesa_expo/texture.png");
+  border-bottom: 1px solid #132332;
+}
+
+.cta__video-col--about.active {
+  background-color: $orange;
+  background-image: none;
+}
+
+.cta__share-col--about {
+  margin-bottom: 30px;
+}
+
+.cta__title--about {
+  text-transform: uppercase;
+  font-size: 26px;
+  color: #fff;
+  margin-bottom: 15px;
+  margin-top: 45px;
+  font-family: 'Gnuolane';
+}
+
+.media-youtube--about {
+  border: 7px solid #446c81 !important;
+}
+
+.cta__video-title--about {
+  text-transform: uppercase;
+  font-size: 26px;
+  color: #fff;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  font-family: 'Gnuolane';
+}
+
+.cta__banner_1--about {
+  width: 100%;
+  background: $bluealpha;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.cta__description--about {
+  color: #fff;
+  font-size: 14px;
+  font-family: "Helvetica";
+  font-weight: 300;
+  margin-top: 0;
+  line-height: inherit;
+}
+
 
 .ctas__search {
     background: whitesmoke; 
