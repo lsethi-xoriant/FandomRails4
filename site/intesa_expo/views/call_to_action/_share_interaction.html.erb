@@ -2,12 +2,14 @@
   <p>CONDIVIDI</p>
 </div>
 
-<!-- FACEBOOK -->   
-<button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-provider" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')"><i class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></i></button>
+<div class="btn-group blocks">
+  <!-- FACEBOOK -->   
+  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-provider" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')"><i class="fa fa-facebook"></i></button>
 
-<!-- TWITTER -->   
-<button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-provider" ng-click="shareWith(calltoaction_info, interaction_info, 'twitter')"><i class="fa fa-twitter share-interaction__cover__info__glyphicon-tt"></i></button>
+  <!-- TWITTER -->   
+  <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-provider" ng-click="shareWith(calltoaction_info, interaction_info, 'twitter')"><i class="fa fa-twitter"></i></button>
 
-<!-- LINKEDIN -->   
-<button ng-if="interaction_info.interaction.resource.providers.linkedin" class="btn btn-provider" ng-click="shareWith(calltoaction_info, interaction_info, 'linkedin')"><i class="fa fa-linkedin share-interaction__cover__info__glyphicon-lk"></i></button>
+  <!-- LINKEDIN -->   
+  <button ng-if="interaction_info.interaction.resource.providers.linkedin" class="btn btn-provider" ng-click="shareWith(calltoaction_info, interaction_info, 'linkedin')"><i class="fa fa-linkedin"></i></button>
+</div>
   

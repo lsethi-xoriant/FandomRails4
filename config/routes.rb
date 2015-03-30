@@ -206,6 +206,7 @@ Fandom::Application.routes.draw do
           match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
           match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
           match "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
+          match "/ranking/page", :to => "ranking#get_rank_page"
         end
       end
     end

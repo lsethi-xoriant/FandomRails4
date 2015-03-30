@@ -1,14 +1,13 @@
 <div class="container">
-  <div class="row">
+  <div class="row main-row">
     <div class="col-sm-4">  
-      <a href="/imprese" ng-if="aux.language != 'en'">Imprese</a>   
+      <img class="left-logo" ng-src="{{aux.assets.left_logo.url}}">    
     </div>
     <div class="col-sm-4 text-center">  
-      <img src="//placehold.it/250x50" style="margin-left: auto; margin-right: auto;">   
+      <img class="center-logo" ng-src="{{aux.assets.logo.url}}">   
     </div>
-    <div class="col-sm-4">     
-      <a href="/it">It</a>
-      <a href="/en">En</a>   
+    <div class="col-sm-4 text-right">     
+      <img class="right-logo" ng-src="{{aux.assets.right_logo.url}}">   
     </div>
   </div>
 </div>
@@ -27,10 +26,22 @@
       </div>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav navbar-nav-center">
           <li ng-class="{'active': (menu_field == menu_item.name)}" ng-repeat="menu_item in aux.menu_items">
             <a href="{{menu_item.browse_url}}">
               <p class="navbar__item-text">{{menu_item.title}}</p>
+            </a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li ng-class="{'active': ('it' == aux.language)}" class="navbar__language">
+            <a href="/it">
+              <p class="navbar__item-text">it</p>
+            </a>
+          </li>
+          <li ng-class="{'active': ('en' == aux.language)}" class="navbar__language">
+            <a href="/en">
+              <p class="navbar__item-text">en</p>
             </a>
           </li>
         </ul>

@@ -1,32 +1,57 @@
-<div class="container main-container">
-  <div class="row">
-    <div class="col-sm-12">
-      <h1 ng-bind-html="calltoaction_info.calltoaction.title"></h1>
-      <p ng-bind-html="calltoaction_info.calltoaction.description"></p>
-      <p>Guarda i video della partnership</p>
+<div class="container-fluid__lightblue">
+  <div class="container container--lightblue">
+    <div class="row main-row">
+      <div class="col-sm-8">
+        <h1 class="cta__title--about" ng-bind-html="calltoaction_info.calltoaction.title"></h1>
+        <h2 class="cta__description--about" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
+      </div>
+      <div class="col-sm-4">
+        <a href="{{calltoaction_info.calltoaction.extra_fields.banner_1_url}}">
+          <img class="cta__banner_1--about" ng-src="{{calltoaction_info.calltoaction.extra_fields.banner_1_img.url}}">
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 
-      <div class="media-youtube embed-responsive embed-responsive-16by9"> 
-        <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
+<div class="container-fluid__blue">
+  <div class="container container--blue">
+    <div class="row main-row">
+      <div class="col-sm-12 text-center">
+        <p class="cta__video-title--about">Guarda i video della partnership</p>
       </div>
 
-      <div ng-repeat="vcode in calltoaction_info.calltoaction.vcodes">
-        <button ng-click="updateYTIframe(calltoaction_info, vcode, false)" class="btn btn-default" >
-          {{$index}}
-        </button>
-        <p>Titolo: {{calltoaction_info.calltoaction.extra_fields[vcode + '_title']}}</p>
-        <img style="width: 40px;" ng-src="{{calltoaction_info.calltoaction.extra_fields[vcode + '_img']['url']}}">
+      <div class="col-sm-8 media-youtube-col">
+        <div class="media-youtube--about">
+          <div class="media-youtube embed-responsive embed-responsive-16by9"> 
+            <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
+          </div>
+        </div>
       </div>
 
-      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
-        <div id="share-interaction-{{interaction_info.interaction.id}}" class="share-undervideo-interaction__row">
-          <%= render partial: "/call_to_action/share_interaction" %>
+      <div class="col-sm-4 cta__video-col--about" ng-class="{'active': calltoaction_info.calltoaction.vcode == vcode}" ng-repeat="vcode in calltoaction_info.calltoaction.vcodes" ng-click="updateYTIframe(calltoaction_info, vcode, false)">
+        <img class="cta__video-img--about" ng-src="{{calltoaction_info.calltoaction.extra_fields[vcode + '_img']['url']}}">
+          <p class="cta__video-subtitle--about">{{calltoaction_info.calltoaction.extra_fields[vcode + '_title']}}</p>
+      </div>
+
+      <div class="col-sm-12 cta__share-col--about">
+        <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+          <div id="share-interaction-{{interaction_info.interaction.id}}" class="share-undervideo-interaction__row">
+            <%= render partial: "/call_to_action/share_interaction" %>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="col-sm-12">
-      <button class="btn btn-default" onclick="showContent('intesa-container')">INTESA</button>
-      <button class="btn btn-default" onclick="showContent('expo-container')">EXPO</button>
+<div class="container">
+  <div class="row main-row">
+    <div class="col-sm-12 text-center">
+      <div class="btn-group blocks">
+        <button id="intesa-button" class="btn btn-about active" onclick="showContent('intesa-container')">ABOUT INTESA</button>
+        <button id="expo-button" class="btn btn-about" onclick="showContent('expo-container')">ABOUT EXPO</button>
+      </div>
     </div>
 
     <div id="intesa-container" class="about-container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.intesa_container"></div>
