@@ -1,7 +1,6 @@
 require "pg"
 require "json"
 require "yaml"
-require "ruby-debug"
 
 def main
 
