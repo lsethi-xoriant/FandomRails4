@@ -1,5 +1,12 @@
 /* CTA */
 
+.cta__miniformat-text {
+  padding: 3px 5px;
+  font-size: 12px;
+  font-family: 'Gnuolane';
+  text-transform: uppercase;
+}
+
 .cta__author-avatar {
   height: 40px; 
   float:left; 
@@ -82,7 +89,7 @@
 
 .cta__related__hr {
   border-color: #eee;
-  margin-top: 30px;
+  margin-top: 15px;
   margin-bottom: 5px;
 }
 
@@ -100,8 +107,8 @@
 
 .cta__related__title-content {
   color: $lightblue;
-  font-size: 10px;
-  padding: 5px 10px 5px 10px;
+  font-size: 12px;
+  padding: 5px 10px 0 10px;
 }
 
 .cta__related__img {
@@ -307,6 +314,7 @@
   font-size: 26px;
   color: $lightblue;
   margin-bottom: 15px;
+  margin-top: 10px;
 }
 
 .ctas__search {
