@@ -57,7 +57,7 @@ def main
     if conn.exec("SELECT COUNT(*) FROM disney.easyadmin_stats").values[0][0].to_i == 0
       starting_date_string = conn.exec("SELECT MIN(created_at) FROM disney.users").values[0][0]
     else
-      starting_date_string = conn.exec("SELECT MAX(date) FROM disney.easyadmin_stats").values[0][0]
+      starting_date_string = (Date.parse(conn.exec("SELECT MAX(date) FROM disney.easyadmin_stats").values[0][0]) + 1).to_s
     end
   end
   starting_date = Date.parse(starting_date_string)
@@ -87,10 +87,10 @@ def create_easyadmin_stats_entry(conn, today, dc_interaction_ids, violetta_inter
 
   iteration_time = Time.now
   if ending_date.nil?
-    date_condition = "created_at > '#{starting_date - 1}' AND created_at < '#{starting_date + 1}'"
+    date_condition = "created_at > '#{starting_date}' AND created_at < '#{starting_date + 1}'"
     puts "Creating entry for #{starting_date}... \n"
   else
-    date_condition = "created_at > '#{starting_date - 1}' AND created_at < '#{ending_date + 1}'"
+    date_condition = "created_at > '#{starting_date}' AND created_at < '#{ending_date + 1}'"
   end
 
   users = conn.exec("SELECT id FROM disney.users WHERE #{date_condition}")
