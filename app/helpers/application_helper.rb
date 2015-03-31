@@ -649,7 +649,7 @@ module ApplicationHelper
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
       where_clause, limit = get_cta_where_clause_from_params(params)
       ctas = CallToAction.active.includes(call_to_action_tags: :tag)
-      if params.includes? [:ical_start_datetime, :ical_end_datetime]
+      if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
         cta_id_to_ical_fields = get_cta_id_to_ical_fields(params) 
         ctas = ctas.where(id: cta_id_to_ical_fields) 
       end
