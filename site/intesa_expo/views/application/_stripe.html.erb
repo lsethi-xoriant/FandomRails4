@@ -1,7 +1,7 @@
 <div class="row main-row" ng-class-odd="'brws-item--dark'">
 	  <!-- HEADING -->
 	<div class="col-sm-12 text-center">
-	  <h2>{{stripe.title}}</h2>
+	  <h2 class="stripe__title">{{stripe.title}}</h2>
 	</div>
     <div class="col-xs-12" ng-repeat="contents in [stripe.contents]">
 	    <%= render partial: "/application/content_carousel" %>

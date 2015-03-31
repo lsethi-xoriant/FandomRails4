@@ -11,6 +11,30 @@
   text-transform: uppercase;
 }
 
+.cta__live-label--related {
+  background-color: red;
+  color: #fff;
+  float: left;
+  margin-right: 10px;
+  margin-top: 5px;
+  padding: 3px 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  border-radius: 20px;
+}
+
+.cta__live-container--related {
+  border: 1px solid #ccc; 
+  background-color: #eee;
+  padding: 10px 15px;
+  margin-top: 15px;
+}
+
+.cta__live-description--related {
+  font-size: 12px;
+  color: $lightblue;
+}
+
 .cta__author-avatar {
   height: 40px; 
   float:left; 

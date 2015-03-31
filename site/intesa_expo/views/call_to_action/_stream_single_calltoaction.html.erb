@@ -1,9 +1,15 @@
 <div class="container" ng-if="calltoaction_info.calltoaction.media_type != 'VOID' || calltoaction_info.calltoaction.gallery"> 
   <div class="row main-row">
-    <div class="col-xs-12 cta__miniformat-col">
+    <div class="col-xs-6 cta__miniformat-col">
       <span ng-if="calltoaction_info.miniformat" class="cta__miniformat-text" style="background-color: {{calltoaction_info.miniformat.label_background}} !important; color: {{calltoaction_info.miniformat.label_color}} !important;">
         <span class="{{calltoaction_info.miniformat.icon}}"></span>
         {{calltoaction_info.miniformat.title}}
+      </span>
+    </div>
+    <div class="col-xs-6 cta__miniformat-col text-right">
+      <span ng-if="aux.is_live_cta" class="cta__miniformat-text" style="background-color: red; color: #fff;">
+        <span class="fa fa-dot-circle-o"></span>
+        live
       </span>
     </div>
     <div class="col-sm-12">
@@ -109,7 +115,19 @@
         <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
 
       </div>
-      <div ng-if="calltoaction_info.flag">FLAG: {{calltoaction_info.flag.title}}</div>
+
+      <div class="row" ng-if="aux.has_related_live">
+        <div class="col-sm-12">
+          <div class="cta__live-container--related">
+            <span class="cta__live-label--related" style="background-color: red; color: #fff;">
+              <span class="fa fa-dot-circle-o"></span>
+              live
+            </span>
+            <p class="cta__live-description--related">Potrai seguire questo evento in livestreaming sul nostro sito</p>
+          </div>
+        </div>
+      </div>
+      
       <%= render partial: "/application/right_contents" %>
     </div>
   </div>

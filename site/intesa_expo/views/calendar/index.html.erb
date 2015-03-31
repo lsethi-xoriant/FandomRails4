@@ -1,4 +1,6 @@
-<div class="container main-container" >
+<div class="calendar-event__popover"></div>
+<div class="container-fluid__blue">
+  <div class="container main-container">
 	
 	<% if $context_root == 'imprese' %>
 		<div class="row row-discover">
@@ -24,18 +26,18 @@
 			<div class="col-xs-12 col-sm-8 col-sm-offset-2">
 				<div class="row">
 					<div class="col-xs-8 col-xs-offset-2">
-						<p class="text-center">AGENDA GIORNALIERA</p>
+						<p class="text-center calendar-event__agenda">AGENDA GIORNALIERA</p>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-2 text-right">
-						<%= light_link_to "/calendar/#{(@today-1).strftime('%d-%m-%Y')}?dir=prev" do %><i class="fa fa-chevron-left"></i><% end %>
+						<%= light_link_to("/calendar/#{(@today-1).strftime('%d-%m-%Y')}?dir=prev", class: "calendar-event__agenda-arrow") do %><i class="fa fa-chevron-left"></i><% end %>
 					</div>
 					<div class="col-xs-8">
-						<h2 class="text-center"><%= @today.strftime("%A %d %B %Y")%></h2>
+						<h2 class="text-center calendar-event__month"><%= @today.strftime("%A %d %B %Y")%></h2>
 					</div>
 					<div class="col-xs-2 text-left">
-						<%= light_link_to "/calendar/#{(@today+1).strftime('%d-%m-%Y')}?dir=next" do %><i class="fa fa-chevron-right"></i><% end %>
+						<%= light_link_to("/calendar/#{(@today+1).strftime('%d-%m-%Y')}?dir=next", class: "calendar-event__agenda-arrow") do %><i class="fa fa-chevron-right"></i><% end %>
 					</div>
 				</div>
 			</div>
@@ -46,10 +48,11 @@
 			</div>
 		</div>
 	<% end %>
-	
+	</div>
+</div>
+<div class="container main-container" >	
 	<div class="row">
       	<div class="col-md-12">
-      		<div class="calendar-event__popover"></div>
 			<div id="full-calendar"></div> <!-- /#full-calendar -->             
 		</div>
 	</div>
@@ -65,6 +68,8 @@
 <script type="text/javascript">
 
   var current_event_id = -1;
+  var mouseX;
+  var mouseY;
 
   $(document).ready(function() {
     buildCalendar();
@@ -72,6 +77,11 @@
 	$('div.calendar-event__popover').mouseleave(function(){
 		$('div.calendar-event__popover').hide();
 	});
+	
+	$(document).mousemove( function(e) {
+	   mouseX = e.pageX; 
+	   mouseY = e.pageY;
+	}); 
   });
   
   function show_event_info(elem, id){
@@ -80,15 +90,14 @@
   		current_event_id = id;
 	  	selected_event = $('#full-calendar').fullCalendar('clientEvents', id)[0];
 	  	
-	  	eventinfo = '<p><b>'+ selected_event.title +'</b></p>';
-	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive" />';
-	  	eventinfo += '<p>'+ selected_event.description +'</p>';
-	  	eventinfo += '<a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a>';
+	  	eventinfo = '<p class="calendar-event__popover__title"><b>'+ selected_event.title +'</b></p>';
+	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive calendar-event__popover__image" />';
+	  	eventinfo += '<p class="calendar-event__popover__description">'+ selected_event.extra_fields.subtitle +'</p>';
+	  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a></div>';
 	  	$("div.calendar-event__popover").html(eventinfo);
 	  	
 	  	position = $(elem).parent().position();
-	  	console.log(position);
-	  	$("div.calendar-event__popover").css({'left': (position.left-220).toString() + 'px', 'top': (position.top+200).toString() + 'px',});
+	  	$("div.calendar-event__popover").css({'left': mouseX-380, 'top': mouseY-100,});
 	  	$("div.calendar-event__popover").show();
 	}
   }
@@ -101,24 +110,38 @@
         center: 'title',
         right: 'next'
       },
+      lang: "<%= get_intesa_property %>",
       dayClick: function(date, jsEvent, view ) {
         window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
       },
-      viewRender: function(view, element) {
-        console.log(view.intervalStart._d);
-        //updateEventListInCalendar(view.intervalStart._d);
-      },
       editable: false,
       disableResizing: true,
-      events: '/calendar/fetch/events.json',
+      height: "auto",
+      events: function(start, end, timezone, callback) {
+      	$.ajax({
+            url: "/<%= get_intesa_property %>/calendar/fetch/events.json",
+            data: {
+                start: start._d,
+            },
+            success: function(data) {
+                var events = data;
+                callback(events);
+            }
+         });
+      },
 	  eventRender: function(event, element, view) {
-	  	console.log(event.id);
+	  	if(event.extra_fields.highlight){
+	  		console.log(event.extra_fields.highlight.value);
+	  	}
 	  	html = $('<div class="calendar-event"></div>');
-	  	html.append('<p class="calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
-	    html.append('<a href="javascript:void(0);" class="calendar-event__title" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
-	    if(! (_.isEmpty(event.image) )){
-	    	html.append('<img class="hidden-xs" style="height: 60px; margin: 0 auto; display: block;" src="'+ event.image +'" />')
-	    }
+	  	if(event.extra_fields.highlight && event.extra_fields.highlight.value){
+		  	html.append('<p class="calendar-event__hour calendar-event__hour--highlight">'+ event.start.format("HH:mm") +'</p>');
+		    html.append('<a href="javascript:void(0);" class="calendar-event__title calendar-event__title--highlight" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
+	    	html.append('<img class="hidden-xs img-responsive" src="'+ event.thumb_url +'" />');
+	  	}else{
+		  	html.append('<p class="calendar-event__hour calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
+		    html.append('<a href="javascript:void(0);" class="calendar-event__title" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
+	  	}
 	    return html;
 	  }
     });
