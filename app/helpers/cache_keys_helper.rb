@@ -428,6 +428,14 @@ module CacheKeysHelper
   def get_property_rankings_cache_key(extra_key)
     "property_rankings_thumbnails_#{extra_key}"
   end
+
+  def get_total_users_until_date_cache_key(date)
+    "total_users_#{date.strftime("%Y-%m-%d")}"
+  end
+
+  def get_social_reg_users_until_date_cache_key(date)
+    "social_reg_users_#{date.strftime("%Y-%m-%d")}"
+  end
   
   # Calendar
   # ~~~~~~~~~~

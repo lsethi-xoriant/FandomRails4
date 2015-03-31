@@ -5,7 +5,6 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
   def dashboard
     authorize! :access, :dashboard
 
-    @user_week_list = Hash.new
     if User.any? 
       if (params[:datepicker_from_date].blank? || params[:commit] == "Reset") 
         @from_date_string = (Time.now - 1.week).strftime('%m/%d/%Y')
@@ -26,8 +25,6 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
                           dunque i dati visualizzati comprendono tutte le statistiche precedenti a quel giorno"
                         : nil
 
-      @total_users = @values["total_users"]
-      @social_reg_users = @values["social_reg_users"]
       from = @from_date
       to = @to_date
 
@@ -35,17 +32,14 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
         params[:time_interval] = "daily"
       end
 
-      while from < to - 1.day do 
-        @user_week_list["#{from.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d") }"] = {
-          "tot" => User.where("created_at<=?", from).count,
-          "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", from).count
-          }
-        from = (params[:time_interval] == "daily" && params[:commit] != "Reset") ? from + 1.day : from + 1.week
-      end
-      @user_week_list["#{from.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d") }"] = {
-          "tot" => User.where("created_at<=?", to).count,
-          "simple" => User.includes(:authentications).where("authentications.user_id IS NULL AND users.created_at<=?", to).count
-          }
+      hash_total_users = get_hash_total_users()
+      hash_social_reg_users = get_hash_social_reg_users()
+
+      days_interval = (params[:time_interval] == "daily" && params[:commit] != "Reset") ? 1 : 7
+      @user_week_list = build_line_chart_values(from, to, hash_total_users, hash_social_reg_users, days_interval)
+
+      @total_users = @values["total_users"]
+      @social_reg_users = @values["social_reg_users"]
 
       @properties = Setting.find_by_key(PROPERTIES_LIST_KEY).value.split(',')
 
@@ -109,6 +103,31 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
     return values
   end
 
+  def build_line_chart_values(from, to, hash_total_users, hash_social_reg_users, days_interval)
+    user_week_list = {}
+    starting_date = from
+    total_users = 0
+    social_reg_users = 0
+
+    while from < to - 1.day do
+      from_date = from.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d")
+      total_users += (hash_total_users[from_date] || 0).to_i
+      social_reg_users += (hash_social_reg_users[from_date] || 0).to_i
+      if (from - starting_date).to_i % days_interval == 0
+        user_week_list["#{ from_date }"] = { "tot" => total_users, "simple" => social_reg_users }
+      end
+      from = from + 1.day
+    end
+
+    from_date = from.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d")
+    to_date = to.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d")
+    total_users += (hash_total_users[to_date] || 0).to_i
+    social_reg_users += (hash_social_reg_users[to_date] || 0).to_i
+    user_week_list["#{ from_date }"] = { "tot" => total_users, "simple" => social_reg_users }
+
+    user_week_list
+  end
+
 # Public: Recursive method to sum integer values of same structured hashes.
 # More precisely, second hash keys have to be a subset of first's.
 #
@@ -129,6 +148,34 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       else
         value_1 + value_2
       end
+    end
+  end
+
+  def get_hash_total_users
+    cache_huge(get_total_users_until_date_cache_key(Date.today)) do
+      hash_total_users = {}
+      User
+        .select(["COUNT(*) AS total_users", "to_char(created_at, 'YYYY-MM-DD') AS date"])
+        .group("to_char(created_at, 'YYYY-MM-DD')")
+        .each do |values| 
+          hash_total_users[values.date] = values.total_users
+        end
+      hash_total_users
+    end
+  end
+
+  def get_hash_social_reg_users
+    cache_huge(get_social_reg_users_until_date_cache_key(Date.today)) do
+      hash_social_reg_users = {}
+      User
+        .select(["COUNT(users.id) AS social_reg_users", "to_char(users.created_at, 'YYYY-MM-DD') AS date"])
+        .joins("LEFT OUTER JOIN disney.authentications ON authentications.user_id = users.id")
+        .where("authentications.user_id IS NULL")
+        .group("to_char(users.created_at, 'YYYY-MM-DD')")
+        .each do |values|
+          hash_social_reg_users[values.date] = values.social_reg_users
+        end
+      hash_social_reg_users
     end
   end
 
