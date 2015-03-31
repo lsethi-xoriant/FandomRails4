@@ -119,7 +119,7 @@ module RankingHelper
     ctas = CallToAction.where("id in (?)", cta_ids)
     ctas_info = {}
     ctas.each do |cta|
-      ctas_info[cta.id] = { "thumb_url" => cta.media_image.url(:thumb) }
+      ctas_info[cta.id] = { "thumb_url" => cta.thumbnail.url(:thumb) }
     end
     ctas_info
   end

@@ -1,4 +1,5 @@
-<div class="calendar-event__popover"></div>
+<div class="calendar-event__popover calendar-event__popover--left"></div>
+<div class="calendar-event__popover calendar-event__popover--right"></div>
 <div class="container-fluid__blue">
   <div class="container main-container">
 	
@@ -77,16 +78,15 @@
 	$('div.calendar-event__popover').mouseleave(function(){
 		$('div.calendar-event__popover').hide();
 	});
-	
-	$(document).mousemove( function(e) {
-	   mouseX = e.pageX; 
-	   mouseY = e.pageY;
-	}); 
+	$('div.calendar-event__popover--right').mouseleave(function(){
+		$('div.calendar-event__popover').hide();
+	});
   });
   
   function show_event_info(elem, id){
-  	
-  	if(! $("div.calendar-event__popover").is(":visible") || id != current_event_id ) {
+  	console.log($("div.calendar-event__popover[data-event-id="+id+"]"));
+  	if(!$("div.calendar-event__popover[data-event-id="+id+"]").is(":visible")) {
+		$('div.calendar-event__popover').hide();
   		current_event_id = id;
 	  	selected_event = $('#full-calendar').fullCalendar('clientEvents', id)[0];
 	  	
@@ -96,9 +96,28 @@
 	  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a></div>';
 	  	$("div.calendar-event__popover").html(eventinfo);
 	  	
-	  	position = $(elem).parent().position();
-	  	$("div.calendar-event__popover").css({'left': mouseX-380, 'top': mouseY-100,});
-	  	$("div.calendar-event__popover").show();
+	  	//position = $(elem).parent().position();
+	  	position = $(elem).offset();
+	  	console.log(position);
+	  	if(position.left-200 < 0){
+	  		eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
+		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
+		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
+		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
+		  	$("div.calendar-event__popover--right").attr("data-event-id", id);
+		  	$("div.calendar-event__popover--right").html(eventinfo);
+	  		$("div.calendar-event__popover--right").css({'left': position.left + 130 + 'px', 'top': position.top - 100 + 'px'});
+	  		$("div.calendar-event__popover--right").show();
+	  	}else{
+	  		eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
+		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
+		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
+		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
+		  	$("div.calendar-event__popover--left").attr("data-event-id", id);
+		  	$("div.calendar-event__popover--left").html(eventinfo);
+	  		$("div.calendar-event__popover--left").css({'left': position.left - 280 + 'px', 'top': position.top - 100 + 'px'});
+	  		$("div.calendar-event__popover--left").show();
+	  	}
 	}
   }
 
@@ -130,10 +149,14 @@
          });
       },
 	  eventRender: function(event, element, view) {
-	  	if(event.extra_fields.highlight){
-	  		console.log(event.extra_fields.highlight.value);
+	  	today = moment().dayOfYear();
+
+	  	if(today == event.start.dayOfYear()){
+	  		html = $('<div class="calendar-event calendar-event--current-date"></div>');
+	  	}else{
+	  		html = $('<div class="calendar-event"></div>');
 	  	}
-	  	html = $('<div class="calendar-event"></div>');
+	  	
 	  	if(event.extra_fields.highlight && event.extra_fields.highlight.value){
 		  	html.append('<p class="calendar-event__hour calendar-event__hour--highlight">'+ event.start.format("HH:mm") +'</p>');
 		    html.append('<a href="javascript:void(0);" class="calendar-event__title calendar-event__title--highlight" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');

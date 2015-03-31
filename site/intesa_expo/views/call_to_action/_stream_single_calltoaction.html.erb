@@ -18,6 +18,19 @@
   </div>
 </div>
 
+<div class="container visible-xs" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.author_name"> 
+  <div class="row main-row">
+    <div class="col-xs-12 cta__miniformat-col">
+      <div class="cta__sub_description ">
+        <img class="cta__author-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
+        <p class="cta__author-title">{{calltoaction_info.calltoaction.extra_fields.author_name}}</p>
+        <p class="cta__author-category">{{calltoaction_info.calltoaction.extra_fields.author_category}}</p>
+        <p class="cta__author-address"><a href="{{calltoaction_info.calltoaction.extra_fields.author_address}}">{{calltoaction_info.calltoaction.extra_fields.author_address}}</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container-fluid__blue">
   <div class="container" ng-if="calltoaction_info.calltoaction.media_type != 'VOID'"> 
     <div class="row main-row">
@@ -48,16 +61,34 @@
           <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
         </div>
 
+        <div class="col-sm-12 visible-xs" ng-if="aux.has_related_live">
+          <div class="cta__live-container--related">
+            <span class="cta__live-label--related" style="background-color: red; color: #fff;">
+              <span class="fa fa-dot-circle-o"></span>
+              live
+            </span>
+            <p class="cta__live-description--related">Potrai seguire questo evento in livestreaming sul nostro sito</p>
+          </div>
+        </div>
+
         <!-- UNDER MEDIA -->
         <div class="col-md-12">         
           <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.extra_fields['subtitle'] | unsafe"></h2>
         </div>
 
-        <div class="col-md-12 cta__column-custom">
+        <!-- MOBILE SHARE -->
+        <div class="col-md-12 visible-xs">
+          <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+            <div id="share-interaction-{{interaction_info.interaction.id}}" class="share-undervideo-interaction__row">
+              <%= render partial: "/call_to_action/share_interaction" %>
+            </div>
+          </div>
+        </div>  
+
+        <!-- DESKTOP SHARE -->
+        <div class="col-md-12 cta__column-custom hidden-xs">
           <div class="cta__hr_top"></div>
           <div class="row">
-            
-
             <div class="col-md-7"> 
               <div class="cta__sub_description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.author_name">
                 <img class="cta__author-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
@@ -66,7 +97,6 @@
                 <p class="cta__author-address"><a href="{{calltoaction_info.calltoaction.extra_fields.author_address}}">{{calltoaction_info.calltoaction.extra_fields.author_address}}</a></p>
               </div>
             </div>
-
             <div class="col-md-5 text-right">
               <div class="cta__hr_center"></div> 
               <!-- SHARE -->
@@ -80,14 +110,31 @@
           <div class="cta__hr_bottom"></div>
         </div>
 
-        <div class="col-md-12"> 
-          <div class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></div>
+        <!-- MOBILE DESCRIPTION -->
+        <div class="col-md-12 visible-xs"> 
+          <div class="panel panel-default cta__cps-panel">
+            <div class="panel-heading" role="tab" id="cta__cps-1">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#cta__cps-1b" aria-expanded="true" aria-controls="cta__cps-1b">
+                  <span class="glyphicon glyphicon-chevron-down"></span>Descrizione
+                </a>
+              </h4>
+            </div>
+            <div id="cta__cps-1b" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cta__cps-1">
+              <div class="panel-body">
+                <div class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <!-- DESKTOP DESCRIPTION -->
+        <div class="col-md-12 hidden-xs"> 
+          <div class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></div>
           <div class="cta__contents" ng-repeat="content in calltoaction_info.calltoaction.contents | orderBy:orderContent">
             <img ng-src="{{content['value']['url']}}" ng-if="content['value']['type'] == 'media'">
             <div ng-if="content['value']['type'] != 'media'" ng-bind-html="content['value'] | unsafe"></div>
           </div>
-
           <!-- DOWNLOAD INTERACTION
           <div class="row {{calltoaction_info.hide_class}}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
             <div class="col-xs-12 text-center" >
@@ -95,28 +142,30 @@
             </div>
           </div>
           -->
-
         </div>
 
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="cta__extra_fields">
 
-        <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.start || calltoaction_info.calltoaction.extra_fields.location">DOVE E QUANDO</p>
-
-        <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.start"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{formatDate(calltoaction_info.calltoaction.extra_fields.start, aux.language)}}</span></p>
-        <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.start"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{extractTimeFromDate(calltoaction_info.calltoaction.extra_fields.start)}}</span></p>
-
-        <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.location"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields["location"]}}</span></p>
-
-        <p class="cta__extra_fields__title cta__extra_fields__title--margin-top" ng-if="calltoaction_info.calltoaction.extra_fields.guests">OSPITI</p>
-
-        <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
-
+      <!-- MOBILE DETAILS -->
+      <div class="panel panel-default visible-xs cta__cps-panel">
+        <div class="panel-heading" role="tab" id="cta__cps-2">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#cta__cps-2b" aria-expanded="true" aria-controls="cta__cps-2b">
+              <span class="glyphicon glyphicon-chevron-down"></span>Dettagli
+            </a>
+          </h4>
+        </div>
+        <div id="cta__cps-2b" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cta__cps-2">
+          <%= render partial: "/call_to_action/cta_extra_fields", locals: { top_class: "" } %>
+        </div>
       </div>
 
-      <div class="row" ng-if="aux.has_related_live">
+      <!-- DESKTOP DETAILS -->
+      <%= render partial: "/call_to_action/cta_extra_fields", locals: { top_class: "hidden-xs" } %>
+
+      <div class="row hidden-xs" ng-if="aux.has_related_live">
         <div class="col-sm-12">
           <div class="cta__live-container--related">
             <span class="cta__live-label--related" style="background-color: red; color: #fff;">

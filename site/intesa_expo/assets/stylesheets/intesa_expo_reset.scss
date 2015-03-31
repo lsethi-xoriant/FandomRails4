@@ -8,6 +8,10 @@ hr {
   font-family: "Helvetica"
 }
 
+img {
+  max-width: 100%;
+}
+
 h1, h2, 
 .ctas__flexslider__title, 
 .cta__extra_fields__title, 
@@ -237,35 +241,13 @@ p {
 
 @media (max-width: $screen-sm-min) { 
 
-  button.close {
-    position: relative;
-    z-index: 10;
-  }
-
   .flex-direction-nav {
     display: none !important;
   }
 
-  .adv__horizontal {
-    margin-bottom: 10px;
-    margin-top: 25px;
-    display: inline-block;
-    width: auto;
-    text-align: center;
-    p {
-      bottom: auto;
-      font-size: 12px;
-      left: 5px;
-      top: -19px;
-      width: 100%;
-      -ms-transform: none; /* IE 9 */
-      -webkit-transform: none; /* Chrome, Safari, Opera */
-      transform: none;
-    }
-  }
-
-  .main-row {
+  .main-row, .main-row__evidence {
     padding-left: 0;
     padding-right: 0;
+    padding-top: 0;
   }
 }
