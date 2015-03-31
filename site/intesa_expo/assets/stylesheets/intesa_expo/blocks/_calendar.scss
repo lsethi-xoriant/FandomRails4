@@ -4,6 +4,13 @@
   border-bottom: 1px solid #ccc;
 }
 
+.calendar-event--current-date{
+  background-color: $orange;
+  .calendar-event__hour, .calendar-event__title, .calendar-event__title:hover {
+    color: #fff;
+  }
+}
+
 .calendar-event__month, .calendar-event__agenda{
   color: #fff;
 }
@@ -35,7 +42,7 @@
   margin: 5px 0;
 }
 
-.calendar-event__popover {
+.calendar-event__popover--left {
   position: absolute;
   height: auto;
   width: 250px;
@@ -53,7 +60,7 @@
   box-shadow: 0px 0px 30px 1px rgba(0,0,0,0.75);
 }
 
-.calendar-event__popover:after {
+.calendar-event__popover--left:after {
   content: '';
   position: absolute;
   border-style: solid;
@@ -67,7 +74,7 @@
   top: 50%;
 }
 
-.calendar-event__popover:before {
+.calendar-event__popover--left:before {
   content: '';
   position: absolute;
   border-style: solid;
@@ -78,6 +85,52 @@
   z-index: 0;
   margin-top: -15px;
   right: -16px;
+  top: 50%;
+}
+
+.calendar-event__popover--right {
+  position: absolute;
+  height: auto;
+  width: 250px;
+  padding: 10px 0px;
+  background: #FFFFFF;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  border: #333 solid 1px;
+  display: none;
+  z-index: 999999;
+  background-color: #fff;
+  -webkit-box-shadow: 0px 0px 30px 1px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 30px 1px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 30px 1px rgba(0,0,0,0.75);
+}
+
+.calendar-event__popover--right:after {
+  content: '';
+  position: absolute;
+  border-style: solid;
+  border-width: 13px 15px 13px 0px;
+  border-color: transparent #FFFFFF;
+  display: block;
+  width: 0;
+  z-index: 1;
+  margin-top: -15px;
+  left: -15px;
+  top: 50%;
+}
+
+.calendar-event__popover--right:before {
+  content: '';
+  position: absolute;
+  border-style: solid;
+  border-width: 13px 15px 13px 0px;
+  border-color: transparent #333;
+  display: block;
+  width: 0;
+  z-index: 0;
+  margin-top: -15px;
+  left: -16px;
   top: 50%;
 }
 

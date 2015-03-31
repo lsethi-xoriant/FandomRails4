@@ -612,12 +612,28 @@ module ApplicationHelper
     end
   end
   
+  def get_cta_id_to_ical_fields(params)
+    donwloads = Download.joins(:interaction => :call_to_action)
+    if params[:ical_start_datetime]
+      donwloads = donwloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= ?", params[:ical_start_datetime])
+    end
+    if params[:ical_start_datetime]
+      donwloads = donwloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= ?", params[:ical_end_datetime])
+    end
+    donwloads.pluck('call_to_actions.id')
+  end
+  
   def get_ctas_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "and") do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
       where_clause, limit = get_cta_where_clause_from_params(params)
-      ctas = CallToAction.active.includes(call_to_action_tags: :tag).where("id IN (#{tag_ids_subselect}) ")
+      ctas = CallToAction.active.includes(call_to_action_tags: :tag)
+      if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
+        cta_id_to_ical_fields = get_cta_id_to_ical_fields(params) 
+        ctas = ctas.where(id: cta_id_to_ical_fields) 
+      end
+      ctas = ctas.where("id IN (#{tag_ids_subselect}) ")
       if !where_clause.empty?
         ctas = ctas.where("#{where_clause}")
       end
@@ -632,7 +648,12 @@ module ApplicationHelper
     extra_key = get_extra_key_from_params(params)
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
       where_clause, limit = get_cta_where_clause_from_params(params)
-      ctas = CallToAction.active.includes(call_to_action_tags: :tag).where("call_to_action_tags.tag_id IN (?) ", tag_ids)
+      ctas = CallToAction.active.includes(call_to_action_tags: :tag)
+      if params.includes? [:ical_start_datetime, :ical_end_datetime]
+        cta_id_to_ical_fields = get_cta_id_to_ical_fields(params) 
+        ctas = ctas.where(id: cta_id_to_ical_fields) 
+      end
+      ctas = ctas.where("call_to_action_tags.tag_id IN (?) ", tag_ids)
       if !where_clause.empty?
         ctas = ctas.where("#{where_clause}")
       end
@@ -643,7 +664,7 @@ module ApplicationHelper
     end
   end
   
-  # Public: Construct an sql condition string from hash of params
+  # Public: Construct an sql condition string from hash of params. 
   #
   # params  - The Hash with params
   #           params hash is so formed: { conditions: { condition_name: condition_value, ... }, limit: { offset: offset_value, perpage: perpage_elements } }
@@ -656,7 +677,7 @@ module ApplicationHelper
   def get_cta_where_clause_from_params(params)
     where_clause = []
     if params[:conditions]
-      if params[:conditions][:without_user_cta] && params[:conditions][:without_user_cta] 
+      if params[:conditions].fetch(:without_user_cta, false) 
         where_clause << "call_to_actions.user_id IS NULL"
       end
       if params[:conditions][:exclude_cta_ids]
