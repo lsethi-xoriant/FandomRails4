@@ -93,7 +93,22 @@ module IntesaExpoHelper
 
     if other && other.has_key?(:calltoaction)
       cta = other[:calltoaction]
+      
+      live = get_tag_from_params("live")
+      is_live_cta = cta.call_to_action_tags.where("tag_id = ?", live.id).any?
+
       relateds = get_intesa_expo_related_ctas(cta)
+      
+      if !is_live_cta
+        relateds_tag_keys = []
+        relateds.contents.each do |related|
+          if related.tags
+            relateds_tag_keys << related.tags.keys
+          end
+        end
+        have_related_live = relateds_tag_keys.include?(live.id)
+      end
+
       if cta.extra_fields
         page_stripes = []
         JSON.parse(cta.extra_fields).each do |key, value|
