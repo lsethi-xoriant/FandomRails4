@@ -99,7 +99,7 @@ module IntesaExpoHelper
 
       relateds = get_intesa_expo_related_ctas(cta)
       
-      if !is_live_cta
+      if !is_live_cta && relateds
         relateds_tag_keys = []
         relateds.contents.each do |related|
           if related.tags
