@@ -8,8 +8,13 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
-streamCalltoactionModule.filter('unsafe', function($sce) { return $sce.trustAsHtml; });
-streamCalltoactionModule.filter('trustAsResourceUrl', function($sce) { return $sce.trustAsResourceUrl; });
+streamCalltoactionModule.filter('unsafe', ['$sce', function($sce) { 
+  return $sce.trustAsHtml; 
+}]);
+
+streamCalltoactionModule.filter('trustAsResourceUrl', ['$sce', function($sce) { 
+  return $sce.trustAsResourceUrl; 
+}]);
 
 /* COIN */
 streamCalltoactionModule.animation('.slide-left', function() {

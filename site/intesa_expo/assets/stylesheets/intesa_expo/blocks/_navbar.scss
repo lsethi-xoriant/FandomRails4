@@ -1,53 +1,81 @@
 /* NAVBAR */
-.navbar__container {
-  padding: 0;
-}
 
-.navbar-default {
-  border: none;
-  margin-bottom: 0;
-}
+@media (min-width: $screen-sm-min) { 
 
-.navbar__container-fluid {
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-}
-
-.navbar__container {
-  padding: 0;
-}
-
-.navbar-nav-center {
-  width: 100%;
-  text-align: center;
-}
-
-.navbar-nav li {
-  float: none;
-  display: inline-block;
-  text-transform: uppercase;
-}
-
-.navbar__item-text {
-  font-family: 'Gnuolane';
-}
-
-.navbar-nav li.active {
-  .navbar__item-text {
-    color: $lightblue;
+  .navbar__container {
+    padding: 0;
   }
+
+  .navbar-default {
+    border: none;
+    margin-bottom: 0;
+  }
+
+  .navbar__container-fluid {
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+
+  .navbar__container {
+    padding: 0;
+  }
+
+  .navbar-nav-center {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-nav li {
+    float: none;
+    display: inline-block;
+    text-transform: uppercase;
+  }
+
+  .navbar__item-text {
+    font-family: 'Gnuolane';
+  }
+
+  .navbar-nav li.active {
+    .navbar__item-text {
+      color: $lightblue;
+    }
+  }
+
+  .navbar-right {
+    position: absolute; 
+    right: 75px;
+  }
+
+  .navbar-right a {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+
+  .navbar-right li:first-child p {
+    border-left: 1px solid #eee; padding-left: 15px;
+  }
+
 }
 
-.navbar-right {
-  position: absolute; 
-  right: 75px;
-}
 
-.navbar-right a {
-  padding-left: 5px !important;
-  padding-right: 5px !important;
-}
+@media (max-width: $screen-sm-min) { 
+  .navbar__logo {
+    height: 60px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    width: auto;
+  }
 
-.navbar-right li:first-child p {
-  border-left: 1px solid #eee; padding-left: 15px;
+  .bnt__menu {
+    position: absolute;
+    top: 25px;
+    right: 0;
+  }
+
+  .navbar-inverse {
+    border: 0 !important;
+    margin-bottom: 0;
+  }
 }

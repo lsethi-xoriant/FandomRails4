@@ -1,26 +1,24 @@
-<div class="row">
-  <div class="col-sm-12">
-    <h2 class="cta__related__title">{{aux.relateds.title}}</h2>
-  </div>
-  <div class="col-xs-12" ng-repeat="content in aux.relateds.contents" ng-if="content.type == 'cta'" style="margin-bottom: 10px;">
-    <div class="row">
-      <div class="col-xs-12">
-        <%= light_link_to("{{content.detail_url}}", class: "cta__related__a") do %>
-          <div class="cta__related__icon-container">
-            <i class="fa fa-picture-o cta__related__icon" ng-if="content.media_type == 'IMAGE'"></i>
-            <i class="fa fa-video-camera cta__related__icon" ng-if="content.media_type == 'YOUTUBE'"></i> 
-          </div>
-          <img class="cta__related__img" ng-src="{{content.thumb_url}}" style="width: 100%;">
-          <p class="cta__related__title-content">
-            <span class="cta__related__type" ng-if="content.media_type == 'IMAGE'">FOTO</span>
-            <span class="cta__related__type" ng-if="content.media_type == 'YOUTUBE'">VIDEO</span>
-            {{content.title | cut:true:70}}
-          </p>
-        <% end %>
+<!-- MOBILE RELATEDS -->
+<div class="row visible-xs">
+  <div class="col-md-12 "> 
+    <div class="panel panel-default cta__cps-panel">
+      <div class="panel-heading" role="tab" id="cta__cps-3">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#cta__cps-3b" aria-expanded="true" aria-controls="cta__cps-3b">
+            <span class="glyphicon glyphicon-chevron-down"></span>Contenuti correlati
+          </a>
+        </h4>
       </div>
-      <div class="col-xs-12">
-        <hr class="cta__related__hr">
+      <div id="cta__cps-3b" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cta__cps-3">
+        <div class="panel-body">
+          <div class="row">
+            <%= render partial: "/application/related_ctas", locals: { top_class: "" } %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- DESKTOP RELATEDS -->
+<%= render partial: "/application/related_ctas", locals: { top_class: "hidden-xs" } %>

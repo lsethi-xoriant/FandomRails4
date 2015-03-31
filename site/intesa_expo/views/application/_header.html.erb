@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container hidden-xs">
   <div class="row main-row">
     <div class="col-sm-4">  
       <img class="left-logo" ng-src="{{aux.assets.left_logo.url}}">    
@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<div class="container-fluid navbar__container-fluid">
+<div class="navbar__container-fluid hidden-xs">
   <div class="container navbar__container">
     <nav class="navbar navbar-default">
       <!-- Brand and toggle get grouped for better mobile display -->
@@ -49,3 +49,38 @@
     </nav>
   </div>
 </div>
+
+<nav class="navbar navbar-inverse visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed bnt__menu" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+        <span class="navbar-inverse__menu">MENU</span>
+      </button>
+      <div class="text-center">
+        <img class="navbar__logo" ng-src="{{aux.assets.logo.url}}">
+      </div>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-class="{'active': (menu_field == menu_item.name)}" ng-repeat="menu_item in aux.menu_items">
+          <a href="{{menu_item.browse_url}}">
+            <p class="navbar__item-text">{{menu_item.title}}</p>
+          </a>
+        </li>
+        <hr style="margin-top: 5px; margin-bottom: 5px;">
+        <li ng-class="{'active': ('it' == aux.language)}" class="navbar__language">
+          <a href="/it">
+            <p class="navbar__item-text">it</p>
+          </a>
+        </li>
+        <li ng-class="{'active': ('en' == aux.language)}" class="navbar__language">
+          <a href="/en">
+            <p class="navbar__item-text">en</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
