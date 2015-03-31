@@ -439,6 +439,25 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .cta__miniformat-col {
+    margin-bottom: 15px;
+  }
+
+  .cta__main-column {
+    border-right: 0;
+  }
+
+  .cta__cps-panel {
+    border: 0 !important;
+    .glyphicon-chevron-down {
+      margin-right: 15px;
+    }
+    .panel-heading {
+      background-color: #fff;
+    }
+    box-shadow: none;
+  }
+
   .cta__title-and-description-col {
     padding: 15px;
   }

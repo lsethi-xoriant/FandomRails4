@@ -55,6 +55,10 @@
     padding-right: 5px !important;
 }
 
+.ctas__flexslider__img-container {
+    height: 395px;
+}
+
 .ctas__flexslider {
     height: 395px;
     padding-left: 0!important;
@@ -177,46 +181,57 @@
 }
 
 @media (min-width: $screen-sm-min) { 
-  .ctas__flexslider {
-    .flex-direction-nav a {
-        color: rgba(255, 255, 255, 0.3) !important;
-        margin: -15px 0 0 !important;
-    }
-
-    .flex-direction-nav a:hover {
-        color: rgba(255, 255, 255, 0.7) !important;
-        transition: color 333ms ease 0s;
-        -webkit-transition: color 333ms ease 0s;
-    }
-
-    .flex-control-paging {
-        margin-bottom: 45px; 
-        z-index: 10;
-        width: auto;
-        right: 15px;
-        li a {
-            background: rgba(255, 255, 255, 0.5);
+    .ctas__flexslider {
+        .flex-direction-nav a {
+            color: rgba(255, 255, 255, 0.3) !important;
+            margin: -15px 0 0 !important;
         }
-        li a.flex-active {
-            background: #fff;
+
+        .flex-direction-nav a:hover {
+            color: rgba(255, 255, 255, 0.7) !important;
+            transition: color 333ms ease 0s;
+            -webkit-transition: color 333ms ease 0s;
+        }
+
+        .flex-control-paging {
+            margin-bottom: 45px; 
+            z-index: 10;
+            width: auto;
+            right: 15px;
+            li a {
+                background: rgba(255, 255, 255, 0.5);
+            }
+            li a.flex-active {
+                background: #fff;
+            }
+        }
+
+        .flex-direction-nav .flex-prev {
+            left: 20px !important; 
+        }
+
+        .flex-direction-nav .flex-next {
+            right: 20px !important; 
+        }
+
+        .flex-direction-nav a:before {
+            font-size: 30px !important;
         }
     }
-
-    .flex-direction-nav .flex-prev {
-        left: 20px !important; 
-    }
-
-    .flex-direction-nav .flex-next {
-        right: 20px !important; 
-    }
-
-    .flex-direction-nav a:before {
-        font-size: 30px !important;
-    }
-  }
 }
 
 @media (max-width: $screen-sm-min) { 
+    .ctas__flexslider__title {
+        width: 100%;
+    }
+
+    .ctas__flexslider__img-container {
+        height: auto;
+    }
+
+    .ctas__flexslider__container {
+        padding: 0 !important;
+    }
 
     .ctas__info {
         padding-left: 15px; 
@@ -228,6 +243,10 @@
     }
 
     .ctas__flexslider {
+        border: 0 !important;
+        height: auto;
+        margin-bottom: 25px !important;
+
         .flex-control-nav {
             bottom: 0;
             z-index: 10;
