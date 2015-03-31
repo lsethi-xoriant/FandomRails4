@@ -362,6 +362,9 @@ module DisneyHelper
       if calltoaction.user_id
         in_gallery = calltoaction.id
         gallery_calltoaction = CallToAction.find(in_gallery)
+
+        @gallery_background = get_extra_fields!(gallery_calltoaction)['background_image']
+
         related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
         related_tag_name = related_tag.present? ? related_tag.name : "gallery"
       end
