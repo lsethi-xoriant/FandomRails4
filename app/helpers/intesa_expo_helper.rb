@@ -103,10 +103,10 @@ module IntesaExpoHelper
         relateds_tag_keys = []
         relateds.contents.each do |related|
           if related.tags
-            relateds_tag_keys << related.tags.keys
+            relateds_tag_keys =  relateds_tag_keys + related.tags.keys
           end
         end
-        have_related_live = relateds_tag_keys.include?(live.id)
+        has_related_live = relateds_tag_keys.include?(live.id)
       end
 
       if cta.extra_fields
@@ -144,6 +144,8 @@ module IntesaExpoHelper
       "root_url" => root_url,
       "menu_items" => menu_items,
       "relateds" => relateds,
+      "is_live_cta" => is_live_cta,
+      "has_related_live" => has_related_live,
       "page_stripes" => page_stripes,
       "context_root" => $context_root,
       "language" => $context_root || "it"
