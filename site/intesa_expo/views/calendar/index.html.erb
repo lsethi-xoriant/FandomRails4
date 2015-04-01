@@ -105,6 +105,12 @@
 	  		eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
 		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
 		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
+		  	eventinfo += '<p class="calendar-event__popover__extra-info">';
+		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("d MMMM YYYY");
+		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.start.format("h:mm");;
+		  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
+		  	eventinfo += '</p>';
+		  	eventinfo += '<hr />';
 		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
 		  	$("div.calendar-event__popover--right").attr("data-event-id", id);
 		  	$("div.calendar-event__popover--right").html(eventinfo);
@@ -114,6 +120,12 @@
 	  		eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
 		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
 		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
+		  	eventinfo += '<p class="calendar-event__popover__extra-info">';
+		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("d MMMM YYYY");
+		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.end.format("h:mm");
+		  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
+		  	eventinfo += '</p>';
+		  	eventinfo += '<hr />';
 		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
 		  	$("div.calendar-event__popover--left").attr("data-event-id", id);
 		  	$("div.calendar-event__popover--left").html(eventinfo);
