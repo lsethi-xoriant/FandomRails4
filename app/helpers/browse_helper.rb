@@ -27,6 +27,7 @@ module BrowseHelper
     attr_accessor :layout
     attr_accessor :start
     attr_accessor :end
+    attr_accessor :interactions
     
     def initialize(params)
       @id = params[:id]
@@ -52,6 +53,7 @@ module BrowseHelper
       @layout = params[:layout]
       @start = params[:start]
       @end = params[:end]
+      @interactions = params[:interactions]
     end
     
   end

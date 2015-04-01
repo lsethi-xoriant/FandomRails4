@@ -53,6 +53,8 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     cal_events = cache_medium(get_month_calendar_cache_key(month_key)) do
       events = get_calendar_events(today.beginning_of_month, today.end_of_month)
       cal_events = []
+      #maps cta to interaction
+      cta_to_interaction = get_cta_to_interactions_map(events.map{|e| e.id})
       ical_events = get_ical_events(events.map{|e| e.id})
       ical_events.each do |event|
         if cal_events[event[:start_datetime].day].nil?
@@ -61,6 +63,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
         content_preview = cta_to_content_preview(event[:cta])
         content_preview.start = event[:start_datetime]
         content_preview.end = event[:end_datetime]
+        content_preview.interactions = cta_to_interaction[event[:cta].id]
         cal_events[event[:start_datetime].day] << content_preview
       end
       cal_events

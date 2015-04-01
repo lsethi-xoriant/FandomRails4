@@ -1565,4 +1565,18 @@ module ApplicationHelper
     end
   end
   
+  def get_cta_to_interactions_map(cta_ids)
+    cta_to_interactions = {}
+    Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids).each do |inter|
+      if cta_to_interactions[inter.call_to_action_id].nil?
+        cta_to_interactions[inter.call_to_action_id] = []
+      end
+      cta_to_interactions[inter.call_to_action_id] << {
+        interaction_info: inter,
+        interaction_resource: inter.resource
+      }
+    end
+    cta_to_interactions
+  end
+  
 end
