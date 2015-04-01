@@ -590,6 +590,14 @@ module ApplicationHelper
         end
       end
     end
+    if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
+      if params[:ical_start_datetime]
+        extra_key << "#{DateTime.parse(params[:ical_start_datetime]).strftime("%d_%M_%Y")}"
+      end
+      if params[:ical_end_datetime]
+        extra_key << "#{DateTime.parse(params[:ical_end_datetime]).strftime("%d_%M_%Y")}"
+      end
+    end
     if params['limit']
       extra_key << "limit_#{params['limit']['offset']}_#{params['limit']['perpage']}"
     end
@@ -615,10 +623,10 @@ module ApplicationHelper
   def get_cta_id_to_ical_fields(params)
     donwloads = Download.joins(:interaction => :call_to_action)
     if params[:ical_start_datetime]
-      donwloads = donwloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= ?", params[:ical_start_datetime])
+      donwloads = donwloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= '#{params[:ical_start_datetime]}'")
     end
-    if params[:ical_start_datetime]
-      donwloads = donwloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= ?", params[:ical_end_datetime])
+    if params[:ical_end_datetime]
+      donwloads = donwloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= '#{params[:ical_end_datetime]}'")
     end
     donwloads.pluck('call_to_actions.id')
   end

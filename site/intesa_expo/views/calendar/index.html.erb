@@ -51,16 +51,18 @@
 	<% end %>
 	</div>
 </div>
-<div class="container main-container" >	
-	<div class="row">
-      	<div class="col-md-12">
-			<div id="full-calendar"></div> <!-- /#full-calendar -->             
+<div class="container-fluid__white">
+	<div class="container main-container" >	
+		<div class="row">
+	      	<div class="col-md-12">
+				<div id="full-calendar"></div> <!-- /#full-calendar -->             
+			</div>
 		</div>
-	</div>
-	
-	<div class="row">
-		<div class="col-xs-12 text-center">
-			<a class="btn btn-primary" href="#">Torna su</a>
+		
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<a class="btn btn-primary" href="#">Torna su</a>
+			</div>
 		</div>
 	</div>
 </div>
@@ -129,6 +131,7 @@
         center: 'title',
         right: 'next'
       },
+      defaultDate: "<%= @today.strftime("%Y-%m-%d") %>",
       lang: "<%= get_intesa_property %>",
       dayClick: function(date, jsEvent, view ) {
         window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
@@ -137,10 +140,13 @@
       disableResizing: true,
       height: "auto",
       events: function(start, end, timezone, callback) {
+      	month = $('#full-calendar').fullCalendar('getDate').month();
+      	year = $('#full-calendar').fullCalendar('getDate').year();
       	$.ajax({
             url: "/<%= get_intesa_property %>/calendar/fetch/events.json",
             data: {
-                start: start._d,
+                month: month+1,
+                year: year
             },
             success: function(data) {
                 var events = data;

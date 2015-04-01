@@ -53,15 +53,63 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     cal_events = cache_medium(get_month_calendar_cache_key(month_key)) do
       events = get_calendar_events(today.beginning_of_month, today.end_of_month)
       cal_events = []
-      events.each do |event|
-        if cal_events[event.valid_from.day].nil?
-          cal_events[event.valid_from.day] = Array.new
+      ical_events = get_ical_events(events.map{|e| e.id})
+      ical_events.each do |event|
+        if cal_events[event[:start_datetime].day].nil?
+          cal_events[event[:start_datetime].day] = Array.new
         end
-        cal_events[event.valid_from.day] << cta_to_content_preview(event)
+        content_preview = cta_to_content_preview(event[:cta])
+        content_preview.start = event[:start_datetime]
+        content_preview.end = event[:end_datetime]
+        cal_events[event[:start_datetime].day] << content_preview
       end
       cal_events
     end
     cal_events
+  end
+  
+  def get_ical_events(cta_ids)
+    ical_events = []
+    if cta_ids.any?
+      Download.includes(:interaction => :call_to_action).where("interactions.call_to_action_id IN (?) AND downloads.ical_fields is not null", cta_ids).each do |cal|
+        ical_events << {
+          cta: cal.interaction.call_to_action, 
+          start_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['start_datetime']['value']),
+          end_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['end_datetime']['value'])
+        }
+      end
+    end
+    ical_events
+  end
+  
+  def get_calendar_events(start_date, end_date)
+    language_tag_id = get_tag_from_params(get_intesa_property).id
+    event_tag_id = Tag.find_by_name("event-#{get_intesa_property}").id
+    params = {
+      ical_start_datetime: start_date.strftime("%d-%m-%Y %H:%M:%S %z"),
+      ical_end_datetime: end_date.strftime("%d-%m-%Y %H:%M:%S %z")
+    }
+    get_ctas_with_tags_in_and([language_tag_id, event_tag_id], params)
+  end
+  
+  def prepare_events_for_calendar(events)
+    calendar_events = []
+    events.each do |days_events|
+      if !days_events.nil?
+        days_events.each do |event|
+          calendar_events << event
+        end
+      end
+    end
+    calendar_events.to_json
+  end
+  
+  def fetch_events
+    start_date = DateTime.parse("01-#{params[:month]}-#{params[:year]}").utc
+    month_calendar = initialize_calendar(start_date)
+    respond_to do |format|
+      format.json { render :json => prepare_events_for_calendar(month_calendar.events) }
+    end
   end
   
   def find_next_event_day(starting_day, events)
@@ -123,36 +171,6 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     else
       find_next_event_day(request_day, events) || find_prev_event_day(request_day, events) || 1
     end    
-  end
-  
-  def get_calendar_events(start_date, end_date)
-    language_tag_id = get_tag_from_params(get_intesa_property).id
-    event_tag_id = Tag.find_by_name("event-#{get_intesa_property}").id
-    params = {
-      ical_start_datetime: start_date,
-      ical_end_datetime: end_date
-    }
-    get_ctas_with_tags_in_and([language_tag_id, event_tag_id], params)
-  end
-  
-  def prepare_events_for_calendar(events)
-    calendar_events = []
-    events.each do |days_events|
-      if !days_events.nil?
-        days_events.each do |event|
-          calendar_events << event
-        end
-      end
-    end
-    calendar_events.to_json
-  end
-  
-  def fetch_events
-    start_date = DateTime.parse(params[:start]).utc + 1.month
-    month_calendar = initialize_calendar(start_date)
-    respond_to do |format|
-      format.json { render :json => prepare_events_for_calendar(month_calendar.events) }
-    end
   end
   
 end
