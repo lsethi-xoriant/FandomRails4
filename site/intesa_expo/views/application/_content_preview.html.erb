@@ -1,5 +1,5 @@
-<a href="{{linkTo(content.detail_url, stripe.key)}}">
-  <div class="content-preview__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta' && content.layout == 'default'"> 
+<a href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.type == 'cta' && content.layout == 'default'">
+  <div class="content-preview__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}"> 
     <div class="row">
       <div class="col-xs-12 text-center">
         <div class="content-preview__thumbnail">
@@ -29,12 +29,13 @@
 	      </div>
       </div> 
   </div>
+</a>
   
-  <div class="content-preview__item-panel content-preview__item-panel--press" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta' && content.layout == 'press'"> 
-    <div class="row">
-      <div class="col-xs-12 text-center">
-        <p class="content-preview__title">{{content.title | cut:true:140}}</p>
-      </div>
+<div class="content-preview--press" ng-if="content.type == 'cta' && content.layout == 'press'"> 
+  <div class="row">
+    <div class="col-xs-12">
+      <span class="fa fa-quote-left content-preview__quote"></span>
+      <p class="content-preview__title--press">{{content.title | cut:true:140}}</p>
     </div>
   </div>
-</a>
+</div>

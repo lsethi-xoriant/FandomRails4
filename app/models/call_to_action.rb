@@ -87,7 +87,8 @@ class CallToAction < ActiveRecordWithJSON
     :styles => { 
       :carousel => "1024x320^", 
       :medium => "524x393^", 
-      :thumb => "262x147^" 
+      :thumb => "262x147^",
+      :wide => "1024x576"
     }, 
     :convert_options => { 
       :carousel => " -crop '1024x320+0+40'", 
