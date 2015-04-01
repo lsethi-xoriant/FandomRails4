@@ -1579,4 +1579,18 @@ module ApplicationHelper
     cta_to_interactions
   end
   
+  def get_ical_events(cta_ids)
+    ical_events = []
+    if cta_ids.any?
+      Download.includes(:interaction => :call_to_action).where("interactions.call_to_action_id IN (?) AND downloads.ical_fields is not null", cta_ids).each do |cal|
+        ical_events << {
+          cta: cal.interaction.call_to_action, 
+          start_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['start_datetime']['value']),
+          end_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['end_datetime']['value'])
+        }
+      end
+    end
+    ical_events
+  end
+  
 end
