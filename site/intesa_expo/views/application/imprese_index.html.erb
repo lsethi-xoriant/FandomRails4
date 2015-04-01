@@ -32,10 +32,10 @@
   </div>
 </div>
 
-<div class="container main-container" ng-if="aux['live-event_stripe']['contents']">
+<div class="container main-container" ng-if="aux['event_stripe']['contents']">
   <div class="row">
     <div class="col-sm-12">
-      <div class="browse-sections" ng-repeat="stripe in [aux['live-event_stripe']]">
+      <div class="browse-sections" ng-repeat="stripe in [aux['event_stripe']]">
         <%= render partial: "/application/stripe" %>
       </div>
     </div>

@@ -14,7 +14,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
       home_stripes = cache_short(get_home_stripes_cache_key($context_root)) do
         {
-          "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
+          "event_stripe" => get_intesa_expo_ctas_with_tag("event"),
           "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
           "interview_stripe" => get_intesa_expo_ctas_with_tag("interview"),
           "story_stripe" => get_intesa_expo_ctas_with_tag("story"),
@@ -24,7 +24,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
       @aux_other_params = {
         calltoaction_evidence_info: true,
-        "live-event_stripe" => home_stripes["live-event_stripe"],
+        "event_stripe" => home_stripes["event_stripe"],
         "gallery_stripe" => home_stripes["gallery_stripe"],
         "interview_stripe" => home_stripes["interview_stripe"],
         "story_stripe" => home_stripes["story_stripe"],
@@ -41,7 +41,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
       home_stripes = cache_short(get_home_stripes_cache_key($context_root || "it")) do
         {
-          "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
+          "event_stripe" => get_intesa_expo_ctas_with_tag("event"),
           "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
           "article_stripe" => get_intesa_expo_ctas_with_tag("article")
         }
@@ -49,7 +49,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
       @aux_other_params = {
         calltoaction_evidence_info: true,
-        "live-event_stripe" => home_stripes["live-event_stripe"],
+        "event_stripe" => home_stripes["event_stripe"],
         "gallery_stripe" => home_stripes["gallery_stripe"],
         "article_stripe" => home_stripes["article_stripe"],
         page_tag: {
