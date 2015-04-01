@@ -86,8 +86,8 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     language_tag_id = get_tag_from_params(get_intesa_property).id
     event_tag_id = Tag.find_by_name("event-#{get_intesa_property}").id
     params = {
-      ical_start_datetime: start_date.strftime("%d-%m-%Y %H:%M:%S %z"),
-      ical_end_datetime: end_date.strftime("%d-%m-%Y %H:%M:%S %z")
+      ical_start_datetime: start_date.strftime("%Y-%m-%d %H:%M:%S %z"),
+      ical_end_datetime: end_date.strftime("%Y-%m-%d %H:%M:%S %z")
     }
     get_ctas_with_tags_in_and([language_tag_id, event_tag_id], params)
   end
