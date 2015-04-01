@@ -23,7 +23,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
       end
 
       @aux_other_params = {
-        "calltoaction_evidence_info" => true,
+        calltoaction_evidence_info: true,
         "live-event_stripe" => home_stripes["live-event_stripe"],
         "gallery_stripe" => home_stripes["gallery_stripe"],
         "interview_stripe" => home_stripes["interview_stripe"],

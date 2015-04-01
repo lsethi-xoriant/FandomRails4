@@ -630,6 +630,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return result;
   }
 
+  $scope.getInteractions = function(calltoaction_id, interaction_type) {
+    result = [];
+    calltoaction_info = getCallToActionInfo(calltoaction_id);
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.resource_type == interaction_type) {
+        result.push(interaction_info);
+      }
+    });
+    return result;
+  };
+
   $scope.filterShareInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "share");
   };

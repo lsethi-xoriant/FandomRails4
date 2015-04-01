@@ -36,12 +36,14 @@
 
 </head>
 
-<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %> body-{{aux.language}}" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 <div ng-cloak>
 
   <div id="header"></div>
 
-  <%= render partial: "/application/header" %>
+  <div class="header-container">
+    <%= render partial: "/application/header" %>
+  </div>
 
   <%= yield %>
 

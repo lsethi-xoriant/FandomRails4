@@ -25,6 +25,28 @@ body {
   background-color: #fff;
 }
 
+.body-imprese {
+  .header-container {
+    background-color: $blue !important; 
+    background-image: url("intesa_expo/texture.png");
+  }
+  .navbar__container-fluid, .navbar-default {
+    background-color: $darkblue !important;
+    border-color: $darkblue !important;
+  }
+  .navbar__item-text {
+    color: $lightblue;
+  }
+  .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus,
+  .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    background-color: $darkblue !important;
+    p { color: #fff !important; }
+  }
+  .container-evidence {
+    padding-bottom: 30px;
+  }
+}
+
 p {
   margin: 0;
 }
@@ -76,7 +98,7 @@ p {
 }
 
 #widget-calendar {
-  background-color: #132332;
+  background-color: $darkblue;
   padding: 10px;
   margin-top: 10px;
 

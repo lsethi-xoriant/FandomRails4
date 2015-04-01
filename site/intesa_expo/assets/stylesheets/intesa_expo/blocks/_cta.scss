@@ -259,9 +259,9 @@
 
 .cta__video-col--about {
   height: 117px;
-  background: #132332;
+  background: $darkblue;
   background-image: url("intesa_expo/texture.png");
-  border-bottom: 1px solid #132332;
+  border-bottom: 1px solid $darkblue;
 }
 
 .cta__video-col--about.active {
