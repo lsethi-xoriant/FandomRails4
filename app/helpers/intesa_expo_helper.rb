@@ -5,7 +5,7 @@ module IntesaExpoHelper
     param_tag = get_tag_from_params(tag_name)
     language_tag = get_tag_from_params($context_root || "it")
 
-    if tag_name == "live-event"
+    if tag_name == "event"
       current_time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
       # exclude_cta_ids = CallToAction.active.where("cast(\"extra_fields\"->>'valid_from' AS timestamp) < ?", current_time).map { |cta| cta.id }
       params = { ical_start_datetime: current_time } 

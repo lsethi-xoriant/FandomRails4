@@ -1,5 +1,5 @@
-<a href="{{linkTo(content.detail_url, stripe.key)}}">
-  <div class="content-preview__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta' && content.layout == 'default'"> 
+<a href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.type == 'cta' && content.layout == 'default'">
+  <div class="content-preview__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}"> 
     <div class="row">
       <div class="col-xs-12 text-center">
         <div class="content-preview__thumbnail">
@@ -29,11 +29,16 @@
 	      </div>
       </div> 
   </div>
-  
-  <div class="content-preview__item-panel content-preview__item-panel--press" ng-style="{'background-color': content.aux.miniformat['label_background']}" ng-if="content.type == 'cta' && content.layout == 'press'"> 
+</a>
+
+<a target="_blank" href="{{content.extra_fields.external_url}}" ng-if="content.type == 'cta' && content.layout == 'press'"> 
+  <div class="content-preview--press"> 
     <div class="row">
-      <div class="col-xs-12 text-center">
-        <p class="content-preview__title">{{content.title | cut:true:140}}</p>
+      <div class="col-xs-12">
+        <span class="fa fa-quote-left content-preview__quote"></span>
+        <p class="content-preview__title--press">{{sanitizeText(content.long_description)}}</p>
+        <p class="content-preview__author">{{content.extra_fields.author_name}}</p>
+        <p class="content-preview__newspaper">{{content.extra_fields.author_newspaper}}</p>
       </div>
     </div>
   </div>
