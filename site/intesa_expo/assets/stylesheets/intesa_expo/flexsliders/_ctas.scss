@@ -221,6 +221,25 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+
+    #gallery-slider {
+        margin-left: -15px !important;
+        margin-right: -15px !important;
+        margin-bottom: 0 !important;
+    }
+
+    #gallery-carousel {
+        margin-left: -15px !important;
+        margin-right: -15px !important;
+        .flex-direction-nav {
+            display: block !important;
+        }
+    }
+
+    .cta-cover__thumbnail-column {
+        height: auto;
+    }
+
     .ctas__flexslider__title {
         width: 100%;
     }
