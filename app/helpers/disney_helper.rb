@@ -353,6 +353,8 @@ module DisneyHelper
     current_property = get_tag_from_params(get_disney_property())
     property = get_tag_from_params("property")
 
+    image_background = (get_extra_fields!(current_property)["image-background"]["url"] rescue nil)
+
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
 
@@ -362,11 +364,17 @@ module DisneyHelper
       if calltoaction.user_id
         in_gallery = calltoaction.id
         gallery_calltoaction = CallToAction.find(in_gallery)
-
-        @gallery_background = get_extra_fields!(gallery_calltoaction)['background_image']
+        
 
         related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
-        related_tag_name = related_tag.present? ? related_tag.name : "gallery"
+
+        if related_tag.present?
+          related_tag_name = related_tag.name
+          image_background = get_upload_extra_field_processor(get_extra_fields!(related_tag)['background_image'], :original)
+        else
+          related_tag_name = "gallery"
+        end
+
       end
 
       related_calltoaction_info = get_disney_related_calltoaction_info(calltoaction, current_property, related_tag_name, in_gallery)
@@ -377,7 +385,7 @@ module DisneyHelper
       "title" => current_property.title,
       "name" => current_property.name,
       "background" => get_extra_fields!(current_property)["label-background"],
-      "image-background" => (get_extra_fields!(current_property)["image-background"]["url"] rescue nil),
+      "image-background" => image_background,
       "logo" => (get_extra_fields!(current_property)["logo"]["url"] rescue nil),
       "path" => compute_property_path(current_property),
       "outer" => get_extra_fields!(current_property)["outer"],
