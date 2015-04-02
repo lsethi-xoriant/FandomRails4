@@ -57,23 +57,40 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   }
 
   $scope.areIcalInteractionsPresent = function(calltoaction_info) {
-    return getIcalInteractions(calltoaction_info.calltoaction.id).length > 0
+    ical_info_list = getIcalInteractions(calltoaction_info.calltoaction.id);
+    if (angular.isUndefined($scope.ical) && ical_info_list.length > 0) { 
+      generateIcalForView(ical_info_list);
+    }
+    return ical_info_list.length > 0;
   };
 
-  $scope.formatDateForDownloadInteractions = function(calltoaction_info, language) {
-    ical_info_list = getIcalInteractions(calltoaction_info.calltoaction.id);
-    date = ical_info_list[0].interaction.resource.ical.start_datetime.value;
-    return $scope.formatDate(date, language);
-  }
+  function generateIcalForView(ical_info_list) {
+    $scope.ical = new Object({"dates": [], "times": [], "locations": [], "n": []});
+    
+    i = 0
+    angular.forEach(ical_info_list, function(value, key) {
+      _datetime = value.interaction.resource.ical.start_datetime.value;
+      _location = value.interaction.resource.ical.location;
+      _date = $scope.formatDate(_datetime, $scope.aux.language);
 
-  $scope.extractTimeFromDateForDownloadInteractions = function(calltoaction_info) {
-    ical_info_list = getIcalInteractions(calltoaction_info.calltoaction.id);
-    times = []
-    angular.forEach(interaction_info_list, function(value, key) {
-      times.push($scope.extractTimeFromDate(value.interaction.resource.ical.start_datetime.value));
+      date_index = $scope.ical.dates.indexOf(_date);
+      location_index = $scope.ical.locations.indexOf(_location);
+
+      if(date_index < 0 || location_index < 0) {
+        $scope.ical.dates.push(_date);
+        $scope.ical.locations.push(_location);
+        $scope.ical.times.push($scope.extractTimeFromDate(_datetime));
+        $scope.ical.n.push(i);
+        i = i + 1;
+      } else {
+        index = Math.max(date_index, location_index);
+        $scope.ical.times[index] = $scope.ical.times[index] + ", " + $scope.extractTimeFromDate(_datetime);
+      }
+
     });
 
-    return times.join(", ");
+    console.log($scope.ical);
+
   }
 
   $scope.orderContent = function(content) {
