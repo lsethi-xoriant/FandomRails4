@@ -1,6 +1,6 @@
 class Download < ActiveRecord::Base
-  attr_accessible :title, :attachment, :ical_fields, :type, :ical_start, :ical_end
-  attr_accessor :type, :ical_start, :ical_end
+  attr_accessible :title, :attachment, :ical_fields, :type, :ical_start, :ical_end, :ical_location
+  attr_accessor :type, :ical_start, :ical_end, :ical_location
 
   has_attached_file :attachment
   
@@ -14,17 +14,19 @@ class Download < ActiveRecord::Base
   end
 
   def set_ical_fields
-    if ical_start.present? and ical_end.present?
+    if ical_start.present? or ical_end.present? or ical_location.present?
       ical_value = { 
         "start_datetime" => { 
           "type" => "date", "value" => ical_start 
         }, 
         "end_datetime" => { 
           "type" => "date", "value" => ical_end 
-        } 
+        },
+        "location" => ical_location
       }
       ical_start = nil
       ical_end = nil
+      ical_location = nil
       attachment.destroy()
     else
       ical_value = {}
