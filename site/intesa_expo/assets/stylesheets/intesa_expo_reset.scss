@@ -55,6 +55,7 @@ p {
   padding-top: 30px;
   padding-left: 43px;
   padding-right: 43px;
+  padding-bottom: 30px;
 }
 
 .main-row {
@@ -150,9 +151,10 @@ p {
   .fc-day-number {
     font-size: 12px;
     text-align: center;
+    cursor: pointer;
   }
 
-  .fc-state-highlight {
+  .fc-state-highlight, .fc-day-number:hover {
     background-color: $orange;
   }
 

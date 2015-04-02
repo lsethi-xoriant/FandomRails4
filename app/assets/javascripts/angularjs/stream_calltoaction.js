@@ -1172,34 +1172,22 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     calltoaction_div_id = newState.target.getIframe().id;
 
     calltoaction_id = $("#" + calltoaction_div_id).attr("calltoaction-id");
-    calltoaction_media_priority = $("#" + calltoaction_div_id).attr("main-media");
 
-    if(calltoaction_media_priority == "main") {
+    current_video_player = getPlayer(calltoaction_id);
+    current_video_player_state = current_video_player.playerManager.getPlayerState();
 
-      current_video_player = getPlayer(calltoaction_id);
-      current_video_player_state = current_video_player.playerManager.getPlayerState();
+    if(current_video_player_state == 1) {
 
-      if(current_video_player_state == 1) {
+      updateStartVideoInteraction(calltoaction_id);
+      mayStartpolling(calltoaction_id);
 
-        updateStartVideoInteraction(calltoaction_id);
-        mayStartpolling(calltoaction_id);
+    } else if(current_video_player_state == 0) {
 
-      } else if(current_video_player_state == 0) {
+      updateEndVideoInteraction(current_video_player, calltoaction_id);
+      mayStopPolling();
 
-        updateEndVideoInteraction(current_video_player, calltoaction_id);
-        mayStopPolling();
-
-      } else {
-        // Other state.
-      }
     } else {
-
-      current_video_player = $scope.secondary_video_players[calltoaction_id]["player"];
-      current_video_player_state = current_video_player.playerManager.getPlayerState();
-
-      if(current_video_player_state == 0) {
-        showCallToActionYTIframe(calltoaction_id);
-      }
+      // Other state.
     }
   }; 
   
