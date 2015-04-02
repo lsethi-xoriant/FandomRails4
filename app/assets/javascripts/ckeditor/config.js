@@ -25,3 +25,24 @@ CKEDITOR.editorConfig = function(config) {
 
 CKEDITOR.dtd.$removeEmpty['span'] = false;
 CKEDITOR.dtd.$removeEmpty['i'] = false;
+
+CKEDITOR.on('instanceReady', function( ev ) {
+  var blockTags = ['div','h1','h2','h3','h4','h5','h6','p','pre','li','blockquote','ul','ol',
+  'table','thead','tbody','tfoot','td','th',];
+
+  for (var i = 0; i < blockTags.length; i++)
+  {
+     ev.editor.dataProcessor.writer.setRules( blockTags[i], {
+        // Indicates that this tag causes indentation on line breaks inside of it.
+        indent : true,
+        // Inserts a line break before the opening tag.
+        breakBeforeOpen : true,
+        // Inserts a line break after the opening tag.
+        breakAfterOpen : true,
+        // Inserts a line break before the closing tag.
+        breakBeforeClose : false,
+        // Inserts a line break after the closing tag.
+        breakAfterClose : true
+     });
+  }
+});
