@@ -2166,7 +2166,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.formatDate = function(date, language) {
     date = new Date(date);
-    return date.getDay() + " " + computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
+    return date.getDate() + " " + computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
   };
 
   $scope.extractTimeFromDate = function(date) {
