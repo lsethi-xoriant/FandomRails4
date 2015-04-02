@@ -153,18 +153,24 @@ class CallToAction < ActiveRecordWithJSON
       datetime_utc = time_parsed_to_utc("#{activation_date_time}")
       write_attribute :activated_at, "#{datetime_utc}"
       activation_date_time = nil
+    else
+      write_attribute :activated_at, nil
     end
 
     if valid_from_date_time.present?
       datetime_utc = time_parsed_to_utc("#{valid_from_date_time}")
       write_attribute :valid_from, "#{datetime_utc}"
       valid_from_date_time = nil
+    else
+      write_attribute :valid_from, nil
     end
 
     if valid_to_date_time.present?
       datetime_utc = time_parsed_to_utc("#{valid_to_date_time}")
       write_attribute :valid_to, "#{datetime_utc}"
       valid_to_date_time = nil
+    else
+      write_attribute :valid_to, nil
     end
   end
   
