@@ -23,52 +23,52 @@
         <%= form_tag :method => 'post' do %>
         <div class="form-group">
           <label class="text-input">Filtra per ID CallTo Action</label></br>
-            <%= text_field_tag :id_cta_to_be_approved_filter, @id_cta_to_be_approved_filter, :class => 'form-control' %>
+          <%= text_field_tag :id_cta_to_be_approved_filter, @id_cta_to_be_approved_filter, :class => 'form-control' %>
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
-            </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+          </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
-            </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+          </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
           <% end %>
         </div>
       </div>
     </div>
-        <div class="col-md-12"> 
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Utente</th>
-                        <th>CTA</th>
-                        <th>Testo</th>
-                        <th>Scritto il</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <% @comment_to_be_approved.each do |c| %>
-                    <tr id="comment-<%= c.id %>-tr">
-                        <td class="col-md-1"><%= c.user ? c.user.id : "Anonimo" %></td>
-                        <td class="col-md-1"><%= link_to "CTA", easyadmin_cta_show_path(Interaction.select(:call_to_action_id).where(:resource_id => c.comment_id, :resource_type => 'Comment').first.call_to_action_id), class: "btn btn-primary btn-xs" %></a></td>
-                        <td class="col-md-6"><%= c.text %></td>
-                        <td class="col-md-2"><%= c.created_at %></td>
-                        <td id="comment-<%= c.id %>" class="col-md-3">
-                            <button type="button" class="btn btn-default btn-xs" onclick="updateComment(true, <%= c.id %>)">Pubblica</button>
-                            &nbsp;&nbsp;
-                            <button type="button" class="btn btn-warning btn-xs" onclick="updateComment(false, <%= c.id %>)">Nascondi</button>                          
-                        </td>
-                    </tr>
-                <% end %>
-            </table>
-        </div>
+    <div class="col-md-12"> 
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Utente</th>
+            <th>CTA</th>
+            <th>Testo</th>
+            <th>Scritto il</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <% @comment_to_be_approved.each do |c| %>
+          <tr id="comment-<%= c.id %>-tr">
+            <td class="col-md-1"><%= c.user ? c.user.id : "Anonimo" %></td>
+            <td class="col-md-1"><%= link_to "CTA", easyadmin_cta_show_path(Interaction.select(:call_to_action_id).where(:resource_id => c.comment_id, :resource_type => 'Comment').first.call_to_action_id), class: "btn btn-primary btn-xs" %></a></td>
+            <td class="col-md-6"><span style="max-width: 200px; word-wrap: break-word;"><%= c.text %></span></td>
+            <td class="col-md-2"><%= c.created_at %></td>
+            <td id="comment-<%= c.id %>" class="col-md-3">
+              <button type="button" class="btn btn-default btn-xs" onclick="updateComment(true, <%= c.id %>)">Pubblica</button>
+              &nbsp;&nbsp;
+              <button type="button" class="btn btn-warning btn-xs" onclick="updateComment(false, <%= c.id %>)">Nascondi</button>                     
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
 
     <div class="row cta-to-show">
-        <div class="col-md-12">
-            <%= render partial: "/easyadmin/easyadmin/pagination" %>
-        </div>
+      <div class="col-md-12">
+        <%= render partial: "/easyadmin/easyadmin/pagination" %>
+      </div>
     </div>
 
   </div>

@@ -9,35 +9,35 @@
 
     <div id="content-container">
 
-  <ul class="nav nav-tabs">
-    <li><a href="/easyadmin/comments/to_approved">Commenti da approvare</a></li>
-    <li ><a href="/easyadmin/comments/approved">Commenti pubblicati</a></li>
-    <li class="active"><a href="/easyadmin/comments/not_approved">Commenti oscurati</a></li>
-  </ul>
+    <ul class="nav nav-tabs">
+      <li><a href="/easyadmin/comments/to_approved">Commenti da approvare</a></li>
+      <li ><a href="/easyadmin/comments/approved">Commenti pubblicati</a></li>
+      <li class="active"><a href="/easyadmin/comments/not_approved">Commenti oscurati</a></li>
+    </ul>
 
     <h3>Commenti oscurati</h3>
     <hr/>
 
     <div class="row">
       <div class="col-md-2">
-            <%= form_tag :method => 'post' do %>
-            <div class="form-group">
-              <label class="text-input">Filtra per ID CallTo Action</label></br>
-                <%= text_field_tag :id_cta_not_approved_filter, @id_cta_not_approved_filter, :class => 'form-control' %>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="form-group">
-                </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="form-group">
-                </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
-            <% end %>
-            </div>
-          </div>
-         </div>
+        <%= form_tag :method => 'post' do %>
+        <div class="form-group">
+          <label class="text-input">Filtra per ID CallTo Action</label></br>
+          <%= text_field_tag :id_cta_not_approved_filter, @id_cta_not_approved_filter, :class => 'form-control' %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+          <% end %>
+        </div>
+      </div>
+     </div>
     <div class="col-md-12"> 
       <table class="table table-striped">
         <thead>
@@ -61,7 +61,7 @@
               <% end %>
             <% end %>
             </td>
-            <td class="col-md-6"><%= c.text %></td>
+            <td class="col-md-6"><span style="max-width: 200px; word-wrap: break-word;"><%= c.text %></span></td>
             <td class="col-md-2"><%= c.created_at %></td>
             <td id="comment-<%= c.id %>" class="col-md-3">
               <button type="button" class="btn btn-default btn-xs" onclick="updateComment(true, <%= c.id %>)">Pubblica</button>         
@@ -71,11 +71,11 @@
       </table>
     </div>
 
-  <div class="row cta-to-show">
-    <div class="col-md-12">
-      <%= render partial: "/easyadmin/easyadmin/pagination" %>
+    <div class="row cta-to-show">
+      <div class="col-md-12">
+        <%= render partial: "/easyadmin/easyadmin/pagination" %>
+      </div>
     </div>
-  </div>
 
   </div>
 </div>
