@@ -38,6 +38,7 @@
     </div>
 
     <%= form_tag("/easyadmin/settings/profanities/save", method: "post") do %>
+      <%= hidden_field_tag :active_key, ACTIVE_PROFANITIES_SETTINGS_KEY %>
       <%= hidden_field_tag :key, PROFANITIES_SETTINGS_KEY %>
       <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
@@ -46,14 +47,18 @@
           </div>
         </div>
       </div>
-        <div class="row form-group">
-            <div class="col-lg-1"><%= label_tag(:profanities_label, "Dizionario:") %></div>
-            <div class="col-lg-10"><%= text_area_tag(:setting, @setting_value, :class => "form-control", size: "60x15") %> </div>
+      <div class="row form-group">
+        <div class="col-lg-1"><%= label_tag(:activation_label, "Attivo:") %></div>
+        <div class="col-lg-10"><%= check_box_tag(:activation_setting, true, @activation_setting == true) %> </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-lg-1"><%= label_tag(:profanities_label, "Dizionario:") %></div>
+        <div class="col-lg-10"><%= text_area_tag(:words_setting, @words_setting, :class => "form-control", size: "60x15") %> </div>
+      </div>
+      <div class="row">
+        <div class="col-sm12 text-center">
+          <button type="submit" class="btn btn-primary">SALVA</button>
         </div>
-        <div class="row">
-          <div class="col-sm12 text-center">
-              <button type="submit" class="btn btn-primary">SALVA</button>
-          </div>
-        </div>
+      </div>
     <% end %>
 </div>
