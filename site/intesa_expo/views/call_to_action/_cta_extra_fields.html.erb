@@ -1,8 +1,10 @@
 <div class="cta__extra_fields <%= top_class %>">
   <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.start || calltoaction_info.calltoaction.extra_fields.location">DOVE E QUANDO</p>
 
-  <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.start"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{formatDate(calltoaction_info.calltoaction.extra_fields.start, aux.language)}}</span></p>
-  <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.start"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{extractTimeFromDate(calltoaction_info.calltoaction.extra_fields.start)}}</span></p>
+  <div ng-if="areIcalInteractionsPresent(calltoaction_info)">
+    <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{formatDateForDownloadInteractions(calltoaction_info, aux.language)}}</span></p>
+    <p class="cta__extra_fields__description"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{extractTimeFromDateForDownloadInteractions(calltoaction_info)}}</span></p>
+  </div>
 
   <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.location"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields["location"]}}</span></p>
 

@@ -72,15 +72,48 @@
 
 .content-preview__title {
   font-size: 16px;
-  font-weight: bold;
   text-align: left;
   margin-top: 10px;
   padding: 0 10px;
   color: $lightblue;
-  font-weight: normal;
   max-height: 55px;
   -webkit-transition: color 200ms ease 0s;
   transition: color 200ms ease 0s;
+}
+
+.content-press-it, .content-press-en {
+  .category-header__title {
+    color: $lightblue !important;
+  }
+}
+
+.content-preview--press {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.content-preview__title--press {
+  font-size: 14px;
+  color: $lightblue;
+}
+
+.content-preview__author {
+  font-size: 10px;
+  font-weight: bold;
+  color: $lightblue;
+  padding-top: 5px;
+}
+
+.content-preview__newspaper {
+  font-size: 10px;
+  font-weight: bold;
+  color: #444;
+}
+
+.content-preview__quote {
+  font-size: 22px;
+  color: $lightblue;
+  margin-bottom: 10px;
 }
 
 .content-preview__counter{

@@ -1,4 +1,4 @@
-<div class="container-fluid__blue">
+<div class="content-<%= @category.name %>" style="background-color: <%= get_extra_fields!(@category)['background-color'] %>;">
 	<% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
 		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init_intesa_browse(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @total %>, <%= get_section_column_number(get_extra_fields!(@category)) %>)">
 	<% else %>
@@ -49,7 +49,7 @@
 	  
 	  <% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
 		  <div class="row main-row">
-		    <div class="col-xs-3" ng-repeat="column in getNumber(column_number)">
+		    <div class="col-sm-<%= 12/(get_extra_fields!(@category)['column_number'].to_i) %>" ng-repeat="column in getNumber(column_number)">
 			      <div class="row">
 		      		<div class="col-xs-12" ng-repeat="column_element in getNumber(elements_per_column)">
 		      			<div ng-repeat="content in [visibleElements[getColumnIndexElement(column, column_element)-1]]">
@@ -61,7 +61,7 @@
 		   </div>
 		   <div class="row">
 				<div class="col-xs-12 text-center" ng-if="total > elements_in_page">
-					<a class="btn btn-primary btn-load-more" ng-click="load_more(elements_in_page)">Carica Altri</a>
+					<a class="btn btn-about-v2" ng-click="load_more(elements_in_page)">Carica Altri</a>
 				</div>
 		   </div>
 	  <% else %>
@@ -80,7 +80,7 @@
 	  <% end %>
 	
 	
-	   <div class="row" ng-if="aux.bottom_stripe">
+	  <div class="row" ng-if="aux.bottom_stripe">
 	    <div class="col-sm-12">
 	      <div class="browse-sections" ng-repeat="stripe in [aux.bottom_stripe]">
 	        <%= render partial: "/application/stripe" %>

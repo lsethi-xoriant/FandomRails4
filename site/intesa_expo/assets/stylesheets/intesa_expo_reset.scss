@@ -25,6 +25,28 @@ body {
   background-color: #fff;
 }
 
+.body-imprese {
+  .header-container {
+    background-color: $blue !important; 
+    background-image: url("intesa_expo/texture.png");
+  }
+  .navbar__container-fluid, .navbar-default {
+    background-color: $darkblue !important;
+    border-color: $darkblue !important;
+  }
+  .navbar__item-text {
+    color: $lightblue;
+  }
+  .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus,
+  .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    background-color: $darkblue !important;
+    p { color: #fff !important; }
+  }
+  .container-evidence {
+    padding-bottom: 30px;
+  }
+}
+
 p {
   margin: 0;
 }
@@ -33,6 +55,7 @@ p {
   padding-top: 30px;
   padding-left: 43px;
   padding-right: 43px;
+  padding-bottom: 30px;
 }
 
 .main-row {
@@ -47,6 +70,11 @@ p {
 
 .container-fluid__lightblue, .container--lightblue {
   background-color: $lightblue !important;
+  background-image: url("intesa_expo/texture.png");
+}
+
+.container-fluid__white, .container--white {
+  background-color: white !important; 
   background-image: url("intesa_expo/texture.png");
 }
 
@@ -71,7 +99,7 @@ p {
 }
 
 #widget-calendar {
-  background-color: #132332;
+  background-color: $darkblue;
   padding: 10px;
   margin-top: 10px;
 
@@ -123,9 +151,10 @@ p {
   .fc-day-number {
     font-size: 12px;
     text-align: center;
+    cursor: pointer;
   }
 
-  .fc-state-highlight {
+  .fc-state-highlight, .fc-day-number:hover {
     background-color: $orange;
   }
 

@@ -8,8 +8,13 @@ streamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
-streamCalltoactionModule.filter('unsafe', function($sce) { return $sce.trustAsHtml; });
-streamCalltoactionModule.filter('trustAsResourceUrl', function($sce) { return $sce.trustAsResourceUrl; });
+streamCalltoactionModule.filter('unsafe', ['$sce', function($sce) { 
+  return $sce.trustAsHtml; 
+}]);
+
+streamCalltoactionModule.filter('trustAsResourceUrl', ['$sce', function($sce) { 
+  return $sce.trustAsResourceUrl; 
+}]);
 
 /* COIN */
 streamCalltoactionModule.animation('.slide-left', function() {
@@ -625,6 +630,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return result;
   }
 
+  $scope.getInteractions = function(calltoaction_id, interaction_type) {
+    result = [];
+    calltoaction_info = getCallToActionInfo(calltoaction_id);
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.resource_type == interaction_type) {
+        result.push(interaction_info);
+      }
+    });
+    return result;
+  };
+
   $scope.filterShareInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "share");
   };
@@ -1156,34 +1172,22 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     calltoaction_div_id = newState.target.getIframe().id;
 
     calltoaction_id = $("#" + calltoaction_div_id).attr("calltoaction-id");
-    calltoaction_media_priority = $("#" + calltoaction_div_id).attr("main-media");
 
-    if(calltoaction_media_priority == "main") {
+    current_video_player = getPlayer(calltoaction_id);
+    current_video_player_state = current_video_player.playerManager.getPlayerState();
 
-      current_video_player = getPlayer(calltoaction_id);
-      current_video_player_state = current_video_player.playerManager.getPlayerState();
+    if(current_video_player_state == 1) {
 
-      if(current_video_player_state == 1) {
+      updateStartVideoInteraction(calltoaction_id);
+      mayStartpolling(calltoaction_id);
 
-        updateStartVideoInteraction(calltoaction_id);
-        mayStartpolling(calltoaction_id);
+    } else if(current_video_player_state == 0) {
 
-      } else if(current_video_player_state == 0) {
+      updateEndVideoInteraction(current_video_player, calltoaction_id);
+      mayStopPolling();
 
-        updateEndVideoInteraction(current_video_player, calltoaction_id);
-        mayStopPolling();
-
-      } else {
-        // Other state.
-      }
     } else {
-
-      current_video_player = $scope.secondary_video_players[calltoaction_id]["player"];
-      current_video_player_state = current_video_player.playerManager.getPlayerState();
-
-      if(current_video_player_state == 0) {
-        showCallToActionYTIframe(calltoaction_id);
-      }
+      // Other state.
     }
   }; 
   

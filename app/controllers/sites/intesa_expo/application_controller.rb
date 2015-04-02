@@ -14,7 +14,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
       home_stripes = cache_short(get_home_stripes_cache_key($context_root)) do
         {
-          "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
+          "event_stripe" => get_intesa_expo_ctas_with_tag("event"),
           "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
           "interview_stripe" => get_intesa_expo_ctas_with_tag("interview"),
           "story_stripe" => get_intesa_expo_ctas_with_tag("story"),
@@ -23,8 +23,8 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
       end
 
       @aux_other_params = {
-        "calltoaction_evidence_info" => true,
-        "live-event_stripe" => home_stripes["live-event_stripe"],
+        calltoaction_evidence_info: true,
+        "event_stripe" => home_stripes["event_stripe"],
         "gallery_stripe" => home_stripes["gallery_stripe"],
         "interview_stripe" => home_stripes["interview_stripe"],
         "story_stripe" => home_stripes["story_stripe"],
@@ -41,7 +41,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
       home_stripes = cache_short(get_home_stripes_cache_key($context_root || "it")) do
         {
-          "live-event_stripe" => get_intesa_expo_ctas_with_tag("live-event"),
+          "event_stripe" => get_intesa_expo_ctas_with_tag("event"),
           "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
           "article_stripe" => get_intesa_expo_ctas_with_tag("article")
         }
@@ -49,7 +49,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
       @aux_other_params = {
         calltoaction_evidence_info: true,
-        "live-event_stripe" => home_stripes["live-event_stripe"],
+        "event_stripe" => home_stripes["event_stripe"],
         "gallery_stripe" => home_stripes["gallery_stripe"],
         "article_stripe" => home_stripes["article_stripe"],
         page_tag: {
@@ -62,11 +62,46 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     end
   end
 
+  def live
+    language_tag = get_tag_from_params($context_root || "it")
+    live_tag = get_tag_from_params("live")
+
+    cta = get_ctas_with_tags_in_and([language_tag.id, live_tag.id])[0]
+
+    @calltoaction_info_list = build_call_to_action_info_list([cta])
+    complete_cta_for_show(cta)
+
+    render template: "/call_to_action/show"
+  end
+
   def about
     language = $context_root || "it"
     cta = CallToAction.find("about-#{language}")
 
     @calltoaction_info_list = build_call_to_action_info_list([cta])
+
+    complete_cta_for_show(cta)
+  end
+
+  def complete_cta_for_show(calltoaction)
+    @aux_other_params = { 
+      calltoaction: calltoaction
+    }
+
+    calltoaction_to_share = calltoaction
+    calltoaction_to_share_title = strip_tags(calltoaction_to_share.title) || ""
+    calltoaction_to_share_description = strip_tags(calltoaction_to_share.description) || ""
+    calltoaction_to_share_thumbnail = calltoaction_to_share.thumbnail.url rescue ""
+
+    @fb_meta_tags = (
+        '<meta property="og:type" content="article" />' +
+        '<meta property="og:locale" content="it_IT" />' +
+        '<meta property="og:title" content="' + calltoaction_to_share_title + '" />' +
+        '<meta property="og:description" content="' + calltoaction_to_share_description + '" />' +
+        '<meta property="og:image" content="' + calltoaction_to_share_thumbnail + '" />'
+      ).html_safe
+
+    set_seo_info_for_cta(calltoaction)
   end
 
 end

@@ -29,9 +29,18 @@
   color: $lightblue;
 }
 
-.calendar-event__popover__title, .calendar-event__popover__description{
+.calendar-event__popover__title, .calendar-event__popover__description,
+.calendar-event__popover__extra-info{
   padding: 0 20px;
-  margin: 5px 0;
+  margin: 10px 0;
+}
+
+.calendar-event__popover__extra-info{
+  font-size: 12px;
+  .fa{
+    color: $lightblue;
+    margin-right: 10px;
+  }
 }
 
 .calendar-event__hour--highlight, .calendar-event__title--highlight{
@@ -71,7 +80,7 @@
   z-index: 1;
   margin-top: -15px;
   right: -15px;
-  top: 50%;
+  top: 30%;
 }
 
 .calendar-event__popover--left:before {
@@ -85,7 +94,7 @@
   z-index: 0;
   margin-top: -15px;
   right: -16px;
-  top: 50%;
+  top: 30%;
 }
 
 .calendar-event__popover--right {
@@ -117,7 +126,7 @@
   z-index: 1;
   margin-top: -15px;
   left: -15px;
-  top: 50%;
+  top: 30%;
 }
 
 .calendar-event__popover--right:before {
@@ -131,7 +140,7 @@
   z-index: 0;
   margin-top: -15px;
   left: -16px;
-  top: 50%;
+  top: 30%;
 }
 
 .calendar-event__hour{

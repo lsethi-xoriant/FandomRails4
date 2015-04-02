@@ -51,16 +51,22 @@
 	<% end %>
 	</div>
 </div>
-<div class="container main-container" >	
-	<div class="row">
-      	<div class="col-md-12">
-			<div id="full-calendar"></div> <!-- /#full-calendar -->             
+<div class="container-fluid__white">
+	<div class="container main-container" >	
+		<div class="row">
+	      	<div class="col-md-12">
+				<div id="full-calendar"></div> <!-- /#full-calendar -->             
+			</div>
 		</div>
-	</div>
-	
-	<div class="row">
-		<div class="col-xs-12 text-center">
-			<a class="btn btn-primary" href="#">Torna su</a>
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<p class="small">Il calendario è in continuo aggiornamento. Torna presto per scoprire le novità.</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<a class="btn btn-primary" href="#" style="margin: 10px 0;">Torna su</a>
+			</div>
 		</div>
 	</div>
 </div>
@@ -69,8 +75,7 @@
 <script type="text/javascript">
 
   var current_event_id = -1;
-  var mouseX;
-  var mouseY;
+  var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   $(document).ready(function() {
     buildCalendar();
@@ -83,26 +88,40 @@
 	});
   });
   
+  function getEventTimeFromEvent(event){
+  	event_date = moment();
+  	$.each(event.interactions, function(index, value){
+  		if(value.interaction_info.resource_type == 'Download' && value.interaction_resource.ical_fields){
+  			event_date = moment($.parseJSON(value.interaction_resource.ical_fields).start_datetime.value);
+  		}
+  	});
+  	event_date_info = { "day": event_date.date() + " " + monthNames[event_date.month()] + " " + event_date.year(), "time": event_date.format("h:mm") };
+  	return event_date_info;
+  }
+  
   function show_event_info(elem, id){
-  	console.log($("div.calendar-event__popover[data-event-id="+id+"]"));
+  	
   	if(!$("div.calendar-event__popover[data-event-id="+id+"]").is(":visible")) {
 		$('div.calendar-event__popover').hide();
   		current_event_id = id;
 	  	selected_event = $('#full-calendar').fullCalendar('clientEvents', id)[0];
-	  	
 	  	eventinfo = '<p class="calendar-event__popover__title"><b>'+ selected_event.title +'</b></p>';
 	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive calendar-event__popover__image" />';
 	  	eventinfo += '<p class="calendar-event__popover__description">'+ selected_event.extra_fields.subtitle +'</p>';
 	  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a></div>';
 	  	$("div.calendar-event__popover").html(eventinfo);
-	  	
-	  	//position = $(elem).parent().position();
+	  	event_time = getEventTimeFromEvent(selected_event);
 	  	position = $(elem).offset();
-	  	console.log(position);
 	  	if(position.left-200 < 0){
 	  		eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
 		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
 		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
+		  	eventinfo += '<p class="calendar-event__popover__extra-info">';
+		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + event_time.day;
+		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + event_time.time;
+		  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
+		  	eventinfo += '</p>';
+		  	eventinfo += '<hr />';
 		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
 		  	$("div.calendar-event__popover--right").attr("data-event-id", id);
 		  	$("div.calendar-event__popover--right").html(eventinfo);
@@ -112,6 +131,12 @@
 	  		eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
 		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
 		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
+		  	eventinfo += '<p class="calendar-event__popover__extra-info">';
+		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + event_time.day;
+		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + event_time.time;
+		  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
+		  	eventinfo += '</p>';
+		  	eventinfo += '<hr />';
 		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
 		  	$("div.calendar-event__popover--left").attr("data-event-id", id);
 		  	$("div.calendar-event__popover--left").html(eventinfo);
@@ -129,6 +154,7 @@
         center: 'title',
         right: 'next'
       },
+      defaultDate: "<%= @today.strftime("%Y-%m-%d") %>",
       lang: "<%= get_intesa_property %>",
       dayClick: function(date, jsEvent, view ) {
         window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
@@ -137,10 +163,13 @@
       disableResizing: true,
       height: "auto",
       events: function(start, end, timezone, callback) {
+      	month = $('#full-calendar').fullCalendar('getDate').month();
+      	year = $('#full-calendar').fullCalendar('getDate').year();
       	$.ajax({
             url: "/<%= get_intesa_property %>/calendar/fetch/events.json",
             data: {
-                start: start._d,
+                month: month+1,
+                year: year
             },
             success: function(data) {
                 var events = data;
@@ -151,11 +180,11 @@
 	  eventRender: function(event, element, view) {
 	  	today = moment().dayOfYear();
 
-	  	if(today == event.start.dayOfYear()){
-	  		html = $('<div class="calendar-event calendar-event--current-date"></div>');
-	  	}else{
+	  	//if(today == event.start.dayOfYear()){
+	  		//html = $('<div class="calendar-event calendar-event--current-date"></div>');
+	  	//}else{ 
 	  		html = $('<div class="calendar-event"></div>');
-	  	}
+	  	//}
 	  	
 	  	if(event.extra_fields.highlight && event.extra_fields.highlight.value){
 		  	html.append('<p class="calendar-event__hour calendar-event__hour--highlight">'+ event.start.format("HH:mm") +'</p>');

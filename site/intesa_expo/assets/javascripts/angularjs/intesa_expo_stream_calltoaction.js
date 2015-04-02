@@ -45,6 +45,36 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     return contents;
   };
 
+  function getIcalInteractions(calltoaction_id) {
+    interaction_info_list = $scope.getInteractions(calltoaction_id, "download");
+    ical_info_list = [];
+    angular.forEach(interaction_info_list, function(value, key) {
+      if(value.interaction.resource.ical) {
+        ical_info_list.push(value);
+      }
+    });
+    return ical_info_list;
+  }
+
+  $scope.areIcalInteractionsPresent = function(calltoaction_info) {
+    return getIcalInteractions(calltoaction_info.calltoaction.id).length > 0
+  };
+
+  $scope.formatDateForDownloadInteractions = function(calltoaction_info, language) {
+    ical_info_list = getIcalInteractions(calltoaction_info.calltoaction.id);
+    date = ical_info_list[0].interaction.resource.ical.start_datetime.value;
+    return $scope.formatDate(date, language);
+  }
+
+  $scope.extractTimeFromDateForDownloadInteractions = function(calltoaction_info) {
+    ical_info_list = getIcalInteractions(calltoaction_info.calltoaction.id);
+    times = []
+    angular.forEach(interaction_info_list, function(value, key) {
+      times.push($scope.extractTimeFromDate(value.interaction.resource.ical.start_datetime.value));
+    });
+
+    return times.join(", ");
+  }
 
   $scope.orderContent = function(content) {
     return content["key"];

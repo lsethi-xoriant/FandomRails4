@@ -5,14 +5,10 @@ module IntesaExpoHelper
     param_tag = get_tag_from_params(tag_name)
     language_tag = get_tag_from_params($context_root || "it")
 
-    if tag_name == "live-event"
-      current_time = Time.now.utc.strftime("%Y/%m/%d %H:%M:%S")
-      exclude_cta_ids = CallToAction.active.where("cast(\"extra_fields\"->>'valid_from' AS timestamp) < ?", current_time).map { |cta| cta.id }
-      if exclude_cta_ids.any?
-        params = { conditions: { exclude_cta_ids: exclude_cta_ids } }   
-      else
-        params = {}
-      end
+    if tag_name == "event"
+      current_time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
+      # exclude_cta_ids = CallToAction.active.where("cast(\"extra_fields\"->>'valid_from' AS timestamp) < ?", current_time).map { |cta| cta.id }
+      params = { ical_start_datetime: current_time } 
     else
       params = {}
     end
@@ -99,7 +95,7 @@ module IntesaExpoHelper
 
       relateds = get_intesa_expo_related_ctas(cta)
       
-      if !is_live_cta
+      if !is_live_cta && relateds
         relateds_tag_keys = []
         relateds.contents.each do |related|
           if related.tags
@@ -124,7 +120,7 @@ module IntesaExpoHelper
         ctas = get_intesa_expo_highlight_calltoactions()
         calltoaction_evidence_info = []
         ctas.each_with_index do |calltoaction, index|
-          calltoaction_evidence_info << build_default_thumb_calltoaction(calltoaction, :medium)
+          calltoaction_evidence_info << build_default_thumb_calltoaction(calltoaction, :wide)
         end
 
         calltoaction_evidence_info

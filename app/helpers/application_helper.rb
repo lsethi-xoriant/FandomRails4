@@ -590,6 +590,14 @@ module ApplicationHelper
         end
       end
     end
+    if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
+      if params[:ical_start_datetime]
+        extra_key << "#{DateTime.parse(params[:ical_start_datetime]).strftime("%d_%M_%Y")}"
+      end
+      if params[:ical_end_datetime]
+        extra_key << "#{DateTime.parse(params[:ical_end_datetime]).strftime("%d_%M_%Y")}"
+      end
+    end
     if params['limit']
       extra_key << "limit_#{params['limit']['offset']}_#{params['limit']['perpage']}"
     end
@@ -615,10 +623,10 @@ module ApplicationHelper
   def get_cta_id_to_ical_fields(params)
     donwloads = Download.joins(:interaction => :call_to_action)
     if params[:ical_start_datetime]
-      donwloads = donwloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= ?", params[:ical_start_datetime])
+      donwloads = donwloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= '#{params[:ical_start_datetime]}'")
     end
-    if params[:ical_start_datetime]
-      donwloads = donwloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= ?", params[:ical_end_datetime])
+    if params[:ical_end_datetime]
+      donwloads = donwloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= '#{params[:ical_end_datetime]}'")
     end
     donwloads.pluck('call_to_actions.id')
   end
@@ -649,7 +657,7 @@ module ApplicationHelper
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
       where_clause, limit = get_cta_where_clause_from_params(params)
       ctas = CallToAction.active.includes(call_to_action_tags: :tag)
-      if params.includes? [:ical_start_datetime, :ical_end_datetime]
+      if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
         cta_id_to_ical_fields = get_cta_id_to_ical_fields(params) 
         ctas = ctas.where(id: cta_id_to_ical_fields) 
       end
@@ -1555,6 +1563,34 @@ module ApplicationHelper
       vote_info['total'] = result
       vote_info
     end
+  end
+  
+  def get_cta_to_interactions_map(cta_ids)
+    cta_to_interactions = {}
+    Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids).each do |inter|
+      if cta_to_interactions[inter.call_to_action_id].nil?
+        cta_to_interactions[inter.call_to_action_id] = []
+      end
+      cta_to_interactions[inter.call_to_action_id] << {
+        interaction_info: inter,
+        interaction_resource: inter.resource
+      }
+    end
+    cta_to_interactions
+  end
+  
+  def get_ical_events(cta_ids)
+    ical_events = []
+    if cta_ids.any?
+      Download.includes(:interaction => :call_to_action).where("interactions.call_to_action_id IN (?) AND downloads.ical_fields is not null", cta_ids).each do |cal|
+        ical_events << {
+          cta: cal.interaction.call_to_action, 
+          start_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['start_datetime']['value']),
+          end_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['end_datetime']['value'])
+        }
+      end
+    end
+    ical_events
   end
   
 end
