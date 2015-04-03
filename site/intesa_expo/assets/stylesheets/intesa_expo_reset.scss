@@ -25,6 +25,11 @@ body {
   background-color: #fff;
 }
 
+.ctas__flexslider__container {
+    padding-left: 15px !important; 
+    padding-right: 5px !important;
+}
+
 .body-imprese {
   .header-container {
     background-color: $blue !important; 
@@ -41,6 +46,11 @@ body {
   .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
     background-color: $darkblue !important;
     p { color: #fff !important; }
+  }
+
+  .ctas__flexslider__container {
+    padding-left: 15px !important; 
+    padding-right: 15px !important;
   }
   
   .stripe__title {
@@ -60,7 +70,7 @@ p {
   padding-top: 30px;
   padding-left: 43px;
   padding-right: 43px;
-  padding-bottom: 30px;
+  //padding-bottom: 30px;
 }
 
 .main-row {
