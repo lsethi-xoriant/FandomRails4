@@ -171,6 +171,7 @@ module BrowseHelper
     browse_section = ContentSection.new({
       key: category.name,
       title:  category.title,
+      extra_fields: category.extra_fields,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: "/browse/view_all/#{category.slug}",

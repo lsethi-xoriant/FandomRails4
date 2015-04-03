@@ -14,21 +14,25 @@
   </div>
 </div>
 
-<div class="container main-container">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="browse-sections" ng-repeat="stripe in [aux.gallery_stripe]">
-        <%= render partial: "/application/stripe" %>
+<div class="stripe-container" ng-style="{'background-color': aux.gallery_stripe.extra_fields.background_color}">
+  <div class="container main-container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="browse-sections" ng-repeat="stripe in [aux.gallery_stripe]">
+          <%= render partial: "/application/stripe" %>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container main-container">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="browse-sections" ng-repeat="stripe in [aux.article_stripe]">
-        <%= render partial: "/application/stripe" %>
+<div class="stripe-container" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}">
+  <div class="container main-container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="browse-sections" ng-repeat="stripe in [aux.article_stripe]">
+          <%= render partial: "/application/stripe" %>
+        </div>
       </div>
     </div>
   </div>

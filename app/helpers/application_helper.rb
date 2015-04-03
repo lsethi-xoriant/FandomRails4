@@ -22,6 +22,7 @@ module ApplicationHelper
     attr_accessor :column_number
     attr_accessor :total
     attr_accessor :per_page
+    attr_accessor :extra_fields
     
     def initialize(params)
       @key = params[:key]
@@ -32,6 +33,7 @@ module ApplicationHelper
       @column_number = params[:column_number]
       @total = params[:total]
       @per_page = params[:per_page]
+      @extra_fields = params[:extra_fields]
     end
     
   end
