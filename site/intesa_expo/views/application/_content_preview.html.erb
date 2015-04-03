@@ -1,22 +1,30 @@
+<!-- content.aux.miniformat['label_background'] -->
 <a href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.type == 'cta' && content.layout == 'default'">
-  <div class="content-preview__item-panel" ng-style="{'background-color': content.aux.miniformat['label_background']}"> 
+  <div class="content-preview__item-panel" ng-class="{'content-preview__border-bottom': (content.aux.miniformat['label_background'] != null)}" ng-style="{'border-color': content.aux.miniformat['label_background']}"> 
     <div class="row">
       <div class="col-xs-12 text-center">
+
         <div class="content-preview__thumbnail">
           <img class="img-responsive content-preview__image" ng-src="{{content.thumb_url}}"> 
-          <div class="text-center flag__container" ng-if="content.aux.flag" ng-style="{'background-color': content.aux.flag['label_background']}"><p ng-style="{'color': content.aux.flag['label_color']}" ng-bind-html="content.aux.flag['title']"></p></div>
-          <div class="content-preview__icon-container" ng-if="content.media_type != 'VOID'">
+
+          <div class="content-preview__icon-container content-preview__icon-container--time" ng-if="getFirstIcalInteractionForContent(content)">
+            <p class="container-preview__icon-container__day">{{getFirstIcalInteractionForContent(content)[1]}}</p>
+            <p class="container-preview__icon-container__month">{{getFirstIcalInteractionForContent(content)[0]}}</p>
+          </div>
+
+          <div class="content-preview__icon-container" ng-if="content.media_type != 'VOID' && !getFirstIcalInteractionForContent(content)">
           	<i class="fa fa-picture-o content-preview__icon" ng-if="content.media_type == 'IMAGE'"></i>
           	<i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == 'KALTURA' || content.media_type == 'YOUTUBE' || content.media_type == 'FLOWPLAYER'"></i> 
           </div>
+
         </div>
-        <span class="content-preview__miniformat" ng-style="{'background-color': content.aux.miniformat['label_background']}">{{content.aux.miniformat['title']}}</span>
+
         <p class="content-preview__title">{{content.title | cut:true:70}}</p>
       </div>
     </div>
-    <div class="content-preview__event-info-container" ng-if="content.start">
-        <p class="content-preview__event-info"><i class="fa fa-calendar-o"></i> {{formatDate(content.start, aux.language)}}</p>
-        <p class="content-preview__event-info"><i class="fa fa-clock-o"></i> {{extractTimeFromDate(content.start)}}</p>
+    <div class="content-preview__event-info-container" ng-if="getFirstIcalInteractionForContent(content)">
+      <p class="content-preview__event-info"><i class="fa fa-clock-o"></i>{{getFirstIcalInteractionForContent(content)[2]}}</p>
+      <p class="content-preview__event-info"><i class="fa fa-user"></i>{{content.extra_fields.guests}}</p>
     </div>
   </div>
   <div class="content-preview__item-panel" ng-if="content.type == 'tag' && content.layout == 'default'">
@@ -38,7 +46,7 @@
         <span class="fa fa-quote-left content-preview__quote"></span>
         <p class="content-preview__title--press">{{sanitizeText(content.long_description)}}</p>
         <p class="content-preview__author">{{content.extra_fields.author_name}}</p>
-        <p class="content-preview__newspaper">{{content.extra_fields.author_newspaper}}</p>
+        <p class="content-preview__newspaper">{{content.extra_fields.author_newspaper}}<span ng-if="content.extra_fields.publishing_date"> - {{formatDate(content.extra_fields.publishing_date.value, aux.language)}}</span></p>
       </div>
     </div>
   </div>

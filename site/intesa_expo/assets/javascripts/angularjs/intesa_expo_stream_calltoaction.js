@@ -13,6 +13,8 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
   $scope.extraInit = function() {
+     $scope.content_ical = new Object();
+
     if($scope.calltoaction_info) {
       $scope.menu_field = "";
 
@@ -56,7 +58,33 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     return ical_info_list;
   }
 
-  $scope.areIcalInteractionsPresent = function(calltoaction_info) {
+  $scope.getFirstIcalInteractionForContent = function(content) {
+    if(angular.isUndefined($scope.content_ical[content.id])) {
+      min_date = null;
+      today_date = new Date();
+      angular.forEach(content.interactions, function(value) {
+        if(value.interaction_info.resource_type.toLowerCase() == "download" && value.interaction_resource.ical_fields) {
+          date = JSON.parse(value.interaction_resource.ical_fields)["start_datetime"]["value"];
+          date = new Date(date);
+          if(!min_date || (date < min_date && date > today_date)) {
+            min_date = date;
+          }
+        }
+      });
+      if(min_date) {
+        month = $scope.computeMonthName(min_date.getMonth(), $scope.auxlanguage).substring(0, 3);
+        day = ("0" + min_date.getDate()).slice(-2);
+        time = $scope.extractTimeFromDate(min_date);
+        guests = 
+        $scope.content_ical[content.id] = [month, day, time];
+      } else {
+        $scope.content_ical[content.id] = min_date;
+      }
+    }
+    return $scope.content_ical[content.id];
+  }
+
+  $scope.checkAndGenerateIcalForView = function(calltoaction_info) {
     ical_info_list = getIcalInteractions(calltoaction_info.calltoaction.id);
     if (angular.isUndefined($scope.ical) && ical_info_list.length > 0) { 
       generateIcalForView(ical_info_list);
@@ -88,8 +116,6 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       }
 
     });
-
-    console.log($scope.ical);
 
   }
 
