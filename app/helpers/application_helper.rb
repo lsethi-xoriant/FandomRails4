@@ -132,7 +132,7 @@ module ApplicationHelper
     )
   end
   
-  def cta_to_content_preview(cta, populate_desc = true)
+  def cta_to_content_preview(cta, populate_desc = true, interactions = nil)
     ContentPreview.new(
       type: "cta",
       media_type: cta.media_type,
@@ -152,6 +152,7 @@ module ApplicationHelper
       extra_fields: get_extra_fields!(cta),
       layout: get_content_preview_layout(cta),
       start: cta.valid_from,
+      interactions: interactions,
       end: cta.valid_to
     )
   end
@@ -592,10 +593,12 @@ module ApplicationHelper
     end
     if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
       if params[:ical_start_datetime]
-        extra_key << "#{DateTime.parse(params[:ical_start_datetime]).strftime("%d_%M_%Y")}"
+        extra_key << Time.parse(params[:ical_start_datetime]).strftime("%Y-%M-%d_%H-%M-%S")
+        #"#{DateTime.parse(params[:ical_start_datetime]).strftime("%d_%M_%Y")}" (AT)
       end
       if params[:ical_end_datetime]
-        extra_key << "#{DateTime.parse(params[:ical_end_datetime]).strftime("%d_%M_%Y")}"
+        extra_key << Time.parse(params[:ical_end_datetime]).strftime("%Y-%M-%d_%H-%M-%S")
+        #"#{DateTime.parse(params[:ical_end_datetime]).strftime("%d_%M_%Y")}"
       end
     end
     if params['limit']
@@ -621,14 +624,16 @@ module ApplicationHelper
   end
   
   def get_cta_id_to_ical_fields(params)
-    donwloads = Download.joins(:interaction => :call_to_action)
+    downloads = Download.joins(:interaction => :call_to_action)
     if params[:ical_start_datetime]
-      donwloads = donwloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= '#{params[:ical_start_datetime]}'")
+      downloads = downloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= ?", params[:ical_start_datetime])
+      #donwloads = donwloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= '#{params[:ical_start_datetime]}'") (AT)
     end
     if params[:ical_end_datetime]
-      donwloads = donwloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= '#{params[:ical_end_datetime]}'")
+      downloads = downloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= ?", params[:ical_end_datetime])
+      #downloads = downloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= '#{params[:ical_end_datetime]}'") (AT)
     end
-    donwloads.pluck('call_to_actions.id')
+    downloads.pluck('call_to_actions.id')
   end
   
   def get_ctas_with_tags_in_and(tag_ids, params = {})

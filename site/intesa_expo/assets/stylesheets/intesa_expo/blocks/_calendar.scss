@@ -1,4 +1,12 @@
 /* CALENDAR */
+
+.calendar-event__empty-title {
+  font-size: 22px;
+  color: #fff;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
 .calendar-event{
   padding: 10px 10px 0 10px;
   border-bottom: 1px solid #ccc;

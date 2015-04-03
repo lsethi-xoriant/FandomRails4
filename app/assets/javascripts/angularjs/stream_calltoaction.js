@@ -2153,7 +2153,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 	    });
   };
 
-  function computeMonthName(n, language) {
+  $scope.computeMonthName = function(n, language) {
     if(language == "en") {
       monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
         'July', 'August', 'September', 'October', 'November', 'December'];
@@ -2166,7 +2166,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.formatDate = function(date, language) {
     date = new Date(date);
-    return date.getDate() + " " + computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
+    return date.getDate() + " " + $scope.computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
   };
 
   $scope.extractTimeFromDate = function(date) {

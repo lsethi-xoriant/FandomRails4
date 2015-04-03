@@ -35,18 +35,24 @@
 						<%= light_link_to("/calendar/#{(@today-1).strftime('%d-%m-%Y')}?dir=prev", class: "calendar-event__agenda-arrow") do %><i class="fa fa-chevron-left"></i><% end %>
 					</div>
 					<div class="col-xs-8">
-						<h2 class="text-center calendar-event__month"><%= @today.strftime("%A %d %B %Y")%></h2>
+						<h2 class="text-center calendar-event__month"><%= @today.strftime("%A %d %B %Y") %></h2>
 					</div>
 					<div class="col-xs-2 text-left">
 						<%= light_link_to("/calendar/#{(@today+1).strftime('%d-%m-%Y')}?dir=next", class: "calendar-event__agenda-arrow") do %><i class="fa fa-chevron-right"></i><% end %>
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-12">
-				<div class="browse-sections" ng-repeat="contents in [aux.today_events]">
-					<%= render partial: "/application/content_carousel" %>
-				</div>
-			</div>
+      <% if @aux_other_params["today_events"] %>
+        <div class="col-xs-12">
+  				<div class="browse-sections" ng-repeat="contents in [aux.today_events]">
+  					<%= render partial: "/application/content_carousel" %>
+  				</div>
+        </div>
+      <% else %>
+        <div class="col-xs-12 text-center">
+          <p class="calendar-event__empty-title"><%= @today.strftime("%A %d %B %Y") == Time.now.strftime("%A %d %B %Y") ? "Oggi" : "In questo giorno" %> non sono previsti eventi</p>
+        </div>
+      <% end %>
 		</div>
 	<% end %>
 	</div>
@@ -54,8 +60,9 @@
 <div class="container-fluid__white">
 	<div class="container main-container" >	
 		<div class="row">
-	      	<div class="col-md-12">
-				<div id="full-calendar"></div> <!-- /#full-calendar -->             
+	     <div class="col-md-12">
+				<div id="full-calendar" class="hidden-xs"></div> <!-- /#full-calendar -->   
+        <div id="widget-calendar" class="visible-xs"></div>          
 			</div>
 		</div>
 		<div class="row">
@@ -79,14 +86,32 @@
 
   $(document).ready(function() {
     buildCalendar();
-	$('[data-toggle="tooltip"]').tooltip();
-	$('div.calendar-event__popover').mouseleave(function(){
-		$('div.calendar-event__popover').hide();
-	});
-	$('div.calendar-event__popover--right').mouseleave(function(){
-		$('div.calendar-event__popover').hide();
-	});
+    buildMobileCalendar();
+  	$('[data-toggle="tooltip"]').tooltip();
+  	$('div.calendar-event__popover').mouseleave(function(){
+  		$('div.calendar-event__popover').hide();
+  	});
+  	$('div.calendar-event__popover--right').mouseleave(function(){
+  		$('div.calendar-event__popover').hide();
+  	});
   });
+
+  function buildMobileCalendar() {
+    $('#widget-calendar').fullCalendar({
+      header: {
+        left: 'prev',
+        center: 'title',
+        right: 'next'
+      },
+      dayClick: function(date, jsEvent, view ) {
+        window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
+      },
+      height: "auto",
+      lang: "<%= $context_root || 'it' %>",
+      editable: false,
+      disableResizing: true
+    });
+  }
   
   function getEventTimeFromEvent(event){
   	event_date = moment();

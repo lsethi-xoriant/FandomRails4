@@ -8,7 +8,7 @@ module IntesaExpoHelper
     if tag_name == "event"
       current_time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
       # exclude_cta_ids = CallToAction.active.where("cast(\"extra_fields\"->>'valid_from' AS timestamp) < ?", current_time).map { |cta| cta.id }
-      params = { ical_start_datetime: current_time } 
+      params = { ical_start_datetime: current_time, include_interactions: true } 
     else
       params = {}
     end
@@ -122,10 +122,10 @@ module IntesaExpoHelper
         if highlight_calltoactions.any?
           ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
           ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(ctas_evidence_count)
-                                       .where("extra_fields->>'layout' <> ''")
+                                       .where("extra_fields->>'layout' <> 'press'")
                                        .to_a
         else
-          ctas = get_intesa_expo_ctas().where("extra_fields->>'layout' <> ''").limit(ctas_evidence_count).to_a
+          ctas = get_intesa_expo_ctas().where("extra_fields->>'layout' <> 'press'").limit(ctas_evidence_count).to_a
         end
 
         ctas = highlight_calltoactions + ctas
