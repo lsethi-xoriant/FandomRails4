@@ -148,6 +148,12 @@
     </div>
     <div class="col-sm-4">
 
+      <div class="play-interaction__video-btn-container" ng-class="{'active': calltoaction_info.calltoaction.vcode == vcode}" ng-repeat="vcode in calltoaction_info.calltoaction.vcodes" ng-click="updateYTIframe(calltoaction_info, vcode, false)">
+        <span class="fa fa-play-circle"></span>
+        <p class="play-interaction__video-btn-title">{{calltoaction_info.calltoaction.extra_fields[vcode + '_title']}}</p>
+        <p class="play-interaction__video-btn-description">{{calltoaction_info.calltoaction.extra_fields[vcode + '_description']}}</p>
+      </div>
+
       <!-- MOBILE DETAILS -->
       <div class="panel panel-default visible-xs cta__cps-panel" ng-if="checkAndGenerateIcalForView(calltoaction_info)">
         <div class="panel-heading" role="tab" id="cta__cps-2">
