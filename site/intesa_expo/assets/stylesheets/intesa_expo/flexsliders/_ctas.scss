@@ -50,11 +50,6 @@
     border: 0 !important;
 }
 
-.ctas__flexslider__container {
-    padding-left: 15px !important; 
-    padding-right: 5px !important;
-}
-
 .ctas__flexslider__img-container {
     height: 395px;
 }
@@ -121,6 +116,7 @@
 }
 
 .ctas__info--bottom {
+    width: 100%;
     position: absolute;
     bottom: 25px;
 }

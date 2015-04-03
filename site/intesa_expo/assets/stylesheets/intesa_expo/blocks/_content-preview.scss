@@ -16,6 +16,22 @@
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
 
+.content-preview__item-panel--narrow {
+  height: 290px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid #fff;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.8);
+  img {
+    width: 100%;
+  }
+}
+
 .content-preview__item-panel--press{
   height: auto;
 }
