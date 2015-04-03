@@ -109,5 +109,11 @@ RailsAdmin.config do |config|
    
   config.model Interaction do
   end
+
+  config.model User do
+    edit do
+      exclude_fields :confirmation_token, :authentication_token
+    end
+  end
   
 end
