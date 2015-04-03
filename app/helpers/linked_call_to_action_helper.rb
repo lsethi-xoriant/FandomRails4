@@ -2,17 +2,19 @@ require 'fandom_utils'
 
 module LinkedCallToActionHelper
 
-  # Based on Node class. A Tree is identified by its root node.
-
+  # Internal: Custom class and methods useful to represent the set of trees containing a call 
+  # to action following linking paths defined in interaction_call_to_actions table.
+  # Based on Node class, every single tree is identified by its root Node.
   class CtaForest
 
-    # Build the graph of all the reachable call to actions and return an array of trees containing the starting
-    # call to action and a boolean set to true if there are cycles.
-    # neighbourhood_map -> hash representing the undirected graph of all linked call to actions.
-    # reachable_cta_id_set -> set of all reachable call to actions ids from starting call to action.
-    # cta_ids_to_check_for_cycles -> if set, array of call to action ids to test cyclicity
-
-    def self.build_trees(starting_cta_id, cta_ids_to_check_for_cycles = nil)
+    # Internal: Builds the graph of all the reachable call to actions from a given cta.
+    # neighbourhood_map is a hash representing the undirected graph of all linked call to actions.
+    # reachable_cta_id_set is the all reachable call to actions ids from starting call to action set.
+    #
+    # starting_cta_id - Call to action id to reach.
+    #
+    # Returns an array of trees containing the starting call to action and a boolean set to true if there are cycles.
+    def self.build_trees(starting_cta_id)
       neighbourhood_map = {}
       InteractionCallToAction.all.each do |interaction_call_to_action|
         if interaction_call_to_action.interaction_id.present?
@@ -40,9 +42,14 @@ module LinkedCallToActionHelper
       return trees, cycles
     end
 
-    # Recursive method to build the tree starting from a root node (tree variable).
-    # For every descendant, a new node is created if it doesn't exist yet.
-
+    # Internal: Recursive method to build the tree starting from a root node (tree variable).
+    #
+    # seen_nodes - Support variable consisting of a hash of { value => Node } elements. It should be empty at the beginning.
+    # tree - Variable containing the call to actions tree. It should contain the root Node at the beginning.
+    # cycles - Array containing the cycles, if there are any. A cycle is an array of integers corresponding to the call to action ids cycle path.
+    # path - Support variable consisting of an array containing the cta ids path followed since the beginning. It should be empty at first and filled every recursion call.
+    #
+    # Returns the tree builded from the Node given at the beginning and the cycles array.
     def self.add_next_cta(seen_nodes, tree, cycles, path)
       cta = CallToAction.find(tree.value)
       if seen_nodes[tree.value].nil?
@@ -103,6 +110,24 @@ module LinkedCallToActionHelper
 
   end
 
+  # Internal: Simple class to define a tree Node. A node value class can be anything.
+  #
+  # Examples
+  #
+  #    n = Node.new("Banana")
+  #    # => #<LinkedCallToActionHelper::Node:0x007fd237682930 @value=5, @children=[]>
+  #
+  #    n.children.push(Node.new("Apple"))
+  #    # => [#<LinkedCallToActionHelper::Node:0x007fd237637368 @value="Apple", @children=[]>]
+  #
+  #    n.children.push(Node.new("Pear"))
+  #    # => [#<LinkedCallToActionHelper::Node:0x007fd237637368 @value="Apple", @children=[]>, 
+  #          #<LinkedCallToActionHelper::Node:0x007fd237626040 @value="Pear", @children=[]>]
+  #
+  #    n
+  #    # => #<LinkedCallToActionHelper::Node:0x007fd237669bb0 @value="Banana", 
+  #          @children=[#<LinkedCallToActionHelper::Node:0x007fd237637368 @value="Apple", @children=[]>, 
+  #                     #<LinkedCallToActionHelper::Node:0x007fd237626040 @value="Pear", @children=[]>]>
   class Node
     attr_accessor :value, :children
 

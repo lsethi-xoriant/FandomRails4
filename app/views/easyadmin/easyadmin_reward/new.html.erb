@@ -242,7 +242,6 @@
 
     fillInputWithSlug($('#reward_title'), $('#reward_name'));
 
-    var mandatory_fields = null;
     var formName = "new_reward"
     var modelName = "reward";
     var fieldName = "extra_fields";
@@ -252,7 +251,7 @@
       json_field = <%= @reward.extra_fields.to_json.gsub("</", "<\\/").html_safe %>;
     <% end %>
 
-    initializeTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName);
+    initializeTextboxWithJsonField(json_field, formName, modelName, fieldName);
 
     $("#reward_valid_from_date_time").datetimepicker();
     $("#reward_valid_to_date_time").datetimepicker();

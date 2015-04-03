@@ -128,19 +128,19 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
     user_week_list
   end
 
-# Public: Recursive method to sum integer values of same structured hashes.
-# More precisely, second hash keys have to be a subset of first's.
-#
-# Examples
-# 
-#    sum_hashes_values({ "eggs" => 2, "chocolate_bars" => 1 }, { "eggs" => 3, "chocolate_bars" => 3 })
-#    # => { "eggs" => 5, "chocolate_bars => 4" }
-#
-#    sum_hashes_values({ "pears" => 2, "apples" => { "red" => 1, "yellow" => 2 }, "bananas" => 4 }, 
-#                      { "pears" => 3, "apples" => { "red" => 3, "yellow" => 2 } })
-#    # => { "pears" => 5, "apples" => { "red" => 4, "yellow" => 4 }, "bananas" => 4 }
-#
-# Returns the summed values hash
+  # Public: Recursive method to sum integer values of same structured hashes.
+  # More precisely, second hash keys have to be a subset of first's.
+  #
+  # Examples
+  # 
+  #    sum_hashes_values({ "eggs" => 2, "chocolate_bars" => 1 }, { "eggs" => 3, "chocolate_bars" => 3 })
+  #    # => { "eggs" => 5, "chocolate_bars => 4" }
+  #
+  #    sum_hashes_values({ "pears" => 2, "apples" => { "red" => 1, "yellow" => 2 }, "bananas" => 4 }, 
+  #                      { "pears" => 3, "apples" => { "red" => 3, "yellow" => 2 } })
+  #    # => { "pears" => 5, "apples" => { "red" => 4, "yellow" => 4 }, "bananas" => 4 }
+  #
+  # Returns the summed values hash
   def sum_hashes_values(hash_1, hash_2)
     hash_1.merge(hash_2) do |k, value_1, value_2|
       if value_1.class == Hash

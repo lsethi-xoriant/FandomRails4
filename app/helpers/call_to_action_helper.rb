@@ -460,8 +460,7 @@ module CallToActionHelper
 
   def get_cta_tags_from_cache(cta)
     cache_short(get_cta_tags_cache_key(cta.id)) do
-      # TODO: rewrite this query as activerecord
-      ActiveRecord::Base.connection.execute("select distinct(tags.name) from call_to_actions join call_to_action_tags on call_to_actions.id = call_to_action_tags.call_to_action_id join tags on tags.id = call_to_action_tags.tag_id where call_to_actions.id = #{cta.id}").map { |row| row['name'] }
+      CallToActionTag.joins(:tag).where(:call_to_action_id => cta.id).pluck(:name)
     end
   end
   
@@ -481,10 +480,23 @@ module CallToActionHelper
         aux[:shown_interactions_count] = shown_interactions_count
       end
       aux[:next_interaction_present] = (interactions.count > 1)
-      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", locals: { interaction: next_quiz_interaction, ctaid: next_quiz_interaction.call_to_action.id, outcome: outcome, shown_interactions_count: shown_interactions_count, index_current_interaction: index_current_interaction, aux: aux }, layout: false, formats: :html
+      render_interaction_str = render_to_string "/call_to_action/_undervideo_interaction", 
+        locals: { 
+          interaction: next_quiz_interaction, 
+          ctaid: next_quiz_interaction.call_to_action.id, 
+          outcome: outcome, 
+          shown_interactions_count: shown_interactions_count, 
+          index_current_interaction: index_current_interaction, 
+          aux: aux 
+        }, layout: false, formats: :html
       interaction_id = next_quiz_interaction.id
     else
-      render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", locals: { quiz_interactions: interactions, calltoaction: calltoaction, aux: aux }, layout: false, formats: :html
+      render_interaction_str = render_to_string "/call_to_action/_end_for_interactions", 
+      locals: { 
+        quiz_interactions: interactions, 
+        calltoaction: calltoaction, 
+        aux: aux 
+      }, layout: false, formats: :html
     end
     
     response = Hash.new
@@ -498,18 +510,17 @@ module CallToActionHelper
   def calculate_next_interactions(calltoaction, interactions_showed_ids)         
     if interactions_showed_ids
       interactions_showed_id_qmarks = (["?"] * interactions_showed_ids.count).join(", ")
-      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ? AND id NOT IN (#{interactions_showed_id_qmarks})", "SEMPRE_VISIBILE", true, *interactions_showed_ids)
-                                                   .order("seconds ASC")
+      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ? 
+        AND id NOT IN (#{interactions_showed_id_qmarks})", "SEMPRE_VISIBILE", true, *interactions_showed_ids).order("seconds ASC")
     else
-      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true)
-                                                   .order("seconds ASC")
+      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC")
     end
   end
 
   def calculate_interaction_index(calltoaction, interaction)
     cache_short("interaction_#{interaction.id}_index_in_calltoaction") do
-      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ? AND seconds <= ?", "SEMPRE_VISIBILE", true, interaction.seconds)
-                                                   .order("seconds ASC").count
+      calltoaction.interactions.where("when_show_interaction = ? 
+        AND required_to_complete = ? AND seconds <= ?", "SEMPRE_VISIBILE", true, interaction.seconds).order("seconds ASC").count
     end
   end
 
@@ -641,10 +652,13 @@ module CallToActionHelper
     if params[:commit] == "SALVA"
       ActiveRecord::Base.transaction do
         begin
-          @cloned_cta_map = { @current_cta.name => { "title" => params[:cloned_cta_title], 
-                                                      "name" => params[:cloned_cta_name],
-                                                      "slug" => params[:cloned_cta_slug] } 
-                            }.merge(params[:cloned_cta])
+          @cloned_cta_map = {
+            @current_cta.name => { 
+              "title" => params[:cloned_cta_title], 
+              "name" => params[:cloned_cta_name],
+              "slug" => params[:cloned_cta_slug] 
+            } 
+          }.merge(params[:cloned_cta])
           cloned_interactions_map = {}
           @cloned_cta_map.each do |old_cta_name, new_params|
             old_cta = CallToAction.find_by_name(old_cta_name)
@@ -878,6 +892,7 @@ module CallToActionHelper
       cta.interactions.each do |interaction|
         interaction.save!
         InteractionCallToAction.where(:interaction_id => interaction.id).destroy_all
+        # if called on a new cta, linked_cta is a hash containing a list of { "condition" => <condition>, "cta_id" => <next cta id> } hashes
         links = interaction.resource.linked_cta rescue nil
         unless links
           params["call_to_action"]["interactions_attributes"].each do |key, value|
@@ -895,7 +910,7 @@ module CallToActionHelper
           end
         end
       end
-      build_html_jstree(cta)
+      build_jstree_and_check_for_cycles(cta)
       if cta.errors.any?
         raise ActiveRecord::Rollback
       end
@@ -903,7 +918,7 @@ module CallToActionHelper
     return cta.errors.empty?
   end
 
-  def build_html_jstree(current_cta)
+  def build_jstree_and_check_for_cycles(current_cta)
     current_cta_id = current_cta.id
     trees, cycles = CtaForest.build_trees(current_cta_id)
     data = []

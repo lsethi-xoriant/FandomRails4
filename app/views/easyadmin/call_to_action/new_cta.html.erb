@@ -509,12 +509,9 @@
   
   $(document).ready(function() {
 
-    //$('#call_to_action_description').jqte();
-
     fillInputWithSlug($('#call_to_action_title'), $('#call_to_action_name'));
     fillInputWithSlug($('#call_to_action_title'), $('#call_to_action_slug'));
 
-  	//var mandatory_fields = ["button_label", "alternative_description", "enable_for_current_user", "shop_url"];
   	var formName = "new_call_to_action"
   	var modelName = "call_to_action";
 	  var fieldName = "extra_fields";
@@ -524,7 +521,7 @@
       json_field = <%= @cta.extra_fields.is_a?(String) ? @cta.extra_fields.gsub("</", "<\\/").html_safe : @cta.extra_fields.to_json.gsub("</", "<\\/").html_safe %>;
     <% end %>
 
-  	initializeTextboxWithJsonField(json_field, null, formName, modelName, fieldName);
+  	initializeTextboxWithJsonField(json_field, formName, modelName, fieldName);
 
     $("#call_to_action_valid_from_date_time").datetimepicker();
     $("#call_to_action_valid_to_date_time").datetimepicker();

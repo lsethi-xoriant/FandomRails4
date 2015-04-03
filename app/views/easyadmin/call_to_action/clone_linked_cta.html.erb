@@ -130,7 +130,7 @@
       window.location.replace(r)
   });
 
-  $('#trees').jstree(<%= raw build_html_jstree(@current_cta) %>);
+  $('#trees').jstree(<%= raw build_jstree_and_check_for_cycles(@current_cta) %>);
 
   function fillClonedCtaNameAndSlug() {
     var nameManuallyModified = false;

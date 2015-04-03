@@ -35,6 +35,6 @@
       window.location.replace(r)
   });
 
-  $('#trees').jstree(<%= raw build_html_jstree(cta) %>);
+  $('#trees').jstree(<%= raw build_jstree_and_check_for_cycles(cta) %>);
 
 </script>

@@ -238,12 +238,11 @@
   $(document).ready(function() {
 
   var json_field = <%= @extra_options.to_json.gsub("</", "<\\/").html_safe %>;
-  var mandatory_fields = null;
   var formName = 'edit_reward_' + <%= @reward.id.to_s %>
   var modelName = "reward";
   var fieldName = "extra_fields";
 
-  populateTextboxWithJsonField(json_field, mandatory_fields, formName, modelName, fieldName);
+  populateTextboxWithJsonField(json_field, formName, modelName, fieldName);
 
   $("#reward_valid_from_date_time").datetimepicker();
   $("#reward_valid_to_date_time").datetimepicker();
