@@ -87,6 +87,37 @@
       }
     });
 
+    $('.relateds-flexslider--narrow').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: false,
+      touch: true,
+      itemWidth: 190,
+      itemMargin: 45,
+      controlNav: false,
+      prevText: "",
+      nextText: "",
+      start: function(slider) {
+        if(slider.pagingCount == 1) {
+          $(slider).find(".flex-viewport-shadow").addClass("hidden");
+        }
+      },
+      before: function(slider) {
+        is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
+        $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+      },
+      after: function(slider) {
+        if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
+          $(slider).find(".flex-viewport-shadow").addClass("hidden");
+        } else {
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        }
+      },
+      end: function(slider) {
+        is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+      }
+    });
+
     $.ajaxSettings.cache = false;
     $('#header').load("http://unmondopossibile.intesasanpaolo.com/snippets/header?color=3d6b80"); 
     $('#footer').load("http://unmondopossibile.intesasanpaolo.com/snippets/footer");

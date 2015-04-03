@@ -1,0 +1,26 @@
+<div class="row main-row" ng-class-odd="'brws-item--dark'">
+    <!-- HEADING -->
+  <div class="col-sm-12 text-center">
+    <h2 class="stripe__title">{{stripe.title}}</h2>
+  </div>
+  <div class="col-xs-12" ng-repeat="contents in [stripe.contents]">
+    <div class="relateds-flexslider--narrow">
+      <ul class="slides">
+        <li class="relateds-flexslider__item--narrow" ng-repeat="content in contents">
+ 
+          <a href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.layout == 'vertical'">
+            <div class="content-preview__item-panel--narrow"> 
+              <div class="row">
+                <div class="col-xs-12">
+                  <img ng-src="{{content.extra_fields.vertical_thumb.url}}"> 
+                </div>
+              </div>
+            </div>
+            <p class="relateds-flexslider__item-title--narrow">{{content.extra_fields.content_title}}</p>
+          </a>
+
+        </li>
+      </ul>
+    </div>  
+  </div>
+</div>

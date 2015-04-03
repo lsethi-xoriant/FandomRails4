@@ -55,6 +55,13 @@
   <div class="row main-row">
 
     <div class="col-sm-8 cta__main-column">
+
+      <div class="play-interaction__video-btn-container visible-xs" ng-class="{'active': calltoaction_info.calltoaction.vcode == vcode}" ng-repeat="vcode in calltoaction_info.calltoaction.vcodes" ng-click="updateYTIframe(calltoaction_info, vcode, false)">
+        <span class="fa fa-play-circle"></span>
+        <p class="play-interaction__video-btn-title">{{calltoaction_info.calltoaction.extra_fields[vcode + '_title']}}</p>
+        <p class="play-interaction__video-btn-description">{{calltoaction_info.calltoaction.extra_fields[vcode + '_description']}}</p>
+      </div>
+
       <div class="row">
 
         <div class="col-sm-12" ng-if="calltoaction_info.calltoaction.media_type == 'VOID' && !calltoaction_info.calltoaction.gallery">
@@ -148,7 +155,7 @@
     </div>
     <div class="col-sm-4">
 
-      <div class="play-interaction__video-btn-container" ng-class="{'active': calltoaction_info.calltoaction.vcode == vcode}" ng-repeat="vcode in calltoaction_info.calltoaction.vcodes" ng-click="updateYTIframe(calltoaction_info, vcode, false)">
+      <div class="play-interaction__video-btn-container hidden-xs" ng-class="{'active': calltoaction_info.calltoaction.vcode == vcode}" ng-repeat="vcode in calltoaction_info.calltoaction.vcodes" ng-click="updateYTIframe(calltoaction_info, vcode, false)">
         <span class="fa fa-play-circle"></span>
         <p class="play-interaction__video-btn-title">{{calltoaction_info.calltoaction.extra_fields[vcode + '_title']}}</p>
         <p class="play-interaction__video-btn-description">{{calltoaction_info.calltoaction.extra_fields[vcode + '_description']}}</p>
