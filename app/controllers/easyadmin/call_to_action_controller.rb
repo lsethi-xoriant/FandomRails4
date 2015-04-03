@@ -390,11 +390,12 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     cta = CallToAction.find(params[:id])
     if cta.activated_at.blank?
       risp = "active"
-      cta.update_attribute("activated_at", DateTime.now.change(hour: 0))
+      cta.activation_date_time = DateTime.now.change(hour: 0).to_s
     else
       risp = "not-active"
-      cta.update_attribute("activated_at", nil)
+      cta.activation_date_time = ""
     end
+    cta.save
 
     respond_to do |format|
       format.json { render :json => risp.to_json }
