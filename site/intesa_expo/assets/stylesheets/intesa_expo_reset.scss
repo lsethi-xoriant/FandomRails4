@@ -45,6 +45,10 @@ body {
   .container-evidence {
     padding-bottom: 30px;
   }
+
+  .stripe__title {
+    color: #fff !important;
+  }
 }
 
 p {
@@ -83,6 +87,18 @@ p {
 .stripe-container {
   background-image: url("intesa_expo/texture.png");
   background-color: #fff;
+}
+
+.stripe-darkwhite {
+  background-color: whitesmoke;
+}
+
+.stripe-darkblue {
+  background-color: $darkblue;
+}
+
+.stripe-blue {
+  background-color: $blue;
 }
 
 .container-fluid__lightblue, .container--lightblue {

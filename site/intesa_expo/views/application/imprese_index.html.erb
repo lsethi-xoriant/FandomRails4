@@ -2,7 +2,7 @@
   <%= render partial: "/application/imprese_evidence_ctas" %>
 </div>
 
-<div class="container main-container" ng-if="aux.story_stripe.contents">
+<div class="container stripe-blue" ng-if="aux.story_stripe.contents">
   <div class="row">
     <div class="col-sm-12">
       <div class="browse-sections" ng-repeat="stripe in [aux.story_stripe]">
@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<div class="container main-container" ng-if="aux.interview_stripe.contents">
+<div class="container stripe-darkblue" ng-if="aux.interview_stripe.contents">
   <div class="row">
     <div class="col-sm-12">
       <div class="browse-sections" ng-repeat="stripe in [aux.interview_stripe]">
@@ -22,7 +22,7 @@
   </div>
 </div>
 
-<div class="container main-container" ng-if="aux['enterprise-in-evidence']['contents']">
+<div class="container stripe-blue" ng-if="aux['enterprise-in-evidence']['contents']">
   <div class="row">
     <div class="col-sm-12">
       <div class="browse-sections" ng-repeat="stripe in [aux['enterprise-in-evidence']]">
@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<div class="container main-container" ng-if="aux['event_stripe']['contents']">
+<div class="container stripe-darkblue" ng-if="aux['event_stripe']['contents']">
   <div class="row">
     <div class="col-sm-12">
       <div class="browse-sections" ng-repeat="stripe in [aux['event_stripe']]">
@@ -42,7 +42,7 @@
   </div>
 </div>
 
-<div class="container main-container" ng-if="aux.gallery.contents">
+<div class="container stripe-blue" ng-if="aux.gallery.contents">
   <div class="row">
     <div class="col-sm-12">
       <div class="browse-sections" ng-repeat="stripe in [aux.gallery]">
