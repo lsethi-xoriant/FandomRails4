@@ -1,4 +1,4 @@
-<div class="content-<%= @category.name %>" style="background-color: <%= get_extra_fields!(@category)['background-color'] %>;">
+<div class="content-browse">
 	<% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
 		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init_intesa_browse(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @total %>, <%= get_section_column_number(get_extra_fields!(@category)) %>)">
 	<% else %>

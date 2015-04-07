@@ -40,6 +40,11 @@
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
+          <li ng-class="{'active': ('search' == aux.page_tag.miniformat.name)}" class="navbar__language">
+	          <a href="javascript:void(0);" ng-click="showSearch();">
+	            <p class="navbar__item-text"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></p>
+	          </a>
+	      </li>
           <li ng-class="{'active': ('it' == aux.language)}" class="navbar__language">
             <a href="/it">
               <p class="navbar__item-text">it</p>
@@ -75,6 +80,11 @@
           </a>
         </li>
         <hr style="margin-top: 5px; margin-bottom: 5px;">
+        <li ng-class="{'active': ('search' == aux.page_tag.miniformat.name)}" class="navbar__language">
+          <a href="javascript:void(0);" ng-click="showSearch();">
+            <p class="navbar__item-text"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></p>
+          </a>
+        </li>
         <li ng-class="{'active': ('it' == aux.language)}" class="navbar__language">
           <a href="/it">
             <p class="navbar__item-text">it</p>

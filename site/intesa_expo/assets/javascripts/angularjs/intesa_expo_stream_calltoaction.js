@@ -82,7 +82,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       }
     }
     return $scope.content_ical[content.id];
-  }
+  };
 
   $scope.checkAndGenerateIcalForView = function(calltoaction_info) {
     ical_info_list = getIcalInteractions(calltoaction_info.calltoaction.id);
@@ -91,11 +91,21 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     }
     return ical_info_list.length > 0;
   };
+  
+  $scope.showSearch = function(hidden){
+	if('search' != $scope.menu_field){
+  		if($(".navbar__search").is(":visible")){
+  			$(".navbar__search").slideUp();
+  		}else{
+  			$(".navbar__search").slideDown();
+  		}
+  	}
+  };
 
   function generateIcalForView(ical_info_list) {
     $scope.ical = new Object({"dates": [], "times": [], "locations": [], "n": []});
     
-    i = 0
+    i = 0;
     angular.forEach(ical_info_list, function(value, key) {
       _datetime = value.interaction.resource.ical.start_datetime.value;
       _location = value.interaction.resource.ical.location;

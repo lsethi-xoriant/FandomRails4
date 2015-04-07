@@ -1,0 +1,35 @@
+<div class="stripe-container stripe-darkwhite">
+	<div class="col-xs-12">
+	  	<%= render partial: "/application/search", locals: {query: @query} %>
+	</div>
+</div>
+
+<div class="stripe-container stripe-darkwhite" ng-controller="SearchCtrl" ng-init="init_intesa_search(<%= @contents.to_json %>, <%= @total %>, '<%= @query %>', 4)">
+	<div class="container main-container">
+	  <div class="row main-row">
+	  	<div class="col-xs-12">
+	      <div class="section-heading">
+	        	<h1 class="text-center">
+	        		Risultati suggeriti
+	        	</h1>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="row main-row">
+	    <div class="col-sm-3" ng-repeat="column in getNumber(column_number)">
+		      <div class="row">
+	      		<div class="col-xs-12" ng-repeat="column_element in getNumber(elements_per_column)">
+	      			<div ng-repeat="content in [contents[getColumnIndexElement(column, column_element)-1]]">
+						<%= render partial: "/application/content_preview" %>
+					</div>
+				</div>
+		      </div>
+		  </div>
+	   </div>
+	   <div class="row">
+			<div class="col-xs-12 text-center" ng-if="total > offset">
+				<a class="btn btn-about-v2" ng-click="load_more(offset)">Carica Altri</a>
+			</div>
+	   </div>
+	</div>
+</div>
