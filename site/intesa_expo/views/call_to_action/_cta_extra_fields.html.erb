@@ -1,12 +1,12 @@
 <div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>" ng-repeat="n in ical.n">
-  <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.start || calltoaction_info.calltoaction.extra_fields.location">DOVE E QUANDO</p>
+  <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.start || calltoaction_info.calltoaction.extra_fields.location">{{aux.assets["event_widget_when_" + aux.language]}}</p>
 
   <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{ical.dates[$index]}}</span></p>
   <p class="cta__extra_fields__description"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{ical.times[$index]}}</span></p>
 
   <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.location"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{ical.locations[$index]}}</span></p>
 
-  <p class="cta__extra_fields__title cta__extra_fields__title--margin-top" ng-if="calltoaction_info.calltoaction.extra_fields.guests">OSPITI</p>
+  <p class="cta__extra_fields__title cta__extra_fields__title--margin-top" ng-if="calltoaction_info.calltoaction.extra_fields.guests">{{aux.assets["event_widget_guests_" + aux.language]}}</p>
 
   <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
 </div>

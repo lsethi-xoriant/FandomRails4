@@ -76,7 +76,7 @@ function addFieldElements(modelName, fieldName, counter, addRemoveButton) {
   jQuery('<div/>', {
     id: 'extra-fields-for-' + fieldName + '-' + counter,
     class: 'row'
-  }).appendTo('#' + containerDivId);
+  }).prependTo('#' + containerDivId);
 
   // *** NAME *** //
   jQuery('<div/>', {

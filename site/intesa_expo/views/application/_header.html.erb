@@ -1,13 +1,19 @@
 <div class="container hidden-xs">
   <div class="row main-row">
     <div class="col-sm-4">  
-      <img class="left-logo" ng-src="{{aux.assets.left_logo.url}}">    
+      <a href="{{aux.assets['left_logo_url_' + aux.language]}}" target="_blank">
+        <img class="left-logo" ng-src="{{aux.assets['left_logo_' + aux.language].url}}">  
+      </a>  
     </div>
-    <div class="col-sm-4 text-center">  
-      <img class="center-logo" ng-src="{{aux.assets.logo.url}}">   
+    <div class="col-sm-4 text-center">
+      <a href="/<%= $context_root %>">  
+        <img class="center-logo" ng-src="{{aux.assets['logo'].url}}">   
+      </a>
     </div>
     <div class="col-sm-4 text-right">     
-      <img class="right-logo" ng-src="{{aux.assets.right_logo.url}}">   
+      <a href="{{aux.assets['right_logo_url_' + aux.language]}}" target="_blank">
+        <img class="right-logo" ng-src="{{aux.assets['right_logo_' + aux.language].url}}">
+      </a>     
     </div>
   </div>
 </div>

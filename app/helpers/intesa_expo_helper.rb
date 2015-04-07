@@ -155,7 +155,7 @@ module IntesaExpoHelper
       "has_related_live" => has_related_live,
       "page_stripes" => page_stripes,
       "context_root" => $context_root,
-      "language" => $context_root || "it"
+      "language" => get_intesa_language()
     }
 
     if other
@@ -166,6 +166,14 @@ module IntesaExpoHelper
 
     aux
 
+  end
+
+  def get_intesa_language()
+    if $context_root == "imprese"
+      "it"
+    else
+      $context_root || "it"
+    end
   end
   
   def get_intesa_property
