@@ -51,3 +51,15 @@
     </div>
   </div>
 </a>
+
+<a class="relateds-flexslider__item--narrow--a" href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.layout == 'narrow-img'">
+  <div class="content-preview__item-panel--narrow"> 
+    <div class="row">
+      <div class="col-xs-12">
+        <img ng-src="{{content.extra_fields.vertical_thumb.url}}"> 
+      </div>
+    </div>
+  </div>
+  <p class="relateds-flexslider__item-title--narrow">{{content.extra_fields.content_title}}</p>
+</a>
+
