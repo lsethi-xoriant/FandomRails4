@@ -138,7 +138,6 @@ module CallToActionHelper
               "detail_url" => cta_url(calltoaction),
               "valid_from" => (calltoaction.valid_from.in_time_zone($site.timezone) rescue nil),
               "valid_to" => (calltoaction.valid_to.in_time_zone($site.timezone) rescue nil),
-              "valid_to" => cta_url(calltoaction),
               "title" => calltoaction.title,
               "description" => calltoaction.description,
               "media_type" => calltoaction.media_type,

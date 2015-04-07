@@ -39,7 +39,7 @@
   </div>
 </a>
 
-<a target="_blank" href="{{content.extra_fields.external_url}}" ng-if="content.layout == 'press'"> 
+<a target="_blank" href="{{content.extra_fields.author_url}}" ng-if="content.layout == 'press'"> 
   <div class="content-preview--press"> 
     <div class="row">
       <div class="col-xs-12">
@@ -47,6 +47,40 @@
         <p class="content-preview__title--press">{{sanitizeText(content.long_description)}}</p>
         <p class="content-preview__author">{{content.extra_fields.author_name}}</p>
         <p class="content-preview__newspaper">{{content.extra_fields.author_newspaper}}<span ng-if="content.extra_fields.publishing_date"> - {{formatDate(content.extra_fields.publishing_date.value, aux.language)}}</span></p>
+      </div>
+    </div>
+  </div>
+</a>
+
+<a class="relateds-flexslider__item--narrow--a" href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.layout == 'narrow-img'">
+  <div class="content-preview__item-panel--narrow"> 
+    <div class="row">
+      <div class="col-xs-12">
+        <img ng-src="{{content.extra_fields.vertical_thumb.url}}"> 
+      </div>
+    </div>
+  </div>
+  <p class="relateds-flexslider__item-title--narrow">{{content.extra_fields.content_title}}</p>
+</a>
+
+<a href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.layout == 'narrow-img-text'">
+  <div class="content-preview__item-panel--narrow"> 
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="relateds-flexslider__img--narrow">
+          <img class="img-responsive" ng-src="{{content.extra_fields.vertical_thumb.url}}"> 
+        </div>
+      </div>
+      <div class="col-xs-12">
+        <div class="row relateds-flexslider__text-container--narrow" ng-style="{'background-color': content.extra_fields['background_color']}">
+          <div class="col-xs-3 text-right relateds-flexslider__number--narrow">
+            <p>{{zerosBeforeNumber($index + 1, 1)}}</p>
+          </div>
+          <div class="col-xs-9">
+            <p class="relateds-flexslider__title--narrow">{{content.title | cut:true:70}}</p>
+            <p class="relateds-flexslider__description--narrow">{{content.long_description | cut:true:70}}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

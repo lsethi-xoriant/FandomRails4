@@ -107,12 +107,14 @@ module IntesaExpoHelper
 
       if cta.extra_fields
         page_stripes = []
-        JSON.parse(cta.extra_fields).each do |key, value|
-          if(key.include?("_stripe") && value)
-            page_stripes << get_intesa_expo_ctas_with_tag(key.sub("_stripe", "")) 
+        stripe_field = JSON.parse(cta.extra_fields)["stripe"]
+        if stripe_field
+          stripe_field.split(",").each do |tag|
+            page_stripes << get_intesa_expo_ctas_with_tag(tag)
           end
         end
       end
+
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
@@ -155,7 +157,7 @@ module IntesaExpoHelper
       "has_related_live" => has_related_live,
       "page_stripes" => page_stripes,
       "context_root" => $context_root,
-      "language" => get_intesa_language()
+      "language" => get_intesa_property()
     }
 
     if other
@@ -166,14 +168,6 @@ module IntesaExpoHelper
 
     aux
 
-  end
-
-  def get_intesa_language()
-    if $context_root == "imprese"
-      "it"
-    else
-      $context_root || "it"
-    end
   end
   
   def get_intesa_property
