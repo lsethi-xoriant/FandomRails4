@@ -20,10 +20,11 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
 
       @values = fill_values_hash(@from_date, @to_date)
 
-      flash[:notice] = @values["migration_day"] == true ? 
-                        "Hai selezionato un periodo che comprende o precede il giorno di migrazione,
-                          dunque i dati visualizzati comprendono anche tutte le statistiche precedenti a quel giorno"
-                        : nil
+      flash[:notice] = 
+        @values["migration_day"] == true ? 
+          "Hai selezionato un periodo che comprende o precede il giorno di migrazione,
+            dunque i dati visualizzati comprendono anche tutte le statistiche precedenti a quel giorno"
+        : nil
 
       from = @from_date
       to = @to_date
