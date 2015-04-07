@@ -8,14 +8,18 @@
             <%= light_link_to("/call_to_action/{{calltoaction.slug}}", style: "text-decoration: none;" ) do %>
               <div class="row">
                 <div class="col-xs-12 ctas__flexslider__img-container">
-                  <img style="width: 100%" ng-src="{{calltoaction.thumb_url}}">
+                  <img style="width: 100%" ng-src="{{calltoaction.thumb_wide_url}}">
                 </div>
                 <div class="col-xs-12 ctas__info">
                   <div class="ctas__info--bottom">
                     <p class="ctas__flexslider__title">{{calltoaction.title}}</p>
-                    <p class="ctas__flexslider__description hidden-xs" ng-if="calltoaction.extra_fields.start"><span class="fa fa-calendar-o"></span> <span class="ctas__flexslider__extra-field">{{formatDate(calltoaction.extra_fields.start, aux.language)}}</span></p>
-                    <p class="ctas__flexslider__description hidden-xs" ng-if="calltoaction.extra_fields.start"><span class="fa fa-clock-o"></span> <span class="ctas__flexslider__extra-field">{{extractTimeFromDate(calltoaction.extra_fields.start)}}</span></p>
-                    <p class="ctas__flexslider__description hidden-xs" ng-if="calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="ctas__flexslider__extra-field">{{calltoaction.extra_fields.guests}}</span></p>
+
+                    <div ng-if="getFirstIcalInteractionForContent(calltoaction)">
+                      <p class="ctas__flexslider__description hidden-xs"><span class="fa fa-calendar-o"></span> <span class="ctas__flexslider__extra-field">{{getFirstIcalInteractionForContent(calltoaction)[3]}}</span></p>
+                      <p class="ctas__flexslider__description hidden-xs"><span class="fa fa-clock-o"></span> <span class="ctas__flexslider__extra-field">{{getFirstIcalInteractionForContent(calltoaction)[2]}}</span></p>
+                      <p class="ctas__flexslider__description hidden-xs"><span class="fa fa-user"></span> <span class="ctas__flexslider__extra-field">{{calltoaction.extra_fields.guests}}</span></p>
+                    </div>
+
                   </div>
                 </div>
               </div>

@@ -67,14 +67,6 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		updateContents();
 	};
 	
-	$scope.getNumber = function(num){
-		var numArray = [];
-		for(i=1; i<= num; i++){
-			numArray.push(i);
-		}
-		return numArray;
-	};
-	
 	$scope.getColumnIndexElement = function(col, elem){
 		return ((elem - 1) * $scope.column_number) + col;
 	};
@@ -116,9 +108,9 @@ function BrowseCtrl($scope, $window, $filter, $http) {
     
     $scope.load_more = function(offset){
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-      	var loadMoreUrl = "/" + $scope.aux.current_property_info.path + "/browse/index_category_load_more.json"
+      	var loadMoreUrl = "/" + $scope.aux.current_property_info.path + "/browse/index_category_load_more.json";
       } else {
-      	var loadMoreUrl = "/browse/index_category_load_more.json"
+      	var loadMoreUrl = "/browse/index_category_load_more.json";
       } 
 
   		$http.get(loadMoreUrl, {

@@ -64,10 +64,12 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       today_date = new Date();
       angular.forEach(content.interactions, function(value) {
         if(value.interaction_info.resource_type.toLowerCase() == "download" && value.interaction_resource.ical_fields) {
-          date = JSON.parse(value.interaction_resource.ical_fields)["start_datetime"]["value"];
-          date = new Date(date);
-          if(!min_date || (date < min_date && date > today_date)) {
-            min_date = date;
+          start_datetime = JSON.parse(value.interaction_resource.ical_fields)["start_datetime"];
+          if(start_datetime) {
+            date = new Date(start_datetime["value"]);
+            if(!min_date || (date < min_date && date > today_date)) {
+              min_date = date;
+            }
           }
         }
       });
@@ -75,14 +77,14 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         month = $scope.computeMonthName(min_date.getMonth(), $scope.auxlanguage).substring(0, 3);
         day = ("0" + min_date.getDate()).slice(-2);
         time = $scope.extractTimeFromDate(min_date);
-        guests = 
-        $scope.content_ical[content.id] = [month, day, time];
+        _datetime = $scope.formatDate(min_date, $scope.aux.language);
+        $scope.content_ical[content.id] = [month, day, time, _datetime];
       } else {
         $scope.content_ical[content.id] = min_date;
       }
     }
     return $scope.content_ical[content.id];
-  }
+  };
 
   $scope.checkAndGenerateIcalForView = function(calltoaction_info) {
     ical_info_list = getIcalInteractions(calltoaction_info.calltoaction.id);
@@ -91,11 +93,21 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     }
     return ical_info_list.length > 0;
   };
+  
+  $scope.showSearch = function(hidden){
+	if('search' != $scope.menu_field){
+  		if($(".navbar__search").is(":visible")){
+  			$(".navbar__search").slideUp();
+  		}else{
+  			$(".navbar__search").slideDown();
+  		}
+  	}
+  };
 
   function generateIcalForView(ical_info_list) {
     $scope.ical = new Object({"dates": [], "times": [], "locations": [], "n": []});
     
-    i = 0
+    i = 0;
     angular.forEach(ical_info_list, function(value, key) {
       _datetime = value.interaction.resource.ical.start_datetime.value;
       _location = value.interaction.resource.ical.location;

@@ -10,6 +10,7 @@ module BrowseHelper
     attr_accessor :media_type
     attr_accessor :has_thumb
     attr_accessor :thumb_url
+    attr_accessor :thumb_wide_url
     attr_accessor :description
     attr_accessor :long_description
     attr_accessor :detail_url
@@ -36,6 +37,7 @@ module BrowseHelper
       @media_type = params[:media_type]
       @has_thumb = params[:has_thumb]
       @thumb_url = params[:thumb_url]
+      @thumb_wide_url = params[:thumb_wide_url]
       @description = params[:description]
       @long_description = params[:long_description]
       @detail_url = params[:detail_url]
@@ -225,15 +227,10 @@ module BrowseHelper
     tags = order_elements(category, get_tags_with_tags(tag_ids, params))
     ctas = order_elements(category, get_ctas_with_tags_in_and(tag_ids, params))
 
-    if params[:include_interactions]
-      cta_ids = ctas.map { |cta| cta.id }
-      interactions = get_cta_to_interactions_map(cta_ids)
-    end #(AT)
-
     total = tags.count + ctas.count
     tags = tags.slice!(0, carousel_elements)
     ctas = ctas.slice!(0, carousel_elements)
-    [merge_contents(ctas, tags, interactions), ctas, tags, total]
+    [merge_contents(ctas, tags), total]
   end
   
   def get_contents_by_category_with_tags(filter_tags, category, offset = 0)
@@ -325,13 +322,21 @@ module BrowseHelper
     contents = prepare_contents(contents)
   end
 
-  def prepare_contents(elements, interactions = nil)
+  def prepare_contents(elements)
     contents = []
+    
+    cta_ids = []
     elements.each do |element|
       if element.class.name == "CallToAction"
-        if interactions
-          element_interactions = interactions[element.id] 
-        end
+        cta_ids << element.id 
+      end
+    end
+    
+    interactions = get_cta_to_interactions_map(cta_ids)
+    
+    elements.each do |element|
+      if element.class.name == "CallToAction"
+        element_interactions = interactions[element.id] 
         contents << cta_to_content_preview(element, true, element_interactions)
       else
         contents << tag_to_content_preview(element)
@@ -352,9 +357,9 @@ module BrowseHelper
     contents
   end
 
-  def merge_contents(ctas, tags, interactions = nil)
+  def merge_contents(ctas, tags)
     merged = (tags + ctas)
-    prepare_contents(merged, interactions)
+    prepare_contents(merged)
   end
   
   def merge_contents_for_autocomplete(ctas,tags)
@@ -376,9 +381,20 @@ module BrowseHelper
   def prepare_contents_with_related_tags(elements)
     contents = []
     tags = {}
+    
+    cta_ids = []
     elements.each do |element|
       if element.class.name == "CallToAction"
-        contents << cta_to_content_preview(element)
+        cta_ids << element.id 
+      end
+    end
+    
+    interactions = get_cta_to_interactions_map(cta_ids)
+    
+    elements.each do |element|
+      if element.class.name == "CallToAction"
+        element_interactions = interactions[element.id]
+        contents << cta_to_content_preview(element, true, element_interactions)
         tags = addCtaTags(tags, element)
       else
         contents << tag_to_content_preview(element, true)

@@ -25,10 +25,28 @@ function SearchCtrl($scope, $window, $filter, $http, $sce) {
 		$scope.query = query;
 	};
 	
+	$scope.init_intesa_search = function(contents, total, query, column_number) {
+		$scope.contents = contents;
+		console.log(contents);
+		$scope.total = total;
+		$scope.offset = 12;
+		$scope.query = query;
+		$scope.column_number = column_number;
+		$scope.column_class = "col-sm-" + (12/column_number).toString;
+		$scope.elements_per_column = $scope.offset / $scope.column_number;
+		$scope.$watch('offset', function(){
+			$scope.elements_per_column = $scope.offset / $scope.column_number;
+		});
+	};
+	
 	$scope.init_view_all = function(contents, total, per_page) {
 		$scope.contents = contents;
 		$scope.total = total;
 		$scope.offset = $scope.perpage = per_page;
+	};
+	
+	$scope.getColumnIndexElement = function(col, elem){
+		return ((elem - 1) * $scope.column_number) + col;
 	};
 	
 	$scope.getResults = function(val) {
