@@ -45,7 +45,7 @@
     <%= render partial: "/application/header" %>
   </div>
   
-  <div class="stripe-container stripe-darkwhite">
+  <div class="container-fluid stripe-container stripe-darkwhite">
   	<div class="row">
 	  	<div class="col-xs-12 navbar__search">
 		  	<%= render partial: "/application/search", locals: { query: (defined? @query).nil? ? nil : @query } %>
