@@ -133,7 +133,7 @@ module IntesaExpoHelper
         ctas = highlight_calltoactions + ctas
         calltoaction_evidence_info = []
           ctas.each_with_index do |calltoaction, index|
-          calltoaction_evidence_info << build_default_thumb_calltoaction(calltoaction, :wide)
+          calltoaction_evidence_info << cta_to_content_preview(calltoaction)
         end
 
         calltoaction_evidence_info

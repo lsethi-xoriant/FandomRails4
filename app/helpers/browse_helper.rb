@@ -10,6 +10,7 @@ module BrowseHelper
     attr_accessor :media_type
     attr_accessor :has_thumb
     attr_accessor :thumb_url
+    attr_accessor :thumb_wide_url
     attr_accessor :description
     attr_accessor :long_description
     attr_accessor :detail_url
@@ -36,6 +37,7 @@ module BrowseHelper
       @media_type = params[:media_type]
       @has_thumb = params[:has_thumb]
       @thumb_url = params[:thumb_url]
+      @thumb_wide_url = params[:thumb_wide_url]
       @description = params[:description]
       @long_description = params[:long_description]
       @detail_url = params[:detail_url]
