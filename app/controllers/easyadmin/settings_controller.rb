@@ -83,7 +83,6 @@ class Easyadmin::SettingsController < Easyadmin::EasyadminController
   def save_profanities_settings
     active_setting = Setting.find_by_key(params[:active_key])
     setting = Setting.find_by_key(params[:key])
-    debugger
     active_setting.update_attribute(:value, params[:activation_setting] == "true")
     setting.update_attribute(:value, params[:words_setting])
     @saved = true
