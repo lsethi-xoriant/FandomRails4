@@ -56,6 +56,10 @@ fieldset[disabled] .btn-about.active {
   font-family: 'Gnuolane';
   margin-top: 15px;
   margin-bottom: 15px;
+}
+
+.btn-about-v2--nomargin {
+  margin: 0 !important;
 } 
  
 .btn-about-v2:hover, 

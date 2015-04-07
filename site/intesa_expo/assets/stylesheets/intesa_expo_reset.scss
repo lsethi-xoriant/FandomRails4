@@ -30,6 +30,11 @@ body {
     padding-right: 5px !important;
 }
 
+.content-browse{
+  background-color: whitesmoke;
+  background-image: url("intesa_expo/texture.png");
+}
+
 .body-imprese {
   .header-container {
     background-color: $blue !important; 
@@ -55,6 +60,14 @@ body {
   
   .stripe__title {
     color: #fff !important;
+  }
+  
+  .content-browse{
+    background-color: $blue;
+  }
+  
+  .category-header__title{
+    color: white;
   }
 }
 

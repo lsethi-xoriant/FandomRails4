@@ -1,0 +1,25 @@
+<div class="ctas__search" ng-controller="SearchCtrl" ng-init="init({})">
+  <%= form_tag("/browse/full_search", { method: "post", role: "search", id: "full-search" }) do %>
+    <div class="col-sm-8 col-sm-offset-1 col-xs-8">
+      <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control search-bar__input" placeholder="Cerca" style="width: 100%;" typeahead-wait-ms="<%= AUTOCOMPLETE_DELAY %>">
+      <% if flash[:notice] %>
+		<p class="text-left search-bar__message"><%= flash[:notice].html_safe %></p>
+  	  <% end %>
+    </div>
+    <div class="col-sm-2 col-xs-4">
+      <button type="submit" class="btn btn-about-v2 btn-about-v2--nomargin btn-block search-bar__button"><span>Cerca</span></button>
+    </div>
+  <% end %>
+  
+  <script type="text/ng-template" id="itemTpl.html">
+    <%= render partial: "/application/search_template" %>
+  </script>
+  
+  <% if query %>
+  <script type="text/javascript">
+    $(document).ready(function(){
+    	$("#search").val("<%= query %>");
+    });
+  </script>
+  <% end %>
+</div>

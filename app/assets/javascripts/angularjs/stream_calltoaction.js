@@ -2021,7 +2021,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.current_user.main_reward_counter.general = counter;
     //$(".user-reward-counter").html("+" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
   };
-
+  
+  //////////////////////// COLUMN VIEW HELPER ////////////////////////////////////////
+  $scope.getNumber = function(num){
+		var numArray = [];
+		for(i=1; i<= num; i++){
+			numArray.push(i);
+		}
+		return numArray;
+	};
+	
   //////////////////////// POINTS AND CHECKS FEEDBACK METHODS ////////////////////////
 
   $scope.emptyUserComment = function(interaction_info) {
