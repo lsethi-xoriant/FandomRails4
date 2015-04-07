@@ -220,7 +220,6 @@ module RewardingSystemHelper
     if user.mocked?
       Context.new(
         user: user,
-        user_rewards: {},
         cta: cta,
         correct_answer: get_correct_answer(user_interaction),
         counters: {},
@@ -234,7 +233,6 @@ module RewardingSystemHelper
       user_rewards, uncountable_user_reward_names, user_unlocked_names = get_user_reward_data(user_reward_info)
       Context.new(
         user: user,
-        user_rewards: user_rewards,
         cta: cta,
         correct_answer: get_correct_answer(user_interaction),
         counters: get_counters(user),
