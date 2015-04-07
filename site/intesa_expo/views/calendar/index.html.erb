@@ -42,7 +42,7 @@
 					</div>
 				</div>
 			</div>
-      <% if @aux_other_params["today_events"] %>
+      <% if @aux_other_params[:today_events].any? %>
         <div class="col-xs-12">
   				<div class="browse-sections" ng-repeat="contents in [aux.today_events]">
   					<%= render partial: "/application/content_carousel" %>
