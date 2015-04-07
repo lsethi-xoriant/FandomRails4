@@ -107,12 +107,14 @@ module IntesaExpoHelper
 
       if cta.extra_fields
         page_stripes = []
-        JSON.parse(cta.extra_fields).each do |key, value|
-          if(key.include?("_stripe") && value)
-            page_stripes << get_intesa_expo_ctas_with_tag(key.sub("_stripe", "")) 
+        stripe_field = JSON.parse(cta.extra_fields)["stripe"]
+        if stripe_field
+          stripe_field.split(",").each do |tag|
+            page_stripes << get_intesa_expo_ctas_with_tag(tag)
           end
         end
       end
+
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
