@@ -35,13 +35,6 @@
         </div>
       </div>
       <div class="col-md-2">
-        <div>
-          <label class="text-input">PERIODO</label></br>
-          <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
-          <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
-        </div>
-      </div>
-      <div class="col-md-2">
         <div class="form-group">
           </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
         </div>
@@ -66,7 +59,7 @@
           <div class="portlet-header">
             <h3>
               <i class="fa fa-bar-chart-o"></i>
-              UTENTI REGISTRATI DAL <%= @from_date_string %> AL <%= @to_date_string %>
+              UTENTI REGISTRATI DAL <%= @from_date_string %> AL <%= @to_date_string %> <i>(<%= @days %> giorni)</i>
             </h3>
           </div> <!-- /.portlet-header -->
           <div class="portlet-content">

@@ -22,20 +22,17 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
 
       flash[:notice] = @values["migration_day"] == true ? 
                         "Hai selezionato un periodo che comprende o precede il giorno di migrazione,
-                          dunque i dati visualizzati comprendono tutte le statistiche precedenti a quel giorno"
+                          dunque i dati visualizzati comprendono anche tutte le statistiche precedenti a quel giorno"
                         : nil
 
       from = @from_date
       to = @to_date
 
-      if((to - from).to_i <= 7 && params[:time_interval] != "daily")
-        params[:time_interval] = "daily"
-      end
-
       hash_total_users = get_hash_total_users()
       hash_social_reg_users = get_hash_social_reg_users()
 
-      days_interval = (params[:time_interval] == "daily" && params[:commit] != "Reset") ? 1 : 7
+      @days = (to - from).to_i
+      days_interval = @days > 30 ? (@days / 30.0).round : 1
       @user_week_list = build_line_chart_values(from, to, hash_total_users, hash_social_reg_users, days_interval)
 
       @total_users = @values["total_users"]
