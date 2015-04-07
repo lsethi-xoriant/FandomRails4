@@ -64,10 +64,12 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       today_date = new Date();
       angular.forEach(content.interactions, function(value) {
         if(value.interaction_info.resource_type.toLowerCase() == "download" && value.interaction_resource.ical_fields) {
-          date = JSON.parse(value.interaction_resource.ical_fields)["start_datetime"]["value"];
-          date = new Date(date);
-          if(!min_date || (date < min_date && date > today_date)) {
-            min_date = date;
+          start_datetime = JSON.parse(value.interaction_resource.ical_fields)["start_datetime"];
+          if(start_datetime) {
+            date = new Date(start_datetime["value"]);
+            if(!min_date || (date < min_date && date > today_date)) {
+              min_date = date;
+            }
           }
         }
       });
@@ -75,8 +77,8 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         month = $scope.computeMonthName(min_date.getMonth(), $scope.auxlanguage).substring(0, 3);
         day = ("0" + min_date.getDate()).slice(-2);
         time = $scope.extractTimeFromDate(min_date);
-        guests = 
-        $scope.content_ical[content.id] = [month, day, time];
+        _datetime = $scope.formatDate(min_date, $scope.aux.language);
+        $scope.content_ical[content.id] = [month, day, time, _datetime];
       } else {
         $scope.content_ical[content.id] = min_date;
       }
