@@ -4,8 +4,7 @@ class Easyadmin::CacheController < Easyadmin::EasyadminController
   layout "admin"
 
   def clear_cache
-    dalli_client = Dalli::Client.new
-    dalli_client.flush
+    Rails.cache.clear
     flash[:notice] = "Cache cancellata!"
   end
 
