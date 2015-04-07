@@ -64,6 +64,13 @@ angular.module('ng').filter('cut', function () {
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
 
+  $scope.zerosBeforeNumber = function(number, zero_length) {
+    for (i = 0; i < zero_length; i++) { 
+      number = "0" + number;
+    }
+    return number.slice(-(zero_length + 1));
+  }
+
   /*
   <form>
     <fieldset><legend>Upload on form submit</legend>
