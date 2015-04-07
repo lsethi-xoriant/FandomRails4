@@ -228,7 +228,7 @@ module BrowseHelper
     total = tags.count + ctas.count
     tags = tags.slice!(0, carousel_elements)
     ctas = ctas.slice!(0, carousel_elements)
-    [merge_contents(ctas, tags, ), ctas, tags, total]
+    [merge_contents(ctas, tags), total]
   end
   
   def get_contents_by_category_with_tags(filter_tags, category, offset = 0)

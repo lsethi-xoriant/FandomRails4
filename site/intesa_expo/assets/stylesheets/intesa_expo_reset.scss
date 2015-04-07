@@ -35,6 +35,14 @@ body {
   background-image: url("intesa_expo/texture.png");
 }
 
+.view-all-link{
+  float: right;
+  font-size: 14px;
+  line-height: 20px;
+  color: $lightblue;
+  text-transform: lowercase;
+}
+
 .body-imprese {
   .header-container {
     background-color: $blue !important; 
