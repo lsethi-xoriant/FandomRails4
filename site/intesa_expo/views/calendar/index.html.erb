@@ -43,7 +43,29 @@
 			</div>
         	<div class="col-xs-12" ng-if="aux.today_events">
   				<div class="browse-sections" ng-repeat="contents in [aux.today_events]">
-  					<%= render partial: "/application/content_carousel" %>
+  					<% if @aux_other_params[:today_events].count > 3 %>
+  						<%= render partial: "/application/content_carousel" %>
+  					<% elsif @aux_other_params[:today_events].count == 3 %>
+  					<div class="row">
+	  					<div class="col-sm-4" ng-repeat="content in aux.today_events">
+	  						<%= render partial: "/application/content_preview" %>
+	  					</div>
+	  				</div>
+  					<% elsif @aux_other_params[:today_events].count == 2 %>
+  					<div class="row">
+  						<div class="col-sm-2"></div>
+	  					<div class="col-sm-4" ng-repeat="content in aux.today_events">
+	  						<%= render partial: "/application/content_preview" %>
+	  					</div>
+	  				</div>
+  					<% elsif @aux_other_params[:today_events].count == 1 %>
+  					<div class="row">
+  						<div class="col-sm-4"></div>
+	  					<div class="col-sm-4" ng-repeat="content in aux.today_events">
+	  						<%= render partial: "/application/content_preview" %>
+	  					</div>
+	  				</div>
+  					<% end %>
   				</div>
         	</div>
 	        <div class="col-xs-12 text-center" ng-if="!aux.today_events && formatDate(newDate(), 'it') == formatDate('<%= @today.strftime("%d-%m-%Y") %>', 'it')">

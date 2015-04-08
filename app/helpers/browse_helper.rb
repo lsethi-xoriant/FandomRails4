@@ -223,7 +223,7 @@ module BrowseHelper
   end
   
   def get_contents_by_category(category, tags, carousel_elements, params = {})
-    params['limit'] = {
+    params[:limit] = {
       offset: 0,
       perpage: carousel_elements
     }
