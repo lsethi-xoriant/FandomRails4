@@ -81,11 +81,14 @@
               </td>
               <td class="col-md-2">
                 <button type="button" class="btn btn-primary btn-xs" onclick="updateCta(false, <%= c.id %>)">Rifiuta</button>
-                &nbsp;&nbsp;
+                &nbsp;
                 <a href="/easyadmin/cta/edit/<%= c.id %>">
                   <button type="button" class="btn btn-secondary btn-xs">Edita</button>
-                </a>          
-              </td>           
+                </a>
+                &nbsp;
+                <%= link_to "Tagga", { :controller => "easyadmin", :action => "tag_cta", :id => c.id, 
+                  :page => request.path, :page_current => @page_current }, { :class => "btn btn-default btn-xs" } %>
+              </td>
             </tr>
           <% end %>
         </table>

@@ -21,6 +21,8 @@
     </div>
     
     <%= form_tag action: "tag_cta_update" do |f| %>
+      <%= hidden_field_tag :page, @page %>
+      <%= hidden_field_tag :page_current, @page_current %>
 
       <div class="row">
         <div class="col-sm-6">
