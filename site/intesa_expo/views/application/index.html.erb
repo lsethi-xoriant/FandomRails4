@@ -2,7 +2,7 @@
   <%= render partial: "/application/evidence_ctas" %>
 </div>
 
-<div class="container-fluid__blue" ng-if="aux['event_stripe'].contents">
+<div class="container-fluid__blue" ng-if="aux['event_stripe']['contents']">
   <div class="container main-container container--blue">
     <div class="row">
       <div class="col-sm-12">
@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<div class="stripe-container stripe-darkwhite">
+<div class="stripe-container stripe-darkwhite" ng-if="aux['gallery_stripe']['contents']">
   <%# {'background-color': aux.gallery_stripe.extra_fields.background_color} %>
   <div class="container main-container">
     <div class="row">
@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<div class="stripe-container stripe-white" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}">
+<div class="stripe-container stripe-white" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}" ng-if="aux['article_stripe']['contents']">
   <div class="container main-container">
     <div class="row">
       <div class="col-sm-12">
@@ -39,7 +39,7 @@
   </div>
 </div>
 
-<div class="stripe-container stripe-darkwhite" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}">
+<div class="stripe-container stripe-darkwhite" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}" ng-if="aux['press_stripe']['contents']">
   <div class="container main-container">
     <div class="row">
       <div class="col-sm-12">
