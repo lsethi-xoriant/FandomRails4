@@ -141,7 +141,6 @@
 		$('div.calendar-event__popover').hide();
   		current_event_id = id;
 	  	selected_event = $('#full-calendar').fullCalendar('clientEvents', id)[0];
-	  	console.log(selected_event.start);
 	  	eventinfo = '<p class="calendar-event__popover__title"><b>'+ selected_event.title +'</b></p>';
 	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive calendar-event__popover__image" />';
 	  	eventinfo += '<p class="calendar-event__popover__description">'+ selected_event.extra_fields.subtitle +'</p>';
@@ -159,7 +158,7 @@
 		  	eventinfo += '</p>';
 		  	eventinfo += '<hr />';
 		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
-		  	eventinfo += '<button class="btn btn-danger" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id +')">DOWNLOAD ICAL</button>';
+		  	eventinfo += '<button class="btn btn-danger" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">DOWNLOAD ICAL</button>';
 		  	$("div.calendar-event__popover--right").attr("data-event-id", id);
 		  	$("div.calendar-event__popover--right").html(eventinfo);
 	  		$("div.calendar-event__popover--right").css({'left': position.left + 130 + 'px', 'top': position.top - 100 + 'px'});
@@ -175,7 +174,7 @@
 		  	eventinfo += '</p>';
 		  	eventinfo += '<hr />';
 		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
-		  	eventinfo += '<button class="btn btn-danger" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id +')">DOWNLOAD ICAL</button>';
+		  	eventinfo += '<button class="btn btn-danger" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">DOWNLOAD ICAL</button>';
 		  	$("div.calendar-event__popover--left").attr("data-event-id", id);
 		  	$("div.calendar-event__popover--left").html(eventinfo);
 	  		$("div.calendar-event__popover--left").css({'left': position.left - 280 + 'px', 'top': position.top - 100 + 'px'});

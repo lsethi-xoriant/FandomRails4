@@ -536,7 +536,7 @@ Fandom::Application.routes.draw do
   match "email_notifications_unsubscribe/:username/:security_token", :to => "notice#unsubscribe", :constraints => { :username => /.*/ }
 
   # ICAL
-  match "/ical/:interaction_id", to: "calendar#get_ical", defaults: { format: 'ics' }
+  match "/ical/:interaction_id/:name", to: "calendar#get_ical", defaults: { format: 'ics' }
 
   match "/tag/:name", :to => "application#index"
   root :to => "application#index"
