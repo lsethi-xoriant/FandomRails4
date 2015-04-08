@@ -65,6 +65,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
         content_preview.end = event[:end_datetime]
         content_preview.interactions = cta_to_interaction[event[:cta].id]
         content_preview.id = content_preview.ical_id = event[:ical_id]
+        content_preview.slug = event[:slug]
         cal_events[event[:start_datetime].day] << content_preview
       end
       cal_events

@@ -23,3 +23,17 @@
     </div>
   </div>
 </div>
+
+<div class="form-group media-upload-form-group">
+  <label class="text-input">Thumbnail video</label>
+  <div class="fileupload fileupload-new" data-provides="fileupload">
+    <div class="fileupload-preview thumbnail" style="width: 100%; height: 200px; line-height: 20px;">
+      <img src="<%= f.object.thumbnail %>">
+    </div>
+    <div>
+      <span class="btn btn-default btn-file"><span class="fileupload-new">UPLOAD</span>
+      <span class="fileupload-exists">Change</span><%= f.file_field :media_image  %></span>
+      <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+    </div>
+  </div>
+</div>

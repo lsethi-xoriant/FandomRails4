@@ -32,6 +32,7 @@ module BrowseHelper
     attr_accessor :interactions
     attr_accessor :valid_from
     attr_accessor :valid_to
+    attr_accessor :slug
     
     def initialize(params)
       @id = params[:id]
@@ -62,6 +63,7 @@ module BrowseHelper
       @valid_from = params[:valid_from]
       @valid_to = params[:valid_to]
       @ical_id = params[:ical_id]
+      @slug = params[:slug]
     end
     
   end

@@ -44,6 +44,14 @@ body {
 }
 
 .body-imprese {
+  .left-logo {
+    border: 0 !important;
+  }
+
+  .right-logo {
+    border: 0 !important;
+  }
+
   .header-container {
     background-color: $blue !important; 
     background-image: url("intesa_expo/texture.png");
@@ -250,6 +258,14 @@ p {
 
 }
 
+.browse-sections {
+  #widget-calendar {
+    margin-top: 30px;
+    margin-left: 15px;
+    padding: 32px 15px;
+  }
+}
+
 /********************* COOKIES FOOTER *********************/
 
 .cookies-footer {
@@ -330,6 +346,15 @@ p {
 }
 
 @media (max-width: $screen-sm-min) { 
+
+  .browse-sections {
+    #widget-calendar {
+      margin-top: 0;
+      margin-left: 0;
+      margin-bottom: 30px;
+      padding: 10px;
+    }
+  }
 
   .flex-direction-nav {
     display: none !important;
