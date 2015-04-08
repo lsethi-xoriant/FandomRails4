@@ -175,4 +175,38 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     return url;
   };
 
+  $scope.updateInteractionDownloadIcal = function(interaction_id) {
+
+    // DISABLE BUTTON HERE (41)
+    if(!$scope.answer_in_progress) {
+      $scope.answer_in_progress = true;
+      newWindow = window.open();
+
+      update_interaction_path = "/update_interaction";
+      if($scope.aux.language) {
+        update_interaction_path = "/" + $scope.aux.language + "" + update_interaction_path;
+      }
+
+      $http.post(update_interaction_path, { interaction_id: interaction_id })
+        .success(function(data) {
+          
+          // Google analytics.
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+              update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+            });
+          }
+
+          newWindow.location = "/ical/" + interaction_id;
+          $scope.answer_in_progress = false;
+
+        }).error(function() {
+          $scope.answer_in_progress = false;
+        });
+    }
+    
+
+  };
+
 }

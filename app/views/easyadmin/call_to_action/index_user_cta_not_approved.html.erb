@@ -30,30 +30,7 @@
     <hr/>
 
     <%= form_tag :action => 'filter_ugc', :approvation_status => 'not_approved', :method => 'post' do %>
-      <div class="row">
-        <div class="col-md-3">
-          <div class="form-group">
-          <label class="text-input">Filtra per TITOLO</label></br>
-          <%= text_field_tag :title_filter, @title_filter, :class => 'form-control' %>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
-          <label class="text-input">Filtra per SLUG</label></br>
-          <%= text_field_tag :slug_filter, @slug_filter, :class => 'form-control' %>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
-          </div>
-        </div>
-        <div class="col-md-1">
-          <div class="form-group">
-            </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
-          </div>
-        </div>
-      </div>
+      <%= render partial: "/easyadmin/call_to_action/user_cta_search_tab" %>
     <% end %>
 
     <div class="row cta-to-show">
@@ -108,8 +85,12 @@
                   <% end %>
                 <% end %>
               </td>
-              <td>
-                <button type="button" class="btn btn-success btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>              
+              <td class="col-md-2">
+                <button type="button" class="btn btn-success btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button> 
+                &nbsp;&nbsp;
+                <a href="/easyadmin/cta/edit/<%= c.id %>">
+                  <button type="button" class="btn btn-secondary btn-xs">Edita</button>
+                </a>             
               </td>           
             </tr>
           <% end %>

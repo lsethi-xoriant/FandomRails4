@@ -263,9 +263,9 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
     if approvation_status.nil?
-      @ctas = CallToAction.where("user_id IS NOT NULL and approved IS NULL").page(page).per(per_page).order("created_at DESC NULLS LAST")
+      @ctas = CallToAction.where("user_id IS NOT NULL and approved IS NULL").page(page).per(per_page).order("created_at ASC NULLS LAST")
     else
-      @ctas = CallToAction.where("user_id IS NOT NULL and approved = ?", approvation_status).page(page).per(per_page).order("created_at DESC NULLS LAST")
+      @ctas = CallToAction.where("user_id IS NOT NULL and approved = ?", approvation_status).page(page).per(per_page).order("created_at ASC NULLS LAST")
     end
 
     @page_size = @ctas.num_pages
@@ -338,16 +338,25 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
     @title_filter = params[:title_filter]
     @slug_filter = params[:slug_filter]
+    @username_filter = params[:username_filter]
+    @email_filter = params[:email_filter]
 
     if params[:commit] == "APPLICA FILTRO"
       where_conditions << " AND title ILIKE '%#{@title_filter}%'" unless @title_filter.nil?
       where_conditions << " AND slug ILIKE '%#{@slug_filter}%'" unless @slug_filter.nil?
+      user_where_conditions = "username ILIKE '%#{@username_filter}%'" unless @username_filter.nil?
+      unless @email_filter.nil?
+        user_where_conditions = 
+          user_where_conditions.nil? ? "email ILIKE '%#{@email_filter}%'" 
+          : user_where_conditions + " AND email ILIKE '%#{@email_filter}%'"
+      end
+      user_ids = User.where(user_where_conditions).pluck(:id) unless user_where_conditions.nil?
+      where_conditions << " AND user_id IN (#{user_ids.join(', ')})" if user_ids
     end
     @ctas = CallToAction.where(where_conditions).page(page).per(per_page).order("activated_at DESC NULLS LAST")
 
     if params[:commit] == "RESET"
-      @title_filter = nil
-      @slug_filter = nil
+      @title_filter = @slug_filter = @username_filter = @email_filter = nil
     end
 
     @page_size = @ctas.num_pages
