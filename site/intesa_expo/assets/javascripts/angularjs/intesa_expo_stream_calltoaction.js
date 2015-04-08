@@ -139,6 +139,24 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     return content["key"];
   };
 
+  $scope.isContentValid = function(content) {
+    valid_from = new Date(content.valid_from);
+    today_date = new Date();
+    return (valid_from < today_date);
+  }
+
+  $scope.linkToValidFrom = function(content) {
+    if(!content.valid_from) {
+      return $scope.linkTo(content.detail_url);
+    } else {
+      if($scope.isContentValid(content)) {
+        return $scope.linkTo(content.detail_url);
+      } else {
+        return "javascript: void(0)";
+      }
+    }
+  }
+
   $scope.linkTo = function(url, stripe_name) {
     if(angular.isUndefined(stripe_name)) {
       stripe_name = "";

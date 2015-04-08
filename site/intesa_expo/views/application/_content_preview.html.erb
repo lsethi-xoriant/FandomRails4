@@ -52,8 +52,16 @@
   </div>
 </a>
 
-<a class="relateds-flexslider__item--narrow--a" href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.layout == 'narrow-img'">
-  <div class="content-preview__item-panel--narrow"> 
+<a class="relateds-flexslider__item--narrow--a" href="{{linkToValidFrom(content)}}" ng-if="content.layout == 'narrow-img'" style="position: relative;">
+  <div class="content-preview__item-panel--narrow">
+
+    <div ng-if="!isContentValid(content)" style="background-color: rgba(0, 0, 0, 0.6); position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 10;">
+      <div class="content-preview__coming-soon--narrow">
+        <p>coming soon</p>
+      </div>
+    </div>
+
+
     <div class="row">
       <div class="col-xs-12">
         <img ng-src="{{content.extra_fields.vertical_thumb.url}}"> 
