@@ -82,12 +82,15 @@
               <td class="col-md-3">
                 <% if aws_trasconding_not_required_or_completed(c) %>
                   <button type="button" class="btn btn-success btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>
-                  &nbsp;&nbsp;
+                  &nbsp;
                   <button type="button" class="btn btn-primary btn-xs" onclick="updateCta(false, <%= c.id %>)">Rifiuta</button>
-                  &nbsp;&nbsp;
+                  &nbsp;
                   <a href="/easyadmin/cta/edit/<%= c.id %>">
                     <button type="button" class="btn btn-secondary btn-xs">Edita</button>
-                  </a> 
+                  </a>
+                  &nbsp;
+                  <%= link_to "Tagga", { :controller => "easyadmin", :action => "tag_cta", :id => c.id, 
+                    :page => request.path, :page_current => @page_current }, { :class => "btn btn-default btn-xs" } %>
                 <% else %>
                   <p>aws transconding status: <%= @aws_transcoding_media_status %></p>
                 <% end %>           

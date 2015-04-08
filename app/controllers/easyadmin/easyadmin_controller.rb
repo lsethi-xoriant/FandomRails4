@@ -309,6 +309,8 @@ class Easyadmin::EasyadminController < ApplicationController
     @tag_list_arr = Array.new
     CallToAction.find(params[:id]).call_to_action_tags.each { |t| @tag_list_arr << t.tag.name }
     @tag_list = @tag_list_arr.join(",")
+    @page = params[:page]
+    @page_current = params[:page_current]
   end
 
   def tag_cta_update
@@ -323,7 +325,11 @@ class Easyadmin::EasyadminController < ApplicationController
       CallToActionTag.create(tag_id: tag.id, call_to_action_id: cta.id)
     end
     flash[:notice] = "CallToAction taggata"
-    redirect_to "/easyadmin/cta/tag/#{ cta.id }"
+    if params[:page]
+      redirect_to "#{params[:page]}?page=#{params[:page_current]}"
+    else
+      redirect_to "/easyadmin/cta/tag/#{ cta.id }"
+    end
   end
 
   def dashboard

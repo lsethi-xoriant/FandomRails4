@@ -13,6 +13,14 @@
   </div>
   <div class="col-md-2">
     <div class="form-group">
+      <label class="text-input">Filtra per TAG</label></br>
+      <%= render_html_tag_box("tag_list", params[:tag_list], "ATTENZIONE: Sono stati inseriti tag non esistenti!") %>
+      <span class="help-block">Per separare i TAG digita virgola</span>
+      <p id="tag_list_message"></p>
+    </div>
+  </div>
+  <div class="col-md-2">  
+    <div class="form-group">
     <label class="text-input">Filtra per USERNAME</label></br>
     <%= text_field_tag :username_filter, @username_filter, :class => 'form-control' %>
     </div>
@@ -23,14 +31,10 @@
     <%= text_field_tag :email_filter, @email_filter, :class => 'form-control' %>
     </div>
   </div>
-  <div class="col-md-2">
-    <div class="form-group">
-      </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
-    </div>
+  <div class="col-md-1">
+    </br><%= submit_tag 'FILTRA', class: 'btn btn-primary' %>
   </div>
   <div class="col-md-1">
-    <div class="form-group">
-      </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
-    </div>
+    </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
   </div>
 </div>
