@@ -36,6 +36,10 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     }
   };
 
+  $scope.hasPhotoGallery = function(calltoaction) {
+    return ($scope.getContentWithPrefixFromExtraFields(calltoaction.extra_fields, "photo_gallery_").length > 0);
+  }
+
   $scope.getContentWithPrefixFromExtraFields = function(extra_fields, prefix) {
     contents = [];
     angular.forEach(extra_fields, function(value, key) {

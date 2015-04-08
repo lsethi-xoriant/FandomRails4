@@ -115,6 +115,18 @@
   font-size: 24px;
 }
 
+.cta__related__right-bar {
+  .cta__related__icon {
+    font-size: 18px;
+    line-height: 30px;
+  }
+  .cta__related__icon-container {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+  } 
+}
+
 .cta__related__hr {
   border-color: #eee;
   margin-top: 15px;
