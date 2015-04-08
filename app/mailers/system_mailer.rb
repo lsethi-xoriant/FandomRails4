@@ -47,13 +47,28 @@ class SystemMailer < ActionMailer::Base
     mail(to: cup_obj['identity']['email'], subject: subject)
   end
 
-  def orzoro_registration_confirmation(cup_obj, user)
+  def orzoro_newsletter_confirmation(info)
+    subject = "Congratulazioni! Sei iscritto alla newsletter di Orzoro!"
+    @info = info
+    @assets_extra_fields = get_extra_fields!(Tag.find_by_name("assets"))
+    mail(to: info[:email], subject: subject)
+  end
+
+  def orzoro_registration_confirmation_from_cups(cup_obj, user)
     subject = "Conferma il tuo indirizzo mail!"
     @form_cup = cup_obj
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     @assets_extra_fields = get_extra_fields!(Tag.find_by_name("assets"))
-    @link = "#{root_url}complete_registration/#{user.email}/#{user.confirmation_token}"
+    @link = "#{root_url}complete_registration_from_cups/#{user.email}/#{user.confirmation_token}"
     mail(to: cup_obj['identity']['email'], subject: subject)
+  end
+
+  def orzoro_registration_confirmation_from_newsletter(info, user)
+    subject = "Conferma il tuo indirizzo mail!"
+    @info = info
+    @assets_extra_fields = get_extra_fields!(Tag.find_by_name("assets"))
+    @link = "#{root_url}complete_registration_from_newsletter/#{user.email}/#{user.confirmation_token}"
+    mail(to: info[:email], subject: subject)
   end
 
 end

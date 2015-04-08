@@ -36,6 +36,10 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     }
   };
 
+  $scope.hasPhotoGallery = function(calltoaction) {
+    return ($scope.getContentWithPrefixFromExtraFields(calltoaction.extra_fields, "photo_gallery_").length > 0);
+  }
+
   $scope.getContentWithPrefixFromExtraFields = function(extra_fields, prefix) {
     contents = [];
     angular.forEach(extra_fields, function(value, key) {
@@ -134,6 +138,24 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   $scope.orderContent = function(content) {
     return content["key"];
   };
+
+  $scope.isContentValid = function(content) {
+    if(!content.valid_from) {
+      return true;
+    } else {
+      valid_from = new Date(content.valid_from);
+      today_date = new Date();
+      return (valid_from < today_date);
+    }
+  }
+
+  $scope.linkToValidFrom = function(content) {
+    if($scope.isContentValid(content)) {
+      return $scope.linkTo(content.detail_url);
+    } else {
+      return "";
+    }
+  }
 
   $scope.linkTo = function(url, stripe_name) {
     if(angular.isUndefined(stripe_name)) {

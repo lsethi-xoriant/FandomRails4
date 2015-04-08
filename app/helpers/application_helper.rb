@@ -156,6 +156,8 @@ module ApplicationHelper
       layout: get_content_preview_layout(cta),
       start: cta.valid_from,
       interactions: interactions,
+      valid_from: cta.valid_from,
+      valid_to: cta.valid_to,
       end: cta.valid_to
     )
   end

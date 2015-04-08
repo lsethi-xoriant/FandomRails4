@@ -29,6 +29,8 @@ module BrowseHelper
     attr_accessor :start
     attr_accessor :end
     attr_accessor :interactions
+    attr_accessor :valid_from
+    attr_accessor :valid_to
     
     def initialize(params)
       @id = params[:id]
@@ -56,6 +58,8 @@ module BrowseHelper
       @start = params[:start]
       @end = params[:end]
       @interactions = params[:interactions]
+      @valid_from = params[:valid_from]
+      @valid_to = params[:valid_to]
     end
     
   end

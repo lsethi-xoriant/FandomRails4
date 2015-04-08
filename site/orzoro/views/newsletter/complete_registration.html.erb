@@ -1,0 +1,22 @@
+<div class="container main-container main-container--cream">   
+  <div class="row main-row">
+    <% if !flash[:error].nil? %>
+      <div class="row">
+        <div class="col-sm-12">
+          <p>Errore:</p>
+          <ul>
+              <li><%= flash[:error] %></li>
+          </ul>
+        </div>
+      </div>
+    <% else %>
+      <div class="col-sm-12 cup__header-col text-center">
+        <%= render partial: "/application/ribbon", locals: { title: "Conferma della registrazione", background: "#ceb5e2"}%>
+        <h2><%= @message %></h2>
+        <div id="two-cups-selected" class="col-sm-12 cup__header-col text-center">
+          <img src="<%= @assets_extra_fields["dora_tressy"]["url"] rescue nil %>">
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

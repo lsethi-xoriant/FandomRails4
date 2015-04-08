@@ -1,0 +1,167 @@
+<%= form_for @subscription, url: "/newsletter/subscription_request", html: { class: "newsletter__form" } do |f| %> 
+  <div class="container main-container main-container--cream">   
+    <div class="row main-row">
+      <div class="col-sm-12 cup__header-col text-center">
+        <div class="hidden-xs">
+          <%= render partial: "/application/ribbon", locals: { title: "Iscriviti alla Newsletter", background: "#ceb5e2" }%>
+        </div>
+      </div>
+
+      <div class="col-sm-10 col-sm-offset-1"> 
+        <% if @subscription.errors.any? %>
+          <div class="row">
+            <div class="col-sm-12">
+              <p>Errori nella compilazione del modulo:</p>
+              <ul>
+                <% @subscription.errors.full_messages.each do |error_message| %>
+                    <li><%= error_message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Nome * </label>
+              <%= f.text_field :first_name, :class => "form-control", :required => true %>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Cognome * </label>
+              <%= f.text_field :last_name, class: "form-control", :required => true %>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Data di nascita * </label>  
+              <div class="row">
+                <div class="col-sm-4">
+                  <% date_array = (1..31).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Giorno", ""] %>
+                  <%= f.select :day_of_birth, options_for_select(date_array, @subscription[:day_of_birth]), {}, { class: "form-control", :required => true } %>
+                </div>
+                <div class="col-sm-4">
+                  <% date_array = (1..12).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Mese", ""] %>
+                  <%= f.select :month_of_birth, options_for_select(date_array, @subscription[:month_of_birth]), {}, { class: "form-control", :required => true } %>
+                </div>
+                <div class="col-sm-4">
+                  <% date_array = (1900..2005).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Anno", ""] %>
+                  <%= f.select :year_of_birth, options_for_select(date_array, @subscription[:year_of_birth]), {}, { class: "form-control", :required => true } %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Genere * </label>
+              <div class="row">
+                <div class="col-sm-12 cup__radio">
+                  <label class="radio-inline"></label>
+                    <%= f.radio_button :gender, "M", :required => true %> M
+                  <label class="radio-inline"></label>
+                     <%= f.radio_button :gender, "F" %> F
+                                    <label id="sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[gender]-error" class="error" for="sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[gender]"></label>   
+                </div>   
+              </div>  
+            </div>
+          </div>
+        </div> 
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Stato * </label>
+              <%= f.select :state, options_for_select(@states_array, @subscription[:state]), {}, { class: "form-control", :required => true } %>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Provincia * </label>
+              <%= f.select :province, options_for_select(@provinces_array, @subscription[:province]), {}, { class: "form-control", :required => true } %>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Cellulare</label>
+              <%= f.text_field :phone, class: "form-control" %>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Email * </label>
+              <%= f.email_field :email, class: "form-control", :required => true, :pattern => "[^@]+@[^@]+\.[a-zA-Z]{2,6}" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container main-container container-shadow">
+    <div class="row main-row">
+      <div class="col-sm-10 col-sm-offset-1">
+        <div class="checkbox">
+          <label><%= f.check_box :newsletter %> Si, voglio ricevere notizie sui nuovi prodotti, promozioni e offerte di Orzoro dedicate a me</label>
+        </div>
+        <div class="checkbox">
+          <label><%= f.check_box :terms %> Si, voglio essere aggiornato anche sulle novità e le offerte degli altri prodotti Nestlè Italiana S.p.A e SanPellegrino S.p.A</label>
+        </div>
+        <div class="checkbox">
+          <%= f.check_box :privacy, :required => true %> 
+          <label>Dichiaro di aver preso visione dell’<a target="_blank" style="color: #660206; text-decoration: underline;" href="http://www.buonalavita.it/nestle/service/note_legali/default.aspx">informativa</a> e acconsento al trattamento dei dati personali * </label>
+          <label id="sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[privacy]-error" class="error" for="sites_orzoro_cup_redeemer_controller_cup_redeemer_step1[privacy]"></label>
+        </div>
+      </div>
+      <% if small_mobile_device? %>
+        <div class="col-sm-6 text-center">
+          <p class="form-errors"></p>
+        <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
+      </div>
+    <% else %>
+      <div class="col-sm-6 col-sm-offset-3 text-center">
+        <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
+      </div>
+    <% end %>   
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      jQuery.validator.addMethod("is13", function(value, element) {
+        var day = $("#sites_orzoro_newsletter_controller_subscription_day_of_birth").val();
+        var month = $("#sites_orzoro_newsletter_controller_subscription_month_of_birth").val();
+        var year = $("#sites_orzoro_newsletter_controller_subscription_year_of_birth").val();
+        var age =  13;
+  
+        if(day == "" || month == "" || year == "")
+          return true;
+  
+        var mydate = new Date();
+        mydate.setFullYear(year, month - 1, day);
+  
+        var currdate = new Date();
+        currdate.setFullYear(currdate.getFullYear() - age);
+  
+        return (mydate <= currdate)
+  
+      }, "Devi aver compiuto 13 anni per poterti iscrivere alla newsletter.");
+  
+    $(".newsletter__form").validate({
+        rules: {
+          'sites_orzoro_newsletter_controller_subscription[year_of_birth]': { is13: true }
+        },
+        invalidHandler: function(event, validator){
+          var errors = validator.numberOfInvalids();
+          $(".form-errors").html("Ci sono " + errors +" errori nel form, controlla i dati inseriti.").show();
+        }
+      });
+  });
+</script>

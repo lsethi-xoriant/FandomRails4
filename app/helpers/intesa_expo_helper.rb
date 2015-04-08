@@ -59,7 +59,9 @@ module IntesaExpoHelper
 
   def get_intesa_expo_ctas(with_tag = nil)
     language = get_tag_from_params($context_root || "it")
-    ctas = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", language.id)
+    ctas = CallToAction.active.includes(:call_to_action_tags, :interactions)
+                              .where("call_to_action_tags.tag_id = ?", language.id)
+                              .where("call_to_actions.valid_from < ? OR call_to_actions.valid_from IS NULL", Time.now.utc)
     if with_tag
       ctas_with_param_tag = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", with_tag.id)
       ctas = ctas.where("call_to_actions.id" => ctas_with_param_tag.map { |cta| cta.id })
@@ -126,11 +128,12 @@ module IntesaExpoHelper
         highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
         if highlight_calltoactions.any?
           ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
-          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(ctas_evidence_count)
-                                       .where("extra_fields->>'layout' <> 'press'")
+          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
+                                       .where("(extra_fields->>'layout') IS NULL OR (extra_fields->>'layout') <> 'press'")
+                                       .limit(ctas_evidence_count)
                                        .to_a
         else
-          ctas = get_intesa_expo_ctas().where("extra_fields->>'layout' <> 'press'").limit(ctas_evidence_count).to_a
+          ctas = get_intesa_expo_ctas().where("(extra_fields->>'layout') IS NULL OR (extra_fields->>'layout') <> 'press'").limit(ctas_evidence_count).to_a
         end
 
         ctas = highlight_calltoactions + ctas
@@ -176,7 +179,7 @@ module IntesaExpoHelper
 
   end
   
-  def get_intesa_property
+  def get_intesa_property()
     $context_root || "it"
   end
   

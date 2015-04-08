@@ -201,14 +201,15 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         flash[:error] = "Hai gia' richiesto tazze per questo scontrino"
       else
         cache_value["request_timestamp"] = Time.now
+        cache_value["entry_point"] = "cup_redeemer"
         redeem_array = aux_hash["cup_redeem"].nil? ? [cache_value] : aux_hash["cup_redeem"] + [cache_value]
         aux_hash["cup_redeem"] = redeem_array
         user.aux = aux_hash.to_json
-        user.assign_attributes(info) if (!user_created_flag && redeem_array.size == 1)
+        user.assign_attributes(info) if (!user_created_flag && (cup_redemption(redeem_array) == 1))
         user.confirmation_sent_at = Time.now if user.confirmation_token.present?
         user.save(:validate => false)
         if user.confirmation_token.present?
-          SystemMailer.orzoro_registration_confirmation(cache_value, user).deliver
+          SystemMailer.orzoro_registration_confirmation_from_cups(cache_value, user).deliver
         else
           SystemMailer.orzoro_cup_redeem_confirmation(cache_value).deliver
         end
@@ -244,6 +245,14 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
 
   def getSessionId
     request.session_options[:id]
+  end
+
+  def cup_redemption(array)
+    count = 0
+    array.each do |cup_redeem|
+      count += 1 if cup_redeem["entry_point"] == "cup_redeemer"
+    end
+    return count
   end
 
   def complete_registration
