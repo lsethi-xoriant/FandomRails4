@@ -61,10 +61,10 @@
 </div>
 
 <div class="stripe-container stripe-blue">
-  <div class="container" ng-if="aux.gallery.contents">
+  <div class="container" ng-if="aux.gallery_stripe.contents">
     <div class="row">
       <div class="col-sm-12">
-        <div class="browse-sections" ng-repeat="stripe in [aux.gallery]">
+        <div class="browse-sections" ng-repeat="stripe in [aux.gallery_stripe]">
           <%= render partial: "/application/stripe" %>
         </div>
       </div>
