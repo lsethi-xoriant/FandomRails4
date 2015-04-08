@@ -58,7 +58,7 @@ class CallToAction < ActiveRecordWithJSON
   validates :privacy, :acceptance => { :accept => true }, if: Proc.new { |c| privacy_required }
 
   before_save :set_activated_at # handles the activated_at fields when updating the model from easyadmin
-  #before_save :set_extra_options
+  # before_save :set_extra_options
 
   has_attached_file :media_image,
     processors: lambda { |calltoaction|
@@ -127,6 +127,10 @@ class CallToAction < ActiveRecordWithJSON
 
   def media_type_enum
     MEDIA_TYPES
+  end
+
+  def allowed_upload_media_type_enum
+    ALLOWED_UPLOAD_MEDIA_TYPES
   end
 
   def check_video_interaction

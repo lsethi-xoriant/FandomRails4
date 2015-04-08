@@ -67,6 +67,9 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       params[:call_to_action]['thumbnail'] = params[:call_to_action]['media_image'] if params[:call_to_action]
     end
     @cta = CallToAction.find(params[:id])
+    if ALLOWED_UPLOAD_MEDIA_TYPES.include?(params[:call_to_action]["media_type"])
+      @cta.aux = (JSON.parse(@cta.aux) rescue {}).merge({ "aws_transcoding_media_status" => "requested" }).to_json
+    end
     create_and_link_attachment(params[:call_to_action], @cta)
     updated_attributes = @cta.update_attributes(params[:call_to_action])
     saved_linking = save_interaction_call_to_action_linking(@cta)
