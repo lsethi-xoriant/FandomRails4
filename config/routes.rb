@@ -43,10 +43,14 @@ Fandom::Application.routes.draw do
         match "/tazze/step_3", to: "cup_redeemer#step_3"
         match "/tazze/step_3/update", to: "cup_redeemer#step_3_update"
         match "/tazze/request_completed", to: "cup_redeemer#request_completed"
-        match "/complete_registration/:email/:token", to: "cup_redeemer#complete_registration", :constraints => { :email => /.*/ }
+        match "/complete_registration_from_cups/:email/:token", to: "cup_redeemer#complete_registration", :constraints => { :email => /.*/ }
+        match "/complete_registration_from_newsletter/:email/:token", to: "newsletter#complete_registration", :constraints => { :email => /.*/ }
         match "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
         match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
-        
+        match "/newsletter/subscribe", :to => "newsletter#subscribe"
+        match "/newsletter/subscription_request", :to => "newsletter#send_request"
+        match "/newsletter/request_completed", :to => "newsletter#request_completed"
+
         match "/faq", :to => "application#faq"
         match "/netiquette", :to => "application#netiquette"
 

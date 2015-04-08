@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style type="text/css">
+      h1{
+        font-size: 22px;
+      }
+      h2{
+        font-size: 18px;
+      }
+      p{
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body style="font-family: arial, helvetica, sans-serif; background-color: #faaa16;">
+    <div style="max-width: 600px; margin-left: auto; margin-right: auto;">
+      <img src="<%= @assets_extra_fields['logo']['url'] rescue nil %>" style="display: block; margin: 10px auto; max-width:200px;" />
+      <h1 style="text-align: center; color: #fff;">Benessere è Buonumore</h1>
+    </div>
+      <div style="max-width: 600px; margin-left: auto; margin-right: auto; background-color: #fff;">
+        <div style="text-align: center; padding: 10px;">
+          <h1 style="font-family: arial, helvetica, sans-serif; color: #660206;">Complimenti, <%= @info['first_name'] %></h1>
+          <h2 style="font-family: arial, helvetica, sans-serif; color: #660206;">Ti confermiamo di aver ricevuto la tua richiesta<br /> di iscrizione alla newsletter</h2>
+            <img style="width: 80%; display: block; margin: 10px auto;" src="<%= @assets_extra_fields["dora_tressy"]["url"] rescue nil %>">
+        </div>
+        <div>
+          <div style="text-align: center; margin-top: 20px;">
+            <img src="<%= @assets_extra_fields['logo_nestle']['url'] rescue nil %>" />
+          </div>
+          <p style="text-align: center; color: #818181; padding: 20px 0;">Se pensi ci sia un errore non considerare la presente mail.</p>
+        </div>
+      </div>
+      <div style="max-width: 600px; margin-left: auto; margin-right: auto;">
+        <p style="text-align: center; color: #fff;">Copyright 2014 - Nestlè S.p.A. - Partita IVA 00777280157 - <a href="https://www.buonalavita.it/note-legali" style="color: #fff; text-decoration: underline;">note legali</a> - <a href="https://www.buonalavita.it/promozioni/in-corso" style="color: #fff; text-decoration: underline;">regolamento concorsi</a></p>
+      </div>
+  </body>
+</html>
