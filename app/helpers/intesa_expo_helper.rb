@@ -8,7 +8,10 @@ module IntesaExpoHelper
     if tag_name == "event"
       current_time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
       # exclude_cta_ids = CallToAction.active.where("cast(\"extra_fields\"->>'valid_from' AS timestamp) < ?", current_time).map { |cta| cta.id }
-      params = { ical_start_datetime: current_time } 
+      params = { 
+        ical_start_datetime: current_time,
+        order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC" 
+        } 
     else
       params = {}
     end

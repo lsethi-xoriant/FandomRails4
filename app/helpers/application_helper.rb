@@ -604,8 +604,8 @@ module ApplicationHelper
         #"#{DateTime.parse(params[:ical_end_datetime]).strftime("%d_%M_%Y")}"
       end
     end
-    if params['limit']
-      extra_key << "limit_#{params['limit']['offset']}_#{params['limit']['perpage']}"
+    if params[:limit]
+      extra_key << "limit_#{params[:limit][:offset]}_#{params[:limit][:perpage]}"
     end
     extra_key.join("_")
   end
@@ -626,17 +626,14 @@ module ApplicationHelper
     end
   end
   
-  def get_cta_id_to_ical_fields(params)
-    downloads = Download.joins(:interaction => :call_to_action)
+  def add_ical_fields_to_where_condition(query, params)
     if params[:ical_start_datetime]
-      downloads = downloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= ?", params[:ical_start_datetime])
-      #donwloads = donwloads.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= '#{params[:ical_start_datetime]}'") (AT)
+      query = query.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= ?", params[:ical_start_datetime])
     end
     if params[:ical_end_datetime]
-      downloads = downloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= ?", params[:ical_end_datetime])
-      #downloads = downloads.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= '#{params[:ical_end_datetime]}'") (AT)
+      query = query.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= ?", params[:ical_end_datetime])
     end
-    downloads.pluck('call_to_actions.id')
+    query
   end
   
   def get_ctas_with_tags_in_and(tag_ids, params = {})
@@ -644,19 +641,25 @@ module ApplicationHelper
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "and") do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
       where_clause, limit = get_cta_where_clause_from_params(params)
-      ctas = CallToAction.active.includes(call_to_action_tags: :tag)
+      ctas = CallToAction.includes(call_to_action_tags: :tag)
       if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
-        cta_id_to_ical_fields = get_cta_id_to_ical_fields(params) 
-        ctas = ctas.where(id: cta_id_to_ical_fields) 
+        ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
+        ctas = add_ical_fields_to_where_condition(ctas, params)
       end
-      ctas = ctas.where("id IN (#{tag_ids_subselect}) ")
+      ctas = ctas.where("call_to_actions.id IN (#{tag_ids_subselect}) ")
       if !where_clause.empty?
         ctas = ctas.where("#{where_clause}")
       end
       if limit
         ctas = ctas.limit(limit)
       end
-      ctas.order("activated_at DESC").to_a
+      
+      if params[:order_string]
+        ctas = ctas.order("#{params[:order_string]}")
+      else
+        ctas = ctas.order("activated_at DESC")
+      end
+      ctas.active.to_a
     end
   end
   
@@ -676,7 +679,12 @@ module ApplicationHelper
       if limit
         ctas = ctas.limit(limit)
       end
-      ctas.order("activated_at DESC").to_a
+      
+      if params[:order_string]
+        ctas.order("#{params[:order_string]}").to_a
+      else
+        ctas.order("activated_at DESC").to_a
+      end
     end
   end
   
@@ -727,8 +735,8 @@ module ApplicationHelper
   
   def get_limit_from_params(params)
     limit = nil
-    if params['limit']
-      limit = (params['limit'][:offset].to_i + 1) * params['limit'][:perpage]
+    if params[:limit]
+      limit = (params[:limit][:offset].to_i + 1) * params[:limit][:perpage]
     end
     limit
   end
