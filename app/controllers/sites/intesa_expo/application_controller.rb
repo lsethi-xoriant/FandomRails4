@@ -40,11 +40,15 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     else
 
       home_stripes = cache_short(get_home_stripes_cache_key($context_root || "it")) do
+        if $context_root == "en"
+          story_stripe = get_intesa_expo_ctas_with_tag("story")
+        end
         {
           "event_stripe" => get_intesa_expo_ctas_with_tag("event"),
           "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
           "article_stripe" => get_intesa_expo_ctas_with_tag("article"),
-          "press_stripe" => get_intesa_expo_ctas_with_tag("press")
+          "press_stripe" => get_intesa_expo_ctas_with_tag("press"),
+          "story_stripe" => story_stripe
         }
       end
 
@@ -54,6 +58,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         "gallery_stripe" => home_stripes["gallery_stripe"],
         "article_stripe" => home_stripes["article_stripe"],
         "press_stripe" => home_stripes["press_stripe"],
+        "story_stripe" => home_stripes["story_stripe"],
         page_tag: {
           miniformat: {
             name: "home"
