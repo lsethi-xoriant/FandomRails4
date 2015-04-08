@@ -1604,7 +1604,8 @@ module ApplicationHelper
         ical_events << {
           cta: cal.interaction.call_to_action, 
           start_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['start_datetime']['value']),
-          end_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['end_datetime']['value'])
+          end_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['end_datetime']['value']),
+          ical_id: cal.interaction.id
         }
       end
     end
