@@ -134,37 +134,25 @@
     });
   }
   
-  function getEventTimeFromEvent(event){
-  	event_date = moment();
-  	$.each(event.interactions, function(index, value){
-  		if(value.interaction_info.resource_type == 'Download' && value.interaction_resource.ical_fields){
-  			event_date = moment($.parseJSON(value.interaction_resource.ical_fields).start_datetime.value);
-  		}
-  	});
-  	event_date_info = { "day": event_date.date() + " " + monthNames[event_date.month()] + " " + event_date.year(), "time": event_date.format("h:mm") };
-  	return event_date_info;
-  }
-  
   function show_event_info(elem, id){
-  	
   	if(!$("div.calendar-event__popover[data-event-id="+id+"]").is(":visible")) {
 		$('div.calendar-event__popover').hide();
   		current_event_id = id;
 	  	selected_event = $('#full-calendar').fullCalendar('clientEvents', id)[0];
+	  	console.log(selected_event.start);
 	  	eventinfo = '<p class="calendar-event__popover__title"><b>'+ selected_event.title +'</b></p>';
 	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive calendar-event__popover__image" />';
 	  	eventinfo += '<p class="calendar-event__popover__description">'+ selected_event.extra_fields.subtitle +'</p>';
 	  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a></div>';
 	  	$("div.calendar-event__popover").html(eventinfo);
-	  	event_time = getEventTimeFromEvent(selected_event);
 	  	position = $(elem).offset();
 	  	if(position.left-200 < 0){
 	  		eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
 		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
 		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
 		  	eventinfo += '<p class="calendar-event__popover__extra-info">';
-		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + event_time.day;
-		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + event_time.time;
+		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("D MMMM YYYY");
+		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.start.format("H:mm");
 		  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
 		  	eventinfo += '</p>';
 		  	eventinfo += '<hr />';
@@ -178,8 +166,8 @@
 		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
 		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
 		  	eventinfo += '<p class="calendar-event__popover__extra-info">';
-		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + event_time.day;
-		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + event_time.time;
+		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("D MMMM YYYY");
+		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.start.format("H:mm");
 		  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
 		  	eventinfo += '</p>';
 		  	eventinfo += '<hr />';
