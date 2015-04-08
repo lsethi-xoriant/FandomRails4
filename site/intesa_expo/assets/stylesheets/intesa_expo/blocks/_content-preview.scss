@@ -32,6 +32,34 @@
   }
 }
 
+.content-preview__coming-soon--narrow {
+  position: absolute; 
+  top: 45%; 
+  left: 0;
+  right: 0;
+  text-align: center;
+  p {
+    font-family: 'Gnuolane';
+    text-transform: uppercase;
+    font-size: 22px;
+    color: $orange;
+    border: 1px solid $orange; 
+    border-radius: 3px;
+    padding: 5px 10px;  
+    display: inline-block;
+  }
+}
+
+.content-preview__coming-soon__container--narrow {
+  background-color: rgba(0, 0, 0, 0.6); 
+  position: absolute; 
+  top: 0; 
+  bottom: 0; 
+  left: 0; 
+  right: 0; 
+  z-index: 10;
+}
+
 .content-preview__item-panel--press{
   height: auto;
 }

@@ -18,7 +18,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
           "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
           "interview_stripe" => get_intesa_expo_ctas_with_tag("interview"),
           "story_stripe" => get_intesa_expo_ctas_with_tag("story"),
-          "enterprise-in-evidence_stripe" => get_intesa_expo_ctas_with_tag("enterprise-in-evidence"),
+          "enterprise-in-evidence_stripe" => get_intesa_expo_ctas_with_tag("enterprise-in-evidence")
         }
       end
 
@@ -43,7 +43,8 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         {
           "event_stripe" => get_intesa_expo_ctas_with_tag("event"),
           "gallery_stripe" => get_intesa_expo_ctas_with_tag("gallery"),
-          "article_stripe" => get_intesa_expo_ctas_with_tag("article")
+          "article_stripe" => get_intesa_expo_ctas_with_tag("article"),
+          "press_stripe" => get_intesa_expo_ctas_with_tag("press")
         }
       end
 
@@ -52,6 +53,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         "event_stripe" => home_stripes["event_stripe"],
         "gallery_stripe" => home_stripes["gallery_stripe"],
         "article_stripe" => home_stripes["article_stripe"],
+        "press_stripe" => home_stripes["press_stripe"],
         page_tag: {
           miniformat: {
             name: "home"

@@ -38,3 +38,15 @@
     </div>
   </div>
 </div>
+
+<div class="stripe-container stripe-darkwhite" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}">
+  <div class="container main-container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="browse-sections" ng-repeat="stripe in [aux.press_stripe]">
+          <%= render partial: "/application/stripe" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,7 +13,7 @@
           </div>
 
           <div class="content-preview__icon-container" ng-if="content.media_type != 'VOID' && !getFirstIcalInteractionForContent(content)">
-          	<i class="fa fa-picture-o content-preview__icon" ng-if="content.media_type == 'IMAGE'"></i>
+          	<i class="fa fa-picture-o content-preview__icon" ng-if="content.media_type == 'IMAGE' || hasPhotoGallery(content)"></i>
           	<i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == 'KALTURA' || content.media_type == 'YOUTUBE' || content.media_type == 'FLOWPLAYER'"></i> 
           </div>
 
@@ -52,8 +52,16 @@
   </div>
 </a>
 
-<a class="relateds-flexslider__item--narrow--a" href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.layout == 'narrow-img'">
-  <div class="content-preview__item-panel--narrow"> 
+<a class="relateds-flexslider__item--narrow--a" ng-href="{{linkToValidFrom(content)}}" ng-if="content.layout == 'narrow-img'" style="position: relative;">
+  <div class="content-preview__item-panel--narrow">
+
+    <div ng-if="!isContentValid(content)" class="content-preview__coming-soon__container--narrow">
+      <div class="content-preview__coming-soon--narrow">
+        <p>coming soon</p>
+      </div>
+    </div>
+
+
     <div class="row">
       <div class="col-xs-12">
         <img ng-src="{{content.extra_fields.vertical_thumb.url}}"> 

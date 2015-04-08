@@ -123,11 +123,12 @@ module IntesaExpoHelper
         highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
         if highlight_calltoactions.any?
           ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
-          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(ctas_evidence_count)
-                                       .where("extra_fields->>'layout' <> 'press'")
+          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
+                                       .where("(extra_fields->>'layout') IS NULL OR (extra_fields->>'layout') <> 'press'")
+                                       .limit(ctas_evidence_count)
                                        .to_a
         else
-          ctas = get_intesa_expo_ctas().where("extra_fields->>'layout' <> 'press'").limit(ctas_evidence_count).to_a
+          ctas = get_intesa_expo_ctas().where("(extra_fields->>'layout') IS NULL OR (extra_fields->>'layout') <> 'press'").limit(ctas_evidence_count).to_a
         end
 
         ctas = highlight_calltoactions + ctas
@@ -173,7 +174,7 @@ module IntesaExpoHelper
 
   end
   
-  def get_intesa_property
+  def get_intesa_property()
     $context_root || "it"
   end
   
