@@ -283,8 +283,9 @@
 @media (max-width: $screen-sm-min) { 
   
   .content-preview__item-panel {
-    min-height: 271px;
+    min-height: 300px;
     height: auto;
+    margin-bottom: 30px;
   }
 
   .content-preview {
