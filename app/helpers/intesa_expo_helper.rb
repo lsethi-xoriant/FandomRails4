@@ -11,7 +11,7 @@ module IntesaExpoHelper
       params = { 
         ical_start_datetime: current_time,
         order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC" 
-        } 
+      }
     else
       params = {}
     end

@@ -187,6 +187,7 @@ module BrowseHelper
       view_all_link: "/browse/view_all/#{category.slug}",
       column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
       total: total,
+      has_view_all: total > carousel_elements,
       per_page: carousel_elements
     })
   end
@@ -227,10 +228,12 @@ module BrowseHelper
   end
   
   def get_contents_by_category(category, tags, carousel_elements, params = {})
-    params[:limit] = {
-      offset: 0,
-      perpage: carousel_elements
-    }
+    if !params[:limit]
+      params[:limit] = {
+        offset: 0,
+        perpage: carousel_elements + 1
+      }
+    end
     tag_ids = ([category] + tags).map{|tag| tag.id}
     tags = order_elements(category, get_tags_with_tags(tag_ids, params))
     ctas = order_elements(category, get_ctas_with_tags_in_and(tag_ids, params))

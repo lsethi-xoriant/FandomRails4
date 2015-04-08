@@ -23,6 +23,7 @@ module ApplicationHelper
     attr_accessor :total
     attr_accessor :per_page
     attr_accessor :extra_fields
+    attr_accessor :has_view_all
     
     def initialize(params)
       @key = params[:key]
@@ -34,6 +35,7 @@ module ApplicationHelper
       @total = params[:total]
       @per_page = params[:per_page]
       @extra_fields = params[:extra_fields]
+      @has_view_all = params[:has_view_all]
     end
     
   end
