@@ -180,7 +180,9 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     // DISABLE BUTTON HERE (41)
     if(!$scope.answer_in_progress) {
       $scope.answer_in_progress = true;
-      newWindow = window.open();
+      //newWindow = window.open();
+
+      console.log($scope.aux);
 
       update_interaction_path = "/update_interaction";
       if($scope.aux.language) {
@@ -198,7 +200,8 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
             });
           }
 
-          newWindow.location = "/ical/" + interaction_id;
+          window.href = "/ical/" + interaction_id;
+          //newWindow.location = "/ical/" + interaction_id;
           $scope.answer_in_progress = false;
 
         }).error(function() {
