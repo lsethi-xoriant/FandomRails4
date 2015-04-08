@@ -56,7 +56,9 @@ module IntesaExpoHelper
 
   def get_intesa_expo_ctas(with_tag = nil)
     language = get_tag_from_params($context_root || "it")
-    ctas = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", language.id)
+    ctas = CallToAction.active.includes(:call_to_action_tags, :interactions)
+                              .where("call_to_action_tags.tag_id = ?", language.id)
+                              .where("call_to_actions.valid_from < ? OR call_to_actions.valid_from IS NULL", Time.now.utc)
     if with_tag
       ctas_with_param_tag = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", with_tag.id)
       ctas = ctas.where("call_to_actions.id" => ctas_with_param_tag.map { |cta| cta.id })
