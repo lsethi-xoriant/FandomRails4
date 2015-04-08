@@ -27,6 +27,18 @@
   </div>
 </div>
 
+<div class="stripe-container stripe-blue" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}" ng-if="aux['story_stripe']['contents']">
+  <div class="container main-container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="browse-sections" ng-repeat="stripe in [aux.story_stripe]">
+          <%= render partial: "/application/stripe" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="stripe-container stripe-white" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}" ng-if="aux['article_stripe']['contents']">
   <div class="container main-container">
     <div class="row">

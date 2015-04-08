@@ -18,26 +18,8 @@
     <h3>Commenti oscurati</h3>
     <hr/>
 
-    <div class="row">
-      <div class="col-md-2">
-        <%= form_tag :method => 'post' do %>
-        <div class="form-group">
-          <label class="text-input">Filtra per ID CallTo Action</label></br>
-          <%= text_field_tag :id_cta_not_approved_filter, @id_cta_not_approved_filter, :class => 'form-control' %>
-        </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
-        </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
-          <% end %>
-        </div>
-      </div>
-     </div>
+    <%= render partial: "/easyadmin/comments/comments_search_tab" %>
+    
     <div class="col-md-12"> 
       <table class="table table-striped">
         <thead>
