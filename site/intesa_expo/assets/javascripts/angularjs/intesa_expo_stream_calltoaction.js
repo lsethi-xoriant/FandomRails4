@@ -140,20 +140,20 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   };
 
   $scope.isContentValid = function(content) {
-    valid_from = new Date(content.valid_from);
-    today_date = new Date();
-    return (valid_from < today_date);
+    if(!content.valid_from) {
+      return true;
+    } else {
+      valid_from = new Date(content.valid_from);
+      today_date = new Date();
+      return (valid_from < today_date);
+    }
   }
 
   $scope.linkToValidFrom = function(content) {
-    if(!content.valid_from) {
+    if($scope.isContentValid(content)) {
       return $scope.linkTo(content.detail_url);
     } else {
-      if($scope.isContentValid(content)) {
-        return $scope.linkTo(content.detail_url);
-      } else {
-        return "javascript: void(0)";
-      }
+      return "";
     }
   }
 

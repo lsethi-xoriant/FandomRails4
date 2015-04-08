@@ -50,6 +50,16 @@
   }
 }
 
+.content-preview__coming-soon__container--narrow {
+  background-color: rgba(0, 0, 0, 0.6); 
+  position: absolute; 
+  top: 0; 
+  bottom: 0; 
+  left: 0; 
+  right: 0; 
+  z-index: 10;
+}
+
 .content-preview__item-panel--press{
   height: auto;
 }
