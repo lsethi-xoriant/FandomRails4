@@ -175,7 +175,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     return url;
   };
 
-  $scope.updateInteractionDownloadIcal = function(interaction_id) {
+  $window.updateInteractionDownloadIcal = function(interaction_id) {
 
     // DISABLE BUTTON HERE (41)
     if(!$scope.answer_in_progress) {
