@@ -105,7 +105,6 @@
 <script type="text/javascript">
 
   var current_event_id = -1;
-  var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   $(document).ready(function() {
     buildCalendar();
@@ -141,7 +140,6 @@
 		$('div.calendar-event__popover').hide();
   		current_event_id = id;
 	  	selected_event = $('#full-calendar').fullCalendar('clientEvents', id)[0];
-	  	console.log(selected_event.start);
 	  	eventinfo = '<p class="calendar-event__popover__title"><b>'+ selected_event.title +'</b></p>';
 	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive calendar-event__popover__image" />';
 	  	eventinfo += '<p class="calendar-event__popover__description">'+ selected_event.extra_fields.subtitle +'</p>';
@@ -218,12 +216,7 @@
 	  eventRender: function(event, element, view) {
 	  	today = moment().dayOfYear();
 
-	  	//if(today == event.start.dayOfYear()){
-	  		//html = $('<div class="calendar-event calendar-event--current-date"></div>');
-	  	//}else{ 
-	  		html = $('<div class="calendar-event"></div>');
-	  	//}
-	  	
+ 		html = $('<div class="calendar-event"></div>');
 	  	if(event.extra_fields.highlight && event.extra_fields.highlight.value){
 		  	html.append('<p class="calendar-event__hour calendar-event__hour--highlight">'+ event.start.format("HH:mm") +'</p>');
 		    html.append('<a href="javascript:void(0);" class="calendar-event__title calendar-event__title--highlight" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
