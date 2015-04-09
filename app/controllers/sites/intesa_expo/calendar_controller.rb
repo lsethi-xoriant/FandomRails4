@@ -32,8 +32,8 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     
     if get_intesa_property == "imprese"
       @aux_other_params = {
-        "expo_events" => get_intesa_expo_ctas_with_tag("event-imprese"),
-        "gallery_events" => get_intesa_expo_ctas_with_tag("gallery-imprese")
+        "expo_events" => get_intesa_expo_ctas_with_tag("event"),
+        "gallery_events" => get_intesa_expo_ctas_with_tag("gallery")
       }
     end
     

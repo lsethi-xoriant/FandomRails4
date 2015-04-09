@@ -1,27 +1,36 @@
 <div class="calendar-event__popover calendar-event__popover--left"></div>
 <div class="calendar-event__popover calendar-event__popover--right"></div>
-<div class="container-fluid__blue">
-  <div class="container main-container">
+
 	<% if $context_root == 'imprese' %>
+	<div class="stripe-container stripe-blue" ng-style="{'background-color': aux.expo_events.extra_fields.background_color}">
+  	  <div class="container main-container">
 		<div class="row row-discover">
 			<div class="col-xs-12">
-				<h1>EVENTI</h1>
-				<h2>Scopri gli eventi imprese nello spazio<br />intesa san paolo a Expo Milano 2015</h2>
-				<div class="browse-sections" ng-repeat="contents in [aux.expo_events]">
+				<h1 class="text-center">EVENTI</h1>
+				<h2 class="text-center">Scopri gli eventi imprese nello spazio<br />intesa san paolo a Expo Milano 2015</h2>
+				<div class="browse-sections" ng-repeat="contents in [aux.expo_events.contents]">
 					<%= render partial: "/application/content_carousel" %>
 				</div>
 			</div>
 		</div>
-		
+	  </div>
+	</div>
+	
+	<div class="stripe-container stripe-darkblue" ng-style="{'background-color': aux.gallery_events.extra_fields.background_color}">
+  	  <div class="container main-container">
 		<div class="row">
 			<div class="col-xs-12">
-				<h2>Gallery Eventi</h2>
-				<div class="browse-sections" ng-repeat="contents in [aux.gallery_events]">
+				<h1 class="text-center">GALLERY EVENTI</h1>
+				<div class="browse-sections" ng-repeat="contents in [aux.gallery_events.contents]">
 					<%= render partial: "/application/content_carousel" %>
 				</div>
 			</div>
 		</div>
+	  </div>
+	</div>
 	<% else %>
+	<div class="container-fluid__blue">
+	  <div class="container main-container">
 		<div class="row">
 			<div class="col-xs-12 col-sm-8 col-sm-offset-2">
 				<div class="row">
@@ -77,25 +86,26 @@
 	          <p class="calendar-event__empty-title">{{aux.assets['no_event_1_' + aux.language]}}</p>
 	        </div>
 	  	</div>
-	<% end %>
+	  </div>
 	</div>
-</div>
-<div class="container-fluid__white">
+	<% end %>
+<div class="<%= $context_root == 'imprese' ? "container-fluid__blue" : "container-fluid__white" %>">
 	<div class="container main-container" >	
 		<div class="row">
-	     <div class="col-md-12" style="padding-top: 15px;">
+		     <div class="col-md-12" style="padding-top: 15px;">
+		     	<p class="text-center" style="margin-bottom: -20px;">Calendario mensile</p>
 				<div id="full-calendar" class="hidden-xs"></div> <!-- /#full-calendar -->   
-        <div id="widget-calendar" class="visible-xs"></div>          
+	        	<div id="widget-calendar" class="visible-xs"></div>          
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-12 text-center">
-				<p class="small">Il calendario è in continuo aggiornamento. Torna presto per scoprire le novità.</p>
+				<p class="small">{{aux.assets['calendar_message_' + aux.language]}}</p>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-12 text-center">
-				<a class="btn btn-primary" href="#" style="margin: 10px 0;">Torna su</a>
+				<a class="btn btn-primary btn-backtotop" href="#" style="margin: 10px 0;"><i class="fa fa-chevron-up"></i></a>
 			</div>
 		</div>
 	</div>

@@ -19,6 +19,9 @@ h1, h2,
   font-family: 'Gnuolane';
 }
 
+h2{
+  font-size: 22px;
+}
 
 body {
   padding-top: 0;
@@ -120,9 +123,28 @@ p {
 .container-fluid__blue, .container--blue {
   background-color: $blue !important; 
   background-image: url("intesa_expo/texture.png");
+}
 
+.container-fluid__blue, .container--blue,
+.stripe-darkblue, .stripe-blue {
   .stripe__title {
     color: #fff;
+  }
+  
+  h1, h2, h3{
+    color: white;
+  }
+  
+  p{
+    color: white;
+  }
+  
+  #full-calendar .fc-center h2{
+    color: white;
+  }
+  
+  #full-calendar .fc-content-skeleton table td.fc-day-number.fc-other-month{
+    background-color: rgba(18, 35, 51, 0.5) !important;
   }
 }
 

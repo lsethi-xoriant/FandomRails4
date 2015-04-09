@@ -145,7 +145,7 @@
   text-align: left;
   margin-top: 5px;
   padding: 0 10px;
-  color: $lightblue;
+  color: $lightblue !important;
 }
 
 .content-press-it, .content-press-en {
@@ -161,13 +161,13 @@
 
 .content-preview__title--press {
   font-size: 14px;
-  color: $lightblue;
+  color: $lightblue !important;
 }
 
 .content-preview__author {
   font-size: 10px;
   font-weight: bold;
-  color: $lightblue;
+  color: $lightblue !important;
   padding-top: 5px;
 }
 
@@ -253,7 +253,7 @@
 }
 
 .content-preview__event-info{
-  color: #333333;
+  color: #333333 !important;
   text-align: left;
   padding: 0 10px;
   font-size: 11px;
