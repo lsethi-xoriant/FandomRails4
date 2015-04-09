@@ -23,8 +23,14 @@
   color: #fff;
 }
 
+.calendar-event__month{
+  text-transform: uppercase;
+  font-size: 28px;
+}
+
 .calendar-event__agenda{
   margin-top: 20px;
+  margin-bottom: -10px;
 }
 
 .calendar-event__agenda-arrow{
@@ -194,11 +200,12 @@
   .fc-center h2{
     text-transform: uppercase;
     color: $lightblue;
+    font-size: 28px;
   }
   
   .fc-toolbar{
     margin: 2em auto;
-    width: 30%;
+    width: 25%;
   }
   
   table{ 

@@ -39,10 +39,10 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-2 text-right">
+					<div class="col-xs-2 col-xs-offset-2 text-right">
 						<%= light_link_to("/calendar/#{(@today-1).strftime('%d-%m-%Y')}?dir=prev", class: "calendar-event__agenda-arrow") do %><i class="fa fa-chevron-left"></i><% end %>
 					</div>
-					<div class="col-xs-8">
+					<div class="col-xs-4">
 						<h2 class="text-center calendar-event__month">{{formatDate('<%= @today.strftime("%Y-%m-%d") %>', aux.language)}}</h2>
 					</div>
 					<div class="col-xs-2 text-left">
@@ -93,7 +93,7 @@
 	<div class="container main-container" >	
 		<div class="row">
 		     <div class="col-md-12" style="padding-top: 15px;">
-		     	<p class="text-center" style="margin-bottom: -20px;">Calendario mensile</p>
+		     	<p class="text-center" style="margin-bottom: -20px;">Calendario Mensile</p>
 				<div id="full-calendar" class="hidden-xs"></div> <!-- /#full-calendar -->   
 	        	<div id="widget-calendar" class="visible-xs"></div>          
 			</div>
@@ -154,36 +154,24 @@
 	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive calendar-event__popover__image" />';
 	  	eventinfo += '<p class="calendar-event__popover__description">'+ selected_event.extra_fields.subtitle +'</p>';
 	  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a></div>';
-	  	$("div.calendar-event__popover").html(eventinfo);
 	  	position = $(elem).offset();
+	  	eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
+	  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
+	  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
+	  	eventinfo += '<p class="calendar-event__popover__extra-info">';
+	  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("D MMMM YYYY");
+	  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.start.format("H:mm");
+	  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
+	  	eventinfo += '</p>';
+	  	eventinfo += '<hr />';
+	  	eventinfo += '<a class="btn btn-event" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
+	  	eventinfo += '<button class="btn btn-event" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">AGGIUNGI AL CALENDARIO</button>';
 	  	if(position.left-200 < 0){
-	  		eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
-		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
-		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
-		  	eventinfo += '<p class="calendar-event__popover__extra-info">';
-		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("D MMMM YYYY");
-		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.start.format("H:mm");
-		  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
-		  	eventinfo += '</p>';
-		  	eventinfo += '<hr />';
-		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
-		  	eventinfo += '<button class="btn btn-danger" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">DOWNLOAD ICAL</button>';
 		  	$("div.calendar-event__popover--right").attr("data-event-id", id);
 		  	$("div.calendar-event__popover--right").html(eventinfo);
 	  		$("div.calendar-event__popover--right").css({'left': position.left + 130 + 'px', 'top': position.top - 100 + 'px'});
 	  		$("div.calendar-event__popover--right").show();
 	  	}else{
-	  		eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
-		  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
-		  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
-		  	eventinfo += '<p class="calendar-event__popover__extra-info">';
-		  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("D MMMM YYYY");
-		  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.start.format("H:mm");
-		  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
-		  	eventinfo += '</p>';
-		  	eventinfo += '<hr />';
-		  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
-		  	eventinfo += '<button class="btn btn-danger" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">DOWNLOAD ICAL</button>';
 		  	$("div.calendar-event__popover--left").attr("data-event-id", id);
 		  	$("div.calendar-event__popover--left").html(eventinfo);
 	  		$("div.calendar-event__popover--left").css({'left': position.left - 280 + 'px', 'top': position.top - 100 + 'px'});
@@ -230,7 +218,7 @@
 	  	if(event.extra_fields.highlight && event.extra_fields.highlight.value){
 		  	html.append('<p class="calendar-event__hour calendar-event__hour--highlight">'+ event.start.format("HH:mm") +'</p>');
 		    html.append('<a href="javascript:void(0);" class="calendar-event__title calendar-event__title--highlight" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
-	    	html.append('<img class="hidden-xs img-responsive" src="'+ event.thumb_url +'" />');
+	    	html.append('<div style="margin-left: -10px; margin-right: -10px;"><img class="hidden-xs img-responsive" src="'+ event.thumb_url +'" /></div>');
 	  	}else{
 		  	html.append('<p class="calendar-event__hour calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
 		    html.append('<a href="javascript:void(0);" class="calendar-event__title" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');

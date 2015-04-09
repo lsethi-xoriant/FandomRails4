@@ -1,0 +1,13 @@
+.btn-event, .btn-event:hover{
+  margin: 10px auto;
+  text-transform: uppercase;
+  background-color: $lightblue;
+  border-color: $lightblue;
+  color: white;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  font-size: 14px;
+  display: block;
+  width: 85%;
+}
