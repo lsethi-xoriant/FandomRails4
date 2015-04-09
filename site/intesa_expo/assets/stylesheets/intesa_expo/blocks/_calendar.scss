@@ -1,10 +1,16 @@
 /* CALENDAR */
 
 .calendar-event__empty-title {
-  font-size: 22px;
+  font-size: 14px;
   color: #fff;
   padding-top: 25px;
   padding-bottom: 25px;
+}
+
+.calendar-event__header{
+  min-height: 390px;
+  padding-top:25px;
+  padding-bottom:20px;
 }
 
 .calendar-event{
@@ -29,7 +35,6 @@
 }
 
 .calendar-event__agenda{
-  margin-top: 20px;
   margin-bottom: -10px;
 }
 

@@ -31,7 +31,7 @@
 	<% else %>
 	<div class="container-fluid__blue">
 	  <div class="container main-container">
-		<div class="row">
+		<div class="row calendar-event__header">
 			<div class="col-xs-12 col-sm-8 col-sm-offset-2">
 				<div class="row">
 					<div class="col-xs-8 col-xs-offset-2">
@@ -92,7 +92,7 @@
 <div class="<%= $context_root == 'imprese' ? "container-fluid__blue" : "container-fluid__white" %>">
 	<div class="container main-container" >	
 		<div class="row">
-		     <div class="col-md-12" style="padding-top: 15px;">
+		     <div class="col-md-12" style="padding-top: 25px;">
 		     	<p class="text-center" style="margin-bottom: -20px;">Calendario Mensile</p>
 				<div id="full-calendar" class="hidden-xs"></div> <!-- /#full-calendar -->   
 	        	<div id="widget-calendar" class="visible-xs"></div>          
@@ -105,7 +105,7 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12 text-center">
-				<a class="btn btn-primary btn-backtotop" href="#" style="margin: 10px 0;"><i class="fa fa-chevron-up"></i></a>
+				<a class="btn btn-primary btn-backtotop" href="javascript:$('html, body').animate({scrollTop: $('#full-calendar').offset().top-50}, 500);" style="margin: 10px 0;"><i class="fa fa-chevron-up"></i></a>
 			</div>
 		</div>
 	</div>
@@ -154,10 +154,9 @@
 	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive calendar-event__popover__image" />';
 	  	eventinfo += '<p class="calendar-event__popover__description">'+ selected_event.extra_fields.subtitle +'</p>';
 	  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a></div>';
-	  	position = $(elem).offset();
 	  	eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
 	  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
-	  	eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
+	  	//eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
 	  	eventinfo += '<p class="calendar-event__popover__extra-info">';
 	  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("D MMMM YYYY");
 	  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.start.format("H:mm");
@@ -166,6 +165,7 @@
 	  	eventinfo += '<hr />';
 	  	eventinfo += '<a class="btn btn-event" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
 	  	eventinfo += '<button class="btn btn-event" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">AGGIUNGI AL CALENDARIO</button>';
+	  	position = $(elem).offset();
 	  	if(position.left-250 < 0){
 		  	$("div.calendar-event__popover--right").attr("data-event-id", id);
 		  	$("div.calendar-event__popover--right").html(eventinfo);

@@ -46,9 +46,11 @@
   </div>
   
   <div class="container-fluid stripe-container stripe-darkwhite">
-  	<div class="row">
-	  	<div class="col-xs-12 navbar__search">
-		  	<%= render partial: "/application/search", locals: { query: (defined? @query).nil? ? nil : @query } %>
+  	<div class="container main-container">
+	  	<div class="row">
+		  	<div class="col-xs-12 navbar__search">
+			  	<%= render partial: "/application/search", locals: { query: (defined? @query).nil? ? nil : @query } %>
+			</div>
 		</div>
 	</div>
   </div>

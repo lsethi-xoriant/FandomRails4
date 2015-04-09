@@ -140,7 +140,7 @@
   font-size: 24px;
 }
 
-.content-preview__title {
+.content-preview__title, .content-preview__title--press {
   font-size: 16px;
   text-align: left;
   margin-top: 5px;
@@ -160,20 +160,20 @@
   margin-bottom: 15px;
 }
 
+
 .content-preview__title--press {
-  font-size: 14px;
-  color: $lightblue !important;
+  margin-bottom: 10px;
 }
 
 .content-preview__author {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
   color: $lightblue !important;
   padding-top: 5px;
 }
 
 .content-preview__newspaper {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
   color: #444;
 }
@@ -262,7 +262,7 @@
   color: #333333 !important;
   text-align: left;
   padding: 0 10px;
-  font-size: 11px;
+  font-size: 12px;
   .fa {
     color: $lightblue;
     margin-right: 5px;
