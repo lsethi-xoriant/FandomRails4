@@ -2179,10 +2179,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
     return monthNames[n];
   };
+  
+  $scope.computeDayName = function(n, language) {
+    if(language == "en") {
+      dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wensday', 'Thursday', 'Friday', 'Saturday'];
+    } else {
+      dayNames = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
+    }
+    return dayNames[n];
+  };
 
   $scope.formatDate = function(date, language) {
     date = new Date(date);
     return date.getDate() + " " + $scope.computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
+  };
+  
+  $scope.formatFullDate = function(date, language) {
+    date = new Date(date);
+    return $scope.computeDayName(date.getDay(), language) + " " + date.getDate() + " " + $scope.computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
   };
 
   $scope.extractTimeFromDate = function(date) {
