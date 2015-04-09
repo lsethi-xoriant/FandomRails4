@@ -189,7 +189,7 @@
         right: 'next'
       },
       defaultDate: "<%= @today.strftime("%Y-%m-%d") %>",
-      lang: "<%= get_intesa_property %>",
+      lang: "<%= get_intesa_property == 'imprese' ? 'it' : get_intesa_property %>",
       dayClick: function(date, jsEvent, view ) {
         window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
       },
