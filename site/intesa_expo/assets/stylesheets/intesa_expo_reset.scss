@@ -352,6 +352,14 @@ p {
 }
 
 @media (max-width: $screen-sm-min) { 
+  .stripe-contents {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .ctas__flexslider__container { 
+    padding: 0 !important;
+  }
 
   .browse-sections {
     #widget-calendar {
