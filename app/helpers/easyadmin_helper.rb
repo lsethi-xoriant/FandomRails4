@@ -217,7 +217,7 @@ module EasyadminHelper
           param[:extra_fields][extra_field_name] = { "type" => "html", "value" => extra_field_value[:value] }
         elsif extra_field_value[:type] == "date"
           param[:extra_fields][extra_field_name] = { "type" => "date", "value" => extra_field_value[:value] }
-        elsif extra_field_value[:type] == "boolean"
+        elsif (extra_field_value[:type] == "bool" || extra_field_value[:type] =="boolean")
           param[:extra_fields][extra_field_name] = { "type" => "bool", "value" => extra_field_value[:value] == "true" }
         else # it's not a string
           if extra_field_value[:value].present?

@@ -28,6 +28,19 @@ body {
   background-color: #fff;
 }
 
+.widget-calendar__title-container {
+  padding: 5px;
+  background-color: $darkblue;
+}
+
+.widget-calendar__title {
+  font-family: 'Gnuolane';
+  color: $lightblue;
+  text-transform: uppercase;
+  font-size: 22px;
+  border-bottom: 1px solid $lightblue;
+}
+
 .ctas__flexslider__container {
     padding-left: 15px !important; 
     padding-right: 5px !important;
@@ -205,6 +218,10 @@ p {
     color: #fff;
   }
 
+  .fc-toolbar {
+    margin-bottom: 5px !important;
+  }
+
   .fc-other-month, .fc-widget-header {
     opacity: 1;
     color: #99a9b6;
@@ -251,7 +268,7 @@ p {
     cursor: pointer;
   }
 
-  .fc-state-highlight, .fc-day-number:hover {
+  .fc-state-highlight {
     background-color: $orange;
   }
 
@@ -370,10 +387,23 @@ p {
 }
 
 
-@media (max-width: $screen-xs) {
+@media (min-width: $screen-sm-min) {
+  #widget-calendar {
+    .fc-day-number:hover {
+      background-color: $orange;
+    }
+  }
 }
 
 @media (max-width: $screen-sm-min) { 
+  .stripe-contents {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .ctas__flexslider__container { 
+    padding: 0 !important;
+  }
 
   .browse-sections {
     #widget-calendar {

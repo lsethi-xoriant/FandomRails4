@@ -3,7 +3,7 @@
 	<div class="col-sm-12 text-center">
 	  <h2 class="stripe__title">{{stripe.title}} <a ng-href="{{stripe.view_all_link}}" class="view-all-link" ng-if="stripe.has_view_all && stripe.extra_fields.view_all && stripe.extra_fields.view_all.value">Vedi tutti</a></h2>
 	</div>
-    <div class="col-xs-12" ng-repeat="contents in [stripe.contents]">
+    <div class="col-xs-12 stripe-contents" ng-repeat="contents in [stripe.contents]">
 	    <%= render partial: "/application/content_carousel" %>
 	</div>
 </div>

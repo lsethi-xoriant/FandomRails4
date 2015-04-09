@@ -188,6 +188,7 @@ function buildValueElement(elementId, selectedType) {
   oldElement = $("#" + elementId);
   oldElementName = oldElement.attr("name");
   oldElementValue = oldElement.val();
+  inputClass = "form-control";
 
   if(selectedType == "html") {
     newElement = jQuery('<textarea/>', {
@@ -209,14 +210,16 @@ function buildValueElement(elementId, selectedType) {
       type = "text";
     if(selectedType == "media")
       type = "file";
-    if(selectedType == "boolean")
+    if(selectedType == "boolean") {
       type = "checkbox";
+      inputClass = "";
+    }
 
     newElement = jQuery('<input/>', {
       type: type,
       id: elementId,
       name: oldElementName,
-      class: 'form-control',
+      class: inputClass,
       change: function() { 
         removeImage($(this), elementId.substr(elementId.indexOf("value-for-") + 10, elementId.indexOf("-field-") - 10)); 
       }
@@ -305,6 +308,7 @@ function populateTextboxWithJsonField(json_field, formName, modelName, fieldName
       $('#type-for-' + fieldName + '-field-' + index).val('boolean');
       valueElement.attr('type', 'checkbox');
       valueElement.attr('checked', value.value == true);
+      valueElement.attr('class', '');
       valueElement.val(value.value);
       valueElement.change(function() {
           valueElement.val(valueElement.prop('checked'));

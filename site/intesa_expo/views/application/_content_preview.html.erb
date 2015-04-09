@@ -14,7 +14,7 @@
 
           <div class="content-preview__icon-container" ng-if="content.media_type != 'VOID' && !getFirstIcalInteractionForContent(content)">
           	<i class="fa fa-picture-o content-preview__icon" ng-if="content.media_type == 'IMAGE' || hasPhotoGallery(content)"></i>
-          	<i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == 'KALTURA' || content.media_type == 'YOUTUBE' || content.media_type == 'FLOWPLAYER'"></i> 
+          	<i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == 'YOUTUBE'"></i> 
           </div>
 
         </div>
@@ -22,11 +22,32 @@
         <p class="content-preview__title">{{content.title | cut:true:70}}</p>
       </div>
     </div>
+
     <div class="content-preview__event-info-container" ng-if="getFirstIcalInteractionForContent(content)">
       <p class="content-preview__event-info"><i class="fa fa-clock-o"></i>{{getFirstIcalInteractionForContent(content)[2]}}</p>
       <p class="content-preview__event-info"><i class="fa fa-user"></i>{{content.extra_fields.guests}}</p>
     </div>
+
+    <div class="content-preview__event-info-container" ng-if="content.extra_fields.author_avatar && !getFirstIcalInteractionForContent(content)">
+      <img class="content-preview__event-info-container__author_avatar" ng-src="{{content.extra_fields.author_avatar.url}}">      
+    </div>
+
   </div>
+<<<<<<< HEAD
+=======
+
+  <div class="content-preview__item-panel" ng-if="content.type == 'tag' && content.layout == 'default'">
+	  <div class="row">
+      <div class="col-xs-12 text-center">
+        <div class="content-preview__thumbnail">
+          <img class="img-responsive content-preview__image" ng-src="{{content.thumb_url}}"> 
+        </div>
+        <p class="content-preview__title content-preview__title--tag">{{content.title | cut:true:70}}</p>
+      </div>
+    </div> 
+  </div>
+
+>>>>>>> origin/master
 </a>
 
 <a target="_blank" href="{{content.extra_fields.author_url}}" ng-if="content.layout == 'press'"> 
