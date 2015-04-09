@@ -83,7 +83,7 @@ module IntesaExpoHelper
 
     menu_items, assets = cache_medium("layout_info_#{$context_root}") do
       menu_items = get_menu_items()
-      layout_assets_tag = Tag.find_by_name('assets')
+      layout_assets_tag = get_tag_from_params('assets')
       if layout_assets_tag.nil?
         extra_fields = {}
       else

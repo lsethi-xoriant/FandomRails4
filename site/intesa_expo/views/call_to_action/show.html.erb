@@ -10,10 +10,10 @@
   </div>
 </div>
 
-<div class="container main-container" nf-if="calltoaction_info.calltoaction.extra_fields.interview_banner_title">
+<div class="container-fluid" nf-if="calltoaction_info.calltoaction.extra_fields.interview_banner_img">
   <div class="row">
-    <div class="col-sm-12">
-      <p>{{calltoaction_info.calltoaction.extra_fields.interview_banner_title}}</p>
+    <div class="col-sm-12 interview_banner_col">
+      <!--<p>{{calltoaction_info.calltoaction.extra_fields.interview_banner_title}}</p>-->
       <img ng-src="{{calltoaction_info.calltoaction.extra_fields.interview_banner_img.url}}">
     </div>
   </div>
