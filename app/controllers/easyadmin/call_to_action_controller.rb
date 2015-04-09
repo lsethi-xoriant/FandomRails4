@@ -361,10 +361,10 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       user_ids = User.where(user_where_conditions).pluck(:id) unless user_where_conditions.nil?
       where_conditions << " AND user_id IN (#{user_ids.join(', ')})" if user_ids
     end
-    @ctas = CallToAction.where(where_conditions).page(page).per(per_page).order("activated_at DESC NULLS LAST")
+    @ctas = CallToAction.where(where_conditions).page(page).per(per_page).order("activated_at ASC NULLS LAST")
 
     if params[:commit] == "RESET"
-      @title_filter = @slug_filter = @tag_list = @username_filter = @email_filter = nil
+      @title_filter = @slug_filter = params[:tag_list] = @username_filter = @email_filter = nil
     end
 
     @page_size = @ctas.num_pages
