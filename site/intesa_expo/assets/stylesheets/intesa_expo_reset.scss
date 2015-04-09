@@ -37,8 +37,8 @@ body {
 
 .view-all-link{
   float: right;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 17px;
+  line-height: 30px;
   color: $lightblue;
   text-transform: lowercase;
 }
@@ -84,6 +84,12 @@ body {
   
   .category-header__title{
     color: white;
+  }
+}
+
+.stripe-blue {
+  .stripe__title {
+    color: #fff !important;
   }
 }
 

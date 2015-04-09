@@ -155,6 +155,7 @@ Fandom::Application.routes.draw do
         match "/calendar/:day", :to => "calendar#index"
         match "/calendar/fetch/events", :to => "calendar#fetch_events"
         match "/browse/category/:id", :to => "browse#intesa_index_category"
+        match "/browse/view_all/:id", :to => "browse#intesa_index_category"
       end
     end
   end

@@ -23,6 +23,7 @@ module ApplicationHelper
     attr_accessor :total
     attr_accessor :per_page
     attr_accessor :extra_fields
+    attr_accessor :has_view_all
     
     def initialize(params)
       @key = params[:key]
@@ -34,6 +35,7 @@ module ApplicationHelper
       @total = params[:total]
       @per_page = params[:per_page]
       @extra_fields = params[:extra_fields]
+      @has_view_all = params[:has_view_all]
     end
     
   end
@@ -1600,7 +1602,7 @@ module ApplicationHelper
   def get_ical_events(cta_ids)
     ical_events = []
     if cta_ids.any?
-      Download.includes(:interaction => :call_to_action).where("interactions.call_to_action_id IN (?) AND downloads.ical_fields is not null", cta_ids).each do |cal|
+      Download.includes(:interaction => :call_to_action).where("interactions.call_to_action_id IN (?) AND interactions.when_show_interaction <> 'MAI_VISIBILE' AND downloads.ical_fields is not null", cta_ids).each do |cal|
         ical_events << {
           cta: cal.interaction.call_to_action, 
           start_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['start_datetime']['value']),

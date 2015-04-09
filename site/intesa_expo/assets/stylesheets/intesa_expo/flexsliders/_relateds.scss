@@ -59,7 +59,6 @@
 }
 
 .relateds-flexslider__img--narrow {
-  height: 190px;
 }
 
 .relateds-flexslider__number--narrow {
@@ -84,8 +83,15 @@
   color: #fff;
 }
 
-.relateds-flexslider__text-container--narrow {
+.relateds-flexslider__text-row--narrow {
   min-height: 95px;
+}
+
+.relateds-flexslider__text-container--narrow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .relateds-flexslider__item-title--narrow {

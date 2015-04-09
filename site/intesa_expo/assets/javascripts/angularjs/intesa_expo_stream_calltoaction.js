@@ -19,11 +19,11 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       $scope.menu_field = "";
 
       if($scope.calltoaction_info.calltoaction.extra_fields) {
-        contents = $scope.getContentWithPrefixFromExtraFields($scope.calltoaction_info.calltoaction.extra_fields, "content_")
+        contents = $scope.getContentWithPrefixFromExtraFields($scope.calltoaction_info.calltoaction.extra_fields, "content_");
         if(contents.length > 0) {
           $scope.calltoaction_info.calltoaction.contents = contents;
         }
-        gallery = $scope.getContentWithPrefixFromExtraFields($scope.calltoaction_info.calltoaction.extra_fields, "photo_gallery_")
+        gallery = $scope.getContentWithPrefixFromExtraFields($scope.calltoaction_info.calltoaction.extra_fields, "photo_gallery_");
         if(gallery.length > 0) {
           $scope.calltoaction_info.calltoaction.gallery = gallery;
         }
@@ -38,7 +38,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
 
   $scope.hasPhotoGallery = function(calltoaction) {
     return ($scope.getContentWithPrefixFromExtraFields(calltoaction.extra_fields, "photo_gallery_").length > 0);
-  }
+  };
 
   $scope.getContentWithPrefixFromExtraFields = function(extra_fields, prefix) {
     contents = [];
@@ -147,7 +147,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       today_date = new Date();
       return (valid_from < today_date);
     }
-  }
+  };
 
   $scope.linkToValidFrom = function(content) {
     if($scope.isContentValid(content)) {
@@ -155,7 +155,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     } else {
       return "";
     }
-  }
+  };
 
   $scope.linkTo = function(url, stripe_name) {
     if(angular.isUndefined(stripe_name)) {
