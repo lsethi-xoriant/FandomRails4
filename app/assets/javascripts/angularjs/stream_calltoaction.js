@@ -2182,7 +2182,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   
   $scope.computeDayName = function(n, language) {
     if(language == "en") {
-      dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wensday', 'Thursday', 'Friday', 'Saturday'];
+      dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     } else {
       dayNames = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
     }
