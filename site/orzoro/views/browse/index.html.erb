@@ -23,7 +23,7 @@
 
 		    <div class="col-xs-12" ng-repeat="contents in [section.contents]">
 			    <%= render partial: "/application/content_carousel" %>
-			    <div calss="row text-center" ng-if="section.total > section.per_page">
+			    <div calss="row text-center" ng-if="section.has_view_all">
 			    	<div class="col-sm-2 col-sm-offset-5 col-xs-4 col-xs-offset-4">
 				    	<%= light_link_to("{{section.view_all_link}}", class: "btn btn-block btn-red") do %>
 				    		Vedi tutti
