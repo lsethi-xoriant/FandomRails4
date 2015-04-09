@@ -69,7 +69,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       number = "0" + number;
     }
     return number.slice(-(zero_length + 1));
-  }
+  };
 
   /*
   <form>
@@ -88,7 +88,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   */
   $scope.upload = function (files, url, extra_fields) {
     delete $scope.form_data.errors;
-    $scope.form_data.errors = getFormUploadErrors(files, extra_fields)
+    $scope.form_data.errors = getFormUploadErrors(files, extra_fields);
     if(!$scope.form_data.errors) {
       $upload.upload({
           url: url,
@@ -115,13 +115,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             $scope.form_data.errors = status;
           }
           delete $scope.form_data.progress;
-        })
+        });
       }
   };
 
   function getFormUploadErrors(files, extra_fields) {
     
-    errors = []
+    errors = [];
 
     angular.forEach(extra_fields, function(extra_field) {
       if(extra_field['required'] && !$scope.form_data[extra_field['name']]) {
@@ -165,7 +165,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             $timeout(function() {
               file.dataUrl = e.target.result;
             });
-          }
+          };
         });
       }
     }
@@ -347,7 +347,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   			}, 1500);
 
   			setTimeout(function(){
-          $(".call-to-action__mobile-description").html(data.calltoaction_info_list[0].calltoaction.description)
+          $(".call-to-action__mobile-description").html(data.calltoaction_info_list[0].calltoaction.description);
   				$(".cta-media img.hidden-xs").attr("src", data.calltoaction_info_list[0].calltoaction.media_image);
   				$(".cta-media img.mobile").attr("src", data.calltoaction_info_list[0].calltoaction.thumbnail_url);
   				$(".loader").addClass("hidden");
@@ -610,7 +610,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       && interaction_info.interaction.resource_type != 'vote'
       && interaction_info.interaction.resource_type != 'download'
     );
-  }
+  };
 
 
   // Build an array from min to max for AngularJS ng-repeat
@@ -620,7 +620,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       result.push(i);
     }
     return result;
-  }
+  };
 
   $scope.getVoteInteraction = function(calltoaction_id) {
     return getInteraction(calltoaction_id, "vote");
@@ -678,7 +678,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       return null;
     }
-  }
+  };
 
   $scope.likePressed = function(interaction_info) {
     if(interaction_info.user_interaction) {
@@ -768,10 +768,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       anonymous_user_storage.user_interaction_info_list = new Object();
     }
 
-    anonymous_user_storage.user_interaction_info_list[user_interaction.interaction_id] = user_interaction
+    anonymous_user_storage.user_interaction_info_list[user_interaction.interaction_id] = user_interaction;
     localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user_storage));
 
-  }
+  };
 
   function initAnonymousUserStorage() {
     anonymous_user_storage = new Object();
@@ -789,7 +789,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(!$scope.current_user && $scope.aux.anonymous_interaction) {
       $scope.updateCallToActionInfoWithAnonymousUserStorage();
     }
-  }
+  };
 
 
   function clearAnonymousUserStorage() {
@@ -933,7 +933,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     other_params = $scope.updateOrderingOtherParams();
 
-    ordering_ctas = "/ordering_ctas"
+    ordering_ctas = "/ordering_ctas";
     if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
       ordering_ctas = "/" + $scope.aux.current_property_info.path + "" + ordering_ctas;
     }
@@ -965,7 +965,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $("#append-other button").attr('disabled', true);
       $scope.append_ctas_in_progress = true;
 
-      append_calltoaction_path = "/append_calltoaction"
+      append_calltoaction_path = "/append_calltoaction";
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
         append_calltoaction_path = "/" + $scope.aux.current_property_info.path + "" + append_calltoaction_path;
       }
@@ -1760,7 +1760,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }     
 
       $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
-      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide"
+      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
       $timeout(function() { 
         $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
       }, 200);
