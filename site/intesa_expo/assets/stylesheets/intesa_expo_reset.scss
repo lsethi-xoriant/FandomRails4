@@ -19,10 +19,6 @@ h1, h2,
   font-family: 'Gnuolane';
 }
 
-h2{
-  font-size: 22px;
-}
-
 body {
   padding-top: 0;
   background-color: #fff;
@@ -149,8 +145,12 @@ p {
     color: #fff;
   }
   
-  h1, h2, h3{
+  h1.calendar-event__stripe-title, h2.calendar-event__stripe-subtitle {
     color: white;
+  }
+  
+  h2.calendar-event__stripe-subtitle{
+    font-size: 22px;
   }
   
   p{
