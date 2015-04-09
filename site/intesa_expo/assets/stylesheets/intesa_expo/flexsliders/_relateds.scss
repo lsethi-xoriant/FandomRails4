@@ -15,6 +15,7 @@
   .slides {
     padding-top: 10px;
     padding-bottom: 10px;
+    padding-left: 10px;
   }
 }
 
@@ -195,6 +196,14 @@
   .relateds-flexslider__item-panel {
     min-height: 271px;
     height: auto;
+  }
+
+  .relateds-flexslider, .relateds-flexslider--narrow {
+    .slides {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 0;
+    }
   }
 
   .relateds-flexslider {

@@ -130,6 +130,12 @@ p {
   padding-right: 43px;
 }
 
+.browse-sections {
+  .main-row {
+    padding-left: 33px;
+  }
+}
+
 .stripe__title {
   color: $lightblue;
 }
@@ -423,7 +429,7 @@ p {
     display: none !important;
   }
 
-  .main-row, .main-row__evidence {
+  .main-row, .main-row__evidence, .browse-sections .main-row {
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
