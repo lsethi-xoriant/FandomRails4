@@ -28,7 +28,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         "gallery_stripe" => home_stripes["gallery_stripe"],
         "interview_stripe" => home_stripes["interview_stripe"],
         "story_stripe" => home_stripes["story_stripe"],
-        "enterprise-in-evidence_stripe" => home_stripes["enterprise-in-evidence_stripe"],
+        "article_stripe" => home_stripes["article_stripe"],
         page_tag: {
           miniformat: {
             name: "imprese-home"

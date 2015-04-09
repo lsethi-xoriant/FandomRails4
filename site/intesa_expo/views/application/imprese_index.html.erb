@@ -27,10 +27,10 @@
 </div>
 
 <div class="stripe-container stripe-blue">
-  <div class="container" ng-if="aux['enterprise-in-evidence']['contents']">
+  <div class="container" ng-if="aux['article_stripe']['contents']">
     <div class="row">
       <div class="col-sm-12">
-        <div class="browse-sections" ng-repeat="stripe in [aux['enterprise-in-evidence']]">
+        <div class="browse-sections" ng-repeat="stripe in [aux['article_stripe']]">
           <%= render partial: "/application/stripe" %>
         </div>
       </div>
