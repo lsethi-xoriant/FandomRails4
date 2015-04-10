@@ -305,3 +305,15 @@
   }
   
 }
+
+@media(max-width: $screen-sm-min){
+  
+  .calendar-event__header{
+    min-height: 0;
+  }
+  
+  .calendar-event__agenda-arrow{
+    line-height: 88px;
+  }
+  
+}
