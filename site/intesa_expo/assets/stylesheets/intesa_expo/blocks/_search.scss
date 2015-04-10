@@ -39,6 +39,7 @@
   background-size: 32px auto;
   height: 46px !important;
   font-size: 18px;
+  color: $lightblue;
 }
 
 .search-bar__button {
@@ -53,7 +54,7 @@
   color: rgb(214, 33, 48);
 }
 
-@media (max-width: $screen-sm-min) { 
+@media (max-width: $screen-sm-min) {
   .search-bar__input {
   }
   
