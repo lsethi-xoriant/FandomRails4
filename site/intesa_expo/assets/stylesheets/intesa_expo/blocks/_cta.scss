@@ -276,7 +276,7 @@
 .cta__video-img--about {
   width: 105px; 
   float: left; 
-  margin: 30px 15px;
+  margin: 30px 15px 0 15px;
   border: 2px solid #fff;
 }
 
@@ -479,6 +479,18 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .cta__extra-content__container-fluid--about {
+    padding: 15px !important;
+  }
+
+  .cta__extra-content__description--about-v2 {
+    margin-bottom: 25px;
+  }
+
+  .media-youtube-col {
+    padding: 0 !important;
+  }
+
   .cta__miniformat-col {
     margin-bottom: 15px;
   }
