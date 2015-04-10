@@ -23,6 +23,11 @@ h1, h2,
   font-family: 'Gnuolane';
 }
 
+.cta__extra_fields__hr {
+  border-color: $lightblue;
+  margin: 15px -25px;
+}
+
 .ctas__flexslider__title {
   line-height: 30px;
 }
@@ -406,6 +411,10 @@ p {
 @media (min-width: $screen-sm-min) {
   .custom-bt-browse-sections {
     margin-left: 10px;
+    margin-bottom: 30px;
+    .stripe__title {
+      margin-bottom: 30px;
+    }
   }
 
   #widget-calendar {

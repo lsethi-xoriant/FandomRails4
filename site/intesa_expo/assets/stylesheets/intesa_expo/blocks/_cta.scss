@@ -90,10 +90,14 @@
   border-right: 1px solid #eee;
 }
 
+.cta__extra_fields__info {
+  position: relative;
+}
+
 .cta__extra_fields {
   margin-top: 15px;
   background-color: $blue;
-  padding: 25px;
+  padding: 15px 25px;
   color: #fff;
 }
 
@@ -102,28 +106,19 @@
   font-family: 'Gnuolane';
 }
 
-.cta__related__icon-container{
-  position: absolute;
-  top: 0;
-  left: 15px;
-  background-color: $orange;
-  padding: 4px;
-}
-
-.cta__related__icon{
-  color: #fff;
-  font-size: 24px;
-}
-
 .cta__related__right-bar {
-  .cta__related__icon {
+  .content-preview__icon{
+    color: #fff;
     font-size: 18px;
     line-height: 30px;
   }
-  .cta__related__icon-container {
-    width: 30px;
-    height: 30px;
-    padding: 0;
+  .content-preview__icon-container {
+    width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    position: absolute;
+    top: 0;
+    left: 15px;
   } 
 }
 
