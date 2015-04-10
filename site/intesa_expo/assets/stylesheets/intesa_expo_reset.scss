@@ -19,6 +19,10 @@ h1, h2,
   font-family: 'Gnuolane';
 }
 
+.ctas__flexslider__title {
+  line-height: 30px;
+}
+
 body {
   padding-top: 0;
   background-color: #fff;
@@ -171,6 +175,9 @@ p {
 .stripe-container {
   background-image: url("intesa_expo/texture.png");
   background-color: #fff;
+  //border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid;
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
 .stripe-darkwhite {

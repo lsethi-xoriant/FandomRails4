@@ -217,7 +217,7 @@
 }
 
 .cta__description {
-  font-size: 16px;
+  font-size: 18px;
   margin-bottom: 0;
 }
 
@@ -274,6 +274,10 @@
   background: $darkblue;
   background-image: url("intesa_expo/texture.png");
   border-bottom: 1px solid $darkblue;
+}
+
+.cta__video-col--about:hover {
+  background: $lightblue;
 }
 
 .cta__video-col--about.active {
@@ -359,9 +363,22 @@
 
 .cta__banner_1--about {
   width: 100%;
-  background: $bluealpha;
+  //background: $bluealpha;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.cta__banner-1-bg {
+  background: $blue;
+  background-image: url("intesa_expo/texture.png");
   margin-top: 15px;
   margin-bottom: 15px;
+  padding: 15px;
+}
+
+.cta__banner-btn {
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
 }
 
 .cta__description--about, .cta__description--about-v2 {

@@ -6,9 +6,10 @@
         <h2 class="cta__description--about" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
       </div>
       <div class="col-sm-4">
-        <a href="{{calltoaction_info.calltoaction.extra_fields.banner_1_url}}">
+        <div class="cta__banner-1-bg">
           <img class="cta__banner_1--about" ng-src="{{calltoaction_info.calltoaction.extra_fields.banner_1_img.url}}">
-        </a>
+          <a href="{{calltoaction_info.calltoaction.extra_fields.banner_1_url}}" class="btn btn-about-v2 cta__banner-btn btn-block">{{calltoaction_info.calltoaction.extra_fields.banner_1_btn}}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -50,7 +51,7 @@
     <div class="col-sm-12 text-center">
       <div class="btn-group blocks">
         <button id="intesa-button" class="btn btn-about active" onclick="showContent('intesa')">Noi ci siamo</button>
-        <button id="expo-button" class="btn btn-about" onclick="showContent('expo')">EXPO Milano 2015O</button>
+        <button id="expo-button" class="btn btn-about" onclick="showContent('expo')">EXPO Milano 2015</button>
       </div>
     </div>
   </div>

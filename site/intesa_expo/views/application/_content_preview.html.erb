@@ -12,7 +12,7 @@
             <p class="container-preview__icon-container__month">{{getFirstIcalInteractionForContent(content)[0]}}</p>
           </div>
 
-          <div class="content-preview__icon-container" ng-if="content.media_type != 'VOID' && !getFirstIcalInteractionForContent(content)">
+          <div class="content-preview__icon-container" ng-if="!getFirstIcalInteractionForContent(content)">
           	<i class="fa fa-picture-o content-preview__icon" ng-if="content.media_type == 'IMAGE' || hasPhotoGallery(content)"></i>
           	<i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == 'YOUTUBE'"></i> 
           </div>
