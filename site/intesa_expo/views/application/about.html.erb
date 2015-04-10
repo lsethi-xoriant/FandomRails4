@@ -19,7 +19,7 @@
   <div class="container container--blue">
     <div class="row main-row">
       <div class="col-sm-12 text-center">
-        <p class="cta__video-title--about">Guarda i video della partnership</p>
+        <p class="cta__video-title--about">{{calltoaction_info.calltoaction.extra_fields.media_title}}</p>
       </div>
 
       <div class="col-sm-8 media-youtube-col">
@@ -50,8 +50,8 @@
   <div class="row main-row">
     <div class="col-sm-12 text-center">
       <div class="btn-group blocks">
-        <button id="intesa-button" class="btn btn-about active" onclick="showContent('intesa')">Noi ci siamo</button>
-        <button id="expo-button" class="btn btn-about" onclick="showContent('expo')">EXPO Milano 2015</button>
+        <button id="intesa-button" class="btn btn-about active" onclick="showContent('intesa')">{{calltoaction_info.calltoaction.extra_fields.btn_1}}</button>
+        <button id="expo-button" class="btn btn-about" onclick="showContent('expo')">{{calltoaction_info.calltoaction.extra_fields.btn_2}}</button>
       </div>
     </div>
   </div>
