@@ -354,7 +354,6 @@ module BrowseHelper
 
     elements.each do |element|
       if element.class.name == "CallToAction"
-        element_interactions1 = interactions[element.id]
         element_interactions = get_interactions_from_cta_to_interaction_map(interactions, element.id)
         contents << cta_to_content_preview(element, true, element_interactions)
       else
