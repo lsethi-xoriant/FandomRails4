@@ -20,6 +20,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     today = DateTime.now.utc
     if params[:day]
       today = DateTime.parse(params[:day]).utc
+      @day_selected = params[:day] 
     end
     
     month_calendar = initialize_calendar(today)

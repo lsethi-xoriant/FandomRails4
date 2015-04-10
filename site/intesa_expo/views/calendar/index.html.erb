@@ -28,6 +28,12 @@
 		</div>
 	  </div>
 	</div>
+	
+	<div class="stripe-container stripe-blue" ng-style="{'background-color': aux.expo_events.extra_fields.background_color}">
+  	  <div class="container main-container">
+		<img class="img-responsive" src="http://placehold.it/1024x200/ebebeb/000000&text=Scopri%20gli%20eventi%20di%20Expo" />
+	  </div>
+	</div>
 	<% else %>
 	<div class="container-fluid__blue">
 	  <div class="container main-container">
@@ -88,29 +94,30 @@
 	  	</div>
 	  </div>
 	</div>
-	<% end %>
-<div class="<%= $context_root == 'imprese' ? "container-fluid__blue" : "container-fluid__white" %>">
-	<div class="container main-container" >	
-		<div class="row">
-		     <div class="col-md-12" style="padding-top: 25px;">
-		     	<p class="text-center" style="margin-bottom: -20px;">Calendario Mensile</p>
-				<div id="full-calendar" class="hidden-xs"></div> <!-- /#full-calendar -->   
-	        	<div id="widget-calendar" class="visible-xs"></div>          
+	
+	<div class="container-fluid__white">
+		<div class="container main-container" >	
+			<div class="row">
+			     <div class="col-md-12" style="padding-top: 25px;">
+			     	<p class="text-center" style="margin-bottom: -20px;">Calendario Mensile</p>
+					<div id="full-calendar" class="hidden-xs"></div> <!-- /#full-calendar -->   
+		        	<div id="widget-calendar" class="visible-xs"></div>          
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-12 text-center">
-				<p class="small">{{aux.assets['calendar_message_' + aux.language]}}</p>
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					<p class="small">{{aux.assets['calendar_message_' + aux.language]}}</p>
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-12 text-center">
-				<a class="btn btn-primary btn-backtotop" href="javascript:$('html, body').animate({scrollTop: $('#full-calendar').offset().top-50}, 500);" style="margin: 10px 0;"><i class="fa fa-chevron-up"></i></a>
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					<a class="btn btn-primary btn-backtotop" href="javascript:$('html, body').animate({scrollTop: $('#full-calendar').offset().top-50}, 500);" style="margin: 10px 0;"><i class="fa fa-chevron-up"></i></a>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
+	<% end %>
 
 <script type="text/javascript">
 
@@ -126,6 +133,13 @@
   	$('div.calendar-event__popover--right').mouseleave(function(){
   		$('div.calendar-event__popover').hide();
   	});
+  	
+  	<% if @day_selected && @day_selected != Time.now.strftime("%Y-%m-%d")%>
+  		console.log('<%= @day_selected %>');
+  		console.log($("td[data-date='<%= @day_selected %>']"));
+  		$("td[data-date='<%= @day_selected %>']").addClass("calendar-event__day-selected");
+  	<% end %>
+  	
   });
 
   function buildMobileCalendar() {
@@ -191,7 +205,7 @@
       defaultDate: "<%= @today.strftime("%Y-%m-%d") %>",
       lang: "<%= get_intesa_property == 'imprese' ? 'it' : get_intesa_property %>",
       dayClick: function(date, jsEvent, view ) {
-        window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
+        window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("YYYY-MM-DD");
       },
       editable: false,
       disableResizing: true,
@@ -215,13 +229,10 @@
 	  	today = moment().dayOfYear();
 
  		html = $('<div class="calendar-event"></div>');
+ 		html.append('<p class="calendar-event__hour calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
+	    html.append('<a href="javascript:void(0);" class="calendar-event__title" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
 	  	if(event.extra_fields.highlight && event.extra_fields.highlight.value){
-		  	html.append('<p class="calendar-event__hour calendar-event__hour--highlight">'+ event.start.format("HH:mm") +'</p>');
-		    html.append('<a href="javascript:void(0);" class="calendar-event__title calendar-event__title--highlight" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
 	    	html.append('<div style="margin-left: -10px; margin-right: -10px;"><img class="hidden-xs img-responsive" src="'+ event.thumb_url +'" /></div>');
-	  	}else{
-		  	html.append('<p class="calendar-event__hour calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
-		    html.append('<a href="javascript:void(0);" class="calendar-event__title" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
 	  	}
 	    return html;
 	  }

@@ -20,7 +20,7 @@
 
 .calendar-event--current-date{
   background-color: $orange;
-  .calendar-event__hour, .calendar-event__title, .calendar-event__title:hover {
+  .calendar-event__hour, .calendar-event__title {
     color: #fff;
   }
 }
@@ -167,7 +167,7 @@
   font-weight: bold;
 }
 
-.calendar-event__title, .calendar-event__title:hover{
+.calendar-event__title{
   color: #333333;
   text-decoration: none;
 }
@@ -200,6 +200,10 @@
   .fc-content-skeleton table td.fc-event-container,
   .fc-content-skeleton table td.fc-day-number{
     background-color: #fff !important;
+  }
+  
+  .fc-content-skeleton table td.fc-day-number.calendar-event__day-selected{
+    background-color: $blue !important;
   }
   
   .fc-center h2{
