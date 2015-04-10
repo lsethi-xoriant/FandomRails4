@@ -17,15 +17,19 @@
 <div class="container-fluid__lightblue">
   <div class="container container--lightblue"> 
     <div class="row main-row">
-      <div class="col-sm-12 text-center">
+      <div class="col-sm-4 text-center">
         <img class="footer__container__img-expo" ng-src="{{aux.assets.footer_expo_img.url}}">
       </div>
-      <div class="col-sm-12 text-center">
-        <p class="footer__container__title-expo">{{aux.assets['footer_expo_title_' + aux.language]}}</p>
-      </div>
-      <div class="col-sm-8 col-sm-offset-2 text-center">
-        <p class="footer__container__description-expo" ng-bind-html="aux.assets['footer_expo_description_' + aux.language]"></p>
-        <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
+      <div class="col-sm-8">
+        <div class="row">
+          <div class="col-sm-12">
+            <p class="footer__container__title-expo">{{aux.assets['footer_expo_title_' + aux.language]}}</p>
+          </div>
+          <div class="col-sm-12">
+            <p class="footer__container__description-expo" ng-bind-html="aux.assets['footer_expo_description_' + aux.language]"></p>
+            <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

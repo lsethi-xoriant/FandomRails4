@@ -48,10 +48,13 @@
 
 .footer__container__img-expo {
   width: 100%;
-  max-width: 380px;
+  max-width: 280px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 30px;
+  border: 2px solid;
+  border-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
 }
 
 @media (max-width: $screen-sm-min) {

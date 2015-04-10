@@ -11,7 +11,8 @@ class CalendarController < ApplicationController
       end_date = ""
     end
 
-    cal = build_ical(start_date, end_date, interaction.call_to_action.title, ical_fields["subtitle"], ical_fields["location"])
+    subtitle = JSON.parse(interaction.call_to_action.extra_fields)["subtitle"]
+    cal = build_ical(start_date, end_date, interaction.call_to_action.title, subtitle, ical_fields["location"])
     render :text => cal.to_ical
   end
   

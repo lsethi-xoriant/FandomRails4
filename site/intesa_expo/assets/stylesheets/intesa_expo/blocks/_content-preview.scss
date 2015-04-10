@@ -259,11 +259,14 @@
   position: absolute;
   bottom: 5px;
   left: 2px;
+  right: 2px;
 }
 
 .content-preview__event-info-container__author_avatar {
   width: 30px; 
   margin-left: 5px;
+  margin-right: 5px;
+  float: left; 
 }
 
 .content-preview__event-info{
