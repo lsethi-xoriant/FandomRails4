@@ -90,7 +90,8 @@
                   </a>
                   &nbsp;
                   <%= link_to "Tagga", { :controller => "easyadmin", :action => "tag_cta", :id => c.id, 
-                    :page => request.path, :page_current => @page_current }, { :class => "btn btn-default btn-xs" } %>
+                    :page => "#{request.protocol}#{request.host_with_port}#{request.fullpath}" }, 
+                    { :class => "btn btn-default btn-xs" } %>
                 <% else %>
                   <p>aws transconding status: <%= @aws_transcoding_media_status %></p>
                 <% end %>           

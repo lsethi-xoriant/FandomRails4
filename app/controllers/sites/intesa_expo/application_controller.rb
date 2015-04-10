@@ -80,6 +80,12 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     @calltoaction_info_list = build_call_to_action_info_list([cta])
     complete_cta_for_show(cta)
 
+    @aux_other_params[:page_tag] = {
+      miniformat: {
+        name: "live"
+      }
+    }
+
     render template: "/call_to_action/show"
   end
 
@@ -90,6 +96,12 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     @calltoaction_info_list = build_call_to_action_info_list([cta])
 
     complete_cta_for_show(cta)
+
+    @aux_other_params[:page_tag] = {
+      miniformat: {
+        name: "about"
+      }
+    }
   end
 
   def complete_cta_for_show(calltoaction)

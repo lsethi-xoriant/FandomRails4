@@ -2,8 +2,8 @@
   <%= render partial: "/application/imprese_evidence_ctas" %>
 </div>
 
-<div class="stripe-container stripe-blue">
-  <div class="container" ng-if="aux.story_stripe.contents">
+<div class="stripe-container stripe-blue" ng-if="aux.story_stripe.contents" ng-style="{'background-color': aux.story_stripe.extra_fields.background_color}">
+  <div class="container">
     <div class="row">
       <div class="col-sm-12">
         <div class="browse-sections" ng-repeat="stripe in [aux.story_stripe]">
@@ -14,8 +14,8 @@
   </div>
 </div>
 
-<div class="stripe-container stripe-darkblue">
-  <div class="container" ng-if="aux.interview_stripe.contents">
+<div class="stripe-container stripe-blue" ng-if="aux.interview_stripe.contents" ng-style="{'background-color': aux.interview_stripe.extra_fields.background_color}">
+  <div class="container">
     <div class="row">
       <div class="col-sm-12">
         <div class="browse-sections" ng-repeat="stripe in [aux.interview_stripe]">
@@ -26,8 +26,8 @@
   </div>
 </div>
 
-<div class="stripe-container stripe-blue">
-  <div class="container" ng-if="aux['article_stripe']['contents']">
+<div class="stripe-container stripe-blue" ng-if="aux['article_stripe']['contents']" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}">
+  <div class="container">
     <div class="row">
       <div class="col-sm-12">
         <div class="browse-sections" ng-repeat="stripe in [aux['article_stripe']]">
@@ -38,8 +38,8 @@
   </div>
 </div>
 
-<div class="stripe-container stripe-darkblue">
-  <div class="container" ng-if="aux['event_stripe']['contents']">
+<div class="stripe-container stripe-blue" ng-if="aux['event_stripe']['contents']" ng-style="{'background-color': aux.event_stripe.extra_fields.background_color}">
+  <div class="container">
     <div class="row">
       <div class="col-sm-12">
         <div class="browse-sections" ng-repeat="stripe in [aux['event_stripe']]">       
@@ -60,8 +60,8 @@
   </div>
 </div>
 
-<div class="stripe-container stripe-blue">
-  <div class="container" ng-if="aux.gallery_stripe.contents">
+<div class="stripe-container stripe-blue" ng-style="{'background-color': aux.gallery_stripe.extra_fields.background_color}" ng-if="aux.gallery_stripe.contents">
+  <div class="container">
     <div class="row">
       <div class="col-sm-12">
         <div class="browse-sections" ng-repeat="stripe in [aux.gallery_stripe]">

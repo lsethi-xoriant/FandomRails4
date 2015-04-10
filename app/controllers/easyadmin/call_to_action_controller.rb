@@ -92,21 +92,6 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
-
-  def tag_cta_update
-    calltoaction = CallToAction.find(params[:id])
-    tag_list = params[:tag_list].split(",")
-
-    calltoaction.call_to_action_tags.delete_all
-
-    tag_list.each do |t|
-      tag = Tag.find_by_name(t)
-      tag = Tag.create(name: t) unless tag
-      CallToActionTag.create(tag_id: tag.id, call_to_action_id: calltoaction.id)
-    end
-    flash[:notice] = "CallToAction taggata"
-    redirect_to "/easyadmin/cta/tag/#{ calltoaction.id }"
-  end
   
   def show_cta
     @current_cta = CallToAction.find(params[:id])
