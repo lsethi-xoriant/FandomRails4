@@ -322,10 +322,8 @@ p {
 }
 
 .browse-sections {
-  #widget-calendar {
-    margin-top: 30px;
-    margin-left: 15px;
-    padding: 32px 15px;
+  .widget-calendar__title-container {
+    margin-top: 10px;
   }
 }
 
@@ -406,6 +404,10 @@ p {
 
 
 @media (min-width: $screen-sm-min) {
+  .custom-bt-browse-sections {
+    margin-left: 10px;
+  }
+
   #widget-calendar {
     .fc-day-number:hover {
       background-color: $orange;
@@ -419,8 +421,11 @@ p {
     padding-right: 0;
   }
 
-  .ctas__flexslider__container { 
+  .ctas__flexslider__container, .body-imprese .ctas__flexslider__container { 
     padding: 0 !important;
+    .ctas__flexslider {
+      margin-bottom: 0 !important;
+    }
   }
 
   .browse-sections {
