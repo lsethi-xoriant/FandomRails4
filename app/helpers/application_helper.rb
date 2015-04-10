@@ -1606,16 +1606,17 @@ module ApplicationHelper
     if interactions.nil?
       nil
     else
-      download_ical_interactions, result = interactions.partition do |interaction|
-        false #interaction[:interaction_info].resource_type == 'Download' && interaction[:interaction_resource].ical?
+      download_ical_interactions, other_interactions = interactions.partition do |interaction|
+        interaction[:interaction_info].resource_type == 'Download' && interaction[:interaction_resource].ical?
       end
 
       if download_ical_interactions.any?
-        result << download_ical_interactions.pop
-        cta_id_to_interactions[cta_id] = cta_id_to_interactions[cta_id] + download_ical_interactions
+        a_download_ical_interaction = download_ical_interactions.shift
+        cta_id_to_interactions[cta_id] = download_ical_interactions + other_interactions
+        other_interactions + [a_download_ical_interaction]
+      else
+        other_interactions
       end
-
-      result
     end
   end
   

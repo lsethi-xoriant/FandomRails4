@@ -25,7 +25,7 @@
         <img class="cta__author-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
         <p class="cta__author-title">{{calltoaction_info.calltoaction.extra_fields.author_name}}</p>
         <p class="cta__author-category">{{calltoaction_info.calltoaction.extra_fields.author_category}}</p>
-        <p class="cta__author-address"><a href="{{calltoaction_info.calltoaction.extra_fields.author_address}}">{{calltoaction_info.calltoaction.extra_fields.author_address}}</a></p>
+        <p class="cta__author-address">{{calltoaction_info.calltoaction.extra_fields.author_newspaper}}</p>
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@
 
         <!-- UNDER MEDIA -->
         <div class="col-md-12">         
-          <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.extra_fields['subtitle'] | unsafe"></h2>
+          <h2 class="cta__description" ng-class="{'cta__description__without-media': !(calltoaction_info.calltoaction.media_type != 'VOID' || calltoaction_info.calltoaction.gallery)}" ng-bind-html="calltoaction_info.calltoaction.extra_fields['subtitle'] | unsafe"></h2>
         </div>
 
         <!-- MOBILE SHARE -->
@@ -101,7 +101,7 @@
                 <img class="cta__author-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
                 <p class="cta__author-title">{{calltoaction_info.calltoaction.extra_fields.author_name}}</p>
                 <p class="cta__author-category">{{calltoaction_info.calltoaction.extra_fields.author_category}}</p>
-                <p class="cta__author-address"><a href="{{calltoaction_info.calltoaction.extra_fields.author_address}}">{{calltoaction_info.calltoaction.extra_fields.author_address}}</a></p>
+                <p class="cta__author-address">{{calltoaction_info.calltoaction.extra_fields.author_newspaper}}</p>
               </div>
             </div>
             <div class="col-md-5 text-right">

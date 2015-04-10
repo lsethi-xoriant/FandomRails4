@@ -19,7 +19,9 @@
     </div>
 
     <div class="content-preview__event-info-container" ng-if="content.extra_fields.author_avatar && !getFirstIcalInteractionForContent(content)">
-      <img class="content-preview__event-info-container__author_avatar" ng-src="{{content.extra_fields.author_avatar.url}}">      
+      <img class="content-preview__event-info-container__author_avatar" ng-src="{{content.extra_fields.author_avatar.url}}">    
+      <p class="cta__author-title--stripe">{{content.extra_fields.author_name}}</p>
+      <p class="cta__author-address--stripe">{{content.extra_fields.author_newspaper}}</p>
     </div>
 
   </div>

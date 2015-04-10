@@ -67,7 +67,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   }
 
   $scope.getFirstIcalInteractionForContent = function(content) {
-    if(angular.isUndefined($scope.content_ical[content.id])) {
+    if(angular.isUndefined(content.content_ical)) {
       min_date = null;
       today_date = new Date();
       angular.forEach(content.interactions, function(value) {
@@ -86,12 +86,12 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         day = ("0" + min_date.getDate()).slice(-2);
         time = $scope.extractTimeFromDate(min_date);
         _datetime = $scope.formatDate(min_date, $scope.aux.language);
-        $scope.content_ical[content.id] = [month, day, time, _datetime];
+        content.content_ical = [month, day, time, _datetime];
       } else {
-        $scope.content_ical[content.id] = min_date;
+        content.content_ical = min_date;
       }
     }
-    return $scope.content_ical[content.id];
+    return content.content_ical;
   };
 
   $scope.checkAndGenerateIcalForView = function(calltoaction_info) {
