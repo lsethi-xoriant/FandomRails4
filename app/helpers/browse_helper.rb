@@ -119,7 +119,7 @@ module BrowseHelper
       title: "I piu recenti",
       icon_url: get_browse_section_icon(nil),
       contents: recent_contents,
-      view_all_link: "/browse/view_recent",
+      view_all_link: build_viewall_link("/browse/view_recent"),
       column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
     }
     )
@@ -148,6 +148,13 @@ module BrowseHelper
     end
   end
   
+  def build_viewall_link(url)
+    unless $context_root.nil?
+      url = "/#{$context_root}#{url}"
+    end
+    url
+  end
+  
   def get_featured(featured, carousel_elements)
     featured_contents, total = get_featured_content(featured, carousel_elements)
     browse_section = ContentSection.new(
@@ -156,7 +163,7 @@ module BrowseHelper
       title: featured.title,
       icon_url: get_browse_section_icon(nil),
       contents: featured_contents,
-      view_all_link: "/browse/view_all/#{featured.id}",
+      view_all_link: build_viewall_link("/browse/view_all/#{featured.id}"),
       column_number: DEFAULT_VIEW_ALL_ELEMENTS/4,
       total: total
     })
@@ -169,7 +176,7 @@ module BrowseHelper
       title: featured.title,
       icon_url: get_browse_section_icon(nil),
       contents: featured_contents,
-      view_all_link: "/browse/view_all/#{featured.id}",
+      view_all_link: build_viewall_link("/browse/view_all/#{featured.id}"),
       column_number: DEFAULT_VIEW_ALL_ELEMENTS/4 #featured_contents.count
     })
   end
@@ -184,7 +191,7 @@ module BrowseHelper
       extra_fields: category.extra_fields,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
-      view_all_link: "/browse/view_all/#{category.slug}",
+      view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
       column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
       total: total,
       has_view_all: total > carousel_elements,
@@ -222,7 +229,7 @@ module BrowseHelper
       title: category.title,
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
-      view_all_link: "/browse/view_all/#{category.slug}",
+      view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
       column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields)
     })
   end

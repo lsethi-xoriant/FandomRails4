@@ -225,6 +225,13 @@
             }
          });
       },
+      eventAfterAllRender: function(e){
+      	$.each($(".fc-content-skeleton table tbody td"), function(index, value){ 
+      		if($(value).height() == 0){
+      			$(value).height(100);
+      		}
+      	});
+      },
 	  eventRender: function(event, element, view) {
 	  	today = moment().dayOfYear();
 
