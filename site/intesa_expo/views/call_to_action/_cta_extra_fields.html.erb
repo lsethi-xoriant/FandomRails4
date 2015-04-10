@@ -13,7 +13,7 @@
 </div>
 %>
 
-<div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields">
+<div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
   <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.start || calltoaction_info.calltoaction.extra_fields.location">{{aux.assets["event_widget_when_" + aux.language]}}</p>
   <hr class="cta__extra_fields__hr">
   <div ng-repeat="n in ical.n" class="cta__extra_fields__info">
@@ -25,7 +25,7 @@
   </div>
 </div>
 
-<div ng-if="calltoaction_info.calltoaction.extra_fields.guests" class="cta__extra_fields">
+<div ng-if="calltoaction_info.calltoaction.extra_fields.guests" class="cta__extra_fields <%= top_class %>">
   <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.guests">{{aux.assets["event_widget_guests_" + aux.language]}}</p>
   <hr class="cta__extra_fields__hr">
   <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
