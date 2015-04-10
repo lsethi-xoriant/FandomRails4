@@ -4,10 +4,9 @@
 	<% if $context_root == 'imprese' %>
 	<div class="stripe-container stripe-blue" ng-style="{'background-color': aux.expo_events.extra_fields.background_color}">
   	  <div class="container main-container">
-		<div class="row row-discover">
+		<div class="row main-row row-discover">
 			<div class="col-xs-12">
-				<h1 class="text-center calendar-event__stripe-title">EVENTI</h1>
-				<h2 class="text-center calendar-event__stripe-subtitle">Scopri gli eventi imprese nello spazio<br />intesa san paolo a Expo Milano 2015</h2>
+				<h1 class="text-center calendar-event__stripe-title">PROSSIMI EVENTI<br />SHARING STORIES</h1>
 				<div class="browse-sections" ng-repeat="contents in [aux.expo_events.contents]">
 					<%= render partial: "/application/content_carousel" %>
 				</div>
@@ -18,9 +17,9 @@
 	
 	<div class="stripe-container stripe-darkblue" ng-style="{'background-color': aux.gallery_events.extra_fields.background_color}">
   	  <div class="container main-container">
-		<div class="row">
+		<div class="row main-row">
 			<div class="col-xs-12">
-				<h1 class="text-center calendar-event__stripe-title">GALLERY EVENTI</h1>
+				<h1 class="text-center calendar-event__stripe-title">GALLERY EVENTI<br />SHARING STORIES</h1>
 				<div class="browse-sections" ng-repeat="contents in [aux.gallery_events.contents]">
 					<%= render partial: "/application/content_carousel" %>
 				</div>
