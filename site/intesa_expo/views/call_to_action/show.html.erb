@@ -10,11 +10,20 @@
   </div>
 </div>
 
-<div class="container-fluid" nf-if="calltoaction_info.calltoaction.extra_fields.interview_banner_img">
+<div class="container-fluid hidden-xs" nf-if="calltoaction_info.calltoaction.extra_fields.interview_banner_img">
   <div class="row">
     <div class="col-sm-12 interview_banner_col">
       <!--<p>{{calltoaction_info.calltoaction.extra_fields.interview_banner_title}}</p>-->
       <img ng-src="{{calltoaction_info.calltoaction.extra_fields.interview_banner_img.url}}">
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid visible-xs" nf-if="calltoaction_info.calltoaction.extra_fields.interview_banner_mobile_img">
+  <div class="row">
+    <div class="col-sm-12 interview_banner_col">
+      <!--<p>{{calltoaction_info.calltoaction.extra_fields.interview_banner_title}}</p>-->
+      <img ng-src="{{calltoaction_info.calltoaction.extra_fields.interview_banner_mobile_img.url}}">
     </div>
   </div>
 </div>
