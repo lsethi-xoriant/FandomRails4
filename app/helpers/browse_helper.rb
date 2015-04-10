@@ -406,16 +406,16 @@ module BrowseHelper
       if element.class.name == "CallToAction"
         element_interactions = interactions[element.id]
         contents << cta_to_content_preview(element, true, element_interactions)
-        tags = addCtaTags(tags, element)
+        tags = add_cta_tags(tags, element)
       else
         contents << tag_to_content_preview(element, true)
-        tags = addTagTags(tags, element)
+        tags = add_tag_tags(tags, element)
       end
     end
     [contents, tags]
   end
   
-  def addCtaTags(tags, element)
+  def add_cta_tags(tags, element)
     hidden_tags_ids = get_hidden_tag_ids
     element.call_to_action_tags.each do |t|
       if !tags.has_key?(t.tag.id) && !hidden_tags_ids.include?(t.tag.id)
@@ -425,7 +425,7 @@ module BrowseHelper
     tags
   end
   
-  def addTagTags(tags, element)
+  def add_tag_tags(tags, element)
     element.tags_tags.each do |t|
       other_tag = Tag.find(t.other_tag_id)
       if !tags.has_key?(other_tag.id)
