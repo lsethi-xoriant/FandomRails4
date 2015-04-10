@@ -437,6 +437,25 @@ p {
     padding-right: 0;
   }
   
+  .body-imprese{ 
+    .navbar-header{
+      background-color: $blue;
+      background-image: url("intesa_expo/texture.png");
+    }
+    .navbar__logo{
+      max-width: 100px;
+    }
+    
+    .navbar-inverse .navbar-toggle{
+      border-color: #fff;
+      color: #fff;
+    }
+    
+    .navbar-inverse .navbar-toggle:hover{
+      background-color: $lightblue;
+    }
+  }
+  
   #widget-calendar {
     .fc-day-number {
       height: 30px;
