@@ -6,7 +6,7 @@
 
 .content-preview__item-panel {
   background-color: #fff;
-  height: 265px;
+  height: 300px;
   margin-bottom: 10px;
   margin-top: 10px;
   overflow: hidden;
@@ -22,7 +22,8 @@
   overflow: hidden;
   position: relative;
   border: 2px solid #fff;
-  border-radius: 3px;
+
+  height: 300px;
   
   -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);

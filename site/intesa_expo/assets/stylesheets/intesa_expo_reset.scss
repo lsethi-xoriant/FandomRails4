@@ -16,11 +16,20 @@ a:hover{
   color: $orange;
 }
 
+.cta__cps-panel .panel-title {
+  color: #000;
+}
+
 h1, h2, 
 .ctas__flexslider__title, 
 .cta__extra_fields__title, 
 .cta__related__title {
   font-family: 'Gnuolane';
+}
+
+.cta__extra_fields__hr {
+  border-color: $lightblue;
+  margin: 15px -25px;
 }
 
 .ctas__flexslider__title {
@@ -406,6 +415,10 @@ p {
 @media (min-width: $screen-sm-min) {
   .custom-bt-browse-sections {
     margin-left: 10px;
+    margin-bottom: 30px;
+    .stripe__title {
+      margin-bottom: 30px;
+    }
   }
 
   #widget-calendar {

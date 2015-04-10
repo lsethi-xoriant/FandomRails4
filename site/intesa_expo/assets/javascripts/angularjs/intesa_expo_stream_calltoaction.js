@@ -112,8 +112,15 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   	}
   };
 
+  $scope.icalTimestamp = function(cta_slug, _datetime) {
+    _datetime = new Date(_datetime);
+    date = cta_slug + "_" + $scope.zerosBeforeNumber(_datetime.getDate(), 1) + "" + $scope.zerosBeforeNumber(_datetime.getMonth(), 1) + "" + _datetime.getFullYear();
+    date = date + $scope.zerosBeforeNumber(_datetime.getHours(), 1) + "" + $scope.zerosBeforeNumber(_datetime.getMinutes(), 1);
+    return date;
+  };
+
   function generateIcalForView(ical_info_list) {
-    $scope.ical = new Object({"dates": [], "times": [], "locations": [], "n": []});
+    $scope.ical = new Object({"dates": [], "times": [], "locations": [], "interaction_ids": [], "datetimes": [], "n": []});
     
     i = 0;
     angular.forEach(ical_info_list, function(value, key) {
@@ -124,6 +131,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       date_index = $scope.ical.dates.indexOf(_date);
       location_index = $scope.ical.locations.indexOf(_location);
 
+      /*
       if(date_index < 0 || location_index < 0) {
         $scope.ical.dates.push(_date);
         $scope.ical.locations.push(_location);
@@ -134,6 +142,15 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         index = Math.max(date_index, location_index);
         $scope.ical.times[index] = $scope.ical.times[index] + ", " + $scope.extractTimeFromDate(_datetime);
       }
+      */
+
+      $scope.ical.datetimes.push(_datetime);
+      $scope.ical.interaction_ids.push(value.interaction.id);
+      $scope.ical.dates.push(_date);
+      $scope.ical.locations.push(_location);
+      $scope.ical.times.push($scope.extractTimeFromDate(_datetime));
+      $scope.ical.n.push(i);
+      i = i + 1;
 
     });
 
@@ -187,8 +204,14 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   };
 
   $window.updateInteractionDownloadIcal = function(interaction_id, ical_name) {
-    alert(ical_name);
-    // DISABLE BUTTON HERE (41)
+    updateInteractionDownloadIcal(interaction_id, ical_name);
+  };
+
+  $scope.updateInteractionDownloadIcal = function(interaction_id, ical_name) {
+    updateInteractionDownloadIcal(interaction_id, ical_name);
+  };
+
+  function updateInteractionDownloadIcal(interaction_id, ical_name) {
     if(!$scope.answer_in_progress) {
       $scope.answer_in_progress = true;
 
@@ -217,8 +240,6 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
 
         });
     }
-    
-
-  };
+  }
 
 }

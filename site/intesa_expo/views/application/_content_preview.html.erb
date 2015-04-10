@@ -6,17 +6,7 @@
 
         <div class="content-preview__thumbnail">
           <img class="img-responsive content-preview__image" ng-src="{{content.thumb_url}}"> 
-
-          <div class="content-preview__icon-container content-preview__icon-container--time" ng-if="getFirstIcalInteractionForContent(content)">
-            <p class="container-preview__icon-container__day">{{getFirstIcalInteractionForContent(content)[1]}}</p>
-            <p class="container-preview__icon-container__month">{{getFirstIcalInteractionForContent(content)[0]}}</p>
-          </div>
-
-          <div class="content-preview__icon-container" ng-if="!getFirstIcalInteractionForContent(content)">
-          	<i class="fa fa-picture-o content-preview__icon" ng-if="content.media_type == 'IMAGE' || hasPhotoGallery(content)"></i>
-          	<i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == 'YOUTUBE'"></i> 
-          </div>
-
+          <%= render partial: "/application/content_preview_content_type" %>
         </div>
 
         <p class="content-preview__title">{{content.title | cut:true:70}}</p>
@@ -61,7 +51,7 @@
       </div>
     </div>
   </div>
-  <p class="relateds-flexslider__item-title--narrow">{{content.extra_fields.content_title}}</p>
+  <!--<p class="relateds-flexslider__item-title--narrow">{{content.extra_fields.content_title}}</p>-->
 </a>
 
 <a href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.layout == 'narrow-img-text'">
