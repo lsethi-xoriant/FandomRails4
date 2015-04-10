@@ -337,7 +337,7 @@ module BrowseHelper
         contents << tag
       end
     end
-    contents = prepare_contents(contents)
+    prepare_contents(contents)
   end
 
   def prepare_contents(elements)
@@ -351,10 +351,11 @@ module BrowseHelper
     end
     
     interactions = get_cta_to_interactions_map(cta_ids)
-    
+
     elements.each do |element|
       if element.class.name == "CallToAction"
-        element_interactions = interactions[element.id] 
+        element_interactions1 = interactions[element.id]
+        element_interactions = get_interactions_from_cta_to_interaction_map(interactions, element.id)
         contents << cta_to_content_preview(element, true, element_interactions)
       else
         contents << tag_to_content_preview(element)
@@ -362,7 +363,7 @@ module BrowseHelper
     end
     contents
   end
-  
+
   def prepare_contents_for_autocomplete(elements)
     contents = []
     elements.each do |element|

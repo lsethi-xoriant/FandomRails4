@@ -13,6 +13,10 @@ class Download < ActiveRecord::Base
     false
   end
 
+  def ical?
+    ical_fields != nil && ical_fields != ''
+  end
+
   def set_ical_fields
     if ical_start.present? or ical_end.present? or ical_location.present?
       ical_value = { 
