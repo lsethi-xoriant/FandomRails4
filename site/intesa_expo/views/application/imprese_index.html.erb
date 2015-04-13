@@ -47,14 +47,17 @@
             <div class="col-sm-12 text-center">
               <h2 class="stripe__title">{{stripe.title}} <a class="view-all-link" ng-if="stripe.total > stripe.per_page && stripe.extra_fields.view_all">Vedi tutti</a></h2>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-9 hidden-xs">
               <div class="row stripe__row__custom">
                 <div class="col-sm-4 stripe__col__custom" ng-repeat="content in stripe.contents | limitTo:3">
                   <%= render partial: "/application/content_preview" %>
                 </div>
               </div>
             </div>
-            <div class="col-sm-3 cta__evidence-calendar text-center">
+            <div class="col-xs-12 visible-xs stripe-contents" ng-repeat="contents in [stripe.contents]">
+              <%= render partial: "/application/content_carousel" %>
+            </div>
+            <div class="col-sm-3 col-xs-12 cta__evidence-calendar text-center">
               <%= render partial: "/calendar/widget-calendar" %>
             </div>
           </div>
