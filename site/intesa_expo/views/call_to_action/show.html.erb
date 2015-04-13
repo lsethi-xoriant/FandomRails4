@@ -1,16 +1,18 @@
 <%= render partial: "/call_to_action/stream_single_calltoaction" %>
 
-<div class="container main-container" ng-repeat="stripes in aux.page_stripes">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="browse-sections" ng-repeat="stripe in [stripes]">
-        <%= render partial: "/application/stripe" %>
+<div class="stripe-container" ng-repeat="stripes in aux.page_stripes" ng-if="stripes.contents" ng-style="{'background-color': stripes.extra_fields.background_color}">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="browse-sections" ng-repeat="stripe in [stripes]">
+          <%= render partial: "/application/stripe" %>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container-fluid hidden-xs" nf-if="calltoaction_info.calltoaction.extra_fields.interview_banner_img">
+<div class="container-fluid hidden-xs" ng-if="calltoaction_info.calltoaction.extra_fields.interview_banner_img">
   <div class="row">
     <div class="col-sm-12 interview_banner_col">
       <!--<p>{{calltoaction_info.calltoaction.extra_fields.interview_banner_title}}</p>-->
@@ -19,7 +21,7 @@
   </div>
 </div>
 
-<div class="container-fluid visible-xs" nf-if="calltoaction_info.calltoaction.extra_fields.interview_banner_mobile_img">
+<div class="container-fluid visible-xs" ng-if="calltoaction_info.calltoaction.extra_fields.interview_banner_mobile_img">
   <div class="row">
     <div class="col-sm-12 interview_banner_col">
       <img ng-src="{{calltoaction_info.calltoaction.extra_fields.interview_banner_mobile_img.url}}">

@@ -2,6 +2,21 @@
   <%= render partial: "/application/evidence_ctas" %>
 </div>
 
+<div class="container container--blue visible-xs">
+  <div class="row">
+    <div class="col-xs-12">  
+      <a href="{{aux.assets['left_logo_url_' + aux.language]}}" target="_blank">
+        <img class="left-logo" ng-src="{{aux.assets['left_logo_imprese'].url}}">  
+      </a>  
+    </div>
+    <div class="col-xs-12">  
+      <a href="{{aux.assets['right_logo_url_' + aux.language]}}" target="_blank">
+        <img class="right-logo" ng-src="{{aux.assets['right_logo_imprese'].url}}">  
+      </a>  
+    </div>
+  </div>
+</div>
+
 <div class="container-fluid__blue stripe-container" ng-if="aux['event_stripe']['contents']">
   <div class="container main-container container--blue">
     <div class="row">

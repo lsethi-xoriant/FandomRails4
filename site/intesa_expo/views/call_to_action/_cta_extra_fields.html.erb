@@ -14,7 +14,7 @@
 %>
 
 <div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
-  <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.start || calltoaction_info.calltoaction.extra_fields.location">{{aux.assets["event_widget_when_" + aux.language]}}</p>
+  <p class="cta__extra_fields__title">{{aux.assets["event_widget_when_" + aux.language]}}</p>
   <hr class="cta__extra_fields__hr">
   <div ng-repeat="n in ical.n" class="cta__extra_fields__info">
     <button ng-click="updateInteractionDownloadIcal(ical.interaction_ids[$index], icalTimestamp(calltoaction_info.calltoaction.slug, ical.datetimes[$index]))" class="btn btn-about-v2" style="position: absolute; top: 0; right: 0;"><i class="fa fa-download"></i></button>
