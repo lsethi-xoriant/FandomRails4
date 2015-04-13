@@ -86,12 +86,6 @@ body {
     border: 0 !important;
   }
 
-  .left-logo:hover, .right-logo:hover {
-    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-  }
-
   .header-container {
     background-color: $blue !important; 
     background-image: url("intesa_expo/texture.png");
