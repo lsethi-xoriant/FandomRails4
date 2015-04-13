@@ -2,17 +2,17 @@ class CalendarController < ApplicationController
 
   def get_ical
     interaction = Interaction.find(params[:interaction_id])
-    start_date = Time.parse(JSON.parse(interaction.resource.ical_fields)["start_datetime"]["value"])
+    ical_fields = JSON.parse(interaction.resource.ical_fields || "{}") 
+    start_date = Time.parse(ical_fields["start_datetime"]["value"])
 
     begin
-      end_date = Time.parse(JSON.parse(interaction.resource.ical_fields)["end_datetime"]["value"])
+      end_date = Time.parse(ical_fields["end_datetime"]["value"])
     rescue Exception => exception
       end_date = ""
     end
 
-    subtitle = (JSON.parse(interaction.call_to_action.extra_fields)["subtitle"] rescue "")
-
-    cal = build_ical(start_date, end_date, interaction.call_to_action.title, subtitle)
+    subtitle = JSON.parse(interaction.call_to_action.extra_fields)["subtitle"]
+    cal = build_ical(start_date, end_date, interaction.call_to_action.title, subtitle, ical_fields["location"])
     render :text => cal.to_ical
   end
   

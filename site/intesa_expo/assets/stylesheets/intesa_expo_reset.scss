@@ -12,11 +12,25 @@ img {
   max-width: 100%;
 }
 
+a:hover{
+  color: $orange;
+  text-decoration: none;
+}
+
+.cta__cps-panel .panel-title {
+  color: #000;
+}
+
 h1, h2, 
 .ctas__flexslider__title, 
 .cta__extra_fields__title, 
 .cta__related__title {
   font-family: 'Gnuolane';
+}
+
+.cta__extra_fields__hr {
+  border-color: $lightblue;
+  margin: 15px -25px;
 }
 
 .ctas__flexslider__title {
@@ -31,6 +45,9 @@ body {
 .interview_banner_col {
   padding: 0;
   margin-top: 15px;
+  img {
+    width: 100%;
+  }
 }
 
 .widget-calendar__title-container {
@@ -65,12 +82,14 @@ body {
 }
 
 .body-imprese {
-  .left-logo {
+  .left-logo, .right-logo {
     border: 0 !important;
   }
 
-  .right-logo {
-    border: 0 !important;
+  .left-logo:hover, .right-logo:hover {
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
   }
 
   .header-container {
@@ -318,10 +337,8 @@ p {
 }
 
 .browse-sections {
-  #widget-calendar {
-    margin-top: 30px;
-    margin-left: 15px;
-    padding: 32px 15px;
+  .widget-calendar__title-container {
+    margin-top: 10px;
   }
 }
 
@@ -402,6 +419,14 @@ p {
 
 
 @media (min-width: $screen-sm-min) {
+  .custom-bt-browse-sections {
+    margin-left: 10px;
+    margin-bottom: 30px;
+    .stripe__title {
+      margin-bottom: 30px;
+    }
+  }
+
   #widget-calendar {
     .fc-day-number:hover {
       background-color: $orange;
@@ -414,9 +439,38 @@ p {
     padding-left: 0;
     padding-right: 0;
   }
+  
+  .body-imprese{ 
+    .navbar-header{
+      background-color: $blue;
+      background-image: url("intesa_expo/texture.png");
+    }
+    .navbar__logo{
+      max-width: 100px;
+    }
+    
+    .navbar-inverse .navbar-toggle{
+      border-color: #fff;
+      color: #fff;
+    }
+    
+    .navbar-inverse .navbar-toggle:hover{
+      background-color: $lightblue;
+    }
+  }
+  
+  #widget-calendar {
+    .fc-day-number {
+      height: 30px;
+      line-height: 30px;
+    }
+  }
 
-  .ctas__flexslider__container { 
+  .ctas__flexslider__container, .body-imprese .ctas__flexslider__container { 
     padding: 0 !important;
+    .ctas__flexslider {
+      margin-bottom: 0 !important;
+    }
   }
 
   .browse-sections {
@@ -436,5 +490,12 @@ p {
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
+  }
+  
+  .view-all-link{
+    float: none;
+    font-size: 18px;
+    line-height: inherit;
+    margin-bottom: 15px;
   }
 }

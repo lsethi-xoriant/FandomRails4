@@ -29,11 +29,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         "interview_stripe" => home_stripes["interview_stripe"],
         "story_stripe" => home_stripes["story_stripe"],
         "article_stripe" => home_stripes["article_stripe"],
-        page_tag: {
-          miniformat: {
-            name: "imprese-home"
-          }
-        }
+        "tag_menu_item" => "imprese-home"
       }
       render template: "/application/imprese_index"
 
@@ -61,11 +57,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         "story_innovation_stripe" => home_stripes["story_innovation_stripe"],
         "press_stripe" => home_stripes["press_stripe"],
         "story_stripe" => home_stripes["story_stripe"],
-        page_tag: {
-          miniformat: {
-            name: "home"
-          }
-        }
+        "tag_menu_item" => "home"
       }
 
     end
@@ -80,11 +72,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     @calltoaction_info_list = build_call_to_action_info_list([cta])
     complete_cta_for_show(cta)
 
-    @aux_other_params[:page_tag] = {
-      miniformat: {
-        name: "live"
-      }
-    }
+    @aux_other_params[:tag_menu_item] = "live"
 
     render template: "/call_to_action/show"
   end
@@ -97,11 +85,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
     complete_cta_for_show(cta)
 
-    @aux_other_params[:page_tag] = {
-      miniformat: {
-        name: "about"
-      }
-    }
+    @aux_other_params[:tag_menu_item] = JSON.parse(cta.extra_fields || "{}")["menu_item"]
   end
 
   def complete_cta_for_show(calltoaction)

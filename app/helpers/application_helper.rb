@@ -1579,7 +1579,7 @@ module ApplicationHelper
   def get_cta_vote_info(interaction_id)
     cache_short(get_cache_votes_for_interaction(interaction_id)) do
       result = UserInteraction.where("interaction_id = ? ", interaction_id).sum("CAST(aux->>'vote' as integer)")
-      vote_info = {"total" => 0}
+      vote_info = { "total" => 0 }
       vote_info['total'] = result
       vote_info
     end
@@ -1588,16 +1588,38 @@ module ApplicationHelper
   def get_cta_to_interactions_map(cta_ids)
     cta_to_interactions = {}
     Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids).each do |inter|
-      if cta_to_interactions[inter.call_to_action_id].nil?
-        cta_to_interactions[inter.call_to_action_id] = []
-      end
-      cta_to_interactions[inter.call_to_action_id] << {
+      (cta_to_interactions[inter.call_to_action_id] ||= []) << {
         interaction_info: inter,
         interaction_resource: inter.resource
       }
     end
     cta_to_interactions
   end
+
+  # This method implement a nasty workaround to handle multiple download-iCal interactions: a download-iCal interaction
+  # is tipically shown with a small date/time graphics in the content preview, but when a CTA has more than one iCal,
+  # the amount of information to display is too heavy. Moreover, a CTA with multiple iCals might be shown multiple
+  # times in a stripe (for example when the stripe is sorted by ical date).
+  # The chosen solution is to display in the content preview a different iCal everytime the same CTA is displayed in a stripe.
+  def get_interactions_from_cta_to_interaction_map(cta_id_to_interactions, cta_id)
+    interactions = cta_id_to_interactions[cta_id]
+    if interactions.nil?
+      nil
+    else
+      download_ical_interactions, other_interactions = interactions.partition do |interaction|
+        interaction[:interaction_info].resource_type == 'Download' && interaction[:interaction_resource].ical?
+      end
+
+      if download_ical_interactions.any?
+        a_download_ical_interaction = download_ical_interactions.shift
+        cta_id_to_interactions[cta_id] = download_ical_interactions + other_interactions
+        other_interactions + [a_download_ical_interaction]
+      else
+        other_interactions
+      end
+    end
+  end
+  
   
   def get_ical_events(cta_ids)
     ical_events = []

@@ -25,7 +25,7 @@
         <img class="cta__author-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
         <p class="cta__author-title">{{calltoaction_info.calltoaction.extra_fields.author_name}}</p>
         <p class="cta__author-category">{{calltoaction_info.calltoaction.extra_fields.author_category}}</p>
-        <p class="cta__author-address"><a href="{{calltoaction_info.calltoaction.extra_fields.author_address}}">{{calltoaction_info.calltoaction.extra_fields.author_address}}</a></p>
+        <p class="cta__author-address">{{calltoaction_info.calltoaction.extra_fields.author_newspaper}}</p>
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@
 
         <!-- UNDER MEDIA -->
         <div class="col-md-12">         
-          <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.extra_fields['subtitle'] | unsafe"></h2>
+          <h2 class="cta__description" ng-class="{'cta__description__without-media': !(calltoaction_info.calltoaction.media_type != 'VOID' || calltoaction_info.calltoaction.gallery)}" ng-bind-html="calltoaction_info.calltoaction.extra_fields['subtitle'] | unsafe"></h2>
         </div>
 
         <!-- MOBILE SHARE -->
@@ -101,7 +101,7 @@
                 <img class="cta__author-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
                 <p class="cta__author-title">{{calltoaction_info.calltoaction.extra_fields.author_name}}</p>
                 <p class="cta__author-category">{{calltoaction_info.calltoaction.extra_fields.author_category}}</p>
-                <p class="cta__author-address"><a href="{{calltoaction_info.calltoaction.extra_fields.author_address}}">{{calltoaction_info.calltoaction.extra_fields.author_address}}</a></p>
+                <p class="cta__author-address">{{calltoaction_info.calltoaction.extra_fields.author_newspaper}}</p>
               </div>
             </div>
             <div class="col-md-5 text-right">
@@ -121,11 +121,11 @@
         <div class="col-md-12 visible-xs"> 
           <div class="panel panel-default cta__cps-panel">
             <div class="panel-heading" role="tab" id="cta__cps-1">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#cta__cps-1b" aria-expanded="true" aria-controls="cta__cps-1b">
-                  <span class="glyphicon glyphicon-chevron-down"></span>Descrizione
-                </a>
-              </h4>
+              <a data-toggle="collapse" data-parent="#accordion" href="#cta__cps-1b" aria-expanded="true" aria-controls="cta__cps-1b">
+                <h4 class="panel-title">   
+                  <span class="glyphicon glyphicon-chevron-down"></span>Descrizione               
+                </h4>
+              </a>
             </div>
             <div id="cta__cps-1b" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cta__cps-1">
               <div class="panel-body">
@@ -164,11 +164,11 @@
       <!-- MOBILE DETAILS -->
       <div class="panel panel-default visible-xs cta__cps-panel" ng-if="checkAndGenerateIcalForView(calltoaction_info)">
         <div class="panel-heading" role="tab" id="cta__cps-2">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#cta__cps-2b" aria-expanded="true" aria-controls="cta__cps-2b">
+          <a data-toggle="collapse" data-parent="#accordion" href="#cta__cps-2b" aria-expanded="true" aria-controls="cta__cps-2b">  
+            <h4 class="panel-title">
               <span class="glyphicon glyphicon-chevron-down"></span>Dettagli
-            </a>
-          </h4>
+            </h4>
+          </a>
         </div>
         <div id="cta__cps-2b" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cta__cps-2">
           <%= render partial: "/call_to_action/cta_extra_fields", locals: { top_class: "" } %>

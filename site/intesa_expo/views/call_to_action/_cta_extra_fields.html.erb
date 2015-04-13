@@ -1,4 +1,5 @@
-<div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>" ng-repeat="n in ical.n">
+<%# Times grouped by day
+<div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields" ng-repeat="n in ical.n">
   <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.start || calltoaction_info.calltoaction.extra_fields.location">{{aux.assets["event_widget_when_" + aux.language]}}</p>
 
   <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{ical.dates[$index]}}</span></p>
@@ -10,3 +11,23 @@
 
   <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
 </div>
+%>
+
+<div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
+  <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.start || calltoaction_info.calltoaction.extra_fields.location">{{aux.assets["event_widget_when_" + aux.language]}}</p>
+  <hr class="cta__extra_fields__hr">
+  <div ng-repeat="n in ical.n" class="cta__extra_fields__info">
+    <button ng-click="updateInteractionDownloadIcal(ical.interaction_ids[$index], icalTimestamp(calltoaction_info.calltoaction.slug, ical.datetimes[$index]))" class="btn btn-about-v2" style="position: absolute; top: 0; right: 0;"><i class="fa fa-download"></i></button>
+    <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{ical.dates[$index]}}</span></p>
+    <p class="cta__extra_fields__description"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{ical.times[$index]}}</span></p>
+    <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.location"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{ical.locations[$index]}}</span></p>
+    <hr class="cta__extra_fields__hr" ng-if="!$last">
+  </div>
+</div>
+
+<div ng-if="calltoaction_info.calltoaction.extra_fields.guests" class="cta__extra_fields <%= top_class %>">
+  <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.guests">{{aux.assets["event_widget_guests_" + aux.language]}}</p>
+  <hr class="cta__extra_fields__hr">
+  <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
+</div>
+

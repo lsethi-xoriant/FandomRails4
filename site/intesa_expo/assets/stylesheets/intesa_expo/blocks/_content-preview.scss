@@ -6,7 +6,7 @@
 
 .content-preview__item-panel {
   background-color: #fff;
-  height: 265px;
+  height: 300px;
   margin-bottom: 10px;
   margin-top: 10px;
   overflow: hidden;
@@ -19,14 +19,21 @@
 .content-preview__item-panel--narrow {
   margin-bottom: 10px;
   margin-top: 10px;
-  margin-right: 25px;
   overflow: hidden;
   position: relative;
   border: 2px solid #fff;
-  border-radius: 3px;
-  -webkit-box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.8);
-  -moz-box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.8);
+
+  height: 300px;
+  
+  -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+
+  //margin-right: 25px;
+  //-webkit-box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.8);
+  //-moz-box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.8);
+  //box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.8);
+  
   img {
     width: 100%;
   }
@@ -170,7 +177,12 @@
   font-size: 12px;
   font-weight: bold;
   color: $lightblue !important;
-  padding-top: 5px;
+  padding-top: 15px;
+}
+
+.content-preview__date {
+  font-size: 12px;
+  color: #444;
 }
 
 .content-preview__newspaper {
@@ -252,11 +264,14 @@
   position: absolute;
   bottom: 5px;
   left: 2px;
+  right: 2px;
 }
 
 .content-preview__event-info-container__author_avatar {
   width: 30px; 
   margin-left: 5px;
+  margin-right: 5px;
+  float: left; 
 }
 
 .content-preview__event-info{
@@ -297,6 +312,7 @@
   
   .content-preview__item-panel--narrow{
     margin-right: 0;
+    height: auto;
   }
 
   .content-preview {
