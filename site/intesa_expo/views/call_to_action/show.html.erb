@@ -1,6 +1,6 @@
 <%= render partial: "/call_to_action/stream_single_calltoaction" %>
 
-<div class="container main-container" ng-repeat="stripes in aux.page_stripes">
+<div class="container main-container" ng-repeat="stripes in aux.page_stripes" ng-if="stripes.contents">
   <div class="row">
     <div class="col-sm-12">
       <div class="browse-sections" ng-repeat="stripe in [stripes]">
