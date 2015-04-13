@@ -324,6 +324,7 @@ module CallToActionHelper
             "seconds" => interaction.seconds,
             "resource_type" => resource_type,
             "resource" => {
+              "extra_fields" => (JSON.parse(interaction.resource.extra_fields) rescue nil),
               "question" => resource_question,
               "title" => resource_title,
               "description" => resource_description,
