@@ -86,7 +86,7 @@ class Easyadmin::SettingsController < Easyadmin::EasyadminController
     active_setting.update_attribute(:value, params[:activation_setting] == "true")
     setting.update_attribute(:value, params[:words_setting])
     @saved = true
-    @activation_setting = params[:activation_setting] == "true"
+    @activation_setting = params[:activation_setting] == "true" ? "t" : "f"
     @words_setting = params[:words_setting]
     flash[:notice] = "Impostazioni salvate correttamente"
     render template: "/easyadmin/settings/profanities_settings"

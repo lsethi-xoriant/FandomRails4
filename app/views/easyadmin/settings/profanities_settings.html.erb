@@ -49,7 +49,7 @@
       </div>
       <div class="row form-group">
         <div class="col-lg-1"><%= label_tag(:activation_label, "Attivo:") %></div>
-        <div class="col-lg-10"><%= check_box_tag(:activation_setting, true, @activation_setting == true) %> </div>
+        <div class="col-lg-10"><%= check_box_tag(:activation_setting, true, @activation_setting == "t") %> </div>
       </div>
       <div class="row form-group">
         <div class="col-lg-1"><%= label_tag(:profanities_label, "Dizionario:") %></div>
