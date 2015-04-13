@@ -21,6 +21,8 @@
     </div>
   </div>
 
+  <p class="vote-interaction__subtitle--undervideo" ng-if="interaction_info.interaction.resource.extra_fields && interaction_info.interaction.resource.extra_fields['subtitle']">{{interaction_info.interaction.resource.extra_fields["subtitle"]}}</p>
+
   <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row vote-interaction__reward">
     <div class="col-md-12 play-interaction__winnable-reward text-center">
       <span class="label label-success cta-cover__winnable-reward__label">

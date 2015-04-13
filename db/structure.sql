@@ -497,6 +497,38 @@ ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
 
 
 --
+-- Name: easyadmin_stats; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE TABLE easyadmin_stats (
+    id integer NOT NULL,
+    date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "values" json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE; Schema: ballando; Owner: -
+--
+
+CREATE SEQUENCE easyadmin_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+--
+
+ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
+
+
+--
 -- Name: events; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -2251,6 +2283,38 @@ CREATE SEQUENCE downloads_id_seq
 --
 
 ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
+
+
+--
+-- Name: easyadmin_stats; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE TABLE easyadmin_stats (
+    id integer NOT NULL,
+    date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "values" json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE; Schema: coin; Owner: -
+--
+
+CREATE SEQUENCE easyadmin_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: coin; Owner: -
+--
+
+ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
 
 
 --
@@ -4011,6 +4075,38 @@ ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
 
 
 --
+-- Name: easyadmin_stats; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE TABLE easyadmin_stats (
+    id integer NOT NULL,
+    date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "values" json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE; Schema: disney; Owner: -
+--
+
+CREATE SEQUENCE easyadmin_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: disney; Owner: -
+--
+
+ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
+
+
+--
 -- Name: events; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -5765,6 +5861,38 @@ CREATE SEQUENCE downloads_id_seq
 --
 
 ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
+
+
+--
+-- Name: easyadmin_stats; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE TABLE easyadmin_stats (
+    id integer NOT NULL,
+    date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "values" json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE; Schema: fandom; Owner: -
+--
+
+CREATE SEQUENCE easyadmin_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: fandom; Owner: -
+--
+
+ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
 
 
 --
@@ -7525,6 +7653,38 @@ ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
 
 
 --
+-- Name: easyadmin_stats; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE TABLE easyadmin_stats (
+    id integer NOT NULL,
+    date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "values" json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE; Schema: forte; Owner: -
+--
+
+CREATE SEQUENCE easyadmin_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: forte; Owner: -
+--
+
+ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
+
+
+--
 -- Name: events; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -9278,6 +9438,38 @@ CREATE SEQUENCE downloads_id_seq
 --
 
 ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
+
+
+--
+-- Name: easyadmin_stats; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE easyadmin_stats (
+    id integer NOT NULL,
+    date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "values" json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE easyadmin_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
 
 
 --
@@ -11037,6 +11229,38 @@ ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
 
 
 --
+-- Name: easyadmin_stats; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE TABLE easyadmin_stats (
+    id integer NOT NULL,
+    date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "values" json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE; Schema: maxibon; Owner: -
+--
+
+CREATE SEQUENCE easyadmin_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: maxibon; Owner: -
+--
+
+ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
+
+
+--
 -- Name: events; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -12791,6 +13015,38 @@ CREATE SEQUENCE downloads_id_seq
 --
 
 ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
+
+
+--
+-- Name: easyadmin_stats; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE easyadmin_stats (
+    id integer NOT NULL,
+    date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "values" json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE easyadmin_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
 
 
 --
@@ -15901,7 +16157,8 @@ CREATE TABLE votes (
     vote_max integer DEFAULT 10,
     one_shot boolean,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    extra_fields json
 );
 
 
@@ -16001,6 +16258,13 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 --
 
 ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
+--
+
+ALTER TABLE ONLY easyadmin_stats ALTER COLUMN id SET DEFAULT nextval('easyadmin_stats_id_seq'::regclass);
 
 
 --
@@ -16345,6 +16609,13 @@ ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq
 -- Name: id; Type: DEFAULT; Schema: coin; Owner: -
 --
 
+ALTER TABLE ONLY easyadmin_stats ALTER COLUMN id SET DEFAULT nextval('easyadmin_stats_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: coin; Owner: -
+--
+
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
 
@@ -16677,6 +16948,13 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 --
 
 ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: disney; Owner: -
+--
+
+ALTER TABLE ONLY easyadmin_stats ALTER COLUMN id SET DEFAULT nextval('easyadmin_stats_id_seq'::regclass);
 
 
 --
@@ -17021,6 +17299,13 @@ ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq
 -- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
 --
 
+ALTER TABLE ONLY easyadmin_stats ALTER COLUMN id SET DEFAULT nextval('easyadmin_stats_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
+--
+
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
 
@@ -17353,6 +17638,13 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 --
 
 ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: forte; Owner: -
+--
+
+ALTER TABLE ONLY easyadmin_stats ALTER COLUMN id SET DEFAULT nextval('easyadmin_stats_id_seq'::regclass);
 
 
 --
@@ -17697,6 +17989,13 @@ ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq
 -- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
 --
 
+ALTER TABLE ONLY easyadmin_stats ALTER COLUMN id SET DEFAULT nextval('easyadmin_stats_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
 
@@ -18035,6 +18334,13 @@ ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq
 -- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
 --
 
+ALTER TABLE ONLY easyadmin_stats ALTER COLUMN id SET DEFAULT nextval('easyadmin_stats_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
+--
+
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
 
@@ -18367,6 +18673,13 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 --
 
 ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY easyadmin_stats ALTER COLUMN id SET DEFAULT nextval('easyadmin_stats_id_seq'::regclass);
 
 
 --
@@ -19064,6 +19377,14 @@ ALTER TABLE ONLY downloads
 
 
 --
+-- Name: easyadmin_stats_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY easyadmin_stats
+    ADD CONSTRAINT easyadmin_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: events_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -19447,6 +19768,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY downloads
     ADD CONSTRAINT downloads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: easyadmin_stats_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY easyadmin_stats
+    ADD CONSTRAINT easyadmin_stats_pkey PRIMARY KEY (id);
 
 
 --
@@ -19836,6 +20165,14 @@ ALTER TABLE ONLY downloads
 
 
 --
+-- Name: easyadmin_stats_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY easyadmin_stats
+    ADD CONSTRAINT easyadmin_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: events_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -20219,6 +20556,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY downloads
     ADD CONSTRAINT downloads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: easyadmin_stats_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY easyadmin_stats
+    ADD CONSTRAINT easyadmin_stats_pkey PRIMARY KEY (id);
 
 
 --
@@ -20608,6 +20953,14 @@ ALTER TABLE ONLY downloads
 
 
 --
+-- Name: easyadmin_stats_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY easyadmin_stats
+    ADD CONSTRAINT easyadmin_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: events_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -20991,6 +21344,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY downloads
     ADD CONSTRAINT downloads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: easyadmin_stats_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY easyadmin_stats
+    ADD CONSTRAINT easyadmin_stats_pkey PRIMARY KEY (id);
 
 
 --
@@ -21380,6 +21741,14 @@ ALTER TABLE ONLY downloads
 
 
 --
+-- Name: easyadmin_stats_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY easyadmin_stats
+    ADD CONSTRAINT easyadmin_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: events_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -21763,6 +22132,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY downloads
     ADD CONSTRAINT downloads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: easyadmin_stats_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY easyadmin_stats
+    ADD CONSTRAINT easyadmin_stats_pkey PRIMARY KEY (id);
 
 
 --
@@ -26419,3 +26796,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150313111511');
 INSERT INTO schema_migrations (version) VALUES ('20150316103146');
 
 INSERT INTO schema_migrations (version) VALUES ('20150324171203');
+
+INSERT INTO schema_migrations (version) VALUES ('20150413144521');
