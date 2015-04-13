@@ -85,7 +85,7 @@ module IntesaExpoHelper
   end
 
   def get_intesa_expo_highlight_calltoactions()
-    tag_highlight = Tag.find_by_name("highlight")
+    tag_highlight = get_tag_from_params("highlight-#{get_intesa_property()}")
     if tag_highlight
       ctas = get_intesa_expo_ctas(tag_highlight)
       order_elements(tag_highlight, ctas)
@@ -139,16 +139,25 @@ module IntesaExpoHelper
 
     if other && other.has_key?(:calltoaction_evidence_info)
       calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key($context_root)) do  
+        
         ctas_evidence_count = 4
         highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
+        
+        ctas = get_intesa_expo_ctas()
+        
+        if $context_root == "imprese"
+          cta_tags_with_tag_imprese = CallToActionTag.includes(:tag).where("tags.name = ?", "event-imprese")
+          ctas = ctas.where("call_to_actions.id NOT IN (?)", cta_tags_with_tag_imprese.map { |tag| tag.call_to_action_id })
+        end
+
         if highlight_calltoactions.any?
           ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
-          ctas = get_intesa_expo_ctas().where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
+          ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
                                        .where("(extra_fields->>'layout') IS NULL OR (extra_fields->>'layout') <> 'press'")
                                        .limit(ctas_evidence_count)
                                        .to_a
         else
-          ctas = get_intesa_expo_ctas().where("(extra_fields->>'layout') IS NULL OR (extra_fields->>'layout') <> 'press'").limit(ctas_evidence_count).to_a
+          ctas = ctas.where("(extra_fields->>'layout') IS NULL OR (extra_fields->>'layout') <> 'press'").limit(ctas_evidence_count).to_a
         end
 
         ctas = highlight_calltoactions + ctas
