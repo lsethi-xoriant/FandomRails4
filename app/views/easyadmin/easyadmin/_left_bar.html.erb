@@ -161,6 +161,25 @@
                 </li>
               </ul>
             </li>
+            <li class="dropdown <%= "active opened" if page == "ugc_comment" %>"><a href="javascript:void(0);"><i class="fa fa-comments"></i>Commenti UGC<span class="caret"></span></a>
+              <ul class="sub-nav">
+                <li>
+                  <a href="/easyadmin/comments/ugc_to_approved">
+                    <i class="fa fa-square-o"></i>Da approvare
+                  </a>
+                </li>
+                <li>
+                  <a href="/easyadmin/comments/ugc_approved">
+                    <i class="fa fa-check-square-o"></i>Pubblicati
+                  </a>
+                </li>
+                <li>
+                  <a href="/easyadmin/comments/ugc_not_approved">
+                    <i class="fa fa-minus-square-o"></i>Oscurati
+                  </a>
+                </li>
+              </ul>
+            </li>
         <% end %>
         
         <% if can? :manage, :notices %>
@@ -173,7 +192,7 @@
                 </li>
                 <li>
                   <a href="/easyadmin/notices/new">
-                    <i class="fa fa-save"></i>Nuovo
+                    <i class="fa fa-save"></i>Nuova
                   </a>
                 </li>
               </ul>

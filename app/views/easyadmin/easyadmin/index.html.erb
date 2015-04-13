@@ -6,7 +6,7 @@
     <h1>HOME</h1>
   </div> <!-- #content-header --> 
 
-  <div id="content-container">
+  <div id="content-container" style="overflow: scroll;">
 
   <div class="row">
     <div class="col-md-12">
@@ -210,6 +210,27 @@
         </div>
       </div> <!-- /.dashboard-stat -->
     </div> <!-- /.col-md-3 -->
+
+    <div class="col-md-3 col-sm-6">
+      <div class="dashboard-stat tertiary" style="min-height:175px; margin-bottom:30px;">
+        <div class="details">
+        <h3> Commenti UGC </h3>
+
+        <a href="/easyadmin/comments/ugc_to_approved" style="color: #FFF">
+          <i class="fa fa-square-o" style="color: #FFF"></i> Da approvare <br/>
+        </a>
+        <a href="/easyadmin/comments/ugc_approved" style="color: #FFF">
+          <i class="fa fa-check-square-o" style="color: #FFF"></i> Pubblicati <br/>
+        </a>
+        <a href="/easyadmin/comments/ugc_not_approved" style="color: #FFF">
+          <i class="fa fa-minus-square-o" style="color: #FFF"></i> Oscurati <br/>
+        </a>
+      </div> <!-- /.details --> 
+        <div class="visual">
+          <i class="fa fa-comments" style="color: #FFF"></i>
+        </div>
+      </div> <!-- /.dashboard-stat -->
+    </div> <!-- /.col-md-3 -->
   <% end %>
 
   <% if can? :manage, :notices %>
@@ -222,7 +243,7 @@
             <i class="fa fa-th-list" style="color: #FFF"></i> Lista <br/>
           </a>
           <a href="/easyadmin/notices/new" style="color: #FFF">
-            <i class="fa fa-save" style="color: #FFF"></i> Nuovo <br/>
+            <i class="fa fa-save" style="color: #FFF"></i> Nuova <br/>
           </a>
         </div> <!-- /.details --> 
         <div class="visual">

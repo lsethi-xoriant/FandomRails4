@@ -1,24 +1,14 @@
-<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "comment" } %>
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "#{ params['cta'] == 'user_call_to_actions' ? 'ugc_comment' : 'comment' }" } %>
  
   <div id="content">    
     
     <div id="content-header">
       <h1><%= "Property #{ @current_prop.name }" if @current_prop %></h1>
-    </div> <!-- #content-header --> 
-
+    </div>
 
     <div id="content-container">
 
-    <ul class="nav nav-tabs">
-      <li><a href="/easyadmin/comments/to_approved">Commenti da approvare</a></li>
-      <li class="active"><a href="/easyadmin/comments/approved">Commenti pubblicati</a></li>
-      <li><a href="/easyadmin/comments/not_approved">Commenti oscurati</a></li>
-    </ul>
-
-    <h3>Commenti approvati</h3>
-    <hr/>
-
-    <%= render partial: "/easyadmin/comments/comments_search_tab" %>
+    <%= render partial: "/easyadmin/comments/comments_header", locals: { ugc: params["cta"] == "user_call_to_actions", page: "approved" } %>
 
     <div class="col-md-12"> 
       <table class="table table-striped">

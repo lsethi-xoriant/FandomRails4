@@ -1,3 +1,28 @@
+<ul class="nav nav-tabs">
+  <li class="<%= 'active' if page == "to_be_approved" %>" >
+    <a href="/easyadmin/comments/<%= "ugc_" if ugc %>to_approved">Commenti <%= "UGC" if ugc %> da approvare</a>
+  </li>
+  <li class="<%= 'active' if page == "approved" %>" >
+    <a href="/easyadmin/comments/<%= "ugc_" if ugc %>approved">Commenti <%= "UGC" if ugc %> pubblicati</a>
+  </li>
+  <li class="<%= 'active' if page == "not_approved" %>" >
+    <a href="/easyadmin/comments/<%= "ugc_" if ugc %>not_approved">Commenti <%= "UGC" if ugc %> oscurati</a>
+  </li>
+</ul>
+
+<h3>Commenti 
+  <%= "UGC" if ugc %> 
+  <% if page == "to_be_approved" %>
+    da approvare
+  <% elsif page == "approved" %>
+    pubblicati
+  <% elsif page == "not_approved" %>
+    oscurati
+  <% end %>
+</h3>
+
+<hr/>
+
 <div class="row">
 <%= form_tag :method => 'post' do %>
   <div class="col-md-2">

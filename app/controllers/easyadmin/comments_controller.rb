@@ -6,6 +6,8 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
   layout "admin"
 
+  before_filter :authorize_user
+
   def authorize_user
     authorize! :manage, :comments
   end
@@ -91,19 +93,16 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
   end
   
   def write_where_conditions(params, approved_cond)
+    params[:id_cta_filter] = params[:text_filter] = nil unless params[:commit] != "RESET"
     where_conditions = approved_cond
-    if params[:commit] != "RESET"
-      unless params[:id_cta_filter].blank?
-        interaction = Interaction.where(:call_to_action_id => params[:id_cta_filter].to_i, :resource_type => 'Comment')
-        comment_id = interaction.present? ? interaction.first.resource_id : nil
-        where_conditions << " AND comment_id = #{comment_id}" unless comment_id.nil?
-      end
-      unless params[:text_filter].blank?
-        where_conditions << " AND text ILIKE '%#{params[:text_filter]}%'"
-      end
+    if params[:commit] != "RESET" and !params[:id_cta_filter].blank?
+      call_to_action_ids = [params[:id_cta_filter].to_i]
     else
-      params[:id_cta_filter] = params[:text_filter] = nil
+      call_to_action_ids = CallToAction.where("#{ params['cta'] == 'user_call_to_actions' ? 'user_id IS NOT NULL' : 'user_id IS NULL' }").pluck(:id)
     end
+    comment_ids = Interaction.where("call_to_action_id IN (?) AND resource_type = 'Comment'", call_to_action_ids).pluck(:resource_id)
+    where_conditions << " AND comment_id IN (#{ comment_ids.empty? ? "-1" : comment_ids.join(",") })"
+    where_conditions << " AND text ILIKE '%#{params[:text_filter]}%'" unless params[:text_filter].blank?
     where_conditions
   end
 

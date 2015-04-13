@@ -407,6 +407,9 @@ Fandom::Application.routes.draw do
     match "comments/approved", :to => "comments#index_comment_approved"
     match "comments/to_approved", :to => "comments#index_comment_to_be_approved"
     match "comments/not_approved", :to => "comments#index_comment_not_approved"
+    match "comments/ugc_approved", :to => "comments#index_comment_approved", :cta => "user_call_to_actions"
+    match "comments/ugc_to_approved", :to => "comments#index_comment_to_be_approved", :cta => "user_call_to_actions"
+    match "comments/ugc_not_approved", :to => "comments#index_comment_not_approved", :cta => "user_call_to_actions"
     match "comments/:comment_id/update_comment_status", :to => "comments#update_comment_status"
 
     match "dashboard", :to => "easyadmin#dashboard"
