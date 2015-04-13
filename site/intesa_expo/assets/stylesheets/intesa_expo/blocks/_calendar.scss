@@ -172,6 +172,8 @@
   text-decoration: none;
 }
 
+.calendar-event__message{}
+
 #full-calendar{
   
   .fc-content-skeleton table{
@@ -314,6 +316,10 @@
   
   .calendar-event__agenda-arrow{
     line-height: 88px;
+  }
+  
+  .calendar-event__message{
+    margin-bottom: 15px;
   }
   
 }
