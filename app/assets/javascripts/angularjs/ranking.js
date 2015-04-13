@@ -30,8 +30,8 @@ function RankingCtrl($scope, $window, $resource, $sce) {
 	};
 	
 	$scope.init_vote = function(rankings, user, single_rank) {
-		console.log(rankings);
 		$scope.rankings = rankings;
+		$scope.ranking_subtitle = JSON.parse(rankings.ranking.extra_fields)["ranking_subtitle"];
 		$scope.user = user;
 	};
 	
