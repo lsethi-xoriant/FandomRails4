@@ -8,7 +8,6 @@ module IntesaExpoHelper
     when "$prev-event-live"
       tag_name = "prev-event-live"
       current_time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
-      # exclude_cta_ids = CallToAction.active.where("cast(\"extra_fields\"->>'valid_from' AS timestamp) < ?", current_time).map { |cta| cta.id }
       params = { 
         ical_end_datetime: current_time,
         order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) DESC" 
@@ -16,7 +15,6 @@ module IntesaExpoHelper
     when "$next-event-live"
       tag_name = "next-event-live"
       current_time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
-      # exclude_cta_ids = CallToAction.active.where("cast(\"extra_fields\"->>'valid_from' AS timestamp) < ?", current_time).map { |cta| cta.id }
       params = { 
         ical_start_datetime: current_time,
         order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC" 
@@ -65,8 +63,8 @@ module IntesaExpoHelper
           "id" => item.id,
           "name" => item.name,
           "slug" => item.slug,
-          "browse_url" => (extra_fields['browse_url'] rescue '#'),
-          "title" => item.title
+          "title" => item.title,
+          "extra_fields" => extra_fields
         }
       end
     end

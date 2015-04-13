@@ -16,8 +16,8 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
      $scope.content_ical = new Object();
 
     if($scope.calltoaction_info) {
-      if($scope.aux.page_tag) {
-        $scope.menu_field = $scope.aux.page_tag.miniformat.name;
+      if($scope.aux.tag_menu_item) {
+        $scope.menu_field = $scope.aux.tag_menu_item;
       } else {
         $scope.menu_field = "";
       }
@@ -34,8 +34,8 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       }
       
     } else {
-      if($scope.aux.page_tag) {
-        $scope.menu_field = $scope.aux.page_tag.miniformat.name;
+      if($scope.aux.tag_menu_item) {
+        $scope.menu_field = $scope.aux.tag_menu_item;
       }
     }
   };

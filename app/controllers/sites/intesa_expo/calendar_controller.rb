@@ -27,11 +27,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     
     @aux_other_params = {
       today_events: month_calendar.today_events,
-      page_tag: {
-        miniformat: {
-          name: "calendar"
-        }
-      }
+      tag_menu_item: "calendar"
     }
     
     @today = month_calendar.today
@@ -39,10 +35,11 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     if get_intesa_property == "imprese"
       @aux_other_params = {
         "expo_events" => get_intesa_expo_ctas_with_tag("event"),
-        "gallery_events" => get_intesa_expo_ctas_with_tag("gallery")
+        "gallery_events" => get_intesa_expo_ctas_with_tag("gallery"),
+        "tag_menu_item" => "calendar"
       }
     end
-    
+
   end
   
   def initialize_calendar(today)

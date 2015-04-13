@@ -40,7 +40,9 @@ class Sites::IntesaExpo::BrowseController < BrowseController
     end
     
     extra_fields = get_extra_fields!(@category)
-    @aux_other_params = {}
+    @aux_other_params = {
+      "tag_menu_item" => extra_fields["menu_item"]
+    }
     
     if extra_fields['top_stripe']
       @aux_other_params['top_stripe'] = get_content_preview_stripe(extra_fields['top_stripe']) 
