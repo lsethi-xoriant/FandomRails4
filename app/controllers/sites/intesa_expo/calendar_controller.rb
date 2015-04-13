@@ -27,11 +27,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     
     @aux_other_params = {
       today_events: month_calendar.today_events,
-      page_tag: {
-        miniformat: {
-          name: "calendar"
-        }
-      }
+      tag_menu_item: "calendar"
     }
     
     @today = month_calendar.today
