@@ -137,6 +137,9 @@ module ApplicationHelper
   end
   
   def cta_to_content_preview(cta, populate_desc = true, interactions = nil)
+    
+    event_date_info = get_cta_event_start_end(interactions)
+    
     ContentPreview.new(
       type: "cta",
       media_type: cta.media_type,
@@ -156,11 +159,13 @@ module ApplicationHelper
       aux: build_content_preview_aux(cta),
       extra_fields: get_extra_fields!(cta),
       layout: get_content_preview_layout(cta),
-      start: cta.valid_from,
+      start: event_date_info[:start_date],
       interactions: interactions,
       valid_from: cta.valid_from,
       valid_to: cta.valid_to,
-      end: cta.valid_to
+      end: event_date_info[:end_date],
+      ical_id: event_date_info[:ical_id],
+      slug: cta.slug
     )
   end
   
@@ -184,8 +189,32 @@ module ApplicationHelper
       extra_fields: get_extra_fields!(cta),
       layout: get_content_preview_layout(cta),
       start: cta.valid_from,
+      slug: cta.slug,
       end: cta.valid_to
     )
+  end
+  
+  def get_cta_event_start_end(cta_interactions)
+    event_range_info = {
+      start_date: nil,
+      end_date: nil,
+      ical_id: nil
+    }
+    if cta_interactions
+      cta_interactions.each do |interaction|
+        if interaction[:interaction_info][:resource_type].downcase == 'download' && interaction[:interaction_resource][:ical_fields]
+          ical_fields = JSON.parse(interaction[:interaction_resource][:ical_fields])
+          event_range_info[:ical_id] = interaction[:interaction_info].id
+          if ical_fields['start_datetime']
+            event_range_info[:start_date] = ical_fields['start_datetime']['value']
+          end
+          if ical_fields['end_datetime']
+            event_range_info[:end_date] = ical_fields['end_datetime']['value'] 
+          end
+        end
+      end
+    end
+    event_range_info
   end
   
   def get_content_preview_layout(content)

@@ -56,20 +56,10 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     cal_events = cache_medium(get_month_calendar_cache_key(month_key)) do
       events = get_calendar_events(today.beginning_of_month, today.end_of_month)
       cal_events = []
-      #maps cta to interaction
-      cta_to_interaction = get_cta_to_interactions_map(events.map{|e| e.id})
-      ical_events = get_ical_events(events.map{|e| e.id})
-      ical_events.each do |event|
-        if cal_events[event[:start_datetime].day].nil?
-          cal_events[event[:start_datetime].day] = Array.new
-        end
-        content_preview = cta_to_content_preview(event[:cta])
-        content_preview.start = event[:start_datetime]
-        content_preview.end = event[:end_datetime]
-        content_preview.interactions = cta_to_interaction[event[:cta].id]
-        content_preview.id = content_preview.ical_id = event[:ical_id]
-        content_preview.slug = event[:slug]
-        cal_events[event[:start_datetime].day] << content_preview
+      
+      events.each do |event|
+        event.id = event.ical_id
+        (cal_events[DateTime.parse(event.start).day] ||= []) << event
       end
       cal_events
     end
@@ -77,13 +67,14 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   end
   
   def get_calendar_events(start_date, end_date)
-    language_tag_id = get_tag_from_params(get_intesa_property).id
-    event_tag_id = Tag.find_by_name("event-#{get_intesa_property}").id
+    language_tag_id = get_tag_from_params(get_intesa_property)
+    event_tag_id = Tag.find_by_name("event-#{get_intesa_property}")
     params = {
       ical_start_datetime: start_date.strftime("%Y-%m-%d %H:%M:%S %z"),
       ical_end_datetime: end_date.strftime("%Y-%m-%d %H:%M:%S %z")
     }
-    get_ctas_with_tags_in_and([language_tag_id, event_tag_id], params)
+    events, total = get_contents_by_category(event_tag_id, [language_tag_id], 10000, params)
+    events
   end
   
   def prepare_events_for_calendar(events)
