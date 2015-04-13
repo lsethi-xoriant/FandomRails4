@@ -73,7 +73,6 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
     cta = CallToAction.includes(call_to_action_tags: :tag).joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id")
                 .joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
-                #.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= ?", Time.now.utc)
                 .where("call_to_actions.id IN (#{tag_ids_subselect})")
                 .order("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC")
                 .first
