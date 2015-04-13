@@ -33,7 +33,7 @@ class Sites::Forte::CustomCallToActionController < ApplicationController
 
     else
 
-      @user_main_reward_count = current_user ? (get_counter_about_user_reward(MAIN_REWARD_NAME, true)["weekly"] || 0) : 0
+      @user_main_reward_count = current_user ? (get_counter_about_user_reward(MAIN_REWARD_NAME, true)[PERIOD_KIND_WEEKLY] || 0) : 0
       render template: "/custom_call_to_action/empty"
 
     end
@@ -48,7 +48,7 @@ class Sites::Forte::CustomCallToActionController < ApplicationController
     aux = { show_next_calltoaction_button: true, show_calltoaction_page: true, small_mobile_device: small_mobile_device? }
     calltoactions_active_interaction[calltoactions[0].id] = generate_next_interaction_response(calltoactions[0], nil, aux)
 
-    user_main_reward_count = current_user ? (get_counter_about_user_reward(MAIN_REWARD_NAME, true)["weekly"] || 0) : 0
+    user_main_reward_count = current_user ? (get_counter_about_user_reward(MAIN_REWARD_NAME, true)[PERIOD_KIND_WEEKLY] || 0) : 0
 
     [calltoactions_during_video_interactions_second, calltoactions_active_interaction, calltoactions_comment_interaction, aux, user_main_reward_count]
   end
