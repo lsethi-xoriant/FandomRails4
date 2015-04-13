@@ -12,7 +12,7 @@
   <meta name="description" content="<%= @seo_info["meta_description"] rescue "" %>">
   <meta name="keywords" content="<%= @seo_info["keywords"] rescue get_default_keywords() %>">
   
-  <%= yield (:fb_meta_tags) %>
+  <%= @fb_meta_tags %>
 
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 
