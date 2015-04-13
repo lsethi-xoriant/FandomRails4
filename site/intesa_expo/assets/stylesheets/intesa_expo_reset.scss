@@ -433,6 +433,17 @@ p {
     padding-left: 0;
     padding-right: 0;
   }
+
+  .cta__evidence-banner {
+    margin-bottom: 15px;
+  }
+
+  .right-logo, .left-logo {
+    margin-bottom: 15px; 
+    max-width: none;
+    width: 100%;
+    border: 1px solid #eee;
+  }
   
   .body-imprese{ 
     .navbar-header{
