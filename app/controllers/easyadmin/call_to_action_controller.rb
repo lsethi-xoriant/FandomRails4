@@ -407,8 +407,10 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
   def update_cta_status
     cta = CallToAction.find(params[:id])
-    activated_at = params[:approved] == 'false' ? nil : DateTime.now
-    cta.update_attributes(activated_at: activated_at, approved: params[:approved])
+    activated_at = params[:approved] == 'false' ? nil : DateTime.now.to_s
+    cta.activation_date_time = activated_at
+    cta.approved = params[:approved]
+    cta.save
     log_synced("moderated UGC content", approved: params[:approved], cta_id: cta.id, moderator_id: current_user.id)
     if cta.approved
       html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_ugc_approved_template",

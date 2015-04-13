@@ -19,9 +19,12 @@
         <p>{{i}}</p>
       </div>
       <!-- ALREADY DONE -->
-      <div  ng-if="interaction_info.user_interaction" class="vote-interaction__baloon__element-pin" ng-class="{'vote-interaction__baloon__element-pin__active': (evaluateVote(interaction_info) >= i)}">
+      <div ng-if="interaction_info.user_interaction" class="vote-interaction__baloon__element-pin" ng-class="{'vote-interaction__baloon__element-pin__active': (evaluateVote(interaction_info) >= i)}">
         <p>{{i}}</p>
       </div>
     </div>
   </div>
+
+  <p class="vote-interaction__subtitle" ng-if="interaction_info.interaction.resource.extra_fields && interaction_info.interaction.resource.extra_fields['subtitle']">{{interaction_info.interaction.resource.extra_fields["subtitle"]}}</p>
+
 </div>
