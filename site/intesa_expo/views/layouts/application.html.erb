@@ -8,9 +8,8 @@
   <% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
 
   <% aux = default_intesa_expo_aux(@aux_other_params, @calltoaction_info_list) %>  
-  <title><%= "#{@seo_info["title"]} | Intesa" rescue "" %></title>
-  <meta name="description" content="<%= @seo_info["meta_description"] rescue "" %>">
-  <meta name="keywords" content="<%= @seo_info["keywords"] rescue get_default_keywords() %>">
+  
+  <%= render partial: "/layouts/seo_head" %>
   
   <%= @fb_meta_tags %>
 

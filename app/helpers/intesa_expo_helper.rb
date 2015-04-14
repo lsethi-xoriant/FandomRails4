@@ -199,9 +199,12 @@ module IntesaExpoHelper
       end
     end
 
+    compute_seo()
+
     aux
 
   end
+
   
   def get_intesa_property()
     $context_root || "it"

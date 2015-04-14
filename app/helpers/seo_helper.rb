@@ -22,4 +22,25 @@ module SeoHelper
     Setting.find_by_key("keywords").value rescue ""
   end
 
+  def compute_seo()
+    seo_values_to_set = ["title", "meta_description", "keywords", "meta_image"]
+    seo_values_to_set.each do |value|
+      compute_seo_value(value)
+    end 
+  end
+
+  def compute_seo_value(value)
+    seo_value_from_settings = Setting.find_by_key(value).value rescue ""
+    if @seo_info && @seo_info[value]
+      seo_value = "#{@seo_info[value]}"
+      if value == "title"
+        seo_value = "#{seo_value} | #{seo_value_from_settings}"
+      end
+    else
+      seo_value = seo_value_from_settings
+    end
+    instance_variable_set("@seo_#{value}", seo_value)
+  end
+
+
 end
