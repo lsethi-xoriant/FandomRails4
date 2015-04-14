@@ -427,7 +427,7 @@ Fandom::Application.routes.draw do
     match "notices/new", :to => "easyadmin_notice#new"
     match "notices/create", :to => "easyadmin_notice#create"
     match "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }
-    match "notices/resend_notice", :to => "easyadmin_notice#resend_notice", defaults: { format: 'json' }
+    match "notices/resend_notice/:notice_id", :to => "easyadmin_notice#resend_notice"
     
     match "rules", :to => "easyadmin_rewarding_rules#index"
     match "rules/save", :to => "easyadmin_rewarding_rules#save"

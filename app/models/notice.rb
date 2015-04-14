@@ -23,7 +23,7 @@ class Notice < ActiveRecord::Base
     end
   end
   
-  def send_to_user(request)
+  def send_to_user(request, send_mail)
     if user.aux
       aux_hash = JSON.parse(user.aux)
       if aux_hash['subscriptions']
@@ -32,7 +32,7 @@ class Notice < ActiveRecord::Base
         end
       end
     end
-    SystemMailer.notification_mail(user.email, html_notice, "Hai ricevuto una notifica su #{request.site.title}").deliver
+    SystemMailer.notification_mail(user.email, html_notice, "Hai ricevuto una notifica su #{request.site.title}").deliver if send_mail
     update_attributes(:last_sent => Time.now, :viewed => false, :read => false)
   end
   
