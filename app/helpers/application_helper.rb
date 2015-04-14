@@ -537,23 +537,6 @@ module ApplicationHelper
     end
   end
   
-  def get_tags_with_tags(tag_ids, params = {})
-    cache_short get_tags_with_tags_cache_key(tag_ids, "") do
-      hidden_tags_ids = get_hidden_tag_ids
-      where_clause = get_tag_where_clause_from_params(params)
-      if hidden_tags_ids.any?
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
-      else
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      end
-      tags = Tag.includes(:tags_tags).where("tags.id in (#{tag_ids_subselect})")
-      if !where_clause.empty?
-        tags.where("#{where_clause}")
-      end
-      tags.order("created_at DESC").to_a
-    end
-  end
-  
   def get_tags_with_tag_with_match(tag_name, query = "")
     conditions = construct_conditions_from_query(query, "tags.title")
     category_tag_ids = get_category_tag_ids()
@@ -630,11 +613,9 @@ module ApplicationHelper
     if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
       if params[:ical_start_datetime]
         extra_key << Time.parse(params[:ical_start_datetime]).strftime("%Y-%M-%d_%H-%M-%S")
-        #"#{DateTime.parse(params[:ical_start_datetime]).strftime("%d_%M_%Y")}" (AT)
       end
       if params[:ical_end_datetime]
         extra_key << Time.parse(params[:ical_end_datetime]).strftime("%Y-%M-%d_%H-%M-%S")
-        #"#{DateTime.parse(params[:ical_end_datetime]).strftime("%d_%M_%Y")}"
       end
     end
     if params[:limit]
@@ -642,18 +623,38 @@ module ApplicationHelper
     end
     extra_key.join("_")
   end
+  
+  def get_tags_with_tags(tag_ids, params = {})
+    cache_short get_tags_with_tags_cache_key(tag_ids, "") do
+      hidden_tags_ids = get_hidden_tag_ids
+      where_clause = get_tag_where_clause_from_params(params)
+      if hidden_tags_ids.any?
+        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
+      else
+        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
+      end
+      tags = Tag.includes(:tags_tags).where("tags.id in (#{tag_ids_subselect})")
+      if !where_clause.empty?
+        tags.where("#{where_clause}")
+      end
+      if params[:limit]
+        tags = tags.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
+      end
+      tags.order("created_at DESC").to_a
+    end
+  end
 
   def get_tags_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
     cache_short get_tags_with_tags_cache_key(tag_ids, extra_key) do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      where_clause, limit = get_tag_where_clause_from_params(params)
+      where_clause = get_tag_where_clause_from_params(params)
       tags = Tag.where("id IN (#{tag_ids_subselect})")
       if !where_clause.empty?
         tags = tags.where("#{where_clause}")
       end
-      if limit
-        tags = tags.limit(limit)
+      if params[:limit]
+        tags = tags.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
       end
       tags.order("created_at DESC").to_a
     end
@@ -673,7 +674,7 @@ module ApplicationHelper
     extra_key = get_extra_key_from_params(params)
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "and") do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
-      where_clause, limit = get_cta_where_clause_from_params(params)
+      where_clause = get_cta_where_clause_from_params(params)
       ctas = CallToAction.includes(call_to_action_tags: :tag)
       if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
         ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
@@ -683,8 +684,8 @@ module ApplicationHelper
       if !where_clause.empty?
         ctas = ctas.where("#{where_clause}")
       end
-      if limit
-        ctas = ctas.limit(limit)
+      if params[:limit]
+        ctas = ctas.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
       end
       
       if params[:order_string]
@@ -699,7 +700,7 @@ module ApplicationHelper
   def get_ctas_with_tags_in_or(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
-      where_clause, limit = get_cta_where_clause_from_params(params)
+      where_clause = get_cta_where_clause_from_params(params)
       ctas = CallToAction.active.includes(call_to_action_tags: :tag)
       if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
         cta_id_to_ical_fields = get_cta_id_to_ical_fields(params) 
@@ -709,8 +710,8 @@ module ApplicationHelper
       if !where_clause.empty?
         ctas = ctas.where("#{where_clause}")
       end
-      if limit
-        ctas = ctas.limit(limit)
+      if params[:limit]
+        ctas = ctas.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
       end
       
       if params[:order_string]
@@ -742,7 +743,7 @@ module ApplicationHelper
       end
     end
     where_clause = where_clause.join(" AND ")
-    [where_clause, get_limit_from_params(params)]
+    where_clause
   end
   
   # Public: Construct an sql condition string from hash of params
@@ -763,15 +764,7 @@ module ApplicationHelper
       end
     end
     where_clause = where_clause.join(" AND ")
-    [where_clause, get_limit_from_params(params)]
-  end
-  
-  def get_limit_from_params(params)
-    limit = nil
-    if params[:limit]
-      limit = (params[:limit][:offset].to_i + 1) * params[:limit][:perpage]
-    end
-    limit
+    where_clause
   end
   
   def get_all_ctas_with_tag(tag_name)

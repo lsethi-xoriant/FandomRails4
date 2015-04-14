@@ -23,7 +23,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
        	});
     });
 	
-	$scope.init = function(category_id, elements, tags, total) {
+	$scope.init = function(category_id, elements, tags, has_more) {
 		$scope.isTagFilterOpen = false;
 		$scope.category_id = category_id;
 		$scope.elements = elements;
@@ -32,10 +32,11 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.tags = tags;
 		$scope.tagsEnabled = tags;
 		$scope.activeTags = {};
-		$scope.total = total;
+		$scope.has_more = has_more;
+		console.log(has_more);
 	};
 	
-	$scope.init_intesa_browse = function(category_id, elements, tags, total, column_number) {
+	$scope.init_intesa_browse = function(category_id, elements, tags, has_more, column_number) {
 		$scope.isTagFilterOpen = false;
 		$scope.category_id = category_id;
 		$scope.elements = elements;
@@ -44,7 +45,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.tags = tags;
 		$scope.tagsEnabled = tags;
 		$scope.activeTags = {};
-		$scope.total = total;
+		$scope.has_more = has_more;
 		$scope.column_number = column_number;
 		$scope.column_class = "col-sm-" + (12/column_number).toString;
 		$scope.elements_per_column = $scope.elements_in_page / $scope.column_number;

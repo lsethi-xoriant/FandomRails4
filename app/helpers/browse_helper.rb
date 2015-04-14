@@ -182,7 +182,7 @@ module BrowseHelper
   end
   
   def get_browse_area_by_category(category, tags, carousel_elements, params = {})
-    contents, total = get_contents_by_category(category, tags, carousel_elements, params)
+    contents, has_more = get_contents_by_category(category, tags, carousel_elements, params)
     extra_fields = get_extra_fields!(category)
 
     browse_section = ContentSection.new({
@@ -193,8 +193,8 @@ module BrowseHelper
       contents: contents,
       view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
       column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
-      total: total,
-      has_view_all: total > carousel_elements,
+      #total: total,
+      has_view_all: has_more,
       per_page: carousel_elements
     })
   end
@@ -240,6 +240,8 @@ module BrowseHelper
         offset: 0,
         perpage: carousel_elements + 1
       }
+    else
+      params[:limit][:perpage] = params[:limit][:perpage] + 1
     end
     tag_ids = ([category] + tags).map{|tag| tag.id}
     tags = order_elements(category, get_tags_with_tags(tag_ids, params))
@@ -248,19 +250,7 @@ module BrowseHelper
     total = tags.count + ctas.count
     tags = tags.slice!(0, carousel_elements)
     ctas = ctas.slice!(0, carousel_elements)
-    [merge_contents(ctas, tags), total]
-  end
-  
-  def get_contents_by_category_with_tags(filter_tags, category, offset = 0)
-    params = {
-      limit: {
-        offset: offset,
-        perpage: DEFAULT_VIEW_ALL_ELEMENTS
-      }
-    }
-    tags = order_elements(category, get_tags_with_tags(filter_tags.map{|t| t.id}, params))
-    ctas = order_elements(category, get_ctas_with_tags_in_and(filter_tags.map{|t| t.id}, params))
-    merge_contents_with_tags(ctas, tags, offset)
+    [merge_contents(ctas, tags), total > carousel_elements]
   end
   
   def get_contents_by_category_with_match(category, query)
@@ -385,58 +375,15 @@ module BrowseHelper
     prepare_contents_for_autocomplete(merged)
   end
   
-  def merge_contents_with_tags(ctas, tags, offset = 0)
-    total = ctas.count + tags.count
-    merged = (total > offset || offset == 0) ? (tags + ctas).slice(offset, DEFAULT_VIEW_ALL_ELEMENTS) : []
-    prepared_contents = prepare_contents_with_related_tags(merged)
-    prepared_contents + [total]
-  end
-  
   def merge_search_contents(ctas, tags)
     (tags.sort_by(&:created_at).reverse + ctas.sort_by(&:created_at).reverse)
   end
   
-  def prepare_contents_with_related_tags(elements)
-    contents = []
-    tags = {}
-    
-    cta_ids = []
-    elements.each do |element|
-      if element.class.name == "CallToAction"
-        cta_ids << element.id 
-      end
-    end
-    
-    interactions = get_cta_to_interactions_map(cta_ids)
-    
-    elements.each do |element|
-      if element.class.name == "CallToAction"
-        element_interactions = interactions[element.id]
-        contents << cta_to_content_preview(element, true, element_interactions)
-        tags = add_cta_tags(tags, element)
-      else
-        contents << tag_to_content_preview(element, true)
-        tags = add_tag_tags(tags, element)
-      end
-    end
-    [contents, tags]
-  end
-  
-  def add_cta_tags(tags, element)
+  def add_content_tags(tags, element)
     hidden_tags_ids = get_hidden_tag_ids
-    element.call_to_action_tags.each do |t|
-      if !tags.has_key?(t.tag.id) && !hidden_tags_ids.include?(t.tag.id)
-        tags[t.tag.id] = get_extra_fields!(t.tag).fetch("title", t.tag.name)
-      end
-    end
-    tags
-  end
-  
-  def add_tag_tags(tags, element)
-    element.tags_tags.each do |t|
-      other_tag = Tag.find(t.other_tag_id)
-      if !tags.has_key?(other_tag.id)
-        tags[other_tag.id] = other_tag.title
+    element.tags.each do |k, t|
+      if !tags.has_key?(t) && !hidden_tags_ids.include?(t)
+        tags[t] = Tag.find(t).title
       end
     end
     tags
