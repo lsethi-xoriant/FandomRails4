@@ -73,7 +73,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
       ical_start_datetime: start_date.strftime("%Y-%m-%d %H:%M:%S %z"),
       ical_end_datetime: end_date.strftime("%Y-%m-%d %H:%M:%S %z")
     }
-    events, total = get_contents_by_category(event_tag_id, [language_tag_id], 10000, params)
+    events, has_more = get_contents_by_category(event_tag_id, [language_tag_id], 10000, params)
     events
   end
   
