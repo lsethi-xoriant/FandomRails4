@@ -45,9 +45,6 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   def initialize_calendar(today)
     cal_events = init_calendar_events(today)
     day_of_month = today.day
-    # if cal_events[today.day].nil?
-    #   day_of_month = find_nearest_day_with_event(today, cal_events)
-    # end
     Calendar.new(cal_events, today)
   end
   
