@@ -375,7 +375,6 @@ class CallToActionController < ApplicationController
     user_text = params[:comment_info][:user_text]
 
     profanity_filter_automatic_setting = Setting.find_by_key('profanity.filter.automatic')
-    debugger
     apply_profanity_filter_automatic = profanity_filter_automatic_setting.nil? ? false : (profanity_filter_automatic_setting.value == "t")
 
     if apply_profanity_filter_automatic && check_profanity_words_in_comment(user_text)
