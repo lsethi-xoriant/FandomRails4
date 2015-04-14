@@ -20,7 +20,7 @@
 				  		<div class="row">
 						  	<div class="col-sm-6 col-sm-offset-3 gallery-cta__upload-photo">
 					  			<input id="upload" name="attachment" ng-file-select="" ng-model="form_data.attachment" class="form-control hidden" type="file"> <!-- onchange="photoSelected()" -->
-					  			<a class="btn btn-primary btn-block" onclick="loadPhoto();"><i class="fa fa-upload"></i> <%= get_extra_fields!(gallery_tag)['label_button'].nil? ? "Carica il tuo media*" : "#{get_extra_fields!(gallery_tag)['label_button']}*" %>
+					  			<a class="btn btn-primary btn-block needsclick" onclick="loadPhoto();"><i class="fa fa-upload"></i> <%= get_extra_fields!(gallery_tag)['label_button'].nil? ? "Carica il tuo media*" : "#{get_extra_fields!(gallery_tag)['label_button']}*" %>
 					  			</a>
 					  			<i class="fa fa-check-circle" ng-if="form_data.attachment"></i>
 					  		</div>
@@ -52,7 +52,7 @@
 					  </div>
 					  <div class="col-xs-12 col-sm-6 col-sm-offset-3 gallery-cta__upload-release">
 					  	<input id="releasing" name="releasing" ng-file-select="" ng-model="form_data.releasing" class="hidden" type="file"> <!-- onchange="releaseSelected();" -->
-					  	<a class="btn btn-primary btn-block" onclick="loadRelease();"><i class="fa fa-pencil"></i> Carica la liberatoria firmata*
+					  	<a class="btn btn-primary btn-block needsclick" onclick="loadRelease();"><i class="fa fa-pencil"></i> Carica la liberatoria firmata*
 					  	</a>
 					  	<i class="fa fa-check-circle" ng-if="form_data.releasing"></i>
 					  </div>

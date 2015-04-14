@@ -32,7 +32,7 @@
      <div class="col-md-2">
       	<div>
           <label class="text-input">PERIODO</label></br>
-          <%= radio_button_tag :time_interval, 'weekly', (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
+          <%= radio_button_tag :time_interval, PERIOD_KIND_WEEKLY, (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
           <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
         </div>
       </div>
