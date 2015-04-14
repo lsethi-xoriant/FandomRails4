@@ -26,9 +26,9 @@
     	<div class="search__container text-center" ng-class="{'search__container--active': ('search' == aux.page_tag.miniformat.name)}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
     </a>
   </nav>
-  
+
   <div class="col-xs-12 navbar__search">
   	<%= render partial: "/application/search", locals: { query: (defined? @query).nil? ? nil : @query } %>
   </div>
-  
+
 </div>
