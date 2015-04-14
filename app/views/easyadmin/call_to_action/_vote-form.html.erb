@@ -16,13 +16,13 @@
 			<div class="col-lg-6">
 				<div class="form-group">
 				  <label class="text-input">Visibile</label>
-				   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
+				  <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
 				</div>
 			</div>
 			<div class="col-lg-6">
 				<div class="form-group">
 					<label class="text-input">Secondo di apparizione</label>
-			  		<%= f.text_field :seconds, :class => "form-control" %>
+			  	<%= f.text_field :seconds, :class => "form-control" %>
 				</div>
 			</div>
 		</div>
@@ -30,27 +30,31 @@
 			<div class="col-lg-6">
 				<div class="form-group">
           <label class="text-input">Richiesto per il completamento</label>
-            <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+          <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
         </div>
         <div class="form-group">
           <label class="text-input">Salvata per l'anonimo</label>
-            <%= f.select(:stored_for_anonymous, [["NO", false], ["SI", true]], {}, { :class => "form-control" }) %>
+          <%= f.select(:stored_for_anonymous, [["NO", false], ["SI", true]], {}, { :class => "form-control" }) %>
         </div>		
 				<div class="form-group">
 				  <label class="text-input">Titolo</label>
-				   <%= voteform.text_field :title, :class => "form-control" %>
+				  <%= voteform.text_field :title, :class => "form-control" %>
 				</div>
 				<div class="form-group">
 				  <label class="text-input">Voto minimo</label>
-				   <%= voteform.text_field :vote_min, :class => "form-control" %>
+				  <%= voteform.text_field :vote_min, :class => "form-control" %>
 				</div>
 				<div class="form-group">
 				  <label class="text-input">Voto massimo</label>
-				   <%= voteform.text_field :vote_max, :class => "form-control" %>
+				  <%= voteform.text_field :vote_max, :class => "form-control" %>
 				</div>
 				<div class="form-group">
 				  <label class="text-input">One shot</label>
-				   <%= voteform.check_box :one_shot %>
+				  <%= voteform.check_box :one_shot %>
+				</div>
+				<div class="form-group">
+					<label class="text-input">Subtitle</label>
+			  	<%= voteform.text_field :subtitle, :class => "form-control", :value => voteform.object.extra_fields ? JSON.parse(voteform.object.extra_fields)["subtitle"] : "" %>
 				</div>
 			</div>
 		</div>
