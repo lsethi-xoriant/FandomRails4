@@ -122,7 +122,7 @@ module ApplicationHelper
       media_type: cta.media_type,
       id: cta.id, 
       has_thumb: cta.thumbnail.present?, 
-      thumb_url: cta.thumbnail(:medium), 
+      thumb_url: cta.thumbnail(:thumb), 
       title: cta.title, 
       description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
       long_description: populate_desc ? cta.description : nil,
