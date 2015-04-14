@@ -85,15 +85,12 @@ class RewardController < ApplicationController
      end
   end
   
-  def buy_reward
+  def buy_reward_attempt
     response = {}
     reward = Reward.find(params[:reward_id])
+    
     if user_has_currency_for_reward(reward)
-      get_reward_with_periods(reward.currency.name).each do |period_reward|
-        period_reward.update_attribute(:counter, period_reward.counter - reward.cost)
-      end
-      UserReward.create(user_id: current_user.id, reward_id: reward.id, available: true, counter: 1)
-      buy_reward_catalogue_expires(reward.currency.name, current_user.id)
+      buy_reward(current_user, reward)
       
       response["html"] = "<p class=\"cta-preview__unlocked-message\">PREMIO SBLOCCATO</p>
       <p><small>Hai speso #{reward.cost} #{reward.currency.name}</small></p>
