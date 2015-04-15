@@ -10,14 +10,23 @@ module SeoHelper
   end
 
   def set_seo_info_for_cta(cta)
-    thumbnail = (cta.thumbnail.path rescue nil)
-    set_seo_info(cta.title, cta.description, get_default_keywords(), thumbnail)
+    seo_title, seo_meta_description = seo_info_from_extra_fields(tag)
+    thumbnail = (cta.thumbnail.path rescue nil) 
+    set_seo_info(seo_title, seo_meta_description, get_default_keywords(), thumbnail)
   end
   
   def set_seo_info_for_tag(tag)
+    seo_title, seo_meta_description = seo_info_from_extra_fields(tag)
+    
     extra_fields = get_extra_fields!(tag)
     thumbnail = get_upload_extra_field_processor(extra_fields['thumbnail'], :medium) rescue nil
-    set_seo_info(extra_fields["seo_title"], extra_fields["seo_meta_description"], get_default_keywords(), thumbnail)
+    set_seo_info(seo_title, seo_meta_description, get_default_keywords(), thumbnail)
+  end
+
+  def seo_info_from_extra_fields(el)
+    extra_fields = get_extra_fields!(el)
+    seo_title = extra_fields["seo_title"] ? extra_fields["seo_title"] : el.title
+    seo_meta_description = extra_fields["seo_meta_description"] ? extra_fields["seo_meta_description"] : el.description
   end
 
   def get_default_keywords()
