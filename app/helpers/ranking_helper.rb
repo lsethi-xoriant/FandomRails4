@@ -260,13 +260,6 @@ module RankingHelper
     end
   end
   
-  def create_current_chart_user_position(ranking)
-    rank = get_ranking(ranking)
-    if rank
-      rank.user_to_position
-    end
-  end
-  
   def prepare_rank_for_json(rankings, ranking)
     positions = Array.new
     rankings.each do |r|
