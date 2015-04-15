@@ -199,7 +199,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       else
         aux_hash = JSON.parse(user.aux || "{}")
         unless aux_hash["terms"]
-          aux_hash"terms"] = cache_value["identity"]["terms"]
+          aux_hash["terms"] = cache_value["identity"]["terms"]
         end
       end
 
