@@ -273,6 +273,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     else
       @message = "Link non valido."
     end
+    @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     render template: "cup_redeemer/complete_registration"
   end
 

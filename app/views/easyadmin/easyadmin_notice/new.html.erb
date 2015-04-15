@@ -3,8 +3,8 @@
 <div id="content">    
 
   <div id="content-header">
-    <h1>NUOVA NOTIFICA MANUALE</h1>
-  </div> <!-- #content-header --> 
+    <h1>NUOVA NOTIFICA</h1>
+  </div> 
 
   <div id="content-container">
 
@@ -29,36 +29,82 @@
     </div>
 
     <h3>Dati</h3>
+
     <hr/>
-    
-	<%= form_tag("/easyadmin/notices/create", method: "post") do %>
-        <div class="row form-group">
-            <div class="col-lg-4"><%= label_tag(:users, "Mail utenti (se piu di una separare con \",\"):") %></div>
-            <div class="col-lg-6"><%= text_field_tag :users, "", :class => "form-control" %> </div>
+
+    <%= form_tag("/easyadmin/notices/create", method: "post") do %>
+      <div class="row form-group">
+        <div class="col-lg-3"><%= label_tag(:users, "Mail utenti (separare con \",\"):") %></div>
+        <div class="col-lg-6"><%= text_field_tag :users, @users, :class => "form-control" %> </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-lg-3"><%= label_tag(:all_users, "Manda a tutti gli utenti:") %></div>
+        <div class="col-lg-6"><%= check_box_tag :all_users, "1", @all_users, :onclick => "checkAllUsers(this);" %> </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-lg-1"><%= label_tag(:channels, "Canali:") %></div>
+        <div class="col-lg-2">
+          <% @channels.each do |channel| %>
+            <%= check_box_tag(channel, "1", params[channel] == "1") %> <%= channel.humanize %> <br/>
+          <% end %>
         </div>
-        <div class="row form-group">
-            <div class="col-lg-4"><%= label_tag(:all_users, "Manda a tutti gli utenti:") %></div>
-            <div class="col-lg-6"><%= check_box_tag :all_users, "1", false, :onclick => "checkAllUsers(this);" %> </div>
-        </div>
-        <div class="row form-group">
-            <div class="col-lg-4"><%= label_tag(:notice, "HTML notifica:") %></div>
-            <div class="col-lg-6"><%= text_area_tag(:notice, "", :class => "form-control", size: "24x6") %> </div>
-        </div>
-        <div class="row">
-          <div class="col-sm12 text-center">
-              <button type="submit" class="btn btn-primary">INVIA NOTIFICA</button>
+        <div class="col-lg-6">
+          <div id="fandom-notice-div" class="hidden">
+            <%= label_tag(:fandom_notice, "Codice HTML notifica Fandom:") %>
+            <%= text_area_tag(:fandom_notice, @fandom_notice, :class => "form-control", size: "24x6", :style => "background-color:#FFE6E6;") %>
+            <hr/>
+          </div>
+          <div id="email-notice-div" class="hidden">
+            <%= label_tag(:email_notice, "Codice HTML notifica email:") %>
+            <%= text_area_tag(:email_notice, @email_notice, :class => "form-control", size: "24x6", :style => "background-color:#E6F5E6;") %>
+            <hr/>
+          </div>
+          <div id="facebook-notice-div" class="hidden">
+            <%= label_tag(:facebook_notice, "Testo notifica Facebook:") %>
+            <%= text_area_tag(:facebook_notice, @facebook_notice, :class => "form-control", size: "24x6", :style => "background-color:#ECEFF5;") %>
+            <hr/>
           </div>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-sm12 text-center">
+          <button type="submit" class="btn btn-primary">INVIA NOTIFICA</button>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>
 
 <script type="text/javascript">
-	function checkAllUsers(checkbox){
+
+	function checkAllUsers(checkbox) {
 		if( $(checkbox).is(":checked") ){
 			$("#users").attr("disabled","disabled");
-		}else{
+		}
+    else {
 			$("#users").removeAttr("disabled");
 		}
-	}
+	};
+
+  function activateTextArea(checkbox, div) {
+    triggerActivateTextArea(checkbox, div)
+    $(checkbox).change(function() {
+      triggerActivateTextArea($(this), div);
+    });
+  };
+
+  function triggerActivateTextArea(checkbox, div) {
+    if(checkbox.is(':checked'))
+      $(div).removeClass("hidden");
+    else
+      $(div).addClass("hidden");
+  };
+
+  $(document).ready(function() {
+    channels = <%= raw @channels %>;
+    channels.forEach(function(channel) {
+      activateTextArea($("#" + channel), $("#" + channel + "-notice-div"));
+    });
+  });
+
 </script>

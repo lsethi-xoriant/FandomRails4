@@ -30,42 +30,40 @@ function NoticeCtrl($scope, $window, $timeout, $resource, ngTableParams, $sce) {
 
 	var Api = $resource('/easyadmin/notices/filter');
 	var columns = [];
-	
+
 	$scope.init = function(fields) {
-		
+
 		$.each(fields, function(key,value){
 			column = {title: value[1].name, field: value[1].id, visible: value[1].visible };
 			columns.push(column);
 		});
 	};
-	
-	$scope.columns = columns;
 
+	$scope.columns = columns;
 	$scope.tableFilters = [];
-	
+
 	$scope.updateFilter = function(){
 		$scope.tableFilters = [];
 		$("#event_filter .row-filter:visible").each(function(key,value){
-			
 			var fieldname = $(value).find(".condition-field-name").attr("name");
 			var operand = $(value).find(".condition-type").val();
 			var parameter = $(value).find(".condition-value").val();
-			var condition = {field: fieldname, operand: operand, value: parameter };
+			var condition = { field: fieldname, operand: operand, value: parameter };
 			$scope.tableFilters.push(condition);
 		});
 		$scope.tableParams.reload();
 	};
-	
+
 	$scope.resend_notice = function(notice_id){
-		var mail_api = $resource("/easyadmin/notices/sendnotice");
+		var mail_api = $resource("/easyadmin/notices/resend_notice");
 		mail_api.get({ notice_id: notice_id}, function(data){
 			alert("notifica reinviata correttamente");
 		}); 
 	};
-	
+
 	$scope.tableParams = new ngTableParams({
 		page: 1,
-	    count: 2,
+	    count: 10,
 	}, 
 	{
 	    total: 0,
@@ -79,13 +77,13 @@ function NoticeCtrl($scope, $window, $timeout, $resource, ngTableParams, $sce) {
 		    });
     	}
 	});
-	
+
 }
 
 function NoticeBarCtrl($scope, $resource, $sce) {
 	//LatestNoticeService.get_notices();
 	var Api = $resource('/profile/notices/get_recent_notice');
-		
+
 	Api.get({}, function(data) {
 	    angular.forEach(data.result, function(value, key) {
 	       value.html_notice = $sce.trustAsHtml(value.html_notice);
@@ -97,20 +95,20 @@ function NoticeBarCtrl($scope, $resource, $sce) {
 function NoticePageCtrl($scope, $resource, $sce, $filter) {
 	//LatestNoticeService.get_notices();
 	var Api = $resource('/profile/notices/load_more');
-	
+
 	$scope.init = function(notices) {
-		
+
 		angular.forEach(notices, function(value, key) {
 			angular.forEach(value, function(value, key) {
 	       		value.html_notice = $sce.trustAsHtml(value.html_notice);
 	     	});
 	    });
-	    
+
 	    result = new Array();
 	    currentDate = {'date': notices[0].date, notices: [] };
-	    
+
 	    angular.forEach(notices, function(value, key) {
-	    	
+
 	    	if(currentDate.date != value.date){
 	    		result.push(currentDate);
 	    		currentDate = {'date': value.date, notices: [] };
@@ -123,7 +121,7 @@ function NoticePageCtrl($scope, $resource, $sce, $filter) {
 	    $scope.notice_list = result;
 		$scope.notice_number = 20;
 	};
-	
+
 	$scope.loadMore = function(){
 		Api.get({count: $scope.notice_number + 20}, function(data) {
 		   if (data.length > 0){
@@ -139,7 +137,7 @@ function NoticePageCtrl($scope, $resource, $sce, $filter) {
 		   }
 		});
 	};
-	
+
 	$scope.mark_as_read = function(id){
 		$.ajax({
 	      type: "POST",
@@ -158,7 +156,7 @@ function NoticePageCtrl($scope, $resource, $sce, $filter) {
 	      } // success AJAX
       	});
 	};
-	
+
 	$scope.min = function(arr) {
     	return $filter('min')
       		($filter('map')(arr, 'date'));

@@ -1,166 +1,169 @@
 <%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "notice" } %>
- <style>
+
+<style>
   .row-filter {
     display: none;
   }
- </style>
-  <div id="content">
-    
-    <div id="content-header">
-      <h1>ELENCO NOTIFICHE</h1>
-    </div> <!-- #content-header --> 
+</style>
 
-      <div id="content-container"
-      ng-controller="NoticeCtrl"
-      ng-init="init(<%= @fields %>)">
+<div id="content">
+  
+  <div id="content-header">
+    <h1>ELENCO NOTIFICHE</h1>
+  </div>
 
-      <% if flash[:notice] %>
-        <div class="row">
-          <div class="col-md-12">         
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="alert alert-success"><%= flash[:notice] %></div>
-                </div>
-              </div>
-          </div>
-        </div>
-      <% end %>
+  <div id="content-container" ng-controller="NoticeCtrl" ng-init="init(<%= @fields %>)">
 
+    <% if flash[:notice] %>
       <div class="row">
-        <h3>FILTRI</h3>
-        
-        <div class="col-md-10">
-          <div class="panel panel-default">
+        <div class="col-md-12">         
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="alert alert-success"><%= flash[:notice] %></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div>
+      <h3>FILTRI</h3>
+
+      <div class="col-md-10">
+        <div class="panel panel-default">
           <div class="panel-body">
-          <div class="row">
-            <div class="col-md-2">
-              <p>Aggiungi filtro:</p>
+            <div class="row">
+              <div class="col-md-2">
+                <p>Aggiungi filtro:</p>
+              </div>
+              <div class="col-md-2">
+                <select name="add-filter" id="add-filter">
+                  <option ng-repeat="column in columns" value="{{column.field}}">{{column.title}}</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-xs btn-primary" onclick="addFilter();">
+                  <i class="fa fa-plus-circle"></i> AGGIUNGI 
+                </button>
+              </div>
             </div>
-            <div class="col-md-2">
-              <select name="add-filter" id="add-filter">
-                <option ng-repeat="column in columns" value="{{column.field}}">{{column.title}}</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <button class="btn btn-xs btn-primary" onclick="addFilter();"><i class="fa fa-plus-circle"></i> AGGIUNGI</button>
-            </div>
-          </div>
           </div>
           <div class="panel-footer">
             <div id="event_filter">
-            <div class="row row-filter filter-date form-horizontal">
-                  <label class="col-sm-2 control-label"><a href="javascript:void(0);" onclick="removeFilter(this);"><i class="fa fa-minus-circle"></i></a> Data</label>
-                  <div class="col-sm-10">
-                    <div class="row">
-                      <input type="hidden" name="date" class="condition-field-name" />
-                      <div class="col-sm-6">
-                      <select name="date-condition" class="condition-type form-control">
-                        <option value="<%= FILTER_OPERATOR_LESS %>">Minore di</option>
-                        <option value="<%= FILTER_OPERATOR_MORE %>">Maggiore di </option>
-                        <option value="<%= FILTER_OPERATOR_EQUAL %>">Uguale a</option>
-                      </select>
-                      </div>
-                      <div class="col-sm-6">
-                        <input name="date" id="date" class="condition-value form-control" type="text">
-                      </div>
+              <div class="row row-filter filter-date form-horizontal">
+                <label class="col-sm-2 control-label">
+                  <a href="javascript:void(0);" onclick="removeFilter(this);">
+                    <i class="fa fa-minus-circle"></i>
+                  </a> 
+                  Data 
+                </label>
+                <div class="col-sm-10">
+                  <div class="row">
+                    <input type="hidden" name="date" class="condition-field-name" />
+                    <div class="col-sm-6">
+                    <select name="date-condition" class="condition-type form-control">
+                      <option value="<%= FILTER_OPERATOR_LESS %>">Minore di</option>
+                      <option value="<%= FILTER_OPERATOR_MORE %>">Maggiore di </option>
+                      <option value="<%= FILTER_OPERATOR_EQUAL %>">Uguale a</option>
+                    </select>
+                    </div>
+                    <div class="col-sm-6">
+                      <input name="date" id="date" class="condition-value form-control" type="text">
                     </div>
                   </div>
-            
-            </div>
-            <div class="row row-filter filter-user form-horizontal">
-                
-                  <label class="col-sm-2 control-label"><a href="javascript:void(0);" onclick="removeFilter(this);"><i class="fa fa-minus-circle"></i></a> Utente</label>
-                  <div class="col-sm-10">
-                    <div class="row">
-                      <input type="hidden" name="user" class="condition-field-name" />
-                      <div class="col-sm-6">
+                </div>
+              </div>
+              <div class="row row-filter filter-user form-horizontal">
+                <label class="col-sm-2 control-label">
+                  <a href="javascript:void(0);" onclick="removeFilter(this);">
+                    <i class="fa fa-minus-circle"></i>
+                  </a> 
+                  Utente
+                </label>
+                <div class="col-sm-10">
+                  <div class="row">
+                    <input type="hidden" name="user" class="condition-field-name" />
+                    <div class="col-sm-6">
                       <select name="user-condition" class="condition-type form-control">
                         <option value="<%= FILTER_OPERATOR_EQUAL %>">Uguale a</option>
                         <option value="<%= FILTER_OPERATOR_CONTAINS %>">Contiene</option>
                       </select>
-                      </div>
-                      <div class="col-sm-6">
-                        <input name="user-value" id="user-value" class="condition-value form-control" type="text">
-                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <input name="user-value" id="user-value" class="condition-value form-control" type="text">
                     </div>
                   </div>
-            
+                </div>
+              </div>
+            </div>
+            <div class="row row-filter apply-filter">
+            <hr/>
+              <div class="col-md-4">
+                <button class="btn btn-success" ng-click="updateFilter()">Apply</button>
+                <button class="btn btn-default">Cancel</button>
+              </div>
             </div>
           </div>
-        
-          <div class="row row-filter apply-filter">
-            <hr/>
-          <div class="col-md-4">
-            <button class="btn btn-success" ng-click="updateFilter()">Apply</button>
-            <button class="btn btn-default">Cancel</button>
-          </div>
         </div>
-        </div>
-        </div>
-        </div>
-        
-        
-      
+      </div>
     </div>
-
-    <hr />
+    <hr/>
     <div class="row">
-          <div class="col-md-12">
-          <table class="table" ng-table="tableParams" template-pagination="custom/pager">
-            <tbody>
-              <tr ng-repeat="row in $data">
-                    <td data-title="'Utente'">
-                      {{row['user']}}
-                    </td>
-                    <td data-title="'Notifica'" ng-bind-html='row.notice'>
-                    </td>
-                    <td data-title="'Data'">
-                      {{row['date']}}
-                    </td>
-                    <td data-title="'Inviata'">
-                      {{row['sent']}}
-                    </td>
-                    <td data-title="'Reinvia'">
-                      <button class="btn btn-sm" ng-click="resend_notice(row.notice_id)">REINVIA</button>
-                    </td>
-                  </tr>
-                </tbody>
-          </table>
-          
-          <script type="text/ng-template" id="custom/pager">
-                <ul class="pager ng-cloak">
-                  <li ng-repeat="page in pages"
-                        ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
-                        ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type">
-                    <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo; Previous</a>
-                    <a ng-switch-when="next" ng-click="params.page(page.number)" href="">Next &raquo;</a>
-                  </li>
-                    <li> 
-                    <div class="btn-group">
-                        <button type="button" ng-class="{'active':params.count() == 10}" ng-click="params.count(10)" class="btn btn-default">10</button>
-                        <button type="button" ng-class="{'active':params.count() == 25}" ng-click="params.count(25)" class="btn btn-default">25</button>
-                        <button type="button" ng-class="{'active':params.count() == 50}" ng-click="params.count(50)" class="btn btn-default">50</button>
-                        <button type="button" ng-class="{'active':params.count() == 100}" ng-click="params.count(100)" class="btn btn-default">100</button>
-                    </div>
-                    </li>
-                </ul>
-            </script>
-          
-        </div>
+      <div class="col-md-12">
+        <table class="table" ng-table="tableParams" template-pagination="custom/pager">
+          <tbody>
+            <tr ng-repeat="row in $data">
+              <td data-title="'Utente'">
+                {{row['user']}}
+              </td>
+              <td data-title="'Notifica'" ng-bind-html='row.notice'>
+              </td>
+              <td data-title="'Data'">
+                {{row['date']}}
+              </td>
+              <td data-title="'Inviata'">
+                {{row['sent']}}
+              </td>
+              <td data-title="'Reinvia'">
+                <!-- <button class="btn btn-sm" ng-click="resend_notice(row.notice_id)">REINVIA</button> -->
+                <a href="notices/resend_notice/{{row.notice_id}}"><button class="btn btn-sm">REINVIA</button></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <script type="text/ng-template" id="custom/pager">
+          <ul class="pager ng-cloak">
+            <li ng-repeat="page in pages" ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
+              ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type">
+              <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo; Previous</a>
+              <a ng-switch-when="next" ng-click="params.page(page.number)" href="">Next &raquo;</a>
+            </li>
+            <li> 
+              <div class="btn-group">
+                <button type="button" ng-class="{'active':params.count() == 10}" ng-click="params.count(10)" class="btn btn-default">10</button>
+                <button type="button" ng-class="{'active':params.count() == 25}" ng-click="params.count(25)" class="btn btn-default">25</button>
+                <button type="button" ng-class="{'active':params.count() == 50}" ng-click="params.count(50)" class="btn btn-default">50</button>
+                <button type="button" ng-class="{'active':params.count() == 100}" ng-click="params.count(100)" class="btn btn-default">100</button>
+              </div>
+            </li>
+          </ul>
+        </script>
+        
+      </div>
     </div>
-
   </div>
 </div>
 
-
 <script src="/assets/bootstrap-datepicker.js"></script>
+
 <script type="text/javascript">
   
-  $(document).ready(function(){
+  $(document).ready(function() {
     $('#date').datepicker();
   });
   
-  function addFilter(){
+  function addFilter() {
     filtro = $("#add-filter").val();
     switch(filtro){
       case 'date':
@@ -174,9 +177,10 @@
     $(".apply-filter").show();
   }
   
-  function removeFilter(ele){
+  function removeFilter(ele) {
     $(ele).parent().parent().hide();
     if($("#event_filter :visible").length == 0)
       $(".apply-filter").hide();
   }
+
 </script>

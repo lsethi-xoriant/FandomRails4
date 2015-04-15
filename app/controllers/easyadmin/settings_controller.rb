@@ -50,23 +50,38 @@ class Easyadmin::SettingsController < Easyadmin::EasyadminController
   end
 
   def notifications_settings
-    setting = Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY)
+    events_setting = Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY)
+    channels_setting = Setting.find_by_key(CHANNELS_SETTINGS_KEY)
     @saved = true
-    if !setting
-      @setting = Setting.create(:key => NOTIFICATIONS_SETTINGS_KEY, :value => "{\"upload_approved\":true, \"comment_approved\":true, \"user_cta_interactions\":true}")
-      @setting_value = { "upload_approved" => true, "comment_approved" => true, "user_cta_interactions" => true }
+    if events_setting
+      @events_value = JSON.parse(events_setting.value)
     else
-      @setting_value = JSON.parse(setting.value)
+      @events_value = { "upload_approved" => true, "comment_approved" => true, "user_cta_interactions" => true }
+      Setting.create(:key => NOTIFICATIONS_SETTINGS_KEY, :value => @events_value.to_json)
+    end
+    if channels_setting
+      @channels_value = JSON.parse(channels_setting.value)
+    else
+      @channels_value = { "fandom" => true, "email" => true, "facebook" => true }
+      Setting.create(:key => CHANNELS_SETTINGS_KEY, :value => @channels_value.to_json)
     end
   end
 
   def save_notifications_settings
-    setting = Setting.find_by_key(params[:key])
-    @setting_value =  { "upload_approved" => params[:upload_approved] == "true", 
-                        "comment_approved" => params[:comment_approved] == "true",
-                        "user_cta_interactions" => params[:user_cta_interactions] == "true"
-                      }
-    setting.update_attribute(:value, @setting_value.to_json)
+    events_setting = Setting.find_by_key(params[:events_key])
+    channels_setting = Setting.find_by_key(params[:channels_key])
+    @events_value =  
+      { "upload_approved" => params[:upload_approved] == "true", 
+        "comment_approved" => params[:comment_approved] == "true",
+        "user_cta_interactions" => params[:user_cta_interactions] == "true"
+      }
+    @channels_value = 
+      { "fandom" => params[:fandom] == "true",
+        "email" => params[:email] == "true",
+        "facebook" => params[:facebook] == "true"
+      }
+    events_setting.update_attribute(:value, @events_value.to_json)
+    channels_setting.update_attribute(:value, @channels_value.to_json)
     @saved = true
     flash[:notice] = "Modifiche salvate correttamente"
     render template: "/easyadmin/settings/notifications_settings"

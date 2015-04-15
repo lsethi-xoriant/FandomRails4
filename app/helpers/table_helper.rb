@@ -4,20 +4,20 @@ module TableHelper
   include FandomUtils
   include FilterHelper
 
-  # A class that rappresent a filter field and its relation to ActiveRecord model
+  # A class that represents a filter field and its relation to ActiveRecord model
   class FieldDesc
     include ActiveAttr::TypecastedAttributes
     include ActiveAttr::MassAssignment
     include ActiveAttr::AttributeDefaults
 
-    # human readable name of this field
+    # Human readable name of this field
     attribute :name, type: String
-    # html id of this field
+    # HTML id of this field
     attribute :id, type: String
+
     attribute :model, type: String
     attribute :column_name, type: String
     attribute :visible, type: Boolean
-    
   end
 
   # Returns an Hash mapping field ids to FieldDesc. It should be overridden in children 
@@ -55,7 +55,7 @@ module TableHelper
     results
   end
 
-  # Perform the query applying the filters
+  # Performs the query applying the filters
   def get_results
       raise NotImplementedError.new
   end
