@@ -27,6 +27,7 @@ module SeoHelper
     extra_fields = get_extra_fields!(el)
     seo_title = extra_fields["seo_title"] ? extra_fields["seo_title"] : el.title
     seo_meta_description = extra_fields["seo_meta_description"] ? extra_fields["seo_meta_description"] : el.description
+    [seo_title, seo_meta_description]
   end
 
   def get_default_keywords()
