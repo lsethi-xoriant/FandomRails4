@@ -45,9 +45,6 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   def initialize_calendar(today)
     cal_events = init_calendar_events(today)
     day_of_month = today.day
-    # if cal_events[today.day].nil?
-    #   day_of_month = find_nearest_day_with_event(today, cal_events)
-    # end
     Calendar.new(cal_events, today)
   end
   
@@ -73,7 +70,7 @@ class Sites::IntesaExpo::CalendarController < CalendarController
       ical_start_datetime: start_date.strftime("%Y-%m-%d %H:%M:%S %z"),
       ical_end_datetime: end_date.strftime("%Y-%m-%d %H:%M:%S %z")
     }
-    events, total = get_contents_by_category(event_tag_id, [language_tag_id], 10000, params)
+    events, has_more = get_contents_by_category(event_tag_id, [language_tag_id], 10000, params)
     events
   end
   
