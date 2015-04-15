@@ -137,6 +137,10 @@ module OrzoroHelper
     end
 
     compute_seo("-")
+    
+    if other && other.has_key?(:seo_long_title)
+      @seo_title = (Setting.find_by_key("long_title").value rescue "")
+    end
 
     aux
 
