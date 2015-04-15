@@ -11,6 +11,7 @@ class BrowseController < ApplicationController
         }
       }
       extra_cache_key = @tag_browse.name
+      set_seo_info_for_tag(@tag_browse)
     else
       extra_cache_key = ""
     end

@@ -136,6 +136,8 @@ module OrzoroHelper
       end
     end
 
+    compute_seo("-")
+
     aux
 
   end
