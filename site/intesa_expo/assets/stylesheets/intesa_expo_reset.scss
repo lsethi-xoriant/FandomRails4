@@ -74,7 +74,8 @@ body {
 }
 
 .view-all-link{
-  float: right;
+  position: absolute;
+  right: 15px;
   font-size: 17px;
   line-height: 30px;
   color: $lightblue;
@@ -502,5 +503,6 @@ p {
     font-size: 18px;
     line-height: inherit;
     margin-bottom: 15px;
+    position: relative;
   }
 }
