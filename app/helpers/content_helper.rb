@@ -29,7 +29,7 @@ module ContentHelper
     
   end
   
-    class ContentPreview
+  class ContentPreview
 
     # human readable name of this field
     attr_accessor :title

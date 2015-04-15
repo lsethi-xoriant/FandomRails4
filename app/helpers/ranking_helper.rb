@@ -26,11 +26,11 @@ module RankingHelper
   end
   
   def get_my_position(ranking_name)
-      if current_user
-        get_my_general_position(ranking_name, current_user.id)
-      else
-        nil
-      end
+    if current_user
+      get_my_general_position(ranking_name, current_user.id)
+    else
+      nil
+    end
   end
   
   def get_my_general_position(ranking_name, user_id)
