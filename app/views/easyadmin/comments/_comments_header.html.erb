@@ -25,13 +25,19 @@
 
 <div class="row">
 <%= form_tag :method => 'post' do %>
-  <div class="col-md-2">
+  <div class="col-md-3">
     <div class="form-group">
-      <label class="text-input">Filtra per ID CTA</label></br>
-      <%= text_field_tag :id_cta_filter, @id_cta_filter, :class => 'form-control' %>
+      <label class="text-input">Filtra per ID UTENTE (separare con ",")</label></br>
+      <%= text_field_tag :user_id_filter, @user_id_filter, :class => 'form-control' %>
     </div>
   </div>
-  <div class="col-md-2">
+  <div class="col-md-3">
+    <div class="form-group">
+      <label class="text-input">Filtra per ID CTA</label></br>
+      <%= text_field_tag :cta_id_filter, @cta_id_filter, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="col-md-3">
     <div class="form-group">
       <label class="text-input">Filtra per TESTO</label></br>
       <%= text_field_tag :text_filter, @text_filter, :class => 'form-control' %>
@@ -42,7 +48,7 @@
       </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
     </div>
   </div>
-  <div class="col-md-2">
+  <div class="col-md-1">
     <div class="form-group">
       </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
     </div>

@@ -375,7 +375,6 @@ class CallToActionController < ApplicationController
     user_text = params[:comment_info][:user_text]
 
     profanity_filter_automatic_setting = Setting.find_by_key('profanity.filter.automatic')
-    debugger
     apply_profanity_filter_automatic = profanity_filter_automatic_setting.nil? ? false : (profanity_filter_automatic_setting.value == "t")
 
     if apply_profanity_filter_automatic && check_profanity_words_in_comment(user_text)
@@ -501,9 +500,9 @@ class CallToActionController < ApplicationController
             answers_map_for_condition = map_answers_in_user_history(current_answer, user_interactions_history, params[:anonymous_user_storage])
           end      
           condition = JSON.parse(interaction_condition.condition)
-          if condition.has_key?("max")
+          if condition.has_key?("more")
             max_key = max_key_in_answers_map_for_condition(answers_map_for_condition)
-            if max_key == condition["max"]
+            if max_key == condition["more"]
               response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction_condition.call_to_action])
             end
           end
@@ -513,6 +512,7 @@ class CallToActionController < ApplicationController
       if answers_map_for_condition.empty?
         response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction.interaction_call_to_actions.first.call_to_action])
       end
+
 
       next_calltoaction_id = response["next_call_to_action_info_list"][0]["calltoaction"]["id"] rescue nil
 

@@ -28,6 +28,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   BROWSE_CAROUSEL_SETTING_KEY = 'browse.carousel.setting'
   RANKING_SETTINGS_KEY = 'ranking.setting'
   NOTIFICATIONS_SETTINGS_KEY = 'notifications.setting'
+  CHANNELS_SETTINGS_KEY = 'channels.setting'
   ACTIVE_PROFANITIES_SETTINGS_KEY = 'profanity.filter.automatic'
   PROFANITIES_SETTINGS_KEY = 'profanity.words'
   NOTIFICATIONS_LIMIT_DEFAULT = 50
@@ -45,7 +46,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   RANKING_USER_FILTER = {"all" => "Tutti", "fb_friends" => "Amici di facebook"}
   
   BYTES_IN_MEGABYTE = 1048576
-  MAX_UPLOAD_SIZE = 3 #Megabyte (Mb)
+  MAX_UPLOAD_SIZE = 3 # Megabyte (Mb)
   
   PERIOD_KIND_TOTAL = "total"
   PERIOD_KIND_DAILY = "daily"

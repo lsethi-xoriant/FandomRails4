@@ -6,7 +6,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     @aux_other_params = { 
       page_tag: {
         miniformat: {
-          name: "tazze"
+          name: "gadget"
         }
       }
     }
@@ -37,7 +37,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
 
     def is_13?
       unless User.has_age?(self.year_of_birth, self.month_of_birth, self.day_of_birth, Time.now.to_s, 13)
-        errors.add(:base, "Devi aver compiuto 13 anni per poter richiedere le tazze")
+        errors.add(:base, "Devi aver compiuto 13 anni per poter richiedere i gadget")
       end
     end
 
@@ -92,7 +92,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
 
   def step_1
     if getSessionId.nil?
-      redirect_to "/tazze"
+      redirect_to "/gadget"
     else
       @provinces_array = ITALIAN_PROVINCES.map { |province| [province, province] }.unshift(["Provincia", ""])
       @states_array = states_array = WORLD_STATES.map { |state| [state, state] }#.unshift(["Stato", ""])
@@ -113,7 +113,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     if @cup_redeemer.valid?
       cache_value = { "identity" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step1] }
       cache_write("cup-redeemer-#{getSessionId}", cache_value, 1.hour)
-      redirect_to "/tazze/step_2"
+      redirect_to "/gadget/step_2"
     else
       render template: "cup_redeemer/step_1"
     end
@@ -123,7 +123,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     cache_value = cache_read("cup-redeemer-#{getSessionId}")
     if getSessionId.nil? || cache_value.nil? || cache_value["identity"].nil?
-      redirect_to "/tazze/step_1"
+      redirect_to "/gadget/step_1"
     else
       @cup_redeemer = CupRedeemerStep2.new(cache_value["receipt"])
       render template: "cup_redeemer/step_2"
@@ -137,9 +137,9 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     if @cup_redeemer.valid?
       new_cache_value = cache_value.merge({ "receipt" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2] }) if cache_value
       cache_write("cup-redeemer-#{getSessionId}", new_cache_value, 1.hour)
-      redirect_to "/tazze/step_3"
+      redirect_to "/gadget/step_3"
     elsif cache_value.nil?
-      redirect_to "/tazze/step_1"
+      redirect_to "/gadget/step_1"
     else
       render template: "cup_redeemer/step_2"
     end
@@ -149,7 +149,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     @cup_redeemer = CupRedeemerStep3.new
     cache_value = cache_read("cup-redeemer-#{getSessionId}")
     if getSessionId.nil? || cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil?
-      redirect_to "/tazze/step_1"
+      redirect_to "/gadget/step_1"
     else
       @cup_redeemer = CupRedeemerStep3.new(cache_value["address"])
       render template: "cup_redeemer/step_3"
@@ -162,9 +162,9 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     if @cup_redeemer.valid?
       new_cache_value = cache_value.merge({ "address" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step3] }) if cache_value
       cache_write("cup-redeemer-#{getSessionId}", new_cache_value, 1.hour)
-      redirect_to "/tazze/request_completed"
+      redirect_to "/gadget/request_completed"
     elsif cache_value.nil?
-      redirect_to "/tazze/step_1"
+      redirect_to "/gadget/step_1"
     else
       render template: "cup_redeemer/step_3"
     end
@@ -174,7 +174,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     cache_value = cache_read("cup-redeemer-#{getSessionId}")
     if getSessionId.nil? || cache_value.nil? || cache_value["identity"].nil? || cache_value["receipt"].nil? || cache_value["address"].nil?
-      redirect_to "/tazze/step_1"
+      redirect_to "/gadget/step_1"
     else
       info = build_info(cache_value)
       user = User.find_by_email(cache_value["identity"]["email"])
@@ -273,6 +273,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     else
       @message = "Link non valido."
     end
+    @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     render template: "cup_redeemer/complete_registration"
   end
 

@@ -35,10 +35,10 @@ module ApplicationHelper
   
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
   # is redefined in TextHelper
-  # class TextHelperNamespace ; include ActionView::Helpers::TextHelper ; end
-  # def truncate(*args)
-  #   TextHelperNamespace.new.truncate(*args)
-  # end
+  class TextHelperNamespace ; include ActionView::Helpers::TextHelper ; end
+  def truncate(*args)
+    TextHelperNamespace.new.truncate(*args)
+  end
   
   def get_cta_event_start_end(cta_interactions)
     event_range_info = {
@@ -148,11 +148,9 @@ module ApplicationHelper
     if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
       if params[:ical_start_datetime]
         extra_key << Time.parse(params[:ical_start_datetime]).strftime("%Y-%M-%d_%H-%M-%S")
-        #"#{DateTime.parse(params[:ical_start_datetime]).strftime("%d_%M_%Y")}" (AT)
       end
       if params[:ical_end_datetime]
         extra_key << Time.parse(params[:ical_end_datetime]).strftime("%Y-%M-%d_%H-%M-%S")
-        #"#{DateTime.parse(params[:ical_end_datetime]).strftime("%d_%M_%Y")}"
       end
     end
     if params[:limit]
@@ -192,7 +190,7 @@ module ApplicationHelper
       end
     end
     where_clause = where_clause.join(" AND ")
-    [where_clause, get_limit_from_params(params)]
+    where_clause
   end
   
   # Public: Construct an sql condition string from hash of params
@@ -213,15 +211,7 @@ module ApplicationHelper
       end
     end
     where_clause = where_clause.join(" AND ")
-    [where_clause, get_limit_from_params(params)]
-  end
-  
-  def get_limit_from_params(params)
-    limit = nil
-    if params[:limit]
-      limit = (params[:limit][:offset].to_i + 1) * params[:limit][:perpage]
-    end
-    limit
+    where_clause
   end
 
   def get_all_active_ctas()

@@ -10,77 +10,118 @@ class Easyadmin::EasyadminNoticeController < Easyadmin::EasyadminController
   def authorize_user
     authorize! :manage, :notices
   end
-  
-  # Constant that describe the filter available
+
+  # Constant that describes available filters
   FIELD_DESCS = {
     :user => FieldDesc.new({ :name => "Utente", :id => "user", :model => "user", :column_name => "email", :visible => true}),
     :notice => FieldDesc.new({ :name => "Notifica", :id => "notice", :model => "notice", :column_name => "html_notice", :visible => true}),
     :date => FieldDesc.new({ :name => "Data", :id => "date", :model => "notice", :column_name => "created_at", :visible => true}),
     :sent => FieldDesc.new({ :name => "Inviata", :id => "sent", :model => "notice", :column_name => "last_sent", :visible => true})
   }
-  
-  # json version of fields description
+
+  # JSON version of fields description
   FIELD_DESCS_JSON = (FIELD_DESCS.map { |id, obj| [id, obj.attributes] }).to_json
-  
-  # Return the fields description Hash
+
+  # Returns the fields description Hash
   def get_fields
     FIELD_DESCS
   end
-  
+
   def index
     @notices = Notice.all
     @fields = FIELD_DESCS_JSON
   end
-  
+
   def show
     @current_notice = Notice.find(params[:id])
   end
-  
+
   def new
+    @channels_hash = JSON.parse(Setting.find_by_key(CHANNELS_SETTINGS_KEY).value) rescue {}
+    @channels = @channels_hash.select { |key, value| value }.keys # the true ones
   end
-  
+
   def create
-    if params[:all_users]
-      if params[:notice].blank?
-        flash[:error] = "ERRORE: Devi inserire l'html della notifica."
-      else
-        bulk_insert_notices(params[:notice])
-        flash[:notice] = "Notifiche inviate correttamente"
-      end
+    @channels_hash = JSON.parse(Setting.find_by_key(CHANNELS_SETTINGS_KEY).value) rescue {}
+    @channels = @channels_hash.select { |key, value| value }.keys # the true ones
+    notification_channels = get_channels_from_params(params, @channels_hash)
+
+    if notification_channels.empty?
+      flash[:error] = "ERRORE: Devi selezionare i canali di invio"
     else
-      if params[:users].blank? || params[:notice].blank?
-        flash[:error] = "ERRORE: Devi inserire sia mail utenti che l'html della notifica."
-      else
-        params[:users].split(",").each do |u|
-          user = User.find_by_email(u)
-          if user
-            notice = create_notice(:user_id => user.id, :html_notice => params[:notice], :viewed => false, :read => false)
-            #commented send mail for ballando
-            #notice.send_to_user(request)
+      notification_channels.each do |c|
+        flash[:error] = "ERRORE: Devi inserire il testo della notifica #{c}" if params[c + "_notice"].blank?
+      end
+      unless flash[:error]
+        if params[:all_users]
+          send_notifications(notification_channels, params, true)
+          flash[:notice] = "Notifiche inviate correttamente"
+        else
+          flash[:error] = "ERRORE: Inserisci le mail degli utenti" if params[:users].blank?
+          unless flash[:error]
+            send_notifications(notification_channels, params)
+            flash[:notice] = "Notifiche inviate correttamente"
           end
         end
-        flash[:notice] = "Notifiche inviate correttamente"
       end
     end
     render template: "/easyadmin/easyadmin_notice/new"
   end
-  
-  def bulk_insert_notices(html_notice)
-    User.all.each do |u|
-      create_notice(:user_id => u.id, :html_notice => html_notice, :viewed => false, :read => false)
+
+  def get_channels_from_params(params, channels_hash)
+    res = []
+    channels_hash.each do |key, value|
+      if params[key]
+        res << key if params[key] == "1"
+      end
+    end
+    res
+  end
+
+  def send_notifications(notification_channels, params, all = false)
+    if notification_channels.include?("facebook")
+      facebook_settings = get_deploy_setting("sites/#{$site.id}/authentications/facebook", nil)
+      if facebook_settings
+        app_access_token = Koala::Facebook::API.new(
+          Koala::Facebook::OAuth.new(facebook_settings["app_id"], facebook_settings["app_secret"]).get_app_access_token
+        )
+      end
+    end
+
+    users = all ? User.all : User.where("email IN (?)", params[:users].split(",")).to_a
+
+    users.each do |user|
+      if notification_channels.include?("fandom")
+        notice = create_notice(:user_id => user.id, :html_notice => params[:fandom_notice], :viewed => false, :read => false)
+        # notice.send_to_user(request, true) if notification_channels.include?("email")
+      end
+      if notification_channels.include?("email")
+        if (JSON.parse(user.aux)['subscriptions']['notifications'] rescue true)
+          SystemMailer.notification_mail(user.email, params[:email_notice], "Hai ricevuto una notifica su #{request.site.title}").deliver
+        end
+      end
+      if app_access_token
+        user_fb_id = Authentication.where(:provider => "facebook", :user_id => user.id).first.oauth_token rescue nil
+        app_access_token.put_connections(user_fb_id, "notifications", template: params[:facebook_notice], href: nil) if user_fb_id
+      end
     end
   end
-  
+
   def resend_notice
+    @channels_hash = JSON.parse(Setting.find_by_key(CHANNELS_SETTINGS_KEY).value) rescue {}
+    @channels = @channels_hash.select { |key, value| value }.keys # the true ones
+
     notice = Notice.find(params[:notice_id])
-    notice.send_to_user(request)
-    respond_to do |format|
-      format.json { render :json => "OK".to_json }
+    if notice
+      @fandom_notice = @email_notice = notice.html_notice
+      @facebook_notice = strip_tags(notice.html_notice).strip
+      params["fandom"] = "1"
     end
+    render template: "/easyadmin/easyadmin_notice/new"
   end
-  
-  # Give back the events query result depending on conditions passes as parameter and the count of total elements
-  # that match the conditions
+
+  # Gives back the events query result depending on conditions passed as parameter and total elements
+  # that match the conditions count
   #
   # offset - current page results to load
   # limit  - number of results per page
@@ -99,10 +140,10 @@ class Easyadmin::EasyadminNoticeController < Easyadmin::EasyadminController
     result['elements'] = notices
     return result
   end
-  
-  # construct the query to retrive events depending on filter params passed as parameter
+
+  # Constructs the query to retrieve events depending on filter params passed as parameter
   #
-  # params - array of filter conidtions
+  # params - array of filter conditions
   def build_query(params)
     query = Notice.includes(:user)
     fields = get_fields()
@@ -118,8 +159,8 @@ class Easyadmin::EasyadminNoticeController < Easyadmin::EasyadminController
     end
     return query  
   end
-  
-  # convert an element of the resultset into a hash easy to converto in json response
+
+  # Converts an resultset element into a Hash in order to easily convert to JSON response
   #
   # e - resultset element
   def element_to_result(e)
@@ -131,5 +172,5 @@ class Easyadmin::EasyadminNoticeController < Easyadmin::EasyadminController
     result['sent'] = e.last_sent.nil? ? "" : e.last_sent.strftime("%d-%m-%Y %H:%M")
     result
   end
-  
+
 end

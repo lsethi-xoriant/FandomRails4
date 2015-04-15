@@ -54,7 +54,8 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     where_conditions = write_where_conditions(params, "approved = false")
     @comment_not_approved = UserCommentInteraction.where(where_conditions).page(page).per(per_page).order("created_at DESC")
 
-    @id_cta_filter = params[:id_cta_filter]
+    @user_id_filter = params[:user_id_filter]
+    @cta_id_filter = params[:cta_id_filter]
     @text_filter = params[:text_filter]
 
     @page_size = @comment_not_approved.num_pages
@@ -69,7 +70,8 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     where_conditions = write_where_conditions(params, "approved IS NULL")
     @comment_to_be_approved = UserCommentInteraction.where(where_conditions).page(page).per(per_page).order("created_at ASC")
 
-    @id_cta_filter = params[:id_cta_filter]
+    @user_id_filter = params[:user_id_filter]
+    @cta_id_filter = params[:cta_id_filter]
     @text_filter = params[:text_filter]
 
     @page_size = @comment_to_be_approved.num_pages
@@ -84,7 +86,8 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     where_conditions = write_where_conditions(params, "approved = true")
     @comment_approved = UserCommentInteraction.where(where_conditions).page(page).per(per_page).order("created_at DESC")
 
-    @id_cta_filter = params[:id_cta_filter]
+    @user_id_filter = params[:user_id_filter]
+    @cta_id_filter = params[:cta_id_filter]
     @text_filter = params[:text_filter]
 
     @page_size = @comment_approved.num_pages
@@ -93,14 +96,16 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
   end
   
   def write_where_conditions(params, approved_cond)
-    params[:id_cta_filter] = params[:text_filter] = nil unless params[:commit] != "RESET"
+    params[:user_id_filter] = params[:cta_id_filter] = params[:text_filter] = nil unless params[:commit] != "RESET"
     where_conditions = approved_cond
-    if params[:commit] != "RESET" and !params[:id_cta_filter].blank?
-      call_to_action_ids = [params[:id_cta_filter].to_i]
+    if params[:commit] != "RESET" && !params[:cta_id_filter].blank?
+      call_to_action_ids = [params[:cta_id_filter].to_i]
     else
       call_to_action_ids = CallToAction.where("#{ params['cta'] == 'user_call_to_actions' ? 'user_id IS NOT NULL' : 'user_id IS NULL' }").pluck(:id)
     end
     comment_ids = Interaction.where("call_to_action_id IN (?) AND resource_type = 'Comment'", call_to_action_ids).pluck(:resource_id)
+
+    where_conditions << " AND user_id IN (#{params[:user_id_filter]})" unless params[:user_id_filter].blank?
     where_conditions << " AND comment_id IN (#{ comment_ids.empty? ? "-1" : comment_ids.join(",") })"
     where_conditions << " AND text ILIKE '%#{params[:text_filter]}%'" unless params[:text_filter].blank?
     where_conditions

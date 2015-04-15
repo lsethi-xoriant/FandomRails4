@@ -31,7 +31,7 @@ module TagHelper
     extra_key = get_extra_key_from_params(params)
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "and") do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
-      where_clause, limit = get_cta_where_clause_from_params(params)
+      where_clause = get_cta_where_clause_from_params(params)
       ctas = CallToAction.includes(call_to_action_tags: :tag)
       if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
         ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
@@ -41,8 +41,8 @@ module TagHelper
       if !where_clause.empty?
         ctas = ctas.where("#{where_clause}")
       end
-      if limit
-        ctas = ctas.limit(limit)
+      if params[:limit]
+        ctas = ctas.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
       end
       
       if params[:order_string]
@@ -57,7 +57,7 @@ module TagHelper
   def get_ctas_with_tags_in_or(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
-      where_clause, limit = get_cta_where_clause_from_params(params)
+      where_clause = get_cta_where_clause_from_params(params)
       ctas = CallToAction.active.includes(call_to_action_tags: :tag)
       if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
         cta_id_to_ical_fields = get_cta_id_to_ical_fields(params) 
@@ -67,8 +67,8 @@ module TagHelper
       if !where_clause.empty?
         ctas = ctas.where("#{where_clause}")
       end
-      if limit
-        ctas = ctas.limit(limit)
+      if params[:limit]
+        ctas = ctas.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
       end
       
       if params[:order_string]
@@ -83,13 +83,13 @@ module TagHelper
     extra_key = get_extra_key_from_params(params)
     cache_short get_tags_with_tags_cache_key(tag_ids, extra_key) do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      where_clause, limit = get_tag_where_clause_from_params(params)
+      where_clause = get_tag_where_clause_from_params(params)
       tags = Tag.where("id IN (#{tag_ids_subselect})")
       if !where_clause.empty?
         tags = tags.where("#{where_clause}")
       end
-      if limit
-        tags = tags.limit(limit)
+      if params[:limit]
+        tags = tags.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
       end
       tags.order("created_at DESC").to_a
     end
@@ -157,6 +157,9 @@ module TagHelper
       tags = Tag.includes(:tags_tags).where("tags.id in (#{tag_ids_subselect})")
       if !where_clause.empty?
         tags.where("#{where_clause}")
+      end
+      if params[:limit]
+        tags = tags.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
       end
       tags.order("created_at DESC").to_a
     end

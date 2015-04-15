@@ -119,9 +119,18 @@ class BrowseController < ApplicationController
     end
   end
   
+  def get_tags_from_contents(contents)
+    tags = {}
+    contents.each do |content|
+      tags = add_content_tags(tags, content)
+    end
+    tags
+  end
+  
   def index_category
     @category = Tag.includes(:tags_tags).find(params[:id])
-    contents, @tags, @total = get_contents_by_category_with_tags(get_tags_for_category(@category), @category)
+    contents, @has_more = get_contents_by_category(@category, get_tags_for_category(@category), DEFAULT_VIEW_ALL_ELEMENTS)
+    @tags = get_tags_from_contents(contents)
     @contents = compute_cta_status_contents(contents)
     
     @aux_other_params = { 
@@ -142,9 +151,12 @@ class BrowseController < ApplicationController
   end
   
   def index_category_load_more
-    offset = params[:offset].to_i
     category = Tag.find(params[:tag_id])
-    contents, tags, total = get_contents_by_category_with_tags(get_tags_for_category(category), category, offset)
+    params[:limit] = {
+      offset: params[:offset].to_i,
+      perpage: DEFAULT_VIEW_ALL_ELEMENTS
+    }
+    contents, has_more = get_contents_by_category(category, get_tags_for_category(category), DEFAULT_VIEW_ALL_ELEMENTS, params)
     
     contents = compute_cta_status_contents(contents)
     

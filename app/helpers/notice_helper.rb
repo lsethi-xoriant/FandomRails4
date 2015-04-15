@@ -10,16 +10,16 @@ module NoticeHelper
       []
     end
   end
-  
+
   def get_unread_notifications_count()
     get_unread_notifications().count
   end
-  
+
   def create_notice(params)
     expire_cache_key(notification_cache_key(params[:user_id]))
     Notice.create(params)
   end
-  
+
   def get_notice_icon(reward)
     if $site.assets["community_logo"].nil?
       icon = ""
@@ -47,5 +47,5 @@ module NoticeHelper
     end
     icon
   end
-  
+
 end

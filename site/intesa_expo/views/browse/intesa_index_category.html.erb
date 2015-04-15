@@ -1,8 +1,8 @@
 <div class="content-browse">
 	<% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
-		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init_intesa_browse(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @total %>, <%= get_section_column_number(get_extra_fields!(@category)) %>)">
+		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init_intesa_browse(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @has_more %>, <%= get_section_column_number(get_extra_fields!(@category)) %>)">
 	<% else %>
-		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @total %>)">
+		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @has_more %>)">
 	<% end %>
 	<% if @use_filter %>
 		  <div class="row category-header text-center">
@@ -68,10 +68,10 @@
 		   <div class="row main-row">
 		      <div class="col-md-12">
 			      <div class="row">
-		      		<div class="col-xs-12 col-md-<%= 12/get_section_column_number(get_extra_fields!(@category)) %>" ng-repeat="content in visibleElements">
+		      		<div class="col-xs-12 col-sm-4 col-md-<%= 12/get_section_column_number(get_extra_fields!(@category)) %>" ng-repeat="content in visibleElements">
 						<%= render partial: "/application/content_preview" %>
 					</div>
-					<div class="col-xs-12 text-center" ng-if="total > elements_in_page">
+					<div class="col-xs-12 text-center" ng-if="has_more">
 						<a class="btn btn-primary btn-load-more" ng-click="load_more(elements_in_page)">Carica Altro <i class="fa fa-chevron-down"></i></a>
 					</div>
 			      </div>

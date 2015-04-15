@@ -44,7 +44,7 @@ module RewardHelper
     end
   end
 
-    # Get an hash cta_id => status for a list of ctas. Needed for separate and caching ctas information 
+  # Get an hash cta_id => status for a list of ctas. Needed for separate and caching ctas information 
   # not depending to user
   #   user           - the user for which calculate cta statuses
   #   ctas           - list of ctas to evaluate
@@ -339,6 +339,21 @@ module RewardHelper
     end
 
     [rewards_to_show, are_properties_used]
+
+  end
+  
+  def buy_reward(user, reward)
+    log_synced("reward bought by user", { 
+        'reward_name' => reward.name, 
+        'currency' => reward.currency.name,
+        'cost' => reward.cost })
+    get_reward_with_periods(reward.currency.name).each do |period_reward|
+      period_reward.update_attribute(:counter, period_reward.counter - reward.cost)
+    end
+    
+    assign_reward(user, reward.name, 1, $site)
+    
+    buy_reward_catalogue_expires(reward.currency.name, user.id)
   end
 
   def assign_reward(user, reward_name, counter, site)

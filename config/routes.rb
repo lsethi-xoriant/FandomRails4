@@ -35,14 +35,14 @@ Fandom::Application.routes.draw do
           match "export_cup_requests", :to => "easyadmin#export_cup_requests"
         end
         root :to => "application#index"
-        match "/tazze", to: "cup_redeemer#index"
-        match "/tazze/step_1", to: "cup_redeemer#step_1"
-        match "/tazze/step_1/update", to: "cup_redeemer#step_1_update"
-        match "/tazze/step_2", to: "cup_redeemer#step_2"
-        match "/tazze/step_2/update", to: "cup_redeemer#step_2_update"
-        match "/tazze/step_3", to: "cup_redeemer#step_3"
-        match "/tazze/step_3/update", to: "cup_redeemer#step_3_update"
-        match "/tazze/request_completed", to: "cup_redeemer#request_completed"
+        match "/gadget", to: "cup_redeemer#index"
+        match "/gadget/step_1", to: "cup_redeemer#step_1"
+        match "/gadget/step_1/update", to: "cup_redeemer#step_1_update"
+        match "/gadget/step_2", to: "cup_redeemer#step_2"
+        match "/gadget/step_2/update", to: "cup_redeemer#step_2_update"
+        match "/gadget/step_3", to: "cup_redeemer#step_3"
+        match "/gadget/step_3/update", to: "cup_redeemer#step_3_update"
+        match "/gadget/request_completed", to: "cup_redeemer#request_completed"
         match "/complete_registration_from_cups/:email/:token", to: "cup_redeemer#complete_registration", :constraints => { :email => /.*/ }
         match "/complete_registration_from_newsletter/:email/:token", to: "newsletter#complete_registration", :constraints => { :email => /.*/ }
         match "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
@@ -427,7 +427,7 @@ Fandom::Application.routes.draw do
     match "notices/new", :to => "easyadmin_notice#new"
     match "notices/create", :to => "easyadmin_notice#create"
     match "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }
-    match "notices/sendnotice", :to => "easyadmin_notice#resend_notice", defaults: { format: 'json' }
+    match "notices/resend_notice/:notice_id", :to => "easyadmin_notice#resend_notice"
     
     match "rules", :to => "easyadmin_rewarding_rules#index"
     match "rules/save", :to => "easyadmin_rewarding_rules#save"
@@ -455,7 +455,7 @@ Fandom::Application.routes.draw do
   match "/reward/catalogue/available/all", :to => "reward#show_all_available_catalogue"
   match "/reward/catalogue/my/all", :to => "reward#show_all_my_catalogue"
   match "/reward/show/:reward_id", :to => "reward#show"
-  match "/reward/buy", :to => "reward#buy_reward", defaults: { format: 'json' }
+  match "/reward/buy", :to => "reward#buy_reward_attempt", defaults: { format: 'json' }
   match "/reward/how_to", :to => "reward#how_to"
 
   # Captcha.

@@ -151,24 +151,24 @@ class User < ActiveRecordWithJSON
     user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid);
     if user_auth
       user_auth.update_attributes(
-          uid: auth.uid,
-          name: auth.info.name,
-          oauth_token: auth.credentials.token,
-          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-          avatar: auth.info.image,
-          user_id: self.id
+        uid: auth.uid,
+        name: auth.info.name,
+        oauth_token: auth.credentials.token,
+        oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
+        oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
+        avatar: auth.info.image,
+        user_id: self.id
       )
     else
       self.authentications.build(
-          uid: auth.uid,
-          name: auth.info.name,
-          oauth_token: auth.credentials.token,
-          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-          provider: provider,
-          avatar: auth.info.image,
-          user_id: self.id
+        uid: auth.uid,
+        name: auth.info.name,
+        oauth_token: auth.credentials.token,
+        oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
+        oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
+        provider: provider,
+        avatar: auth.info.image,
+        user_id: self.id
       )
     end 
 

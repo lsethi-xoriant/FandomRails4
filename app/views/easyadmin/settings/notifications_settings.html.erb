@@ -4,7 +4,7 @@
 
   <div id="content-header">
     <h1>IMPOSTAZIONI NOTIFICHE</h1>
-  </div> <!-- #content-header --> 
+  </div>
 
   <div id="content-container">
 
@@ -38,33 +38,57 @@
     </div>
 
     <%= form_tag("/easyadmin/settings/notifications/save", method: "post") do %>
-    	<%= hidden_field_tag :key, NOTIFICATIONS_SETTINGS_KEY %>
+    	<%= hidden_field_tag :events_key, NOTIFICATIONS_SETTINGS_KEY %>
+      <%= hidden_field_tag :channels_key, CHANNELS_SETTINGS_KEY %>
     	<div class="row">
     		<div class="col-lg-6 col-lg-offset-3">
     			<div class="alert alert-info text-center" role="alert">
     				Selezionare gli eventi per i quali inviare una notifica all'utente
-    				<!--<dl class="dl-horizontal">
-    					<dt>$recent</dt><dd>Mostra i contenuti più recenti</dd>
-    				</dl>-->
     			</div>
     		</div>
     	</div>
-        <div class="row form-group">
-          <div class="col-lg-2 col-lg-offset-5"><%= label_tag(:upload_approved_label, UPLOAD_APPROVED_LABEL) %></div>
-          <div class="col-lg-2"><%= check_box_tag(:upload_approved, true, @setting_value['upload_approved'] == true) %> </div>
-        </div>
-        <div class="row form-group">
-          <div class="col-lg-2 col-lg-offset-5"><%= label_tag(:comment_approved_label, COMMENT_APPROVED_LABEL) %></div>
-          <div class="col-lg-2"><%= check_box_tag(:comment_approved, true, @setting_value['comment_approved'] == true) %> </div>
-        </div>
-        <div class="row form-group">
-          <div class="col-lg-2 col-lg-offset-5"><%= label_tag(:user_cta_interactions_label, USER_CTA_INTERACTIONS_LABEL) %></div>
-          <div class="col-lg-2"><%= check_box_tag(:user_cta_interactions, true, @setting_value['user_cta_interactions'] == true) %> </div>
-        </div>
-        <div class="row">
-          <div class="col-sm12 text-center">
-              <button type="submit" class="btn btn-primary">SALVA</button>
+      <div class="row form-group">
+        <div class="col-lg-2 col-lg-offset-5"><%= label_tag(:upload_approved_label, UPLOAD_APPROVED_LABEL) %></div>
+        <div class="col-lg-2"><%= check_box_tag(:upload_approved, true, @events_value["upload_approved"] == true) %> </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-lg-2 col-lg-offset-5"><%= label_tag(:comment_approved_label, COMMENT_APPROVED_LABEL) %></div>
+        <div class="col-lg-2"><%= check_box_tag(:comment_approved, true, @events_value["comment_approved"] == true) %> </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-lg-2 col-lg-offset-5"><%= label_tag(:user_cta_interactions_label, USER_CTA_INTERACTIONS_LABEL) %></div>
+        <div class="col-lg-2"><%= check_box_tag(:user_cta_interactions, true, @events_value["user_cta_interactions"] == true) %> </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+          <div class="alert alert-info text-center" role="alert">
+            Selezionare i canali di notifica
           </div>
         </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-lg-2 col-lg-offset-5"><%= label_tag(:fandom_label, "Fandom") %></div>
+        <div class="col-lg-2"><%= check_box_tag(:fandom, true, @channels_value["fandom"] == true) %> </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-lg-2 col-lg-offset-5"><%= label_tag(:facebook_label, "Facebook") %></div>
+        <div class="col-lg-2"><%= check_box_tag(:facebook, true, @channels_value["facebook"] == true) %> </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-lg-2 col-lg-offset-5"><%= label_tag(:email_label, "E-mail") %></div>
+        <div class="col-lg-2"><%= check_box_tag(:email, true, @channels_value["email"] == true) %> </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-sm12 text-center">
+            <button type="submit" class="btn btn-primary">SALVA</button>
+        </div>
+      </div>
     <% end %>
+  </div>
 </div>
