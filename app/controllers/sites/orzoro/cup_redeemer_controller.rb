@@ -1,6 +1,16 @@
 class Sites::Orzoro::CupRedeemerController < ApplicationController
 
   before_filter :set_menu
+  before_filter :set_seo
+
+  def set_seo
+    begin
+      tag = get_tag_from_params("gadget")
+      set_seo_info_for_tag(tag)
+    rescue Exception => exception
+      log_error('gadget tag seo error', { 'exception' => exception.to_s, 'backtrace' => exception.backtrace })
+    end 
+  end
 
   def set_menu
     @aux_other_params = { 
