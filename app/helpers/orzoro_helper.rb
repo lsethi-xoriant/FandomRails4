@@ -86,6 +86,11 @@ module OrzoroHelper
       calltoaction_category = get_tag_with_tag_about_call_to_action(calltoaction, "category").first
       related_calltoaction_info = get_orzoro_related_calltoaction_info(calltoaction, "category")
       if calltoaction_info_list.first["miniformat"]["name"] == "ricette"
+        
+        if @seo_info
+          @seo_info["title"] = "Ricetta #{@seo_info["title"]} - Ricette"
+        end
+
         related_product = get_tag_with_tag_about_call_to_action(calltoaction, "related-product").first
         if related_product
           related_product = {
@@ -137,7 +142,7 @@ module OrzoroHelper
     end
 
     compute_seo("-")
-    
+
     if other && other.has_key?(:seo_long_title)
       @seo_title = (Setting.find_by_key("long_title").value rescue "")
     end
