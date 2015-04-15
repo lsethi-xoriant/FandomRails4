@@ -12,10 +12,10 @@
               <% if @notices_list.blank? %>
               	<h3 class="text-center">Non hai nessuna notifica al momento</h3>
               <% end %>
-              <% @notices_list.each do |date, nl| %>
-              <h5><%= date %></h5>
+              <% @notices_list.each do |x| %>
+              <h5><%= x[:date] %></h5>
               <ul class="list-group">
-              	<% nl.each do |n| %>
+              	<% [x[:notice]].each do |n| %>
                 <li id="<%= n.id %>" class="list-group-item <%= "list-group-item-warning" if !n.read %>">
                   <div class="row">
                   	<div class="col-sm-11">
