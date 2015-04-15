@@ -28,6 +28,74 @@ module ContentHelper
     end
     
   end
+  
+    class ContentPreview
+
+    # human readable name of this field
+    attr_accessor :title
+    # html id of this field
+    attr_accessor :id
+    attr_accessor :type
+    attr_accessor :media_type
+    attr_accessor :has_thumb
+    attr_accessor :thumb_url
+    attr_accessor :thumb_wide_url
+    attr_accessor :description
+    attr_accessor :long_description
+    attr_accessor :detail_url
+    attr_accessor :created_at
+    attr_accessor :header_image_url
+    attr_accessor :icon
+    attr_accessor :category_icon
+    attr_accessor :status
+    attr_accessor :likes
+    attr_accessor :comments
+    attr_accessor :votes
+    attr_accessor :tags
+    attr_accessor :aux
+    attr_accessor :extra_fields
+    attr_accessor :layout
+    attr_accessor :start
+    attr_accessor :end
+    attr_accessor :ical_id
+    attr_accessor :interactions
+    attr_accessor :valid_from
+    attr_accessor :valid_to
+    attr_accessor :slug
+    
+    def initialize(params)
+      @id = params[:id]
+      @title = params[:title]
+      @type = params[:type]
+      @media_type = params[:media_type]
+      @has_thumb = params[:has_thumb]
+      @thumb_url = params[:thumb_url]
+      @thumb_wide_url = params[:thumb_wide_url]
+      @description = params[:description]
+      @long_description = params[:long_description]
+      @detail_url = params[:detail_url]
+      @created_at = params[:created_at]
+      @header_image_url = params[:header_image_url]
+      @icon = params[:icon]
+      @category_icon = params[:category_icon]
+      @status = params[:status]
+      @likes = params[:likes]
+      @comments = params[:comments]
+      @votes = params[:votes]
+      @tags = params[:tags]
+      @aux = params[:aux]
+      @extra_fields = params[:extra_fields]
+      @layout = params[:layout]
+      @start = params[:start]
+      @end = params[:end]
+      @interactions = params[:interactions]
+      @valid_from = params[:valid_from]
+      @valid_to = params[:valid_to]
+      @ical_id = params[:ical_id]
+      @slug = params[:slug]
+    end
+    
+  end
 
   def get_content_preview_layout(content)
     get_extra_fields!(content)['layout'] || "default"
@@ -113,6 +181,8 @@ module ContentHelper
     content_preview.valid_from = cta.valid_from
     content_preview.valid_to = cta.valid_to
     content_preview.ical_id = event_date_info[:ical_id]
+    content_preview.start = event_date_info[:start_date]
+    content_preview.end = event_date_info[:end_date]
     content_preview
   end
   
@@ -135,9 +205,7 @@ module ContentHelper
       votes: nil,
       extra_fields: get_extra_fields!(cta),
       layout: get_content_preview_layout(cta),
-      start: cta.valid_from,
       slug: cta.slug,
-      end: cta.valid_to
     )
   end
 
