@@ -1,12 +1,18 @@
 <div class="row main-row" ng-class-odd="'brws-item--dark'">
 	  <!-- HEADING -->
 	<div class="col-sm-12 text-center">
-	  <h2 class="stripe__title" ng-style="{'color': stripe.extra_fields.color}">{{stripe.title}} <a ng-href="{{stripe.view_all_link}}" class="view-all-link hidden-xs" ng-if="stripe.has_view_all && stripe.extra_fields.view_all && stripe.extra_fields.view_all.value">Vedi tutti</a></h2>
+	  <h2 class="stripe__title" ng-style="{'color': stripe.extra_fields.color}">{{stripe.title}} 
+	  	<a ng-href="{{stripe.view_all_link}}" class="view-all-link hidden-xs" 
+	  	ng-if="stripe.has_view_all && stripe.extra_fields.view_all && stripe.extra_fields.view_all.value">Vedi tutti</a>
+	  	<a ng-href="{{stripe.extra_fields.custom_view_all_url}}" class="view-all-link hidden-xs" 
+	  	ng-if="stripe.extra_fields.custom_view_all_url && stripe.extra_fields.custom_view_all_label">{{stripe.extra_fields.custom_view_all_label}}</a>
+	  </h2>
 	</div>
     <div class="col-xs-12 stripe-contents" ng-repeat="contents in [stripe.contents]">
 	    <%= render partial: "/application/content_carousel" %>
 	</div>
 	<div class="col-xs-12 text-center">
 		<a ng-href="{{stripe.view_all_link}}" class="view-all-link visible-xs" ng-if="stripe.has_view_all && stripe.extra_fields.view_all && stripe.extra_fields.view_all.value">Vedi tutti</a>
+		<a ng-href="{{stripe.extra_fields.custom_view_all_url}}" class="view-all-link visible-xs" ng-if="stripe.extra_fields.custom_view_all_url && stripe.extra_fields.custom_view_all_label">{{stripe.extra_fields.custom_view_all_label}}</a>
 	</div>
 </div>
