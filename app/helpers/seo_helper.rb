@@ -10,7 +10,7 @@ module SeoHelper
   end
 
   def set_seo_info_for_cta(cta)
-    seo_title, seo_meta_description = seo_info_from_extra_fields(tag)
+    seo_title, seo_meta_description = seo_info_from_extra_fields(cta)
     thumbnail = (cta.thumbnail.path rescue nil) 
     set_seo_info(seo_title, seo_meta_description, get_default_keywords(), thumbnail)
   end
