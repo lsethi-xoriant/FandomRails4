@@ -7,16 +7,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery except: [:instagram_verify_token_callback, :facebook_app], :if => proc {|c| Rails.configuration.deploy_settings.fetch('forgery_protection', true) }
   include FandomUtils
   include ApplicationHelper
-  include EventHandlerHelper
-  include CacheHelper
-  include CacheKeysHelper
-  include RewardHelper
-  include CommentHelper
-  include CallToActionHelper
-  include CaptchaHelper
-  include CalendarHelper
-  include BrowseHelper
-  include ActionView::Helpers::SanitizeHelper
 
   before_filter :fandom_before_filter
   

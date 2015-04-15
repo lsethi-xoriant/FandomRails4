@@ -30,6 +30,44 @@ module OrzoroHelper
     miniformat_info_list
   end
 
+  def build_orzoro_thumb_calltoaction(calltoaction, thumb_format = :thumb)   
+    {
+      "id" => calltoaction.id,
+      "detail_url" => cta_url(calltoaction),
+      "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
+      "thumb_url" => calltoaction.thumbnail(thumb_format),
+      "title" => calltoaction.title,
+      "slug" => calltoaction.slug,
+      "description" => calltoaction.description,
+      "type" => "cta",
+      "interactions" => calltoaction.interactions,
+      "extra_fields" => JSON.parse(calltoaction.extra_fields || "{}"),
+      "aux" => {
+        "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat"),
+        "flag" => build_grafitag_for_calltoaction(calltoaction, "flag")
+      }
+    }
+  end
+
+  def get_orzoro_related_calltoaction_info(current_calltoaction, related_tag_name = "miniformat")
+    calltoactions = cache_short(get_ctas_except_me_cache_key(current_calltoaction.id)) do
+      tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
+      if tag
+        CallToAction.active.includes(:call_to_action_tags)
+                    .where("call_to_actions.id <> ?", current_calltoaction.id)
+                    .where("call_to_action_tags.tag_id = ?", tag.id)
+                    .limit(8).to_a
+      else
+        CallToAction.active.where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
+      end
+    end 
+    related_calltoaction_info = []
+    calltoactions.each do |calltoaction|
+      related_calltoaction_info << build_orzoro_thumb_calltoaction(calltoaction)
+    end
+    related_calltoaction_info
+  end
+
   def default_orzoro_aux(other, calltoaction_info_list = nil)
 
     miniformat_info_list, assets = cache_medium("layout_info") do
@@ -46,7 +84,7 @@ module OrzoroHelper
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
       calltoaction_category = get_tag_with_tag_about_call_to_action(calltoaction, "category").first
-      related_calltoaction_info = get_related_calltoaction_info(calltoaction, "category")
+      related_calltoaction_info = get_orzoro_related_calltoaction_info(calltoaction, "category")
       if calltoaction_info_list.first["miniformat"]["name"] == "ricette"
         related_product = get_tag_with_tag_about_call_to_action(calltoaction, "related-product").first
         if related_product
@@ -68,7 +106,7 @@ module OrzoroHelper
         calltoaction_evidence_info = []
         calltoactions.each_with_index do |calltoaction, index|
           thumb_format = (index == 0 && !small_mobile_device?()) ? :medium : :thumb
-          calltoaction_evidence_info << build_default_thumb_calltoaction(calltoaction, thumb_format)
+          calltoaction_evidence_info << build_orzoro_thumb_calltoaction(calltoaction, thumb_format)
         end
 
         calltoaction_evidence_info

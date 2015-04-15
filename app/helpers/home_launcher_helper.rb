@@ -1,5 +1,3 @@
-require 'fandom_utils'
-
 module HomeLauncherHelper
   def active_home_launchers()
     cache_short('home_launcher') do

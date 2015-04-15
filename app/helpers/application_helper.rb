@@ -4,195 +4,41 @@
 require 'fandom_utils'
 
 module ApplicationHelper
+
   include CacheHelper
   include RewardingSystemHelper
+  include RewardHelper
   include NoticeHelper
   include BrowseHelper
+  include GrafitagHelper
   include LogHelper
   include SeoHelper
-
-  class ContentSection
-    
-    # key can be either tag name or special keyword such as $recent
-    attr_accessor :key
-    attr_accessor :title 
-    attr_accessor :icon_url
-    attr_accessor :contents
-    attr_accessor :view_all_link
-    attr_accessor :column_number
-    attr_accessor :total
-    attr_accessor :per_page
-    attr_accessor :extra_fields
-    attr_accessor :has_view_all
-    
-    def initialize(params)
-      @key = params[:key]
-      @title = params[:title]
-      @icon_url = params[:icon_url]
-      @contents = params[:contents]
-      @view_all_link = params[:view_all_link]
-      @column_number = params[:column_number]
-      @total = params[:total]
-      @per_page = params[:per_page]
-      @extra_fields = params[:extra_fields]
-      @has_view_all = params[:has_view_all]
-    end
-    
-  end
+  include EventHandlerHelper
+  include CacheKeysHelper
+  include CommentHelper
+  include CallToActionHelper
+  include CaptchaHelper
+  include CalendarHelper
+  include ViewHelper
+  include LinkedCallToActionHelper
+  include CacheExpireHelper
+  include PeriodicityHelper
+  include ModelHelper
+  include RewardingRuleCheckerHelper
+  include RewardingRulesCollectorHelper
+  include FandomUtils
+  include FilterHelper
+  include ContentHelper
+  include UserInteractionHelper
+  include TagHelper
+  include ActionView::Helpers::SanitizeHelper
   
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
   # is redefined in TextHelper
-  class TextHelperNamespace ; include ActionView::Helpers::TextHelper ; end
-  def truncate(*args)
-    TextHelperNamespace.new.truncate(*args)
-  end
-  
-  def tag_to_content_preview(tag, needs_related_tags = false, populate_desc = true)
-    thumb_field = get_extra_fields!(tag)["thumbnail"]
-    has_thumb = !thumb_field.blank? && upload_extra_field_present?(thumb_field)
-    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if has_thumb
-    if get_extra_fields!(tag).key? "description"
-      description = truncate(get_extra_fields!(tag)["description"], :length => 150, :separator => ' ')
-      long_description = get_extra_fields!(tag)["description"]
-    else
-      description = ""
-      long_description = ""
-    end
-    header_field = get_extra_fields!(tag)["header_image"]
-    has_header = !header_field.blank? && upload_extra_field_present?(header_field)
-    header_image = get_upload_extra_field_processor(header_field,"original") if has_header
-    
-    icon_field = get_extra_fields!(tag)["icon"]
-    has_icon = !icon_field.blank? && upload_extra_field_present?(icon_field)
-    icon = get_upload_extra_field_processor(icon_field,"medium") if has_icon
-    
-    category_icon_field = get_extra_fields!(tag)["category_icon"]
-    has_category_icon_field = !category_icon_field.blank? && upload_extra_field_present?(category_icon_field)
-    category_icon = get_upload_extra_field_processor(category_icon_field,"medium") if has_category_icon_field
-    
-    ContentPreview.new(
-      type: "tag",
-      id: tag.id,
-      has_thumb: has_thumb, 
-      thumb_url: thumb_url,
-      title: tag.title,
-      long_description: populate_desc ? long_description : nil,
-      description: populate_desc ? description : nil,  
-      detail_url: "/browse/category/#{tag.slug}",
-      created_at: tag.created_at.to_i,
-      header_image_url: header_image,
-      icon: icon,
-      category_icon: category_icon,
-      tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
-      aux: build_content_preview_aux(tag),
-      extra_fields: get_extra_fields!(tag),
-      layout: get_content_preview_layout(tag),
-      start: tag.valid_from,
-      end: tag.valid_to
-    )
-  end
-  
-  def tag_to_content_preview_light(tag, needs_related_tags = false, populate_desc = true)
-    thumb_field = get_extra_fields!(tag)["thumbnail"]
-    has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
-    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if has_thumb
-    if get_extra_fields!(tag).key? "description"
-      description = truncate(get_extra_fields!(tag)["description"], :length => 150, :separator => ' ')
-      long_description = get_extra_fields!(tag)["description"]
-    else
-      description = ""
-      long_description = ""
-    end
-    header_field = get_extra_fields!(tag)["header_image"]
-    has_header = !header_field.blank? && upload_extra_field_present?(header_field)
-    header_image = get_upload_extra_field_processor(header_field,"original") if has_header
-    
-    icon_field = get_extra_fields!(tag)["icon"]
-    has_icon = !icon_field.blank? && upload_extra_field_present?(icon_field)
-    icon = get_upload_extra_field_processor(icon_field,"medium") if has_icon
-    
-    category_icon_field = get_extra_fields!(tag)["category_icon"]
-    has_category_icon_field = !category_icon_field.blank? && upload_extra_field_present?(category_icon_field)
-    category_icon = get_upload_extra_field_processor(category_icon_field,"medium") if has_category_icon_field
-    
-    ContentPreview.new(
-      type: "tag",
-      id: tag.id,
-      has_thumb: has_thumb, 
-      thumb_url: thumb_url,
-      title: tag.title,
-      long_description: populate_desc ? long_description : nil,
-      description: populate_desc ? description : nil,  
-      detail_url: "/browse/category/#{tag.slug}",
-      created_at: tag.created_at.to_i,
-      header_image_url: header_image,
-      icon: icon,
-      category_icon: category_icon,
-      tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
-      extra_fields: get_extra_fields!(tag),
-      layout: get_content_preview_layout(tag),
-      start: tag.valid_from,
-      end: tag.valid_to
-    )
-  end
-  
-  def cta_to_content_preview(cta, populate_desc = true, interactions = nil)
-    
-    event_date_info = get_cta_event_start_end(interactions)
-    
-    ContentPreview.new(
-      type: "cta",
-      media_type: cta.media_type,
-      id: cta.id, 
-      has_thumb: cta.thumbnail.present?, 
-      thumb_url: cta.thumbnail(:thumb), 
-      thumb_wide_url: (cta.thumbnail(:wide) rescue ""), 
-      title: cta.title, 
-      description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
-      long_description: populate_desc ? cta.description : nil,
-      detail_url: cta_url(cta),
-      created_at: cta.created_at.to_time.to_i,
-      comments: get_number_of_comments_for_cta(cta),
-      likes: get_number_of_likes_for_cta(cta),
-      tags: get_tag_ids_for_cta(cta),
-      votes: get_votes_for_cta(cta.id),
-      aux: build_content_preview_aux(cta),
-      extra_fields: get_extra_fields!(cta),
-      layout: get_content_preview_layout(cta),
-      start: event_date_info[:start_date],
-      interactions: interactions,
-      valid_from: cta.valid_from,
-      valid_to: cta.valid_to,
-      end: event_date_info[:end_date],
-      ical_id: event_date_info[:ical_id],
-      slug: cta.slug
-    )
-  end
-  
-  def cta_to_content_preview_light(cta, populate_desc = true)
-    ContentPreview.new(
-      type: "cta",
-      media_type: cta.media_type,
-      id: cta.id, 
-      has_thumb: cta.thumbnail.present?, 
-      thumb_url: cta.thumbnail(:medium), 
-      title: cta.title, 
-      description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
-      long_description: populate_desc ? cta.description : nil,
-      detail_url: cta_url(cta),
-      created_at: cta.created_at.to_time.to_i,
-      comments: nil,
-      likes: nil,
-      status: nil,
-      tags: nil,
-      votes: nil,
-      extra_fields: get_extra_fields!(cta),
-      layout: get_content_preview_layout(cta),
-      start: cta.valid_from,
-      slug: cta.slug,
-      end: cta.valid_to
-    )
-  end
+  # class TextHelperNamespace ; include ActionView::Helpers::TextHelper ; end
+  # def truncate(*args)
+  #   TextHelperNamespace.new.truncate(*args)
+  # end
   
   def get_cta_event_start_end(cta_interactions)
     event_range_info = {
@@ -215,64 +61,6 @@ module ApplicationHelper
       end
     end
     event_range_info
-  end
-  
-  def get_content_preview_layout(content)
-    get_extra_fields!(content)['layout'] || "default"
-  end
-  
-  def build_content_preview_aux(obj)
-    if obj.class.name == "CallToAction"
-      {
-        "miniformat" => build_grafitag_for_calltoaction(obj, "miniformat"),
-        "flag" => build_grafitag_for_calltoaction(obj, "flag")
-      }
-    else
-      {
-        "miniformat" => build_grafitag_for_tag(obj, "miniformat"),
-        "flag" => build_grafitag_for_tag(obj, "flag")
-      }
-    end
-  end
-  
-  def get_tag_ids_for_cta(cta)
-    cache_short(get_tag_names_for_cta_key(cta.id)) do
-      tags = {}
-      cta.call_to_action_tags.each do |t|
-        tags[t.tag.id] = t.tag.id
-      end
-      tags
-    end
-  end
-  
-  def get_tag_ids_for_tag(tag)
-    cache_short(get_tag_names_for_tag_key(tag.id)) do
-      tags = {}
-      tag.tags_tags.each do |t| 
-        tags[Tag.find(t.other_tag_id).id] = Tag.find(t.other_tag_id).id
-      end
-      tags  
-    end
-  end
-  
-  def user_for_registation_form()
-    if current_user.aux
-      aux = JSON.parse(current_user.aux)
-      contest = aux[:contest]
-      role = aux[:role]
-    end
-
-    {
-      "day_of_birth" => current_user.day_of_birth,
-      "month_of_birth" => current_user.month_of_birth,
-      "year_of_birth" => current_user.year_of_birth,
-      "gender" => current_user.gender,
-      "location" => current_user.location, 
-      "aux" => { 
-        "contest" => contest,
-        "terms" => role
-      }
-    }
   end
 
   def order_elements_by_ordering_meta(meta_ordering, elements)
@@ -298,10 +86,6 @@ module ApplicationHelper
     else
       []
     end
-  end
-
-  def cached_nil?(cached_value)
-    cached_value.class == CachedNil
   end
 
   def ga_code
@@ -332,101 +116,6 @@ module ApplicationHelper
     aux_1.present? ? aux_1.to_json : nil
 
   end
-
-  def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
-
-    if !anonymous_user?(user) || ($site.anonymous_interaction && interaction.stored_for_anonymous)
-      user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
-      expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
-    end
-    
-    if user_interaction
-      if interaction.resource.one_shot
-        log_error('one shot interaction attempted more than once', { user_id: user_interaction.user.id, interaction_id: user_interaction.interaction.id, cta_id: user_interaction.interaction.call_to_action.id })
-        raise Exception.new("one shot interaction attempted more than once")
-      end
-
-      case interaction.resource_type.downcase
-      when "share"
-        aux = merge_aux(aux, user_interaction.aux)
-      when "like"
-        aux = { like: !(JSON.parse(user_interaction.aux)["like"]) }.to_json
-      when "vote"
-        aux_parse = JSON.parse(aux)
-        aux_in_user_interaction = JSON.parse(user_interaction.aux)
-        aux_in_user_interaction["vote"] = aux_parse["vote"]
-        if aux_in_user_interaction["vote_info_list"].has_key?(aux_parse["vote"].to_s)
-          aux_in_user_interaction["vote_info_list"][aux_parse["vote"]] = aux_in_user_interaction["vote_info_list"][aux_parse["vote"].to_s] + 1
-        else
-          aux_in_user_interaction["vote_info_list"][aux_parse["vote"]] = 1
-        end
-        aux = aux_in_user_interaction.to_json
-        expire_cache_key(get_cache_votes_for_interaction(interaction.id))
-      end
-
-      user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
-      UserCounter.update_counters(interaction, user_interaction, user, false) 
-
-    else
-
-      if interaction.resource_type.downcase == "vote"
-        aux_parse = JSON.parse(aux)
-        aux_parse["vote_info_list"] = {
-          aux_parse["vote"] => 1
-        }
-        aux = aux_parse.to_json
-        expire_cache_key(get_cache_votes_for_interaction(interaction.id))
-      end
-
-      user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
-  
-      unless anonymous_user?(user)
-        UserCounter.update_counters(interaction, user_interaction, user, true)
-      end
-    end
-
-    unless anonymous_user?(user)
-      expire_cache_key(get_cta_completed_or_reward_status_cache_key(get_main_reward_name, interaction.call_to_action_id, user.id))
-    end
-
-    if anonymous_user?(user) && !$site.anonymous_interaction
-      outcome = compute_outcome(user_interaction)
-    else
-      outcome = compute_save_and_notify_outcome(user_interaction)
-    end
-    outcome.info = []
-    outcome.errors = []
-    
-    if user_interaction.outcome.present?
-      interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
-      interaction_outcome.merge!(outcome)
-    else
-      interaction_outcome = outcome
-    end
-
-    outcome_for_user_interaction = { win: interaction_outcome }
-
-    is_trivia_interaction = interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
-    if is_trivia_interaction
-      predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
-      if user_interaction.outcome.present?
-        interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
-        interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer)
-      else
-        interaction_correct_answer_outcome = predict_outcome_with_correct_answer
-      end
-      outcome_for_user_interaction[:correct_answer] = interaction_correct_answer_outcome
-    end
-
-    user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
-
-    if !anonymous_user?(user) || ($site.anonymous_interaction && interaction.resource_type.downcase == "vote")
-      user_interaction.save
-    end
-  
-    [user_interaction, outcome]
-  
-  end
   
   def get_max(collection, &comparison)
     result = nil
@@ -443,177 +132,6 @@ module ApplicationHelper
       end
     end
     result
-  end
-  
-  def interaction_done?(interaction)
-    return current_user && UserInteraction.find_by_user_id_and_interaction_id(current_user.id, interaction.id)
-  end
-
-  def get_tag_to_rewards()
-    cache_short("tag_to_rewards") do
-      rewards = Reward.all
-      id_to_reward = {}
-      rewards.each do |r|
-        id_to_reward[r.id] = r
-      end
-
-      tag_to_rewards = {}
-      RewardTag.joins(:tag).select('tags.name, reward_id').each do |reward_tag|
-        (tag_to_rewards[reward_tag.name] ||= Set.new) << id_to_reward[reward_tag.reward_id]
-      end
-
-      tag_to_rewards
-    end
-  end
-  
-  def get_tag_to_my_rewards(user)
-    get_user_rewards_from_cache(user)[0]
-  end
-  
-  def get_user_rewards_from_cache(user)
-    cache_short(get_user_rewards_cache_key(user.id)) do
-      rewards = Reward.joins(:user_rewards).select("rewards.*").where("user_rewards.user_id = ?", user.id)
-      id_to_reward = {}
-      rewards.each do |r|
-        id_to_reward[r.id] = r
-      end
-      
-      name_to_reward = {}
-      rewards.each do |r|
-        name_to_reward[r.name] = r
-      end
-      
-      tag_to_rewards = {}
-      RewardTag.joins(:tag).select('tags.name, reward_id').each do |reward_tag|
-        if id_to_reward[reward_tag.reward_id]
-          (tag_to_rewards[reward_tag.name] ||= Set.new) << id_to_reward[reward_tag.reward_id]
-        end
-      end
-      [tag_to_rewards, name_to_reward] 
-    end
-  end
-
-  def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
-    cache_short get_tag_with_tag_about_call_to_action_cache_key(calltoaction.id, tag_name) do
-      Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).order("call_to_action_tags.updated_at DESC").to_a
-    end
-  end
-
-  def get_tag_with_tag_about_tag(tag, parent_tag_name)
-    cache_short get_tag_with_tag_about_tag_cache_key(tag.id, parent_tag_name) do
-      Tag.includes(tags_tags: :other_tag).includes(:tags_tags).where("other_tags_tags_tags.name = ? AND tags_tags.tag_id = ?", parent_tag_name, tag.id).order("tags_tags.updated_at DESC").to_a
-    end
-  end
-  
-  def get_tag_with_tag_about_reward(reward, tag_name)
-    cache_short get_tag_with_tag_about_reward_cache_key(reward.id, tag_name) do
-      Tag.includes(tags_tags: :other_tag).includes(:reward_tags).where("other_tags_tags_tags.name = ? AND reward_tags.reward_id = ?", tag_name, reward.id).to_a
-    end
-  end
-  
-  def construct_conditions_from_query(query, field)
-    query.gsub!(/\W+/, ' ')
-    conditions = ""
-    query.split(" ").each do |term|
-      if term.length > 3
-        unless conditions.blank?
-          conditions += " OR #{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
-        else
-          conditions += "#{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
-        end
-      end
-    end
-    conditions
-  end
-
-  def get_tags_with_tag(tag_name)
-    cache_short get_tags_with_tag_cache_key(tag_name) do
-      hidden_tags_ids = get_hidden_tag_ids
-      if hidden_tags_ids.any?
-        Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND tags.id not in (?)", tag_name, hidden_tags_ids).to_a
-      else
-        Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).to_a
-      end
-    end
-  end
-  
-  def get_tags_with_tags(tag_ids, params = {})
-    cache_short get_tags_with_tags_cache_key(tag_ids, "") do
-      hidden_tags_ids = get_hidden_tag_ids
-      where_clause = get_tag_where_clause_from_params(params)
-      if hidden_tags_ids.any?
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
-      else
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      end
-      tags = Tag.includes(:tags_tags).where("tags.id in (#{tag_ids_subselect})")
-      if !where_clause.empty?
-        tags.where("#{where_clause}")
-      end
-      tags.order("created_at DESC").to_a
-    end
-  end
-  
-  def get_tags_with_tag_with_match(tag_name, query = "")
-    conditions = construct_conditions_from_query(query, "tags.title")
-    category_tag_ids = get_category_tag_ids()
-    if conditions.empty?
-      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).order("tags.created_at DESC").to_a
-    else
-      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions}) AND tags.id in (?)", tag_name, category_tag_ids).order("tags.created_at DESC").to_a
-    end
-    filter_results(tags, query)
-  end
-  
-  def get_tags_with_match(query = "")
-    conditions = construct_conditions_from_query(query, "tags.title")
-    category_tag_ids = get_category_tag_ids()
-    if conditions.empty?
-      tags = Tag.includes(:tags_tags).where("id in (?)", category_tag_ids).order("tags.created_at DESC").to_a
-    else
-      tags = Tag.includes(:tags_tags).where("#{conditions} AND id in (?)", category_tag_ids).order("tags.created_at DESC").to_a
-    end
-    filter_results(tags, query)
-  end
-  
-  def get_ctas_with_tag(tag_name)
-    cache_short get_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.active.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
-    end
-  end
-  
-  def get_user_ctas_with_tag(tag_name, offset = 0, limit = 6)
-    cache_short get_user_ctas_with_tag_cache_key(tag_name) do
-        CallToAction.active_with_media.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", tag_name).offset(offset).limit(limit).to_a
-    end
-  end
-  
-  def get_ctas_with_tag_with_match(tag_name, query = "")
-    conditions = construct_conditions_from_query(query, "call_to_actions.title")
-    ctas = CallToAction.active.includes(call_to_action_tags: :tag).includes(:interactions).where("tags.name = ? AND (#{conditions})", tag_name).order("call_to_actions.created_at DESC").to_a
-    filter_results(ctas, query)
-  end
-  
-  def get_ctas_with_match(query = "")
-    conditions = construct_conditions_from_query(query, "call_to_actions.title")
-    if conditions.empty?
-      ctas = CallToAction.active.includes(:interactions).where("user_id IS NULL").order("call_to_actions.created_at DESC").to_a
-    else
-      ctas = CallToAction.active.includes(:interactions).where("#{conditions} AND user_id IS NULL").order("call_to_actions.created_at DESC").to_a
-    end
-    filter_results(ctas, query)
-  end
-  
-  def filter_results(results, query)
-    regexp = Regexp.new(query.split(/\W+/).map { |term| "(\\W+#{term}\\W+)" }.join("|"), Regexp::IGNORECASE)
-    filtered_results = []
-    results.each do |result|
-      title = " #{result.title} "
-      unless regexp.match(title).nil?
-        filtered_results << result
-      end
-    end
-    filtered_results
   end
   
   def get_extra_key_from_params(params)
@@ -642,22 +160,6 @@ module ApplicationHelper
     end
     extra_key.join("_")
   end
-
-  def get_tags_with_tags_in_and(tag_ids, params = {})
-    extra_key = get_extra_key_from_params(params)
-    cache_short get_tags_with_tags_cache_key(tag_ids, extra_key) do
-      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      where_clause, limit = get_tag_where_clause_from_params(params)
-      tags = Tag.where("id IN (#{tag_ids_subselect})")
-      if !where_clause.empty?
-        tags = tags.where("#{where_clause}")
-      end
-      if limit
-        tags = tags.limit(limit)
-      end
-      tags.order("created_at DESC").to_a
-    end
-  end
   
   def add_ical_fields_to_where_condition(query, params)
     if params[:ical_start_datetime]
@@ -667,58 +169,6 @@ module ApplicationHelper
       query = query.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= ?", params[:ical_end_datetime])
     end
     query
-  end
-  
-  def get_ctas_with_tags_in_and(tag_ids, params = {})
-    extra_key = get_extra_key_from_params(params)
-    cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "and") do
-      tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
-      where_clause, limit = get_cta_where_clause_from_params(params)
-      ctas = CallToAction.includes(call_to_action_tags: :tag)
-      if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
-        ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
-        ctas = add_ical_fields_to_where_condition(ctas, params)
-      end
-      ctas = ctas.where("call_to_actions.id IN (#{tag_ids_subselect}) ")
-      if !where_clause.empty?
-        ctas = ctas.where("#{where_clause}")
-      end
-      if limit
-        ctas = ctas.limit(limit)
-      end
-      
-      if params[:order_string]
-        ctas = ctas.order("#{params[:order_string]}")
-      else
-        ctas = ctas.order("activated_at DESC")
-      end
-      ctas.active.to_a
-    end
-  end
-  
-  def get_ctas_with_tags_in_or(tag_ids, params = {})
-    extra_key = get_extra_key_from_params(params)
-    cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
-      where_clause, limit = get_cta_where_clause_from_params(params)
-      ctas = CallToAction.active.includes(call_to_action_tags: :tag)
-      if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
-        cta_id_to_ical_fields = get_cta_id_to_ical_fields(params) 
-        ctas = ctas.where(id: cta_id_to_ical_fields) 
-      end
-      ctas = ctas.where("call_to_action_tags.tag_id IN (?) ", tag_ids)
-      if !where_clause.empty?
-        ctas = ctas.where("#{where_clause}")
-      end
-      if limit
-        ctas = ctas.limit(limit)
-      end
-      
-      if params[:order_string]
-        ctas.order("#{params[:order_string]}").to_a
-      else
-        ctas.order("activated_at DESC").to_a
-      end
-    end
   end
   
   # Public: Construct an sql condition string from hash of params. 
@@ -773,12 +223,6 @@ module ApplicationHelper
     end
     limit
   end
-  
-  def get_all_ctas_with_tag(tag_name)
-    cache_short get_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).order("activated_at DESC").to_a
-    end
-  end
 
   def get_all_active_ctas()
     cache_short get_all_active_ctas_cache_key() do
@@ -789,19 +233,6 @@ module ApplicationHelper
   def get_rewards_with_tag(tag_name)
     cache_short get_rewards_with_tag_cache_key(tag_name) do
       Reward.includes(reward_tags: :tag).where("tags.name = ?", tag_name).to_a
-    end
-  end
-  
-  def get_last_rewards_for_tag(tag_name)
-    cache_short get_last_rewards_for_tag(tag_name, current_user.id) do
-      
-      
-      last_reward = current_or_anonymous_user.user_rewards.includes(:reward).where("rewards.name = '#{reward_name}'").order("rewards.updated_at DESC").first
-      if last_reward
-        last_reward
-      else
-        CACHED_NIL
-      end
     end
   end
   
@@ -825,225 +256,6 @@ module ApplicationHelper
   def push_in_array(array, element, push_times)
     push_times.times do
       array << element
-    end
-  end
-  
-  # Get an hash cta_id => status for a list of ctas. Needed for separate and caching ctas information 
-  # not depending to user
-  #   user           - the user for which calculate cta statuses
-  #   ctas           - list of ctas to evaluate
-  #   reward_name    - name of the reward that ctas contribute to obtain 
-  def cta_to_reward_statuses_by_user(user, ctas, reward_name) 
-    cta_to_reward_statuses = cache_long(get_cta_to_reward_statuses_by_user_cache_key(user.id)) do
-      result = {}
-      ctas.each do |cta|
-        result[cta.id] = cta_reward_statuses(user, cta, reward_name)
-      end
-      result
-    end
-    updated = false
-    ctas.each do |cta|
-      unless cta_to_reward_statuses.key? cta.id
-        updated = true
-        cta_to_reward_statuses[cta.id] = cta_reward_statuses(user, cta, reward_name)
-      end
-    end
-    if updated
-      cache_write_long(get_cta_to_reward_statuses_by_user_cache_key(user.id), cta_to_reward_statuses)
-    end
-    cta_to_reward_statuses
-  end
-
-  def cta_reward_statuses(user, cta, reward_name)
-    if call_to_action_completed?(cta)
-      nil
-    else
-      winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(cta, user)
-      winnable_outcome["reward_name_to_counter"][reward_name]
-    end
-  end
-
-
-  def call_to_action_completed?(cta, user = nil)
-    if user.nil?
-      user = current_or_anonymous_user
-    end
-
-    if !anonymous_user?(user)
-      require_to_complete_interactions = interactions_required_to_complete(cta)
-
-      if require_to_complete_interactions.count == 0
-        return false
-      end
-
-      require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
-      interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", user.id, require_to_complete_interactions_ids)
-      require_to_complete_interactions.count == interactions_done.count
-
-    else
-      false
-    end
-  end
-
-  def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, user = nil)
-    if user.nil?
-      user = current_or_anonymous_user
-    end
-
-    call_to_action_completed_or_reward_status = cache_short(get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, user.id)) do
-      if call_to_action_completed?(calltoaction, user)
-        CACHED_NIL
-      else
-        compute_current_call_to_action_reward_status(reward_name, calltoaction, nil)
-      end
-    end
-
-    if !cached_nil?(call_to_action_completed_or_reward_status)
-      JSON.parse(call_to_action_completed_or_reward_status)
-    else 
-      nil
-    end
-  end
-
-  # Generates an hash with reward information.
-  def compute_current_call_to_action_reward_status(reward_name, calltoaction, user = nil)
-    if user.nil?
-      user = current_user
-    end
-
-    reward = get_reward_from_cache(reward_name)
-    if reward
-      winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user)
-      
-      interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
-
-      reward_status_images = Array.new
-      total_win_reward_count = 0
-
-      if user
-
-        interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
-          user_interaction = interaction.user_interactions.find_by_user_id(user.id)        
-    
-          if user_interaction && user_interaction.outcome.present?
-            win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
-            correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
-            correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
-
-            total_win_reward_count += win_reward_count;
-
-            push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
-            push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
-            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-          else 
-            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
-          end       
-
-        end
-
-      else
-        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
-      end
-
-      winnable_reward_count = winnable_outcome["reward_name_to_counter"][reward_name]
-    end
-
-    {
-      winnable_reward_count: winnable_reward_count,
-      win_reward_count: total_win_reward_count,
-      reward_status_images: reward_status_images,
-      reward: reward
-    }.to_json
-  end
-
-  def get_current_interaction_reward_status(reward_name, interaction, user = current_user)
-    reward = get_reward_by_name(reward_name)
-    if reward
-      reward_status_images = Array.new 
-
-      user_interaction = user ? UserInteraction.find_by_user_id_and_interaction_id(user.id, interaction.id) : nil
-      
-      if user_interaction
-        win_reward_count = (JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) rescue 0)
-        correct_answer_outcome = (JSON.parse(user_interaction.outcome)["correct_answer"] rescue nil)
-        correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
-
-        winnable_reward_count = 0
-
-        push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
-        push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
-      else
-        win_reward_count = 0
-        winnable_reward_count = predict_outcome(interaction, nil, true).reward_name_to_counter[reward_name]
-        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_reward_count)
-      end
-    end
-
-    {
-      win_reward_count: win_reward_count,
-      winnable_reward_count: winnable_reward_count,
-      reward_status_images: reward_status_images,
-      reward: reward.to_json
-    }
-
-  end
-  
-  def get_current_property_point
-    get_counter_about_user_reward(get_current_property_point_reward_name)
-  end  
-
-  def get_current_property_point_reward_name
-    $context_root.nil? ? "point" : "#{$context_root}-point"
-  end
-
-  def get_counter_about_user_reward(reward_name, all_periods = false)
-    if current_user
-      reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
-        
-        reward_points = { general: 0 }
-        $site.periodicity_kinds.each do |periodicity_kind|
-          reward_points[:periodicity_kind] = 0
-        end
-
-        get_reward_with_periods(reward_name).each do |user_reward|
-          if user_reward.period.blank?
-            reward_points[:general] = user_reward.counter
-          else
-            reward_points[user_reward.period.kind] = user_reward.counter
-          end
-        end 
-
-        reward_points     
-      end
-
-      all_periods ? reward_points : reward_points[:general]  
-    else
-      nil
-    end
-  end
-  
-  def get_reward_with_periods(reward_name)
-    reward = Reward.find_by_name(reward_name)
-    if reward
-      user_reward = UserReward.includes(:period)
-        .where("user_rewards.reward_id = ? AND user_rewards.user_id = ?", reward.id, current_user.id)
-        .where("periods.id IS NULL OR (periods.start_datetime < ? AND periods.end_datetime > ?)", Time.now.utc, Time.now.utc)
-    else
-      []
-    end
-  end
-
-  def user_has_reward(reward_name)
-    user_reward = get_user_rewards_from_cache(current_user)[1]
-    !user_reward[reward_name].nil?
-  end
-
-  def compute_rewards_gotten_over_total(reward_ids)
-    if reward_ids.any?
-      place_holders = (["?"] * reward_ids.count).join ", "
-      current_or_anonymous_user.user_rewards.where("reward_id IN (#{place_holders})", *reward_ids).count
-    else
-      0
     end
   end
 
@@ -1088,13 +300,6 @@ module ApplicationHelper
 
   def ipad?
     return request.user_agent =~ /iPad/ 
-  end
-
-  def find_interaction_for_calltoaction_by_resource_type(calltoaction, resource_type)
-    interactions = cache_short get_interaction_for_calltoaction_by_resource_type_cache_key(calltoaction.id, resource_type) do
-      interactions = Interaction.where("resource_type = ? AND when_show_interaction <> 'MAI_VISIBILE' AND call_to_action_id = ?", resource_type, calltoaction.id)
-    end
-    interactions.any? ? interactions.first : nil
   end
 
   def calltoaction_active_with_tag(tag, order)
@@ -1263,35 +468,6 @@ module ApplicationHelper
       results / results_per_page + 1
     end
   end
-
-  # Trace the time spend by the block passed as parameter.
-  # This function cannot be named just "trace" because of a conflict with rake db:migrate
-  def trace_block(message, data, &block)
-    start_time = Time.now.utc
-    result = yield block
-    time = Time.now.utc - start_time
-    data['time'] = time
-    log_debug(message, data)
-    result 
-  end
-
-  def get_main_reward
-    cache_short("main_reward") do
-      Reward.find_by_name(MAIN_REWARD_NAME);
-    end
-  end
-
-  def get_reward_by_name(reward_name)
-    cache_short("reward_#{reward_name}") do
-      Reward.find_by_name(reward_name)
-    end
-  end
-  
-  def get_main_reward_image_url
-    cache_short(get_main_reward_image_cache_key) do
-      Reward.find_by_name(MAIN_REWARD_NAME).main_image.url
-    end
-  end
   
   def get_cta_button_label(cta)
     if cta.aux && JSON.parse(cta.aux)['button_label'] && !JSON.parse(cta.aux)['button_label'].blank?
@@ -1328,123 +504,7 @@ module ApplicationHelper
     ac = ActionController::Base.new()
     ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", locals: { label: field['label'], name: field['name'], is_required: field['required']  }, layout: false, formats: :html
   end
-
-  def not_logged_from_omniauth(auth, provider)  
-    user_auth =  Authentication.find_by_provider_and_uid(provider, auth.uid);
-    if user_auth
-      # Ho gia' agganciato questo PROVIDER, mi basta recuperare l'utente per poi aggiornarlo.
-      # Da tenere conto che vengono salvate informazioni differenti a seconda del PROVIDER di provenienza.
-      user = user_auth.user
-      user_auth.update_attributes(
-          uid: auth.uid,
-          name: auth.info.name,
-          oauth_token: auth.credentials.token,
-          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-          avatar: auth.info.image,
-      )
-
-      from_registration = false
-
-    else
-      # Verifico se esiste l'utente con l'email del provider selezionato.
-      unless auth.info.email && (user = User.find_by_email(auth.info.email))
-        password = Devise.friendly_token.first(8)
-        user = User.new(
-          password: password,
-          password_confirmation: password,
-          first_name: auth.info.first_name,
-          last_name: auth.info.last_name,
-          email: auth.info.email,
-          avatar_selected: provider,
-          privacy: nil # TODO: TENANT
-          )
-        from_registration = true
-      else
-        from_registration = false
-      end 
-
-      # Recupero l'autenticazione associata al provider selezionato.
-      # Da tenere conto che vengono salvate informazioni differenti a seconda del provider di provenienza.
-      user.authentications.build(
-          uid: auth.uid,
-          name: auth.info.name,
-          oauth_token: auth.credentials.token,
-          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-          provider: provider,
-          avatar: auth.info.image,
-          aux: auth.to_json
-      )
-
-      user.required_attrs = get_site_from_request(request)["required_attrs"]
-      user.aux = JSON.parse(user.aux) if user.aux.present?
-      user.save
-    end 
-    
-    return user, from_registration
-  end
   
-  # Get max reward
-  #   rward_name      - name of the reward type (eg: level, badge)
-  #   extra_cache_key - further param to handle name clashing clash in case of multi property
-  def get_max_reward(reward_name, extra_cache_key = "")
-    cache_short(get_max_reward_key(reward_name, current_user.id, extra_cache_key)) do
-      rewards, use_property = rewards_by_tag(reward_name, current_user)
-      reward = nil
-      if use_property
-        if !rewards.empty?
-          reward = get_max(rewards[$context_root]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
-        end 
-      elsif !rewards.nil?
-        rweard = get_max(rewards) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
-      end
-      
-      if reward.nil?
-        CACHED_NIL
-      else
-        reward
-      end
-    end
-  end
-  
-  def rewards_by_tag(tag_name, user = nil)
-    if user.nil?
-      tag_to_rewards = get_tag_to_rewards()
-    else
-      tag_to_rewards = get_tag_to_my_rewards(user)
-    end
-    # rewards_from_param can include badges or levels 
-    rewards_from_param = tag_to_rewards[tag_name]
-
-    property_tags = get_tags_with_tag("property")
-
-    if property_tags.present?
-
-      rewards_to_show = Hash.new
-
-      property_tag_names = property_tags.map{ |tag| tag.name }
-      
-      tag_to_rewards.each do |tag_name, rewards|
-        if property_tag_names.include?(tag_name) && rewards_from_param
-          rewards_to_show[tag_name] = rewards & rewards_from_param
-        end
-      end
-
-      are_properties_used = are_properties_used?(rewards_to_show)
-     
-      unless are_properties_used
-        rewards_to_show = rewards_from_param
-      end
-
-    else
-      are_properties_used = false
-      rewards_to_show = rewards_from_param
-    end
-
-    [rewards_to_show, are_properties_used]
-  end
-
   def are_properties_used?(rewards_to_show)
     not_empty_properties_counter = 0
     rewards_to_show.each do |tag_name, rewards|
@@ -1475,105 +535,22 @@ module ApplicationHelper
     $context_root ? "#{$context_root}-#{MAIN_REWARD_NAME}" : MAIN_REWARD_NAME
   end
   
-  def get_property_from_cta(cta)
-    properties_tag = get_tag_with_tag_about_call_to_action(cta, "property")
-    if properties_tag.empty?
-      ""
-    else
-      "#{properties_tag.first.name}"
-    end
-  end
-  
   def get_hidden_tag_ids
     cache_short(get_hidden_tags_cache_key) do
       Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? ", "hide-tag").map{|t| t.id}
     end
   end
-  
-  def get_number_of_page(elements, per_page)
-    if elements == 0
-      0
-    elsif elements < per_page
-      1
-    elsif elements % per_page == 0
-      elements / per_page
-    else
-      (elements / per_page) + 1
-    end
-  end
 
-  def get_related_calltoaction_info(current_calltoaction, related_tag_name = "miniformat")
-    calltoactions = cache_short(get_ctas_except_me_cache_key(current_calltoaction.id)) do
-      tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
-      if tag
-        CallToAction.active.includes(:call_to_action_tags)
-                    .where("call_to_actions.id <> ?", current_calltoaction.id)
-                    .where("call_to_action_tags.tag_id = ?", tag.id)
-                    .limit(8).to_a
-      else
-        CallToAction.active.where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
-      end
-    end 
-    related_calltoaction_info = []
-    calltoactions.each do |calltoaction|
-      related_calltoaction_info << build_default_thumb_calltoaction(calltoaction)
-    end
-    related_calltoaction_info
-  end
-
-  def default_aux(other)
-
-    miniformat_items = get_tags_with_tag("miniformat")
-
-    if miniformat_items.any?
-      miniformat_tag = get_tag_from_params("miniformat")
-      miniformat_items = order_elements(miniformat_tag, miniformat_items)
-      
-      miniformat_info_list = []
-      miniformat_items.each do |miniformat_item|
-        miniformat_info_list << {
-          "id" => miniformat_item.id,
-          "slug" => miniformat_item.slug,
-          "title" => miniformat_item.title,
-          "icon" => (get_extra_fields!(miniformat_item)["icon"]["url"] rescue nil)
-        }
-      end
-    end
-
-    if other && other.has_key?(:calltoaction)
-      calltoaction = other[:calltoaction]
-      related_calltoaction_info = get_related_calltoaction_info(calltoaction, "miniformat")
-    end
-
-    if other && other.has_key?(:calltoaction_evidence_info)
-      calltoaction_evidence_info = cache_short(get_evidence_calltoactions_in_property_for_user_cache_key(current_or_anonymous_user.id, current_property.id)) do  
-        highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
-        calltoactions_in_property = get_disney_ctas(current_property)
-        if highlight_calltoactions.any?
-          calltoactions_in_property = calltoactions_in_property.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
-        end
-
-        calltoactions = highlight_calltoactions + calltoactions_in_property.limit(3).to_a
-        calltoaction_evidence_info = []
-        calltoactions.each do |calltoaction|
-          calltoaction_evidence_info << build_thumb_calltoaction(calltoaction)
-        end
-
-        calltoaction_evidence_info
-      end
-    end
+  def default_aux(other, calltoaction_info_list = nil)
     
     aux = {
       "tenant" => $site.id,
       "anonymous_interaction" => $site.anonymous_interaction,
       "main_reward_name" => MAIN_REWARD_NAME,
-      "calltoaction_evidence_info" => calltoaction_evidence_info,
-      "related_calltoaction_info" => related_calltoaction_info,
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
       "free_provider_share" => $site.free_provider_share,
-      "miniformat_info_list" => miniformat_info_list,
       "root_url" => root_url
     }
 
@@ -1585,16 +562,6 @@ module ApplicationHelper
 
     aux
 
-  end
-
-  def get_calltoactions_count(calltoactions_in_page, aux)
-    if calltoactions_in_page < $site.init_ctas
-      calltoactions_in_page
-    else
-      cache_short(get_calltoactions_count_cache_key()) do
-        CallToAction.active.count
-      end
-    end
   end
   
   def order_elements(tag, elements)
@@ -1647,23 +614,6 @@ module ApplicationHelper
         other_interactions
       end
     end
-  end
-  
-  
-  def get_ical_events(cta_ids)
-    ical_events = []
-    if cta_ids.any?
-      Download.includes(:interaction => :call_to_action).where("interactions.call_to_action_id IN (?) AND interactions.when_show_interaction <> 'MAI_VISIBILE' AND downloads.ical_fields is not null", cta_ids).each do |cal|
-        ical_events << {
-          cta: cal.interaction.call_to_action, 
-          start_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['start_datetime']['value']),
-          end_datetime: DateTime.parse(JSON.parse(cal.ical_fields)['end_datetime']['value']),
-          ical_id: cal.interaction.id,
-          slug: cal.interaction.call_to_action.slug
-        }
-      end
-    end
-    ical_events
   end
   
 end

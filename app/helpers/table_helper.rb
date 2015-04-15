@@ -1,8 +1,4 @@
-require 'fandom_utils'
-
 module TableHelper
-  include FandomUtils
-  include FilterHelper
 
   # A class that rappresent a filter field and its relation to ActiveRecord model
   class FieldDesc

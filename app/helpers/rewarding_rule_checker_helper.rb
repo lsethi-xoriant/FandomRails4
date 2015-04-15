@@ -1,5 +1,4 @@
 module RewardingRuleCheckerHelper
-  include ModelHelper
 
   # This method is needed just to overcome scoping issues with helpers. It should be invoked before check_rules_aux.
   def init_check_rules_aux(rules_collector, allowed_options, allowed_interactions)

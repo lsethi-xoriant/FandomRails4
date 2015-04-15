@@ -15,6 +15,13 @@ module BallandoHelper
     attribute :total, type: Integer
     attribute :number_of_pages, type: Integer
   end
+
+  def find_interaction_for_calltoaction_by_resource_type(calltoaction, resource_type)
+    interactions = cache_short get_interaction_for_calltoaction_by_resource_type_cache_key(calltoaction.id, resource_type) do
+      interactions = Interaction.where("resource_type = ? AND when_show_interaction <> 'MAI_VISIBILE' AND call_to_action_id = ?", resource_type, calltoaction.id)
+    end
+    interactions.any? ? interactions.first : nil
+  end
   
   def get_superfan_reward
     cache_short("weekly_superfan") do

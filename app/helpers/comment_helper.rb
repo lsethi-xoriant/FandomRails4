@@ -1,5 +1,3 @@
-require 'fandom_utils'
-
 module CommentHelper
   
   ############ BALLANDO ############

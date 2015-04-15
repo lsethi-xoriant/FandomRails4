@@ -1,11 +1,4 @@
 module RewardingSystemHelper
-  include EventHandlerHelper
-  include ModelHelper
-  include RewardingRuleCheckerHelper
-  include RewardingRulesCollectorHelper
-  include CallToActionHelper
-  include CacheKeysHelper
-  include RewardHelper
 
   # The Abstract Syntax of a rule
   class Rule

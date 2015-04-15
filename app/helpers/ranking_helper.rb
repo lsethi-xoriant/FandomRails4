@@ -1,8 +1,5 @@
 module RankingHelper
-  
-  include PeriodicityHelper
-  include ApplicationHelper
-  
+    
   class RankingElement
     include ActiveAttr::TypecastedAttributes
     include ActiveAttr::MassAssignment
@@ -14,6 +11,18 @@ module RankingHelper
     attribute :user_to_position
     attribute :total, type: Integer
     attribute :number_of_pages, type: Integer
+  end
+
+  def get_number_of_page(elements, per_page)
+    if elements == 0
+      0
+    elsif elements < per_page
+      1
+    elsif elements % per_page == 0
+      elements / per_page
+    else
+      (elements / per_page) + 1
+    end
   end
   
   def get_my_position(ranking_name)

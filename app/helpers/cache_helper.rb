@@ -1,9 +1,8 @@
-require 'fandom_utils'
+module CacheHelper  
+  def cached_nil?(cached_value)
+    cached_value.class == CachedNil
+  end
 
-module CacheHelper
-  include FandomUtils
-  include CacheExpireHelper
-  
   # Caches a rails template, that should be passed as block.
   #
   # key       - A simple string, or a model (or an array of models) from which the template depends

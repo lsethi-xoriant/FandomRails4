@@ -1,15 +1,20 @@
-require 'fandom_utils'
-require 'digest/md5'
-
 module CallToActionHelper
-  include ViewHelper
-  include LinkedCallToActionHelper
 
   def cta_url(cta)
     if $context_root
       "/#{$context_root}/call_to_action/#{cta.slug}"
     else 
       "/call_to_action/#{cta.slug}"
+    end
+  end
+
+  def get_calltoactions_count(calltoactions_in_page, aux)
+    if calltoactions_in_page < $site.init_ctas
+      calltoactions_in_page
+    else
+      cache_short(get_calltoactions_count_cache_key()) do
+        CallToAction.active.count
+      end
     end
   end
 
@@ -50,54 +55,6 @@ module CallToActionHelper
 
   def get_cta_max_updated_at()
     CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
-  end
-
-  def build_default_thumb_calltoaction(calltoaction, thumb_format = :thumb)   
-    {
-      "id" => calltoaction.id,
-      "detail_url" => cta_url(calltoaction),
-      "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
-      "thumb_url" => calltoaction.thumbnail(thumb_format),
-      "title" => calltoaction.title,
-      "slug" => calltoaction.slug,
-      "description" => calltoaction.description,
-      "type" => "cta",
-      "interactions" => calltoaction.interactions,
-      "extra_fields" => JSON.parse(calltoaction.extra_fields || "{}"),
-      "aux" => {
-        "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat"),
-        "flag" => build_grafitag_for_calltoaction(calltoaction, "flag")
-      }
-    }
-  end
-
-  def build_grafitag_for_tag(tag, tag_name)
-    grafitag = get_tag_with_tag_about_tag(tag, tag_name).first
-    if grafitag.present?
-      build_grafitag(grafitag)
-    else
-      nil
-    end
-  end
-
-  def build_grafitag_for_calltoaction(calltoaction, tag_name)
-    grafitag = get_tag_with_tag_about_call_to_action(calltoaction, tag_name).first
-    if grafitag.present?
-      build_grafitag(grafitag)
-    else
-      nil
-    end
-  end
-
-  def build_grafitag(grafitag)
-    {
-      "label_background" => get_extra_fields!(grafitag)["label-background"],
-      "icon" => get_extra_fields!(grafitag)["icon"],
-      "image" => (get_extra_fields!(grafitag)["image"]["url"] rescue nil),
-      "label_color" => get_extra_fields!(grafitag)["label-color"] || "#fff",
-      "title" => grafitag.title,
-      "name" => grafitag.name
-    }
   end
 
   def build_call_to_action_info_list(calltoactions, interactions_to_compute = nil)
@@ -168,58 +125,10 @@ module CallToActionHelper
       # This hack is needed to avoid a strange "@new_record" string being serialized instead of an object id
       # Marshal.dump(result)  
 
-    end                                                    
+    end    
+                                            
+    adjustCallToActionsWithUserInteractionData(calltoactions, calltoaction_info_list)
 
-    if current_user
-      interaction_ids = []
-      calltoaction_info_list.each do |calltoaction_info|
-        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-          interaction_ids << interaction_info["interaction"]["id"]
-        end
-      end
-
-      user_interactions = UserInteraction.includes(interaction: :resource).where(interaction_id: interaction_ids, user_id: current_user.id)
-
-      calltoaction_info_list_for_current_user = [] 
-      calltoaction_info_list.each do |calltoaction_info|
-
-        interaction_info_list = []
-        calltoaction = find_in_calltoactions(calltoactions, calltoaction_info["calltoaction"]["id"])
-
-        if calltoaction_info["reward_info"]
-          calltoaction_info["reward_info"] = update_current_user_reward(calltoaction_info["reward_info"]["reward"])
-        end
-
-        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-          
-          interaction_id = interaction_info["interaction"]["id"]
-          user_interaction = find_in_user_interactions(user_interactions, interaction_id)
-
-          if user_interaction
-            user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
-            interaction = user_interaction.interaction
-            interaction_info["user_interaction"] = user_interaction_for_interaction_info
-            interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
-            begin
-              answers = user_interaction.interaction.resource.answers
-              resource_type = interaction_info["interaction"]["resource_type"]
-              interaction_info["interaction"]["resource"]["answers"] = build_answers_for_resource(interaction, answers, resource_type, user_interaction)
-            rescue Exception => exception
-              # resource without answers
-            end
-          end
-          interaction_info_list << interaction_info
-
-        end
-
-        calltoaction_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, current_user)
-        calltoaction_info["calltoaction"]["interaction_info_list"] = interaction_info_list
-        calltoaction_info_list_for_current_user << calltoaction_info
-
-      end
-      calltoaction_info_list = calltoaction_info_list_for_current_user
-    end
-    calltoaction_info_list
   end
   
   def get_cta_media_data(cta)
@@ -236,36 +145,6 @@ module CallToActionHelper
       "status" => get_user_reward_status(reward),
       "id" => reward.id,
     }
-  end
-
-  def find_in_answers(answer_ids, answers)
-    answers_to_return = []
-    answers.each do |answer|
-      if answer_ids.include?(answer.id)
-        answers_to_return << answer
-      end
-    end
-    answers_to_return
-  end
-
-  def find_in_calltoactions(calltoactions, calltoaction_id)
-    calltoaction_to_return = nil
-    calltoactions.each do |calltoaction|
-      if calltoaction.id == calltoaction_id
-        calltoaction_to_return = calltoaction 
-      end
-    end
-    calltoaction_to_return
-  end
-
-  def find_in_user_interactions(user_interactions, interaction_id)
-    user_interaction_to_return = nil
-    user_interactions.each do |user_interaction|
-      if user_interaction.interaction_id == interaction_id
-        user_interaction_to_return = user_interaction 
-      end
-    end
-    user_interaction_to_return
   end
 
   def build_interaction_info_list(calltoaction, interactions_to_compute)
@@ -286,18 +165,11 @@ module CallToActionHelper
         resource_providers = JSON.parse(resource.providers) rescue nil
         resource_url = resource.url rescue "/"
 
-        if ($site.anonymous_interaction && interaction.stored_for_anonymous)
-          user_interaction = interaction.user_interactions.find_by_user_id(current_or_anonymous_user.id)
-          if user_interaction
-            anonymous_user_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
-          end
-        end
-
         case resource_type
         when "quiz"
           resource_type = resource.quiz_type.downcase
           resource_answers = resource.answers
-          answers = build_answers_for_resource(interaction, resource_answers, resource_type, user_interaction)
+          answers = build_answers_for_resource(interaction, resource_answers, resource_type, nil)
         when "comment"
           comment_info = build_comments_for_resource(interaction)
         when "like"
@@ -341,7 +213,7 @@ module CallToActionHelper
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction, nil),
           "user_interaction" => nil,
-          "anonymous_user_interaction_info" => anonymous_user_interaction_info
+          "anonymous_user_interaction_info" => nil
         }
       end
 
@@ -874,91 +746,6 @@ module CallToActionHelper
     else
       result.votes
     end
-  end
-
-  def is_linking?(cta_id)
-    CallToAction.find(cta_id).interactions.each do |interaction|
-      return true if InteractionCallToAction.find_by_interaction_id(interaction.id)
-    end
-    false
-  end
-
-  def is_linked?(cta_id)
-    return true if InteractionCallToAction.find_by_call_to_action_id(cta_id)
-    false
-  end
-
-  def save_interaction_call_to_action_linking(cta)
-    ActiveRecord::Base.transaction do
-      cta.interactions.each do |interaction|
-        interaction.save!
-        InteractionCallToAction.where(:interaction_id => interaction.id).destroy_all
-        # if called on a new cta, linked_cta is a hash containing a list of { "condition" => <condition>, "cta_id" => <next cta id> } hashes
-        links = interaction.resource.linked_cta rescue nil
-        unless links
-          params["call_to_action"]["interactions_attributes"].each do |key, value|
-            links = value["resource_attributes"]["linked_cta"] if value["id"] == interaction.id.to_s
-          end
-        end
-        if links
-          links.each do |key, link|
-            if CallToAction.exists?(link["cta_id"].to_i)
-              condition = link["condition"].blank? ? nil : { "more" => link["condition"] }.to_json
-              InteractionCallToAction.create(:interaction_id => interaction.id, :call_to_action_id => link["cta_id"], :condition => condition )
-            else
-              cta.errors.add(:base, "Non esiste una call to action con id #{link["cta_id"]}")
-            end
-          end
-        end
-      end
-      build_jstree_and_check_for_cycles(cta)
-      if cta.errors.any?
-        raise ActiveRecord::Rollback
-      end
-    end
-    return cta.errors.empty?
-  end
-
-  def build_jstree_and_check_for_cycles(current_cta)
-    current_cta_id = current_cta.id
-    trees, cycles = CtaForest.build_trees(current_cta_id)
-    data = []
-    trees.each do |root|
-      data << build_node_entries(root, current_cta_id) 
-    end
-    res = { "core" => { "data" => data } }
-    if cycles.any?
-      message = "Sono presenti cicli: \n"
-      cycles.each do |cycle|
-        cycle.each_with_index do |cta_id, i|
-          message += (i + 1) != cycle.size ? "#{CallToAction.find(cta_id).name} --> " 
-            : "#{CallToAction.find(cta_id).name} --> #{CallToAction.find(cycle[0]).name}\n"
-        end
-      end
-      current_cta.errors[:base] << message
-    end
-    res.to_json
-  end
-
-  def build_node_entries(node, current_cta_id)
-    if node.value == current_cta_id
-      icon = "fa fa-circle"
-    else
-      cta_tags = get_cta_tags_from_cache(CallToAction.find(node.value))
-      if cta_tags.include?('step')
-        icon = "fa fa-step-forward"
-      elsif cta_tags.include?('ending')
-        icon = "fa fa-flag-checkered"
-      else
-        icon = "fa fa-long-arrow-right"
-      end
-    end
-    res = { "text" => "#{CallToAction.find(node.value).name}", "icon" => icon }
-    if node.children.any?
-      res.merge!({ "state" => { "opened" => true }, 
-                "children" => (node.children.map do |child| build_node_entries(child, current_cta_id) end) })
-    end
-    res
   end
 
 end

@@ -1,5 +1,3 @@
-require 'fandom_utils'
-
 module CacheKeysHelper
   
   # Notifications
@@ -224,10 +222,6 @@ module CacheKeysHelper
   
   def get_rewards_with_tag_cache_key(tag_name)
     "rewards_with_tag_#{tag_name}"
-  end
-  
-  def get_last_rewards_for_tag(tag_name, user_id)
-    "last_rewards_with_tag_#{tag_name}_user_#{user_id}"
   end
   
   def get_ctas_with_tags_cache_key(tag_names, extra_key, operator)

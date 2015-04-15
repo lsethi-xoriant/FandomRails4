@@ -1,5 +1,4 @@
 module RewardingRulesCollectorHelper
-  include EventHandlerHelper
   
   ALL = "ALL INTERACTIONS"
     

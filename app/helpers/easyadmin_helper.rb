@@ -1,5 +1,20 @@
 module EasyadminHelper
 
+  def get_all_ctas_with_tag(tag_name)
+    cache_short get_ctas_with_tag_cache_key(tag_name) do
+      CallToAction.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).order("activated_at DESC").to_a
+    end
+  end
+
+  def get_property_from_cta(cta)
+    properties_tag = get_tag_with_tag_about_call_to_action(cta, "property")
+    if properties_tag.empty?
+      ""
+    else
+      "#{properties_tag.first.name}"
+    end
+  end
+
   def aws_trasconding_not_required_or_completed(cta)
     aux = JSON.parse(cta.aux || "{}")
     @aws_transcoding_media_status = aux["aws_transcoding_media_status"]
@@ -254,6 +269,91 @@ module EasyadminHelper
   def find_user_reward_count_by_reward_name_at_date(reward_name, period_ids)
     reward_id = Reward.find_by_name(reward_name).id rescue 0
     period_ids.empty? ? 0 : UserReward.where("reward_id = #{reward_id} AND period_id IN (#{period_ids.join(', ')})").pluck("sum(counter)").first.to_i
+  end
+
+  def is_linking?(cta_id)
+    CallToAction.find(cta_id).interactions.each do |interaction|
+      return true if InteractionCallToAction.find_by_interaction_id(interaction.id)
+    end
+    false
+  end
+
+  def is_linked?(cta_id)
+    return true if InteractionCallToAction.find_by_call_to_action_id(cta_id)
+    false
+  end
+
+  def save_interaction_call_to_action_linking(cta)
+    ActiveRecord::Base.transaction do
+      cta.interactions.each do |interaction|
+        interaction.save!
+        InteractionCallToAction.where(:interaction_id => interaction.id).destroy_all
+        # if called on a new cta, linked_cta is a hash containing a list of { "condition" => <condition>, "cta_id" => <next cta id> } hashes
+        links = interaction.resource.linked_cta rescue nil
+        unless links
+          params["call_to_action"]["interactions_attributes"].each do |key, value|
+            links = value["resource_attributes"]["linked_cta"] if value["id"] == interaction.id.to_s
+          end
+        end
+        if links
+          links.each do |key, link|
+            if CallToAction.exists?(link["cta_id"].to_i)
+              condition = link["condition"].blank? ? nil : { "more" => link["condition"] }.to_json
+              InteractionCallToAction.create(:interaction_id => interaction.id, :call_to_action_id => link["cta_id"], :condition => condition )
+            else
+              cta.errors.add(:base, "Non esiste una call to action con id #{link["cta_id"]}")
+            end
+          end
+        end
+      end
+      build_jstree_and_check_for_cycles(cta)
+      if cta.errors.any?
+        raise ActiveRecord::Rollback
+      end
+    end
+    return cta.errors.empty?
+  end
+
+  def build_jstree_and_check_for_cycles(current_cta)
+    current_cta_id = current_cta.id
+    trees, cycles = CtaForest.build_trees(current_cta_id)
+    data = []
+    trees.each do |root|
+      data << build_node_entries(root, current_cta_id) 
+    end
+    res = { "core" => { "data" => data } }
+    if cycles.any?
+      message = "Sono presenti cicli: \n"
+      cycles.each do |cycle|
+        cycle.each_with_index do |cta_id, i|
+          message += (i + 1) != cycle.size ? "#{CallToAction.find(cta_id).name} --> " 
+            : "#{CallToAction.find(cta_id).name} --> #{CallToAction.find(cycle[0]).name}\n"
+        end
+      end
+      current_cta.errors[:base] << message
+    end
+    res.to_json
+  end
+
+  def build_node_entries(node, current_cta_id)
+    if node.value == current_cta_id
+      icon = "fa fa-circle"
+    else
+      cta_tags = get_cta_tags_from_cache(CallToAction.find(node.value))
+      if cta_tags.include?('step')
+        icon = "fa fa-step-forward"
+      elsif cta_tags.include?('ending')
+        icon = "fa fa-flag-checkered"
+      else
+        icon = "fa fa-long-arrow-right"
+      end
+    end
+    res = { "text" => "#{CallToAction.find(node.value).name}", "icon" => icon }
+    if node.children.any?
+      res.merge!({ "state" => { "opened" => true }, 
+                "children" => (node.children.map do |child| build_node_entries(child, current_cta_id) end) })
+    end
+    res
   end
 
 end

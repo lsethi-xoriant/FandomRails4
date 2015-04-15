@@ -1,8 +1,3 @@
-#!/bin/env ruby
-# encoding: utf-8
-
-require 'fandom_utils'
-
 module PeriodicityHelper
   
   def get_current_periodicities

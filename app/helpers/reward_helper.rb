@@ -1,6 +1,345 @@
 module RewardHelper
+
+  def get_tag_to_rewards()
+    cache_short("tag_to_rewards") do
+      rewards = Reward.all
+      id_to_reward = {}
+      rewards.each do |r|
+        id_to_reward[r.id] = r
+      end
+
+      tag_to_rewards = {}
+      RewardTag.joins(:tag).select('tags.name, reward_id').each do |reward_tag|
+        (tag_to_rewards[reward_tag.name] ||= Set.new) << id_to_reward[reward_tag.reward_id]
+      end
+
+      tag_to_rewards
+    end
+  end
   
-  include PeriodicityHelper
+  def get_tag_to_my_rewards(user)
+    get_user_rewards_from_cache(user)[0]
+  end
+  
+  def get_user_rewards_from_cache(user)
+    cache_short(get_user_rewards_cache_key(user.id)) do
+      rewards = Reward.joins(:user_rewards).select("rewards.*").where("user_rewards.user_id = ?", user.id)
+      id_to_reward = {}
+      rewards.each do |r|
+        id_to_reward[r.id] = r
+      end
+      
+      name_to_reward = {}
+      rewards.each do |r|
+        name_to_reward[r.name] = r
+      end
+      
+      tag_to_rewards = {}
+      RewardTag.joins(:tag).select('tags.name, reward_id').each do |reward_tag|
+        if id_to_reward[reward_tag.reward_id]
+          (tag_to_rewards[reward_tag.name] ||= Set.new) << id_to_reward[reward_tag.reward_id]
+        end
+      end
+      [tag_to_rewards, name_to_reward] 
+    end
+  end
+
+    # Get an hash cta_id => status for a list of ctas. Needed for separate and caching ctas information 
+  # not depending to user
+  #   user           - the user for which calculate cta statuses
+  #   ctas           - list of ctas to evaluate
+  #   reward_name    - name of the reward that ctas contribute to obtain 
+  def cta_to_reward_statuses_by_user(user, ctas, reward_name) 
+    cta_to_reward_statuses = cache_long(get_cta_to_reward_statuses_by_user_cache_key(user.id)) do
+      result = {}
+      ctas.each do |cta|
+        result[cta.id] = cta_reward_statuses(user, cta, reward_name)
+      end
+      result
+    end
+    updated = false
+    ctas.each do |cta|
+      unless cta_to_reward_statuses.key? cta.id
+        updated = true
+        cta_to_reward_statuses[cta.id] = cta_reward_statuses(user, cta, reward_name)
+      end
+    end
+    if updated
+      cache_write_long(get_cta_to_reward_statuses_by_user_cache_key(user.id), cta_to_reward_statuses)
+    end
+    cta_to_reward_statuses
+  end
+
+  def cta_reward_statuses(user, cta, reward_name)
+    if call_to_action_completed?(cta)
+      nil
+    else
+      winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(cta, user)
+      winnable_outcome["reward_name_to_counter"][reward_name]
+    end
+  end
+
+
+  def call_to_action_completed?(cta, user = nil)
+    if user.nil?
+      user = current_or_anonymous_user
+    end
+
+    if !anonymous_user?(user)
+      require_to_complete_interactions = interactions_required_to_complete(cta)
+
+      if require_to_complete_interactions.count == 0
+        return false
+      end
+
+      require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
+      interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", user.id, require_to_complete_interactions_ids)
+      require_to_complete_interactions.count == interactions_done.count
+
+    else
+      false
+    end
+  end
+
+  def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, user = nil)
+    if user.nil?
+      user = current_or_anonymous_user
+    end
+
+    call_to_action_completed_or_reward_status = cache_short(get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, user.id)) do
+      if call_to_action_completed?(calltoaction, user)
+        CACHED_NIL
+      else
+        compute_current_call_to_action_reward_status(reward_name, calltoaction, nil)
+      end
+    end
+
+    if !cached_nil?(call_to_action_completed_or_reward_status)
+      JSON.parse(call_to_action_completed_or_reward_status)
+    else 
+      nil
+    end
+  end
+
+  # Generates an hash with reward information.
+  def compute_current_call_to_action_reward_status(reward_name, calltoaction, user = nil)
+    if user.nil?
+      user = current_user
+    end
+
+    reward = get_reward_from_cache(reward_name)
+    if reward
+      winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user)
+      
+      interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
+
+      reward_status_images = Array.new
+      total_win_reward_count = 0
+
+      if user
+
+        interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
+          user_interaction = interaction.user_interactions.find_by_user_id(user.id)        
+    
+          if user_interaction && user_interaction.outcome.present?
+            win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
+            correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]
+            correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
+
+            total_win_reward_count += win_reward_count;
+
+            push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
+            push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
+            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+          else 
+            push_in_array(reward_status_images, reward.not_awarded_image(:thumb), intearction_outcome["reward_name_to_counter"][reward_name])
+          end       
+
+        end
+
+      else
+        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_outcome["reward_name_to_counter"][reward_name])
+      end
+
+      winnable_reward_count = winnable_outcome["reward_name_to_counter"][reward_name]
+    end
+
+    {
+      winnable_reward_count: winnable_reward_count,
+      win_reward_count: total_win_reward_count,
+      reward_status_images: reward_status_images,
+      reward: reward
+    }.to_json
+  end
+
+  def get_current_interaction_reward_status(reward_name, interaction, user = current_user)
+    reward = get_reward_by_name(reward_name)
+    if reward
+      reward_status_images = Array.new 
+
+      user_interaction = user ? UserInteraction.find_by_user_id_and_interaction_id(user.id, interaction.id) : nil
+      
+      if user_interaction
+        win_reward_count = (JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) rescue 0)
+        correct_answer_outcome = (JSON.parse(user_interaction.outcome)["correct_answer"] rescue nil)
+        correct_answer_reward_count = correct_answer_outcome ? correct_answer_outcome["attributes"]["reward_name_to_counter"].fetch(reward_name, 0) : 0
+
+        winnable_reward_count = 0
+
+        push_in_array(reward_status_images, reward.preview_image(:thumb), win_reward_count)
+        push_in_array(reward_status_images, reward.not_winnable_image(:thumb), correct_answer_reward_count - win_reward_count)
+      else
+        win_reward_count = 0
+        winnable_reward_count = predict_outcome(interaction, nil, true).reward_name_to_counter[reward_name]
+        push_in_array(reward_status_images, reward.not_awarded_image(:thumb), winnable_reward_count)
+      end
+    end
+
+    {
+      win_reward_count: win_reward_count,
+      winnable_reward_count: winnable_reward_count,
+      reward_status_images: reward_status_images,
+      reward: reward.to_json
+    }
+
+  end
+
+  def get_current_property_point
+    get_counter_about_user_reward(get_current_property_point_reward_name)
+  end  
+
+  def get_current_property_point_reward_name
+    $context_root.nil? ? "point" : "#{$context_root}-point"
+  end
+
+  def get_counter_about_user_reward(reward_name, all_periods = false)
+    if current_user
+      reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
+        
+        reward_points = { general: 0 }
+        $site.periodicity_kinds.each do |periodicity_kind|
+          reward_points[:periodicity_kind] = 0
+        end
+
+        get_reward_with_periods(reward_name).each do |user_reward|
+          if user_reward.period.blank?
+            reward_points[:general] = user_reward.counter
+          else
+            reward_points[user_reward.period.kind] = user_reward.counter
+          end
+        end 
+
+        reward_points     
+      end
+
+      all_periods ? reward_points : reward_points[:general]  
+    else
+      nil
+    end
+  end
+
+  def compute_rewards_gotten_over_total(reward_ids)
+    if reward_ids.any?
+      place_holders = (["?"] * reward_ids.count).join ", "
+      current_or_anonymous_user.user_rewards.where("reward_id IN (#{place_holders})", *reward_ids).count
+    else
+      0
+    end
+  end
+
+  def get_reward_with_periods(reward_name)
+    reward = Reward.find_by_name(reward_name)
+    if reward
+      user_reward = UserReward.includes(:period)
+        .where("user_rewards.reward_id = ? AND user_rewards.user_id = ?", reward.id, current_user.id)
+        .where("periods.id IS NULL OR (periods.start_datetime < ? AND periods.end_datetime > ?)", Time.now.utc, Time.now.utc)
+    else
+      []
+    end
+  end
+
+  def user_has_reward(reward_name)
+    user_reward = get_user_rewards_from_cache(current_user)[1]
+    !user_reward[reward_name].nil?
+  end
+
+  def get_main_reward
+    cache_short("main_reward") do
+      Reward.find_by_name(MAIN_REWARD_NAME);
+    end
+  end
+
+  def get_reward_by_name(reward_name)
+    cache_short("reward_#{reward_name}") do
+      Reward.find_by_name(reward_name)
+    end
+  end
+  
+  def get_main_reward_image_url
+    cache_short(get_main_reward_image_cache_key) do
+      Reward.find_by_name(MAIN_REWARD_NAME).main_image.url
+    end
+  end
+
+  # Get max reward
+  #   rward_name      - name of the reward type (eg: level, badge)
+  #   extra_cache_key - further param to handle name clashing clash in case of multi property
+  def get_max_reward(reward_name, extra_cache_key = "")
+    cache_short(get_max_reward_key(reward_name, current_user.id, extra_cache_key)) do
+      rewards, use_property = rewards_by_tag(reward_name, current_user)
+      reward = nil
+      if use_property
+        if !rewards.empty?
+          reward = get_max(rewards[$context_root]) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+        end 
+      elsif !rewards.nil?
+        rweard = get_max(rewards) do |x,y| if x.updated_at > y.updated_at then -1 elsif x.updated_at < y.updated_at then 1 else 0 end end
+      end
+      
+      if reward.nil?
+        CACHED_NIL
+      else
+        reward
+      end
+    end
+  end
+
+  def rewards_by_tag(tag_name, user = nil)
+    if user.nil?
+      tag_to_rewards = get_tag_to_rewards()
+    else
+      tag_to_rewards = get_tag_to_my_rewards(user)
+    end
+    # rewards_from_param can include badges or levels 
+    rewards_from_param = tag_to_rewards[tag_name]
+
+    property_tags = get_tags_with_tag("property")
+
+    if property_tags.present?
+
+      rewards_to_show = Hash.new
+
+      property_tag_names = property_tags.map{ |tag| tag.name }
+      
+      tag_to_rewards.each do |tag_name, rewards|
+        if property_tag_names.include?(tag_name) && rewards_from_param
+          rewards_to_show[tag_name] = rewards & rewards_from_param
+        end
+      end
+
+      are_properties_used = are_properties_used?(rewards_to_show)
+     
+      unless are_properties_used
+        rewards_to_show = rewards_from_param
+      end
+
+    else
+      are_properties_used = false
+      rewards_to_show = rewards_from_param
+    end
+
+    [rewards_to_show, are_properties_used]
+  end
 
   def assign_reward(user, reward_name, counter, site)
     user_reward = get_user_reward(user, reward_name)

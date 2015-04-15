@@ -1,5 +1,3 @@
-require 'fandom_utils'
-
 module LinkedCallToActionHelper
 
   # Internal: Custom class and methods useful to represent the set of trees containing a call 
