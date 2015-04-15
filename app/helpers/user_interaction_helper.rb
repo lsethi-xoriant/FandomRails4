@@ -1,6 +1,6 @@
 module UserInteractionHelper
 
-  def extractInteractionIdsFromCallToActionInfoList(calltoaction_info_list)
+  def extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
     interaction_ids = []
     calltoaction_info_list.each do |calltoaction_info|
       calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
@@ -10,7 +10,7 @@ module UserInteractionHelper
     interaction_ids
   end
 
-  def getUserInteractionsWithInteractionId(interaction_ids, user)
+  def get_user_interactions_with_interaction_id(interaction_ids, user)
     user_interactions = UserInteraction.includes(:interaction).where(interaction_id: interaction_ids, user_id: user.id)
     if anonymous_user?(user)
       user_interactions = user_interactions.where("interactions.stored_for_anonymous")
@@ -18,9 +18,9 @@ module UserInteractionHelper
     user_interactions
   end
 
-  def adjustCallToActionsWithUserInteractionDataForCurrentUser(calltoactions, calltoaction_info_list)
-    interaction_ids = extractInteractionIdsFromCallToActionInfoList(calltoaction_info_list)
-    user_interactions = getUserInteractionsWithInteractionId(interaction_ids, current_user)
+  def adjust_call_to_actions_with_user_interaction_data_for_current_user(calltoactions, calltoaction_info_list)
+    interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+    user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
 
     calltoaction_info_list.each do |calltoaction_info|
 
@@ -57,9 +57,9 @@ module UserInteractionHelper
     calltoaction_info_list
   end
 
-  def adjustCallToActionsWithUserInteractionDataForAnonymousUser(calltoactions, calltoaction_info_list)
-    interaction_ids = extractInteractionIdsFromCallToActionInfoList(calltoaction_info_list)
-    user_interactions = getUserInteractionsWithInteractionId(interaction_ids, anonymous_user)
+  def adjust_call_to_actions_with_user_interaction_data_for_anonymous_user(calltoactions, calltoaction_info_list)
+    interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+    user_interactions = get_user_interactions_with_interaction_id(interaction_ids, anonymous_user)
 
     calltoaction_info_list.each do |calltoaction_info|
       calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
@@ -73,11 +73,11 @@ module UserInteractionHelper
     calltoaction_info_list
   end
 
-  def adjustCallToActionsWithUserInteractionData(calltoactions, calltoaction_info_list)
+  def adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list)
     if current_user
-      adjustCallToActionsWithUserInteractionDataForCurrentUser(calltoactions, calltoaction_info_list) 
+      adjust_call_to_actions_with_user_interaction_data_for_current_user(calltoactions, calltoaction_info_list) 
     elsif $site.anonymous_interaction
-      adjustCallToActionsWithUserInteractionDataForAnonymousUser(calltoactions, calltoaction_info_list)
+      adjust_call_to_actions_with_user_interaction_data_for_anonymous_user(calltoactions, calltoaction_info_list)
     end
   end
 

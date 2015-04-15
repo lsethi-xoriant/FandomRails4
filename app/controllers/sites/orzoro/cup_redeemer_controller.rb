@@ -1,6 +1,16 @@
 class Sites::Orzoro::CupRedeemerController < ApplicationController
 
   before_filter :set_menu
+  before_filter :set_seo
+
+  def set_seo
+    begin
+      tag = get_tag_from_params("gadget")
+      set_seo_info_for_tag(tag)
+    rescue Exception => exception
+      log_error('gadget tag seo error', { 'exception' => exception.to_s, 'backtrace' => exception.backtrace })
+    end 
+  end
 
   def set_menu
     @aux_other_params = { 
@@ -187,7 +197,10 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         user_created_flag = true
         aux_hash = { "terms" => cache_value["identity"]["terms"], "sync_timestamp" => "" }
       else
-        aux_hash = JSON.parse(user.aux) rescue {}
+        aux_hash = JSON.parse(user.aux || "{}")
+        unless aux_hash["terms"]
+          aux_hash"terms"] = cache_value["identity"]["terms"]
+        end
       end
 
       if new_user || user.confirmation_token

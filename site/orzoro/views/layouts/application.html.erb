@@ -18,11 +18,8 @@
   <% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
 
   <% aux = default_orzoro_aux(@aux_other_params, @calltoaction_info_list) %>  
-  <title><%= "#{@seo_info["title"]} | Orzoro" rescue "Dora & Miss Tressy | Orzoro" %></title>
-  <meta name="description" content="<%= @seo_info["meta_description"] rescue "Entra nel mondo di Orzoro e scopri i segreti di Benessere e Buonumore." %>">
-  <meta name="keywords" content="<%= @seo_info["keywords"] rescue get_default_keywords() %>">
-  
-  <%= yield (:fb_meta_tags) %>
+
+  <%= render partial: "/layouts/seo_head" %>
 
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 

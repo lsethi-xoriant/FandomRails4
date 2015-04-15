@@ -178,6 +178,14 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     }
   };
 
+  $scope.evidenceLinkTo = function(content) {
+    if(content.extra_fields.external_url) {
+      return content.extra_fields.external_url;
+    } else {
+      return $scope.linkTo(content.detail_url);
+    }
+  };
+
   $scope.linkTo = function(url, stripe_name) {
     if(angular.isUndefined(stripe_name)) {
       stripe_name = "";

@@ -67,7 +67,7 @@ Fandom::Application.routes.draw do
         match "/browse/full_search", :to => "browse#full_search"
         
         #resources :call_to_action, only: :show
-        match "/call_to_action/:id", to: "call_to_action#show"
+        match "/call_to_action/:id", to: "http_error#not_found_404"
 
         match "/ricette/:id", to: "call_to_action#show"
         match "/ricette", :to => "browse#index", defaults: { tagname: 'ricette' }

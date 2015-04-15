@@ -71,7 +71,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
           
           $scope.aux["related_product"] = data.related_product;
 
-          document.title = data.seo_info.title + " | Orzoro";
+          document.title = data.seo_info.title;
           $('meta[name=description]').attr('content', data.seo_info.meta_description);
 
           $scope.initAnonymousUser();
@@ -81,7 +81,8 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
             if($scope.linked_call_to_actions_count) {
               $scope.linked_call_to_actions_index = 1;
             }
-            window.history.pushState(null, $scope.calltoaction_info.calltoaction.title, "/call_to_action/" + $scope.calltoaction_info.calltoaction.slug);
+            prefix = window.location.pathname.split("/")[1]
+            window.history.pushState(null, $scope.calltoaction_info.calltoaction.title, "/" + prefix + "/" + $scope.calltoaction_info.calltoaction.slug);
           }
 
           $timeout(function() { 

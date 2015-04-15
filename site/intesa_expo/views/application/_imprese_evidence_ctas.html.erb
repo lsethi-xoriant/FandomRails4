@@ -5,7 +5,7 @@
       <div class="flexslider ctas__flexslider">
         <ul class="slides">
           <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
-            <a href="{{linkTo(calltoaction.detail_url)}}" style="text-decoration: none;">
+            <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;">
               <div class="row">
                 <div class="col-xs-12 ctas__flexslider__img-container">
                   <img style="width: 100%" ng-src="{{calltoaction.thumb_wide_url}}">
