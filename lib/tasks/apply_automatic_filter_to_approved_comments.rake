@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'rake'
-require 'ruby-debug'
 
 desc "Apply automatic profanity filter to selected tenant approved comments"
 
