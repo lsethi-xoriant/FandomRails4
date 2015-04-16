@@ -127,7 +127,7 @@ module CallToActionHelper
 
     end    
                                             
-    adjustCallToActionsWithUserInteractionData(calltoactions, calltoaction_info_list)
+    adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list)
 
   end
   

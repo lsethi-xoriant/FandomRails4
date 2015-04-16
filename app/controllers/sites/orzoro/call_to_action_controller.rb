@@ -50,10 +50,19 @@ class Sites::Orzoro::CallToActionController < CallToActionController
       end
     end
 
+    compute_seo("-")
+
+    seo_info = {
+      "title" => @seo_title,
+      "meta_description" => @seo_description,
+      "meta_image" => @seo_meta_image,
+      "keywords" => @seo_keywords
+    }
+
     response = { 
       "calltoaction" => calltoaction_info_list,
       "related_product" => related_product,
-      "seo_info" => set_seo_info_for_cta(calltoaction)
+      "seo_info" => seo_info
     }
 
     respond_to do |format|

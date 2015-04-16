@@ -127,7 +127,7 @@ module IntesaExpoHelper
 
       if cta.extra_fields
         page_stripes = []
-        stripe_field = JSON.parse(cta.extra_fields)["stripe"]
+        stripe_field = cta.extra_fields["stripe"]
         if stripe_field
           stripe_field.split(",").each do |tag|
             page_stripes << get_intesa_expo_ctas_with_tag(tag)

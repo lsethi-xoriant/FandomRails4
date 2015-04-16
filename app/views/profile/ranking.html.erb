@@ -7,7 +7,7 @@
 		<div class="row">
 			
 				<% if @rank_name == "my_position_general" %>
-					<% if get_my_general_position %>
+					<% if get_my_position %>
 						<%= render partial: "/ranking/rank", locals: { rankings: "rankings.my_position_general" } %>
 					<% end %>
 				<% else %>

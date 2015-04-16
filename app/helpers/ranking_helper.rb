@@ -26,11 +26,11 @@ module RankingHelper
   end
   
   def get_my_position(ranking_name)
-      if current_user
-        get_my_general_position(ranking_name, current_user.id)
-      else
-        nil
-      end
+    if current_user
+      get_my_general_position(ranking_name, current_user.id)
+    else
+      nil
+    end
   end
   
   def get_my_general_position(ranking_name, user_id)
@@ -254,13 +254,6 @@ module RankingHelper
     else
       ranking = Ranking.find_by_name("#{property}-general-chart")
     end
-    rank = get_ranking(ranking)
-    if rank
-      rank.user_to_position
-    end
-  end
-  
-  def create_current_chart_user_position(ranking)
     rank = get_ranking(ranking)
     if rank
       rank.user_to_position
