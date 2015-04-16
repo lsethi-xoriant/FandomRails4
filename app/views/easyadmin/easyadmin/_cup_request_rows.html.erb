@@ -10,7 +10,7 @@
   <td><%= request["address"]["province"] %></td>
   <td><%= request["address"]["cap"] %></td>
   <td><%= request["receipt"]["package_count"] %></td>
-  <td><%= request["receipt"]["cup_selected"] %></td>
+  <td><%= request["receipt"]["cup_selected"] || "-" %></td>
   <td><%= request["receipt"]["receipt_number"] %></td>
   <td>
     <%= "#{(sprintf '%02d', request["receipt"]["day_of_emission"])}/#{(sprintf '%02d', request["receipt"]["month_of_emission"])}/#{request["receipt"]["year_of_emission"]} #{(sprintf '%02d', request["receipt"]["hour_of_emission"])}:#{request["receipt"]["minute_of_emission"]}" 
