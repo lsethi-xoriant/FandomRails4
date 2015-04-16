@@ -7,9 +7,11 @@
           <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
             <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;">
               <div class="row">
+
                 <div class="col-xs-12 ctas__flexslider__img-container">
                   <img style="width: 100%" ng-src="{{calltoaction.thumb_wide_url}}">
                 </div>
+
                 <div class="col-xs-12 ctas__info">
                   <div class="ctas__info--bottom">
                     <p class="ctas__flexslider__title">{{calltoaction.title}}</p>
@@ -29,10 +31,10 @@
       </div>
     </div>
     <!-- SLIDER END -->
-    <div class="col-md-3 cta__evidence-calendar text-center">
+    <div class="col-md-3 col-sm-6 cta__evidence-calendar text-center">
       <%= render partial: "/calendar/widget-calendar" %>
     </div>
-    <div class="col-md-3 cta__evidence-banner">
+    <div class="col-md-3 col-sm-6 cta__evidence-banner">
       <a href="{{aux.assets['banner_url_1_' + aux.language]}}">
         <div class="cta__evidence-banner__img">
           <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}">
