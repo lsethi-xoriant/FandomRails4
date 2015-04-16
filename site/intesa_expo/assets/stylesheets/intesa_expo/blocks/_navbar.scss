@@ -61,6 +61,13 @@
 
 }
 
+@media (max-width: $screen-md-min) and (min-width: $screen-sm-min) {
+  .navbar-nav-center {
+    width: auto;
+    text-align: center;
+    padding-left: 43px;
+  }
+}
 
 @media (max-width: $screen-sm-min) { 
   .navbar__logo {
