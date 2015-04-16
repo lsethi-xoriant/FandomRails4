@@ -40,6 +40,7 @@ module ContentHelper
     attr_accessor :has_thumb
     attr_accessor :thumb_url
     attr_accessor :thumb_wide_url
+    attr_accessor :thumb_medium_url
     attr_accessor :description
     attr_accessor :long_description
     attr_accessor :detail_url
@@ -71,6 +72,7 @@ module ContentHelper
       @has_thumb = params[:has_thumb]
       @thumb_url = params[:thumb_url]
       @thumb_wide_url = params[:thumb_wide_url]
+      @thumb_medium_url = params[:thumb_medium_url]
       @description = params[:description]
       @long_description = params[:long_description]
       @detail_url = params[:detail_url]
@@ -172,6 +174,7 @@ module ContentHelper
     event_date_info = get_cta_event_start_end(interactions)
     
     content_preview.thumb_wide_url = (cta.thumbnail(:wide) rescue "") 
+    content_preview.thumb_medium_url = (cta.thumbnail(:medium) rescue "") 
     content_preview.comments = get_number_of_comments_for_cta(cta)
     content_preview.likes = get_number_of_likes_for_cta(cta)
     content_preview.tags = get_tag_ids_for_cta(cta)
