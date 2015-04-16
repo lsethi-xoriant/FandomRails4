@@ -13,7 +13,7 @@ def apply_profanity_filter(tenant)
   start_time = Time.now
 
   count = 0
-  matches = "ID user comment interaction\tTesto user comment interaction\tMatch\n"
+  matches = "User comment interaction ID\tUser comment interaction text\tMatch\n"
   pattern_array = Array.new
   profanity_words = Setting.find_by_key("profanity.words").value
 
