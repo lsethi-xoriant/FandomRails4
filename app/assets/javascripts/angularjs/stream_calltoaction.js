@@ -889,6 +889,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           calltoaction_info.calltoaction.vcodes = vcode.split(",");
           calltoaction_info.calltoaction.vcode = calltoaction_info.calltoaction.vcodes[0];
         });
+      } else {
+        calltoaction_info.calltoaction.vcodes = vcode;
+        calltoaction_info.calltoaction.vcode = vcode;
       }
 
       player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.vcode);
