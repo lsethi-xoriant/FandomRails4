@@ -14,6 +14,7 @@
 %>
 
 <div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
+  <img class="cta__flag--extra_fields" ng-src="{{calltoaction_info.flag.image}}" ng-if="calltoaction_info.flag">
   <p class="cta__extra_fields__title">{{aux.assets["event_widget_when_" + aux.language]}}</p>
   <hr class="cta__extra_fields__hr">
   <div ng-repeat="n in ical.n" class="cta__extra_fields__info">
