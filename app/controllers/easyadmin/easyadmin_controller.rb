@@ -115,27 +115,28 @@ class Easyadmin::EasyadminController < ApplicationController
     @email_filter = params[:email_filter]
     @from_date = params[:datepicker_from_date]
     @to_date = params[:datepicker_to_date]
-    @where_conditions = "true"
+    where_conditions = ""
 
-    if params[:commit] == "APPLICA FILTRO"
-      @where_conditions << " AND email ILIKE '%#{@email_filter}%'" unless @email_filter.blank?
+    if params[:commit] == "APPLICA FILTRO"  
+      where_conditions << "email ILIKE '%#{@email_filter}%'" unless @email_filter.blank?
     else
-      @email_filter = nil
-      @from_date = nil
-      @to_date = nil
+      @email_filter = @from_date = @to_date = nil
     end
-    @request_list = build_request_list(@where_conditions, @from_date, @to_date)
+    @request_list = build_request_list(where_conditions, @from_date, @to_date)
 
     render template: "/easyadmin/easyadmin/index_cup_requests" 
   end
 
   def build_request_list(where_conditions, from_date, to_date)
     request_list = []
-    User.where(where_conditions).each do |user|
+    users = where_conditions.blank? ? User.all : User.where(where_conditions)
+    users.each do |user|
       cups_redeemed = JSON.parse(user.aux)["cup_redeem"] rescue nil
       if cups_redeemed.present?
         cups_redeemed.each do |request|
-          request_list += [request] if request_timestamp_between_dates(request["request_timestamp"], from_date, to_date)
+          if request_timestamp_between_dates(request["request_timestamp"], from_date, to_date) && request["identity"]["entry_point"] != "subscribe_newsletter"
+            request_list += [request]
+         end
         end
       end
     end
@@ -143,12 +144,14 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def request_timestamp_between_dates(timestamp, from_date, to_date)
-    if timestamp.nil?
+    if from_date.blank? || to_date.blank?
+      return true
+    elsif timestamp.nil?
       return false
     end
     request_timestamp = Time.parse(timestamp)
-    after_from_date = from_date.nil? ? true : request_timestamp >= Time.parse(from_date)
-    before_to_date = to_date.nil? ? true : request_timestamp <= Time.parse(to_date)
+    after_from_date = from_date.nil? ? true : request_timestamp >= DateTime.strptime(from_date, "%m/%d/%Y")
+    before_to_date = to_date.nil? ? true : request_timestamp <= DateTime.strptime(to_date, "%m/%d/%Y").change({ hour: 23, min: 59, sec: 59 })
     return after_from_date && before_to_date
   end
 
