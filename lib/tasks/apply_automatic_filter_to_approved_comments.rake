@@ -3,14 +3,14 @@
 require 'rake'
 require 'ruby-debug'
 
-desc "Apply automatic profanity filter to disney approved comments"
+desc "Apply automatic profanity filter to selected tenant approved comments"
 
-task :apply_profanity_filter => :environment do
-  apply_profanity_filter
+task :apply_profanity_filter, [:tenant] => :environment do |task, args|
+  apply_profanity_filter(args.tenant)
 end
 
-def apply_profanity_filter
-  switch_tenant('disney')
+def apply_profanity_filter(tenant)
+  switch_tenant(tenant)
   start_time = Time.now
 
   count = 0
@@ -44,17 +44,4 @@ def apply_profanity_filter
   puts "All approved comments checked. Elapsed time: #{Time.now - start_time}s"
   puts "#{count} comments with profanities found."
   puts "Matches: \n#{matches}"
-end
-
-def build_regexp(line)
-  string = "(^|[ \\-,_xy]+)"
-  line.strip.each_char do |c|
-    if REGEX_SPECIAL_CHARS.include? c
-      c = "\\" + c
-    end
-    if c != " "
-      string << "[ \\-.,_]*" + c
-    end
-  end
-  string << "($|[ \\-,_xy]+)"
 end
