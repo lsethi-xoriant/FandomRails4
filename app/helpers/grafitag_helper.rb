@@ -25,6 +25,7 @@ module GrafitagHelper
       "image" => (get_extra_fields!(grafitag)["image"]["url"] rescue nil),
       "label_color" => get_extra_fields!(grafitag)["label-color"] || "#fff",
       "title" => grafitag.title,
+      "extra_fields" => get_extra_fields!(grafitag),
       "name" => grafitag.name
     }
   end

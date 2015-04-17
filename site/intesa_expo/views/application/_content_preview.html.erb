@@ -1,6 +1,6 @@
 <!-- content.aux.miniformat['label_background'] -->
 <a href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.type == 'cta' && content.layout == 'default'">
-  <img class="cta__flag" ng-src="{{content.aux.flag['image_' + aux.language]}}" ng-if="content.aux.flag">
+  <img class="cta__flag" ng-src="{{content.aux.flag.extra_fields['image_' + aux.language].url}}" ng-if="content.aux.flag">
   <div class="content-preview__item-panel" ng-class="{'content-preview__border-bottom': (content.aux.miniformat['label_background'] != null)}" ng-style="{'border-color': content.aux.miniformat['label_background']}"> 
     <div class="row">
       <div class="col-xs-12 text-center">
@@ -9,7 +9,6 @@
           <img class="img-responsive content-preview__image" ng-src="{{content.thumb_url}}"> 
           <%= render partial: "/application/content_preview_content_type" %>
         </div>
-
         <p class="content-preview__title">{{content.title | cut:true:70}}</p>
       </div>
     </div>
@@ -69,7 +68,7 @@
       <div class="relateds-flexslider__text-container--narrow">
         <div class="row relateds-flexslider__text-row--narrow" ng-style="{'background-color': content.extra_fields['background_color']}">
           <div class="col-xs-3 text-right relateds-flexslider__number--narrow">
-            <p>{{zerosBeforeNumber($index + 1, 1)}}</p>
+            <p>{{content.extra_fields.number_thumb}}</p>
           </div>
           <div class="col-xs-9">
             <p class="relateds-flexslider__title--narrow">{{content.title | cut:true:70}}</p>
