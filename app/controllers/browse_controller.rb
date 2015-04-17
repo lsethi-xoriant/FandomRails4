@@ -212,7 +212,6 @@ class BrowseController < ApplicationController
         perpage: DEFAULT_VIEW_ALL_ELEMENTS + 1
       }
     }
-    debugger
     contents = get_recent_ctas(get_search_tags_for_tenant, parameters)
     has_more = contents.count > DEFAULT_VIEW_ALL_ELEMENTS
     contents = prepare_contents(contents.slice(0, DEFAULT_VIEW_ALL_ELEMENTS))

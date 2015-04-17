@@ -220,7 +220,7 @@ module BrowseHelper
     total = tags.count + ctas.count
     tags = tags.slice!(0, carousel_elements)
     ctas = ctas.slice!(0, carousel_elements)
-    [merge_contents(ctas, tags), total > carousel_elements]
+    [merge_contents(ctas, tags, params), total > carousel_elements]
   end
   
   def get_contents_by_category_with_match(category, query)
@@ -300,7 +300,10 @@ module BrowseHelper
     prepare_contents(contents)
   end
 
-  def prepare_contents(elements)
+  # Convert a list of Call To Actions mixed with Tags into a list of ContentPreview.
+  #   elements - list of Call To Actions mixed with Tags
+  #   params   - used to handle a special case - see the get_cta_to_interactions_map() method documentation
+  def prepare_contents(elements, params = {})
     contents = []
     
     cta_ids = []
@@ -310,8 +313,7 @@ module BrowseHelper
       end
     end
     
-    interactions = get_cta_to_interactions_map(cta_ids)
-
+    interactions = get_cta_to_interactions_map(cta_ids, params)
     elements.each do |element|
       if element.class.name == "CallToAction"
         element_interactions = get_interactions_from_cta_to_interaction_map(interactions, element.id)
@@ -335,9 +337,9 @@ module BrowseHelper
     contents
   end
 
-  def merge_contents(ctas, tags)
+  def merge_contents(ctas, tags, params = {})
     merged = (tags + ctas)
-    prepare_contents(merged)
+    prepare_contents(merged, params)
   end
   
   def merge_contents_for_autocomplete(ctas,tags)

@@ -159,12 +159,21 @@ module ApplicationHelper
     extra_key.join("_")
   end
   
-  def add_ical_fields_to_where_condition(query, params)
+  # Adds to a query some conditions on ical fields.
+  #   query  - the active record query where the conditions should be added
+  #   params - an hash containing start/end datetimes
+  #   allow_null - when true the filter is only applied to download interactions so that other interactions are included in the result
+  def add_ical_fields_to_where_condition(query, params, allow_null = false)
+    if allow_null
+      allow_null_condition = "ical_fields is null OR"
+    else
+      allow_null_condition = ""
+    end
     if params[:ical_start_datetime]
-      query = query.where("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= ?", params[:ical_start_datetime])
+      query = query.where("#{allow_null_condition} cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) >= ?", params[:ical_start_datetime])
     end
     if params[:ical_end_datetime]
-      query = query.where("cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= ?", params[:ical_end_datetime])
+      query = query.where("#{allow_null_condition} cast(\"ical_fields\"->'end_datetime'->>'value' AS timestamp) <= ?", params[:ical_end_datetime])
     end
     query
   end
@@ -571,9 +580,20 @@ module ApplicationHelper
     end
   end
   
-  def get_cta_to_interactions_map(cta_ids)
+  # This methods is used to obtain an Hash that will be used to attach interactions to call to actions that have been transformed into content previews.
+  #   cta_ids - the list of cta id to consider
+  #   params  - used to handle a special case: if the list of cta has been constructed by filtering the start/end date of ical interactions,
+  #             ctas with multiple icals will be duplicated; after full processing each duplicate will contain just one of the initial ical interactions;
+  #             this method has to ensure that only the ical interactions that have been considered by the query that obtained the ctas are included
+  #             in the result Hash.
+  def get_cta_to_interactions_map(cta_ids, params = {})
     cta_to_interactions = {}
-    Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids).each do |inter|
+    interactions = Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids)
+    if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
+      interactions = interactions.joins("LEFT OUTER JOIN downloads ON downloads.id = interactions.resource_id")
+      interactions = add_ical_fields_to_where_condition(interactions, params, true)
+    end
+    interactions.each do |inter|
       (cta_to_interactions[inter.call_to_action_id] ||= []) << {
         interaction_info: inter,
         interaction_resource: inter.resource

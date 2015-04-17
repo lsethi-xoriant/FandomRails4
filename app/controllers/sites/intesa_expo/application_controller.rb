@@ -93,7 +93,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
     complete_cta_for_show(cta)
 
-    @aux_other_params[:tag_menu_item] = get_extra_fields!(cta.extra_fields)["menu_item"]
+    @aux_other_params[:tag_menu_item] = get_extra_fields!(cta)["menu_item"]
   end
 
   def complete_cta_for_show(calltoaction)
