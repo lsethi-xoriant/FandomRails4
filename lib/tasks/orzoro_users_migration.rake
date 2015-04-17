@@ -25,6 +25,8 @@ def migrate_orzoro_users(users_csv_file, user_redeem_cups_csv_file)
   email_present = 0
   no_cups_redeemed = 0
 
+  start_time = Time.now
+
   users_hash_array.each_with_index do |user, index|
     if User.find_by_email(user["email"])
       email_present += 1
@@ -32,7 +34,7 @@ def migrate_orzoro_users(users_csv_file, user_redeem_cups_csv_file)
       last_cup_redeem = find_line_by_email(user["email"], user_redeem_cups_hash_array)
       no_cups_redeemed += 1 if last_cup_redeem.empty?
 
-      terms = user_["terms"] == "t" ? true : false
+      terms = user["terms"] == "t" ? true : false
       newsletter = user["newsletter"] == "t" ? true : false
       aux = { "terms" => terms, 
               "sync_timestamp" => Time.now,
@@ -86,7 +88,8 @@ def migrate_orzoro_users(users_csv_file, user_redeem_cups_csv_file)
     end
 
     if (index + 1) % 100 == 0
-      puts "#{index + 1} lines iterated\n"
+      puts "#{index + 1} lines iterated in #{ Time.now - start_time } s\n"
+      start_time = Time.now
     end
   end
 
