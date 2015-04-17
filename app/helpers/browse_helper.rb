@@ -381,7 +381,6 @@ module BrowseHelper
   end
   
   def get_contents_from_ordering(tag)
-    debugger
     ordering_names = get_extra_fields!(tag)['ordering']
     ctas = CallToAction.active.where("name in (?)", ordering_names.split(",")).to_a
     tags = Tag.where("name in (?)", ordering_names.split(","))
@@ -394,11 +393,11 @@ module BrowseHelper
     stripe_tag = Tag.find_by_name(stripe_tag_name)
     carousel_elements = get_elements_for_browse_carousel(stripe_tag)
     
-    #if(get_extra_fields!(stripe_tag)['ordering'])
-      #get_browse_section_by_ordering(stripe_tag, [], carousel_elements, params)
-    #else
+    if(get_extra_fields!(stripe_tag)['ordering'])
+      get_browse_section_by_ordering(stripe_tag, [], carousel_elements, params)
+    else
       get_browse_area_by_category(stripe_tag, [], carousel_elements, params)
-    #end
+    end
   end
   
 end
