@@ -88,7 +88,7 @@ class Easyadmin::EasyadminController < ApplicationController
       cups_redeemed = JSON.parse(user.aux)["cup_redeem"] rescue nil
       if cups_redeemed
         cups_redeemed.each do |entry|
-          unless (entry["identity"]["entry_point"] == "subscribe_newsletter" rescue true)
+          if entry["receipt"]
             @request_list += [entry]
           end
         end
