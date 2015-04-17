@@ -154,7 +154,7 @@ module BrowseHelper
     end
 
     if extra_contents
-      has_more = (contents.count + extra_content.count) > carousel_elements
+      has_more = (contents.count + extra_contents.count) > carousel_elements
       contents = contents + extra_contents.slice(0, carousel_elements - contents.count)
     else
       has_more = contents.count > carousel_elements
