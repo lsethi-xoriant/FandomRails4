@@ -378,8 +378,12 @@ module CacheKeysHelper
     "full_search_result_#{term}_#{extra_cache_key}"
   end
   
-  def get_recent_contents_cache_key(query)
-    "recent_contents_cache_key_#{query}"
+  def get_recent_contents_cache_key(limit, tag_ids)
+    if limit
+      "recent_contents_cache_key_#{tag_ids.join("_")}_#{limit[:offset]}"
+    else
+      "recent_contents_cache_key_#{tag_ids.join("_")}"
+    end
   end
   
   def get_browse_settings_key(extra_cache_key = "")

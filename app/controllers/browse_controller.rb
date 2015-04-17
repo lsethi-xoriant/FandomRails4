@@ -189,30 +189,48 @@ class BrowseController < ApplicationController
   end
   
   def view_all_recent
-    contents = get_recent_ctas()
-    @total = contents.count
-    contents = prepare_contents(contents.slice(0, 12))
+    params = {
+      limit:{
+        offset: 0,
+        perpage: DEFAULT_VIEW_ALL_ELEMENTS + 1
+      }
+    }
+    
+    contents = get_recent_ctas(get_search_tags_for_tenant, params)
+    @has_more = contents.count > DEFAULT_VIEW_ALL_ELEMENTS
+    contents = prepare_contents(contents.slice(0, DEFAULT_VIEW_ALL_ELEMENTS))
     
     @contents = compute_cta_status_contents(contents)
     
-    @per_page = 12
+    @per_page = DEFAULT_VIEW_ALL_ELEMENTS
   end
   
   def view_all_recent_load_more
-    contents = get_recent_ctas()
-    offset = params[:offset].to_i
-    contents = prepare_contents(contents.slice(offset, 12))
-    
+    parameters = {
+      limit:{
+        offset: params[:offset].to_i,
+        perpage: DEFAULT_VIEW_ALL_ELEMENTS + 1
+      }
+    }
+    debugger
+    contents = get_recent_ctas(get_search_tags_for_tenant, parameters)
+    has_more = contents.count > DEFAULT_VIEW_ALL_ELEMENTS
+    contents = prepare_contents(contents.slice(0, DEFAULT_VIEW_ALL_ELEMENTS))
     contents = compute_cta_status_contents(contents)
     
+    response = {
+      contents: contents,
+      has_more: has_more
+    }
+    
     respond_to do |format|
-      format.json { render :json => contents.to_json }
+      format.json { render :json => response.to_json }
     end
   end
   
   def search
     if flash[:notice]
-      contents = get_recent_ctas()
+      contents = get_recent_ctas(get_search_tags_for_tenant)
       contents = prepare_contents(contents.slice(0, 12))
       @contents = compute_cta_status_contents(contents)
     end

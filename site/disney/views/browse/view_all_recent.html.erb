@@ -1,4 +1,4 @@
-<div class="container container--default" ng-controller="SearchCtrl" ng-init="init_view_all(<%= @contents.to_json %>, <%= @total %>, '<%= @per_page %>')">
+<div class="container container--default" ng-controller="SearchCtrl" ng-init="init_view_all(<%= @contents.to_json %>, <%= @has_more %>, '<%= @per_page %>')">
 	
 	<div class="row main-row brws-item">
 		<div class="col-xs-12">
@@ -41,7 +41,7 @@
 	      <% end %>
 		</div>
 	</div>
-	<div class="row row-load-more text-center" ng-if="total > offset">
+	<div class="row row-load-more text-center" ng-if="hasmore">
 		<div class="col-xs-4 col-xs-offset-4">
 			<a class="btn btn-primary btn-block" ng-click="load_more_recent(offset)">Carica Altri</a>
 		</div>

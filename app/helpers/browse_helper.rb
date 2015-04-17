@@ -28,7 +28,7 @@ module BrowseHelper
       browse_areas.each do |area|
         if area.start_with?("$")
           func = "get_#{area[1..area.length]}"
-          browse_sections_arr << send(func, 0, carousel_elements)
+          browse_sections_arr << send(func, 0, carousel_elements, tags)
         else
           tag_area = Tag.find_by_name(area)
           if get_extra_fields!(tag_area).key? "contents"
@@ -42,8 +42,17 @@ module BrowseHelper
     browse_sections_arr
   end
 
-  def get_recent(offset = 0, per_page = DEFAULT_BROWSE_ELEMENT_CAROUSEL, query = "")
-    recent = get_recent_ctas(query).slice(offset, per_page)
+  def get_recent(offset = 0, per_page = DEFAULT_BROWSE_ELEMENT_CAROUSEL, tags)
+    params = {
+      conditions:{
+        without_user_cta: true
+      },
+      limit: {
+        offset: offset,
+        perpage: per_page
+      }
+    }
+    recent = get_ctas_with_tags_in_and(tags.map{|t| t.id}, params)
     recent_contents = prepare_contents(recent)
     browse_section = ContentSection.new(
     {
@@ -57,25 +66,14 @@ module BrowseHelper
     )
   end
 
-  def get_recent_ctas(query = "")
-    cache_medium(get_recent_contents_cache_key(query)) do
-      ugc_tag = get_tag_from_params("ugc")
+  def get_recent_ctas(tags, params = {})
+    cache_medium(get_recent_contents_cache_key( params[:limit], tags.map{ |t| t.id })) do
       
-      if query.empty?
-        calltoactions = CallToAction.active.order("activated_at DESC")
-      else
-        conditions = construct_conditions_from_query(query, "title")
-        calltoactions = CallToAction.active.where("#{conditions}").order("activated_at DESC")
-      end
+      params[:conditions] = {
+        without_user_cta: true
+      }
       
-      if ugc_tag
-        ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
-        if ugc_calltoactions.any?
-          calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
-        end
-      end
-      
-      calltoactions.to_a
+      get_ctas_with_tags_in_and(tags.map{|t| t.id}, params)
       
     end
   end
