@@ -100,11 +100,13 @@
 	<div class="container-fluid__white">
 		<div class="container main-container" >	
 			<div class="row">
-			     <div class="col-md-12" style="padding-top: 25px;">
-			     	<p class="text-center hidden-xs" style="margin-bottom: -20px;">Calendario Mensile</p>
-					<div id="full-calendar" class="hidden-xs"></div> <!-- /#full-calendar -->   
-		        	<div id="widget-calendar" class="visible-xs"></div>          
+			  <div class="col-md-12 hidden-xs" style="padding-top: 25px;">
+			    <p class="text-center" style="margin-bottom: -20px;">Calendario Mensile</p>
+					<div id="full-calendar"></div> <!-- /#full-calendar -->   
 				</div>
+        <div class="col-md-12 visible-xs text-center" style="padding-top: 25px;">
+          <%= render partial: "/calendar/widget-calendar" %>
+        </div>
 			</div>
 			<div class="row">
 				<div class="col-xs-12 text-center">
@@ -127,7 +129,6 @@
 
   $(document).ready(function() {
     buildCalendar();
-    buildMobileCalendar();
   	$('[data-toggle="tooltip"]').tooltip();
   	$('div.calendar-event__popover').mouseleave(function(){
   		$('div.calendar-event__popover').hide();
@@ -143,23 +144,6 @@
   	<% end %>
   	
   });
-
-  function buildMobileCalendar() {
-    $('#widget-calendar').fullCalendar({
-      header: {
-        left: 'prev',
-        center: 'title',
-        right: 'next'
-      },
-      dayClick: function(date, jsEvent, view ) {
-        window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
-      },
-      height: "auto",
-      lang: "<%= $context_root || 'it' %>",
-      editable: false,
-      disableResizing: true
-    });
-  }
   
   function show_event_info(elem, id){
   	if(!$("div.calendar-event__popover[data-event-id="+id+"]").is(":visible")) {
