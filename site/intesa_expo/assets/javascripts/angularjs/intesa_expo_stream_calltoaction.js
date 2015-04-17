@@ -81,7 +81,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         }
       });
       if(min_date) {
-        month = $scope.computeMonthName(min_date.getMonth(), $scope.auxlanguage).substring(0, 3);
+        month = $scope.computeMonthName(min_date.getMonth(), $scope.aux.language).substring(0, 3);
         day = ("0" + min_date.getDate()).slice(-2);
         time = $scope.extractTimeFromDate(min_date);
         _datetime = $scope.formatDate(min_date, $scope.aux.language);
