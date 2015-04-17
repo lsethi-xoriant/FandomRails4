@@ -46,31 +46,6 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    buildCalendar();
-  });
-
-  function buildCalendar() {
-
-    $('#widget-calendar').fullCalendar({
-      header: {
-        left: 'prev',
-        center: 'title',
-        right: 'next'
-      },
-      dayClick: function(date, jsEvent, view ) {
-        window.location.href = "/<%= get_intesa_property %>/calendar/" + date.format("DD-MM-YYYY")
-      },
-      height: "auto",
-      lang: "<%= $context_root || 'it' %>",
-      editable: false,
-      disableResizing: true
-    });
-
-  }
-</script>
-
-<script type="text/javascript">
-  $(document).ready(function() {
     $('.ctas__flexslider').flexslider({
       animation: "fade",
       slideshow: false,
