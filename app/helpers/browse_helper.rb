@@ -123,7 +123,47 @@ module BrowseHelper
       contents: contents,
       view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
       column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
-      #total: total,
+      has_view_all: has_more,
+      per_page: carousel_elements
+    })
+  end
+  
+  def get_browse_section_by_ordering(category, tags, carousel_elements, params = {})
+    extra_fields = get_extra_fields!(category)
+    contents = get_contents_from_ordering(category)
+    if contents.count < carousel_elements
+      exclude_tag_ids = []
+      exclude_cta_ids = []
+      contents.each do |content|
+        if content.type == "cta"
+          exclude_cta_ids << content.id
+        else
+          exclude_tag_ids << content.id
+        end
+      end
+      if params[:conditions]
+        params[:conditions][:exclude_tag_ids] = exclude_tag_ids
+        params[:conditions][:exclude_cta_ids] = exclude_cta_ids
+      else
+        params[:conditions] = {
+          exclude_tag_ids: exclude_tag_ids,
+          exclude_cta_ids: exclude_cta_ids
+        }
+      end
+      extra_contents, has_more = get_contents_by_category(category, tags, carousel_elements, params)  
+    end
+    
+    has_more = (contents.count + extra_contents.count) > carousel_elements
+    contents = contents + (extra_contents.slice(0, carousel_elements - contents.count))
+
+    browse_section = ContentSection.new({
+      key: category.name,
+      title:  category.title,
+      extra_fields: category.extra_fields,
+      icon_url: get_browse_section_icon(extra_fields),
+      contents: contents,
+      view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
       has_view_all: has_more,
       per_page: carousel_elements
     })
@@ -338,11 +378,25 @@ module BrowseHelper
     end
   end
   
+  def get_contents_from_ordering(tag)
+    debugger
+    ordering_names = get_extra_fields!(tag)['ordering']
+    ctas = CallToAction.active.where("name in (?)", ordering_names.split(",")).to_a
+    tags = Tag.where("name in (?)", ordering_names.split(","))
+    contents = order_elements(tag, (tags + ctas))
+    prepare_contents(contents)
+  end
+  
   def get_content_preview_stripe(stripe_tag_name, params = {})
     #carousel elements if setted in content tag, if in section tag needs to be passed as function params
     stripe_tag = Tag.find_by_name(stripe_tag_name)
     carousel_elements = get_elements_for_browse_carousel(stripe_tag)
-    get_browse_area_by_category(stripe_tag, [], carousel_elements, params)
+    
+    #if(get_extra_fields!(stripe_tag)['ordering'])
+      #get_browse_section_by_ordering(stripe_tag, [], carousel_elements, params)
+    #else
+      get_browse_area_by_category(stripe_tag, [], carousel_elements, params)
+    #end
   end
   
 end
