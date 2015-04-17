@@ -1,13 +1,13 @@
 <div class="row main-row ctas__search" ng-controller="SearchCtrl" ng-init="init({})">
   <%= form_tag("/browse/full_search", { method: "post", role: "search", id: "full-search" }) do %>
-    <div class="col-xs-10">
+    <div class="col-sm-10 col-xs-8">
       <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control search-bar__input" placeholder="Cerca" style="width: 100%;" typeahead-wait-ms="<%= AUTOCOMPLETE_DELAY %>">
       <% if flash[:notice] %>
 		<p class="text-left search-bar__message"><%= flash[:notice].html_safe %></p>
 		<% flash[:notice] = nil %>
   	  <% end %>
     </div>
-    <div class="col-xs-2">
+    <div class="col-sm-2 col-xs-4">
       <button type="submit" class="btn btn-about-v2 btn-about-v2--nomargin btn-block search-bar__button"><span>Cerca</span></button>
     </div>
   <% end %>
