@@ -7,6 +7,9 @@ CKEDITOR.editorConfig = function(config) {
   config.fillEmptyBlocks = "&#8203;";
   config.removeFormatTags = "b,big,code,del,dfn,em,font,i,ins,kbd,p,q,samp,small,span,strike,strong,sub,sup,tt,u,var";
   config.entities = false;
+  // config.basicEntities = false;
+  // config.entities_greek = false;
+  // config.entities_latin = false;
 
   config.toolbar_Mini =
     [

@@ -11,6 +11,22 @@
   text-transform: uppercase;
 }
 
+.cta__flag {
+  position: absolute;
+  top: 4px;
+  left: 145px;
+  width: 75px;
+  z-index: 10;
+}
+
+.cta__flag--extra_fields {
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  width: 75px;
+  z-index: 10;
+}
+
 .cta__live-label--related {
   background-color: red;
   color: #fff;
@@ -111,6 +127,7 @@
   background-color: $blue;
   padding: 15px 25px;
   color: #fff;
+  position: relative;
 }
 
 .cta__related__type {

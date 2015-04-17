@@ -74,8 +74,8 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
       <ul class="nav navbar-nav navbar-right">
-        <li ng-class="{'active': (menu_field == menu_item.name)}" ng-repeat="menu_item in aux.menu_items">
-          <a href="{{menu_item.browse_url}}">
+        <li ng-class="{'active': (menu_field && menu_field == menu_item.extra_fields.menu_item)}" ng-repeat="menu_item in aux.menu_items">
+          <a href="{{menu_item.extra_fields.browse_url}}">
             <p class="navbar__item-text">{{menu_item.title}}</p>
           </a>
         </li>

@@ -50,5 +50,35 @@ module CommentHelper
   def get_comments_append_counter(interaction)
     [interaction.resource.user_comment_interactions.approved.count - get_last_comments_to_view(interaction).count, 0].max
   end
+
+  def check_profanity_words_in_comment(text)
+    user_comment_text = text.downcase
+    profanities_regexp = cache_short(get_profanity_words_cache_key()) do
+      pattern_array = Array.new
+
+      profanity_words = Setting.find_by_key("profanity.words")
+      if profanity_words
+        profanity_words.value.split(",").each do |exp|
+          pattern_array.push(build_regexp(exp))
+        end
+      end
+      Regexp.union(pattern_array)
+    end
+    user_comment_text =~ profanities_regexp
+  end
+
+  def build_regexp(line)
+    string = "(^|[ \\-,_xy]+)"
+    line.strip.each_char do |c|
+      if REGEX_SPECIAL_CHARS.include? c
+        c = "\\" + c
+      end
+      if c != " "
+        string << "[ \\-.,_]*" + c
+      end
+    end
+    string << "($|[ \\-,_xy]+)"
+    Regexp.new(string)
+  end
   
 end

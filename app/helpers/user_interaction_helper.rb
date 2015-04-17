@@ -78,6 +78,8 @@ module UserInteractionHelper
       adjust_call_to_actions_with_user_interaction_data_for_current_user(calltoactions, calltoaction_info_list) 
     elsif $site.anonymous_interaction
       adjust_call_to_actions_with_user_interaction_data_for_anonymous_user(calltoactions, calltoaction_info_list)
+    else
+      calltoaction_info_list
     end
   end
 

@@ -66,7 +66,7 @@ class Sites::Orzoro::NewsletterController < ApplicationController
 
       aux_params["request_timestamp"] = Time.now
       aux_params["entry_point"] = "subscribe_newsletter"
-      redeem_array = aux_hash["cup_redeem"].nil? ? [aux_params] : [aux_params] + aux_hash["cup_redeem"]
+      redeem_array = aux_hash["cup_redeem"].nil? ? [{ "identity" => aux_params }] : [{ "identity" => aux_params }] + aux_hash["cup_redeem"]
       aux_hash["cup_redeem"] = redeem_array
       user.aux = aux_hash.to_json
       user.assign_attributes(info) if (!user_created_flag && redeem_array.size == 1)

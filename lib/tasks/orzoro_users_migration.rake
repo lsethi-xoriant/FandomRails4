@@ -41,7 +41,7 @@ def migrate_orzoro_users(users_csv_file, user_redeem_cups_csv_file)
 
       user_params = Hash.new
 
-      # user_params[:id] = user["id"]
+      user_params[:id] = user["id"]
       user_params[:email] = user["email"]
       # user_params[:encrypted_password] = user["encrypted_password"]
       user_params[:reset_password_token] = user["reset_password_token"]
@@ -86,11 +86,11 @@ def migrate_orzoro_users(users_csv_file, user_redeem_cups_csv_file)
     end
 
     if (index + 1) % 100 == 0
-      puts "\n#{index + 1} lines iterated\n"
+      puts "#{index + 1} lines iterated\n"
     end
   end
 
-  puts "\n#{users_array_count} lines iterated \n"
+  puts "#{users_array_count} lines iterated \n"
   puts "#{users_array_count - migration_errors - email_present}/#{users_array_count} users successfully migrated\n"
   puts "#{migration_errors} errors\n#{email_present} email already present\n"
   puts "#{no_cups_redeemed} users never redeemed cups\n"

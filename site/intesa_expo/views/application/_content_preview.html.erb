@@ -1,5 +1,6 @@
 <!-- content.aux.miniformat['label_background'] -->
 <a href="{{linkTo(content.detail_url, stripe.key)}}" ng-if="content.type == 'cta' && content.layout == 'default'">
+  <img class="cta__flag" ng-src="{{content.aux.flag.image}}" ng-if="content.aux.flag">
   <div class="content-preview__item-panel" ng-class="{'content-preview__border-bottom': (content.aux.miniformat['label_background'] != null)}" ng-style="{'border-color': content.aux.miniformat['label_background']}"> 
     <div class="row">
       <div class="col-xs-12 text-center">

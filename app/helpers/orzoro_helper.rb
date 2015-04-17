@@ -33,7 +33,7 @@ module OrzoroHelper
   def build_orzoro_thumb_calltoaction(calltoaction, thumb_format = :thumb)   
     {
       "id" => calltoaction.id,
-      "detail_url" => cta_url(calltoaction),
+      "detail_url" => orzoro_cta_url(calltoaction),
       "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction),
       "thumb_url" => calltoaction.thumbnail(thumb_format),
       "title" => calltoaction.title,

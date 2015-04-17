@@ -63,17 +63,12 @@ body {
   border-bottom: 1px solid $lightblue;
 }
 
-.ctas__flexslider__container {
-    padding-left: 15px !important; 
-    padding-right: 5px !important;
-}
-
-.content-browse{
+.content-browse {
   background-color: whitesmoke;
   background-image: url("intesa_expo/texture.png");
 }
 
-.view-all-link{
+.view-all-link {
   position: absolute;
   right: 15px;
   font-size: 17px;
@@ -404,6 +399,13 @@ p {
 
 .error__description {
   margin-bottom: 220px;
+}
+
+@media (min-width: $screen-md-min) {
+  .ctas__flexslider__container {
+    padding-left: 15px !important; 
+    padding-right: 5px !important;
+  }
 }
 
 

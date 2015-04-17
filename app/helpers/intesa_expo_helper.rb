@@ -146,21 +146,18 @@ module IntesaExpoHelper
         ctas = get_intesa_expo_ctas()
         
         if $context_root == "imprese"
-          cta_tags_with_tag_imprese = CallToActionTag.includes(:tag).where("tags.name = ?", "event-imprese")
-          ctas = ctas.where("call_to_actions.id NOT IN (?)", cta_tags_with_tag_imprese.map { |tag| tag.call_to_action_id })
+          ignore_cta_tags = CallToActionTag.includes(:tag).where("tags.name IN (?)", ["story-imprese", "interview-imprese"])
+          ctas = ctas.where("call_to_actions.id NOT IN (?)", ignore_cta_tags.map { |tag| tag.call_to_action_id })
+        else
+          ctas = ctas.where("(call_to_actions.extra_fields->>'layout') IS NULL OR (call_to_actions.extra_fields->>'layout') <> 'press'")
         end
 
         if highlight_calltoactions.any?
           ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
           ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
-                                       .where("(extra_fields->>'layout') IS NULL OR (extra_fields->>'layout') <> 'press'")
-                                       .limit(ctas_evidence_count)
-                                       .to_a
-        else
-          ctas = ctas.where("(extra_fields->>'layout') IS NULL OR (extra_fields->>'layout') <> 'press'").limit(ctas_evidence_count).to_a
         end
 
-        ctas = highlight_calltoactions + ctas
+        ctas = highlight_calltoactions + ctas.limit(ctas_evidence_count).to_a
 
         interactions = get_cta_to_interactions_map(ctas.map { |cta| cta.id })
 
