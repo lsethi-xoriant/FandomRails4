@@ -222,11 +222,17 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+    .ctas__info--bottom {
+        width: auto;
+        left: 15px;
+        right: 15px;
+    }
+
     .ctas__flexslider__img-container {
         height: 300px;
         img {
           max-width: none;
-          width: auto;
+          width: auto !important;
           height: 100%;
           margin-left: auto;
           margin-right: auto;
