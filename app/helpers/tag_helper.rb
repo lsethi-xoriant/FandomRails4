@@ -37,7 +37,9 @@ module TagHelper
         ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
         ctas = add_ical_fields_to_where_condition(ctas, params)
       end
-      ctas = ctas.where("call_to_actions.id IN (#{tag_ids_subselect}) ")
+      if !tag_ids_subselect.empty?
+        ctas = ctas.where("call_to_actions.id IN (#{tag_ids_subselect}) ")
+      end
       if !where_clause.empty?
         ctas = ctas.where("#{where_clause}")
       end

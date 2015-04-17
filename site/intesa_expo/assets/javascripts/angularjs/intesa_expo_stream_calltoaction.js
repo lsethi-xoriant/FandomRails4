@@ -13,8 +13,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
   $scope.extraInit = function() {
-     $scope.content_ical = new Object();
-
+    $scope.content_ical = new Object();
     if($scope.calltoaction_info) {
       if($scope.aux.tag_menu_item) {
         $scope.menu_field = $scope.aux.tag_menu_item;

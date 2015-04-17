@@ -31,7 +31,7 @@
     <button ng-click="updateInteractionDownloadIcal(ical.interaction_ids[$index], icalTimestamp(calltoaction_info.calltoaction.slug, ical.datetimes[$index]))" class="btn btn-about-v2" style="position: absolute; top: 0; right: 0;"><i class="fa fa-download"></i></button>
     <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{ical.dates[$index]}}</span></p>
     <p class="cta__extra_fields__description"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{ical.times[$index]}}</span></p>
-    <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.location"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{ical.locations[$index]}}</span></p>
+    <p class="cta__extra_fields__description"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{ical.locations[$index]}}</span></p>
     <hr class="cta__extra_fields__hr" ng-if="!$last">
   </div>
 </div>

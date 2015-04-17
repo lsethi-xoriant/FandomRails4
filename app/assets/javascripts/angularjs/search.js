@@ -39,9 +39,9 @@ function SearchCtrl($scope, $window, $filter, $http, $sce) {
 		});
 	};
 	
-	$scope.init_view_all = function(contents, total, per_page) {
+	$scope.init_view_all = function(contents, hasmore, per_page) {
 		$scope.contents = contents;
-		$scope.total = total;
+		$scope.hasmore = hasmore;
 		$scope.offset = $scope.perpage = per_page;
 	};
 	
@@ -87,8 +87,9 @@ function SearchCtrl($scope, $window, $filter, $http, $sce) {
 	        per_page: $scope.per_page
 	      }
 	    }).then(function(response){
-	      $scope.contents = $scope.contents.concat(response.data);
+	      $scope.contents = $scope.contents.concat(response.data.contents);
 	      $scope.offset = parseInt(offset) + 12;
+	      $scope.hasmore = response.data.has_more;
 	    });
   	};
 	

@@ -14,9 +14,20 @@
 .cta__flag {
   position: absolute;
   top: 4px;
-  left: 145px;
   width: 75px;
   z-index: 10;
+  right: 10px;
+}
+
+.relateds-flexslider {
+  .cta__flag {
+    position: absolute;
+    top: 4px;
+    left: 145px;
+    width: 75px;
+    z-index: 10;
+    right: auto;
+  }
 }
 
 .cta__flag--extra_fields {
@@ -133,22 +144,6 @@
 .cta__related__type {
   color: $orange;
   font-family: 'Gnuolane';
-}
-
-.cta__related__right-bar {
-  .content-preview__icon{
-    color: #fff;
-    font-size: 18px;
-    line-height: 30px;
-  }
-  .content-preview__icon-container {
-    width: 30px !important;
-    height: 30px !important;
-    padding: 0 !important;
-    position: absolute;
-    top: 0;
-    left: 15px;
-  } 
 }
 
 .cta__related__hr {
@@ -305,16 +300,22 @@
 
 .cta__video-col--about {
   height: 117px;
+  padding-left: 0;
+}
+
+.cta__video-col--about--container {
   background: $darkblue;
   background-image: url("intesa_expo/texture.png");
   border-bottom: 1px solid $darkblue;
+  width: 100%;
+  height: 100%;
 }
 
-.cta__video-col--about:hover {
+.cta__video-col--about--container:hover {
   background: $lightblue;
 }
 
-.cta__video-col--about.active {
+.cta__video-col--about--container.active {
   background-color: $orange;
   background-image: none;
 }
@@ -502,6 +503,10 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .cta__video-col--about {
+    padding: 0;
+  }
+
   .cta__extra-content__container-fluid--about {
     padding: 15px !important;
   }
