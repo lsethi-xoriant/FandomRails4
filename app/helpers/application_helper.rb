@@ -580,6 +580,12 @@ module ApplicationHelper
     end
   end
   
+  # This methods is used to obtain an Hash that will be used to attach interactions to call to actions that have been transformed into content previews.
+  #   cta_ids - the list of cta id to consider
+  #   params  - used to handle a special case: if the list of cta has been constructed by filtering the start/end date of ical interactions,
+  #             ctas with multiple icals will be duplicated; after full processing each duplicate will contain just one of the initial ical interactions;
+  #             this method has to ensure that only the ical interactions that have been considered by the query that obtained the ctas are included
+  #             in the result Hash.
   def get_cta_to_interactions_map(cta_ids, params = {})
     cta_to_interactions = {}
     interactions = Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids)
