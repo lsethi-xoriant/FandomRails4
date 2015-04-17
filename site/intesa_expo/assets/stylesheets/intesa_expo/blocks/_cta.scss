@@ -316,16 +316,22 @@
 
 .cta__video-col--about {
   height: 117px;
+  padding-left: 0;
+}
+
+.cta__video-col--about--container {
   background: $darkblue;
   background-image: url("intesa_expo/texture.png");
   border-bottom: 1px solid $darkblue;
+  width: 100%;
+  height: 100%;
 }
 
-.cta__video-col--about:hover {
+.cta__video-col--about--container:hover {
   background: $lightblue;
 }
 
-.cta__video-col--about.active {
+.cta__video-col--about--container.active {
   background-color: $orange;
   background-image: none;
 }
@@ -513,6 +519,10 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .cta__video-col--about {
+    padding: 0;
+  }
+
   .cta__extra-content__container-fluid--about {
     padding: 15px !important;
   }
