@@ -12,8 +12,9 @@
           <img class="cta__related__img" ng-src="{{content.thumb_url}}" style="width: 100%;">
 
           <p class="cta__related__title-content">
-            <span class="cta__related__type" ng-if="content.media_type == 'IMAGE' || hasPhotoGallery(content) && isContentValid(content)">FOTO</span>
-            <span class="cta__related__type" ng-if="content.media_type == 'YOUTUBE' && isContentValid(content)">VIDEO</span>
+            <span class="cta__related__type" ng-if="content.media_type == 'IMAGE' || hasPhotoGallery(content) && isContentValid(content) && !getFirstIcalInteractionForContent(content)">FOTO</span>
+            <span class="cta__related__type" ng-if="content.media_type == 'YOUTUBE' && isContentValid(content) && !getFirstIcalInteractionForContent(content)">VIDEO</span>
+            <span class="cta__related__type" ng-if="getFirstIcalInteractionForContent(content)">EVENTO</span>
             <span class="cta__related__type" ng-if="!isContentValid(content)">COMING SOON</span>
             {{content.title | cut:true:70}}
           </p>
