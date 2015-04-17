@@ -152,10 +152,13 @@ module BrowseHelper
       end
       extra_contents, has_more = get_contents_by_category(category, tags, carousel_elements, params)  
     end
-    contents_count = contents ? contents.count : 0
-    extra_content_count = extra_contents ? extra_contents.count : 0
-    has_more = (contents_count + extra_content_count) > carousel_elements
-    contents = contents + (extra_contents.slice(0, carousel_elements - contents.count))
+
+    if extra_contents
+      has_more = (contents.count + extra_content.count) > carousel_elements
+      contents = contents + extra_contents.slice(0, carousel_elements - contents.count)
+    else
+      has_more = contents.count > carousel_elements
+    end
 
     browse_section = ContentSection.new({
       key: category.name,
