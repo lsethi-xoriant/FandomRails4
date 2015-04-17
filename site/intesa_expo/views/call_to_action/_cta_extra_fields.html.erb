@@ -14,7 +14,7 @@
 %>
 
 <div ng-if="calltoaction_info.calltoaction.extra_fields.custom_time && calltoaction_info.calltoaction.extra_fields.custom_location" class="cta__extra_fields <%= top_class %>">
-  <img class="cta__flag--extra_fields" ng-src="{{calltoaction_info.flag.image}}" ng-if="calltoaction_info.flag">
+  <img class="cta__flag--extra_fields" ng-src="{{calltoaction_info.flag['image_' + aux.language]}}" ng-if="calltoaction_info.flag">
   <p class="cta__extra_fields__title">{{aux.assets["event_widget_when_" + aux.language]}}</p>
   <hr class="cta__extra_fields__hr">
   <div class="cta__extra_fields__info">
