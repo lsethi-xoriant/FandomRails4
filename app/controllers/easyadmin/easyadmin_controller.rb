@@ -136,7 +136,7 @@ class Easyadmin::EasyadminController < ApplicationController
         cups_redeemed.each do |request|
           if request_timestamp_between_dates(request["request_timestamp"], from_date, to_date) && request["identity"]["entry_point"] != "subscribe_newsletter"
             request_list += [request]
-         end
+          end
         end
       end
     end
