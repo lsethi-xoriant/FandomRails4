@@ -55,8 +55,10 @@ class Sites::IntesaExpo::CalendarController < CalendarController
       cal_events = []
       
       events.each do |event|
-        event.id = event.ical_id
-        (cal_events[DateTime.parse(event.start).day] ||= []) << event
+        if event.ical_id
+          event.id = event.ical_id
+          (cal_events[DateTime.parse(event.start).day] ||= []) << event
+        end
       end
       cal_events
     end
