@@ -138,8 +138,6 @@
   	});
   	
   	<% if @day_selected && @day_selected != Time.now.strftime("%Y-%m-%d")%>
-  		console.log('<%= @day_selected %>');
-  		console.log($("td[data-date='<%= @day_selected %>']"));
   		$("td[data-date='<%= @day_selected %>']").addClass("calendar-event__day-selected");
   	<% end %>
   	
