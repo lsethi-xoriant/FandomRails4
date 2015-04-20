@@ -298,7 +298,7 @@ module EasyadminHelper
         if links
           links.each do |key, link|
             if CallToAction.exists?(link["cta_id"].to_i)
-              condition = link["condition"].blank? ? nil : { "more" => link["condition"] }.to_json
+              condition = link["condition"].blank? ? nil : { link["condition"] => link["parameters"] }.to_json
               InteractionCallToAction.create(:interaction_id => interaction.id, :call_to_action_id => link["cta_id"], :condition => condition )
             else
               cta.errors.add(:base, "Non esiste una call to action con id #{link["cta_id"]}")

@@ -62,7 +62,11 @@
       </div>
 
       <script type="text/javascript">
-        addButtonHandlerForInteractionCallToActionFields("interaction_call_to_actions-" + "<%= quizform_index %>", <%= @interaction_call_to_actions.nil? ? "null" : @interaction_call_to_actions.to_s.html_safe %>);
+        addButtonHandlerForInteractionCallToActionFields(
+          "interaction_call_to_actions-" + "<%= quizform_index %>", 
+          <%= @interaction_call_to_actions.nil? ? "null" : @interaction_call_to_actions.to_s.html_safe %>,
+          <%= raw get_linked_call_to_action_conditions.keys.unshift("") %>
+          );
       </script>
 
       <div class="col-lg-12">

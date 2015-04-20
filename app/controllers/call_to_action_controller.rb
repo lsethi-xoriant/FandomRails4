@@ -452,14 +452,14 @@ class CallToActionController < ApplicationController
     response = Hash.new
 
     response[:calltoaction_id] = interaction.call_to_action_id;
-    
+
     response[:ga] = Hash.new
     response[:ga][:category] = "UserInteraction"
     response[:ga][:action] = "CreateOrUpdate"
 
     if interaction.interaction_call_to_actions.any?
       interaction_conditions = interaction.interaction_call_to_actions.order(:ordering, :created_at)
-      
+
       answers_map_for_condition = {}
 
       interaction_conditions.each do |interaction_condition|
@@ -468,13 +468,10 @@ class CallToActionController < ApplicationController
             user_interactions_history = params[:user_interactions_history] # + [user_interaction.id]
             current_answer = params[:params]
             answers_map_for_condition = map_answers_in_user_history(current_answer, user_interactions_history, params[:anonymous_user_storage])
-          end      
+          end
           condition = JSON.parse(interaction_condition.condition)
           if condition.has_key?("more")
-            max_key = max_key_in_answers_map_for_condition(answers_map_for_condition)
-            if max_key == condition["more"]
-              response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction_condition.call_to_action])
-            end
+            get_linked_call_to_action_conditions["more"].call(answers_map_for_condition, response, interaction_condition)
           end
         end
       end
@@ -482,7 +479,6 @@ class CallToActionController < ApplicationController
       if answers_map_for_condition.empty?
         response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction.interaction_call_to_actions.first.call_to_action])
       end
-
 
       next_calltoaction_id = response["next_call_to_action_info_list"][0]["calltoaction"]["id"] rescue nil
 

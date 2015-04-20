@@ -748,4 +748,22 @@ module CallToActionHelper
     end
   end
 
+  def get_linked_call_to_action_conditions
+    conditions = { 
+
+      # "example" =>
+      #   lambda { |symbolic_name, user_interaction| 
+      #     true
+      #   }
+
+      "more" => 
+        lambda { |answers_map_for_condition, response, interaction_condition| 
+          max_key = max_key_in_answers_map_for_condition(answers_map_for_condition)
+          if max_key == JSON.parse(interaction_condition.condition)["more"]
+            response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction_condition.call_to_action])
+          end
+        }
+    }
+  end
+
 end
