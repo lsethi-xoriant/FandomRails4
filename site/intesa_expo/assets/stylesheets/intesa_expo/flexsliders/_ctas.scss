@@ -49,6 +49,18 @@
 
 #gallery-slider {
     border: 0 !important;
+    .cta-cover__thumbnail {
+        position: relative !important;
+        top: 0 !important;
+    }
+    .cta-cover__thumbnail-column {
+        padding-top: 0 !important;
+        height: auto !important;
+    }
+}
+
+.ctas__flexslider#gallery-slider {
+    height: auto !important;
 }
 
 .ctas__flexslider {
