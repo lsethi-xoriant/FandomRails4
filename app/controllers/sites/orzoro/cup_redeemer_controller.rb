@@ -215,7 +215,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       else
         cache_value["request_timestamp"] = Time.now
         cache_value["entry_point"] = "cup_redeemer"
-        redeem_array = aux_hash["cup_redeem"].nil? ? [cache_value] : aux_hash["cup_redeem"] + [cache_value]
+        redeem_array = aux_hash["cup_redeem"].nil? ? [cache_value] : [cache_value] + aux_hash["cup_redeem"]
         aux_hash["cup_redeem"] = redeem_array
         user.aux = aux_hash.to_json
         user.assign_attributes(info) if (!user_created_flag && (cup_redemption(redeem_array) == 1))
