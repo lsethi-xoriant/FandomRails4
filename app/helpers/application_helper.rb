@@ -147,10 +147,10 @@ module ApplicationHelper
     end
     if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
       if params[:ical_start_datetime]
-        extra_key << Time.parse(params[:ical_start_datetime]).strftime("%Y-%M-%d_%H-%M-%S")
+        extra_key << Time.parse(params[:ical_start_datetime]).strftime("%Y-%m-%d_%H-%M-%S")
       end
       if params[:ical_end_datetime]
-        extra_key << Time.parse(params[:ical_end_datetime]).strftime("%Y-%M-%d_%H-%M-%S")
+        extra_key << Time.parse(params[:ical_end_datetime]).strftime("%Y-%m-%d_%H-%M-%S")
       end
     end
     if params[:limit]
