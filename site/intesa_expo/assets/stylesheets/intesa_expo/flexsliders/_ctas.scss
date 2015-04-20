@@ -1,7 +1,7 @@
 #gallery-carousel {
     /* margin-top: -100px; */
     /* background: $bluealpha; */
-    background: transparent;
+    background: rgba(0,0,0,0.3);
     margin-bottom: 0;
     z-index: 10; 
     border: 0; 
@@ -54,7 +54,7 @@
         top: 0 !important;
     }
     .cta-cover__thumbnail-column {
-        padding-top: 0 !important;
+        padding: 0 !important;
         height: auto !important;
     }
 }
