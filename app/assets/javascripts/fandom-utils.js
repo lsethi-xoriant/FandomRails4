@@ -267,7 +267,7 @@ function populateTextboxWithJsonField(json_field, formName, modelName, fieldName
     $('#name-for-' + fieldName + '-field-' + index).val(key);
     updateValueElementName($('#name-for-' + fieldName + '-field-' + index), modelName, fieldName, 'value');
     updateValueElementName($('#name-for-' + fieldName + '-field-' + index), modelName, fieldName, 'type');
-    valueElement = $('#value-for-' + fieldName + '-field-' + index);
+    var valueElement = $('#value-for-' + fieldName + '-field-' + index);
 
     if (typeof value == 'string') {
       $('#type-for-' + fieldName + '-field-' + index).val('string');
