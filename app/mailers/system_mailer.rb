@@ -71,4 +71,11 @@ class SystemMailer < ActionMailer::Base
     mail(to: info[:email], subject: subject)
   end
 
+  def send_approved_comments_mail(emails, tenant, days, body)
+    to = emails.split(" ")
+    subject = "Report commenti approvati negli ultimi #{ days } giorni su #{ tenant.capitalize }"
+    @body = body
+    mail(to: to, subject: subject)
+  end
+
 end
