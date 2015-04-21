@@ -5,7 +5,7 @@
         <p class="footer__container__title">{{aux.assets['footer_title_' + aux.language]}}</p>
       </div>
       <div class="col-sm-3 col-xs-6 text-center" ng-repeat="n in getNumber(4) track by $index">
-        <a href="{{aux.assets['footer_url_' + ($index + 1) + '_' + aux.language]}}">
+        <a href="{{aux.assets['footer_url_' + ($index + 1) + '_' + aux.language]}}" ng-click="gaq.push(['_trackEvent','Navigation','Scopri', aux.assets['footer_seo_' + ($index + 1)]]);">
           <img class="img-responsive footer__container__img" ng-src="{{aux.assets['footer_img_' + ($index + 1) + '_' + aux.language].url}}">
           <p class="footer__container__description">{{aux.assets['footer_description_' + ($index + 1) + '_' + aux.language]}}</p>
         </a>
@@ -27,7 +27,7 @@
           </div>
           <div class="col-sm-12">
             <p class="footer__container__description-expo" ng-bind-html="aux.assets['footer_expo_description_' + aux.language]"></p>
-            <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
+            <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn" onclick="gaq.push(['_trackEvent','Navigation','Footer','Scopri']);">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
           </div>
         </div>
       </div>

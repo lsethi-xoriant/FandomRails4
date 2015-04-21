@@ -890,7 +890,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           calltoaction_info.calltoaction.vcode = calltoaction_info.calltoaction.vcodes[0];
         });
       } else {
-        calltoaction_info.calltoaction.vcodes = vcode;
         calltoaction_info.calltoaction.vcode = vcode;
       }
 
