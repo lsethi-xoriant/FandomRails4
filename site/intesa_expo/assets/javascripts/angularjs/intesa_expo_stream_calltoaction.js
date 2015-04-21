@@ -62,6 +62,9 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         ical_info_list.push(value);
       }
     });
+    ical_info_list.sort(function(a, b) {
+      return new Date(a.interaction.resource.ical.start_datetime.value) - new Date(b.interaction.resource.ical.start_datetime.value);
+    });
     return ical_info_list;
   }
 
