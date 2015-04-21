@@ -8,7 +8,11 @@
             <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;" onclick="_gaq.push(['_trackEvent','Navigation','Carousel','{{calltoaction.slug}}']);">
               <div class="row">
 
-                <div class="col-xs-12 ctas__flexslider__img-container">
+                <div class="col-xs-12 ctas__flexslider__img-container visible-xs">
+                  <img ng-src="{{calltoaction.thumb_medium_url}}">
+                </div>
+
+                <div class="col-xs-12 ctas__flexslider__img-container hidden-xs">
                   <img ng-src="{{calltoaction.thumb_wide_url}}">
                 </div>
 
