@@ -378,7 +378,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @cta.interactions.each do |interaction|
       InteractionCallToAction.where(:interaction_id => interaction.id).each do |icta|
         condition_hash = JSON.parse(icta.condition) rescue {}
-        @interaction_call_to_actions += [[condition_hash.keys.first, condition_hash.values.first, icta.call_to_action_id]]
+        @interaction_call_to_actions += 
+          [[(condition_hash.keys.first || ""), (condition_hash.values.first || ""), (icta.call_to_action_id || "")]]
       end
     end
     @tag_list_arr = Array.new
