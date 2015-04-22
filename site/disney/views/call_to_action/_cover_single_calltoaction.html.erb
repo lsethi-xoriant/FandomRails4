@@ -3,11 +3,18 @@
 </div>
 
 <div class="panel panel-default cta-cover__card">
-    
   <div class="panel-body cta-cover__card__body">  
     <div class="row cta-cover__thumbnail-row">
       <!-- CALLTOACTION THUMBNAIL -->
       <%= light_link_to("/call_to_action/{{calltoaction_info.calltoaction.slug}}") do %>
+
+        <div class="cta-cover__media_type" ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'">
+          <div class="cta-cover__media_type--content"><span class="fa fa-photo"></span></div>
+        </div>
+
+        <div class="cta-cover__media_type" ng-if="calltoaction_info.calltoaction.media_type == 'FLOWPLAYER' || calltoaction_info.calltoaction.media_type == 'KALTURA'">
+          <div class="cta-cover__media_type--content"><span class="fa fa-play"></span></div>
+        </div>
 
         <div class="col-xs-12 cta-cover__thumbnail-column">
           <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
