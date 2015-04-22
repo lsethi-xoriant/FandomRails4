@@ -124,7 +124,8 @@ module BrowseHelper
       view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
       column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
       has_view_all: has_more,
-      per_page: carousel_elements
+      per_page: carousel_elements,
+      slug: category.slug
     })
   end
   
@@ -169,7 +170,8 @@ module BrowseHelper
       view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
       column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
       has_view_all: has_more,
-      per_page: carousel_elements
+      per_page: carousel_elements,
+      slug: category.slug
     })
   end
   
@@ -204,7 +206,8 @@ module BrowseHelper
       icon_url: get_browse_section_icon(extra_fields),
       contents: contents,
       view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
-      column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields)
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
+      slug: category.slug
     })
   end
   

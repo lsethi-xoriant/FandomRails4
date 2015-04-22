@@ -13,6 +13,7 @@ module ContentHelper
     attr_accessor :per_page
     attr_accessor :extra_fields
     attr_accessor :has_view_all
+    attr_accessor :slug
     
     def initialize(params)
       @key = params[:key]
@@ -25,6 +26,7 @@ module ContentHelper
       @per_page = params[:per_page]
       @extra_fields = params[:extra_fields]
       @has_view_all = params[:has_view_all]
+      @slug = params[:slug]
     end
     
   end

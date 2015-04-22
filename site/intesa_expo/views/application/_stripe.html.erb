@@ -2,9 +2,10 @@
 	  <!-- HEADING -->
 	<div class="col-sm-12 text-center">
 	  <h2 class="stripe__title" ng-style="{'color': stripe.extra_fields.color}">{{stripe.title}} 
-	  	<a ng-href="{{stripe.view_all_link}}" class="view-all-link hidden-xs" 
+	  	<a ng-href="{{stripe.view_all_link}}" class="view-all-link hidden-xs" ng-click="_gaq.push(['_trackEvent','Navigation', stripe.slug,'Vedi_Tutti']);" 
 	  	ng-if="stripe.has_view_all && stripe.extra_fields.view_all && stripe.extra_fields.view_all.value">Vedi tutti</a>
-	  	<a ng-href="{{stripe.extra_fields.custom_view_all_url}}" class="view-all-link hidden-xs" 
+	  	<a ng-href="{{stripe.extra_fields.custom_view_all_url}}" ng-click="_gaq.push(['_trackEvent','Navigation', stripe.extra_fields.custom_view_all_label,'Vedi_Tutti']);" 
+	  	class="view-all-link hidden-xs" 
 	  	ng-if="stripe.extra_fields.custom_view_all_url && stripe.extra_fields.custom_view_all_label">{{stripe.extra_fields.custom_view_all_label}}</a>
 	  </h2>
 	</div>
@@ -12,7 +13,7 @@
 	    <%= render partial: "/application/content_carousel" %>
 	</div>
 	<div class="col-xs-12 text-center">
-		<a ng-href="{{stripe.view_all_link}}" class="view-all-link visible-xs" ng-if="stripe.has_view_all && stripe.extra_fields.view_all && stripe.extra_fields.view_all.value">Vedi tutti</a>
-		<a ng-href="{{stripe.extra_fields.custom_view_all_url}}" class="view-all-link visible-xs" ng-if="stripe.extra_fields.custom_view_all_url && stripe.extra_fields.custom_view_all_label">{{stripe.extra_fields.custom_view_all_label}}</a>
+		<a ng-href="{{stripe.view_all_link}}" class="view-all-link visible-xs" ng-click="_gaq.push(['_trackEvent','Navigation', stripe.slug,'Vedi_Tutti']);" ng-if="stripe.has_view_all && stripe.extra_fields.view_all && stripe.extra_fields.view_all.value">Vedi tutti</a>
+		<a ng-href="{{stripe.extra_fields.custom_view_all_url}}" ng-click="_gaq.push(['_trackEvent','Navigation', stripe.extra_fields.custom_view_all_label,'Vedi_Tutti']);" class="view-all-link visible-xs" ng-if="stripe.extra_fields.custom_view_all_url && stripe.extra_fields.custom_view_all_label">{{stripe.extra_fields.custom_view_all_label}}</a>
 	</div>
 </div>

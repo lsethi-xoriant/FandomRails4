@@ -88,6 +88,9 @@
         } else {
           $(slider).find(".flex-viewport-shadow").removeClass("hidden");
         }
+        
+        //_gaq.push(['_trackEvent','Navigation', $(slider).attr("data-title"),'arrow']);
+        
       },
       end: function(slider) {
         is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
