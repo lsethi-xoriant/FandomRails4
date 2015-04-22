@@ -12,7 +12,7 @@
                 </div>
                 <div class="col-xs-12 ctas__info">
                   <div class="ctas__info--bottom">
-                    <p class="ctas__flexslider__title">{{calltoaction.title}}</p>
+                    <p class="ctas__flexslider__title" ng-bind-html="calltoaction.title"></p>
                      <div ng-if="getFirstIcalInteractionForContent(calltoaction)">
                       <p class="ctas__flexslider__description hidden-xs"><span class="fa fa-calendar-o"></span> <span class="ctas__flexslider__extra-field">{{getFirstIcalInteractionForContent(calltoaction)[3]}}</span></p>
                       <p class="ctas__flexslider__description hidden-xs"><span class="fa fa-clock-o"></span> <span class="ctas__flexslider__extra-field">{{getFirstIcalInteractionForContent(calltoaction)[2]}}</span></p>
