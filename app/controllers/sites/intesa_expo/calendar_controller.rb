@@ -24,9 +24,8 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     end
     
     month_calendar = initialize_calendar(today)
-    
     @aux_other_params = {
-      today_events: month_calendar.today_events,
+      today_events: month_calendar.today_events.sort_by { |event| event.start },
       tag_menu_item: "calendar"
     }
     
@@ -70,7 +69,8 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     event_tag_id = Tag.find_by_name("event-#{get_intesa_property}")
     params = {
       ical_start_datetime: start_date.strftime("%Y-%m-%d %H:%M:%S %z"),
-      ical_end_datetime: end_date.strftime("%Y-%m-%d %H:%M:%S %z")
+      ical_end_datetime: end_date.strftime("%Y-%m-%d %H:%M:%S %z"),
+      order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC"
     }
     events, has_more = get_contents_by_category(event_tag_id, [language_tag_id], 10000, params)
     events
