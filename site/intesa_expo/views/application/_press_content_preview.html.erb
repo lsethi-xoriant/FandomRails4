@@ -1,0 +1,11 @@
+<div class="content-preview--press"> 
+  <div class="row">
+    <div class="col-xs-12">
+      <span class="fa fa-quote-left content-preview__quote"></span>
+      <p class="content-preview__title--press">{{sanitizeText(content.long_description)}}</p>
+      <p class="content-preview__author">{{content.extra_fields.author_name}}</p>
+      <p class="content-preview__newspaper">{{content.extra_fields.author_newspaper}}<span ng-if="content.extra_fields.publishing_date"></span></p>
+      <p class="content-preview__date">{{formatDate(content.extra_fields.publishing_date.value, aux.language)}}</p>
+    </div>
+  </div>
+</div>

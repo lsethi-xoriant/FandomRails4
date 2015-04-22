@@ -28,18 +28,12 @@
   </div>
 </a>
 
-<a target="_blank" href="{{content.extra_fields.author_url}}" ng-click="_gaq.push(['_trackEvent','Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug]);" ng-if="content.layout == 'press'"> 
-  <div class="content-preview--press"> 
-    <div class="row">
-      <div class="col-xs-12">
-        <span class="fa fa-quote-left content-preview__quote"></span>
-        <p class="content-preview__title--press">{{sanitizeText(content.long_description)}}</p>
-        <p class="content-preview__author">{{content.extra_fields.author_name}}</p>
-        <p class="content-preview__newspaper">{{content.extra_fields.author_newspaper}}<span ng-if="content.extra_fields.publishing_date"></span></p>
-        <p class="content-preview__date">{{formatDate(content.extra_fields.publishing_date.value, aux.language)}}</p>
-      </div>
-    </div>
-  </div>
+<a target="_blank" href="{{content.extra_fields.author_url}}" ng-click="_gaq.push(['_trackEvent','Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug]);" ng-if="content.layout == 'press' && (content.extra_fields.author_url && content.extra_fields.author_url != '')"> 
+  <%= render partial: "application/press_content_preview" %>
+</a>
+
+<div ng-if="content.layout == 'press' && (!content.extra_fields.author_url || content.extra_fields.author_url == '')"> 
+  <%= render partial: "application/press_content_preview" %>
 </a>
 
 <a class="relateds-flexslider__item--narrow--a" ng-href="{{linkToValidFrom(content)}}" ng-click="_gaq.push(['_trackEvent','Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug]);" ng-if="content.layout == 'narrow-img' || content.type == 'tag'" style="position: relative;">
