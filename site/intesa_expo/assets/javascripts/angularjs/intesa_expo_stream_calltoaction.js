@@ -122,13 +122,15 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   };
 
   function generateIcalForView(ical_info_list) {
-    $scope.ical = new Object({"dates": [], "times": [], "locations": [], "interaction_ids": [], "datetimes": [], "n": []});
+    $scope.ical = new Object({"dates": [], "dates_to": [], "times": [], "times_to": [], "locations": [], "interaction_ids": [], "datetimes": [], "n": []});
     
     i = 0;
     angular.forEach(ical_info_list, function(value, key) {
       _datetime = value.interaction.resource.ical.start_datetime.value;
+      _datetime_to = value.interaction.resource.ical.end_datetime.value;
       _location = value.interaction.resource.ical.location;
       _date = $scope.formatDate(_datetime, $scope.aux.language);
+      _date_to = $scope.formatDate(_datetime_to, $scope.aux.language);
 
       date_index = $scope.ical.dates.indexOf(_date);
       location_index = $scope.ical.locations.indexOf(_location);
@@ -149,8 +151,10 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       $scope.ical.datetimes.push(_datetime);
       $scope.ical.interaction_ids.push(value.interaction.id);
       $scope.ical.dates.push(_date);
+      $scope.ical.dates_to.push(_date_to);
       $scope.ical.locations.push(_location);
       $scope.ical.times.push($scope.extractTimeFromDate(_datetime));
+      $scope.ical.times_to.push($scope.extractTimeFromDate(_datetime_to));
       $scope.ical.n.push(i);
       i = i + 1;
 
