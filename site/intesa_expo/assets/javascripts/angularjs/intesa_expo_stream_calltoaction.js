@@ -62,6 +62,9 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         ical_info_list.push(value);
       }
     });
+    ical_info_list.sort(function(a, b) {
+      return new Date(a.interaction.resource.ical.start_datetime.value) - new Date(b.interaction.resource.ical.start_datetime.value);
+    });
     return ical_info_list;
   }
 
@@ -219,6 +222,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   };
 
   function updateInteractionDownloadIcal(interaction_id, ical_name) {
+    _gaq.push(['_trackEvent','Navigation','Click','Download']);
     if(!$scope.answer_in_progress) {
       $scope.answer_in_progress = true;
 
@@ -248,5 +252,46 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         });
     }
   }
+
+  $window.updateStartVideoInteraction = function(calltoaction_id, interaction_id) {
+    if(!$scope.play_event_tracked[calltoaction_id]) {
+
+      $scope.play_event_tracked[calltoaction_id] = true;
+
+      play_interaction_info = $scope.getPlayInteraction(calltoaction_id);
+      if(play_interaction_info == null) {
+        console.log("You must enable the play interaction for this calltoaction.");
+        return;
+      }
+
+      // INTESA
+      _gaq.push(['_trackEvent','Video','Play','Partnership_' + $scope.calltoaction_info.calltoaction["vcode"]]);
+
+      play_interaction_info.hide = true; 
+
+      update_interaction_path = "/update_interaction";
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
+      }
+
+      $http.post(update_interaction_path, { interaction_id: play_interaction_info.interaction.id })
+        .success(function(data) {
+    
+          // GOOGLE ANALYTICS
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+              update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+            });
+          }
+          
+        }).error(function() {
+          // ERROR.
+        });
+
+    } else {
+      // Button play already selected.
+    }
+  };
 
 }

@@ -8,7 +8,7 @@
       <div class="col-sm-4">
         <div class="cta__banner-1-bg">
           <img class="cta__banner_1--about" ng-src="{{calltoaction_info.calltoaction.extra_fields.banner_1_img.url}}">
-          <a href="{{calltoaction_info.calltoaction.extra_fields.banner_1_url}}" class="btn btn-about-v2 cta__banner-btn btn-block">{{calltoaction_info.calltoaction.extra_fields.banner_1_btn}}</a>
+          <a href="{{calltoaction_info.calltoaction.extra_fields.banner_1_url}}" class="btn btn-about-v2 cta__banner-btn btn-block" onclick="_gaq.push(['_trackEvent','Navigation','Click','Acquista']);">{{calltoaction_info.calltoaction.extra_fields.banner_1_btn}}</a>
         </div>
       </div>
     </div>
@@ -31,7 +31,7 @@
       </div>
 
       <div class="col-sm-4 cta__video-col--about" ng-repeat="vcode in calltoaction_info.calltoaction.vcodes">
-        <div class="cta__video-col--about--container" ng-class="{'active': calltoaction_info.calltoaction.vcode == vcode}" ng-click="updateYTIframe(calltoaction_info, vcode, false)">
+        <div class="cta__video-col--about--container" ng-class="{'active': calltoaction_info.calltoaction.vcode == vcode}" ng-click="_gaq.push(['_trackEvent',' Navigation','Click','Partnership_' + vcode]); updateYTIframe(calltoaction_info, vcode, false)">
           <img class="cta__video-img--about" ng-src="{{calltoaction_info.calltoaction.extra_fields[vcode + '_img']['url']}}">
           <p class="cta__video-subtitle--about">{{calltoaction_info.calltoaction.extra_fields[vcode + '_title']}}</p>
         </div>
@@ -52,8 +52,8 @@
   <div class="row main-row">
     <div class="col-sm-12 text-center">
       <div class="btn-group blocks">
-        <button id="intesa-button" class="btn btn-about active" onclick="showContent('intesa')">{{calltoaction_info.calltoaction.extra_fields.btn_1}}</button>
-        <button id="expo-button" class="btn btn-about" onclick="showContent('expo')">{{calltoaction_info.calltoaction.extra_fields.btn_2}}</button>
+        <button id="intesa-button" class="btn btn-about active" onclick="_gaq.push(['_trackEvent','Navigation','Click','NoiCiSiamo']); showContent('intesa')">{{calltoaction_info.calltoaction.extra_fields.btn_1}}</button>
+        <button id="expo-button" class="btn btn-about" onclick="_gaq.push(['_trackEvent','Navigation','Click','Expo2015']); showContent('expo')">{{calltoaction_info.calltoaction.extra_fields.btn_2}}</button>
       </div>
     </div>
   </div>

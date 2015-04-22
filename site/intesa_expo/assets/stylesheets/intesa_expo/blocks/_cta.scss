@@ -5,10 +5,19 @@
 }
 
 .cta__miniformat-text {
-  padding: 3px 5px;
+  padding: 4px;
   font-size: 12px;
   font-family: 'Gnuolane';
   text-transform: uppercase;
+  display: inline-block;
+  img {
+    width: 20px;
+    margin-right: 3px;
+  }
+  span {
+    position: relative; 
+    top: 2px;
+  }
 }
 
 .cta__flag {

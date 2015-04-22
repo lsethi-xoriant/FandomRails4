@@ -1,10 +1,11 @@
 <div class="container" ng-if="calltoaction_info.calltoaction.media_type != 'VOID' || calltoaction_info.calltoaction.gallery"> 
   <div class="row main-row">
     <div class="col-xs-6 cta__miniformat-col">
-      <span ng-if="calltoaction_info.miniformat" class="cta__miniformat-text" style="background-color: {{calltoaction_info.miniformat.label_background}} !important; color: {{calltoaction_info.miniformat.label_color}} !important;">
-        <span class="{{calltoaction_info.miniformat.icon}}"></span>
-        {{calltoaction_info.miniformat.title}}
-      </span>
+      <p ng-if="calltoaction_info.miniformat" class="cta__miniformat-text" ng-style="{'background-color': calltoaction_info.miniformat.label_background, 'color': calltoaction_info.miniformat.label_color}">
+        <img ng-src="{{calltoaction_info.miniformat.image.url}}">
+        <!--<span class="{{calltoaction_info.miniformat.icon}}"></span>-->
+        <span style="">{{calltoaction_info.miniformat.title}}</span>
+      </p>
     </div>
     <div class="col-xs-6 cta__miniformat-col text-right">
       <span ng-if="aux.is_live_cta" class="cta__miniformat-text" style="background-color: red; color: #fff;">
@@ -18,7 +19,7 @@
   </div>
 </div>
 
-<div class="container visible-xs" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.author_name"> 
+<div class="container visible-xs" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.author_avatar"> 
   <div class="row main-row">
     <div class="col-xs-12 cta__miniformat-col">
       <div class="cta__sub_description ">
@@ -97,7 +98,7 @@
           <div class="cta__hr_top"></div>
           <div class="row">
             <div class="col-md-7"> 
-              <div class="cta__sub_description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.author_name">
+              <div class="cta__sub_description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.author_avatar">
                 <img class="cta__author-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields['author_avatar']['url']}}">
                 <p class="cta__author-title">{{calltoaction_info.calltoaction.extra_fields.author_name}}</p>
                 <p class="cta__author-category">{{calltoaction_info.calltoaction.extra_fields.author_category}}</p>
