@@ -87,9 +87,7 @@ class Sites::Orzoro::NewsletterController < ApplicationController
     { :email => params["email"], 
       :first_name => params["first_name"], :last_name => params["last_name"], 
       :province => params["province"], :phone => params["phone"], 
-      :birth_date => "#{params['year_of_birth']}-
-        #{(sprintf '%02d', params['month_of_birth'])}-
-        #{(sprintf '%02d', params['day_of_birth'])}", 
+      :birth_date => "#{params['year_of_birth']}-#{(sprintf '%02d', params['month_of_birth'])}-#{(sprintf '%02d', params['day_of_birth'])}", 
       :gender => params["gender"], :username => params["email"] 
     }
   end
