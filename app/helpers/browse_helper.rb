@@ -400,7 +400,7 @@ module BrowseHelper
     stripe_tag = Tag.find_by_name(stripe_tag_name)
     carousel_elements = get_elements_for_browse_carousel(stripe_tag)
     
-    if(get_extra_fields!(stripe_tag)['ordering'])
+    if(get_extra_fields!(stripe_tag)['ordering'] && !params[:related])
       get_browse_section_by_ordering(stripe_tag, [], carousel_elements, params)
     else
       get_browse_area_by_category(stripe_tag, [], carousel_elements, params)
