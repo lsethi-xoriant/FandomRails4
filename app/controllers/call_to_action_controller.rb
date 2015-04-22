@@ -247,29 +247,17 @@ class CallToActionController < ApplicationController
 
       @aux_other_params = init_show_aux(calltoaction)
 
+      set_seo_info_for_cta(calltoaction)
+
       descendent_calltoaction_id = params[:descendent_id]
       if(descendent_calltoaction_id)
         calltoaction_to_share = CallToAction.find(descendent_calltoaction_id)
         extra_fields = JSON.parse(calltoaction_to_share.extra_fields)
-        calltoaction_to_share_title = strip_tags(extra_fields["linked_result_title"]) rescue ""
-        calltoaction_to_share_description = strip_tags(extra_fields["linked_result_description"]) rescue ""
-        calltoaction_to_share_thumbnail = strip_tags(extra_fields["linked_result_image"]["url"]) rescue ""
-      else
-        calltoaction_to_share = calltoaction
-        calltoaction_to_share_title = strip_tags(calltoaction_to_share.title) || ""
-        calltoaction_to_share_description = strip_tags(calltoaction_to_share.description) || ""
-        calltoaction_to_share_thumbnail = calltoaction_to_share.thumbnail.url rescue ""
+
+        @seo_info["title"] = strip_tags(extra_fields["linked_result_title"]) rescue ""
+        @seo_info["meta_description"] = strip_tags(extra_fields["linked_result_description"]) rescue ""
+        @seo_info["meta_image"] = strip_tags(extra_fields["linked_result_image"]["url"]) rescue ""
       end
-
-      @fb_meta_tags = (
-          '<meta property="og:type" content="article" />' +
-          '<meta property="og:locale" content="it_IT" />' +
-          '<meta property="og:title" content="' + calltoaction_to_share_title + '" />' +
-          '<meta property="og:description" content="' + calltoaction_to_share_description + '" />' +
-          '<meta property="og:image" content="' + calltoaction_to_share_thumbnail + '" />'
-        ).html_safe
-
-      set_seo_info_for_cta(calltoaction)
       
     else
 
