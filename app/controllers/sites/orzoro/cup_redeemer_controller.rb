@@ -237,7 +237,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       return false
     else
       aux_hash["cup_redeem"].each do |request|
-        if request["receipt"]["receipt_number"] == receipt_number
+        if request["receipt"]["receipt_number"] == receipt_number rescue false
           return true
         end
       end
