@@ -1,5 +1,19 @@
 /* SHARE */
 
+.share-interaction__fb-modal-title {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.share-interaction__fb-modal-link {
+  border: 1px solid $blu; 
+  padding: 5px; 
+  word-wrap: break-word; 
+  font-size: 18px; 
+  margin-top: 15px; 
+  margin-bottom: 15px;
+}
+
 .share-interaction__cover__col {
   padding-top: 10px;
 }
