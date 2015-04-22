@@ -90,6 +90,14 @@ Fandom::Application.routes.draw do
 
         match "/users/sign_up", to: redirect('/')
 
+        match "/prodotti", :to => "browse#index_category", defaults: { id: 'prodotti' }
+
+        #get '/experience/prodotti/:name', to: redirect('/prodotti/%{name}')
+        get '/experience/prodotti', to: redirect('/prodotti')
+        get '/experience/home', to: redirect('/')
+        get '/experience', to: redirect('/')
+
+
       end
     end
   end
