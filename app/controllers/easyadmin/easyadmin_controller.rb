@@ -134,7 +134,7 @@ class Easyadmin::EasyadminController < ApplicationController
       cups_redeemed = JSON.parse(user.aux)["cup_redeem"] rescue nil
       if cups_redeemed.present?
         cups_redeemed.each do |request|
-          if request_timestamp_between_dates(request["request_timestamp"], from_date, to_date) && request["identity"]["entry_point"] != "subscribe_newsletter"
+          if request["receipt"] && request_timestamp_between_dates(request["request_timestamp"], from_date, to_date)
             request_list += [request]
           end
         end

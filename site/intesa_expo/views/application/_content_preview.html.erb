@@ -15,7 +15,7 @@
     </div>
 
     <div class="content-preview__event-info-container" ng-if="getFirstIcalInteractionForContent(content)">
-      <p class="content-preview__event-info"><i class="fa fa-clock-o"></i>{{getFirstIcalInteractionForContent(content)[2]}}</p>
+      <p class="content-preview__event-info" ng-if="getFirstIcalInteractionForContent(content)[2]"><i class="fa fa-clock-o"></i>{{getFirstIcalInteractionForContent(content)[2]}}</p>
       <p class="content-preview__event-info" ng-if="content.extra_fields.guests"><i class="fa fa-user"></i>{{content.extra_fields.guests}}</p>
     </div>
 

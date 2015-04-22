@@ -237,7 +237,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
       return false
     else
       aux_hash["cup_redeem"].each do |request|
-        if request["receipt"]["receipt_number"] == receipt_number
+        if (request["receipt"]["receipt_number"] == receipt_number rescue false)
           return true
         end
       end
@@ -250,9 +250,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         :cap => cache_value["address"]["cap"], :location => cache_value["address"]["city"], 
         :province => cache_value["address"]["province"], :address => cache_value["address"]["address"], 
         :number => cache_value["address"]["street_number"], :phone => cache_value["identity"]["phone"], 
-        :birth_date => "#{cache_value['identity']['year_of_birth']}-
-          #{(sprintf '%02d', cache_value['identity']['month_of_birth'])}-
-          #{(sprintf '%02d', cache_value['identity']['day_of_birth'])}", 
+        :birth_date => "#{cache_value['identity']['year_of_birth']}-#{(sprintf '%02d', cache_value['identity']['month_of_birth'])}-#{(sprintf '%02d', cache_value['identity']['day_of_birth'])}", 
         :gender => cache_value["identity"]["gender"], :username => cache_value["identity"]["email"] }
   end
 
