@@ -1,6 +1,15 @@
 <div class="calendar-event__popover calendar-event__popover--left"></div>
 <div class="calendar-event__popover calendar-event__popover--right"></div>
-
+<div class="container-fluid__blue stripe-container">
+  <div class="container main-container container">
+    <div class="row">
+      <div class="col-sm-12 text-center">
+		<h1 class="category-header__title" ng-if="aux.assets['calendar_title_' + aux.language]">{{aux.assets['calendar_title_' + aux.language]}}</h1>
+		<h2 class="category-header__subtitle" ng-if="aux.assets['calendar_subtitle_' + aux.language]">{{aux.assets['calendar_subtitle_' + aux.language]}}</h2>
+	  </div>
+    </div>
+  </div>
+</div>
 	<% if $context_root == 'imprese' %>
 	<div class="stripe-container stripe-blue" ng-style="{'background-color': aux.expo_events.extra_fields.background_color}" 
 		ng-if="aux.expo_events.contents">

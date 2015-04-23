@@ -1,3 +1,13 @@
+<div class="container-fluid__blue stripe-container">
+  <div class="container main-container container">
+    <div class="row">
+      <div class="col-sm-12 text-center">
+      	<h1 class="category-header__title" ng-if="aux.assets['home_title_' + aux.language]">{{aux.assets['home_title_' + aux.language]}}</h1>
+		<h2 class="category-header__subtitle" ng-if="aux.assets['home_subtitle_' + aux.language]">{{aux.assets['home_subtitle_' + aux.language]}}</h2>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container-fluid__blue">
   <%= render partial: "/application/evidence_ctas" %>
 </div>
