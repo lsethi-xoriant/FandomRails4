@@ -1,5 +1,13 @@
 <div class="container-fluid__lightblue">
   <div class="container container--lightblue">
+
+    <div class="row main-row" ng-if="calltoaction_info.calltoaction.extra_fields.title || calltoaction_info.calltoaction.extra_fields.subtitle">
+      <div class="col-sm-12 text-center">
+        <h1 class="category-header__title" ng-if="calltoaction_info.calltoaction.extra_fields.title">{{calltoaction_info.calltoaction.extra_fields.title}}</h1>
+        <h2 class="category-header__subtitle" ng-if="calltoaction_info.calltoaction.extra_fields.subtitle">{{calltoaction_info.calltoaction.extra_fields.subtitle}}</h2>
+      </div>
+    </div>
+
     <div class="row main-row">
       <div class="col-sm-8">
         <h1 class="cta__title--about" ng-bind-html="calltoaction_info.calltoaction.title"></h1>
