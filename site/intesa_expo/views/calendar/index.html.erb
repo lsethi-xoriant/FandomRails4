@@ -2,7 +2,8 @@
 <div class="calendar-event__popover calendar-event__popover--right"></div>
 
 	<% if $context_root == 'imprese' %>
-	<div class="stripe-container stripe-blue" ng-style="{'background-color': aux.expo_events.extra_fields.background_color}">
+	<div class="stripe-container stripe-blue" ng-style="{'background-color': aux.expo_events.extra_fields.background_color}" 
+		ng-if="aux.expo_events.contents">
   	  <div class="container main-container">
 		<div class="row main-row row-discover">
 			<div class="col-xs-12" ng-repeat="stripe in [aux.expo_events]">
@@ -15,7 +16,8 @@
 	  </div>
 	</div>
 	
-	<div class="stripe-container stripe-darkblue" ng-style="{'background-color': aux.gallery_events.extra_fields.background_color}">
+	<div class="stripe-container stripe-darkblue" ng-style="{'background-color': aux.gallery_events.extra_fields.background_color}" 
+		ng-if="aux.gallery_events.contents">
   	  <div class="container main-container">
 		<div class="row main-row">
 			<div class="col-xs-12" ng-repeat="stripe in [aux.gallery_events]">
