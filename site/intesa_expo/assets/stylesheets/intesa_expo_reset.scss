@@ -116,6 +116,10 @@ body {
   .category-header__title{
     color: white;
   }
+  
+  .category-header__subtitle {
+    color: white;
+  }
 }
 
 .stripe-blue {
@@ -160,7 +164,8 @@ p {
     color: #fff;
   }
   
-  h1.calendar-event__stripe-title, h2.calendar-event__stripe-subtitle {
+  h1.calendar-event__stripe-title, h2.calendar-event__stripe-subtitle,
+  .category-header__subtitle {
     color: white;
   }
   
