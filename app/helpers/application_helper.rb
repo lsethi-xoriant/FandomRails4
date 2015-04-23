@@ -181,7 +181,8 @@ module ApplicationHelper
   # Public: Construct an sql condition string from hash of params. 
   #
   # params  - The Hash with params
-  #           params hash is so formed: { conditions: { condition_name: condition_value, ... }, limit: { offset: offset_value, perpage: perpage_elements } }
+  #           params hash is so formed: { conditions: { condition_name: condition_value, ... }, 
+  #                                       limit: { offset: offset_value, perpage: perpage_elements } }
   #           conditions_name accepted:
   #             without_user_cta: exclude cta user generated
   #             exclude_cta_ids: exclude from results cta with listed ids

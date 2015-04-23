@@ -18,7 +18,9 @@
 
                 <div class="col-xs-12 ctas__info">
                   <div class="ctas__info--bottom">
-                    <p class="ctas__flexslider__title" ng-bind-html="calltoaction.title"></p>
+                    <p class="ctas__flexslider__title hidden-xs" ng-bind-html="calltoaction.title"></p>
+                    <p class="ctas__flexslider__title visible-xs" ng-if="calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.extra_fields.title_mobile"></p>
+                    <p class="ctas__flexslider__title visible-xs" ng-if="!calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.title"></p>
 
                     <div ng-if="getFirstIcalInteractionForContent(calltoaction)">
                       <p class="ctas__flexslider__description hidden-xs"><span class="fa fa-calendar-o"></span> <span class="ctas__flexslider__extra-field">{{getFirstIcalInteractionForContent(calltoaction)[3]}}</span></p>

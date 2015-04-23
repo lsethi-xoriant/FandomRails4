@@ -25,6 +25,10 @@
   </div>
 </div>
 
+<div class="back-to-gallery__container hidden-xs" ng-if="calltoaction_info.calltoaction.user_id">
+  <a href="/gallery/{{aux.gallery_calltoaction.slug}}"><span class="glyphicon glyphicon-chevron-left"></span>Torna alla Gallery</a>
+</div>
+
 <div class="row main-row" ng-if="calltoaction_info.calltoaction.user_id != null">
   <div class="col-xs-9">
     <h1 class="cta__title" style="padding-top: 16px;"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}} <span class="label label-default cta-cover__vote-count--header" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">{{interaction_info.interaction.resource.vote_info.total}} Voti</span></h1>

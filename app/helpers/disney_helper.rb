@@ -369,6 +369,13 @@ module DisneyHelper
         related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
 
         if related_tag.present?
+          params = {
+            conditions: { 
+              without_user_cta: true 
+            }
+          }
+          gallery_calltoaction = get_ctas_with_tags_in_or([related_tag.id], params).first
+
           related_tag_name = related_tag.name
           image_background = get_upload_extra_field_processor(get_extra_fields!(related_tag)['background_image'], :original)
         else
@@ -458,7 +465,8 @@ module DisneyHelper
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
-      "sidebar_info" => get_disney_sidebar_info(sidebar_tags, gallery_calltoaction, other)
+      "sidebar_info" => get_disney_sidebar_info(sidebar_tags, gallery_calltoaction, other),
+      "gallery_calltoaction" => gallery_calltoaction
     }
 
     if other

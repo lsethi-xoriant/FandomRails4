@@ -307,4 +307,50 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     }
   };
 
+  $window.appendYTIframe = function(calltoaction_info) {
+    if(calltoaction_info.calltoaction.media_type == "YOUTUBE" && $scope.youtube_api_ready) {
+
+      vcode = calltoaction_info.calltoaction.media_data;
+      if(vcode.indexOf(",") > -1) {
+        $scope.$apply(function() {
+          calltoaction_info.calltoaction.vcodes = vcode.split(",");
+          calltoaction_info.calltoaction.vcode = calltoaction_info.calltoaction.vcodes[0];
+        });
+      } else {
+        calltoaction_info.calltoaction.vcode = vcode;
+      }
+
+      player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.vcode);
+      calltoaction_info.calltoaction["player"] = player;
+
+      $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
+      $scope.current_user_answer_response_correct[calltoaction_info.calltoaction.id] = false;
+
+    }
+  };
+
+  function youtubePlayer(playerId, media_data) {
+    this.playerId = playerId;
+    this.media_data = media_data;
+    
+    this.playerManager = new YT.Player( (this.playerId), {
+        playerVars: { html5: 1, rel: 0, wmode: "transparent", showinfo: 0 },
+        height: "100%", width: "100%",
+        videoId: this.media_data,
+        events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
+      });
+    
+    this.play = function(){
+      this.playerManager.playVideo();
+    };
+    
+    this.pause = function(){
+      this.playerManager.pauseVideo();
+    };
+    
+    this.seek = function(time){
+      this.playerManager.seekTo(time, true);
+    };
+  };
+
 }
