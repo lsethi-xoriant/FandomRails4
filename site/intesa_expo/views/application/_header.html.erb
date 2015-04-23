@@ -1,7 +1,7 @@
 <div class="container hidden-xs">
   <div class="row main-row">
     <div class="col-sm-4">  
-      <a href="{{aux.assets['left_logo_url_' + aux.language]}}" target="_blank" onclick="_gaq.push(['_trackEvent','Navigation','Header','Expo_Acquista']);">
+      <a ng-if="aux.assets['left_logo_' + aux.language]" href="{{aux.assets['left_logo_url_' + aux.language]}}" target="_blank" onclick="_gaq.push(['_trackEvent','Navigation','Header','Expo_Acquista']);">
         <img class="left-logo" ng-src="{{aux.assets['left_logo_' + aux.language].url}}">  
       </a>  
     </div>
@@ -11,7 +11,7 @@
       </a>
     </div>
     <div class="col-sm-4 text-right">     
-      <a href="{{aux.assets['right_logo_url_' + aux.language]}}" target="_blank" onclick="_gaq.push(['_trackEvent','Navigation','Header','Expo_Eventi']);">
+      <a ng-if="aux.assets['right_logo_' + aux.language]" href="{{aux.assets['right_logo_url_' + aux.language]}}" target="_blank" onclick="_gaq.push(['_trackEvent','Navigation','Header','Expo_Eventi']);">
         <img class="right-logo" ng-src="{{aux.assets['right_logo_' + aux.language].url}}">
       </a>     
     </div>
