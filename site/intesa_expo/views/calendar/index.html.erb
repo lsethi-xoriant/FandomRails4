@@ -5,7 +5,7 @@
 	<div class="stripe-container stripe-blue" ng-style="{'background-color': aux.expo_events.extra_fields.background_color}">
   	  <div class="container main-container">
 		<div class="row main-row row-discover">
-			<div class="col-xs-12">
+			<div class="col-xs-12" ng-repeat="stripe in [aux.expo_events]">
 				<h1 class="text-center calendar-event__stripe-title">PROSSIMI EVENTI IMPRESE</h1>
 				<div class="browse-sections" ng-repeat="contents in [aux.expo_events.contents]">
 					<%= render partial: "/application/content_carousel" %>
@@ -18,7 +18,7 @@
 	<div class="stripe-container stripe-darkblue" ng-style="{'background-color': aux.gallery_events.extra_fields.background_color}">
   	  <div class="container main-container">
 		<div class="row main-row">
-			<div class="col-xs-12">
+			<div class="col-xs-12" ng-repeat="stripe in [aux.gallery_events]">
 				<h1 class="text-center calendar-event__stripe-title">GALLERY EVENTI IMPRESE</h1>
 				<div class="browse-sections" ng-repeat="contents in [aux.gallery_events.contents]">
 					<%= render partial: "/application/content_carousel" %>
@@ -161,7 +161,7 @@
 	  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
 	  	eventinfo += '</p>';
 	  	eventinfo += '<hr />';
-	  	eventinfo += '<a class="btn btn-event" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
+	  	eventinfo += '<a class="btn btn-event" onclick="_gaq.push([\'_trackEvent\',\'Navigation\',\'Calendar\',\'' + selected_event.slug + '\']);" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
 	  	eventinfo += '<button class="btn btn-event" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">AGGIUNGI AL CALENDARIO</button>';
 	  	position = $(elem).offset();
 	  	if(position.left-250 < 0){
