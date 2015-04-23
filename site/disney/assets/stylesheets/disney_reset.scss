@@ -17,6 +17,19 @@ body {
   color: #000 !important;
 }
 
+.back-to-gallery__container {
+  position: relative;
+  a {
+    position: absolute; 
+    top: -30px;
+    color: #999;
+    .glyphicon {
+      font-size: 12px;
+      margin-right: 5px;
+    }
+  }
+}
+
 p{
   margin: 0;
   line-height: inherit;
