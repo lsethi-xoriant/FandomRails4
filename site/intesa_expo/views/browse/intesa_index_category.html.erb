@@ -6,11 +6,13 @@
 	<% end %>
 	<% if @use_filter %>
 		  <div class="row category-header text-center">
-		  	<h1 class="category-header__title"><%= @category.title %></h1>
-		  	<% subtitle = get_extra_fields!(@category)['subtitle'] %>
-		  	<% if subtitle %>
-		  		<h2 class="category-header__subtitle"><%= subtitle %></h2>
-		  	<% end %>
+		  	<div class="col-sm-8 col-sm-offset-2">
+			  	<h1 class="category-header__title"><%= @category.title %></h1>
+			  	<% subtitle = get_extra_fields!(@category)['subtitle'] %>
+			  	<% if subtitle %>
+			  		<h2 class="category-header__subtitle"><%= subtitle %></h2>
+			  	<% end %>
+			</div>
 		  	<div class="category-header__filter-area">
 		      <button class="btn btn-primary" ng-click="isTagFilterOpen = !isTagFilterOpen">
 		        <span class="glyphicon glyphicon-chevron-down" style="position: relative; top: 3px;"></span>
@@ -31,11 +33,13 @@
 		  </div>
 	<% else %>
 	  	<div class="row text-center">
-		  	<h1 class="category-header__title"><%= @category.title %></h1>
-		  	<% subtitle = get_extra_fields!(@category)['subtitle'] %>
-		  	<% if subtitle %>
-		  		<h2 class="category-header__subtitle"><%= subtitle %></h2>
-		  	<% end %>
+	  		<div class="col-sm-8 col-sm-offset-2">
+			  	<h1 class="category-header__title"><%= @category.title %></h1>
+			  	<% subtitle = get_extra_fields!(@category)['subtitle'] %>
+			  	<% if subtitle %>
+			  		<h2 class="category-header__subtitle"><%= subtitle %></h2>
+			  	<% end %>
+			</div>
 		</div>
 	<% end %>
 	
