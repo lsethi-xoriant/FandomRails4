@@ -161,6 +161,11 @@
 	  	selected_event = $('#full-calendar').fullCalendar('clientEvents', id)[0];
 	  	eventinfo = '<p class="calendar-event__popover__title"><b>'+ selected_event.title +'</b></p>';
 	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive calendar-event__popover__image" />';
+	  	/*if(selected_event.aux.flag != null){
+	  		console.log(selected_event.aux.flag.extra_fields['image_it'].url);
+	  		eventinfo += '<img class="cta__flag" src="' + selected_event.aux.flag.extra_fields['image_it'].url + '" />';
+	  		console.log(eventinfo);
+	  	}*/
 	  	eventinfo += '<p class="calendar-event__popover__description">'+ selected_event.extra_fields.subtitle +'</p>';
 	  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a></div>';
 	  	eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
@@ -168,8 +173,12 @@
 	  	//eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
 	  	eventinfo += '<p class="calendar-event__popover__extra-info">';
 	  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("D MMMM YYYY");
-	  	eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.start.format("H:mm");
-	  	eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
+	  	if(!(selected_event.start.format("HH:mm") == "00:00" && selected_event.end.format("HH:mm") == "23:59")){
+	  		eventinfo += '<br /><i class="fa fa-clock-o"></i> ' + selected_event.start.format("H:mm");
+	  	}
+	  	if(selected_event.extra_fields.guests != '' && selected_event.extra_fields.guests != undefined){
+	  		eventinfo += '<br /><i class="fa fa-user"></i> ' + selected_event.extra_fields.guests;
+	  	}
 	  	eventinfo += '</p>';
 	  	eventinfo += '<hr />';
 	  	eventinfo += '<a class="btn btn-event" onclick="_gaq.push([\'_trackEvent\',\'Navigation\',\'Calendar\',\'' + selected_event.slug + '\']);" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
@@ -231,7 +240,9 @@
 	  	today = moment().dayOfYear();
 
  		html = $('<div class="calendar-event"></div>');
- 		html.append('<p class="calendar-event__hour calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
+ 		if(!(event.start.format("HH:mm") == "00:00" && event.end.format("HH:mm") == "23:59")){
+ 			html.append('<p class="calendar-event__hour calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
+ 		}
 	    html.append('<a href="javascript:void(0);" class="calendar-event__title" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
 	  	if(event.extra_fields.highlight && event.extra_fields.highlight.value){
 	    	html.append('<div style="margin-left: -10px; margin-right: -10px;"><img class="hidden-xs img-responsive" src="'+ event.thumb_url +'" /></div>');
