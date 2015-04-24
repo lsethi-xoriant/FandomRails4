@@ -1,14 +1,14 @@
 module CacheKeysHelper
   
   # Notifications
-  # ~~~~~
+  # ~~~~~~~~~~~~~
   
   def notification_cache_key(user_id)
     "unread_notifications_#{user_id}"
   end
   
   # Settings
-  # ~~~~~~~
+  # ~~~~~~~~
   def get_special_guest_settings_key
     "special_guest_menu_setting"
   end
@@ -75,7 +75,7 @@ module CacheKeysHelper
   end
   
   # CTA
-  # ~~~~~
+  # ~~~
 
   def get_home_stripes_cache_key(context_root = nil)
     "#{context_root}_home_stripes"
@@ -194,7 +194,7 @@ module CacheKeysHelper
   end
 
   # CTA and tags
-  # ~~~~~
+  # ~~~~~~~~~~~~
 
   def get_cta_tags_cache_key(cta_id)
     "cta_tags_#{cta_id}"
@@ -252,7 +252,7 @@ module CacheKeysHelper
   end
   
   # Rankings
-  # ~~~~~
+  # ~~~~~~~~
 
   def get_general_position_key(user_id)
     "user_#{user_id}_general_position"
@@ -399,7 +399,7 @@ module CacheKeysHelper
   end
 
   # Coin
-  # ~~~~~~~~~~
+  # ~~~~
 
   def get_coin_locations_cache_key()
     "coin_locations"
@@ -421,7 +421,7 @@ module CacheKeysHelper
   end
   
   # Disney
-  # ~~~~~~~~~~
+  # ~~~~~~
   
   def get_property_rankings_cache_key(extra_key)
     "property_rankings_thumbnails_#{extra_key}"
