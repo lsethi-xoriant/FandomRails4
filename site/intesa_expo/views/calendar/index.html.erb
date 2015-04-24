@@ -159,17 +159,14 @@
 		$('div.calendar-event__popover').hide();
   		current_event_id = id;
 	  	selected_event = $('#full-calendar').fullCalendar('clientEvents', id)[0];
-	  	eventinfo = '<p class="calendar-event__popover__title"><b>'+ selected_event.title +'</b></p>';
-	  	eventinfo += '<img src="'+ selected_event.thumb_url +'" class="img-responsive calendar-event__popover__image" />';
-	  	/*if(selected_event.aux.flag != null){
-	  		console.log(selected_event.aux.flag.extra_fields['image_it'].url);
-	  		eventinfo += '<img class="cta__flag" src="' + selected_event.aux.flag.extra_fields['image_it'].url + '" />';
-	  		console.log(eventinfo);
-	  	}*/
-	  	eventinfo += '<p class="calendar-event__popover__description">'+ selected_event.extra_fields.subtitle +'</p>';
-	  	eventinfo += '<div class="text-center"><a class="btn btn-primary" href="'+ selected_event.detail_url +'">SCHEDA EVENTO</a></div>';
+	  	
 	  	eventinfo = '<p class="calendar-event__popover__title"><b>' + selected_event.title + '</b></p>';
+	  	eventinfo += '<div style="position: relative">';
 	  	eventinfo += '<img src="' + selected_event.thumb_url + '" class="img-responsive calendar-event__popover__image" />';
+	  	if(selected_event.aux.flag != null){
+	  		eventinfo += '<img src="' + selected_event.aux.flag.extra_fields['image_it'].url + '" class="cta__flag cta__flag--calendar" />';
+	  	}
+	  	eventinfo += '</div>';
 	  	//eventinfo += '<p class="calendar-event__popover__description">' + selected_event.extra_fields.subtitle + '</p>';
 	  	eventinfo += '<p class="calendar-event__popover__extra-info">';
 	  	eventinfo += '<i class="fa fa-calendar-o"></i> ' + selected_event.start.format("D MMMM YYYY");
