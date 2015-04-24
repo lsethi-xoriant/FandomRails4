@@ -188,6 +188,12 @@
   }
 }
 
+.container--lightblue {
+  .category-header__title, .category-header__subtitle {
+    color: #fff !important;
+  }
+}
+
 .content-preview--press {
   margin-top: 15px;
   margin-bottom: 15px;

@@ -12,11 +12,13 @@
   </div>
 </div>
 
-<div class="container-fluid hidden-xs" ng-if="calltoaction_info.calltoaction.extra_fields.interview_banner_img">
-  <div class="row">
-    <div class="col-sm-12 interview_banner_col">
-      <!--<p>{{calltoaction_info.calltoaction.extra_fields.interview_banner_title}}</p>-->
-      <img ng-src="{{calltoaction_info.calltoaction.extra_fields.interview_banner_img.url}}">
+<div ng-if="calltoaction_info.calltoaction.extra_fields.interview_banner_img" ng-style="{'background-color': calltoaction_info.calltoaction.extra_fields.interview_banner_bg_color}">
+  <div class="container hidden-xs">
+    <div class="row main-row">
+      <div class="col-sm-12 interview_banner_col">
+        <!--<p>{{calltoaction_info.calltoaction.extra_fields.interview_banner_title}}</p>-->
+        <img ng-src="{{calltoaction_info.calltoaction.extra_fields.interview_banner_img.url}}">
+      </div>
     </div>
   </div>
 </div>

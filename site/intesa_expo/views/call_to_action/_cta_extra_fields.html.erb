@@ -34,7 +34,7 @@
 
     <p class="cta__extra_fields__description" ng-if="ical.dates[$index] != ical.dates_to[$index] || !(ical.times[$index] == '00:00' && ical.times_to[$index] == '23:59')"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{ical.times[$index]}}</span></p>
 
-    <p class="cta__extra_fields__description"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{ical.locations[$index]}}</span></p>
+    <p class="cta__extra_fields__description cta__extra_fields__description--location"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{ical.locations[$index]}}</span></p>
     <hr class="cta__extra_fields__hr" ng-if="!$last">
   </div>
 </div>

@@ -2,17 +2,44 @@
 # encoding: utf-8
 
 class GalleryController < ApplicationController
+
+  def get_user_gallery_ctas(gallery = nil, user_id)
+    if gallery.nil?
+      gallery_tags = get_tags_with_tag("gallery")
+      gallery_tags = order_elements("gallery", gallery_tags)
+      gallery_tag_ids = gallery_tags.map{|t| t.id}
+      if gallery_tag_ids.blank?
+        []
+      else
+        user_ctas = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id = ?", gallery_tag_ids, user_id)
+        user_ctas_with_limit = user_ctas.limit(6).to_a
+        user_ctas_count = user_ctas.count
+        [user_ctas_with_limit, user_ctas_count]
+      end
+    else
+      user_ctas = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id = ?", gallery.id, user_id)
+      user_ctas_with_limit = user_ctas.limit(6).to_a
+      user_ctas_count = user_ctas.count
+      [user_ctas_with_limit, user_ctas_count]
+    end
+  end
+
   def index
 
     @galleries_cta = get_gallery_ctas_carousel
 
-    galleries_user_cta, galleries_user_cta_count = cache_short(get_index_gallery_ctas_cache_key) { 
-      [get_gallery_ctas(), get_gallery_ctas_count()] 
-    }
+    if params[:user]
+      galleries_user_cta, galleries_user_cta_count = get_user_gallery_ctas(nil, params[:user])
+    else
+      galleries_user_cta, galleries_user_cta_count = cache_short(get_index_gallery_ctas_cache_key) { 
+        [get_gallery_ctas(), get_gallery_ctas_count()] 
+      }
+    end
 
     @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share", "vote"])
     @aux_other_params = { 
       "gallery" => true, 
+      "gallery_index" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count
     }
 
@@ -36,14 +63,19 @@ class GalleryController < ApplicationController
     @upload_active = upload_interaction.when_show_interaction != "MAI_VISIBILE"
     @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
 
-    galleries_user_cta, galleries_user_cta_count = cache_short(get_gallery_ctas_cache_key(@gallery_tag.id)) { 
-      [get_gallery_ctas(@gallery_tag), get_gallery_ctas_count(@gallery_tag)]
-    }
+    if params[:user]
+      galleries_user_cta, galleries_user_cta_count = get_user_gallery_ctas(@gallery_tag, params[:user])
+    else
+      galleries_user_cta, galleries_user_cta_count = cache_short(get_gallery_ctas_cache_key(@gallery_tag.id)) { 
+        [get_gallery_ctas(@gallery_tag), get_gallery_ctas_count(@gallery_tag)]
+      }
+    end
 
     @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share", "vote"])
 
     @aux_other_params = { 
       "gallery" => build_call_to_action_info_list([cta]).first,
+      "gallery_show" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count
     }
     

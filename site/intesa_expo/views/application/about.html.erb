@@ -1,5 +1,13 @@
 <div class="container-fluid__lightblue">
   <div class="container container--lightblue">
+
+    <div class="row main-row" ng-if="calltoaction_info.calltoaction.extra_fields.title || calltoaction_info.calltoaction.extra_fields.subtitle">
+      <div class="col-sm-8 col-sm-offset-2 text-center">
+        <h1 class="category-header__title" ng-if="calltoaction_info.calltoaction.extra_fields.title">{{calltoaction_info.calltoaction.extra_fields.title}}</h1>
+        <h2 class="category-header__subtitle" ng-if="calltoaction_info.calltoaction.extra_fields.subtitle">{{calltoaction_info.calltoaction.extra_fields.subtitle}}</h2>
+      </div>
+    </div>
+
     <div class="row main-row">
       <div class="col-sm-8">
         <h1 class="cta__title--about" ng-bind-html="calltoaction_info.calltoaction.title"></h1>
@@ -8,7 +16,7 @@
       <div class="col-sm-4">
         <div class="cta__banner-1-bg">
           <img class="cta__banner_1--about" ng-src="{{calltoaction_info.calltoaction.extra_fields.banner_1_img.url}}">
-          <a href="{{calltoaction_info.calltoaction.extra_fields.banner_1_url}}" class="btn btn-about-v2 cta__banner-btn btn-block" onclick="_gaq.push(['_trackEvent','Navigation','Click','Acquista']);">{{calltoaction_info.calltoaction.extra_fields.banner_1_btn}}</a>
+          <a ng-if="calltoaction_info.calltoaction.extra_fields.banner_1_btn && calltoaction_info.calltoaction.extra_fields.banner_1_btn != ''" href="{{calltoaction_info.calltoaction.extra_fields.banner_1_url}}" class="btn btn-about-v2 cta__banner-btn btn-block" onclick="_gaq.push(['_trackEvent','Navigation','Click','Acquista']);">{{calltoaction_info.calltoaction.extra_fields.banner_1_btn}}</a>
         </div>
       </div>
     </div>
