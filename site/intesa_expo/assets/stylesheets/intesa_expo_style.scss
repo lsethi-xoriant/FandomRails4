@@ -85,6 +85,6 @@ $navbar-inverse-toggle-border-color:        #999 !default;
          url('gnuolane.woff') format('woff'),
          url('gnuolane.ttf') format('truetype'),
          url('gnuolane.svg#gnuolaneregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
+    font-weight: normal !important;
+    font-style: normal !important;
 }
