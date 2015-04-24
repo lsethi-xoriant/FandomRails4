@@ -177,7 +177,12 @@
 
     var commit = '<%= params['commit'] %>'
     if(commit != "APPLICA FILTRO") {
-      selectedPropertyButton = $('input[name="commit"][value="' + commit + '"]')
+      if(commit == '')
+        selectedProperty = "DISNEY-CHANNEL"
+      else
+        selectedProperty = commit
+
+      selectedPropertyButton = $('input[name="commit"][value="' + selectedProperty + '"]')
       selectedPropertyButton.addClass("active");
       scrollToElement($('#property-stats'));
     }
