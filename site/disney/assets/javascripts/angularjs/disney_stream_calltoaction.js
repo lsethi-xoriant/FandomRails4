@@ -58,6 +58,7 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     if($scope.aux.gallery) {
       other_params = new Object();
       other_params.gallery = new Object();
+      other_params.gallery.user = $scope.aux.gallery_user;
       if($scope.aux.gallery.calltoaction) {
         other_params.gallery.calltoaction_id = $scope.aux.gallery.calltoaction.id;
       } else {

@@ -40,7 +40,8 @@ class GalleryController < ApplicationController
     @aux_other_params = { 
       "gallery" => true, 
       "gallery_index" => true,
-      "gallery_calltoactions_count" => galleries_user_cta_count
+      "gallery_calltoactions_count" => galleries_user_cta_count,
+      "gallery_user" => params[:user]
     }
 
   end
@@ -80,7 +81,8 @@ class GalleryController < ApplicationController
     @aux_other_params = { 
       "gallery" => build_call_to_action_info_list([cta]).first,
       "gallery_show" => true,
-      "gallery_calltoactions_count" => galleries_user_cta_count
+      "gallery_calltoactions_count" => galleries_user_cta_count,
+      "gallery_user" => params[:user]
     }
     
     if get_extra_fields!(cta)['form_extra_fields']
