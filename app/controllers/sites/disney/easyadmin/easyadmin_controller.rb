@@ -18,7 +18,20 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       @from_date = datetime_parsed_to_utc(DateTime.strptime("#{@from_date_string} 00:00:00 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
       @to_date = datetime_parsed_to_utc(DateTime.strptime("#{@to_date_string} 23:59:59 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
 
-      @values = fill_values_hash(@from_date, @to_date)
+      # @properties = Setting.find_by_key(PROPERTIES_LIST_KEY).value.split(',')
+      @properties = []
+      property_tag = Tag.find_by_name("property")
+      (JSON.parse(property_tag.extra_fields)["ordering"] rescue "").split(",").each do |ordered_property_name|
+        @properties << ordered_property_name
+      end
+      TagsTag.where(:other_tag_id => property_tag.id).pluck(:tag_id).each do |tag_id|
+        tag_name = Tag.find(tag_id).name
+        @properties << tag_name unless @properties.include?(tag_name)
+      end
+
+      counters_hashes = get_counters_hashes(@from_date, @to_date, @properties)
+      @values = counters_hashes[0]
+      @extra_fields = counters_hashes[1]
 
       flash[:notice] = 
         @values["migration_day"] == true ? 
@@ -36,69 +49,75 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       days_interval = @days > 30 ? (@days / 30.0).round : 1
       @user_week_list = build_line_chart_values(from, to, hash_total_users, hash_social_reg_users, days_interval)
 
-      @total_users = @values["total_users"]
-      @social_reg_users = @values["social_reg_users"]
+      @total_users = @values["total-users"]
+      @social_reg_users = @values["social-reg-users"]
 
-      @properties = Setting.find_by_key(PROPERTIES_LIST_KEY).value.split(',')
-
-      if params[:commit] == "APPLICA FILTRO"
-        @property_tag_name = params[:property] || "Disney Channel"
-        @property_values = @property_values || @values["disney_channel"]
-      elsif (params[:commit] == "DISNEY-CHANNEL") || (params[:commit].nil?)
-        @property_tag_name = "Disney Channel"
-        @property_values = @values["disney_channel"] || {}
+      if !params[:commit]
+        @property_tag_name = @properties.first.gsub("-", " ").split.map(&:capitalize).join(" ")
+        @property_values = @values[@properties.first] || {}
+      elsif params[:commit] == "APPLICA FILTRO"
+        @property_tag_name = params[:property] || @properties.first.gsub("-", " ").split.map(&:capitalize).join(" ")
+        @property_values = @property_values || @values[@properties.first]
       else
-        @property_tag_name = "Violetta"
-        @property_values = @values["violetta"] || {}
+        @property_tag_name = params[:commit].downcase.split.map(&:capitalize).join(" ") || ""
+        @property_values = @values[params[:commit].downcase] || {}
       end
 
       # REWARDS
       @total_rewards = @values["rewards"]
       # COMMENTS
-      @total_comments = @values["total_comments"]
-      @approved_comments = @values["approved_comments"]
-      # QUIZZES
-      @property_trivia_answers = @property_values["trivia_answers"]
-      @property_trivia_correct_answers = @property_values["trivia_correct_answers"]
-      # VERSUS
-      @property_versus_answers = @property_values["versus_answers"]
-      # PLAYS
-      @property_plays = @property_values["plays"]
-      # LIKES
-      @property_likes = @property_values["likes"]
-      # CHECKS
-      @property_checks = @property_values["checks"]
-      # SHARES
-      @property_shares = @property_values["shares"]
-      # DOWNLOADS
-      @property_downloads = @property_values["downloads"]
-      # VOTES
-      @property_votes = @property_values["votes"]
-      # LEVELS AND BADGES
-      @property_assigned_levels = @property_values["assigned_levels"]
-      @property_assigned_badges = @property_values["assigned_badges"]
+      @total_comments = @values["total-comments"]
+      @approved_comments = @values["approved-comments"]
+      # # QUIZZES
+      # @property_trivia_answers = @property_values["trivia_answers"]
+      # @property_trivia_correct_answers = @property_values["trivia_correct_answers"]
+      # # VERSUS
+      # @property_versus_answers = @property_values["versus_answers"]
+      # # PLAYS
+      # @property_plays = @property_values["plays"]
+      # # LIKES
+      # @property_likes = @property_values["likes"]
+      # # CHECKS
+      # @property_checks = @property_values["checks"]
+      # # SHARES
+      # @property_shares = @property_values["shares"]
+      # # DOWNLOADS
+      # @property_downloads = @property_values["downloads"]
+      # # VOTES
+      # @property_votes = @property_values["votes"]
+      # # LEVELS AND BADGES
+      # @property_assigned_levels = @property_values["assigned_levels"]
+      # @property_assigned_badges = @property_values["assigned_badges"]
     end
   end
 
-  def fill_values_hash(from_date, to_date)
+  def get_counters_hashes(from_date, to_date, properties)
     migration_date = UserReward.where("period_id IS NOT NULL").minimum(:created_at).to_date
-    values = {}
+    counter_values_hash = {}
     if to_date > migration_date
-      if from_date < migration_date
-        from_date = migration_date 
-      end
+      from_date = migration_date if from_date < migration_date
       EasyadminStats.where("date >= '#{from_date}' AND date <= '#{to_date}'").each_with_index do |stats, i|
         next_values_hash = JSON.parse(stats.values)
-        if i == 0
-          values = next_values_hash
-        else
-          values = sum_hashes_values(values, next_values_hash)
-        end
+        counter_values_hash = i == 0 ? next_values_hash : sum_hashes_values(counter_values_hash, next_values_hash)
       end
     else
-      values = JSON.parse(EasyadminStats.find_by_date(migration_date).values)
+      counter_values_hash = JSON.parse(EasyadminStats.find_by_date(migration_date).values)
     end
-    return values
+    counter_names = get_keys_with_simple_value(counter_values_hash)
+    counter_extra_fields_hash = {}
+    Reward.where(:name => counter_names).each do |r|
+      counter_extra_fields_hash[r.name] = JSON.parse(r.extra_fields)
+    end
+    # for levels and badges total count
+    levels_extra_fields = JSON.parse(Tag.find_by_name("level").extra_fields) rescue {}
+    badges_extra_fields = JSON.parse(Tag.find_by_name("badges").extra_fields) rescue {}
+    properties.each do |property|
+      assigned_prefix = property == "disney-channel" ? "" : "#{property}-"
+      counter_extra_fields_hash["#{assigned_prefix}assigned-levels"] = levels_extra_fields
+      counter_extra_fields_hash["#{assigned_prefix}assigned-badges"] = badges_extra_fields
+    end
+
+    return counter_values_hash, counter_extra_fields_hash
   end
 
   def build_line_chart_values(from, to, hash_total_users, hash_social_reg_users, days_interval)
@@ -147,6 +166,26 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
         value_1 + value_2
       end
     end
+  end
+
+  # Public: Recursive method to collect every Hash key with referring to a non-Hash value 
+  #
+  # Examples
+  # 
+  #    get_keys_with_simple_value({ "water" => 1, "red_wines" => { "cabernet" => 5, "merlot" => 2 }, "white_wines" => { "chardonnay" => 3, "moscato" => 4 } })
+  #    # => ["water", "cabernet", "merlot", "chardonnay", "moscato"]
+  #
+  # Returns the keys array
+  def get_keys_with_simple_value(hash)
+    res = []
+    hash.each do |key, value|
+      if value.class == Hash
+        res += get_keys_with_simple_value(value)
+      else
+        res << key
+      end
+    end
+    res
   end
 
   def get_hash_total_users
