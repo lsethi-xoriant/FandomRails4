@@ -18,7 +18,6 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       @from_date = datetime_parsed_to_utc(DateTime.strptime("#{@from_date_string} 00:00:00 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
       @to_date = datetime_parsed_to_utc(DateTime.strptime("#{@to_date_string} 23:59:59 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
 
-      # @properties = Setting.find_by_key(PROPERTIES_LIST_KEY).value.split(',')
       @properties = []
       property_tag = Tag.find_by_name("property")
       (JSON.parse(property_tag.extra_fields)["ordering"] rescue "").split(",").each do |ordered_property_name|
@@ -49,9 +48,14 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
       days_interval = @days > 30 ? (@days / 30.0).round : 1
       @user_week_list = build_line_chart_values(from, to, hash_total_users, hash_social_reg_users, days_interval)
 
+      # Cross-property values
       @total_users = @values["total-users"]
       @social_reg_users = @values["social-reg-users"]
+      @total_rewards = @values["rewards"]
+      @total_comments = @values["total-comments"]
+      @approved_comments = @values["approved-comments"]
 
+      # Property values
       if !params[:commit]
         @property_tag_name = @properties.first.gsub("-", " ").split.map(&:capitalize).join(" ")
         @property_values = @values[@properties.first] || {}
@@ -63,31 +67,6 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
         @property_values = @values[params[:commit].downcase] || {}
       end
 
-      # REWARDS
-      @total_rewards = @values["rewards"]
-      # COMMENTS
-      @total_comments = @values["total-comments"]
-      @approved_comments = @values["approved-comments"]
-      # # QUIZZES
-      # @property_trivia_answers = @property_values["trivia_answers"]
-      # @property_trivia_correct_answers = @property_values["trivia_correct_answers"]
-      # # VERSUS
-      # @property_versus_answers = @property_values["versus_answers"]
-      # # PLAYS
-      # @property_plays = @property_values["plays"]
-      # # LIKES
-      # @property_likes = @property_values["likes"]
-      # # CHECKS
-      # @property_checks = @property_values["checks"]
-      # # SHARES
-      # @property_shares = @property_values["shares"]
-      # # DOWNLOADS
-      # @property_downloads = @property_values["downloads"]
-      # # VOTES
-      # @property_votes = @property_values["votes"]
-      # # LEVELS AND BADGES
-      # @property_assigned_levels = @property_values["assigned_levels"]
-      # @property_assigned_badges = @property_values["assigned_badges"]
     end
   end
 
@@ -108,7 +87,7 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
     Reward.where(:name => counter_names).each do |r|
       counter_extra_fields_hash[r.name] = JSON.parse(r.extra_fields)
     end
-    # for levels and badges total count
+    # For levels and badges total count
     levels_extra_fields = JSON.parse(Tag.find_by_name("level").extra_fields) rescue {}
     badges_extra_fields = JSON.parse(Tag.find_by_name("badges").extra_fields) rescue {}
     properties.each do |property|

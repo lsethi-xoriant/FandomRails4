@@ -171,8 +171,8 @@ def create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc
     values = values.merge({ 
       "disney-channel" => { 
         "comment-counter" => count_comments_for_property(conn, tenant, date_condition, violetta_interaction_ids, "disney-channel"),
-        "trivia-counter" => violetta_trivia, # changed from trivia_answers
-        "trivia-correct-counter" => violetta_trivia_correct, # changed from trivia_correct_answers
+        "trivia-counter" => dc_trivia, # changed from trivia_answers
+        "trivia-correct-counter" => dc_trivia_correct, # changed from trivia_correct_answers
         "versus-counter" => count_user_interactions(conn, tenant, date_condition, versus_type_interaction_ids, dc_interaction_ids),  # changed from versus_answers
         "play-counter" => count_user_interactions(conn, tenant, date_condition, play_type_interaction_ids, dc_interaction_ids, true), # changed from plays
         "like-counter" => count_user_interactions(conn, tenant, date_condition, like_type_interaction_ids, dc_interaction_ids, true), # changed from likes
@@ -186,8 +186,8 @@ def create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc
 
       "violetta" => { 
         "violetta-comment-counter" => count_comments_for_property(conn, tenant, date_condition, violetta_interaction_ids, "violetta"),
-        "violetta-trivia-counter" => dc_trivia, 
-        "violetta-trivia-correct-counter" => dc_trivia_correct, 
+        "violetta-trivia-counter" => violetta_trivia, 
+        "violetta-trivia-correct-counter" => violetta_trivia_correct, 
         "violetta-versus-counter" => count_user_interactions(conn, tenant, date_condition, versus_type_interaction_ids, violetta_interaction_ids), 
         "violetta-play-counter" => count_user_interactions(conn, tenant, date_condition, play_type_interaction_ids, violetta_interaction_ids, true), 
         "violetta-like-counter" => count_user_interactions(conn, tenant, date_condition, like_type_interaction_ids, violetta_interaction_ids, true), 
