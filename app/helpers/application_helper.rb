@@ -593,6 +593,10 @@ module ApplicationHelper
     if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
       interactions = interactions.joins("LEFT OUTER JOIN downloads ON downloads.id = interactions.resource_id")
       interactions = add_ical_fields_to_where_condition(interactions, params, true)
+      # TODO: order_string has been thought for get_ctas_with_tags_in_XXX(), it might break here!
+      if params[:order_string]
+        interactions = interactions.order("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC")
+      end
     end
     interactions.each do |inter|
       (cta_to_interactions[inter.call_to_action_id] ||= []) << {
