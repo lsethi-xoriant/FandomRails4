@@ -53,6 +53,10 @@ class GalleryController < ApplicationController
     galleries.unshift(current_gallery)
   end
   
+  def get_ugc_number_gallery_map(galleries)
+    #disney=# select tag_id, count(*) from call_to_action_tags where tag_id in (select tag_id from tags_tags where other_tag_id = 6) group by tag_id;
+  end
+  
   def show
     galleries_cta = get_gallery_ctas_carousel
     @galleries_cta = take_current_gallery_to_first_position(params[:id], galleries_cta)

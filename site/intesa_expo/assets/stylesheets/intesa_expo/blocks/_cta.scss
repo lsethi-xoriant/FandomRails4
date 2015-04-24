@@ -5,8 +5,8 @@
 }
 
 .cta__miniformat-text {
-  padding: 4px;
-  font-size: 12px;
+  padding: 6px;
+  font-size: 14px;
   font-family: 'Gnuolane';
   text-transform: uppercase;
   display: inline-block;
@@ -45,6 +45,11 @@
   right: -4px;
   width: 75px;
   z-index: 10;
+}
+
+.cta__flag--calendar{
+  top: -6px;
+  right: -5px;
 }
 
 .cta__live-label--related {
