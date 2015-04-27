@@ -151,14 +151,15 @@ module IntesaExpoHelper
           ctas = ctas.where("(call_to_actions.extra_fields->>'layout') IS NULL OR (call_to_actions.extra_fields->>'layout') <> 'press'")
         end
 
+        result_ctas = highlight_calltoactions[0..8]
+
         if highlight_calltoactions.any?
           ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
           if ctas_evidence_count > 0
             ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(ctas_evidence_count)
+            result_ctas = result_ctas + ctas
           end
         end
-
-        ctas = ctas + highlight_calltoactions[0..8]
 
         interactions = get_cta_to_interactions_map(ctas.map { |cta| cta.id })
 
