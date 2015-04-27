@@ -9,7 +9,7 @@
 	<div class="panel-body">
 		<%= f.hidden_field :resource_type, :class => "form-control" %>
 		<%= f.fields_for :resource do |shareform| %>
-			
+
 			<div class="col-lg-3">
 				<label>Provider per lo share</label>
 				<div class="checkbox">
@@ -63,6 +63,11 @@
           <label class="text-input">JSON</label>
 					<%= shareform.text_area :providers, class: "form-control provider-json", rows: 4, readonly: true, style: "font-size: 10px;" %>
 				</div>
+
+				<div class="form-group">
+					<label class="text-input">Salvata per l'anonimo</label>
+	  			 <%= f.select(:stored_for_anonymous, [["NO", false], ["SI", true]], {}, { :class => "form-control" }) %>
+	 			</div>	
 
 			</div>
 

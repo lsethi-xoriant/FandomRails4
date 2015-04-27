@@ -115,7 +115,7 @@ module UserInteractionHelper
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
 
-    if !anonymous_user?(user) || ($site.anonymous_interaction && interaction.stored_for_anonymous)
+    if !anonymous_user?(user) || interaction.stored_for_anonymous
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
       expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
     end
@@ -200,7 +200,7 @@ module UserInteractionHelper
 
     user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
 
-    if !anonymous_user?(user) || ($site.anonymous_interaction && interaction.resource_type.downcase == "vote")
+    if !anonymous_user?(user) || interaction.stored_for_anonymous
       user_interaction.save
     end
   
