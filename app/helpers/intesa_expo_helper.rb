@@ -142,7 +142,6 @@ module IntesaExpoHelper
         
         ctas_evidence_count = 4
         highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
-        
         ctas = get_intesa_expo_ctas()
         
         if $context_root == "imprese"
@@ -159,7 +158,7 @@ module IntesaExpoHelper
           end
         end
 
-        ctas = ctas + highlight_calltoactions
+        ctas = ctas + highlight_calltoactions[0..8]
 
         interactions = get_cta_to_interactions_map(ctas.map { |cta| cta.id })
 
