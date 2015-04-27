@@ -463,6 +463,7 @@ module DisneyHelper
       "calltoaction_evidence_info" => calltoaction_evidence_info,
       "related_calltoaction_info" => related_calltoaction_info,
       "mobile" => small_mobile_device?(),
+      "free_provider_share" => $site.free_provider_share,
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
       "sidebar_info" => get_disney_sidebar_info(sidebar_tags, gallery_calltoaction, other),
