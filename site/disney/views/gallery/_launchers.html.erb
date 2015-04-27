@@ -3,10 +3,11 @@
     <div class="flex-viewport-shadow"></div>
     <ul class="slides">
     	<% galleries.each do |gallery| %>
-	      <li class="text-center filters__flexslider-desktop-item" id="<%= gallery.id%>">
-    	    <%= light_link_to("/gallery/#{gallery.slug}", class: "filters__flexslider-a") do %>
-        	  <img class="filters__flexslider-image <%= "filters__flexslider-image--active" if current_gallery_id && gallery.id == current_gallery_id %>" src="<%= gallery.thumbnail(:medium) %>">  
-          	<p class="filters__title--gallery"><%= gallery.title %></p>   
+	      <li class="text-center filters__flexslider-desktop-item" id="<%= gallery[:cta].id%>">
+    	    <%= light_link_to("/gallery/#{gallery[:cta].slug}", class: "filters__flexslider-a") do %>
+        	  <img class="filters__flexslider-image <%= "filters__flexslider-image--active" if current_gallery_id && gallery[:cta].id == current_gallery_id %>" src="<%= gallery[:cta].thumbnail(:medium) %>">  
+          	<p class="filters__title--gallery"><%= gallery[:cta].title %></p>
+          	<p class="filters__title--gallery-counter"><%= gallery[:count] %> contenuti</p>
         	<% end %>
       	  </li>
       	<% end %>
@@ -28,10 +29,11 @@
   <div class="flexslider filters__flexslider-mobile filters__flexslider-mobile--gallery visible-xs">
     <ul class="slides">
       <% galleries.each do |gallery| %>
-	      <li class="text-center filters__flexslider-mobile-item" id="<%= gallery.id%>">
-	        <%= light_link_to("/gallery/#{gallery.slug}") do %>
-            <div class="filters__gallery-item" style="background-image: url('<%= gallery.thumbnail(:medium) %>')">
-	            <p class="filters__title--gallery"><%= gallery.title %></p>
+	      <li class="text-center filters__flexslider-mobile-item" id="<%= gallery[:cta].id%>">
+	        <%= light_link_to("/gallery/#{gallery[:cta].slug}") do %>
+            <div class="filters__gallery-item" style="background-image: url('<%= gallery[:cta].thumbnail(:medium) %>')">
+	            <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
+	            <p class="filters__title--gallery-counter"><%= gallery[:couns] %> contenuti</p>
             </div>
 	        <% end %>
 	      </li>
