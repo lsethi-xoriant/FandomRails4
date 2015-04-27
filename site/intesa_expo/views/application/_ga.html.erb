@@ -1,12 +1,17 @@
 <% if request.path != "/404" %>
     <script type="text/javascript">
         var _gaq = _gaq || [];
-        var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
-        _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
         _gaq.push(['_setAccount', 'UA-4605985-142']);
-        _gaq.push(['_setDomainName', 'intesasanpaolo.com']);
+
+        <% if $context_root == "imprese" %>
+            _gaq.push(['_setDomainName', 'intesasanpaolo.com']);
+        <% else %>
+            _gaq.push(['_setDomainName', 'auto']);
+        <% end %>
+
         _gaq.push(['_setSiteSpeedSampleRate', 100]);
         _gaq.push(['_trackPageview']);
+        _gaq.push(['_setAllowLinker', true]);
 
         (function() {
             var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
@@ -17,12 +22,17 @@
 <% else %>
     <script type="text/javascript">
         var _gaq = _gaq || [];
-        var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
-        _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
         _gaq.push(['_setAccount', 'UA-4605985-142']);
-        _gaq.push(['_setDomainName', 'intesasanpaolo.com']);
+        
+        <% if $context_root == "imprese" %>
+            _gaq.push(['_setDomainName', 'intesasanpaolo.com']);
+        <% else %>
+            _gaq.push(['_setDomainName', 'auto']);
+        <% end %>
+        
         _gaq.push(['_setSiteSpeedSampleRate', 100]);
         _gaq.push(['_trackPageview', '/404.html?page=' + document.location.pathname + document.location.search + '&from=' + document.referrer]);
+        _gaq.push(['_setAllowLinker', true]);
 
         (function() {
             var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
