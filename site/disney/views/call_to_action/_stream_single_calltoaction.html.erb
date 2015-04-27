@@ -26,7 +26,7 @@
 </div>
 
 <div class="back-to-gallery__container hidden-xs" ng-if="calltoaction_info.calltoaction.user_id">
-  <a href="/gallery/{{aux.gallery_calltoaction.slug}}"><span class="glyphicon glyphicon-chevron-left"></span>Torna alla Gallery</a>
+  <a class="back-to-gallery__container-a" href="/gallery/{{aux.gallery_calltoaction.slug}}" ng-style="{'color': aux.gallery_calltoaction.extra_fields.back_color}"><span class="glyphicon glyphicon-chevron-left"></span>Torna alla Gallery</a>
 </div>
 
 <div class="row main-row" ng-if="calltoaction_info.calltoaction.user_id != null">
