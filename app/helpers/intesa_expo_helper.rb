@@ -154,7 +154,9 @@ module IntesaExpoHelper
 
         if highlight_calltoactions.any?
           ctas_evidence_count = ctas_evidence_count - highlight_calltoactions.count
-          ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
+          if ctas_evidence_count > 0
+            ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id })
+          end
         end
 
         ctas = highlight_calltoactions + ctas.limit(ctas_evidence_count).to_a
