@@ -89,7 +89,7 @@ class Sites::Disney::Easyadmin::EasyadminController < Easyadmin::EasyadminContro
     end
     # For levels and badges total count
     levels_extra_fields = JSON.parse(Tag.find_by_name("level").extra_fields) rescue {}
-    badges_extra_fields = JSON.parse(Tag.find_by_name("badges").extra_fields) rescue {}
+    badges_extra_fields = JSON.parse(Tag.find_by_name("badge").extra_fields) rescue {}
     properties.each do |property|
       assigned_prefix = property == "disney-channel" ? "" : "#{property}-"
       counter_extra_fields_hash["#{assigned_prefix}assigned-levels"] = levels_extra_fields
