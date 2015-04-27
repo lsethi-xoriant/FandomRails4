@@ -43,6 +43,11 @@
 						Email
 					</label>
 				</div>
+				<div class="checkbox">
+					<input class="direct_url-checkbox" type="checkbox" value="twitter" onchange="updateJsonForShare(this)">
+						Direct url
+					</label>
+				</div>
 
 				<div class="form-group">
           <label class="text-input">Richiesto per il completamento</label>
@@ -225,6 +230,10 @@
 				$(provider_div).find(".email-checkbox").attr("checked", "checked");
 			}
 
+			if(json.direct_url) {
+				$(provider_div).find(".direct_url-checkbox").attr("checked", "checked");
+			}
+
 		}
 
 	}
@@ -241,6 +250,7 @@
 		whatsapp_checkbox = $(element).parent().parent().parent().parent().find(".whatsapp-checkbox")[0];
 		linkedin_checkbox = $(element).parent().parent().parent().parent().find(".linkedin-checkbox")[0];
 		email_checkbox = $(element).parent().parent().parent().parent().find(".email-checkbox")[0];
+		direct_url_checkbox = $(element).parent().parent().parent().parent().find(".direct_url-checkbox")[0];
 		
 		if(facebook_checkbox.checked) {
 			json.facebook = {}
@@ -299,6 +309,10 @@
 			json.email = {};
 		}
 
+		if(direct_url_checkbox.checked) { 
+			json.direct_url = {};
+		}
+
 		json_div = $(element).parent().parent().parent().parent().find(".provider-json").val(JSON.stringify(json));
 
 	}
@@ -318,6 +332,7 @@
 		whatsapp_checkbox = $(element).parent().parent().parent().parent().find(".whatsapp-checkbox")[0];
 		linkedin_checkbox = $(element).parent().parent().parent().parent().find(".linkedin-checkbox")[0];
 		email_checkbox = $(element).parent().parent().parent().parent().find(".email-checkbox")[0];
+		direct_url_checkbox = $(element).parent().parent().parent().parent().find(".direct_url-checkbox")[0];
 	
 		if(facebook_checkbox.checked) {
 			json.facebook = {};
@@ -354,6 +369,10 @@
 
 		if(email_checkbox.checked) { 
 			json.email = {};
+		}
+
+		if(direct_url_checkbox.checked) { 
+			json.direct_url = {};
 		}
 
 		json_div = $(element).parent().parent().parent().parent().find(".provider-json").val(JSON.stringify(json));
