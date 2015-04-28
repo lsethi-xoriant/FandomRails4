@@ -63,12 +63,24 @@
             <label class="text-input">Slug prima CTA</label>
             <%= text_field_tag :cloned_cta_slug, @current_cta.slug, :class => "form-control" %>
           </div>
+          <% if @current_cta_answer_linkings.any? %>
+            <div class="form-group">
+              <label class="text-input"><%= "Domanda copia di '#{Quiz.find(Answer.find(@current_cta_answer_linkings.first.keys[0]).quiz_id).question}'" %></label>
+              <%= text_field_tag "cloned_cta_questions[#{Answer.find(@current_cta_answer_linkings.first.keys[0]).quiz_id}]", Quiz.find(Answer.find(@current_cta_answer_linkings.first.keys[0]).quiz_id).question, :class => "form-control" %>
+              <% @current_cta_answer_linkings.each_with_index do |answer_id_call_to_action_id, i| %>
+                <label class="text-input">
+                  <%= "Risposta copia di '#{Answer.find(answer_id_call_to_action_id.keys[0]).text}' --> '#{CallToAction.find(answer_id_call_to_action_id.values[0]).name}'" %>
+                </label>
+                <%= text_field_tag "cloned_cta_answers[#{answer_id_call_to_action_id.keys[0]}]", Answer.find(answer_id_call_to_action_id.keys[0]).text, :class => "form-control" %>
+              <% end %>
+            </div>
+          <% end %>
           <hr/>
 
-          <% if @linked_cta_set %>
+          <% if @linked_ctas %>
             <h3>CTA collegate</h3>
             <hr/>
-            <% @linked_cta_set.each do |old_cta_attributes| %>
+            <% @linked_ctas.each do |old_cta_attributes| %>
               <% old_cta_name = old_cta_attributes['name'] %>
               <% tagged_as_step = get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('step') %>
               <% tagged_as_ending = get_cta_tags_from_cache(CallToAction.find_by_name(old_cta_name)).include?('ending') %>
@@ -88,6 +100,18 @@
                 <%= text_field_tag "cloned_cta[#{old_cta_name}][slug]", old_cta_attributes['slug'], :class => "form-control", 
                     :tagged_as_step => tagged_as_step, :tagged_as_ending => tagged_as_ending %>
               </div>
+              <% unless old_cta_attributes["answer_linkings"].blank? %>
+                <div class="form-group">
+                  <label class="text-input"><%= "Domanda copia di '#{Quiz.find(old_cta_attributes['answer_linkings'].first[0]).question}'" %></label>
+                  <%= text_field_tag "cloned_cta[#{old_cta_name}][questions][#{old_cta_attributes['answer_linkings'].first[0]}]", Quiz.find(old_cta_attributes['answer_linkings'].first[0]).question, :class => "form-control" %>
+                  <% old_cta_attributes['answer_linkings'].values.first.each do |answer_id_call_to_action_id| %>
+                    <label class="text-input">
+                      <%= "Risposta copia di '#{Answer.find(answer_id_call_to_action_id.keys[0]).text}' --> '#{CallToAction.find(answer_id_call_to_action_id.values[0]).name}'" %>
+                    </label>
+                    <%= text_field_tag "cloned_cta[#{old_cta_name}][answers][#{answer_id_call_to_action_id.keys[0]}]", Answer.find(answer_id_call_to_action_id.keys[0]).text, :class => "form-control" %>
+                  <% end %>
+                </div>
+              <% end %>
               <hr/>
             <% end %>
           <% end %>
@@ -171,7 +195,7 @@
           text = text + "-step-" + counter;
         else 
           if(taggedAsEnding == "true")
-            text = text + "-eding-" + counter;
+            text = text + "-ending-" + counter;
           else
             text = text + "-" + counter;
 
@@ -198,7 +222,7 @@
           text = text + " [step " + counter + "]";
         else 
           if(taggedAsEnding == "true")
-            text = text + " [eding " + counter + "]";
+            text = text + " [ending " + counter + "]";
           else
             text = text + " [" + counter + "]";
 
@@ -220,7 +244,7 @@
     endingLinkedCounter = 0;
     linkedCounter = 0;
 
-    $("input[name^='cloned_cta[']").each(function() {
+    $("input[name^='cloned_cta['][name*='title'],input[name^='cloned_cta['][name*= 'name'],input[name^='cloned_cta['][name*= 'slug']").each(function() {
       taggedAsStep = $(this).attr("tagged_as_step");
       taggedAsEnding = $(this).attr("tagged_as_ending");
       name = $(this).attr("name");

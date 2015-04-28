@@ -16,8 +16,11 @@
               <p class="share-interaction__fb-modal-title">Condividi questo contenuto con un amico</p>
             </div>
             <div class="col-sm-10 col-sm-offset-1 text-left">
-              <textarea class="share-interaction__fb-modal-link" onclick="this.focus();this.select()" readonly="readonly"><%= "#{root_url}#{$context_root + '/' if $context_root}call_to_action/" %>{{calltoaction_info.calltoaction.slug}}
+              <textarea class="hidden-xs share-interaction__fb-modal-link" onclick="this.focus();this.select()" readonly="readonly"><%= "#{root_url}#{$context_root + '/' if $context_root}call_to_action/" %>{{calltoaction_info.calltoaction.slug}}
               </textarea>
+              <div class="visible-xs share-interaction__fb-modal-link">
+                <%= "#{root_url}#{$context_root + '/' if $context_root}call_to_action/" %>{{calltoaction_info.calltoaction.slug}}         
+              </div>
             </div>
           </div>
 
