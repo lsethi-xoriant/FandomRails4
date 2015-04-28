@@ -1,7 +1,7 @@
 module LinkedCallToActionHelper
 
   # Internal: Custom class and methods useful to represent the set of trees containing a call 
-  # to action following linking paths defined in interaction_call_to_actions table.
+  # to action following linking paths defined in interaction_call_to_actions table and cta answer call_to_action_id.
   # Based on Node class, every single tree is identified by its root Node.
   class CtaForest
 
@@ -16,10 +16,20 @@ module LinkedCallToActionHelper
       neighbourhood_map = {}
       InteractionCallToAction.all.each do |interaction_call_to_action|
         if interaction_call_to_action.interaction_id.present?
-          cta_linking = Interaction.find(interaction_call_to_action.interaction_id).call_to_action_id
-          cta_linked = interaction_call_to_action.call_to_action_id
-          add_neighbour(neighbourhood_map, cta_linking, cta_linked)
-          add_neighbour(neighbourhood_map, cta_linked, cta_linking)
+          cta_linking_id = Interaction.find(interaction_call_to_action.interaction_id).call_to_action_id
+          cta_linked_id = interaction_call_to_action.call_to_action_id
+          add_neighbour(neighbourhood_map, cta_linking_id, cta_linked_id)
+          add_neighbour(neighbourhood_map, cta_linked_id, cta_linking_id)
+        end
+      end
+      Answer.all.each do |answer|
+        if answer.call_to_action_id
+          cta_linking_ids = Interaction.where(:resource_type => "Quiz", :resource_id => answer.quiz_id).pluck(:call_to_action_id)
+          cta_linked_id = answer.call_to_action_id
+          cta_linking_ids.each do |cta_linking_id|
+            add_neighbour(neighbourhood_map, cta_linking_id, cta_linked_id)
+            add_neighbour(neighbourhood_map, cta_linked_id, cta_linking_id)
+          end
         end
       end
       reachable_cta_id_set = build_reachable_cta_set(starting_cta_id, Set.new([starting_cta_id]), neighbourhood_map, [])
@@ -33,7 +43,7 @@ module LinkedCallToActionHelper
       end
       trees = []
       reachable_cta_id_set.each do |cta_id|
-        if InteractionCallToAction.find_by_call_to_action_id(cta_id).nil? or (cycles.any? and cta_id == starting_cta_id) # add roots
+        if (InteractionCallToAction.find_by_call_to_action_id(cta_id).nil? and Answer.where(:call_to_action_id => cta_id).count == 0 ) or (cycles.any? and cta_id == starting_cta_id) # add roots
           trees << seen_nodes[cta_id]
         end
       end
@@ -54,7 +64,7 @@ module LinkedCallToActionHelper
         seen_nodes.merge!({ tree.value => tree })
         if cta.interactions.any?
           cta.interactions.each do |interaction|
-            children_cta_ids = InteractionCallToAction.where(:interaction_id => interaction.id).pluck(:call_to_action_id)
+            children_cta_ids = InteractionCallToAction.where(:interaction_id => interaction.id).pluck(:call_to_action_id) + call_to_action_linked_to_answers(interaction.id)
             children_cta_ids.each do |cta_id|
               if path.include?(cta_id) # cycle
                 cycles << path
@@ -104,6 +114,17 @@ module LinkedCallToActionHelper
         end
       end
       reachable_cta_id_set
+    end
+
+    def self.call_to_action_linked_to_answers(interaction_id)
+      res = []
+      interaction = Interaction.find(interaction_id)
+      if interaction.resource_type == "Quiz"
+        Answer.where(:quiz_id => interaction.resource_id).each do |answer|
+          res << answer.call_to_action_id if answer.call_to_action_id
+        end
+      end
+      res
     end
 
   end

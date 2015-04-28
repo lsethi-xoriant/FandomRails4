@@ -273,14 +273,24 @@ module EasyadminHelper
 
   def is_linking?(cta_id)
     CallToAction.find(cta_id).interactions.each do |interaction|
-      return true if InteractionCallToAction.find_by_interaction_id(interaction.id)
+      return true if (InteractionCallToAction.find_by_interaction_id(interaction.id) or call_to_action_answers_linked_cta(cta_id).any? )
     end
     false
   end
 
   def is_linked?(cta_id)
-    return true if InteractionCallToAction.find_by_call_to_action_id(cta_id)
+    return true if (InteractionCallToAction.find_by_call_to_action_id(cta_id) or Answer.find_by_call_to_action_id(cta_id) )
     false
+  end
+
+  def call_to_action_answers_linked_cta(cta_id)
+    res = []
+    Interaction.where(:resource_type => "Quiz", :call_to_action_id => cta_id).each do |interaction|
+      Answer.where(:quiz_id => interaction.resource_id).each do |answer|
+        res << { answer.id => answer.call_to_action_id } if answer.call_to_action_id
+      end
+    end
+    res
   end
 
   def save_interaction_call_to_action_linking(cta)

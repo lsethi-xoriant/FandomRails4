@@ -522,6 +522,7 @@ module CallToActionHelper
 
   def clone_linking_cta(old_cta_id)
     @current_cta = CallToAction.find(old_cta_id)
+    @current_cta_answer_linkings = call_to_action_answers_linked_cta(old_cta_id)
     if params[:commit] == "SALVA"
       ActiveRecord::Base.transaction do
         begin
@@ -529,15 +530,26 @@ module CallToActionHelper
             @current_cta.name => { 
               "title" => params[:cloned_cta_title], 
               "name" => params[:cloned_cta_name],
-              "slug" => params[:cloned_cta_slug] 
+              "slug" => params[:cloned_cta_slug], 
+              "questions" => params[:cloned_cta_questions],
+              "answers" => params[:cloned_cta_answers]
             } 
           }.merge(params[:cloned_cta])
           cloned_interactions_map = {}
+          cloned_cta_map = {}
           @cloned_cta_map.each do |old_cta_name, new_params|
             old_cta = CallToAction.find_by_name(old_cta_name)
             new_cta = duplicate_cta(old_cta.id)
             old_cta.interactions.each do |i|
-              new_interaction = duplicate_interaction(new_cta, i)
+              if new_params["questions"]
+                if i.resource_type == "Quiz" and new_params["questions"][i.resource_id.to_s]
+                  custom_resource_attributes = { "Quiz" => { "question" => new_params["questions"][i.resource_id.to_s] } }
+                  if new_params["answers"]
+                    custom_resource_attributes.merge!({ "Answer" => { "answers" => new_params["answers"] } })
+                  end
+                end
+              end
+              new_interaction = duplicate_interaction(new_cta, i, custom_resource_attributes)
               cloned_interactions_map[i.id] = new_interaction
             end
             old_cta.call_to_action_tags.each do |tag|
@@ -547,33 +559,54 @@ module CallToActionHelper
             new_cta.name = new_params["name"]
             new_cta.slug = new_params["slug"]
             new_cta.save
+            cloned_cta_map[old_cta.id] = new_cta.id
           end
           duplicate_interaction_call_to_actions(@cloned_cta_map, cloned_interactions_map)
+          update_answer_call_to_action_ids(cloned_cta_map)
         rescue Exception => e
-          flash[:error] = "Errore: #{e}"
+          flash[:error] = "Errore: #{e} - #{e.backtrace[0..2]}"
           raise ActiveRecord::Rollback
         end
         flash[:notice] = "CallToAction '#{@current_cta.name}' e collegate clonate con successo"
       end
     else
       @tree, cycles = CtaForest.add_next_cta({}, Node.new(old_cta_id), [], [old_cta_id])
-      @linked_cta_set = Set.new
-      build_linked_cta_attr_set(@linked_cta_set, @tree)
+      @linked_ctas = []
+      if @tree.children.any?
+        @tree.children.each do |child|
+          build_linked_cta_attr_array(@linked_ctas, child)
+        end
+      end
     end
     render :template => "/easyadmin/call_to_action/clone_linked_cta"
   end
 
-  def build_linked_cta_attr_set(linked_cta_set, tree)
+  def build_linked_cta_attr_array(linked_ctas, tree)
     cta = CallToAction.find(tree.value)
-    unless linked_cta_set.any? { |cta_attributes| cta_attributes["name"] == cta.name }
-      linked_cta_set << { "title" => cta.title, "name" => cta.name, "slug" => cta.slug }
+    cta_attributes = {}
+    unless linked_ctas.any? { |h| h["name"] == cta.name }
+      linked_ctas << cta_attributes(cta)
     end
     if tree.children.any?
       tree.children.each do |child|
-        build_linked_cta_attr_set(linked_cta_set, child)
+        build_linked_cta_attr_array(linked_ctas, child)
       end
     end
     return
+  end
+
+  def cta_attributes(cta)
+    cta_attributes = { "title" => cta.title, "name" => cta.name, "slug" => cta.slug }
+    answer_links = call_to_action_answers_linked_cta(cta)
+    if answer_links.any?
+      cta_attributes.merge!({ "answer_linkings" => {} })
+      answer_links.each do |answer_id_call_to_action_id|
+        answer = Answer.find(answer_id_call_to_action_id.keys[0])
+        cta_attributes["answer_linkings"][answer.quiz_id] = 
+          (cta_attributes["answer_linkings"][answer.quiz_id] || []) << answer_id_call_to_action_id
+      end
+    end
+    cta_attributes
   end
 
   def duplicate_cta(old_cta_id)
@@ -584,6 +617,17 @@ module CallToActionHelper
     cta_attributes = cta.attributes
     cta_attributes.delete("id")
     CallToAction.new(cta_attributes, :without_protection => true)
+  end
+
+  def update_answer_call_to_action_ids(cloned_cta_map)
+    cloned_cta_map.values.each do |new_cta_id|
+      quiz_interaction = CallToAction.find(new_cta_id).interactions.where(:resource_type => "Quiz").first
+      if quiz_interaction
+        Answer.where(:quiz_id => quiz_interaction.resource_id).each do |answer|
+          answer.update_attribute :call_to_action_id, cloned_cta_map[answer.call_to_action_id] if answer.call_to_action_id
+        end
+      end
+    end
   end
 
   def duplicate_interaction_call_to_actions(cloned_cta_map, cloned_interactions_map)
@@ -602,7 +646,7 @@ module CallToActionHelper
     end
   end
 
-  def duplicate_interaction(new_cta, interaction)
+  def duplicate_interaction(new_cta, interaction, custom_resource_attributes = nil)
     interaction_attributes = interaction.attributes
     interaction_attributes.delete("id")
     interaction_attributes.delete("name")
@@ -616,20 +660,34 @@ module CallToActionHelper
     if resource_type == "Play"
       resource_attributes["title"] = "#{interaction.resource.attributes["title"][0..12]}T#{Time.now.strftime("%H%M")}"
     end
+
+    if custom_resource_attributes
+      custom_resource_attributes.each do |k, v|
+        if k == resource_type
+          v.each do |key, value|
+            resource_attributes[key] = value
+          end
+        end
+      end
+    end
     
     resource_model = get_model_from_name(resource_type)
     new_interaction.resource = resource_model.new(resource_attributes, :without_protection => true)
     new_resource = new_interaction.resource 
     if resource_type == "Quiz"
-      duplicate_quiz_answers(new_resource,interaction.resource)
+      custom_answers = custom_resource_attributes ? custom_resource_attributes["Answer"] : nil
+      duplicate_quiz_answers(new_resource, interaction.resource, custom_answers)
     end
     new_interaction
   end
 
-  def duplicate_quiz_answers(new_quiz, old_quiz)
+  def duplicate_quiz_answers(new_quiz, old_quiz, custom_answers)
     old_quiz.answers.each do |a|
       answer_attributes = a.attributes
       answer_attributes.delete("id")
+      if custom_answers
+        answer_attributes["text"] = custom_answers["answers"][a.id.to_s]
+      end
       new_quiz.answers.build(answer_attributes, :without_protection => true)
     end
   end
