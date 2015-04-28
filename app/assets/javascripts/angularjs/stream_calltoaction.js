@@ -1231,6 +1231,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   			kdp = $("#" + playerId).get(0);
   			kdp.addJsListener("playerReady", "onKalturaPlayerReady");
   			kdp.addJsListener("doPlay", "onKalturaPlayEvent");
+  			kdp.addJsListener("preSequenceComplete", "onKalturaPlayEvent");
   			kdp.addJsListener("playerUpdatePlayhead", "kalturaCheckInteraction");
   			kdp.addJsListener("playerPlayEnd", "onKalturaVideoEnded");
   			player.playerManager = kdp;
