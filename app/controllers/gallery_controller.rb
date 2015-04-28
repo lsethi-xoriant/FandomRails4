@@ -40,21 +40,23 @@ class GalleryController < ApplicationController
     @aux_other_params = { 
       "gallery" => true, 
       "gallery_index" => true,
-      "gallery_calltoactions_count" => galleries_user_cta_count
+      "gallery_calltoactions_count" => galleries_user_cta_count,
+      "gallery_user" => params[:user]
     }
 
   end
   
   def take_current_gallery_to_first_position(gallery_slug, galleries)
     gallery_id = CallToAction.find(gallery_slug).id
-    index = galleries.index{ |gal| gal.id == gallery_id.to_i}
+    index = galleries.index{ |gal| gal[:cta].id == gallery_id.to_i}
     current_gallery = galleries[index]
     galleries.delete_at(index)
     galleries.unshift(current_gallery)
   end
   
-  def get_ugc_number_gallery_map(galleries)
-    #disney=# select tag_id, count(*) from call_to_action_tags where tag_id in (select tag_id from tags_tags where other_tag_id = 6) group by tag_id;
+  def get_ugc_number_gallery_map(tag_ids)
+    cta_active_ids = CallToAction.active.pluck(:id)
+    CallToActionTag.where("tag_id in (?) AND call_to_action_id in (?)", tag_ids, cta_active_ids).group(:tag_id).count
   end
   
   def show
@@ -80,7 +82,8 @@ class GalleryController < ApplicationController
     @aux_other_params = { 
       "gallery" => build_call_to_action_info_list([cta]).first,
       "gallery_show" => true,
-      "gallery_calltoactions_count" => galleries_user_cta_count
+      "gallery_calltoactions_count" => galleries_user_cta_count,
+      "gallery_user" => params[:user]
     }
     
     if get_extra_fields!(cta)['form_extra_fields']
@@ -134,8 +137,23 @@ class GalleryController < ApplicationController
           without_user_cta: true 
         }
       }
-      get_ctas_with_tags_in_or(gallery_tag_ids, params)
+      
+      galleries = get_ctas_with_tags_in_or(gallery_tag_ids, params)
+      construct_cta_gallery_info(galleries, gallery_tag_ids)
     end
+  end
+  
+  def construct_cta_gallery_info(galleries, gallery_tag_ids)
+    ugc_numebr_in_gallery_map = get_ugc_number_gallery_map(gallery_tag_ids)
+    galleries_info = []
+    galleries.each do |gallery|
+      gallery_tag = get_tag_with_tag_about_call_to_action(gallery, "gallery").first
+      galleries_info << {
+        cta: gallery,
+        count: ugc_numebr_in_gallery_map[gallery_tag.id]
+      }
+    end
+    galleries_info
   end
   
   def how_to

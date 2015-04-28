@@ -1,0 +1,80 @@
+<div ng-if="calltoaction_info.flag" class="cta-cover__flag">
+  <img class="cta-cover__flag-img" ng-src="{{calltoaction_info.flag['image']}}">
+</div>
+
+<div class="panel panel-default cta-cover__card">
+  <div class="panel-body cta-cover__card__body">  
+    <div class="row cta-cover__thumbnail-row">
+      <!-- CALLTOACTION THUMBNAIL -->
+      <%= light_link_to("/call_to_action/{{calltoaction_info.calltoaction.slug}}") do %>
+
+        <div class="cta-cover__media_type" ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'">
+          <div class="cta-cover__media_type--content"><span class="fa fa-photo"></span></div>
+        </div>
+
+        <div class="cta-cover__media_type" ng-if="calltoaction_info.calltoaction.media_type == 'FLOWPLAYER' || calltoaction_info.calltoaction.media_type == 'KALTURA'">
+          <div class="cta-cover__media_type--content"><span class="fa fa-play"></span></div>
+        </div>
+
+        <div class="col-xs-12 cta-cover__thumbnail-column">
+          <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
+        </div>  
+        <!-- CALLTOACTION WINNABLE REWARD COUNT -->
+        <div ng-if="calltoaction_info.status && calltoaction_info.status.winnable_reward_count > 0" class="col-xs-12 cta-cover__winnable-reward text-right">
+          <span class="label label-warning cta-cover__winnable-reward__label">
+            +{{calltoaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+          </span>  
+        </div> 
+        <!-- CALLTOACTION DONE -->
+        <div ng-if="!calltoaction_info.status" class="col-xs-12 cta-cover__winnable-reward text-right">
+          <span class="label label-success cta-cover__winnable-reward__label">
+            Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+          </span>  
+        </div> 
+        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id == null">
+          <span ng-if="calltoaction_info.miniformat" class="label label-default cta-cover__miniformat" style="background-color: {{calltoaction_info.miniformat.label_background}} !important; color: {{calltoaction_info.miniformat.label_color}} !important;">
+            <span class="{{calltoaction_info.miniformat.icon}}"></span>
+            {{calltoaction_info.miniformat.title}}
+          </span>
+          <p>{{calltoaction_info.calltoaction.title}}</p>
+        </div>
+        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id">
+          <div class="row">
+            <div class="col-xs-10">
+              <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>
+              <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.user_name}}</p>
+            </div>
+            <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
+              <span class="label label-default cta-cover__vote-count">{{interaction_info.interaction.resource.vote_info.total}} <span class="hidden-xs">Voti</span></span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="row">
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions" class="col-xs-6">
+        <div class="like-interaction__cover__info">
+          <button ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}">
+            <span class="fa fa-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span>
+          </button><span class="like-interaction__cover__info__text">{{interaction_info.interaction.resource.like_info}} <span class="hidden-xs">mi piace</span></span>
+        </div>
+      </div>
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="col-xs-6 text-right">
+        <div class="share-interaction__cover__col">
+          <%= render partial: "/call_to_action/share_interaction" %>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+  <div class="panel-footer cta-cover__card__footer" ng-class="{'hidden-xs': isCommentEmpty(calltoaction_info)}">
+    <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
+      <%= light_link_to("/call_to_action/{{calltoaction_info.calltoaction.slug}}") do %>
+        <%= render partial: "/call_to_action/cover_comment_interaction" %>
+      <% end %>
+    </div>
+  </div>
+
+</div>        
+
+       

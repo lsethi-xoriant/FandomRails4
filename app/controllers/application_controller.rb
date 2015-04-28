@@ -89,47 +89,26 @@ class ApplicationController < ActionController::Base
   end
 
   def index
-    if user_signed_in?
+    if current_user
       compute_save_and_notify_context_rewards(current_user)
     end
 
     return if cookie_based_redirect?
     
-    init_ctas = request.site.init_ctas
-
-    # warning: these 3 caches cannot be aggretated for some strange bug, probably due to how active records are marshalled 
-    @tag = get_tag_from_params(params[:name])
-    if @tag.nil? || params[:name] == "home_filter_all" 
-      if params[:calltoaction_id]
-        @calltoactions = [CallToAction.find_by_id(params[:calltoaction_id])]
-      else
-        if get_site_from_request(request)["id"] == "coin"
-          calltoaction = get_all_active_ctas().sample
-          @calltoactions = [calltoaction]
-        else
-          @calltoactions = cache_short("stream_ctas_init_calltoactions") do
-            CallToAction.active.limit(init_ctas).to_a
-          end
-        end
-      end
-    else
-      @calltoactions = cache_short("stream_ctas_init_calltoactions_#{params[:name]}") do
-        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", @tag.id).limit(init_ctas)
-      end
+    init_ctas = $site.init_ctas
+    if $context_root
+      context_root_tag = get_tag_from_params($context_root)
+      context_root_id = context_root_tag.id
     end
+
+    #@calltoactions = cache_medium(get_calltoactions_in_property_cache_key(property.id, 0, get_cta_max_updated_at())) do
+    #end  
     
-    @calltoactions_active_count = cache_short("stream_ctas_init_calltoactions_active_count") do
-      CallToAction.active.count
-    end
+    @calltoactions = CallToAction.active.limit(init_ctas).to_a
+    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions, ["like", "comment", "share"])
 
-    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
-    
-    if current_user
-      @current_user_info = build_current_user()
-    end
-
-    @aux = init_aux()
-
+    @aux_other_params = { 
+    }
   end
 
   def build_current_user() 

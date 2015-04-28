@@ -732,6 +732,10 @@ class CallToActionController < ApplicationController
 
     elsif provider == "email"
 
+      if !current_user
+        throw Exception.new("to sent an email the user must be logged")
+      end
+
       if address =~ Devise.email_regexp
         send_share_interaction_email(address, interaction.call_to_action)
       else

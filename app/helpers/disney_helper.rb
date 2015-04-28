@@ -375,6 +375,11 @@ module DisneyHelper
             }
           }
           gallery_calltoaction = get_ctas_with_tags_in_or([related_tag.id], params).first
+          gallery_calltoaction_adjust_for_view = {
+            "id" => gallery_calltoaction.id,
+            "slug" => gallery_calltoaction.slug,
+            "extra_fields" => get_extra_fields!(gallery_calltoaction)
+          }
 
           related_tag_name = related_tag.name
           image_background = get_upload_extra_field_processor(get_extra_fields!(related_tag)['background_image'], :original)
@@ -463,10 +468,11 @@ module DisneyHelper
       "calltoaction_evidence_info" => calltoaction_evidence_info,
       "related_calltoaction_info" => related_calltoaction_info,
       "mobile" => small_mobile_device?(),
+      "free_provider_share" => $site.free_provider_share,
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
       "sidebar_info" => get_disney_sidebar_info(sidebar_tags, gallery_calltoaction, other),
-      "gallery_calltoaction" => gallery_calltoaction
+      "gallery_calltoaction" => gallery_calltoaction_adjust_for_view
     }
 
     if other

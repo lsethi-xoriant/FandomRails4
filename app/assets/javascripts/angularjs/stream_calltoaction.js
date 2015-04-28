@@ -1482,36 +1482,40 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.shareFree = function(calltoaction_info, interaction_info, provider) {
+    if(provider == "direct_url") {
+      $("#modal-interaction-" + interaction_info.interaction.id + "-direct_url").modal("show");
+    } else {
+      message = calltoaction_info.calltoaction.title;
+      url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
 
-    message = calltoaction_info.calltoaction.title;
-    url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
+      cta_url = encodeURI(url_to_share);
 
-    cta_url = encodeURI(url_to_share);
-
-    switch(provider) {
-      case "facebook":    
-        share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url; // TODO: include meta
-        break;
-      case "twitter":
-        share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(message);
-        break;
-      case "whatsapp":
-        share_url = "whatsapp://send?text=" + encodeURIComponent(message) + " " + cta_url;
-        break;
-      case "gplus":
-        share_url = "https://plus.google.com/share?url=" + cta_url;
-        break;
-      case "linkedin":
-        share_url = "http://www.linkedin.com/shareArticle?mini=true&url=" + cta_url + "&title=" + encodeURIComponent(message) + "&summary=" + encodeURIComponent(stripTags(calltoaction_info.calltoaction.description || ""));
-        break;
+      switch(provider) {
+        case "facebook":    
+          share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url;
+          break;
+        case "twitter":
+          share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(message);
+          break;
+        case "whatsapp":
+          share_url = "whatsapp://send?text=" + encodeURIComponent(message) + " " + cta_url;
+          break;
+        case "gplus":
+          share_url = "https://plus.google.com/share?url=" + cta_url;
+          break;
+        case "linkedin":
+          share_url = "http://www.linkedin.com/shareArticle?mini=true&url=" + cta_url + "&title=" + encodeURIComponent(message) + "&summary=" + encodeURIComponent(stripTags(calltoaction_info.calltoaction.description || ""));
+          break;
+      }
     }
 
-    if(share_url) {
+    if(typeof share_url !== 'undefined') {
       window.open(share_url);
-      $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
-        .success(function(data) {
-        });
     }
+    
+    $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
+      .success(function(data) {
+      });
 
   };
 
