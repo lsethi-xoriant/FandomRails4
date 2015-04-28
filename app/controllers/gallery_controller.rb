@@ -55,7 +55,8 @@ class GalleryController < ApplicationController
   end
   
   def get_ugc_number_gallery_map(tag_ids)
-    CallToActionTag.where("tag_id in (?)", tag_ids).group(:tag_id).count
+    cta_active_ids = CallToAction.active.pluck(:id)
+    CallToActionTag.where("tag_id in (?) AND call_to_action_id in (?)", tag_ids, cta_active_ids).group(:tag_id).count
   end
   
   def show
