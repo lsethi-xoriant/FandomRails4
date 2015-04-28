@@ -126,7 +126,21 @@ module CallToActionHelper
       # Marshal.dump(result)  
 
     end    
-                                         
+    
+    if small_mobile_device?()
+      calltoaction_info_list.each do |calltoaction_info|
+        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info_list|
+          if interaction_info_list["interaction"]["when_show_interaction"].include?("OVERVIDEO")
+            interaction_info_list["interaction"]["when_show_interaction"] = "SEMPRE_VISIBILE"
+          end
+        end
+      end
+    end
+
+    #if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
+    #  when_show_interaction = "SEMPRE_VISIBILE"
+    #end
+
     adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list)
 
   end
@@ -182,11 +196,7 @@ module CallToActionHelper
           ical = JSON.parse(resource.ical_fields) if resource.ical_fields
         end
 
-        if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
-          when_show_interaction = "SEMPRE_VISIBILE"
-        else
-          when_show_interaction = interaction.when_show_interaction
-        end
+        when_show_interaction = interaction.when_show_interaction
 
         interaction_info_list << {
           "interaction" => {
