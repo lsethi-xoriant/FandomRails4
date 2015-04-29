@@ -1211,7 +1211,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
     $scope.KalturaPlayerId = playerId;
     // Update: http://knowledge.kaltura.com/javascript-api-kaltura-media-players#EnablingtheJavascriptAPI
-
 	  kWidget.embed({
   		'targetId': this.playerId,
   		'wid': '_' + $scope.aux.kaltura.partner_id,
@@ -1220,7 +1219,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   		'flashvars':{
   			'autoPlay': false,
   			'doubleClick': { 
-  				'adTagUrl': "http://pubads.g.doubleclick.net/gampad/ads?env=vp&gdfp_req=1&impl=s&output=xml_vast2&unviewed_position_start =1&description_url=http%3A%2F%2Fdisney.co.uk&iu=/165891808/disney.it/video/watch&sz=1920x480&url=[REFERRER_ URL]&correlator=[TIMESTAMP]&ad_rule=1&cmsid=13728&ciu_szs=320x50,300x250&cust_params=contenttype%3Dvideos%26disneycms%3DMH&vid=1_w7b1ppxw",
+  				'adTagUrl': "http://analytics.disneyinternational.com/ads/tagsv2/video/?sdk=1&hub=disneychannel.it&site=community&slug1=" + $scope.calltoaction_info.calltoaction.slug + "&sdk=1&cmsid=13728&vid=" + media_data + "&output=xml_vast2&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction,
 				'htmlCompanions': 'div-video-mpu:300:250;' 
 			}
   		},
