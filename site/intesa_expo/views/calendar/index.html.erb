@@ -99,10 +99,10 @@
 	  			<% end %>
         	</div>
 	        <div class="col-xs-12 text-center" ng-if="!aux.today_events && formatDate(newDate(), 'it') == formatDate('<%= @today.strftime("%d-%m-%Y") %>', 'it')">
-	          <p class="calendar-event__empty-title">{{aux.assets['no_event_' + aux.language]}}</p>
+	          <p class="calendar-event__empty-title" ng-bind-html="aux.assets['no_event_' + aux.language]"></p>
 	        </div>
 	        <div class="col-xs-12 text-center" ng-if="!aux.today_events && formatDate(newDate(), 'it') != formatDate('<%= @today.strftime("%d-%m-%Y") %>', 'it')">
-	          <p class="calendar-event__empty-title">{{aux.assets['no_event_1_' + aux.language]}}</p>
+	          <p class="calendar-event__empty-title" ng-bind-html="aux.assets['no_event_1_' + aux.language]"></p>
 	        </div>
 	  	</div>
 	  </div>
