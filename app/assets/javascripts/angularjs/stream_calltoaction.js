@@ -1231,7 +1231,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   			kdp = $("#" + playerId).get(0);
   			kdp.addJsListener("playerReady", "onKalturaPlayerReady");
   			kdp.addJsListener("doPlay", "onKalturaPlayEvent");
-  			kdp.addJsListener("preSequenceComplete", "onKalturaPlayEvent");
+  			kdp.addJsListener("preSequenceStart", "onKalturaAdvStart");
   			kdp.addJsListener("playerUpdatePlayhead", "kalturaCheckInteraction");
   			kdp.addJsListener("playerPlayEnd", "onKalturaVideoEnded");
   			player.playerManager = kdp;
@@ -1277,6 +1277,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $window.onKalturaPlayEvent = function(idPlayer) {  
     calltoaction_id = getCallToActionIdFromKalturaPlayer(idPlayer);
     if(!$scope.play_event_tracked[calltoaction_info.calltoaction.id]) {
+      $scope.$apply(function() {
+  	    updateStartVideoInteraction(calltoaction_id);
+      });
+    }
+  };
+  
+  $window.onKalturaAdvStart = function(idPlayer) {
+  	calltoaction_id = $scope.calltoaction_info.calltoaction.id;
+  	if(!$scope.play_event_tracked[calltoaction_id]) {
       $scope.$apply(function() {
   	    updateStartVideoInteraction(calltoaction_id);
       });
