@@ -408,7 +408,13 @@ class Easyadmin::EasyadminController < ApplicationController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    @reward_cta_list = Reward.where("media_type ILIKE 'CallToAction'").page(page).per(per_page)
+    @reward_cta_list = Reward
+      .select("rewards.id, title, cost, call_to_action_id, sum(rewards.id) AS unlocked_by")
+      .joins("LEFT JOIN user_rewards ON rewards.id = user_rewards.reward_id")
+      .where("call_to_action_id IS NOT NULL")
+      .group("rewards.id")
+      .order("unlocked_by DESC")
+      .page(page).per(per_page)
 
     @page_size = @reward_cta_list.num_pages
     @page_current = page

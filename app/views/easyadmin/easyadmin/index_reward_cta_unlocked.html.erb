@@ -43,19 +43,19 @@
           
           <% @reward_cta_list.each do |reward_cta| %>
             <tr>
-                    <td>
-                      <%= reward_cta.title %>
-                    </td>
-                    <td>
-                      <%= reward_cta.cost %>
-                    </td>
-                    <td>
-                      <%= link_to "#{CallToAction.where(:id => reward_cta.call_to_action_id).first.title} [id: #{reward_cta.call_to_action_id}]", easyadmin_cta_show_path(reward_cta.call_to_action_id), class: "btn btn-secondary btn-xs" %> 
-                    </td>
-                    <td>
-                      <%= UserReward.where(:reward_id => reward_cta.id).sum("counter") %>
-                    </td>
-                  </tr>
+              <td>
+                <%= reward_cta.title %>
+              </td>
+              <td>
+                <%= reward_cta.cost %>
+              </td>
+              <td>
+                <%= link_to "#{CallToAction.where(:id => reward_cta.call_to_action_id).first.title} [id: #{reward_cta.call_to_action_id}]", easyadmin_cta_show_path(reward_cta.call_to_action_id), class: "btn btn-secondary btn-xs" %> 
+              </td>
+              <td>
+                <%= reward_cta.unlocked_by %>
+              </td>
+            </tr>
           <% end %>
         </table>
       </div>
