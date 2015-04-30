@@ -2,7 +2,7 @@
 	<div class="container"> 
 	  <div class="row main-row">
 	  	<div style="width: 220px; margin: 40px auto;">
-	  		<a href="{{linkTo(calltoaction_info.calltoaction.extra_fields.external_url)}}" target="_blank">
+	  		<a href="{{linkTo(calltoaction_info.calltoaction.extra_fields.author_url)}}" target="_blank" ng-if="calltoaction_info.calltoaction.extra_fields.author_url != null && calltoaction_info.calltoaction.extra_fields.author_url != ''">
 			  	<div class="content-preview--press"> 
 				  <div class="row">
 				    <div class="col-xs-12">
@@ -15,6 +15,17 @@
 				  </div>
 				</div>
 			</a>
+			  	<div class="content-preview--press" ng-if="calltoaction_info.calltoaction.extra_fields.author_url == null || calltoaction_info.calltoaction.extra_fields.author_url == ''"> 
+				  <div class="row">
+				    <div class="col-xs-12">
+				      <span class="fa fa-quote-left content-preview__quote"></span>
+				      <p class="content-preview__title--press">{{sanitizeText(calltoaction_info.calltoaction.description)}}</p>
+				      <p class="content-preview__author">{{calltoaction_info.calltoaction.extra_fields.author_name}}</p>
+				      <p class="content-preview__newspaper">{{calltoaction_info.calltoaction.extra_fields.author_newspaper}}<span ng-if="calltoaction_info.calltoaction.extra_fields.publishing_date"></span></p>
+				      <p class="content-preview__date">{{formatDate(calltoaction_info.calltoaction.extra_fields.publishing_date.value, aux.language)}}</p>
+				    </div>
+				  </div>
+				</div>
 		</div>
 	  </div>
 	</div>
