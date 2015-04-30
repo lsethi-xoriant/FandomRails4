@@ -1,3 +1,4 @@
+# encoding: utf-8
 module EasyadminHelper
 
   def get_all_ctas_with_tag(tag_name)
@@ -366,5 +367,70 @@ module EasyadminHelper
     res
   end
 
-end
+  def get_request_selection(cup_selected)
+    selection = ""
+    case cup_selected
+    when nil
+      selection = "Due tazze"
+    when "miss_tressy"
+      selection = "Tazza miss Tressy"
+    when "dora"
+      selection = "Tazza Dora"
+    when "placemat_and_miss_tressy"
+      selection = "Tovaglietta e tazza miss Tressy"
+    when "placemat_and_dora"
+      selection = "Tovaglietta e tazza Dora"
+    when "placemats"
+      selection = "Due tovagliette"
+    end
+    selection
+  end
 
+  def render_update_banner(updated_at, instance)
+
+    if instance.class == CallToAction
+      tag_ids = CallToActionTag.where(:call_to_action_id => instance.id).pluck(:tag_id)
+    elsif instance.class == Reward
+      tag_ids = RewardTag.where(:reward_id => instance.id).pluck(:tag_id)
+    elsif instance.class == Tag
+      tag_ids = TagsTag.where(:tag_id => instance.id).pluck(:other_tag_id)
+    else
+      tag_ids = []
+    end
+
+    banner = <<EOF 
+      <div class="row">
+        <div class="col-lg-12">
+          <div id="update-banner-message" class="alert alert-warning">
+            <p class="col-lg-10"> Alcuni contenuti sono stati modificati, per completare l'aggiornamento del sistema 
+             è necessario aggiornare la cache premendo il seguente pulsante </p>
+            <button type="button" class="btn btn-primary btn-xs" onclick="updateTagsUpdatedAt(
+EOF
+    banner += "'#{ updated_at }', '#{ tag_ids.join(",") }'"
+
+    banner += <<EOF
+    )">Aggiorna cache</button>
+          </div>
+        </div>
+      </div>
+
+
+      <script type="text/javascript">
+        function updateTagsUpdatedAt(updatedAt, tagIds) {
+          url = "/easyadmin/tag/update_updated_at/" + updatedAt
+          if(tagIds != "")
+            url += "/" + tagIds
+          $.ajax({
+            type: "POST",
+            url: url,
+            success: function(data) {
+              document.getElementById("update-banner-message").innerHTML = "Contenuti aggiornati con successo";
+            }
+          });
+        }
+      </script>
+EOF
+    banner.html_safe
+  end
+
+end

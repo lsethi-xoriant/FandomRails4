@@ -35,6 +35,9 @@
             </div>
           </div>
         <% end %>
+        <% if cookies[:updated_at] %>
+          <%= render_update_banner(cookies[:updated_at], @current_cta) %>
+        <% end %>
       </div>
     </div>
 
