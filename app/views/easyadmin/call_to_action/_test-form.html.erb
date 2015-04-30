@@ -62,10 +62,22 @@
       </div>
 
       <script type="text/javascript">
+
+        <% cta_list = [] %>
+        <% CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag)
+                        .select('id, name')
+                        .where("activated_at<=? AND activated_at IS NOT NULL AND (tags.name='step' OR tags.name = 'ending')", Time.now.utc)
+                        .order("activated_at DESC").each do |c| 
+                          cta_list << {"id" => c.id, "text" => c.name} 
+                        end %>
+
+        ctaList = <%= raw(cta_list.to_json) %>
+
         addButtonHandlerForInteractionCallToActionFields(
           "interaction_call_to_actions-" + "<%= quizform_index %>", 
           <%= @interaction_call_to_actions.nil? ? "null" : @interaction_call_to_actions.to_s.html_safe %>,
-          <%= raw get_linked_call_to_action_conditions.keys.unshift("") %>
+          <%= raw get_linked_call_to_action_conditions.keys.unshift("") %>,
+          ctaList
           );
       </script>
 
