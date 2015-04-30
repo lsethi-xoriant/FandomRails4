@@ -1,4 +1,9 @@
-<%= render partial: "/call_to_action/stream_single_calltoaction" %>
+<div ng-if="calltoaction_info.calltoaction.extra_fields.layout == 'press'">
+	<%= render partial: "/call_to_action/stream_single_calltoaction_press" %>
+</div>
+<div ng-if="calltoaction_info.calltoaction.extra_fields.layout != 'press'">
+	<%= render partial: "/call_to_action/stream_single_calltoaction" %>
+</div>
 
 <div class="stripe-container" ng-repeat="stripes in aux.page_stripes" ng-if="stripes.contents" ng-style="{'background-color': stripes.extra_fields.background_color}">
   <div class="container">
