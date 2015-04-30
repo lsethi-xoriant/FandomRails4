@@ -340,6 +340,7 @@ Fandom::Application.routes.draw do
     match "tag/clone/:id", :to => "tag#clone"
     match "tag/ordering", :to => "tag#ordering"
     match "tag/retag", :to => "tag#retag_tag"
+    match "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
 
     resources :home_launchers
 

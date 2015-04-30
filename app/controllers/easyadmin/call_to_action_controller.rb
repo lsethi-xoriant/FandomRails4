@@ -58,6 +58,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       end
 
       flash[:notice] = "CallToAction generata correttamente"
+      cookies[:updated_at] = Time.now
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
@@ -89,6 +90,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       end
 
       flash[:notice] = "CallToAction aggiornata correttamente"
+      cookies[:updated_at] = Time.now
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end

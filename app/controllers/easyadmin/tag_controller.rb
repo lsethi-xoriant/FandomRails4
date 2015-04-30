@@ -56,6 +56,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
         else
           add_tags_tags_and_check_cycle()
           flash[:notice] = "Tag generato correttamente"
+          cookies[:updated_at] = Time.now
           redirect_to "/easyadmin/tag/#{ @tag.id }"
         end
 
@@ -237,6 +238,27 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
       end
     end
 
+  end
+
+  def update_updated_at
+    if params[:tag_ids] and params[:updated_at]
+      params[:tag_ids].split(",").each do |tag_id|
+        update_updated_at_recursive(tag_id, params[:updated_at])
+      end
+    end
+    cookies.delete :updated_at
+    respond_to do |format|
+      format.json { render :json => params[:updated_at].to_json }
+    end
+  end
+
+  def update_updated_at_recursive(tag_id, updated_at)
+    tag = Tag.find(tag_id)
+    tag.updated_at = updated_at
+    tag.save
+    TagsTag.where("tag_id = #{tag_id}").each do |tags_tag|
+      update_updated_at_recursive(tags_tag.other_tag_id, updated_at)
+    end
   end
 
 end
