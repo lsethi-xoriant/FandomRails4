@@ -375,29 +375,13 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def index_most_clicked_interactions
+
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    if (params[:datepicker_from_date].blank? || params[:commit] == "Reset") 
-      @from_date_string = (Time.now - 1.week).strftime('%m/%d/%Y')
-    else
-      @from_date_string = params[:datepicker_from_date]
-    end
-    @to_date_string = (params[:datepicker_to_date].blank? || params[:commit] == "Reset") ? Time.now.strftime('%m/%d/%Y') : params[:datepicker_to_date]
-    @from_date = datetime_parsed_to_utc(DateTime.strptime("#{@from_date_string} 00:00:00 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
-    @to_date = datetime_parsed_to_utc(DateTime.strptime("#{@to_date_string} 23:59:59 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
+    @call_to_actions = ViewCounter.where(:ref_type => "cta").order("counter DESC").page(page).per(per_page)
 
-    @interactions = Interaction
-        .joins(:user_interactions)
-        .includes(:call_to_action)
-        .where("user_interactions.created_at >= '#{@from_date}' AND user_interactions.created_at <= '#{@to_date}'")
-        .group("interactions.id")
-        .order("SUM(user_interactions.counter) DESC")
-        .select("SUM(user_interactions.counter) as count, resource_type, interactions.id, call_to_action_id")
-        .page(page)
-        .per(per_page)
-
-    @page_size = @interactions.num_pages
+    @page_size = @call_to_actions.num_pages
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
 
