@@ -42,6 +42,8 @@ class SystemMailer < ActionMailer::Base
   def orzoro_cup_redeem_confirmation(cup_obj)
     subject = "Congratulazioni! Hai ordinato le tazze"
     @form_cup = cup_obj
+    @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
+    @assets_extra_fields = get_extra_fields!(Tag.find_by_name("assets"))
     if @form_cup['receipt']['package_count'].to_i == 2
       @packages_image_url = @cup_tag_extra_fields["two_packages"]["url"] rescue nil
     elsif @form_cup['receipt']['package_count'].to_i == 3
@@ -62,8 +64,6 @@ class SystemMailer < ActionMailer::Base
     else
       @gadgets_image_url = @cup_tag_extra_fields["two_cups"]["url"] rescue nil
     end
-    @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
-    @assets_extra_fields = get_extra_fields!(Tag.find_by_name("assets"))
     mail(to: cup_obj['identity']['email'], subject: subject)
   end
 
