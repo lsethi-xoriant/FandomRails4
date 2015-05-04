@@ -73,7 +73,7 @@ class Sites::Orzoro::Easyadmin::UserController < Easyadmin::EasyadminController
         end
       end
     end
-    request_list
+    request_list.sort_by { |h| Time.parse(h["request_timestamp"]) rescue Time.now }.reverse!
   end
 
   def request_timestamp_between_dates(timestamp, from_date, to_date)
