@@ -154,17 +154,17 @@
     </div>
     <% if small_mobile_device? %>
       <div class="col-sm-6 text-center">
-        <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
+        <button type="submit" class="btn btn-red cup__submit"> AVANTI </button>
       </div>
       <div class="col-sm-2 col-sm-offset-1 text-center">
-        <a href="step_1" class="cup__back"><i class="fa fa-arrow-left"></i> Indietro</a>
+        <a href="step_1" class="cup__back"><i class="fa fa-arrow-left"></i> Indietro </a>
       </div>
     <% else %>
       <div class="col-sm-2 col-sm-offset-1">
-        <a href="step_1" class="cup__back"><i class="fa fa-arrow-left"></i> Indietro</a>
+        <a href="step_1" class="cup__back"><i class="fa fa-arrow-left"></i> Indietro </a>
       </div>
       <div class="col-sm-6 text-center">
-        <button type="submit" class="btn btn-red cup__submit">AVANTI</button>
+        <button type="submit" class="btn btn-red cup__submit"> AVANTI </button>
       </div>
     <% end %>
   </div>
@@ -203,7 +203,7 @@ function selectNumberOfPackages(n) {
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(2);
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_dora").prop("checked", true);
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_miss_tressy").prop("checked", false);
-    $('#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_placemats').prop("checked", false);
+    $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_placemats").prop("checked", false);
   }
   if(n == 3) {
     $("#three_package").addClass("cup__package--selected");
@@ -218,7 +218,8 @@ function selectNumberOfPackages(n) {
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(3);
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_dora").prop("checked", false);
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_miss_tressy").prop("checked", true);
-    $('#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_placemats').prop("checked", false);
+    $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_placemats").prop("checked", false);
+    $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_placemat_and_miss_tressy").prop("checked", true);
   }
   if(n == 5) {
     $("#five_package").addClass("cup__package--selected");
@@ -233,7 +234,7 @@ function selectNumberOfPackages(n) {
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_package_count").val(5);
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_dora").prop("checked", false);
     $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_miss_tressy").prop("checked", false);
-    $('#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_placemats').prop("checked", true);
+    $("#sites_orzoro_cup_redeemer_controller_cup_redeemer_step2_cup_selected_placemats").prop("checked", true);
   }
 }
 </script>
