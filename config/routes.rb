@@ -30,9 +30,9 @@ Fandom::Application.routes.draw do
       scope module: "orzoro" do
         namespace :easyadmin do
           match "/dashboard", :to => "easyadmin#dashboard"
-          match "/cups", :to => "easyadmin#index_cup_requests"
-          match "/cups/filter", :to => "easyadmin#filter_cup_requests"
-          match "export_cup_requests", :to => "easyadmin#export_cup_requests"
+          match "/cups", :to => "user#index_cup_requests"
+          match "/cups/filter", :to => "user#filter_cup_requests"
+          match "export_cup_requests", :to => "user#export_cup_requests"
         end
         root :to => "application#index"
         match "/gadget", to: "cup_redeemer#index"
@@ -351,10 +351,10 @@ Fandom::Application.routes.draw do
     resources :vote_ranking
 
     # USER
-    match "user", :to => "easyadmin#index_user"
-    match "export_users", :to => "easyadmin#export_users"
-    match "user/show/:id", :to => "easyadmin#show_user"
-    match "user/filter", :to => "easyadmin#filter_user"
+    match "user", :to => "user#index_user"
+    match "export_users", :to => "user#export_users"
+    match "user/show/:id", :to => "user#show_user"
+    match "user/filter", :to => "user#filter_user"
 
     # WINNER
     match "winner", :to => "easyadmin#index_winner"
