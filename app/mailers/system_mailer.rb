@@ -44,14 +44,14 @@ class SystemMailer < ActionMailer::Base
     @form_cup = cup_obj
     if @form_cup['receipt']['package_count'].to_i == 2
       @packages_image_url = @cup_tag_extra_fields["two_packages"]["url"] rescue nil
-    elsif @form_cup['receipt']['package_count'].to_i == 2
+    elsif @form_cup['receipt']['package_count'].to_i == 3
       @packages_image_url = @cup_tag_extra_fields["three_packages"]["url"] rescue nil
     else
       @packages_image_url = @cup_tag_extra_fields["five_packages"]["url"] rescue nil
     end
     if @form_cup['receipt']['package_count'].to_i == 2
       @gadgets_image_url = @cup_tag_extra_fields["placemat"]["url"] rescue nil
-    elsif @form_cup['receipt']['package_count'].to_i == 2
+    elsif @form_cup['receipt']['package_count'].to_i == 3
       if @form_cup['receipt']['cup_selected'] == "placemat_and_miss_tressy"
         @gadgets_image_url = @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil
       elsif @form_cup['receipt']['cup_selected'] == "placemat_and_dora"
