@@ -1,6 +1,7 @@
 <tr>
 
-  <td><%= Time.parse(request["request_timestamp"]).strftime("%d/%m/%Y") rescue nil %></td>
+  <td><%= Time.parse(request["request_timestamp"]).strftime("%d/%m/%y") rescue nil %></td>
+  <td><%= User.find_by_email(request["identity"]["email"]).id rescue nil %></td>
   <td><%= request["address"]["first_name"] %></td>
   <td><%= request["address"]["last_name"] %></td>
   <td><%= request["identity"]["email"] %></td>
@@ -13,7 +14,7 @@
   <td><%= get_request_selection(request["receipt"]["cup_selected"]) %></td>
   <td><%= request["receipt"]["receipt_number"] %></td>
   <td>
-    <%= "#{(sprintf '%02d', request["receipt"]["day_of_emission"])}/#{(sprintf '%02d', request["receipt"]["month_of_emission"])}/#{request["receipt"]["year_of_emission"]} #{(sprintf '%02d', request["receipt"]["hour_of_emission"])}:#{request["receipt"]["minute_of_emission"]}" 
+    <%= "#{(sprintf '%02d', request["receipt"]["day_of_emission"])}/#{(sprintf '%02d', request["receipt"]["month_of_emission"])}/#{request["receipt"]["year_of_emission"][2..3]} #{(sprintf '%02d', request["receipt"]["hour_of_emission"])}:#{request["receipt"]["minute_of_emission"]}" 
     %>
   </td>
   <td><%= request["receipt"]["receipt_total"] %></td>
