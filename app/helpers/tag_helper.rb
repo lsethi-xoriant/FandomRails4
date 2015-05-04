@@ -173,7 +173,7 @@ module TagHelper
     if conditions.empty?
       tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).order("tags.created_at DESC").to_a
     else
-      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions}) AND tags.id in (?)", tag_name, category_tag_ids).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions}) AND (tags.id in (?))", tag_name, category_tag_ids).order("tags.created_at DESC").to_a
     end
     filter_results(tags, query)
   end
@@ -184,7 +184,7 @@ module TagHelper
     if conditions.empty?
       tags = Tag.includes(:tags_tags).where("id in (?)", category_tag_ids).order("tags.created_at DESC").to_a
     else
-      tags = Tag.includes(:tags_tags).where("#{conditions} AND id in (?)", category_tag_ids).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags).where("(#{conditions}) AND (id in (?))", category_tag_ids).order("tags.created_at DESC").to_a
     end
     filter_results(tags, query)
   end
