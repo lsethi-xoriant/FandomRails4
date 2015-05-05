@@ -257,8 +257,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $scope.form_data = {};
 
-    $scope.initAnonymousUser();
-
     $scope.animation_in_progress = false;
     
     $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION = "slide-right";
@@ -305,6 +303,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $("#append-other button").show();
     }
 
+    $scope.initAnonymousUser();
     $scope.extraInit();
 
   };
@@ -788,6 +787,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     if(!$scope.current_user && $scope.aux.anonymous_interaction) {
       $scope.updateCallToActionInfoWithAnonymousUserStorage();
+
+      if($scope.calltoaction_info) {
+        $scope.goToLastLinkedCallToAction();
+      }
     }
   };
 
@@ -1654,7 +1657,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       if(data.main_reward_counter) {
         setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
       }
- 
+
       user_interaction_for_storage = new Object();
       user_interaction_for_storage["user_interaction"] = data.user_interaction;
       user_interaction_for_storage["calltoaction_id"] = calltoaction_id;
@@ -1728,9 +1731,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       if(interaction_info.interaction.resource_type == "like") {
         if(JSON.parse(interaction_info.user_interaction.aux)["like"]) {
-          interaction_info.interaction.resource.like_info += 1;
+          interaction_info.interaction.resource.counter += 1;
         } else {
-          interaction_info.interaction.resource.like_info -= 1;
+          interaction_info.interaction.resource.counter -= 1;
         } 
       }
 
@@ -1739,7 +1742,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
     if(interaction_info.interaction.resource_type == "download") {
 
-      if(interaction_info.interaction.resource.ical) {
+      if(interaction_info.interaction.resource.ical && !angular.equals(interaction_info.interaction.resource.ical, {})) {
         newWindow.location = "/ical";
       } else {
         newWindow.location = data.download_interaction_attachment;
@@ -1753,7 +1756,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
         interaction_info.anonymous_user_interaction_info = data.user_interaction;
       }
-      interaction_info.interaction.resource.vote_info = data.vote_info;
+      //interaction_info.interaction.resource.vote_info = data.vote_info;
+      interaction_info.interaction.resource.counter_aux = data.counter_aux; 
     }
 
     // Next calltoaction for test interaction.
@@ -1772,6 +1776,75 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }, 200);
 
     }
+  };
+
+  $scope.calculateVoteTotal = function(interaction_info) {
+    total = 0;
+    angular.forEach(interaction_info.interaction.resource.counter_aux, function(value, key) {
+      total = total + (key * value);
+    });
+    return total;
+  };
+
+  $scope.goToLastLinkedCallToAction = function() {
+    $scope.parent_calltoaction_info = $scope.calltoaction_info;
+    $scope.compute_in_progress = true;
+
+    anonymous_user_storage = getAnonymousUserStorage()
+    call_last_linked_calltoaction = false;
+    angular.forEach(anonymous_user_storage.user_interaction_info_list, function(user_interaction_info) {
+      if(user_interaction_info.calltoaction_id == $scope.calltoaction_info.calltoaction.id && user_interaction_info.user_interaction.aux) {
+        aux = JSON.parse(user_interaction_info.user_interaction.aux)
+        if(aux["next_calltoaction_id"]) {
+          call_last_linked_calltoaction = true;
+        }
+      }
+    });
+    
+    if(call_last_linked_calltoaction) {
+      // Too long for get.
+      $http.post("/last_linked_calltoaction", { "anonymous_user_interactions": getAnonymousUserStorage(), "calltoaction_id": $scope.calltoaction_info.calltoaction.id })
+      .success(function(data) { 
+        if(data.go_on) {
+          $scope.initCallToActionInfoList(data.calltoaction_info_list);
+          $scope.linked_call_to_actions_index = data.linked_call_to_actions_index;
+          $scope.user_interactions_history = data.user_interactions_history;
+          $scope.updateCallToActionInfoWithAnonymousUserStorage();
+        }
+        $scope.compute_in_progress = false;
+      }).error(function() {
+        $scope.compute_in_progress = false;
+      });
+    }
+
+  }
+
+  $scope.resetToRedo = function(interaction_info) {
+    $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
+
+    $timeout(function() { 
+      anonymous_user_interactions = getAnonymousUserStorage();
+      angular.forEach($scope.user_interactions_history, function(index) {
+        user_interaction_info = anonymous_user_interactions["user_interaction_info_list"][index];
+        if(user_interaction_info) {
+          aux_parse = JSON.parse(user_interaction_info.user_interaction.aux);
+          aux_parse.to_redo = true;
+          user_interaction_info.user_interaction.aux = JSON.stringify(aux_parse);
+          $scope.updateAnonymousUserStorageUserInteractions(user_interaction_info);
+        }
+      });
+
+      $scope.initCallToActionInfoList([$scope.parent_calltoaction_info]);
+      $scope.calltoaction_info.hide_class = "";
+      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide"
+      $timeout(function() { 
+        $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+      }, 500);
+
+      $scope.linked_call_to_actions_index = 1;
+      $scope.user_interactions_history = [];
+      $scope.updateCallToActionInfoWithAnonymousUserStorage();
+    }, 200);    
   };
 
   function updateInteractionsHistory(user_interaction_id) {

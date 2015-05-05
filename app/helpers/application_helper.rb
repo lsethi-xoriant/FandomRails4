@@ -543,7 +543,7 @@ module ApplicationHelper
 
   def default_aux(other, calltoaction_info_list = nil)
     
-    aux = {
+    @aux = {
       "tenant" => $site.id,
       "anonymous_interaction" => $site.anonymous_interaction,
       "main_reward_name" => MAIN_REWARD_NAME,
@@ -556,11 +556,11 @@ module ApplicationHelper
 
     if other
       other.each do |key, value|
-        aux[key] = value unless aux.has_key?(key.to_s)
+        @aux[key] = value unless @aux.has_key?(key.to_s)
       end
     end
 
-    aux
+    @aux
 
   end
   

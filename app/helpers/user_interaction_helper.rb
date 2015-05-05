@@ -1,13 +1,27 @@
 module UserInteractionHelper
 
-  def extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+  def extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list, resource_type = nil)
     interaction_ids = []
     calltoaction_info_list.each do |calltoaction_info|
       calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-        interaction_ids << interaction_info["interaction"]["id"]
+        if !resource_type || interaction_info["interaction"]["resource_type"] == resource_type
+          interaction_ids << interaction_info["interaction"]["id"]
+        end
       end
     end
     interaction_ids
+  end
+
+  def extract_resource_ids_from_call_to_action_info_list(calltoaction_info_list, resource_type = nil)
+    resource_ids = []
+    calltoaction_info_list.each do |calltoaction_info|
+      calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+        if !resource_type || interaction_info["interaction"]["resource_type"] == resource_type
+          resource_ids << interaction_info["interaction"]["resource"]["id"]
+        end
+      end
+    end
+    resource_ids
   end
 
   def get_user_interactions_with_interaction_id(interaction_ids, user)
@@ -18,69 +32,63 @@ module UserInteractionHelper
     user_interactions
   end
 
-  def adjust_call_to_actions_with_user_interaction_data_for_current_user(calltoactions, calltoaction_info_list)
-    interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
-    user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
+  def check_and_find_next_call_to_action_in_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute) 
+    next_cta_info_list = false
+    if calltoaction_info_list.length == 1 && user_interactions.any?
+      user_interactions.each do |user_interaction|
+        aux = JSON.parse(user_interaction.aux || {})
+        if aux["next_calltoaction_id"].present? && !aux["to_redo"]
+          next_cta = CallToAction.find(aux["next_calltoaction_id"])
+          next_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([next_cta], interactions_to_compute)
+          break
+        end
+      end
+    end
+    next_cta_info_list
+  end
 
+  def build_current_user_reward(reward)
+    {
+      "cost" => reward.cost,
+      "status" => get_user_reward_status(reward),
+      "id" => reward.id,
+    }
+  end
+
+  def adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
     calltoaction_info_list.each do |calltoaction_info|
 
-      calltoaction = find_in_calltoactions(calltoactions, calltoaction_info["calltoaction"]["id"])
+        calltoaction = find_in_calltoactions(calltoactions, calltoaction_info["calltoaction"]["id"])
 
-      if calltoaction_info["reward_info"]
-        calltoaction_info["reward_info"] = update_current_user_reward(calltoaction_info["reward_info"]["reward"])
-      end
+        if calltoaction_info["reward_info"]
+          calltoaction_info["reward_info"] = build_current_user_reward(calltoaction_info["reward_info"]["reward"])
+        end
 
-      calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-        
-        interaction_id = interaction_info["interaction"]["id"]
-        user_interaction = find_in_user_interactions(user_interactions, interaction_id)
+        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+          
+          interaction_id = interaction_info["interaction"]["id"]
+          user_interaction = find_in_user_interactions(user_interactions, interaction_id)
 
-        if user_interaction
-          user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
-          interaction = user_interaction.interaction
-          interaction_info["user_interaction"] = user_interaction_for_interaction_info
-          interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
-          begin
-            answers = user_interaction.interaction.resource.answers
-            resource_type = interaction_info["interaction"]["resource_type"]
-            interaction_info["interaction"]["resource"]["answers"] = build_answers_for_resource(interaction, answers, resource_type, user_interaction)
-          rescue Exception => exception
-            # resource without answers
+          if user_interaction
+            user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
+            interaction = user_interaction.interaction
+            interaction_info["user_interaction"] = user_interaction_for_interaction_info
+            interaction_info["status"] = get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction)
+            begin
+              answers = user_interaction.interaction.resource.answers
+              resource_type = interaction_info["interaction"]["resource_type"]
+              interaction_info["interaction"]["resource"]["answers"] = build_answers_for_resource(interaction, answers, resource_type, user_interaction)
+            rescue Exception => exception
+              # resource without answers
+            end
           end
+
         end
 
-      end
+        calltoaction_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, current_user)
+    end      
 
-      calltoaction_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, current_user)
-
-    end
     calltoaction_info_list
-  end
-
-  def adjust_call_to_actions_with_user_interaction_data_for_anonymous_user(calltoactions, calltoaction_info_list)
-    interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
-    user_interactions = get_user_interactions_with_interaction_id(interaction_ids, anonymous_user)
-
-    calltoaction_info_list.each do |calltoaction_info|
-      calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-        interaction_id = interaction_info["interaction"]["id"]
-        user_interaction = find_in_user_interactions(user_interactions, interaction_id)
-        if user_interaction
-          interaction_info["anonymous_user_interaction_info"] = build_user_interaction_for_interaction_info(user_interaction)
-        end
-      end
-    end
-    calltoaction_info_list
-  end
-
-  def adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list)
-    if current_user
-      adjust_call_to_actions_with_user_interaction_data_for_current_user(calltoactions, calltoaction_info_list) 
-    elsif $site.anonymous_interaction
-      adjust_call_to_actions_with_user_interaction_data_for_anonymous_user(calltoactions, calltoaction_info_list)
-    else
-      calltoaction_info_list
-    end
   end
 
   def find_in_answers(answer_ids, answers)
@@ -94,13 +102,7 @@ module UserInteractionHelper
   end
 
   def find_in_calltoactions(calltoactions, calltoaction_id)
-    calltoaction_to_return = nil
-    calltoactions.each do |calltoaction|
-      if calltoaction.id == calltoaction_id
-        calltoaction_to_return = calltoaction 
-      end
-    end
-    calltoaction_to_return
+    find_content_in_array_by_id(calltoactions, calltoaction_id)
   end
 
   def find_in_user_interactions(user_interactions, interaction_id)
@@ -111,6 +113,66 @@ module UserInteractionHelper
       end
     end
     user_interaction_to_return
+  end
+
+  def find_interaction_in_counters(counters, id)
+    counter = nil
+    counters.each do |element|
+      if element.ref_id == id
+        counter = element 
+      end
+    end
+    counter
+  end
+
+  def build_comments_by_resource_id(comments, resource_id)
+    result = []
+    comments.each do |comment|
+      if comment.comment_id == resource_id
+        result << {
+          "id" => comment.id,
+          "text" => comment.text,
+          "updated_at" => comment.updated_at.strftime("%Y/%m/%d %H:%M:%S"),
+          "user" => {
+            "name" => comment.user.username,
+            "avatar" => user_avatar(comment.user)
+          }
+        }
+      end
+    end
+    result
+  end
+
+  def find_content_in_array_by_id(elements, id)
+    content = nil
+    elements.each do |element|
+      if element.id == id
+        content = element 
+      end
+    end
+    content
+  end
+
+  def adjust_counter!(interaction, value = 1)
+    ViewCounter.transaction do
+      counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
+      if counter
+        if interaction.resource_type.downcase == "vote"
+          aux = JSON.parse(counter.aux)
+          aux[value] = aux[value] ? (aux[value] + 1) : 1
+          counter.update_attributes(counter: (counter.counter + 1), aux: aux.to_json)
+        else
+          counter.update_attribute(:counter, counter.counter + value)
+        end
+      else
+        if interaction.resource_type.downcase == "vote"
+          aux = { "#{value}" => 1 }
+        else
+          aux = {}
+        end
+        ViewCounter.create(ref_type: "interaction", ref_id: interaction.id, counter: 1, aux: aux.to_json)
+      end
+    end
   end
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
@@ -130,7 +192,10 @@ module UserInteractionHelper
       when "share"
         aux = merge_aux(aux, user_interaction.aux)
       when "like"
-        aux = { like: !(JSON.parse(user_interaction.aux)["like"]) }.to_json
+        like = !(JSON.parse(user_interaction.aux)["like"])
+        like_value = like ? 1 : -1
+        aux = { like: like }.to_json
+        adjust_counter!(interaction, like_value)
       when "vote"
         aux_parse = JSON.parse(aux)
         aux_in_user_interaction = JSON.parse(user_interaction.aux)
@@ -141,7 +206,7 @@ module UserInteractionHelper
           aux_in_user_interaction["vote_info_list"][aux_parse["vote"]] = 1
         end
         aux = aux_in_user_interaction.to_json
-        expire_cache_key(get_cache_votes_for_interaction(interaction.id))
+        adjust_counter!(interaction, aux_parse["vote"])
       end
 
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
@@ -149,13 +214,16 @@ module UserInteractionHelper
 
     else
 
-      if interaction.resource_type.downcase == "vote"
+      case interaction.resource_type.downcase
+      when "like"
+         adjust_counter!(interaction, 1)
+      when "vote"
         aux_parse = JSON.parse(aux)
         aux_parse["vote_info_list"] = {
           aux_parse["vote"] => 1
         }
         aux = aux_parse.to_json
-        expire_cache_key(get_cache_votes_for_interaction(interaction.id))
+        adjust_counter!(interaction, aux_parse["vote"])
       end
 
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)

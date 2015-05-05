@@ -1,6 +1,73 @@
 module DisneyHelper
 
-  def get_ctas_most_viewed_widget(property)
+  def check_disney_gallery_params(params)
+    if params["other_params"] && params["other_params"]["gallery"]["calltoaction_id"]
+      gallery_calltoaction_id = params["other_params"]["gallery"]["calltoaction_id"]
+      gallery_user_id = params["other_params"]["gallery"]["user"]
+    end
+    [gallery_calltoaction_id, gallery_user_id]
+  end
+
+  def get_disney_ctas_for_stream_computation(tag, ordering, gallery_calltoaction_id, gallery_user_id, calltoaction_ids_shown, limit_ctas)
+    calltoactions = get_disney_ctas(tag, gallery_calltoaction_id)
+
+    # Append other scenario
+    if calltoaction_ids_shown
+      calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", calltoaction_ids_shown)
+    end
+
+    # User galleries scenario
+    if gallery_user_id
+      calltoactions = calltoactions.where("user_id = ?", gallery_user_id)
+    end
+
+    case ordering
+    when "comment"
+      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
+      gets_ctas_ordered_by_comments(calltoaction_ids, limit_ctas)
+    when "view"
+      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
+      gets_ctas_ordered_by_views(calltoaction_ids, limit_ctas)
+    else
+      calltoactions.limit(limit_ctas).to_a
+    end
+  end
+
+  def get_disney_ctas_for_stream(params, limit_ctas)
+    gallery_calltoaction_id, gallery_user_id = check_disney_gallery_params(params)
+
+    property = get_tag_from_params(get_disney_property())
+    ordering = params[:ordering] || "recent"
+
+    cache_key = gallery_calltoaction_id ? gallery_calltoaction_id : property.name
+    cache_key = "#{cache_key}_#{ordering}"
+
+    calltoaction_ids_shown = params[:calltoaction_ids_shown]
+    if calltoaction_ids_shown
+      cache_key = "#{cache_key}_append_from_#{calltoaction_ids_shown.last}"
+    end
+
+    if ordering == "recent"
+      cache_timestamp = get_cta_max_updated_at()
+      ctas = cache_forever(get_ctas_cache_key(cache_key, cache_timestamp)) do
+        get_disney_ctas_for_stream_computation(property, ordering, gallery_calltoaction_id, gallery_user_id, calltoaction_ids_shown, limit_ctas)
+      end 
+    else
+      ctas = cache_medium(get_ctas_cache_key(cache_key, nil)) do
+        get_disney_ctas_for_stream_computation(property, ordering, gallery_calltoaction_id, gallery_user_id, calltoaction_ids_shown, limit_ctas)
+      end 
+    end
+
+    page_elements = ["like", "comment", "share"]
+    if gallery_calltoaction_id
+      page_elements = page_elements + ["vote"]
+    end
+
+    build_cta_info_list_and_cache_with_max_updated_at(ctas, page_elements)
+  end
+
+  def get_ctas_most_viewed_widget()
+    property = get_tag_from_params(get_disney_property())
     result = cache_huge(get_ctas_most_viewed_cache_key(property.id)) do
 
       ctas = get_disney_ctas(property)
@@ -262,19 +329,18 @@ module DisneyHelper
 
   end
 
-  def get_disney_related_calltoaction_info(current_calltoaction, property, related_tag_name = "miniformat", in_gallery)
-    related_calltoaction_info, calltoaction_ids = cache_short(get_ctas_except_me_in_property_cache_key(current_calltoaction.id, property.id)) do
+  def get_disney_related_calltoaction_info(current_calltoaction, tag, parent_related_tag_name = "miniformat", in_gallery)
+    related_calltoaction_info, calltoaction_ids = cache_short(get_ctas_except_me_in_property_cache_key(nil, tag.name)) do
       
-      tag = get_tag_with_tag_about_call_to_action(current_calltoaction, related_tag_name).first
-      if tag
+      related_tag = get_tag_with_tag_about_call_to_action(current_calltoaction, parent_related_tag_name).first
+      if related_tag
         calltoactions = CallToAction.includes(:call_to_action_tags)
-                    .where("call_to_actions.id <> ?", current_calltoaction.id)
-                    .where("call_to_action_tags.tag_id = ?", tag.id)
+                    .where("call_to_action_tags.tag_id = ?", related_tag.id)
                     .where("call_to_actions.id IN (?)", get_disney_ctas(property, in_gallery).map { |calltoaction| calltoaction.id })
                     .order("call_to_actions.activated_at DESC")
-                    .limit(8).to_a
+                    .limit(9).to_a
       else
-        calltoactions = get_disney_ctas(property, in_gallery).where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a
+        calltoactions = get_disney_ctas(tag, in_gallery).limit(9).to_a
       end
 
       related_calltoaction_info = []
@@ -285,6 +351,9 @@ module DisneyHelper
       [related_calltoaction_info, calltoactions.map { |cta| cta.id }]
 
     end 
+
+    related_calltoaction_info.delete_if { |obj| obj["id"] == current_calltoaction.id }
+    related_calltoaction_info = related_calltoaction_info[0..7]
 
     if current_user
       calltoactions = CallToAction.where(id: calltoaction_ids)

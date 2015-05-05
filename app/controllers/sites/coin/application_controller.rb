@@ -55,7 +55,7 @@ class Sites::Coin::ApplicationController < ApplicationController
       CallToAction.active.count
     end
 
-    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions)
+    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(@calltoactions)
     
     if current_user
       @current_user_info = build_current_user()

@@ -105,7 +105,7 @@ class ApplicationController < ActionController::Base
     #end  
     
     @calltoactions = CallToAction.active.limit(init_ctas).to_a
-    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions, ["like", "comment", "share"])
+    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(@calltoactions, ["like", "comment", "share"])
 
     @aux_other_params = { 
     }

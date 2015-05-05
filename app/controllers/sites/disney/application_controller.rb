@@ -22,14 +22,14 @@ class Sites::Disney::ApplicationController < ApplicationController
 
     return if cookie_based_redirect?
     
-    init_ctas = $site.init_ctas
-    property = get_tag_from_params(get_disney_property())
+    #cache_key = property.id
+    #cache_timestamp = get_cta_max_updated_at()
 
-    @calltoactions = cache_medium(get_calltoactions_in_property_cache_key(property.id, 0, get_cta_max_updated_at())) do
-      get_disney_ctas(property).limit(init_ctas).to_a
-    end
+    #@calltoactions = cache_forever(get_ctas_cache_key(cache_key, cache_timestamp)) do
+    #  get_disney_ctas(property).limit(init_ctas).to_a
+    #end
 
-    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions, ["like", "comment", "share"])
+    @calltoaction_info_list = get_disney_ctas_for_stream({}, $site.init_ctas)
 
     @aux_other_params = { 
       filters: true,
@@ -37,7 +37,7 @@ class Sites::Disney::ApplicationController < ApplicationController
       sidebar_tags: ["stream"],
       fan_of_the_day_widget: true,
       rank_widget: true,
-      ctas_most_viewed_widget: get_ctas_most_viewed_widget(property)
+      ctas_most_viewed_widget: get_ctas_most_viewed_widget()
     }
 
   end

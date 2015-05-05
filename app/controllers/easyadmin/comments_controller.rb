@@ -16,9 +16,10 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     current_comment = UserCommentInteraction.find(params[:comment_id])
     current_comment.update_attributes(approved: params[:approved])
 
-    if current_comment.approved
+    interaction = current_comment.comment.interaction
 
-      interaction = current_comment.comment.interaction
+    if current_comment.approved
+      adjust_counter!(interaction, 1)
       cta = interaction.call_to_action
 
       if anonymous_user.id != current_comment.user_id
@@ -38,6 +39,8 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
         end
       end
 
+    else
+      adjust_counter!(interaction, -1)
     end
 
     log_synced("change comment status from backoffice", approved: current_comment.approved, comment_id: current_comment.id)

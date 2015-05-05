@@ -77,7 +77,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
                 .order("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC")
                 .first
 
-    @calltoaction_info_list = build_call_to_action_info_list([cta])
+    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta])
     complete_cta_for_show(cta)
 
     @aux_other_params[:tag_menu_item] = "live"
@@ -89,7 +89,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     language = $context_root || "it"
     cta = CallToAction.find("about-#{language}")
 
-    @calltoaction_info_list = build_call_to_action_info_list([cta])
+    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta])
 
     complete_cta_for_show(cta)
 

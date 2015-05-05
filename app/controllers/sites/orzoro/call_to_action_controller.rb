@@ -35,7 +35,7 @@ class Sites::Orzoro::CallToActionController < CallToActionController
       end  
     end
 
-    calltoaction_info_list = build_call_to_action_info_list([calltoaction])
+    calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction])
 
     if calltoaction_info_list.first["miniformat"]["name"] == "ricette"
       related_product = get_tag_with_tag_about_call_to_action(calltoaction, "related-product").first

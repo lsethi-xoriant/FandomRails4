@@ -360,7 +360,7 @@ class Sites::Ballando::CallToActionController < CallToActionController
       calltoactions_during_video_interactions_second: calltoactions_during_video_interactions_second,
       calltoactions: calltoactions,
       html_to_append: render_calltoactions_str,
-      calltoaction_info_list: build_call_to_action_info_list(calltoactions)
+      calltoaction_info_list: build_cta_info_list_and_cache_with_max_updated_at(calltoactions)
     }
     
     respond_to do |format|
