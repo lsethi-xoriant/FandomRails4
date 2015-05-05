@@ -30,12 +30,7 @@ module BrowseHelper
           func = "get_#{area[1..area.length]}"
           browse_sections_arr << send(func, 0, carousel_elements, tags)
         else
-          tag_area = Tag.find_by_name(area)
-          if get_extra_fields!(tag_area).key? "contents"
-            browse_sections_arr << get_featured(tag_area, carousel_elements)
-          else
-            browse_sections_arr << get_browse_area_by_category(tag_area, tags, carousel_elements)
-          end
+          browse_sections_arr << get_content_previews(area, tags)
         end
       end
     end
@@ -54,6 +49,7 @@ module BrowseHelper
     }
     recent = get_ctas_with_tags_in_and(tags.map{|t| t.id}, params)
     recent_contents = prepare_contents(recent)
+    
     browse_section = ContentSection.new(
     {
       key: "recent",
@@ -85,34 +81,8 @@ module BrowseHelper
     url
   end
   
-  def get_featured(featured, carousel_elements)
-    featured_contents, total = get_featured_content(featured, carousel_elements)
-    browse_section = ContentSection.new(
-    {
-      key: "featured",
-      title: featured.title,
-      icon_url: get_browse_section_icon(nil),
-      contents: featured_contents,
-      view_all_link: build_viewall_link("/browse/view_all/#{featured.id}"),
-      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4,
-      total: total
-    })
-  end
-  
-  def get_featured_with_match(featured, query)
-    featured_contents = get_featured_content_with_match(featured, query)
-    browse_section = ContentSection.new({
-      key: "featured",
-      title: featured.title,
-      icon_url: get_browse_section_icon(nil),
-      contents: featured_contents,
-      view_all_link: build_viewall_link("/browse/view_all/#{featured.id}"),
-      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4 #featured_contents.count
-    })
-  end
-  
-  def get_browse_area_by_category(category, tags, carousel_elements, params = {})
-    contents, has_more = get_contents_by_category(category, tags, carousel_elements, params)
+  def get_content_previews_by_tags(category, tags, carousel_elements, params = {})
+    contents, has_more = get_content_previews_with_tags([category] + tags, carousel_elements, params)
     extra_fields = get_extra_fields!(category)
 
     browse_section = ContentSection.new({
@@ -129,7 +99,7 @@ module BrowseHelper
     })
   end
   
-  def get_browse_section_by_ordering(category, tags, carousel_elements, params = {})
+  def get_content_previews_by_tags_with_ordering(category, tags, carousel_elements, params = {})
     extra_fields = get_extra_fields!(category)
     contents = get_contents_from_ordering(category)
     if contents.count < carousel_elements
@@ -151,7 +121,7 @@ module BrowseHelper
           exclude_cta_ids: exclude_cta_ids
         }
       end
-      extra_contents, has_more = get_contents_by_category(category, tags, carousel_elements, params)  
+      extra_contents, has_more = get_content_previews_with_tags([category] + tags, carousel_elements, params)  
     end
 
     if extra_contents
@@ -197,21 +167,7 @@ module BrowseHelper
     end      
   end
   
-  def get_browse_area_by_category_with_match(category, query)
-    contents = get_contents_by_category_with_match(category, query)
-    extra_fields = get_extra_fields!(category)
-    browse_section = ContentSection.new({
-      key: category.name,
-      title: category.title,
-      icon_url: get_browse_section_icon(extra_fields),
-      contents: contents,
-      view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
-      column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
-      slug: category.slug
-    })
-  end
-  
-  def get_contents_by_category(category, tags, carousel_elements, params = {})
+  def get_content_previews_with_tags(tags, carousel_elements, params = {})
     if !params[:limit]
       params[:limit] = {
         offset: 0,
@@ -220,20 +176,14 @@ module BrowseHelper
     else
       params[:limit][:perpage] = params[:limit][:perpage] + 1
     end
-    tag_ids = ([category] + tags).map{|tag| tag.id}
-    tags = order_elements(category, get_tags_with_tags(tag_ids, params))
-    ctas = order_elements(category, get_ctas_with_tags_in_and(tag_ids, params))
+    tag_ids = tags.map{|tag| tag.id}
+    tags = get_tags_with_tags(tag_ids, params)
+    ctas = get_ctas_with_tags_in_and(tag_ids, params)
 
     total = tags.count + ctas.count
     tags = tags.slice!(0, carousel_elements)
     ctas = ctas.slice!(0, carousel_elements)
     [merge_contents(ctas, tags, params), total > carousel_elements]
-  end
-  
-  def get_contents_by_category_with_match(category, query)
-    tags = get_tags_with_tag_with_match(category.name, query).sort_by { |tag| tag.created_at }
-    ctas = get_ctas_with_tag_with_match(category.name, query).sort_by { |cta| cta.activated_at }
-    merge_contents(ctas, tags)
   end
   
   def get_contents_with_match(query, offset = 0, property)
@@ -275,38 +225,7 @@ module BrowseHelper
     end
     ids
   end
-
-  def get_featured_content(featured, carousel_elements)
-    contents = Array.new
-    get_extra_fields!(featured)["contents"].split(",").each do |name|
-      cta = CallToAction.find_by_name(name)
-      if cta
-        contents << cta
-      else
-        tag = Tag.find_by_name(name)
-        contents << tag
-      end
-    end
-    total = contents.count
-    contents = prepare_contents(contents.slice(0, carousel_elements))
-    [contents, total]
-  end
   
-  def get_featured_content_with_match(featured, query)
-    contents = Array.new
-    conditions = construct_conditions_from_query(query, "title")
-    get_extra_fields!(featured)["contents"].split(",").each do |name|
-      cta = CallToAction.where("name = ? AND (#{conditions})", name)
-      if cta
-        contents << cta
-      else
-        tag = Tag.find_by_name(name)
-        contents << tag
-      end
-    end
-    prepare_contents(contents)
-  end
-
   # Convert a list of Call To Actions mixed with Tags into a list of ContentPreview.
   #   elements - list of Call To Actions mixed with Tags
   #   params   - used to handle a special case - see the get_cta_to_interactions_map() method documentation
@@ -395,16 +314,45 @@ module BrowseHelper
     prepare_contents(contents)
   end
   
-  def get_content_preview_stripe(stripe_tag_name, params = {})
+  # This methods is used to obtain a list of content previews starting from a tag name and a list of tags derived from the context (i.e: current property or language)
+  #   main_tag_name - the name of the tag that rappresent the content previews container
+  #   other_tags    - list of context tag such as current property tag or language tag, these tags will be used to filter contents. It could be empty.
+  #   params        - a dictionary containing further conditions to retrive content from DB (see get_cta_where_clause_from_params for detail)
+  def get_content_previews(main_tag_name, other_tags = [], params = {})
     #carousel elements if setted in content tag, if in section tag needs to be passed as function params
-    stripe_tag = Tag.find_by_name(stripe_tag_name)
-    carousel_elements = get_elements_for_browse_carousel(stripe_tag)
+    main_tag = Tag.find_by_name(main_tag_name)
+    carousel_elements = get_elements_for_browse_carousel(main_tag)
     
-    if(get_extra_fields!(stripe_tag)['ordering'] && !params[:related])
-      get_browse_section_by_ordering(stripe_tag, [], carousel_elements, params)
+    if(get_extra_fields!(main_tag)['ordering'] && !params[:related])
+      get_content_previews_by_tags_with_ordering(main_tag, [], carousel_elements, params)
     else
-      get_browse_area_by_category(stripe_tag, [], carousel_elements, params)
+      get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
     end
+  end
+  
+  # WITH MATCH METHOD
+  # these methods have been created for particular implementation of search: when the search string dose not match any contents 
+  # the user will be redirected to brwose page with stripes filtered with contents similar to words on string search.
+  # Every method below re-implement the above method of browse to implement this requirement no more in use in FANDOM
+  
+  def get_browse_area_by_category_with_match(category, query)
+    contents = get_contents_by_category_with_match(category, query)
+    extra_fields = get_extra_fields!(category)
+    browse_section = ContentSection.new({
+      key: category.name,
+      title: category.title,
+      icon_url: get_browse_section_icon(extra_fields),
+      contents: contents,
+      view_all_link: build_viewall_link("/browse/view_all/#{category.slug}"),
+      column_number: DEFAULT_VIEW_ALL_ELEMENTS / get_section_column_number(extra_fields),
+      slug: category.slug
+    })
+  end
+  
+  def get_contents_by_category_with_match(category, query)
+    tags = get_tags_with_tag_with_match(category.name, query).sort_by { |tag| tag.created_at }
+    ctas = get_ctas_with_tag_with_match(category.name, query).sort_by { |cta| cta.activated_at }
+    merge_contents(ctas, tags)
   end
   
 end

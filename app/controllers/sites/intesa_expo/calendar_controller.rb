@@ -97,14 +97,14 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   end
   
   def get_calendar_events(start_date, end_date)
-    language_tag_id = get_tag_from_params(get_intesa_property)
-    event_tag_id = Tag.find_by_name("event-#{get_intesa_property}")
+    language_tag = get_tag_from_params(get_intesa_property)
+    event_tag = Tag.find_by_name("event-#{get_intesa_property}")
     params = {
       ical_start_datetime: start_date.strftime("%Y-%m-%d %H:%M:%S %z"),
       ical_end_datetime: end_date.strftime("%Y-%m-%d %H:%M:%S %z"),
       order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC"
     }
-    events, has_more = get_contents_by_category(event_tag_id, [language_tag_id], 10000, params)
+    events, has_more = get_content_previews_with_tags([event_tag] + [language_tag], 10000, params)
     events
   end
   
