@@ -27,7 +27,8 @@
           </div>
           <div class="col-sm-12">
             <p class="footer__container__description-expo" ng-bind-html="aux.assets['footer_expo_description_' + aux.language]"></p>
-            <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn" onclick="gaq.push(['_trackEvent','Navigation','Footer','Scopri']);">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
+            <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn" ng-if="aux.language != 'imprese'" onclick="gaq.push(['_trackEvent','Navigation','Footer','Scopri']);">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
+            <a href="http://www.expo.intesasanpaolo.com/about" class="btn btn-blue footer__container__btn" ng-if="aux.language == 'imprese'" onclick="gaq.push(['_trackEvent','Navigation','Footer','Scopri']);">{{aux.assets['footer_expo_btn_it']}}</a>
           </div>
         </div>
       </div>

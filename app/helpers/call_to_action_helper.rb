@@ -18,6 +18,27 @@ module CallToActionHelper
     end
   end
 
+  def get_all_ctas_with_tag(tag_name)
+    cache_short get_ctas_with_tag_cache_key(tag_name) do
+      CallToAction.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).order("activated_at DESC").to_a
+    end
+  end
+
+  def get_property_from_cta(cta)
+    properties_tag = get_tag_with_tag_about_call_to_action(cta, "property")
+    if properties_tag.empty?
+      ""
+    else
+      "#{properties_tag.first.name}"
+    end
+  end
+
+  def aws_trasconding_not_required_or_completed(cta)
+    aux = JSON.parse(cta.aux || "{}")
+    @aws_transcoding_media_status = aux["aws_transcoding_media_status"]
+    !@aws_transcoding_media_status || @aws_transcoding_media_status == "done"
+  end
+
   def from_ctas_to_cta_ids_sql(calltoactions)
     calltoactions.joins("LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id")
                  .joins("LEFT OUTER JOIN rewards ON rewards.call_to_action_id = call_to_actions.id")

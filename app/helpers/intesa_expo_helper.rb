@@ -32,7 +32,7 @@ module IntesaExpoHelper
 
     param_tag = get_tag_from_params(tag_name)
     tagged_tags = get_tags_with_tags_in_and([param_tag.id, language_tag.id])
-    get_content_preview_stripe(tagged_tags.first.name, params)
+    get_content_previews(tagged_tags.first.name, [], params)
 
   end
 
@@ -40,7 +40,7 @@ module IntesaExpoHelper
     tag_tagged_with_related = get_tag_with_tag_about_call_to_action(cta, "related").first   
     params = { conditions: { exclude_cta_ids: [cta.id] }, related: true }   
     if tag_tagged_with_related
-      relateds = get_content_preview_stripe(tag_tagged_with_related.name, params)
+      relateds = get_content_previews(tag_tagged_with_related.name, [], params)
     else
       nil
     end

@@ -1,0 +1,59 @@
+<ul class="nav nav-tabs">
+  <li class="<%= 'active' if page == "confirmed" %>" >
+    <a href="/easyadmin/cups_confirmed">Richieste utenti confermati</a>
+  </li>
+  <li class="<%= 'active' if page == "not_confirmed" %>" >
+    <a href="/easyadmin/cups_not_confirmed">Richieste utenti non confermati</a>
+  </li>
+</ul>
+
+<h3>Richieste utenti 
+  <% if page == "confirmed" %>
+    confermati
+  <% elsif page == "not_confirmed" %>
+    non confermati
+  <% end %>
+</h3>
+
+<hr/>
+
+<div class="row text-right">
+  <div class="col-md-12">
+    <%= link_to "ESPORTA CSV", { :action => "export_cup_requests", :from_date => @from_date, 
+          :to_date => @to_date, :page => @page, :email_filter => @email_filter }, :class => "btn btn-primary" %>
+  </div>
+</div>
+
+<%= form_tag :action => 'filter_cup_requests', :method => 'post' do %>
+  <%= hidden_field_tag :page, page %>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="text-input">Filtra per EMAIL</label></br>
+        <%= text_field_tag :email_filter, @email_filter, :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="text-input">Dal giorno</label></br>
+        <%= text_field_tag :datepicker_from_date, @from_date, :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="text-input">Al giorno</label></br>
+        <%= text_field_tag :datepicker_to_date, @to_date, :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+      </div>
+    </div>
+    <div class="col-md-1">
+      <div class="form-group">
+        </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+      </div>
+    </div>
+  </div> 
+<% end %>

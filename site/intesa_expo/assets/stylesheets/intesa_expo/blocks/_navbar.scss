@@ -55,17 +55,31 @@
     padding-right: 5px !important;
   }
 
-  .navbar-right li:nth-child(2) p {
+  .navbar-right li:nth-child(2) p,
+  .navbar-right li:nth-child(3) p {
     border-left: 1px solid #eee; padding-left: 15px;
   }
-
+  
+  .press-contact{
+    a{
+      text-transform: lowercase;
+      font-size: 12px;
+      p{
+        font-size: 13px;
+        text-transform: capitalize;
+      }
+    }
+  }
 }
 
 @media (max-width: $screen-md-min) and (min-width: $screen-sm-min) {
   .navbar-nav-center {
     width: auto;
     text-align: center;
-    padding-left: 43px;
+    padding-left: 0px;
+  }
+  .navbar-nav.navbar-right:last-child {
+    margin-right: -50px;
   }
 }
 

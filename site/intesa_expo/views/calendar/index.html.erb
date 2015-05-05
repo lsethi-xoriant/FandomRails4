@@ -99,10 +99,10 @@
 	  			<% end %>
         	</div>
 	        <div class="col-xs-12 text-center" ng-if="!aux.today_events && formatDate(newDate(), 'it') == formatDate('<%= @today.strftime("%d-%m-%Y") %>', 'it')">
-	          <p class="calendar-event__empty-title">{{aux.assets['no_event_' + aux.language]}}</p>
+	          <p class="calendar-event__empty-title" ng-bind-html="aux.assets['no_event_' + aux.language]"></p>
 	        </div>
 	        <div class="col-xs-12 text-center" ng-if="!aux.today_events && formatDate(newDate(), 'it') != formatDate('<%= @today.strftime("%d-%m-%Y") %>', 'it')">
-	          <p class="calendar-event__empty-title">{{aux.assets['no_event_1_' + aux.language]}}</p>
+	          <p class="calendar-event__empty-title" ng-bind-html="aux.assets['no_event_1_' + aux.language]"></p>
 	        </div>
 	  	</div>
 	  </div>
@@ -240,9 +240,9 @@
  		if(!(event.start.format("HH:mm") == "00:00" && event.end.format("HH:mm") == "23:59")){
  			html.append('<p class="calendar-event__hour calendar-event__hour">'+ event.start.format("HH:mm") +'</p>');
  		}
-	    html.append('<a href="' + event.detail_url + '" class="calendar-event__title" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</span>');
+	    html.append('<p style="line-height: 16px;"><a href="' + event.detail_url + '" class="calendar-event__title" onmouseover="show_event_info(this, '+event.id+')">'+ event.title +'</a></p>');
 	  	if(event.extra_fields.highlight && event.extra_fields.highlight.value){
-	    	html.append('<div style="margin-left: -10px; margin-right: -10px;"><img class="hidden-xs img-responsive" src="'+ event.thumb_url +'" /></div>');
+	    	html.append('<div style="margin-left: -10px; margin-right: -10px;"><img class="hidden-xs img-responsive calendar-event__image-highlight" src="'+ event.thumb_url +'" /></div>');
 	  	}
 	    return html;
 	  }

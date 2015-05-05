@@ -17,10 +17,42 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   
   def index
     
+    monthes_map = {
+      "gennaio" => "01-01-2015",
+      "febbraio" => "01-02-2015",
+      "marzo" => "01-03-2015",
+      "aprile" => "01-04-2015",
+      "maggio" => "01-05-2015",
+      "giugno" => "01-06-2015",
+      "luglio" => "01-07-2015",
+      "agosto" => "01-08-2015",
+      "settembre" => "01-09-2015",
+      "ottobre" => "01-10-2015",
+      "novembre" => "01-11-2015",
+      "dicembre" => "01-12-2015",
+      "jenuary" => "01-01-2015",
+      "february" => "01-02-2015",
+      "march" => "01-03-2015",
+      "april" => "01-04-2015",
+      "may" => "01-05-2015",
+      "june" => "01-06-2015",
+      "july" => "01-07-2015",
+      "august" => "01-08-2015",
+      "september" => "01-09-2015",
+      "october" => "01-10-2015",
+      "november" => "01-11-2015",
+      "december" => "01-12-2015"
+    }
+    
     today = DateTime.now.utc
     if params[:day]
-      today = DateTime.parse(params[:day]).utc
-      @day_selected = params[:day] 
+      if monthes_map.has_key?(params[:day])
+        today = DateTime.parse(monthes_map[params[:day]]).utc
+        @day_selected = monthes_map[params[:day]]
+      else
+        today = DateTime.parse(params[:day]).utc
+        @day_selected = params[:day]
+      end
     end
     
     month_calendar = initialize_calendar(today)
@@ -65,14 +97,14 @@ class Sites::IntesaExpo::CalendarController < CalendarController
   end
   
   def get_calendar_events(start_date, end_date)
-    language_tag_id = get_tag_from_params(get_intesa_property)
-    event_tag_id = Tag.find_by_name("event-#{get_intesa_property}")
+    language_tag = get_tag_from_params(get_intesa_property)
+    event_tag = Tag.find_by_name("event-#{get_intesa_property}")
     params = {
       ical_start_datetime: start_date.strftime("%Y-%m-%d %H:%M:%S %z"),
       ical_end_datetime: end_date.strftime("%Y-%m-%d %H:%M:%S %z"),
       order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC"
     }
-    events, has_more = get_contents_by_category(event_tag_id, [language_tag_id], 10000, params)
+    events, has_more = get_content_previews_with_tags([event_tag] + [language_tag], 10000, params)
     events
   end
   

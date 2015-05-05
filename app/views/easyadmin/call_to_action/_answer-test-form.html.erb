@@ -7,7 +7,7 @@
             <%= f.hidden_field :destroy_answer %>
             <!-- <a class="btn btn-secondary btn-xs " href="javascript: void(0)" onclick="updateDeleteHiddenField(this)">sgancia</a> -->
         <% else %>
-          <%= link_to_remove_answer_quiz_fields "rimuovi" %>
+          <%= link_to_remove_fields("rimuovi", "answer_quiz") %>
         <% end %>
       </div>
     </div>
@@ -60,10 +60,8 @@
 
         <div class="form-group">
           <label class="text-input">CallToAction</label>
-          <% date_array = CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND (tags.name='step' OR tags.name = 'ending')", Time.now.utc).order("activated_at DESC").map { |c| [ "#{ c.title }", c.id] } %>
-          <% date_array.unshift ["", ""] %>
-          <%= f.select :call_to_action_id, date_array, {}, :class => "form-control" %>
-        </div>                 
+          <%= f.text_field :call_to_action_id, :value => (f.object.call_to_action_id rescue nil), :class => "form-control cta-tag-box" %>
+        </div>
       </div>
 
       <div class="col-lg-6">
@@ -95,3 +93,31 @@
   </div>
 </div>
 
+<script type="text/javascript">
+
+  <% cta_list = [] %>
+  <% CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag)
+                  .select('id, name')
+                  .where("activated_at<=? AND activated_at IS NOT NULL AND (tags.name='step' OR tags.name = 'ending')", Time.now.utc)
+                  .order("activated_at DESC").each do |c| 
+                    cta_list << {"id" => c.id, "text" => c.name} 
+                  end %>
+
+    cta_list = <%= raw(cta_list.to_json) %>
+
+  function formatSelection(item) {
+    return item.text;
+  };
+
+  $(".cta-tag-box").select2({ 
+    maximumSelectionSize: 1, 
+    createSearchChoice: function() { return null; },
+    formatSelection: formatSelection,
+    formatNoMatches: function (term) { return "Nessuna Call to Action trovata"; },
+    formatSelectionTooBig: function (limit) { return "Puoi selezionare una sola Call to Action"; },
+    placeholder: "", 
+    tags: cta_list, 
+    tokenSeparators: [","] 
+  });
+
+</script>

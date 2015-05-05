@@ -84,9 +84,12 @@ module TagHelper
   def get_tags_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
     cache_short get_tags_with_tags_cache_key(tag_ids, extra_key) do
-      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
       where_clause = get_tag_where_clause_from_params(params)
-      tags = Tag.where("id IN (#{tag_ids_subselect})")
+      tags = Tag
+      unless tag_ids.empty?
+        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
+        tags = tags.where("id IN (#{tag_ids_subselect})")
+      end
       if !where_clause.empty?
         tags = tags.where("#{where_clause}")
       end
@@ -151,12 +154,18 @@ module TagHelper
     cache_short get_tags_with_tags_cache_key(tag_ids, "") do
       hidden_tags_ids = get_hidden_tag_ids
       where_clause = get_tag_where_clause_from_params(params)
-      if hidden_tags_ids.any?
+      tags = Tag.includes(:tags_tags)
+      
+      if hidden_tags_ids.any? && tag_ids.empty?
+        tags = tags.where("tags.id not in (#{hidden_tags_ids.join(",")})")
+      elsif hidden_tags_ids.any? && !tag_ids.empty?
         tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
-      else
+        tags = tags.where("tags.id in (#{tag_ids_subselect})")
+      elsif hidden_tags_ids.empty? && !tag_ids.empty?
         tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
+        tags = tags.where("tags.id in (#{tag_ids_subselect})")
       end
-      tags = Tag.includes(:tags_tags).where("tags.id in (#{tag_ids_subselect})")
+      
       if !where_clause.empty?
         tags.where("#{where_clause}")
       end
@@ -173,7 +182,7 @@ module TagHelper
     if conditions.empty?
       tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).order("tags.created_at DESC").to_a
     else
-      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions}) AND tags.id in (?)", tag_name, category_tag_ids).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions}) AND (tags.id in (?))", tag_name, category_tag_ids).order("tags.created_at DESC").to_a
     end
     filter_results(tags, query)
   end
@@ -184,7 +193,7 @@ module TagHelper
     if conditions.empty?
       tags = Tag.includes(:tags_tags).where("id in (?)", category_tag_ids).order("tags.created_at DESC").to_a
     else
-      tags = Tag.includes(:tags_tags).where("#{conditions} AND id in (?)", category_tag_ids).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags).where("(#{conditions}) AND (id in (?))", category_tag_ids).order("tags.created_at DESC").to_a
     end
     filter_results(tags, query)
   end

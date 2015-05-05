@@ -1,7 +1,7 @@
 /* CALENDAR */
 
 .calendar-event__empty-title {
-  font-size: 14px;
+  font-size: 20px;
   color: #fff;
   padding-top: 25px;
   padding-bottom: 25px;
@@ -172,7 +172,21 @@
   text-decoration: none;
 }
 
-.calendar-event__message{}
+.calendar-event__image-highlight{
+  margin-top: 10px;
+}
+
+.calendar-event__message{
+  margin-top:20px;
+}
+
+.fc-toolbar{
+  .fc-center{
+    h2{
+      cursor: pointer;
+    }
+  }
+}
 
 #full-calendar{
   

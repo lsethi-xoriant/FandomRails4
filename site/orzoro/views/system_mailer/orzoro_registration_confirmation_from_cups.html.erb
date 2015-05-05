@@ -23,7 +23,7 @@
       <div style="max-width: 600px; margin-left: auto; margin-right: auto; background-color: #fff;">
         <div style="text-align: center; padding: 10px;">
           <h1 style="font-family: arial, helvetica, sans-serif; color: #660206;">Complimenti, <%= @form_cup['identity']['first_name'] %></h1>
-          <h2 style="font-family: arial, helvetica, sans-serif; color: #818181;">Abbiamo ricevuto i tuoi dati per la richiesta delle tazze.</h2>
+          <h2 style="font-family: arial, helvetica, sans-serif; color: #818181;">Abbiamo ricevuto i tuoi dati per la richiesta dei gadget.</h2>
           <p style="text-align: center; font-weight: bold; margin: 30px 0;"><a href="<%= @link %>" style="color: #cc0000; font-size: 20px;">CLICCA QUI PER CONFERMARE</a></p>
           <p>La tua richiesta verrà elaborata non appena confermerai la tua iscrizione al sito di Orzoro. In caso contrario non potremmo procedere con la memorizzazione dei tuoi dati per il relativo invio delle tazze.</p>
           <img style="width: 80%; display: block; margin: 10px auto;" src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>">
@@ -31,22 +31,10 @@
 
         <div style="background-color: #f6f0dd;">
           <div style="float: left; width: 50%; padding-top: 60px;">
-            <% if @form_cup['receipt']['package_count'].to_i == 2 %>
-              <img src="<%= @cup_tag_extra_fields["two_packages"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
-            <% else %>
-              <img src="<%= @cup_tag_extra_fields["three_packages"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
-            <% end %>
+            <img src="<%= @packages_image_url %>" style="display: block; width: 85%; margin:10px auto;" />
           </div>
           <div style="float: left; width: 50%;">
-            <% if @form_cup['receipt']['package_count'].to_i == 2 %>
-              <% if @form_cup['receipt']['cup_selected'] == 'dora' %>
-                <img src="<%= @cup_tag_extra_fields["dora_cup"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
-              <% else %>
-                <img src="<%= @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
-              <% end %>
-            <% else %>
-              <img src="<%= @cup_tag_extra_fields["two_cups"]["url"] rescue nil %>" style="display: block; width: 85%; margin:10px auto;" />
-            <% end %>
+            <img src="<%= @gadgets_image_url %>" style="display: block; width: 85%; margin:10px auto;" />
           </div>
           <div style="clear: both;"></div>
         </div>

@@ -60,6 +60,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     @user_id_filter = params[:user_id_filter]
     @cta_id_filter = params[:cta_id_filter]
     @text_filter = params[:text_filter]
+    @profanity_check_filter = params[:profanity_check_filter]
 
     @page_size = @comment_not_approved.num_pages
     @page_current = page
@@ -99,7 +100,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
   end
   
   def write_where_conditions(params, approved_cond)
-    params[:user_id_filter] = params[:cta_id_filter] = params[:text_filter] = nil unless params[:commit] != "RESET"
+    params[:user_id_filter] = params[:cta_id_filter] = params[:text_filter] = params[:profanity_check_filter] = nil unless params[:commit] != "RESET"
     where_conditions = approved_cond
     if params[:commit] != "RESET" && !params[:cta_id_filter].blank?
       call_to_action_ids = [params[:cta_id_filter].to_i]
@@ -107,10 +108,18 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
       call_to_action_ids = CallToAction.where("#{ params['cta'] == 'user_call_to_actions' ? 'user_id IS NOT NULL' : 'user_id IS NULL' }").pluck(:id)
     end
     comment_ids = Interaction.where("call_to_action_id IN (?) AND resource_type = 'Comment'", call_to_action_ids).pluck(:resource_id)
-
+    if params[:profanity_check_filter]
+      comment_with_profanity_ids = []
+      UserCommentInteraction.where(:comment_id => comment_ids, :approved => false).each do |user_comment_interaction|
+        if (JSON(user_comment_interaction.aux)["profanity"] == true rescue false)
+          comment_with_profanity_ids << user_comment_interaction.id
+        end
+      end 
+    end
     where_conditions << " AND user_id IN (#{params[:user_id_filter]})" unless params[:user_id_filter].blank?
     where_conditions << " AND comment_id IN (#{ comment_ids.empty? ? "-1" : comment_ids.join(",") })"
     where_conditions << " AND text ILIKE '%#{params[:text_filter]}%'" unless params[:text_filter].blank?
+    where_conditions << " AND id in (#{comment_with_profanity_ids.join(",")})" unless comment_with_profanity_ids.blank?
     where_conditions
   end
 

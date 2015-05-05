@@ -44,6 +44,22 @@ class SystemMailer < ActionMailer::Base
     @form_cup = cup_obj
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     @assets_extra_fields = get_extra_fields!(Tag.find_by_name("assets"))
+    if @form_cup['receipt']['package_count'].to_i == 2
+      @packages_image_url = @cup_tag_extra_fields["two_packages"]["url"] rescue nil
+      @gadgets_image_url = @cup_tag_extra_fields["placemat"]["url"] rescue nil
+    elsif @form_cup['receipt']['package_count'].to_i == 3
+      @packages_image_url = @cup_tag_extra_fields["three_packages"]["url"] rescue nil
+      if @form_cup['receipt']['cup_selected'] == "placemat_and_miss_tressy"
+        @gadgets_image_url = @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil
+      elsif @form_cup['receipt']['cup_selected'] == "placemat_and_dora"
+        @gadgets_image_url = @cup_tag_extra_fields["dora_cup"]["url"] rescue nil
+      else
+        @gadgets_image_url = @cup_tag_extra_fields["placemats"]["url"] rescue nil
+      end
+    else
+      @packages_image_url = @cup_tag_extra_fields["five_packages"]["url"] rescue nil
+      @gadgets_image_url = @cup_tag_extra_fields["two_cups"]["url"] rescue nil
+    end
     mail(to: cup_obj['identity']['email'], subject: subject)
   end
 
@@ -59,6 +75,22 @@ class SystemMailer < ActionMailer::Base
     @form_cup = cup_obj
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
     @assets_extra_fields = get_extra_fields!(Tag.find_by_name("assets"))
+    if @form_cup['receipt']['package_count'].to_i == 2
+      @packages_image_url = @cup_tag_extra_fields["two_packages"]["url"] rescue nil
+      @gadgets_image_url = @cup_tag_extra_fields["placemat"]["url"] rescue nil
+    elsif @form_cup['receipt']['package_count'].to_i == 3
+      @packages_image_url = @cup_tag_extra_fields["three_packages"]["url"] rescue nil
+      if @form_cup['receipt']['cup_selected'] == "placemat_and_miss_tressy"
+        @gadgets_image_url = @cup_tag_extra_fields["miss_tressy_cup"]["url"] rescue nil
+      elsif @form_cup['receipt']['cup_selected'] == "placemat_and_dora"
+        @gadgets_image_url = @cup_tag_extra_fields["dora_cup"]["url"] rescue nil
+      else
+        @gadgets_image_url = @cup_tag_extra_fields["placemats"]["url"] rescue nil
+      end
+    else
+      @packages_image_url = @cup_tag_extra_fields["five_packages"]["url"] rescue nil
+      @gadgets_image_url = @cup_tag_extra_fields["two_cups"]["url"] rescue nil
+    end
     @link = "#{root_url}complete_registration_from_cups/#{user.email}/#{user.confirmation_token}"
     mail(to: cup_obj['identity']['email'], subject: subject)
   end

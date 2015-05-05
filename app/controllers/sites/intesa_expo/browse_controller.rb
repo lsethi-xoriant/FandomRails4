@@ -45,11 +45,11 @@ class Sites::IntesaExpo::BrowseController < BrowseController
     }
     
     if extra_fields['top_stripe']
-      @aux_other_params['top_stripe'] = get_content_preview_stripe(extra_fields['top_stripe']) 
+      @aux_other_params['top_stripe'] = get_content_previews(extra_fields['top_stripe']) 
     end
     
     if extra_fields['bottom_stripe']
-      @aux_other_params['bottom_stripe'] = get_content_preview_stripe(extra_fields['bottom_stripe']) 
+      @aux_other_params['bottom_stripe'] = get_content_previews(extra_fields['bottom_stripe']) 
     end
     
     @use_filter = extra_fields['use_filter'].nil? ? false : extra_fields['use_filter']['value']

@@ -149,4 +149,27 @@ module OrzoroHelper
     aux
 
   end
+
+  def get_request_selection(cup_selected)
+    selection = ""
+    case cup_selected
+    when nil
+      selection = "Due tazze"
+    when "miss_tressy"
+      selection = "Tazza miss Tressy"
+    when "dora"
+      selection = "Tazza Dora"
+    when "placemat"
+      selection = "Tovaglietta"
+    when "placemat_and_miss_tressy"
+      selection = "Tovaglietta e tazza miss Tressy"
+    when "placemat_and_dora"
+      selection = "Tovaglietta e tazza Dora"
+    when "placemats"
+      selection = "Due tovagliette"
+    when "placemats_and_two_cups"
+      selection = "Due tovagliette e due tazze"
+    end
+    selection
+  end
 end

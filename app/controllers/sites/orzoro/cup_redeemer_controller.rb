@@ -67,14 +67,9 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
     attribute :minute_of_emission, type: String
     attribute :receipt_total, type: Float
 
-    validates_presence_of :package_count, :receipt_number, :day_of_emission, :month_of_emission, :year_of_emission, 
+    validates_presence_of :package_count, :cup_selected, :receipt_number, :day_of_emission, :month_of_emission, :year_of_emission, 
                           :hour_of_emission, :minute_of_emission
     validates :receipt_total, presence: true, numericality: { only_float: true }
-    validates_presence_of :cup_selected, :if => :two_packages_selected?
-
-    def two_packages_selected?
-      package_count == 2
-    end
 
   end
 
@@ -141,11 +136,17 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
   end
 
   def step_2_update
+    params_hash = params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2]
+    if params_hash["package_count"] == "2"
+      params_hash["cup_selected"] = "placemat"
+    elsif params_hash["package_count"] == "5"
+      params_hash["cup_selected"] = "placemats_and_two_cups"
+    end
     @cup_tag_extra_fields = get_extra_fields!(Tag.find_by_name("cup-redeemer"))
-    @cup_redeemer = CupRedeemerStep2.new(params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2])
+    @cup_redeemer = CupRedeemerStep2.new(params_hash)
     cache_value = cache_read("cup-redeemer-#{getSessionId}")
     if @cup_redeemer.valid?
-      new_cache_value = cache_value.merge({ "receipt" => params[:sites_orzoro_cup_redeemer_controller_cup_redeemer_step2] }) if cache_value
+      new_cache_value = cache_value.merge({ "receipt" => params_hash }) if cache_value
       cache_write("cup-redeemer-#{getSessionId}", new_cache_value, 1.hour)
       redirect_to "/gadget/step_3"
     elsif cache_value.nil?

@@ -145,7 +145,7 @@
       <% @property_values.each do |key, value| %>
       <div class="col-md-3 col-sm-6" style="margin: 20px 0">
       <h4 style="text-align:center;"><%= "#{(@extra_fields[key]['title'] || key) rescue key} #{@property_tag_name}" %></h4>
-        <div class="dashboard-stat primary" style="background-color: <%= (@extra_fields[key]["background-color"] || "#CCC") rescue "#CCC" %>;">
+        <div class="dashboard-stat primary" style="background-color: <%= (@extra_fields[key]["background_color"] || "#CCC") rescue "#CCC" %>;">
           <div class="details">
             <span class="content"> CONTATORE <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
             <span class="value-sm"><%= value %></span>

@@ -1,5 +1,5 @@
 <div class="widget-calendar__title-container">
-  <p class="widget-calendar__title">{{aux.assets["calendar_title_" + aux.language]}}</p>
+  <p class="widget-calendar__title"><a href="{{linkTo('/calendar')}}">{{aux.assets["calendar_title_" + aux.language]}}</a></p>
 </div>
 <div id="widget-calendar"></div>    
 
@@ -26,7 +26,13 @@
       height: "auto",
       lang: "<%= $context_root || 'it' %>",
       editable: false,
-      disableResizing: true
+      disableResizing: true,
+      eventAfterAllRender: function(e){
+      	$(".fc-toolbar .fc-center h2").click(function(){
+      		var today = $("#widget-calendar").fullCalendar('getDate');
+      		window.location.href = "/<%= get_intesa_property %>/calendar/" + today.format("YYYY-MM-DD");
+      	});
+      }
     });
 
   }

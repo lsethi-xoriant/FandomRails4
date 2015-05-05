@@ -58,6 +58,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       end
 
       flash[:notice] = "CallToAction generata correttamente"
+      cookies[:updated_at] = Time.now
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
@@ -89,6 +90,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       end
 
       flash[:notice] = "CallToAction aggiornata correttamente"
+      cookies[:updated_at] = Time.now
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
@@ -343,8 +345,14 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
           user_where_conditions.nil? ? "email ILIKE '%#{@email_filter}%'" 
           : user_where_conditions + " AND email ILIKE '%#{@email_filter}%'"
       end
-      user_ids = User.where(user_where_conditions).pluck(:id) unless user_where_conditions.nil?
-      where_conditions << " AND user_id IN (#{user_ids.join(', ')})" if user_ids
+      if user_where_conditions
+        user_ids = User.where(user_where_conditions).pluck(:id)
+        if user_ids.empty?
+          where_conditions = "FALSE"
+        else
+          where_conditions << " AND user_id IN (#{user_ids.join(', ')})" if user_ids
+        end
+      end
     end
     @ctas = CallToAction.where(where_conditions).page(page).per(per_page).order("activated_at ASC NULLS LAST")
 
