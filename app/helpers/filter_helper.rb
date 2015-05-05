@@ -20,7 +20,21 @@ module FilterHelper
     return operator_by_activerecord_expresson[operator]
   end
 
-  def get_tagged_objects(active_record_relation, tag_list, tagging_table, tagging_table_model_id_column_name, tagging_table_tag_id_column_name)
+  # Internal: Get the active_record_relation objects tagged with tags having tag_names (in AND).
+  #
+  # active_record_relation - ActiveRecord objects
+  # tag_names - array containing tag names
+  # tagging_table - ActiveRecord model that links selected relation with tags
+  # tagging_table_model_id_column_name - tagging_table selected relation attribute name
+  # tagging_table_tag_id_column_name - tagging_table tag attribute name
+  #
+  # Examples
+  #
+  #    get_tagged_objects(CallToAction.where("created_at > '2015-01-01'"), ["violetta", "glam"], CallToActionTag, "call_to_action_id", "tag_id")
+  #    # => [2333, 2398, 2403, 2408]
+  #
+  # Returns an array of ids
+  def get_tagged_objects(active_record_relation, tag_names, tagging_table, tagging_table_model_id_column_name, tagging_table_tag_id_column_name)
 
     model_ids = Array.new
     active_record_relation.find_each do |model_instance|
@@ -28,7 +42,7 @@ module FilterHelper
     end
 
     tag_ids = Array.new
-    tag_list.split(",").each do |tag_name|
+    tag_names.split(",").each do |tag_name|
       tag = Tag.find_by_name(tag_name)
       tag_ids << tag.id if tag
     end
