@@ -101,25 +101,6 @@ class BrowseController < ApplicationController
     end
   end
   
-  def full_search_old
-    browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY).value
-    browse_areas = browse_settings.split(",")
-    @browse_section = Array.new
-    browse_areas.each do |area|
-      if area.start_with?("$")
-        func = "get_#{area[1..area.length]}"
-        @browse_section << send(func, params[:query])
-      else
-        tag_area = Tag.find_by_name(area)
-        if get_extra_fields!(tag_area).key? "contents"
-          @browse_section << get_featured_with_match(tag_area, params[:query])
-        else
-          @browse_section << get_browse_area_by_category_with_match(tag_area, params[:query])
-        end
-      end
-    end
-  end
-  
   def get_tags_from_contents(contents)
     tags = {}
     contents.each do |content|
@@ -130,7 +111,7 @@ class BrowseController < ApplicationController
   
   def index_category
     @category = Tag.includes(:tags_tags).find(params[:id])
-    contents, @has_more = get_contents_by_category(@category, get_tags_for_category(@category), DEFAULT_VIEW_ALL_ELEMENTS)
+    contents, @has_more = get_content_previews_with_tags([@category] + get_tags_for_category(@category), DEFAULT_VIEW_ALL_ELEMENTS)
     @tags = get_tags_from_contents(contents)
     @contents = compute_cta_status_contents(contents)
     
@@ -157,7 +138,7 @@ class BrowseController < ApplicationController
       offset: params[:offset].to_i,
       perpage: DEFAULT_VIEW_ALL_ELEMENTS
     }
-    contents, has_more = get_contents_by_category(category, get_tags_for_category(category), DEFAULT_VIEW_ALL_ELEMENTS, params)
+    contents, has_more = get_content_previews_with_tags([category] + get_tags_for_category(category), DEFAULT_VIEW_ALL_ELEMENTS, params)
     
     contents = compute_cta_status_contents(contents)
     
@@ -269,6 +250,28 @@ class BrowseController < ApplicationController
   #hook for filter search result in specific property if multiproperty site
   def get_current_property
     nil
+  end
+  
+  # Old implementation of search that redirect to filtered browse page if no result
+  # see browse helper docs for more information
+  
+  def full_search_old
+    browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY).value
+    browse_areas = browse_settings.split(",")
+    @browse_section = Array.new
+    browse_areas.each do |area|
+      if area.start_with?("$")
+        func = "get_#{area[1..area.length]}"
+        @browse_section << send(func, params[:query])
+      else
+        tag_area = Tag.find_by_name(area)
+        if get_extra_fields!(tag_area).key? "contents"
+          @browse_section << get_featured_with_match(tag_area, params[:query])
+        else
+          @browse_section << get_browse_area_by_category_with_match(tag_area, params[:query])
+        end
+      end
+    end
   end
   
 end
