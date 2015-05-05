@@ -72,7 +72,7 @@
             <label class="text-input">Tipologia di contenuto</label>
               <%= f.select(:media_type, [["DIGITALE", "DIGITALE"], ["FISICO", "FISICO"], ["CALLTOACTION", "CALLTOACTION"]], {}, { :class => "form-control" }) %>
           </div>
-          <div class="form-group cta-erward">
+          <div class="form-group cta-reward">
               <label class="text-input">Call to action premio</label>
               <% date_array = get_all_ctas_with_tag(CTA_REWARD_TAG).map { |cta| [cta.title, cta.id] } %>
               <% date_array.unshift ["", ""] %>

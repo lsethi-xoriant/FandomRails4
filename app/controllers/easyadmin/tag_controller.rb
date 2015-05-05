@@ -79,19 +79,24 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     end
   end
 
+  def edit
+    @tag = Tag.find(params[:id])
+    @tag_list_arr = Array.new
+    @tag.tags_tags.each { |t| @tag_list_arr << t.other_tag.name }
+    @tag_list = @tag_list_arr.join(",")
+  end
+
   def update
     create_or_update("edit") do
       @tag = Tag.find(params[:id])
       create_and_link_attachment(params[:tag], @tag)
       old_name = @tag.name
       new_name = params[:tag][:name]
-
       if old_name == new_name
         @tag.update_attributes(params[:tag])
       else
         change_name_if_not_locked(@tag, params)
       end
-
     end
   end
 
@@ -102,13 +107,6 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     else
       tag.update_attributes(new_tag_params[:tag])
     end
-  end
-
-  def edit
-    @tag = Tag.find(params[:id])
-    @tag_list_arr = Array.new
-    @tag.tags_tags.each { |t| @tag_list_arr << t.other_tag.name }
-    @tag_list = @tag_list_arr.join(",")
   end
 
   def add_tags_tags_and_check_cycle
@@ -258,6 +256,99 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     tag.save
     TagsTag.where("tag_id = #{tag_id}").each do |tags_tag|
       update_updated_at_recursive(tags_tag.other_tag_id, updated_at)
+    end
+  end
+
+  def update_tag
+    @tag = Tag.find(params[:id])
+    unless @tag.update_attributes(params[:tag])  
+      render template: "/easyadmin/easyadmin/edit_tag"     
+    else
+      flash[:notice] = "Tag aggiornato correttamente"
+      redirect_to "/easyadmin/tag"
+    end
+  end
+
+  def tag_cta
+    @tag_list_arr = Array.new
+    CallToAction.find(params[:id]).call_to_action_tags.each { |t| @tag_list_arr << t.tag.name }
+    @tag_list = @tag_list_arr.join(",")
+    @page = params[:page]
+  end
+
+  def tag_cta_update
+    cta = CallToAction.find(params[:id])
+    tag_list = params[:tag_list].split(",")
+
+    cta.call_to_action_tags.delete_all
+
+    tag_list.each do |t|
+      tag = Tag.find_by_name(t)
+      tag = Tag.create(name: t, slug: t) unless tag
+      CallToActionTag.create(tag_id: tag.id, call_to_action_id: cta.id)
+    end
+    flash[:notice] = "CallToAction taggata"
+    unless params[:page].blank?
+      redirect_to params[:page]
+    else
+      redirect_to "/easyadmin/cta/tag/#{ cta.id }"
+    end
+  end
+
+  def update_class_tag_table(class_name, class_id_field, tag_id_field)
+    id_objects_to_update = class_name.pluck(class_id_field)
+
+    old_tags = params[:old_tag].split(",").map { |name|
+        Tag.find_by_name(name)
+    }
+
+    old_tags.each do |old_tag|
+      id_objects_tagged = class_name.where("#{tag_id_field} = ?", old_tag.id).pluck(class_id_field)
+      id_objects_to_update = id_objects_to_update & id_objects_tagged # intersection
+    end
+
+    id_objects_to_update.each do |object_id|
+      # class_name.delete_all(["#{class_id_field} = ?", object_id]) # uncomment if old tagging must be dismissed
+      new_tag = Tag.find_by_name(params[:new_tag])
+      new_tag = Tag.create(name: params[:new_tag]) unless new_tag
+
+      if class_name.where("#{class_id_field} = ? AND #{tag_id_field} = ?", object_id, new_tag.id).count == 0
+        object_tag = class_name.new
+        object_tag[class_id_field] = object_id
+        object_tag[tag_id_field] = new_tag.id
+        object_tag.save
+      end
+    end
+
+    if id_objects_to_update.size > 0
+      flash.now[:notice] = (flash.now[:notice] ||= []) << "#{class_name.to_s.slice(0..-4)} ritaggati/e"
+    end
+  end
+
+  def update_tags_tag_table
+
+    id_objects_to_update = []
+
+    params[:old_tag].split(",").map { |name|
+      other_tag = Tag.find_by_name(name)
+      id_objects_to_update = id_objects_to_update | TagsTag.where(:other_tag_id => other_tag.id).pluck(:tag_id)
+    }
+
+    id_objects_to_update.each do |object_id|
+      # TagsTag.delete_all(["tag_id = ?", object_id]) # uncomment if old tagging must be dismissed
+      new_tag = Tag.find_by_name(params[:new_tag])
+      new_tag = Tag.create(name: params[:new_tag]) unless new_tag
+
+      if TagsTag.where("tag_id = ? AND other_tag_id = ?", object_id, new_tag.id).count == 0
+        object_tag = TagsTag.new
+        object_tag.tag_id = object_id
+        object_tag.other_tag_id = new_tag.id
+        object_tag.save
+      end
+    end
+
+    if id_objects_to_update.size > 0
+      flash.now[:notice] = (flash.now[:notice] ||= []) << "Tags ritaggati/e"
     end
   end
 

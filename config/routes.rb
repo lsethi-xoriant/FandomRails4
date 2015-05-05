@@ -30,7 +30,8 @@ Fandom::Application.routes.draw do
       scope module: "orzoro" do
         namespace :easyadmin do
           match "/dashboard", :to => "easyadmin#dashboard"
-          match "/cups", :to => "user#index_cup_requests"
+          match "/cups_confirmed", :to => "user#index_cup_requests", defaults: { page: 'confirmed' }
+          match "/cups_not_confirmed", :to => "user#index_cup_requests", defaults: { page: 'not_confirmed' }
           match "/cups/filter", :to => "user#filter_cup_requests"
           match "export_cup_requests", :to => "user#export_cup_requests"
         end
@@ -336,11 +337,14 @@ Fandom::Application.routes.draw do
 
     match "/", :to => "easyadmin#index"
 
+    # TAG
     match "tag/filter", :to => "tag#filter"
     match "tag/clone/:id", :to => "tag#clone"
     match "tag/ordering", :to => "tag#ordering"
     match "tag/retag", :to => "tag#retag_tag"
     match "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
+    match "cta/tag/:id", :to => "tag#tag_cta"
+    match "cta/tag/:id/update", :to => "tag#tag_cta_update"
 
     resources :home_launchers
 
@@ -379,14 +383,10 @@ Fandom::Application.routes.draw do
     match "cta/clone/:id", :to => "call_to_action#clone"
     match "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
 
-    # TAG CTA
-    match "cta/tag/:id", :to => "easyadmin#tag_cta"
-    match "cta/tag/:id/update", :to => "easyadmin#tag_cta_update"
-
     # PROMOCODE
-    match "promocode", :to => "easyadmin#index_promocode"
-    match "promocode/new_promocode", :to => "easyadmin#new_promocode"
-    match "promocode/create_promocode", :to => "easyadmin#create_promocode"
+    match "promocode", :to => "promocode#index_promocode"
+    match "promocode/new_promocode", :to => "promocode#new_promocode"
+    match "promocode/create_promocode", :to => "promocode#create_promocode"
     
     # PRIZE
     match "reward", :to => "easyadmin_reward#index"
@@ -425,7 +425,7 @@ Fandom::Application.routes.draw do
     match "dashboard", :to => "easyadmin#dashboard"
     match "published", :to => "easyadmin#published"
     match "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
-    match "dashboard/update_activated_at", :to => "easyadmin#update_activated_at", defaults: { format: 'json' }
+    match "dashboard/update_activated_at", :to => "call_to_action#update_activated_at", defaults: { format: 'json' }
     match "most_clicked_interactions", :to => "easyadmin#index_most_clicked_interactions"
     match "reward_cta_unlocked", :to => "easyadmin#index_reward_cta_unlocked"
     

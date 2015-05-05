@@ -1,3 +1,156 @@
+// Easyadmin call to action forms methods //
+
+function add_fields(link, association, content, resource) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $("#tmp-" + resource + "-add").prepend(content.replace(regexp, new_id));
+}
+
+function add_like_fields(link, association, content) {
+  if(!like_counter) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-like-add").prepend(content.replace(regexp, new_id));
+    like_counter = true;
+  }
+}
+
+function add_download_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $("#tmp-download-add").prepend(content.replace(regexp, new_id));
+}
+
+function add_play_fields(link, association, content) {
+  if(!play_counter) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-play-add").prepend(content.replace(regexp, new_id));
+    play_counter = true;
+  }
+}
+
+function add_versus_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $("#tmp-versus-add").prepend(content.replace(regexp, new_id));
+}
+
+function add_check_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $("#tmp-check-add").prepend(content.replace(regexp, new_id));
+}
+
+function add_quiz_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $("#tmp-quiz-add").prepend(content.replace(regexp, new_id));
+}
+
+function add_upload_fields(link, association, content) {
+  if(!upload_counter){
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-upload-add").prepend(content.replace(regexp, new_id));
+  }
+}
+
+function add_answer_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $(link).parent().parent().parent().parent().find(".answers-container").prepend(content.replace(regexp, new_id));
+
+  $(".answer-media-type").each(function(i, obj) {
+    updateMedia(obj);
+  });
+}
+
+function add_share_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $("#tmp-share-add").prepend(content.replace(regexp, new_id));
+}
+
+function add_check_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $("#tmp-check-add").prepend(content.replace(regexp, new_id));
+}
+
+function add_download_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  $("#tmp-download-add").prepend(content.replace(regexp, new_id));
+}
+
+function add_comment_fields(link, association, content) {
+  if(!comment_counter) {
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-comment-add").prepend(content.replace(regexp, new_id));
+    comment_counter = true;
+  }
+}
+
+function add_vote_fields(link, association, content) {
+  if(!vote_counter){
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-vote-add").prepend(content.replace(regexp, new_id));
+    vote_counter = true;
+  }
+}
+
+function remove_fields(link, resource) {
+  switch(resource) {
+    case "check":
+    case "download":
+    case "quiz":
+    case "versus":
+    case "contest":
+      $(link).parent().parent().parent().remove();
+      break;
+    case "answer_quiz":
+      $(link).parent().parent().parent().parent().remove();
+      break;
+    case "like":
+      $(link).parent().parent().parent().remove();
+      like_counter = false;
+      break;
+    case "play":
+      $(link).parent().parent().parent().remove();
+      play_counter = false;
+      break;
+    case "comment":
+      $(link).parent().parent().parent().remove();
+      comment_counter = false;
+      break;
+    case "share_fb":
+      $(link).parent().parent().parent().remove();
+      share_fb_counter = false;
+      break;
+    case "share_tt":
+      $(link).parent().parent().parent().remove();
+      share_tt_counter = false;
+      break;
+    case "share_email":
+      $(link).parent().parent().parent().remove();
+      share_email_counter = false;
+      break;
+    case "upload":
+      $(link).parent().parent().parent().remove();
+      upload_counter = false;
+      break;
+    case "vote":
+      $(link).parent().parent().parent().remove();
+      vote_counter = false;
+      break;
+    default:
+      $(link).closest(".panel-" + resource).remove();
+  }
+}
+
 // Tagbox alert message //
 
 function showTagboxAlert(idTextField, unactiveTagsName, allTagsName, newTagMessage) {
