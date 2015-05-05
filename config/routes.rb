@@ -30,7 +30,8 @@ Fandom::Application.routes.draw do
       scope module: "orzoro" do
         namespace :easyadmin do
           match "/dashboard", :to => "easyadmin#dashboard"
-          match "/cups", :to => "user#index_cup_requests"
+          match "/cups_confirmed", :to => "user#index_cup_requests", defaults: { page: 'confirmed' }
+          match "/cups_not_confirmed", :to => "user#index_cup_requests", defaults: { page: 'not_confirmed' }
           match "/cups/filter", :to => "user#filter_cup_requests"
           match "export_cup_requests", :to => "user#export_cup_requests"
         end
