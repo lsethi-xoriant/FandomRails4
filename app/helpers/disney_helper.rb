@@ -418,7 +418,6 @@ module DisneyHelper
   end
 
   def disney_default_aux(other)
-
     current_property = get_tag_from_params(get_disney_property())
     property = get_tag_from_params("property")
 
@@ -427,6 +426,12 @@ module DisneyHelper
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
 
+      related_params = {
+        conditions: {
+          exclude_cta_ids: [calltoaction.id]
+        }
+      }
+
       related_tag_name = "miniformat"
       in_gallery = nil
 
@@ -434,16 +439,15 @@ module DisneyHelper
         in_gallery = calltoaction.id
         gallery_calltoaction = CallToAction.find(in_gallery)
         
+        main_related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
 
-        related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
-
-        if related_tag.present?
+        if main_related_tag.present?
           params = {
             conditions: { 
               without_user_cta: true 
             }
           }
-          gallery_calltoaction = get_ctas_with_tags_in_or([related_tag.id], params).first
+          gallery_calltoaction = get_ctas_with_tags_in_or([main_related_tag.id], params).first
           gallery_calltoaction_adjust_for_view = {
             "id" => gallery_calltoaction.id,
             "slug" => gallery_calltoaction.slug,
@@ -451,14 +455,21 @@ module DisneyHelper
           }
 
           related_tag_name = related_tag.name
-          image_background = get_upload_extra_field_processor(get_extra_fields!(related_tag)['background_image'], :original)
-        else
-          related_tag_name = "gallery"
-        end
+          image_background = get_upload_extra_field_processor(get_extra_fields!(main_related_tag)['background_image'], :original)
 
+          related_calltoaction_info = get_content_previews(main_related_tag.name, [], related_params)
+          related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents)
+        end
+      else
+        main_related_tag = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
+        if main_related_tag
+          related_calltoaction_info = get_content_previews(main_related_tag.name, [current_property], related_params)
+          related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents)
+        end
       end
 
-      related_calltoaction_info = get_disney_related_calltoaction_info(calltoaction, current_property, related_tag_name, in_gallery)
+      # Old related implementation
+      # related_calltoaction_info = get_disney_related_calltoaction_info(calltoaction, current_property, related_tag_name, in_gallery)
     end
 
     current_property_info = {
