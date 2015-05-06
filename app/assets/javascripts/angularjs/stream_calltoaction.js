@@ -212,8 +212,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.initCallToActionInfoList(calltoaction_info_list);
 
     if($scope.calltoaction_info) {
-      $scope.linked_call_to_actions_count = $scope.calltoaction_info.calltoaction.extra_fields.linked_call_to_actions_count;
-      if($scope.linked_call_to_actions_count) {
+      if($scope.aux.linked_call_to_actions_count) {
+        $scope.linked_call_to_actions_count = $scope.aux.linked_call_to_actions_count;
+        $scope.linked_call_to_actions_index = $scope.aux.linked_call_to_actions_index;
+      } else if($scope.linked_call_to_actions_count) {
+        $scope.linked_call_to_actions_count = $scope.calltoaction_info.calltoaction.extra_fields.linked_call_to_actions_count;
         $scope.linked_call_to_actions_index = 1;
       }
     }

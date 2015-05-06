@@ -223,15 +223,17 @@ class CallToActionController < ApplicationController
     if calltoaction
       log_call_to_action_viewed(calltoaction)
 
-      #calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
-      @calltoactions_with_current = [calltoaction] # + calltoactions
-      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(@calltoactions_with_current)
+      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction])
       
       if current_user
         @current_user_info = build_current_user()
       end
 
-      @aux_other_params = init_show_aux(calltoaction)
+      @aux_other_params = { 
+        calltoaction: calltoaction,
+        linked_call_to_actions_index: @step_counter, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
+        linked_call_to_actions_count: @linked_call_to_actions_count
+      }
 
       set_seo_info_for_cta(calltoaction)
 
@@ -278,12 +280,6 @@ class CallToActionController < ApplicationController
     }
   end
 =end
-
-  def init_show_aux(calltoaction)
-    { 
-      calltoaction: calltoaction
-    }
-  end
   
   def get_correlated_cta(calltoaction)
     tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat")
