@@ -1,5 +1,15 @@
+{{linked_call_to_actions_count}}---{{linked_call_to_actions_index}}----
+<div class="row" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()" ng-click="resetToRedo(interaction_info)">
+  <div class="col-xs-12">
+    <span>Rifai il test <span class="fa fa-refresh"></span></span>
+  </div>
+</div>
+
 <div class="row {{interaction_info.interaction.resource_type}}-undervideo-interaction__row">
-  <div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-12 undervideo-interaction__col">
+  <div ng-if="interaction_info.interaction.resource_type == 'test'" class="col-sm-12 undervideo-interaction__col">
+    <%= render partial: "/call_to_action/test_interaction" %>
+  </div>
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-sm-12 undervideo-interaction__col">
     <%= render partial: "/call_to_action/trivia_interaction" %>
   </div>
   <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-sm-12 undervideo-interaction__col">

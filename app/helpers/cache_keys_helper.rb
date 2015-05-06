@@ -77,16 +77,24 @@ module CacheKeysHelper
   # CTA
   # ~~~
 
+  def get_cta_info_list_cache_key(cache_key) 
+    "ctas_info_list_#{cache_key}"
+  end
+
+  def get_user_interactions_in_cta_info_list_cache_key(user_id, cache_key, timestamp)
+    "user_interactions_in_cta_info_list_#{cache_key}_user_#{user_id}_#{timestamp}"
+  end
+
+  def get_ctas_cache_key(cache_key, timestamp)
+    "ctas_#{cache_key}_#{timestamp}"
+  end
+
   def get_home_stripes_cache_key(context_root = nil)
     "#{context_root}_home_stripes"
   end
 
   def get_related_calltoactions_cache_key(user_id, calltoaction_id)
     "related_calltoactions_for_calltoaction_#{calltoaction_id}_for_user_#{user_id}"
-  end
-
-  def get_calltoactions_info_cache_key(calltoaction_ids, interactions_to_compute) 
-    "calltoactions_info_#{calltoaction_ids}_interactions_#{interactions_to_compute}"
   end
 
   def get_calltoactions_count_cache_key()

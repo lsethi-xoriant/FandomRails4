@@ -33,123 +33,27 @@ class Sites::Disney::CallToActionController < CallToActionController
     SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
   end
 
-  def append_calltoaction_page_elements
-    ["like", "comment", "share"]
-  end
-
   def append_calltoaction
-    page_elements = append_calltoaction_page_elements()
-
-    if params["other_params"] && params["other_params"]["gallery"]["calltoaction_id"]
-      gallery_calltoaction_id = params["other_params"]["gallery"]["calltoaction_id"]
-      gallery_user_id = params["other_params"]["gallery"]["user"]
-      page_elements = page_elements + ["vote"]
-    end
-
-    calltoaction_ids_shown = params[:calltoaction_ids_shown]
-    calltoaction_ids_shown_qmarks = (["?"] * calltoaction_ids_shown.count).join(", ")
-
-    property = get_tag_from_params(get_disney_property())
-
-    ordering = params[:ordering]
-
-    if !gallery_user_id
-
-      calltoactions = cache_short(get_next_ctas_stream_cache_key(property.id, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, gallery_calltoaction_id)) do     
-        
-        calltoactions = get_disney_ctas(property, gallery_calltoaction_id).where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)
-
-        case ordering
-        when "comment"
-          calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-          gets_ctas_ordered_by_comments(calltoaction_ids, 4)
-        when "view"
-          calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-          gets_ctas_ordered_by_views(calltoaction_ids, 4)
-        else
-          calltoactions.limit(4).to_a
-        end
-
-      end
-
-    else
-
-      calltoactions = get_disney_ctas(property, gallery_calltoaction_id).where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)
-      calltoactions = calltoactions.where("user_id = ?", gallery_user_id)
-
-      case ordering
-      when "comment"
-        calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-        gets_ctas_ordered_by_comments(calltoaction_ids, 4)
-      when "view"
-        calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-        gets_ctas_ordered_by_views(calltoaction_ids, 4)
-      else
-        calltoactions.limit(4).to_a
-      end
-
-    end
-
+    tag_name = get_disney_property()
+    params[:page_elements] = ["like", "comment", "share"]
+    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, 6)
     response = {
-      calltoaction_info_list: build_call_to_action_info_list(calltoactions, page_elements)
-    }.to_json
+      calltoaction_info_list: calltoaction_info_list,
+      has_more: has_more
+    }
     
     respond_to do |format|
-      format.json { render json: response }
+      format.json { render json: response.to_json }
     end 
   end
 
   def ordering_ctas
-    other_params = JSON.parse(params["other_params"] || {})
-    if params["other_params"] && other_params["gallery"]["calltoaction_id"]
-      gallery_calltoaction_id = other_params["gallery"]["calltoaction_id"]
-      gallery_user_id = other_params["gallery"]["user"]
-    end
-
-    property = get_tag_from_params(get_disney_property())
-    init_ctas = $site.init_ctas
-
-    calltoactions = []
-    ordering = params["ordering"]
-
-    if !gallery_user_id
-
-      case ordering
-      when "comment"
-        calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering, gallery_calltoaction_id)) do
-          calltoaction_ids = from_ctas_to_cta_ids_sql(get_disney_ctas(property, gallery_calltoaction_id))
-          calltoactions = gets_ctas_ordered_by_comments(calltoaction_ids, init_ctas)
-        end
-      when "view"
-        calltoactions = cache_short(get_calltoactions_in_property_by_ordering_cache_key(property.id, ordering, gallery_calltoaction_id)) do
-          calltoaction_ids = from_ctas_to_cta_ids_sql(get_disney_ctas(property, gallery_calltoaction_id))
-          gets_ctas_ordered_by_views(calltoaction_ids, init_ctas)
-        end
-      else
-        calltoactions = cache_medium(get_calltoactions_in_property_cache_key(property.id, gallery_calltoaction_id, get_cta_max_updated_at())) do
-          get_disney_ctas(property, gallery_calltoaction_id).limit(init_ctas).to_a
-        end
-      end
-
-    else
-
-      calltoactions = get_disney_ctas(property, gallery_calltoaction_id).where("user_id = ?", gallery_user_id)
-
-      case ordering
-      when "comment"
-        calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-        calltoactions = gets_ctas_ordered_by_comments(calltoaction_ids, init_ctas)
-      when "view"
-        calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-        gets_ctas_ordered_by_views(calltoaction_ids, init_ctas)
-      else
-        calltoactions.limit(init_ctas).to_a
-      end
-
-    end
-
+    tag_name = get_disney_property()
+    params[:page_elements] = ["like", "comment", "share"]
+    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, $site.init_ctas)
     response = {
-      calltoaction_info_list: build_call_to_action_info_list(calltoactions, ["like", "comment", "share"])
+      calltoaction_info_list: calltoaction_info_list,
+      has_more: has_more
     }
     
     respond_to do |format|

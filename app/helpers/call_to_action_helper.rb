@@ -1,5 +1,126 @@
 module CallToActionHelper
 
+  def check_gallery_params(params)
+    if params["other_params"] && params["other_params"]["gallery"]["calltoaction_id"]
+      {
+        "gallery_calltoaction_id" => params["other_params"]["gallery"]["calltoaction_id"],
+        "gallery_user_id" => params["other_params"]["gallery"]["user"]
+      }
+    else
+      nil
+    end
+  end
+
+  def get_ctas_for_stream(tag_name, params, limit_ctas)
+    limit_ctas_with_has_more_check = limit_ctas + 1
+
+    gallery_info = check_gallery_params(params)
+    ordering = params[:ordering] || "recent"
+
+    if tag_name
+      tag = get_tag_from_params(tag_name)
+    end
+   
+    if tag || gallery_info
+      cache_key = gallery_info ? gallery_info[:gallery_calltoaction_id] : tag.name
+      cache_key = "#{cache_key}_#{ordering}"
+    else
+      cache_key = "#{ordering}"
+    end
+
+    calltoaction_ids_shown = params[:calltoaction_ids_shown]
+    if calltoaction_ids_shown
+      cache_key = "#{cache_key}_append_from_#{calltoaction_ids_shown.last}"
+    end
+
+    if ordering == "recent"
+      cache_timestamp = get_cta_max_updated_at()
+      ctas = cache_forever(get_ctas_cache_key(cache_key, cache_timestamp)) do
+        get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
+      end 
+    else
+      ctas = cache_medium(get_ctas_cache_key(cache_key, nil)) do
+        get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
+      end 
+    end
+
+    page_elements = params && params[:page_elements] ? params[:page_elements] : nil
+    if gallery_info
+      if page_elements
+        page_elements = page_elements + ["vote"]
+      else
+        page_elements = ["vote"]
+      end
+    end
+
+    ctas = build_cta_info_list_and_cache_with_max_updated_at(ctas, page_elements)
+
+    if limit_ctas < ctas.length
+      has_more = true
+      ctas.pop
+    else
+      has_more = false
+    end
+
+    [ctas, has_more]
+  end
+
+  def get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas)
+    if gallery_info
+      gallery_calltoaction_id = gallery_info[:gallery_calltoaction_id]
+      gallery_user_id = gallery_info[:gallery_user_id]
+    end
+
+    calltoactions = get_ctas(tag, gallery_calltoaction_id)
+
+    # Append other scenario
+    if calltoaction_ids_shown
+      calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", calltoaction_ids_shown)
+    end
+
+    # User galleries scenario
+    if gallery_user_id
+      calltoactions = calltoactions.where("user_id = ?", gallery_user_id)
+    end
+
+    case ordering
+    when "comment"
+      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
+      gets_ctas_ordered_by_comments(calltoaction_ids, limit_ctas)
+    when "view"
+      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
+      gets_ctas_ordered_by_views(calltoaction_ids, limit_ctas)
+    else
+      calltoactions.limit(limit_ctas).to_a
+    end
+  end
+
+  def get_ctas(tag, in_gallery)
+    if in_gallery
+      if in_gallery != "all"
+        gallery_calltoaction = CallToAction.find(in_gallery)
+        gallery_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
+        calltoactions = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL", gallery_tag.id)
+      else
+        calltoactions = CallToAction.active_with_media.where("call_to_actions.user_id IS NOT NULL")
+      end
+    else
+      if tag
+        calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", tag.id)
+      else
+        calltoactions = CallToAction.active.includes(:rewards, :interactions).where("rewards.id IS NULL")
+      end
+      ugc_tag = get_tag_from_params("ugc")
+      if ugc_tag
+        ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
+        if ugc_calltoactions.any?
+          calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
+        end
+      end
+    end
+    calltoactions
+  end
+
   def cta_url(cta)
     if $context_root
       "/#{$context_root}/call_to_action/#{cta.slug}"
@@ -46,24 +167,28 @@ module CallToActionHelper
   end
 
   def gets_ctas_ordered_by_comments(calltoaction_ids, cta_count)
-    sql = "SELECT call_to_actions.id,  sum((user_comment_interactions.approved is not null and user_comment_interactions.approved)::integer) " +
-          "FROM call_to_actions LEFT OUTER JOIN interactions ON call_to_actions.id = interactions.call_to_action_id LEFT OUTER JOIN user_comment_interactions ON interactions.resource_id = user_comment_interactions.comment_id " +
-          "WHERE interactions.resource_type = 'Comment' AND call_to_actions.id in (#{calltoaction_ids}) " +
-          "GROUP BY call_to_actions.id " +
-          "ORDER BY sum DESC limit #{cta_count};"
-    execute_sql_and_get_ctas_ordered(sql)
+    #sql = "SELECT call_to_actions.id,  sum((user_comment_interactions.approved is not null and user_comment_interactions.approved)::integer) " +
+    #      "FROM call_to_actions LEFT OUTER JOIN interactions ON call_to_actions.id = interactions.call_to_action_id LEFT OUTER JOIN user_comment_interactions ON interactions.resource_id = user_comment_interactions.comment_id " +
+    #      "WHERE interactions.resource_type = 'Comment' AND call_to_actions.id in (#{calltoaction_ids}) " +
+    #      "GROUP BY call_to_actions.id " +
+    #      "ORDER BY sum DESC limit #{cta_count};"
+    query = "SELECT interactions.call_to_action_id AS id " +
+            "FROM interactions LEFT OUTER JOIN view_counters ON interactions.id = view_counters.ref_id " +
+            "WHERE (view_counters.ref_type = 'interaction') AND interactions.call_to_action_id IN (#{calltoaction_ids}) AND interactions.resource_type = 'Comment' " +
+            "ORDER BY coalesce(view_counters.counter, 0) DESC limit #{cta_count};"
+    execute_sql_and_get_ctas_ordered(query)
   end
 
   def gets_ctas_ordered_by_views(calltoaction_ids, cta_count)
-    sql = "SELECT call_to_actions.id " +
-          "FROM call_to_actions LEFT OUTER JOIN view_counters ON call_to_actions.id = view_counters.ref_id " +
-          "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'cta') AND call_to_actions.id in (#{calltoaction_ids}) " +
-          "ORDER BY (coalesce(view_counters.counter, 0) / (extract('epoch' from (now() - coalesce(call_to_actions.activated_at, call_to_actions.created_at) )) / 3600 / 24)) DESC, call_to_actions.activated_at DESC limit #{cta_count};"
-    execute_sql_and_get_ctas_ordered(sql)
+    query = "SELECT call_to_actions.id " +
+            "FROM call_to_actions LEFT OUTER JOIN view_counters ON call_to_actions.id = view_counters.ref_id " +
+            "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'cta') AND call_to_actions.id in (#{calltoaction_ids}) " +
+            "ORDER BY (coalesce(view_counters.counter, 0) / (extract('epoch' from (now() - coalesce(call_to_actions.activated_at, call_to_actions.created_at) )) / 3600 / 24)) DESC, call_to_actions.activated_at DESC limit #{cta_count};"
+    execute_sql_and_get_ctas_ordered(query)
   end
 
-  def execute_sql_and_get_ctas_ordered(sql)
-    cta_ids = ActiveRecord::Base.connection.execute(sql)
+  def execute_sql_and_get_ctas_ordered(query)
+    cta_ids = ActiveRecord::Base.connection.execute(query)
     order =  cta_ids.map { |r| "call_to_actions.id = #{r["id"].to_i} DESC" }
     CallToAction.where("call_to_actions.id" => cta_ids.map { |r| r["id"].to_i }).order("#{order.join(",")}").to_a
   end
@@ -75,15 +200,40 @@ module CallToActionHelper
   end
 
   def get_cta_max_updated_at()
-    CallToAction.active.first.updated_at.strftime("%Y%m%d%H%M%S") rescue ""
+    from_updated_at_to_timestamp(CallToAction.first.updated_at)
   end
 
-  def build_call_to_action_info_list(calltoactions, interactions_to_compute = nil)
+  def get_max_updated_at(models)
+    max_updated_at = nil
+    models.each do |model|
+      if !max_updated_at || model.updated_at > max_updated_at
+        max_updated_at = model.updated_at
+      end
+    end
+    from_updated_at_to_timestamp(max_updated_at)
+  end
 
+  def from_updated_at_to_timestamp(updated_at)
+    if updated_at
+      updated_at.to_i.to_s
+    else
+      nil
+    end
+  end
+
+  def build_cta_info_list_and_cache_with_max_updated_at(calltoactions, interactions_to_compute = nil)
     calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
-    interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("-") : "all"
+    interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("_") : "all"
+    calltoactions_key = calltoaction_ids.join("_")
+    cache_timestamp = get_max_updated_at(calltoactions)
+    cache_key = get_cta_info_list_cache_key("#{calltoactions_key}_interaction_types_#{interactions_to_compute_key}_#{cache_timestamp}")
+ 
+    build_cta_info_list(cache_key, calltoactions, interactions_to_compute)
+  end
 
-    calltoaction_info_list = cache_short(get_calltoactions_info_cache_key(calltoaction_ids.join("-"), interactions_to_compute_key)) do
+  def build_cta_info_list(cache_key, calltoactions, interactions_to_compute = nil)
+
+    calltoaction_info_list = cache_forever(cache_key) do
       
       calltoaction_info_list = Array.new
       interactions = {}
@@ -143,9 +293,6 @@ module CallToActionHelper
       end
 
       calltoaction_info_list
-      # This hack is needed to avoid a strange "@new_record" string being serialized instead of an object id
-      # Marshal.dump(result)  
-
     end    
     
     if small_mobile_device?()
@@ -158,12 +305,75 @@ module CallToActionHelper
       end
     end
 
-    #if small_mobile_device?() && interaction.when_show_interaction.include?("OVERVIDEO")
-    #  when_show_interaction = "SEMPRE_VISIBILE"
-    #end
+    interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
 
-    adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list)
+    resource_ids = extract_resource_ids_from_call_to_action_info_list(calltoaction_info_list, "comment")
+    if resource_ids.any?
+      get_comments_query = "SELECT id FROM (select row_number() over (partition by comment_id ORDER BY created_at DESC) as r, t.* FROM user_comment_interactions t WHERE approved = true AND comment_id IN (#{resource_ids.join(',')})) x WHERE x.r <= 5;"
+      comments = ActiveRecord::Base.connection.execute(get_comments_query)
+      comment_ids = comments.map { |comment| comment["id"] }
+      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).order("created_at DESC")
+    end
 
+    adjustCounters(interaction_ids, calltoaction_info_list, comments)
+
+    max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
+    max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
+    user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
+
+    cache_forever(user_cache_key) do
+      if current_user
+        interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+        user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
+
+        # Recursive method invoked with single cta in page with at least one interaction with next_calltoaction_id set
+        next_cta_info_list = check_and_find_next_call_to_action_in_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute)
+      
+        if next_cta_info_list
+          calltoaction_info_list = next_cta_info_list
+        else
+          adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
+        end
+      else    
+        interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+        user_interactions = get_user_interactions_with_interaction_id(interaction_ids, anonymous_user)
+      
+        calltoaction_info_list.each do |calltoaction_info|
+          calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+            interaction_id = interaction_info["interaction"]["id"]
+            user_interaction = find_in_user_interactions(user_interactions, interaction_id)
+            if user_interaction
+              interaction_info["anonymous_user_interaction_info"] = build_user_interaction_for_interaction_info(user_interaction)
+            end
+          end
+        end
+
+        calltoaction_info_list
+      end
+    end
+
+  end
+
+  def adjustCounters(interaction_ids, calltoaction_info_list, comments)
+    counters = ViewCounter.where("ref_type = 'interaction' AND ref_id IN (?)", interaction_ids)
+    if counters.any?
+      calltoaction_info_list.each do |calltoaction_info|
+        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+          interaction_id = interaction_info["interaction"]["id"]
+          counter = find_interaction_in_counters(counters, interaction_id)
+          interaction_info["interaction"]["resource"]["counter"] = counter ? counter.counter : 0
+          if interaction_info["interaction"]["resource_type"] == "vote"
+            aux = counter ? counter.aux : "{}"
+            interaction_info["interaction"]["resource"]["counter_aux"] = JSON.parse(aux)
+          elsif interaction_info["interaction"]["resource_type"] == "comment"
+            interaction_info["interaction"]["resource"]["comment_info"] = {
+              "comments_total_count" => interaction_info["interaction"]["resource"]["counter"],
+              "comments" => build_comments_by_resource_id(comments, interaction_info["interaction"]["resource"]["id"]) 
+            } 
+          end
+        end
+      end
+    end
   end
   
   def get_cta_media_data(cta)
@@ -172,14 +382,6 @@ module CallToActionHelper
     else
       cta.media_data
     end
-  end
-
-  def update_current_user_reward(reward)
-    {
-      "cost" => reward.cost,
-      "status" => get_user_reward_status(reward),
-      "id" => reward.id,
-    }
   end
 
   def build_interaction_info_list(calltoaction, interactions_to_compute)
@@ -200,15 +402,20 @@ module CallToActionHelper
         resource_providers = JSON.parse(resource.providers) rescue nil
         resource_url = resource.url rescue "/"
 
+        if interaction.stored_for_anonymous
+          user_interaction = interaction.user_interactions.find_by_user_id(anonymous_user.id)
+          if user_interaction
+            user_interaction = build_user_interaction_for_interaction_info(user_interaction)
+          end
+        else
+          user_interaction = nil
+        end
+
         case resource_type
         when "quiz"
           resource_type = resource.quiz_type.downcase
           resource_answers = resource.answers
           answers = build_answers_for_resource(interaction, resource_answers, resource_type, nil)
-        when "comment"
-          comment_info = build_comments_for_resource(interaction)
-        when "like"
-          like_info = build_likes_for_resource(interaction)
         when "upload"
           upload_info = build_uploads_for_resource(interaction)
         when "vote"
@@ -227,6 +434,7 @@ module CallToActionHelper
             "seconds" => interaction.seconds,
             "resource_type" => resource_type,
             "resource" => {
+              "id" => resource.id,
               "extra_fields" => (JSON.parse(interaction.resource.extra_fields) rescue nil),
               "question" => resource_question,
               "title" => resource_title,
@@ -234,8 +442,7 @@ module CallToActionHelper
               "one_shot" => resource_one_shot,
               "answers" => answers,
               "providers" => resource_providers,
-              "comment_info" => comment_info,
-              "like_info" => like_info,
+              "counter" => 0,
               "upload_info" => upload_info,
               "ical" => ical,
               "vote_info" => vote_info,
@@ -243,7 +450,7 @@ module CallToActionHelper
             }
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction, nil),
-          "user_interaction" => nil,
+          "user_interaction" => user_interaction,
           "anonymous_user_interaction_info" => nil
         }
       end
@@ -289,7 +496,7 @@ module CallToActionHelper
     {
       min: interaction.resource.vote_min,
       max: interaction.resource.vote_max,
-      total: get_cta_vote_info(interaction.id)['total']
+      # total: get_cta_vote_info(interaction.id)['total']
     } 
   end
 
@@ -849,7 +1056,7 @@ module CallToActionHelper
         lambda { |answers_map_for_condition, response, interaction_condition| 
           max_key = max_key_in_answers_map_for_condition(answers_map_for_condition)
           if max_key == JSON.parse(interaction_condition.condition)["more"]
-            response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction_condition.call_to_action])
+            response["next_call_to_action_info_list"] = build_cta_info_list_and_cache_with_max_updated_at([interaction_condition.call_to_action])
           end
         }
     }

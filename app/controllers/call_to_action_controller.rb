@@ -17,29 +17,29 @@ class CallToActionController < ApplicationController
       user_interaction_info_list = params[:anonymous_user_interactions]
       
       calltoaction_id_to_return = calltoaction.id
-      next_calltoaction_id = calltoaction.id
+      calltoaction_to_evaluate = calltoaction.id
       linked_call_to_actions_index = 0
       user_interactions_history = []
-      while next_calltoaction_id.present?
-        calltoaction_id_to_return = next_calltoaction_id
+      while calltoaction_to_evaluate.present?
+        calltoaction_id_to_return = calltoaction_to_evaluate
         linked_call_to_actions_index = linked_call_to_actions_index + 1
         if user_interaction_info_list["user_interaction_info_list"]
           user_interaction_info_list["user_interaction_info_list"].each do |index, user_interaction_info|
-            if user_interaction_info["calltoaction_id"] == next_calltoaction_id
+            if user_interaction_info["calltoaction_id"] == calltoaction_to_evaluate
               current_interaction = user_interaction_info["user_interaction"]
               aux_parse = JSON.parse(current_interaction["aux"])
               if aux_parse["to_redo"] == false
                 user_interactions_history = user_interactions_history + [index]
-                next_calltoaction_id = aux_parse["next_calltoaction_id"]
+                calltoaction_to_evaluate = aux_parse["next_calltoaction_id"]
               end
               break
             end
           end
-          if next_calltoaction_id == calltoaction_id_to_return
+          if calltoaction_to_evaluate == calltoaction_id_to_return
             break
           end
         else
-          calltoaction_id_to_return = next_calltoaction_id
+          calltoaction_id_to_return = calltoaction_to_evaluate
           break
         end
       end
@@ -52,7 +52,7 @@ class CallToActionController < ApplicationController
       response = {
         go_on: go_on,
         linked_call_to_actions_index: linked_call_to_actions_index,
-        calltoaction_info_list: build_call_to_action_info_list([calltoaction]),
+        calltoaction_info_list: build_cta_info_list_and_cache_with_max_updated_at([calltoaction]),
         user_interactions_history: user_interactions_history
       }
       
@@ -74,7 +74,7 @@ class CallToActionController < ApplicationController
     end 
 
     response = {
-      "calltoaction_info_list" => build_call_to_action_info_list([calltoaction])
+      "calltoaction_info_list" => build_cta_info_list_and_cache_with_max_updated_at([calltoaction])
     }
 
     respond_to do |format|
@@ -97,51 +97,37 @@ class CallToActionController < ApplicationController
     end
   end
 
-  def append_calltoaction_page_elements
-    ["like", "comment", "share"]
-  end
-
   def append_calltoaction
-    page_elements = append_calltoaction_page_elements()
-
-    calltoaction_ids_shown = params[:calltoaction_ids_shown]
-    calltoaction_ids_shown_qmarks = (["?"] * calltoaction_ids_shown.count).join(", ")
-
-    ordering = params[:ordering]
-
     init_ctas = $site.init_ctas * 2
-    response = cache_short(get_next_ctas_stream_for_user_cache_key(current_or_anonymous_user.id, nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do
-      calltoactions = cache_short(get_next_ctas_stream_cache_key(nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do     
-        calltoactions = CallToAction.active.where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)
-        case ordering
-        when "comment"
-          calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")
-          sql = "SELECT call_to_actions.id, sum((user_comment_interactions.approved is not null and user_comment_interactions.approved)::integer) " +
-                "FROM call_to_actions LEFT OUTER JOIN interactions ON call_to_actions.id = interactions.call_to_action_id LEFT OUTER JOIN user_comment_interactions ON interactions.resource_id = user_comment_interactions.comment_id " +
-                "WHERE interactions.resource_type = 'Comment' AND call_to_actions.id in (#{calltoaction_ids}) " +
-                "GROUP BY call_to_actions.id " +
-                "ORDER BY sum DESC limit #{init_ctas};"
-          execute_sql_and_get_ctas_ordered(sql)
-        when "view"
-          calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")
-          sql = "SELECT call_to_actions.id " +
-              "FROM call_to_actions LEFT OUTER JOIN view_counters ON call_to_actions.id = view_counters.ref_id " +
-              "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'cta') AND call_to_actions.id in (#{calltoaction_ids}) " +
-              "ORDER BY (coalesce(view_counters.counter, 0) / (extract('epoch' from (now() - coalesce(call_to_actions.activated_at, call_to_actions.created_at) )) / 3600 / 24)), call_to_actions.activated_at DESC limit #{init_ctas};"
-        else
-          calltoactions = calltoactions.limit(init_ctas).to_a
-        end
-        calltoactions
-      end
-      
-      {
-        calltoaction_info_list: build_call_to_action_info_list(calltoactions, page_elements)
-      }.to_json
+    calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, init_ctas)
 
-    end
+    params[:page_elements] = ["empty"]
+    response = {
+      calltoaction_info_list: calltoaction_info_list,
+      has_more: has_more
+    }
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end 
     
     respond_to do |format|
       format.json { render json: response }
+    end 
+  end
+
+  def ordering_ctas
+    tag_name = get_disney_property()
+    calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+
+    params[:page_elements] = ["empty"]
+    response = {
+      calltoaction_info_list: calltoaction_info_list,
+      has_more: has_more
+    }
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
     end 
   end
 
@@ -237,15 +223,17 @@ class CallToActionController < ApplicationController
     if calltoaction
       log_call_to_action_viewed(calltoaction)
 
-      #calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
-      @calltoactions_with_current = [calltoaction] # + calltoactions
-      @calltoaction_info_list = build_call_to_action_info_list(@calltoactions_with_current)
+      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction])
       
       if current_user
         @current_user_info = build_current_user()
       end
 
-      @aux_other_params = init_show_aux(calltoaction)
+      @aux_other_params = { 
+        calltoaction: calltoaction,
+        linked_call_to_actions_index: @step_counter, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
+        linked_call_to_actions_count: @linked_call_to_actions_count
+      }
 
       set_seo_info_for_cta(calltoaction)
 
@@ -292,12 +280,6 @@ class CallToActionController < ApplicationController
     }
   end
 =end
-
-  def init_show_aux(calltoaction)
-    { 
-      calltoaction: calltoaction
-    }
-  end
   
   def get_correlated_cta(calltoaction)
     tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat")
@@ -354,6 +336,7 @@ class CallToActionController < ApplicationController
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id, aux: aux)
       response[:comment] = build_comment_for_comment_info(user_comment, true)
       if approved && user_comment.errors.blank?
+        adjust_counter!(interaction, 1)
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
         expire_cache_key(get_comments_approved_cache_key(interaction.id))
       end
@@ -407,7 +390,6 @@ class CallToActionController < ApplicationController
 
   def comments_polling
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
-
       comments_without_shown = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comment_info][:comments])
       first_comment_shown_date = params[:comment_info][:comments].first[:updated_at] rescue Date.yesterday
 
@@ -465,7 +447,7 @@ class CallToActionController < ApplicationController
       end
 
       if answers_map_for_condition.empty?
-        response["next_call_to_action_info_list"] = build_call_to_action_info_list([interaction.interaction_call_to_actions.first.call_to_action])
+        response["next_call_to_action_info_list"] = build_cta_info_list_and_cache_with_max_updated_at([interaction.interaction_call_to_actions.first.call_to_action])
       end
 
       next_calltoaction_id = response["next_call_to_action_info_list"][0]["calltoaction"]["id"] rescue nil
@@ -528,7 +510,9 @@ class CallToActionController < ApplicationController
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
       response[:ga][:label] = interaction.resource_type.downcase
 
-      response["vote_info"] = build_votes_for_resource(interaction) 
+      counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
+      aux = counter ? counter.aux : "{}"
+      response["counter_aux"] = JSON.parse(aux)
     else
       if interaction.resource_type.downcase == "download" 
         response["download_interaction_attachment"] = interaction.resource.attachment.url
@@ -572,7 +556,6 @@ class CallToActionController < ApplicationController
   end 
 
   def map_answers_in_user_history(current_answer, user_interactions_history, anonymous_user_storage)
-
     if current_user
       answers_history = UserInteraction.where(id: user_interactions_history).map { |ui| ui.answer_id }
     elsif $site.anonymous_interaction 
@@ -582,6 +565,8 @@ class CallToActionController < ApplicationController
           answers_history = answers_history + [user_interaction_info["user_interaction"]["answer"]["id"]]
         end
       end
+    else
+      throw Exception.new("for linked interactions the user must be logged or the anonymous navigation must be enabled")
     end
 
     answers_history = answers_history + [current_answer]

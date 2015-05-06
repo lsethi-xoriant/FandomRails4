@@ -29,36 +29,6 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     return thumb_calltoactions;
   };
 
-  $scope.resetToRedo = function(interaction_info) {
-    $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
-
-    $timeout(function() { 
-      anonymous_user_interactions = getAnonymousUserStorage();
-      angular.forEach($scope.user_interactions_history, function(index) {
-        user_interaction_info = anonymous_user_interactions["user_interaction_info_list"][index];
-        if(user_interaction_info) {
-          aux_parse = JSON.parse(user_interaction_info.user_interaction.aux);
-          aux_parse.to_redo = true;
-          user_interaction_info.user_interaction.aux = JSON.stringify(aux_parse);
-          $scope.updateAnonymousUserStorageUserInteractions(user_interaction_info);
-        }
-      });
-
-
-      $scope.initCallToActionInfoList([$scope.parent_calltoaction_info]);
-      $scope.calltoaction_info.hide_class = "";
-      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide"
-      $timeout(function() { 
-        $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
-      }, 500);
-
-      $scope.linked_call_to_actions_index = 1;
-      $scope.user_interactions_history = [];
-      $scope.updateCallToActionInfoWithAnonymousUserStorage();
-    }, 200);
-    
-  };
-
   $scope.nextCallToActionInCategory = function(direction) {
     $scope.calltoaction_info.hide_class = "fadeout_animation";
     $timeout(function() { 
@@ -99,7 +69,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
 
           }, 0); // To execute code after page is render
 
-          goToLastLinkedCallToAction();
+          $scope.goToLastLinkedCallToAction();
 
           $timeout(function() { 
             $scope.calltoaction_info.hide_class = "hide_content fadein_animation";
@@ -111,35 +81,12 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     }, 500);
   };
 
-  function goToLastLinkedCallToAction() {
-    $scope.parent_calltoaction_info = $scope.calltoaction_info;
-    $scope.compute_in_progress = true;
-
-    // Too long for get.
-    $http.post("/last_linked_calltoaction", { "anonymous_user_interactions": getAnonymousUserStorage(), "calltoaction_id": $scope.calltoaction_info.calltoaction.id })
-    .success(function(data) { 
-
-      if(data.go_on) {
-        $scope.initCallToActionInfoList(data.calltoaction_info_list);
-        $scope.linked_call_to_actions_index = data.linked_call_to_actions_index;
-        $scope.user_interactions_history = data.user_interactions_history;
-        $scope.updateCallToActionInfoWithAnonymousUserStorage();
-      }
-
-      $scope.compute_in_progress = false;
-
-    }).error(function() {
-
-      $scope.compute_in_progress = false;
-
-    });
-  }
-
   $scope.extraInit = function() {
     if($scope.calltoaction_info) {
       $scope.menu_field = $scope.calltoaction_info.miniformat.name;
       $scope.calltoaction_ids_shown = $scope.calltoaction_info["calltoaction"]["id"];
-      goToLastLinkedCallToAction();
+      // Move into main angular
+      // $scope.goToLastLinkedCallToAction();
     } else {
       if($scope.aux.page_tag) {
         $scope.menu_field = $scope.aux.page_tag.miniformat.name;

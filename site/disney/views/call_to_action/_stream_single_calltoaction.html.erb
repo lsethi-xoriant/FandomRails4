@@ -21,7 +21,7 @@
   </div>
   <div class="col-xs-12">
     <h1 class="cta__title">{{calltoaction_info.calltoaction.title}}</h1>
-    <h1 class="cta__title" ng-if="calltoaction_info.calltoaction.user_id != null"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}} <span class="label label-default cta-cover__vote-count--header" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">{{interaction_info.interaction.resource.vote_info.total}} Voti</span></h1>
+    <h1 class="cta__title" ng-if="calltoaction_info.calltoaction.user_id != null"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}} <span class="label label-default cta-cover__vote-count--header" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">{{calculateVoteTotal(interaction_info)}} Voti</span></h1>
   </div>
 </div>
 
@@ -31,7 +31,7 @@
 
 <div class="row main-row" ng-if="calltoaction_info.calltoaction.user_id != null">
   <div class="col-xs-9">
-    <h1 class="cta__title" style="padding-top: 16px;"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}} <span class="label label-default cta-cover__vote-count--header" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">{{interaction_info.interaction.resource.vote_info.total}} Voti</span></h1>
+    <h1 class="cta__title" style="padding-top: 16px;"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}} <span class="label label-default cta-cover__vote-count--header" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">{{calculateVoteTotal(interaction_info)}} Voti</span></h1>
   </div>
 </div>
 
@@ -60,7 +60,7 @@
     <div class="row">
       <div class="col-xs-6">
         <div class="like-interaction__cta__info" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions">
-          <button class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span class="fa fa-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span></button><span class="like-interaction__cta__info__text">{{interaction_info.interaction.resource.like_info}}<span class="hidden-xs"> mi piace</span></span>
+          <button class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span class="fa fa-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span></button><span class="like-interaction__cta__info__text">{{interaction_info.interaction.resource.counter}}<span class="hidden-xs"> mi piace</span></span>
         </div>
         <div class="comment-interaction__cta__info hidden-xs" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions">
             <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-default comment-interaction__cta__info__button">

@@ -33,6 +33,9 @@ module CacheHelper
   def cache_huge(key = nil, &block)
     cache_aux(key, 1.day, &block)
   end
+  def cache_forever(key = nil, &block)
+    cache_aux(key, nil, &block)
+  end
   
   def cache_write_short(key, value)
     cache_write(key, value, 1.minute)  
@@ -91,7 +94,11 @@ module CacheHelper
       block_result 
     end
     
-    result = Rails.cache.fetch(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
+    if expires_in.nil?
+      result = Rails.cache.fetch(cache_key, :race_condition_ttl => 30, &wrapped_block)
+    else
+      result = Rails.cache.fetch(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
+    end
     
     if block_run
       $cache_misses += 1

@@ -36,7 +36,7 @@ class GalleryController < ApplicationController
       }
     end
 
-    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share", "vote"])
+    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(galleries_user_cta, ["like", "comment", "share", "vote"])
     @aux_other_params = { 
       "gallery" => true, 
       "gallery_index" => true,
@@ -77,10 +77,10 @@ class GalleryController < ApplicationController
       }
     end
 
-    @calltoaction_info_list = build_call_to_action_info_list(galleries_user_cta, ["like", "comment", "share", "vote"])
+    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(galleries_user_cta, ["like", "comment", "share", "vote"])
 
     @aux_other_params = { 
-      "gallery" => build_call_to_action_info_list([cta]).first,
+      "gallery" => build_cta_info_list_and_cache_with_max_updated_at([cta]).first,
       "gallery_show" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,
       "gallery_user" => params[:user]

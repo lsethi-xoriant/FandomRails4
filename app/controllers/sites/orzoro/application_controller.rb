@@ -20,7 +20,7 @@ class Sites::Orzoro::ApplicationController < ApplicationController
       CallToAction.active.limit(init_ctas).to_a
     end
 
-    @calltoaction_info_list = build_call_to_action_info_list(@calltoactions, ["empty"])
+    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(@calltoactions, ["empty"])
 
     @aux_other_params = { 
       seo_long_title: true,

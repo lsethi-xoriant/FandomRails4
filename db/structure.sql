@@ -422,7 +422,8 @@ CREATE TABLE downloads (
     attachment_file_name character varying(255),
     attachment_content_type character varying(255),
     attachment_file_size integer,
-    attachment_updated_at timestamp without time zone
+    attachment_updated_at timestamp without time zone,
+    ical_fields json
 );
 
 
@@ -443,6 +444,38 @@ CREATE SEQUENCE downloads_id_seq
 --
 
 ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
+
+
+--
+-- Name: easyadmin_stats; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE easyadmin_stats (
+    id integer NOT NULL,
+    date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    "values" json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE easyadmin_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: easyadmin_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
 
 
 --
@@ -1765,7 +1798,8 @@ CREATE TABLE votes (
     vote_max integer DEFAULT 10,
     one_shot boolean,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    extra_fields json
 );
 
 
@@ -3452,7 +3486,8 @@ CREATE TABLE view_counters (
     updated_at timestamp without time zone NOT NULL,
     ref_type character varying(255),
     ref_id integer,
-    counter integer
+    counter integer,
+    aux json
 );
 
 
@@ -3653,6 +3688,13 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 --
 
 ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY easyadmin_stats ALTER COLUMN id SET DEFAULT nextval('easyadmin_stats_id_seq'::regclass);
 
 
 --
@@ -4347,6 +4389,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY downloads
     ADD CONSTRAINT downloads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: easyadmin_stats_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY easyadmin_stats
+    ADD CONSTRAINT easyadmin_stats_pkey PRIMARY KEY (id);
 
 
 --
@@ -5112,6 +5162,13 @@ CREATE INDEX index_cache_votes_on_version ON cache_votes USING btree (version);
 
 
 --
+-- Name: index_call_to_actions_on_aux_aws_transcoding_media_status; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_aux_aws_transcoding_media_status ON call_to_actions USING btree (((aux ->> 'aws_transcoding_media_status'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_aux_options; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -5137,6 +5194,20 @@ CREATE INDEX index_call_to_actions_on_slug ON call_to_actions USING btree (slug)
 --
 
 CREATE INDEX index_events_on_message ON events USING btree (message);
+
+
+--
+-- Name: index_user_comment_interactions_on_approved; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_approved ON user_comment_interactions USING btree (approved);
+
+
+--
+-- Name: index_user_comment_interactions_on_created_at; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_comment_interactions_on_created_at ON user_comment_interactions USING btree (created_at);
 
 
 SET search_path = public, pg_catalog;
@@ -5903,3 +5974,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150316103146');
 INSERT INTO schema_migrations (version) VALUES ('20150324171203');
 
 INSERT INTO schema_migrations (version) VALUES ('20150413144521');
+
+INSERT INTO schema_migrations (version) VALUES ('20150504101145');
