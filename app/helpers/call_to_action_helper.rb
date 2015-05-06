@@ -1,5 +1,126 @@
 module CallToActionHelper
 
+  def check_gallery_params(params)
+    if params["other_params"] && params["other_params"]["gallery"]["calltoaction_id"]
+      {
+        "gallery_calltoaction_id" => params["other_params"]["gallery"]["calltoaction_id"],
+        "gallery_user_id" => params["other_params"]["gallery"]["user"]
+      }
+    else
+      nil
+    end
+  end
+
+  def get_ctas_for_stream(tag_name, params, limit_ctas)
+    limit_ctas_with_has_more_check = limit_ctas + 1
+
+    gallery_info = check_gallery_params(params)
+    ordering = params[:ordering] || "recent"
+
+    if tag_name
+      tag = get_tag_from_params(tag_name)
+    end
+   
+    if tag || gallery_info
+      cache_key = gallery_info ? gallery_info[:gallery_calltoaction_id] : tag.name
+      cache_key = "#{cache_key}_#{ordering}"
+    else
+      cache_key = "#{ordering}"
+    end
+
+    calltoaction_ids_shown = params[:calltoaction_ids_shown]
+    if calltoaction_ids_shown
+      cache_key = "#{cache_key}_append_from_#{calltoaction_ids_shown.last}"
+    end
+
+    if ordering == "recent"
+      cache_timestamp = get_cta_max_updated_at()
+      ctas = cache_forever(get_ctas_cache_key(cache_key, cache_timestamp)) do
+        get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
+      end 
+    else
+      ctas = cache_medium(get_ctas_cache_key(cache_key, nil)) do
+        get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
+      end 
+    end
+
+    page_elements = params && params[:page_elements] ? params[:page_elements] : nil
+    if gallery_info
+      if page_elements
+        page_elements = page_elements + ["vote"]
+      else
+        page_elements = ["vote"]
+      end
+    end
+
+    ctas = build_cta_info_list_and_cache_with_max_updated_at(ctas, page_elements)
+
+    if limit_ctas < ctas.length
+      has_more = true
+      ctas.pop
+    else
+      has_more = false
+    end
+
+    [ctas, has_more]
+  end
+
+  def get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas)
+    if gallery_info
+      gallery_calltoaction_id = gallery_info[:gallery_calltoaction_id]
+      gallery_user_id = gallery_info[:gallery_user_id]
+    end
+
+    calltoactions = get_ctas(tag, gallery_calltoaction_id)
+
+    # Append other scenario
+    if calltoaction_ids_shown
+      calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", calltoaction_ids_shown)
+    end
+
+    # User galleries scenario
+    if gallery_user_id
+      calltoactions = calltoactions.where("user_id = ?", gallery_user_id)
+    end
+
+    case ordering
+    when "comment"
+      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
+      gets_ctas_ordered_by_comments(calltoaction_ids, limit_ctas)
+    when "view"
+      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
+      gets_ctas_ordered_by_views(calltoaction_ids, limit_ctas)
+    else
+      calltoactions.limit(limit_ctas).to_a
+    end
+  end
+
+  def get_ctas(tag, in_gallery)
+    if in_gallery
+      if in_gallery != "all"
+        gallery_calltoaction = CallToAction.find(in_gallery)
+        gallery_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
+        calltoactions = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL", gallery_tag.id)
+      else
+        calltoactions = CallToAction.active_with_media.where("call_to_actions.user_id IS NOT NULL")
+      end
+    else
+      if tag
+        calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", tag.id)
+      else
+        calltoactions = CallToAction.active.includes(:rewards, :interactions).where("rewards.id IS NULL")
+      end
+      ugc_tag = get_tag_from_params("ugc")
+      if ugc_tag
+        ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
+        if ugc_calltoactions.any?
+          calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
+        end
+      end
+    end
+    calltoactions
+  end
+
   def cta_url(cta)
     if $context_root
       "/#{$context_root}/call_to_action/#{cta.slug}"

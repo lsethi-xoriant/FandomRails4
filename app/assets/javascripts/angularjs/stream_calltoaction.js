@@ -203,7 +203,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
 
-  $scope.init = function(current_user, calltoaction_info_list, calltoactions_count, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
+  $scope.init = function(current_user, calltoaction_info_list, has_more, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
     FastClick.attach(document.body);
 
     $scope.aux = aux;
@@ -271,7 +271,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.current_user_answer_response_correct = {};
     $scope.calltoactions_during_video_interactions_second = []; // FIX THIS calltoactions_during_video_interactions_second;
     $scope.current_calltoaction = current_calltoaction;
-    $scope.calltoactions_count = calltoactions_count;
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
     $scope.youtube_api_ready = false;
@@ -296,12 +295,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     //updateSecondaryVideoPlayers($scope.calltoactions);
 
-    $("#append-other button").attr('disabled', false);
-    if($scope.calltoactions.length >= $scope.calltoactions_count) {
-      $("#append-other button").hide();
-    } else {
-      $("#append-other button").show();
-    }
+    $scope.has_more = has_more;
 
     $scope.initAnonymousUser();
     $scope.extraInit();
@@ -848,7 +842,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $scope.current_tag_id = tag_id; 
 
         $scope.initCallToActionInfoList(data.calltoaction_info_list);
-        $scope.calltoactions_count = data.calltoactions_count;
 
         $scope.calltoactions_during_video_interactions_second = data.calltoactions_during_video_interactions_second;
     
@@ -860,12 +853,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
         updateSecondaryVideoPlayers($scope.calltoactions);
 
-        $("#append-other button").attr('disabled', false);
-        if($scope.calltoactions.length >= $scope.calltoactions_count) {
-          $("#append-other button").hide();
-        } else {
-          $("#append-other button").show();
-        }
+        $scope.has_more = data.has_more;
 		
 		    updateFiltersMenu(tag_id);
         
@@ -950,11 +938,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $scope.calltoaction_ordering = ordering;
         $scope.initCallToActionInfoList(data.calltoaction_info_list);
 
-        if($scope.calltoactions.length >= $scope.calltoactions_count) {
-          $("#append-other button").hide();
-        } else {
-          $("#append-other button").show();
-        }
+        $scope.has_more = data.has_more;
 
         $scope.ordering_in_progress = false;
 
@@ -965,60 +949,51 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.appendCallToAction = function(callback) {
 
-    if($scope.calltoactions.length < $scope.calltoactions_count) {
+    $("#append-other button").attr('disabled', true);
+    $scope.append_ctas_in_progress = true;
 
-      $("#append-other button").attr('disabled', true);
-      $scope.append_ctas_in_progress = true;
+    append_calltoaction_path = "/append_calltoaction";
+    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+      append_calltoaction_path = "/" + $scope.aux.current_property_info.path + "" + append_calltoaction_path;
+    }
 
-      append_calltoaction_path = "/append_calltoaction";
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-        append_calltoaction_path = "/" + $scope.aux.current_property_info.path + "" + append_calltoaction_path;
+    calltoaction_ids_shown = [];
+    angular.forEach($scope.calltoactions, function(_info) {
+      calltoaction_ids_shown.push(_info.calltoaction.id);
+    });
+
+    other_params = $scope.appendCallToActionOtherParams();
+
+    $http.post(append_calltoaction_path, { calltoaction_ids_shown: calltoaction_ids_shown, other_params: other_params, ordering: $scope.calltoaction_ordering })
+    .success(function(data) {
+
+      angular.forEach(data.calltoaction_info_list, function(calltoaction_info) {
+        $scope.calltoactions.push(calltoaction_info);
+        appendYTIframe(calltoaction_info);
+      });
+
+      if(!$scope.current_user && $scope.aux.anonymous_interaction) {
+        $scope.updateCallToActionInfoWithAnonymousUserStorage();
       }
 
-      calltoaction_ids_shown = [];
-      angular.forEach($scope.calltoactions, function(_info) {
-        calltoaction_ids_shown.push(_info.calltoaction.id);
-      });
+      hash_to_append = data.calltoactions_during_video_interactions_second;
+      hash_main = $scope.calltoactions_during_video_interactions_second;
+      for(var name in hash_to_append) { 
+        hash_main[name] = hash_to_append[name]; 
+      }
+      $scope.calltoactions_during_video_interactions_second = hash_main;
 
-      other_params = $scope.appendCallToActionOtherParams();
+      $scope.has_more = data.has_more;
 
-      $http.post(append_calltoaction_path, { calltoaction_ids_shown: calltoaction_ids_shown, other_params: other_params, ordering: $scope.calltoaction_ordering })
-      .success(function(data) {
+      $("#append-other button").attr('disabled', false);
 
-        angular.forEach(data.calltoaction_info_list, function(calltoaction_info) {
-          $scope.calltoactions.push(calltoaction_info);
-          appendYTIframe(calltoaction_info);
-        });
+      $scope.append_ctas_in_progress = false;
 
-        if(!$scope.current_user && $scope.aux.anonymous_interaction) {
-          $scope.updateCallToActionInfoWithAnonymousUserStorage();
-        }
+      if (!angular.isUndefined(callback)) {
+        callback();
+      }
 
-        hash_to_append = data.calltoactions_during_video_interactions_second;
-        hash_main = $scope.calltoactions_during_video_interactions_second;
-        for(var name in hash_to_append) { 
-          hash_main[name] = hash_to_append[name]; 
-        }
-        $scope.calltoactions_during_video_interactions_second = hash_main;
-
-        if($scope.calltoactions.length >= $scope.calltoactions_count) {
-          $("#append-other button").hide();
-        }
-
-        //updateSecondaryVideoPlayers(data.calltoactions);
-
-        $("#append-other button").attr('disabled', false);
-        $scope.append_ctas_in_progress = false;
-
-        if (!angular.isUndefined(callback)) {
-          callback();
-        }
-
-      });
-      
-    } else {
-      $("#append-other").remove();
-    }
+    });
     
   };
 

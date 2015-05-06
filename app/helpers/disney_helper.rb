@@ -1,71 +1,5 @@
 module DisneyHelper
 
-  def check_disney_gallery_params(params)
-    if params["other_params"] && params["other_params"]["gallery"]["calltoaction_id"]
-      gallery_calltoaction_id = params["other_params"]["gallery"]["calltoaction_id"]
-      gallery_user_id = params["other_params"]["gallery"]["user"]
-    end
-    [gallery_calltoaction_id, gallery_user_id]
-  end
-
-  def get_disney_ctas_for_stream_computation(tag, ordering, gallery_calltoaction_id, gallery_user_id, calltoaction_ids_shown, limit_ctas)
-    calltoactions = get_disney_ctas(tag, gallery_calltoaction_id)
-
-    # Append other scenario
-    if calltoaction_ids_shown
-      calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", calltoaction_ids_shown)
-    end
-
-    # User galleries scenario
-    if gallery_user_id
-      calltoactions = calltoactions.where("user_id = ?", gallery_user_id)
-    end
-
-    case ordering
-    when "comment"
-      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-      gets_ctas_ordered_by_comments(calltoaction_ids, limit_ctas)
-    when "view"
-      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-      gets_ctas_ordered_by_views(calltoaction_ids, limit_ctas)
-    else
-      calltoactions.limit(limit_ctas).to_a
-    end
-  end
-
-  def get_disney_ctas_for_stream(params, limit_ctas)
-    gallery_calltoaction_id, gallery_user_id = check_disney_gallery_params(params)
-
-    property = get_tag_from_params(get_disney_property())
-    ordering = params[:ordering] || "recent"
-
-    cache_key = gallery_calltoaction_id ? gallery_calltoaction_id : property.name
-    cache_key = "#{cache_key}_#{ordering}"
-
-    calltoaction_ids_shown = params[:calltoaction_ids_shown]
-    if calltoaction_ids_shown
-      cache_key = "#{cache_key}_append_from_#{calltoaction_ids_shown.last}"
-    end
-
-    if ordering == "recent"
-      cache_timestamp = get_cta_max_updated_at()
-      ctas = cache_forever(get_ctas_cache_key(cache_key, cache_timestamp)) do
-        get_disney_ctas_for_stream_computation(property, ordering, gallery_calltoaction_id, gallery_user_id, calltoaction_ids_shown, limit_ctas)
-      end 
-    else
-      ctas = cache_medium(get_ctas_cache_key(cache_key, nil)) do
-        get_disney_ctas_for_stream_computation(property, ordering, gallery_calltoaction_id, gallery_user_id, calltoaction_ids_shown, limit_ctas)
-      end 
-    end
-
-    page_elements = ["like", "comment", "share"]
-    if gallery_calltoaction_id
-      page_elements = page_elements + ["vote"]
-    end
-
-    build_cta_info_list_and_cache_with_max_updated_at(ctas, page_elements)
-  end
-
   def get_ctas_most_viewed_widget()
     property = get_tag_from_params(get_disney_property())
     result = cache_huge(get_ctas_most_viewed_cache_key(property.id)) do
@@ -109,25 +43,7 @@ module DisneyHelper
   end
 
   def get_disney_ctas(property, in_gallery = false)
-    if in_gallery
-      if in_gallery != "all"
-        gallery_calltoaction = CallToAction.find(in_gallery)
-        gallery_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
-        calltoactions = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL", gallery_tag.id)
-      else
-        calltoactions = CallToAction.active_with_media.where("call_to_actions.user_id IS NOT NULL")
-      end
-    else
-      ugc_tag = get_tag_from_params("ugc")
-      calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", property.id)
-      if ugc_tag
-        ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
-        if ugc_calltoactions.any?
-          calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
-        end
-      end
-    end
-    calltoactions
+    get_ctas(property, in_gallery)
   end
   
   def get_my_general_position_in_property
