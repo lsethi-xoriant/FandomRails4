@@ -19,7 +19,7 @@
 	    		<div class="col-xs-12">  
 			      <div class="relateds__icon-container text-center" ng-bind-html="section.icon_url">
 			      </div>
-			      <p class="relateds__title">{{section.title}} <%= light_link_to("{{section.view_all_link}}", class: "section-heading__see-all") do %>
+			      <p class="relateds__title">{{section.title}} <%= link_to("{{section.view_all_link}}", class: "section-heading__see-all") do %>
 		            Vedi tutti
 		          <% end %></p>
 			    </div>
@@ -31,7 +31,7 @@
 		      <div class="flex-viewport-shadow hidden-xs"></div>
 		      <ul class="slides">
 		        <li class="relateds-flexslider__item" ng-repeat="content in section.contents">
-		          <%= light_link_to("{{content.detail_url}}") do %>	
+		          <a href="{{content.detail_url}}">	
 			          <div class="relateds-flexslider__item-panel" ng-if="content.type == 'cta'"> 
 			            <div class="row">
 			              <div class="col-xs-12">
@@ -59,7 +59,7 @@
 				            </div>
 				          </div>
 				      </div>
-		          <% end %>
+		          </a>
 		        </li>
 		      </ul>
 		    </div>

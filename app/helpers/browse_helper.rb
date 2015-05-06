@@ -47,19 +47,25 @@ module BrowseHelper
         perpage: per_page
       }
     }
-    recent = get_ctas_with_tags_in_and(tags.map{|t| t.id}, params)
-    recent_contents = prepare_contents(recent)
     
-    browse_section = ContentSection.new(
-    {
-      key: "recent",
-      title: "I piu recenti",
-      icon_url: get_browse_section_icon(nil),
-      contents: recent_contents,
-      view_all_link: build_viewall_link("/browse/view_recent"),
-      column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
-    }
-    )
+    cache_medium(get_recent_content_previews_cache_key(params)) do
+    
+      recent = get_ctas_with_tags_in_and(tags.map{|t| t.id}, params)
+      recent_contents = prepare_contents(recent)
+      recent_contents = compute_cta_status_contents(recent_contents, current_or_anonymous_user)
+
+      browse_section = ContentSection.new(
+      {
+        key: "recent",
+        title: "I piu recenti",
+        icon_url: get_browse_section_icon(nil),
+        contents: recent_contents,
+        view_all_link: build_viewall_link("/browse/view_recent"),
+        column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
+      }
+      )
+      
+    end
   end
 
   def get_recent_ctas(tags, params = {})
@@ -81,7 +87,7 @@ module BrowseHelper
     url
   end
 
-  def compute_cta_status_contents(contents)
+  def compute_cta_status_contents(contents, user)
     cta_ids = []
     contents.each do |content|
       if content.type == "cta"
@@ -337,20 +343,33 @@ module BrowseHelper
   #   main_tag_name - the name of the tag that rappresent the content previews container
   #   other_tags    - list of context tag such as current property tag or language tag, these tags will be used to filter contents. It could be empty.
   #   params        - a dictionary containing further conditions to retrive content from DB (see get_cta_where_clause_from_params for detail)
-  def get_content_previews(main_tag_name, other_tags = [], params = {})
+  def get_content_previews(main_tag_name, other_tags = [], params = {}, number_of_elements = nil)
     #carousel elements if setted in content tag, if in section tag needs to be passed as function params
     main_tag = Tag.find_by_name(main_tag_name)
     timestamp = main_tag.updated_at
-    #TODO: cache_forever
-    cache_medium(get_content_previews_cache_key(main_tag_name, timestamp)) do
-      carousel_elements = get_elements_for_browse_carousel(main_tag)
+    content_preview_list = cache_forever(get_content_previews_cache_key(main_tag_name, timestamp, params)) do
+      if number_of_elements.nil?
+        carousel_elements = get_elements_for_browse_carousel(main_tag)
+      else
+        carousel_elements = number_of_elements
+      end
       
       if(get_extra_fields!(main_tag)['ordering'] && !params[:related])
-        get_content_previews_by_tags_with_ordering(main_tag, [], carousel_elements, params)
+        content_preview_list = get_content_previews_by_tags_with_ordering(main_tag, [], carousel_elements, params)
       else
-        get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
+        content_preview_list = get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
+      end
+      content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, anonymous_user)
+      content_preview_list
+    end
+    
+    if current_user
+      content_preview_list = cache_forever(get_content_previews_statuses_for_tag(main_tag_name, current_user)) do
+        content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, current_user)
+        content_preview_list
       end
     end
+    content_preview_list
   end
   
   # WITH MATCH METHOD

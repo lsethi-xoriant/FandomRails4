@@ -322,8 +322,8 @@ module DisneyHelper
       "title" => calltoaction.title,
       "description" => calltoaction.description,
       "votes" => get_votes_thumb_for_cta(calltoaction),
-      "likes" => get_number_of_likes_for_cta(calltoaction),
-      "comments" => get_number_of_comments_for_cta(calltoaction),
+      "likes" => get_number_of_interaction_type_for_cta("Like", calltoaction),
+      "comments" => get_number_of_interaction_type_for_cta("Comment", calltoaction),
       "flag" => build_grafitag_for_calltoaction(calltoaction, "flag")
     }
 
@@ -458,13 +458,13 @@ module DisneyHelper
           image_background = get_upload_extra_field_processor(get_extra_fields!(main_related_tag)['background_image'], :original)
 
           related_calltoaction_info = get_content_previews(main_related_tag.name, [], related_params)
-          related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents)
+          related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         end
       else
         main_related_tag = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
         if main_related_tag
           related_calltoaction_info = get_content_previews(main_related_tag.name, [current_property], related_params)
-          related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents)
+          related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         end
       end
 

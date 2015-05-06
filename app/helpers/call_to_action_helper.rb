@@ -379,12 +379,6 @@ module CallToActionHelper
     } 
   end
 
-  def build_likes_for_resource(interaction)
-    cache_short(get_likes_count_for_interaction_cache_key(interaction.id)) do
-      interaction.user_interactions.where("(aux->>'like')::bool").count
-    end
-  end
-
   def build_comments_for_resource(interaction)
     comments, comments_total_count = get_comments_approved(interaction)
 
@@ -881,15 +875,21 @@ module CallToActionHelper
     get_ctas_with_tag(tag_name).sample
   end
 
-  def get_number_of_comments_for_cta(cta)
-    cache_short(get_comments_count_for_cta_key(cta.id)) do
-      comment_interaction = cta.interactions.find_by_resource_type("Comment")
-      if comment_interaction
-        comment_interaction.resource.user_comment_interactions.where("approved = true").count
+  def get_number_of_interaction_type_for_cta(type, cta)
+    #cache_short(get_comments_count_for_cta_key(cta.id)) do
+      type_interaction = cta.interactions.find_by_resource_type(type)
+      if type_interaction
+        type_counter = ViewCounter.where(:ref_type => "interaction", :ref_id => type_interaction.id).first
+        if type_counter.nil?
+          0
+        else
+          type_counter.counter
+        end
+        #comment_interaction.resource.user_comment_interactions.where("approved = true").count
       else
         0
       end
-    end
+    #end
   end
 
   def get_votes_thumb_for_cta(cta) 
@@ -900,26 +900,6 @@ module CallToActionHelper
       else
         0
       end
-    end
-  end
-
-  def get_number_of_likes_for_cta(cta)
-    cache_short(get_likes_count_for_cta_key(cta.id)) do
-      like_interaction = cta.interactions.find_by_resource_type("Like")
-      if like_interaction
-        build_likes_for_resource(like_interaction)
-      else
-        0
-      end
-    end
-  end
-
-  def get_votes_for_cta(cta_id)
-    result = UserInteraction.select("SUM((aux->>'vote')::int) as votes").where("(aux->>'call_to_action_id')::int = ?", cta_id).first
-    if result.votes.blank?
-      nil
-    else
-      result.votes
     end
   end
 

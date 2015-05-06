@@ -16,18 +16,12 @@ class BrowseController < ApplicationController
       extra_cache_key = ""
     end
     
-    @browse_section = cache_long(get_browse_sections_cache_key(get_search_tags_for_tenant, extra_cache_key)) do 
-      init_browse_sections(get_search_tags_for_tenant, @tag_browse) 
-    end
+    @browse_section = init_browse_sections(get_search_tags_for_tenant, @tag_browse) 
     
     if params[:query]
       @query = params[:query]
     end
     
-    @browse_section.each do |bs|
-      bs.contents = compute_cta_status_contents(bs.contents)
-    end
-
   end
   
   def get_tag_browse(tag_name)
@@ -71,7 +65,7 @@ class BrowseController < ApplicationController
     @total = total
     contents = prepare_contents(contents)
     
-    @contents = compute_cta_status_contents(contents)
+    @contents = compute_cta_status_contents(contents, current_or_anonymous_user)
     
     @aux_other_params = { 
       calltoaction_evidence_info: true,
@@ -94,7 +88,7 @@ class BrowseController < ApplicationController
     contents, total = get_contents_with_match(params[:query], offset, get_current_property)
     contents = prepare_contents(contents)
     
-    contents = compute_cta_status_contents(contents)
+    contents = compute_cta_status_contents(contents, current_or_anonymous_user)
     
     respond_to do |format|
       format.json { render :json => contents.to_json }
@@ -111,9 +105,15 @@ class BrowseController < ApplicationController
   
   def index_category
     @category = Tag.includes(:tags_tags).find(params[:id])
-    contents, @has_more = get_content_previews_with_tags([@category] + get_tags_for_category(@category), DEFAULT_VIEW_ALL_ELEMENTS)
-    @tags = get_tags_from_contents(contents)
-    @contents = compute_cta_status_contents(contents)
+    params[:limit] = {
+      offset: 0,
+      perpage: DEFAULT_VIEW_ALL_ELEMENTS
+    }
+    content_preview_list = get_content_previews(@category.name, get_tags_for_category(@category), params, DEFAULT_VIEW_ALL_ELEMENTS)
+    
+    @tags = get_tags_from_contents(content_preview_list.contents)
+    @contents = content_preview_list.contents
+    @has_more = content_preview_list.has_view_all
     
     @aux_other_params = { 
       page_tag: {
@@ -138,9 +138,8 @@ class BrowseController < ApplicationController
       offset: params[:offset].to_i,
       perpage: DEFAULT_VIEW_ALL_ELEMENTS
     }
-    contents, has_more = get_content_previews_with_tags([category] + get_tags_for_category(category), DEFAULT_VIEW_ALL_ELEMENTS, params)
-    
-    contents = compute_cta_status_contents(contents)
+    content_preview_list = get_content_previews(category.name, get_tags_for_category(category), params, DEFAULT_VIEW_ALL_ELEMENTS)
+    contents = content_preview_list.contents
     
     respond_to do |format|
       format.json { render :json => contents.to_json }
@@ -162,7 +161,7 @@ class BrowseController < ApplicationController
     @has_more = contents.count > DEFAULT_VIEW_ALL_ELEMENTS
     contents = prepare_contents(contents.slice(0, DEFAULT_VIEW_ALL_ELEMENTS))
     
-    @contents = compute_cta_status_contents(contents)
+    @contents = compute_cta_status_contents(contents, current_or_anonymous_user)
     
     @per_page = DEFAULT_VIEW_ALL_ELEMENTS
   end
@@ -177,7 +176,7 @@ class BrowseController < ApplicationController
     contents = get_recent_ctas(get_search_tags_for_tenant, parameters)
     has_more = contents.count > DEFAULT_VIEW_ALL_ELEMENTS
     contents = prepare_contents(contents.slice(0, DEFAULT_VIEW_ALL_ELEMENTS))
-    contents = compute_cta_status_contents(contents)
+    contents = compute_cta_status_contents(contents, current_or_anonymous_user)
     
     response = {
       contents: contents,
@@ -193,7 +192,7 @@ class BrowseController < ApplicationController
     if flash[:notice]
       contents = get_recent_ctas(get_search_tags_for_tenant)
       contents = prepare_contents(contents.slice(0, 12))
-      @contents = compute_cta_status_contents(contents)
+      @contents = compute_cta_status_contents(contents, current_or_anonymous_user)
     end
     
     @aux_other_params = { 
@@ -231,28 +230,6 @@ class BrowseController < ApplicationController
   #hook for filter search result in specific property if multiproperty site
   def get_current_property
     nil
-  end
-  
-  # Old implementation of search that redirect to filtered browse page if no result
-  # see browse helper docs for more information
-  
-  def full_search_old
-    browse_settings = Setting.find_by_key(BROWSE_SETTINGS_KEY).value
-    browse_areas = browse_settings.split(",")
-    @browse_section = Array.new
-    browse_areas.each do |area|
-      if area.start_with?("$")
-        func = "get_#{area[1..area.length]}"
-        @browse_section << send(func, params[:query])
-      else
-        tag_area = Tag.find_by_name(area)
-        if get_extra_fields!(tag_area).key? "contents"
-          @browse_section << get_featured_with_match(tag_area, params[:query])
-        else
-          @browse_section << get_browse_area_by_category_with_match(tag_area, params[:query])
-        end
-      end
-    end
   end
   
 end

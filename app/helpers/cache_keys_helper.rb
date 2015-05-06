@@ -452,8 +452,19 @@ module CacheKeysHelper
   
   # Stripe
   # ~~~~~~
-  def get_content_previews_cache_key(tag_name, ts)
-    "#{tag_name}_content_previews_#{ts}"
+  def get_content_previews_cache_key(tag_name, ts, params)
+    extra_key = get_extra_key_from_params(params)
+    "#{tag_name}_content_previews_#{ts}_#{extra_key}"
   end
-    
+  
+  def get_content_previews_statuses_for_tag(tag_name, current_user)
+    timestamp = UserInteraction.select("MAX(updated_at) as ts").where(:user_id => current_user.id).first.ts
+    "#{tag_name}_content_previews_statuses_for_#{current_user.id}_#{timestamp}"
+  end
+  
+  def get_recent_content_previews_cache_key(params)
+    extra_key = get_extra_key_from_params(params)
+    "recent_content_previews_#{extra_key}"
+  end
+  
 end

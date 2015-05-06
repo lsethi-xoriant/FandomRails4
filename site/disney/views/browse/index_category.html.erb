@@ -42,7 +42,7 @@
      
 	      <div class="row">
       		<div class="col-xs-12 col-md-3" ng-repeat="content in visibleElements">
-				<%= light_link_to("{{content.detail_url}}") do %>	
+				<%= link_to("{{content.detail_url}}") do %>	
 		        <div class="relateds-flexslider__item-panel relateds-flexslider__item-panel--full-search" ng-if="content.type == 'cta'"> 
 		          <div class="row">
 		            <div class="col-xs-12">
