@@ -104,8 +104,9 @@ class ApplicationController < ActionController::Base
     #@calltoactions = cache_medium(get_calltoactions_in_property_cache_key(property.id, 0, get_cta_max_updated_at())) do
     #end  
     
-    @calltoactions = CallToAction.active.limit(init_ctas).to_a
-    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(@calltoactions, ["like", "comment", "share"])
+    tag_name = nil
+    params = { "page_elements" => ["like", "comment", "share"] }
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(tag_name, params, $site.init_ctas)
 
     @aux_other_params = { 
     }

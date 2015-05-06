@@ -1,8 +1,8 @@
 <div id="gallery-slider" class="flexslider ctas__flexslider">
   <ul class="slides">
     <li ng-repeat="content in calltoaction_info.calltoaction.gallery | orderBy:orderContent" class="filters__flexslider-item">
-        <div class="col-xs-12 cta-cover__thumbnail-column">
-          <img ng-src="{{content['value']['url']}}" class="cta-cover__thumbnail">
+        <div class="col-xs-12 cta-preview__thumbnail">
+          <img ng-src="{{content['value']['url']}}" class="cta-preview__image">
         </div>
     </li>
   </ul>

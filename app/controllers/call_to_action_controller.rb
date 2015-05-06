@@ -97,51 +97,37 @@ class CallToActionController < ApplicationController
     end
   end
 
-  def append_calltoaction_page_elements
-    ["like", "comment", "share"]
-  end
-
   def append_calltoaction
-    page_elements = append_calltoaction_page_elements()
-
-    calltoaction_ids_shown = params[:calltoaction_ids_shown]
-    calltoaction_ids_shown_qmarks = (["?"] * calltoaction_ids_shown.count).join(", ")
-
-    ordering = params[:ordering]
-
     init_ctas = $site.init_ctas * 2
-    response = cache_short(get_next_ctas_stream_for_user_cache_key(current_or_anonymous_user.id, nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do
-      calltoactions = cache_short(get_next_ctas_stream_cache_key(nil, calltoaction_ids_shown.last, get_cta_max_updated_at(), ordering, nil)) do     
-        calltoactions = CallToAction.active.where("call_to_actions.id NOT IN (#{calltoaction_ids_shown_qmarks})", *calltoaction_ids_shown)
-        case ordering
-        when "comment"
-          calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")
-          sql = "SELECT call_to_actions.id, sum((user_comment_interactions.approved is not null and user_comment_interactions.approved)::integer) " +
-                "FROM call_to_actions LEFT OUTER JOIN interactions ON call_to_actions.id = interactions.call_to_action_id LEFT OUTER JOIN user_comment_interactions ON interactions.resource_id = user_comment_interactions.comment_id " +
-                "WHERE interactions.resource_type = 'Comment' AND call_to_actions.id in (#{calltoaction_ids}) " +
-                "GROUP BY call_to_actions.id " +
-                "ORDER BY sum DESC limit #{init_ctas};"
-          execute_sql_and_get_ctas_ordered(sql)
-        when "view"
-          calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }.join(",")
-          sql = "SELECT call_to_actions.id " +
-              "FROM call_to_actions LEFT OUTER JOIN view_counters ON call_to_actions.id = view_counters.ref_id " +
-              "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'cta') AND call_to_actions.id in (#{calltoaction_ids}) " +
-              "ORDER BY (coalesce(view_counters.counter, 0) / (extract('epoch' from (now() - coalesce(call_to_actions.activated_at, call_to_actions.created_at) )) / 3600 / 24)), call_to_actions.activated_at DESC limit #{init_ctas};"
-        else
-          calltoactions = calltoactions.limit(init_ctas).to_a
-        end
-        calltoactions
-      end
-      
-      {
-        calltoaction_info_list: build_cta_info_list_and_cache_with_max_updated_at(calltoactions, page_elements)
-      }.to_json
+    calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, init_ctas)
 
-    end
+    params[:page_elements] = ["empty"]
+    response = {
+      calltoaction_info_list: calltoaction_info_list,
+      has_more: has_more
+    }
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end 
     
     respond_to do |format|
       format.json { render json: response }
+    end 
+  end
+
+  def ordering_ctas
+    tag_name = get_disney_property()
+    calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+
+    params[:page_elements] = ["empty"]
+    response = {
+      calltoaction_info_list: calltoaction_info_list,
+      has_more: has_more
+    }
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
     end 
   end
 
@@ -237,15 +223,17 @@ class CallToActionController < ApplicationController
     if calltoaction
       log_call_to_action_viewed(calltoaction)
 
-      #calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
-      @calltoactions_with_current = [calltoaction] # + calltoactions
-      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(@calltoactions_with_current)
+      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction])
       
       if current_user
         @current_user_info = build_current_user()
       end
 
-      @aux_other_params = init_show_aux(calltoaction)
+      @aux_other_params = { 
+        calltoaction: calltoaction,
+        linked_call_to_actions_index: @step_counter, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
+        linked_call_to_actions_count: @linked_call_to_actions_count
+      }
 
       set_seo_info_for_cta(calltoaction)
 
@@ -292,12 +280,6 @@ class CallToActionController < ApplicationController
     }
   end
 =end
-
-  def init_show_aux(calltoaction)
-    { 
-      calltoaction: calltoaction
-    }
-  end
   
   def get_correlated_cta(calltoaction)
     tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat")

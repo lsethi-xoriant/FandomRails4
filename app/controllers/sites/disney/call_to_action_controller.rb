@@ -34,8 +34,12 @@ class Sites::Disney::CallToActionController < CallToActionController
   end
 
   def append_calltoaction
+    tag_name = get_disney_property()
+    params[:page_elements] = ["like", "comment", "share"]
+    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, 6)
     response = {
-      calltoaction_info_list: get_disney_ctas_for_stream(params, 6)
+      calltoaction_info_list: calltoaction_info_list,
+      has_more: has_more
     }
     
     respond_to do |format|
@@ -44,8 +48,12 @@ class Sites::Disney::CallToActionController < CallToActionController
   end
 
   def ordering_ctas
+    tag_name = get_disney_property()
+    params[:page_elements] = ["like", "comment", "share"]
+    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, $site.init_ctas)
     response = {
-      calltoaction_info_list: get_disney_ctas_for_stream(params, $site.init_ctas)
+      calltoaction_info_list: calltoaction_info_list,
+      has_more: has_more
     }
     
     respond_to do |format|
