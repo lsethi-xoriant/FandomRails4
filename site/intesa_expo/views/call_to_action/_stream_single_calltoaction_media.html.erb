@@ -19,8 +19,8 @@
 </div>
 
 <!-- MAIN MEDIA IMAGE -->
-<div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image media-image-{{calltoaction_info.miniformat['name']}} {{calltoaction_info.class}}">
-  <img ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+<div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image media-image-{{calltoaction_info.miniformat['name']}} {{calltoaction_info.class}} cta-preview__thumbnail">
+  <img ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;" class="cta-preview__image">
 </div>
 
 <!-- IFRAME -->
