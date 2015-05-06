@@ -44,7 +44,7 @@ module RewardHelper
     end
   end
 
-  # Get an hash cta_id => status for a list of ctas. Needed for separate and caching ctas information 
+  # Get a hash cta_id => status for a list of ctas. Needed for separate and caching ctas information 
   # not depending to user
   #   user           - the user for which calculate cta statuses
   #   ctas           - list of ctas to evaluate

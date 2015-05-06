@@ -340,12 +340,16 @@ module BrowseHelper
   def get_content_previews(main_tag_name, other_tags = [], params = {})
     #carousel elements if setted in content tag, if in section tag needs to be passed as function params
     main_tag = Tag.find_by_name(main_tag_name)
-    carousel_elements = get_elements_for_browse_carousel(main_tag)
-    
-    if(get_extra_fields!(main_tag)['ordering'] && !params[:related])
-      get_content_previews_by_tags_with_ordering(main_tag, [], carousel_elements, params)
-    else
-      get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
+    timestamp = main_tag.updated_at
+    #TODO: cache_forever
+    cache_medium(get_content_previews_cache_key(main_tag_name, timestamp)) do
+      carousel_elements = get_elements_for_browse_carousel(main_tag)
+      
+      if(get_extra_fields!(main_tag)['ordering'] && !params[:related])
+        get_content_previews_by_tags_with_ordering(main_tag, [], carousel_elements, params)
+      else
+        get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
+      end
     end
   end
   
