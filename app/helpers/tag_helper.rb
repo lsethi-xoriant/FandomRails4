@@ -29,6 +29,7 @@ module TagHelper
 
   def get_ctas_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
+    #TODO: remove cache
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "and") do
       tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
       where_clause = get_cta_where_clause_from_params(params)
@@ -58,6 +59,7 @@ module TagHelper
   
   def get_ctas_with_tags_in_or(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
+    #TODO: remove cache
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
       where_clause = get_cta_where_clause_from_params(params)
       ctas = CallToAction.active.includes(call_to_action_tags: :tag)
@@ -83,6 +85,7 @@ module TagHelper
 
   def get_tags_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
+    #TODO: remove cache
     cache_short get_tags_with_tags_cache_key(tag_ids, extra_key) do
       where_clause = get_tag_where_clause_from_params(params)
       tags = Tag
@@ -101,6 +104,7 @@ module TagHelper
   end
 
   def get_tag_ids_for_cta(cta)
+    #TODO: remove cache
     cache_short(get_tag_names_for_cta_key(cta.id)) do
       tags = {}
       cta.call_to_action_tags.each do |t|
@@ -121,18 +125,21 @@ module TagHelper
   end
 
   def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
+    #TODO: remove cache
     cache_short get_tag_with_tag_about_call_to_action_cache_key(calltoaction.id, tag_name) do
       Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).order("call_to_action_tags.updated_at DESC").to_a
     end
   end
 
   def get_tag_with_tag_about_tag(tag, parent_tag_name)
+    #TODO: remove cache
     cache_short get_tag_with_tag_about_tag_cache_key(tag.id, parent_tag_name) do
       Tag.includes(tags_tags: :other_tag).includes(:tags_tags).where("other_tags_tags_tags.name = ? AND tags_tags.tag_id = ?", parent_tag_name, tag.id).order("tags_tags.updated_at DESC").to_a
     end
   end
   
   def get_tag_with_tag_about_reward(reward, tag_name)
+    #TODO: remove cache
     cache_short get_tag_with_tag_about_reward_cache_key(reward.id, tag_name) do
       Tag.includes(tags_tags: :other_tag).includes(:reward_tags).where("other_tags_tags_tags.name = ? AND reward_tags.reward_id = ?", tag_name, reward.id).to_a
     end

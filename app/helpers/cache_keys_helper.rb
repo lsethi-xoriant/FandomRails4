@@ -441,5 +441,11 @@ module CacheKeysHelper
   def get_month_calendar_cache_key(extra_key)
     "month_#{extra_key}_events"
   end
+  
+  # Stripe
+  # ~~~~~~
+  def get_content_previews_cache_key(tag_name, ts)
+    "#{tag_name}_content_previews_#{ts}"
+  end
     
 end
