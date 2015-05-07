@@ -1006,7 +1006,7 @@ module CallToActionHelper
         end
         #comment_interaction.resource.user_comment_interactions.where("approved = true").count
       else
-        0
+        nil
       end
     #end
   end
