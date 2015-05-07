@@ -34,17 +34,39 @@ module UserInteractionHelper
 
   def check_and_find_next_call_to_action_in_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute) 
     next_cta_info_list = false
+
     if calltoaction_info_list.length == 1 && user_interactions.any?
+
+      prev_calltoaction_info_id = calltoaction_info_list.first["calltoaction"]["id"]
+
+      if calltoaction_info_list.first["calltoaction"]["extra_fields"]["linked_call_to_actions_count"]
+        optional_total_count = calltoaction_info_list.first["calltoaction"]["extra_fields"]["linked_call_to_actions_count"]
+      end
+      
       user_interactions.each do |user_interaction|
         aux = JSON.parse(user_interaction.aux || {})
         if aux["next_calltoaction_id"].present? && !aux["to_redo"]
           next_cta = CallToAction.find(aux["next_calltoaction_id"])
           next_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([next_cta], interactions_to_compute)
+          update_cta_info_optional_history(next_cta_info_list, prev_calltoaction_info_id, optional_total_count) 
           break
         end
       end
     end
+
     next_cta_info_list
+
+  end
+
+  def update_cta_info_optional_history(next_cta_info_list, prev_calltoaction_info_id, optional_total_count)
+    unless next_cta_info_list.first["optional_history"]
+      next_cta_info_list.first["optional_history"] = {}
+    end
+    (next_cta_info_list.first["optional_history"]["ctas"] ||= []) << prev_calltoaction_info_id
+    if optional_total_count
+      next_cta_info_list.first["optional_history"]["optional_total_count"] = optional_total_count
+      next_cta_info_list.first["calltoaction"]["extra_fields"]["linked_call_to_actions_count"] = optional_total_count
+    end
   end
 
   def build_current_user_reward(reward)

@@ -223,16 +223,22 @@ class CallToActionController < ApplicationController
     if calltoaction
       log_call_to_action_viewed(calltoaction)
 
-      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction])
+      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction], nil)
       
-      if current_user
-        @current_user_info = build_current_user()
+      optional_history = @calltoaction_info_list.first["optional_history"]
+      if optional_history
+        step_index = optional_history["ctas"].length + 1
+        step_count = optional_history["optional_total_count"]
       end
+
+      #if current_user
+      #  @current_user_info = build_current_user()
+      #end
 
       @aux_other_params = { 
         calltoaction: calltoaction,
-        linked_call_to_actions_index: @step_counter, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
-        linked_call_to_actions_count: @linked_call_to_actions_count
+        linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
+        linked_call_to_actions_count: step_count
       }
 
       set_seo_info_for_cta(calltoaction)

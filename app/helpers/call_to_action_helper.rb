@@ -39,9 +39,7 @@ module CallToActionHelper
         get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
       end 
     else
-      ctas = cache_medium(get_ctas_cache_key(cache_key, nil)) do
-        get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
-      end 
+      get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
     end
 
     page_elements = params && params[:page_elements] ? params[:page_elements] : nil
@@ -174,7 +172,7 @@ module CallToActionHelper
     #      "ORDER BY sum DESC limit #{cta_count};"
     query = "SELECT interactions.call_to_action_id AS id " +
             "FROM interactions LEFT OUTER JOIN view_counters ON interactions.id = view_counters.ref_id " +
-            "WHERE (view_counters.ref_type = 'interaction') AND interactions.call_to_action_id IN (#{calltoaction_ids}) AND interactions.resource_type = 'Comment' " +
+            "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'interaction') AND interactions.call_to_action_id IN (#{calltoaction_ids}) AND interactions.resource_type = 'Comment' " +
             "ORDER BY coalesce(view_counters.counter, 0) DESC limit #{cta_count};"
     execute_sql_and_get_ctas_ordered(query)
   end
