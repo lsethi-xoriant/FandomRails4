@@ -1,5 +1,6 @@
 <div class="col-sm-12 hidden-xs">
-  <p class="comment-interaction__cover__info"><span class="glyphicon glyphicon-comment comment-interaction__cover__info__glyphicon-comment"></span> <span class="comment-interaction__cover__info__text">Ci sono {{interaction_info.interaction.resource.comment_info.comments_total_count}} commenti</span></p>
+  <p class="comment-interaction__cover__info"><span class="glyphicon glyphicon-comment comment-interaction__cover__info__glyphicon-comment"></span> <span class="comment-interaction__cover__info__text">
+  Ci sono {{interaction_info.interaction.resource.comment_info.comments_total_count}} commenti</span></p>
 </div>
 <div class="col-sm-12" ng-if="!aux.gallery">
   <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments | limitTo:coverCommentsLimit">

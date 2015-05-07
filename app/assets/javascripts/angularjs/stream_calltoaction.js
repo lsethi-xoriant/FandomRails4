@@ -557,7 +557,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.isCommentEmpty = function(calltoaction_info) {
     interaction_info = getCommentInteraction(calltoaction_info.calltoaction.id);
     if(interaction_info) {
-      return !(interaction_info.interaction.resource.comment_info.comments.length > 0);
+      return !(interaction_info.interaction.resource.comment_info && interaction_info.interaction.resource.comment_info.comments_total_count > 0);
     } else {
       return true;
     }

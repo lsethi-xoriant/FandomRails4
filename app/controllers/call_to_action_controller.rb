@@ -257,7 +257,7 @@ class CallToActionController < ApplicationController
 
       redirect_to "/"
 
-    end   
+    end
 
 =begin
     if @calltoaction.enable_disqus

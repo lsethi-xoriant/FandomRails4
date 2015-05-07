@@ -10,12 +10,49 @@ class Sites::Disney::CallToActionController < CallToActionController
     get_disney_property()
   end
 
-  def init_show_aux(calltoaction)
-    { 
-      init_captcha: true,
-      calltoaction: calltoaction,
-      sidebar_tags: ["detail"]
-    }
+  def show
+
+    calltoaction_id = params[:id]
+    
+    calltoaction = CallToAction.includes(interactions: :resource).active.find(calltoaction_id)
+
+    if calltoaction
+      log_call_to_action_viewed(calltoaction)
+
+      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction], nil)
+      
+      optional_history = @calltoaction_info_list.first["optional_history"]
+      if optional_history
+        step_index = optional_history["ctas"].length + 1
+        step_count = optional_history["optional_total_count"]
+      end
+
+      @aux_other_params = { 
+        calltoaction: calltoaction,
+        linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
+        linked_call_to_actions_count: step_count,
+        init_captcha: true,
+        sidebar_tags: ["detail"]
+      }
+
+      set_seo_info_for_cta(calltoaction)
+
+      descendent_calltoaction_id = params[:descendent_id]
+      if(descendent_calltoaction_id)
+        calltoaction_to_share = CallToAction.find(descendent_calltoaction_id)
+        extra_fields = JSON.parse(calltoaction_to_share.extra_fields)
+
+        @seo_info["title"] = strip_tags(extra_fields["linked_result_title"]) rescue ""
+        @seo_info["meta_description"] = strip_tags(extra_fields["linked_result_description"]) rescue ""
+        @seo_info["meta_image"] = strip_tags(extra_fields["linked_result_image"]["url"]) rescue ""
+      end
+      
+    else
+
+      redirect_to "/"
+
+    end
+
   end
 
   def expire_user_interaction_cache_keys()

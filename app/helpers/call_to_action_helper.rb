@@ -39,7 +39,7 @@ module CallToActionHelper
         get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
       end 
     else
-      get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
+      ctas = get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
     end
 
     page_elements = params && params[:page_elements] ? params[:page_elements] : nil
@@ -313,13 +313,11 @@ module CallToActionHelper
       comments = UserCommentInteraction.includes(:user).where(id: comment_ids).order("created_at DESC")
     end
 
-    adjustCounters(interaction_ids, calltoaction_info_list, comments)
-
     max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
     max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
     user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
 
-    cache_forever(user_cache_key) do
+    calltoaction_info_list = cache_forever(user_cache_key) do
       if current_user
         interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
         user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
@@ -350,25 +348,26 @@ module CallToActionHelper
       end
     end
 
+    adjustCounters(interaction_ids, calltoaction_info_list, comments)
+    calltoaction_info_list
+
   end
 
   def adjustCounters(interaction_ids, calltoaction_info_list, comments)
     counters = ViewCounter.where("ref_type = 'interaction' AND ref_id IN (?)", interaction_ids)
-    if counters.any?
-      calltoaction_info_list.each do |calltoaction_info|
-        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-          interaction_id = interaction_info["interaction"]["id"]
-          counter = find_interaction_in_counters(counters, interaction_id)
-          interaction_info["interaction"]["resource"]["counter"] = counter ? counter.counter : 0
-          if interaction_info["interaction"]["resource_type"] == "vote"
-            aux = counter ? counter.aux : "{}"
-            interaction_info["interaction"]["resource"]["counter_aux"] = JSON.parse(aux)
-          elsif interaction_info["interaction"]["resource_type"] == "comment"
-            interaction_info["interaction"]["resource"]["comment_info"] = {
-              "comments_total_count" => interaction_info["interaction"]["resource"]["counter"],
-              "comments" => build_comments_by_resource_id(comments, interaction_info["interaction"]["resource"]["id"]) 
-            } 
-          end
+    calltoaction_info_list.each do |calltoaction_info|
+      calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+        interaction_id = interaction_info["interaction"]["id"]
+        counter = find_interaction_in_counters(counters, interaction_id)
+        interaction_info["interaction"]["resource"]["counter"] = counter ? counter.counter : 0
+        if interaction_info["interaction"]["resource_type"] == "vote"
+          aux = counter ? counter.aux : "{}"
+          interaction_info["interaction"]["resource"]["counter_aux"] = JSON.parse(aux)
+        elsif interaction_info["interaction"]["resource_type"] == "comment"
+          interaction_info["interaction"]["resource"]["comment_info"] = {
+            "comments_total_count" => interaction_info["interaction"]["resource"]["counter"],
+            "comments" => build_comments_by_resource_id(comments, interaction_info["interaction"]["resource"]["id"]) 
+          } 
         end
       end
     end
