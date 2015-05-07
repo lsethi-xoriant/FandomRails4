@@ -42,7 +42,7 @@ module CallToActionHelper
       ctas = get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
     end
 
-    page_elements = params && params[:page_elements] ? params[:page_elements] : nil
+    page_elements = params && params["page_elements"] ? params["page_elements"] : nil
     if gallery_info
       if page_elements
         page_elements = page_elements + ["vote"]
@@ -225,7 +225,7 @@ module CallToActionHelper
     calltoactions_key = calltoaction_ids.join("_")
     cache_timestamp = get_max_updated_at(calltoactions)
     cache_key = get_cta_info_list_cache_key("#{calltoactions_key}_interaction_types_#{interactions_to_compute_key}_#{cache_timestamp}")
- 
+    
     build_cta_info_list(cache_key, calltoactions, interactions_to_compute)
   end
 
@@ -348,13 +348,14 @@ module CallToActionHelper
       end
     end
 
-    adjustCounters(interaction_ids, calltoaction_info_list, comments)
+    adjust_counters(interaction_ids, calltoaction_info_list, comments)
     calltoaction_info_list
 
   end
 
-  def adjustCounters(interaction_ids, calltoaction_info_list, comments)
+  def adjust_counters(interaction_ids, calltoaction_info_list, comments)
     counters = ViewCounter.where("ref_type = 'interaction' AND ref_id IN (?)", interaction_ids)
+    debugger
     calltoaction_info_list.each do |calltoaction_info|
       calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
         interaction_id = interaction_info["interaction"]["id"]
