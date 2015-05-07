@@ -277,21 +277,22 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
   end
 
   def tag_cta_update
-    cta = CallToAction.find(params[:id])
+    @cta = CallToAction.find(params[:id])
     tag_list = params[:tag_list].split(",")
 
-    cta.call_to_action_tags.delete_all
+    @cta.call_to_action_tags.delete_all
 
     tag_list.each do |t|
       tag = Tag.find_by_name(t)
       tag = Tag.create(name: t, slug: t) unless tag
-      CallToActionTag.create(tag_id: tag.id, call_to_action_id: cta.id)
+      CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
     end
     flash[:notice] = "CallToAction taggata"
+    cookies[:updated_at] = Time.now
     unless params[:page].blank?
       redirect_to params[:page]
     else
-      redirect_to "/easyadmin/cta/tag/#{ cta.id }"
+      redirect_to "/easyadmin/cta/tag/#{ @cta.id }"
     end
   end
 

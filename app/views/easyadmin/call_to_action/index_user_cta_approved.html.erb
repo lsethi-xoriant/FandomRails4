@@ -2,35 +2,8 @@
  
   <div id="content">    
     
-    <div id="content-header">
-      <h1>CONTENUTI GENERATI DAGLI UTENTI</h1>
-    </div> <!-- #content-header --> 
-
-      <div id="content-container">
-
-      <% if flash[:notice] %>
-        <div class="row">
-          <div class="col-md-12">         
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="alert alert-success"><%= flash[:notice] %></div>
-                </div>
-              </div>
-          </div>
-        </div>
-      <% end %>
-
-      <ul class="nav nav-tabs">
-      <li><a href="/easyadmin/cta/to_approve">Contenuti da approvare</a></li>
-      <li class="active"><a href="/easyadmin/cta/approved">Contenuti pubblicati</a></li>
-      <li><a href="/easyadmin/cta/not_approved">Contenuti oscurati</a></li>
-    </ul>
-
-    <h3>Contenuti approvati</h3>
-    <hr/>
-
     <%= form_tag :action => 'filter_ugc', :approvation_status => 'approved', :method => 'post' do %>
-      <%= render partial: "/easyadmin/call_to_action/user_cta_search_tab" %>
+      <%= render partial: "/easyadmin/call_to_action/user_cta_search_tab", locals: { page: "approved" } %>
     <% end %>
 
     <div class="row cta-to-show">
@@ -86,7 +59,7 @@
                   <button type="button" class="btn btn-secondary btn-xs">Edita</button>
                 </a>
                 &nbsp;
-                <%= link_to "Tagga", { :controller => "easyadmin", :action => "tag_cta", :id => c.id, 
+                <%= link_to "Tagga", { :controller => "tag", :action => "tag_cta", :id => c.id, 
                   :page => "#{request.protocol}#{request.host_with_port}#{request.fullpath}" }, 
                   { :class => "btn btn-default btn-xs" } %>
               </td>
