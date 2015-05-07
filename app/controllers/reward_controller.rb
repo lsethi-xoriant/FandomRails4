@@ -50,13 +50,13 @@ class RewardController < ApplicationController
   
   def get_catalogue_user_rewards_ids
     cache_short(get_catalogue_user_rewards_ids_key(current_user.id)) do
-      Reward.joins(:user_rewards).select("rewards.id").where("user_rewards.available = TRUE AND user_rewards.counter > 0 AND user_rewards.user_id = ? AND rewards.id NOT IN (?)", current_user.id, get_basic_rewards_ids).to_a
+      Reward.joins(:user_rewards).select("rewards.id").where("user_rewards.period_id is null AND user_rewards.available = true AND user_rewards.counter > 0 AND user_rewards.user_id = ? AND rewards.id NOT IN (?)", current_user.id, get_basic_rewards_ids).to_a
     end
   end
   
   def get_user_rewards(all_rewards)
     user_rewards = []
-    get_catalogue_user_rewards_ids.each do |reward|
+    get_catalogue_user_rewards_ids().each do |reward|
       user_rewards << all_rewards[reward.id]
     end
     user_rewards
