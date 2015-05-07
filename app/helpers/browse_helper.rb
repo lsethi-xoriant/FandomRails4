@@ -199,8 +199,10 @@ module BrowseHelper
         perpage: carousel_elements + 1
       }
     else
+      carousel_elements = params[:limit][:perpage]
       params[:limit][:perpage] = params[:limit][:perpage] + 1
     end
+
     tag_ids = tags.map{|tag| tag.id}
     tags = get_tags_with_tags(tag_ids, params)
     ctas = get_ctas_with_tags_in_and(tag_ids, params)

@@ -355,7 +355,6 @@ module CallToActionHelper
 
   def adjust_counters(interaction_ids, calltoaction_info_list, comments)
     counters = ViewCounter.where("ref_type = 'interaction' AND ref_id IN (?)", interaction_ids)
-    debugger
     calltoaction_info_list.each do |calltoaction_info|
       calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
         interaction_id = interaction_info["interaction"]["id"]
