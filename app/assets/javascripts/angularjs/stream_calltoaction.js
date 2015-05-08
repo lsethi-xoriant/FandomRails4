@@ -1189,7 +1189,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   	this.media_data = media_data;
 
   	player = this;
-    
     $scope.KalturaPlayerId = playerId;
     // Update: http://knowledge.kaltura.com/javascript-api-kaltura-media-players#EnablingtheJavascriptAPI
 	  kWidget.embed({
@@ -1200,7 +1199,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   		'flashvars':{
   			'autoPlay': false,
   			'doubleClick': { 
-  				'adTagUrl': "http://analytics.disneyinternational.com/ads/tagsv2/video/?sdk=1&hub=disneychannel.it&site=community&slug1=" + $scope.calltoaction_info.calltoaction.slug + "&sdk=1&cmsid=13728&vid=" + media_data + "&output=xml_vast2&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction,
+  				'adTagUrl': "http://analytics.disneyinternational.com/ads/tagsv2/video/?sdk=1&hub=disneychannel.it&site=community&slug1=" + $scope.calltoaction_info.calltoaction.slug + "&sdk=1&cmsid=13728&vid=" + media_data + "&output=xml_vast2&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug,
 				'htmlCompanions': 'div-video-mpu:300:250;' 
 			}
   		},
