@@ -346,14 +346,19 @@ module DisneyHelper
 
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
-
+=begin
       related_params = {
         limit: {
           offset: 0,
           perpage: 9
         }
       }
-
+=end
+      related_params = {
+        conditions: {
+          exclude_cta_ids: [calltoaction.id]
+        }
+      }
       related_tag_name = "miniformat"
       in_gallery = nil
 
@@ -380,7 +385,7 @@ module DisneyHelper
           image_background = get_upload_extra_field_processor(get_extra_fields!(main_related_tag)['background_image'], :original)
 
           related_calltoaction_info = get_content_previews(main_related_tag.name, [], related_params)
-          adjust_related_without_current_cta(related_calltoaction_info, calltoaction)
+          #adjust_related_without_current_cta(related_calltoaction_info, calltoaction)
           related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         end
       else
@@ -391,7 +396,7 @@ module DisneyHelper
           related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         else
           related_calltoaction_info = get_content_previews(current_property.name, [], related_params)
-          adjust_related_without_current_cta(related_calltoaction_info, calltoaction)
+          #adjust_related_without_current_cta(related_calltoaction_info, calltoaction)
           related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         end
       end
