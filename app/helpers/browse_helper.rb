@@ -234,7 +234,7 @@ module BrowseHelper
       ctas = CallToAction.active.where("title ILIKE ? AND user_id is null","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
     else
       tag_set = tags.map { |tag| "(select tag_id from tags_tags where other_tag_id = #{tag.id} AND tag_id in (#{category_tag_ids.join(",")}) )" }.join(' INTERSECT ')
-      cta_set = tags.map { |tag| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag.id} AND tag_id in (#{category_tag_ids.join(",")}) )" }.join(' INTERSECT ')
+      cta_set = tags.map { |tag| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag.id})" }.join(' INTERSECT ')
       tags = Tag.where("title ILIKE ? AND id IN (#{tag_set})","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
       ctas = CallToAction.active.where("title ILIKE ? AND id in (#{cta_set}) AND user_id is null","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
     end

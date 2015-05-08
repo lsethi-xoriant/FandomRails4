@@ -166,6 +166,7 @@ Fandom::Application.routes.draw do
         match "/browse/full_search", :to => "browse#full_search"
         match "/browse/category/:id", :to => "browse#intesa_index_category"
         match "/browse/view_all/:id", :to => "browse#intesa_index_category"
+        match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
 
         match "/call_to_action/:id", to: "call_to_action#show"
       end
