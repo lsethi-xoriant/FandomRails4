@@ -4,21 +4,25 @@ namespace :counters do
     switch_tenant(args.tenant)
     Quiz.where("quiz_type = 'VERSUS'").each do |quiz|
       interaction = quiz.interaction
-      interaction_answers_count = interaction.user_interactions.count
-      
-      counter_aux = {}
-      quiz.answers.each do |answer|
-        counter_aux[answer.id] = UserInteraction.where("answer_id = ?", answer.id).count
+      if interaction
+        puts interaction.id
+        
+        interaction_answers_count = interaction.user_interactions ? interaction.user_interactions.count : 0
+        
+        counter_aux = {}
+        quiz.answers.each do |answer|
+          counter_aux[answer.id] = UserInteraction.where("answer_id = ?", answer.id).count
+        end
+
+        #if interaction_answers_count < 1
+        #  (100 / interaction.resource.answers.count.to_f).round
+        #else
+        #  interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
+        #  ((interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100).round
+        #end
+
+        setViewCounter(interaction.id, interaction_answers_count, counter_aux.to_json)
       end
-
-      #if interaction_answers_count < 1
-      #  (100 / interaction.resource.answers.count.to_f).round
-      #else
-      #  interaction_current_answer_count = interaction.user_interactions.where("answer_id = ?", answer.id).count
-      #  ((interaction_current_answer_count.to_f / interaction_answers_count.to_f) * 100).round
-      #end
-
-      setViewCounter(interaction.id, interaction_answers_count, counter_aux.to_json)
     end
   end
 
