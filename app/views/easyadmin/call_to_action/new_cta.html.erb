@@ -362,6 +362,12 @@
     var regexp = new RegExp("new_" + association, "g");
     $("#tmp-ctafield-add").prepend(content.replace(regexp, new_id));
   }
+
+  var like_counter = false;
+  var play_counter = false;
+  var upload_counter = false;
+  var vote_counter = false;
+  
   
   $(document).ready(function() {
 
