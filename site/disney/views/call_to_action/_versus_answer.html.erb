@@ -2,11 +2,11 @@
 <div class="row" ng-class="{'versus-answer--newline': ($index > 1)}">
   <div class="col-xs-12">
     <div class="progress bottom vertical versus-interaction__progress-bar versus-interaction__progress-bar--{{ $index % 2 == 0 ? 'left' : 'right' }} hidden-xs">
-      <div class="progress-bar" role="progressbar" style="height: {{answer.percentage}}%;"></div>
+      <div class="progress-bar" role="progressbar" style="height: {{computePercentageForVersus(interaction_info, answer.id)}}%;"></div>
     </div>
 
-    <div ng-if="answer.percentage != null" class="versus-interaction__percentage--{{ $index % 2 == 0 ? 'left' : 'right' }}--undervideo">
-      <p class="versus-interaction__percentage-text versus-interaction__percentage-text--undervideo">{{answer.percentage}}%</p>
+    <div ng-if="interaction_info.user_interaction" class="versus-interaction__percentage--{{ $index % 2 == 0 ? 'left' : 'right' }}--undervideo">
+      <p class="versus-interaction__percentage-text versus-interaction__percentage-text--undervideo">{{computePercentageForVersus(interaction_info, answer.id)}}%</p>
     </div>
 
     <img ng-if="interaction_info.user_interaction" class="versus-interaction__img versus-interaction__img--{{ $index % 2 == 0 ? 'left' : 'right' }}" ng-src="{{answer.image_medium}}">

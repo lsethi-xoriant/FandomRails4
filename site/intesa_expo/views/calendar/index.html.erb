@@ -178,7 +178,7 @@
 	  	}
 	  	eventinfo += '</p>';
 	  	eventinfo += '<hr />';
-	  	eventinfo += '<a class="btn btn-event" onclick="_gaq.push([\'_trackEvent\',\'Navigation\',\'Calendar\',\'' + selected_event.slug + '\']);" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
+	  	eventinfo += '<a class="btn btn-event" ng-click="intesaExpoGa(\'Navigation\',\'Calendar\',\'' + selected_event.slug + '\');" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
 	  	eventinfo += '<button class="btn btn-event" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">AGGIUNGI AL CALENDARIO</button>';
 	  	position = $(elem).offset();
 	  	if(position.left-250 < 0){

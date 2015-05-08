@@ -12,6 +12,14 @@ intesaExpoStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
+  $scope.intesaExpoGa = function(el1, el2, el3) {
+    _gaq.push(['_trackEvent', el1, el2, el3]);
+  };
+
+  $scope.intesaExpoGaSocial = function(el1, el2) {
+    _gaq.push(['_trackSocial', el1, el2]);
+  };
+
   $scope.extraInit = function() {
     $scope.content_ical = new Object();
     if($scope.calltoaction_info) {
@@ -131,7 +139,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   };
 
   function generateIcalForView(ical_info_list) {
-    $scope.ical = new Object({"dates": [], "dates_to": [], "times": [], "times_to": [], "locations": [], "interaction_ids": [], "datetimes": [], "n": []});
+    $scope.ical = new Object({"dates": [], "dates_to": [], "times": [], "times_to": [], "locations": [], "location_urls": [], "interaction_ids": [], "datetimes": [], "n": []});
     
     i = 0;
     angular.forEach(ical_info_list, function(value, key) {
@@ -157,11 +165,21 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       }
       */
 
+      _location_arr = _location.split("|");
+      if(_location_arr.length > 1) {
+        _location = _location_arr[0];
+        _location_url = _location_arr[1];
+      } else {
+        _location = _location_arr[0];
+        _location_url = null;
+      }
+
       $scope.ical.datetimes.push(_datetime);
       $scope.ical.interaction_ids.push(value.interaction.id);
       $scope.ical.dates.push(_date);
       $scope.ical.dates_to.push(_date_to);
       $scope.ical.locations.push(_location);
+      $scope.ical.location_urls.push(_location_url);
       $scope.ical.times.push($scope.extractTimeFromDate(_datetime));
       $scope.ical.times_to.push($scope.extractTimeFromDate(_datetime_to));
       $scope.ical.n.push(i);

@@ -39,6 +39,30 @@ module ApplicationHelper
   def truncate(*args)
     TextHelperNamespace.new.truncate(*args)
   end
+
+  def get_property()
+    property_name = $context_root || $site.default_property
+    if(property_name)
+      get_tag_from_params(property_name)
+    else
+      nil
+    end
+  end
+
+  def build_current_user()
+    if current_user
+      {
+        "facebook" => current_user.facebook($site.id),
+        "twitter" => current_user.twitter($site.id),
+        "main_reward_counter" => get_point,
+        "username" => current_user.username,
+        "avatar" => current_avatar,
+        "avatar" => current_avatar,
+      }.to_json
+    else
+      nil
+    end
+  end
   
   def get_cta_event_start_end(cta_interactions)
     event_range_info = {

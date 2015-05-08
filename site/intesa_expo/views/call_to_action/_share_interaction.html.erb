@@ -4,13 +4,13 @@
 </div>
 
 <div class="btn-group blocks">
-  <!-- FACEBOOK -->   
-  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-provider" ng-click="_gaq.push(['_trackSocial','Facebook','Share']); shareWith(calltoaction_info, interaction_info, 'facebook')"><i class="fa fa-facebook"></i></button>
+  <!-- FACEBOOK -->
+  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-provider" ng-click="intesaExpoGaSocial('Facebook','Share'); shareWith(calltoaction_info, interaction_info, 'facebook')"><i class="fa fa-facebook"></i></button>
 
   <!-- TWITTER -->   
-  <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-provider" ng-click="_gaq.push(['_trackSocial','Twitter','Share']); shareWith(calltoaction_info, interaction_info, 'twitter')"><i class="fa fa-twitter"></i></button>
+  <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-provider" ng-click="intesaExpoGaSocial('Twitter','Share'); shareWith(calltoaction_info, interaction_info, 'twitter')"><i class="fa fa-twitter"></i></button>
 
-  <!-- LINKEDIN -->   
-  <button ng-if="interaction_info.interaction.resource.providers.linkedin" class="btn btn-provider" ng-click="_gaq.push(['_trackSocial','LinkedIn','Share']); shareWith(calltoaction_info, interaction_info, 'linkedin')"><i class="fa fa-linkedin"></i></button>
+  <!-- LINKEDIN -->
+  <button ng-if="interaction_info.interaction.resource.providers.linkedin" class="btn btn-provider" ng-click="intesaExpoGaSocial('LinkedIn','Share'); shareWith(calltoaction_info, interaction_info, 'linkedin')"><i class="fa fa-linkedin"></i></button>
 </div>
   

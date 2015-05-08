@@ -54,6 +54,7 @@ module ConfigUtils
     attribute :force_landing, :default => false
     attribute :search_results_per_page, :default => 5
     attribute :allowed_context_roots, :default => []
+    attribute :default_property, :default => nil
     attribute :timezone, type: String, :default => "Europe/Rome"
     attribute :assets, :default => { "anon_avatar" => "anon.png", "community_logo" => nil }
     attribute :free_provider_share, :default => false
