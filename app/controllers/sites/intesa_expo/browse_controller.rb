@@ -56,4 +56,15 @@ class Sites::IntesaExpo::BrowseController < BrowseController
     
   end
   
+  #hook for filter search result in specific property if multiproperty site
+  def get_current_property
+    get_intesa_property
+  end
+  
+  # Get an array of tags to use to filter contents. 
+  # Filter contents in base of current property
+  def get_search_tags_for_tenant
+    [Tag.find_by_name(get_intesa_property)]
+  end
+  
 end
