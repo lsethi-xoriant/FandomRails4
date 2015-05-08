@@ -24,7 +24,7 @@
 
 <% default_aux(@aux_other_params, @calltoaction_info_list) %>  
 
-<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= @current_user_info.present? ? @current_user_info.to_json : "null" %>, <%= calltoaction_info_list %>, <%= @has_more || false %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.to_json %>)">
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= build_current_user() %>, <%= calltoaction_info_list %>, <%= @has_more || false %>, <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>', null, <%= @aux.to_json %>)">
 
   <div id="quiz-waiting-audio"></div>
 

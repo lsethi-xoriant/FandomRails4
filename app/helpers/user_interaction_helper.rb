@@ -48,7 +48,7 @@ module UserInteractionHelper
         if aux["next_calltoaction_id"].present? && !aux["to_redo"]
           next_cta = CallToAction.find(aux["next_calltoaction_id"])
           next_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([next_cta], interactions_to_compute)
-          update_cta_info_optional_history(next_cta_info_list, prev_calltoaction_info_id, optional_total_count) 
+          update_cta_info_optional_history(user_interaction["id"], next_cta_info_list, prev_calltoaction_info_id, optional_total_count) 
           break
         end
       end
@@ -58,11 +58,12 @@ module UserInteractionHelper
 
   end
 
-  def update_cta_info_optional_history(next_cta_info_list, prev_calltoaction_info_id, optional_total_count)
+  def update_cta_info_optional_history(user_interaction_id, next_cta_info_list, prev_calltoaction_info_id, optional_total_count)
     unless next_cta_info_list.first["optional_history"]
       next_cta_info_list.first["optional_history"] = {}
     end
     (next_cta_info_list.first["optional_history"]["ctas"] ||= []) << prev_calltoaction_info_id
+    (next_cta_info_list.first["optional_history"]["user_interactions"] ||= []) << user_interaction_id
     if optional_total_count
       next_cta_info_list.first["optional_history"]["optional_total_count"] = optional_total_count
       next_cta_info_list.first["calltoaction"]["extra_fields"]["linked_call_to_actions_count"] = optional_total_count
@@ -179,7 +180,7 @@ module UserInteractionHelper
     ViewCounter.transaction do
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
       if counter
-        if interaction.resource_type.downcase == "vote"
+        if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "quiz"
           aux = JSON.parse(counter.aux)
           aux[value] = aux[value] ? (aux[value] + 1) : 1
           counter.update_attributes(counter: (counter.counter + 1), aux: aux.to_json)
@@ -229,6 +230,10 @@ module UserInteractionHelper
         end
         aux = aux_in_user_interaction.to_json
         adjust_counter!(interaction, aux_parse["vote"])
+      when "quiz"
+        if interaction.resource.quiz_type == "VERSUS"
+          adjust_counter!(interaction, answer_id.to_s)
+        end
       end
 
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
@@ -246,6 +251,10 @@ module UserInteractionHelper
         }
         aux = aux_parse.to_json
         adjust_counter!(interaction, aux_parse["vote"])
+      when "quiz"
+        if interaction.resource.quiz_type == "VERSUS"
+          adjust_counter!(interaction, answer_id.to_s)
+        end
       end
 
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)

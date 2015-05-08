@@ -1625,6 +1625,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     calltoaction_id = calltoaction_info.calltoaction.id;
     interaction_id = interaction_info.interaction.id;
 
+    if(data.counter) {
+      interaction_info.interaction.resource.counter = data.counter;
+      interaction_info.interaction.resource.counter_aux = data.counter_aux;
+    }
+
     // Google analytics.
     if(data.ga) {
       update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
@@ -1806,9 +1811,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   }
 
-  $scope.resetToRedo = function(interaction_info) {
-    $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
+  function resetRedoUserInteractionsForLoggedUser() {
+    user_interaction_ids = $scope.calltoaction_info.optional_history.user_interactions;
+    $http.post("/reset_redo_user_interactions", { user_interaction_ids: user_interaction_ids })
+      .success(function(data) {      
+      }).error(function() {
+      });
+  }
 
+  function resetRedoUserInteractionsForAnonymousUser(interaction_info) {
+    $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
     $timeout(function() { 
       anonymous_user_interactions = getAnonymousUserStorage();
       angular.forEach($scope.user_interactions_history, function(index) {
@@ -1831,7 +1843,31 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $scope.linked_call_to_actions_index = 1;
       $scope.user_interactions_history = [];
       $scope.updateCallToActionInfoWithAnonymousUserStorage();
-    }, 200);    
+    }, 200);
+  }
+
+  $scope.resetToRedo = function(interaction_info) {
+    if($scope.current_user) {
+      resetRedoUserInteractionsForLoggedUser(interaction_info);
+    } else {
+      resetRedoUserInteractionsForAnonymousUser(interaction_info);
+    }
+  };
+
+  $scope.computePercentageForVersus = function(interaction_info, answer_id) {
+    if(interaction_info.user_interaction) {
+      return $scope.computePercentage(interaction_info.interaction.resource.counter, interaction_info.interaction.resource.counter_aux[answer_id]);
+    } else {
+      return 0;
+    }
+  };
+
+  $scope.computePercentage = function(total, partial) {
+    if(total == 0) {
+      return 0
+    } else {
+      return Math.round(partial / total * 100)
+    }
   };
 
   function updateInteractionsHistory(user_interaction_id) {

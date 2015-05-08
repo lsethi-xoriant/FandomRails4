@@ -9,6 +9,17 @@ class CallToActionController < ApplicationController
   include CaptchaHelper
   include CommentHelper
 
+  def reset_redo_user_interactions
+    user_interactions = UserInteraction.where(id: params[:user_interaction_ids])
+    user_interactions.each do |user_interaction|
+      aux = JSON.parse(user_interaction.aux)
+      aux["to_redo"] = true
+      user_interaction.update_attribute(:aux, aux.to_json)
+    end
+    # TODO: return first cta
+  end
+
+  # For anonymous user
   def last_linked_calltoaction
     calltoaction = CallToAction.find(params[:calltoaction_id])
     linked_interaction = calltoaction.interactions.includes(:interaction_call_to_actions).where("interaction_call_to_actions.interaction_id IS NOT NULL")[0] 
@@ -482,7 +493,11 @@ class CallToActionController < ApplicationController
         response[:ga][:label] = interaction.resource.quiz_type.downcase
       end
 
-      response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, interaction.resource.quiz_type.downcase, user_interaction)
+      #response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, interaction.resource.quiz_type.downcase, user_interaction)
+      counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
+      aux = counter ? counter.aux : "{}"
+      response["counter_aux"] = JSON.parse(aux)
+      response["counter"] = counter ? counter.counter : 0
 
     elsif interaction.resource_type.downcase == "like"
 
