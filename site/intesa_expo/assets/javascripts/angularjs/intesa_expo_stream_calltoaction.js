@@ -12,6 +12,14 @@ intesaExpoStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
+  $scope.intesaExpoGa = function(el1, el2, el3) {
+    _gaq.push(['_trackEvent', el1, el2, el3]);
+  };
+
+  $scope.intesaExpoGaSocial = function(el1, el2) {
+    _gaq.push(['_trackSocial', el1, el2]);
+  };
+
   $scope.extraInit = function() {
     $scope.content_ical = new Object();
     if($scope.calltoaction_info) {
