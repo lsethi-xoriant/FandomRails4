@@ -40,6 +40,15 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
 
+  def get_property()
+    property_name = $context_root || $site.default_property
+    if(property_name)
+      get_tag_from_params(property_name)
+    else
+      nil
+    end
+  end
+
   def build_current_user()
     if current_user
       {
