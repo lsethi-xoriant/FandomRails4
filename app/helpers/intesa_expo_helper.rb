@@ -189,7 +189,8 @@ module IntesaExpoHelper
       "has_related_live" => has_related_live,
       "page_stripes" => page_stripes,
       "context_root" => $context_root,
-      "language" => get_intesa_property()
+      "language" => get_intesa_property(),
+      "current_property_info" => { "path" => get_intesa_property() }
     }
 
     if other
