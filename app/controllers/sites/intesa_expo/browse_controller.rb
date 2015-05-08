@@ -67,4 +67,8 @@ class Sites::IntesaExpo::BrowseController < BrowseController
     [Tag.find_by_name(get_intesa_property)]
   end
   
+  def get_search_cache_key_params(term)
+    "#{term}_#{get_intesa_property}"
+  end
+  
 end
