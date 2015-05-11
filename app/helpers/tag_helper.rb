@@ -47,39 +47,41 @@ module TagHelper
   end
 
   def get_ctas_with_tags_in_and(tag_ids, params = {})
-    extra_key = get_extra_key_from_params(params)
-    #TODO: remove cache
-    cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "and") do
-      tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
-      where_clause = get_cta_where_clause_from_params(params)
-      ctas = CallToAction.includes(call_to_action_tags: :tag)
-      if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
-        ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
-        ctas = add_ical_fields_to_where_condition(ctas, params)
-      end
-      if !tag_ids_subselect.empty?
-        ctas = ctas.where("call_to_actions.id IN (#{tag_ids_subselect}) ")
-      end
-      if !where_clause.empty?
-        ctas = ctas.where("#{where_clause}")
-      end
-      if params[:limit]
-        offset, limit = calculate_limit_info(params, "cta")
-        ctas = ctas.offset(offset).limit(limit)
-      end
-      
-      if params[:order_string]
-        ctas = ctas.order("#{params[:order_string]}")
-      else
-        ctas = ctas.order("activated_at DESC")
-      end
-      ctas = ctas.active.to_a
-      if params.include?(:conditions) && params[:conditions][:exclude_cta_ids]
-        remove_excluded_elements(ctas, params[:conditions][:exclude_cta_ids])
-      else
-        ctas
-      end
+    if params[:conditions] && params[:conditions][:exclude_cta_ids]
+      params[:limit][:perpage] = params[:limit][:perpage] + params[:conditions][:exclude_cta_ids].count
     end
+
+    extra_key = get_extra_key_from_params(params)
+    tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
+    where_clause = get_cta_where_clause_from_params(params)
+    ctas = CallToAction.includes(call_to_action_tags: :tag)
+    if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
+      ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
+      ctas = add_ical_fields_to_where_condition(ctas, params)
+    end
+    if !tag_ids_subselect.empty?
+      ctas = ctas.where("call_to_actions.id IN (#{tag_ids_subselect}) ")
+    end
+    if !where_clause.empty?
+      ctas = ctas.where("#{where_clause}")
+    end
+    if params[:limit]
+      offset, limit = params[:limit][:offset], params[:limit][:perpage]
+      ctas = ctas.offset(offset).limit(limit)
+    end
+    
+    if params[:order_string]
+      ctas = ctas.order("#{params[:order_string]}")
+    else
+      ctas = ctas.order("activated_at DESC")
+    end
+    ctas = ctas.active.to_a
+    # Move this code after cache block
+    # if params.include?(:conditions) && params[:conditions][:exclude_cta_ids]
+    #   remove_excluded_elements(ctas, params[:conditions][:exclude_cta_ids])
+    # else
+    #   ctas
+    # end
   end
   
   def get_ctas_with_tags_in_or(tag_ids, params = {})
@@ -106,15 +108,14 @@ module TagHelper
       else
         ctas = ctas.order("activated_at DESC").to_a
       end
-      
+
       ctas = ctas.active.to_a
-      
-      if params.include?(:conditions) && params[:conditions][:exclude_cta_ids]
-        remove_excluded_elements(ctas, params[:conditions][:exclude_cta_ids])
-      else
-        ctas
-      end
-      
+      # Move this code after cache block
+      # if params.include?(:conditions) && params[:conditions][:exclude_cta_ids]
+      #   remove_excluded_elements(ctas, params[:conditions][:exclude_cta_ids])
+      # else
+      #   ctas
+      # end
     end
   end
 

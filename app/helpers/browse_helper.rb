@@ -207,10 +207,25 @@ module BrowseHelper
     tags = get_tags_with_tags(tag_ids, params)
     ctas = get_ctas_with_tags_in_and(tag_ids, params)
 
-    total = tags.count + ctas.count
+    exclude_cta_ids_in_result_count = 0
+    if params[:conditions] && params[:conditions][:exclude_cta_ids]  
+      carousel_elements = params[:limit][:perpage] + params[:conditions][:exclude_cta_ids].count
+      ctas.each do |cta|
+        if params[:conditions][:exclude_cta_ids].include?(cta.id)
+          exclude_cta_ids_in_result_count = exclude_cta_ids_in_result_count + 1
+        end
+      end
+    end
+
+    total = tags.count + ctas.count - exclude_cta_ids_in_result_count
+    has_more = total > carousel_elements
+
     tags = tags.slice!(0, carousel_elements)
     ctas = ctas.slice!(0, carousel_elements)
-    [merge_contents(ctas, tags, params), total > carousel_elements]
+
+    # TODO: check has_more with except ids
+
+    [merge_contents(ctas, tags, params), has_more]
   end
   
   def get_contents_with_match(query, offset = 0, property)
@@ -350,7 +365,7 @@ module BrowseHelper
     #carousel elements if setted in content tag, if in section tag needs to be passed as function params
     main_tag = Tag.find_by_name(main_tag_name)
     timestamp = main_tag.updated_at
-    content_preview_list = cache_forever(get_content_previews_cache_key(main_tag_name, timestamp, params)) do
+    content_preview_list, carousel_elements = cache_forever(get_content_previews_cache_key(main_tag_name, timestamp, params)) do
       if number_of_elements.nil?
         carousel_elements = get_elements_for_browse_carousel(main_tag)
       else
@@ -363,7 +378,12 @@ module BrowseHelper
         content_preview_list = get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
       end
       content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, anonymous_user)
-      content_preview_list
+      [content_preview_list, carousel_elements]
+    end
+
+    if params[:conditions] && params[:conditions][:exclude_cta_ids] 
+      content_preview_list.contents.delete_if { |obj| params[:conditions][:exclude_cta_ids].include?(obj.id) }
+      content_preview_list.contents = content_preview_list.contents[0..carousel_elements]
     end
     
     if current_user
