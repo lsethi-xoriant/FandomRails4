@@ -380,12 +380,12 @@ module DisneyHelper
         end
       else
         main_related_tag = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
-        related_tag_name = main_related_tag.name
         if main_related_tag
+          related_tag_name = main_related_tag.name
           related_calltoaction_info = get_content_previews_excluding_ctas(related_tag_name, [current_property], [calltoaction.id], 8)
           #related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         else
-          related_calltoaction_info = get_content_previews(current_property.name)
+          related_calltoaction_info = get_content_previews_excluding_ctas(current_property.name, [current_property], [calltoaction.id], 8)
           #related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         end
       end
