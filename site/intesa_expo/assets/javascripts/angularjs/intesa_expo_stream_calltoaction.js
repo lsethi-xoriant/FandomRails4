@@ -16,6 +16,10 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     _gaq.push(['_trackEvent', el1, el2, el3]);
   };
 
+  $window.intesaExpoGaW = function(el1, el2, el3) {
+    _gaq.push(['_trackEvent', el1, el2, el3]);
+  };
+
   $scope.intesaExpoGaSocial = function(el1, el2) {
     _gaq.push(['_trackSocial', el1, el2]);
   };
