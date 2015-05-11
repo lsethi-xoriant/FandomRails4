@@ -63,7 +63,7 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-nav-center">
           <li ng-class="{'active': (menu_field && menu_field == menu_item.extra_fields.menu_item)}" ng-repeat="menu_item in aux.menu_items">
-            <a href="{{menu_item.extra_fields.browse_url}}">
+            <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('Navigation', 'Menu', menu_item.title)">
               <p class="navbar__item-text">{{menu_item.title}}</p>
             </a>
           </li>
@@ -126,7 +126,7 @@
           </a>
         </li>
         <li ng-class="{'active': (menu_field && menu_field == menu_item.extra_fields.menu_item)}" ng-repeat="menu_item in aux.menu_items">
-          <a href="{{menu_item.extra_fields.browse_url}}">
+          <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('Navigation', 'Menu', menu_item.title)">
             <p class="navbar__item-text">{{menu_item.title}}</p>
           </a>
         </li>
