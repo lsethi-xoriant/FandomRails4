@@ -38,7 +38,11 @@ def export_csv_gallery(gallery_tag_name, csv_file)
       user = User.find(cta.user_id)
       username = user.username
       email = user.email
-      releasing_file = ReleasingFile.find(cta.releasing_file_id).file.url
+      if cta.releasing_file_id.nil?
+        releasing_file = "missing releasing file"
+      else
+        releasing_file = ReleasingFile.find(cta.releasing_file_id).file.url
+      end
       
       if cta.media_image_content_type[-3..-1] != "mp4"
         original_file = cta.media_image.url
