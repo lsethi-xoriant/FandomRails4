@@ -27,16 +27,6 @@ module TagHelper
     conditions
   end
   
-  def calculate_limit_info(params, type)
-    if type == "cta" && params[:conditions] && params[:conditions][:exclude_cta_ids]
-      [params[:limit][:offset], params[:limit][:perpage] + params[:conditions][:exclude_cta_ids].count]
-    elsif type == "tag" && params[:conditions] && params[:conditions][:exclude_tag_ids]
-      [params[:limit][:offset], params[:limit][:perpage] + params[:conditions][:exclude_tag_ids].count]
-    else
-      [params[:limit][:offset], params[:limit][:perpage]]
-    end
-  end
-  
   def remove_excluded_elements(element_list, excluded_ids)
     element_list.each do |element|
       if excluded_ids.include? element.id
@@ -47,10 +37,6 @@ module TagHelper
   end
 
   def get_ctas_with_tags_in_and(tag_ids, params = {})
-    if params[:conditions] && params[:conditions][:exclude_cta_ids]
-      params[:limit][:perpage] = params[:limit][:perpage] + params[:conditions][:exclude_cta_ids].count
-    end
-
     extra_key = get_extra_key_from_params(params)
     tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
     where_clause = get_cta_where_clause_from_params(params)
@@ -99,7 +85,7 @@ module TagHelper
         ctas = ctas.where("#{where_clause}")
       end
       if params[:limit]
-        offset, limit = calculate_limit_info(params, "cta")
+        offset, limit = params[:limit][:offset], params[:limit][:perpage]
         ctas = ctas.offset(offset).limit(limit)
       end
       
@@ -121,62 +107,45 @@ module TagHelper
 
   def get_tags_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
-    #TODO: remove cache
-    cache_short get_tags_with_tags_cache_key(tag_ids, extra_key) do
-      where_clause = get_tag_where_clause_from_params(params)
-      tags = Tag
-      unless tag_ids.empty?
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-        tags = tags.where("id IN (#{tag_ids_subselect})")
-      end
-      if !where_clause.empty?
-        tags = tags.where("#{where_clause}")
-      end
-      if params[:limit]
-        offset, limit = calculate_limit_info(params, "tag")
-        tags = tags.offset(offset).limit(limit)
-      end
-      tags = tags.order("created_at DESC").to_a
-      
-      if params.include?(:conditions) && params[:conditions][:exclude_tag_ids]
-        remove_excluded_elements(tags, params[:conditions][:exclude_tag_ids])
-      else
-        tags
-      end
+    where_clause = get_tag_where_clause_from_params(params)
+    tags = Tag
+    unless tag_ids.empty?
+      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
+      tags = tags.where("id IN (#{tag_ids_subselect})")
     end
+    if !where_clause.empty?
+      tags = tags.where("#{where_clause}")
+    end
+    if params[:limit]
+      offset, limit = offset, limit = params[:limit][:offset], params[:limit][:perpage]
+      tags = tags.offset(offset).limit(limit)
+    end
+    tags.order("created_at DESC").to_a
   end
   
   def get_tags_with_tags(tag_ids, params = {})
-    cache_short get_tags_with_tags_cache_key(tag_ids, "") do
-      hidden_tags_ids = get_hidden_tag_ids
-      where_clause = get_tag_where_clause_from_params(params)
-      tags = Tag.includes(:tags_tags)
-      
-      if hidden_tags_ids.any? && tag_ids.empty?
-        tags = tags.where("tags.id not in (#{hidden_tags_ids.join(",")})")
-      elsif hidden_tags_ids.any? && !tag_ids.empty?
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
-        tags = tags.where("tags.id in (#{tag_ids_subselect})")
-      elsif hidden_tags_ids.empty? && !tag_ids.empty?
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-        tags = tags.where("tags.id in (#{tag_ids_subselect})")
-      end
-      
-      if !where_clause.empty?
-        tags.where("#{where_clause}")
-      end
-      if params[:limit]
-        offset, limit = calculate_limit_info(params, "tag")
-        tags = tags.offset(offset).limit(limit)
-      end
-      tags = tags.order("created_at DESC").to_a
-      
-      if params.include?(:conditions) && params[:conditions][:exclude_tag_ids]
-        remove_excluded_elements(tags, params[:conditions][:exclude_tag_ids])
-      else
-        tags
-      end
+    hidden_tags_ids = get_hidden_tag_ids
+    where_clause = get_tag_where_clause_from_params(params)
+    tags = Tag.includes(:tags_tags)
+    
+    if hidden_tags_ids.any? && tag_ids.empty?
+      tags = tags.where("tags.id not in (#{hidden_tags_ids.join(",")})")
+    elsif hidden_tags_ids.any? && !tag_ids.empty?
+      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
+      tags = tags.where("tags.id in (#{tag_ids_subselect})")
+    elsif hidden_tags_ids.empty? && !tag_ids.empty?
+      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
+      tags = tags.where("tags.id in (#{tag_ids_subselect})")
     end
+    
+    if !where_clause.empty?
+      tags.where("#{where_clause}")
+    end
+    if params[:limit]
+      offset, limit = offset, limit = params[:limit][:offset], params[:limit][:perpage]
+      tags = tags.offset(offset).limit(limit)
+    end
+    tags.order("created_at DESC").to_a
   end
 
   def get_tag_ids_for_cta(cta)

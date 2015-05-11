@@ -333,11 +333,6 @@ module DisneyHelper
 
   end
 
-  def adjust_related_without_current_cta(related_calltoaction_info_list, current_cta)
-    related_calltoaction_info_list.contents.delete_if { |obj| obj.id == current_cta.id }
-    related_calltoaction_info_list.contents = related_calltoaction_info_list.contents[0..7]
-  end
-
   def disney_default_aux(other)
     current_property = get_tag_from_params(get_disney_property())
     property = get_tag_from_params("property")
@@ -346,6 +341,7 @@ module DisneyHelper
 
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
+
 =begin
       related_params = {
         limit: {
@@ -354,12 +350,7 @@ module DisneyHelper
         }
       }
 =end
-      related_params = {
-        conditions: {
-          exclude_cta_ids: [calltoaction.id]
-        }
-      }
-      related_tag_name = "miniformat"
+
       in_gallery = nil
 
       if calltoaction.user_id
@@ -384,20 +375,18 @@ module DisneyHelper
           related_tag_name = main_related_tag.name
           image_background = get_upload_extra_field_processor(get_extra_fields!(main_related_tag)['background_image'], :original)
 
-          related_calltoaction_info = get_content_previews(main_related_tag.name, [], related_params)
-          #adjust_related_without_current_cta(related_calltoaction_info, calltoaction)
-          related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
+          related_calltoaction_info = get_content_previews_excluding_ctas(related_tag_name, [], [calltoaction.id], 8)
+          #related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         end
       else
         main_related_tag = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat").first
+        related_tag_name = main_related_tag.name
         if main_related_tag
-          related_calltoaction_info = get_content_previews(main_related_tag.name, [current_property], related_params)
-          adjust_related_without_current_cta(related_calltoaction_info, calltoaction)
-          related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
+          related_calltoaction_info = get_content_previews_excluding_ctas(related_tag_name, [current_property], [calltoaction.id], 8)
+          #related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         else
-          related_calltoaction_info = get_content_previews(current_property.name, [], related_params)
-          #adjust_related_without_current_cta(related_calltoaction_info, calltoaction)
-          related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
+          related_calltoaction_info = get_content_previews(current_property.name)
+          #related_calltoaction_info.contents = compute_cta_status_contents(related_calltoaction_info.contents, current_or_anonymous_user)
         end
       end
 
