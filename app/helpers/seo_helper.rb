@@ -36,13 +36,24 @@ module SeoHelper
 
   def compute_seo(title_separator = "|")
     seo_values_to_set = ["title", "meta_description", "keywords", "meta_image"]
+
+    property = get_property()
+    if property
+      property_extra_fields = get_extra_fields!(property)
+    end
+
     seo_values_to_set.each do |value|
-      compute_seo_value(value, title_separator)
+      compute_seo_value(value, title_separator, property_extra_fields)
     end 
   end
 
-  def compute_seo_value(value, title_separator)
-    seo_value_from_settings = get_seo_value_from_settings(value)
+  def compute_seo_value(value, title_separator, property_extra_fields)
+    if property_extra_fields
+      seo_value_from_settings = property_extra_fields["seo_#{value}"]
+    else
+      seo_value_from_settings = get_seo_value_from_settings(value)
+    end
+
     if @seo_info && @seo_info[value]
       seo_value = "#{@seo_info[value]}"
       if value == "title"

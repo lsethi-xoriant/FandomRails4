@@ -23230,6 +23230,13 @@ CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
+-- Name: index_view_counters_on_counter; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_counter ON view_counters USING btree (counter);
+
+
+--
 -- Name: index_view_counters_on_ref_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -23628,6 +23635,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 --
 
 CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
+-- Name: index_view_counters_on_counter; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_counter ON view_counters USING btree (counter);
 
 
 --
@@ -24032,6 +24046,13 @@ CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
+-- Name: index_view_counters_on_counter; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_counter ON view_counters USING btree (counter);
+
+
+--
 -- Name: index_view_counters_on_ref_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -24430,6 +24451,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 --
 
 CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
+-- Name: index_view_counters_on_counter; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_counter ON view_counters USING btree (counter);
 
 
 --
@@ -24834,6 +24862,13 @@ CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
+-- Name: index_view_counters_on_counter; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_counter ON view_counters USING btree (counter);
+
+
+--
 -- Name: index_view_counters_on_ref_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -25218,6 +25253,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 --
 
 CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
+-- Name: index_view_counters_on_counter; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_counter ON view_counters USING btree (counter);
 
 
 --
@@ -25622,6 +25664,13 @@ CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
+-- Name: index_view_counters_on_counter; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_counter ON view_counters USING btree (counter);
+
+
+--
 -- Name: index_view_counters_on_ref_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -26020,6 +26069,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 --
 
 CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
+-- Name: index_view_counters_on_counter; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_view_counters_on_counter ON view_counters USING btree (counter);
 
 
 --

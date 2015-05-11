@@ -26,35 +26,48 @@ module TagHelper
     end
     conditions
   end
+  
+  def remove_excluded_elements(element_list, excluded_ids)
+    element_list.each do |element|
+      if excluded_ids.include? element.id
+        element_list.delete(element)
+      end
+    end
+    element_list
+  end
 
   def get_ctas_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
-    #TODO: remove cache
-    cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "and") do
-      tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
-      where_clause = get_cta_where_clause_from_params(params)
-      ctas = CallToAction.includes(call_to_action_tags: :tag)
-      if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
-        ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
-        ctas = add_ical_fields_to_where_condition(ctas, params)
-      end
-      if !tag_ids_subselect.empty?
-        ctas = ctas.where("call_to_actions.id IN (#{tag_ids_subselect}) ")
-      end
-      if !where_clause.empty?
-        ctas = ctas.where("#{where_clause}")
-      end
-      if params[:limit]
-        ctas = ctas.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
-      end
-      
-      if params[:order_string]
-        ctas = ctas.order("#{params[:order_string]}")
-      else
-        ctas = ctas.order("activated_at DESC")
-      end
-      ctas.active.to_a
+    tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
+    where_clause = get_cta_where_clause_from_params(params)
+    ctas = CallToAction.includes(call_to_action_tags: :tag)
+    if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
+      ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
+      ctas = add_ical_fields_to_where_condition(ctas, params)
     end
+    if !tag_ids_subselect.empty?
+      ctas = ctas.where("call_to_actions.id IN (#{tag_ids_subselect}) ")
+    end
+    if !where_clause.empty?
+      ctas = ctas.where("#{where_clause}")
+    end
+    if params[:limit]
+      offset, limit = params[:limit][:offset], params[:limit][:perpage]
+      ctas = ctas.offset(offset).limit(limit)
+    end
+    
+    if params[:order_string]
+      ctas = ctas.order("#{params[:order_string]}")
+    else
+      ctas = ctas.order("activated_at DESC")
+    end
+    ctas = ctas.active.to_a
+    # Move this code after cache block
+    # if params.include?(:conditions) && params[:conditions][:exclude_cta_ids]
+    #   remove_excluded_elements(ctas, params[:conditions][:exclude_cta_ids])
+    # else
+    #   ctas
+    # end
   end
   
   def get_ctas_with_tags_in_or(tag_ids, params = {})
@@ -72,35 +85,67 @@ module TagHelper
         ctas = ctas.where("#{where_clause}")
       end
       if params[:limit]
-        ctas = ctas.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
+        offset, limit = params[:limit][:offset], params[:limit][:perpage]
+        ctas = ctas.offset(offset).limit(limit)
       end
       
       if params[:order_string]
-        ctas.order("#{params[:order_string]}").to_a
+        ctas = ctas.order("#{params[:order_string]}").to_a
       else
-        ctas.order("activated_at DESC").to_a
+        ctas = ctas.order("activated_at DESC").to_a
       end
+
+      ctas = ctas.active.to_a
+      # Move this code after cache block
+      # if params.include?(:conditions) && params[:conditions][:exclude_cta_ids]
+      #   remove_excluded_elements(ctas, params[:conditions][:exclude_cta_ids])
+      # else
+      #   ctas
+      # end
     end
   end
 
   def get_tags_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
-    #TODO: remove cache
-    cache_short get_tags_with_tags_cache_key(tag_ids, extra_key) do
-      where_clause = get_tag_where_clause_from_params(params)
-      tags = Tag
-      unless tag_ids.empty?
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-        tags = tags.where("id IN (#{tag_ids_subselect})")
-      end
-      if !where_clause.empty?
-        tags = tags.where("#{where_clause}")
-      end
-      if params[:limit]
-        tags = tags.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
-      end
-      tags.order("created_at DESC").to_a
+    where_clause = get_tag_where_clause_from_params(params)
+    tags = Tag
+    unless tag_ids.empty?
+      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
+      tags = tags.where("id IN (#{tag_ids_subselect})")
     end
+    if !where_clause.empty?
+      tags = tags.where("#{where_clause}")
+    end
+    if params[:limit]
+      offset, limit = offset, limit = params[:limit][:offset], params[:limit][:perpage]
+      tags = tags.offset(offset).limit(limit)
+    end
+    tags.order("created_at DESC").to_a
+  end
+  
+  def get_tags_with_tags(tag_ids, params = {})
+    hidden_tags_ids = get_hidden_tag_ids
+    where_clause = get_tag_where_clause_from_params(params)
+    tags = Tag.includes(:tags_tags)
+    
+    if hidden_tags_ids.any? && tag_ids.empty?
+      tags = tags.where("tags.id not in (#{hidden_tags_ids.join(",")})")
+    elsif hidden_tags_ids.any? && !tag_ids.empty?
+      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
+      tags = tags.where("tags.id in (#{tag_ids_subselect})")
+    elsif hidden_tags_ids.empty? && !tag_ids.empty?
+      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
+      tags = tags.where("tags.id in (#{tag_ids_subselect})")
+    end
+    
+    if !where_clause.empty?
+      tags.where("#{where_clause}")
+    end
+    if params[:limit]
+      offset, limit = offset, limit = params[:limit][:offset], params[:limit][:perpage]
+      tags = tags.offset(offset).limit(limit)
+    end
+    tags.order("created_at DESC").to_a
   end
 
   def get_tag_ids_for_cta(cta)
@@ -154,32 +199,6 @@ module TagHelper
       else
         Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).to_a
       end
-    end
-  end
-  
-  def get_tags_with_tags(tag_ids, params = {})
-    cache_short get_tags_with_tags_cache_key(tag_ids, "") do
-      hidden_tags_ids = get_hidden_tag_ids
-      where_clause = get_tag_where_clause_from_params(params)
-      tags = Tag.includes(:tags_tags)
-      
-      if hidden_tags_ids.any? && tag_ids.empty?
-        tags = tags.where("tags.id not in (#{hidden_tags_ids.join(",")})")
-      elsif hidden_tags_ids.any? && !tag_ids.empty?
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}) )" }.join(' INTERSECT ')
-        tags = tags.where("tags.id in (#{tag_ids_subselect})")
-      elsif hidden_tags_ids.empty? && !tag_ids.empty?
-        tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-        tags = tags.where("tags.id in (#{tag_ids_subselect})")
-      end
-      
-      if !where_clause.empty?
-        tags.where("#{where_clause}")
-      end
-      if params[:limit]
-        tags = tags.offset(params[:limit][:offset]).limit(params[:limit][:perpage])
-      end
-      tags.order("created_at DESC").to_a
     end
   end
   

@@ -55,14 +55,14 @@ module BrowseHelper
       recent_contents = compute_cta_status_contents(recent_contents, current_or_anonymous_user)
 
       browse_section = ContentSection.new(
-      {
-        key: "recent",
-        title: "I piu recenti",
-        icon_url: get_browse_section_icon(nil),
-        contents: recent_contents,
-        view_all_link: build_viewall_link("/browse/view_recent"),
-        column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
-      }
+        {
+          key: "recent",
+          title: "I piu recenti",
+          icon_url: get_browse_section_icon(nil),
+          contents: recent_contents,
+          view_all_link: build_viewall_link("/browse/view_recent"),
+          column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
+        }
       )
       
     end
@@ -107,7 +107,13 @@ module BrowseHelper
   end
   
   def get_content_previews_by_tags(category, tags, carousel_elements, params = {})
-    contents, has_more = get_content_previews_with_tags([category] + tags, carousel_elements, params)
+    tags = [category] + tags
+    params[:limit] = {
+      perpage: carousel_elements,
+      offset: 0
+    }
+
+    contents, has_more = get_content_previews_with_tags(tags, params)
     extra_fields = get_extra_fields!(category)
 
     browse_section = ContentSection.new({
@@ -128,25 +134,11 @@ module BrowseHelper
     extra_fields = get_extra_fields!(category)
     contents = get_contents_from_ordering(category)
     if contents.count < carousel_elements
-      exclude_tag_ids = []
-      exclude_cta_ids = []
-      contents.each do |content|
-        if content.type == "cta"
-          exclude_cta_ids << content.id
-        else
-          exclude_tag_ids << content.id
-        end
-      end
-      if params[:conditions]
-        params[:conditions][:exclude_tag_ids] = exclude_tag_ids
-        params[:conditions][:exclude_cta_ids] = exclude_cta_ids
-      else
-        params[:conditions] = {
-          exclude_tag_ids: exclude_tag_ids,
-          exclude_cta_ids: exclude_cta_ids
-        }
-      end
-      extra_contents, has_more = get_content_previews_with_tags([category] + tags, carousel_elements, params)  
+      params[:limit] = {
+        perpage: carousel_elements,
+        offset: 0
+      }
+      extra_contents, has_more = get_content_previews_with_tags([category] + tags, params)  
     end
 
     if extra_contents
@@ -192,25 +184,23 @@ module BrowseHelper
     end      
   end
   
-  def get_content_previews_with_tags(tags, carousel_elements, params = {})
-    if !params[:limit]
-      params[:limit] = {
-        offset: 0,
-        perpage: carousel_elements + 1
-      }
-    else
-      carousel_elements = params[:limit][:perpage]
-      params[:limit][:perpage] = params[:limit][:perpage] + 1
+  def get_content_previews_with_tags(tags, params = {}) # TODO: removed carouse_elements
+    begin
+      perpage = params[:limit][:perpage]
+      params[:limit][:perpage] = perpage + 1
+    rescue Exception => exception
+      throw Exception.new("perpage in content previews must be setting")
     end
 
-    tag_ids = tags.map{|tag| tag.id}
+    tag_ids = tags.map { |tag| tag.id }
     tags = get_tags_with_tags(tag_ids, params)
     ctas = get_ctas_with_tags_in_and(tag_ids, params)
 
-    total = tags.count + ctas.count
-    tags = tags.slice!(0, carousel_elements)
-    ctas = ctas.slice!(0, carousel_elements)
-    [merge_contents(ctas, tags, params), total > carousel_elements]
+    contents_merged = merge_contents(ctas, tags, params)
+    has_more = contents_merged.count > perpage
+    contents_merged = contents_merged.slice(0, perpage)
+
+    [contents_merged, has_more]
   end
   
   def get_contents_with_match(query, offset = 0, property)
@@ -229,11 +219,12 @@ module BrowseHelper
   
   def get_contents_by_query(term, tags)
     category_tag_ids = get_category_tag_ids()
+    optional_category_tag_ids_condition = category_tag_ids.any? ? "AND tag_id in (#{category_tag_ids.join(",")})" : ""
     if tags.empty?
       tags = Tag.where("title ILIKE ? AND id IN (?) ","%#{term}%", category_tag_ids).limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
       ctas = CallToAction.active.where("title ILIKE ? AND user_id is null","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
     else
-      tag_set = tags.map { |tag| "(select tag_id from tags_tags where other_tag_id = #{tag.id} AND tag_id in (#{category_tag_ids.join(",")}) )" }.join(' INTERSECT ')
+      tag_set = tags.map { |tag| "(select tag_id from tags_tags where other_tag_id = #{tag.id} #{optional_category_tag_ids_condition})" }.join(' INTERSECT ')
       cta_set = tags.map { |tag| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag.id})" }.join(' INTERSECT ')
       tags = Tag.where("title ILIKE ? AND id IN (#{tag_set})","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
       ctas = CallToAction.active.where("title ILIKE ? AND id in (#{cta_set}) AND user_id is null","%#{term}%").limit(DEFAULT_BROWSE_ELEMENT_CAROUSEL)
@@ -340,16 +331,35 @@ module BrowseHelper
     contents = order_elements(tag, (tags + ctas))
     prepare_contents(contents)
   end
+
+  def get_content_previews_excluding_ctas(main_tag_name, other_tags, excluding_cta_ids, number_of_elements)
+    number_of_elements_with_excluding_ctas = number_of_elements + excluding_cta_ids.count
+    content_previews = get_content_previews(main_tag_name, other_tags, {}, number_of_elements_with_excluding_ctas)
+    content_previews_without_excluding_ctas_count = content_previews.contents.count
+    content_previews.contents.delete_if { |obj| excluding_cta_ids.include?(obj.id) }
+
+    unless content_previews.has_view_all
+      if number_of_elements < content_previews.contents.count
+        content_previews.has_view_all = true
+      end
+    end
+
+    content_previews.contents[0..number_of_elements]
+    content_previews
+  end
   
   # This methods is used to obtain a list of content previews starting from a tag name and a list of tags derived from the context (i.e: current property or language)
   #   main_tag_name - the name of the tag that rappresent the content previews container
   #   other_tags    - list of context tag such as current property tag or language tag, these tags will be used to filter contents. It could be empty.
   #   params        - a dictionary containing further conditions to retrive content from DB (see get_cta_where_clause_from_params for detail)
   def get_content_previews(main_tag_name, other_tags = [], params = {}, number_of_elements = nil)
-    #carousel elements if setted in content tag, if in section tag needs to be passed as function params
+    # Carousel elements if setted in content tag, if in section tag needs to be passed as function params
     main_tag = Tag.find_by_name(main_tag_name)
-    timestamp = main_tag.updated_at
-    content_preview_list = cache_forever(get_content_previews_cache_key(main_tag_name, timestamp, params)) do
+    # When a cta is edited the related tag is updated
+    timestamp = from_updated_at_to_timestamp(main_tag.updated_at)
+
+    # TODO: cache change about number_of_elements????
+    content_preview_list, carousel_elements = cache_forever(get_content_previews_cache_key(main_tag_name, timestamp, params)) do
       if number_of_elements.nil?
         carousel_elements = get_elements_for_browse_carousel(main_tag)
       else
@@ -362,9 +372,9 @@ module BrowseHelper
         content_preview_list = get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
       end
       content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, anonymous_user)
-      content_preview_list
+      [content_preview_list, carousel_elements]
     end
-    
+
     if current_user
       content_preview_list = cache_forever(get_content_previews_statuses_for_tag(main_tag_name, current_user)) do
         content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, current_user)

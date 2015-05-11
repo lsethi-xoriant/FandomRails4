@@ -38,12 +38,19 @@ module IntesaExpoHelper
 
   def get_intesa_expo_related_ctas(cta)
     tag_tagged_with_related = get_tag_with_tag_about_call_to_action(cta, "related").first   
-    params = { conditions: { exclude_cta_ids: [cta.id] }, related: true }   
     if tag_tagged_with_related
-      relateds = get_content_previews(tag_tagged_with_related.name, [], params)
+      get_content_previews_excluding_ctas(tag_tagged_with_related.name, [], [cta.id], 8)
     else
       nil
     end
+
+    # params = { conditions: { exclude_cta_ids: [cta.id] }, related: true }   
+    # if tag_tagged_with_related
+    #   relateds = get_content_previews(tag_tagged_with_related.name, [], params)
+    # else
+    #   nil
+    # end
+
   end
 
   def get_menu_items()
@@ -189,7 +196,8 @@ module IntesaExpoHelper
       "has_related_live" => has_related_live,
       "page_stripes" => page_stripes,
       "context_root" => $context_root,
-      "language" => get_intesa_property()
+      "language" => get_intesa_property(),
+      "current_property_info" => { "path" => get_intesa_property() }
     }
 
     if other

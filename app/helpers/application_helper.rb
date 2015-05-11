@@ -39,6 +39,30 @@ module ApplicationHelper
   def truncate(*args)
     TextHelperNamespace.new.truncate(*args)
   end
+
+  def get_property()
+    property_name = $context_root || $site.default_property
+    if(property_name)
+      get_tag_from_params(property_name)
+    else
+      nil
+    end
+  end
+
+  def build_current_user()
+    if current_user
+      {
+        "facebook" => current_user.facebook($site.id),
+        "twitter" => current_user.twitter($site.id),
+        "main_reward_counter" => get_point,
+        "username" => current_user.username,
+        "avatar" => current_avatar,
+        "avatar" => current_avatar,
+      }.to_json
+    else
+      nil
+    end
+  end
   
   def get_cta_event_start_end(cta_interactions)
     event_range_info = {
@@ -138,10 +162,12 @@ module ApplicationHelper
     extra_key = []
     if params[:conditions]
       params[:conditions].map do |k,v|
-        if v.kind_of?(Array)
-          extra_key << "#{k}_#{v.join("_")}"
-        else
-          extra_key << "#{k}_#{v}"
+        if k != "exclude_cta_ids" && k != "exclude_tag_ids"
+          if v.kind_of?(Array)
+            extra_key << "#{k}_#{v.join("_")}"
+          else
+            extra_key << "#{k}_#{v}"
+          end
         end
       end
     end
@@ -186,7 +212,6 @@ module ApplicationHelper
   #           conditions_name accepted:
   #             without_user_cta: exclude cta user generated
   #             exclude_cta_ids: exclude from results cta with listed ids
-  #             exclude_tag_ids: exclude from results tag with listed ids
   #
   # Returns the where conditions string
   def get_cta_where_clause_from_params(params)
@@ -194,9 +219,6 @@ module ApplicationHelper
     if params[:conditions]
       if params[:conditions].fetch(:without_user_cta, false) 
         where_clause << "call_to_actions.user_id IS NULL"
-      end
-      if params[:conditions][:exclude_cta_ids]
-        where_clause << "call_to_actions.id NOT IN (#{params[:conditions][:exclude_cta_ids].join(',')})"
       end
     end
     where_clause = where_clause.join(" AND ")
@@ -208,17 +230,13 @@ module ApplicationHelper
   # params  - The Hash with params
   #           params hash is so formed: { conditions: { condition_name: condition_value, ... }, limit: { offset: offset_value, perpage: perpage_elements } }
   #           conditions_name accepted:
-  #             without_user_cta: exclude cta user generated
-  #             exclude_cta_ids: exclude from results cta with listed ids
   #             exclude_tag_ids: exclude from results tag with listed ids
   #
   # Returns the where conditions string
   def get_tag_where_clause_from_params(params)
     where_clause = []
     if params[:conditions]
-      if params[:conditions][:exclude_tag_ids]
-        where_clause << "tags.id NOT IN (#{params[:conditions][:exclude_tag_ids].join(',')})"
-      end
+      
     end
     where_clause = where_clause.join(" AND ")
     where_clause

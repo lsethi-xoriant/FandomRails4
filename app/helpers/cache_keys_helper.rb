@@ -458,8 +458,8 @@ module CacheKeysHelper
   end
   
   def get_content_previews_statuses_for_tag(tag_name, current_user)
-    timestamp = UserInteraction.select("MAX(updated_at) as ts").where(:user_id => current_user.id).first.ts
-    "#{tag_name}_content_previews_statuses_for_#{current_user.id}_#{timestamp}"
+    max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
+    "content_previews_statuses_for_tag_#{tag_name}_user_#{current_user.id}_#{max_user_interaction_updated_at}"
   end
   
   def get_recent_content_previews_cache_key(params)

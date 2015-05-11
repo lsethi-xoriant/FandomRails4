@@ -102,9 +102,15 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     params = {
       ical_start_datetime: start_date.strftime("%Y-%m-%d %H:%M:%S %z"),
       ical_end_datetime: end_date.strftime("%Y-%m-%d %H:%M:%S %z"),
-      order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC"
+      order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC",
+      limit: {
+        offset: 0,
+        perpage: 10000
+      }
     }
-    events, has_more = get_content_previews_with_tags([event_tag] + [language_tag], 10000, params)
+
+    tags = [event_tag] + [language_tag]
+    events, has_more = get_content_previews_with_tags(tags, params)
     events
   end
   

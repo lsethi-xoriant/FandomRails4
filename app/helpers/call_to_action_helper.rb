@@ -360,7 +360,7 @@ module CallToActionHelper
         interaction_id = interaction_info["interaction"]["id"]
         counter = find_interaction_in_counters(counters, interaction_id)
         interaction_info["interaction"]["resource"]["counter"] = counter ? counter.counter : 0
-        if interaction_info["interaction"]["resource_type"] == "vote"
+        if interaction_info["interaction"]["resource_type"] == "vote" || interaction_info["interaction"]["resource_type"] == "versus" 
           aux = counter ? counter.aux : "{}"
           interaction_info["interaction"]["resource"]["counter_aux"] = JSON.parse(aux)
         elsif interaction_info["interaction"]["resource_type"] == "comment"
@@ -473,17 +473,17 @@ module CallToActionHelper
   def build_answers_for_resource(interaction, answers, resource_type, user_interaction)
     answers_for_resource = Array.new
     answers.each do |answer|
-      if resource_type == "versus" && user_interaction
-        percentage = interaction_answer_percentage(interaction, answer) 
-      end
+      #if resource_type == "versus" && user_interaction
+      #  percentage = interaction_answer_percentage(interaction, answer) 
+      #end
       answer_correct = user_interaction ? answer.correct : false
       answers_for_resource << {
         "id" => answer.id,
         "text" => answer.text,
         "aux" => answer.aux,
         "image_medium" => answer.image(:medium),
-        "correct" => answer_correct,
-        "percentage" => percentage
+        "correct" => answer_correct
+        #{}"percentage" => percentage
       }
     end
     answers_for_resource
