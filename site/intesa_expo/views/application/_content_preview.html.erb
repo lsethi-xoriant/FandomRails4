@@ -1,4 +1,3 @@
-<!-- content.aux.miniformat['label_background'] -->
 <a href="{{linkTo(content.detail_url, stripe.key)}}" ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug, $event)" ng-if="content.type == 'cta' && content.layout == 'default'">
   <img class="cta__flag" ng-src="{{content.aux.flag.extra_fields['image_' + aux.language].url}}" ng-if="content.aux.flag">
   <div class="content-preview__item-panel" ng-class="{'content-preview__border-bottom': (content.aux.miniformat['label_background'] != null)}" ng-style="{'border-color': content.aux.miniformat['label_background']}"> 

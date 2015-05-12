@@ -57,6 +57,11 @@ class Sites::IntesaExpo::CalendarController < CalendarController
     
     month_calendar = initialize_calendar(today)
     @aux_other_params = {
+      calendar_stripe: {
+        name: "AgendaGiornaliera",
+        title: "AgendaGiornaliera",
+        slug: "AgendaGiornaliera"
+      },
       today_events: month_calendar.today_events.nil? ? nil : month_calendar.today_events.sort_by { |event| event.start },
       tag_menu_item: "calendar"
     }
