@@ -70,6 +70,10 @@
   <%= render partial: "application/press_content_preview" %>
 </a>
 
+<a href="{{linkTo(content.detail_url, stripe.key)}}" ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug)" ng-if="content.layout == 'press-release'"> 
+  <%= render partial: "application/press_release_content_preview" %>
+</a>
+
 <div ng-if="content.layout == 'press' && (!content.extra_fields.author_url || content.extra_fields.author_url == '')"> 
   <%= render partial: "application/press_content_preview" %>
 </div>
