@@ -1732,13 +1732,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
     
     if(interaction_info.interaction.resource_type == "download") {
-
       if(interaction_info.interaction.resource.ical && !angular.equals(interaction_info.interaction.resource.ical, {})) {
         newWindow.location = "/ical";
       } else {
         newWindow.location = data.download_interaction_attachment;
       }
-
     } else if(interaction_info.interaction.resource_type == "link") {
       window.location = interaction_info.interaction.resource.url;
     }

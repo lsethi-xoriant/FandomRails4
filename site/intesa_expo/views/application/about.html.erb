@@ -16,7 +16,7 @@
       <div class="col-sm-4">
         <div class="cta__banner-1-bg">
           <img class="cta__banner_1--about" ng-src="{{calltoaction_info.calltoaction.extra_fields.banner_1_img.url}}">
-          <a ng-if="calltoaction_info.calltoaction.extra_fields.banner_1_btn && calltoaction_info.calltoaction.extra_fields.banner_1_btn != ''" href="{{calltoaction_info.calltoaction.extra_fields.banner_1_url}}" class="btn btn-about-v2 cta__banner-btn btn-block" ng-click="intesaExpoGa('Navigation', 'Click', 'Acquista')">{{calltoaction_info.calltoaction.extra_fields.banner_1_btn}}</a>
+          <a ng-if="calltoaction_info.calltoaction.extra_fields.banner_1_btn && calltoaction_info.calltoaction.extra_fields.banner_1_btn != ''" href="{{calltoaction_info.calltoaction.extra_fields.banner_1_url}}" class="btn btn-about-v2 cta__banner-btn btn-block" ng-click="intesaExpoGa('Navigation', 'Click', 'Acquista', $event)">{{calltoaction_info.calltoaction.extra_fields.banner_1_btn}}</a>
         </div>
       </div>
     </div>
@@ -68,12 +68,12 @@
 </div>
 
 <div class="about-container" id="intesa-container">
-  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.intesa_container">
+  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.intesa_container | unsafe">
   </div>
 </div>
 
 <div class="about-container hidden" id="expo-container">
-  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.expo_container">
+  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.expo_container | unsafe">
   </div>
 </div>
 

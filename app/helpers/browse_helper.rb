@@ -108,10 +108,12 @@ module BrowseHelper
   
   def get_content_previews_by_tags(category, tags, carousel_elements, params = {})
     tags = [category] + tags
-    params[:limit] = {
-      perpage: carousel_elements,
-      offset: 0
-    }
+    unless params.key? :limit
+      params[:limit] = {
+        perpage: carousel_elements,
+        offset: 0
+      }
+    end
 
     contents, has_more = get_content_previews_with_tags(tags, params)
     extra_fields = get_extra_fields!(category)
@@ -133,11 +135,33 @@ module BrowseHelper
   def get_content_previews_by_tags_with_ordering(category, tags, carousel_elements, params = {})
     extra_fields = get_extra_fields!(category)
     contents = get_contents_from_ordering(category)
+
     if contents.count < carousel_elements
-      params[:limit] = {
-        perpage: carousel_elements,
-        offset: 0
-      }
+      unless params.key? :limit
+        params[:limit] = {
+          perpage: carousel_elements,
+          offset: 0
+        }
+      end
+
+      exclude_tag_ids = []
+      exclude_cta_ids = []
+      contents.each do |content|
+        if content.type == "cta"
+          exclude_cta_ids << content.id
+        else
+          exclude_tag_ids << content.id
+        end
+      end
+      if params[:conditions]
+        params[:conditions][:exclude_tag_ids] = exclude_tag_ids
+        params[:conditions][:exclude_cta_ids] = exclude_cta_ids
+      else
+        params[:conditions] = {
+          exclude_tag_ids: exclude_tag_ids,
+          exclude_cta_ids: exclude_cta_ids
+        }
+      end
       extra_contents, has_more = get_content_previews_with_tags([category] + tags, params)  
     end
 
@@ -366,11 +390,12 @@ module BrowseHelper
         carousel_elements = number_of_elements
       end
       
-      if(get_extra_fields!(main_tag)['ordering'] && !params[:related])
-        content_preview_list = get_content_previews_by_tags_with_ordering(main_tag, [], carousel_elements, params)
-      else
+      #if(get_extra_fields!(main_tag)['ordering'] && !params[:related])
+      #  content_preview_list = get_content_previews_by_tags_with_ordering(main_tag, [], carousel_elements, params)
+      #else
         content_preview_list = get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
-      end
+      #end
+
       content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, anonymous_user)
       [content_preview_list, carousel_elements]
     end

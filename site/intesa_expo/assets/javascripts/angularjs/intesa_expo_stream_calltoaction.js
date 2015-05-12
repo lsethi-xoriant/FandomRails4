@@ -12,12 +12,34 @@ intesaExpoStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
-  $scope.intesaExpoGa = function(el1, el2, el3) {
-    _gaq.push(['_trackEvent', el1, el2, el3]);
+  $scope.intesaExpoGa = function(el1, el2, el3, $event) {
+    if (!angular.isUndefined($event)) {
+      _this = $event.currentTarget;
+      if(_this.target != "_blank") {
+        _gaq.push(['_set','hitCallback', function() {
+          document.location = _this.href;
+        }]);
+        _gaq.push(['_trackEvent', el1, el2, el3]);
+        return false;
+      } else {
+        _gaq.push(['_trackEvent', el1, el2, el3]);
+      }  
+    } else {
+      _gaq.push(['_trackEvent', el1, el2, el3]);
+    }
   };
 
-  $window.intesaExpoGaW = function(el1, el2, el3) {
-    _gaq.push(['_trackEvent', el1, el2, el3]);
+  $window.intesaExpoGaW = function(el1, el2, el3, el) {
+    _this = el;
+    if(_this.target != "_blank") {
+      _gaq.push(['_set','hitCallback', function() {
+        document.location = _this.href;
+      }]);
+      _gaq.push(['_trackEvent', el1, el2, el3]);
+      return false;
+    } else {
+      _gaq.push(['_trackEvent', el1, el2, el3]);
+    }  
   };
 
   $scope.intesaExpoGaSocial = function(el1, el2) {
