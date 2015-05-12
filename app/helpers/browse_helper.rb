@@ -108,10 +108,12 @@ module BrowseHelper
   
   def get_content_previews_by_tags(category, tags, carousel_elements, params = {})
     tags = [category] + tags
-    params[:limit] = {
-      perpage: carousel_elements,
-      offset: 0
-    }
+    unless params.key? :limit
+      params[:limit] = {
+        perpage: carousel_elements,
+        offset: 0
+      }
+    end
 
     contents, has_more = get_content_previews_with_tags(tags, params)
     extra_fields = get_extra_fields!(category)
@@ -134,10 +136,12 @@ module BrowseHelper
     extra_fields = get_extra_fields!(category)
     contents = get_contents_from_ordering(category)
     if contents.count < carousel_elements
-      params[:limit] = {
-        perpage: carousel_elements,
-        offset: 0
-      }
+      unless params.key? :limit
+        params[:limit] = {
+          perpage: carousel_elements,
+          offset: 0
+        }
+      end
       extra_contents, has_more = get_content_previews_with_tags([category] + tags, params)  
     end
 
