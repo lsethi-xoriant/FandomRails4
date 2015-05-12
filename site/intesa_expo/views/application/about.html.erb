@@ -68,12 +68,12 @@
 </div>
 
 <div class="about-container" id="intesa-container">
-  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.intesa_container">
+  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.intesa_container | unsafe">
   </div>
 </div>
 
 <div class="about-container hidden" id="expo-container">
-  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.expo_container">
+  <div ng-bind-html="calltoaction_info.calltoaction.extra_fields.expo_container | unsafe">
   </div>
 </div>
 
