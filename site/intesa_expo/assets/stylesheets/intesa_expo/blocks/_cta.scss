@@ -439,6 +439,29 @@
   font-family: 'Gnuolane';
 }
 
+.cta__map-title--about {
+  text-transform: uppercase;
+  font-size: 26px;
+  color: $lightblue;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  font-family: 'Gnuolane';
+}
+
+.cta__map-img--about {
+  margin-bottom: 15px;
+}
+
+.cta__map-download--about-col {
+  margin-bottom: 15px;
+}
+
+.cta__map-download--about {
+  color: $lightblue;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .cta__banner_1--about {
   width: 100%;
   //background: $bluealpha;
