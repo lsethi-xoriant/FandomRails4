@@ -13,12 +13,16 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
   $scope.intesaExpoGa = function(el1, el2, el3, $event) {
-    _this = $event.currentTarget;
-    _gaq.push(['_set','hitCallback', function() {
-      document.location = _this.href;
-    }]);
-    _gaq.push(['_trackEvent', el1, el2, el3]);
-    return false;
+    if (!angular.isUndefined($event)) {
+      _this = $event.currentTarget;
+      _gaq.push(['_set','hitCallback', function() {
+        document.location = _this.href;
+      }]);
+      _gaq.push(['_trackEvent', el1, el2, el3]);
+      return false;
+    } else {
+      _gaq.push(['_trackEvent', el1, el2, el3]);
+    }
   };
 
   $window.intesaExpoGaW = function(el1, el2, el3, el) {
