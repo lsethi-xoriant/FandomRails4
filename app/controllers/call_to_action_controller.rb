@@ -355,7 +355,6 @@ class CallToActionController < ApplicationController
       if approved && user_comment.errors.blank?
         adjust_counter!(interaction, 1)
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
-        expire_cache_key(get_comments_approved_cache_key(interaction.id))
       end
     else
       captcha_enabled = get_deploy_setting("captcha", true)
@@ -366,7 +365,6 @@ class CallToActionController < ApplicationController
         response[:comment] = build_comment_for_comment_info(user_comment, true)
         if approved && user_comment.errors.blank?
           user_interaction, outcome = create_or_update_interaction(user_comment.user, interaction, nil, nil)
-          expire_cache_key(get_comments_approved_cache_key(interaction.id))
         end
       end
       response[:captcha] = generate_captcha_response
@@ -493,7 +491,7 @@ class CallToActionController < ApplicationController
         response[:ga][:label] = interaction.resource.quiz_type.downcase
       end
 
-      #response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, interaction.resource.quiz_type.downcase, user_interaction)
+      response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, interaction.resource.quiz_type.downcase, user_interaction)
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
       aux = counter ? counter.aux : "{}"
       response["counter_aux"] = JSON.parse(aux)

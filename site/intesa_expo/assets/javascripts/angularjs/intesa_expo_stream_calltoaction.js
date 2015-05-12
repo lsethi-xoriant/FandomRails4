@@ -13,6 +13,8 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
   $scope.intesaExpoGa = function(el1, el2, el3) {
+    console.log(this);
+    //onclick="var _this=this;_gaq.push(['_set','hitCallback',function(){$(_this).parents('form').first().submit();}]);_gaq.push(['_trackEvent','My category','My action']);return !window._gat;"
     _gaq.push(['_trackEvent', el1, el2, el3]);
   };
 
