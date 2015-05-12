@@ -63,7 +63,7 @@ namespace :aws_tasks do
             media_destination = remove_head_slash("#{cta.media_image.path.sub(cta.media_image_file_name, "")}#{media_file_name}")
 
             # Save original media in another folder and replace this media with transcoded media
-            bucket.objects[media_image_key].copy_to("#{s3_output_folder}/original/#{cta.media_image_file_name}", acl: :public_read)
+            bucket.objects[media_image_key].copy_to("#{s3_output_folder}/original/#{media_file_name}", acl: :public_read)
             object.copy_to(media_destination, acl: :public_read)
 
             thumb_object = bucket.objects["#{s3_output_folder}/thumbnail/00001_aws_transcoding-#{cta.id}.jpg"] #sprintf '%05d', 1
