@@ -376,7 +376,7 @@ module BrowseHelper
     end
 
     if current_user
-      content_preview_list = cache_forever(get_content_previews_statuses_for_tag(main_tag_name, current_user)) do
+      content_preview_list = cache_forever(get_content_previews_statuses_for_tag_cache_key(main_tag_name, current_user, params)) do
         content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, current_user)
         content_preview_list
       end
