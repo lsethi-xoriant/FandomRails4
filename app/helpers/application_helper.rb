@@ -220,6 +220,9 @@ module ApplicationHelper
       if params[:conditions].fetch(:without_user_cta, false) 
         where_clause << "call_to_actions.user_id IS NULL"
       end
+      if params[:conditions][:exclude_cta_ids]
+        where_clause << "call_to_actions.id NOT IN (#{params[:conditions][:exclude_cta_ids].join(',')})"
+      end
     end
     where_clause = where_clause.join(" AND ")
     where_clause
