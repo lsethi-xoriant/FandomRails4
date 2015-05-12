@@ -12,14 +12,22 @@ intesaExpoStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
-  $scope.intesaExpoGa = function(el1, el2, el3) {
-    console.log(this);
-    //onclick="var _this=this;_gaq.push(['_set','hitCallback',function(){$(_this).parents('form').first().submit();}]);_gaq.push(['_trackEvent','My category','My action']);return !window._gat;"
+  $scope.intesaExpoGa = function(el1, el2, el3, $event) {
+    _this = $event.currentTarget;
+    _gaq.push(['_set','hitCallback', function() {
+      document.location = _this.href;
+    }]);
     _gaq.push(['_trackEvent', el1, el2, el3]);
+    return false;
   };
 
-  $window.intesaExpoGaW = function(el1, el2, el3) {
+  $window.intesaExpoGaW = function(el1, el2, el3, el) {
+    _this = el;
+    _gaq.push(['_set','hitCallback', function() {
+      document.location = _this.href;
+    }]);
     _gaq.push(['_trackEvent', el1, el2, el3]);
+    return false;
   };
 
   $scope.intesaExpoGaSocial = function(el1, el2) {
