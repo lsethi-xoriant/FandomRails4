@@ -107,7 +107,6 @@
 	  	</div>
 	  </div>
 	</div>
-	
 	<div class="container-fluid__white">
 		<div class="container main-container" >	
 			<div class="row">
@@ -178,8 +177,10 @@
 	  	}
 	  	eventinfo += '</p>';
 	  	eventinfo += '<hr />';
-	  	eventinfo += '<a class="btn btn-event" onclick="intesaExpoGaW(\'Navigation\',\'Calendar\',\'' + selected_event.slug + '\', this);" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
-	  	eventinfo += '<button class="btn btn-event" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">AGGIUNGI AL CALENDARIO</button>';
+	  	lang = angular.element('body').scope().aux.language;
+	  	assets =  angular.element('body').scope().aux.assets;
+  		eventinfo += '<a class="btn btn-event" onclick="intesaExpoGaW(\'Navigation\',\'Calendar\',\'' + selected_event.slug + '\', this);" href="' + selected_event.detail_url + '">' + assets['label_event_detail_' + lang] + '</a></div>';
+  		eventinfo += '<button class="btn btn-event" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">' + assets['label_add_to_calendar_' + lang] + '</button>';	
 	  	position = $(elem).offset();
 	  	if(position.left-250 < 0){
 		  	$("div.calendar-event__popover--right").attr("data-event-id", id);
