@@ -33,7 +33,7 @@ class Easyadmin::VoteRankingController < Easyadmin::EasyadminController
     vote_ranking.vote_ranking_tags.destroy_all
     tag_list.each do |t|
       tag = Tag.find_by_name(t)
-      tag = Tag.create(name: t) unless tag
+      tag = Tag.create(title: t, name: t, slug: t) unless tag
       VoteRankingTag.create(tag_id: tag.id, vote_ranking_id: vote_ranking.id)
     end
   end

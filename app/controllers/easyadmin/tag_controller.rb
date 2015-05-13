@@ -114,7 +114,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     @tag.tags_tags.delete_all
     tag_list.each do |t|
       tag_tag = Tag.find_by_name(t)
-      tag_tag = Tag.create(name: t, slug: t) unless tag_tag
+      tag_tag = Tag.create(title: t, name: t, slug: t) unless tag_tag
       TagsTag.create(tag_id: @tag.id, other_tag_id: tag_tag.id)
     end
 
@@ -284,7 +284,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
 
     tag_list.each do |t|
       tag = Tag.find_by_name(t)
-      tag = Tag.create(name: t, slug: t) unless tag
+      tag = Tag.create(title: t, name: t, slug: t) unless tag
       CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
     end
     flash[:notice] = "CallToAction taggata"

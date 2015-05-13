@@ -53,7 +53,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       @cta.call_to_action_tags.delete_all
       tag_list.each do |t|
         tag = Tag.find_by_name(t)
-        tag = Tag.create(name: t, slug: t) unless tag
+        tag = Tag.create(title: t, name: t, slug: t) unless tag
         CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
       end
 
@@ -84,7 +84,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
         @cta.call_to_action_tags.delete_all
         tag_list.each do |t|
           tag = Tag.find_by_name(t)
-          tag = Tag.create(name: t, slug: t) unless tag
+          tag = Tag.create(title: t, name: t, slug: t) unless tag
           CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
         end
       end
