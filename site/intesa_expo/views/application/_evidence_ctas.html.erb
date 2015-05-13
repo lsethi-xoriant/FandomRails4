@@ -40,12 +40,32 @@
     <div class="col-md-3 col-sm-6 cta__evidence-calendar text-center">
       <%= render partial: "/calendar/widget-calendar" %>
     </div>
-    <div class="col-md-3 col-sm-6 cta__evidence-banner">
-      <a href="{{aux.assets['banner_url_1_' + aux.language]}}" ng-click="intesaExpoGa('Navigation', 'Carousel', 'Acquista', $event)">
-        <div class="cta__evidence-banner__img">
-          <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}">
-        </div>
-      </a>
+	<div class="col-md-3 col-sm-6 cta__evidence-banner">
+	    <a href="{{aux.assets['banner_url_1_' + aux.language]}}" ng-click="intesaExpoGa('Navigation', 'Carousel', 'Acquista', $event)">
+	        <div class="cta__evidence-banner__img">
+	          <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}">
+	        </div>
+      	</a>
+	</div>
+    <div class="col-md-3 col-sm-6 cta__evidence__press-widget" ng-if="aux.language == 'it_xxx'">
+    	<div class="cta__evidence__press-widget__title-container">
+    		<div class="col-xs-8 cta__evidence__press-widget__title">AREA STAMPA</div>
+    		<div class="col-xs-4 text-right"><a class="read" href="/browse/category/press-release-it">Leggi</a></div>
+    	</div>
+    	<div class="cta__evidence__press-widget__element" ng-repeat="content in aux['press-release_stripe'].contents.slice(0,2)">
+    		<a ng-href="{{linkToValidFrom(content)}}" class="cta__related__a">
+    			<div class="col-xs-2">
+					<i class="fa fa-file-text cta__related__icon--press-release"></i>
+				</div>
+				<div class="col-xs-9">
+					<p class="cta__related__title--press-release">{{content.title}}</p>
+					<p class="cta__related__date--press-release">{{formatDate(content.extra_fields.publishing_date.value, aux.language)}} - {{extractTimeFromDate(content.extra_fields.publishing_date.value)}}</p>
+				</div>
+				<div class="col-xs-1">
+					<i class="fa fa-angle-right cta__related__icon--arrow"></i>
+				</div>
+    		</a>
+    	</div>
     </div>
   </div>
 </div>

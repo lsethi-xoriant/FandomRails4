@@ -45,11 +45,11 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
           "story_innovation_stripe" => get_intesa_expo_ctas_with_tag("story-innovation"),
           "press_stripe" => get_intesa_expo_ctas_with_tag("press"),
           "article_stripe" => get_intesa_expo_ctas_with_tag("article"),
-          #"press-release_stripe" => get_intesa_expo_ctas_with_tag("press-release"),
+          "press-release_stripe" => get_intesa_expo_ctas_with_tag("press-release"),
           "story_stripe" => story_stripe
         }
       end
-
+      
       @aux_other_params = {
         calltoaction_evidence_info: true,
         "event_stripe" => home_stripes["event_stripe"],
@@ -58,10 +58,10 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         "story_innovation_stripe" => home_stripes["story_innovation_stripe"],
         "press_stripe" => home_stripes["press_stripe"],
         "story_stripe" => home_stripes["story_stripe"],
-        #"press-release_stripe" => home_stripes["press-release_stripe"],
+        "press-release_stripe" => home_stripes["press-release_stripe"],
         "tag_menu_item" => "home"
       }
-
+      
     end
   end
 

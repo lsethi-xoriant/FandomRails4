@@ -15,6 +15,9 @@ class ApplicationController < ActionController::Base
     redirect_to "/"
   end
 
+  def cookies_policy
+  end
+
   def update_basic_share_interaction
     response = Hash.new
     
@@ -50,6 +53,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_cookies
+    # domain: request.domain
     user_cookies = { value: true, expires: 1.year.from_now } 
     secure_cookies = get_deploy_setting('secure_cookies', false)
     if secure_cookies

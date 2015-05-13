@@ -8,6 +8,8 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/rails_admin/'
 
+  match '/cookies_policy', :to => 'application#cookies_policy'
+
   constraints(SiteMatcher.new('coin')) do
     match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
     scope module: "sites" do

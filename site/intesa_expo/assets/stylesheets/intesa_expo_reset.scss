@@ -339,20 +339,30 @@ p {
 /********************* COOKIES FOOTER *********************/
 
 .cookies-footer {
-  background: rgba(0, 0, 0, 0.6); 
+  background: rgba(0, 0, 0, 0.8); 
   color: #fff; 
   min-height: 0; 
   padding: 10px;
 }
 
 .cookies-footer__description {
-  margin: 0; 
-  font-size: 11px;
+  margin: 15px 0; 
+  font-size: 13px;
+  line-height: 15px;
 }
 
 .cookies-footer__link {
   color: #fff;
   text-decoration: underline;
+  font-weight: bold;
+}
+
+.cookies-footer__close {
+  font-size: 34px;
+  color: #fff;
+  .fa {
+    padding-top: 15px;
+  }
 }
 
 .comment_evidence {
@@ -436,6 +446,11 @@ p {
 }
 
 @media (max-width: $screen-sm-min) { 
+  .cookies-footer__description {
+    font-size: 11px;
+    line-height: 13px;
+  }
+
   .stripe-contents {
     padding-left: 0;
     padding-right: 0;
