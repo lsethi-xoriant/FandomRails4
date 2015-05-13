@@ -1,7 +1,7 @@
 <div class="row cta__related__right-bar <%= top_class %>" ng-if="aux.relateds.contents">
   <div class="col-sm-12">
-    <h2 class="cta__related__title" ng-if="aux.relateds.key != 'press-release'">{{aux.assets["relateds_title_" + aux.language]}}</h2>
-    <h2 class="cta__related__title" ng-if="aux.relateds.key == 'press-release'">AREA STAMPA</h2>
+    <h2 class="cta__related__title" ng-if="aux.relateds.key != 'press-release-it'">{{aux.assets["relateds_title_" + aux.language]}}</h2>
+    <h2 class="cta__related__title" ng-if="aux.relateds.key == 'press-release-it'">AREA STAMPA</h2>
   </div>
   <div class="col-xs-12" ng-repeat="content in aux.relateds.contents" ng-if="content.type == 'cta'" style="margin-bottom: 10px;">
     <div class="row">
