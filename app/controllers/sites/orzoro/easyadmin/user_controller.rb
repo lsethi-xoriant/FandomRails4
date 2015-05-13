@@ -38,7 +38,7 @@ class Sites::Orzoro::Easyadmin::UserController < Easyadmin::EasyadminController
     where_conditions << " AND email ILIKE '%#{params[:email_filter]}%'" unless params[:email_filter].blank?
     @request_list = build_request_list(where_conditions, params[:from_date], params[:to_date])
 
-    csv = "ID;Nome;Cognome;Giorno di nascita;Mese di nascita;Anno di nascita;Gender;Stato;Provincia;Telefono;Email;Terms;Newsletter;Privacy;" + 
+    csv = "ID utente;Nome;Cognome;Giorno di nascita;Mese di nascita;Anno di nascita;Gender;Stato;Provincia;Telefono;Email;Terms;Newsletter;Privacy;" + 
           "Confezioni;Gadget;N.Scontrino;Data emissione;Importo;Data richiesta;Nome sped.;Cognome sped.;Indirizzo sped.;N.Civico sped.;" + 
           "Citta sped.;Provincia sped.;CAP sped.\n"
 
