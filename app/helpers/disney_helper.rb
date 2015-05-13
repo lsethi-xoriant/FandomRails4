@@ -108,6 +108,8 @@ module DisneyHelper
         cta_info_list = adjust_disney_thumb_calltoaction_for_current_user(cta_info_list, calltoactions)
       end
 
+      adjust_disney_thumb_calltoactions(cta_info_list)
+
       cta_info_list
     else
       []
@@ -227,7 +229,29 @@ module DisneyHelper
     end
   end
 
+  def adjust_disney_thumb_calltoactions(calltoaction_info_list)
+    interaction_ids = []
+    calltoaction_info_list.each do |calltoaction|
+      interaction_ids = interaction_ids + calltoaction["interaction_ids"]
+    end
+    if interaction_ids.any?
+      interactions = Interaction.where(id: interaction_ids)
+      counters = ViewCounter.where(ref_type: 'interaction', ref_id: interaction_ids)
+      calltoaction_info_list.each do |calltoaction_info|
+        calltoaction_info["interaction_ids"].each do |interaction_id|
+          interaction = find_content_in_array_by_id(interactions, interaction_id)
+          counter = find_interaction_in_counters(counters, interaction_id)
+          calltoaction_info[interaction.resource_type.downcase] = counter ? counter.counter : 0
+        end
+      end
+    end
+  end
+
   def build_disney_thumb_calltoaction(calltoaction)
+
+    if calltoaction.interactions
+      interaction_ids = calltoaction.interactions.map { |interaction| interaction.id }
+    end
 
     {
       "id" => calltoaction.id,
@@ -237,46 +261,13 @@ module DisneyHelper
       "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
       "title" => calltoaction.title,
       "description" => calltoaction.description,
-      "votes" => get_votes_thumb_for_cta(calltoaction),
-      "likes" => get_number_of_interaction_type_for_cta("Like", calltoaction),
-      "comments" => get_number_of_interaction_type_for_cta("Comment", calltoaction),
-      "flag" => build_grafitag_for_calltoaction(calltoaction, "flag")
+      # Move this code out of cache
+      # "likes" => get_number_of_interaction_type_for_cta("Like", calltoaction)
+      # "comments" => get_number_of_interaction_type_for_cta("Comment", calltoaction)
+      "flag" => build_grafitag_for_calltoaction(calltoaction, "flag"),
+      "interaction_ids" => interaction_ids
     }
 
-  end
-
-  def get_disney_related_calltoaction_info(current_calltoaction, tag, parent_related_tag_name = "miniformat", in_gallery)
-    related_calltoaction_info, calltoaction_ids = cache_short(get_ctas_except_me_in_property_cache_key(nil, tag.name)) do
-      
-      related_tag = get_tag_with_tag_about_call_to_action(current_calltoaction, parent_related_tag_name).first
-      if related_tag
-        calltoactions = CallToAction.includes(:call_to_action_tags)
-                    .where("call_to_action_tags.tag_id = ?", related_tag.id)
-                    .where("call_to_actions.id IN (?)", get_disney_ctas(property, in_gallery).map { |calltoaction| calltoaction.id })
-                    .order("call_to_actions.activated_at DESC")
-                    .limit(9).to_a
-      else
-        calltoactions = get_disney_ctas(tag, in_gallery).limit(9).to_a
-      end
-
-      related_calltoaction_info = []
-      calltoactions.each do |calltoaction|
-        related_calltoaction_info << build_disney_thumb_calltoaction(calltoaction)
-      end
-
-      [related_calltoaction_info, calltoactions.map { |cta| cta.id }]
-
-    end 
-
-    related_calltoaction_info.delete_if { |obj| obj["id"] == current_calltoaction.id }
-    related_calltoaction_info = related_calltoaction_info[0..7]
-
-    if current_user
-      calltoactions = CallToAction.where(id: calltoaction_ids)
-      related_calltoaction_info = adjust_disney_thumb_calltoaction_for_current_user(related_calltoaction_info, calltoactions)
-    end
-
-    related_calltoaction_info
   end
 
   def adjust_disney_thumb_calltoaction_for_current_user(calltoaction_info_list, calltoactions)
@@ -341,15 +332,6 @@ module DisneyHelper
 
     if other && other.has_key?(:calltoaction)
       calltoaction = other[:calltoaction]
-
-=begin
-      related_params = {
-        limit: {
-          offset: 0,
-          perpage: 9
-        }
-      }
-=end
 
       in_gallery = nil
 
@@ -459,6 +441,8 @@ module DisneyHelper
           adjust_disney_thumb_calltoaction_for_current_user(calltoaction_evidence_info, calltoactions)
         end
       end
+
+      adjust_disney_thumb_calltoactions(calltoaction_evidence_info)
 
       calltoaction_evidence_info
     end
