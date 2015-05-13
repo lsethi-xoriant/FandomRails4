@@ -40,14 +40,14 @@
     <div class="col-md-3 col-sm-6 cta__evidence-calendar text-center">
       <%= render partial: "/calendar/widget-calendar" %>
     </div>
-	<div class="col-md-3 col-sm-6 cta__evidence-banner" ng-if="aux.language != 'it'">
+	<div class="col-md-3 col-sm-6 cta__evidence-banner">
 	    <a href="{{aux.assets['banner_url_1_' + aux.language]}}" ng-click="intesaExpoGa('Navigation', 'Carousel', 'Acquista', $event)">
 	        <div class="cta__evidence-banner__img">
 	          <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}">
 	        </div>
       	</a>
 	</div>
-    <div class="col-md-3 col-sm-6 cta__evidence__press-widget" ng-if="aux.language == 'it'">
+    <div class="col-md-3 col-sm-6 cta__evidence__press-widget" ng-if="aux.language == 'it_xxx'">
     	<div class="cta__evidence__press-widget__title-container">
     		<div class="col-xs-8 cta__evidence__press-widget__title">AREA STAMPA</div>
     		<div class="col-xs-4 text-right"><a class="read" href="/browse/category/press-release-it">Leggi</a></div>
