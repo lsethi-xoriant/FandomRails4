@@ -95,7 +95,7 @@ module CacheHelper
     end
     
     if expires_in.nil?
-      result = Rails.cache.fetch(cache_key, :race_condition_ttl => 30, &wrapped_block)
+      result = Rails.cache.fetch(cache_key, :expires_in => 0, :race_condition_ttl => 30, &wrapped_block)
     else
       result = Rails.cache.fetch(cache_key, :expires_in => expires_in, :race_condition_ttl => 30, &wrapped_block)
     end
