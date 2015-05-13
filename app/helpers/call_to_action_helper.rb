@@ -22,7 +22,7 @@ module CallToActionHelper
     end
    
     if tag || gallery_info
-      cache_key = gallery_info ? gallery_info[:gallery_calltoaction_id] : tag.name
+      cache_key = gallery_info ? gallery_info["gallery_calltoaction_id"] : tag.name
       cache_key = "#{cache_key}_#{ordering}"
     else
       cache_key = "#{ordering}"
@@ -65,8 +65,8 @@ module CallToActionHelper
 
   def get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas)
     if gallery_info
-      gallery_calltoaction_id = gallery_info[:gallery_calltoaction_id]
-      gallery_user_id = gallery_info[:gallery_user_id]
+      gallery_calltoaction_id = gallery_info["gallery_calltoaction_id"]
+      gallery_user_id = gallery_info["gallery_user_id"]
     end
 
     calltoactions = get_ctas(tag, gallery_calltoaction_id)
@@ -198,7 +198,7 @@ module CallToActionHelper
   end
 
   def get_cta_max_updated_at()
-    from_updated_at_to_timestamp(CallToAction.first.updated_at)
+    from_updated_at_to_timestamp(CallToAction.maximum(:updated_at))
   end
 
   def get_max_updated_at(models)

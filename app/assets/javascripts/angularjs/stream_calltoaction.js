@@ -1836,7 +1836,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   function resetRedoUserInteractionsForLoggedUser() {
     user_interaction_ids = $scope.calltoaction_info.optional_history.user_interactions;
     $http.post("/reset_redo_user_interactions", { user_interaction_ids: user_interaction_ids })
-      .success(function(data) {      
+      .success(function(data) {   
+        $scope.initCallToActionInfoList(data.calltoaction_info_list);
+        $scope.linked_call_to_actions_index = 1;
       }).error(function() {
       });
   }
