@@ -446,6 +446,20 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (!$scope.current_user && $scope.aux.anonymous_interaction);
   };
 
+  $scope.computeAvgForVote = function(interaction_info) {
+    numerator = 0; denominator = 0;
+    counter_aux = interaction_info.interaction.resource.counter_aux;
+    if(counter_aux && !angular.equals(counter_aux, {})) {
+      angular.forEach(counter_aux, function(value, key) {
+        denominator = denominator + value;
+        numerator = numerator + (parseInt(key) * value);
+      });
+      return (numerator/denominator).toFixed(0);
+    } else {
+      return 0;
+    }
+  };
+
   $scope.computeAvgForVoteInteraction = function(interaction_info) {
     numerator = 0; denominator = 0;
     if(interaction_info.anonymous_user_interaction_info) {
@@ -484,6 +498,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
     });
     return share_interaction_present;
+  };
+
+  $scope.voteInteractionPresent = function(calltoaction_info) {
+    interaction_present = false;
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.resource_type == "vote") {
+        calltoaction_info.vote_interaction_info = interaction_info;
+        interaction_present = true;
+      }
+    });
+    return interaction_present;
   };
 
   $scope.openCommentInfo = function(interaction_info) {
