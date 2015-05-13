@@ -429,7 +429,11 @@ module DisneyHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      calltoaction_evidence_info, calltoaction_ids = cache_short(get_evidence_calltoactions_in_property_cache_key(current_property.id)) do  
+
+      cache_key = "evidence_ctas_in_#{current_property.name}"
+      cache_timestamp = get_cta_max_updated_at()
+      
+      calltoaction_evidence_info, calltoaction_ids = cache_forever(get_ctas_cache_key(cache_key, cache_timestamp)) do  
         highlight_calltoactions = get_disney_highlight_calltoactions(current_property)
         calltoactions_in_property = get_disney_ctas(current_property)
         if highlight_calltoactions.any?
@@ -445,9 +449,15 @@ module DisneyHelper
         [calltoaction_evidence_info, calltoactions.map { |cta| cta.id }]
       end
 
+      max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
+      max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
+      user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
+
       if current_user
-        calltoactions = CallToAction.where(id: calltoaction_ids)
-        calltoaction_evidence_info = adjust_disney_thumb_calltoaction_for_current_user(calltoaction_evidence_info, calltoactions)
+        calltoaction_evidence_info = cache_forever(user_cache_key) do
+          calltoactions = CallToAction.where(id: calltoaction_ids)
+          adjust_disney_thumb_calltoaction_for_current_user(calltoaction_evidence_info, calltoactions)
+        end
       end
 
       calltoaction_evidence_info
