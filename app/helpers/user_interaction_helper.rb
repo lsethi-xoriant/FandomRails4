@@ -45,13 +45,14 @@ module UserInteractionHelper
       
       user_interactions.each do |user_interaction|
         aux = JSON.parse(user_interaction.aux || {})
-        if aux["next_calltoaction_id"].present? && !aux["to_redo"]
+        if aux["to_redo"].present?
           next_cta = CallToAction.find(aux["next_calltoaction_id"])
           next_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([next_cta], interactions_to_compute)
           update_cta_info_optional_history(user_interaction["id"], next_cta_info_list, prev_calltoaction_info_id, optional_total_count) 
           break
         end
       end
+
     end
 
     next_cta_info_list

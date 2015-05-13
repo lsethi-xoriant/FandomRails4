@@ -9,14 +9,24 @@ class CallToActionController < ApplicationController
   include CaptchaHelper
   include CommentHelper
 
+  # For logged user
   def reset_redo_user_interactions
     user_interactions = UserInteraction.where(id: params[:user_interaction_ids])
+    cta = []
     user_interactions.each do |user_interaction|
       aux = JSON.parse(user_interaction.aux)
       aux["to_redo"] = true
       user_interaction.update_attribute(:aux, aux.to_json)
+      unless aux["user_interactions_history"]
+        cta = user_interaction.interaction.call_to_action
+      end
     end
-    # TODO: return first cta
+    response = {
+      calltoaction_info_list: build_cta_info_list_and_cache_with_max_updated_at([cta])
+    }
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end 
   end
 
   # For anonymous user
