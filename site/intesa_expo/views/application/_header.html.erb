@@ -30,17 +30,17 @@
 <div class="container hidden-xs">
   <div class="row main-row">
     <div class="col-sm-4">  
-      <a ng-if="aux.assets['left_logo_' + aux.language]" href="{{aux.assets['left_logo_url_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Acquista')">
+      <a ng-if="aux.assets['left_logo_' + aux.language]" href="{{aux.assets['left_logo_url_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Acquista', $event)">
         <img class="left-logo" ng-src="{{aux.assets['left_logo_' + aux.language].url}}">  
       </a>
     </div>
     <div class="col-sm-4 text-center">
-      <a href="/<%= $context_root %>" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Sito')">  
+      <a href="/<%= $context_root %>" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Sito', $event)">  
         <img class="center-logo" ng-src="{{aux.assets['logo_' + aux.language].url}}">   
       </a>
     </div>
     <div class="col-sm-4 text-right">
-      <a ng-if="aux.assets['right_logo_' + aux.language]" href="{{aux.assets['right_logo_url_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Eventi')">
+      <a ng-if="aux.assets['right_logo_' + aux.language]" href="{{aux.assets['right_logo_url_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Eventi', $event)">
         <img class="right-logo" ng-src="{{aux.assets['right_logo_' + aux.language].url}}">
       </a>     
     </div>
@@ -63,7 +63,7 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-nav-center">
           <li ng-class="{'active': (menu_field && menu_field == menu_item.extra_fields.menu_item)}" ng-repeat="menu_item in aux.menu_items">
-            <a href="{{menu_item.extra_fields.browse_url}}">
+            <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('Navigation', 'Menu', menu_item.title, $event)">
               <p class="navbar__item-text">{{menu_item.title}}</p>
             </a>
           </li>
@@ -107,7 +107,7 @@
         <span class="navbar-inverse__menu">MENU</span>
       </button>
       <div class="text-center">
-        <a href="/<%= $context_root %>" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Sito')">
+        <a href="/<%= $context_root %>" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Sito', $event)">
           <img class="navbar__logo" ng-src="{{aux.assets['logo_' + aux.language].url}}">
         </a>
       </div>
@@ -126,7 +126,7 @@
           </a>
         </li>
         <li ng-class="{'active': (menu_field && menu_field == menu_item.extra_fields.menu_item)}" ng-repeat="menu_item in aux.menu_items">
-          <a href="{{menu_item.extra_fields.browse_url}}">
+          <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('Navigation', 'Menu', menu_item.title, $event)">
             <p class="navbar__item-text">{{menu_item.title}}</p>
           </a>
         </li>

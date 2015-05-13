@@ -69,7 +69,7 @@
 					</div>
 				</div>
 			</div>
-        	<div class="col-xs-12" ng-if="aux.today_events">
+        	<div class="col-xs-12" ng-if="aux.today_events" ng-repeat="stripe in [aux.calendar_stripe]">
         		<% if @aux_other_params[:today_events] %>
 	  				<div class="browse-sections" ng-repeat="contents in [aux.today_events]">
 	  					<% if @aux_other_params[:today_events].count > 3 %>
@@ -178,7 +178,7 @@
 	  	}
 	  	eventinfo += '</p>';
 	  	eventinfo += '<hr />';
-	  	eventinfo += '<a class="btn btn-event" ng-click="intesaExpoGa(\'Navigation\',\'Calendar\',\'' + selected_event.slug + '\');" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
+	  	eventinfo += '<a class="btn btn-event" onclick="intesaExpoGaW(\'Navigation\',\'Calendar\',\'' + selected_event.slug + '\', this);" href="' + selected_event.detail_url + '">SCHEDA EVENTO</a></div>';
 	  	eventinfo += '<button class="btn btn-event" onclick="updateInteractionDownloadIcal('+ selected_event.ical_id + ', \'' + selected_event.slug + '_' + selected_event.start.format("YYYYMMDDHHmm") + '\')">AGGIUNGI AL CALENDARIO</button>';
 	  	position = $(elem).offset();
 	  	if(position.left-250 < 0){

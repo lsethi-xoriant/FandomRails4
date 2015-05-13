@@ -5,7 +5,7 @@
         <p class="footer__container__title">{{aux.assets['footer_title_' + aux.language]}}</p>
       </div>
       <div class="col-sm-3 col-xs-6 text-center" ng-repeat="n in getNumber(4) track by $index">
-        <a href="{{aux.assets['footer_url_' + ($index + 1) + '_' + aux.language]}}" ng-click="gaq.push(['_trackEvent','Navigation','Scopri', aux.assets['footer_seo_' + ($index + 1)]]);">
+        <a href="{{aux.assets['footer_url_' + ($index + 1) + '_' + aux.language]}}" ng-click="intesaExpoGa('Navigation', 'Scopri', aux.assets['footer_seo_' + ($index + 1)], $event)">
           <img class="img-responsive footer__container__img" ng-src="{{aux.assets['footer_img_' + ($index + 1) + '_' + aux.language].url}}">
           <p class="footer__container__description">{{aux.assets['footer_description_' + ($index + 1) + '_' + aux.language]}}</p>
         </a>
@@ -27,15 +27,14 @@
           </div>
           <div class="col-sm-12">
             <p class="footer__container__description-expo" ng-bind-html="aux.assets['footer_expo_description_' + aux.language]"></p>
-            <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn" ng-if="aux.language != 'imprese'" onclick="gaq.push(['_trackEvent','Navigation','Footer','Scopri']);">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
-            <a href="http://www.expo.intesasanpaolo.com/about" class="btn btn-blue footer__container__btn" ng-if="aux.language == 'imprese'" onclick="gaq.push(['_trackEvent','Navigation','Footer','Scopri']);">{{aux.assets['footer_expo_btn_it']}}</a>
+            <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn" ng-if="aux.language != 'imprese'" onclick="intesaExpoGaW('Navigation','Footer','Scopri', this);">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
+            <a href="http://www.expo.intesasanpaolo.com/about" class="btn btn-blue footer__container__btn" ng-if="aux.language == 'imprese'" onclick="intesaExpoGaW('Navigation','Footer','Scopri', this);">{{aux.assets['footer_expo_btn_it']}}</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 
 <div id="footer"><!-- Footer -->
     <div id="isp-footer" class="footer small-12 chrome modern mac webkit">
@@ -46,10 +45,10 @@
 
             <div class="small-12 medium-8 columns end social border">
                 <span class="seguici hide-for-small show-for-ie7">Seguici anche su:</span>
-                <a href="https://www.facebook.com/IntesaSanpaolo" id="footer-fb" target="_blank"><img alt="Fb-ft2" src="https://unmondopossibile.intesasanpaolo.com/assets/fb-ft2.png"></a>
-                <a href="http://www.youtube.com/intesasanpaolo" id="footer-youtube" target="_blank"><img alt="Youtube-ft2" src="https://unmondopossibile.intesasanpaolo.com/assets/youtube-ft2.png"></a>
-                <a href="http://www.linkedin.com/company/164437?trk=tyah" id="footer-linkedin" target="_blank"><img alt="Linkedin-ft2" src="https://unmondopossibile.intesasanpaolo.com/assets/linkedin-ft2.png"></a>
-                <a href="https://twitter.com/IntesaSP_Help" id="footer-webradio" target="_blank"><img alt="Twitter-ft2" src="https://unmondopossibile.intesasanpaolo.com/assets/twitter-ft2.png"></a>
+                <a href="https://www.facebook.com/IntesaSanpaolo" id="footer-fb" target="_blank" onclick="_gaq.push(['_trackEvent', 'Navigation', 'Footer', 'Follow_Facebook']);"><img alt="Fb-ft2" src="https://unmondopossibile.intesasanpaolo.com/assets/fb-ft2.png"></a>
+                <a href="http://www.youtube.com/intesasanpaolo" id="footer-youtube" target="_blank" onclick="_gaq.push(['_trackEvent', 'Navigation', 'Footer', 'Follow_Youtube']);"><img alt="Youtube-ft2" src="https://unmondopossibile.intesasanpaolo.com/assets/youtube-ft2.png"></a>
+                <a href="http://www.linkedin.com/company/164437?trk=tyah" id="footer-linkedin" target="_blank" onclick="_gaq.push(['_trackEvent', 'Navigation', 'Footer', 'Follow_LinkedIn']);"><img alt="Linkedin-ft2" src="https://unmondopossibile.intesasanpaolo.com/assets/linkedin-ft2.png"></a>
+                <a href="https://twitter.com/IntesaSP_Help" id="footer-webradio" target="_blank" onclick="_gaq.push(['_trackEvent', 'Navigation', 'Footer', 'Follow_Twitter']);"><img alt="Twitter-ft2" src="https://unmondopossibile.intesasanpaolo.com/assets/twitter-ft2.png"></a>
             </div>
 
         </div>

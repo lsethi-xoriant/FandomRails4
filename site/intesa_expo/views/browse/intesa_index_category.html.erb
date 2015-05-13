@@ -8,9 +8,14 @@
 		  <div class="row category-header text-center">
 		  	<div class="col-sm-8 col-sm-offset-2">
 			  	<h1 class="category-header__title"><%= @category.title %></h1>
-			  	<% subtitle = get_extra_fields!(@category)['subtitle'] %>
+			  	<% subtitle = get_extra_fields!(@category)['subtitle']; press_contact = get_extra_fields!(@category)['press-contact']; %>
 			  	<% if subtitle %>
 			  		<h2 class="category-header__subtitle"><%= subtitle %></h2>
+			  	<% end %>
+			  	<% if press_contact %>
+			  		<div class="text-center col-xs-6 col-xs-offset-3" style="border: 3px solid #ccc; padding: 10px; margin-bottom: 20px;">
+			  			Contatti stampa: <a href="mailto:<%= press_contact %>"><%= press_contact %></a>
+			  		</div>
 			  	<% end %>
 			</div>
 		  	<div class="category-header__filter-area">
@@ -35,9 +40,14 @@
 	  	<div class="row text-center">
 	  		<div class="col-sm-8 col-sm-offset-2">
 			  	<h1 class="category-header__title"><%= @category.title %></h1>
-			  	<% subtitle = get_extra_fields!(@category)['subtitle'] %>
+			  	<% subtitle = get_extra_fields!(@category)['subtitle']; press_contact = get_extra_fields!(@category)['press-contact']; %>
 			  	<% if subtitle %>
 			  		<h2 class="category-header__subtitle"><%= subtitle %></h2>
+			  	<% end %>
+			  	<% if press_contact %>
+			  		<div class="text-center col-xs-6 col-xs-offset-3" style="border: 3px solid #ccc; padding: 10px; margin-bottom: 20px;">
+			  			Contatti stampa: <a href="mailto:<%= press_contact %>"><%= press_contact %></a>
+			  		</div>
 			  	<% end %>
 			</div>
 		</div>

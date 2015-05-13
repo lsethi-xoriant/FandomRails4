@@ -35,7 +35,7 @@ module CallToActionHelper
 
     if ordering == "recent"
       cache_timestamp = get_cta_max_updated_at()
-      ctas = cache_forever(get_ctas_cache_key(cache_key, cache_timestamp)) do
+      ctas = cache_long(get_ctas_cache_key(cache_key, cache_timestamp)) do
         get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
       end 
     else

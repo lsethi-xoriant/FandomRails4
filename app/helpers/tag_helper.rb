@@ -90,12 +90,11 @@ module TagHelper
       end
       
       if params[:order_string]
-        ctas = ctas.order("#{params[:order_string]}").to_a
+        ctas.order("#{params[:order_string]}").to_a
       else
-        ctas = ctas.order("activated_at DESC").to_a
+        ctas.order("activated_at DESC").to_a
       end
 
-      ctas = ctas.active.to_a
       # Move this code after cache block
       # if params.include?(:conditions) && params[:conditions][:exclude_cta_ids]
       #   remove_excluded_elements(ctas, params[:conditions][:exclude_cta_ids])

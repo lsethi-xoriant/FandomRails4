@@ -457,9 +457,10 @@ module CacheKeysHelper
     "#{tag_name}_content_previews_#{ts}_#{extra_key}"
   end
   
-  def get_content_previews_statuses_for_tag(tag_name, current_user)
+  def get_content_previews_statuses_for_tag_cache_key(tag_name, current_user, params)
     max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
-    "content_previews_statuses_for_tag_#{tag_name}_user_#{current_user.id}_#{max_user_interaction_updated_at}"
+    extra_key = get_extra_key_from_params(params)
+    "content_previews_statuses_for_tag_#{tag_name}_#{extra_key}_user_#{current_user.id}_#{max_user_interaction_updated_at}"
   end
   
   def get_recent_content_previews_cache_key(params)
