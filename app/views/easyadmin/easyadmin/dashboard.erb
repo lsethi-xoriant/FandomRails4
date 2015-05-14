@@ -3,56 +3,55 @@
   <div id="content">    
     
   <div id="content-header">
-    <h1>STATISTICHE GENERALI</h1>
+    <h1>Statistiche generali</h1>
   </div> <!-- #content-header --> 
 
   <div id="content-container">
 
-  <div class="row">
-    <div class="col-md-12">
-    	<h3>Registrazioni</h3>
-    	<hr/>
+    <div class="row">
+      <div class="col-md-12"> 
+        <% if flash[:notice] %>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="alert alert-warning"><%= flash[:notice] %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
     </div>
-  </div>
-  <div class="row">
 
-    <div class="col-md-2">
-    	<%= form_tag :method => 'post' do %>
-        	<div class="form-group">
-            	<label class="text-input">DAL GIORNO</label></br>
-              	<%= text_field_tag :datepicker_from_date, @from_date_string, :class => "form-control" %>
-            </div>
-     </div>
-     <div class="col-md-2">
-          	<div class="form-group">
-              <label class="text-input">AL GIORNO</label></br>
-              <%= text_field_tag :datepicker_to_date, @to_date_string, :class => "form-control" %>
-            </div>
-     </div>
-     <div class="col-md-2">
-      	<div>
-          <label class="text-input">PERIODO</label></br>
-          <%= radio_button_tag :time_interval, PERIOD_KIND_WEEKLY, (params[:time_interval] != "daily" || params[:commit] == "Reset") ? true : false  %> Settimanale </br>
-          <%= radio_button_tag :time_interval, 'daily', (params[:time_interval] == "daily" && params[:commit] != "Reset") ? true : false %> Giornaliero
-        </div>
+    <div class="row">
+      <div class="col-md-2">
+        <%= form_tag :method => 'post' do %>
+          <div class="form-group">
+            <label class="text-input">DAL GIORNO</label></br>
+            <%= text_field_tag :datepicker_from_date, @from_date_string, :class => "form-control" %>
+          </div>
       </div>
       <div class="col-md-2">
-          	<div class="form-group">
-                </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
-            </div>
-      </div>
-      <div class="col-md-2">
-      	<div class="form-group">
-            </br><%= submit_tag 'RESET', class: 'btn btn-primary btn-block' %>
-  	    <% end %>
+        <div class="form-group">
+          <label class="text-input">AL GIORNO</label></br>
+          <%= text_field_tag :datepicker_to_date, @to_date_string, :class => "form-control" %>
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
-            </br><a href="/easyadmin/export_users" class="btn btn-primary btn-block">ESPORTA CSV</a>
+          </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          </br><%= submit_tag 'RESET', class: 'btn btn-primary btn-block' %>
         </div>
       </div>
     </div> <!-- /.row -->
+
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Statistiche cross-property</h3>
+        <hr/>
+      </div>
+    </div>
 
     <div class="row">
       <div class="col-md-12">
@@ -60,7 +59,7 @@
           <div class="portlet-header">
             <h3>
               <i class="fa fa-bar-chart-o"></i>
-              UTENTI REGISTRATI DAL <%= @from_date_string %> AL <%= @to_date_string %>
+              UTENTI REGISTRATI DAL <%= @from_date_string %> AL <%= @to_date_string %> <i>(<%= @days %> giorni)</i>
             </h3>
           </div> <!-- /.portlet-header -->
           <div class="portlet-content">
@@ -69,304 +68,179 @@
           </div> <!-- /.portlet-content -->
         </div> <!-- /.portlet -->
       </div> <!-- /.col -->
-
     </div> <!-- /.row -->
 
     <br/>
-    
-    <div class="row">
-    	<div class="col-md-6">
-    		<h4>Registrazioni</h4>
-   			<hr/>
-   		</div>
-   		<div class="col-md-6">
-    		<h4>Share</h4>
-   			<hr/>
-   		</div>
-    </div> <!-- /.row -->
-    
-    <div class="row">
-      <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat primary">
-            <div class="details">
-              <span class="content">REGISTRATI TOTALI</span>
-              <span class="value-sm"><%= total_users = User.where(:created_at => @from_date..@to_date).count %></span>
-            </div>
-            <div class="visual">
-            	<i class="fa fa-user"></i>
-            </div>
-          </div><hr/>
-          <div class="dashboard-stat secondary">
-            <div class="details">
-              <span class="content">UTENTI REGISTRATI CON SOCIAL</span>
-              <span class="value-sm"><%= social_reg_users = User.where(:created_at => @from_date..@to_date).includes(:authentications).where("authentications.user_id IS NOT NULL").count %></span>
-            </div>
-            <div class="visual">
-            	<i class="fa fa-group"></i>
-            </div>
-          </div><hr/>
 
-          <% if get_site_from_request(request)["id"] == "coin" %>
-            <% interaction_id = get_instant_win_coin_interaction_id() %>
-            <div class="dashboard-stat primary" style="background: #6ECCA0;">
-              <div class="details">
-                <span class="content">BIGLIETTI GIOCATI</span>
-                <span class="value-sm"><%= UserInteraction.where("interaction_id = ?", interaction_id).sum(:counter) %></span>
-              </div>
-              <div class="visual">
-                <i class="fa fa-ticket" style="color: #30B376;"></i>
-              </div>
-            </div><hr/>
-          <% end %>
+    <div class="row">
+      <div class="col-md-3">
+        <h4> Registrazioni totali </h4>
       </div>
       <div class="col-md-3">
-        <div class="portlet">
-          <div class="portlet-header">
-            <h3>
-              <i class="fa fa-bar-chart-o"></i>
-              REGISTRAZIONI
-            </h3>
-          </div> <!-- /.portlet-header -->
-          <div class="portlet-content">
-            <div id="fb-reg-donut-chart" class="chart-holder"></div>
-          </div> <!-- /.portlet-content -->
-        </div> <!-- /.portlet -->
-      </div> <!-- /.col -->
-
-      <div class="col-md-3 col-sm-6">
-          <div class="dashboard-stat primary" style="background-color: #ccc;">
-            <div class="details">
-              <span class="content">SHARE EMAIL</span>
-              <span class="value-sm"><%= email_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'email')::int") %></span>
-            </div> <!-- /.details --> 
-            <div class="visual">
-              <i class="fa fa-envelope" style="color: #FFF"></i>
-            </div>
-          </div><hr/> <!-- /.dashboard-stat -->
-          <div class="dashboard-stat primary" style="background-color: #43609c;">
-            <div class="details">
-              <span class="content">SHARE FACEBOOK</span>
-              <span class="value-sm"><%= fb_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'facebook')::int") %></span>
-            </div> <!-- /.details -->	
-            <div class="visual">
-            	<i class="fa fa-facebook" style="color: #FFF"></i>
-            </div>
-          </div><hr/> <!-- /.dashboard-stat -->
-          <div class="dashboard-stat primary" style="background-color: #5eaade;">
-            <div class="details">
-              <span class="content">SHARE TWITTER</span>
-              <span class="value-sm"><%= twitter_share = UserInteraction.where(:created_at => @from_date..@to_date).sum("(aux::json->>'twitter')::int") %></span>
-            </div> <!-- /.details -->
-            <div class="visual">
-            	<i class="fa fa-twitter" style="color: #FFF"></i>
-            </div>
-          </div><hr> <!-- /.dashboard-stat -->
-      </div> <!-- /.col-md-3 -->
+        <h4> Premi totali </h4>
+      </div>
       <div class="col-md-3">
-        <div class="portlet">
-          <div class="portlet-header">
-            <h3>
-              <i class="fa fa-bar-chart-o"></i>
-              SHARE
-            </h3>
-          </div> <!-- /.portlet-header -->
-          <div class="portlet-content">
-            <div id="share-donut-chart" class="chart-holder"></div>
-          </div> <!-- /.portlet-content -->
-        </div> <!-- /.portlet -->
-      </div> <!-- /.col -->
+        <h4> Commenti totali </h4>
+      </div>
     </div> <!-- /.row -->
-    
+
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat primary" style="background-color: #E5412D;">
+          <div class="details">
+            <span class="content"> UTENTI REGISTRATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
+            <span class="value-sm"><%= @total_users %>/<%= User.count %></span>
+          </div>
+          <div class="visual">
+            <i class="fa fa-user" style="color: #FFF"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat primary" style="background-color: #50A550;">
+          <div class="details">
+            <span class="content"> SBLOCCATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value-sm"><%= @total_rewards %></span>
+          </div> <!-- /.details --> 
+          <div class="visual">
+            <i class="fa fa-trophy" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+      <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
+          <div class="details">
+            <span class="content"> APPROVATI / LASCIATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value-sm"><%= @approved_comments %> / <%= @total_comments %></span>
+          </div> <!-- /.details --> 
+          <div class="visual">
+            <i class="fa fa-comments" style="color: #FFF"></i>
+          </div>
+        </div> <!-- /.dashboard-stat -->
+      </div> <!-- /.col-md-3 -->
+    </div> <!-- /.row -->
+
     <hr/>
 
-    <% all_trivia = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_TRIVIA')::int").to_i %>
-    <% correct_answers_trivia = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_TRIVIA_CORRECT_ANSWER')::int").to_i %>
-
-    <% all_versus = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_VERSUS')::int").to_i %>
-
-    <% all_check = UserCounter.where(:created_at => @from_date..@to_date, :name => "TOTAL").sum("(counters::json->>'ALL_CHECK')::int").to_i %>
-
-    <% if all_trivia > 0 || all_versus > 0 || all_check > 0 %>
-      <div class="row">
-        <% if all_trivia > 0 %>
-          <div class="col-md-6">
-            <div class="row">
-              <div class="col-md-12">
-                <h4>Trivia</h4>
-              </div>
-            	<div class="col-md-6">
-                <div class="dashboard-stat">
-                  <div class="details">
-                    <span class="content">TRIVIA RISPOSTI</span>
-                    <span class="value-sm"><%= all_trivia %></span>
-                  </div>
-                  <div class="visual">
-                  	<i class="fa fa-question"></i>
-                  </div>
-                </div><hr/>
-                <div class="dashboard-stat">
-                  <div class="details">
-                    <span class="content">TRIVIA RISPOSTI CORRETTAMENTE</span>
-                    <span class="value-sm"><%= correct_answers_trivia %></span>
-                  </div>
-                  <div class="visual">
-                  	<i class="fa fa-question"></i>
-                  </div>
-                </div> 
-              </div>
-              <div class="col-md-6">
-                <div class="portlet">
-                  <div class="portlet-header">
-                    <h3>
-                      <i class="fa fa-bar-chart-o"></i>
-                      TRIVIA
-                    </h3>
-                  </div>
-                  <div class="portlet-content">
-                    <div id="trivia-donut-chart" class="chart-holder"></div>
-                  </div>
-                </div>
-              </div> 
-            </div>
-          </div>
-
-        <% end %>
-        <% if all_versus > 0 %>
-          <div class="col-md-6">
-            <div class="row">    
-              <div class="col-md-12">
-                <h4>Versus</h4>
-              </div>       
-              <div class="col-md-6">
-                <div class="dashboard-stat secondary">
-                  <div class="details">
-                    <span class="content">VERSUS RISPOSTI</span>
-                    <span class="value-sm"><%= all_versus %></span>
-                  </div>
-                  <div class="visual">
-                  	<i class="fa fa-thumbs-o-up"></i>
-                  </div>
-                </div><hr/>
-              </div>
-            </div>
-          </div>
-        <% end %>
-        <% if all_check > 0 %>
-          <div class="col-md-6">
-            <div class="row">    
-              <div class="col-md-12">
-                <h4>Check</h4>
-              </div>       
-              <div class="col-md-6">
-               <div class="dashboard-stat secondary">
-                  <div class="details">
-                    <span class="content">CHECK RISPOSTI</span>
-                    <span class="value-sm"><%= all_check %></span>
-                  </div>
-                  <div class="visual">
-                    <i class="fa fa-check"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
+    <div id="property-stats" class="row">
+      <div class="col-md-3">
+        <h3>Statistiche per property</h3>
       </div>
-    <% end %>
+    </div>
+
+    <hr/>
+
+    <ul id="property-selectors" class="nav nav-tabs">
+      <% @properties.each do |p| %>
+        <li>
+          <input class="btn btn-default" name="commit" type="submit" value="<%= p.upcase %>">
+        </li>
+      <% end %>
+    </ul>
+
+    <%= hidden_field_tag :property, @property_tag_name || $site.default_property.gsub("-", " ").split.map(&:capitalize).join(' ') %>
+    <% end %> <!-- form-post -->
+
+    <div class="row">
+      <% @property_values.each do |key, value| %>
+      <div class="col-md-3 col-sm-6" style="margin: 20px 0">
+      <h4 style="text-align:center;"><%= "#{(@extra_fields[key]['title'] || key) rescue key} #{@property_tag_name}" %></h4>
+        <div class="dashboard-stat primary" style="background-color: <%= (@extra_fields[key]["background_color"] || "#CCC") rescue "#CCC" %>;">
+          <div class="details">
+            <span class="content"> CONTATORE <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+            <span class="value-sm"><%= value %></span>
+          </div>
+          <div class="visual">
+            <i class="<%= (@extra_fields[key]["icon"] || "fa fa-line-chart") rescue "fa fa-line-chart" %>" style="color: #FFF"></i>
+          </div>
+        </div>
+      </div>
+      <% end %>
+    </div> <!-- /.row -->
 
   </div>
 </div>
 
 <script type="text/javascript">
-  
-  total_users = <%= total_users %>;
-  social_reg_users = <%= social_reg_users %>;
-  all_trivia = <%= all_trivia %>;
-  correct_answers_trivia = <%= correct_answers_trivia %>;
-  fb_share = <%= fb_share %>;
-  email_share = <%= email_share %>;
-  twitter_share = <%= twitter_share %>;
-  total_share = fb_share + twitter_share + email_share;
-    
+
+  var total_users = <%= @total_users %>;
+  var social_reg_users = <%= @social_reg_users %>;
+  // var property_trivia = <%= @property_trivia_answers %>
+  // var property_correct_trivia = <%= @property_trivia_correct_answers %>
+
   $(document).ready(function() {
-    buildDonut();
+    // buildDonut();
     buildLine();
 
-    $(window).resize(App.debounce(buildDonut, 325));
+    // $(window).resize(App.debounce(buildDonut, 325));
     $(window).resize(App.debounce(buildLine, 325));
+
+    var commit = '<%= params['commit'] %>';
+    if(commit != "APPLICA FILTRO") {
+      if(commit == '')
+        selectedProperty = '<%= $site.default_property.upcase %>';
+      else
+        selectedProperty = commit
+
+      selectedPropertyButton = $('input[name="commit"][value="' + selectedProperty + '"]')
+      selectedPropertyButton.addClass("active");
+      if(commit != '')
+        scrollToElement($('#property-stats'));
+    }
   });
 
-  function buildDonut() {
-    $('#fb-reg-donut-chart').empty();
-    if(total_users > 0) {
-      Morris.Donut({
-            element: 'fb-reg-donut-chart',
-            data: [
-                { label: 'Registrazioni via social', value: Math.round(((social_reg_users * 100)/total_users)) },
-                { label: 'Registrazioni via mail', value: Math.round((((total_users - social_reg_users) * 100)/total_users)) }
-            ],
-            hideHover: true,
-            colors: ["#f0ad4e", "#e5412d"],
-            formatter: function (y) { return y + "%" }
-      });
-    }
-    if(all_trivia > 0) {
-      Morris.Donut({
-			element: 'trivia-donut-chart',
-            data: [
-                { label: 'Trivia risposti correttamente', value: Math.round(((correct_answers_trivia * 100)/all_trivia)) },
-                { label: 'Trivia risposti erroneamente', value: Math.round((((all_trivia - correct_answers_trivia) * 100)/all_trivia)) }
-            ],
-            hideHover: true,
-            colors: ["#f18c09", "#0b62a4"],
-            formatter: function (y) { return y + "%" }
-      });
-     }
-    if(total_share > 0) {
-      Morris.Donut({
-			element: 'share-donut-chart',
-            data: [
-                { label: 'Share su Facebook', value: Math.round(((fb_share * 100)/total_share)) },
-                { label: 'Share su Twitter', value: Math.round(((twitter_share * 100)/total_share)) },
-                { label: 'Share su Email', value: Math.round(((email_share * 100)/total_share)) }
-            ],
-            hideHover: true,
-            colors: ["#43609c", "#5eaade", "#ccc"],
-            formatter: function (y) { return y + "%" }
-      });
-    }
+  function scrollToElement(ele) {
+    $(window).scrollTop(ele.offset().top).scrollLeft(ele.offset().left);
   }
 
   function buildLine() {
     $('#line-chart').empty();
 
-      var data_arr = [];
-      user_arr = <%= raw(@user_week_list.to_json) %>;
+    var data_arr = [];
+    user_arr = <%= raw(@user_week_list.to_json) %>;
+    first_day_total = <%= @user_week_list.values[0]["tot"] %>;
+    first_day_simple = <%= @user_week_list.values[0]["simple"] %>;
 
-      $.each(user_arr, function(key, value) {
-        data_arr.push({
-          time: key,
-          tot: value.tot,
-          provider: (value.tot - value.simple),
-          simple: value.simple
-        });
+    $.each(user_arr, function(key, value) {
+      data_arr.push({
+        time: key,
+        tot: (value.tot - first_day_total),
+        provider: (value.tot - value.simple),
+        simple: (value.simple - first_day_simple)
       });
+    });
 
-      Morris.Line({
-        element: 'line-chart',
-        data: data_arr,
-        xLabelFormat: function (x) { return (x.getMonth() + 1) + "/" + x.getFullYear(); },
-        xkey: 'time',
-        ykeys: ['tot', 'provider', 'simple'],
-        labels: ['Registrati totali', 'Registrati via social', 'Registrati via email'],
-        lineColors: ["#000", "#f0ad4e", "#e5412d"]
-      });
+    Morris.Line({
+      element: 'line-chart',
+      data: data_arr,
+      xLabelFormat: function (x) { return (x.getMonth() + 1) + "/" + x.getFullYear(); },
+      xkey: 'time',
+      ykeys: ['tot', 'provider', 'simple'],
+      labels: ['Registrati totali', 'Registrati via social', 'Registrati via email'],
+      lineColors: ["#000", "#f0ad4e", "#e5412d"]
+    });
 
-  } 
+  }
+
+  // function buildDonut() {
+  //   $('#trivia-donut-chart').empty();
+  //   if(property_trivia > 0) {
+  //     Morris.Donut({
+  //     element: 'trivia-donut-chart',
+  //           data: [
+  //               { label: 'Trivia risposti correttamente', value: Math.round(((property_correct_trivia * 100)/property_trivia)) },
+  //               { label: 'Trivia risposti erroneamente', value: Math.round((((property_trivia - property_correct_trivia) * 100)/property_trivia)) }
+  //           ],
+  //           hideHover: true,
+  //           colors: ["#f18c09", "#0b62a4"],
+  //           formatter: function (y) { return y + "%" }
+  //     });
+  //    }
+  // }
 
   $(function() {
-    $("#datepicker_from_date").datepicker()
-    $("#datepicker_to_date").datepicker()
+    $("#datepicker_from_date").datepicker();
+    $("#datepicker_to_date").datepicker();
   });
 
 </script>

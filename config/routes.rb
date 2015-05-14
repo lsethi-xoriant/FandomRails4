@@ -110,7 +110,6 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         namespace :easyadmin do
-          match "/dashboard", :to => "easyadmin#dashboard"
           match "settings/properties", :to => "settings#properties_settings"
           match "settings/properties/save", :to => "settings#save_properties_settings"
         end
@@ -473,8 +472,9 @@ Fandom::Application.routes.draw do
   # Captcha.
   match "/captcha", :to => "captcha#generate_captcha", defaults: { format: 'json' }
 
-  # Instagram subscribe. 
-  match "/instagram_verify_token_callback", :to => "application#instagram_verify_token_callback"
+  # Instagram subscribe.
+  match "/instagram_tag_subscription/:tag_name", :to => "application#instagram_tag_subscription"
+  match "/instagram_verify_token_callback/:tag_name", :to => "application#instagram_verify_token_callback"
 
   match "/how_to", :to => "application#how_to"
   match "/landing", :to => "landing#index"
