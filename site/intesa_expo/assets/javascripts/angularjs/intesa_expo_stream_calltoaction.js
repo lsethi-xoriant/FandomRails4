@@ -164,6 +164,21 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     return date;
   };
 
+  $scope.checkLocationExtraField = function(calltoaction_info) {
+    if(calltoaction_info.calltoaction.extra_fields.custom_time && calltoaction_info.calltoaction.extra_fields.custom_location) {
+      _location_arr = calltoaction_info.calltoaction.extra_fields.custom_location.split("|");
+      if(_location_arr.length > 1) {
+        calltoaction_info.calltoaction.extra_fields.custom_location = _location_arr[0];
+        calltoaction_info.calltoaction.extra_fields.custom_location_url = _location_arr[1];
+      } else {
+        calltoaction_info.calltoaction.extra_fields.custom_location = _location_arr[0];
+      }
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   function generateIcalForView(ical_info_list) {
     $scope.ical = new Object({"dates": [], "dates_to": [], "times": [], "times_to": [], "locations": [], "location_urls": [], "interaction_ids": [], "datetimes": [], "n": []});
     
