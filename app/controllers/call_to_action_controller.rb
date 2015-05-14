@@ -9,14 +9,14 @@ class CallToActionController < ApplicationController
   include CaptchaHelper
   include CommentHelper
 
-  # For logged user
+  # For logged user, last_linked_calltoaction for anonymous user
   def reset_redo_user_interactions
     user_interactions = UserInteraction.where(id: params[:user_interaction_ids])
-    cta = []
+    cta = nil
     user_interactions.each do |user_interaction|
       aux = JSON.parse(user_interaction.aux)
       aux["to_redo"] = true
-      user_interaction.update_attribute(:aux, aux.to_json)
+      user_interaction.update_attributes(aux: aux.to_json)
       unless aux["user_interactions_history"]
         cta = user_interaction.interaction.call_to_action
       end
@@ -245,6 +245,25 @@ class CallToActionController < ApplicationController
       log_call_to_action_viewed(calltoaction)
 
       @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction], nil)
+
+      #if calltoaction_info_list.length == 1
+      #  call_to_action_info = calltoaction_info_list.first
+      #  has_next_cta = true
+      #  while has_next_cta do
+      #    has_next_cta = false
+      #    call_to_action_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+      #      if interaction_info["user_interaction"] 
+      #        aux = JSON.parse(interaction_info["user_interaction"]["aux"] || "{}")
+      #        if aux["next_calltoaction_id"]
+      #          cta = CallToAction.find(aux["next_calltoaction_id"])
+      #          calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta], interactions_to_compute)
+      #          has_next_cta = true
+      #          break
+      #        end
+      #      end
+      #    end
+      #  end
+      #end
       
       optional_history = @calltoaction_info_list.first["optional_history"]
       if optional_history
