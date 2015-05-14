@@ -14,9 +14,12 @@ def main
     exit
   end
 
+  now = Time.now
+  puts "Call to action update activated_at started at #{now}"
+
   config = YAML.load_file(ARGV[0].to_s)
   conn = PG::Connection.open(config["db"])
-  now_in_utc = Time.now.utc
+  now_in_utc = now.utc
 
   tenants = []
   conn.exec("SELECT nspname FROM pg_namespace").each do |value|
@@ -24,7 +27,6 @@ def main
       tenants << value["nspname"]
     end
   end
-
   puts "Updating call to actions to be activated for the following tenants: #{tenants.join(",")}"
 
   tenants.each do |tenant|
