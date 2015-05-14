@@ -49,6 +49,10 @@
 
 #gallery-slider {
     border: 0 !important;
+    .flex-direction-nav a {
+        text-shadow: none;
+        color: #ccc !important;
+    }
     .cta-cover__thumbnail {
         position: relative !important;
         top: 0 !important;
