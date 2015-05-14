@@ -279,7 +279,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   };
 
   function updateInteractionDownloadIcal(interaction_id, ical_name) {
-    _gaq.push(['_trackEvent','Navigation','Click','Download']);
+    _gaq.push(['_trackEvent','Event','Download', ical_name]);
     //ga('send', 'event', "Navigation", "Click", "Download", 1, true);
 
     if(!$scope.answer_in_progress) {

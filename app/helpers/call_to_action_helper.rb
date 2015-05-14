@@ -225,7 +225,6 @@ module CallToActionHelper
     calltoactions_key = calltoaction_ids.join("_")
     cache_timestamp = get_max_updated_at(calltoactions)
     cache_key = get_cta_info_list_cache_key("#{calltoactions_key}_interaction_types_#{interactions_to_compute_key}_#{cache_timestamp}")
-    
     build_cta_info_list(cache_key, calltoactions, interactions_to_compute)
   end
 
@@ -307,10 +306,10 @@ module CallToActionHelper
 
     resource_ids = extract_resource_ids_from_call_to_action_info_list(calltoaction_info_list, "comment")
     if resource_ids.any?
-      get_comments_query = "SELECT id FROM (select row_number() over (partition by comment_id ORDER BY created_at DESC) as r, t.* FROM user_comment_interactions t WHERE approved = true AND comment_id IN (#{resource_ids.join(',')})) x WHERE x.r <= 5;"
+      get_comments_query = "SELECT id FROM (select row_number() over (partition by comment_id ORDER BY updated_at DESC) as r, t.* FROM user_comment_interactions t WHERE approved = true AND comment_id IN (#{resource_ids.join(',')})) x WHERE x.r <= 5;"
       comments = ActiveRecord::Base.connection.execute(get_comments_query)
       comment_ids = comments.map { |comment| comment["id"] }
-      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).order("created_at DESC")
+      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).order("updated_at DESC").limit(5)
     end
 
     max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
@@ -323,13 +322,15 @@ module CallToActionHelper
         user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
 
         # Recursive method invoked with single cta in page with at least one interaction with next_calltoaction_id set
-        next_cta_info_list = check_and_find_next_call_to_action_in_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute)
+        # next_cta_info_list = check_and_find_next_call_to_action_in_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute)
       
-        if next_cta_info_list
-          calltoaction_info_list = next_cta_info_list
-        else
-          adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
-        end
+        # if next_cta_info_list
+        #   calltoaction_info_list = next_cta_info_list
+        # else
+        #   adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
+        # end
+
+        adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
       else    
         interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
         user_interactions = get_user_interactions_with_interaction_id(interaction_ids, anonymous_user)
