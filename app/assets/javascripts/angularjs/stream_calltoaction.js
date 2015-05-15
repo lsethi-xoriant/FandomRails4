@@ -200,11 +200,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     if($scope.calltoactions.length == 1) {
       $scope.calltoaction_info = $scope.calltoactions[0];
+
+      if($scope.calltoaction_info.optional_history.user_interactions) {
+        $scope.user_interactions_history = $scope.calltoaction_info.optional_history.user_interactions;
+      }
+
     }
 
-    if($scope.calltoaction_info.optional_history.user_interactions) {
-      $scope.user_interactions_history = $scope.calltoaction_info.optional_history.user_interactions;
-    }
   };
 
   $scope.init = function(current_user, calltoaction_info_list, has_more, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {

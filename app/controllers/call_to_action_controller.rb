@@ -11,7 +11,6 @@ class CallToActionController < ApplicationController
 
   # For logged user, last_linked_calltoaction for anonymous user
   def reset_redo_user_interactions
-    debugger
     user_interactions = UserInteraction.where(id: params[:user_interaction_ids])
     cta = nil
     user_interactions.each do |user_interaction|
