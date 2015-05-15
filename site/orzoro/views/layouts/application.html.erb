@@ -43,20 +43,28 @@
 </head>
 
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="OrzoroStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
-<div ng-cloak>
 
-<% unless small_mobile_device? %>
-  <%= render partial: "/application/header" %>
-  <%= render partial: "/application/user_bar", locals: { aux: aux } %>
-<% else %>
-  <%= render partial: "/application/user_bar_mobile", locals: { aux: aux } %>
-<% end %>
+  <!-- Google Tag Manager -->
+  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-NWLJM7" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NWLJM7');
+  </script>
+  <!-- End Google Tag Manager -->
 
-  <%= yield %>
+  <div ng-cloak>
 
-  <%= render partial: "/application/footer", locals: { aux: aux } %>
+    <% unless small_mobile_device? %>
+      <%= render partial: "/application/header" %>
+      <%= render partial: "/application/user_bar", locals: { aux: aux } %>
+    <% else %>
+      <%= render partial: "/application/user_bar_mobile", locals: { aux: aux } %>
+    <% end %>
 
-</div>
+    <%= yield %>
+
+    <%= render partial: "/application/footer", locals: { aux: aux } %>
+
+  </div>
   <script type="text/javascript">
 	$(document).ready(function() {
       is_last_rewards_flexslider_slide = new Object();
@@ -96,12 +104,6 @@
   
   <%= render partial: "/application/ga" %>
 
-  <!-- Google Tag Manager -->
-  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-NWLJM7" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NWLJM7');
-  </script>
-  <!-- End Google Tag Manager -->
 
 </body>
 </html>
