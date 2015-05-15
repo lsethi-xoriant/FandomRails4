@@ -92,8 +92,8 @@ class CallToAction < ActiveRecordWithJSON
     }, 
     :convert_options => { 
       :carousel => " -crop '1024x320+0+40'", 
-      :medium => " -gravity center -crop '524x393+0+0'", 
-      :thumb => " -gravity center -crop '262x147+0+0'" 
+      :medium => " -crop '524x393+0+0'", 
+      :thumb => " -crop '262x147+0+0'" 
     }
 
   has_many :interaction_call_to_actions
