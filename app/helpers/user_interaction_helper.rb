@@ -32,43 +32,70 @@ module UserInteractionHelper
     user_interactions
   end
 
-  def check_and_find_next_call_to_action_in_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute) 
-    next_cta_info_list = false
+  # TODO: in future implement this feature with a cached graph in build_cta_info
+  def check_and_find_next_cta_from_user_interactions(cta_info_list, user_interactions, interactions_to_compute) 
+    next_cta_info_list = nil
+    if cta_info_list.length == 1 && user_interactions.any?
+      # TODO: for semplicity reasons only the first test CTA is handled in a CTA stream (i.e. only the single page cta is handled)
+      cta_info = cta_info_list.first
 
-    if calltoaction_info_list.length == 1 && user_interactions.any?
+      prev_cta_info = cta_info
 
-      prev_calltoaction_info_id = calltoaction_info_list.first["calltoaction"]["id"]
+      linked_user_interaction_ids = []
 
-      if calltoaction_info_list.first["calltoaction"]["extra_fields"]["linked_call_to_actions_count"]
-        optional_total_count = calltoaction_info_list.first["calltoaction"]["extra_fields"]["linked_call_to_actions_count"]
-      end
-      
-      user_interactions.each do |user_interaction|
-        aux = JSON.parse(user_interaction.aux || {})
-        if aux["to_redo"].present?
-          next_cta = CallToAction.find(aux["next_calltoaction_id"])
-          next_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([next_cta], interactions_to_compute)
-          update_cta_info_optional_history(user_interaction["id"], next_cta_info_list, prev_calltoaction_info_id, optional_total_count) 
-          break
+      next_cta, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(user_interactions)
+      linked_user_interaction_ids << linked_user_interaction_id if linked_user_interaction_id
+      next_cta_to_return = next_cta
+      while next_cta
+        user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ?", next_cta.id)
+        next_cta, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(user_interactions)
+        linked_user_interaction_ids << linked_user_interaction_id if linked_user_interaction_id
+        if next_cta
+          next_cta_to_return = next_cta
         end
+        prev_cta_info["optional_history"]["optional_index_count"] = prev_cta_info["optional_history"]["optional_index_count"] + 1
       end
-
+      next_cta = next_cta_to_return
+      
+      if next_cta  
+        next_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([next_cta], interactions_to_compute)
+        next_cta_info = next_cta_info_list.first
+        update_cta_info_optional_history(next_cta_info, prev_cta_info, linked_user_interaction_ids) 
+      else
+        next_cta_info_list = nil
+      end
     end
 
     next_cta_info_list
-
   end
 
-  def update_cta_info_optional_history(user_interaction_id, next_cta_info_list, prev_calltoaction_info_id, optional_total_count)
-    unless next_cta_info_list.first["optional_history"]
-      next_cta_info_list.first["optional_history"] = {}
+  def check_and_find_next_cta_from_user_interactions_computation(user_interactions)
+    next_cta = nil
+    linked_user_interaction_id = nil
+    user_interactions.each do |user_interaction|
+      aux = JSON.parse(user_interaction.aux || {})
+      to_redo = aux["to_redo"]
+      if aux["next_calltoaction_id"] && !to_redo
+        next_cta = CallToAction.find(aux["next_calltoaction_id"])
+        linked_user_interaction_id = user_interaction.id
+        break
+      end
     end
-    (next_cta_info_list.first["optional_history"]["ctas"] ||= []) << prev_calltoaction_info_id
-    (next_cta_info_list.first["optional_history"]["user_interactions"] ||= []) << user_interaction_id
-    if optional_total_count
-      next_cta_info_list.first["optional_history"]["optional_total_count"] = optional_total_count
-      next_cta_info_list.first["calltoaction"]["extra_fields"]["linked_call_to_actions_count"] = optional_total_count
-    end
+    [next_cta, linked_user_interaction_id]
+  end
+
+  def update_cta_info_optional_history(next_cta_info, prev_cta_info, linked_user_interaction_ids)
+    optional_index_count = prev_cta_info["optional_history"]["optional_index_count"]
+    optional_total_count = prev_cta_info["optional_history"]["optional_total_count"]
+
+    next_cta_info["optional_history"] = {
+      "user_interactions" => linked_user_interaction_ids,
+      "optional_total_count" => optional_total_count,
+      "optional_index_count" => optional_index_count
+    }
+
+    # TODO: remove this line and fix orzoro templates 
+    next_cta_info["calltoaction"]["extra_fields"]["linked_call_to_actions_count"] = optional_total_count
   end
 
   def build_current_user_reward(reward)

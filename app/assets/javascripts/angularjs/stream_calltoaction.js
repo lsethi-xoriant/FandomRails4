@@ -200,6 +200,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     if($scope.calltoactions.length == 1) {
       $scope.calltoaction_info = $scope.calltoactions[0];
+
+      if($scope.calltoaction_info.optional_history.user_interactions) {
+        $scope.user_interactions_history = $scope.calltoaction_info.optional_history.user_interactions;
+      }
+
     }
   };
 
@@ -1834,11 +1839,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   function resetRedoUserInteractionsForLoggedUser() {
-    user_interaction_ids = $scope.calltoaction_info.optional_history.user_interactions;
-    $http.post("/reset_redo_user_interactions", { user_interaction_ids: user_interaction_ids })
+    $http.post("/reset_redo_user_interactions", { user_interaction_ids: $scope.user_interactions_history })
       .success(function(data) {   
         $scope.initCallToActionInfoList(data.calltoaction_info_list);
         $scope.linked_call_to_actions_index = 1;
+        $scope.user_interactions_history = [];
       }).error(function() {
       });
   }

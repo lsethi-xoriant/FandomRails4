@@ -255,6 +255,17 @@ module CallToActionHelper
           user_name = calltoaction.user.username
           user_user_avatar = user_avatar(calltoaction.user)
         end
+
+        cta_extra_fields = get_extra_fields!(calltoaction)
+        
+        if cta_extra_fields["linked_call_to_actions_count"]
+          optional_history = {
+            "optional_total_count" => cta_extra_fields["linked_call_to_actions_count"],
+            "optional_index_count" => 1
+          }
+        else
+          optional_history = {}
+        end
         
         calltoaction_info = {
             "calltoaction" => { 
@@ -273,12 +284,13 @@ module CallToActionHelper
               "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
               "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
               "interaction_info_list" => interaction_info_list,
-              "extra_fields" => (JSON.parse(calltoaction.extra_fields) rescue "{}"),
+              "extra_fields" => get_extra_fields!(calltoaction),
               "activated_at" => calltoaction.activated_at,
               "user_id" => calltoaction.user_id,
               "user_name" => user_name,
               "user_avatar" => user_user_avatar
             },
+            "optional_history" => optional_history,
             "flag" => build_grafitag_for_calltoaction(calltoaction, "flag"),
             "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat"),
             "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, anonymous_user),
@@ -322,15 +334,15 @@ module CallToActionHelper
         user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
 
         # Recursive method invoked with single cta in page with at least one interaction with next_calltoaction_id set
-        # next_cta_info_list = check_and_find_next_call_to_action_in_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute)
+        next_cta_info_list = check_and_find_next_cta_from_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute)
       
-        # if next_cta_info_list
-        #   calltoaction_info_list = next_cta_info_list
-        # else
-        #   adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
-        # end
+        if next_cta_info_list
+          calltoaction_info_list = next_cta_info_list
+        else
+          adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
+        end
 
-        adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
+        # adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
       else    
         interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
         user_interactions = get_user_interactions_with_interaction_id(interaction_ids, anonymous_user)
@@ -1024,18 +1036,10 @@ module CallToActionHelper
 
   def get_linked_call_to_action_conditions
     conditions = { 
-
-      # "example" =>
-      #   lambda { |symbolic_name, user_interaction| 
-      #     true
-      #   }
-
-      "more" => 
-        lambda { |answers_map_for_condition, response, interaction_condition| 
-          max_key = max_key_in_answers_map_for_condition(answers_map_for_condition)
-          if max_key == JSON.parse(interaction_condition.condition)["more"]
-            response["next_call_to_action_info_list"] = build_cta_info_list_and_cache_with_max_updated_at([interaction_condition.call_to_action])
-          end
+      "more" =>
+        lambda { |symbolic_name_to_counter, condition_params| 
+          max_key = max_key_in_symbolic_name_to_counter(symbolic_name_to_counter)
+          return max_key == condition_params
         }
     }
   end
