@@ -11,6 +11,7 @@ class CallToActionController < ApplicationController
 
   # For logged user, last_linked_calltoaction for anonymous user
   def reset_redo_user_interactions
+    debugger
     user_interactions = UserInteraction.where(id: params[:user_interaction_ids])
     cta = nil
     user_interactions.each do |user_interaction|
@@ -245,29 +246,10 @@ class CallToActionController < ApplicationController
       log_call_to_action_viewed(calltoaction)
 
       @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction], nil)
-
-      #if calltoaction_info_list.length == 1
-      #  call_to_action_info = calltoaction_info_list.first
-      #  has_next_cta = true
-      #  while has_next_cta do
-      #    has_next_cta = false
-      #    call_to_action_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-      #      if interaction_info["user_interaction"] 
-      #        aux = JSON.parse(interaction_info["user_interaction"]["aux"] || "{}")
-      #        if aux["next_calltoaction_id"]
-      #          cta = CallToAction.find(aux["next_calltoaction_id"])
-      #          calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta], interactions_to_compute)
-      #          has_next_cta = true
-      #          break
-      #        end
-      #      end
-      #    end
-      #  end
-      #end
       
       optional_history = @calltoaction_info_list.first["optional_history"]
       if optional_history
-        step_index = optional_history["ctas"].length + 1
+        step_index = optional_history["optional_index_count"]
         step_count = optional_history["optional_total_count"]
       end
 
@@ -471,36 +453,37 @@ class CallToActionController < ApplicationController
     response[:ga][:category] = "UserInteraction"
     response[:ga][:action] = "CreateOrUpdate"
 
+    linked_cta = nil
     if interaction.interaction_call_to_actions.any?
-      interaction_conditions = interaction.interaction_call_to_actions.order(:ordering, :created_at)
+      interaction_call_to_actions = interaction.interaction_call_to_actions.order(:ordering, :created_at)
 
-      answers_map_for_condition = {}
+      symbolic_name_to_counter = nil
 
-      interaction_conditions.each do |interaction_condition|
-        if interaction_condition.condition.present?
-          if answers_map_for_condition.empty?
+      interaction_call_to_actions.each do |interaction_call_to_action|
+        if interaction_call_to_action.condition.present?
+          # the symbolic_name_to_counter is populated "lazily" only if there is at least one condition present
+          if symbolic_name_to_counter.nil?
             user_interactions_history = params[:user_interactions_history] # + [user_interaction.id]
             current_answer = params[:params]
-            answers_map_for_condition = map_answers_in_user_history(current_answer, user_interactions_history, params[:anonymous_user_storage])
+            symbolic_name_to_counter = user_history_to_answer_map_fo_condition(current_answer, user_interactions_history, params[:anonymous_user_storage])
           end
-          condition = JSON.parse(interaction_condition.condition)
-          if condition.has_key?("more")
-            get_linked_call_to_action_conditions["more"].call(answers_map_for_condition, response, interaction_condition)
+          condition = JSON.parse(interaction_call_to_action.condition)
+          condition_name, condition_params = condition.first
+          if get_linked_call_to_action_conditions[condition_name].call(symbolic_name_to_counter, condition_params)
+            linked_cta = interaction_call_to_action.call_to_action
           end
+        else
+          linked_cta = interaction_call_to_action.call_to_action
+          break
         end
       end
 
-      if answers_map_for_condition.empty?
-        response["next_call_to_action_info_list"] = build_cta_info_list_and_cache_with_max_updated_at([interaction.interaction_call_to_actions.first.call_to_action])
-      end
-
-      next_calltoaction_id = response["next_call_to_action_info_list"][0]["calltoaction"]["id"] rescue nil
-
+      next_cta_id = linked_cta.nil? ? nil : linked_cta.id
     end
 
     aux = {
       user_interactions_history: params[:user_interactions_history],
-      next_calltoaction_id: next_calltoaction_id,
+      next_calltoaction_id: next_cta_id,
       to_redo: false
     }
 
@@ -598,12 +581,16 @@ class CallToActionController < ApplicationController
     response["interaction_status"] = get_current_interaction_reward_status(get_main_reward_name(), interaction)
     response["calltoaction_status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction).to_json
 
+    unless linked_cta.nil?
+      response["next_call_to_action_info_list"] = build_cta_info_list_and_cache_with_max_updated_at([linked_cta])
+    end
+
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
   end 
 
-  def map_answers_in_user_history(current_answer, user_interactions_history, anonymous_user_storage)
+  def user_history_to_answer_map_fo_condition(current_answer, user_interactions_history, anonymous_user_storage)
     if current_user
       answers_history = UserInteraction.where(id: user_interactions_history).map { |ui| ui.answer_id }
     elsif $site.anonymous_interaction 
@@ -620,24 +607,24 @@ class CallToActionController < ApplicationController
     answers_history = answers_history + [current_answer]
 
     answers = Answer.where(id: answers_history)
-    answers_map_for_condition = {}
+    symbolic_name_to_counter = {}
     answers.each do |answer|
       value = JSON.parse(answer.aux)["symbolic_name"]
-      if answers_map_for_condition.has_key?(value)
-        answers_map_for_condition[value] = answers_map_for_condition[value] + 1
+      if symbolic_name_to_counter.has_key?(value)
+        symbolic_name_to_counter[value] = symbolic_name_to_counter[value] + 1
       else
-        answers_map_for_condition[value] = 1
+        symbolic_name_to_counter[value] = 1
       end
     end
-    answers_map_for_condition
+    symbolic_name_to_counter
   end
 
-  def max_key_in_answers_map_for_condition(answers_map_for_condition)
+  def max_key_in_symbolic_name_to_counter(symbolic_name_to_counter)
 
     current_key = ""
     current_value = 0
 
-    answers_map_for_condition.each do |key, value|
+    symbolic_name_to_counter.each do |key, value|
       if value > current_value
         current_key = key
         current_value = value
