@@ -23,7 +23,7 @@ class Sites::Disney::CallToActionController < CallToActionController
       
       optional_history = @calltoaction_info_list.first["optional_history"]
       if optional_history
-        step_index = optional_history["ctas"].length + 1
+        step_index = optional_history["optional_index_count"]
         step_count = optional_history["optional_total_count"]
       end
 
