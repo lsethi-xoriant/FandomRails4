@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-xs-6">
+    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'recent'">Tutti</h2>
+    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'comment'">Più commentati</h2>
+    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'view'">Più visti</h2>
+  </div>
+  <div class="col-xs-6 text-right">
+    <div class="dropdown">
+      <% if current_user && params[:user] %>
+        <a ng-if="aux.gallery_index" class="btn btn-primary active" href="/gallery">
+          I MIEI CONTENUTI
+        </a>
+        <a ng-if="aux.gallery_show" class="btn btn-primary active" href="/gallery/{{aux.gallery.calltoaction.slug}}">
+          I MIEI CONTENUTI
+        </a>
+      <% elsif current_user && !params[:user] %>
+        <a ng-if="aux.gallery_index" class="btn btn-primary" href="/gallery?user=<%= current_user.id %>">
+          I MIEI CONTENUTI
+        </a>
+        <a ng-if="aux.gallery_show" class="btn btn-primary" href="/gallery/{{aux.gallery.calltoaction.slug}}?user=<%= current_user.id %>">
+          I MIEI CONTENUTI
+        </a>
+      <% end %>
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+        <span class="glyphicon glyphicon-chevron-down" style="position: relative; top: 3px;"></span>
+        Ordina
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right text-left" role="menu" aria-labelledby="dropdownMenu1">
+        <li class="active" role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="updateOrdering('recent')">Più recenti</a></li>
+        <li role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="updateOrdering('comment')">Più commentati</a></li>
+        <li role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="updateOrdering('view')">Più visti</a></li>
+      </ul>
+    </div>
+  </div>
+</div>

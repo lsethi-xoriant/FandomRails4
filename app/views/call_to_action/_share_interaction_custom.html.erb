@@ -1,0 +1,29 @@
+<!-- FACEBOOK -->
+<div ng-if="interaction_info.interaction.resource.providers.facebook" class="col-md-6">                    
+  <button ng-if="current_user.facebook" id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-fb btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')">CONDIVIDI CON FACEBOOK</button>
+  <a ng-if="!current_user.facebook" href="/auth/facebook_{{aux.tenant}}" class="btn btn-fb btn-block">ENTRA CON FACEBOOK</a>
+</div>
+<!-- TWITTER -->
+<div ng-if="interaction_info.interaction.resource.providers.twitter" class="col-md-6">                    
+  <button ng-if="current_user.twitter" id="twitter-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-tw btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'twitter')">CONDIVIDI CON TWITTER</button>
+  <a ng-if="!current_user.twitter" href="/auth/twitter_{{aux.tenant}}" class="btn btn-tw btn-block">ENTRA CON TWITTER</a>
+</div>
+<!-- EMAIL -->
+<div ng-if="interaction_info.interaction.resource.providers.email" class="col-md-12">
+  <div class="row">
+    <div class="col-md-6" style="margin-top: 10px;"> 
+      <input ng-model="interaction_info.user_interaction.share_to_email" class="form-control" type="text" placeholder="example@shado.tv" name="address">
+    </div>
+    <div class="col-md-6" style="margin-top: 10px;">
+      <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-default btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')">CONDIVIDI VIA EMAIL</button>
+    </div>
+  </div>
+</div>
+
+<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" id="undervideo-outcome-{{interaction_info.interaction.id}}" class="row undervideo">
+  <div class="col-sm-10 col-sm-offset-1 text-center">
+    <div class="alert alert-success" style="margin-bottom: 0; margin-top: 15px;">
+    <strong>Bravo!</strong> Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.
+    </div>
+  </div> 
+</div>

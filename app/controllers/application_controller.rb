@@ -100,19 +100,13 @@ class ApplicationController < ActionController::Base
     return if cookie_based_redirect?
     
     init_ctas = $site.init_ctas
-    if $context_root
-      context_root_tag = get_tag_from_params($context_root)
-      context_root_id = context_root_tag.id
-    end
-
-    #@calltoactions = cache_medium(get_calltoactions_in_property_cache_key(property.id, 0, get_cta_max_updated_at())) do
-    #end  
     
-    tag_name = nil
+    tag_name = get_property()
     params = { "page_elements" => ["like", "comment", "share"] }
-    @calltoaction_info_list, @has_more = get_ctas_for_stream(tag_name, params, $site.init_ctas)
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(tag_name, params, init_ctas)
 
     @aux_other_params = { 
+      calltoaction_evidence_info: true
     }
   end
 

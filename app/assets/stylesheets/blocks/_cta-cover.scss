@@ -22,6 +22,32 @@
   z-index: 10;
 }
 
+.cta-cover__media_type {
+  position: absolute; 
+  width: 100%; 
+  z-index: 10; 
+  top: 25%;
+  opacity: 0;
+  -webkit-transition: opacity 200ms ease 0s;
+  transition: opacity 200ms ease 0s;
+}
+
+.cta-cover__media_type--content {
+  background: $blu; 
+  border-radius: 50%; 
+  width: 80px; 
+  height: 80px; 
+  margin-left: auto; 
+  margin-right: auto;
+  opacity: 0.65;
+  text-align: center;
+  .fa {
+    color: #fff;
+    font-size: 42px;
+    line-height: 80px;
+  }
+}
+
 .cta-cover__column-title {
   font-size: 24px;
   margin: 0 0 30px 0;
@@ -32,6 +58,11 @@
   -webkit-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+  .cta-cover__media_type {
+    opacity: 1;
+    -webkit-transition: opacity 200ms ease 0s;
+    transition: opacity 200ms ease 0s;
+  }
 }
 
 .cta-cover__card__body {

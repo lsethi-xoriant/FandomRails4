@@ -102,11 +102,36 @@ module ApplicationHelper
     result + name_to_element.values
   end
 
-  def get_highlight_calltoactions()
-    tag = Tag.find_by_name("highlight")
-    if tag
-      highlight_calltoactions = calltoaction_active_with_tag(tag.name, "DESC")
-      order_elements(tag, highlight_calltoactions)
+  def get_highlight_ctas(property = nil)
+    highlight_tag = get_tag_from_params("highlight")
+
+    unless highlight_tag
+      throw Exception.new("highlight tag must be created")
+    end
+
+    if property.present?
+      # With property must be used highlight-<property name> tag for highlights
+      highlight_tag = get_tags_with_tags_in_and([highlight_tag.id, property.id]).first
+    end
+
+    highlight_ctas = get_ctas(highlight_tag)
+    if highlight_ctas
+      order_elements(highlight_tag, highlight_ctas)
+    else
+      []
+    end
+
+  end
+
+  def get_highlight_calltoactions(property = nil)
+    get_highlight_ctas(property)
+  end
+
+  def get_intesa_expo_highlight_calltoactions()
+    tag_highlight = 
+    if tag_highlight
+      ctas = get_intesa_expo_ctas(tag_highlight)
+      order_elements(tag_highlight, ctas)
     else
       []
     end
@@ -562,17 +587,199 @@ module ApplicationHelper
     end
   end
 
+  def is_ugc?(cta)
+    return cta.user_id.present?
+  end
+
+  def init_related_ctas(cta, property = nil)
+    other_tags = []
+    if is_ugc?(cta)        
+      related_tag = get_cta_tag_tagged_with(cta, "gallery")
+    else
+      related_tag = get_cta_tag_tagged_with(cta, "miniformat")
+      if related_tag.nil? && property.present?
+        related_tag = property
+      end
+      if property.present?
+        other_tags = [property]
+      end
+    end
+
+    # TODO: remove 8 hardcoded
+    [get_content_previews_excluding_ctas(related_tag.name, other_tags, [cta.id], 8), related_tag]
+  end
+
+  def init_property_info(property)
+    if property.present?
+      {
+        "id" => property.id,
+        "title" => property.title,
+        "name" => property.name,
+        "extra_fields" => get_extra_fields!(property),
+        "image" => get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb)
+      }
+    else
+      nil
+    end
+  end
+
+  def init_property_info_list()
+    property_tag = get_tag_from_params("property")
+    if property_tag
+      properties = order_elements(property_tag, get_tags_with_tag("property"))
+      if properties.any?
+        property_info_list = []
+        properties.each do |property|
+          property_info_list << {
+            "id" => property.id,
+            "extra_fields" => get_extra_fields!(property),
+            "title" => property.title,
+            "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil),
+            "image_hover" => (get_upload_extra_field_processor(get_extra_fields!(property)["image-hover"], :thumb) rescue nil) 
+          }
+        end
+        property_info_list
+      else
+        nil
+      end
+    else
+      nil
+    end
+  end
+
+  def get_ugc_cta(gallery_tag)
+    # gallery cta does not have the user id set
+    params = { 
+      conditions: { 
+        without_user_cta: true 
+      }
+    }
+    get_ctas_with_tags_in_or([gallery_tag.id], params).first
+  end
+
+  def build_thumb_cta(cta)
+
+    if cta.interactions
+      interaction_ids = cta.interactions.map { |interaction| interaction.id }
+    end
+
+    {
+      "id" => cta.id,
+      "slug" => cta.slug,
+      "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), cta, anonymous_user),
+      "thumbnail_carousel_url" => cta.thumbnail(:carousel),
+      "thumbnail_medium_url" => cta.thumbnail(:medium),
+      "title" => cta.title,
+      "description" => cta.description,
+      "flag" => build_grafitag_for_calltoaction(cta, "flag"),
+      "interaction_ids" => interaction_ids
+    }
+
+  end
+
+  def adjust_thumb_ctas(cta_info_list)
+    interaction_ids = []
+    cta_info_list.each do |cta|
+      interaction_ids = interaction_ids + cta["interaction_ids"]
+    end
+    if interaction_ids.any?
+      interactions = Interaction.where(id: interaction_ids)
+      counters = ViewCounter.where(ref_type: 'interaction', ref_id: interaction_ids)
+      cta_info_list.each do |cta_info|
+        cta_info["interaction_ids"].each do |interaction_id|
+          interaction = find_content_in_array_by_id(interactions, interaction_id)
+          counter = find_interaction_in_counters(counters, interaction_id)
+          cta_info[interaction.resource_type.downcase] = counter ? counter.counter : 0
+        end
+      end
+    end
+  end
+
+  def adjust_thumb_cta_for_current_user(cta_info_list)
+    cta_ids = cta_info_list.map { |cta| cta["id"] }
+    ctas = CallToAction.where(id: cta_ids)
+
+    cta_info_list.each do |cta_info|
+      cta = find_in_calltoactions(ctas, cta_info["id"])
+      main_reward_name = get_main_reward_name()
+      cta_info["status"] = compute_call_to_action_completed_or_reward_status(main_reward_name, cta)
+    end
+    cta_info_list
+  end
+
   def default_aux(other, calltoaction_info_list = nil)
-    
+    property = get_property()
+
+    property_info = init_property_info(property)
+    property_info_list = init_property_info_list()
+
+    if other && other.has_key?(:calltoaction)
+      cta = other[:calltoaction]
+      related_ctas, related_tag = init_related_ctas(cta, property)
+
+      if is_ugc?(cta)        
+        ugc_cta = get_ugc_cta(related_tag)
+      else
+        ugc_cta = nil
+      end
+
+    else
+      related_ctas = nil
+    end
+
+    if other && other.has_key?(:calltoaction_evidence_info)
+      cache_key = property.present? ? "in_#{property.name}" : "without_property"
+      cache_timestamp = get_cta_max_updated_at()
+      
+      evidence_ctas_info_list = cache_forever(get_evidence_ctas_cache_key(cache_key, cache_timestamp)) do
+        highlight_ctas = get_highlight_ctas(property)
+        ctas = get_ctas(property)
+
+        # TODO: remove 3 hardcoded
+        if highlight_ctas.any?
+          highlight_cta_ids = highlight_ctas.map { |cta| cta.id }
+          evidence_ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_cta_ids).limit(3).to_a
+          evidence_ctas = evidence_ctas + highlight_ctas
+        else
+          evidence_ctas = ctas.limit(3).to_a
+        end
+
+        evidence_ctas_info_list = []
+        evidence_ctas.each do |cta|
+          evidence_ctas_info_list << build_thumb_cta(cta)
+        end
+
+        evidence_ctas_info_list
+      end
+
+      max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
+      max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
+      user_cache_key = get_user_interactions_in_evidence_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
+
+      if current_user
+        evidence_ctas_info_list = cache_forever(user_cache_key) do
+          adjust_thumb_cta_for_current_user(evidence_ctas_info_list)
+        end
+      end
+
+      adjust_thumb_ctas(evidence_ctas_info_list)
+
+    else
+      evidence_ctas_info_list = nil
+    end
+
     @aux = {
       "tenant" => $site.id,
+      "free_provider_share" => $site.free_provider_share,
       "anonymous_interaction" => $site.anonymous_interaction,
-      "main_reward_name" => MAIN_REWARD_NAME,
+      "property_info" => property_info,
+      "property_info_list" => property_info_list,
+      "calltoaction_evidence_info" => evidence_ctas_info_list,
+      "related_calltoaction_info" => related_ctas,
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
-      "free_provider_share" => $site.free_provider_share,
-      "root_url" => root_url
+      "ugc_cta" => ugc_cta
     }
 
     if other
@@ -580,8 +787,6 @@ module ApplicationHelper
         @aux[key] = value unless @aux.has_key?(key.to_s)
       end
     end
-
-    @aux
 
   end
   

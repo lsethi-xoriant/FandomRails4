@@ -104,11 +104,10 @@ module DisneyHelper
       end
 
       if current_user && cta_info_list.any?
-        calltoactions = CallToAction.where(id: calltoaction_ids)
-        cta_info_list = adjust_disney_thumb_calltoaction_for_current_user(cta_info_list, calltoactions)
+        cta_info_list = adjust_thumb_cta_for_current_user(cta_info_list)
       end
 
-      adjust_disney_thumb_calltoactions(cta_info_list)
+      adjust_thumb_ctas(cta_info_list)
 
       cta_info_list
     else
@@ -229,24 +228,6 @@ module DisneyHelper
     end
   end
 
-  def adjust_disney_thumb_calltoactions(calltoaction_info_list)
-    interaction_ids = []
-    calltoaction_info_list.each do |calltoaction|
-      interaction_ids = interaction_ids + calltoaction["interaction_ids"]
-    end
-    if interaction_ids.any?
-      interactions = Interaction.where(id: interaction_ids)
-      counters = ViewCounter.where(ref_type: 'interaction', ref_id: interaction_ids)
-      calltoaction_info_list.each do |calltoaction_info|
-        calltoaction_info["interaction_ids"].each do |interaction_id|
-          interaction = find_content_in_array_by_id(interactions, interaction_id)
-          counter = find_interaction_in_counters(counters, interaction_id)
-          calltoaction_info[interaction.resource_type.downcase] = counter ? counter.counter : 0
-        end
-      end
-    end
-  end
-
   def build_disney_thumb_calltoaction(calltoaction)
 
     if calltoaction.interactions
@@ -268,14 +249,6 @@ module DisneyHelper
       "interaction_ids" => interaction_ids
     }
 
-  end
-
-  def adjust_disney_thumb_calltoaction_for_current_user(calltoaction_info_list, calltoactions)
-    calltoaction_info_list.each do |cta_info|
-      cta = find_in_calltoactions(calltoactions, cta_info["id"])
-      cta_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), cta)
-    end
-    calltoaction_info_list
   end
 
   def get_disney_sidebar_info(sidebar_tags, gallery_cta, other)
@@ -437,12 +410,11 @@ module DisneyHelper
 
       if current_user
         calltoaction_evidence_info = cache_forever(user_cache_key) do
-          calltoactions = CallToAction.where(id: calltoaction_ids)
-          adjust_disney_thumb_calltoaction_for_current_user(calltoaction_evidence_info, calltoactions)
+          adjust_thumb_cta_for_current_user(calltoaction_evidence_info)
         end
       end
 
-      adjust_disney_thumb_calltoactions(calltoaction_evidence_info)
+      adjust_thumb_ctas(calltoaction_evidence_info)
 
       calltoaction_evidence_info
     end

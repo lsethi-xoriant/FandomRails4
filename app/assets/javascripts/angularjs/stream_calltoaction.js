@@ -494,15 +494,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return calltoaction_info_result;
   }
 
-  $scope.shareInteractionsPresent = function(calltoaction_id) {
-    share_interaction_present = false;
-    calltoaction_info = getCallToActionInfo(calltoaction_id);
+  $scope.shareInteractionPresent = function(calltoaction_info) {
+    interaction_present = false;
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.resource_type == "share") {
-        share_interaction_present = true;
+        calltoaction_info.share_interaction_info = interaction_info;
+        interaction_present = true;
       }
     });
-    return share_interaction_present;
+    return interaction_present;
   };
 
   $scope.voteInteractionPresent = function(calltoaction_info) {
@@ -510,6 +510,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.resource_type == "vote") {
         calltoaction_info.vote_interaction_info = interaction_info;
+        interaction_present = true;
+      }
+    });
+    return interaction_present;
+  };
+
+  $scope.likeInteractionPresent = function(calltoaction_info) {
+    interaction_present = false;
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.resource_type == "like") {
+        calltoaction_info.like_interaction_info = interaction_info;
         interaction_present = true;
       }
     });

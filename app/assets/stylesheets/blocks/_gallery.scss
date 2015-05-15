@@ -1,4 +1,35 @@
 /* GALLERY STILE CLASS*/
+
+.gallery__extra-field {
+  text-align: center;
+}
+
+.gallery__required-info {
+  margin-top: 15px; 
+  font-size: 12px;
+}
+
+.gallery__errors {
+  margin-top: 15px; 
+  color: red;
+  ul {
+    padding-left: 0;
+    li {
+      list-style-type: none;
+    }
+  }
+}
+
+.gallery__progress {
+  margin-top: 15px;
+  .progress {
+    margin-bottom: 0;
+    .progress-bar {
+      border-radius: 4px !important;
+    }
+  }
+}
+
 .gallery-cta{
   margin-bottom: 20px;
   color: #fff;
@@ -82,6 +113,7 @@
 
 .gallery-cta__how-to-row{
   border-bottom: 1px solid #CCC;
+  padding-bottom: 20px;
 }
 
 .gallery-cta-list{}

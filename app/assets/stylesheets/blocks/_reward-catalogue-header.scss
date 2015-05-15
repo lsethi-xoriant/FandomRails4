@@ -51,12 +51,20 @@
   /*margin-right: 15px;*/
 }
 
+.reward-catalogue__how-to-image{
+  margin-left: -16px;
+}
+
 @media (max-width: $screen-sm-min) {
    .reward-catalogue-header__credit-text{
     color: #fff;
     font-size: 19px;
     line-height: 22px;
     text-align: center;
+  }
+  
+  .reward-catalogue__how-to-image{
+    margin-left: 0px;
   }
   
   .reward-catalogue-header__credit-counter{

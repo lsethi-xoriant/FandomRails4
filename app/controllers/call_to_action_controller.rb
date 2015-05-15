@@ -120,7 +120,8 @@ class CallToActionController < ApplicationController
 
   def append_calltoaction
     init_ctas = $site.init_ctas * 2
-    calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, init_ctas)
+    tag_name = get_property()
+    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, init_ctas)
 
     params[:page_elements] = ["empty"]
     response = {
@@ -131,15 +132,12 @@ class CallToActionController < ApplicationController
     respond_to do |format|
       format.json { render json: response.to_json }
     end 
-    
-    respond_to do |format|
-      format.json { render json: response }
-    end 
   end
 
   def ordering_ctas
-    tag_name = get_disney_property()
-    calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+    init_ctas = $site.init_ctas
+    tag_name = get_property()
+    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, init_ctas)
 
     params[:page_elements] = ["empty"]
     response = {

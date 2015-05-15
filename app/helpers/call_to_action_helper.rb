@@ -93,7 +93,7 @@ module CallToActionHelper
     end
   end
 
-  def get_ctas(tag, in_gallery)
+  def get_ctas(tag, in_gallery = nil)
     if in_gallery
       if in_gallery != "all"
         gallery_calltoaction = CallToAction.find(in_gallery)
