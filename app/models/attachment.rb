@@ -21,9 +21,9 @@ class Attachment < ActiveRecord::Base
       end 
     }, 
     :convert_options => { 
-      :carousel => " -crop '1024x320+0+40'", 
-      :medium => " -gravity center -crop '524x393+0+0'", 
-      :thumb => " -gravity center -crop '262x147+0+0'" 
+      :carousel => "-crop '1024x320+0+40'", 
+      :medium => "-crop '524x393+0+0'", 
+      :thumb => "-crop '262x147+0+0'" 
     }
 
   def destroy_data=(destroy_data_check)
