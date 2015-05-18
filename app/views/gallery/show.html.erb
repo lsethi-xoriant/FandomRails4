@@ -1,0 +1,140 @@
+<% if get_extra_fields!(@gallery_tag)['background_image'] %>
+  <style type="text/css">
+    body {
+      background-image: url("<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image'], :original) %>");
+      background-position: top center;
+      background-repeat: no-repeat;
+    }
+  </style>
+<% end %>
+
+<div class="container main-container">
+
+  <div class="row main-row filters__flexslider-main-row" style="border-bottom: 1px solid #ccc;">
+    <%= render partial: "/gallery/launchers", locals: { galleries: @galleries_cta, current_gallery_id: @cta_id }  %>    
+  </div>
+  
+  <div class="row main-row">
+    <div class="col-xs-12">
+        <div class="row">
+        <div class="col-md-12"> 
+          <% if flash[:error] %>
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="alert alert-danger" style="margin-top: 20px;">
+                  <p>Errori processo di upload:</p>
+                  <p>
+                    <ul>
+                      <% flash[:error].split(",").each do |msg| %>
+                        <li><%= msg %></li>
+                      <% end %>
+                    </ul>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% elsif flash[:notice] %>
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="alert alert-success" style="margin-top: 20px;"><%= flash[:notice] %></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      </div>
+    </div>
+  
+  <div class="row" style="margin-bottom: 20px; background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['background_image_upload'], :original) if get_extra_fields!(@gallery_tag)['background_image_upload'] %>);">
+      <div class="col-xs-12 gallery-cta">
+        <div class="row main-row gallery-cta__upload-area">
+          <div class="col-sm-4">
+            <img class="img-responsive hidden-xs" src="<%= get_upload_extra_field_processor(get_extra_fields!(@gallery_tag)['thumbnail_upload'], :medium) if get_extra_fields!(@gallery_tag)['thumbnail_upload'] && upload_extra_field_present?(get_extra_fields!(@gallery_tag)['thumbnail_upload']) %>" />
+          </div>
+          <div class="col-sm-7">
+            <%= @gallery_tag.description.html_safe %>
+            <p>&nbsp;</p>
+            <div class="row">
+              <div class="col-xs-12 text-left">
+                <% if get_extra_fields!(@gallery_tag)['url_gallery_rules'] %>
+                  <a href="/gallery/<%= get_extra_fields!(@gallery_tag)['url_gallery_rules'] %>/<%= @cta_id %>" class="btn btn-default gallery-cta__rule-button"><%= get_extra_fields!(@gallery_tag)['label_gallery_rules'] %></a>
+                <% end %>
+                <% if @upload_active %>
+                  <button id="partecipa" class="btn btn-primary <%= "hidden" if @error %>" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
+                <% end %>
+              </div>
+            </div>
+            <% if @upload_active %>
+              <%= render partial: "/gallery/gallery_calltoaction", locals: { gallery_tag: @gallery_tag, interaction_id: @upload_interaction_id, uploaded: @uploaded, error: @error, extra_fields: @extra_fields } %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+  </div>
+  
+  <div class="row main-row">
+    <div class="col-xs-12">
+      <%= render partial: "application/ordering" %>
+      
+      <div ng-if="!ordering_in_progress" class="row">
+      <div ng-repeat="calltoaction_info in calltoactions" class="col-sm-6">
+          <%= render partial: "/call_to_action/cover_single_calltoaction" %>
+        </div>
+      </div>
+      <div ng-if="!ordering_in_progress && has_more" class="row">
+        <div class="col-sm-12">
+          <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="!append_ctas_in_progress && has_more">
+            <button class="btn btn-primary" href="javascript: void(0)" ng-click="appendCallToAction();"><span>Carica altri</span></button>
+          </div>
+          <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="append_ctas_in_progress && has_more">
+            <button class="btn btn-primary" href="javascript: void(0)"><span>Caricamento in corso</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center" ng-if="ordering_in_progress">
+        <div class="col-sm-12">
+          <img style="margin-top: 45px; margin-bottom: 45px;" src="<%= asset_path("loader.gif") %>"> 
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<script type="text/javascript">
+  function partecipa(){
+    $("#upload-form").removeClass("hidden");
+    $("#partecipa").hide();
+  }
+  
+  function loadPhoto(){
+    $("#upload").click();
+  }
+  
+  function loadRelease(){
+    $("#releasing").click();
+  }
+  
+  function photoSelected(){
+    if( $(".gallery-cta__upload-photo").find("i.fa-check-circle").length == 0){
+      $(".gallery-cta__upload-photo").append('<i class="fa fa-check-circle"></i>');
+    }
+  }
+  
+  function releaseSelected(){
+    if( $(".gallery-cta__upload-release").find("i.fa-check-circle").length == 0){
+      $(".gallery-cta__upload-release").append('<i class="fa fa-check-circle"></i>');
+    }
+  }
+  
+  function openLoadiongModal(){
+    $("#ugc-loading").modal('show');
+    $("#form-upload").submit();
+  }
+  
+  <% if @uploaded %>
+  $(document).ready(function(){
+    $("#ugc-feedback").modal('show');
+  });
+  <% end %>
+</script>

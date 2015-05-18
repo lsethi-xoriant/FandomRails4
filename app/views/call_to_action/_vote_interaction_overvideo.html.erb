@@ -1,0 +1,30 @@
+<div ng-if="currentUserEmptyAndAnonymousInteractionEnable()">
+  {{computeAvgForVoteInteraction(interaction_info)}}
+</div>
+
+<div class="col-sm-12 text-center visible-xs">
+  <p ng-if="!interaction_info.user_interaction" class="vote-interaction__title">{{interaction_info.interaction.resource.title}}</p>
+  <p ng-if="interaction_info.user_interaction" class="vote-interaction__title">Il tuo voto è:</p>
+</div>
+
+<div class="vote-interaction__baloon-container" ng-class="{'vote-interaction__done': interaction_info.user_interaction, 'vote-interaction__active': !interaction_info.user_interaction}">
+
+  <p ng-if="!interaction_info.user_interaction" class="vote-interaction__title hidden-xs">{{interaction_info.interaction.resource.title}}</p>
+  <p ng-if="interaction_info.user_interaction" class="vote-interaction__title hidden-xs">Il tuo voto è:</p>
+
+  <div class="vote-interaction__baloon text-center">
+    <div ng-repeat="i in range(interaction_info.interaction.resource.vote_info.min, interaction_info.interaction.resource.vote_info.max)" class="vote-interaction__baloon__element">
+      <!-- NOT DONE -->
+      <div  ng-if="!interaction_info.user_interaction" class="vote-interaction__baloon__element-pin" ng-click="updateAnswer(calltoaction_info, interaction_info, i, interaction_info.interaction.when_show_interaction)" ng-class="{'vote-interaction__baloon__element-pin__active': (evaluateVote(interaction_info) >= i)}">
+        <p>{{i}}</p>
+      </div>
+      <!-- ALREADY DONE -->
+      <div ng-if="interaction_info.user_interaction" class="vote-interaction__baloon__element-pin" ng-class="{'vote-interaction__baloon__element-pin__active': (evaluateVote(interaction_info) >= i)}">
+        <p>{{i}}</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="vote-interaction__subtitle" ng-if="interaction_info.interaction.resource.extra_fields && interaction_info.interaction.resource.extra_fields['subtitle']">{{interaction_info.interaction.resource.extra_fields["subtitle"]}}</p>
+
+</div>
