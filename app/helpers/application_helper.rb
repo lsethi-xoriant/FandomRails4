@@ -646,7 +646,7 @@ module ApplicationHelper
   def init_property_info(property)
     if property.present?
       property_image = get_extra_fields!(property)["image"]
-      if property_image
+      if property_image.present?
         property_image_thumb = get_upload_extra_field_processor(property_image, :thumb)
       end
       {
@@ -669,10 +669,10 @@ module ApplicationHelper
         property_info_list = []
         properties.each do |property|
           property_extra_fields = get_extra_fields!(property)
-          if property_extra_fields["image"]
+          if property_extra_fields["image"].present?
             property_image_thumb = get_upload_extra_field_processor(property_extra_fields["image"], :thumb)
           end
-           if property_extra_fields["image_hover"]
+           if property_extra_fields["image_hover"].present?
             property_image_hover_thumb = get_upload_extra_field_processor(property_extra_fields["image_hover"], :thumb)
           end
           property_info_list << {
@@ -759,8 +759,8 @@ module ApplicationHelper
     property_info = init_property_info(property)
     property_info_list = init_property_info_list()
 
-    if other && other.has_key?(:calltoaction)
-      cta = other[:calltoaction]
+    if other && (other.has_key?(:calltoaction) || other.has_key?("calltoaction"))
+      cta = other[:calltoaction] || other["calltoaction"]
       related_ctas, related_tag = init_related_ctas(cta, property)
 
       if is_ugc?(cta)        

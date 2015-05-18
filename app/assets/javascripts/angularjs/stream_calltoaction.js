@@ -86,15 +86,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     </fieldset>
   </form>
   */
-  $scope.upload = function (files, url, extra_fields) {
+  $scope.upload = function (files, url, extra_fields, upload_interaction) {
     delete $scope.form_data.errors;
-    $scope.form_data.errors = getFormUploadErrors(files, extra_fields);
+    $scope.form_data.errors = getFormUploadErrors(files, extra_fields, upload_interaction);
     if(!$scope.form_data.errors) {
+
+      if(!upload_interaction.interaction.resource.upload_info.releasing.required) {
+        file_param = files[0];
+        file_form_data_params = ["attachment"]
+      } else {
+        file_param = files;
+        file_form_data_params = ["attachment", "releasing"]
+      }
+
       $upload.upload({
           url: url,
           fields: { obj: $scope.form_data },
-          file: files,
-          fileFormDataName: ["attachment", "releasing"]
+          file: file_param,
+          fileFormDataName: file_form_data_params
         }).progress(function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             $scope.form_data.progress = progressPercentage; // evt.config.file[0].progress
@@ -116,18 +125,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           }
           delete $scope.form_data.progress;
         });
+
       }
   };
 
-  function getFormUploadErrors(files, extra_fields) {
+  function getFormUploadErrors(files, extra_fields, upload_interaction) {
     
     errors = [];
 
-    angular.forEach(extra_fields, function(extra_field) {
-      if(extra_field['required'] && !$scope.form_data[extra_field['name']]) {
-        errors.push(extra_field['label']);
-      }
-    });
+    if(!angular.equals(extra_fields, {})) {
+      angular.forEach(extra_fields, function(extra_field) {
+        if(extra_field['required'] && !$scope.form_data[extra_field['name']]) {
+          errors.push(extra_field['label']);
+        }
+      });
+    }
 
     if(!$scope.form_data['title']) { 
       errors.push("Titolo non può essere lasciato in bianco");
@@ -141,7 +153,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       errors.push("Formato del media non valido");
     }
 
-    if(!files[1]) {
+    if(!files[1] && upload_interaction.interaction.resource.upload_info.releasing.required) {
       errors.push("La liberatoria deve essere caricata");
     }
 
@@ -663,6 +675,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return getInteraction(calltoaction_id, "vote");
   };
 
+  $scope.getUploadInteraction = function(calltoaction_info) {
+    return getInteraction(calltoaction_info.calltoaction.id, "upload");
+  };
+
   function getInteraction(calltoaction_id, interaction_type) {
     result = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
@@ -959,12 +975,28 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.appendCallToActionOtherParams = function() {
-    return null;
+    return otherParamsForGallery();
   };
 
   $scope.updateOrderingOtherParams = function() {
-    return null;
+    return otherParamsForGallery();
   };
+
+  function otherParamsForGallery() {
+    if($scope.aux.gallery) {
+      other_params = new Object();
+      other_params.gallery = new Object();
+      other_params.gallery.user = $scope.aux.gallery_user;
+      if($scope.aux.gallery.calltoaction) {
+        other_params.gallery.calltoaction_id = $scope.aux.gallery.calltoaction.id;
+      } else {
+        other_params.gallery.calltoaction_id = "all";
+      }
+      return other_params;
+    } else {
+      return null;
+    } 
+  }
 
   $scope.updateOrdering = function(ordering) {
 

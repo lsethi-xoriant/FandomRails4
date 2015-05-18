@@ -1,33 +1,87 @@
-<% if galleries.any? %>
-  <div id="home-carousel" class="carousel slide" data-ride="carousel">
-    <!-- Indicators -->
-    <ol class="carousel-indicators">
-      <% i = 0 %>
-      <% galleries.each do |g| %>
-        <li data-target="#home-carousel" data-slide-to="0" class="<%= "active" if i == 0 %>"></li>
-        <% i = i + 1 %>
-      <% end %>
-    </ol>
-    <div class="carousel-inner">
-      <% i = 0 %>
-      <% galleries.each do |g| %>
-      	<% gallery_tag = get_tag_with_tag_about_call_to_action(g, "gallery").first %>
-        <div class="item <%= "active" if i == 0 %>" style="background: url('<%= get_extra_fields!(tags_with_miniformat_in_calltoaction.first.gallery_tag)["preview_image"]["url"] %>') no-repeat center top; background-size: cover;">
-          <!--<img src="//placehold.it/1000x500">-->
-          <div class="container">
-            <div class="carousel-caption">
-              <!--<h1>Example headline.</h1>-->
-              <h1><%= g.title %></h1>
-              <h3>
-              	<a class="btn btn-lg btn-primary" href="/gallery/<%= g.id %>" role="button">VAI ALLA GALLERY</a>
-              </h3>                
-            </div>
-          </div>
-        </div>
-        <% i = i + 1 %>
-      <% end %>
-    </div>
-    <a class="left carousel-control" href="#home-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-    <a class="right carousel-control" href="#home-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+<div class="col-sm-12 filters__flexslider">
+  <div class="flexslider filters__flexslider-desktop hidden-xs">
+    <div class="flex-viewport-shadow"></div>
+    <ul class="slides">
+      <% galleries.each do |gallery| %>
+        <li class="text-center filters__flexslider-desktop-item" id="<%= gallery[:cta].id%>">
+          <%= light_link_to("/gallery/#{gallery[:cta].slug}", class: "filters__flexslider-a") do %>
+            <img class="filters__flexslider-image <%= "filters__flexslider-image--active" if current_gallery_id && gallery[:cta].id == current_gallery_id %>" src="<%= gallery[:cta].thumbnail(:medium) %>">  
+            <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
+            <p class="filters__title--gallery-counter"><%= gallery[:count] - 1 %> contenuti</p>
+          <% end %>
+          </li>
+        <% end %>
+    </ul>
   </div>
-<% end %>
+
+  <div class="flexslider filters__flexslider-mobile filters__flexslider-mobile--gallery visible-xs">
+    <ul class="slides">
+      <% galleries.each do |gallery| %>
+        <li class="text-center filters__flexslider-mobile-item" id="<%= gallery[:cta].id%>">
+          <%= light_link_to("/gallery/#{gallery[:cta].slug}") do %>
+            <div class="filters__gallery-item" style="background-image: url('<%= gallery[:cta].thumbnail(:medium) %>')">
+              <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
+              <p class="filters__title--gallery-counter"><%= gallery[:count] - 1 %> contenuti</p>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    is_last_filters_flexslider_slide = false;
+    $('.filters__flexslider-desktop').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: false,
+      touch: true,
+      itemWidth: 262,
+      itemMargin: 15,
+      controlNav: false,
+      prevText: "",
+      nextText: "",
+      before: function(slider) {
+        is_last_filters_flexslider_slide = false;
+        $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+      },
+      after: function(slider) {
+        if(is_last_filters_flexslider_slide) {
+          $(slider).find(".flex-viewport-shadow").addClass("hidden");
+        } else {
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        }
+      },
+      end: function(slider) {
+        is_last_filters_flexslider_slide = true;
+      }
+    });
+
+    $(".filters__flexslider-desktop-item").first().find(".filters__flexslider-item-active").removeClass("hidden");
+
+    $(".filters__flexslider-desktop-item").bind("click", function() {
+      $(".filters__flexslider-desktop-item").find(".filters__flexslider-item-active").addClass("hidden");
+      $(this).find(".filters__flexslider-item-active").removeClass("hidden");
+    });
+
+    $(".filters__flexslider-mobile-item").first().find(".filters__flexslider-item-active").removeClass("hidden");
+
+    $(".filters__flexslider-mobile-item").bind("click", function() {
+      $(".filters__flexslider-mobile-item").find(".filters__flexslider-item-active").addClass("hidden");
+      $(this).find(".filters__flexslider-item-active").removeClass("hidden");
+    });
+
+    $('.filters__flexslider-mobile').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: false,
+      touch: true,
+      itemWidth: 130,
+      itemMargin: 8,
+      controlNav: false,
+      prevText: "",
+      nextText: ""
+    });
+  });
+</script>

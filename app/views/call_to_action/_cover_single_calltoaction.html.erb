@@ -8,11 +8,11 @@
       <!-- CALLTOACTION THUMBNAIL -->
       <%= light_link_to("/call_to_action/{{calltoaction_info.calltoaction.slug}}") do %>
 
-        <div class="cta-cover__media_type" ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'">
+        <div class="cta-cover__media_type hidden-xs" ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'">
           <div class="cta-cover__media_type--content"><span class="fa fa-photo"></span></div>
         </div>
 
-        <div class="cta-cover__media_type" ng-if="calltoaction_info.calltoaction.media_type == 'FLOWPLAYER' || calltoaction_info.calltoaction.media_type == 'KALTURA'">
+        <div class="cta-cover__media_type hidden-xs" ng-if="calltoaction_info.calltoaction.media_type == 'FLOWPLAYER' || calltoaction_info.calltoaction.media_type == 'KALTURA'">
           <div class="cta-cover__media_type--content"><span class="fa fa-play"></span></div>
         </div>
 
@@ -52,15 +52,15 @@
       <% end %>
     </div>
     <div class="row">
-      <div ng-if="likeInteractionPresent(calltoaction_info)" class="col-xs-6">
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions" class="col-xs-6">
         <div class="like-interaction__cover__info">
-          <button ng-click="updateAnswer(calltoaction_info, calltoaction_info.like_interaction_info, null, calltoaction_info.like_interaction_info.interaction.when_show_interaction)" class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}">
+          <button ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}">
             <span class="fa fa-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span>
-          </button><span class="like-interaction__cover__info__text">{{calltoaction_info.like_interaction_info.interaction.resource.counter}} <span class="hidden-xs">mi piace</span></span>
+          </button><span class="like-interaction__cover__info__text">{{interaction_info.interaction.resource.counter}} <span class="hidden-xs">mi piace</span></span>
         </div>
       </div>
-      <div ng-if="shareInteractionPresent(calltoaction_info)" class="col-xs-6 text-right" ng-class="{'col-xs-offset-6': !likeInteractionPresent(calltoaction_info)}">
-        <div ng-repeat="interaction_info in [calltoaction_info.share_interaction_info]" class="share-interaction__cover__col">
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="col-xs-6 text-right">
+        <div class="share-interaction__cover__col">
           <%= render partial: "/call_to_action/share_interaction" %>
         </div>
       </div>
@@ -75,6 +75,4 @@
     </div>
   </div>
 
-</div>        
-
-       
+</div>

@@ -304,7 +304,7 @@ Fandom::Application.routes.draw do
   match "/profile/update_avatar", to: "application#update_avatar_image"
 
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
-  match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
+  match "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
   match "/upload", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
