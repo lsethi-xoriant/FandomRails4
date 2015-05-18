@@ -2,10 +2,6 @@
 class Sites::Disney::CallToActionController < CallToActionController
   include DisneyHelper
 
-  def build_current_user() 
-    build_disney_current_user()
-  end
-
   def get_context()
     get_disney_property()
   end

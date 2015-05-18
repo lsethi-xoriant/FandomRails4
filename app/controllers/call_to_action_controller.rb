@@ -294,17 +294,6 @@ class CallToActionController < ApplicationController
 =end
 
   end
-
-=begin
-  def build_current_user()
-    {
-      "facebook" => current_user.facebook(request.site.id),
-      "twitter" => current_user.twitter(request.site.id),
-      "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
-      "registration_fully_completed" => registration_fully_completed?
-    }
-  end
-=end
   
   def get_correlated_cta(calltoaction)
     tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat")
