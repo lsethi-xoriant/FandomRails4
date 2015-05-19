@@ -470,7 +470,7 @@ Fandom::Application.routes.draw do
 
   # Instagram subscribe.
   match "/instagram_tag_subscription/:tag_name", :to => "application#instagram_tag_subscription"
-  match "/instagram_new_tagged_media_callback/:tag_name", :to => "application#instagram_verify_token_callback"
+  match "/instagram_new_tagged_media_callback/:tag_name", :to => "callback#instagram_new_tagged_media_callback"
   match "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
   match "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
 
