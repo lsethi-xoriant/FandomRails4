@@ -1,62 +1,83 @@
-<!-- MEDIA -->
-<div class="row">
-  <div class="col-md-12">
-    <!-- SECONDARY MEDIA -->
-    <div id="secondary-media-{{calltoaction_info.calltoaction.id}}" class="hidden">
-      <div id="secondary-media-video-{{calltoaction_info.calltoaction.id}}" class="video flex-video widescreen secondary-media"> 
-        <div id="home-stream-video-secondary-{{calltoaction_info.calltoaction.id}}" main-media="secondary" calltoaction-id="{{calltoaction_info.calltoaction.id}}"></div>
-        <!-- OVERVIDEO AREA -->
-        <div class="home-overvideo-feedback-{{calltoaction_info.calltoaction.id}}"></div> 
+<div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA' || calltoaction_info.calltoaction.media_type == 'FLOWPLAYER'" id="main-media-{{calltoaction_info.calltoaction.id}}">
+  <div class="media-youtube embed-responsive embed-responsive-16by9">             
+    
+    <!-- IFRAME VIDEO -->
+    <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
+
+    <!-- OVERVIDEO AREA -->
+    <%= render partial: "/call_to_action/overvideo_interaction" %>
+
+    <!-- DEFAULT END -->
+    <div class="col-xs-12 end-interaction text-center" ng-if="calltoaction_info.active_end_interaction">
+      <p class="end-interaction__title" ng-if="!calltoaction_info.calltoaction.extra_fields['end-video']">Cosa ne pensi? Dì la tua!<br>Lascia subito il tuo commento su questo argomento.</p>
+      <p class="end-interaction__title" ng-if="calltoaction_info.calltoaction.extra_fields['end-video']">{{calltoaction_info.calltoaction.extra_fields['end-video']}}</p>
+      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-lg hidden-xs"><span>COMMENTA</span></a>
+      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-sm visible-xs"><span>COMMENTA</span></a>
+    </div>
+
+    <!-- PLAY INTERACTION -->
+    <div class="play-interaction__container" ng-if="(interaction_info = getPlayInteraction(calltoaction_info.calltoaction.id)) && !interaction_info.hide">
+      <div class="col-md-12 text-center hidden-xs">
+        <p class="play-interaction__title">Guarda il video e guadagna i punti.</p>
       </div>
-      <img id="secondary-media-image-{{calltoaction_info.calltoaction.id}}" class="secondary-media" style="width: 100%;">
-    </div>
-    <!-- MAIN MEDIA -->
-    <div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA' || calltoaction_info.calltoaction.media_type == 'FLOWPLAYER'" id="main-media-{{calltoaction_info.calltoaction.id}}">
-      <div class="media-youtube embed-responsive embed-responsive-16by9">             
-        <!-- IFRAME VIDEO -->
-        <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
-
-        <!-- OVERVIDEO AREA -->
-        <div ng-if="overvideoInteractionsPresent(calltoaction_info.calltoaction.id)" id="overvideo-calltoaction-{{calltoaction_info.calltoaction.id}}">
-          <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterOvervideoDuringInteractions | filter:filterOvervideoDuringActiveInteraction" class="col-xs-12">
-            <div id="overvideo-interaction-{{interaction_info.interaction.id}}">
-              <%= render partial: "/call_to_action/overvideo_interaction" %>
-            </div>
-          </div>
-
-          <!-- DEFAULT END -->
-          <div class="col-xs-12 end-interaction" ng-if="calltoaction_info.active_end_interaction">
-            <div class="row">
-              <div class="col-sm-8 col-sm-offset-2 text-center">
-                <p class="end-interaction__title">END</p>
-              </div>
-            </div>
-          </div>
-
-        </div>  
-
-      </div>
-    </div>
-
-    <!-- MAIN MEDIA IMAGE -->
-    <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
-      <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
-    </div>
-    <!-- IFRAME -->
-    <div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
-      <div id="calltoaction-{{calltoaction_info.calltoaction.id}}-cover" class="calltoaction-cover row text-center">
-        <div class="col-xs-12">
-          <img ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}" class="img-responsive" style="width: 100%;">
+      <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row">
+        <div class="col-md-12 play-interaction__winnable-reward text-center">
+          <span class="label label-success cta-cover__winnable-reward__label">
+            Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+          </span> 
         </div>
-        <div class="col-sm-4 col-sm-offset-4" style="position: absolute; bottom: 10px; z-index: 10;">
-          <button class="btn btn-danger btn-lg btn-block" ng-click="showCallToAction(calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_type)">GUARDA</button>
-        </div>     
       </div>
-      <!-- IFRAME -->
-      <div id="main-media-{{calltoaction_info.calltoaction.id}}">
-        <div id="iframe-calltoaction-{{calltoaction_info.calltoaction.id}}" class="<%= "iframe-apple-mobile" if request_is_from_apple_mobile_device?(request) %> video flex-video widescreen text-center media-iframe hidden">  
+      <div ng-if="!interaction_info.user_interaction" class="row text-center">
+        <div class="col-md-12 play-interaction__winnable-reward">
+          <span class="label label-warning cta-cover__winnable-reward__label">
+            +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+          </span>
         </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MAIN MEDIA IMAGE -->
+<div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
+  <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+
+  <!-- DOWNLOAD INTERACTION -->
+  <div class="play-interaction__container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
+
+    <div class="col-md-12 text-center hidden-xs" style="position: relative; top: 40%;">
+      <a class="btn btn-lg btn-blue" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>DOWNLOAD</span></a>
+    </div>
+    <div class="col-md-12 text-center visible-xs" style="position: relative">
+      <a class="btn btn-blue" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>DOWNLOAD</span></a>
+    </div>
+    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.status.winnable_reward_count > 0" class="row">
+      <div class="col-md-12 play-interaction__winnable-reward text-center">
+        <span class="label label-success cta-cover__winnable-reward__label">
+          Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+        </span> 
+      </div>
+    </div>
+    <div ng-if="!interaction_info.user_interaction && interaction_info.status.winnable_reward_count > 0" class="row text-center">
+      <div class="col-md-12 play-interaction__winnable-reward">
+        <span class="label label-warning cta-cover__winnable-reward__label">
+          +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+        </span>
       </div>
     </div>
   </div>
+
+  <!-- VOTE INTERACTION -->
+  <div class="play-interaction__container hidden-xs text-center" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
+    <div class="col-xs-12" style="position: absolute; bottom: 15px;">
+      <%= render partial: "/call_to_action/vote_interaction" %>
+    </div>
+  </div>
+
+</div>
+<!-- IFRAME -->
+<div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
+  <!-- IFRAME -->
+  <div class="embed-responsive embed-responsive-16by9 text-center" id="iframe-calltoaction-{{calltoaction_info.calltoaction.id}}"></div>
 </div>

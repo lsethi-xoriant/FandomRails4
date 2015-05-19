@@ -60,7 +60,7 @@
         <p ng-if="aux.share_interaction_daily_done" class="call-to-action__share-and-win__description hidden-xs">Hai già fatto la prima condivisione del giorno. Per ottenere altri biglietti torna domani.</p>
         <p class="call-to-action__share-and-win__title visible-xs">Condividi e vinci!</p>
       </div>
-      <div ng-if="shareInteractionsPresent(calltoaction_info.calltoaction.id)">
+      <div ng-if="shareInteractionPresent(calltoaction_info)">
         <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
           <div id="share-interaction-{{interaction_info.interaction.id}}">
             <%= render partial: "/call_to_action/share_interaction" %>

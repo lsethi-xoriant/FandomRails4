@@ -6,8 +6,13 @@
 
   <%= render partial: "/application/search", locals: { query: nil } %>
 
+  <div class="row main-row filters__flexslider-main-row">
+    <%= render partial: "/application/home_filters" %>
+  </div>
+
   <div class="row main-row main-row__covers">
     <div class="col-md-7 main-row__covers-left-col">
+      <%= render partial: "application/ordering" %>
 
       <div ng-if="!ordering_in_progress" ng-repeat="calltoaction_info in calltoactions" class="row">
         <div class="col-sm-12">
@@ -16,10 +21,10 @@
       </div>
       <div ng-if="!ordering_in_progress" class="row">
         <div class="col-sm-12">
-          <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="!append_ctas_in_progress">
+          <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="!append_ctas_in_progress && has_more">
             <button class="btn btn-primary" href="javascript: void(0)" ng-click="appendCallToAction();"><span>Carica altri</span></button>
           </div>
-          <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="append_ctas_in_progress">
+          <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="append_ctas_in_progress && has_more">
             <button class="btn btn-primary" href="javascript: void(0)"><span>Caricamento in corso</span></button>
           </div>
         </div>
@@ -33,6 +38,8 @@
 
     </div>
     <div class="col-md-5 text-center">
+      <div class="row">
+      </div>
     </div>
   </div>
 

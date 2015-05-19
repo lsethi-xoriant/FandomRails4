@@ -2,48 +2,48 @@
   <div class="flexslider filters__flexslider-desktop hidden-xs">
     <div class="flex-viewport-shadow"></div>
     <ul class="slides">
-    	<% galleries.each do |gallery| %>
-	      <li class="text-center filters__flexslider-desktop-item" id="<%= gallery[:cta].id%>">
-    	    <%= light_link_to("/gallery/#{gallery[:cta].slug}", class: "filters__flexslider-a") do %>
-        	  <img class="filters__flexslider-image <%= "filters__flexslider-image--active" if current_gallery_id && gallery[:cta].id == current_gallery_id %>" src="<%= gallery[:cta].thumbnail(:medium) %>">  
-          	<p class="filters__title--gallery"><%= gallery[:cta].title %></p>
-          	<p class="filters__title--gallery-counter"><%= gallery[:count] %> contenuti</p>
-        	<% end %>
-      	  </li>
-      	<% end %>
-      	<li class="text-center filters__flexslider-desktop-item">
-	    	  <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon1.jpg">  
+      <% galleries.each do |gallery| %>
+        <li class="text-center filters__flexslider-desktop-item" id="<%= gallery[:cta].id%>">
+          <%= light_link_to("/gallery/#{gallery[:cta].slug}", class: "filters__flexslider-a") do %>
+            <img class="filters__flexslider-image <%= "filters__flexslider-image--active" if current_gallery_id && gallery[:cta].id == current_gallery_id %>" src="<%= gallery[:cta].thumbnail(:medium) %>">  
+            <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
+            <p class="filters__title--gallery-counter"><%= gallery[:count] %> contenuti</p>
+          <% end %>
+          </li>
+        <% end %>
+        <li class="text-center filters__flexslider-desktop-item">
+          <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon1.jpg">  
           <p class="filters__title--gallery">Coming soon</p> 
-	  	</li>
-	  	<li class="text-center filters__flexslider-desktop-item">
-	    	  <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon2.jpg">  
+      </li>
+      <li class="text-center filters__flexslider-desktop-item">
+          <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon2.jpg">  
           <p class="filters__title--gallery">Coming soon</p> 
-	  	</li>
-	  	<li class="text-center filters__flexslider-desktop-item">
-	    	  <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon3.jpg">  
+      </li>
+      <li class="text-center filters__flexslider-desktop-item">
+          <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon3.jpg">  
           <p class="filters__title--gallery">Coming soon</p> 
-	  	</li>
+      </li>
     </ul>
   </div>
 
   <div class="flexslider filters__flexslider-mobile filters__flexslider-mobile--gallery visible-xs">
     <ul class="slides">
       <% galleries.each do |gallery| %>
-	      <li class="text-center filters__flexslider-mobile-item" id="<%= gallery[:cta].id%>">
-	        <%= light_link_to("/gallery/#{gallery[:cta].slug}") do %>
+        <li class="text-center filters__flexslider-mobile-item" id="<%= gallery[:cta].id%>">
+          <%= light_link_to("/gallery/#{gallery[:cta].slug}") do %>
             <div class="filters__gallery-item" style="background-image: url('<%= gallery[:cta].thumbnail(:medium) %>')">
-	            <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
-	            <p class="filters__title--gallery-counter"><%= gallery[:couns] %> contenuti</p>
+              <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
+              <p class="filters__title--gallery-counter"><%= gallery[:couns] %> contenuti</p>
             </div>
-	        <% end %>
-	      </li>
+          <% end %>
+        </li>
       <% end %>
       <li class="text-center filters__flexslider-mobile-item">
         <div class="filters__gallery-item" style="background-image: url('https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon1.jpg')">
           <p class="filters__title--gallery">Coming soon</p>
         </div>
-	  	</li>
-	  	<li class="text-center filters__flexslider-mobile-item">
+      </li>
+      <li class="text-center filters__flexslider-mobile-item">
         <div class="filters__gallery-item" style="background-image: url('https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon2.jpg')">
           <p class="filters__title--gallery">Coming soon</p>
         </div>

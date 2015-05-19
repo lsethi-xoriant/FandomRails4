@@ -1,0 +1,57 @@
+<div class="col-sm-3">
+  <a href="/<%= $context_root %>" ng-if="aux.property_info.extra_fields.logo"><img class="properties__logo" ng-src="{{aux.property_info.extra_fields.logo.url}}"></a>
+</div>           
+
+<div class="col-sm-6 properties__flexslider-col" ng-if="aux.property_info_list">
+  <div class="flexslider properties__flexslider">
+    <ul class="slides">
+      <li ng-repeat="property in aux.property_info_list" class="text-center properties__flexslider-item" ng-init="property.image_visible = property.image" ng-mouseover="property.image_visible = property.image_hover" ng-mouseleave="property.image_visible = property.image">
+        <a class="properties__flexslider-a" href="/{{property.name}}"> 
+          <img class="properties__flexslider-image" ng-src="{{property.image_visible}}" ng-style="{'border-bottom': '4px solid ' + property.color}">     
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="col-sm-3 text-left" ng-if="!current_user">
+  <p class="properties__right-bar-text">Partecipa<br>alla community</p>
+  <a class="btn btn-primary" href="/iur" style="margin-top: 5px;"><span>Entra</span></a>
+</div>
+
+<div class="col-sm-3 text-left" ng-if="current_user">
+  <%= light_link_to("/profile") do %>
+    <p class="properties__right-bar-text">{{current_user.username}}</p>
+  <% end %>  
+  <p class="properties__right-bar-level">{{current_user.level}}</p>
+  <span class="label label-warning cta-cover__winnable-reward__label">
+    +{{current_user.main_reward_counter}}<span class="cta-cover__glyphicon-icon fa fa-star">
+  </span>  
+</div>
+
+<div ng-if="current_user && current_user.notifications > 0" class="properties__right-bar-notifications">
+  <%= light_link_to("/profile/notices") do %>
+    {{current_user.notifications}}
+  <% end %>
+</div>
+
+<%= light_link_to("/profile") do %>
+  <img ng-src="{{current_user.avatar}}" class="navbar__avatar" ng-if="current_user">
+  <img src="<%= anon_avatar() %>" class="navbar__avatar" ng-if="!current_user">
+<% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.properties__flexslider').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: true,
+      touch: true,
+      itemWidth: 120,
+      itemMargin: 8,
+      controlNav: false,
+      prevText: "",
+      nextText: ""
+    });
+  });
+</script> 

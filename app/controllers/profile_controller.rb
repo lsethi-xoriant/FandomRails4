@@ -39,11 +39,20 @@ class ProfileController < ApplicationController
     end
   end
 
+  def index_mobile
+    @level = get_current_level;
+    @my_position, total = get_my_general_position_in_property
+  end
+
   def index
-    unless get_current_property.empty?
-      redirect_to "/#{get_current_property}/users/edit"
+    if small_mobile_device?
+      redirect_to "/profile/index"
     else
-      redirect_to "/users/edit"
+      if $context_root.present?
+        redirect_to "/#{$context_root}/users/edit"
+      else
+        redirect_to "/users/edit"
+      end
     end
   end
 
@@ -54,10 +63,110 @@ class ProfileController < ApplicationController
   end
 
   def rankings
+    property = get_property()
+    if property.present?
+      property_name = property.name
+      rank = Ranking.find_by_name("#{property_name}-general-chart")
+    else
+      rank = Ranking.find_by_name("general-chart")
+    end
+
+    @property_rank = get_full_rank(rank)
+    
+    @fan_of_days = []
+    (1..8).each do |i|
+      day = Time.now - i.day
+      winner = get_winner_of_day(day)
+      @fan_of_days << {"day" => "#{day.strftime('%d')} #{calculate_month_string_ita(day.strftime('%m').to_i)[0..2].camelcase}", "winner" => winner} if winner
+    end
+    
+    gallery_tags = get_tags_with_tag("gallery")
+    gallery_tag = Tag.find_by_name("gallery")
+    @property_rankings = get_property_rankings()
+    
+    gallery_tags = get_gallery_for_property(gallery_tags)
+    @galleries = order_elements(gallery_tag, gallery_tags.sort_by{ |tag| tag.created_at }.reverse)
+    
+    if small_mobile_device?
+      render template: "profile/rankings_mobile"
+    else
+      render template: "profile/rankings"
+    end
   end
-  
-  def get_current_property
-    $context_root || ""
+
+  def get_gallery_for_property(gallery_tags)
+    property = get_property()
+    if property.present? && property.name == $site.default_property
+      gallery_tags
+    elsif property.present?
+      property_name = property.name
+      Tag.includes(:tags_tags => :other_tag).where("other_tags_tags_tags.name = ? AND tags.id in (?)", property_name, gallery_tags.map { |t| t.id })
+    else 
+      []
+    end
+  end
+
+  def rewards
+    property = get_property()
+    if property.present?
+      property_name = property.name
+    end
+
+    badge_tag = Tag.find_by_name("badge")
+
+    @levels, levels_use_prop = rewards_by_tag("level")
+    @levels = prepare_levels_to_show(@levels, property_name)
+    
+    @badges, badges_use_prop = rewards_by_tag("badge")
+    @badges = order_elements(badge_tag, @badges)
+    @badges = badges.nil? ? nil : @badges[property_name]
+    @badges = order_elements(badge_tag, @badges)
+
+    if small_mobile_device?
+      render template: "/profile/rewards_mobile"
+    else      
+      @mybadges = get_other_property_rewards("badge", property_name)
+    end   
+  end
+
+  def get_other_property_rewards(reward_name, property_name)
+    myrewards, use_prop = rewards_by_tag(reward_name, current_user)
+    other_rewards = []
+    if myrewards.present?
+      get_tags_with_tag("property").each do |property|
+        if myrewards[property.name] && property.name != property_name
+          reward = get_max(myrewards[property.name]) do |x,y| 
+            y.updated_at <=> x.updated_at # -1, 1 or 0
+          end
+          other_rewards << { "reward" => reward, "property" => property }
+        end
+      end
+    end
+    other_rewards
+  end
+
+  def get_property_rankings
+    property = get_property()
+    if property.present?
+      property_name = property.name
+    end
+
+    cache_short(get_property_rankings_cache_key(property_name)) do
+      property_rankings = Array.new
+      properties = get_tags_with_tag("property")
+      properties.each do |p|
+        if property_name != p.name
+          thumb_url = get_upload_extra_field_processor(get_extra_fields!(p)['thumbnail'], :medium) rescue ""
+          property_ranking = {"title" => p.title, "thumb" => thumb_url, "link" => "#{get_root_path(p.name)}/profile/rankings"}
+          property_rankings << property_ranking
+        end  
+      end
+      property_rankings
+    end
+  end
+
+  def get_root_path(property_name)
+    property_name == $site.default_property ? "" : "/#{property_name}"
   end
   
   def levels
@@ -71,6 +180,14 @@ class ProfileController < ApplicationController
   def prizes
     # TODO: adjust.
   end
+
+  def load_more_notice
+    notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC").limit(params[:count])
+    notices_list = group_notice_by_date(notices)
+    respond_to do |format|
+      format.json { render :json => notices_list.to_json }
+    end
+  end
   
   def superfan_contest
     contest_points = get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD, false) || 0
@@ -81,20 +198,11 @@ class ProfileController < ApplicationController
   
   def notices
     Notice.mark_all_as_viewed()
-    setting = Setting.find_by_key(NOTIFICATIONS_LIMIT_KEY)
-    if setting.nil?
-      notices_limit = NOTIFICATIONS_LIMIT_DEFAULT
-    else
-      notices_limit = setting.value.to_i
-    end
-
-    old_notices = Notice.where("user_id = ?", current_user.id).where("id NOT IN (SELECT id FROM notices WHERE user_id = ? ORDER BY created_at DESC LIMIT #{notices_limit})", current_user.id)
-    old_notices.destroy_all
-
-    notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC").to_a
+    expire_cache_key(notification_cache_key(current_user.id))
+    notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC")
     @notices_list = group_notice_by_date(notices)
   end
-  
+
   def group_notice_by_date(notices)
     notices_list = []
     

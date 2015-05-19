@@ -58,7 +58,7 @@ module RankingHelper
     reward_points[period_kind].present? ? reward_points[period_kind] : 0
   end
   
-  def get_ranking(ranking, page)
+  def get_ranking(ranking, page = 0)
     if ranking
       rankings, total = get_ranking_page(ranking.name, page)
       rank = RankingElement.new(

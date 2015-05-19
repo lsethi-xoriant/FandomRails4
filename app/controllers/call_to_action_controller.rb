@@ -120,7 +120,9 @@ class CallToActionController < ApplicationController
 
   def append_calltoaction
     init_ctas = $site.init_ctas * 2
-    calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, init_ctas)
+    tag = get_property()
+    tag_name = tag.present? ? tag.name : nil
+    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, init_ctas)
 
     params[:page_elements] = ["empty"]
     response = {
@@ -131,15 +133,13 @@ class CallToActionController < ApplicationController
     respond_to do |format|
       format.json { render json: response.to_json }
     end 
-    
-    respond_to do |format|
-      format.json { render json: response }
-    end 
   end
 
   def ordering_ctas
-    tag_name = get_disney_property()
-    calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+    init_ctas = $site.init_ctas
+    tag_name = get_property()
+    tag_name = tag.present? ? tag.name : nil
+    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, init_ctas)
 
     params[:page_elements] = ["empty"]
     response = {
@@ -296,17 +296,6 @@ class CallToActionController < ApplicationController
 =end
 
   end
-
-=begin
-  def build_current_user()
-    {
-      "facebook" => current_user.facebook(request.site.id),
-      "twitter" => current_user.twitter(request.site.id),
-      "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
-      "registration_fully_completed" => registration_fully_completed?
-    }
-  end
-=end
   
   def get_correlated_cta(calltoaction)
     tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat")
@@ -772,61 +761,61 @@ class CallToActionController < ApplicationController
   def send_share_interaction_email(address, calltoaction)
     SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
   end
-  
+
   def upload
     upload_interaction = Interaction.find(params[:interaction_id]).resource
-    errors = check_valid_upload(upload_interaction)
-    if errors.any?
-      flash[:error] = errors
+    extra_fields = JSON.parse(get_extra_fields!(upload_interaction.interaction.call_to_action)['form_extra_fields'])['fields'] rescue nil;
+    calltoaction = CallToAction.find(params[:cta_id])
+    
+    params_obj = JSON.parse(params["obj"])
+    params_obj["releasing"] = params["releasing"]
+    params_obj["upload"] = params["attachment"]
+
+    extra_fields_valid, extra_field_errors, cloned_cta_extra_fields = validate_upload_extra_fileds(params_obj, extra_fields)
+
+    if !extra_fields_valid
+      response = { "errors" => extra_field_errors.join(", ") }
     else
-      create_user_calltoactions(upload_interaction)
-      if flash[:error].blank?
-        flash[:notice] = "Upload interaction completata correttamente."
+      cloned_cta = create_user_calltoactions(upload_interaction, params_obj)
+      if cloned_cta.errors.any?
+        response = { "errors" => cloned_cta.errors.full_messages.join(", ") }
+      else
+        get_extra_fields!(cloned_cta).merge!(cloned_cta_extra_fields)
+        cloned_cta.save
       end
     end
-    if is_call_to_action_gallery(upload_interaction.call_to_action)
-      redirect_to "/gallery/#{params[:cta_id]}"
-    else
-      redirect_to "/call_to_action/#{params[:cta_id]}"
-    end
-  end
-  
-  def create_user_calltoactions(upload_interaction)  
 
-    for i in(1 .. upload_interaction.upload_number) do
-      if params["upload-#{i}"]
-        if params["upload-#{i}"].size <= get_max_upload_size()
-          cloned_cta = clone_and_create_cta(upload_interaction, params, i, upload_interaction.watermark)
-          if cloned_cta.errors.any?
-            flash[:error] << cloned_cta.errors
-          else
-            UserUploadInteraction.create(user_id: current_user.id, call_to_action_id: cloned_cta.id, upload_id: upload_interaction.id)
-            if upload_interaction.releasing?
-              releasing.save if releasing.id.blank?
-              cloned_cta.releasing_file_id = releasing.id
-            end
-            cloned_cta.save
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end     
+  end
+
+  def validate_upload_extra_fileds(params, extra_fields)
+    if extra_fields.nil?
+      [true, [], {}]
+    else
+      errors = []
+      cloned_cta_extra_fields = {}
+      extra_fields.each do |ef|
+        if ef['required'] && params["#{ef['name']}"].blank?
+          if ef['type'] == "textfield"
+            errors << "#{ef['label']} non puo' essere lasciato in bianco"
+          elsif
+            errors << "#{ef['label']} deve essere accettato"
           end
         else
-          flash[:error] = ["I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"]
+          cloned_cta_extra_fields["#{ef['name']}"] = params["#{ef['name']}"]
         end
       end
+      [errors.empty?, errors, cloned_cta_extra_fields]
     end
-
   end
   
-  def check_valid_upload(upload_interaction)
-    errors = Array.new
-    if !check_privacy_accepted(upload_interaction) 
-      errors << "Devi accettare la privacy" 
-    end
-    if !check_releasing_accepted(upload_interaction)
-      errors << "Devi caricare la liberatoria"
-    end
-    if !check_uploaded_file()
-      errors << "I file devono essere al massimo di #{MAX_UPLOAD_SIZE} Mb"
-    end
-    errors
+  def create_user_calltoactions(upload_interaction, params)
+    cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
+    cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)
+    cloned_cta.save
+    cloned_cta
   end
   
   def check_privacy_accepted(upload_interaction)

@@ -1,13 +1,9 @@
-<div ng-if="currentUserEmptyAndAnonymousInteractionEnable()">
-  {{computeAvgForVoteInteraction(interaction_info)}}-----
-</div>
-
 <div class="col-sm-12 text-center visible-xs">
   <p ng-if="!interaction_info.user_interaction" class="vote-interaction__title">{{interaction_info.interaction.resource.title}}</p>
   <p ng-if="interaction_info.user_interaction" class="vote-interaction__title">Il tuo voto è:</p>
 </div>
 
-<div class="vote-interaction__baloon-container" ng-class="{'vote-interaction__done': interaction_info.user_interaction, 'vote-interaction__active': !interaction_info.user_interaction}">
+<div class="vote-interaction__baloon-container text-center" ng-class="{'vote-interaction__done': interaction_info.user_interaction, 'vote-interaction__active': !interaction_info.user_interaction}">
 
   <p ng-if="!interaction_info.user_interaction" class="vote-interaction__title hidden-xs">{{interaction_info.interaction.resource.title}}</p>
   <p ng-if="interaction_info.user_interaction" class="vote-interaction__title hidden-xs">Il tuo voto è:</p>
@@ -18,14 +14,16 @@
       <div  ng-if="!interaction_info.user_interaction" class="vote-interaction__baloon__element-pin" ng-click="updateAnswer(calltoaction_info, interaction_info, i, interaction_info.interaction.when_show_interaction)" ng-class="{'vote-interaction__baloon__element-pin__active': (evaluateVote(interaction_info) >= i)}">
         <p>{{i}}</p>
       </div>
-      <!-- ALREADY DONE -->
+      <!-- ALREAY DONE -->
       <div  ng-if="interaction_info.user_interaction" class="vote-interaction__baloon__element-pin" ng-class="{'vote-interaction__baloon__element-pin__active': (evaluateVote(interaction_info) >= i)}">
         <p>{{i}}</p>
       </div>
     </div>
   </div>
 
-  <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && interaction_info.status.winnable_reward_count > 0" class="row vote-interaction__reward">
+  <p class="vote-interaction__subtitle--undervideo" ng-if="interaction_info.interaction.resource.extra_fields && interaction_info.interaction.resource.extra_fields['subtitle']">{{interaction_info.interaction.resource.extra_fields["subtitle"]}}</p>
+
+  <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row vote-interaction__reward">
     <div class="col-md-12 play-interaction__winnable-reward text-center">
       <span class="label label-success cta-cover__winnable-reward__label">
         Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">

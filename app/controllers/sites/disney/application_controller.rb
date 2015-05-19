@@ -43,9 +43,5 @@ class Sites::Disney::ApplicationController < ApplicationController
     }
 
   end
-
-  def build_current_user() 
-    build_disney_current_user()
-  end
   
 end

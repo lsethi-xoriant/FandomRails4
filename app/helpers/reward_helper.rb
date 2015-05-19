@@ -490,35 +490,6 @@ module RewardHelper
     level.cost > 0 ? ((user_points - starting_point) * 100) / (level.cost - starting_point) : 100
   end
   
-  def prepare_levels_to_show(levels)
-    levels = levels 
-    order_rewards(levels.to_a, "cost")
-    prepared_levels = {}
-    if levels
-      index = 0
-      level_before_point = 0
-      level_before_status = nil
-      levels.each do |level|
-        if level_before_status.nil? || level_before_status == "gained"
-          progress = calculate_level_progress(level, level_before_point)
-          if progress >= 100
-            level_before_status = "gained"
-            prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => 100, "status" => level_before_status }
-          else
-            level_before_status = "progress"
-            prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => progress, "status" => level_before_status }
-          end
-        else
-          progress = 0
-          level_before_status = "locked"
-          prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => progress, "status" => level_before_status }
-        end
-        index += 1
-      end
-    end
-    prepared_levels
-  end
-  
   def get_level_number
     levels, use_property = rewards_by_tag("level")
     levels.count

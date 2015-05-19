@@ -69,17 +69,24 @@ class GalleryController < ApplicationController
     @upload_active = upload_interaction.when_show_interaction != "MAI_VISIBILE"
     @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
 
+    params["other_params"] = {}
+    params["other_params"]["gallery"] = { "calltoaction_id" => cta.id }
+
     if params[:user]
       galleries_user_cta, galleries_user_cta_count = get_user_gallery_ctas(@gallery_tag, params[:user])
+      params["other_params"]["gallery"]["user"] = params[:user]
     else
       galleries_user_cta, galleries_user_cta_count = cache_short(get_gallery_ctas_cache_key(@gallery_tag.id)) { 
         [get_gallery_ctas(@gallery_tag), get_gallery_ctas_count(@gallery_tag)]
       }
     end
 
-    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(galleries_user_cta, ["like", "comment", "share", "vote"])
+    gallery_tag_name = @gallery_tag.name
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(gallery_tag_name, params, $site.init_ctas)
+    #@calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(galleries_user_cta, ["like", "comment", "share", "vote"])
 
     @aux_other_params = { 
+      "upload_interaction_resource" => upload_interaction.resource,
       "gallery" => build_cta_info_list_and_cache_with_max_updated_at([cta]).first,
       "gallery_show" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,

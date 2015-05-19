@@ -86,15 +86,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     </fieldset>
   </form>
   */
-  $scope.upload = function (files, url, extra_fields) {
+  $scope.upload = function (files, url, extra_fields, upload_interaction) {
     delete $scope.form_data.errors;
-    $scope.form_data.errors = getFormUploadErrors(files, extra_fields);
+    $scope.form_data.errors = getFormUploadErrors(files, extra_fields, upload_interaction);
     if(!$scope.form_data.errors) {
+
+      if(!upload_interaction.interaction.resource.upload_info.releasing.required) {
+        file_param = files[0];
+        file_form_data_params = ["attachment"]
+      } else {
+        file_param = files;
+        file_form_data_params = ["attachment", "releasing"]
+      }
+
       $upload.upload({
           url: url,
           fields: { obj: $scope.form_data },
-          file: files,
-          fileFormDataName: ["attachment", "releasing"]
+          file: file_param,
+          fileFormDataName: file_form_data_params
         }).progress(function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             $scope.form_data.progress = progressPercentage; // evt.config.file[0].progress
@@ -116,18 +125,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           }
           delete $scope.form_data.progress;
         });
+
       }
   };
 
-  function getFormUploadErrors(files, extra_fields) {
+  function getFormUploadErrors(files, extra_fields, upload_interaction) {
     
     errors = [];
 
-    angular.forEach(extra_fields, function(extra_field) {
-      if(extra_field['required'] && !$scope.form_data[extra_field['name']]) {
-        errors.push(extra_field['label']);
-      }
-    });
+    if(!angular.equals(extra_fields, {})) {
+      angular.forEach(extra_fields, function(extra_field) {
+        if(extra_field['required'] && !$scope.form_data[extra_field['name']]) {
+          errors.push(extra_field['label']);
+        }
+      });
+    }
 
     if(!$scope.form_data['title']) { 
       errors.push("Titolo non può essere lasciato in bianco");
@@ -141,7 +153,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       errors.push("Formato del media non valido");
     }
 
-    if(!files[1]) {
+    if(!files[1] && upload_interaction.interaction.resource.upload_info.releasing.required) {
       errors.push("La liberatoria deve essere caricata");
     }
 
@@ -277,7 +289,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.secondary_video_players = {};
     $scope.play_event_tracked = {};
     $scope.current_user_answer_response_correct = {};
-    $scope.calltoactions_during_video_interactions_second = []; // FIX THIS calltoactions_during_video_interactions_second;
     $scope.current_calltoaction = current_calltoaction;
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
@@ -494,15 +505,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return calltoaction_info_result;
   }
 
-  $scope.shareInteractionsPresent = function(calltoaction_id) {
-    share_interaction_present = false;
-    calltoaction_info = getCallToActionInfo(calltoaction_id);
+  $scope.shareInteractionPresent = function(calltoaction_info) {
+    interaction_present = false;
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.resource_type == "share") {
-        share_interaction_present = true;
+        calltoaction_info.share_interaction_info = interaction_info;
+        interaction_present = true;
       }
     });
-    return share_interaction_present;
+    return interaction_present;
   };
 
   $scope.voteInteractionPresent = function(calltoaction_info) {
@@ -510,6 +521,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.resource_type == "vote") {
         calltoaction_info.vote_interaction_info = interaction_info;
+        interaction_present = true;
+      }
+    });
+    return interaction_present;
+  };
+
+  $scope.likeInteractionPresent = function(calltoaction_info) {
+    interaction_present = false;
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.resource_type == "like") {
+        calltoaction_info.like_interaction_info = interaction_info;
         interaction_present = true;
       }
     });
@@ -650,6 +672,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.getVoteInteraction = function(calltoaction_id) {
     return getInteraction(calltoaction_id, "vote");
+  };
+
+  $scope.getUploadInteraction = function(calltoaction_info) {
+    return getInteraction(calltoaction_info.calltoaction.id, "upload");
   };
 
   function getInteraction(calltoaction_id, interaction_type) {
@@ -875,8 +901,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $scope.current_tag_id = tag_id; 
 
         $scope.initCallToActionInfoList(data.calltoaction_info_list);
-
-        $scope.calltoactions_during_video_interactions_second = data.calltoactions_during_video_interactions_second;
     
         $("#calltoaction-stream").html(data.calltoactions_render);
 
@@ -948,12 +972,28 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.appendCallToActionOtherParams = function() {
-    return null;
+    return otherParamsForGallery();
   };
 
   $scope.updateOrderingOtherParams = function() {
-    return null;
+    return otherParamsForGallery();
   };
+
+  function otherParamsForGallery() {
+    if($scope.aux.gallery) {
+      other_params = new Object();
+      other_params.gallery = new Object();
+      other_params.gallery.user = $scope.aux.gallery_user;
+      if($scope.aux.gallery.calltoaction) {
+        other_params.gallery.calltoaction_id = $scope.aux.gallery.calltoaction.id;
+      } else {
+        other_params.gallery.calltoaction_id = "all";
+      }
+      return other_params;
+    } else {
+      return null;
+    } 
+  }
 
   $scope.updateOrdering = function(ordering) {
 
@@ -1008,13 +1048,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       if(!$scope.current_user && $scope.aux.anonymous_interaction) {
         $scope.updateCallToActionInfoWithAnonymousUserStorage();
       }
-
-      hash_to_append = data.calltoactions_during_video_interactions_second;
-      hash_main = $scope.calltoactions_during_video_interactions_second;
-      for(var name in hash_to_append) { 
-        hash_main[name] = hash_to_append[name]; 
-      }
-      $scope.calltoactions_during_video_interactions_second = hash_main;
 
       $scope.has_more = data.has_more;
 
@@ -1999,7 +2032,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   //////////////////////// POLLING METHODS ////////////////////////
 
   $window.mayStartpolling = function(calltoaction_id) {
-    if(!$scope.polling && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
+    if(!$scope.polling) {
       $scope.polling = $interval(videoPolling, 800);
     }
   };
@@ -2010,7 +2043,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       video_with_polling_counter = false;
       
       angular.forEach($scope.play_event_tracked, function(video_started, calltoaction_id) {
-        if(video_started && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
+        if(video_started) {
           video_with_polling_counter = true;
         } else {
           // This video has not polling.
@@ -2029,7 +2062,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $window.videoPolling = function() {
     angular.forEach($scope.play_event_tracked, function(video_started, calltoaction_id) {
-      if(getCallToActionInfo(calltoaction_id).calltoaction.media_type == "YOUTUBE"){
+      calltoaction_info = getCallToActionInfo(calltoaction_id);
+      if(calltoaction_info.calltoaction.media_type == "YOUTUBE"){
       	youtube_player = getPlayer(calltoaction_id);
       	youtube_player_current_time = Math.floor(youtube_player.playerManager.getCurrentTime()); 
       	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);

@@ -1,15 +1,5 @@
-{{linked_call_to_actions_count}}---{{linked_call_to_actions_index}}----
-<div class="row" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()" ng-click="resetToRedo(interaction_info)">
-  <div class="col-xs-12">
-    <span>Rifai il test <span class="fa fa-refresh"></span></span>
-  </div>
-</div>
-
 <div class="row {{interaction_info.interaction.resource_type}}-undervideo-interaction__row">
-  <div ng-if="interaction_info.interaction.resource_type == 'test'" class="col-sm-12 undervideo-interaction__col">
-    <%= render partial: "/call_to_action/test_interaction" %>
-  </div>
-  <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-sm-12 undervideo-interaction__col">
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-12 undervideo-interaction__col">
     <%= render partial: "/call_to_action/trivia_interaction" %>
   </div>
   <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-sm-12 undervideo-interaction__col">
@@ -61,17 +51,6 @@
     <!-- {{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} -->
   </div> 
 </div>
-
-<!--
-<div ng-if="!interaction_info.user_interaction && interaction_info.interaction.resource_type != 'like' && interaction_info.interaction.resource_type != 'comment'" class="row text-center undervideo-interaction__feedback">
-  <div class="col-md-12">
-    <p>Rispondi per ottenere fino a +{{interaction_info.status["winnable_reward_count"]}} punti</p>
-    <div ng-if="!interaction_info.status.reward.numeric_display" ng-repeat="status_image in interaction_info.status.reward_status_images track by $index">  
-      <img ng-src="{{status_image}}">
-    </div>
-  </div>
-</div>
--->
 
 <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
   <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">

@@ -37,10 +37,6 @@ module DisneyHelper
   def get_disney_property_root_path
     $context_root ? "/#{$context_root}" : ""
   end
-  
-  def get_disney_root_path_for_property_name(property_name)
-    property_name == "disney-channel" ? "" : "/#{property_name}"
-  end
 
   def get_disney_ctas(property, in_gallery = false)
     get_ctas(property, in_gallery)
@@ -58,14 +54,6 @@ module DisneyHelper
   def get_disney_current_contest_point_name
     unless $context_root.nil?
       "#{$context_root}-point"
-    else
-      "point"
-    end
-  end
-  
-  def disney_get_point_name_from_property_name(property_name)
-    unless property_name == "disney-channel"
-      "#{property_name}-point"
     else
       "point"
     end
@@ -104,11 +92,10 @@ module DisneyHelper
       end
 
       if current_user && cta_info_list.any?
-        calltoactions = CallToAction.where(id: calltoaction_ids)
-        cta_info_list = adjust_disney_thumb_calltoaction_for_current_user(cta_info_list, calltoactions)
+        cta_info_list = adjust_thumb_cta_for_current_user(cta_info_list)
       end
 
-      adjust_disney_thumb_calltoactions(cta_info_list)
+      adjust_thumb_ctas(cta_info_list)
 
       cta_info_list
     else
@@ -191,7 +178,7 @@ module DisneyHelper
         "main_reward_counter" => get_point,
         "username" => current_user.username,
         "avatar" => current_avatar,
-        "level" => (disney_get_current_level["level"]["name"] rescue "nessun livello"),
+        "level" => (get_current_level["level"]["name"] rescue "nessun livello"),
         "notifications" => get_unread_notifications_count(),
         "avatar" => current_avatar,
         "profile_completed" => disney_profile_completed?()
@@ -229,24 +216,6 @@ module DisneyHelper
     end
   end
 
-  def adjust_disney_thumb_calltoactions(calltoaction_info_list)
-    interaction_ids = []
-    calltoaction_info_list.each do |calltoaction|
-      interaction_ids = interaction_ids + calltoaction["interaction_ids"]
-    end
-    if interaction_ids.any?
-      interactions = Interaction.where(id: interaction_ids)
-      counters = ViewCounter.where(ref_type: 'interaction', ref_id: interaction_ids)
-      calltoaction_info_list.each do |calltoaction_info|
-        calltoaction_info["interaction_ids"].each do |interaction_id|
-          interaction = find_content_in_array_by_id(interactions, interaction_id)
-          counter = find_interaction_in_counters(counters, interaction_id)
-          calltoaction_info[interaction.resource_type.downcase] = counter ? counter.counter : 0
-        end
-      end
-    end
-  end
-
   def build_disney_thumb_calltoaction(calltoaction)
 
     if calltoaction.interactions
@@ -268,14 +237,6 @@ module DisneyHelper
       "interaction_ids" => interaction_ids
     }
 
-  end
-
-  def adjust_disney_thumb_calltoaction_for_current_user(calltoaction_info_list, calltoactions)
-    calltoaction_info_list.each do |cta_info|
-      cta = find_in_calltoactions(calltoactions, cta_info["id"])
-      cta_info["status"] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), cta)
-    end
-    calltoaction_info_list
   end
 
   def get_disney_sidebar_info(sidebar_tags, gallery_cta, other)
@@ -437,12 +398,11 @@ module DisneyHelper
 
       if current_user
         calltoaction_evidence_info = cache_forever(user_cache_key) do
-          calltoactions = CallToAction.where(id: calltoaction_ids)
-          adjust_disney_thumb_calltoaction_for_current_user(calltoaction_evidence_info, calltoactions)
+          adjust_thumb_cta_for_current_user(calltoaction_evidence_info)
         end
       end
 
-      adjust_disney_thumb_calltoactions(calltoaction_evidence_info)
+      adjust_thumb_ctas(calltoaction_evidence_info)
 
       calltoaction_evidence_info
     end
@@ -485,64 +445,12 @@ module DisneyHelper
     get_max_reward(reward_name, $context_root)
   end
   
-  # Calculate a progress into a reward level.
-  #   level          - the level to check progress
-  #   starting_point - the cost of the preceding level
-  def disney_calculate_level_progress(level, starting_point, property_name)
-    user_points = get_counter_about_user_reward(disney_get_point_name_from_property_name(property_name))
-    level.cost > 0 ? ((user_points - starting_point) * 100) / (level.cost - starting_point) : 100
-  end
-  
   def disney_extract_name_or_username(user)
     if !user.username.empty?
       user.username
     else
       "#{user.first_name} #{user.last_name}"
     end
-  end
-  
-  def disney_prepare_levels_to_show(levels)
-    levels = levels[get_disney_property] rescue nil
-    levels = order_rewards(levels.to_a, "cost")
-    prepared_levels = {}
-    unless levels.blank?
-      index = 0
-      level_before_point = 0
-      level_before_status = nil
-      levels.each do |level|
-        if level_before_status.nil? || level_before_status == "gained"
-          progress = disney_calculate_level_progress(level, level_before_point, get_disney_property)
-          if progress >= 100
-            level_before_status = "gained"
-            prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => 100, "status" => level_before_status }
-          else
-            level_before_status = "progress"
-            prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => progress, "status" => level_before_status }
-          end
-        else
-          progress = 0
-          level_before_status = "locked"
-          prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => progress, "status" => level_before_status }
-        end
-        index += 1
-        level_before_point = level.cost
-      end
-    end
-    prepared_levels
-  end
-  
-  def disney_get_current_level()
-    current_level = cache_short(get_current_level_by_user(current_user.id, get_disney_property)) do
-      levels, levels_use_prop = rewards_by_tag("level")
-      property_levels = disney_prepare_levels_to_show(levels)
-      current_level = property_levels.select{|key, hash| hash["status"] == "progress" }.first || property_levels.select{|key, hash| hash["status"] == "gained" }.to_a.last 
-      unless current_level.nil?
-        current_level[1]
-      else
-        CACHED_NIL
-      end
-    end
-    cached_nil?(current_level) ? nil : current_level
   end
   
   def disney_get_level_number
