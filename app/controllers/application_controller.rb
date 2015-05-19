@@ -320,7 +320,7 @@ class ApplicationController < ActionController::Base
   end
 
   def add_instagram_tag_subscription(interaction, tag_name)
-    ig_settings = get_deploy_setting("sites/#{request.site.id}/custom_authentications/instagram", nil)
+    ig_settings = get_deploy_setting("sites/#{request.site.id}/authentications/instagram", nil)
 
     # To create a subscription, make a POST request to the subscriptions endpoint.
     #
@@ -379,7 +379,7 @@ class ApplicationController < ActionController::Base
   end
 
   def delete_instagram_tag_subscription(interaction)
-    ig_settings = get_deploy_setting("sites/#{request.site.id}/custom_authentications/instagram", nil)
+    ig_settings = get_deploy_setting("sites/#{request.site.id}/authentications/instagram", nil)
     params = { 
       "_method" => "DELETE", 
       "client_id" => ig_settings["client_id"], 

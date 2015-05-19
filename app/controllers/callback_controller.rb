@@ -33,7 +33,7 @@ class CallbackController < ActionController::Base
       render json: params["hub.challenge"]
     else
       call_to_action_save = true
-      ig_settings = get_deploy_setting("sites/#{request.site.id}/custom_authentications/instagram", nil)
+      ig_settings = get_deploy_setting("sites/#{request.site.id}/authentications/instagram", nil)
 
       # Request body example:
       # [
