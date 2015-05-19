@@ -1,9 +1,9 @@
-<div class="content-preview__icon-container content-preview__icon-container--time" ng-if="getFirstIcalInteractionForContent(content)">
+<div class="content-preview__icon-container content-preview__icon-container--time" ng-if="content.extra_fields.media_type_icon && getFirstIcalInteractionForContent(content)">
   <p class="container-preview__icon-container__day">{{getFirstIcalInteractionForContent(content)[1]}}</p>
   <p class="container-preview__icon-container__month">{{getFirstIcalInteractionForContent(content)[0]}}</p>
 </div>
 
-<div class="content-preview__icon-container text-center" ng-if="!getFirstIcalInteractionForContent(content) && (content.media_type != 'VOID' || hasPhotoGallery(content))">
+<div class="content-preview__icon-container text-center" ng-if="content.extra_fields.media_type_icon && !getFirstIcalInteractionForContent(content) && (content.media_type != 'VOID' || hasPhotoGallery(content))">
   <i class="fa fa-picture-o content-preview__icon" ng-if="content.media_type == 'IMAGE' || hasPhotoGallery(content)"></i>
   <i class="fa fa-video-camera content-preview__icon" ng-if="content.media_type == 'YOUTUBE'"></i> 
 </div>
