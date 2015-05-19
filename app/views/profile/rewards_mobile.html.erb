@@ -1,8 +1,8 @@
 <div class="container container--default">
     
   <div id="levels" class="row brws-item">
-  	<div class="col-xs-12">
-    	<div class="section-heading">
+    <div class="col-xs-12">
+      <div class="section-heading">
         <h3>
           <span class="section-heading__marker"><i class="fa fa-tasks"></i></span>
           Livelli
@@ -10,19 +10,19 @@
       </div>
     </div>
     <% if @levels %>
-  		<% @levels.each do |key, level| %>
+      <% @levels.each do |key, level| %>
         <div class="col-xs-6" style="margin-bottom: 20px">
-        	<%= render partial: "/profile/level_badge", locals: { reward: level } %>
+          <%= render partial: "/profile/level_badge", locals: { reward: level } %>
         </div>
       <% end %>
     <% else %>
-    	<p>Nessun livello presente</p>
+      <p>Nessun livello presente</p>
     <% end %>
   </div>
   
   <div id="badges" class="row brws-item">
-  	<div class="col-xs-12">
-    	<div class="section-heading">
+    <div class="col-xs-12">
+      <div class="section-heading">
         <h3>
           <span class="section-heading__marker"><i class="fa fa-shield"></i></span>
           Badge
@@ -32,18 +32,18 @@
     <% if @badges %>
       <% @badges.each do |badge| %>
        <div class="col-xs-6" style="margin-bottom: 20px">
-    	    <%= render partial: "/profile/badge", locals: { reward: badge } %>
+          <%= render partial: "/profile/badge", locals: { reward: badge } %>
         </div>
       <% end %>
     <% else %>
-    	<p>Nessun badge presente</p>
+      <p>Nessun badge presente</p>
     <% end %>
   </div>
   
   <div class="row brws-item">
-  	<div class="col-xs-12 text-center">
-  		<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %><span>Indietro</span><% end %>
-  	</div>
+    <div class="col-xs-12 text-center">
+      <%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %><span>Indietro</span><% end %>
+    </div>
   </div>
   
 </div>

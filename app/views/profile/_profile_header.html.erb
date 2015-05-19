@@ -1,20 +1,24 @@
 <%
-level = get_max_reward("level");
-my_position, total = get_my_position("general-chart")
+level = disney_get_current_level;
+my_position, total = get_my_general_position_in_property 
 %>
 <div class="row profile-header">
 	<div class="col-sm-3">
 		<div class="profile-header__item">
 			<img src="<%= user_avatar current_user %>" alt="profile avatar" class="profile-header__item__image">
-			<p class="profile-header__item__title"><%= extract_name_or_username(current_user) %></p>
+			<p class="profile-header__item__title"><%= disney_extract_name_or_username(current_user) %></p>
 			<p class="profile-header__item__subtitle"><%= light_link_to "/users/sign_out" do %>Logout<% end %></p>
 		</div>
 	</div>
 	<div class="col-sm-3">
-		<div class="row profile-header__item">
-			<% if !cached_nil?(level) %>
-				<img src="<%= get_reward_image_for_status(level) %>" alt="" class="profile-header__item__image">
-				<p class="profile-header__item__title"><%= level.title %></p>
+		<div class="row profile-header__item profile-header__item--level">
+			<% if level %>
+				<img src="<%= get_reward_image_for_status(level["level"]) %>" alt="" class="profile-header__item__image">
+				<p class="profile-header__item__title"><%= level["level"].title %></p>
+				<div class="progress" style="margin: 10px auto; height: 12px; width: 65%;">
+					<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: <%= level["progress"] %>%;"></div>
+				</div>
+				<p class="profile-header__item__subtitle">Livello <%= level["level_number"] %> di <%= disney_get_level_number %></p>
 			<% end %>
 		</div>
 	</div>
@@ -38,13 +42,21 @@ my_position, total = get_my_position("general-chart")
 	</div>
 	<div class="col-sm-3">
 		<div class="row profile-header__item profile-header__item--last">
-			<div class="profile-header__item__reward">
-				Punti <span class="label label-warning profile-header__item__counter">+ <%= get_point %> <span class="profile-header__glyphicon-icon fa fa-star">
-  </span></span>
+
+			<div class="row profile-header__item__reward">
+				<div class="col-xs-12 col-sm-3 profile-header__item__counter-label">Punti</div>
+				<div class="col-xs-12 col-sm-9">
+					<span class="label label-warning profile-header__item__counter">+ <%= get_point %> <span class="profile-header__glyphicon-icon fa fa-star">
+  					</span></span>
+				</div>
 			</div>
-			<div class="profile-header__item__reward">
-				Crediti <span class="label label-warning profile-header__item__counter">+ <%= get_counter_about_user_reward("credit") %></span>
+			<div class="row profile-header__item__reward">
+				<div class="col-xs-12 col-sm-3 profile-header__item__counter-label">Crediti</div>
+				<div class="col-xs-12 col-sm-9">
+					<span class="label label-warning profile-header__item__counter--credits">+ <%= get_counter_about_user_reward("credit") %> <i class="fa fa-copyright"></i></span>
+				</div>
 			</div>
+				
 		</div>
 	</div>
 	<hr class="visible-xs">

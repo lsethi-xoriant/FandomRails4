@@ -289,7 +289,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.secondary_video_players = {};
     $scope.play_event_tracked = {};
     $scope.current_user_answer_response_correct = {};
-    $scope.calltoactions_during_video_interactions_second = []; // FIX THIS calltoactions_during_video_interactions_second;
     $scope.current_calltoaction = current_calltoaction;
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
@@ -902,8 +901,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $scope.current_tag_id = tag_id; 
 
         $scope.initCallToActionInfoList(data.calltoaction_info_list);
-
-        $scope.calltoactions_during_video_interactions_second = data.calltoactions_during_video_interactions_second;
     
         $("#calltoaction-stream").html(data.calltoactions_render);
 
@@ -1051,13 +1048,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       if(!$scope.current_user && $scope.aux.anonymous_interaction) {
         $scope.updateCallToActionInfoWithAnonymousUserStorage();
       }
-
-      hash_to_append = data.calltoactions_during_video_interactions_second;
-      hash_main = $scope.calltoactions_during_video_interactions_second;
-      for(var name in hash_to_append) { 
-        hash_main[name] = hash_to_append[name]; 
-      }
-      $scope.calltoactions_during_video_interactions_second = hash_main;
 
       $scope.has_more = data.has_more;
 
@@ -2042,7 +2032,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   //////////////////////// POLLING METHODS ////////////////////////
 
   $window.mayStartpolling = function(calltoaction_id) {
-    if(!$scope.polling && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
+    if(!$scope.polling) {
       $scope.polling = $interval(videoPolling, 800);
     }
   };
@@ -2053,7 +2043,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       video_with_polling_counter = false;
       
       angular.forEach($scope.play_event_tracked, function(video_started, calltoaction_id) {
-        if(video_started && $scope.calltoactions_during_video_interactions_second[calltoaction_id]) {
+        if(video_started) {
           video_with_polling_counter = true;
         } else {
           // This video has not polling.
@@ -2072,7 +2062,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $window.videoPolling = function() {
     angular.forEach($scope.play_event_tracked, function(video_started, calltoaction_id) {
-      if(getCallToActionInfo(calltoaction_id).calltoaction.media_type == "YOUTUBE"){
+      calltoaction_info = getCallToActionInfo(calltoaction_id);
+      if(calltoaction_info.calltoaction.media_type == "YOUTUBE"){
       	youtube_player = getPlayer(calltoaction_id);
       	youtube_player_current_time = Math.floor(youtube_player.playerManager.getCurrentTime()); 
       	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);
