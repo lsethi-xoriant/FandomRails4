@@ -334,7 +334,7 @@ class ApplicationController < ActionController::Base
     #    -F 'callback_url=http://[example.com]/instagram_tag_subscription/[TAG_NAME]' \
     #    https://api.instagram.com/v1/subscriptions/
 
-    params = { 
+    request_params = { 
       "client_id" => ig_settings["client_id"], 
       "client_secret" => ig_settings["client_secret"], 
       "object" => "tag", 
@@ -342,7 +342,8 @@ class ApplicationController < ActionController::Base
       "object_id" => tag_name, 
       "callback_url" => "#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL)}/#{params[:tag_name]}"
     }
-    url = "https://api.instagram.com/v1/subscriptions#{build_arguments_string_for_request(params)}"
+
+    url = "https://api.instagram.com/v1/subscriptions#{build_arguments_string_for_request(request_params)}"
     res = URI.parse(url).read
     success = (JSON.parse(res["meta"]["code"]).to_i == 200) rescue false
     if success
@@ -381,13 +382,13 @@ class ApplicationController < ActionController::Base
 
   def delete_instagram_tag_subscription(interaction)
     ig_settings = get_deploy_setting("sites/#{request.site.id}/authentications/instagram", nil)
-    params = { 
+    request_params = { 
       "_method" => "DELETE", 
       "client_id" => ig_settings["client_id"], 
       "client_secret" => ig_settings["client_secret"], 
       "object" => interaction.aux["instagram_tag"]["subscription_id"].to_i
     }
-    url = "https://api.instagram.com/v1/subscriptions#{build_arguments_string_for_request(params)}"
+    url = "https://api.instagram.com/v1/subscriptions#{build_arguments_string_for_request(request_params)}"
     res = URI.parse(url).read
     res = JSON.parse(res)
     success = (res["meta"]["code"].to_i == 200) rescue false
