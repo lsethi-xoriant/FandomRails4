@@ -162,7 +162,7 @@
   function changeTagSubscriptionRequest(interactionId, tagName, img) {
     $.ajax({
       type: "POST",
-      url: "modify_instagram_upload_object/" + interactionId + "/" + tagName,
+      url: "/modify_instagram_upload_object/" + interactionId + "/" + tagName,
       success: function(subscriptionId) {
         img.src = "/assets/icon-success.png";
         img.siblings("p").val("Tag registrato: " + tagName + " - ID registrazione: " + subscriptionId )

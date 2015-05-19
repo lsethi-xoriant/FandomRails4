@@ -7,7 +7,7 @@ class Upload < ActiveRecord::Base
   belongs_to :call_to_action
   has_many :user_upload_interactions
 
-  after_save :set_instagram_tag_in_interaction_aux
+  after_update :set_instagram_tag_in_interaction_aux
 
   has_attached_file :watermark, :styles => { :normalized => "200x112#" }
 

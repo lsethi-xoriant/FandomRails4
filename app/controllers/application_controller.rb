@@ -333,6 +333,7 @@ class ApplicationController < ActionController::Base
     #    -F 'object_id=[TAG_NAME]' \
     #    -F 'callback_url=http://[example.com]/instagram_tag_subscription/[TAG_NAME]' \
     #    https://api.instagram.com/v1/subscriptions/
+
     params = { 
       "client_id" => ig_settings["client_id"], 
       "client_secret" => ig_settings["client_secret"], 
