@@ -452,6 +452,7 @@ Fandom::Application.routes.draw do
     match "settings/notifications/save", :to => "settings#save_notifications_settings"
     match "settings/profanities", :to => "settings#profanities_settings"
     match "settings/profanities/save", :to => "settings#save_profanities_settings"
+    match "settings/instagram_subscriptions", :to => "settings#instagram_subscriptions_settings"
     match "/settings/clear_cache", :to => "cache#clear_cache"
   end
 
@@ -474,7 +475,9 @@ Fandom::Application.routes.draw do
 
   # Instagram subscribe.
   match "/instagram_tag_subscription/:tag_name", :to => "application#instagram_tag_subscription"
-  match "/instagram_verify_token_callback/:tag_name", :to => "application#instagram_verify_token_callback"
+  match "/instagram_new_tagged_media_callback/:tag_name", :to => "application#instagram_verify_token_callback"
+  match "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
+  match "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
 
   match "/how_to", :to => "application#how_to"
   match "/landing", :to => "landing#index"

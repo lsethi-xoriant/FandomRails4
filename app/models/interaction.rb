@@ -3,7 +3,7 @@
 
 class Interaction < ActiveRecord::Base
   attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :call_to_action_id, :resource_attributes,
-    :points, :added_points, :when_show_interaction, :required_to_complete, :stored_for_anonymous
+    :points, :added_points, :when_show_interaction, :required_to_complete, :stored_for_anonymous, :aux
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
   belongs_to :call_to_action
@@ -12,6 +12,7 @@ class Interaction < ActiveRecord::Base
   has_many :interaction_call_to_actions
 
   before_create :check_name
+  before_save :default_values
 
   validate :resource_errors
   validate :check_max_one_play_resource
@@ -27,6 +28,12 @@ class Interaction < ActiveRecord::Base
 
   def check_name
     name = "#inter#{ Interaction.count }" if name.blank?
+  end
+
+  def default_values
+    if self.aux.blank? 
+      self.aux = "{}"
+    end
   end
 
   # Ogni calltoaction (per il momento formata da un solo media), può avere una sola interaction di tipo Play. Un'interaction

@@ -8,7 +8,7 @@ module ProfileHelper
       user = user_auth.user
       user_auth.update_attributes(
           uid: auth.uid,
-          name: auth.info.name,
+          name: (provider.include?("instagram") ? auth.info.nickname : auth.info.name,
           oauth_token: auth.credentials.token,
           oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
@@ -39,7 +39,7 @@ module ProfileHelper
       # Da tenere conto che vengono salvate informazioni differenti a seconda del provider di provenienza.
       user.authentications.build(
           uid: auth.uid,
-          name: auth.info.name,
+          name: (provider.include?("instagram") ? auth.info.nickname : auth.info.name,
           oauth_token: auth.credentials.token,
           oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),

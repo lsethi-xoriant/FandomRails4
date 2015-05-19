@@ -1,0 +1,26 @@
+<%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "settings" } %>
+    
+<div id="content">    
+
+  <div id="content-header">
+    <h1>SOTTOSCRIZIONI TAG INSTAGRAM</h1>
+  </div> <!-- #content-header --> 
+
+  <div id="content-container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2">
+        <div class="alert alert-info text-center" role="alert">
+          Sottoscrizioni a tag instagram attive
+        </div>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col-lg-2 col-lg-offset-4 text-center"><strong> Tag </strong></div>
+      <div class="col-lg-2 text-center"><strong> ID sottoscrizione </strong></div>
+      <% @instagram_subscriptions_setting.each do |name, id| %>
+        <div class="col-lg-2 col-lg-offset-4 text-center"><%= name %></div>
+        <div class="col-lg-2 text-center"><%= id %> </div>
+      <% end %>
+    </div>
+  </div>
+</div>
