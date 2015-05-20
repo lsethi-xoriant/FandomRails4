@@ -179,6 +179,10 @@ module EasyadminHelper
     end
   end
 
+  def instagram_upload?(interaction_id)
+    !JSON.parse(Interaction.find(interaction_id).aux)["instagram_tag"].nil? rescue false
+  end
+
   def get_period_ids(from_date, to_date)
     Period.where("start_datetime >= '#{from_date.strftime('%Y-%m-%d 00:00:00')}' 
                     AND end_datetime <= '#{to_date.strftime('%Y-%m-%d 23:59:59')}'

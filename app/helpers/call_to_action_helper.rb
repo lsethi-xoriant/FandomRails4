@@ -537,14 +537,14 @@ module CallToActionHelper
   end
   
   def get_privacy_info(upload)
-    privacy_info = {
+    {
       "required" => upload.privacy?,
       "description" => upload.privacy_description
     }
   end
   
   def get_releasing_info(upload)
-    privacy_info = {
+    {
       "required" => upload.releasing?,
       "description" => upload.releasing_description
     }

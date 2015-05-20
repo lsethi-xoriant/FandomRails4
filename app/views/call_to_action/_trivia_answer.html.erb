@@ -3,18 +3,16 @@
   <div ng-if="interaction_info.interaction.resource.one_shot">
     <div class="col-sm-12 col-xs-12 text-center">
       
-      <button class="hidden-xs trivia-interaction__answer {{answer.class}} btn btn-block btn-lg active {{answer.correct ? 'btn-green' : (interaction_info.user_interaction.answer.id == answer.id ? 'btn-red' : 'btn-blue')}}">
+      <button class="hidden-xs trivia-interaction__answer {{answer.class}} btn btn-block btn-lg active {{answer.correct ? 'btn-green' : 'btn-red'}}">
         <div class="trivia-interaction__avatar-container" ng-if="interaction_info.user_interaction.answer.id == answer.id">
-          <img ng-if="current_user" class="trivia-interaction__avatar" ng-src="{{current_user.avatar}}">
-          <img ng-if="!current_user" class="trivia-interaction__avatar" ng-src="<%= anon_avatar() %>">
+          <img class="trivia-interaction__avatar" ng-src="{{current_user.avatar}}">
         </div>
         <span>{{answer.text}}</span>
       </button>
 
-      <button class="visible-xs trivia-interaction__answer {{answer.class}} btn btn-block active {{answer.correct ? 'btn-green' : (interaction_info.user_interaction.answer.id == answer.id ? 'btn-red' : 'btn-blue')}}">
+      <button class="visible-xs trivia-interaction__answer {{answer.class}} btn btn-block active {{answer.correct ? 'btn-green' : 'btn-red'}}">
         <div class="trivia-interaction__avatar-container" ng-if="interaction_info.user_interaction.answer.id == answer.id">
-          <img ng-if="current_user" class="trivia-interaction__avatar" ng-src="{{current_user.avatar}}">
-          <img ng-if="!current_user" class="trivia-interaction__avatar" ng-src="<%= anon_avatar() %>">
+          <img class="trivia-interaction__avatar" ng-src="{{current_user.avatar}}">
         </div>
         <span>{{answer.text}}</span>
       </button>
@@ -39,5 +37,3 @@
   </div>
 
 </div>
-                                      
-          

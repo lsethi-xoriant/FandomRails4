@@ -107,4 +107,15 @@ class Easyadmin::SettingsController < Easyadmin::EasyadminController
     render template: "/easyadmin/settings/profanities_settings"
   end
 
+  def instagram_subscriptions_settings
+    instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
+    if !instagram_subscriptions_setting
+      instagram_subscriptions_setting = Setting.create(:key => INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY, :value => "{}")
+    end
+    @instagram_subscriptions_setting = JSON.parse(instagram_subscriptions_setting.value)
+  end
+
+  def save_instagram_subscriptions_settings
+  end
+
 end

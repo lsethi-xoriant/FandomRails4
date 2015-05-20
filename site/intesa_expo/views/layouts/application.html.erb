@@ -31,6 +31,11 @@
 
   <%= csrf_meta_tags %>
 
+  <% if get_intesa_property == 'imprese' %>
+    <meta name="google-site-verification" content="Zjk2gp5eeAu0uwgoV3y1HSXL8SuAMhXH23PACjpYvvM" />
+  <% else %>
+    <meta name="google-site-verification" content="rLFXVG7Aq4CCbuL7EGRLy2_Fnvzu1oAPpov6oEIZIDE" />
+  <% end %>
 </head>
 
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %> body-{{aux.language}}" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">

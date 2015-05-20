@@ -26,100 +26,11 @@
 
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= build_current_user() %>, <%= calltoaction_info_list %>, <%= @has_more || false %>, null, '<%= ga_code() %>', null, <%= @aux.to_json %>)">
 
-  <div id="quiz-waiting-audio"></div>
-
-  <!-- COMMENT FEEDBACK MODAL -->
-  <div class="modal fade" id="comment-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4>Commento inserito con successo</h4>
-        </div>
-        <div class="modal-body">
-          <p id="comment-must-be-approved">Il commento verrà pubblicato solo dopo l'approvazione.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-        </div>
-      </div>
-    </div>
+  <div ng-cloak>
+    <%= render partial: "/application/style", locals: { aux: @aux } %>
+    <%= render partial: "/application/user_bar" %>
+    <%= yield %>
   </div>
-
-  <!-- CAPTCHA ERROR MODAL -->
-  <div class="modal fade" id="comment-captcha-error-feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4>Errore nell'inserimento del commento</h4>
-        </div>
-        <div class="modal-body">
-          <p>Verifica di avere inserito correttamente il captcha.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="registrate-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4>Registrati per giocare</h4>
-        </div>
-        <div class="modal-body">
-          Per poter giocare devi <a href="/users/sign_up">loggarti o registrarti</a>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-          <a href="/users/sign_up"><button type="button" class="btn btn-primary">Entra</button></a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="facebook-like-modal" tabindex="-1" role="dialog" aria-labelledby="facebookModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="myModalLabel">Like su Facebook</h4>
-        </div>
-        <div class="modal-body">
-         <p>Per effettuare il like devi essere collegato a Facebook</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="facebook-share-modal" tabindex="-1" role="dialog" aria-labelledby="facebookModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="myModalLabel">Share su Facebook</h4>
-        </div>
-        <div class="modal-body">
-         <p>Per effettuare la condivisione devi essere collegato a Facebook</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <%= yield %>
 
   <%= render partial: "/application/ga" %>
 

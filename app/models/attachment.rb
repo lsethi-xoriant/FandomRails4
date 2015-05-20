@@ -10,9 +10,9 @@ class Attachment < ActiveRecord::Base
     styles: lambda { |image| 
       if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
         {
-          :carousel => "1024x320^", 
-          :medium => "524x393^", 
-          :thumb => "262x147^"
+          :carousel => "", 
+          :medium => "", 
+          :thumb => ""
         }
       elsif image.content_type =~ %r{^(image|(x-)?application)/(pdf)$}
         { }
@@ -21,9 +21,9 @@ class Attachment < ActiveRecord::Base
       end 
     }, 
     :convert_options => { 
-      :carousel => " -crop '1024x320+0+40'", 
-      :medium => " -gravity center -crop '524x393+0+0'", 
-      :thumb => " -gravity center -crop '262x147+0+0'" 
+      :carousel => "-gravity north -thumbnail 1024x320^ -extent 1024x320", 
+      :medium => "-gravity north -thumbnail 524x393^ -extent 524x393", 
+      :thumb => "-gravity north -thumbnail 262x147^ -extent 262x147" 
     }
 
   def destroy_data=(destroy_data_check)

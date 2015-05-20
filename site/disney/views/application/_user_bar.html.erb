@@ -54,7 +54,7 @@
                 Profilo
               <% end %>
             </li>
-            <% if aux["current_property_info"] && aux["current_property_info"]["outer"] && aux["current_property_info"]["outer-url"] %>
+            <% if aux && aux["current_property_info"] && aux["current_property_info"]["outer"] && aux["current_property_info"]["outer-url"] %>
               <li>
                 <a href="<%= aux["current_property_info"]["outer-url"] %>"><%= aux["current_property_info"]["outer"] %></a>
               </li>
@@ -114,7 +114,7 @@
             Profilo
           <% end %>
         </li>
-        <% if aux["current_property_info"] && aux["current_property_info"]["outer"] && aux["current_property_info"]["outer-url"] %>
+        <% if aux && aux["current_property_info"] && aux["current_property_info"]["outer"] && aux["current_property_info"]["outer-url"] %>
           <li>
             <a href="<%= aux["current_property_info"]["outer-url"] %>"><%= aux["current_property_info"]["outer"] %></a>
           </li>

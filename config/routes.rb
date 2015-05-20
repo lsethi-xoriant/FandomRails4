@@ -125,11 +125,6 @@ Fandom::Application.routes.draw do
         match "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
         match "/browse/index_category_load_more", :to => "browse#index_category_load_more"
         match "/browse/category/:id", :to => "browse#index_category"
-        match "profile", :to => "profile#index"
-        match "profile/index", :to => "profile#index_mobile"
-        match "profile/rankings", :to => "profile#rankings"
-        match "profile/rewards", :to => "profile#rewards"
-        match "profile/notices", :to => "profile#notices"
         match "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
         match "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         
@@ -304,7 +299,7 @@ Fandom::Application.routes.draw do
   match "/profile/update_avatar", to: "application#update_avatar_image"
 
   match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
-  match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
+  match "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
   match "/upload", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
@@ -458,6 +453,7 @@ Fandom::Application.routes.draw do
     match "settings/notifications/save", :to => "settings#save_notifications_settings"
     match "settings/profanities", :to => "settings#profanities_settings"
     match "settings/profanities/save", :to => "settings#save_profanities_settings"
+    match "settings/instagram_subscriptions", :to => "settings#instagram_subscriptions_settings"
     match "/settings/clear_cache", :to => "cache#clear_cache"
   end
 
@@ -480,18 +476,21 @@ Fandom::Application.routes.draw do
 
   # Instagram subscribe.
   match "/instagram_tag_subscription/:tag_name", :to => "application#instagram_tag_subscription"
-  match "/instagram_verify_token_callback/:tag_name", :to => "application#instagram_verify_token_callback"
+  match "/instagram_new_tagged_media_callback/:tag_name", :to => "callback#instagram_new_tagged_media_callback"
+  match "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
+  match "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
 
   match "/how_to", :to => "application#how_to"
   match "/landing", :to => "landing#index"
 
   match "profile", :to => "profile#index"
-  match "profile/levels", :to => "profile#levels"
-  match "profile/badges", :to => "profile#badges"
-  match "profile/prizes", :to => "profile#prizes"
+  match "profile/index", :to => "profile#index_mobile"
   match "profile/rankings", :to => "profile#rankings"
   match "profile/rewards", :to => "profile#rewards"
   match "profile/notices", :to => "profile#notices"
+  match "profile/levels", :to => "profile#levels"
+  match "profile/badges", :to => "profile#badges"
+  match "profile/prizes", :to => "profile#prizes"
   match "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
   match "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
   match "profile/notices/mark_as_viewed", :to => "notice#mark_as_viewed", defaults: { format: 'json' }

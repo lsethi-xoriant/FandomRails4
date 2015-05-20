@@ -3,6 +3,7 @@ include FandomUtils
 
 class SessionsController < Devise::SessionsController
   include FandomPlayAuthHelper
+  include ProfileHelper
   
   prepend_before_filter :anchor_provider_to_current_user, only: :create, :if => proc {|c| current_user && env["omniauth.auth"].present? }
   skip_before_filter :iur_authenticate

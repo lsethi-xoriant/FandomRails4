@@ -58,7 +58,19 @@ $filters-item-margin-right: 15px;
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 25px;
+    bottom: 30px;
+}
+
+.filters__title--gallery-counter {
+    color: #fff;
+    text-transform: capitalize;
+    text-shadow: 0 1px #000;
+    font-size: 14px;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 14px;
 }
 
 .filters__flexslider-desktop-item, .filters__flexslider-mobile-item {

@@ -1,5 +1,66 @@
 module ProfileHelper
 
+  def get_current_level()
+    property = get_property()
+    if property.present?
+      property_name = property.name
+    end
+
+    current_level = cache_short(get_current_level_by_user(current_user.id, property_name)) do
+      levels, levels_use_prop = rewards_by_tag("level")
+      if levels
+        property_levels = prepare_levels_to_show(levels, property_name)
+        current_level = property_levels.select{|key, hash| hash["status"] == "progress" }.first || property_levels.select { |key, hash| hash["status"] == "gained" }.to_a.last 
+        current_level.present? ? current_level[1] : CACHED_NIL
+      else
+        CACHED_NIL
+      end
+    end
+    cached_nil?(current_level) ? nil : current_level
+  end
+
+  def prepare_levels_to_show(levels, property_name)
+    levels = levels[property_name]
+    levels = order_rewards(levels.to_a, "cost")
+    prepared_levels = {}
+    if levels.present?
+      index = 0
+      level_before_point = 0
+      level_before_status = nil
+      levels.each do |level|
+        if level_before_status.nil? || level_before_status == "gained"
+          progress = calculate_level_progress(level, level_before_point, property_name)
+          if progress >= 100
+            level_before_status = "gained"
+            prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => 100, "status" => level_before_status }
+          else
+            level_before_status = "progress"
+            prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => progress, "status" => level_before_status }
+          end
+        else
+          progress = 0
+          level_before_status = "locked"
+          prepared_levels["#{index+1}"] = {"level" => level, "level_number" => index+1, "progress" => progress, "status" => level_before_status }
+        end
+        index += 1
+        level_before_point = level.cost
+      end
+    end
+    prepared_levels
+  end
+
+  # Calculate a progress into a reward level.
+  #   level          - the level to check progress
+  #   starting_point - the cost of the preceding level
+  def calculate_level_progress(level, starting_point, property_name)
+    user_points = get_counter_about_user_reward(get_point_name(property_name))
+    level.cost > 0 ? ((user_points - starting_point) * 100) / (level.cost - starting_point) : 100
+  end
+
+  def get_point_name(property_name)
+    property_name == $site.default_property ? "point" : "#{property_name}-point"
+  end
+
   def not_logged_from_omniauth(auth, provider)  
     user_auth =  Authentication.find_by_provider_and_uid(provider, auth.uid);
     if user_auth
@@ -8,7 +69,7 @@ module ProfileHelper
       user = user_auth.user
       user_auth.update_attributes(
           uid: auth.uid,
-          name: auth.info.name,
+          name: (provider.include?("instagram") ? auth.info.nickname : auth.info.name),
           oauth_token: auth.credentials.token,
           oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
@@ -39,7 +100,7 @@ module ProfileHelper
       # Da tenere conto che vengono salvate informazioni differenti a seconda del provider di provenienza.
       user.authentications.build(
           uid: auth.uid,
-          name: auth.info.name,
+          name: (provider.include?("instagram") ? auth.info.nickname : auth.info.name),
           oauth_token: auth.credentials.token,
           oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),

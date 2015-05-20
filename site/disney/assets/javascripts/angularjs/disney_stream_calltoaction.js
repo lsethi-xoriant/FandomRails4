@@ -46,30 +46,6 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     } 
   };
 
-  $scope.appendCallToActionOtherParams = function() {
-    return otherParamsForGallery();
-  };
-
-  $scope.updateOrderingOtherParams = function() {
-    return otherParamsForGallery();
-  };
-
-  function otherParamsForGallery() {
-    if($scope.aux.gallery) {
-      other_params = new Object();
-      other_params.gallery = new Object();
-      other_params.gallery.user = $scope.aux.gallery_user;
-      if($scope.aux.gallery.calltoaction) {
-        other_params.gallery.calltoaction_id = $scope.aux.gallery.calltoaction.id;
-      } else {
-        other_params.gallery.calltoaction_id = "all";
-      }
-      return other_params;
-    } else {
-      return null;
-    } 
-  }
-
   $scope.setAvatar = function(avatar, id) {
     $scope.form_data.current_user.avatar_selected_url = avatar;
     $(".avatars__flexslider__avatar-container").removeClass("avatars__flexslider__avatar-container--selected");

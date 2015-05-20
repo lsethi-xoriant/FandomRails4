@@ -1,31 +1,30 @@
-<%= render partial: "/application/user_bar" %>
-
-<div class="row">
-	<div class="col-md-8 col-md-offset-2">
-		<%= render partial: "/gallery/launchers", locals: { galleries: @galleries_cta }  %>		
-	</div>
-</div>
-
-
-<div class="container-fluid" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= !current_user.blank? %>, <%= @galleries_user_cta.to_json %>, '<%= @galleries_user_cta.count %>', <%= @calltoactions_during_video_interactions_second.to_json %>, '<%= ga_code() %>')">   
-  
-  <!-- CUSTOM SITE HEADER --> 
-  <%#= render partial: "/application/header" %>
-
-  <div class="row">
-    <div id="calltoaction-stream" class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-      <%= render partial: "/call_to_action/stream_calltoactions", locals: { calltoactions: @galleries_user_cta } %>
-    </div>
+<div class="container main-container">
+  <div class="row main-row filters__flexslider-main-row">
+    <%= render partial: "/gallery/launchers", locals: { galleries: @galleries_cta, current_gallery_id: nil }  %>    
   </div>
-
-  <div class="row">      
-    <div class="col-sm-6 col-sm-offset-3">
-      <div id="append-other" class="text-center" style="margin-bottom: 20px;">
-        <button class="btn btn-default" href="javascript: void(0)" onclick="appendCallToAction()">CARICA ALTRI</button>
+  <div class="row main-row main-row__covers">
+    <div class="col-xs-12">
+      <%= render partial: "application/ordering" %>  
+      <div ng-if="!ordering_in_progress" class="row">
+        <div ng-repeat="calltoaction_info in calltoactions" class="col-sm-6">
+          <%= render partial: "/call_to_action/cover_single_calltoaction" %>
+        </div>
+      </div>
+      <div ng-if="!ordering_in_progress && has_more" class="row">
+        <div class="col-sm-12">
+          <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="!append_ctas_in_progress && has_more">
+            <button class="btn btn-primary" href="javascript: void(0)" ng-click="appendCallToAction();"><span>Carica altri</span></button>
+          </div>
+          <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="append_ctas_in_progress && has_more">
+            <button class="btn btn-primary" href="javascript: void(0)"><span>Caricamento in corso</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center" ng-if="ordering_in_progress">
+        <div class="col-sm-12">
+          <img style="margin-top: 45px; margin-bottom: 45px;" src="<%= asset_path("loader.gif") %>"> 
+        </div>
       </div>
     </div>
   </div>
-
 </div>
-
-<%#= render partial: "/application/footer" %>

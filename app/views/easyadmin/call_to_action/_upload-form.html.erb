@@ -1,94 +1,177 @@
-
 <div class="panel panel-default">
-		<% if f.object.id %>
-			<div class="panel-heading-dark">UPLOAD</div>
-		<% else %>
-			<div class="panel-heading-dark">UPLOAD 
-				<p style="float: right"><%= link_to_remove_fields("rimuovi", "upload") %></p>
-			</div>
-		<% end %>
-		<div class="panel-body">
+  <% if f.object.id %>
+    <div class="panel-heading-dark">UPLOAD</div>
+  <% else %>
+    <div class="panel-heading-dark">UPLOAD 
+      <p style="float: right"><%= link_to_remove_fields("rimuovi", "upload") %></p>
+    </div>
+  <% end %>
+    <div class="panel-body">
+      <%= f.hidden_field :resource_type, :class => "form-control" %>
 
-			<%= f.hidden_field :resource_type, :class => "form-control" %>
+      <%= f.fields_for :resource do |uploadform| %>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="text-input">Seleziona il metodo di upload</label>
+            <div class="radio">
+              <%= uploadform.radio_button :gallery_type, "default", :class => "default", :checked => !instagram_upload?(f.object.id), :onchange => "updateInputsForGalleryType($(this))" %> Base
+            </div>
+            <div class="radio">
+              <%= uploadform.radio_button :gallery_type, "instagram", :class => "instagram", :checked => instagram_upload?(f.object.id), :onchange => "updateInputsForGalleryType($(this))" %> Instagram
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row default-gallery <%= instagram_upload?(f.object.id) ? 'hidden' : '' %>" style="margin-bottom: 0px;">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="text-input">Visibile</label>
+             <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="text-input">Secondo di apparizione</label>
+              <%= f.text_field :seconds, :class => "form-control" %>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="text-input">Call to action template</label>
+            <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Numero di upload consentiti</label>
+            <%= uploadform.text_field :upload_number, :class => "form-control" %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Titolo necessario</label>
+            <%= uploadform.check_box :title_needed, { checked: true } %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Privacy necessaria</label>
+            <%= uploadform.check_box :privacy %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Liberatoria necessaria</label>
+            <%= uploadform.check_box :releasing %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Immagine watermark</label>
+            <div class="fileupload fileupload-new" data-provides="fileupload">
+              <div class="fileupload-preview thumbnail" style="width: 200px; height: 112px; line-height: 20px;">
+              <% if uploadform.object.watermark.exists? %>
+                <img src="<%= uploadform.object.watermark.url %>">
+              <% end %>
+              </div>
+              <div>
+                <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
+                  <span class="fileupload-exists">Change</span><%= uploadform.file_field :watermark  %></span>
+                <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Campi aggiuntivi</label>
+          </div>
+          <div class="form-group">
+            <%= f.text_area :aux, :cols => "60", :rows => "5" %>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="text-input">Testo privacy</label>
+            <%= uploadform.text_area :privacy_description, :class => "form-control", rows: 6 %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Testo richiesta liberatoria</label>
+            <%= uploadform.text_area :releasing_description, :class => "form-control", rows: 6 %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Richiesto per il completamento</label>
+            <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+          </div>
+        </div>
+      </div>
+      <div class="row instagram-gallery <%= !instagram_upload?(f.object.id) ? 'hidden' : '' %>" style="margin-bottom: 0px;">
+        <div class="col-lg-12">
+          <div class="form-group col-lg-4">
+            <% if f.object.id %>
+              <label class="text-input">Tag della gallery (senza #)</label>
+              <br/> Dopo la registrazione / modifica, attendere la spunta verde sotto al tag registrato prima di salvare la call to action.
 
-			<%= f.fields_for :resource do |uploadform| %>
-			<div class="row" style="margin-bottom: 0px;">
-						<div class="col-lg-6">
-							<div class="form-group">
-							  <label class="text-input">Visibile</label>
-							   <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<div class="form-group">
-								<label class="text-input">Secondo di apparizione</label>
-						  		<%= f.text_field :seconds, :class => "form-control" %>
-							</div>
-						</div>
-					</div>
-			<div class="row">
-				<div class="col-lg-6">
-					
-						<div class="form-group">
-						  <label class="text-input">Call to action template</label>
-						   <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
-						</div>
-						<div class="form-group">
-						  <label class="text-input">Numero di upload consentiti</label>
-						   <%= uploadform.text_field :upload_number, :class => "form-control" %>
-						</div>
-						<div class="form-group">
-							<label class="text-input">Titolo necessario</label>
-					  		<%= uploadform.check_box :title_needed, {checked: true} %>
-						</div>
-						<div class="form-group">
-							<label class="text-input">Privacy necessaria</label>
-					  		<%= uploadform.check_box :privacy %>
-						</div>
-						<div class="form-group">
-						  <label class="text-input">Liberatoria necessaria</label>
-						   <%= uploadform.check_box :releasing %>
-						</div>
-						<div class="form-group">
-			              <label class="text-input">Immagine watermark</label>
-			              <div class="fileupload fileupload-new" data-provides="fileupload">
-			                <div class="fileupload-preview thumbnail" style="width: 200px; height: 112px; line-height: 20px;">
-								<% if uploadform.object.watermark.exists? %>
-			                		<img src="<%= uploadform.object.watermark.url %>">
-			                	<% end %>
-			                </div>
-			                <div>
-			                  <span class="btn btn-default btn-file"><span class="fileupload-new">SELEZIONA L'IMMAGINE</span>
-			                  <span class="fileupload-exists">Change</span><%= uploadform.file_field :watermark  %></span>
-			                  <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
-			                </div>
-			              </div>
-				        </div>
-				        <div class="form-group">
-						  <label class="text-input">Campi aggiuntivi</label>
-						</div>
-						<div class="form-group">
-							<%= uploadform.text_area :aux, :cols => "60", :rows => "5" %>
-						</div>
-					
-				</div>
-				<div class="col-lg-6">
-					
-						<div class="form-group">
-						  <label class="text-input">Testo privacy</label>
-						   <%= uploadform.text_area :privacy_description, :class => "form-control", rows: 6 %>
-						</div>
-						<div class="form-group">
-						  <label class="text-input">Testo richiesta liberatoria</label>
-						   <%= uploadform.text_area :releasing_description, :class => "form-control", rows: 6 %>
-						</div>
-						<div class="form-group">
-				        	<label class="text-input">Richiesto per il completamento</label>
-				            <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
-				        </div>
-					
-				</div>
-			</div>
-			<% end %>
-  	</div>
+              <% tag_name = JSON.parse(Interaction.find(f.object.id).aux)["instagram_tag"]["name"] rescue "" %>
+              <% tag_subscription_id = JSON.parse(Interaction.find(f.object.id).aux)["instagram_tag"]["subscription_id"] rescue "" %>
+
+              <%= uploadform.text_field :instagram_tag_name, :class => "form-control instagram-tag", :value => tag_name %>
+              <%= uploadform.hidden_field :instagram_tag_subscription_id, :class => "subscription-id", :value => tag_subscription_id %>
+              <a class="btn btn-primary btn-block clickable" onclick="sendInstagramTagSubscription(<%= f.object.id %>, $(this));"> Registra / aggiorna tag </a>
+
+              <p>
+                <% if instagram_upload?(f.object.id) %>
+                  Tag registrato: <%= tag_name %> - ID registrazione: <%= tag_subscription_id %> 
+                <% end %>
+              </p>
+              <img style="display:none;" src="/assets/loading.gif" width="32px" height="32px">
+            <% else %>
+              <p> Per settare il tag Instagram da sottoscrivere, salvare prima la call to action. </p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
+
+<script type="text/javascript">
+
+  function updateInputsForGalleryType(el) {
+    parentDiv = el.parent().parent().parent().parent();
+    if(el.attr("class") == "default") {
+      selected = parentDiv.siblings(".default-gallery");
+      unselected = parentDiv.siblings(".instagram-gallery");
+    }
+    else {
+      selected = parentDiv.siblings(".instagram-gallery");
+      unselected = parentDiv.siblings(".default-gallery");
+      unselected.children().children("input").val("");
+    }
+    selected.removeClass("hidden");
+    unselected.addClass("hidden");
+  };
+
+  $(".instagram-tag").on("keyup", function() {
+    button = $(this).siblings("a");
+    img = $(this).siblings("img")[0];
+    img.style.display = "none";
+    img.src = "/assets/loading.gif";
+    button.addClass("clickable");
+  });
+
+  function sendInstagramTagSubscription(interactionId, button) {
+    if(button.hasClass("clickable")) {
+      button.removeClass("clickable");
+      tagName = button.siblings("input").val();
+      img = button.siblings("img")[0];
+      img.style.display = "inline";
+      changeTagSubscriptionRequest(interactionId, tagName, img);
+    }
+  };
+
+  function changeTagSubscriptionRequest(interactionId, tagName, img) {
+    $.ajax({
+      type: "POST",
+      url: "/modify_instagram_upload_object/" + interactionId + "/" + tagName,
+      success: function(subscriptionId) {
+        img.src = "/assets/icon-success.png";
+        img.siblings("p").val("Tag registrato: " + tagName + " - ID registrazione: " + subscriptionId )
+        img.siblings(".subscription-id").val(subscriptionId)
+      },
+      error: function(data) {
+        img.src = "/assets/icon-error.png";
+      }
+    });
+  };
+
+</script>

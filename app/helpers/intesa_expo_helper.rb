@@ -53,7 +53,7 @@ module IntesaExpoHelper
 
   end
 
-  def get_menu_items()
+  def get_intesa_menu_items()
     result = []
 
     menu_item_tag = get_tag_from_params("menu-item")
@@ -104,7 +104,7 @@ module IntesaExpoHelper
   def default_intesa_expo_aux(other, calltoaction_info_list = nil)
 
     menu_items, assets = cache_medium("layout_info_#{$context_root}") do
-      menu_items = get_menu_items()
+      menu_items = get_intesa_menu_items()
       layout_assets_tag = get_tag_from_params('assets')
       if layout_assets_tag.nil?
         extra_fields = {}

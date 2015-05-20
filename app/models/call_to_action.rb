@@ -18,7 +18,8 @@ class CallToAction < ActiveRecordWithJSON
   	:approved, 
     :user_id, 
     :interaction_watermark_url, 
-    :name, :thumbnail, 
+    :name, 
+    :thumbnail, 
     :releasing_file_id, 
     :release_required,
     :privacy_required, 
@@ -27,7 +28,9 @@ class CallToAction < ActiveRecordWithJSON
     :valid_to, 
     :valid_from_date_time, 
     :valid_to_date_time, 
-    :aux, :extra_fields,
+    :aux, 
+    :extra_fields,
+    :secondary_id,
     :button_label, 
     :alternative_description, 
     :enable_for_current_user, 
@@ -67,19 +70,19 @@ class CallToAction < ActiveRecordWithJSON
       end
     },
     styles: lambda { |image| 
-        if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
-          {
-            :extra_large => { :geometry => "1024x768>",  :quality => 90, :watermark_path => image.instance.get_watermark },
-            :large => { :geometry => "600x600>", :watermark_path => image.instance.get_watermark },
-            :extra => { :geometry => '260x150#' },
-            :medium => { :geometry => '300x300#' },
-            :thumb => { :geometry => '100x100#' }
-          }
-        elsif image.content_type =~ %r{^(image|(x-)?application)/(pdf)$}
-          { }
-        else
-          { }
-        end
+      if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
+        {
+          :extra_large => { :geometry => "1024x768>", :quality => 90, :watermark_path => image.instance.get_watermark },
+          :large => { :geometry => "600x600>", :watermark_path => image.instance.get_watermark },
+          :extra => { :geometry => '260x150#' },
+          :medium => { :geometry => '300x300#' },
+          :thumb => { :geometry => '100x100#' }
+        }
+      elsif image.content_type =~ %r{^(image|(x-)?application)/(pdf)$}
+        { }
+      else
+        { }
+      end
      },
      default_url: "/assets/media-image-default.jpg"
 
@@ -139,7 +142,7 @@ class CallToAction < ActiveRecordWithJSON
       play_inter = true if i.resource_type == "Play"
     end
 
-    errors.add(:media_type, "devi agganciare una interazione di tipo Play per questa calltoaction") unless play_inter
+    errors.add(:media_type, "devi agganciare una interazione di tipo Play per questa call to action") unless play_inter
   end
 
   def interaction_resource
@@ -157,7 +160,7 @@ class CallToAction < ActiveRecordWithJSON
       datetime_utc = time_parsed_to_utc("#{activation_date_time}")
       write_attribute :activated_at, "#{datetime_utc}"
       activation_date_time = nil
-    else
+    elsif self.activated_at.nil?
       write_attribute :activated_at, nil
     end
 

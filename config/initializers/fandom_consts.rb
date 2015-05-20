@@ -31,6 +31,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
   CHANNELS_SETTINGS_KEY = 'channels.setting'
   ACTIVE_PROFANITIES_SETTINGS_KEY = 'profanity.filter.automatic'
   PROFANITIES_SETTINGS_KEY = 'profanity.words'
+  INSTAGRAM_CALLBACK_URL = 'instagram.callback.url'
+  INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY = 'instagram.subscriptions'
   NOTIFICATIONS_LIMIT_DEFAULT = 50
   NOTIFICATIONS_LIMIT_KEY = 'notifications.limit'
   PROPERTIES_LIST_KEY = 'properties.list'

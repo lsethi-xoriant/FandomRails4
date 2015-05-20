@@ -49,19 +49,54 @@ module ApplicationHelper
     end
   end
 
-  def build_current_user()
+
+  def get_menu_items(property = nil)
+    result = []
+
+    menu_item_tag = get_tag_from_params("menu-item")
+    
+    menu_item_tag_ids = [menu_item_tag.id]
+    if property
+      menu_item_tag_ids << property.id
+    end
+
+    menu_items = get_tags_with_tags_in_and(menu_item_tag_ids)
+
+    if menu_items.any?    
+      menu_items = order_elements(menu_item_tag, menu_items)
+      
+      menu_items.each do |item|
+        extra_fields = get_extra_fields!(item)
+        result << {
+          "id" => item.id,
+          "name" => item.name,
+          "slug" => item.slug,
+          "title" => item.title,
+          "extra_fields" => extra_fields
+        }
+      end
+    end
+
+    result
+  end
+
+  def build_current_user() 
     if current_user
-      {
+      profile_completed = disney_profile_completed?()
+      current_user_for_view = {
         "facebook" => current_user.facebook($site.id),
         "twitter" => current_user.twitter($site.id),
         "main_reward_counter" => get_point,
         "username" => current_user.username,
         "avatar" => current_avatar,
-        "avatar" => current_avatar,
-      }.to_json
+        "level" => nil, # (get_current_level["level"]["name"] rescue "nessun livello"),
+        "notifications" => get_unread_notifications_count(),
+        "avatar" => current_avatar
+      }
     else
-      nil
+      current_user_for_view = nil
     end
+    current_user_for_view.to_json
   end
   
   def get_cta_event_start_end(cta_interactions)
@@ -105,18 +140,17 @@ module ApplicationHelper
   def get_highlight_ctas(property = nil)
     highlight_tag = get_tag_from_params("highlight")
 
-    unless highlight_tag
-      throw Exception.new("highlight tag must be created")
-    end
-
     if property.present?
-      # With property must be used highlight-<property name> tag for highlights
       highlight_tag = get_tags_with_tags_in_and([highlight_tag.id, property.id]).first
     end
 
-    highlight_ctas = get_ctas(highlight_tag)
-    if highlight_ctas
-      order_elements(highlight_tag, highlight_ctas)
+    if highlight_tag
+      highlight_ctas = get_ctas(highlight_tag)
+      if highlight_ctas
+        order_elements(highlight_tag, highlight_ctas)
+      else
+        []
+      end
     else
       []
     end
@@ -611,12 +645,16 @@ module ApplicationHelper
 
   def init_property_info(property)
     if property.present?
+      property_image = get_extra_fields!(property)["image"]
+      if property_image.present?
+        property_image_thumb = get_upload_extra_field_processor(property_image, :thumb)
+      end
       {
         "id" => property.id,
         "title" => property.title,
         "name" => property.name,
         "extra_fields" => get_extra_fields!(property),
-        "image" => get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb)
+        "image" => property_image_thumb
       }
     else
       nil
@@ -630,12 +668,20 @@ module ApplicationHelper
       if properties.any?
         property_info_list = []
         properties.each do |property|
+          property_extra_fields = get_extra_fields!(property)
+          if property_extra_fields["image"].present?
+            property_image_thumb = get_upload_extra_field_processor(property_extra_fields["image"], :thumb)
+          end
+           if property_extra_fields["image_hover"].present?
+            property_image_hover_thumb = get_upload_extra_field_processor(property_extra_fields["image_hover"], :thumb)
+          end
           property_info_list << {
             "id" => property.id,
+            "name" => property.name,
             "extra_fields" => get_extra_fields!(property),
             "title" => property.title,
-            "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil),
-            "image_hover" => (get_upload_extra_field_processor(get_extra_fields!(property)["image-hover"], :thumb) rescue nil) 
+            "image" => property_image_thumb,
+            "image_hover" => property_image_hover_thumb
           }
         end
         property_info_list
@@ -713,8 +759,8 @@ module ApplicationHelper
     property_info = init_property_info(property)
     property_info_list = init_property_info_list()
 
-    if other && other.has_key?(:calltoaction)
-      cta = other[:calltoaction]
+    if other && (other.has_key?(:calltoaction) || other.has_key?("calltoaction"))
+      cta = other[:calltoaction] || other["calltoaction"]
       related_ctas, related_tag = init_related_ctas(cta, property)
 
       if is_ugc?(cta)        
@@ -779,7 +825,8 @@ module ApplicationHelper
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
-      "ugc_cta" => ugc_cta
+      "ugc_cta" => ugc_cta,
+      "menu_items" => get_menu_items(property)
     }
 
     if other
@@ -787,6 +834,8 @@ module ApplicationHelper
         @aux[key] = value unless @aux.has_key?(key.to_s)
       end
     end
+
+    @aux
 
   end
   

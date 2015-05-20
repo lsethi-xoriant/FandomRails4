@@ -4,7 +4,7 @@
 require 'fandom_utils'
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery except: [:instagram_verify_token_callback, :facebook_app], :if => proc {|c| Rails.configuration.deploy_settings.fetch('forgery_protection', true) }
+  protect_from_forgery except: [:instagram_new_tagged_media_callback, :facebook_app], :if => proc {|c| Rails.configuration.deploy_settings.fetch('forgery_protection', true) }
   include FandomUtils
   include ApplicationHelper
 
@@ -101,21 +101,16 @@ class ApplicationController < ActionController::Base
     
     init_ctas = $site.init_ctas
     
-    tag_name = get_property()
+    tag = get_property()
+    if tag
+      tag_name = tag.name
+    end
     params = { "page_elements" => ["like", "comment", "share"] }
     @calltoaction_info_list, @has_more = get_ctas_for_stream(tag_name, params, init_ctas)
 
     @aux_other_params = { 
-      calltoaction_evidence_info: true
-    }
-  end
-
-  def build_current_user() 
-    {
-      "facebook" => current_user.facebook(request.site.id),
-      "twitter" => current_user.twitter(request.site.id),
-      "main_reward_counter" => get_counter_about_user_reward(MAIN_REWARD_NAME, true),
-      "registration_fully_completed" => registration_fully_completed?
+      calltoaction_evidence_info: true,
+      tag_menu_item: "home"
     }
   end
 
@@ -310,46 +305,118 @@ class ApplicationController < ActionController::Base
   def how_to
   end
 
-  # curl -F 'client_id=[CLIENT_ID]' \
-  #    -F 'client_secret=[CLIENT_SECRET]' \
-  #    -F 'object=tag' \
-  #    -F 'aspect=media' \
-  #    -F 'object_id=[TAG]' \
-  #    -F 'callback_url=http://[example.com]/instagram_verify_token_callback' \
-  #    https://api.instagram.com/v1/subscriptions/
-  def instagram_verify_token_callback
-    if params["hub.mode"] && params["hub.mode"] == "subscribe"
-      render json: params["hub.challenge"]
-    else
-      calltoaction_save = true
-      InstagramAdminUser.all.each do |iu|
-        begin
-          user = JSON.parse(open("https://api.instagram.com/v1/users/search?q=#{ iu.nickname }&client_id=f77c4dfff5e048b198504cb97a4c6194&count=1").read)
-          instagram = JSON.parse(open("https://api.instagram.com/v1/users/#{ user["data"][0]["id"] }/media/recent/?client_id=#{ ENV["INSTAGRAM_APP_ID"] }&count=5").read)   
-          instagram_media = instagram["data"].each do |m|
-            if CallToAction.find_by_secondary_id(m["id"]).blank? && m["tags"].include?("NOMETAG")
-              img = open(m["images"]["standard_resolution"]["url"])
-
-              # Customize the calltoaction created.
-              calltoaction = CallToAction.new(
-                title: m["caption"]["text"], image: img, 
-                activated_at: Time.at(m["created_time"].to_i - 1.hour), secondary_id: m["id"], media_type: "IMAGE", 
-                enable_disqus: true, category_id: (category ? category.id : nil)
-              )
-
-              # Anchor interactions to instagram calltoaction.
-              # interaction = calltoaction.interactions.build(when_show_interaction: "SEMPRE_VISIBILE", points: 100)
-              # interaction.resource = Check.new(title: "CHECK", description: "Foto scattata...")
-
-              calltoaction_save = calltoaction_save && calltoaction.save
-            end
-          end
-        rescue Exception
-          calltoaction_save = false
-        end
-      end
-      render json: calltoaction_save.to_json
+  def modify_instagram_upload_object
+    interaction = Interaction.find(params[:interaction_id])
+    aux = JSON.parse(interaction.aux) rescue {}
+    if aux["instagram_tag"]
+      res, delete_success = delete_instagram_tag_subscription(interaction)
     end
+    delete_success ||= true
+    unless delete_success == false
+      res, add_success, subscription = add_instagram_tag_subscription(interaction, params[:tag_name])
+    end
+    add_success ||= false
+    render :json => subscription["id"].to_i if (delete_success and add_success)
+  end
+
+  def add_instagram_tag_subscription(interaction, tag_name)
+    ig_settings = get_deploy_setting("sites/#{request.site.id}/authentications/instagram", nil)
+
+    # To create a subscription, make a POST request to the subscriptions endpoint.
+    #
+    #  Examples:
+    #
+    #    curl -F 'client_id=[CLIENT_ID]' \
+    #    -F 'client_secret=[CLIENT_SECRET]' \
+    #    -F 'object=tag' \
+    #    -F 'aspect=media' \
+    #    -F 'object_id=[TAG_NAME]' \
+    #    -F 'callback_url=http://[example.com]/instagram_tag_subscription/[TAG_NAME]' \
+    #    https://api.instagram.com/v1/subscriptions/
+
+    request_params = { 
+      "client_id" => ig_settings["client_id"], 
+      "client_secret" => ig_settings["client_secret"], 
+      "object" => "tag", 
+      "aspect" => "media", 
+      "object_id" => tag_name, 
+      "callback_url" => "#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL)}/#{params[:tag_name]}"
+    }
+
+    url = "https://api.instagram.com/v1/subscriptions#{build_arguments_string_for_request(request_params)}"
+    res = URI.parse(url).read
+    success = (JSON.parse(res["meta"]["code"]).to_i == 200) rescue false
+    if success
+
+      # We find the requested subscription from Instagram subscriptions list provided with response ("data" array). Structure below:
+      # data : [{
+      #           "id": "123456",
+      #           "type": "subscription",
+      #           "object": "tag",
+      #           "object_id": "tag_name",
+      #           "aspect": "media",
+      #           "callback_url": "http://your-callback.com/url/"
+      #         },
+      #         {
+      #           ...
+      #         }]
+      res = JSON.parse(res)
+      data = res["data"]
+      new_tag = data.find { |subscription| subscription["object"] == tag and subscription["object_id"] == params[:tag_name] }
+      aux = JSON.parse(interaction.aux) rescue {}
+      aux["instagram_tag"]["subscription_id"] = new_tag["subscription_id"]
+      aux["instagram_tag"]["name"] = new_tag["tag_name"]
+      interaction_updated = interaction.update_attribute(:aux, aux.to_json)
+
+      if interaction_updated
+        instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY).value
+        instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting)
+        instagram_subscriptions_setting_hash[new_tag["tag_name"]] = { "subscription_id" => new_tag["subscription_id"] }
+        instagram_subscriptions_setting.value = instagram_subscriptions_setting_hash.to_json
+      end
+
+    end
+    interaction_updated ||= false
+    [res, (success and interaction_updated), new_tag]
+  end
+
+  def delete_instagram_tag_subscription(interaction)
+    ig_settings = get_deploy_setting("sites/#{request.site.id}/authentications/instagram", nil)
+    request_params = { 
+      "_method" => "DELETE", 
+      "client_id" => ig_settings["client_id"], 
+      "client_secret" => ig_settings["client_secret"], 
+      "object" => interaction.aux["instagram_tag"]["subscription_id"].to_i
+    }
+    url = "https://api.instagram.com/v1/subscriptions#{build_arguments_string_for_request(request_params)}"
+    res = URI.parse(url).read
+    res = JSON.parse(res)
+    success = (res["meta"]["code"].to_i == 200) rescue false
+
+    if success
+      aux = JSON.parse(interaction.aux) rescue {}
+      old_tag_name = aux["instagram_tag"]["name"]
+      aux.delete("instagram_tag")
+      interaction_updated = interaction.update_attribute(:aux, aux.to_json)
+
+      if interaction_updated
+        instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY).value
+        instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting)
+        instagram_subscriptions_setting_hash.delete(old_tag_name)
+        instagram_subscriptions_setting.value = instagram_subscriptions_setting_hash.to_json
+      end
+
+    end
+    [res, (success and interaction_updated)]
+  end
+
+  def build_arguments_string_for_request(params)
+    res = ""
+    params.each_with_index do |(key, value), i|
+      connector = i == 0 ? "?" : "&"
+      res += connector + "#{key}=#{value}"
+    end
+    res
   end
 
   def update_avatar_image
