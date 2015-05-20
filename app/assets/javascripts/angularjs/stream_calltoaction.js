@@ -1192,7 +1192,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   	this.media_data = media_data;
   	
 	  this.playerManager = new YT.Player( (this.playerId), {
-        playerVars: { html5: 1, controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 },
+        playerVars: { html5: 1, rel: 0, wmode: "transparent", showinfo: 0 }, /* { html5: 1, controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 }, */
         height: "100%", width: "100%",
         videoId: this.media_data,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
@@ -1236,7 +1236,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     } else if(current_video_player_state == 0) {
 
-      updateEndVideoInteraction(current_video_player, calltoaction_id);
+      updateEndVideoInteraction(calltoaction_id);
       mayStopPolling();
 
     } else {

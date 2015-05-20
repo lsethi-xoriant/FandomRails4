@@ -61,7 +61,7 @@
                       <span class="btn btn-default btn btn-xs btn-file btn-block" style="vertical-align: top;"><span class="fileinput-new">Cambia immagine</span><span class="fileinput-exists">Modifica</span><%= f.file_field :avatar %></span>
                     </div>
                   </div>
-                  <% if app_fb || app_tt %>
+                  <% if auth_tt || auth_fb %>
                     <div class="col-sm-5 col-sm-offset-3">
                       <div class="list-group">
                         <a id="upload-avatar" href="javascript: void(0)" onclick="updateAvatar('upload')" class="list-group-item <%= "active" if current_user.avatar_selected == "upload" %> avatar"><img src="<%= current_user.avatar(:thumb) %>" alt="..." class="img-circle img-profile" width="10%">&nbsp;&nbsp;&nbsp;Immagine caricata</a>
@@ -108,6 +108,8 @@
               </div>
             <% end %>
 
+            <hr>
+
             <div class="form-group">
               <label class="col-xs-3 control-label text-right">Nome</label>
               <div class="col-xs-9">
@@ -126,6 +128,9 @@
                 <%= f.text_field :email, :class => "form-control", readonly: "true" %>
               </div>
             </div>
+
+            <hr>
+
             <div class="form-group">
               <label class="col-xs-3 control-label text-right">Nuova password</label>
               <div class="col-xs-9">
@@ -142,7 +147,7 @@
           
           </div>
           <div class="panel-footer text-right">
-            <button class="btn btn-primary btn-lg">Salva</button>
+            <button class="btn btn-primary btn-lg">SALVA</button>
           </div>
         </div>
       </div>
