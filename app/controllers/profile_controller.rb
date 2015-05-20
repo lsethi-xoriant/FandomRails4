@@ -118,7 +118,7 @@ class ProfileController < ApplicationController
     badge_tag = Tag.find_by_name("badge")
     badges, badges_use_prop = rewards_by_tag("badge")
     @badges = badges.nil? ? nil : badges[property_name]
-    @badges = order_elements(badge_tag, badges)
+    @badges = order_elements(badge_tag, @badges)
 
     if small_mobile_device?
       render template: "/profile/rewards_mobile"

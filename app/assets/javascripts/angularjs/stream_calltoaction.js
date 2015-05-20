@@ -733,7 +733,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.likePressed = function(interaction_info) {
-    if(interaction_info.user_interaction) {
+    if(angular.isDefined(interaction_info) && interaction_info.user_interaction) {
       return (JSON.parse(interaction_info.user_interaction.aux)["like"]);
     } else {
       return false;
@@ -1573,7 +1573,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
     url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.slug;
-    if($scope.calltoaction_info.calltoaction.extra_fields.linked_result_title) {
+    if(calltoaction_info.calltoaction.extra_fields.linked_result_title) {
       url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
       message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
     }
