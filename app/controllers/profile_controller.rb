@@ -112,15 +112,13 @@ class ProfileController < ApplicationController
       property_name = property.name
     end
 
-    badge_tag = Tag.find_by_name("badge")
-
-    @levels, levels_use_prop = rewards_by_tag("level")
-    @levels = prepare_levels_to_show(@levels, property_name)
+    levels, levels_use_prop = rewards_by_tag("level")
+    @levels = prepare_levels_to_show(levels, property_name)
     
-    @badges, badges_use_prop = rewards_by_tag("badge")
-    @badges = order_elements(badge_tag, @badges)
-    @badges = badges.nil? ? nil : @badges[property_name]
-    @badges = order_elements(badge_tag, @badges)
+    badge_tag = Tag.find_by_name("badge")
+    badges, badges_use_prop = rewards_by_tag("badge")
+    @badges = badges.nil? ? nil : badges[property_name]
+    @badges = order_elements(badge_tag, badges)
 
     if small_mobile_device?
       render template: "/profile/rewards_mobile"
