@@ -57,7 +57,8 @@ class ProfileController < ApplicationController
   end
 
   def remove_provider
-  	auth = current_user.authentications.find_by_provider(params[:provider])
+    provider_name = "#{params[:provider]}_#{$site.id}"
+  	auth = current_user.authentications.find_by_provider(provider_name)
   	auth.destroy if auth
   	redirect_to "/profile/edit"
   end
