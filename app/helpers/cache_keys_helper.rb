@@ -40,8 +40,9 @@ module CacheKeysHelper
     "basic_reward_ids_cache_key"
   end
   
-  def get_all_rewards_map_cache_key
-    "all_rewards_catalogue_map_key"
+  def get_all_rewards_map_cache_key(property)
+    property_suffix = property ? "_for_property_#{property}" : ""
+    "all_rewards_catalogue_map_key#{property_suffix}"
   end
   
   def get_catalogue_user_rewards_ids_key(user_id)

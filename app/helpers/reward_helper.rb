@@ -405,7 +405,7 @@ module RewardHelper
       Reward.find_by_name(reward_name)
     end
   end
-  
+
   def get_reward_image_for_status(reward)
     cache_short(get_status_rewar_image_key(reward.name, current_user.id)) do
       if user_has_reward(reward.name)
@@ -417,19 +417,19 @@ module RewardHelper
       end
     end
   end
-  
+
   def order_rewards(rewards, sort_param)
     rewards.sort! do |a, b|
       a[sort_param] <=> b[sort_param]
     end
   end
-  
+
   def get_reward_with_cta
     cache_short("rewards_with_cta") do
       Reward.includes(:call_to_action).where("rewards.media_type = 'CALLTOACTION' and call_to_actions.activated_at <= ? AND call_to_actions.activated_at IS NOT NULL AND call_to_actions.media_type <> 'VOID' AND call_to_actions.user_id IS NULL", Time.now).to_a
     end
   end
-  
+
   def get_unlocked_contents
     cache_short(get_unlocked_contents_for_user(current_user.id)) do
       rewards_with_cta = get_reward_with_cta
@@ -464,16 +464,16 @@ module RewardHelper
     reward_attributes.delete("id")
     Reward.new(reward_attributes, :without_protection => true)
   end
-  
+
   def duplicate_reward_tag(new_reward, tag)
     new_reward.reward_tags.build(:reward_id => new_reward.id, :tag_id => tag.tag_id)
   end
-  
+
   def get_superfan_points_gap
     contest_points = get_counter_about_user_reward(SUPERFAN_CONTEST_REWARD, false) || 0
     SUPERFAN_CONTEST_POINTS_TO_WIN - contest_points
   end
-  
+
   def get_point
     if $context_root.nil?
       get_counter_about_user_reward(MAIN_REWARD_NAME)
@@ -481,7 +481,7 @@ module RewardHelper
       get_current_property_point
     end
   end
-  
+
   # Calculate a progress into a reward level.
   #   level          - the level to check progress
   #   starting_point - the cost of the preceding level
@@ -489,12 +489,12 @@ module RewardHelper
     user_points = get_counter_about_user_reward(get_point)
     level.cost > 0 ? ((user_points - starting_point) * 100) / (level.cost - starting_point) : 100
   end
-  
+
   def get_level_number
     levels, use_property = rewards_by_tag("level")
     levels.count
   end
-  
+
   def user_has_currency_for_reward(reward)
     if reward.currency.nil?
       log_error("expected currency for reward", {reward_name: reward.name})
@@ -503,13 +503,26 @@ module RewardHelper
       get_counter_about_user_reward(reward.currency.name) >= reward.cost
     end
   end
-  
-  def get_all_rewards_map
-    cache_short(get_all_rewards_map_cache_key) do
-      all_rewards = Hash.new
+
+  def get_all_rewards_map(property = nil)
+    cache_short(get_all_rewards_map_cache_key(property)) do
+      all_rewards = {}
+      where_conditions = []
+
+      if property && property != "all"
+        rewards_with_tag_property = get_rewards_with_tag(property)
+        if rewards_with_tag_property.empty?
+          return {}
+        else
+          where_conditions << "rewards.id IN (#{rewards_with_tag_property.map{|r| r.id}.join(",")})"
+        end
+      end
+
       basic_rewards_ids = get_basic_rewards_ids()
-      if basic_rewards_ids.any?
-        rewards = Reward.includes(:currency).includes(:call_to_action).where("rewards.id not in (?)", get_basic_rewards_ids).order("created_at DESC")
+      where_conditions << "rewards.id NOT IN (#{basic_rewards_ids.join(",")})" if basic_rewards_ids.any?
+
+      if where_conditions.any?
+        rewards = Reward.includes(:currency).includes(:call_to_action).where(where_conditions.join(" AND ")).order("created_at DESC")
       else
         rewards = Reward.includes(:currency).includes(:call_to_action).order("created_at DESC")
       end
@@ -520,19 +533,19 @@ module RewardHelper
       all_rewards
     end
   end
-  
+
   def is_basic_reward(reward)
     basic_tag = Tag.find_by_name("basic")
     reward_tags = reward.reward_tags.map{ |rt| [rt.id] }
     reward_tags.include?(basic_tag.id)
   end
-  
+
   def get_basic_rewards_ids
     cache_short(get_basic_reward_cache_key) do
       get_rewards_with_tag("basic").map{ |rt| rt.id }
     end
   end
-  
+
   def get_user_reward_status(reward)
     if current_user
       if user_has_reward(reward.name)

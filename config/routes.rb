@@ -127,6 +127,7 @@ Fandom::Application.routes.draw do
         match "/browse/category/:id", :to => "browse#index_category"
         match "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
         match "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
+        match "/reward/catalogue", :to => "reward#index"
         
         devise_scope :user do
           post "/users", :to => "registrations#create"
@@ -456,7 +457,7 @@ Fandom::Application.routes.draw do
   match '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }
   match '/check_next_interaction', to: "call_to_action#check_next_interaction", defaults: { format: 'json' }
   
-  #reward
+  # Reward
   match "/reward/catalogue", :to => "reward#index"
   match "/reward/catalogue/all", :to => "reward#show_all_catalogue"
   match "/reward/catalogue/available/all", :to => "reward#show_all_available_catalogue"

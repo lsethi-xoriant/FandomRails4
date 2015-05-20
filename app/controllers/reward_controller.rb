@@ -6,72 +6,81 @@ require 'fandom_utils'
 class RewardController < ApplicationController
   include ApplicationHelper
   include RewardHelper
-  
+
   def index
-    all_rewards = get_all_rewards_map
+    property = get_property_for_reward_catalogue
+    all_rewards_hash = get_all_rewards_map(property)
     if current_user
-      user_rewards = get_user_rewards(all_rewards).slice(0,8)
-      user_available_rewards = get_user_available_rewards(all_rewards)
+      user_rewards = get_user_rewards(all_rewards_hash).slice(0,8)
+      user_available_rewards = get_user_available_rewards(all_rewards_hash)
     else
       user_rewards = []
       user_available_rewards = []
     end
-    newest_rewards = all_rewards.map{|k,v| v}.sort_by{|reward| reward.created_at}.slice(0,8)
-    all_rewards = []
+    newest_rewards = all_rewards_hash.map{ |k, v| v }.sort_by{|reward| reward.created_at}.slice(0,8)
     reward_list = {
       "user_rewards" => prepare_rewards_for_presentation(user_rewards),
       "user_available_rewards" => prepare_rewards_for_presentation(user_available_rewards),
       "newest_rewards" => prepare_rewards_for_presentation(newest_rewards),
-      "all_rewards" => prepare_rewards_for_presentation(all_rewards)
+      "all_rewards" => prepare_rewards_for_presentation(all_rewards_hash.values)
+
     }
     @reward_list = reward_list
   end
-  
+
+  def get_property_for_reward_catalogue
+    get_context()
+  end
+
   def prepare_rewards_for_presentation(rewards)
     unless rewards.empty?
       reward_info_list = []
       rewards.each do |reward|
-        reward_info_list << {
-          "calltoaction" => { 
-            "id" => reward.call_to_action.id,
-            "slug" => reward.call_to_action.slug,
-            "title" => reward.call_to_action.title,
-            "thumbnail_url" => reward.call_to_action.thumbnail_url,
-          },
-          "reward_info" => {
-            "cost" => reward.cost,
-            "status" => get_user_reward_status(reward)
+        if reward.call_to_action
+          reward_info_list << {
+            "calltoaction" => { 
+              "id" => reward.call_to_action.id,
+              "slug" => reward.call_to_action.slug,
+              "title" => reward.call_to_action.title,
+              "thumbnail_url" => reward.call_to_action.thumbnail_url,
+            },
+            "reward_info" => {
+              "cost" => reward.cost,
+              "status" => get_user_reward_status(reward)
+            }
           }
-        }
+        end
       end
       reward_info_list
     end
   end
-  
+
   def get_catalogue_user_rewards_ids
     cache_short(get_catalogue_user_rewards_ids_key(current_user.id)) do
-      Reward.joins(:user_rewards).select("rewards.id").where("user_rewards.period_id is null AND user_rewards.available = true AND user_rewards.counter > 0 AND user_rewards.user_id = ? AND rewards.id NOT IN (?)", current_user.id, get_basic_rewards_ids).to_a
+      Reward.joins(:user_rewards).select("rewards.id").where("user_rewards.period_id IS NULL AND user_rewards.available = true AND user_rewards.counter > 0 AND user_rewards.user_id = ? AND rewards.id NOT IN (?)", current_user.id, get_basic_rewards_ids).to_a
     end
   end
-  
+
   def get_user_rewards(all_rewards)
+    return [] if all_rewards.empty?
     user_rewards = []
     get_catalogue_user_rewards_ids().each do |reward|
-      user_rewards << all_rewards[reward.id]
+      user_rewards << all_rewards[reward.id] if all_rewards[reward.id]
     end
     user_rewards
   end
-  
+
   def get_user_available_rewards(all_rewards)
-    avaiable_rewards = []
+    return [] if all_rewards.empty?
+    available_rewards = []
     all_rewards.each do |key, reward|
       if user_has_currency_for_reward(reward) && !user_has_reward(reward.name)
-        avaiable_rewards << reward
+        available_rewards << reward
       end
     end
-    avaiable_rewards
+    available_rewards
   end
-  
+
   def show
     @reward = Reward.find(params[:reward_id])
     user_reward = UserReward.where("user_id = ? AND reward_id = ?", current_user.id, @reward.id).first
@@ -84,7 +93,7 @@ class RewardController < ApplicationController
       @currency_to_buy_reward = @user_can_buy_reward ? 0 : (@reward.cost - user_reward.counter)
      end
   end
-  
+
   def buy_reward_attempt
     response = {}
     reward = Reward.find(params[:reward_id])
@@ -104,9 +113,9 @@ class RewardController < ApplicationController
       format.json { render :json => response.to_json }
     end
   end
-  
+
   def show_all_catalogue
-    all_rewards = get_all_rewards_map.map{|k,v| v}.sort_by{|reward| reward.created_at}
+    all_rewards = get_all_rewards_map(get_property_for_reward_catalogue).map{|k,v| v}.sort_by{|reward| reward.created_at}
     reward_list = {
       "all_rewards" => prepare_rewards_for_presentation(all_rewards)
     }
@@ -114,10 +123,10 @@ class RewardController < ApplicationController
     @reward_key = "all_rewards"
     @reward_list = reward_list
   end
-  
+
   def show_all_available_catalogue
     if current_user
-      all_rewards = get_all_rewards_map
+      all_rewards = get_all_rewards_map(get_property_for_reward_catalogue)
       user_available_rewards = get_user_available_rewards(all_rewards)
       reward_list = {
         "user_available_rewards" => prepare_rewards_for_presentation(user_available_rewards)
@@ -130,10 +139,10 @@ class RewardController < ApplicationController
       redirect_to "/reward/catalogue" 
     end
   end
-  
+
   def show_all_my_catalogue
     if current_user
-      all_rewards = get_all_rewards_map
+      all_rewards = get_all_rewards_map(get_property_for_reward_catalogue)
       user_rewards = get_user_rewards(all_rewards)
       reward_list = {
         "user_rewards" => prepare_rewards_for_presentation(user_rewards),
@@ -146,9 +155,8 @@ class RewardController < ApplicationController
       redirect_to "/reward/catalogue" 
     end
   end
-  
+
   def how_to
-    
   end
-  
+
 end
