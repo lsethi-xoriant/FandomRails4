@@ -119,7 +119,9 @@ class ProfileController < ApplicationController
     badges, badges_use_prop = rewards_by_tag("badge")
     if badges && badges_use_prop
       @badges = badges[property_name]
-      @badges = order_elements(badge_tag, @badges)
+      if @badges
+        @badges = order_elements(badge_tag, @badges)
+      end
     end
 
     if small_mobile_device?
