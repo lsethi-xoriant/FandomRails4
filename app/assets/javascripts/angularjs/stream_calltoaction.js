@@ -1804,7 +1804,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       window.location = interaction_info.interaction.resource.url;
     }
 
-    if(interaction_info.interaction.resource_type == "vote") {
+    if(interaction_info.interaction.resource_type == "vote" || interaction_info.interaction.resource_type == "versus") {
       if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
         interaction_info.anonymous_user_interaction_info = data.user_interaction;
       }
@@ -1918,7 +1918,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.computePercentageForVersus = function(interaction_info, answer_id) {
     if(interaction_info.user_interaction) {
-      return $scope.computePercentage(interaction_info.interaction.resource.counter, interaction_info.interaction.resource.counter_aux[answer_id]);
+      answer_counter = interaction_info.interaction.resource.counter_aux[answer_id]
+      if(answer_counter) {
+        return $scope.computePercentage(interaction_info.interaction.resource.counter, answer_counter);
+      } else {
+        return 0;
+      }
     } else {
       return 0;
     }
