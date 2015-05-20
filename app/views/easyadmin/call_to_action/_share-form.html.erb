@@ -12,42 +12,17 @@
 
 			<div class="col-lg-3">
 				<label>Provider per lo share</label>
-				<div class="checkbox">
-					<label>
-					<input class="facebook-checkbox" type="checkbox" value="facebook" onchange="updateJsonForShare(this)">
-						Facebook
-					</label>
-				</div>
-				<div class="checkbox">
-					<input class="twitter-checkbox" type="checkbox" value="twitter" onchange="updateJsonForShare(this)">
-						Twitter
-					</label>
-				</div>
-				<div class="checkbox">
-					<input class="google-plus-checkbox" type="checkbox" value="googlePlus" onchange="updateJsonForShare(this)">
-						Google+
-					</label>
-				</div>
-				<div class="checkbox">
-					<input class="whatsapp-checkbox" type="checkbox" value="whatsapp" onchange="updateJsonForShare(this)">
-						WhatsApp
-					</label>
-				</div>
-				<div class="checkbox">
-					<input class="linkedin-checkbox" type="checkbox" value="linkedin" onchange="updateJsonForShare(this)">
-						LinkedIn
-					</label>
-				</div>
-				<div class="checkbox">
-					<input class="email-checkbox" type="checkbox" value="twitter" onchange="updateJsonForShare(this)">
-						Email
-					</label>
-				</div>
-				<div class="checkbox">
-					<input class="direct_url-checkbox" type="checkbox" value="twitter" onchange="updateJsonForShare(this)">
-						Direct url
-					</label>
-				</div>
+
+				<% ["facebook", "twitter", "google-plus", "whatsapp", "linkedin", "email", "direct-url"].each do |provider| %>
+
+					<div class="checkbox">
+						<label>
+						<input class="<%= provider %>-checkbox" type="checkbox" value="<%= provider %>" onchange="updateJsonForShare(this)">
+							<%= provider.gsub("-", " ").capitalize %>
+						</label>
+					</div>
+
+				<% end %>
 
 				<div class="form-group">
           <label class="text-input">Richiesto per il completamento</label>
@@ -77,15 +52,15 @@
 						<hr>
 					 	<div class="form-group">
               <label class="text-input">Titolo</label>
-              <%= text_field_tag :facebook_message, nil, class: "form-control facebook-message", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :facebook_message, nil, class: "form-control facebook-message", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
           	<div class="form-group">
               <label class="text-input">Descrizione</label>
-              <%= text_field_tag :facebook_description, nil, class: "form-control facebook-description", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :facebook_description, nil, class: "form-control facebook-description", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
           	<div class="form-group">
               <label class="text-input">Link</label>
-              <%= text_field_tag :facebook_link, nil, class: "form-control facebook-link", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :facebook_link, nil, class: "form-control facebook-link", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
          </div>
          <div class="twitter-share hidden">
@@ -93,11 +68,11 @@
 						<hr>
 					 	<div class="form-group">
               <label class="text-input">Messaggio</label>
-              <%= text_field_tag :twitter_message, nil, class: "form-control twitter-message", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :twitter_message, nil, class: "form-control twitter-message", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
           	<div class="form-group">
               <label class="text-input">Link</label>
-              <%= text_field_tag :twitter_link, nil, class: "form-control twitter-link", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :twitter_link, nil, class: "form-control twitter-link", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
 				</div>
 				<div class="google-plus-share hidden">
@@ -105,15 +80,15 @@
 						<hr>
 					 	<div class="form-group">
               <label class="text-input">Titolo</label>
-              <%= text_field_tag :google_plus_message, nil, class: "form-control google-plus-message", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :google_plus_message, nil, class: "form-control google-plus-message", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
           	<div class="form-group">
               <label class="text-input">Descrizione</label>
-              <%= text_field_tag :google_plus_description, nil, class: "form-control google-plus-description", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :google_plus_description, nil, class: "form-control google-plus-description", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
           	<div class="form-group">
               <label class="text-input">Link</label>
-              <%= text_field_tag :google_plus_link, nil, class: "form-control google-plus-link", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :google_plus_link, nil, class: "form-control google-plus-link", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
          </div>
          <div class="whatsapp-share hidden">
@@ -121,11 +96,11 @@
 						<hr>
 					 	<div class="form-group">
               <label class="text-input">Messaggio</label>
-              <%= text_field_tag :whatsapp_message, nil, class: "form-control whatsapp-message", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :whatsapp_message, nil, class: "form-control whatsapp-message", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
           	<div class="form-group">
               <label class="text-input">Link</label>
-              <%= text_field_tag :whatsapp_link, nil, class: "form-control whatsapp-link", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :whatsapp_link, nil, class: "form-control whatsapp-link", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
          </div>
          <div class="linkedin-share hidden">
@@ -133,15 +108,15 @@
 						<hr>
 					 	<div class="form-group">
               <label class="text-input">Titolo</label>
-              <%= text_field_tag :linkedin_message, nil, class: "form-control linkedin-message", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :linkedin_message, nil, class: "form-control linkedin-message", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
           	<div class="form-group">
               <label class="text-input">Descrizione</label>
-              <%= text_field_tag :linkedin_description, nil, class: "form-control linkedin-description", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :linkedin_description, nil, class: "form-control linkedin-description", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
           	<div class="form-group">
               <label class="text-input">Link</label>
-              <%= text_field_tag :linkedin_link, nil, class: "form-control linkedin-link", id: nil, onkeyup: "updateProviderJson(this)" %>
+              <%= text_field_tag :linkedin_link, nil, class: "form-control linkedin-link", id: nil, onkeyup: "updateProviderJson(this)", onchange: "updateProviderJson(this)" %>
           	</div>
          </div>
 			</div>
@@ -236,7 +211,7 @@
 			}
 
 			if(json.direct_url) {
-				$(provider_div).find(".direct_url-checkbox").attr("checked", "checked");
+				$(provider_div).find(".direct-url-checkbox").attr("checked", "checked");
 			}
 
 		}
@@ -255,7 +230,7 @@
 		whatsapp_checkbox = $(element).parent().parent().parent().parent().find(".whatsapp-checkbox")[0];
 		linkedin_checkbox = $(element).parent().parent().parent().parent().find(".linkedin-checkbox")[0];
 		email_checkbox = $(element).parent().parent().parent().parent().find(".email-checkbox")[0];
-		direct_url_checkbox = $(element).parent().parent().parent().parent().find(".direct_url-checkbox")[0];
+		direct_url_checkbox = $(element).parent().parent().parent().parent().find(".direct-url-checkbox")[0];
 		
 		if(facebook_checkbox.checked) {
 			json.facebook = {}
@@ -279,10 +254,10 @@
 		}
 
 		if(google_plus_checkbox.checked) {
-			json.gplus = {}
-			json.gplus.message = provider_div.find(".google-plus-message").val(); 
-			json.gplus.description = provider_div.find(".google-plus-description").val(); 
-			json.gplus.link = provider_div.find(".google-plus-link").val(); 
+			json.google_plus = {}
+			json.google_plus.message = provider_div.find(".google-plus-message").val(); 
+			json.google_plus.description = provider_div.find(".google-plus-description").val(); 
+			json.google_plus.link = provider_div.find(".google-plus-link").val(); 
 
 			$(provider_div).find(".google-plus-share").removeClass("hidden");
 		} else {
@@ -337,7 +312,7 @@
 		whatsapp_checkbox = $(element).parent().parent().parent().parent().find(".whatsapp-checkbox")[0];
 		linkedin_checkbox = $(element).parent().parent().parent().parent().find(".linkedin-checkbox")[0];
 		email_checkbox = $(element).parent().parent().parent().parent().find(".email-checkbox")[0];
-		direct_url_checkbox = $(element).parent().parent().parent().parent().find(".direct_url-checkbox")[0];
+		direct_url_checkbox = $(element).parent().parent().parent().parent().find(".direct-url-checkbox")[0];
 	
 		if(facebook_checkbox.checked) {
 			json.facebook = {};
@@ -353,16 +328,16 @@
 		}
 
 		if(google_plus_checkbox.checked) {
-			json.gplus = {};
-			json.gplus.message = google_plus_share.find(".google-plus-message").val();
-			json.gplus.description = google_plus_share.find(".google-plus-description").val();
-			json.gplus.link = google_plus_share.find(".google-plus-link").val(); 
+			json.google_plus = {};
+			json.google_plus.message = google_plus_share.find(".google-plus-message").val();
+			json.google_plus.description = google_plus_share.find(".google-plus-description").val();
+			json.google_plus.link = google_plus_share.find(".google-plus-link").val(); 
 		}
 
 		if(whatsapp_checkbox.checked) {
 			json.whatsapp = {};
-			json.whatsapp.message = twitter_share.find(".whatsapp-message").val(); 
-			json.whatsapp.link = twitter_share.find(".whatsapp-link").val(); 
+			json.whatsapp.message = whatsapp_share.find(".whatsapp-message").val(); 
+			json.whatsapp.link = whatsapp_share.find(".whatsapp-link").val(); 
 		}
 
 		if(linkedin_checkbox.checked) {
