@@ -18,7 +18,7 @@ my_position, total = get_my_general_position_in_property
 				<div class="progress" style="margin: 10px auto; height: 12px; width: 65%;">
 					<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: <%= level["progress"] %>%;"></div>
 				</div>
-				<p class="profile-header__item__subtitle">Livello <%= level["level_number"] %> di <%= disney_get_level_number %></p>
+				<p class="profile-header__item__subtitle">Livello <%= level["level_number"] %> di <%= get_level_number() %></p>
 			<% end %>
 		</div>
 	</div>

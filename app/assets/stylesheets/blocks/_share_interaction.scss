@@ -28,14 +28,10 @@
   margin-bottom: 10px;
 }
 
-.share-interaction__cta__info__fb-button {
-  width: 44px;
+.share-interaction__cta__info__fb-button, .share-interaction__cta__info__email-button {
   padding: 0;
+  width: 40px;
   height: 40px;
-}
-
-.share-interaction__cta__info__email-button {
-  padding: 6px 9px;
 }
 
 .share-interaction__cover__info__glyphicon-fb {

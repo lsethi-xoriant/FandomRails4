@@ -216,7 +216,7 @@ module UserInteractionHelper
           counter.update_attribute(:counter, counter.counter + value)
         end
       else
-        if interaction.resource_type.downcase == "vote"
+        if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "quiz"
           aux = { "#{value}" => 1 }
         else
           aux = {}

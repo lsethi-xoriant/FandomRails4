@@ -1,5 +1,15 @@
 module ProfileHelper
 
+  def get_level_number()
+    property = get_property()
+    if property.present?
+      property_name = property.name
+    end
+
+    levels, use_property = rewards_by_tag("level")
+    use_property ? levels[property_name].count : levels.count
+  end
+
   def get_current_level()
     property = get_property()
     if property.present?
@@ -8,11 +18,31 @@ module ProfileHelper
 
     current_level = cache_short(get_current_level_by_user(current_user.id, property_name)) do
       levels, levels_use_prop = rewards_by_tag("level")
-      property_levels = prepare_levels_to_show(levels, property_name)
-      current_level = property_levels.select{|key, hash| hash["status"] == "progress" }.first || property_levels.select { |key, hash| hash["status"] == "gained" }.to_a.last 
-      current_level.present? ? current_level[1] : CACHED_NIL
+      if levels
+        property_levels = prepare_levels_to_show(levels, property_name)
+
+        level_in_progress = get_max_level_with_status(property_levels, "progress")
+
+        current_level = level_in_progress || get_max_level_with_status(property_levels, "gained")
+        current_level ? current_level : CACHED_NIL
+      else
+        CACHED_NIL
+      end
     end
     cached_nil?(current_level) ? nil : current_level
+  end
+
+  def get_max_level_with_status(levels, status)
+    max_level = nil
+    max_cost = -1
+    levels.each do  |key, level| 
+      cost = level["cost"].to_i
+      if level["status"] == status && (!max_level || cost > max_cost)
+        max_level = level
+        max_cost = cost
+      end
+    end
+    max_level
   end
 
   def prepare_levels_to_show(levels, property_name)

@@ -453,11 +453,6 @@ module DisneyHelper
     end
   end
   
-  def disney_get_level_number
-    levels, use_property = rewards_by_tag("level")
-    levels[get_disney_property].count
-  end
-  
   def disney_link_to_profile(options = nil, html_options = nil, &block)
     if small_mobile_device?
       light_link_to("/profile/index", options, html_options, &block)

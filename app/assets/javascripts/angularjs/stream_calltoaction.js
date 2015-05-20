@@ -733,7 +733,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.likePressed = function(interaction_info) {
-    if(interaction_info.user_interaction) {
+    if(angular.isDefined(interaction_info) && interaction_info.user_interaction) {
       return (JSON.parse(interaction_info.user_interaction.aux)["like"]);
     } else {
       return false;
@@ -1192,7 +1192,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   	this.media_data = media_data;
   	
 	  this.playerManager = new YT.Player( (this.playerId), {
-        playerVars: { html5: 1, controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 },
+        playerVars: { html5: 1, rel: 0, wmode: "transparent", showinfo: 0 }, /* { html5: 1, controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 }, */
         height: "100%", width: "100%",
         videoId: this.media_data,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
@@ -1236,7 +1236,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     } else if(current_video_player_state == 0) {
 
-      updateEndVideoInteraction(current_video_player, calltoaction_id);
+      updateEndVideoInteraction(calltoaction_id);
       mayStopPolling();
 
     } else {
@@ -1573,7 +1573,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
     url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.slug;
-    if($scope.calltoaction_info.calltoaction.extra_fields.linked_result_title) {
+    if(calltoaction_info.calltoaction.extra_fields.linked_result_title) {
       url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
       message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
     }
@@ -1804,7 +1804,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       window.location = interaction_info.interaction.resource.url;
     }
 
-    if(interaction_info.interaction.resource_type == "vote") {
+    if(interaction_info.interaction.resource_type == "vote" || interaction_info.interaction.resource_type == "versus") {
       if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
         interaction_info.anonymous_user_interaction_info = data.user_interaction;
       }
@@ -1918,7 +1918,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.computePercentageForVersus = function(interaction_info, answer_id) {
     if(interaction_info.user_interaction) {
-      return $scope.computePercentage(interaction_info.interaction.resource.counter, interaction_info.interaction.resource.counter_aux[answer_id]);
+      answer_counter = interaction_info.interaction.resource.counter_aux[answer_id]
+      if(answer_counter) {
+        return $scope.computePercentage(interaction_info.interaction.resource.counter, answer_counter);
+      } else {
+        return 0;
+      }
     } else {
       return 0;
     }

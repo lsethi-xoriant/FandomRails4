@@ -52,14 +52,14 @@
       <% end %>
     </div>
     <div class="row">
-      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions" class="col-xs-6">
+      <div ng-if="likeInteractionPresent(calltoaction_info)" ng-repeat="interaction_info in [calltoaction_info.like_interaction_info]" class="col-xs-6">
         <div class="like-interaction__cover__info">
           <button ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}">
             <span class="fa fa-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span>
           </button><span class="like-interaction__cover__info__text">{{interaction_info.interaction.resource.counter}} <span class="hidden-xs">mi piace</span></span>
         </div>
       </div>
-      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="col-xs-6 text-right">
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="col-xs-6 text-right" ng-class="{'col-xs-12': !likeInteractionPresent(calltoaction_info)}">
         <div class="share-interaction__cover__col">
           <%= render partial: "/call_to_action/share_interaction" %>
         </div>
