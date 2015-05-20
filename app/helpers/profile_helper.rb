@@ -8,9 +8,13 @@ module ProfileHelper
 
     current_level = cache_short(get_current_level_by_user(current_user.id, property_name)) do
       levels, levels_use_prop = rewards_by_tag("level")
-      property_levels = prepare_levels_to_show(levels, property_name)
-      current_level = property_levels.select{|key, hash| hash["status"] == "progress" }.first || property_levels.select { |key, hash| hash["status"] == "gained" }.to_a.last 
-      current_level.present? ? current_level[1] : CACHED_NIL
+      if levels
+        property_levels = prepare_levels_to_show(levels, property_name)
+        current_level = property_levels.select{|key, hash| hash["status"] == "progress" }.first || property_levels.select { |key, hash| hash["status"] == "gained" }.to_a.last 
+        current_level.present? ? current_level[1] : CACHED_NIL
+      else
+        CACHED_NIL
+      end
     end
     cached_nil?(current_level) ? nil : current_level
   end
