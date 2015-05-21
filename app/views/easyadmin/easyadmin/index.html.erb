@@ -291,8 +291,22 @@
           <a href="/easyadmin/settings/ranking" style="color: #FFF">
             <i class="fa fa-sort-amount-asc" style="color: #FFF"></i> Pagina Classifiche <br/>
           </a>
+          <% if $site.id == "disney" %>
+            <a href="/easyadmin/settings/properties" style="color: #FFF">
+              <i class="fa fa-cubes" style="color: #FFF"></i> Impostazioni property <br/>
+            </a>
+          <% end %>
           <a href="/easyadmin/settings/notifications" style="color: #FFF">
             <i class="fa fa-paper-plane" style="color: #FFF"></i> Impostazioni notifiche <br/>
+          </a>
+          <a href="/easyadmin/settings/profanities" style="color: #FFF">
+            <i class="fa fa-ban" style="color: #FFF"></i> Dizionario parole vietate <br/>
+          </a>
+          <a href="/easyadmin/settings/instagram_subscriptions" style="color: #FFF">
+            <i class="fa fa-instagram" style="color: #FFF"></i> Impostazioni Instagram <br/>
+          </a>
+          <a href="/easyadmin/settings/clear_cache" style="color: #FFF">
+            <i class="fa fa-trash-o" style="color: #FFF"></i> Cancella la cache <br/>
           </a>
         </div> <!-- /.details --> 
         <div class="visual">

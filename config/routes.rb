@@ -447,6 +447,7 @@ Fandom::Application.routes.draw do
     match "settings/profanities", :to => "settings#profanities_settings"
     match "settings/profanities/save", :to => "settings#save_profanities_settings"
     match "settings/instagram_subscriptions", :to => "settings#instagram_subscriptions_settings"
+    match "settings/instagram_subscriptions/save", :to => "settings#save_instagram_subscriptions_settings"
     match "/settings/clear_cache", :to => "cache#clear_cache"
   end
 

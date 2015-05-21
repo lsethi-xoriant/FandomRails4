@@ -108,14 +108,28 @@ class Easyadmin::SettingsController < Easyadmin::EasyadminController
   end
 
   def instagram_subscriptions_settings
+    instagram_callback_url = Setting.find_by_key(INSTAGRAM_CALLBACK_URL)
     instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
+    @saved = true
+    if !instagram_callback_url
+      instagram_callback_url = Setting.create(:key => INSTAGRAM_CALLBACK_URL, :value => "")
+    end
     if !instagram_subscriptions_setting
       instagram_subscriptions_setting = Setting.create(:key => INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY, :value => "{}")
     end
+    @instagram_callback_url = instagram_callback_url.value
     @instagram_subscriptions_setting = JSON.parse(instagram_subscriptions_setting.value)
   end
 
   def save_instagram_subscriptions_settings
+    instagram_callback_url = Setting.find_by_key(INSTAGRAM_CALLBACK_URL)
+    instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
+    instagram_callback_url.update_attribute(:value, params[:instagram_callback_url])
+    @saved = true
+    @instagram_callback_url = instagram_callback_url.value
+    @instagram_subscriptions_setting = JSON.parse(instagram_subscriptions_setting.value)
+    flash[:notice] = "Modifiche salvate correttamente"
+    render template: "/easyadmin/settings/instagram_subscriptions_settings"
   end
 
 end
