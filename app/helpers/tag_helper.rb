@@ -141,7 +141,7 @@ module TagHelper
       tags.where("#{where_clause}")
     end
     if params[:limit]
-      offset, limit = offset, limit = params[:limit][:offset], params[:limit][:perpage]
+      offset, limit = params[:limit][:offset], params[:limit][:perpage]
       tags = tags.offset(offset).limit(limit)
     end
     tags.order("created_at DESC").to_a

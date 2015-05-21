@@ -101,15 +101,23 @@ class ApplicationController < ActionController::Base
     
     init_ctas = $site.init_ctas
     
-    tag = get_property()
-    if tag
-      tag_name = tag.name
+    property = get_property()
+    featured_tag_name = "featured"
+
+    if property
+      property_name = property.name
+      featured_content_previews = get_content_previews(featured_tag_name, [property])
+    else
+      featured_content_previews = get_content_previews(featured_tag_name)
     end
+
     params = { "page_elements" => ["like", "comment", "share"] }
-    @calltoaction_info_list, @has_more = get_ctas_for_stream(tag_name, params, init_ctas)
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(property_name, params, init_ctas)
+
 
     @aux_other_params = { 
       calltoaction_evidence_info: true,
+      featured_content_previews: featured_content_previews,
       tag_menu_item: "home"
     }
   end
