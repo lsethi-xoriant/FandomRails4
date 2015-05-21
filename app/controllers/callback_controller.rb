@@ -13,8 +13,11 @@ class CallbackController < ActionController::Base
 
   def echo_service
     headers = ""
-    response.header.each_header do |key, value| 
-      headers += "#{key} = #{value} - "
+    response_header = response.header
+    unless response_header.empty?
+      response_header.each_header do |key, value| 
+        headers += "#{key} = #{value} - "
+      end
     end
     log_info(headers)
     logger.info(headers)
