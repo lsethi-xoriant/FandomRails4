@@ -1,85 +1,113 @@
-<style type="text/css">
-	.dropdown-menu{
-		width: 80%;
-		max-height: 300px;
-		overflow-y: scroll;
-	}
-</style>
 <div class="container container--default" ng-controller="SearchCtrl" ng-init="init(<%= @browse_section.to_json %>)">
-	<div class="row brws-item search-bar">
-		<div class="col-xs-12">
-			<%= form_tag("/browse/full_search",{method: "post", class: "navbar-form", role: "search"}) %>
-	        <div class="form-group col-xs-10">
-	          <input id="search" autocomplete="off" typeahead="result for results in getResults($viewValue)" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="resultSelected" name="query" type="text" class="form-control search-bar__input" placeholder="Search" style="width: 100%;">
-	        </div>
-	        <div class="form-group col-xs-2">
-	        	<button type="submit" class="btn btn-primary btn-block search-bar__button"><span>Cerca</span></button>
-	        </div>
-	     </form>
-	    </div>
-	</div>	
 	
-	<div class="browse-sections" ng-repeat="section in sections">
-		
+	<%= render partial: "/application/search", locals: { query: (defined? @query).nil? ? nil : @query } %>
+	
+	<% if flash[:notice] %>
 		<div class="row brws-item">
 			<div class="col-xs-12">
-		      <div class="section-heading">
-		        	<h3>
-		        		<img ng-src="{{section.icon_url}}" class="img-circle section-heading__icon" />
-		        		{{section.title}} <a href="{{section.view_all_link}}" class="section-heading__see-all">View all</a>
-		        	</h3>
-		      </div>
-		    </div>
-			<div class="col-xs-12 col-md-{{section.column_number}}" ng-repeat="content in section.contents">
-				<div class="cta-preview" ng-if="content.type == 'cta'">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="cta-preview__thumbnail">
-								<a href="{{content.detail_url}}">
-									<img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}" alt="..." ng-if="content.has_thumb">
-									<img class="img-responsive cta-preview__image" src="//placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
-								</a>
-								<div class="label label-warning cta-preview__points" ng-if="content.status != undefined">+ {{content.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
-							</div>
-						</div>
-						<div class="col-xs-12">
-							<h3 class="cta-preview__title">{{content.title | cut:true:70}}</h3>
-						</div>
-					</div>
-					<div class="row relateds-flexslider__footer">
-			            <div class="col-xs-12">
-			              <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.likes}}</p>
-			              <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.comments}}</p>
-			            </div>
-			        </div> 
-				</div>
-				
-				<div class="cta-preview cta-preview--category" ng-if="content.type == 'tag'">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="cta-preview__thumbnail cta-preview__thumbnail--category">
-								<a href="{{content.detail_url}}">
-									<img class="cta-preview__image cta-preview__image--category" ng-src="{{content.thumb_url}}" alt="..." ng-if="content.has_thumb">
-									<img class="cta-preview__image cta-preview__image--category" src="//placehold.it/420x300" alt="..." ng-if="!content.has_thumb">
-								</a>
-							</div>
-						</div>
-					</div>
-					<h3 class="cta-preview__title--category">{{content.title}}</h3>
-				</div>
+				<h3 class="text-center"><%= flash[:notice].html_safe %></h3>
 			</div>
+		</div>
+	<% end %>
+	
+	<div class="browse-sections" ng-repeat="section in sections" ng-if="section.contents.length > 0">	
+		<div class="row brws-item main-row" style="margin-top: 30px;">
+		  
+			  <!-- HEADING -->
+			<div class="col-sm-12">
+			  <div class="row section-heading">
+	    		<div class="col-xs-12">  
+			      <div class="relateds__icon-container text-center" ng-bind-html="section.icon_url">
+			      </div>
+			      <p class="relateds__title">{{section.title}} <%= link_to("{{section.view_all_link}}", class: "section-heading__see-all") do %>
+		            Vedi tutti
+		          <% end %></p>
+			    </div>
+			  </div>
+			</div>
+
+	    <div class="col-xs-12">
+		    <div class="rewards-flexslider" id="browse-{{$index}}--flexslider">
+		      <div class="flex-viewport-shadow hidden-xs"></div>
+		      <ul class="slides">
+		        <li class="relateds-flexslider__item" ng-repeat="content in section.contents">
+		          <a href="{{content.detail_url}}">	
+			          <div class="relateds-flexslider__item-panel" ng-if="content.type == 'cta'"> 
+			            <div class="row">
+			              <div class="col-xs-12">
+			                <div class="relateds-flexslider__thumbnail">
+			                  <img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}">            
+			                  <!-- STATUS -->
+			                  <div class="label label-warning cta-preview__points" ng-if="content.status > 0">+ {{content.status}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+							  <div class="col-xs-12 cta-cover__winnable-reward text-right ng-scope" ng-if="content.status == null"><span class="label label-success cta-cover__winnable-reward__label">Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span></span></div>
+							  <span class="label label-default cta-cover__vote-count--browse" ng-if="content.votes != null">{{content.votes}} Voti</span>
+			                </div>
+			                <p class="cta-preview__title">{{content.title | cut:true:70}}</p>
+			              </div>
+			            </div>
+			            <div class="row relateds-flexslider__footer">
+			              <div class="col-xs-12">
+			                <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.likes}}</p>
+			                <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.comments}}</p>
+			              </div>
+			            </div>
+			          </div>
+			          <div class="relateds-flexslider__item-panel" ng-if="content.type == 'tag'" ng-style ="{'background-image': 'url('+content.thumb_url+')'" style="background-position: center center; background-size: auto 100%;"> 
+				          <div class="row">
+				            <div class="col-xs-12 text-center cta-preview--tag">
+				              <p class="cta-preview__title--tag">{{content.title | cut:true:70}}</p>
+				            </div>
+				          </div>
+				      </div>
+		          </a>
+		        </li>
+		      </ul>
+		    </div>
+		  </div>
 		</div>
 	</div>
 	
-	<script type="text/ng-template" id="itemTpl.html">
-	   <a href="{{match.model.detail_url}}" tabindex="-1">
-	   	<div class='row'>
-	   		<div class='col-xs-4 col-sm-2'>
-	   			<img ng-src="{{match.model.thumb_url}}" class="img-responsive" />
-	   		</div>
-	   		<div class='col-xs-8 col-sm-10'>{{match.model.title | cut:true:70}}</div>
-	   	</div>
-	   </a>
-	</script>
-	
 </div>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+      is_last_rewards_flexslider_slide = new Object();
+	    $('.rewards-flexslider').flexslider({
+	      animation: "slide",
+        slideshow: false,
+        animationLoop: false,
+        touch: true,
+        itemWidth: 258,
+        itemMargin: 15,
+        controlNav: false,
+        prevText: "",
+        nextText: "",
+        start: function(slider) {
+          if(slider.pagingCount == 1) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          }
+        },
+        before: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }
+        },
+        end: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+        }
+	    });
+	});
+	
+	function serchRedirect(query){
+		$("#search").val(query);
+		$("#full-search").attr("action", "/browse/full_search").submit();
+	}
+	
+</script>

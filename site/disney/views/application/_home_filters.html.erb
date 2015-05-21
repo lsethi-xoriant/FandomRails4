@@ -1,12 +1,11 @@
-<div class="col-sm-12 filters__flexslider" ng-if="aux.featured_content_previews" ng-repeat="stripe in [aux.featured_content_previews]">
+<div class="col-sm-12 filters__flexslider" ng-if="aux.filter_info">
   <div class="flexslider filters__flexslider-desktop hidden-xs">
     <div class="flex-viewport-shadow"></div>
     <ul class="slides">
-      <li ng-repeat="content in stripe.contents" class="text-center filters__flexslider-desktop-item">
-        <%= light_link_to("/browse/category/{{content.slug}}", class: "filters__flexslider-a") do %>
-          <img ng-if="content.thumb_url" class="filters__flexslider-image" ng-src="{{content.thumb_url}}">  
-          <img ng-if="!content.thumb_url" class="filters__flexslider-image" src="//placehold.it/262x147/108ff7/108ff7">
-          <div  ng-if="!content.thumb_url"  class="filters__title">{{content.title}}</div>   
+      <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-desktop-item">
+        <%= light_link_to("/browse/category/{{filter.slug}}", class: "filters__flexslider-a") do %>
+          <img class="filters__flexslider-image" ng-src="{{filter.image}}">  
+          <div class="filters__title hidden">{{filter.title}}</div>   
         <% end %>
       </li>
       <li class="text-center filters__flexslider-desktop-item">
@@ -18,12 +17,12 @@
     </ul>
   </div>
 
-  <div class="flexslider filters__flexslider-mobile visible-xs">
+  <div class="flexslider filters__flexslider-mobile visible-xs" ng-if="aux.filter_info">
     <ul class="slides">
-      <li ng-repeat="content in stripe.contents" class="text-center filters__flexslider-mobile-item">
-        <%= light_link_to("/browse/category/{{content.slug}}") do %>
-          <p class="filters__title hidden">{{content.title}}</p>
-          <img  class="filters__flexslider-image" ng-src="{{content.thumb_url}}">
+      <li ng-repeat="filter in aux.filter_info" class="text-center filters__flexslider-mobile-item">
+        <%= light_link_to("/browse/category/{{filter.slug}}") do %>
+          <p class="filters__title hidden">{{filter.title}}</p>
+          <img  class="filters__flexslider-image" ng-src="{{filter.image}}">
         <% end %>
       </li>
       <li class="text-center filters__flexslider-mobile-item">
