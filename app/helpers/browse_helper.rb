@@ -382,8 +382,15 @@ module BrowseHelper
     # When a cta is edited the related tag is updated
     timestamp = from_updated_at_to_timestamp(main_tag.updated_at)
 
+    main_tag_name_for_cache = main_tag_name
+    if other_tags.any?
+      other_tags.each do |tag|
+        main_tag_name_for_cache = main_tag_name_for_cache + "_#{tag.name}"
+      end
+    end
+
     # TODO: cache change about number_of_elements????
-    content_preview_list, carousel_elements = cache_forever(get_content_previews_cache_key(main_tag_name, timestamp, params)) do
+    content_preview_list, carousel_elements = cache_forever(get_content_previews_cache_key(main_tag_name_for_cache, timestamp, params)) do
       if number_of_elements.nil?
         carousel_elements = get_elements_for_browse_carousel(main_tag)
       else
@@ -401,7 +408,7 @@ module BrowseHelper
     end
 
     if current_user
-      content_preview_list = cache_forever(get_content_previews_statuses_for_tag_cache_key(main_tag_name, current_user, params)) do
+      content_preview_list = cache_forever(get_content_previews_statuses_for_tag_cache_key(main_tag_name_for_cache, current_user, params)) do
         content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, current_user)
         content_preview_list
       end

@@ -21,6 +21,8 @@ def main
   tenant = config["tenant"]
   app_root_path = config["app_root_path"]
 
+  puts "aaa#{app_root_path}----"
+
   logger = Logger.new("#{app_root_path}/log/cache_update_daemon.log")
 
   conn = PG::Connection.open(db)

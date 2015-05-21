@@ -107,24 +107,28 @@ module TagHelper
   def get_tags_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
     where_clause = get_tag_where_clause_from_params(params)
-    tags = Tag
+    tags = Tag.includes(:tags_tags)
+
     unless tag_ids.empty?
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
       tags = tags.where("id IN (#{tag_ids_subselect})")
     end
+
     if !where_clause.empty?
       tags = tags.where("#{where_clause}")
     end
+
     if params[:limit]
-      offset, limit = offset, limit = params[:limit][:offset], params[:limit][:perpage]
+      offset, limit = params[:limit][:offset], params[:limit][:perpage]
       tags = tags.offset(offset).limit(limit)
     end
+
     tags.order("created_at DESC").to_a
   end
   
   def get_tags_with_tags(tag_ids, params = {})
     hidden_tags_ids = get_hidden_tag_ids
-    where_clause = get_tag_where_clause_from_params(params)
+    #where_clause = get_tag_where_clause_from_params(params)
     tags = Tag.includes(:tags_tags)
     
     if hidden_tags_ids.any? && tag_ids.empty?
@@ -137,9 +141,10 @@ module TagHelper
       tags = tags.where("tags.id in (#{tag_ids_subselect})")
     end
     
-    if !where_clause.empty?
-      tags.where("#{where_clause}")
-    end
+    # if !where_clause.empty?
+    #   tags.where("#{where_clause}")
+    # end
+
     if params[:limit]
       offset, limit = params[:limit][:offset], params[:limit][:perpage]
       tags = tags.offset(offset).limit(limit)
@@ -159,13 +164,11 @@ module TagHelper
   end
   
   def get_tag_ids_for_tag(tag)
-    cache_short(get_tag_names_for_tag_key(tag.id)) do
-      tags = {}
-      tag.tags_tags.each do |t| 
-        tags[Tag.find(t.other_tag_id).id] = Tag.find(t.other_tag_id).id
-      end
-      tags  
+    tags = {}
+    tag.tags_tags.each do |t| 
+      tags[Tag.find(t.other_tag_id).id] = Tag.find(t.other_tag_id).id
     end
+    tags  
   end
 
   def get_cta_tag_tagged_with(cta, tag_name)
