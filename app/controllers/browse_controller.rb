@@ -16,12 +16,23 @@ class BrowseController < ApplicationController
       extra_cache_key = ""
     end
     
-    @browse_section = init_browse_sections(get_search_tags_for_tenant, @tag_browse) 
+    @browse_section = init_browse_sections(get_search_tags_for_tenant(), @tag_browse) 
     
     if params[:query]
       @query = params[:query]
     end
     
+  end
+
+  # Get an array of tags to use to filter contents. 
+  # Filter contents in base of current property
+  def get_search_tags_for_tenant
+    property = get_property()
+    if property
+      property.name == $site.default_property ? [] : property.to_a
+    else
+      []
+    end
   end
   
   def get_tag_browse(tag_name)
