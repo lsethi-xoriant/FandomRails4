@@ -115,16 +115,6 @@ Fandom::Application.routes.draw do
         end
         
         match "/iur", to: "application#iur"
-        match "/browse", :to => "browse#index"
-        match "/browse/full_search", :to => "browse#full_search"
-        match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
-        match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
-        match "/browse/redirect/:query", :to => "browse#index"
-        match "/browse/view_all/:id", :to => "browse#index_category"
-        match "/browse/view_recent", :to => "browse#view_all_recent"
-        match "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
-        match "/browse/index_category_load_more", :to => "browse#index_category_load_more"
-        match "/browse/category/:id", :to => "browse#index_category"
         match "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
         match "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         match "/reward/catalogue", :to => "reward#index"
@@ -304,16 +294,18 @@ Fandom::Application.routes.draw do
   match "/upload", :to => "call_to_action#upload"
   
   match "/browse", :to => "browse#index"
-  match "/browse/contents/:tagname", :to => "browse#index"
-  match "/browse/search", :to => "browse#search"
-  match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
   match "/browse/full_search", :to => "browse#full_search"
-  match "/browse/fullscreen", :to => "browse#index_fullscreen"
+  match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
+  match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
+  match "/browse/redirect/:query", :to => "browse#index"
   match "/browse/view_all/:id", :to => "browse#index_category"
   match "/browse/view_recent", :to => "browse#view_all_recent"
   match "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
   match "/browse/index_category_load_more", :to => "browse#index_category_load_more"
   match "/browse/category/:id", :to => "browse#index_category"
+  match "/browse/contents/:tagname", :to => "browse#index"
+  match "/browse/search", :to => "browse#search"
+  match "/browse/fullscreen", :to => "browse#index_fullscreen"
   
   match "/gallery", :to => "gallery#index"
   match "/gallery/:id", :to => "gallery#show"

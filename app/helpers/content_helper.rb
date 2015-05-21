@@ -151,6 +151,7 @@ module ContentHelper
     ContentPreview.new(
       type: "tag",
       id: tag.id,
+      slug: tag.slug,
       has_thumb: has_thumb, 
       thumb_url: thumb_url,
       title: tag.title,
