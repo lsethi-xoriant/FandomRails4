@@ -113,7 +113,7 @@
                   Tag registrato: <%= tag_name %> - ID registrazione: <%= tag_subscription_id %> 
                 <% end %>
               </p>
-              <img style="display:none;" src="/assets/loading.gif" width="32px" height="32px">
+              <img class="subscription-status-image" style="display:none;" src="/assets/loading.gif" width="32px" height="32px">
             <% else %>
               <p> Per settare il tag Instagram da sottoscrivere, salvare prima la call to action. </p>
             <% end %>
@@ -144,6 +144,8 @@
   $(".instagram-tag").on("keyup", function() {
     button = $(this).siblings("a");
     img = $(this).siblings("img")[0];
+    p = $(this).siblings("p")[0];
+    $(p).text("");
     img.style.display = "none";
     img.src = "/assets/loading.gif";
     button.addClass("clickable");
@@ -161,15 +163,18 @@
 
   function changeTagSubscriptionRequest(interactionId, tagName, img) {
     $.ajax({
-      type: "POST",
-      url: "/modify_instagram_upload_object/" + interactionId + "/" + tagName,
+      type: "POST", 
+      dataType: "json", 
+      url: "/modify_instagram_upload_object/" + interactionId + "/" + tagName, 
       success: function(subscriptionId) {
         img.src = "/assets/icon-success.png";
-        img.siblings("p").val("Tag registrato: " + tagName + " - ID registrazione: " + subscriptionId )
-        img.siblings(".subscription-id").val(subscriptionId)
+        $(img).siblings("p").text("Tag registrato: " + tagName + " - ID registrazione: " + subscriptionId);
+        $(img).siblings(".subscription-id").val(subscriptionId);
       },
       error: function(data) {
         img.src = "/assets/icon-error.png";
+        $(img).siblings("p").text($.parseJSON(data.responseText).errors);
+        $(img).siblings(".subscription-id").val("");
       }
     });
   };

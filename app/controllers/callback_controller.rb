@@ -19,7 +19,7 @@ class CallbackController < ActionController::Base
         headers += "#{key} = #{value} - "
       end
     end
-    log_info(headers)
+    log_info("callback method called", headers)
     logger.info(headers)
   end
 

@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 require 'fandom_utils'
+require 'net/http'
 
 class ApplicationController < ActionController::Base
   protect_from_forgery except: [:instagram_new_tagged_media_callback, :facebook_app], :if => proc {|c| Rails.configuration.deploy_settings.fetch('forgery_protection', true) }
@@ -316,7 +317,11 @@ class ApplicationController < ActionController::Base
       res, add_success, subscription = add_instagram_tag_subscription(interaction, params[:tag_name])
     end
     add_success ||= false
-    render :json => subscription["id"].to_i if (delete_success and add_success)
+    if delete_success and add_success
+      render :json => subscription["id"].to_i
+    else
+      render :json => { :errors => "Errore #{delete_success ? "nell'aggiunta" : "nella disiscrizione"} del tag" }, :status => 500
+    end
   end
 
   def add_instagram_tag_subscription(interaction, tag_name)
@@ -335,17 +340,34 @@ class ApplicationController < ActionController::Base
     #    https://api.instagram.com/v1/subscriptions/
 
     request_params = { 
+      "ssl_version" => :TLSv1, 
       "client_id" => ig_settings["client_id"], 
       "client_secret" => ig_settings["client_secret"], 
       "object" => "tag", 
       "aspect" => "media", 
       "object_id" => tag_name, 
-      "callback_url" => "#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL)}/#{params[:tag_name]}"
+      "callback_url" => "http://dev.fandomlab.com#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL).value}/#{params[:tag_name]}"
     }
+    url = "https://api.instagram.com/v1/subscriptions/"
+    uri = URI.parse(url)
+    req = Net::HTTP::Post.new(uri.path)
+    req.set_form_data(request_params)
 
-    url = "https://api.instagram.com/v1/subscriptions#{build_arguments_string_for_request(request_params)}"
-    res = URI.parse(url).read
-    success = (JSON.parse(res["meta"]["code"]).to_i == 200) rescue false
+    http = Net::HTTP.new(uri.hostname, uri.port)
+    http.use_ssl = true
+    http.ssl_version = :TLSv1
+    res = http.start do |http|
+      http.request(req)
+    end
+
+    case res
+    when Net::HTTPSuccess, Net::HTTPRedirection
+      success = true
+    else
+      success = false
+      # res.value
+    end
+
     if success
 
       # We find the requested subscription from Instagram subscriptions list provided with response ("data" array). Structure below:
@@ -360,12 +382,10 @@ class ApplicationController < ActionController::Base
       #         {
       #           ...
       #         }]
-      res = JSON.parse(res)
       data = res["data"]
       new_tag = data.find { |subscription| subscription["object"] == tag and subscription["object_id"] == params[:tag_name] }
       aux = JSON.parse(interaction.aux) rescue {}
-      aux["instagram_tag"]["subscription_id"] = new_tag["subscription_id"]
-      aux["instagram_tag"]["name"] = new_tag["tag_name"]
+      aux["instagram_tag"] = { "subscription_id" => new_tag["subscription_id"], "name" => new_tag["tag_name"] }
       interaction_updated = interaction.update_attribute(:aux, aux.to_json)
 
       if interaction_updated
@@ -391,7 +411,7 @@ class ApplicationController < ActionController::Base
     url = "https://api.instagram.com/v1/subscriptions#{build_arguments_string_for_request(request_params)}"
     res = URI.parse(url).read
     res = JSON.parse(res)
-    success = (res["meta"]["code"].to_i == 200) rescue false
+    success = (res["meta"]["code"] == 200) rescue false
 
     if success
       aux = JSON.parse(interaction.aux) rescue {}
