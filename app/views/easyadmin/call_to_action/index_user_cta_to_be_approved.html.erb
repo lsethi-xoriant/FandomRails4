@@ -35,21 +35,17 @@
                   <% if c.media_image.content_type.start_with?("image") %>
                     <img src="<%= c.media_image.url(:extra) %>" class="img-responsive" style="max-width: 200px; width: 100%;">
                   <% elsif !c.media_image.content_type.start_with?("video") %>
-                    <a href="<%= c.media_image.url %>" target="_blank">scarica</a>
+                    <a href="<%= c.media_image.url %>" class="btn btn-primary btn-xs" target="_blank">scarica</a>
                   <% elsif aws_trasconding_not_required_or_completed(c) %>
                     <a href="<%= c.media_image.url %>"><i class="fa fa-play-circle-o fa-2x" style="color:red"></i></a>
                   <% end %>
                 <% end %>
               </td>
               <td class="col-md-1">
-                <% if c.releasing_file.present? && c.releasing_file.file.present? %>
-                  <% if c.releasing_file.file_content_type.split("/").first == "image" %>
-                    <img src="<%= c.releasing_file.file.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
-                  <% elsif c.releasing_file.file_content_type.split("/").first != "image" %>
-                    <a href="<%= c.releasing_file.file.url %>" target="_blank">scarica</a>
-                  <% else %>
-                    --
-                  <% end %>
+                <% if c.releasing_file.present? && c.releasing_file.file_content_type.present? %> 
+                  <a href="<%= c.releasing_file.file.url %>" class="btn btn-primary btn-xs" target="_blank">scarica</a>
+                <% else %>
+                  <p> Nessuna </p>
                 <% end %>
               </td>
               <td class="col-md-3">

@@ -47,15 +47,9 @@
               </td>
               <td>
                 <% if c.releasing_file.present? && c.releasing_file.file_content_type.present? %> 
-                  <% if c.releasing_file.file_content_type.split("/").first == "image" %>
-                    <img src="<%= c.releasing_file.file.url %>" class="img-responsive" style="max-width: 200px; width: 100%;">
-                  <% elsif !c.media_image.content_type.start_with?("video") %>
-                    <a href="<%= c.media_image.url %>" target="_blank">scarica</a>
-                  <% elsif c.releasing_file.present? && c.releasing_file.file_content_type.present? && c.releasing_file.file_content_type.split("/").first != "image" %>
-                    <a href="<%= c.releasing_file.file.url %>" class="btn btn-primary btn-xs" target="_blank">scarica</a>
-                  <% else %>
-                    --
-                  <% end %>
+                  <a href="<%= c.releasing_file.file.url %>" class="btn btn-primary btn-xs" target="_blank">scarica</a>
+                <% else %>
+                  <p> Nessuna </p>
                 <% end %>
               </td>
               <td class="col-md-2">
