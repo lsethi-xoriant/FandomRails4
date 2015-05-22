@@ -363,12 +363,8 @@ class ApplicationController < ActionController::Base
         :headers => headers
       })
 
-    case res
-    when Net::HTTPSuccess, Net::HTTPRedirection
-      success = true
-    else
-      success = false
-    end
+    res = JSON.parse(res.body)
+    success = res["meta"]["code"] == 200 rescue false
 
     if success
 
@@ -381,7 +377,6 @@ class ApplicationController < ActionController::Base
       #           "aspect": "media",
       #           "callback_url": "http://your-callback.com/url/"
       #         }
-      res = JSON.parse(res.body)
       new_tag = res["data"]
       # new_tag = data.find { |subscription| subscription["object"] == tag and subscription["object_id"] == params[:tag_name] }
       aux = JSON.parse(interaction.aux) rescue {}

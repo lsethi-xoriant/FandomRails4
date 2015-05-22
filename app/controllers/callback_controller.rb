@@ -22,7 +22,6 @@ class CallbackController < ApplicationController
   end
 
   def instagram_new_tagged_media_callback
-params = {"_json"=>[{"changed_aspect"=>"media", "object"=>"tag", "object_id"=>"fandom", "time"=>1432223814, "subscription_id"=>18250755, "data"=>{}}], "tag_name"=>"fandom", "callback"=>{"_json"=>[{"changed_aspect"=>"media", "object"=>"tag", "object_id"=>"fandom", "time"=>1432223814, "subscription_id"=>18250755, "data"=>{}}]}, "http_error"=>{"_json"=>[{"changed_aspect"=>"media", "object"=>"tag", "object_id"=>"fandom", "time"=>1432223814, "subscription_id"=>18250755, "data"=>{}}], "callback"=>{"_json"=>[{"changed_aspect"=>"media", "object"=>"tag", "object_id"=>"fandom", "time"=>1432223814, "subscription_id"=>18250755, "data"=>{}}]}}}
     # PubSubHubbub request
     # When we POST with the info above to create a new subscription, Instagram simultaneously submit a GET request 
     # to our callback URL with the following parameters:
