@@ -253,6 +253,7 @@ module RewardHelper
       user_reward = UserReward.includes(:period)
         .where("user_rewards.reward_id = ? AND user_rewards.user_id = ?", reward.id, current_user.id)
         .where("periods.id IS NULL OR (periods.start_datetime < ? AND periods.end_datetime > ?)", Time.now.utc, Time.now.utc)
+        .references(:periods)
     else
       []
     end
@@ -393,11 +394,11 @@ module RewardHelper
   end
 
   def get_user_reward_with_periodicity(user, reward_name, period_id)
-    UserReward.includes(:reward).where("user_id = ? and rewards.name = ? and user_rewards.period_id = ?", user.id, reward_name, period_id).first
+    UserReward.includes(:reward).where("user_id = ? and rewards.name = ? and user_rewards.period_id = ?", user.id, reward_name, period_id).references(:rewards).first
   end
 
   def get_user_reward(user, reward_name)
-    UserReward.includes(:reward).where("user_id = ? and rewards.name = ? and user_rewards.period_id IS NULL", user.id, reward_name).first
+    UserReward.includes(:reward).where("user_id = ? and rewards.name = ? and user_rewards.period_id IS NULL", user.id, reward_name).references(:rewards).first
   end
 
   def get_reward_from_cache(reward_name)
@@ -426,7 +427,7 @@ module RewardHelper
 
   def get_reward_with_cta
     cache_short("rewards_with_cta") do
-      Reward.includes(:call_to_action).where("rewards.media_type = 'CALLTOACTION' and call_to_actions.activated_at <= ? AND call_to_actions.activated_at IS NOT NULL AND call_to_actions.media_type <> 'VOID' AND call_to_actions.user_id IS NULL", Time.now).to_a
+      Reward.includes(:call_to_action).where("rewards.media_type = 'CALLTOACTION' and call_to_actions.activated_at <= ? AND call_to_actions.activated_at IS NOT NULL AND call_to_actions.media_type <> 'VOID' AND call_to_actions.user_id IS NULL", Time.now).references(:call_to_actions).to_a
     end
   end
 
@@ -522,9 +523,9 @@ module RewardHelper
       where_conditions << "rewards.id NOT IN (#{basic_rewards_ids.join(",")})" if basic_rewards_ids.any?
 
       if where_conditions.any?
-        rewards = Reward.includes(:currency).includes(:call_to_action).where(where_conditions.join(" AND ")).order("created_at DESC")
+        rewards = Reward.includes(:currency).includes(:call_to_action).where(where_conditions.join(" AND ")).references(:currencies, :call_to_actions).order("created_at DESC")
       else
-        rewards = Reward.includes(:currency).includes(:call_to_action).order("created_at DESC")
+        rewards = Reward.includes(:currency).includes(:call_to_action).references(:currencies, :call_to_actions).order("created_at DESC")
       end
 
       rewards.each do |reward|

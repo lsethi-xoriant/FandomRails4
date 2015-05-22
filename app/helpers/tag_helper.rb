@@ -40,7 +40,7 @@ module TagHelper
     extra_key = get_extra_key_from_params(params)
     tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
     where_clause = get_cta_where_clause_from_params(params)
-    ctas = CallToAction.includes(call_to_action_tags: :tag)
+    ctas = CallToAction.includes(call_to_action_tags: :tag).references(:call_to_action_tags)
     if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
       ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
       ctas = add_ical_fields_to_where_condition(ctas, params)
@@ -75,7 +75,7 @@ module TagHelper
     #TODO: remove cache
     cache_short get_ctas_with_tags_cache_key(tag_ids, extra_key, "or") do
       where_clause = get_cta_where_clause_from_params(params)
-      ctas = CallToAction.active.includes(call_to_action_tags: :tag)
+      ctas = CallToAction.active.includes(call_to_action_tags: :tag).references(:call_to_action_tags)
       if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
         cta_id_to_ical_fields = get_cta_id_to_ical_fields(params) 
         ctas = ctas.where(id: cta_id_to_ical_fields) 
@@ -107,7 +107,7 @@ module TagHelper
   def get_tags_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
     where_clause = get_tag_where_clause_from_params(params)
-    tags = Tag.includes(:tags_tags)
+    tags = Tag.includes(:tags_tags).references(:tags_tags)
 
     unless tag_ids.empty?
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
@@ -129,7 +129,7 @@ module TagHelper
   def get_tags_with_tags(tag_ids, params = {})
     hidden_tags_ids = get_hidden_tag_ids
     #where_clause = get_tag_where_clause_from_params(params)
-    tags = Tag.includes(:tags_tags)
+    tags = Tag.includes(:tags_tags).references(:tags_tags)
     
     if hidden_tags_ids.any? && tag_ids.empty?
       tags = tags.where("tags.id not in (#{hidden_tags_ids.join(",")})")
@@ -172,25 +172,25 @@ module TagHelper
   end
 
   def get_cta_tag_tagged_with(cta, tag_name)
-    Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, cta.id).order("call_to_action_tags.updated_at DESC").limit(1).to_a.first
+    Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, cta.id).references(:tags_tags, :call_to_action_tags).order("call_to_action_tags.updated_at DESC").limit(1).to_a.first
   end
 
   # TODO: replace with previous method
   def get_tag_with_tag_about_call_to_action(calltoaction, tag_name)
-    Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).order("call_to_action_tags.updated_at DESC").to_a
+    Tag.includes(tags_tags: :other_tag).includes(:call_to_action_tags).where("other_tags_tags_tags.name = ? AND call_to_action_tags.call_to_action_id = ?", tag_name, calltoaction.id).references(:tags_tags, :call_to_action_tags).order("call_to_action_tags.updated_at DESC").to_a
   end
 
   def get_tag_with_tag_about_tag(tag, parent_tag_name)
     #TODO: remove cache
     cache_short get_tag_with_tag_about_tag_cache_key(tag.id, parent_tag_name) do
-      Tag.includes(tags_tags: :other_tag).includes(:tags_tags).where("other_tags_tags_tags.name = ? AND tags_tags.tag_id = ?", parent_tag_name, tag.id).order("tags_tags.updated_at DESC").to_a
+      Tag.includes(tags_tags: :other_tag).includes(:tags_tags).where("other_tags_tags_tags.name = ? AND tags_tags.tag_id = ?", parent_tag_name, tag.id).references(:tags_tags).order("tags_tags.updated_at DESC").to_a
     end
   end
   
   def get_tag_with_tag_about_reward(reward, tag_name)
     #TODO: remove cache
     cache_short get_tag_with_tag_about_reward_cache_key(reward.id, tag_name) do
-      Tag.includes(tags_tags: :other_tag).includes(:reward_tags).where("other_tags_tags_tags.name = ? AND reward_tags.reward_id = ?", tag_name, reward.id).to_a
+      Tag.includes(tags_tags: :other_tag).includes(:reward_tags).where("other_tags_tags_tags.name = ? AND reward_tags.reward_id = ?", tag_name, reward.id).references(:tags_tags, :reward_tags).to_a
     end
   end
 
@@ -210,9 +210,9 @@ module TagHelper
     conditions = construct_conditions_from_query(query, "tags.title")
     category_tag_ids = get_category_tag_ids()
     if conditions.empty?
-      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).order("tags.created_at DESC").references(:tags_tags).to_a
     else
-      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions}) AND (tags.id in (?))", tag_name, category_tag_ids).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions}) AND (tags.id in (?))", tag_name, category_tag_ids).references(:tags_tags).order("tags.created_at DESC").to_a
     end
     filter_results(tags, query)
   end
@@ -221,9 +221,9 @@ module TagHelper
     conditions = construct_conditions_from_query(query, "tags.title")
     category_tag_ids = get_category_tag_ids()
     if conditions.empty?
-      tags = Tag.includes(:tags_tags).where("id in (?)", category_tag_ids).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags).where("id in (?)", category_tag_ids).references(:tags_tags).order("tags.created_at DESC").to_a
     else
-      tags = Tag.includes(:tags_tags).where("(#{conditions}) AND (id in (?))", category_tag_ids).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags).where("(#{conditions}) AND (id in (?))", category_tag_ids).references(:tags_tags).order("tags.created_at DESC").to_a
     end
     filter_results(tags, query)
   end
@@ -242,16 +242,16 @@ module TagHelper
   
   def get_ctas_with_tag_with_match(tag_name, query = "")
     conditions = construct_conditions_from_query(query, "call_to_actions.title")
-    ctas = CallToAction.active.includes(call_to_action_tags: :tag).includes(:interactions).where("tags.name = ? AND (#{conditions})", tag_name).order("call_to_actions.created_at DESC").to_a
+    ctas = CallToAction.active.includes(call_to_action_tags: :tag).includes(:interactions).where("tags.name = ? AND (#{conditions})", tag_name).references(:call_to_action_tags, :interactions).order("call_to_actions.created_at DESC").to_a
     filter_results(ctas, query)
   end
   
   def get_ctas_with_match(query = "")
     conditions = construct_conditions_from_query(query, "call_to_actions.title")
     if conditions.empty?
-      ctas = CallToAction.active.includes(:interactions).where("user_id IS NULL").order("call_to_actions.created_at DESC").to_a
+      ctas = CallToAction.active.includes(:interactions).where("user_id IS NULL").references(:interactions).order("call_to_actions.created_at DESC").to_a
     else
-      ctas = CallToAction.active.includes(:interactions).where("#{conditions} AND user_id IS NULL").order("call_to_actions.created_at DESC").to_a
+      ctas = CallToAction.active.includes(:interactions).where("#{conditions} AND user_id IS NULL").references(:interactions).order("call_to_actions.created_at DESC").to_a
     end
     filter_results(ctas, query)
   end

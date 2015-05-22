@@ -56,6 +56,7 @@ module OrzoroHelper
         CallToAction.active.includes(:call_to_action_tags)
                     .where("call_to_actions.id <> ?", current_calltoaction.id)
                     .where("call_to_action_tags.tag_id = ?", tag.id)
+                    .references(:call_to_action_tags)
                     .limit(8).to_a
       else
         CallToAction.active.where("call_to_actions.id <> ?", current_calltoaction.id).limit(8).to_a

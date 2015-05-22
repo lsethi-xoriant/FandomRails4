@@ -98,19 +98,19 @@ module CallToActionHelper
       if in_gallery != "all"
         gallery_calltoaction = CallToAction.find(in_gallery)
         gallery_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
-        calltoactions = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL", gallery_tag.id)
+        calltoactions = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL", gallery_tag.id).references(:call_to_action_tags)
       else
         calltoactions = CallToAction.active_with_media.where("call_to_actions.user_id IS NOT NULL")
       end
     else
       if tag
-        calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", tag.id)
+        calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", tag.id).references(:call_to_action_tags, :rewards, :interactions)
       else
-        calltoactions = CallToAction.active.includes(:rewards, :interactions).where("rewards.id IS NULL")
+        calltoactions = CallToAction.active.includes(:rewards, :interactions).where("rewards.id IS NULL").references(:rewards, :interactions)
       end
       ugc_tag = get_tag_from_params("ugc")
       if ugc_tag
-        ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
+        ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", ugc_tag.id).references(:call_to_action_tags, :interactions)
         if ugc_calltoactions.any?
           calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
         end
@@ -139,7 +139,7 @@ module CallToActionHelper
 
   def get_all_ctas_with_tag(tag_name)
     cache_short get_ctas_with_tag_cache_key(tag_name) do
-      CallToAction.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).order("activated_at DESC").to_a
+      CallToAction.includes(call_to_action_tags: :tag).where("tags.name = ?", tag_name).references(:call_to_action_tags).order("activated_at DESC").to_a
     end
   end
 
@@ -240,7 +240,7 @@ module CallToActionHelper
     
         interaction_info_list = build_interaction_info_list(calltoaction, interactions_to_compute)
 
-        reward = Reward.includes(:currency).where(call_to_action_id: calltoaction.id).first
+        reward = Reward.includes(:currency).where(call_to_action_id: calltoaction.id).references(:currencies).first
         if reward.present?
           calltoaction_reward_info = {
             "cost" => reward.cost,
@@ -322,7 +322,7 @@ module CallToActionHelper
       get_comments_query = "SELECT id FROM (select row_number() over (partition by comment_id ORDER BY updated_at DESC) as r, t.* FROM user_comment_interactions t WHERE approved = true AND comment_id IN (#{resource_ids.join(',')})) x WHERE x.r <= 5;"
       comments = ActiveRecord::Base.connection.execute(get_comments_query)
       comment_ids = comments.map { |comment| comment["id"] }
-      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).order("updated_at DESC").limit(5)
+      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).references(:users).order("updated_at DESC").limit(5)
     end
 
     max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
@@ -570,7 +570,7 @@ module CallToActionHelper
 
   def enable_interactions(calltoaction)
     cache_short("enable_interactions_#{calltoaction.id}") do
-      calltoaction.interactions.includes(:resource, :call_to_action).where("when_show_interaction <> ?", "MAI_VISIBILE").to_a
+      calltoaction.interactions.includes(:resource, :call_to_action).where("when_show_interaction <> ?", "MAI_VISIBILE").references(:resources, :call_to_actions).to_a
     end
   end
 
@@ -582,7 +582,7 @@ module CallToActionHelper
   
   def interactions_required_to_complete(cta)
     cache_short get_interactions_required_to_complete_cache_key(cta.id) do
-      cta.interactions.includes(:resource, :call_to_action).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
+      cta.interactions.includes(:resource, :call_to_action).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").references(:resources, :call_to_actions).order("seconds ASC").to_a
     end
   end
 
@@ -641,7 +641,7 @@ module CallToActionHelper
   end
 
   def get_cta_template_option_list
-    CallToAction.includes({:call_to_action_tags => :tag}).where("tags.name ILIKE 'template'").map{|cta| [cta.title, cta.id]}
+    CallToAction.includes({:call_to_action_tags => :tag}).where("tags.name ILIKE 'template'").references(:call_to_action_tags).map{|cta| [cta.title, cta.id]}
   end
   
   def clone_and_create_cta(upload_interaction, params, watermark)

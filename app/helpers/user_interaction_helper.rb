@@ -25,7 +25,7 @@ module UserInteractionHelper
   end
 
   def get_user_interactions_with_interaction_id(interaction_ids, user)
-    user_interactions = UserInteraction.includes(:interaction).where(interaction_id: interaction_ids, user_id: user.id)
+    user_interactions = UserInteraction.includes(:interaction).where(interaction_id: interaction_ids, user_id: user.id).references(:interactions)
     if anonymous_user?(user)
       user_interactions = user_interactions.where("interactions.stored_for_anonymous")
     end
@@ -47,7 +47,7 @@ module UserInteractionHelper
       linked_user_interaction_ids << linked_user_interaction_id if linked_user_interaction_id
       next_cta_to_return = next_cta
       while next_cta
-        user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ?", next_cta.id)
+        user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ?", next_cta.id).references(:interactions)
         next_cta, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(user_interactions)
         linked_user_interaction_ids << linked_user_interaction_id if linked_user_interaction_id
         if next_cta
