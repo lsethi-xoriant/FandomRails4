@@ -4,9 +4,7 @@
 require 'fandom_utils'
 require 'net/http'
 
-class CallbackController < ActionController::Base
-  include FandomUtils
-  include ApplicationHelper
+class CallbackController < ApplicationController
 
   skip_before_filter :authenticate_admin
   before_filter :echo_service
@@ -24,7 +22,7 @@ class CallbackController < ActionController::Base
   end
 
   def instagram_new_tagged_media_callback
-
+params = {"_json"=>[{"changed_aspect"=>"media", "object"=>"tag", "object_id"=>"fandom", "time"=>1432223814, "subscription_id"=>18250755, "data"=>{}}], "tag_name"=>"fandom", "callback"=>{"_json"=>[{"changed_aspect"=>"media", "object"=>"tag", "object_id"=>"fandom", "time"=>1432223814, "subscription_id"=>18250755, "data"=>{}}]}, "http_error"=>{"_json"=>[{"changed_aspect"=>"media", "object"=>"tag", "object_id"=>"fandom", "time"=>1432223814, "subscription_id"=>18250755, "data"=>{}}], "callback"=>{"_json"=>[{"changed_aspect"=>"media", "object"=>"tag", "object_id"=>"fandom", "time"=>1432223814, "subscription_id"=>18250755, "data"=>{}}]}}}
     # PubSubHubbub request
     # When we POST with the info above to create a new subscription, Instagram simultaneously submit a GET request 
     # to our callback URL with the following parameters:
@@ -36,7 +34,7 @@ class CallbackController < ActionController::Base
       render json: params["hub.challenge"]
     else
       call_to_action_save = true
-      ig_settings = get_deploy_setting("sites/#{request.site.id}/authentications/instagram", nil)
+      ig_settings = get_deploy_setting("sites/#{$site.id}/authentications/instagram", nil)
 
       # Request body example:
       # [
@@ -56,23 +54,23 @@ class CallbackController < ActionController::Base
       #   },
       #   ...
       # ]
-      params["body"].each do |subscription|
+      params["_json"].each do |subscription|
 
         if subscription["object"] == "tag"
           tag_name = subscription["object_id"]
           instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY).value
           instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting)
-          min_tag_id = instagram_subscriptions_setting_hash[tag_name]["min_tag_id"]
+          min_tag_id = instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] rescue nil
 
-          params = {
-            "access_token" => "#{ig_settings["access_token"]}"
+          request_params = {
+            "client_id" => "#{ig_settings["client_id"]}"
           }
-          params.merge!({ "min_tag_id" => min_tag_id.to_i }) if min_tag_id
-          url = "https://api.instagram.com/v1/tags/#{tag_name}/media/recent#{build_arguments_string_for_request(params)}"
+          request_params.merge!({ "min_tag_id" => min_tag_id.to_i }) if min_tag_id
+          url = "https://api.instagram.com/v1/tags/#{tag_name}/media/recent#{build_arguments_string_for_request(request_params)}"
           res = JSON.parse(open(url).read)
           res["data"].each do |media|
-            user = User.where("aux->>'instagram_user_id' = '#{media["user"]["id"]}'").first
-            if user
+            auth = Authentication.find_by_uid_and_provider("'#{media["user"]["id"]}', 'instagram_#{$site.id}'")
+            if auth
               begin
                 # secondary_id check necessary?
                 img = open(media["images"]["standard_resolution"]["url"])
@@ -86,7 +84,7 @@ class CallbackController < ActionController::Base
                   activation_date_time: Time.at(media["created_time"].to_i), 
                   # secondary_id: media["id"], 
                   media_type: "IMAGE", 
-                  user_id: user.id
+                  user_id: auth.user_id
                 )
 
                 # Anchor desired interactions to instagram call_to_action.
@@ -101,15 +99,13 @@ class CallbackController < ActionController::Base
 
             # Add tags?
 
-            instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] = res["pagination"]["min_tag_id"]
-            instagram_subscriptions_setting = instagram_subscriptions_setting_hash.to_json
-            Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY).save
-
-            render json: call_to_action_save.to_json
           end
+          min_tag_id = res["pagination"]["min_tag_id"]
+          instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] = res["pagination"]["min_tag_id"]
+          instagram_subscriptions_setting.update_attribute(:value, instagram_subscriptions_setting_hash.to_json)
         end
       end
-
+      render json: "OK"
     end
   end
 

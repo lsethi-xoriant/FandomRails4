@@ -346,7 +346,6 @@ class ApplicationController < ActionController::Base
     #    -F 'object_id=[TAG_NAME]' \
     #    -F 'callback_url=http://[example.com]/instagram_tag_subscription/[TAG_NAME]' \
     #    https://api.instagram.com/v1/subscriptions/
-
     request_params = { 
       "ssl_version" => :TLSv1, 
       "client_id" => ig_settings["client_id"], 
@@ -373,34 +372,32 @@ class ApplicationController < ActionController::Base
       success = true
     else
       success = false
-      # res.value
     end
 
     if success
 
       # We find the requested subscription from Instagram subscriptions list provided with response ("data" array). Structure below:
-      # data : [{
+      # data : {
       #           "id": "123456",
       #           "type": "subscription",
       #           "object": "tag",
       #           "object_id": "tag_name",
       #           "aspect": "media",
       #           "callback_url": "http://your-callback.com/url/"
-      #         },
-      #         {
-      #           ...
-      #         }]
-      data = res["data"]
-      new_tag = data.find { |subscription| subscription["object"] == tag and subscription["object_id"] == params[:tag_name] }
+      #         }
+      res = JSON.parse(res.body)
+      new_tag = res["data"]
+      # new_tag = data.find { |subscription| subscription["object"] == tag and subscription["object_id"] == params[:tag_name] }
       aux = JSON.parse(interaction.aux) rescue {}
-      aux["instagram_tag"] = { "subscription_id" => new_tag["subscription_id"], "name" => new_tag["tag_name"] }
+      aux["instagram_tag"] = { "subscription_id" => new_tag["id"], "name" => new_tag["object_id"] }
       interaction_updated = interaction.update_attribute(:aux, aux.to_json)
 
       if interaction_updated
-        instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY).value
-        instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting)
-        instagram_subscriptions_setting_hash[new_tag["tag_name"]] = { "subscription_id" => new_tag["subscription_id"] }
+        instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
+        instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting.value)
+        instagram_subscriptions_setting_hash[new_tag["object_id"]] = { "subscription_id" => new_tag["id"] }
         instagram_subscriptions_setting.value = instagram_subscriptions_setting_hash.to_json
+        instagram_subscriptions_setting.save
       end
 
     end
@@ -411,15 +408,32 @@ class ApplicationController < ActionController::Base
   def delete_instagram_tag_subscription(interaction)
     ig_settings = get_deploy_setting("sites/#{request.site.id}/authentications/instagram", nil)
     request_params = { 
-      "_method" => "DELETE", 
+      #  "_method" => "DELETE", 
       "client_id" => ig_settings["client_id"], 
       "client_secret" => ig_settings["client_secret"], 
       "object" => interaction.aux["instagram_tag"]["subscription_id"].to_i
     }
-    url = "https://api.instagram.com/v1/subscriptions#{build_arguments_string_for_request(request_params)}"
-    res = URI.parse(url).read
-    res = JSON.parse(res)
-    success = (res["meta"]["code"] == 200) rescue false
+    url = "https://api.instagram.com/v1/subscriptions" # #{build_arguments_string_for_request(request_params)}"
+
+    uri = URI.parse(url)
+    req = Net::HTTP::Delete.new(uri.path)
+    req.set_form_data(request_params)
+
+    http = Net::HTTP.new(uri.hostname, uri.port)
+    http.use_ssl = true
+    http.ssl_version = :TLSv1
+    res = http.request(req)
+
+    case res
+    when Net::HTTPSuccess, Net::HTTPRedirection
+      success = true
+    else
+      success = false
+    end
+
+    # res = URI.parse(url).read
+    # res = JSON.parse(res)
+    # success = (res["meta"]["code"] == 200) rescue false
 
     if success
       aux = JSON.parse(interaction.aux) rescue {}
