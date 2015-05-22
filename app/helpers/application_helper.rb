@@ -382,11 +382,11 @@ module ApplicationHelper
   end
 
   def calltoaction_active_with_tag(tag, order)
-    return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at <= ? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name = ?)", Time.now, tag).order("activated_at #{order}")
+    CallToAction.joins(:call_to_action_tags => [:tag]).where("activated_at <= ? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name = ?)", Time.now, tag).order("activated_at #{order}")
   end
 
   def calltoaction_coming_soon_with_tag(tag, order)
-    return CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
+    CallToAction.joins(:call_to_action_tags => [:tag]).where("activated_at>? AND activated_at IS NOT NULL AND media_type<>'VOID' AND (call_to_action_tags.id IS NOT NULL AND tags.name=?)", Time.now, tag).order("activated_at #{order}")
   end 
 
   # Get calltoaction's share interactions.
@@ -616,7 +616,7 @@ module ApplicationHelper
   
   def get_hidden_tag_ids
     cache_short(get_hidden_tags_cache_key) do
-      Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? ", "hide-tag").map{|t| t.id}
+      Tag.includes(:tags_tags => :other_tag ).where(other_tags_tags_tags: { name: "hide-tag" }).map{|t| t.id}
     end
   end
 
