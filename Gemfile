@@ -97,7 +97,7 @@ gem 'friendly_id'
 gem 'inherited_resources'
 gem 'cancan'
 
-#ENV['NOKOGIRI_USE_SYSTEM_LIBRARIES'] = "true"
+ENV['NOKOGIRI_USE_SYSTEM_LIBRARIES'] = "true"
 gem 'nokogiri'
 
 gem 'aws-sdk' #, '~> 1.0'
