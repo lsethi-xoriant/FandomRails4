@@ -8,20 +8,20 @@ Fandom::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/rails_admin/'
 
-  match '/cookies_policy', :to => 'application#cookies_policy'
+  get '/cookies_policy', :to => 'application#cookies_policy'
 
   constraints(SiteMatcher.new('coin')) do
-    match "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
+    get "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
     scope module: "sites" do
       scope module: "coin" do
-        root :to => "application#index"
-        match '/privacy_policy', :to => 'application#show_privacy_policy'
-        match '/cookies_policy', :to => 'application#show_cookies_policy'
-        match '/stores', :to => 'application#show_stores'
-        match "profile/complete_for_contest", :to => "application#complete_for_contest", defaults: { format: 'json' }
+        get "/", to: "application#index"
+        get '/privacy_policy', :to => 'application#show_privacy_policy'
+        get '/cookies_policy', :to => 'application#show_cookies_policy'
+        get '/stores', :to => 'application#show_stores'
+        get "profile/complete_for_contest", :to => "application#complete_for_contest", defaults: { format: 'json' }
         devise_scope :user do
           post "/users", :to => "registrations#create"
-          match 'auth/:provider/callback', :to => 'sessions#create'
+          get 'auth/:provider/callback', :to => 'sessions#create'
         end
       end
     end
@@ -31,69 +31,69 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "orzoro" do
         namespace :easyadmin do
-          match "/dashboard", :to => "easyadmin#dashboard"
-          match "/cups_confirmed", :to => "user#index_cup_requests", defaults: { page: 'confirmed' }
-          match "/cups_not_confirmed", :to => "user#index_cup_requests", defaults: { page: 'not_confirmed' }
-          match "/cups/filter", :to => "user#filter_cup_requests"
-          match "export_cup_requests", :to => "user#export_cup_requests"
+          get "/dashboard", :to => "easyadmin#dashboard"
+          get "/cups_confirmed", :to => "user#index_cup_requests", defaults: { page: 'confirmed' }
+          get "/cups_not_confirmed", :to => "user#index_cup_requests", defaults: { page: 'not_confirmed' }
+          get "/cups/filter", :to => "user#filter_cup_requests"
+          get "export_cup_requests", :to => "user#export_cup_requests"
         end
-        root :to => "application#index"
-        match "/gadget", to: "cup_redeemer#index"
-        match "/gadget/step_1", to: "cup_redeemer#step_1"
-        match "/gadget/step_1/update", to: "cup_redeemer#step_1_update"
-        match "/gadget/step_2", to: "cup_redeemer#step_2"
-        match "/gadget/step_2/update", to: "cup_redeemer#step_2_update"
-        match "/gadget/step_3", to: "cup_redeemer#step_3"
-        match "/gadget/step_3/update", to: "cup_redeemer#step_3_update"
-        match "/gadget/request_completed", to: "cup_redeemer#request_completed"
-        match "/complete_registration_from_cups/:email/:token", to: "cup_redeemer#complete_registration", :constraints => { :email => /.*/ }
-        match "/complete_registration_from_newsletter/:email/:token", to: "newsletter#complete_registration", :constraints => { :email => /.*/ }
-        match "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
-        match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
-        match "/newsletter/subscribe", :to => "newsletter#subscribe"
-        match "/newsletter/subscription_request", :to => "newsletter#send_request"
-        match "/newsletter/request_completed", :to => "newsletter#request_completed"
+        get "/", to: "application#index"
+        get "/gadget", to: "cup_redeemer#index"
+        get "/gadget/step_1", to: "cup_redeemer#step_1"
+        get "/gadget/step_1/update", to: "cup_redeemer#step_1_update"
+        get "/gadget/step_2", to: "cup_redeemer#step_2"
+        get "/gadget/step_2/update", to: "cup_redeemer#step_2_update"
+        get "/gadget/step_3", to: "cup_redeemer#step_3"
+        get "/gadget/step_3/update", to: "cup_redeemer#step_3_update"
+        get "/gadget/request_completed", to: "cup_redeemer#request_completed"
+        get "/complete_registration_from_cups/:email/:token", to: "cup_redeemer#complete_registration", :constraints => { :email => /.*/ }
+        get "/complete_registration_from_newsletter/:email/:token", to: "newsletter#complete_registration", :constraints => { :email => /.*/ }
+        get "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
+        get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+        get "/newsletter/subscribe", :to => "newsletter#subscribe"
+        get "/newsletter/subscription_request", :to => "newsletter#send_request"
+        get "/newsletter/request_completed", :to => "newsletter#request_completed"
 
-        match "/faq", :to => "application#faq"
-        match "/netiquette", :to => "application#netiquette"
+        get "/faq", :to => "application#faq"
+        get "/netiquette", :to => "application#netiquette"
 
-        match "/browse", :to => "browse#index"
+        get "/browse", :to => "browse#index"
         
-        match "/browse/search", :to => "browse#search"
-        match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
+        get "/browse/search", :to => "browse#search"
+        get "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
 
-        match "/browse/view_recent", :to => "browse#view_all_recent"
-        match "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
-        match "/browse/index_category_load_more", :to => "browse#index_category_load_more"
-        match "/browse/category/:id", :to => "browse#index_category"
-        match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
-        match "/browse/full_search", :to => "browse#full_search"
+        get "/browse/view_recent", :to => "browse#view_all_recent"
+        get "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
+        get "/browse/index_category_load_more", :to => "browse#index_category_load_more"
+        get "/browse/category/:id", :to => "browse#index_category"
+        get "/browse/full_search_load_more", :to => "browse#full_search_load_more"
+        get "/browse/full_search", :to => "browse#full_search"
         
         #resources :call_to_action, only: :show
-        match "/call_to_action/:id", to: "http_error#not_found_404"
+        get "/call_to_action/:id", to: "http_error#not_found_404"
 
-        match "/ricette/:id", to: "call_to_action#show"
-        match "/ricette", :to => "browse#index", defaults: { tagname: 'ricette' }
+        get "/ricette/:id", to: "call_to_action#show"
+        get "/ricette", :to => "browse#index", defaults: { tagname: 'ricette' }
 
-        match "/prodotti", :to => "browse#index_category", defaults: { id: 'prodotti' }
-        match "/prodotti/:id", to: "call_to_action#show"
+        get "/prodotti", :to => "browse#index_category", defaults: { id: 'prodotti' }
+        get "/prodotti/:id", to: "call_to_action#show"
 
-        match "/storie/:id", to: "call_to_action#show"
-        match "/storie", :to => "browse#index", defaults: { tagname: 'storie' }
+        get "/storie/:id", to: "call_to_action#show"
+        get "/storie", :to => "browse#index", defaults: { tagname: 'storie' }
 
-        match "/test/:id", to: "call_to_action#show"
-        match "/test", :to => "browse#index_category", defaults: { id: 'test' }
-        match "/test/:id/:descendent_id", to: "call_to_action#show"
+        get "/test/:id", to: "call_to_action#show"
+        get "/test", :to => "browse#index_category", defaults: { id: 'test' }
+        get "/test/:id/:descendent_id", to: "call_to_action#show"
 
-        match "/balli/:id", to: "call_to_action#show"
-        match "/balli", :to => "browse#index", defaults: { tagname: 'balli' }
+        get "/balli/:id", to: "call_to_action#show"
+        get "/balli", :to => "browse#index", defaults: { tagname: 'balli' }
 
-        match "/browse/view_all/:id", :to => "browse#index_category"
-        match "/browse/contents/:tagname", :to => "browse#index"
+        get "/browse/view_all/:id", :to => "browse#index_category"
+        get "/browse/contents/:tagname", :to => "browse#index"
 
-        match "/users/sign_up", to: redirect('/')
+        get "/users/sign_up", to: redirect('/')
 
-        match "/prodotti", :to => "browse#index_category", defaults: { id: 'prodotti' }
+        get "/prodotti", :to => "browse#index_category", defaults: { id: 'prodotti' }
 
         #get '/experience/prodotti/:name', to: redirect('/prodotti/%{name}')
         get '/experience/prodotti', to: redirect('/prodotti')
@@ -110,32 +110,32 @@ Fandom::Application.routes.draw do
       scope module: "disney" do
 
         namespace :easyadmin do
-          match "settings/properties", :to => "settings#properties_settings"
-          match "settings/properties/save", :to => "settings#save_properties_settings"
+          get "settings/properties", :to => "settings#properties_settings"
+          get "settings/properties/save", :to => "settings#save_properties_settings"
         end
         
-        match "/iur", to: "application#iur"
-        match "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
-        match "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
-        match "/reward/catalogue", :to => "reward#index"
+        get "/iur", to: "application#iur"
+        get "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
+        get "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
+        get "/reward/catalogue", :to => "reward#index"
         
         devise_scope :user do
           post "/users", :to => "registrations#create"
           put "/users/edit", :to => "registrations#update"
-          match "/iur/sign_in", to: "registrations#iur"
+          get "/iur/sign_in", to: "registrations#iur"
           get "/users/sign_in", to: "application#iur"
-          match "/users/sign_in_admin", to: "sessions#new"
+          get "/users/sign_in_admin", to: "sessions#new"
           get "/users/sign_up", to: "sessions#new"
-          match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+          get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
         end
 
         resources :call_to_action, only: :show
         
-        match "ordering_ctas", to: "call_to_action#ordering_ctas" , defaults: { format: 'json' }
-        match "rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
-        match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
-        match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
-        root :to => "application#index"
+        get "ordering_ctas", to: "call_to_action#ordering_ctas" , defaults: { format: 'json' }
+        get "rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
+        get "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+        get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+        get "/", to: "application#index"
 
       end
     end  
@@ -144,24 +144,24 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('intesa_expo')) do
     scope module: "sites" do
       scope module: "intesa_expo" do
-        root :to => "application#index"
-        match "/live", to: "application#live"
-        match "/about", :to => "application#about"
-        match "/calendar", :to => "calendar#index"
-        match "/calendar/:day", :to => "calendar#index"
-        match "/calendar/fetch/events", :to => "calendar#fetch_events"
-        match "/browse/full_search", :to => "browse#full_search"
-        match "/browse/category/:id", :to => "browse#intesa_index_category"
-        match "/browse/view_all/:id", :to => "browse#intesa_index_category"
-        match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
+        get "/", to: "application#index"
+        get "/live", to: "application#live"
+        get "/about", :to => "application#about"
+        get "/calendar", :to => "calendar#index"
+        get "/calendar/:day", :to => "calendar#index"
+        get "/calendar/fetch/events", :to => "calendar#fetch_events"
+        get "/browse/full_search", :to => "browse#full_search"
+        get "/browse/category/:id", :to => "browse#intesa_index_category"
+        get "/browse/view_all/:id", :to => "browse#intesa_index_category"
+        get "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
 
-        match "/call_to_action/:id", to: "call_to_action#show"
+        get "/call_to_action/:id", to: "call_to_action#show"
       end
     end
   end
           
   constraints(SiteMatcher.new('ballando')) do
-    match "/profile", :to => "profile#badges"
+    get "/profile", :to => "profile#badges"
 
     devise_scope :user do
       scope module: "sites" do
@@ -169,57 +169,57 @@ Fandom::Application.routes.draw do
 
           resources :call_to_action
 
-          root :to => "application#index"
+          get "/", to: "application#index"
 
-          match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+          get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 
-          match "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
+          get "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
 
-          match "/redirect_top_with_cookie", :to => "application#redirect_top_with_cookie"
+          get "/redirect_top_with_cookie", :to => "application#redirect_top_with_cookie"
 
-          match '/users/sign_in', :to => 'sessions#ballando_new', :as => 'user_sign_in'
+          get '/users/sign_in', :to => 'sessions#ballando_new'
 
-          match "/users/gigya_socialize_redirect", :to => "application#gigya_socialize_redirect"
+          get "/users/gigya_socialize_redirect", :to => "application#gigya_socialize_redirect"
 
-          match "/custom_call_to_action/:id/next", :to => "custom_call_to_action#show_next_calltoaction"
-          match "/custom_call_to_action/:id", :to => "custom_call_to_action#show"
+          get "/custom_call_to_action/:id/next", :to => "custom_call_to_action#show_next_calltoaction"
+          get "/custom_call_to_action/:id", :to => "custom_call_to_action#show"
 
-          match "/refresh_top_window", :to => "application#refresh_top_window"
+          get "/refresh_top_window", :to => "application#refresh_top_window"
   
-          match "/users/rai/sign_out", :to => "sessions#ballando_destroy"
-          match "/users/rai/sign_up/create", :to => "registrations#ballando_create"
-          match "/users/rai/sign_in/create", :to => "sessions#ballando_create"
-          match "/users/rai/sign_in_from_provider/create", :to => "sessions#ballando_create_from_provider", defaults: { format: 'json' }
+          get "/users/rai/sign_out", :to => "sessions#ballando_destroy"
+          get "/users/rai/sign_up/create", :to => "registrations#ballando_create"
+          get "/users/rai/sign_in/create", :to => "sessions#ballando_create"
+          get "/users/rai/sign_in_from_provider/create", :to => "sessions#ballando_create_from_provider", defaults: { format: 'json' }
   
-          match "/profile/widget", :to => "iframe_profile#show"
-          match "/carousel/widget", :to => "iframe_carousel#main"
-          match "/carousel_footer/widget", :to => "iframe_carousel#footer"
+          get "/profile/widget", :to => "iframe_profile#show"
+          get "/carousel/widget", :to => "iframe_carousel#main"
+          get "/carousel_footer/widget", :to => "iframe_carousel#footer"
           
-          match "/iframe/check", :to => "iframe_check#show"
-          match "/iframe/get_check", :to => "iframe_check#get_check_template"
-          match "/iframe/do_check", :to => "iframe_check#do_check"
+          get "/iframe/check", :to => "iframe_check#show"
+          get "/iframe/get_check", :to => "iframe_check#get_check_template"
+          get "/iframe/do_check", :to => "iframe_check#do_check"
 
-          match "/upload_interaction/new", :to => "upload_interaction#new"
-          match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
+          get "/upload_interaction/new", :to => "upload_interaction#new"
+          get "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
 
-          match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
-          match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
+          get "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
+          get "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
           
-          match "/special_guest", :to => "application#redirect_into_special_guest"
+          get "/special_guest", :to => "application#redirect_into_special_guest"
           
-          match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+          get "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
-          match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
-          match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
-          match "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
-          match "/ranking/page", :to => "ranking#get_rank_page"
+          get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
+          get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+          get "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
+          get "/ranking/page", :to => "ranking#get_rank_page"
         end
       end
     end
   end
 
    constraints(SiteMatcher.new('forte')) do
-    match "/profile", :to => "profile#badges"
+    get "/profile", :to => "profile#badges"
 
     devise_scope :user do
       scope module: "sites" do
@@ -227,121 +227,121 @@ Fandom::Application.routes.draw do
 
           resources :call_to_action
 
-          match "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
+          get "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
 
-          match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+          get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 
-          match "/update_reward_calltoactions_in_page", to: "call_to_action#update_reward_calltoactions_in_page", defaults: { format: 'json' }
+          get "/update_reward_calltoactions_in_page", to: "call_to_action#update_reward_calltoactions_in_page", defaults: { format: 'json' }
 
-          match "/", :to => "application#index"
+          get "/", :to => "application#index"
 
-          match "/redirect_top_with_cookie", :to => "application#redirect_top_with_cookie"
+          get "/redirect_top_with_cookie", :to => "application#redirect_top_with_cookie"
 
-          match '/users/sign_in', :to => 'sessions#forte_new', :as => 'user_sign_in'
+          get '/users/sign_in', :to => 'sessions#forte_new'
 
-          match "/users/gigya_socialize_redirect", :to => "application#gigya_socialize_redirect"
+          get "/users/gigya_socialize_redirect", :to => "application#gigya_socialize_redirect"
 
-          match "/custom_call_to_action/:id/next", :to => "custom_call_to_action#show_next_calltoaction"
-          match "/custom_call_to_action/:id", :to => "custom_call_to_action#show"
+          get "/custom_call_to_action/:id/next", :to => "custom_call_to_action#show_next_calltoaction"
+          get "/custom_call_to_action/:id", :to => "custom_call_to_action#show"
 
-          match "/refresh_top_window", :to => "application#refresh_top_window"
+          get "/refresh_top_window", :to => "application#refresh_top_window"
   
-          match "/users/rai/sign_out", :to => "sessions#forte_destroy"
-          match "/users/rai/sign_up/create", :to => "registrations#forte_create"
-          match "/users/rai/sign_in/create", :to => "sessions#forte_create"
-          match "/users/rai/sign_in_from_provider/create", :to => "sessions#forte_create_from_provider", defaults: { format: 'json' }
+          get "/users/rai/sign_out", :to => "sessions#forte_destroy"
+          get "/users/rai/sign_up/create", :to => "registrations#forte_create"
+          get "/users/rai/sign_in/create", :to => "sessions#forte_create"
+          get "/users/rai/sign_in_from_provider/create", :to => "sessions#forte_create_from_provider", defaults: { format: 'json' }
   
-          match "/profile/widget", :to => "iframe_profile#show"
-          match "/carousel/widget", :to => "iframe_carousel#main"
-          match "/carousel_footer/widget", :to => "iframe_carousel#footer"
+          get "/profile/widget", :to => "iframe_profile#show"
+          get "/carousel/widget", :to => "iframe_carousel#main"
+          get "/carousel_footer/widget", :to => "iframe_carousel#footer"
           
-          match "/iframe/check", :to => "iframe_check#show"
-          match "/iframe/get_check", :to => "iframe_check#get_check_template"
-          match "/iframe/do_check", :to => "iframe_check#do_check"
+          get "/iframe/check", :to => "iframe_check#show"
+          get "/iframe/get_check", :to => "iframe_check#get_check_template"
+          get "/iframe/do_check", :to => "iframe_check#do_check"
 
-          match "/upload_interaction/new", :to => "upload_interaction#new"
-          match "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
+          get "/upload_interaction/new", :to => "upload_interaction#new"
+          get "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
 
-          match "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
-          match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
+          get "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
+          get "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
           
-          match "/special_guest", :to => "application#redirect_into_special_guest"
+          get "/special_guest", :to => "application#redirect_into_special_guest"
           
-          match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+          get "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
-          match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
-          match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
-          match "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
+          get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
+          get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+          get "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
         end
       end
     end
   end
 
-  match "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
+  get "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
 
-  match "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
+  get "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
 
-  match "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
+  get "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
 
-  match "/file_upload_too_large", to: "application#file_upload_too_large"
+  get "/file_upload_too_large", to: "application#file_upload_too_large"
 
-  match "/redirect_into_iframe_calltoaction/:calltoaction_id", to: "application#redirect_into_iframe_calltoaction"
-  match "/facebook_share_page_with_meta/:calltoaction_id", to: "call_to_action#facebook_share_page_with_meta"
-  match "/profile/update_avatar", to: "application#update_avatar_image"
+  get "/redirect_into_iframe_calltoaction/:calltoaction_id", to: "application#redirect_into_iframe_calltoaction"
+  get "/facebook_share_page_with_meta/:calltoaction_id", to: "call_to_action#facebook_share_page_with_meta"
+  get "/profile/update_avatar", to: "application#update_avatar_image"
 
-  match "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
-  match "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
-  match "/upload", :to => "call_to_action#upload"
+  get "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
+  get "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
+  get "/upload", :to => "call_to_action#upload"
   
-  match "/browse", :to => "browse#index"
-  match "/browse/full_search", :to => "browse#full_search"
-  match "/browse/full_search_load_more", :to => "browse#full_search_load_more"
-  match "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
-  match "/browse/redirect/:query", :to => "browse#index"
-  match "/browse/view_all/:id", :to => "browse#index_category"
-  match "/browse/view_recent", :to => "browse#view_all_recent"
-  match "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
-  match "/browse/index_category_load_more", :to => "browse#index_category_load_more"
-  match "/browse/category/:id", :to => "browse#index_category"
-  match "/browse/contents/:tagname", :to => "browse#index"
-  match "/browse/search", :to => "browse#search"
-  match "/browse/fullscreen", :to => "browse#index_fullscreen"
+  get "/browse", :to => "browse#index"
+  get "/browse/full_search", :to => "browse#full_search"
+  get "/browse/full_search_load_more", :to => "browse#full_search_load_more"
+  get "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
+  get "/browse/redirect/:query", :to => "browse#index"
+  get "/browse/view_all/:id", :to => "browse#index_category"
+  get "/browse/view_recent", :to => "browse#view_all_recent"
+  get "/browse/view_recent/load_more", :to => "browse#view_all_recent_load_more"
+  get "/browse/index_category_load_more", :to => "browse#index_category_load_more"
+  get "/browse/category/:id", :to => "browse#index_category"
+  get "/browse/contents/:tagname", :to => "browse#index"
+  get "/browse/search", :to => "browse#search"
+  get "/browse/fullscreen", :to => "browse#index_fullscreen"
   
-  match "/gallery", :to => "gallery#index"
-  match "/gallery/:id", :to => "gallery#show"
-  match "/gallery/how_to/:id", :to => "gallery#how_to"
+  get "/gallery", :to => "gallery#index"
+  get "/gallery/:id", :to => "gallery#show"
+  get "/gallery/how_to/:id", :to => "gallery#how_to"
   
-  #match "/classifica/:id", :to => "ranking#show"
-  match "classifiche", :to => "ranking#show_rankings_page"
-  match "bootcamp", :to => "ranking#show_vote_rankings_page"
-  match "/ranking/page", :to => "ranking#get_rank_page"
-  match "/ranking/vote/page", :to => "ranking#get_vote_rank_page"
-  match "/ranking/show/:id", :to => "ranking#show_single_rank"
-  match "/ranking/vote/:id", :to => "ranking#show_vote_rank"
+  #get "/classifica/:id", :to => "ranking#show"
+  get "classifiche", :to => "ranking#show_rankings_page"
+  get "bootcamp", :to => "ranking#show_vote_rankings_page"
+  get "/ranking/page", :to => "ranking#get_rank_page"
+  get "/ranking/vote/page", :to => "ranking#get_vote_rank_page"
+  get "/ranking/show/:id", :to => "ranking#show_single_rank"
+  get "/ranking/vote/:id", :to => "ranking#show_vote_rank"
   
-  match "/healthcheck", :to => "health_check#health_check"
+  get "/healthcheck", :to => "health_check#health_check"
   
-  match "/profile/superfan_contest", :to => "profile#superfan_contest"
+  get "/profile/superfan_contest", :to => "profile#superfan_contest"
   
   namespace :api do
     namespace :v2 do
-      match "/get_stripe/:tag_name", :to => "browse#get_stripe_from_tag", defaults: { format: 'json' }
-      match "/index", :to => "application#index", defaults: { format: 'json' }
+      get "/get_stripe/:tag_name", :to => "browse#get_stripe_from_tag", defaults: { format: 'json' }
+      get "/index", :to => "application#index", defaults: { format: 'json' }
     end
   end
 
   namespace :easyadmin do
 
-    match "/", :to => "easyadmin#index"
+    get "/", :to => "easyadmin#index"
 
     # TAG
-    match "tag/filter", :to => "tag#filter"
-    match "tag/clone/:id", :to => "tag#clone"
-    match "tag/ordering", :to => "tag#ordering"
-    match "tag/retag", :to => "tag#retag_tag"
-    match "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
-    match "cta/tag/:id", :to => "tag#tag_cta"
-    match "cta/tag/:id/update", :to => "tag#tag_cta_update"
+    get "tag/filter", :to => "tag#filter"
+    get "tag/clone/:id", :to => "tag#clone"
+    get "tag/ordering", :to => "tag#ordering"
+    get "tag/retag", :to => "tag#retag_tag"
+    get "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
+    get "cta/tag/:id", :to => "tag#tag_cta"
+    get "cta/tag/:id/update", :to => "tag#tag_cta_update"
 
     resources :home_launchers
 
@@ -352,219 +352,220 @@ Fandom::Application.routes.draw do
     resources :vote_ranking
 
     # USER
-    match "user", :to => "user#index_user"
-    match "export_users", :to => "user#export_users"
-    match "user/show/:id", :to => "user#show_user"
-    match "user/filter", :to => "user#filter_user"
+    get "user", :to => "user#index_user"
+    get "export_users", :to => "user#export_users"
+    get "user/show/:id", :to => "user#show_user"
+    get "user/filter", :to => "user#filter_user"
 
     # WINNER
-    match "winner", :to => "easyadmin#index_winner"
-    match "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
+    get "winner", :to => "easyadmin#index_winner"
+    get "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
 
     # CALL TO ACTION
-    match "cta", :to => "call_to_action#index_cta"
-    match "cta/filter", :to => "call_to_action#filter"
-    match "cta/template", :to => "call_to_action#index_cta_template"
-    match "cta/to_approve", :to => "call_to_action#index_user_cta_to_be_approved"
-    match "cta/approved", :to => "call_to_action#index_user_cta_approved"
-    match "cta/not_approved", :to => "call_to_action#index_user_cta_not_approved"
-    match "cta/filter_ugc", :to => "call_to_action#filter_ugc"
-    match "cta/:id/update_cta_status", :to => "call_to_action#update_cta_status"
-    match "cta/new/", :to => "call_to_action#new_cta"
-    match "cta/show/:id", :to => "call_to_action#show_cta", :as => :cta_show
-    match "cta/show_details/:id", :to => "call_to_action#show_details"
-    match "cta/edit/:id/", :to => "call_to_action#edit_cta"
-    match "cta/save", :to => "call_to_action#save_cta"
-    match "cta/update", :to => "call_to_action#update_cta"
-    match "cta/hide/:id", :to => "call_to_action#hide_cta"
-    match "cta/clone/:id", :to => "call_to_action#clone"
-    match "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
+    get "cta", :to => "call_to_action#index_cta"
+    get "cta/filter", :to => "call_to_action#filter"
+    get "cta/template", :to => "call_to_action#index_cta_template"
+    get "cta/to_approve", :to => "call_to_action#index_user_cta_to_be_approved"
+    get "cta/approved", :to => "call_to_action#index_user_cta_approved"
+    get "cta/not_approved", :to => "call_to_action#index_user_cta_not_approved"
+    get "cta/filter_ugc", :to => "call_to_action#filter_ugc"
+    get "cta/:id/update_cta_status", :to => "call_to_action#update_cta_status"
+    get "cta/new/", :to => "call_to_action#new_cta"
+    get "cta/show/:id", :to => "call_to_action#show_cta", :as => :cta_show
+    get "cta/show_details/:id", :to => "call_to_action#show_details"
+    get "cta/edit/:id/", :to => "call_to_action#edit_cta"
+    get "cta/save", :to => "call_to_action#save_cta"
+    get "cta/update", :to => "call_to_action#update_cta"
+    get "cta/hide/:id", :to => "call_to_action#hide_cta"
+    get "cta/clone/:id", :to => "call_to_action#clone"
+    get "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
 
     # PROMOCODE
-    match "promocode", :to => "promocode#index_promocode"
-    match "promocode/new_promocode", :to => "promocode#new_promocode"
-    match "promocode/create_promocode", :to => "promocode#create_promocode"
+    get "promocode", :to => "promocode#index_promocode"
+    get "promocode/new_promocode", :to => "promocode#new_promocode"
+    get "promocode/create_promocode", :to => "promocode#create_promocode"
     
     # PRIZE
-    match "reward", :to => "easyadmin_reward#index"
-    match "reward/filter", :to => "easyadmin_reward#filter"
-    match "reward/show/:id", :to => "easyadmin_reward#show"
-    match "reward/edit/:id", :to => "easyadmin_reward#edit"
-    match "reward/new", :to => "easyadmin_reward#new"
-    match "reward/save", :to => "easyadmin_reward#save"
-    match "reward/update", :to => "easyadmin_reward#update"
-    match "reward/clone/:id", :to => "easyadmin_reward#clone"
+    get "reward", :to => "easyadmin_reward#index"
+    get "reward/filter", :to => "easyadmin_reward#filter"
+    get "reward/show/:id", :to => "easyadmin_reward#show"
+    get "reward/edit/:id", :to => "easyadmin_reward#edit"
+    get "reward/new", :to => "easyadmin_reward#new"
+    get "reward/save", :to => "easyadmin_reward#save"
+    get "reward/update", :to => "easyadmin_reward#update"
+    get "reward/clone/:id", :to => "easyadmin_reward#clone"
     
     # INSTANT WIN
-    match "contest", :to => "easyadmin#index_contest"
-    match "contest/new", :to => "easyadmin#new_contest"
-    match "contest/edit", :to => "easyadmin#edit_contest"
-    match "contest/save", :to => "easyadmin#save_contest"
-    match "periodicity/new", :to => "easyadmin#new_periodicity"
-    match "periodicity/save", :to => "easyadmin#save_periodicity"
-    match "periodicity", :to => "easyadmin#index_periodicity"
-    match "instantwin/generate/:id", :to => "instantwin#create_wins"
-    match "instantwin_prize", :to => "easyadmin#index_prize"
-    match "instantwin_prize/new", :to => "easyadmin#new_prize"
-    match "instantwin_prize/edit/:id", :to => "easyadmin#edit_prize"
-    match "instantwin_prize/save", :to => "easyadmin#save_prize"
-    match "instantwin_prize/update", :to => "easyadmin#update_prize"
+    get "contest", :to => "easyadmin#index_contest"
+    get "contest/new", :to => "easyadmin#new_contest"
+    get "contest/edit", :to => "easyadmin#edit_contest"
+    get "contest/save", :to => "easyadmin#save_contest"
+    get "periodicity/new", :to => "easyadmin#new_periodicity"
+    get "periodicity/save", :to => "easyadmin#save_periodicity"
+    get "periodicity", :to => "easyadmin#index_periodicity"
+    get "instantwin/generate/:id", :to => "instantwin#create_wins"
+    get "instantwin_prize", :to => "easyadmin#index_prize"
+    get "instantwin_prize/new", :to => "easyadmin#new_prize"
+    get "instantwin_prize/edit/:id", :to => "easyadmin#edit_prize"
+    get "instantwin_prize/save", :to => "easyadmin#save_prize"
+    get "instantwin_prize/update", :to => "easyadmin#update_prize"
     
     # COMMENT
-    match "comments/approved", :to => "comments#index_comment_approved"
-    match "comments/to_approved", :to => "comments#index_comment_to_be_approved"
-    match "comments/not_approved", :to => "comments#index_comment_not_approved"
-    match "comments/ugc_approved", :to => "comments#index_comment_approved", :cta => "user_call_to_actions"
-    match "comments/ugc_to_approved", :to => "comments#index_comment_to_be_approved", :cta => "user_call_to_actions"
-    match "comments/ugc_not_approved", :to => "comments#index_comment_not_approved", :cta => "user_call_to_actions"
-    match "comments/:comment_id/update_comment_status", :to => "comments#update_comment_status"
+    get "comments/approved", :to => "comments#index_comment_approved"
+    get "comments/to_approved", :to => "comments#index_comment_to_be_approved"
+    get "comments/not_approved", :to => "comments#index_comment_not_approved"
+    get "comments/ugc_approved", :to => "comments#index_comment_approved", :cta => "user_call_to_actions"
+    get "comments/ugc_to_approved", :to => "comments#index_comment_to_be_approved", :cta => "user_call_to_actions"
+    get "comments/ugc_not_approved", :to => "comments#index_comment_not_approved", :cta => "user_call_to_actions"
+    get "comments/:comment_id/update_comment_status", :to => "comments#update_comment_status"
 
-    match "dashboard", :to => "easyadmin#dashboard"
-    match "published", :to => "easyadmin#published"
-    match "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
-    match "dashboard/update_activated_at", :to => "call_to_action#update_activated_at", defaults: { format: 'json' }
-    match "most_clicked_interactions", :to => "easyadmin#index_most_clicked_interactions"
-    match "reward_cta_unlocked", :to => "easyadmin#index_reward_cta_unlocked"
+    get "dashboard", :to => "easyadmin#dashboard"
+    get "published", :to => "easyadmin#published"
+    get "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
+    get "dashboard/update_activated_at", :to => "call_to_action#update_activated_at", defaults: { format: 'json' }
+    get "most_clicked_interactions", :to => "easyadmin#index_most_clicked_interactions"
+    get "reward_cta_unlocked", :to => "easyadmin#index_reward_cta_unlocked"
     
-    match "events", :to => "easyadmin_event_console#index"
-    match "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }
+    get "events", :to => "easyadmin_event_console#index"
+    get "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }
     
-    match "notices", :to => "easyadmin_notice#index"
-    match "notices/new", :to => "easyadmin_notice#new"
-    match "notices/create", :to => "easyadmin_notice#create"
-    match "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }
-    match "notices/resend_notice/:notice_id", :to => "easyadmin_notice#resend_notice"
+    get "notices", :to => "easyadmin_notice#index"
+    get "notices/new", :to => "easyadmin_notice#new"
+    get "notices/create", :to => "easyadmin_notice#create"
+    get "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }
+    get "notices/resend_notice/:notice_id", :to => "easyadmin_notice#resend_notice"
     
-    match "rules", :to => "easyadmin_rewarding_rules#index"
-    match "rules/save", :to => "easyadmin_rewarding_rules#save"
+    get "rules", :to => "easyadmin_rewarding_rules#index"
+    get "rules/save", :to => "easyadmin_rewarding_rules#save"
     
     # SETTING
-    match "settings/browse", :to => "settings#browse_settings"
-    match "settings/browse/save", :to => "settings#save_browse_settings"
-    match "settings/ranking", :to => "settings#ranking_settings"
-    match "settings/ranking/save", :to => "settings#save_ranking_settings"
-    match "settings/notifications", :to => "settings#notifications_settings"
-    match "settings/notifications/save", :to => "settings#save_notifications_settings"
-    match "settings/profanities", :to => "settings#profanities_settings"
-    match "settings/profanities/save", :to => "settings#save_profanities_settings"
-    match "settings/instagram_subscriptions", :to => "settings#instagram_subscriptions_settings"
-    match "settings/instagram_subscriptions/save", :to => "settings#save_instagram_subscriptions_settings"
-    match "/settings/clear_cache", :to => "cache#clear_cache"
+    get "settings/browse", :to => "settings#browse_settings"
+    get "settings/browse/save", :to => "settings#save_browse_settings"
+    get "settings/ranking", :to => "settings#ranking_settings"
+    get "settings/ranking/save", :to => "settings#save_ranking_settings"
+    get "settings/notifications", :to => "settings#notifications_settings"
+    get "settings/notifications/save", :to => "settings#save_notifications_settings"
+    get "settings/profanities", :to => "settings#profanities_settings"
+    get "settings/profanities/save", :to => "settings#save_profanities_settings"
+    get "settings/instagram_subscriptions", :to => "settings#instagram_subscriptions_settings"
+    get "settings/instagram_subscriptions/save", :to => "settings#save_instagram_subscriptions_settings"
+    get "/settings/clear_cache", :to => "cache#clear_cache"
   end
 
-  match '/facebook_app', to: "application#facebook_app"
+  get '/facebook_app', to: "application#facebook_app"
 
-  match '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }
-  match '/check_next_interaction', to: "call_to_action#check_next_interaction", defaults: { format: 'json' }
+  get '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }
+  get '/check_next_interaction', to: "call_to_action#check_next_interaction", defaults: { format: 'json' }
   
   # Reward
-  match "/reward/catalogue", :to => "reward#index"
-  match "/reward/catalogue/all", :to => "reward#show_all_catalogue"
-  match "/reward/catalogue/available/all", :to => "reward#show_all_available_catalogue"
-  match "/reward/catalogue/my/all", :to => "reward#show_all_my_catalogue"
-  match "/reward/show/:reward_id", :to => "reward#show"
-  match "/reward/buy", :to => "reward#buy_reward_attempt", defaults: { format: 'json' }
-  match "/reward/how_to", :to => "reward#how_to"
+  get "/reward/catalogue", :to => "reward#index"
+  get "/reward/catalogue/all", :to => "reward#show_all_catalogue"
+  get "/reward/catalogue/available/all", :to => "reward#show_all_available_catalogue"
+  get "/reward/catalogue/my/all", :to => "reward#show_all_my_catalogue"
+  get "/reward/show/:reward_id", :to => "reward#show"
+  get "/reward/buy", :to => "reward#buy_reward_attempt", defaults: { format: 'json' }
+  get "/reward/how_to", :to => "reward#how_to"
 
   # Captcha.
-  match "/captcha", :to => "captcha#generate_captcha", defaults: { format: 'json' }
+  get "/captcha", :to => "captcha#generate_captcha", defaults: { format: 'json' }
 
   # Instagram subscribe.
-  match "/instagram_tag_subscription/:tag_name", :to => "callback#instagram_tag_subscription", defaults: { format: 'json' }
-  match "/instagram_new_tagged_media_callback/:tag_name", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }
-  match "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
-  match "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
+  get "/instagram_tag_subscription/:tag_name", :to => "callback#instagram_tag_subscription", defaults: { format: 'json' }
+  get "/instagram_new_tagged_media_callback/:tag_name", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }
+  get "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
+  get "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
 
-  match "/how_to", :to => "application#how_to"
-  match "/landing", :to => "landing#index"
+  get "/how_to", :to => "application#how_to"
+  get "/landing", :to => "landing#index"
 
-  match "profile", :to => "profile#index"
-  match "profile/index", :to => "profile#index_mobile"
-  match "profile/rankings", :to => "profile#rankings"
-  match "profile/rewards", :to => "profile#rewards"
-  match "profile/notices", :to => "profile#notices"
-  match "profile/levels", :to => "profile#levels"
-  match "profile/badges", :to => "profile#badges"
-  match "profile/prizes", :to => "profile#prizes"
-  match "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
-  match "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
-  match "profile/notices/mark_as_viewed", :to => "notice#mark_as_viewed", defaults: { format: 'json' }
-  match "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
-  match "profile/notices/get_recent_notice", :to => "notice#get_user_latest_notices", defaults: { format: 'json' }
-  match "profile/remove-provider/:provider", :to => "profile#remove_provider"
-  match "profile/complete_for_contest", :to => "profile#complete_for_contest", defaults: { format: 'json' }
+  get "profile", :to => "profile#index"
+  get "profile/index", :to => "profile#index_mobile"
+  get "profile/rankings", :to => "profile#rankings"
+  get "profile/rewards", :to => "profile#rewards"
+  get "profile/notices", :to => "profile#notices"
+  get "profile/levels", :to => "profile#levels"
+  get "profile/badges", :to => "profile#badges"
+  get "profile/prizes", :to => "profile#prizes"
+  get "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
+  get "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
+  get "profile/notices/mark_as_viewed", :to => "notice#mark_as_viewed", defaults: { format: 'json' }
+  get "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
+  get "profile/notices/get_recent_notice", :to => "notice#get_user_latest_notices", defaults: { format: 'json' }
+  get "profile/remove-provider/:provider", :to => "profile#remove_provider"
+  get "profile/complete_for_contest", :to => "profile#complete_for_contest", defaults: { format: 'json' }
 
-  match "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
-  match "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
-  match "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
+  get "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
+  get "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
+  get "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
 
-  match "/playticket", :to => "instantwin#play_ticket_mb"
-  match "/winners", :to => "instantwin#show_winners"
+  get "/playticket", :to => "instantwin#play_ticket_mb"
+  get "/winners", :to => "instantwin#show_winners"
 
-  match "/anchor_provider_from_calltoaction/:calltoaction_id", to: "application#anchor_provider_from_calltoaction"
+  get "/anchor_provider_from_calltoaction/:calltoaction_id", to: "application#anchor_provider_from_calltoaction"
 
   devise_for :users, :controllers => { :registrations => "registrations", :sessions => "sessions", :passwords => "passwords" }
 
   devise_scope :user do
-    match "/password_feedback", :to => "passwords#feedback"
-    match "/users/sign_in", :to => "sessions#create", :as => "user_sign_in"
-    match "/users/sign_out", :to => "sessions#destroy"
-    match "auth/:provider/callback", :to => "sessions#create"
-    match "/auth/failure" => "sessions#omniauth_failure"
-    match "/profile/edit", :to => "registrations#edit"
-    match "/user/sign_in_as/:id", :to => "sessions#sign_in_as"
+    get "/password_feedback", :to => "passwords#feedback"
+    get "/users/sign_in", :to => "sessions#create", :as => "user_sign_in"
+    get "/users/sign_out", :to => "sessions#destroy"
+    get "auth/:provider/callback", :to => "sessions#create"
+    get "/auth/failure" => "sessions#omniauth_failure"
+    get "/profile/edit", :to => "registrations#edit"
+    get "/user/sign_in_as/:id", :to => "sessions#sign_in_as"
   end
 
-  match "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }
-  match "/user_event/update_download", :to => "call_to_action#update_download", defaults: { format: 'json' }
-  match "/user_event/update_like", :to => "call_to_action#update_like", defaults: { format: 'json' }
-  match "/user_event/update_check", :to => "call_to_action#update_check", defaults: { format: 'json' }
-  match "/user_event/share/:provider", :to => "call_to_action#share", defaults: { format: 'json' }
-  match "/user_event/share_free/:provider", :to => "call_to_action#share_free", defaults: { format: 'json' }
+  get "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }
+  get "/user_event/update_download", :to => "call_to_action#update_download", defaults: { format: 'json' }
+  get "/user_event/update_like", :to => "call_to_action#update_like", defaults: { format: 'json' }
+  get "/user_event/update_check", :to => "call_to_action#update_check", defaults: { format: 'json' }
+  get "/user_event/share/:provider", :to => "call_to_action#share", defaults: { format: 'json' }
+  get "/user_event/share_free/:provider", :to => "call_to_action#share_free", defaults: { format: 'json' }
 
-  match "/gallery", :to => "gallery#index"
+  get "/gallery", :to => "gallery#index"
 
-  match "/update_call_to_action_in_page_with_tag", :to => "application#update_call_to_action_in_page_with_tag", defaults: { format: 'json' }
+  get "/update_call_to_action_in_page_with_tag", :to => "application#update_call_to_action_in_page_with_tag", defaults: { format: 'json' }
 
-  match "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
-  match "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }
-  match "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+  get "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
+  get "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }
+  get "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
-  match "/delete_current_user_interactions", :to => "application#delete_current_user_interactions"
+  get "/delete_current_user_interactions", :to => "application#delete_current_user_interactions"
 
-  match "rss", :to => "rss#rss", defaults: { format: 'rss' }
+  get "rss", :to => "rss#rss", defaults: { format: 'rss' }
 
-  match "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
-  match "/last_linked_calltoaction", to: "call_to_action#last_linked_calltoaction", defaults: { format: 'json' }
+  get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+  get "/last_linked_calltoaction", to: "call_to_action#last_linked_calltoaction", defaults: { format: 'json' }
 
-  match "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
-  match "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
-  match "/comments_polling", :to => "call_to_action#comments_polling", defaults: { format: 'json' }
+  get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+  get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
+  get "/comments_polling", :to => "call_to_action#comments_polling", defaults: { format: 'json' }
 
-  match "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
-  match "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
-  match "get_overvideo_during_interaction", :to => "call_to_action#get_overvideo_during_interaction", defaults: { format: 'json' }
+  get "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
+  get "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }
+  get "get_overvideo_during_interaction", :to => "call_to_action#get_overvideo_during_interaction", defaults: { format: 'json' }
   
-  match "/call_to_action/:id/:descendent_id", to: "call_to_action#show"
+  get "/call_to_action/:id/:descendent_id", to: "call_to_action#show"
 
-  resources :call_to_action, only: :show do
-    match "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }
-  end
+  resources :call_to_action, only: :show
+  #resources :call_to_action, only: :show do
+  #  get "/next_disqus_page", :to => "call_to_action#next_disqus_page", defaults: { format: 'json' }
+  #end
 
-  match "/newsletter_unsubscribe/:email/:security_token", :to => "newsletter#unsubscribe", :constraints => { :email => /.*/ }
-  match "email_notifications_unsubscribe/:username/:security_token", :to => "notice#unsubscribe", :constraints => { :username => /.*/ }
+  get "/newsletter_unsubscribe/:email/:security_token", :to => "newsletter#unsubscribe", :constraints => { :email => /.*/ }
+  get "email_notifications_unsubscribe/:username/:security_token", :to => "notice#unsubscribe", :constraints => { :username => /.*/ }
 
-  match "/reset_redo_user_interactions", to: "call_to_action#reset_redo_user_interactions", defaults: { format: 'json' }
+  get "/reset_redo_user_interactions", to: "call_to_action#reset_redo_user_interactions", defaults: { format: 'json' }
 
   # ICAL
-  match "/ical/:interaction_id/:name", to: "calendar#get_ical", defaults: { format: 'ics' }
+  get "/ical/:interaction_id/:name", to: "calendar#get_ical", defaults: { format: 'ics' }
 
-  match "/tag/:name", :to => "application#index"
+  get "/tag/:name", :to => "application#index"
   root :to => "application#index"
 
   # error handling
-  match "/404", :to => "http_error#not_found_404"
-  match "/500", :to => "http_error#internal_error_500"
-  match "/422", :to => "http_error#unprocessable_entity_422"
+  get "/404", :to => "http_error#not_found_404"
+  get "/500", :to => "http_error#internal_error_500"
+  get "/422", :to => "http_error#unprocessable_entity_422"
 
 end
