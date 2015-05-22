@@ -57,8 +57,8 @@ class CallbackController < ApplicationController
 
         if subscription["object"] == "tag"
           tag_name = subscription["object_id"]
-          instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY).value
-          instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting)
+          instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
+          instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting.value)
           min_tag_id = instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] rescue nil
 
           request_params = {
@@ -68,7 +68,7 @@ class CallbackController < ApplicationController
           url = "https://api.instagram.com/v1/tags/#{tag_name}/media/recent#{build_arguments_string_for_request(request_params)}"
           res = JSON.parse(open(url).read)
           res["data"].each do |media|
-            auth = Authentication.find_by_uid_and_provider("'#{media["user"]["id"]}', 'instagram_#{$site.id}'")
+            auth = Authentication.find_by_uid_and_provider(media["user"]["id"], "instagram_#{$site.id}")
             if auth
               begin
                 # secondary_id check necessary?
