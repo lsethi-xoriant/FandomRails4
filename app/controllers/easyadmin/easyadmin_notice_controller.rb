@@ -97,7 +97,13 @@ class Easyadmin::EasyadminNoticeController < Easyadmin::EasyadminController
       end
       if notification_channels.include?("email")
         if (JSON.parse(user.aux)['subscriptions']['notifications'] rescue true)
-          SystemMailer.notification_mail(user.email, params[:email_notice], "Hai ricevuto una notifica su #{request.site.title}").deliver
+          property = get_property()
+          if property
+            site_name = property.title
+          else
+            site_name = $site.id.capitalize
+          end
+          SystemMailer.notification_mail(user.email, params[:email_notice], "Hai ricevuto una notifica su #{site_name}").deliver
         end
       end
       if app_access_token

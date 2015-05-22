@@ -422,14 +422,24 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     cta.approved = params[:approved]
     cta.save
     log_synced("moderated UGC content", approved: params[:approved], cta_id: cta.id, moderator_id: current_user.id)
+    user_upload_interaction = cta.user_upload_interaction
+
+    notifications_enable = JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['upload_approved']
+
     if cta.approved
       html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_ugc_approved_template",
                                         layout: false, locals: { cta: cta }, formats: :html
-      user_upload_interaction = cta.user_upload_interaction
-      if JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['upload_approved'] != false
+      if notifications_enable != false
         notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
       end
       userinteraction, outcome = create_or_update_interaction(User.find(user_upload_interaction.user_id), Interaction.where(:resource_type => 'Upload', :resource_id => user_upload_interaction.upload_id).first, nil, nil)
+    elsif cta.approved == false
+      gallery_tag = get_cta_tag_tagged_with(cta, "gallery")
+      extra_fields = JSON.parse(gallery_tag.extra_fields)
+      not_approved_text = extra_fields["not_approved_text"]
+      if not_approved_text && notifications_enable != false
+        notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => not_approved_text, :viewed => false, :read => false)
+      end
     end
     # TODO insert call to log moderation ugc event
     respond_to do |format|
