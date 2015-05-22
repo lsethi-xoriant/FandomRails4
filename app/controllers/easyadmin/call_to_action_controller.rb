@@ -403,10 +403,10 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     cta = CallToAction.find(params[:id])
     if cta.activated_at.blank?
       risp = "active"
-      cta.activation_date_time = DateTime.now.change(hour: 0).to_s
+      cta.activated_at = DateTime.now.change(hour: 0).to_s
     else
       risp = "not-active"
-      cta.activation_date_time = ""
+      cta.activated_at = nil
     end
     cta.save
 
