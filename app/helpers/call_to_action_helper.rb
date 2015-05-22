@@ -288,7 +288,8 @@ module CallToActionHelper
               "activated_at" => calltoaction.activated_at,
               "user_id" => calltoaction.user_id,
               "user_name" => user_name,
-              "user_avatar" => user_user_avatar
+              "user_avatar" => user_user_avatar,
+              "updated_at" => calltoaction.updated_at
             },
             "optional_history" => optional_history,
             "flag" => build_grafitag_for_calltoaction(calltoaction, "flag"),
