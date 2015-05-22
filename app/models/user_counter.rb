@@ -68,7 +68,7 @@
     else
       result = {}
       user.user_counters.map do |counter|
-        result[counter.name] = JSON.parse(counter.counters)
+        result[counter.name] = counter.counters
       end
       result
     end
