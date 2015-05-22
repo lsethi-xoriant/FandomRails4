@@ -347,7 +347,6 @@ class ApplicationController < ActionController::Base
     #    -F 'callback_url=http://[example.com]/instagram_tag_subscription/[TAG_NAME]' \
     #    https://api.instagram.com/v1/subscriptions/
     request_params = { 
-      "ssl_version" => :TLSv1, 
       "client_id" => ig_settings["client_id"], 
       "client_secret" => ig_settings["client_secret"], 
       "object" => "tag", 
@@ -355,17 +354,14 @@ class ApplicationController < ActionController::Base
       "object_id" => tag_name, 
       "callback_url" => "http://dev.fandomlab.com#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL).value}/#{params[:tag_name]}"
     }
-    url = "https://api.instagram.com/v1/subscriptions/"
-    uri = URI.parse(url)
-    req = Net::HTTP::Post.new(uri.path)
-    req.set_form_data(request_params)
 
-    http = Net::HTTP.new(uri.hostname, uri.port)
-    http.use_ssl = true
-    http.ssl_version = :TLSv1
-    res = http.start do |http|
-      http.request(req)
-    end
+    headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
+
+    res = HTTParty.post("https://api.instagram.com/v1/subscriptions/",
+      { 
+        :body => request_params,
+        :headers => headers
+      })
 
     case res
     when Net::HTTPSuccess, Net::HTTPRedirection
