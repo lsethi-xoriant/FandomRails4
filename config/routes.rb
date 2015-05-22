@@ -326,6 +326,7 @@ Fandom::Application.routes.draw do
   namespace :api do
     namespace :v2 do
       match "/get_stripe/:tag_name", :to => "browse#get_stripe_from_tag", defaults: { format: 'json' }
+      match "/index", :to => "application#index", defaults: { format: 'json' }
     end
   end
 
