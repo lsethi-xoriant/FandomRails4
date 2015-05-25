@@ -90,7 +90,7 @@
         </div>
 
         <div class="col-lg-6 text-center">
-          <%= render partial: "media_type-form", locals: { f: f } %>
+          <%= render partial: "media_type_form", locals: { f: f } %>
         </div>
       </div>
 
@@ -118,7 +118,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == 'Quiz' && builder.object.resource.quiz_type == "TRIVIA" %>
-          <%= render 'quiz-form', :f => builder %>
+          <%= render 'quiz_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -131,7 +131,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "TEST" %>
-          <%= render '/easyadmin/call_to_action/test-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/test_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -144,7 +144,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == 'Quiz' && builder.object.resource.quiz_type == "VERSUS" %>
-          <%= render 'versus-form', :f => builder %>
+          <%= render 'versus_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -157,7 +157,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Check" %>
-          <%= render 'check-form', :f => builder %>
+          <%= render 'check_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -170,7 +170,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Like" %>
-          <%= render 'like-form', :f => builder %>
+          <%= render 'like_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -183,7 +183,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Download" %>
-          <%= render 'download-form', :f => builder %>
+          <%= render 'download_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -196,7 +196,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Comment" %>
-          <%= render 'comment-form', :f => builder %>
+          <%= render 'comment_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -209,7 +209,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Link" %>
-          <%= render 'link-form', :f => builder %>
+          <%= render 'link_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -220,7 +220,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Upload" %>
-          <%= render '/easyadmin/call_to_action/upload-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/upload_form', :f => builder %>
         <% end %>
       <% end %>
       
@@ -231,7 +231,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Vote" %>
-          <%= render '/easyadmin/call_to_action/vote-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/vote_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -244,7 +244,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Share" %>
-          <%= render '/easyadmin/call_to_action/share-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/share_form', :f => builder %>
         <% end %>
       <% end %>
 

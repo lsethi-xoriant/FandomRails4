@@ -37,7 +37,7 @@ module RankingHelper
     version_rank = CacheVersion.where("name = ?", ranking_name).order("version desc").first
     if version_rank
       version = version_rank.version
-      total = JSON.parse(version_rank.data)['total']
+      total = version_rank.data['total']
     else
       version = 0
       total = 0

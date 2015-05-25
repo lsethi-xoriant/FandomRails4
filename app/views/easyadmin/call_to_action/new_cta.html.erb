@@ -79,7 +79,7 @@
         </div>
 		
         <div class="col-lg-6 text-center">
-          <%= render partial: "media_type-form", locals: { f: f } %>
+          <%= render partial: "media_type_form", locals: { f: f } %>
         </div>
       </div>
 
@@ -106,7 +106,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "TRIVIA" %>
-          <%= render '/easyadmin/call_to_action/quiz-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/quiz_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -119,7 +119,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "TEST" %>
-          <%= render '/easyadmin/call_to_action/test-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/test_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -132,7 +132,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "VERSUS" %>
-          <%= render '/easyadmin/call_to_action/versus-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/versus_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -145,7 +145,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Check" %>
-          <%= render '/easyadmin/call_to_action/check-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/check_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -171,7 +171,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Download" %>
-          <%= render '/easyadmin/call_to_action/download-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/download_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -184,7 +184,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Comment" %>
-          <%= render '/easyadmin/call_to_action/comment-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/comment_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -197,7 +197,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Link" %>
-          <%= render 'link-form', :f => builder %>
+          <%= render 'link_form', :f => builder %>
         <% end %>
       <% end %>
       
@@ -208,7 +208,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Upload" %>
-          <%= render '/easyadmin/call_to_action/upload-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/upload_form', :f => builder %>
         <% end %>
       <% end %>
       
@@ -219,7 +219,7 @@
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Vote" %>
-          <%= render '/easyadmin/call_to_action/vote-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/vote_form', :f => builder %>
         <% end %>
       <% end %>
       
@@ -232,7 +232,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Share" %>
-          <%= render '/easyadmin/call_to_action/share-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/share_form', :f => builder %>
         <% end %>
       <% end %>
  
