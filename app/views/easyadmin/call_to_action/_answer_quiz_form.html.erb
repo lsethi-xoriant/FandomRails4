@@ -51,7 +51,7 @@
 
         <div class="form-group">
           <label class="text-input">CallToAction</label>
-          <% date_array = CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND (tags.name='step' OR tags.name = 'ending')", Time.now.utc).order("activated_at DESC").map { |c| [ "#{ c.title }", c.id] } %>
+          <% date_array = CallToAction.includes(:call_to_action_tags, call_to_action_tags: :tag).where("activated_at<=? AND activated_at IS NOT NULL AND (tags.name='step' OR tags.name = 'ending')", Time.now.utc).references(:call_to_action_tags).order("activated_at DESC").map { |c| [ "#{ c.title }", c.id] } %>
           <% date_array.unshift ["", ""] %>
           <%= f.select :call_to_action_id, date_array, {}, :class => "form-control" %>
         </div>                 
