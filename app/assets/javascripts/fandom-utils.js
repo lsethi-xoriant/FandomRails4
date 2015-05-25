@@ -72,18 +72,6 @@ function add_share_fields(link, association, content) {
   $("#tmp-share-add").prepend(content.replace(regexp, new_id));
 }
 
-function add_check_fields(link, association, content) {
-  var new_id = new Date().getTime();
-  var regexp = new RegExp("new_" + association, "g");
-  $("#tmp-check-add").prepend(content.replace(regexp, new_id));
-}
-
-function add_download_fields(link, association, content) {
-  var new_id = new Date().getTime();
-  var regexp = new RegExp("new_" + association, "g");
-  $("#tmp-download-add").prepend(content.replace(regexp, new_id));
-}
-
 function add_comment_fields(link, association, content) {
   if(!comment_counter) {
     var new_id = new Date().getTime();
