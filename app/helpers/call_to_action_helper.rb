@@ -158,10 +158,11 @@ module CallToActionHelper
     !@aws_transcoding_media_status || @aws_transcoding_media_status == "done"
   end
 
-  def from_ctas_to_cta_ids_sql(calltoactions)
-    calltoactions.joins("LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id")
-                 .joins("LEFT OUTER JOIN rewards ON rewards.call_to_action_id = call_to_actions.id")
-                 .select("call_to_actions.id").to_sql
+  def from_ctas_to_cta_ids_sql(call_to_actions)
+    # calltoactions.joins("LEFT OUTER JOIN call_to_action_tags ON call_to_action_tags.call_to_action_id = call_to_actions.id")
+    #              .joins("LEFT OUTER JOIN rewards ON rewards.call_to_action_id = call_to_actions.id")
+    #              .select("call_to_actions.id").to_sql
+    call_to_actions.map {|cta| cta.id}.join(",")
   end
 
   def gets_ctas_ordered_by_comments(calltoaction_ids, cta_count)
@@ -322,7 +323,7 @@ module CallToActionHelper
       get_comments_query = "SELECT id FROM (select row_number() over (partition by comment_id ORDER BY updated_at DESC) as r, t.* FROM user_comment_interactions t WHERE approved = true AND comment_id IN (#{resource_ids.join(',')})) x WHERE x.r <= 5;"
       comments = ActiveRecord::Base.connection.execute(get_comments_query)
       comment_ids = comments.map { |comment| comment["id"] }
-      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).references(:users).order("updated_at DESC").limit(5)
+      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).references(:users).order("user_comment_interactions.updated_at DESC").limit(5)
     end
 
     max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
@@ -570,7 +571,7 @@ module CallToActionHelper
 
   def enable_interactions(calltoaction)
     cache_short("enable_interactions_#{calltoaction.id}") do
-      calltoaction.interactions.includes(:resource, :call_to_action).where("when_show_interaction <> ?", "MAI_VISIBILE").references(:resources, :call_to_actions).to_a
+      calltoaction.interactions.includes(:resource, :call_to_action).where("when_show_interaction <> ?", "MAI_VISIBILE").to_a
     end
   end
 
@@ -582,7 +583,7 @@ module CallToActionHelper
   
   def interactions_required_to_complete(cta)
     cache_short get_interactions_required_to_complete_cache_key(cta.id) do
-      cta.interactions.includes(:resource, :call_to_action).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").references(:resources, :call_to_actions).order("seconds ASC").to_a
+      cta.interactions.includes(:resource, :call_to_action).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
     end
   end
 
