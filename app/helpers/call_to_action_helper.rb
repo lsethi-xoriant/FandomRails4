@@ -376,8 +376,8 @@ module CallToActionHelper
         counter = find_interaction_in_counters(counters, interaction_id)
         interaction_info["interaction"]["resource"]["counter"] = counter ? counter.counter : 0
         if interaction_info["interaction"]["resource_type"] == "vote" || interaction_info["interaction"]["resource_type"] == "versus" 
-          aux = counter ? counter.aux : "{}"
-          interaction_info["interaction"]["resource"]["counter_aux"] = JSON.parse(aux)
+          aux = counter ? counter.aux : {}
+          interaction_info["interaction"]["resource"]["counter_aux"] = aux
         elsif interaction_info["interaction"]["resource_type"] == "comment"
           interaction_info["interaction"]["resource"]["comment_info"] = {
             "comments_total_count" => interaction_info["interaction"]["resource"]["counter"],

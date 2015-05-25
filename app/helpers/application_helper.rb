@@ -107,7 +107,7 @@ module ApplicationHelper
     if cta_interactions
       cta_interactions.each do |interaction|
         if interaction[:interaction_info][:resource_type].downcase == 'download' && interaction[:interaction_resource][:ical_fields]
-          ical_fields = JSON.parse(interaction[:interaction_resource][:ical_fields])
+          ical_fields = interaction[:interaction_resource][:ical_fields]
           event_range_info[:ical_id] = interaction[:interaction_info].id
           if ical_fields['start_datetime']
             event_range_info[:start_date] = ical_fields['start_datetime']['value']

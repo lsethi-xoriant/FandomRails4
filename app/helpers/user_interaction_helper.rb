@@ -73,7 +73,7 @@ module UserInteractionHelper
     next_cta = nil
     linked_user_interaction_id = nil
     user_interactions.each do |user_interaction|
-      aux = JSON.parse(user_interaction.aux || {})
+      aux = user_interaction.aux
       to_redo = aux["to_redo"]
       if aux["next_calltoaction_id"] && !to_redo
         next_cta = CallToAction.find(aux["next_calltoaction_id"])
@@ -209,7 +209,7 @@ module UserInteractionHelper
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
       if counter
         if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "quiz"
-          aux = JSON.parse(counter.aux)
+          aux = counter.aux
           aux[value] = aux[value] ? (aux[value] + 1) : 1
           counter.update_attributes(counter: (counter.counter + 1), aux: aux.to_json)
         else
@@ -227,6 +227,7 @@ module UserInteractionHelper
   end
 
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
+    aux = JSON.parse(aux)
 
     if !anonymous_user?(user) || interaction.stored_for_anonymous
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
@@ -243,21 +244,19 @@ module UserInteractionHelper
       when "share"
         aux = merge_aux(aux, user_interaction.aux)
       when "like"
-        like = !(JSON.parse(user_interaction.aux)["like"])
-        like_value = like ? 1 : -1
-        aux = { like: like }.to_json
+        like_updated = !user_interaction.aux["like"]
+        aux = { like: like_updated }.to_json
+        like_value = like_updated ? 1 : -1
         adjust_counter!(interaction, like_value)
       when "vote"
-        aux_parse = JSON.parse(aux)
-        aux_in_user_interaction = JSON.parse(user_interaction.aux)
-        aux_in_user_interaction["vote"] = aux_parse["vote"]
-        if aux_in_user_interaction["vote_info_list"].has_key?(aux_parse["vote"].to_s)
-          aux_in_user_interaction["vote_info_list"][aux_parse["vote"]] = aux_in_user_interaction["vote_info_list"][aux_parse["vote"].to_s] + 1
+        aux_in_user_interaction = user_interaction.aux
+        aux_in_user_interaction["vote"] = aux["vote"]
+        if aux_in_user_interaction["vote_info_list"].has_key?(aux["vote"].to_s)
+          aux_in_user_interaction["vote_info_list"][aux["vote"]] = aux_in_user_interaction["vote_info_list"][aux["vote"].to_s] + 1
         else
-          aux_in_user_interaction["vote_info_list"][aux_parse["vote"]] = 1
+          aux_in_user_interaction["vote_info_list"][aux["vote"]] = 1
         end
-        aux = aux_in_user_interaction.to_json
-        adjust_counter!(interaction, aux_parse["vote"])
+        adjust_counter!(interaction, aux["vote"])
       when "quiz"
         if interaction.resource.quiz_type == "VERSUS"
           adjust_counter!(interaction, answer_id.to_s)
@@ -273,12 +272,9 @@ module UserInteractionHelper
       when "like"
          adjust_counter!(interaction, 1)
       when "vote"
-        aux_parse = JSON.parse(aux)
-        aux_parse["vote_info_list"] = {
-          aux_parse["vote"] => 1
-        }
-        aux = aux_parse.to_json
-        adjust_counter!(interaction, aux_parse["vote"])
+        vote = aux["vote"]
+        aux["vote_info_list"] = { vote => 1 }
+        adjust_counter!(interaction, vote)
       when "quiz"
         if interaction.resource.quiz_type == "VERSUS"
           adjust_counter!(interaction, answer_id.to_s)

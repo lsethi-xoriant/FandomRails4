@@ -239,7 +239,7 @@ class CallToActionController < ApplicationController
 
     calltoaction_id = params[:id]
     
-    calltoaction = CallToAction.includes(interactions: :resource).active.references(:interactions).find(calltoaction_id)
+    calltoaction = CallToAction.includes(:interactions).active.references(:interactions).find(calltoaction_id)
 
     if calltoaction
       log_call_to_action_viewed(calltoaction)
@@ -493,8 +493,7 @@ class CallToActionController < ApplicationController
 
       response["answers"] = build_answers_for_resource(interaction, interaction.resource.answers, interaction.resource.quiz_type.downcase, user_interaction)
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
-      aux = counter ? counter.aux : "{}"
-      response["counter_aux"] = JSON.parse(aux)
+      response["counter_aux"] = counter ? counter.aux : {}
       response["counter"] = counter ? counter.counter : 0
 
     elsif interaction.resource_type.downcase == "like"
@@ -530,8 +529,7 @@ class CallToActionController < ApplicationController
       response[:ga][:label] = interaction.resource_type.downcase
 
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
-      aux = counter ? counter.aux : "{}"
-      response["counter_aux"] = JSON.parse(aux)
+      response["counter_aux"] = counter.aux
     else
       if interaction.resource_type.downcase == "download" 
         response["download_interaction_attachment"] = interaction.resource.attachment.url

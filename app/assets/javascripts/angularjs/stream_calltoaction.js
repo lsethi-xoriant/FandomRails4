@@ -726,7 +726,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.evaluateVote = function(interaction_info) {
     if(interaction_info.user_interaction) {
-      return JSON.parse(interaction_info.user_interaction.aux)["vote"];
+      return interaction_info.user_interaction.aux["vote"];
     } else {
       return null;
     }
@@ -734,7 +734,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.likePressed = function(interaction_info) {
     if(angular.isDefined(interaction_info) && interaction_info.user_interaction) {
-      return (JSON.parse(interaction_info.user_interaction.aux)["like"]);
+      return interaction_info.user_interaction.aux["like"];
     } else {
       return false;
     }
@@ -1784,7 +1784,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       interaction_info.user_interaction.feedback = data.user_interaction.outcome;
 
       if(interaction_info.interaction.resource_type == "like") {
-        if(JSON.parse(interaction_info.user_interaction.aux)["like"]) {
+        like_pressed = interaction_info.user_interaction.aux["like"]
+        if(like_pressed) {
           interaction_info.interaction.resource.counter += 1;
         } else {
           interaction_info.interaction.resource.counter -= 1;
