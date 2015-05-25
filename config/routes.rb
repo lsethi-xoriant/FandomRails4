@@ -126,7 +126,7 @@ Fandom::Application.routes.draw do
           get "/users/sign_in", to: "application#iur"
           get "/users/sign_in_admin", to: "sessions#new"
           get "/users/sign_up", to: "sessions#new"
-          get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+          post "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
         end
 
         resources :call_to_action, only: :show
@@ -210,7 +210,7 @@ Fandom::Application.routes.draw do
           post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
           get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
-          get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+          post "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
           get "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
           get "/ranking/page", :to => "ranking#get_rank_page"
         end
@@ -270,7 +270,7 @@ Fandom::Application.routes.draw do
           post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
           get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
-          get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+          post "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
           get "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
         end
       end
@@ -537,7 +537,7 @@ Fandom::Application.routes.draw do
   get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
   get "/last_linked_calltoaction", to: "call_to_action#last_linked_calltoaction", defaults: { format: 'json' }
 
-  get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
+  post "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
   get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
   get "/comments_polling", :to => "call_to_action#comments_polling", defaults: { format: 'json' }
 
