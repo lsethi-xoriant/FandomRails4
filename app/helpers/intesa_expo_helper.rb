@@ -81,11 +81,11 @@ module IntesaExpoHelper
 
   def get_intesa_expo_ctas(with_tag = nil)
     language = get_tag_from_params($context_root || "it")
-    ctas = CallToAction.active.includes(:call_to_action_tags, :interactions)
+    ctas = CallToAction.active.includes(:call_to_action_tags, :interactions).references(:call_to_action_tags, :interactions)
                               .where("call_to_action_tags.tag_id = ?", language.id)
                               .where("call_to_actions.valid_from < ? OR call_to_actions.valid_from IS NULL", Time.now.utc)
     if with_tag
-      ctas_with_param_tag = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", with_tag.id)
+      ctas_with_param_tag = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", with_tag.id).references(:call_to_action_tags)
       ctas = ctas.where("call_to_actions.id" => ctas_with_param_tag.map { |cta| cta.id })
     end
     ctas
@@ -152,7 +152,7 @@ module IntesaExpoHelper
         ctas = get_intesa_expo_ctas()
         
         if $context_root == "imprese"
-          ignore_cta_tags = CallToActionTag.includes(:tag).where("tags.name IN (?)", ["story-imprese", "interview-imprese"])
+          ignore_cta_tags = CallToActionTag.includes(:tag).where("tags.name IN (?)", ["story-imprese", "interview-imprese"]).references(:tags)
           ctas = ctas.where("call_to_actions.id IN (?)", ignore_cta_tags.map { |tag| tag.call_to_action_id })
         else
           ctas = ctas.where("(call_to_actions.extra_fields->>'layout') IS NULL OR (call_to_actions.extra_fields->>'layout') <> 'press'")

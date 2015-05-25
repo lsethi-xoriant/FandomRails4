@@ -26,7 +26,7 @@ module GraphHelper
   end
   
   def tags_cyclic?(tag)    
-    tags = Tag.includes(:tags_tags).where("tags_tags.other_tag_id IS NOT NULL")
+    tags = Tag.includes(:tags_tags).where("tags_tags.other_tag_id IS NOT NULL").references(:tags_tags)
     graph = create_graph(tags)    
     start_node = graph.nodes.fetch(tag.id, nil)
     seen_node_set = Hamster.set

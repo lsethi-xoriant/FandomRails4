@@ -134,7 +134,7 @@ module DisneyHelper
 
   def get_disney_calltoaction_active_with_tag_in_property(tag, property, order)
     # Cached in index
-    tag_calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", tag.id)
+    tag_calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", tag.id).references(:call_to_action_tags)
     get_disney_ctas(property).where("call_to_actions.id IN (?)", tag_calltoactions.map { |calltoaction| calltoaction.id }).order("activated_at #{order}")
   end
 

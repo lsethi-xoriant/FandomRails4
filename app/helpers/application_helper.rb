@@ -311,7 +311,7 @@ module ApplicationHelper
   
   def get_rewards_with_tag(tag_name)
     cache_short get_rewards_with_tag_cache_key(tag_name) do
-      Reward.includes(reward_tags: :tag).where("tags.name = ?", tag_name).to_a
+      Reward.includes(reward_tags: :tag).where(tags: { name: tag_name }).to_a
     end
   end
   
@@ -616,7 +616,7 @@ module ApplicationHelper
   
   def get_hidden_tag_ids
     cache_short(get_hidden_tags_cache_key) do
-      Tag.includes(:tags_tags => :other_tag ).where(other_tags_tags_tags: { name: "hide-tag" }).map{|t| t.id}
+      Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? ", "hide-tag").references(:other_tags_tags_tags).map{|t| t.id}
     end
   end
 
@@ -863,7 +863,7 @@ module ApplicationHelper
   #             in the result Hash.
   def get_cta_to_interactions_map(cta_ids, params = {})
     cta_to_interactions = {}
-    interactions = Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids)
+    interactions = Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids).references(:resources)
     if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
       interactions = interactions.joins("LEFT OUTER JOIN downloads ON downloads.id = interactions.resource_id")
       interactions = add_ical_fields_to_where_condition(interactions, params, true)
