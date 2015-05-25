@@ -863,7 +863,7 @@ module ApplicationHelper
   #             in the result Hash.
   def get_cta_to_interactions_map(cta_ids, params = {})
     cta_to_interactions = {}
-    interactions = Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids).references(:resources)
+    interactions = Interaction.includes(:resource).where("call_to_action_id IN (?)", cta_ids)
     if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
       interactions = interactions.joins("LEFT OUTER JOIN downloads ON downloads.id = interactions.resource_id")
       interactions = add_ical_fields_to_where_condition(interactions, params, true)

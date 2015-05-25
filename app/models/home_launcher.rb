@@ -7,5 +7,5 @@ class HomeLauncher < ActiveRecord::Base
   validates_presence_of :url
   validates_presence_of :image
 
-  scope :active, where("enable=?", true).order("updated_at DESC")
+  scope :active, -> { where("enable=?", true) }.order("updated_at DESC")
 end
