@@ -539,7 +539,7 @@ Fandom::Application.routes.draw do
 
   post "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
   get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
-  get "/comments_polling", :to => "call_to_action#comments_polling", defaults: { format: 'json' }
+  post "/comments_polling", :to => "call_to_action#comments_polling", defaults: { format: 'json' }
 
   get "rss", :to => "rss#property_rss", defaults: { format: 'rss' }
   get "check_level_and_badge_up", :to => "call_to_action#check_level_and_badge_up", defaults: { format: 'json' }

@@ -32,9 +32,11 @@ class User < ActiveRecordWithJSON
   before_update :set_current_avatar
   before_create :default_values
 
+
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, 
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }
 
+  validates_attachment :avatar, content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }
   validates_length_of :username, maximum: 15, if: Proc.new { |f| required_attr?("username_length") }
   validates_presence_of :location, if: Proc.new { |f| required_attr?("location") }
   validates_presence_of :gender, if: Proc.new { |f| required_attr?("gender") }
@@ -178,13 +180,13 @@ class User < ActiveRecordWithJSON
   end
 
   # Update the user without ask the account password again.
-  def update_with_password(params={}) 
-    if params[:password].blank? 
-      params.delete(:password) 
-      params.delete(:password_confirmation) if params[:password_confirmation].blank? 
-    end 
-    update_attributes(params) 
-  end
+  # def update_with_password(params={}) 
+  #   if params[:password].blank? 
+  #     params.delete(:password) 
+  #     params.delete(:password_confirmation) if params[:password_confirmation].blank? 
+  #   end 
+  #   update_attributes(params) 
+  # end
 
   # Specifies that this is a real user, not somebody used just interanlly by the system, such as to evaluate rules
   def mocked?
