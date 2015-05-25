@@ -133,7 +133,7 @@ Fandom::Application.routes.draw do
         
         get "ordering_ctas", to: "call_to_action#ordering_ctas" , defaults: { format: 'json' }
         get "rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
-        get "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+        post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
         get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         get "/", to: "application#index"
 
@@ -207,7 +207,7 @@ Fandom::Application.routes.draw do
           
           get "/special_guest", :to => "application#redirect_into_special_guest"
           
-          get "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+          post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
           get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
           get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
@@ -267,7 +267,7 @@ Fandom::Application.routes.draw do
           
           get "/special_guest", :to => "application#redirect_into_special_guest"
           
-          get "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+          post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
           get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
           get "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
@@ -528,7 +528,7 @@ Fandom::Application.routes.draw do
 
   get "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
   get "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }
-  get "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
+  post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
   get "/delete_current_user_interactions", :to => "application#delete_current_user_interactions"
 

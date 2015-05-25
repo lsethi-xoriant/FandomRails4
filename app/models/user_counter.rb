@@ -11,7 +11,7 @@
 
     ["DAILY", "TOTAL"].each do |periodicity|
       user_counter = find_or_create_user_counter_by_perodicity(user, periodicity)
-      counters = JSON.parse(user_counter.counters) 
+      counters = user_counter.counters
 
       counters = update_counter_by_periodicity_and_counter_type(counters, "all", interaction, user_interaction, quiz_type)
 
