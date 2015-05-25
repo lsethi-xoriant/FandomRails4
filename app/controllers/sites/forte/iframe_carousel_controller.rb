@@ -5,7 +5,7 @@ class Sites::Forte::IframeCarouselController < ApplicationController
   def main
     @calltoactions = cache_short("iframe_carousel_calltoactions") do     
       highlight_calltoactions = get_highlight_calltoactions()
-      active_calltoactions_without_rewards = CallToAction.includes(:rewards).active.where("rewards.id IS NULL")
+      active_calltoactions_without_rewards = CallToAction.includes(:rewards).references(:rewards).active.where("rewards.id IS NULL")
       if highlight_calltoactions.any?
         last_calltoactions = active_calltoactions_without_rewards.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
       else
@@ -30,7 +30,7 @@ class Sites::Forte::IframeCarouselController < ApplicationController
 
   def footer
     @calltoactions = cache_short("iframe_carousel_footer_calltoactions") do
-      CallToAction.includes(:rewards).active.where("rewards.id IS NULL").limit(8).to_a
+      CallToAction.includes(:rewards).references(:rewards).active.where("rewards.id IS NULL").limit(8).to_a
     end
     
     @calltoaction_reward_status = Hash.new

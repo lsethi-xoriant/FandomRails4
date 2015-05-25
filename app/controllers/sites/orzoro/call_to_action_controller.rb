@@ -20,7 +20,7 @@ class Sites::Orzoro::CallToActionController < CallToActionController
     calltoaction_id = params[:calltoaction_id].to_i
     category_id = params[:category_id].to_i
 
-    calltoaction = CallToAction.order("call_to_actions.id ASC").active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", category_id)
+    calltoaction = CallToAction.order("call_to_actions.id ASC").active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", category_id).references(:call_to_action_tags)
     if params[:direction] == "next"
       calltoaction = calltoaction.where("call_to_actions.id > ?", calltoaction_id).first  
       unless calltoaction

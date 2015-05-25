@@ -28,7 +28,7 @@ class Sites::Ballando::ApplicationController < ApplicationController
       end
     else
       @calltoactions = cache_short("stream_ctas_init_calltoactions_#{params[:name]}") do
-        CallToAction.active.includes(:call_to_action_tags).where(call_to_action_tags: { tag_id: @tag.id }).limit(init_ctas)
+        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", @tag.id).references(:call_to_action_tags).limit(init_ctas)
       end
     end
     

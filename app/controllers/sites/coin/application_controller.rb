@@ -47,7 +47,7 @@ class Sites::Coin::ApplicationController < ApplicationController
       end
     else
       @calltoactions = cache_short("stream_ctas_init_calltoactions_#{params[:name]}") do
-        CallToAction.active.includes(:call_to_action_tags).where(call_to_action_tags: { tag_id: @tag.id }).limit(init_ctas)
+        CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", @tag.id).references(:call_to_action_tags).limit(init_ctas)
       end
     end
     
@@ -116,7 +116,7 @@ class Sites::Coin::ApplicationController < ApplicationController
   def share_interaction_daily_done?
     if current_user
       cache_short(get_share_interaction_daily_done_cache_key(current_user.id)) do
-        current_user.user_interactions.includes(:interaction).where("interactions.resource_type = 'Share' AND user_interactions.created_at >= ?", Time.now.in_time_zone("Rome").beginning_of_day).any?
+        current_user.user_interactions.includes(:interaction).where("interactions.resource_type = 'Share' AND user_interactions.created_at >= ?", Time.now.in_time_zone("Rome").beginning_of_day).references(:interactions).any?
       end
     else
       false

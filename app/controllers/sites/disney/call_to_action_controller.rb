@@ -10,7 +10,7 @@ class Sites::Disney::CallToActionController < CallToActionController
 
     calltoaction_id = params[:id]
     
-    calltoaction = CallToAction.includes(interactions: :resource).active.find(calltoaction_id)
+    calltoaction = CallToAction.includes(interactions: :resource).references(:interactions).active.find(calltoaction_id)
 
     if calltoaction
       log_call_to_action_viewed(calltoaction)
