@@ -111,7 +111,7 @@ module TagHelper
 
     unless tag_ids.empty?
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      tags = tags.where("id IN (#{tag_ids_subselect})")
+      tags = tags.where("tags.id IN (#{tag_ids_subselect})")
     end
 
     if !where_clause.empty?
@@ -123,7 +123,7 @@ module TagHelper
       tags = tags.offset(offset).limit(limit)
     end
 
-    tags.order("created_at DESC").to_a
+    tags.order("tags.created_at DESC").to_a
   end
   
   def get_tags_with_tags(tag_ids, params = {})
@@ -149,7 +149,7 @@ module TagHelper
       offset, limit = params[:limit][:offset], params[:limit][:perpage]
       tags = tags.offset(offset).limit(limit)
     end
-    tags.order("created_at DESC").to_a
+    tags.order("tags.created_at DESC").to_a
   end
 
   def get_tag_ids_for_cta(cta)
