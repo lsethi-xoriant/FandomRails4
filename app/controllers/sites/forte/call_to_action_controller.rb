@@ -10,7 +10,7 @@ class Sites::Forte::CallToActionController < CallToActionController
     calltoactions_showed_id_qmarks = (["?"] * calltoactions_showed_ids.count).join(", ")
 
     if params[:tag_id].present?
-      stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", params[:tag_id]).active
+      stream_call_to_action_to_render = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", params[:tag_id]).references(:call_to_action_tags).active
       if params[:current_calltoaction].present?
         stream_call_to_action_to_render = stream_call_to_action_to_render.where("call_to_actions.id <> ?", params[:current_calltoaction])
       end
@@ -282,11 +282,11 @@ class Sites::Forte::CallToActionController < CallToActionController
 
     def show
       calltoaction_id = params[:id].to_i
-      calltoaction = CallToAction.includes(:interactions).active.find_by_id(calltoaction_id)
+      calltoaction = CallToAction.includes(:interactions).references(:interactions).active.find_by_id(calltoaction_id)
 
       if calltoaction
 
-        calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
+        calltoactions = CallToAction.includes(:interactions).references(:interactions).active.where("call_to_actions.id <> ?", calltoaction_id).limit(2).to_a
         
         @calltoactions_with_current = [calltoaction] + calltoactions
 

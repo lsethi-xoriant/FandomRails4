@@ -1,7 +1,7 @@
 class Sites::Forte::CustomCallToActionController < ApplicationController
 
   def show_next_calltoaction
-    active_calltoactions_without_rewards = CallToAction.includes(:rewards).active.where("rewards.id IS NULL")
+    active_calltoactions_without_rewards = CallToAction.includes(:rewards).references(:rewards).active.where("rewards.id IS NULL")
 
     @calltoactions = active_calltoactions_without_rewards.where("call_to_actions.id < ?", params[:id].to_i).order("call_to_actions.id DESC").limit(1).to_a
     if @calltoactions.empty?
@@ -19,7 +19,7 @@ class Sites::Forte::CustomCallToActionController < ApplicationController
 
   def show
     @calltoaction_id = params[:id].to_i
-    @calltoactions = CallToAction.includes(:interactions).active.where("call_to_actions.id = ?", @calltoaction_id).to_a
+    @calltoactions = CallToAction.includes(:interactions).references(:interactions).active.where("call_to_actions.id = ?", @calltoaction_id).to_a
 
     if @calltoactions.present?
     

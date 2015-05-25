@@ -76,6 +76,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     cta = CallToAction.includes(call_to_action_tags: :tag).joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id")
                 .joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
                 .where("call_to_actions.id IN (#{tag_ids_subselect})")
+                .references(:call_to_action_tags)
                 .order("cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC")
                 .first
 
