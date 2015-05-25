@@ -161,7 +161,7 @@ class ApplicationController < ActionController::Base
 
     calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key()) do   
       highlight_calltoactions = get_highlight_calltoactions()
-      active_calltoactions_without_rewards = CallToAction.includes(:rewards, :interactions).active.where("rewards.id IS NULL")
+      active_calltoactions_without_rewards = CallToAction.includes(:rewards, :interactions).active.where("rewards.id IS NULL").references(:rewards, :interactions)
       if highlight_calltoactions.any?
         last_calltoactions = active_calltoactions_without_rewards.where("call_to_actions.id NOT IN (?)", highlight_calltoactions.map { |calltoaction| calltoaction.id }).limit(3).to_a
       else
@@ -200,8 +200,8 @@ class ApplicationController < ActionController::Base
   def update_call_to_action_in_page_with_tag
 
     if params[:tag_id].present?
-      calltoactions_count = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", params[:tag_id]).count
-      calltoactions = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id=?", params[:tag_id]).limit(3)
+      calltoactions_count = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", params[:tag_id]).references(:call_to_action_tags).count
+      calltoactions = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", params[:tag_id]).references(:call_to_action_tags).limit(3)
     else
       calltoactions_count = CallToAction.active.count
       calltoactions = CallToAction.active.limit(3)
@@ -228,7 +228,7 @@ class ApplicationController < ActionController::Base
     calltoactions.each do |calltoaction|
 
       interactions = cache_short("calltoaction_#{calltoaction.id}_comment_interactions") do
-        calltoaction.interactions.includes(:resource).where("resource_type = 'Comment' AND when_show_interaction <> 'MAI_VISIBILE'").to_a
+        calltoaction.interactions.includes(:resource).where("resource_type = 'Comment' AND when_show_interaction <> 'MAI_VISIBILE'").references(:resource).to_a
       end  
 
       calltoaction_comment_interaction = Hash.new

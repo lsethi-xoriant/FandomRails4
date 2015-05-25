@@ -101,7 +101,8 @@ class ProfileController < ApplicationController
       gallery_tags
     elsif property.present?
       property_name = property.name
-      Tag.includes(:tags_tags => :other_tag).where("other_tags_tags_tags.name = ? AND tags.id in (?)", property_name, gallery_tags.map { |t| t.id })
+      gallery_tag_ids = gallery_tags.map { |t| t.id }
+      Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ? AND tags.id in (?)", property_name, gallery_tag_ids).references(:tags_tags, :other_tag)
     else 
       []
     end

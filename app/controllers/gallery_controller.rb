@@ -11,13 +11,13 @@ class GalleryController < ApplicationController
       if gallery_tag_ids.blank?
         []
       else
-        user_ctas = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id = ?", gallery_tag_ids, user_id)
+        user_ctas = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id = ?", gallery_tag_ids, user_id).references(:call_to_action_tags)
         user_ctas_with_limit = user_ctas.limit(6).to_a
         user_ctas_count = user_ctas.count
         [user_ctas_with_limit, user_ctas_count]
       end
     else
-      user_ctas = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id = ?", gallery.id, user_id)
+      user_ctas = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id = ?", gallery.id, user_id).references(:call_to_action_tags)
       user_ctas_with_limit = user_ctas.limit(6).to_a
       user_ctas_count = user_ctas.count
       [user_ctas_with_limit, user_ctas_count]
@@ -116,7 +116,7 @@ class GalleryController < ApplicationController
       if gallery_tag_ids.blank?
         []
       else
-        CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).limit(6).to_a
+        CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).references(:call_to_action_tags).limit(6).to_a
       end
     else
       get_user_ctas_with_tag(gallery.name)
@@ -129,10 +129,10 @@ class GalleryController < ApplicationController
       if gallery_tag_ids.blank?
         []
       else
-        CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).count
+        CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).references(:call_to_action_tags).count
       end
     else
-      CallToAction.active_with_media.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", gallery.name).count
+      CallToAction.active_with_media.joins(call_to_action_tags: :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", gallery.name).references(:call_to_action_tags, :tags).count
     end
   end
   

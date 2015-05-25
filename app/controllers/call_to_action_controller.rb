@@ -32,7 +32,7 @@ class CallToActionController < ApplicationController
   # For anonymous user
   def last_linked_calltoaction
     calltoaction = CallToAction.find(params[:calltoaction_id])
-    linked_interaction = calltoaction.interactions.includes(:interaction_call_to_actions).where("interaction_call_to_actions.interaction_id IS NOT NULL")[0] 
+    linked_interaction = calltoaction.interactions.includes(:interaction_call_to_actions).where("interaction_call_to_actions.interaction_id IS NOT NULL").references(:interaction_call_to_actions).first 
 
     if !current_user && $site.anonymous_interaction 
       user_interaction_info_list = params[:anonymous_user_interactions]
@@ -239,7 +239,7 @@ class CallToActionController < ApplicationController
 
     calltoaction_id = params[:id]
     
-    calltoaction = CallToAction.includes(interactions: :resource).active.find(calltoaction_id)
+    calltoaction = CallToAction.includes(interactions: :resource).active.references(:interactions).find(calltoaction_id)
 
     if calltoaction
       log_call_to_action_viewed(calltoaction)
@@ -301,7 +301,7 @@ class CallToActionController < ApplicationController
     tags_with_miniformat_in_calltoaction = get_tag_with_tag_about_call_to_action(calltoaction, "miniformat")
     if tags_with_miniformat_in_calltoaction.any?
       tag_id = tags_with_miniformat_in_calltoaction.first.id
-      calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id=? and call_to_actions.id <> ?", tag_id, calltoaction.id).limit(3)
+      calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id=? and call_to_actions.id <> ?", tag_id, calltoaction.id).references(:call_to_action_tags).references(:call_to_action_tags).limit(3)
     else
        calltoactions = Array.new
     end

@@ -115,7 +115,7 @@ class BrowseController < ApplicationController
   end
   
   def index_category
-    @category = Tag.includes(:tags_tags).find(params[:id])
+    @category = Tag.includes(:tags_tags).references(:tags_tags).find(params[:id])
     params[:limit] = {
       offset: 0,
       perpage: DEFAULT_VIEW_ALL_ELEMENTS
