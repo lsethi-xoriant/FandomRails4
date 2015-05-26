@@ -1,0 +1,31 @@
+<div id="notApprovingModal<%= cta.id %>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="notApprovingModalLabel<%= cta.id %>" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title" id="notApprovingModalLabel<%= cta.id %>">Perché hai rifiutato questo contenuto?</h4>
+      </div>
+
+      <div class="modal-body">
+        <%= form_tag("/easyadmin/cta/send_reason_for_not_approving", method: "post", multipart: true) do %>
+          <%= hidden_field_tag :cta_id, cta.id %>
+          <%= hidden_field_tag :page, page %>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="form-group">
+              <label class="text-input">Inserisci il motivo del rifiuto</label><br/>
+              <%= text_area_tag :reason, nil, :class => 'form-control' %><br/>
+              <%= submit_tag 'Invia', class: 'btn btn-primary col-md-4 col-md-offset-4' %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi senza inviare</button>
+      </div> -->
+
+    </div> <!-- /.modal-content -->
+  </div> <!-- /.modal-dialog -->
+</div>

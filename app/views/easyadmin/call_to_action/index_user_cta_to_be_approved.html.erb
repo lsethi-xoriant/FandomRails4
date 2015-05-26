@@ -1,5 +1,9 @@
 <%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "calltoaction" } %>
- 
+
+<% @ctas.each do |c| %>
+  <%= render partial: "/easyadmin/call_to_action/reason_for_not_approving", locals: { cta: c, page: "to_approve" } %>
+<% end %>
+
   <div id="content">
 
     <%= form_tag :action => 'filter_ugc', :approvation_status => 'to_be_approved', :method => 'post' do %>
@@ -49,10 +53,12 @@
                 <% end %>
               </td>
               <td class="col-md-3">
-                <% if aws_trasconding_not_required_or_completed(c) %>
+                <% unless aws_trasconding_not_required_or_completed(c) %>
+                  <p>aws transconding status: <%= @aws_transcoding_media_status %></p>
+                <% end %>
                   <button type="button" class="btn btn-success btn-xs" onclick="updateCta(true, <%= c.id %>)">Approva</button>
                   &nbsp;
-                  <button type="button" class="btn btn-primary btn-xs" onclick="updateCta(false, <%= c.id %>)">Rifiuta</button>
+                  <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#notApprovingModal<%= c.id %>" onclick="updateCta(false, <%= c.id %>)">Rifiuta</button>
                   &nbsp;
                   <a href="/easyadmin/cta/edit/<%= c.id %>">
                     <button type="button" class="btn btn-secondary btn-xs">Edita</button>
@@ -60,10 +66,7 @@
                   &nbsp;
                   <%= link_to "Tagga", { :controller => "tag", :action => "tag_cta", :id => c.id, 
                     :page => "#{request.protocol}#{request.host_with_port}#{request.fullpath}" }, 
-                    { :class => "btn btn-default btn-xs" } %>
-                <% else %>
-                  <p>aws transconding status: <%= @aws_transcoding_media_status %></p>
-                <% end %>           
+                    { :class => "btn btn-default btn-xs" } %>      
               </td>       
               </tr>
           <% end %>
@@ -84,15 +87,15 @@
   function updateCta(approved, cta_id) {
     $("#cta-" + cta_id).remove();
     $.ajax({
-            type: "POST",
-            url: "/easyadmin/cta/" + cta_id + "/update_cta_status",
-            data: { "approved": approved },
-            beforeSend: function(jqXHR, settings) {
-                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-            },
-            success: function(data) {
-              $("#cta-" + cta_id).remove();
-            }
-        });
+      type: "POST",
+      url: "/easyadmin/cta/" + cta_id + "/update_cta_status",
+      data: { "approved": approved },
+      beforeSend: function(jqXHR, settings) {
+          jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      },
+      success: function(data) {
+        $("#cta-" + cta_id).remove();
+      }
+    });
   }
 </script>

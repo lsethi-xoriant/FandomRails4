@@ -379,6 +379,7 @@ Fandom::Application.routes.draw do
     get "cta/hide/:id", :to => "call_to_action#hide_cta"
     get "cta/clone/:id", :to => "call_to_action#clone"
     get "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
+    post "cta/send_reason_for_not_approving", :to => "call_to_action#send_reason_for_not_approving"
 
     # PROMOCODE
     get "promocode", :to => "promocode#index_promocode"
@@ -470,10 +471,9 @@ Fandom::Application.routes.draw do
   get "/captcha", :to => "captcha#generate_captcha", defaults: { format: 'json' }
 
   # Instagram subscribe.
-  get "/instagram_tag_subscription/:tag_name", :to => "callback#instagram_tag_subscription", defaults: { format: 'json' }
-  get "/instagram_new_tagged_media_callback/:tag_name", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }
-  get "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
-  get "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
+  post "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
+  post "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
+  post "/instagram_new_tagged_media_callback/:tag_name", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }
 
   get "/how_to", :to => "application#how_to"
   get "/landing", :to => "landing#index"

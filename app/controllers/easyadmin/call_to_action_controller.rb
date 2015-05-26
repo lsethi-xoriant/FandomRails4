@@ -64,8 +64,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
 
   def update_cta
-    if params[:part] == "user_cta_image"
-      params[:call_to_action]['thumbnail'] = params[:call_to_action]['media_image'] if params[:call_to_action]
+    if params[:part] == "user_cta_image" && params[:call_to_action]
+      params[:call_to_action]['thumbnail'] = params[:call_to_action]['media_image']
     end
     @cta = CallToAction.find(params[:id])
     if params[:call_to_action]["media_image"] && ALLOWED_UPLOAD_MEDIA_TYPES.include?(params[:call_to_action]["media_type"])
@@ -447,4 +447,11 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
   end
   
+  def send_reason_for_not_approving
+    cta = CallToAction.find(params[:cta_id])
+    aux = JSON.parse(cta.aux)
+    aux["reason_for_not_approving"] = params[:reason]
+    cta.update_attribute(:aux, aux.to_json)
+    redirect_to "/easyadmin/cta/#{params[:page]}"
+  end
 end
