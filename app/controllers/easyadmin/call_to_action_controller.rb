@@ -69,7 +69,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
     @cta = CallToAction.find(params[:id])
     if params[:call_to_action]["media_image"] && ALLOWED_UPLOAD_MEDIA_TYPES.include?(params[:call_to_action]["media_type"])
-      @cta.aux = (JSON.parse(@cta.aux) rescue {}).merge({ "aws_transcoding_media_status" => "requested" }).to_json
+      @cta.aux = (@cta.aux rescue {}).merge({ "aws_transcoding_media_status" => "requested" }).to_json
     end
     create_and_link_attachment(params[:call_to_action], @cta)
     updated_attributes = @cta.update_attributes(params[:call_to_action])
@@ -127,7 +127,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
         user_interactions = UserInteraction.where(:interaction_id => interaction_vote.id)
         user_interactions.each do |user_interaction|
           total += 1
-          sum += JSON.parse(user_interaction.aux)["vote"]
+          sum += user_interaction.aux["vote"]
         end
         @votes[i] = { "title" => interaction_vote.resource.title, "total" => total, "mean" => sum.to_f/total }
       end
@@ -168,10 +168,10 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
         if reward_name_to_counter
           user_interaction_outcomes = UserInteraction.where(:interaction_id => interaction.id).pluck(:outcome)
           user_interaction_outcomes.each do |out|
-            total += JSON.parse(out)["win"]["attributes"]["reward_name_to_counter"]["#{reward_name_to_counter}"]
+            total += out["win"]["attributes"]["reward_name_to_counter"]["#{reward_name_to_counter}"]
           end
           if resource_type == "Share"
-            type_interactions_info[i] = { "total" => total, "providers" => JSON.parse(interaction.resource.providers) }
+            type_interactions_info[i] = { "total" => total, "providers" => interaction.resource.providers }
           else
             type_interactions_info[i] = { "title" => interaction.resource.title, "total" => total }
           end
@@ -380,12 +380,12 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     if @cta.extra_fields.blank?
       @extra_options = {}
     else
-      @extra_options = JSON.parse(@cta.extra_fields)
+      @extra_options = @cta.extra_fields
     end
     @interaction_call_to_actions = []
     @cta.interactions.each do |interaction|
       InteractionCallToAction.where(:interaction_id => interaction.id).each do |icta|
-        condition_hash = JSON.parse(icta.condition) rescue {}
+        condition_hash = icta.condition || {}
         @interaction_call_to_actions += 
           [[(condition_hash.keys.first || ""), (condition_hash.values.first || ""), (icta.call_to_action_id || "")]]
       end
@@ -424,7 +424,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     log_synced("moderated UGC content", approved: params[:approved], cta_id: cta.id, moderator_id: current_user.id)
     user_upload_interaction = cta.user_upload_interaction
 
-    notifications_enable = JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['upload_approved']
+    notifications_enable = Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value['upload_approved']
 
     if cta.approved
       html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_ugc_approved_template",
@@ -435,7 +435,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       userinteraction, outcome = create_or_update_interaction(User.find(user_upload_interaction.user_id), Interaction.where(:resource_type => 'Upload', :resource_id => user_upload_interaction.upload_id).first, nil, nil)
     elsif cta.approved == false
       gallery_tag = get_cta_tag_tagged_with(cta, "gallery")
-      extra_fields = JSON.parse(gallery_tag.extra_fields)
+      extra_fields = gallery_tag.extra_fields
       not_approved_text = extra_fields["not_approved_text"]
       if not_approved_text && notifications_enable != false
         notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => not_approved_text, :viewed => false, :read => false)
@@ -449,7 +449,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   
   def send_reason_for_not_approving
     cta = CallToAction.find(params[:cta_id])
-    aux = JSON.parse(cta.aux)
+    aux = cta.aux
     aux["reason_for_not_approving"] = params[:reason]
     cta.update_attribute(:aux, aux.to_json)
     redirect_to "/easyadmin/cta/#{params[:page]}"
