@@ -50,19 +50,19 @@
             <div class="col-lg-2 input-ical hidden">
               <div class="form-group">
                 <label class="text-input">Inizio</label>
-                <%= dform.text_field :ical_start, :class => "form-control datetime", :value => (JSON.parse(f.object.resource.ical_fields)["start_datetime"]["value"] rescue "") %>
+                <%= dform.text_field :ical_start, :class => "form-control datetime", :value => (f.object.resource.ical_fields["start_datetime"]["value"] rescue "") %>
               </div>
             </div>
             <div class="col-lg-2 input-ical hidden">
               <div class="form-group">
                 <label class="text-input">Fine</label>
-                <%= dform.text_field :ical_end, :class => "form-control datetime", :value => (JSON.parse(f.object.resource.ical_fields)["end_datetime"]["value"] rescue "") %>
+                <%= dform.text_field :ical_end, :class => "form-control datetime", :value => (f.object.resource.ical_fields["end_datetime"]["value"] rescue "") %>
               </div>
             </div>
             <div class="col-lg-4 col-lg-offset-6 input-ical hidden">
               <div class="form-group">
                 <label class="text-input">Location</label>
-                <%= dform.text_field :ical_location, :class => "form-control", :value => (JSON.parse(f.object.resource.ical_fields)["location"] rescue "") %>
+                <%= dform.text_field :ical_location, :class => "form-control", :value => (f.object.resource.ical_fields["location"] rescue "") %>
               </div>
             </div>
           </div>

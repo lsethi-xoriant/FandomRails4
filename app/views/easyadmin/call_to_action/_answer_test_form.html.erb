@@ -29,7 +29,7 @@
           <label class="text-input">Nome simbolico</label>
           <div class="input-group">        
             <%= f.text_field :symbolic_name, :class => "form-control", 
-              :value => "#{f.object.id ? (JSON.parse(f.object.aux)['symbolic_name'] rescue nil) : nil}" %>
+              :value => "#{f.object.id ? (f.object.aux['symbolic_name'] rescue nil) : nil}" %>
           </div>
         </div>
       </div>

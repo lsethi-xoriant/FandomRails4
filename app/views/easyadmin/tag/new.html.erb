@@ -127,7 +127,7 @@
         <div class="col-sm12">
           <button type="submit" class="btn btn-primary btn-lg">GENERA</button>
         </div>
-      </div>     
+      </div>
     <% end %>
     </div>
 </div>
@@ -145,7 +145,7 @@
 
     var json_field = null;
     <% if @tag.extra_fields.present? %>
-      json_field = <%= @tag.extra_fields.gsub("</", "<\\/").html_safe %>;
+      json_field = <%= @tag.extra_fields.to_json.gsub("</", "<\\/").html_safe %>;
     <% end %>
 
     var formName = "new_tag"

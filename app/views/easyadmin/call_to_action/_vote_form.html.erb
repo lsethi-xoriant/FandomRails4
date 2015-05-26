@@ -54,7 +54,7 @@
 				</div>
 				<div class="form-group">
 					<label class="text-input">Subtitle</label>
-			  	<%= voteform.text_field :subtitle, :class => "form-control", :value => voteform.object.extra_fields ? JSON.parse(voteform.object.extra_fields)["subtitle"] : "" %>
+			  	<%= voteform.text_field :subtitle, :class => "form-control", :value => voteform.object.extra_fields ? voteform.object.extra_fields["subtitle"] : "" %>
 				</div>
 			</div>
 		</div>

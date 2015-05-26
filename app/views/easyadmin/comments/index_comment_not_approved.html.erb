@@ -28,7 +28,7 @@
             <td class="col-md-1"><%= link_to "CTA", easyadmin_cta_show_path(Interaction.select(:call_to_action_id).where(:resource_id => c.comment_id, :resource_type => 'Comment').first.call_to_action_id), class: "btn btn-primary btn-xs" %></a></td>
             <td class="col-md-1"> 
             <% unless c.aux.nil? %>
-              <% if JSON.parse(c.aux)["profanity"] %>
+              <% if c.aux["profanity"] %>
                 <i class="fa fa-check"></i>
               <% end %>
             <% end %>

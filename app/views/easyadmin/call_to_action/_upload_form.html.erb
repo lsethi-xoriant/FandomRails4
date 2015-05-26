@@ -101,8 +101,8 @@
               <label class="text-input">Tag della gallery (senza #)</label>
               <br/> Dopo la registrazione / modifica, attendere la spunta verde sotto al tag registrato prima di salvare la call to action.
 
-              <% tag_name = JSON.parse(Interaction.find(f.object.id).aux)["instagram_tag"]["name"] rescue "" %>
-              <% tag_subscription_id = JSON.parse(Interaction.find(f.object.id).aux)["instagram_tag"]["subscription_id"] rescue "" %>
+              <% tag_name = Interaction.find(f.object.id).aux["instagram_tag"]["name"] rescue "" %>
+              <% tag_subscription_id = Interaction.find(f.object.id).aux["instagram_tag"]["subscription_id"] rescue "" %>
 
               <%= uploadform.text_field :instagram_tag_name, :class => "form-control instagram-tag", :value => tag_name %>
               <%= uploadform.hidden_field :instagram_tag_subscription_id, :class => "subscription-id", :value => tag_subscription_id %>

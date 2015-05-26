@@ -161,7 +161,7 @@ module EasyadminHelper
             extra_field_value.delete :value
           else
             if model_instance.present?
-              value_of_extra_field = JSON.parse(model_instance.extra_fields)[extra_field_name]
+              value_of_extra_field = model_instance.extra_fields[extra_field_name]
               extra_field_value[:type] = "media"
               if value_of_extra_field.nil?
                 extra_field_value[:attachment_id] = "null"
@@ -179,8 +179,16 @@ module EasyadminHelper
     end
   end
 
+  def array_or_string_for_javascript(option)
+    if option.kind_of?(Array)
+      "['#{option.join('\',\'')}']"
+    elsif !option.nil?
+      "'#{option}'"
+    end
+  end
+
   def instagram_upload?(interaction_id)
-    !JSON.parse(Interaction.find(interaction_id).aux)["instagram_tag"].nil? rescue false
+    !Interaction.find(interaction_id).aux["instagram_tag"].nil? rescue false
   end
 
   def get_period_ids(from_date, to_date)

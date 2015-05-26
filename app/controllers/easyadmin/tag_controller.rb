@@ -16,7 +16,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
   end
 
   def filter
-    @tags = Tag.scoped
+    @tags = Tag.where(nil)
 
     @title_filter = params[:title_filter]
     @description_filter = params[:description_filter]
@@ -140,7 +140,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     @tag.tags_tags.each { |t| tag_array << t.other_tag.name }
     @tag_list = tag_array.join(",")
     params[:id] = @tag.id
-    params[:extra_fields] = JSON.parse(@tag.extra_fields) if @tag.extra_fields
+    params[:extra_fields] = @tag.extra_fields
     create_and_link_attachment(params, @tag)
     render "new"
   end
@@ -194,7 +194,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
         else
           tag_extra_fields = tag.extra_fields
           if tag_extra_fields.present?
-            ordering = JSON.parse(tag_extra_fields)["ordering"]
+            ordering = tag_extra_fields["ordering"]
             if ordering
               @ordered_elements = ordering.gsub(/\s+/, "").split(",")
             end
@@ -227,7 +227,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
       ordering = ordering_array.map { |element| element.to_s }.join(",")
 
       tag = Tag.find_by_name(params[:tag])
-      extra_fields = JSON.parse(tag.extra_fields)
+      extra_fields = tag.extra_fields
       extra_fields["ordering"] = ordering
       if tag.update_attribute(:extra_fields, extra_fields)
         flash[:notice] = "Ordinamento per il tag '#{tag.name}' salvato con successo"

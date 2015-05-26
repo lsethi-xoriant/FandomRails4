@@ -31,10 +31,10 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "orzoro" do
         namespace :easyadmin do
-          get "/dashboard", :to => "easyadmin#dashboard"
+          match "/dashboard", :to => "easyadmin#dashboard", via: [:get, :post]
           get "/cups_confirmed", :to => "user#index_cup_requests", defaults: { page: 'confirmed' }
           get "/cups_not_confirmed", :to => "user#index_cup_requests", defaults: { page: 'not_confirmed' }
-          get "/cups/filter", :to => "user#filter_cup_requests"
+          match "/cups/filter", :to => "user#filter_cup_requests", via: [:get, :post]
           get "export_cup_requests", :to => "user#export_cup_requests"
         end
         get "/", to: "application#index"
@@ -335,11 +335,11 @@ Fandom::Application.routes.draw do
     get "/", :to => "easyadmin#index"
 
     # TAG
-    get "tag/filter", :to => "tag#filter"
+    match "tag/filter", :to => "tag#filter", via: [:get, :post]
     get "tag/clone/:id", :to => "tag#clone"
-    get "tag/ordering", :to => "tag#ordering"
+    match "tag/ordering", :to => "tag#ordering", via: [:get, :post]
     get "tag/retag", :to => "tag#retag_tag"
-    get "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
+    post "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
     get "cta/tag/:id", :to => "tag#tag_cta"
     get "cta/tag/:id/update", :to => "tag#tag_cta_update"
 
@@ -355,7 +355,7 @@ Fandom::Application.routes.draw do
     get "user", :to => "user#index_user"
     get "export_users", :to => "user#export_users"
     get "user/show/:id", :to => "user#show_user"
-    get "user/filter", :to => "user#filter_user"
+    match "user/filter", :to => "user#filter_user", via: [:get, :post]
 
     # WINNER
     get "winner", :to => "easyadmin#index_winner"
@@ -363,12 +363,12 @@ Fandom::Application.routes.draw do
 
     # CALL TO ACTION
     get "cta", :to => "call_to_action#index_cta"
-    get "cta/filter", :to => "call_to_action#filter"
+    match "cta/filter", :to => "call_to_action#filter", via: [:get, :post]
     get "cta/template", :to => "call_to_action#index_cta_template"
     get "cta/to_approve", :to => "call_to_action#index_user_cta_to_be_approved"
     get "cta/approved", :to => "call_to_action#index_user_cta_approved"
     get "cta/not_approved", :to => "call_to_action#index_user_cta_not_approved"
-    get "cta/filter_ugc", :to => "call_to_action#filter_ugc"
+    match "cta/filter_ugc", :to => "call_to_action#filter_ugc", via: [:get, :post]
     get "cta/:id/update_cta_status", :to => "call_to_action#update_cta_status"
     get "cta/new/", :to => "call_to_action#new_cta"
     get "cta/show/:id", :to => "call_to_action#show_cta", :as => :cta_show
@@ -387,7 +387,7 @@ Fandom::Application.routes.draw do
     
     # PRIZE
     get "reward", :to => "easyadmin_reward#index"
-    get "reward/filter", :to => "easyadmin_reward#filter"
+    match "reward/filter", :to => "easyadmin_reward#filter", via: [:get, :post]
     get "reward/show/:id", :to => "easyadmin_reward#show"
     get "reward/edit/:id", :to => "easyadmin_reward#edit"
     get "reward/new", :to => "easyadmin_reward#new"
@@ -419,7 +419,7 @@ Fandom::Application.routes.draw do
     get "comments/ugc_not_approved", :to => "comments#index_comment_not_approved", :cta => "user_call_to_actions"
     get "comments/:comment_id/update_comment_status", :to => "comments#update_comment_status"
 
-    get "dashboard", :to => "easyadmin#dashboard"
+    match "dashboard", :to => "easyadmin#dashboard", via: [:get, :post]
     get "published", :to => "easyadmin#published"
     get "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
     get "dashboard/update_activated_at", :to => "call_to_action#update_activated_at", defaults: { format: 'json' }
@@ -427,12 +427,12 @@ Fandom::Application.routes.draw do
     get "reward_cta_unlocked", :to => "easyadmin#index_reward_cta_unlocked"
     
     get "events", :to => "easyadmin_event_console#index"
-    get "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }
+    match "events/filter", :to => "easyadmin_event_console#apply_filter", defaults: { format: 'json' }, via: [:get, :post]
     
     get "notices", :to => "easyadmin_notice#index"
     get "notices/new", :to => "easyadmin_notice#new"
     get "notices/create", :to => "easyadmin_notice#create"
-    get "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }
+    match "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }, via: [:get, :post]
     get "notices/resend_notice/:notice_id", :to => "easyadmin_notice#resend_notice"
     
     get "rules", :to => "easyadmin_rewarding_rules#index"

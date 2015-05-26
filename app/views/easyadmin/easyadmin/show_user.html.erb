@@ -64,7 +64,7 @@
 						</tr>
 					</thead>
             			<% user_wins_user_interactions.each do |win| %>						<tr>
-							<td><%= Reward.where(:id => JSON.parse(win.aux)["reward_id"]).first.title %></td>
+							<td><%= Reward.where(:id => win.aux["reward_id"]).first.title %></td>
 							<td><%= win.created_at.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") %></td>
 						</tr>
 					<% end %>

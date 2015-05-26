@@ -153,7 +153,7 @@ module CallToActionHelper
   end
 
   def aws_trasconding_not_required_or_completed(cta)
-    aux = JSON.parse(cta.aux || "{}")
+    aux = cta.aux || {}
     @aws_transcoding_media_status = aux["aws_transcoding_media_status"]
     !@aws_transcoding_media_status || @aws_transcoding_media_status == "done"
   end
@@ -411,7 +411,7 @@ module CallToActionHelper
         resource_description = resource.description rescue nil
         resource_title = resource.title rescue nil
         resource_one_shot = resource.one_shot rescue false
-        resource_providers = JSON.parse(resource.providers) rescue nil
+        resource_providers = resource.providers
         resource_url = resource.url rescue "/"
 
         if interaction.stored_for_anonymous
@@ -433,7 +433,7 @@ module CallToActionHelper
         when "vote"
           vote_info = build_votes_for_resource(interaction)
         when "download"
-          ical = JSON.parse(resource.ical_fields) if resource.ical_fields
+          ical = resource.ical_fields
         end
 
         when_show_interaction = interaction.when_show_interaction
@@ -447,7 +447,7 @@ module CallToActionHelper
             "resource_type" => resource_type,
             "resource" => {
               "id" => resource.id,
-              "extra_fields" => (JSON.parse(interaction.resource.extra_fields) rescue nil),
+              "extra_fields" => interaction.resource.extra_fields,
               "question" => resource_question,
               "title" => resource_title,
               "description" => resource_description,
@@ -713,7 +713,7 @@ module CallToActionHelper
     
     if $site.aws_transcoding
       if params["upload"] && params["upload"].content_type.start_with?("video")
-        aux_fields = JSON.parse(user_calltoaction.aux) rescue {}
+        aux_fields = user_calltoaction.aux || {}
         aux_fields['aws_transcoding_media_status'] = "requested"
         user_calltoaction.aux = aux_fields.to_json
       end
