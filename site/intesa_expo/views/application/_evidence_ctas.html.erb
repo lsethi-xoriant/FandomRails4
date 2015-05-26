@@ -38,7 +38,7 @@
     </div>
     <!-- SLIDER END -->
     <div class="col-md-3 col-sm-6 cta__evidence-calendar text-center">
-      <%= render partial: "/calendar/widget-calendar" %>
+      <%= render partial: "/calendar/widget_calendar" %>
     </div>
 	<div class="col-md-3 col-sm-6 cta__evidence-banner">
     <div class="cta__evidence-banner__img" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'">
@@ -77,7 +77,8 @@
   $(document).ready(function() {
     $('.ctas__flexslider').flexslider({
       animation: "fade",
-      slideshow: false,
+      slideshow: true,
+      slideshowSpeed: 4000,
       animationLoop: true,
       touch: true,
       itemWidth: "100%",

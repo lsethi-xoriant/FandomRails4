@@ -180,13 +180,13 @@ class User < ActiveRecordWithJSON
   end
 
   # Update the user without ask the account password again.
-  # def update_with_password(params={}) 
-  #   if params[:password].blank? 
-  #     params.delete(:password) 
-  #     params.delete(:password_confirmation) if params[:password_confirmation].blank? 
-  #   end 
-  #   update_attributes(params) 
-  # end
+  def update_with_password(params={}) 
+    if params[:password].blank? 
+      params.delete(:password) 
+      params.delete(:password_confirmation) if params[:password_confirmation].blank? 
+    end 
+    update_attributes(params) 
+  end
 
   # Specifies that this is a real user, not somebody used just interanlly by the system, such as to evaluate rules
   def mocked?

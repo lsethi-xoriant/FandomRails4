@@ -48,8 +48,8 @@ Fandom::Application.routes.draw do
         get "/gadget/request_completed", to: "cup_redeemer#request_completed"
         get "/complete_registration_from_cups/:email/:token", to: "cup_redeemer#complete_registration", :constraints => { :email => /.*/ }
         get "/complete_registration_from_newsletter/:email/:token", to: "newsletter#complete_registration", :constraints => { :email => /.*/ }
-        get "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
-        get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+        post "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
+        post "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         get "/newsletter/subscribe", :to => "newsletter#subscribe"
         get "/newsletter/subscription_request", :to => "newsletter#send_request"
         get "/newsletter/request_completed", :to => "newsletter#request_completed"
@@ -67,7 +67,7 @@ Fandom::Application.routes.draw do
         get "/browse/index_category_load_more", :to => "browse#index_category_load_more"
         get "/browse/category/:id", :to => "browse#index_category"
         get "/browse/full_search_load_more", :to => "browse#full_search_load_more"
-        get "/browse/full_search", :to => "browse#full_search"
+        post "/browse/full_search", :to => "browse#full_search"
         
         #resources :call_to_action, only: :show
         get "/call_to_action/:id", to: "http_error#not_found_404"
@@ -115,7 +115,7 @@ Fandom::Application.routes.draw do
         end
         
         get "/iur", to: "application#iur"
-        get "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
+        post "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
         get "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         get "/reward/catalogue", :to => "reward#index"
         
@@ -134,7 +134,7 @@ Fandom::Application.routes.draw do
         get "ordering_ctas", to: "call_to_action#ordering_ctas" , defaults: { format: 'json' }
         get "rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
         post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
-        get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+        post "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         get "/", to: "application#index"
 
       end
@@ -150,7 +150,7 @@ Fandom::Application.routes.draw do
         get "/calendar", :to => "calendar#index"
         get "/calendar/:day", :to => "calendar#index"
         get "/calendar/fetch/events", :to => "calendar#fetch_events"
-        get "/browse/full_search", :to => "browse#full_search"
+        post "/browse/full_search", :to => "browse#full_search"
         get "/browse/category/:id", :to => "browse#intesa_index_category"
         get "/browse/view_all/:id", :to => "browse#intesa_index_category"
         get "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
@@ -171,7 +171,7 @@ Fandom::Application.routes.draw do
 
           get "/", to: "application#index"
 
-          get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+          post "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 
           get "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
 
@@ -203,13 +203,13 @@ Fandom::Application.routes.draw do
           get "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
 
           get "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
-          get "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
+          post "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
           
           get "/special_guest", :to => "application#redirect_into_special_guest"
           
           post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
-          get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
+          post "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
           post "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
           get "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
           get "/ranking/page", :to => "ranking#get_rank_page"
@@ -229,7 +229,7 @@ Fandom::Application.routes.draw do
 
           get "/captcha", :to => "application#generate_captcha", defaults: { format: 'json' }
 
-          get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+          post "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
 
           get "/update_reward_calltoactions_in_page", to: "call_to_action#update_reward_calltoactions_in_page", defaults: { format: 'json' }
 
@@ -263,13 +263,13 @@ Fandom::Application.routes.draw do
           get "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
 
           get "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
-          get "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
+          post "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
           
           get "/special_guest", :to => "application#redirect_into_special_guest"
           
           post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 
-          get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
+          post "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
           post "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
           get "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
         end
@@ -277,7 +277,7 @@ Fandom::Application.routes.draw do
     end
   end
 
-  get "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
+  post "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
 
   get "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
 
@@ -294,7 +294,7 @@ Fandom::Application.routes.draw do
   get "/upload", :to => "call_to_action#upload"
   
   get "/browse", :to => "browse#index"
-  get "/browse/full_search", :to => "browse#full_search"
+  post "/browse/full_search", :to => "browse#full_search"
   get "/browse/full_search_load_more", :to => "browse#full_search_load_more"
   get "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
   get "/browse/redirect/:query", :to => "browse#index"
@@ -464,7 +464,7 @@ Fandom::Application.routes.draw do
   get "/reward/catalogue/available/all", :to => "reward#show_all_available_catalogue"
   get "/reward/catalogue/my/all", :to => "reward#show_all_my_catalogue"
   get "/reward/show/:reward_id", :to => "reward#show"
-  get "/reward/buy", :to => "reward#buy_reward_attempt", defaults: { format: 'json' }
+  post "/reward/buy", :to => "reward#buy_reward_attempt", defaults: { format: 'json' }
   get "/reward/how_to", :to => "reward#how_to"
 
   # Captcha.
@@ -486,7 +486,7 @@ Fandom::Application.routes.draw do
   get "profile/levels", :to => "profile#levels"
   get "profile/badges", :to => "profile#badges"
   get "profile/prizes", :to => "profile#prizes"
-  get "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
+  post "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
   get "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
   get "profile/notices/mark_as_viewed", :to => "notice#mark_as_viewed", defaults: { format: 'json' }
   get "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
@@ -534,11 +534,11 @@ Fandom::Application.routes.draw do
 
   get "rss", :to => "rss#rss", defaults: { format: 'rss' }
 
-  get "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
-  get "/last_linked_calltoaction", to: "call_to_action#last_linked_calltoaction", defaults: { format: 'json' }
+  post "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
+  post "/last_linked_calltoaction", to: "call_to_action#last_linked_calltoaction", defaults: { format: 'json' }
 
   post "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
-  get "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
+  post "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
   post "/comments_polling", :to => "call_to_action#comments_polling", defaults: { format: 'json' }
 
   get "rss", :to => "rss#property_rss", defaults: { format: 'rss' }

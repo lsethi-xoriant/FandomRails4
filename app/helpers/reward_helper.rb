@@ -523,9 +523,9 @@ module RewardHelper
       where_conditions << "rewards.id NOT IN (#{basic_rewards_ids.join(",")})" if basic_rewards_ids.any?
 
       if where_conditions.any?
-        rewards = Reward.includes(:currency).includes(:call_to_action).where(where_conditions.join(" AND ")).references(:currencies, :call_to_actions).order("created_at DESC")
+        rewards = Reward.includes(:currency).includes(:call_to_action).where(where_conditions.join(" AND ")).references(:currencies, :call_to_actions).order("rewards.created_at DESC")
       else
-        rewards = Reward.includes(:currency).includes(:call_to_action).references(:currencies, :call_to_actions).order("created_at DESC")
+        rewards = Reward.includes(:currency).includes(:call_to_action).references(:currencies, :call_to_actions).order("rewards.created_at DESC")
       end
 
       rewards.each do |reward|

@@ -411,16 +411,18 @@ module CallToActionHelper
         resource_description = resource.description rescue nil
         resource_title = resource.title rescue nil
         resource_one_shot = resource.one_shot rescue false
-        resource_providers = resource.providers
+        resource_providers = resource.providers rescue nil
         resource_url = resource.url rescue "/"
 
         if interaction.stored_for_anonymous
-          user_interaction = interaction.user_interactions.find_by_user_id(anonymous_user.id)
-          if user_interaction
-            user_interaction = build_user_interaction_for_interaction_info(user_interaction)
+          anonymous_user_interaction = interaction.user_interactions.find_by_user_id(anonymous_user.id)
+          if anonymous_user_interaction
+            anonymous_user_interaction_info = build_user_interaction_for_interaction_info(anonymous_user_interaction)
+          else
+            anonymous_user_interaction_info = nil
           end
         else
-          user_interaction = nil
+          anonymous_user_interaction_info = nil
         end
 
         case resource_type
@@ -447,7 +449,7 @@ module CallToActionHelper
             "resource_type" => resource_type,
             "resource" => {
               "id" => resource.id,
-              "extra_fields" => interaction.resource.extra_fields,
+              "extra_fields" => get_extra_fields!(interaction.resource),
               "question" => resource_question,
               "title" => resource_title,
               "description" => resource_description,
@@ -462,8 +464,7 @@ module CallToActionHelper
             }
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction, nil),
-          "user_interaction" => user_interaction,
-          "anonymous_user_interaction_info" => nil
+          "anonymous_user_interaction_info" => anonymous_user_interaction_info
         }
       end
 

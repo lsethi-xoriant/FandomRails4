@@ -14,7 +14,7 @@ class CallToActionController < ApplicationController
     user_interactions = UserInteraction.where(id: params[:user_interaction_ids])
     cta = nil
     user_interactions.each do |user_interaction|
-      aux = JSON.parse(user_interaction.aux)
+      aux = user_interaction.aux
       aux["to_redo"] = true
       user_interaction.update_attributes(aux: aux.to_json)
       unless aux["user_interactions_history"]
@@ -48,7 +48,7 @@ class CallToActionController < ApplicationController
           user_interaction_info_list["user_interaction_info_list"].each do |index, user_interaction_info|
             if user_interaction_info["calltoaction_id"] == calltoaction_to_evaluate
               current_interaction = user_interaction_info["user_interaction"]
-              aux_parse = JSON.parse(current_interaction["aux"])
+              aux_parse = current_interaction["aux"]
               if aux_parse["to_redo"] == false
                 user_interactions_history = user_interactions_history + [index]
                 calltoaction_to_evaluate = aux_parse["next_calltoaction_id"]
@@ -455,7 +455,7 @@ class CallToActionController < ApplicationController
             current_answer = params[:params]
             symbolic_name_to_counter = user_history_to_answer_map_fo_condition(current_answer, user_interactions_history, params[:anonymous_user_storage])
           end
-          condition = JSON.parse(interaction_call_to_action.condition)
+          condition = interaction_call_to_action.condition
           condition_name, condition_params = condition.first
           if get_linked_call_to_action_conditions[condition_name].call(symbolic_name_to_counter, condition_params)
             linked_cta = interaction_call_to_action.call_to_action
@@ -595,7 +595,7 @@ class CallToActionController < ApplicationController
     answers = Answer.where(id: answers_history)
     symbolic_name_to_counter = {}
     answers.each do |answer|
-      value = JSON.parse(answer.aux)["symbolic_name"]
+      value = answer.aux["symbolic_name"]
       if symbolic_name_to_counter.has_key?(value)
         symbolic_name_to_counter[value] = symbolic_name_to_counter[value] + 1
       else
@@ -709,7 +709,7 @@ class CallToActionController < ApplicationController
 
   def update_share_interaction(interaction, provider, address, facebook_message = " ")
     # When this function is called, there is a current user with the current provider anchor
-    provider_json = JSON.parse(interaction.resource.providers)[provider]
+    provider_json = interaction.resource.providers[provider]
     result = true
 
     if provider == "facebook"
