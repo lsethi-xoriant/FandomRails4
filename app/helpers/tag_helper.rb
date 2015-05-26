@@ -18,9 +18,9 @@ module TagHelper
     query.split(" ").each do |term|
       if term.length > 3
         unless conditions.blank?
-          conditions += " OR #{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
+          conditions += " OR #{field} ILIKE #{ActiveRecord::Base.connection.quote("%%#{term}%%")}"
         else
-          conditions += "#{field} ILIKE #{ActiveRecord::Base.connection.quote("%#{term}%")}"
+          conditions += "#{field} ILIKE #{ActiveRecord::Base.connection.quote("%%#{term}%%")}"
         end
       end
     end
@@ -221,9 +221,9 @@ module TagHelper
     conditions = construct_conditions_from_query(query, "tags.title")
     category_tag_ids = get_category_tag_ids()
     if conditions.empty?
-      tags = Tag.includes(:tags_tags).where("id in (?)", category_tag_ids).references(:tags_tags).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags).where("tags.id in (?)", category_tag_ids).references(:tags_tags).order("tags.created_at DESC").to_a
     else
-      tags = Tag.includes(:tags_tags).where("(#{conditions}) AND (id in (?))", category_tag_ids).references(:tags_tags).order("tags.created_at DESC").to_a
+      tags = Tag.includes(:tags_tags).where("(#{conditions}) AND (tags.id in (?))", category_tag_ids).references(:tags_tags).order("tags.created_at DESC").to_a
     end
     filter_results(tags, query)
   end
@@ -242,7 +242,11 @@ module TagHelper
   
   def get_ctas_with_tag_with_match(tag_name, query = "")
     conditions = construct_conditions_from_query(query, "call_to_actions.title")
-    ctas = CallToAction.active.includes(call_to_action_tags: :tag).includes(:interactions).where("tags.name = ? AND (#{conditions})", tag_name).references(:call_to_action_tags, :interactions).order("call_to_actions.created_at DESC").to_a
+    ctas = CallToAction.active.includes(call_to_action_tags: :tag).includes(:interactions).where("tags.name = ?", tag_name).references(:call_to_action_tags, :interactions)
+    if conditions.present?
+      ctas = ctas.where("(#{conditions})", tag_name)
+    end
+    ctas = ctas.order("call_to_actions.created_at DESC").to_a
     filter_results(ctas, query)
   end
   

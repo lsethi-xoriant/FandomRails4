@@ -63,6 +63,9 @@ GEM
       multi_json (~> 1.0)
     aws-sdk-resources (2.0.45)
       aws-sdk-core (= 2.0.45)
+    aws-sdk-v1 (1.64.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
     aws-ses (0.6.0)
       builder
       mail (> 2.2.5)
@@ -530,7 +533,8 @@ DEPENDENCIES
   ancestry
   angularjs-rails (= 1.2.16)
   apartment
-  aws-sdk
+  aws-sdk (~> 2)
+  aws-sdk-v1
   aws-ses
   better_errors
   binding_of_caller

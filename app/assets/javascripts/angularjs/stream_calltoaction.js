@@ -479,7 +479,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.computeAvgForVoteInteraction = function(interaction_info) {
     numerator = 0; denominator = 0;
     if(interaction_info.anonymous_user_interaction_info) {
-      vote_info_list = JSON.parse(interaction_info.anonymous_user_interaction_info.aux).vote_info_list;
+      vote_info_list = interaction_info.anonymous_user_interaction_info.aux.vote_info_list;
       angular.forEach(vote_info_list, function(value, key) {
         denominator = denominator + value;
         numerator = numerator + (parseInt(key) * value);
@@ -1847,7 +1847,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     call_last_linked_calltoaction = false;
     angular.forEach(anonymous_user_storage.user_interaction_info_list, function(user_interaction_info) {
       if(user_interaction_info.calltoaction_id == $scope.calltoaction_info.calltoaction.id && user_interaction_info.user_interaction.aux) {
-        aux = JSON.parse(user_interaction_info.user_interaction.aux)
+        aux = user_interaction_info.user_interaction.aux;
         if(aux["next_calltoaction_id"]) {
           call_last_linked_calltoaction = true;
         }
@@ -1889,7 +1889,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       angular.forEach($scope.user_interactions_history, function(index) {
         user_interaction_info = anonymous_user_interactions["user_interaction_info_list"][index];
         if(user_interaction_info) {
-          aux_parse = JSON.parse(user_interaction_info.user_interaction.aux);
+          aux_parse = user_interaction_info.user_interaction.aux;
           aux_parse.to_redo = true;
           user_interaction_info.user_interaction.aux = JSON.stringify(aux_parse);
           $scope.updateAnonymousUserStorageUserInteractions(user_interaction_info);

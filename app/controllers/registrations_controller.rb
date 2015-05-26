@@ -9,7 +9,7 @@ class RegistrationsController < Devise::RegistrationsController
   skip_before_filter :verify_authenticity_token
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:first_name, :last_name, :avatar, :avatar_selected, :avatar_selected_url, :email, :password, :password_confirmation) }
+    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:first_name, :last_name, :username, :avatar, :avatar_selected, :avatar_selected_url, :email, :password, :password_confirmation) }
   end
 
   def new

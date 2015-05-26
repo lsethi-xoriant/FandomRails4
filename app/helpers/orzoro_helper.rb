@@ -41,7 +41,7 @@ module OrzoroHelper
       "description" => calltoaction.description,
       "type" => "cta",
       "interactions" => calltoaction.interactions,
-      "extra_fields" => JSON.parse(calltoaction.extra_fields || "{}"),
+      "extra_fields" => calltoaction.extra_fields,
       "aux" => {
         "miniformat" => build_grafitag_for_calltoaction(calltoaction, "miniformat"),
         "flag" => build_grafitag_for_calltoaction(calltoaction, "flag")

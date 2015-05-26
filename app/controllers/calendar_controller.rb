@@ -2,7 +2,7 @@ class CalendarController < ApplicationController
 
   def get_ical
     interaction = Interaction.find(params[:interaction_id])
-    ical_fields = JSON.parse(interaction.resource.ical_fields || "{}") 
+    ical_fields = interaction.resource.ical_fields 
     start_date = Time.parse(ical_fields["start_datetime"]["value"])
 
     begin
@@ -11,7 +11,7 @@ class CalendarController < ApplicationController
       end_date = ""
     end
 
-    subtitle = JSON.parse(interaction.call_to_action.extra_fields)["subtitle"]
+    subtitle = interaction.call_to_action.extra_fields["subtitle"]
     cal = build_ical(start_date, end_date, interaction.call_to_action.title, subtitle, ical_fields["location"])
     render :text => cal.to_ical
   end

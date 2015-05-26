@@ -249,14 +249,14 @@ module UserInteractionHelper
         like_value = like_updated ? 1 : -1
         adjust_counter!(interaction, like_value)
       when "vote"
-        aux_in_user_interaction = user_interaction.aux
-        aux_in_user_interaction["vote"] = aux["vote"]
-        if aux_in_user_interaction["vote_info_list"].has_key?(aux["vote"].to_s)
-          aux_in_user_interaction["vote_info_list"][aux["vote"]] = aux_in_user_interaction["vote_info_list"][aux["vote"].to_s] + 1
+        vote = aux["vote"]
+        aux = user_interaction.aux
+        if aux["vote_info_list"]["#{vote}"].present?
+          aux["vote_info_list"]["#{vote}"] = aux["vote_info_list"]["#{vote}"] + 1
         else
-          aux_in_user_interaction["vote_info_list"][aux["vote"]] = 1
+          aux["vote_info_list"]["#{vote}"] = 1
         end
-        adjust_counter!(interaction, aux["vote"])
+        adjust_counter!(interaction, vote)
       when "quiz"
         if interaction.resource.quiz_type == "VERSUS"
           adjust_counter!(interaction, answer_id.to_s)

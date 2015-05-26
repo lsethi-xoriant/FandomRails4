@@ -100,7 +100,8 @@ gem 'cancan'
 ENV['NOKOGIRI_USE_SYSTEM_LIBRARIES'] = "true"
 gem 'nokogiri'
 
-gem 'aws-sdk' #, '~> 1.0'
+gem 'aws-sdk-v1'
+gem 'aws-sdk', '~> 2'
 
 gem 'figaro'
 gem 'execjs'
