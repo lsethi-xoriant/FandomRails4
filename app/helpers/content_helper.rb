@@ -126,27 +126,40 @@ module ContentHelper
   end
   
   def tag_to_content_preview_light(tag, needs_related_tags = false, populate_desc = true)
+    
     thumb_field = get_extra_fields!(tag)["thumbnail"]
-    has_thumb = thumb_field && upload_extra_field_present?(thumb_field)
-    thumb_url = get_upload_extra_field_processor(thumb_field,"medium") if has_thumb
-    if get_extra_fields!(tag).key? "description"
-      description = truncate(get_extra_fields!(tag)["description"], :length => 150, :separator => ' ')
-      long_description = get_extra_fields!(tag)["description"]
+    if thumb_field.present? && upload_extra_field_present?(thumb_field)
+      has_thumb = true
+      thumb_url = get_upload_extra_field_processor(thumb_field, "medium")
+    else
+      has_thumb = false
+    end
+    
+    description = get_extra_fields!(tag)["description"]
+    if description.present? && populate_desc
+      description = truncate(description, :length => 150, :separator => ' ')
+      long_description = description
     else
       description = ""
       long_description = ""
     end
+
     header_field = get_extra_fields!(tag)["header_image"]
-    has_header = !header_field.blank? && upload_extra_field_present?(header_field)
-    header_image = get_upload_extra_field_processor(header_field,"original") if has_header
+    if header_field.present? && upload_extra_field_present?(header_field)
+      header_image = get_upload_extra_field_processor(header_field, "original")
+    end
     
     icon_field = get_extra_fields!(tag)["icon"]
-    has_icon = !icon_field.blank? && upload_extra_field_present?(icon_field)
-    icon = get_upload_extra_field_processor(icon_field,"medium") if has_icon
+    if icon_field.present? && upload_extra_field_present?(icon_field)
+      icon = get_upload_extra_field_processor(icon_field, "medium")
+    end
     
     category_icon_field = get_extra_fields!(tag)["category_icon"]
-    has_category_icon_field = !category_icon_field.blank? && upload_extra_field_present?(category_icon_field)
-    category_icon = get_upload_extra_field_processor(category_icon_field,"medium") if has_category_icon_field
+    if category_icon_field.present? && upload_extra_field_present?(category_icon_field)
+      category_icon = get_upload_extra_field_processor(category_icon_field, "medium")
+    end
+
+    tags = needs_related_tags ? get_tag_ids_for_tag(tag) : []
     
     ContentPreview.new(
       type: "tag",
@@ -155,19 +168,20 @@ module ContentHelper
       has_thumb: has_thumb, 
       thumb_url: thumb_url,
       title: tag.title,
-      long_description: populate_desc ? long_description : nil,
-      description: populate_desc ? description : nil,  
+      long_description: long_description,
+      description: description,  
       detail_url: "/browse/category/#{tag.slug}",
       created_at: tag.created_at.to_i,
       header_image_url: header_image,
       icon: icon,
       category_icon: category_icon,
-      tags: needs_related_tags ? get_tag_ids_for_tag(tag) : [],
+      tags: tags,
       extra_fields: get_extra_fields!(tag),
       layout: get_content_preview_layout(tag),
       start: tag.valid_from,
       end: tag.valid_to
     )
+
   end
   
   def cta_to_content_preview(cta, populate_desc = true, interactions = nil)

@@ -70,68 +70,6 @@ module DisneyHelper
     end
   end
 
-  def get_disney_sidebar_calltoactions(sidebar_tags)
-    if sidebar_tags.present?
-      cta_info_list, calltoaction_ids = cache_short(get_sidebar_calltoactions_cache_key(sidebar_tags)) do       
-        tag_ids = []
-        sidebar_tags.each do |tag_name| 
-          tag = get_tag_from_params(tag_name)
-          if tag
-            tag_ids << tag.id
-          end
-        end
-
-        calltoactions = get_ctas_with_tags_in_and(tag_ids)
-
-        calltoaction_info = []
-        calltoactions.each do |calltoaction|
-          calltoaction_info << build_disney_thumb_calltoaction(calltoaction)
-        end
-
-        [calltoaction_info, calltoactions.map { |cta| cta.id }]
-      end
-
-      if current_user && cta_info_list.any?
-        cta_info_list = adjust_thumb_cta_for_current_user(cta_info_list)
-      end
-
-      adjust_thumb_ctas(cta_info_list)
-
-      cta_info_list
-    else
-      []
-    end
-
-  end
-
-  def get_disney_sidebar_tags(sidebar_tags)
-    if sidebar_tags.present?
-
-      tag_ids = []
-      sidebar_tags.each do |tag_name| 
-        tag = get_tag_from_params(tag_name)
-        if tag
-          tag_ids << tag.id
-        end
-      end
-
-      tags = get_tags_with_tags_in_and(tag_ids)
-
-      tag_info = []
-      tags.each do |tag|
-        tag_info << {
-          "title" => tag.title,
-          "image" => (get_upload_extra_field_processor(get_extra_fields!(tag)["image"], :thumb) rescue nil),
-          "description" => tag.description,
-          "url" => get_extra_fields!(tag)["url"]
-        }
-      end
-      tag_info
-    else
-      []
-    end
-  end
-
   def get_disney_calltoaction_active_with_tag_in_property(tag, property, order)
     # Cached in index
     tag_calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", tag.id).references(:call_to_action_tags)
@@ -239,49 +177,47 @@ module DisneyHelper
 
   end
 
-  def get_disney_sidebar_info(sidebar_tags, gallery_cta, other)
-    sidebar_tags = sidebar_tags + ["sidebar"]
+  def get_disney_sidebar_info(sidebar_tag_name, property)
 
-    tag_info_list = cache_short(get_sidebar_tags_cache_key(sidebar_tags)) do  
-      get_disney_sidebar_tags(sidebar_tags)
-    end
+    property_tag = property.present? ? [property] : []
+    sidebar_content_previews = get_content_previews(sidebar_tag_name, property_tag)
+    
+    # if gallery_cta
+    #   gallery_tag = get_tag_with_tag_about_call_to_action(gallery_cta, "gallery").first
+    #   gallery_tag_id = gallery_tag.id
+    #   gallery_rank, total  = cache_short(get_sidebar_gallery_rank_cache_key(gallery_tag.id)) do
+    #     get_vote_ranking(gallery_tag.name, 1)
+    #   end
+    # end
+    
+    # if other && other[:rank_widget] # TODO: change this when property_rank will be activate
+    #   rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
+    #   property_rank = { rank: get_ranking(rank, 1), rank_id: rank.id }
+    # end
 
-    cta_info_list = get_disney_sidebar_calltoactions(sidebar_tags)
-    
-    gallery_rank = nil
-    
-    if gallery_cta
-      gallery_tag = get_tag_with_tag_about_call_to_action(gallery_cta, "gallery").first
-      gallery_tag_id = gallery_tag.id
-      gallery_rank, total  = cache_short(get_sidebar_gallery_rank_cache_key(gallery_tag.id)) do
-        get_vote_ranking(gallery_tag.name, 1)
-      end
-    end
-    
-    if other && other[:rank_widget] # TODO: change this when property_rank will be activate
-      rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
-      property_rank = { rank: get_ranking(rank, 1), rank_id: rank.id }
-    end
+    # {
+    #   "calltoaction_info_list" => cta_info_list,
+    #   "tag_info_list" => tag_info_list,
+    #   "gallery_rank" => { rank_list: gallery_rank, gallery_id: gallery_tag_id  },
+    #   "property_rank" => property_rank,
+    #   "fan_of_the_day" => winner
+    # }
 
-    if other && other[:fan_of_the_day_widget]
-      day = Time.now - 1.day
-      winner = cache_long(get_fan_of_the_day_widget_cache_key()) do
-        winner_of_the_day = get_winner_of_day(day)
+    sidebar_content_previews.contents.each do |content|
+      if content.title == "fan-of-the-day-widget"
+        content.type = content.title
+        winner_of_the_day = get_winner_of_day(Date.yesterday)
         if winner_of_the_day
-          {avatar: user_avatar(winner_of_the_day.user), username: winner_of_the_day.user.username, counter: winner_of_the_day.counter}
-        else
-          {}
+          content.extra_fields["widget_extra_fields"] = {
+            avatar: user_avatar(winner_of_the_day.user), 
+            username: winner_of_the_day.user.username, 
+            counter: winner_of_the_day.counter
+          }
         end
       end
     end
-    
-    {
-      "calltoaction_info_list" => cta_info_list,
-      "tag_info_list" => tag_info_list,
-      "gallery_rank" => { rank_list: gallery_rank, gallery_id: gallery_tag_id  },
-      "property_rank" => property_rank,
-      "fan_of_the_day" => winner
-    }
+
+    sidebar_content_previews
 
   end
 
@@ -408,15 +344,14 @@ module DisneyHelper
       calltoaction_evidence_info
     end
 
-    if other && other.has_key?(:sidebar_tags)
-      sidebar_tags = other[:sidebar_tags] + [current_property.name]
-    else
-      sidebar_tags = [current_property.name]
+    if other && other.has_key?(:sidebar_tag)
+      sidebar_info = get_disney_sidebar_info(other[:sidebar_tag], current_property)
     end
 
     aux = {
-      "tenant" => get_site_from_request(request)["id"],
-      "anonymous_interaction" => get_site_from_request(request)["anonymous_interaction"],
+      "default_property" => $site.default_property,
+      "tenant" => $site.id,
+      "anonymous_interaction" => $site.anonymous_interaction,
       "main_reward_name" => MAIN_REWARD_NAME,
       "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
       "filter_info" => filter_info,
@@ -428,7 +363,7 @@ module DisneyHelper
       "free_provider_share" => $site.free_provider_share,
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
-      "sidebar_info" => get_disney_sidebar_info(sidebar_tags, gallery_calltoaction, other),
+      "sidebar_info" => sidebar_info,
       "gallery_calltoaction" => gallery_calltoaction_adjust_for_view
     }
 

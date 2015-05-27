@@ -2,13 +2,12 @@
   <a href="/<%= $context_root %>"><img class="properties__logo" ng-src="{{aux.current_property_info.logo}}"></a>
 </div>           
 
-{{aux.property_info}}----
 <div class="col-sm-6 properties__flexslider-col" ng-if="aux.property_info">
   <div class="flexslider properties__flexslider">
     <ul class="slides">
-      <li ng-repeat="property in aux.property_info" class="text-center properties__flexslider-item" ng-init="property.image_visible = property.image" ng-mouseover="property.image_visible = property.image_hover" ng-mouseleave="property.image_visible = property.image">
-        <a class="properties__flexslider-a" href="/{{property.path}}"> 
-          <img class="properties__flexslider-image" ng-src="{{property.image_visible}}" ng-style="{'border-bottom': '4px solid ' + property.background}">     
+      <li ng-repeat="property in aux.property_info.contents" class="text-center properties__flexslider-item" ng-init="property.image_visible = property.extra_fields.image.url" ng-mouseover="property.image_visible = property.extra_fields.image_hover.url" ng-mouseleave="property.image_visible = property.extra_fields.image.url">
+        <a class="properties__flexslider-a" href="/{{property.extra_fields.path}}"> 
+          <img class="properties__flexslider-image" ng-src="{{property.image_visible}}" ng-style="{'border-bottom': '4px solid ' + property.extra_fields.background}">     
         </a>
       </li>
       <li class="text-center properties__flexslider-item">

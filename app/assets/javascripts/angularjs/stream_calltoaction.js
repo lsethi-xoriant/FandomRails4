@@ -338,6 +338,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
   };
 
+  $scope.linkTo = function(url) {
+    if(url == "/" + $scope.aux.default_property) {
+      return "/"
+    } else if($scope.aux.context_root && url.indexOf("/" + $scope.aux.context_root + "/") < 0) {
+      url = "/" + $scope.aux.context_root + "" + url;
+    }
+    
+    return url;
+  };
+
   $scope.nextRandomCallToAction = function(current_calltoaction_info) {
     update_ga_event("UpdateCallToAction", "nextRandom", "nextRandom", 1);
 

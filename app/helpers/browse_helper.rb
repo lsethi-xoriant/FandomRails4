@@ -143,7 +143,6 @@ module BrowseHelper
           offset: 0
         }
       end
-
       exclude_tag_ids = []
       exclude_cta_ids = []
       contents.each do |content|

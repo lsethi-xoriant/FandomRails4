@@ -128,8 +128,14 @@ module TagHelper
   
   def get_tags_with_tags(tag_ids, params = {})
     hidden_tags_ids = get_hidden_tag_ids
-    #where_clause = get_tag_where_clause_from_params(params)
+    
     tags = Tag.includes(:tags_tags).references(:tags_tags)
+
+    where_clause = get_tag_where_clause_from_params(params)
+
+    if where_clause.present?
+      tags.where("#{where_clause}") 
+    end
     
     if hidden_tags_ids.any? && tag_ids.empty?
       tags = tags.where("tags.id not in (#{hidden_tags_ids.join(",")})")
@@ -140,15 +146,12 @@ module TagHelper
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
       tags = tags.where("tags.id in (#{tag_ids_subselect})")
     end
-    
-    # if !where_clause.empty?
-    #   tags.where("#{where_clause}")
-    # end
 
     if params[:limit]
       offset, limit = params[:limit][:offset], params[:limit][:perpage]
       tags = tags.offset(offset).limit(limit)
     end
+    
     tags.order("tags.created_at DESC").to_a
   end
 

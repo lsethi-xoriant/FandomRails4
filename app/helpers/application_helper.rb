@@ -661,35 +661,7 @@ module ApplicationHelper
   end
 
   def init_property_info_list()
-    property_tag = get_tag_from_params("property")
-    if property_tag
-      properties = order_elements(property_tag, get_tags_with_tag("property"))
-      if properties.any?
-        property_info_list = []
-        properties.each do |property|
-          property_extra_fields = get_extra_fields!(property)
-          if property_extra_fields["image"].present?
-            property_image_thumb = get_upload_extra_field_processor(property_extra_fields["image"], :thumb)
-          end
-           if property_extra_fields["image_hover"].present?
-            property_image_hover_thumb = get_upload_extra_field_processor(property_extra_fields["image_hover"], :thumb)
-          end
-          property_info_list << {
-            "id" => property.id,
-            "name" => property.name,
-            "extra_fields" => get_extra_fields!(property),
-            "title" => property.title,
-            "image" => property_image_thumb,
-            "image_hover" => property_image_hover_thumb
-          }
-        end
-        property_info_list
-      else
-        nil
-      end
-    else
-      nil
-    end
+    get_content_previews("property")
   end
 
   def get_ugc_cta(gallery_tag)

@@ -5,6 +5,7 @@ class Attachment < ActiveRecord::Base
   attr_accessible :data
 
   attr_accessor :destroy_data
+  do_not_validate_attachment_file_type :data
 
   do_not_validate_attachment_file_type :data
 
