@@ -5,7 +5,6 @@
 *= require ./easyadmin/jquery-te-1.4.0
 *= require ./easyadmin/datepicker
 *= require ./easyadmin/fullcalendar
-*= require typography/font-awesome
 *= require ./easyadmin/app
 *= require ./easyadmin/custom
 *= require ./easyadmin/select2
