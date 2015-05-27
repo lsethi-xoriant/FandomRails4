@@ -7,8 +7,6 @@ $container-md:                 $container-desktop !default;
 $container-large-desktop:      $container-desktop !default;
 $container-lg:                 $container-desktop !default;
 
-@import "bootstrap/bootstrap";
-
 body {
   padding-top: 15px;
   background-image: url("coin/bg.jpg");
