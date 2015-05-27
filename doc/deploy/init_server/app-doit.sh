@@ -45,10 +45,10 @@ gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 
 source "$HOME/.rvm/scripts/rvm"
 
-rvm install 1.9.3 --autolibs=disabled
+rvm install ruby-2.2-head --autolibs=disable
 gem install bundler
-gem install rmagick -v '2.13.2'
-gem install rails -v 3.2.17
+gem install rmagick
+gem install rails
 gem install activerecord-postgresql-adapter
 gem install sys-proctable
 gem install aws-ses

@@ -358,17 +358,18 @@ module DisneyHelper
     properties = order_elements(property, properties)
     
     if properties.any?
-      property_info = []
-      properties.each do |property|
-        property_info << {
-          "id" => property.id,
-          "background" => get_extra_fields!(property)["label-background"],
-          "path" => compute_property_path(property),
-          "title" => property.title,
-          "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil),
-          "image_hover" => (get_upload_extra_field_processor(get_extra_fields!(property)["image-hover"], :thumb) rescue nil) 
-        }
-      end
+      property_info = get_content_previews("property")
+      # property_info = []
+      # properties.each do |property|
+      #   property_info << {
+      #     "id" => property.id,
+      #     "background" => get_extra_fields!(property)["label-background"],
+      #     "path" => compute_property_path(property),
+      #     "title" => property.title,
+      #     "image" => (get_upload_extra_field_processor(get_extra_fields!(property)["image"], :thumb) rescue nil),
+      #     "image_hover" => (get_upload_extra_field_processor(get_extra_fields!(property)["image-hover"], :thumb) rescue nil) 
+      #   }
+      # end
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)

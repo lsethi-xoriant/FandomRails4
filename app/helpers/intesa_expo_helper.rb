@@ -1,5 +1,9 @@
 module IntesaExpoHelper
 
+  def has_cta_spotlight?(cta_info)
+    cta_info && cta_info["calltoaction"]["extra_fields"] && cta_info["calltoaction"]["extra_fields"]["spotlight"]
+  end
+
   def get_intesa_expo_ctas_with_tag(tag_name)
 
     language_tag = get_tag_from_params($context_root || "it")

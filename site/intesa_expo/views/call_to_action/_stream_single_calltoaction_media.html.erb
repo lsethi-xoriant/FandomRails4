@@ -7,14 +7,6 @@
     <!-- OVERVIDEO AREA -->
     <%= render partial: "/call_to_action/overvideo_interaction" %>
 
-    <!-- DEFAULT END -->
-    <div class="col-xs-12 end-interaction text-center" ng-if="calltoaction_info.active_end_interaction">
-      <p class="end-interaction__title" ng-if="!calltoaction_info.calltoaction.extra_fields['end-video']">Cosa ne pensi? Dì la tua!<br>Lascia subito il tuo commento su questo argomento.</p>
-      <p class="end-interaction__title" ng-if="calltoaction_info.calltoaction.extra_fields['end-video']">{{calltoaction_info.calltoaction.extra_fields['end-video']}}</p>
-      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-lg hidden-xs"><span>COMMENTA</span></a>
-      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-sm visible-xs"><span>COMMENTA</span></a>
-    </div>
-
   </div>
 </div>
 

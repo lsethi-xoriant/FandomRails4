@@ -8,8 +8,6 @@ set -x
 #
 
 export POSTGRESQL_VERSION=9.3
-# this is just the version of the ubuntu package, the actual ruby version is installed with RVM
-export RUBY_VERSION=1.9.1
 
 #
 # Timezone
@@ -47,8 +45,6 @@ apt-get install vim \
   supervisor \
   traceroute
   
-apt-get build-dep ruby${RUBY_VERSION}
-
 #
 # Add the user running rails
 #
