@@ -3,13 +3,12 @@
 
 namespace :instant_win_coin do
   #require 'digest/md5'
-  DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
   desc "Genera tutte le data e ora di vincita del concorso"
   task :generate => :environment do
   	createWins
   end
-  
+
   def initContest
     Apartment::Database.switch("coin")
     point = Reward.find_by_name("point")
@@ -69,7 +68,7 @@ namespace :instant_win_coin do
     [contest_prize_list, instantwin_interaction, contest]
     
   end
-  
+
   def create_contest_prize_list
     prize_list = Array.new
     COIN_PRIZES_LIST.each do |p|
@@ -80,7 +79,7 @@ namespace :instant_win_coin do
     end
     prize_list.shuffle
   end
-  
+
   def get_start_hour_for_instantwin(cdate, contest)
     if(cdate == contest.valid_from.to_date)
       hour = (contest.valid_from.hour.to_i..23).to_a.sample
@@ -90,7 +89,7 @@ namespace :instant_win_coin do
       hour = (0..23).to_a.sample
     end
   end
-  
+
   def createWins
     prizes, iw_interaction, contest = initContest
     cdate = contest.valid_from.to_date
@@ -121,14 +120,13 @@ namespace :instant_win_coin do
       cdate += 1
     end
   end
-  
+
   def get_instantwin_reward(prizes)
     prize_id = prizes[0]
     prizes.delete_at(0)
     prize_id
   end
-  
-  #
+
   # Returns days in a month
   #
   # month - month want to know days amount

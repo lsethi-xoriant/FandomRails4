@@ -1,18 +1,17 @@
 namespace :instant_win do
-  #require 'digest/md5'
-  DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  # require 'digest/md5'
 
   desc "Genera tutte le data e ora di vincita del concorso"
   task :generate_wins => :environment do
   	createWins
   end
   
-  #TODO MAXIBON
+  # TODO MAXIBON
   task :generate_maxibon_wins => :environment do
     createMaxibonWins
   end
 
-  #TODO MAXIBON
+  # TODO MAXIBON
   #
   # create the default contest for maxibon and the periodicity type (daily and 60gg), the contest prizes and generate time to win
   #
@@ -33,7 +32,7 @@ namespace :instant_win do
     create_wins_mb(contest)
   end
 
-  #TODO MAXIBON
+  # TODO MAXIBON
   def create_wins_mb(contest)
     @hash_counter = 1
     contest.contest_periodicities.each do |cp|
@@ -48,7 +47,7 @@ namespace :instant_win do
     contest.update_attributes(:generated => true)
   end
   
-  #TODO MAXIBON
+  # TODO MAXIBON
   #
   # create 20 time to win between during the validity contest period
   #
@@ -83,8 +82,7 @@ namespace :instant_win do
       @hash_counter += 1
     end
   end
-  
-  #
+
   # create one timetowin per day form start_date of contest to end date
   #
   # contest - contest for which generate time to win
@@ -117,8 +115,7 @@ namespace :instant_win do
       cdate += 1
     end
   end
-  
-  #
+
   # Returns days in a month
   #
   # month - month want to know days amount

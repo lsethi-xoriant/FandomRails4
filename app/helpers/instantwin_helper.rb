@@ -1,6 +1,4 @@
 module InstantwinHelper
-	
-	DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
   def get_instant_win_coin_interaction_id()
     interaction_id = cache_short(get_instant_win_coin_interaction_id_cache_key()) do
