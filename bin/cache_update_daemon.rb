@@ -18,14 +18,23 @@ def main
 
   config = YAML.load_file(ARGV[0].to_s)
   db = config["db"]
+  conn = PG::Connection.open(db)
   tenant = config["tenant"]
+
+  if tenant.nil?
+    tenant = []
+    conn.exec("SELECT nspname FROM pg_namespace").each do |value|
+      unless (value["nspname"].start_with?("pg_") or value["nspname"] == "public" or value["nspname"] == "information_schema")
+        tenant << value["nspname"]
+      end
+    end
+  elsif tenant.class == String
+    tenant = [tenant]
+  end
+
   app_root_path = config["app_root_path"]
 
-  puts "aaa#{app_root_path}----"
-
   logger = Logger.new("#{app_root_path}/log/cache_update_daemon.log")
-
-  conn = PG::Connection.open(db)
 
   logger.info "cache daemon starting"
 
@@ -33,8 +42,10 @@ def main
     start_time = Time.now
 
     execute_job(logger) do
-      cache_generate_rankings(conn, tenant, logger)
-      cache_generate_votes(conn, tenant, logger)
+      tenant.each do |t|
+        cache_generate_rankings(conn, t, logger)
+        cache_generate_votes(conn, t, logger)
+      end
     end
 
     elapsed_time = Time.now - start_time
@@ -45,7 +56,7 @@ def main
 end
 
 def cache_generate_rankings(conn, tenant, logger)
-  anonymous_user_id = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE email = 'anonymous@shado.tv'").first["id"]
+  anonymous_user_id = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE email = 'anonymous@shado.tv'").first["id"] rescue 0
   rankings = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}rankings")
 
   rankings.each do |r|
