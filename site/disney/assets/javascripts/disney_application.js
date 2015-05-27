@@ -20,13 +20,12 @@
 //= require angularjs/eventfilter
 //= require angularjs/browse
 //= require ui-bootstrap-0.12.min
-//= require bootstrap
+//= require bootstrap-sprockets
 //= require bootstrap-notify
 //= require bootstrap-fileupload
 //= require jquery.jplayer
 //= require fandom-utils
 //= require flowplayer.min
-//= require jquery.jcarousel
 //= require jquery.flexslider
 //= require config
 //= require angularjs/stream_calltoaction

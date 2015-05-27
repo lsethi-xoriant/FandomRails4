@@ -1,3 +1,6 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
 $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
@@ -35,7 +38,6 @@ $container-md:                 $container-desktop !default;
 $container-large-desktop:      $container-desktop !default;
 $container-lg:                 $container-desktop !default;
 
-@import "bootstrap/bootstrap";
 
 .baloon-no-pad {
   padding: 0 !important;

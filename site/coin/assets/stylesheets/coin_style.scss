@@ -1,3 +1,6 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
 $container-tablet:             750px !default;
 $container-sm:                 $container-tablet !default;
 
@@ -6,8 +9,6 @@ $container-md:                 $container-desktop !default;
 
 $container-large-desktop:      $container-desktop !default;
 $container-lg:                 $container-desktop !default;
-
-@import "bootstrap/bootstrap";
 
 body {
   padding-top: 15px;

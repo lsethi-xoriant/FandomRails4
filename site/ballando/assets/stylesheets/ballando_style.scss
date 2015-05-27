@@ -1,3 +1,6 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
 $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
@@ -25,8 +28,6 @@ $navbar-default-brand-hover-bg:             transparent !default;
 $navbar-default-toggle-hover-bg:            darken($navbar-default-bg, 10%) !default;
 $navbar-default-toggle-icon-bar-bg:         #ccc !default;
 $navbar-default-toggle-border-color:        #ccc !default;
-
-@import "bootstrap/bootstrap";
 
 .baloon-no-pad{
   padding: 0 !important;

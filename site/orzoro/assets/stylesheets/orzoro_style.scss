@@ -1,3 +1,6 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
 $brown: #660206;
 $brown_hover: #850e0d;
 $red: red;
@@ -89,7 +92,6 @@ $navbar-inverse-toggle-border-color:        #999 !default;
 
 
 //import style folders
-@import "bootstrap/bootstrap";
 @import "orzoro/**/*";
 @import "orzoro_reset";
 

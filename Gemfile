@@ -47,6 +47,7 @@ gem 'ckeditor'
   gem 'uglifier' #, '>= 1.0.3'
   gem 'compass-rails' #, '>= 1.0.3'
   gem 'sass-rails' #, '~> 3.2.3'
+  gem 'bootstrap-sass'
 gem 'sass-globbing'
 
 #end
@@ -125,3 +126,5 @@ gem 'sys-proctable'
 
 # used to prevent BREACH attacks when the HTTP compression is active
 gem 'breach-mitigation-rails'
+gem "font-awesome-rails"
+gem 'flexslider'
