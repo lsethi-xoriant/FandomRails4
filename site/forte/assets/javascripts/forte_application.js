@@ -22,6 +22,5 @@
 //= require bootstrap-notify
 //= require bootstrap-fileupload
 //= require respond.min
-//= require jquery.jcarousel
 //= require fastclick
 //= require jquery.flexslider
