@@ -118,7 +118,6 @@ module DisneyHelper
         "avatar" => current_avatar,
         "level" => (get_current_level["level"]["name"] rescue "nessun livello"),
         "notifications" => get_unread_notifications_count(),
-        "avatar" => current_avatar,
         "profile_completed" => disney_profile_completed?()
       }
       disney_current_user[:username] = get_disney_membername() if !profile_completed
