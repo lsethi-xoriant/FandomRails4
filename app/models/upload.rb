@@ -14,7 +14,7 @@ class Upload < ActiveRecord::Base
 
   def set_instagram_tag_in_interaction_aux
     if self.gallery_type == "instagram"
-      aux = self.interaction.aux.nil? ? {} : JSON.parse(self.interaction.aux)
+      aux = self.interaction.aux || {}
       aux["instagram_tag"] = { "name" => self.instagram_tag_name, "subscription_id" => instagram_tag_subscription_id }
       self.interaction.update_attribute(:aux, aux.to_json)
     end
