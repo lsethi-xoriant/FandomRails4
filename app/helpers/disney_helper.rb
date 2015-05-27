@@ -207,7 +207,7 @@ module DisneyHelper
         content.type = content.title
         winner_of_the_day = get_winner_of_day(Date.yesterday)
         if winner_of_the_day
-          content.extra_fields["widget_extra_fields"] = {
+          content.extra_fields["widget_info"] = {
             avatar: user_avatar(winner_of_the_day.user), 
             username: winner_of_the_day.user.username, 
             counter: winner_of_the_day.counter

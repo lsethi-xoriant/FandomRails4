@@ -58,9 +58,9 @@
   <div ng-if="content.type == 'fan-of-the-day-widget'" class="relateds-flexslider__item-panel text-left cta__sidebar-panel--ranking" style="border-top: none !important;"> 
     <div class="row">
       <div class="col-xs-12 text-center" style="padding: 10px 0;">
-        <p><img ng-src="{{aux.sidebar_info.fan_of_the_day.avatar}}" class="img-responsive ranking-widget__avatar" /></p>
-        <p><span class="gallery-widget__username" style="padding: 7px 0;"></span>{{aux.sidebar_info.fan_of_the_day.username}}</p>
-      <div class="label label-warning ranking-widget__points" style="width: auto; display: inline-block;">+ {{aux.sidebar_info.fan_of_the_day.counter}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+        <p><img ng-src="{{content.extra_fields.widget_info.avatar}}" class="img-responsive ranking-widget__avatar" /></p>
+        <p><span class="gallery-widget__username" style="padding: 7px 0;"></span>{{content.extra_fields.widget_info.username}}</p>
+      <div class="label label-warning ranking-widget__points" style="width: auto; display: inline-block;">+ {{content.extra_fields.widget_info.counter}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
       </div>
     </div>
   </div>  
