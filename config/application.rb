@@ -179,3 +179,6 @@ module Fandom
   end
 
 end
+
+# This workaround is necessary for flexslider font precompile.
+require_relative '../lib/flexslider_workaround'

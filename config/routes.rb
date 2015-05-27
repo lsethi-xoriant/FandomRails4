@@ -4,8 +4,6 @@ include FandomUtils
 
 Fandom::Application.routes.draw do
 
-  use_doorkeeper
-
   mount RailsAdmin::Engine => '/rails_admin/'
 
   get '/cookies_policy', :to => 'application#cookies_policy'

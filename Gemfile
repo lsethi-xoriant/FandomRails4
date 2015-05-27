@@ -23,7 +23,7 @@ gem 'twitter'
 gem 'hirb'
 gem 'httparty'
 
-gem 'doorkeeper'
+#gem 'doorkeeper'
 
 gem 'angularjs-rails', "1.2.16"
 
