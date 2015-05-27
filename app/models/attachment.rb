@@ -20,6 +20,7 @@ class Attachment < ActiveRecord::Base
         { }
       end 
     }, 
+    source_file_options:  { all: '-background transparent' },
     :convert_options => { 
       :carousel => "-gravity north -thumbnail 1024x320^ -extent 1024x320", 
       :medium => "-gravity north -thumbnail 524x393^ -extent 524x393", 
