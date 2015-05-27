@@ -27,13 +27,13 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
         html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_comment_approved_template", locals: { cta: cta }, layout: false, formats: :html
 
-        if JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['comment_approved'] != false
+        if (Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value['comment_approved'] != false rescue true)
           create_notice(:user_id => current_comment.user_id, :html_notice => html_notice, :viewed => false, :read => false)
         end
       end
 
       unless cta.user_id.nil? # user_call_to_action
-        if JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)['user_cta_interactions'] != false
+        if (Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value['user_cta_interactions'] != false rescue true)
           html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_interaction_on_ugc_approved_template", locals: { cta: cta, interaction_type: "commento" }, layout: false, formats: :html
           create_notice(:user_id => cta.user_id, :html_notice => html_notice, :viewed => false, :read => false)
         end
@@ -111,7 +111,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     if params[:profanity_check_filter]
       comment_with_profanity_ids = []
       UserCommentInteraction.where(:comment_id => comment_ids, :approved => false).each do |user_comment_interaction|
-        if (JSON(user_comment_interaction.aux)["profanity"] == true rescue false)
+        if (user_comment_interaction.aux["profanity"] == true rescue false)
           comment_with_profanity_ids << user_comment_interaction.id
         end
       end 

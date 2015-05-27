@@ -10,6 +10,7 @@ class Upload < ActiveRecord::Base
   after_update :set_instagram_tag_in_interaction_aux
 
   has_attached_file :watermark, :styles => { :normalized => "200x112#" }
+  do_not_validate_attachment_file_type :watermark
 
   def set_instagram_tag_in_interaction_aux
     if self.gallery_type == "instagram"

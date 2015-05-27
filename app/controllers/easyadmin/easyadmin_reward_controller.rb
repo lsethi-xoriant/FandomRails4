@@ -58,7 +58,7 @@ class Easyadmin::EasyadminRewardController < Easyadmin::EasyadminController
     if @reward.extra_fields.blank?
       @extra_options = {}
     else
-      @extra_options = JSON.parse(@reward.extra_fields)
+      @extra_options = @reward.extra_fields
     end
     @currency_rewards = Reward.where("spendable = TRUE")
     @tag_list = get_reward_tag_list(@reward)

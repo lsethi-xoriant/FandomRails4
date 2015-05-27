@@ -311,7 +311,7 @@ Fandom::Application.routes.draw do
   get "/gallery/:id", :to => "gallery#show"
   get "/gallery/how_to/:id", :to => "gallery#how_to"
   
-  #get "/classifica/:id", :to => "ranking#show"
+  # get "/classifica/:id", :to => "ranking#show"
   get "classifiche", :to => "ranking#show_rankings_page"
   get "bootcamp", :to => "ranking#show_vote_rankings_page"
   get "/ranking/page", :to => "ranking#get_rank_page"
@@ -338,10 +338,10 @@ Fandom::Application.routes.draw do
     match "tag/filter", :to => "tag#filter", via: [:get, :post]
     get "tag/clone/:id", :to => "tag#clone"
     match "tag/ordering", :to => "tag#ordering", via: [:get, :post]
-    get "tag/retag", :to => "tag#retag_tag"
+    match "tag/retag", :to => "tag#retag_tag", via: [:get, :post]
     post "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
     get "cta/tag/:id", :to => "tag#tag_cta"
-    get "cta/tag/:id/update", :to => "tag#tag_cta_update"
+    post "cta/tag/:id/update", :to => "tag#tag_cta_update"
 
     resources :home_launchers
 
@@ -353,13 +353,13 @@ Fandom::Application.routes.draw do
 
     # USER
     get "user", :to => "user#index_user"
-    get "export_users", :to => "user#export_users"
+    post "export_users", :to => "user#export_users"
     get "user/show/:id", :to => "user#show_user"
     match "user/filter", :to => "user#filter_user", via: [:get, :post]
 
     # WINNER
     get "winner", :to => "easyadmin#index_winner"
-    get "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
+    post "winner/send_email_to_winner", :to => "easyadmin#send_email_to_winner"
 
     # CALL TO ACTION
     get "cta", :to => "call_to_action#index_cta"
@@ -369,22 +369,22 @@ Fandom::Application.routes.draw do
     get "cta/approved", :to => "call_to_action#index_user_cta_approved"
     get "cta/not_approved", :to => "call_to_action#index_user_cta_not_approved"
     match "cta/filter_ugc", :to => "call_to_action#filter_ugc", via: [:get, :post]
-    get "cta/:id/update_cta_status", :to => "call_to_action#update_cta_status"
+    post "cta/:id/update_cta_status", :to => "call_to_action#update_cta_status"
     get "cta/new/", :to => "call_to_action#new_cta"
     get "cta/show/:id", :to => "call_to_action#show_cta", :as => :cta_show
     get "cta/show_details/:id", :to => "call_to_action#show_details"
     get "cta/edit/:id/", :to => "call_to_action#edit_cta"
-    get "cta/save", :to => "call_to_action#save_cta"
-    get "cta/update", :to => "call_to_action#update_cta"
-    get "cta/hide/:id", :to => "call_to_action#hide_cta"
+    post "cta/save", :to => "call_to_action#save_cta"
+    patch "cta/update", :to => "call_to_action#update_cta"
+    post "cta/hide/:id", :to => "call_to_action#hide_cta"
     get "cta/clone/:id", :to => "call_to_action#clone"
-    get "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
+    post "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
     post "cta/send_reason_for_not_approving", :to => "call_to_action#send_reason_for_not_approving"
 
     # PROMOCODE
     get "promocode", :to => "promocode#index_promocode"
     get "promocode/new_promocode", :to => "promocode#new_promocode"
-    get "promocode/create_promocode", :to => "promocode#create_promocode"
+    post "promocode/create_promocode", :to => "promocode#create_promocode"
     
     # PRIZE
     get "reward", :to => "easyadmin_reward#index"
@@ -392,38 +392,38 @@ Fandom::Application.routes.draw do
     get "reward/show/:id", :to => "easyadmin_reward#show"
     get "reward/edit/:id", :to => "easyadmin_reward#edit"
     get "reward/new", :to => "easyadmin_reward#new"
-    get "reward/save", :to => "easyadmin_reward#save"
-    get "reward/update", :to => "easyadmin_reward#update"
+    post "reward/save", :to => "easyadmin_reward#save"
+    patch "reward/update", :to => "easyadmin_reward#update"
     get "reward/clone/:id", :to => "easyadmin_reward#clone"
     
     # INSTANT WIN
     get "contest", :to => "easyadmin#index_contest"
     get "contest/new", :to => "easyadmin#new_contest"
     get "contest/edit", :to => "easyadmin#edit_contest"
-    get "contest/save", :to => "easyadmin#save_contest"
+    post "contest/save", :to => "easyadmin#save_contest"
     get "periodicity/new", :to => "easyadmin#new_periodicity"
-    get "periodicity/save", :to => "easyadmin#save_periodicity"
+    post "periodicity/save", :to => "easyadmin#save_periodicity"
     get "periodicity", :to => "easyadmin#index_periodicity"
     get "instantwin/generate/:id", :to => "instantwin#create_wins"
     get "instantwin_prize", :to => "easyadmin#index_prize"
     get "instantwin_prize/new", :to => "easyadmin#new_prize"
     get "instantwin_prize/edit/:id", :to => "easyadmin#edit_prize"
-    get "instantwin_prize/save", :to => "easyadmin#save_prize"
-    get "instantwin_prize/update", :to => "easyadmin#update_prize"
+    post "instantwin_prize/save", :to => "easyadmin#save_prize"
+    patch "instantwin_prize/update", :to => "easyadmin#update_prize"
     
     # COMMENT
-    get "comments/approved", :to => "comments#index_comment_approved"
-    get "comments/to_approved", :to => "comments#index_comment_to_be_approved"
-    get "comments/not_approved", :to => "comments#index_comment_not_approved"
-    get "comments/ugc_approved", :to => "comments#index_comment_approved", :cta => "user_call_to_actions"
-    get "comments/ugc_to_approved", :to => "comments#index_comment_to_be_approved", :cta => "user_call_to_actions"
-    get "comments/ugc_not_approved", :to => "comments#index_comment_not_approved", :cta => "user_call_to_actions"
-    get "comments/:comment_id/update_comment_status", :to => "comments#update_comment_status"
+    match "comments/approved", :to => "comments#index_comment_approved", via: [:get, :post]
+    match "comments/to_approved", :to => "comments#index_comment_to_be_approved", via: [:get, :post]
+    match "comments/not_approved", :to => "comments#index_comment_not_approved", via: [:get, :post]
+    match "comments/ugc_approved", :to => "comments#index_comment_approved", :cta => "user_call_to_actions", via: [:get, :post]
+    match "comments/ugc_to_approved", :to => "comments#index_comment_to_be_approved", :cta => "user_call_to_actions", via: [:get, :post]
+    match "comments/ugc_not_approved", :to => "comments#index_comment_not_approved", :cta => "user_call_to_actions", via: [:get, :post]
+    post "comments/:comment_id/update_comment_status", :to => "comments#update_comment_status"
 
     match "dashboard", :to => "easyadmin#dashboard", via: [:get, :post]
     get "published", :to => "easyadmin#published"
     get "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
-    get "dashboard/update_activated_at", :to => "call_to_action#update_activated_at", defaults: { format: 'json' }
+    post "dashboard/update_activated_at", :to => "call_to_action#update_activated_at", defaults: { format: 'json' }
     get "most_clicked_interactions", :to => "easyadmin#index_most_clicked_interactions"
     get "reward_cta_unlocked", :to => "easyadmin#index_reward_cta_unlocked"
     
@@ -432,24 +432,24 @@ Fandom::Application.routes.draw do
     
     get "notices", :to => "easyadmin_notice#index"
     get "notices/new", :to => "easyadmin_notice#new"
-    get "notices/create", :to => "easyadmin_notice#create"
+    post "notices/create", :to => "easyadmin_notice#create"
     match "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }, via: [:get, :post]
     get "notices/resend_notice/:notice_id", :to => "easyadmin_notice#resend_notice"
     
     get "rules", :to => "easyadmin_rewarding_rules#index"
-    get "rules/save", :to => "easyadmin_rewarding_rules#save"
+    post "rules/save", :to => "easyadmin_rewarding_rules#save"
     
     # SETTING
     get "settings/browse", :to => "settings#browse_settings"
-    get "settings/browse/save", :to => "settings#save_browse_settings"
+    post "settings/browse/save", :to => "settings#save_browse_settings"
     get "settings/ranking", :to => "settings#ranking_settings"
-    get "settings/ranking/save", :to => "settings#save_ranking_settings"
+    post "settings/ranking/save", :to => "settings#save_ranking_settings"
     get "settings/notifications", :to => "settings#notifications_settings"
-    get "settings/notifications/save", :to => "settings#save_notifications_settings"
+    post "settings/notifications/save", :to => "settings#save_notifications_settings"
     get "settings/profanities", :to => "settings#profanities_settings"
-    get "settings/profanities/save", :to => "settings#save_profanities_settings"
+    post "settings/profanities/save", :to => "settings#save_profanities_settings"
     get "settings/instagram_subscriptions", :to => "settings#instagram_subscriptions_settings"
-    get "settings/instagram_subscriptions/save", :to => "settings#save_instagram_subscriptions_settings"
+    post "settings/instagram_subscriptions/save", :to => "settings#save_instagram_subscriptions_settings"
     get "/settings/clear_cache", :to => "cache#clear_cache"
   end
 
@@ -487,9 +487,9 @@ Fandom::Application.routes.draw do
   get "profile/badges", :to => "profile#badges"
   get "profile/prizes", :to => "profile#prizes"
   post "profile/notices/mark_as_read", :to => "notice#mark_as_read", defaults: { format: 'json' }
-  get "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
-  get "profile/notices/mark_as_viewed", :to => "notice#mark_as_viewed", defaults: { format: 'json' }
-  get "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
+  post "profile/notices/mark_all_as_read", :to => "notice#mark_all_as_read", defaults: { format: 'json' }
+  post "profile/notices/mark_as_viewed", :to => "notice#mark_as_viewed", defaults: { format: 'json' }
+  post "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
   get "profile/notices/get_recent_notice", :to => "notice#get_user_latest_notices", defaults: { format: 'json' }
   get "profile/remove-provider/:provider", :to => "profile#remove_provider"
   get "profile/complete_for_contest", :to => "profile#complete_for_contest", defaults: { format: 'json' }
@@ -515,18 +515,18 @@ Fandom::Application.routes.draw do
     get "/user/sign_in_as/:id", :to => "sessions#sign_in_as"
   end
 
-  get "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }
-  get "/user_event/update_download", :to => "call_to_action#update_download", defaults: { format: 'json' }
-  get "/user_event/update_like", :to => "call_to_action#update_like", defaults: { format: 'json' }
-  get "/user_event/update_check", :to => "call_to_action#update_check", defaults: { format: 'json' }
+  post "/user_event/update_answer", :to => "call_to_action#update_answer", defaults: { format: 'json' }
+  post "/user_event/update_download", :to => "call_to_action#update_download", defaults: { format: 'json' }
+  post "/user_event/update_like", :to => "call_to_action#update_like", defaults: { format: 'json' }
+  post "/user_event/update_check", :to => "call_to_action#update_check", defaults: { format: 'json' }
   get "/user_event/share/:provider", :to => "call_to_action#share", defaults: { format: 'json' }
   get "/user_event/share_free/:provider", :to => "call_to_action#share_free", defaults: { format: 'json' }
 
   get "/gallery", :to => "gallery#index"
 
-  get "/update_call_to_action_in_page_with_tag", :to => "application#update_call_to_action_in_page_with_tag", defaults: { format: 'json' }
+  post "/update_call_to_action_in_page_with_tag", :to => "application#update_call_to_action_in_page_with_tag", defaults: { format: 'json' }
 
-  get "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
+  post "/update_calltoaction_content", :to => "call_to_action#update_calltoaction_content", defaults: { format: 'json' }
   get "/calltoaction_overvideo_end", :to => "call_to_action#calltoaction_overvideo_end", defaults: { format: 'json' }
   post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
 

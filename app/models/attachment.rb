@@ -6,6 +6,8 @@ class Attachment < ActiveRecord::Base
 
   attr_accessor :destroy_data
 
+  do_not_validate_attachment_file_type :data
+
   has_attached_file :data, 
     styles: lambda { |image| 
       if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}

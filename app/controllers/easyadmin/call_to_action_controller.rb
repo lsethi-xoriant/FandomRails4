@@ -27,7 +27,6 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
   def restore_from_extra_fields(calltoaction)
     if calltoaction.extra_fields.present?
-      calltoaction.extra_fields = JSON.parse(calltoaction.extra_fields)
       # TODO Ale
       extra_fields = calltoaction.extra_fields
       calltoaction.button_label = extra_fields["button_label"]

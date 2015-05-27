@@ -59,9 +59,9 @@
   <div class="row form-group">
     <div class="col-lg-2 col-lg-offset-4 text-center"><strong> Tag </strong></div>
       <div class="col-lg-2 text-center"><strong> ID sottoscrizione </strong></div>
-      <% @instagram_subscriptions_setting.each do |name, id| %>
+      <% @instagram_subscriptions_setting.each do |name, info| %>
         <div class="col-lg-2 col-lg-offset-4 text-center"><%= name %></div>
-        <div class="col-lg-2 text-center"><%= id %> </div>
+        <div class="col-lg-2 text-center"><%= info["subscription_id"] %> </div>
       <% end %>
     </div>
   </div>

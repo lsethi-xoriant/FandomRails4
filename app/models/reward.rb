@@ -49,6 +49,7 @@ class Reward < ActiveRecordWithJSON
                     :convert_options => { :thumb => '-quality 60' }, 
                     :default_url => ""
   has_attached_file :media_file
+  do_not_validate_attachment_file_type :main_image, :preview_image, :not_awarded_image, :not_winnable_image
 
   has_many :reward_tags
   has_many :user_rewards

@@ -63,8 +63,7 @@ class CallToAction < ActiveRecordWithJSON
   before_save :set_activated_at # handles the activated_at fields when updating the model from easyadmin
   # before_save :set_extra_options
 
-  do_not_validate_attachment_file_type :media_image
-  do_not_validate_attachment_file_type :thumbnail
+  do_not_validate_attachment_file_type :media_image, :thumbnail
 
   has_attached_file :media_image,
     processors: lambda { |calltoaction|

@@ -11,13 +11,14 @@ class Answer < ActiveRecord::Base
                     :convert_options => { :large => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }
   has_attached_file :image, :styles => { :large => "600x600#", :medium => "300x300#", :thumb => "100x100#" }, 
                     :convert_options => { :large => '-quality 60', :medium => '-quality 60', :thumb => '-quality 60' }
+  do_not_validate_attachment_file_type :media_image, :image
 
   belongs_to :quiz
   has_many :user_interactions
 
   belongs_to :call_to_action
 
-  #validates_presence_of :text
+  # validates_presence_of :text
 
   before_save :set_aux_for_symbolic_name
 
