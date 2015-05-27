@@ -1,5 +1,5 @@
 <%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "settings" } %>
-    
+
 <div id="content">    
 
   <div id="content-header">
@@ -37,7 +37,7 @@
     </div>
   </div>
 
-<%= form_tag("/easyadmin/settings/instagram_subscriptions/save", method: "post") do %>
+  <%= form_tag("/easyadmin/settings/instagram_subscriptions/save", method: "post") do %>
     <div class="row form-group">
       <div class="col-lg-2"><%= label_tag(:instagram_callback_url_label, "Callback URL:") %></div>
       <div class="col-lg-8"><%= text_area_tag(:instagram_callback_url, @instagram_callback_url, :class => "form-control", size: "30x10") %> </div>
@@ -57,10 +57,10 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="col-lg-2 col-lg-offset-4 text-center"><strong> Tag </strong></div>
-      <div class="col-lg-2 text-center"><strong> ID sottoscrizione </strong></div>
+    <div class="col-lg-2 col-lg-offset-4 text-center"><strong> Tag <span class="fa fa-tags"></span></strong></div>
+      <div class="col-lg-2 text-center"><strong> ID sottoscrizione <span class="fa fa-instagram"></span></strong></div>
       <% @instagram_subscriptions_setting.each do |name, info| %>
-        <div class="col-lg-2 col-lg-offset-4 text-center"><%= name %></div>
+        <div class="col-lg-2 col-lg-offset-4 text-center">#<%= name %></div>
         <div class="col-lg-2 text-center"><%= info["subscription_id"] %> </div>
       <% end %>
     </div>

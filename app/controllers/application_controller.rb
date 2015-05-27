@@ -316,7 +316,7 @@ class ApplicationController < ActionController::Base
 
   def modify_instagram_upload_object
     interaction = Interaction.find(params[:interaction_id])
-    aux = JSON.parse(interaction.aux) rescue {}
+    aux = interaction.aux || {}
     if aux["instagram_tag"]
       res, delete_success = delete_instagram_tag_subscription(interaction)
     end
@@ -359,8 +359,8 @@ class ApplicationController < ActionController::Base
 
     res = HTTParty.post("https://api.instagram.com/v1/subscriptions/",
       { 
-        :body => request_params,
-        :headers => headers
+        :headers => headers,
+        :body => request_params
       })
 
     res = JSON.parse(res.body)
@@ -378,8 +378,7 @@ class ApplicationController < ActionController::Base
       #           "callback_url": "http://your-callback.com/url/"
       #         }
       new_tag = res["data"]
-      # new_tag = data.find { |subscription| subscription["object"] == tag and subscription["object_id"] == params[:tag_name] }
-      aux = JSON.parse(interaction.aux) rescue {}
+      aux = interaction.aux || {}
       aux["instagram_tag"] = { "subscription_id" => new_tag["id"], "name" => new_tag["object_id"] }
       interaction_updated = interaction.update_attribute(:aux, aux.to_json)
 
@@ -399,42 +398,31 @@ class ApplicationController < ActionController::Base
   def delete_instagram_tag_subscription(interaction)
     ig_settings = get_deploy_setting("sites/#{request.site.id}/authentications/instagram", nil)
     request_params = { 
-      #  "_method" => "DELETE", 
       "client_id" => ig_settings["client_id"], 
       "client_secret" => ig_settings["client_secret"], 
-      "object" => interaction.aux["instagram_tag"]["subscription_id"].to_i
+      "id" => interaction.aux["instagram_tag"]["subscription_id"]
     }
-    url = "https://api.instagram.com/v1/subscriptions" # #{build_arguments_string_for_request(request_params)}"
 
-    uri = URI.parse(url)
-    req = Net::HTTP::Delete.new(uri.path)
-    req.set_form_data(request_params)
+    headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
 
-    http = Net::HTTP.new(uri.hostname, uri.port)
-    http.use_ssl = true
-    http.ssl_version = :TLSv1
-    res = http.request(req)
+    res = HTTParty.delete("https://api.instagram.com/v1/subscriptions/",
+      { 
+        :headers => headers,
+        :query => request_params
+      })
 
-    case res
-    when Net::HTTPSuccess, Net::HTTPRedirection
-      success = true
-    else
-      success = false
-    end
-
-    # res = URI.parse(url).read
-    # res = JSON.parse(res)
-    # success = (res["meta"]["code"] == 200) rescue false
+    res = JSON.parse(res.body)
+    success = res["meta"]["code"] == 200 rescue false
 
     if success
-      aux = JSON.parse(interaction.aux) rescue {}
+      aux = interaction.aux || {}
       old_tag_name = aux["instagram_tag"]["name"]
       aux.delete("instagram_tag")
       interaction_updated = interaction.update_attribute(:aux, aux.to_json)
 
       if interaction_updated
-        instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY).value
-        instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting)
+        instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
+        instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting.value)
         instagram_subscriptions_setting_hash.delete(old_tag_name)
         instagram_subscriptions_setting.value = instagram_subscriptions_setting_hash.to_json
       end
