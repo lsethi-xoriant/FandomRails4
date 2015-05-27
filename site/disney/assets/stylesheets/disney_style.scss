@@ -1,3 +1,6 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
 $red: #a35217;
 $blu: #3399ff;
 $grey: #ececec;
@@ -79,6 +82,5 @@ $navbar-inverse-toggle-border-color:        #999 !default;
 }
 
 //import style folders
-@import "bootstrap/bootstrap";
 @import "disney/**/*";
 @import "disney_reset";
