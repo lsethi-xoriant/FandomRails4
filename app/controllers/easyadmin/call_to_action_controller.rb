@@ -449,7 +449,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   
   def send_reason_for_not_approving
     cta = CallToAction.find(params[:cta_id])
-    aux = cta.aux
+    aux = cta.aux || {}
     aux["reason_for_not_approving"] = params[:reason]
     cta.update_attribute(:aux, aux.to_json)
     redirect_to "/easyadmin/cta/#{params[:page]}"
