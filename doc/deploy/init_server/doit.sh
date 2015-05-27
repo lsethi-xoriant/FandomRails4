@@ -43,7 +43,9 @@ apt-get install vim \
   cloud-utils \
   default-jdk \
   supervisor \
-  traceroute
+  traceroute \
+  autoconf \
+  bison
   
 #
 # Add the user running rails
