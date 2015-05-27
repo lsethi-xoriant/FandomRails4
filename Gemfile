@@ -127,3 +127,4 @@ gem 'sys-proctable'
 # used to prevent BREACH attacks when the HTTP compression is active
 gem 'breach-mitigation-rails'
 gem "font-awesome-rails"
+gem 'flexslider'

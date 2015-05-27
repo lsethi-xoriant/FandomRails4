@@ -176,6 +176,8 @@ GEM
       thor (~> 0.14)
     fission (0.5.0)
       CFPropertyList (~> 2.2)
+    flexslider (2.2.0)
+      sass-rails (>= 3.1.0)
     fog (1.30.0)
       fog-atmos
       fog-aws (~> 0.0)
@@ -565,6 +567,7 @@ DEPENDENCIES
   execjs
   fastclick-rails
   figaro
+  flexslider
   fog
   font-awesome-rails
   friendly_id

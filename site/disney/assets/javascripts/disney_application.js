@@ -26,7 +26,6 @@
 //= require jquery.jplayer
 //= require fandom-utils
 //= require flowplayer.min
-//= require jquery.jcarousel
 //= require jquery.flexslider
 //= require config
 //= require angularjs/stream_calltoaction
