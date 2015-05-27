@@ -583,8 +583,8 @@ h1, h2, h3 {
 }
 
 .yellow-marker {
-    @extend .btn;
-    @extend .disabled;
+    @extend .btn !optional;
+    @extend .disabled !optional;
     opacity: 1;
     background: #FFC629; 
     box-shadow: none !important;
@@ -798,7 +798,7 @@ body.iframe-profile {
 }
 
 .page-header-browse{
-  @extend .page-header;
+  @extend .page-header !optional;
   border: none;
   img{
     width: 100%;
@@ -1812,7 +1812,7 @@ body {
         .cta-media {
             overflow: none;
             img {
-                @extend .image-responsive;
+                @extend .image-responsive !optional;
                 width: 100%;
             }
         }

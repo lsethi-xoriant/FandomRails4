@@ -93,8 +93,8 @@ button, h1, h2, h3, h4, h5, h6, li {
 }
 
 .yellow-marker {
-    @extend .btn;
-    @extend .disabled;
+    @extend .btn !optional;
+    @extend .disabled !optional;
     opacity: 1;
     background: #FFC629; 
     box-shadow: none !important;
@@ -920,7 +920,7 @@ height: 100%;
         .cta-media {
             overflow: none;
             img {
-                @extend .image-responsive;
+                @extend .image-responsive !optional;
                 width: 100%;
             }
         }
@@ -952,7 +952,7 @@ height: 100%;
         .cta-media {
             overflow: none;
             img {
-                @extend .image-responsive;
+                @extend .image-responsive !optional;
                 width: 100%;
             }
         }

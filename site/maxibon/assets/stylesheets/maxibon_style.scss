@@ -283,8 +283,8 @@ p.oblique { font-style:oblique }
 }
 
 .yellow-point {
-    @extend .btn;
-    @extend .disabled;
+    @extend .btn !optional;
+    @extend .disabled !optional;
     opacity: 1;
     background: #FFC629; 
 }
@@ -990,7 +990,7 @@ height: 100%;
         .cta-media {
             overflow: none;
             img {
-                @extend .image-responsive;
+                @extend .image-responsive !optional;
                 width: 100%;
             }
         }
@@ -1064,7 +1064,7 @@ height: 100%;
         .cta-media {
             overflow: none;
             img {
-                @extend .image-responsive;
+                @extend .image-responsive !optional;
                 width: 100%;
             }
         }

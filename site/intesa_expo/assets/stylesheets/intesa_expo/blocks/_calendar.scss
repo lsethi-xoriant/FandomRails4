@@ -302,7 +302,7 @@
   }
   
   .fc-icon {
-    @extend .glyphicon;
+    @extend .glyphicon !optional;
     overflow: visible;
     line-height: 0;
     margin: 0;
@@ -313,11 +313,11 @@
   }
 
   .fc-icon-left-single-arrow {
-    @extend .glyphicon-chevron-left;
+    @extend .glyphicon-chevron-left !optional;
   }
 
   .fc-icon-right-single-arrow {
-    @extend .glyphicon-chevron-right;
+    @extend .glyphicon-chevron-right !optional;
   }
   
 }
