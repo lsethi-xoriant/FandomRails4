@@ -201,8 +201,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
   def update_activated_at
     cta = CallToAction.find(params[:id])
-    cta.activation_date_time = DateTime.parse(params["time"]).to_s
-    cta.save
+    cta.update_column(:activated_at, time_parsed_to_utc(DateTime.parse(params["time"]).to_s))
     respond_to do |format|
       format.json { render :json => "calltoaction-update".to_json }
     end
