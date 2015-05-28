@@ -28,21 +28,35 @@
 
     <%= form_tag :action => 'filter', :method => 'post' do %>
       <div class="row">
-        <div class="col-md-3">
-          <label>Filtra per TAG</label>
+        <div class="col-md-2">
+            <div class="form-group">
+              <label class="text-input">Filtra per NOME</label></br>
+              <%= text_field_tag :name_filter, @name_filter, :class => 'form-control' %>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="text-input">Filtra per TITOLO</label></br>
+              <%= text_field_tag :title_filter, @title_filter, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="text-input">Filtra per COSTO</label></br>
+              <%= text_field_tag :cost_filter, @cost_filter, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <label class="text-input">Filtra per TAG</label>
           <%= render_html_tag_box("tag_list", params[:tag_list], "ATTENZIONE: Sono stati inseriti tag non esistenti!") %>
           <span class="help-block">Per separare i TAG digita virgola</span>
           <p id="tag_list_message"> </p>
         </div>
-        <div class="col-md-2">
-          <%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
+        <div class="col-md-2 col-md-offset-1">
+          <br/><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
         </div>
         <div class="col-md-1">
-          <%= submit_tag 'RESET', class: 'btn btn-primary' %>
+          <br/><%= submit_tag 'RESET', class: 'btn btn-primary' %>
         </div>
       </div>
     <% end %>

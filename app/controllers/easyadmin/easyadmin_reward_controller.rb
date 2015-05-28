@@ -17,13 +17,23 @@ class Easyadmin::EasyadminRewardController < Easyadmin::EasyadminController
   def filter
     @reward_list = Reward.order("cost ASC")
 
+    @name_filter = params[:name_filter]
+    @title_filter = params[:title_filter]
+    @cost_filter = params[:cost_filter]
+
     if params[:commit] == "APPLICA FILTRO"
+      where_conditions = []
       reward_ids = get_tagged_objects(@reward_list, params[:tag_list], RewardTag, 'reward_id', 'tag_id')
-      @reward_list = Reward.where(:id => reward_ids).order("cost ASC")
+
+      where_conditions << "name ILIKE '%#{@name_filter}%'" unless @name_filter.blank?
+      where_conditions << "title ILIKE '%#{@title_filter}%'" unless @title_filter.blank?
+      where_conditions << "cost = #{@cost_filter}" if ( !@cost_filter.blank? && /\A\d+\z/.match(@cost_filter) )
+      where_conditions << "id IN (#{reward_ids.join(",")})" if reward_ids.any?
+      @reward_list = Reward.where(where_conditions.join(" AND ")).order("cost ASC")
     end
 
     if params[:commit] == "RESET"
-      params[:tag_list] = ""
+      @name_filter = @title_filter = @cost_filter = @tag_list = params[:tag_list] = ""
     end
 
     render template: "/easyadmin/easyadmin_reward/index"
