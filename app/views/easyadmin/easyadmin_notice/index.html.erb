@@ -26,7 +26,7 @@
       </div>
     <% end %>
 
-    <div>
+    <div class="row">
       <h3>FILTRI</h3>
 
       <div class="col-md-10">
@@ -125,7 +125,6 @@
                 {{row['sent']}}
               </td>
               <td data-title="'Reinvia'">
-                <!-- <button class="btn btn-sm" ng-click="resend_notice(row.notice_id)">REINVIA</button> -->
                 <a href="notices/resend_notice/{{row.notice_id}}"><button class="btn btn-sm">REINVIA</button></a>
               </td>
             </tr>
@@ -158,14 +157,14 @@
 <script src="/assets/bootstrap-datepicker.js"></script>
 
 <script type="text/javascript">
-  
+
   $(document).ready(function() {
     $('#date').datepicker();
   });
-  
+
   function addFilter() {
-    filtro = $("#add-filter").val();
-    switch(filtro){
+    filter = $("#add-filter").val();
+    switch(filter) {
       case 'date':
         $(".filter-date").show();
         break;
@@ -173,14 +172,14 @@
         $(".filter-user").show();
         break;
     }
-    
+
     $(".apply-filter").show();
-  }
-  
-  function removeFilter(ele) {
-    $(ele).parent().parent().hide();
+  };
+
+  function removeFilter(el) {
+    $(el).parent().parent().hide();
     if($("#event_filter :visible").length == 0)
       $(".apply-filter").hide();
-  }
+  };
 
 </script>

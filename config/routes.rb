@@ -431,7 +431,7 @@ Fandom::Application.routes.draw do
     get "notices", :to => "easyadmin_notice#index"
     get "notices/new", :to => "easyadmin_notice#new"
     post "notices/create", :to => "easyadmin_notice#create"
-    match "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }, via: [:get, :post]
+    get "notices/filter", :to => "easyadmin_notice#apply_filter", defaults: { format: 'json' }
     get "notices/resend_notice/:notice_id", :to => "easyadmin_notice#resend_notice"
     
     get "rules", :to => "easyadmin_rewarding_rules#index"

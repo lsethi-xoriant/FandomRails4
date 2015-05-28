@@ -151,7 +151,7 @@ class Easyadmin::EasyadminNoticeController < Easyadmin::EasyadminController
   #
   # params - array of filter conditions
   def build_query(params)
-    query = Notice.includes(:user)
+    query = Notice.includes(:user).references(:user)
     fields = get_fields()
     params.each do |filter|
       field_id = filter['field'].to_sym
