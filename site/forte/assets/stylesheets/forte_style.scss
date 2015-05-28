@@ -1,6 +1,3 @@
-@import "bootstrap-sprockets";
-@import "bootstrap";
-
 $component-active-bg: #cccccc;
 $pagination-active-bg: $component-active-bg;
 $pagination-active-border: $pagination-active-bg;
@@ -38,6 +35,8 @@ $container-md:                 $container-desktop !default;
 $container-large-desktop:      $container-desktop !default;
 $container-lg:                 $container-desktop !default;
 
+@import "bootstrap-sprockets";
+@import "bootstrap";
 
 .baloon-no-pad {
   padding: 0 !important;
@@ -2152,7 +2151,6 @@ body {
 }
 
 .flex-viewport-shadow {
-    background: radial-gradient(at 100% 50% , rgba(0, 0, 0, 0.5) 0%, transparent 75%);
     bottom: -3px;
     position: absolute;
     right: 0;
@@ -2160,6 +2158,8 @@ body {
     width: 6px;
     z-index: 100;
     border-right: 1px solid #999;
+    background-image: radial-gradient(farthest-corner at 100% 50%, rgba(0, 0, 0, 0.5) 0%, transparent 75%);
+    background-image: -webkit-radial-gradient(100% 50%, rgba(0,0,0,0.5) 0%, transparent 75%);
 }
 
 .flex-disabled {

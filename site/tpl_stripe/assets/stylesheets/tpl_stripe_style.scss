@@ -1,6 +1,3 @@
-@import "bootstrap-sprockets";
-@import "bootstrap";
-
 // Variable here
 
 //$body-bg: #222;
@@ -15,7 +12,8 @@ $container-lg: $container-large-desktop;
 
 $navbar-inverse-bg: #444;
 
-
+@import "bootstrap-sprockets";
+@import "bootstrap";
 
 p.oblique { font-style:oblique } 
 

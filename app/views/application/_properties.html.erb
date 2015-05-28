@@ -5,7 +5,7 @@
 <div class="col-sm-6 properties__flexslider-col" ng-if="aux.property_info_list">
   <div class="flexslider properties__flexslider">
     <ul class="slides">
-      <li ng-repeat="content in aux.property_info_list.contents" class="text-center properties__flexslider-item" ng-init="content.image_visible = content.extra_fields.image.url" ng-mouseover="content.image_visible = content.extra_fields.image_hover.url" ng-mouseleave="content.image_visible = content.extra_fields.image.url">
+      <li ng-repeat="content in aux.property_info_list.contents" class="text-center properties__flexslider-item" ng-init="content.image_visible = content.thumb_thumb_url" ng-mouseover="content.image_visible = content.thumb_hover_thumb_url" ng-mouseleave="content.image_visible = content.thumb_thumb_url">
         <a class="properties__flexslider-a" href="/{{content.extra_fields.url}}"> 
           <img class="properties__flexslider-image" ng-src="{{content.image_visible}}" ng-style="{'border-bottom': '4px solid ' + content.extra_fields.background}">     
         </a>
@@ -16,7 +16,7 @@
 
 <div class="col-sm-3 text-left" ng-if="!current_user">
   <p class="properties__right-bar-text">Partecipa<br>alla community</p>
-  <a class="btn btn-primary" href="/iur" style="margin-top: 5px;"><span>Entra</span></a>
+  <a class="btn btn-primary" href="/users/sign_in" style="margin-top: 5px;"><span>Entra</span></a>
 </div>
 
 <div class="col-sm-3 text-left" ng-if="current_user">

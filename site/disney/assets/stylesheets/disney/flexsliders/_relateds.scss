@@ -123,6 +123,9 @@
     position: relative;
     margin-left: 15px;
     margin-right: 15px;
+    .flex-direction-nav a {
+      opacity: 1;
+    }
     .flex-direction-nav a:before {
       -webkit-transition: color 300ms ease 0s;
       transition: color 300ms ease 0s;

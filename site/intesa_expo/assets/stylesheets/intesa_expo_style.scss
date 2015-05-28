@@ -1,6 +1,3 @@
-@import "bootstrap-sprockets";
-@import "bootstrap";
-
 $brown: #660206;
 $brown_hover: #850e0d;
 $red: red;
@@ -75,6 +72,19 @@ $navbar-inverse-brand-hover-bg:             transparent !default;
 $navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 10%) !default;
 $navbar-inverse-toggle-icon-bar-bg:         #fff !default;
 $navbar-inverse-toggle-border-color:        #999 !default;
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+.search-bar__input {
+  background-image: url("<%= asset_path('disney/search.png') %>");
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  background-size: 32px auto;
+  height: 46px !important;
+  font-size: 18px;
+  color: $lightblue;
+}
 
 //import style folders
 @import "intesa_expo/**/*";

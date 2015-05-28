@@ -38,11 +38,11 @@ Fandom::Application.routes.draw do
         get "/", to: "application#index"
         get "/gadget", to: "cup_redeemer#index"
         get "/gadget/step_1", to: "cup_redeemer#step_1"
-        get "/gadget/step_1/update", to: "cup_redeemer#step_1_update"
+        post "/gadget/step_1/update", to: "cup_redeemer#step_1_update"
         get "/gadget/step_2", to: "cup_redeemer#step_2"
-        get "/gadget/step_2/update", to: "cup_redeemer#step_2_update"
+        post "/gadget/step_2/update", to: "cup_redeemer#step_2_update"
         get "/gadget/step_3", to: "cup_redeemer#step_3"
-        get "/gadget/step_3/update", to: "cup_redeemer#step_3_update"
+        post "/gadget/step_3/update", to: "cup_redeemer#step_3_update"
         get "/gadget/request_completed", to: "cup_redeemer#request_completed"
         get "/complete_registration_from_cups/:email/:token", to: "cup_redeemer#complete_registration", :constraints => { :email => /.*/ }
         get "/complete_registration_from_newsletter/:email/:token", to: "newsletter#complete_registration", :constraints => { :email => /.*/ }

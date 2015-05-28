@@ -42,7 +42,9 @@ module ContentHelper
     attr_accessor :has_thumb
     attr_accessor :thumb_url
     attr_accessor :thumb_wide_url
+    attr_accessor :thumb_thumb_url
     attr_accessor :thumb_medium_url
+    attr_accessor :thumb_hover_thumb_url
     attr_accessor :description
     attr_accessor :long_description
     attr_accessor :detail_url
@@ -73,7 +75,9 @@ module ContentHelper
       @media_type = params[:media_type]
       @has_thumb = params[:has_thumb]
       @thumb_url = params[:thumb_url]
+      @thumb_thumb_url = params[:thumb_thumb_url]
       @thumb_wide_url = params[:thumb_wide_url]
+      @thumb_hover_thumb_url = params[:thumb_hover_thumb_url]
       @thumb_medium_url = params[:thumb_medium_url]
       @description = params[:description]
       @long_description = params[:long_description]
@@ -130,9 +134,15 @@ module ContentHelper
     thumb_field = get_extra_fields!(tag)["thumbnail"]
     if thumb_field.present? && upload_extra_field_present?(thumb_field)
       has_thumb = true
-      thumb_url = get_upload_extra_field_processor(thumb_field, "medium")
+      thumb_medium_url = get_upload_extra_field_processor(thumb_field, "medium")
+      thumb_thumb_url = get_upload_extra_field_processor(thumb_field, "thumb")
     else
       has_thumb = false
+    end
+
+    thumb_hover_field = get_extra_fields!(tag)["thumbnail_hover"]
+    if thumb_hover_field.present? && upload_extra_field_present?(thumb_hover_field)
+      thumb_hover_thumb_url = get_upload_extra_field_processor(thumb_hover_field, "thumb")
     end
     
     description = get_extra_fields!(tag)["description"]
@@ -166,7 +176,9 @@ module ContentHelper
       id: tag.id,
       slug: tag.slug,
       has_thumb: has_thumb, 
-      thumb_url: thumb_url,
+      thumb_thumb_url: thumb_thumb_url,
+      thumb_hover_thumb_url: thumb_hover_thumb_url,
+      thumb_url: thumb_medium_url,
       title: tag.title,
       long_description: long_description,
       description: description,  
