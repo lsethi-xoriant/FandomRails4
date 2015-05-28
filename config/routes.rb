@@ -420,7 +420,7 @@ Fandom::Application.routes.draw do
 
     match "dashboard", :to => "easyadmin#dashboard", via: [:get, :post]
     get "published", :to => "easyadmin#published"
-    get "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
+    post "dashboard/get_current_month_event", :to => "easyadmin#get_current_month_event", defaults: { format: 'json' }
     post "dashboard/update_activated_at", :to => "call_to_action#update_activated_at", defaults: { format: 'json' }
     get "most_clicked_interactions", :to => "easyadmin#index_most_clicked_interactions"
     get "reward_cta_unlocked", :to => "easyadmin#index_reward_cta_unlocked"

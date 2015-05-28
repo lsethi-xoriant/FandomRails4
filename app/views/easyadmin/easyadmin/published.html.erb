@@ -6,7 +6,6 @@
       <h1></h1>
     </div> <!-- #content-header --> 
 
-
     <div id="content-container">
 
     <h3>Pubblicazione contenuti</h3>
@@ -14,27 +13,26 @@
 
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
-          <div class="portlet">
-            <div class="portlet-header">
+        <div class="portlet">
+          <div class="portlet-header">
 
-              <h3>
-                <i class="fa fa-calendar"></i>
-                Calendario pubblicazioni
-              </h3>
+            <h3>
+              <i class="fa fa-calendar"></i>
+              Calendario pubblicazioni
+            </h3>
 
-            </div> <!-- /.portlet-header -->
-            <div class="portlet-content">
-              
-              <div id="full-calendar"></div> <!-- /#full-calendar -->             
+          </div> <!-- /.portlet-header -->
+          <div class="portlet-content">
+            
+            <div id="full-calendar"></div> <!-- /#full-calendar -->             
 
-            </div> <!-- /.portlet-content -->
-          </div> <!-- /.portlet -->
-        </div> <!-- /.col-md-8 -->
+          </div> <!-- /.portlet-content -->
+        </div> <!-- /.portlet -->
+      </div> <!-- /.col-md-8 -->
     </div>
 
   </div>
 </div>
-
 
 <script type="text/javascript">
   
@@ -58,7 +56,7 @@
       eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
         updateCalltoactionActivatedAt(event.start, event.id);
       },
-      viewDisplay: function(view) {
+      viewDisplay: function(view) { // viewRender: function(view, element) ?
         updateCalltoactionListInCalendar(view.start);
       }
     });
@@ -68,54 +66,54 @@
   function updateCalltoactionActivatedAt(timetostart, id) {
     //time = timetostart.toString().slice(0, timetostart.toString().indexOf(" GMT"));
     $.ajax({
-        type: "POST",
-        url: "/easyadmin/dashboard/update_activated_at",
-        data: { time: timetostart, id: id },
-        beforeSend: function(jqXHR, settings) {
-            jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-        },
-        success: function(data) {
-          $.howl ({
-            type: "success"
-            , title: 'INFO'
-            , content: 'La data di attivazione della calltoaction è stata aggiornata'
-            , sticky: $(this).data ('sticky')
-            , lifetime: 7500
-          });
-        } // success AJAX
+      type: "POST",
+      url: "/easyadmin/dashboard/update_activated_at",
+      data: { time: timetostart, id: id },
+      beforeSend: function(jqXHR, settings) {
+        jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      },
+      success: function(data) {
+        $.howl ({
+          type: "success", 
+          title: 'INFO', 
+          content: 'La data di attivazione della calltoaction è stata aggiornata', 
+          sticky: $(this).data ('sticky'), 
+          lifetime: 7500
+        });
+      }
     });
   }
 
   function updateCalltoactionListInCalendar(timetostart) {
     $.ajax({
-        type: "POST",
-        url: "/easyadmin/dashboard/get_current_month_event",
-        data: { time: timetostart },
-        beforeSend: function(jqXHR, settings) {
-            jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-        },
-        success: function(data) {
-          // Cancello tutti gli eventi.
-          $('#full-calendar').fullCalendar('removeEvents', function(event) {
-            return true;
-          });
+      type: "POST",
+      url: "/easyadmin/dashboard/get_current_month_event",
+      data: { time: timetostart },
+      beforeSend: function(jqXHR, settings) {
+        jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      },
+      success: function(data) {
+        // Remove all events
+        $('#full-calendar').fullCalendar('removeEvents', function(event) {
+          return true;
+        });
 
-          $.each(data, function(key, value) {
-            var date = new Date(Date.parse(value["activated_at"]));
-            console.log(value["title"] + date)
-            var m = date.getMonth();
-            var y = date.getFullYear();
-            var d = date.getDate();
-            $('#full-calendar').fullCalendar('renderEvent', 
-              {
-                id: value["id"],
-                title: value["title"],
-                start: new Date(y, m, d),
-                end: new Date(y, m, d),
-                className: 'fc-red'
-              }, true);
-          });
-        } // success AJAX
+        $.each(data, function(key, value) {
+          var date = new Date(Date.parse(value["activated_at"]));
+          // console.log(value["title"] + date)
+          var m = date.getMonth();
+          var y = date.getFullYear();
+          var d = date.getDate();
+          $('#full-calendar').fullCalendar('renderEvent', 
+            {
+              id: value["id"],
+              title: value["title"],
+              start: new Date(y, m, d),
+              end: new Date(y, m, d),
+              className: 'fc-red'
+            }, true);
+        });
+      }
     });
   }
 

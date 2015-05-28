@@ -20,125 +20,125 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-2">
-        <%= form_tag :method => 'post' do %>
+    <%= form_tag :method => 'post' do %>
+      <div class="row">
+        <div class="col-md-2">
           <div class="form-group">
             <label class="text-input">DAL GIORNO</label></br>
             <%= text_field_tag :datepicker_from_date, @from_date_string, :class => "form-control" %>
           </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          <label class="text-input">AL GIORNO</label></br>
-          <%= text_field_tag :datepicker_to_date, @to_date_string, :class => "form-control" %>
         </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="text-input">AL GIORNO</label></br>
+            <%= text_field_tag :datepicker_to_date, @to_date_string, :class => "form-control" %>
+          </div>
         </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          </br><%= submit_tag 'RESET', class: 'btn btn-primary btn-block' %>
+        <div class="col-md-2">
+          <div class="form-group">
+            </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary btn-block' %>
+          </div>
         </div>
-      </div>
-    </div> <!-- /.row -->
+        <div class="col-md-2">
+          <div class="form-group">
+            </br><%= submit_tag 'RESET', class: 'btn btn-primary btn-block' %>
+          </div>
+        </div>
+      </div> <!-- /.row -->
 
-    <div class="row">
-      <div class="col-md-12">
-        <h3>Statistiche cross-property</h3>
-        <hr/>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Statistiche cross-property</h3>
+          <hr/>
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <div class="portlet">
-          <div class="portlet-header">
-            <h3>
-              <i class="fa fa-bar-chart-o"></i>
-              UTENTI REGISTRATI DAL <%= @from_date_string %> AL <%= @to_date_string %> <i>(<%= @days %> giorni)</i>
-            </h3>
-          </div> <!-- /.portlet-header -->
-          <div class="portlet-content">
-            <div id="line-chart" class="chart-holder">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="portlet">
+            <div class="portlet-header">
+              <h3>
+                <i class="fa fa-bar-chart-o"></i>
+                UTENTI REGISTRATI DAL <%= @from_date_string %> AL <%= @to_date_string %> <i>(<%= @days %> giorni)</i>
+              </h3>
+            </div> <!-- /.portlet-header -->
+            <div class="portlet-content">
+              <div id="line-chart" class="chart-holder">
+              </div>
+            </div> <!-- /.portlet-content -->
+          </div> <!-- /.portlet -->
+        </div> <!-- /.col -->
+      </div> <!-- /.row -->
+
+      <br/>
+
+      <div class="row">
+        <div class="col-md-3">
+          <h4> Registrazioni totali </h4>
+        </div>
+        <div class="col-md-3">
+          <h4> Premi totali </h4>
+        </div>
+        <div class="col-md-3">
+          <h4> Commenti totali </h4>
+        </div>
+      </div> <!-- /.row -->
+
+      <div class="row">
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #E5412D;">
+            <div class="details">
+              <span class="content"> UTENTI REGISTRATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
+              <span class="value-sm"><%= @total_users %>/<%= User.count %></span>
             </div>
-          </div> <!-- /.portlet-content -->
-        </div> <!-- /.portlet -->
-      </div> <!-- /.col -->
-    </div> <!-- /.row -->
-
-    <br/>
-
-    <div class="row">
-      <div class="col-md-3">
-        <h4> Registrazioni totali </h4>
-      </div>
-      <div class="col-md-3">
-        <h4> Premi totali </h4>
-      </div>
-      <div class="col-md-3">
-        <h4> Commenti totali </h4>
-      </div>
-    </div> <!-- /.row -->
-
-    <div class="row">
-      <div class="col-md-3 col-sm-6">
-        <div class="dashboard-stat primary" style="background-color: #E5412D;">
-          <div class="details">
-            <span class="content"> UTENTI REGISTRATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
-            <span class="value-sm"><%= @total_users %>/<%= User.count %></span>
-          </div>
-          <div class="visual">
-            <i class="fa fa-user" style="color: #FFF"></i>
+            <div class="visual">
+              <i class="fa fa-user" style="color: #FFF"></i>
+            </div>
           </div>
         </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #50A550;">
+            <div class="details">
+              <span class="content"> SBLOCCATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value-sm"><%= @total_rewards %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-trophy" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
+            <div class="details">
+              <span class="content"> APPROVATI / LASCIATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value-sm"><%= @approved_comments %> / <%= @total_comments %></span>
+            </div> <!-- /.details --> 
+            <div class="visual">
+              <i class="fa fa-comments" style="color: #FFF"></i>
+            </div>
+          </div> <!-- /.dashboard-stat -->
+        </div> <!-- /.col-md-3 -->
+      </div> <!-- /.row -->
+
+      <hr/>
+
+      <div id="property-stats" class="row">
+        <div class="col-md-3">
+          <h3>Statistiche per property</h3>
+        </div>
       </div>
-      <div class="col-md-3 col-sm-6">
-        <div class="dashboard-stat primary" style="background-color: #50A550;">
-          <div class="details">
-            <span class="content"> SBLOCCATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-            <span class="value-sm"><%= @total_rewards %></span>
-          </div> <!-- /.details --> 
-          <div class="visual">
-            <i class="fa fa-trophy" style="color: #FFF"></i>
-          </div>
-        </div> <!-- /.dashboard-stat -->
-      </div> <!-- /.col-md-3 -->
-      <div class="col-md-3 col-sm-6">
-        <div class="dashboard-stat primary" style="background-color: #7EBBE5;">
-          <div class="details">
-            <span class="content"> APPROVATI / LASCIATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-            <span class="value-sm"><%= @approved_comments %> / <%= @total_comments %></span>
-          </div> <!-- /.details --> 
-          <div class="visual">
-            <i class="fa fa-comments" style="color: #FFF"></i>
-          </div>
-        </div> <!-- /.dashboard-stat -->
-      </div> <!-- /.col-md-3 -->
-    </div> <!-- /.row -->
 
-    <hr/>
+      <hr/>
 
-    <div id="property-stats" class="row">
-      <div class="col-md-3">
-        <h3>Statistiche per property</h3>
-      </div>
-    </div>
+      <ul id="property-selectors" class="nav nav-tabs">
+        <% @properties.each do |p| %>
+          <li>
+            <input class="btn btn-default" name="commit" type="submit" value="<%= p.upcase %>">
+          </li>
+        <% end %>
+      </ul>
 
-    <hr/>
-
-    <ul id="property-selectors" class="nav nav-tabs">
-      <% @properties.each do |p| %>
-        <li>
-          <input class="btn btn-default" name="commit" type="submit" value="<%= p.upcase %>">
-        </li>
-      <% end %>
-    </ul>
-
-    <%= hidden_field_tag :property, @property_tag_name || $site.default_property.gsub("-", " ").split.map(&:capitalize).join(' ') %>
+      <%= hidden_field_tag :property, @property_tag_name || $site.default_property.gsub("-", " ").split.map(&:capitalize).join(' ') %>
     <% end %> <!-- form-post -->
 
     <div class="row">
