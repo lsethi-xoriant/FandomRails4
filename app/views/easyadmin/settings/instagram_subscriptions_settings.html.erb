@@ -56,13 +56,19 @@
       </div>
     </div>
   </div>
-  <div class="row form-group">
-    <div class="col-lg-2 col-lg-offset-4 text-center"><strong> Tag <span class="fa fa-tags"></span></strong></div>
+  <% if @instagram_subscriptions_setting.empty? %>
+    <p class = "text-center"><b>Nessuna sottoscrizione attiva</b></p>
+  <% else %>
+    <div class="row form-group">
+      <div class="col-lg-2 col-lg-offset-3 text-center"><strong> Tag <span class="fa fa-tags"></span></strong></div>
+      <div class="col-lg-2 text-center"><strong> ID interaction <span class="fa fa-hand-o-up"></span></strong></div>
       <div class="col-lg-2 text-center"><strong> ID sottoscrizione <span class="fa fa-instagram"></span></strong></div>
       <% @instagram_subscriptions_setting.each do |name, info| %>
-        <div class="col-lg-2 col-lg-offset-4 text-center">#<%= name %></div>
+        <div class="col-lg-2 col-lg-offset-3 text-center"><%= name %></div>
+        <div class="col-lg-2 text-center"><%= info["interaction_id"] %> </div>
         <div class="col-lg-2 text-center"><%= info["subscription_id"] %> </div>
       <% end %>
     </div>
+  <% end %>
   </div>
 </div>

@@ -113,7 +113,7 @@ Fandom::Application.routes.draw do
         end
         
         get "/iur", to: "application#iur"
-        post "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
+        get "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
         get "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         get "/reward/catalogue", :to => "reward#index"
         
@@ -471,7 +471,7 @@ Fandom::Application.routes.draw do
   # Instagram subscribe.
   post "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
   post "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
-  post "/instagram_new_tagged_media_callback/:tag_name", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }
+  get "/instagram_new_tagged_media_callback", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }
 
   get "/how_to", :to => "application#how_to"
   get "/landing", :to => "landing#index"

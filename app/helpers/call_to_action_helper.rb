@@ -660,21 +660,21 @@ module CallToActionHelper
       duplicate_cta_tag(user_calltoaction, tag)
     end
 
-      user_calltoaction.release_required = upload_interaction.releasing? 
+      user_calltoaction.release_required = upload_interaction.releasing? rescue false
       user_calltoaction.build_releasing_file(file: params["releasing"])
 
-      user_calltoaction.privacy_required = upload_interaction.privacy? 
+      user_calltoaction.privacy_required = upload_interaction.privacy? rescue false
       user_calltoaction.privacy = !params["privacy"].blank?
 
-      #user_calltoaction.releasing_file_id = releasing.id
+      # user_calltoaction.releasing_file_id = releasing.id
 
     user_calltoaction
   end
   
   def calculate_cloned_cta_title(upload_interaction, calltoaction_template, params)
-    if upload_interaction.title_needed && params["title"].blank?
+    if (upload_interaction.title_needed rescue true) && params["title"].blank?
       nil
-    elsif upload_interaction.title_needed && params["title"].present?
+    elsif (upload_interaction.title_needed rescue true) && params["title"].present?
       params["title"]
     else
       calltoaction_template.title
@@ -697,18 +697,19 @@ module CallToActionHelper
         description: description,
         name: unique_name,
         slug: unique_name, 
-        user_id: current_user.id,
+        user_id: params["user_id"] || current_user.id,
         media_image: params["upload"],
         thumbnail: (params["upload"] if params["upload"] && params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}),
         media_type: params["upload"] && params["upload"].content_type.start_with?("video") ? "FLOWPLAYER" : "IMAGE",
         extra_fields: cta_template.extra_fields.nil? ? "{}" : cta_template.extra_fields 
         )
-
-    if watermark.exists?
-      if watermark.url.start_with?("http")
-        user_calltoaction.interaction_watermark_url = watermark.url(:normalized)
-      else
-        user_calltoaction.interaction_watermark_url = watermark.path(:normalized)
+    if watermark
+      if watermark.exists?
+        if watermark.url.start_with?("http")
+          user_calltoaction.interaction_watermark_url = watermark.url(:normalized)
+        else
+          user_calltoaction.interaction_watermark_url = watermark.path(:normalized)
+        end
       end
     end
     

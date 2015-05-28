@@ -10,14 +10,16 @@ class CallbackController < ApplicationController
   before_filter :echo_service
 
   def echo_service
-    headers = ""
     response_header = response.header
+    log_info("callback method called", response_header)
+
+    headers = []
     unless response_header.empty?
-      response_header.each_header do |key, value| 
-        headers += "#{key} = #{value} - "
+      response_header.each do |key, value| 
+        headers << "#{key} = #{value}"
       end
     end
-    log_info("callback method called", headers)
+    headers = headers.join(" - ")
     logger.info(headers)
   end
 
@@ -54,12 +56,12 @@ class CallbackController < ApplicationController
       #   ...
       # ]
       params["_json"].each do |subscription|
-
         if subscription["object"] == "tag"
           tag_name = subscription["object_id"]
           instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
           instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting.value)
           min_tag_id = instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] rescue nil
+          interaction_id = instagram_subscriptions_setting_hash[tag_name]["interaction_id"]
 
           request_params = {
             "client_id" => "#{ig_settings["client_id"]}"
@@ -67,37 +69,26 @@ class CallbackController < ApplicationController
           request_params.merge!({ "min_tag_id" => min_tag_id.to_i }) if min_tag_id
           url = "https://api.instagram.com/v1/tags/#{tag_name}/media/recent#{build_arguments_string_for_request(request_params)}"
           res = JSON.parse(open(url).read)
+          headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
+
           res["data"].each do |media|
             auth = Authentication.find_by_uid_and_provider(media["user"]["id"], "instagram_#{$site.id}")
-            if auth
+            cta_with_media_present = CallToAction.where("aux->>'instagram_media_id' = '#{media["id"]}'").first
+            if auth && !cta_with_media_present
               begin
-                # secondary_id check necessary?
-                img = open(media["images"]["standard_resolution"]["url"])
-                created_time = Time.at(media["created_time"].to_i)
-                call_to_action = CallToAction.new(
-                  title: media["caption"]["text"], 
-                  name: "instagram-tag-#{tag_name}-post-#{created_time.strftime("%Y-%m-%dT%H:%M:%S")}", 
-                  # slug: , # if not set, it is the same as name
-                  # enable_disqus: true, 
-                  media_image: img, 
-                  activation_date_time: Time.at(media["created_time"].to_i), 
-                  # secondary_id: media["id"], 
-                  media_type: "IMAGE", 
-                  user_id: auth.user_id
-                )
-
-                # Anchor desired interactions to instagram call_to_action.
-                # interaction = call_to_action.interactions.build(when_show_interaction: "SEMPRE_VISIBILE", points: 100)
-                # interaction.resource = Check.new(title: "CHECK", description: "Foto scattata...")
-
-                call_to_action_save = call_to_action_save && call_to_action.save
-              rescue Exception
-                call_to_action_save = false
+                user_id = auth.user_id
+                clone_params = { 
+                  "title" => media["caption"]["text"], 
+                  "upload" => open(media["images"]["standard_resolution"]["url"]),
+                  "user_id" => user_id 
+                }
+                upload_interaction = Interaction.find(interaction_id)
+                cloned_cta = clone_and_create_cta(upload_interaction, clone_params, nil)
+                cloned_cta.build_user_upload_interaction(user_id: user_id, upload_id: upload_interaction.id)
+                cloned_cta.aux = { "instagram_media_id" => media["id"] }.to_json
+                cloned_cta.save
               end
             end
-
-            # Add tags?
-
           end
           min_tag_id = res["pagination"]["min_tag_id"]
           instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] = res["pagination"]["min_tag_id"]

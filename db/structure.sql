@@ -23095,6 +23095,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -23778,4 +23785,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150504101145');
 INSERT INTO schema_migrations (version) VALUES ('20150507085715');
 
 INSERT INTO schema_migrations (version) VALUES ('20150511143302');
+
+INSERT INTO schema_migrations (version) VALUES ('20150528134030');
 

@@ -352,7 +352,7 @@ class ApplicationController < ActionController::Base
       "object" => "tag", 
       "aspect" => "media", 
       "object_id" => tag_name, 
-      "callback_url" => "http://dev.fandomlab.com#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL).value}/#{params[:tag_name]}"
+      "callback_url" => "http://dev.fandomlab.com#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL).value}}"
     }
 
     headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
@@ -385,7 +385,7 @@ class ApplicationController < ActionController::Base
       if interaction_updated
         instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
         instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting.value)
-        instagram_subscriptions_setting_hash[new_tag["object_id"]] = { "subscription_id" => new_tag["id"] }
+        instagram_subscriptions_setting_hash[new_tag["object_id"]] = { "subscription_id" => new_tag["id"], "interaction_id" => interaction.id }
         instagram_subscriptions_setting.value = instagram_subscriptions_setting_hash.to_json
         instagram_subscriptions_setting.save
       end

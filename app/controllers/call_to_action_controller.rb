@@ -764,7 +764,7 @@ class CallToActionController < ApplicationController
     upload_interaction = Interaction.find(params[:interaction_id]).resource
     extra_fields = JSON.parse(get_extra_fields!(upload_interaction.interaction.call_to_action)['form_extra_fields'])['fields'] rescue nil;
     calltoaction = CallToAction.find(params[:cta_id])
-    
+
     params_obj = JSON.parse(params["obj"])
     params_obj["releasing"] = params["releasing"]
     params_obj["upload"] = params["attachment"]
@@ -808,7 +808,7 @@ class CallToActionController < ApplicationController
       [errors.empty?, errors, cloned_cta_extra_fields]
     end
   end
-  
+
   def create_user_calltoactions(upload_interaction, params)
     cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
     cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)

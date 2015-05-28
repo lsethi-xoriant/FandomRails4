@@ -173,7 +173,7 @@ class Sites::Ballando::CallToActionController < CallToActionController
     errors
   end
 
-  def create_user_calltoactions(upload_interaction)  
+  def create_user_calltoactions(upload_interaction)
     cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
     cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)
     cloned_cta.save
