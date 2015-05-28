@@ -2,16 +2,19 @@
     
     respond_to :json
     
+    # possible (GET) params: 
+    #   ordering = recent | view | comment
     def index
       cta_chunk_size = $site.init_ctas
-      cta_chunk_size = 1
+      cta_chunk_size = 10
       
       tag = get_property()
       if tag
         tag_name = tag.name
       end
-      
-      params = { "page_elements" => ["like", "comment", "share"] }
+
+      params = request.params
+      params["page_elements"] = ["like", "comment", "share"]
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
   
       result = {
