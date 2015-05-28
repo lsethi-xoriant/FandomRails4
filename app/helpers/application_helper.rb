@@ -661,7 +661,7 @@ module ApplicationHelper
   end
 
   def init_property_info_list()
-    get_content_previews("property")
+    content_previews = get_content_previews("property")
   end
 
   def get_ugc_cta(gallery_tag)

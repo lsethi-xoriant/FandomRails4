@@ -5,9 +5,9 @@
 <div class="col-sm-6 properties__flexslider-col" ng-if="aux.property_info">
   <div class="flexslider properties__flexslider">
     <ul class="slides">
-      <li ng-repeat="property in aux.property_info.contents" class="text-center properties__flexslider-item" ng-init="property.image_visible = property.extra_fields.image.url" ng-mouseover="property.image_visible = property.extra_fields.image_hover.url" ng-mouseleave="property.image_visible = property.extra_fields.image.url">
-        <a class="properties__flexslider-a" href="/{{property.extra_fields.path}}"> 
-          <img class="properties__flexslider-image" ng-src="{{property.image_visible}}" ng-style="{'border-bottom': '4px solid ' + property.extra_fields.background}">     
+      <li ng-repeat="content in aux.property_info.contents" class="text-center properties__flexslider-item" ng-init="content.image_visible = content.thumb_thumb_url" ng-mouseover="content.image_visible = content.thumb_hover_thumb_url" ng-mouseleave="content.image_visible = content.thumb_thumb_url">
+        <a class="properties__flexslider-a" href="/{{content.extra_fields.url}}"> 
+          <img class="properties__flexslider-image" ng-src="{{content.image_visible}}" ng-style="{'border-bottom': '4px solid ' + content.extra_fields.background}">     
         </a>
       </li>
       <li class="text-center properties__flexslider-item">
