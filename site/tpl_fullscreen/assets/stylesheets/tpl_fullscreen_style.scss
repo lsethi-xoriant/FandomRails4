@@ -1,6 +1,3 @@
-@import "bootstrap-sprockets";
-@import "bootstrap";
-
 // Variable here
 
 $grid-gutter-width: 30px;
@@ -11,7 +8,8 @@ $container-md: $container-desktop;
 $container-large-desktop: ((760px + $grid-gutter-width));
 $container-lg: $container-large-desktop;
 
-
+@import "bootstrap-sprockets";
+@import "bootstrap";
 
 p.oblique { font-style:oblique } 
 
