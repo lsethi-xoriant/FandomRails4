@@ -1,0 +1,159 @@
+<div class="col-xs-12 hidden-xs hidden-sm" ng-if="aux.sidebar_info" ng-repeat="content in aux.sidebar_info.contents">
+  <!-- CTA -->
+  <%= light_link_to("{{content.detail_url}}", "ng-if" => "content.type == 'cta'") do %>
+    <div class="row text-left">
+      <div class="col-xs-12">
+        <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
+          <p class="cta__sidebar-panel__header-title">In evidenza</p>
+        </div>
+      </div>
+    </div>
+    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel" style="border-top: none !important;"> 
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="relateds-flexslider__thumbnail">
+            <img class="img-responsive cta-preview__image" ng-src="{{content.thumb_url}}">            
+            <div ng-if="content.status && content.status > 0" class="col-xs-12 cta-cover__winnable-reward text-right">
+              <span class="label label-warning cta-cover__winnable-reward__label">
+                +{{content.status}}<span class="cta-cover__glyphicon-icon fa fa-star"></span>
+              </span>  
+            </div> 
+
+            <div ng-if="!content.status || content.status < 1" class="col-xs-12 cta-cover__winnable-reward text-right">
+              <span class="label label-success cta-cover__winnable-reward__label">
+                Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok"></span>
+              </span>  
+            </div> 
+          </div>
+          <p class="cta-preview__title">{{content.title | cut:true:70}}</p>
+        </div>
+      </div>
+      <div class="row relateds-flexslider__footer">
+        <div class="col-xs-12">
+          <p class="relateds-flexslider__likes"><span class="fa fa-thumbs-up relateds-flexslider__thumbs-up"></span>{{content.likes}}</p>
+          <p class="relateds-flexslider__comments"><span class="glyphicon glyphicon-comment relateds-flexslider__glyphicon-comment"></span>{{content.comments}}</p>
+        </div>
+      </div>
+    </div>  
+  <% end %>
+  <!-- TAG -->
+  <a target="_blank" href="{{tag.url}}" ng-if="content.type == 'tag'"> 
+    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--tag"> 
+      <div class="row">
+        <div class="col-xs-12">
+          <p class="cta__sidebar-panel__header-title--tag">{{content.title}}</p>
+        </div>
+        <div class="col-xs-12">
+          <img class="cta-preview__image--tag" ng-src="{{tag.image}}">            
+          <p class="cta-preview__title">{{content.long_description | cut:true:70}}</p>
+        </div>
+      </div>
+    </div>  
+  </a>  
+  <!-- FAN OF THE DAY -->
+  <div class="row text-left" ng-if="content.type == 'fan-of-the-day-widget'">
+    <div class="col-xs-12">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
+        <p class="cta__sidebar-panel__header-title">Fan del giorno</p>
+      </div>
+    </div>
+  </div>
+  <div ng-if="content.type == 'fan-of-the-day-widget'" class="relateds-flexslider__item-panel text-left cta__sidebar-panel--ranking" style="border-top: none !important;"> 
+    <div class="row">
+      <div class="col-xs-12 text-center" style="padding: 10px 0;">
+        <p><img ng-src="{{content.extra_fields.widget_info.avatar}}" class="img-responsive ranking-widget__avatar" /></p>
+        <p><span class="gallery-widget__username" style="padding: 7px 0;"></span>{{content.extra_fields.widget_info.username}}</p>
+      <div class="label label-warning ranking-widget__points" style="width: auto; display: inline-block;">+ {{content.extra_fields.widget_info.counter}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+      </div>
+    </div>
+  </div>  
+  <!-- POPULAR CTAS -->
+  <div ng-if="content.type == 'popular-ctas-widget'" class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--most-viewed"> 
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="cta__sidebar-panel__header-title--tag">Post più popolari</p>
+      </div>
+      <div class="col-xs-12" ng-repeat="cta in content.extra_fields.widget_info.ctas" style="margin-bottom: 10px;">
+        <%= light_link_to("/call_to_action/{{cta.slug}}") do %>
+          <img class="cta-preview__image--tag" ng-src="{{cta.thumb_url}}" style="width: 130px; float: left;">
+          <p class="cta__sidebar__most-viewed__title">{{cta.title}}</p>
+        <% end %>
+      </div>
+    </div>
+  </div>  
+  <!-- RANKING -->
+  <div class="row text-left" ng-if="content.type == 'ranking-widget'">
+    <div class="col-xs-12">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
+        <p class="cta__sidebar-panel__header-title">{{content.extra_fields.widget_info.rank.attributes.title}}</p>
+      </div>
+    </div>
+  </div>
+  <div ng-if="content.type == 'ranking-widget'" class="relateds-flexslider__item-panel text-left cta__sidebar-panel--ranking" style="border-top: none !important;"> 
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="row gallery-widget__row" ng-class-even="'gallery-widget__row--grey'" ng-repeat="rank in content.extra_fields.widget_info.rank.attributes.rankings.slice(0, 5)">
+        <div class="col-xs-3 text-right ranking-widget__col-position">
+          <span class="gallery-widget__position">#{{rank.position}}</span>
+        </div>
+        <div class="col-xs-4 text-center">
+          <p><img ng-src="{{rank.avatar}}" class="img-responsive ranking-widget__avatar" /></p>
+          <p><span class="ranking-widget__username"></span>{{rank.user}}</p>
+        </div>
+        <div class="col-xs-5 ranking-widget__col-counter">
+          <div class="label label-warning ranking-widget__points">+ {{rank.counter}}<span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="row gallery-widget__view-all">
+      <div class="col-xs-10 col-xs-offset-1">
+        <%= light_link_to("/ranking/show/{{content.extra_fields.widget_info.rank_id}}") do %>
+          <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Classifica completa
+        <% end %>
+      </div>
+    </div>
+  </div> 
+  <!-- GALLERY RANKING -->
+
+  <div ng-if="content.type == 'gallery-ranking-widget'" class="row text-left">
+    <div class="col-xs-12">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
+        <p class="cta__sidebar-panel__header-title">Classifica gallery</p>
+      </div>
+    </div>
+  </div>
+  <div ng-if="content.type == 'gallery-ranking-widget'" class="relateds-flexslider__item-panel text-left cta__sidebar-panel--ranking" style="border-top: none !important;"> 
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="row gallery-widget__row" ng-repeat="rank in content.extra_fields.widget_info.rank.slice(0, 3)">
+        <div class="col-xs-5">
+          <%= light_link_to "{{rank.cta_url}}" do %>
+            <img ng-src="{{rank.cta_image}}" class="img-responsive gallery-widget__image" />
+          <% end %>
+        </div>
+        <div class="col-xs-7">
+          <p>
+            <span class="gallery-widget__position">#{{rank.position}}</span>
+            <br />
+            <span class="gallery-widget__username"></span>{{rank.user}}</p>
+          <p class="gallery-widget__votes">
+            <span class="fa fa-thumbs-up"></span> {{rank.counter}}
+          </p>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="row gallery-widget__view-all">
+      <div class="col-xs-10 col-xs-offset-1">
+        <a ng-href="/ranking/vote/{{content.extra_fields.widget_info.gallery_id}}"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Classifica completa</a>
+      </div>
+    </div>
+  </div>  
+ 
+</div>
+
+
+
+    
+   

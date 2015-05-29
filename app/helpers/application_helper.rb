@@ -736,6 +736,7 @@ module ApplicationHelper
 
       if is_ugc?(cta)        
         ugc_cta = get_ugc_cta(related_tag)
+        gallery_tag = related_tag
       else
         ugc_cta = nil
       end
@@ -785,6 +786,11 @@ module ApplicationHelper
       evidence_ctas_info_list = nil
     end
 
+    if other && other.has_key?(:sidebar_tag)
+      _env = gallery_tag.present? ? gallery_tag : property
+      sidebar_info = get_sidebar_info(other[:sidebar_tag], _env)
+    end
+
     @aux = {
       "tenant" => $site.id,
       "free_provider_share" => $site.free_provider_share,
@@ -796,6 +802,7 @@ module ApplicationHelper
       "mobile" => small_mobile_device?(),
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
+      "sidebar_info" => sidebar_info,
       "ugc_cta" => ugc_cta,
       "menu_items" => get_menu_items(property)
     }

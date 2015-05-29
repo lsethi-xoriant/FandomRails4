@@ -1,5 +1,53 @@
 module CallToActionHelper
 
+  def get_sidebar_info(sidebar_tag_name, property)
+    # Property can be the gallery section
+
+    property_tag = property.present? ? [property] : []
+    sidebar_content_previews = get_content_previews(sidebar_tag_name, property_tag)
+    
+    sidebar_content_previews.contents.each do |content|
+      case content.title
+      when "fan-of-the-day-widget"
+        content.type = content.title
+        winner_of_the_day = get_winner_of_day(Date.yesterday)
+        if winner_of_the_day
+          content.extra_fields["widget_info"] = {
+            avatar: user_avatar(winner_of_the_day.user), 
+            username: winner_of_the_day.user.username, 
+            counter: winner_of_the_day.counter
+          }
+        end
+      when "popular-ctas-widget"
+        content.type = content.title
+        content.extra_fields["widget_info"] = {
+          ctas: get_ctas_most_viewed(property)
+        }
+      when "ranking-widget"
+        ranking_name = property.present? ? "#{property.name}-general-chart" : "general-chart"
+        ranking = Ranking.find_by_name(ranking_name)
+        content.type = content.title
+        content.extra_fields["widget_info"] = {
+          rank: get_ranking(ranking, 1),
+          rank_id: ranking.id
+        }
+      when "gallery-ranking-widget"
+        content.type = content.title
+        gallery = property
+        rank, rank_count = get_vote_ranking(gallery.name, 1)
+        content.extra_fields["widget_info"] = { 
+          rank: rank, 
+          gallery_id: gallery.id  
+        }
+      else
+        # Nothing to do
+      end
+    end
+
+    sidebar_content_previews
+
+  end
+
   def get_ctas_most_viewed(property)
     ctas = get_ctas(property)
     cta_ids = from_ctas_to_cta_ids_sql(ctas)

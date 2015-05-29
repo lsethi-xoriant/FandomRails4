@@ -119,6 +119,7 @@ class ApplicationController < ActionController::Base
     @aux_other_params = { 
       calltoaction_evidence_info: true,
       featured_content_previews: featured_content_previews,
+      sidebar_tag: "sidebar-home",
       tag_menu_item: "home"
     }
   end
