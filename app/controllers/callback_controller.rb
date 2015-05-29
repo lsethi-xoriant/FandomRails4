@@ -24,6 +24,7 @@ class CallbackController < ApplicationController
   end
 
   def instagram_new_tagged_media_callback
+
     # PubSubHubbub request
     # When we POST with the info above to create a new subscription, Instagram simultaneously submit a GET request 
     # to our callback URL with the following parameters:
