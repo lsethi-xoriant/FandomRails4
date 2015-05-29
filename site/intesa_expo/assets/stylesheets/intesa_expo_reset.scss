@@ -72,7 +72,7 @@ body {
 
 .content-browse {
   background-color: whitesmoke;
-  background-image: url("intesa_expo/texture.png");
+  background-image: url("<%= asset_path('intesa_expo/texture.png') %>");
   padding-bottom: 25px;
 }
 
@@ -92,7 +92,7 @@ body {
 
   .header-container {
     background-color: $blue !important; 
-    background-image: url("intesa_expo/texture.png");
+    background-image: url("<%= asset_path('intesa_expo/texture.png') %>");
   }
   .navbar__container-fluid, .navbar-default {
     background-color: $darkblue !important;
@@ -162,7 +162,7 @@ p {
 
 .container-fluid__blue, .container--blue {
   background-color: $blue !important; 
-  background-image: url("intesa_expo/texture.png");
+  background-image: url("<%= asset_path('intesa_expo/texture.png') %>");
 }
 
 .container-fluid__blue, .container--blue,
@@ -190,7 +190,7 @@ p {
 }
 
 .stripe-container {
-  background-image: url("intesa_expo/texture.png");
+  background-image: url("<%= asset_path('intesa_expo/texture.png') %>");
   background-color: #fff;
   //border-bottom: 1px solid #ddd;
   border-bottom: 1px solid;
@@ -211,12 +211,12 @@ p {
 
 .container-fluid__lightblue, .container--lightblue {
   background-color: $lightblue !important;
-  background-image: url("intesa_expo/texture.png");
+  background-image: url("<%= asset_path('intesa_expo/texture.png') %>");
 }
 
 .container-fluid__white, .container--white {
   background-color: white !important; 
-  background-image: url("intesa_expo/texture.png");
+  background-image: url("<%= asset_path('intesa_expo/texture.png') %>");
 }
 
 .center-logo {
@@ -474,7 +474,7 @@ p {
   .body-imprese{ 
     .navbar-header{
       background-color: $blue;
-      background-image: url("intesa_expo/texture.png");
+      background-image: url("<%= asset_path('intesa_expo/texture.png') %>");
     }
     .navbar__logo{
       max-width: 100px;
