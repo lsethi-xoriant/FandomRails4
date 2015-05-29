@@ -84,7 +84,7 @@ class CallbackController < ApplicationController
                   "user_id" => user_id 
                 }
                 upload_interaction = Interaction.find(interaction_id)
-                cloned_cta = clone_and_create_cta(upload_interaction, clone_params, nil)
+                cloned_cta = clone_and_create_cta(upload_interaction, clone_params, (upload_interaction.watermark rescue nil))
                 cloned_cta.build_user_upload_interaction(user_id: user_id, upload_id: upload_interaction.id)
                 cloned_cta.aux = { "instagram_media_id" => media["id"] }.to_json
                 cloned_cta.save
