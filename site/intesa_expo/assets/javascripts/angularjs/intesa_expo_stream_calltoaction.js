@@ -109,7 +109,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       today_date = new Date();
       angular.forEach(content.interactions, function(value) {
         if(value.interaction_info.resource_type.toLowerCase() == "download" && value.interaction_resource.ical_fields) {
-          ical_fields = JSON.parse(value.interaction_resource.ical_fields)
+          ical_fields = value.interaction_resource.ical_fields;
           start_datetime = ical_fields["start_datetime"];
           end_datetime = ical_fields["end_datetime"];
           if(start_datetime) {
