@@ -1,25 +1,4 @@
 module DisneyHelper
-
-  def get_ctas_most_viewed_widget()
-    property = get_tag_from_params(get_disney_property())
-    result = cache_huge(get_ctas_most_viewed_cache_key(property.id)) do
-
-      ctas = get_disney_ctas(property)
-      cta_ids = from_ctas_to_cta_ids_sql(ctas)
-
-      result = []
-      gets_ctas_ordered_by_views(cta_ids, 4).each do |cta|
-        result << {
-          "id" => cta.id,
-          "slug" => cta.slug,
-          "title" => cta.title,
-          "thumb_url" => cta.thumbnail(:thumb)
-        }
-      end 
-      result
-    end
-  end
-
   def get_disney_calltoactions_count(calltoactions_in_page, aux)
     if calltoactions_in_page < $site.init_ctas
       calltoactions_in_page
@@ -177,6 +156,7 @@ module DisneyHelper
   end
 
   def get_disney_sidebar_info(sidebar_tag_name, property)
+    # Property can be the gallery section
 
     property_tag = property.present? ? [property] : []
     sidebar_content_previews = get_content_previews(sidebar_tag_name, property_tag)
@@ -203,7 +183,8 @@ module DisneyHelper
     # }
 
     sidebar_content_previews.contents.each do |content|
-      if content.title == "fan-of-the-day-widget"
+      case content.title
+      when "fan-of-the-day-widget"
         content.type = content.title
         winner_of_the_day = get_winner_of_day(Date.yesterday)
         if winner_of_the_day
@@ -213,6 +194,29 @@ module DisneyHelper
             counter: winner_of_the_day.counter
           }
         end
+      when "popular-ctas-widget"
+        content.type = content.title
+        content.extra_fields["widget_info"] = {
+          ctas: get_ctas_most_viewed(property)
+        }
+      when "ranking-widget"
+        ranking_name = property.present? ? "#{property.name}-general-chart" : "general-chart"
+        ranking = Ranking.find_by_name(ranking_name)
+        content.type = content.title
+        content.extra_fields["widget_info"] = {
+          rank: get_ranking(ranking, 1),
+          rank_id: ranking.id
+        }
+      when "gallery-ranking-widget"
+        content.type = content.title
+        gallery = property
+        rank, rank_count = get_vote_ranking(gallery.name, 1)
+        content.extra_fields["widget_info"] = { 
+          rank: rank, 
+          gallery_id: gallery.id  
+        }
+      else
+        # Nothing to do
       end
     end
 
@@ -236,6 +240,7 @@ module DisneyHelper
         gallery_calltoaction = CallToAction.find(in_gallery)
         
         main_related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
+        gallery_tag = main_related_tag
 
         if main_related_tag.present?
           params = {
@@ -344,7 +349,8 @@ module DisneyHelper
     end
 
     if other && other.has_key?(:sidebar_tag)
-      sidebar_info = get_disney_sidebar_info(other[:sidebar_tag], current_property)
+      _env = gallery_tag.present? ? gallery_tag : current_property
+      sidebar_info = get_disney_sidebar_info(other[:sidebar_tag], _env)
     end
 
     aux = {

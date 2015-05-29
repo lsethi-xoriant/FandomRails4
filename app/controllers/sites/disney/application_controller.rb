@@ -36,10 +36,7 @@ class Sites::Disney::ApplicationController < ApplicationController
     @aux_other_params = { 
       filters: true,
       calltoaction_evidence_info: false,
-      sidebar_tag: "sidebar-home",
-      fan_of_the_day_widget: true,
-      rank_widget: true,
-      ctas_most_viewed_widget: get_ctas_most_viewed_widget()
+      sidebar_tag: "sidebar-home"
     }
 
   end

@@ -1,5 +1,22 @@
 module CallToActionHelper
 
+  def get_ctas_most_viewed(property)
+    ctas = get_ctas(property)
+    cta_ids = from_ctas_to_cta_ids_sql(ctas)
+
+    result = []
+    ctas_most_viewed = gets_ctas_ordered_by_views(cta_ids, 4)
+    ctas_most_viewed.each do |cta|
+      result << {
+        "id" => cta.id,
+        "slug" => cta.slug,
+        "title" => cta.title,
+        "thumb_url" => cta.thumbnail(:thumb)
+      }
+    end 
+    result
+  end
+
   def check_gallery_params(params)
     if params["other_params"] && params["other_params"]["gallery"]["calltoaction_id"]
       {
@@ -305,16 +322,6 @@ module CallToActionHelper
 
       calltoaction_info_list
     end    
-    
-    if small_mobile_device?()
-      calltoaction_info_list.each do |calltoaction_info|
-        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info_list|
-          if interaction_info_list["interaction"]["when_show_interaction"].include?("OVERVIDEO")
-            interaction_info_list["interaction"]["when_show_interaction"] = "SEMPRE_VISIBILE"
-          end
-        end
-      end
-    end
 
     interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
 
@@ -360,6 +367,16 @@ module CallToActionHelper
         end
 
         calltoaction_info_list
+      end
+    end
+
+    if small_mobile_device?()
+      calltoaction_info_list.each do |calltoaction_info|
+        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info_list|
+          if interaction_info_list["interaction"]["when_show_interaction"].include?("OVERVIDEO")
+            interaction_info_list["interaction"]["when_show_interaction"] = "SEMPRE_VISIBILE"
+          end
+        end
       end
     end
 

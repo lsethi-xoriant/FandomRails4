@@ -109,7 +109,7 @@ module RankingHelper
     positions = Array.new
     ctas_info = get_call_to_actions_info(rankings.map{|r| r.call_to_action_id})
     rankings.each_with_index do |r, index|
-      extra_data = JSON.parse(r.data)
+      extra_data = r.data
       positions << {
         "position" => (index + 1) + offset,
         "general_position" => (index + 1) + offset, 

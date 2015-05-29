@@ -256,10 +256,13 @@ class CallToActionController < ApplicationController
       #  @current_user_info = build_current_user()
       #end
 
+      sidebar_tag = calltoaction.user_id.present? ? "sidebar-cta-gallery" : "sidebar-cta"
+
       @aux_other_params = { 
         calltoaction: calltoaction,
         linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
-        linked_call_to_actions_count: step_count
+        linked_call_to_actions_count: step_count,
+        sidebar_tag: sidebar_tag
       }
 
       set_seo_info_for_cta(calltoaction)
