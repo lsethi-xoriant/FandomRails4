@@ -256,7 +256,7 @@ class ApplicationController < ActionController::Base
   def init_calltoactions_during_video_interactions_second(calltoactions)
     calltoactions_during_video_interactions_second = Hash.new
     calltoactions.each do |calltoaction|
-      interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")
+      interactions_overvideo_during = calltoaction.interactions.where("when_show_interaction = 'OVERVIDEO_DURING'")
       if(interactions_overvideo_during.any?)
         calltoactions_during_video_interactions_second[calltoaction.id] = Hash.new
         interactions_overvideo_during.each do |interaction|
