@@ -200,7 +200,7 @@ Fandom::Application.routes.draw do
           get "/upload_interaction/new", :to => "upload_interaction#new"
           post "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
 
-          get "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
+          post "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
           post "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
           
           get "/special_guest", :to => "application#redirect_into_special_guest"
@@ -260,7 +260,7 @@ Fandom::Application.routes.draw do
           get "/upload_interaction/new", :to => "upload_interaction#new"
           post "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
 
-          get "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
+          post "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
           post "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
           
           get "/special_guest", :to => "application#redirect_into_special_guest"
@@ -453,7 +453,7 @@ Fandom::Application.routes.draw do
 
   get '/facebook_app', to: "application#facebook_app"
 
-  get '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }
+  post '/next_interaction', to: "call_to_action#next_interaction", defaults: { format: 'json' }
   get '/check_next_interaction', to: "call_to_action#check_next_interaction", defaults: { format: 'json' }
   
   # Reward
