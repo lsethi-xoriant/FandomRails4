@@ -256,6 +256,10 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       @ctas = CallToAction.where("user_id IS NOT NULL and approved = ?", approvation_status).page(page).per(per_page).order("created_at ASC NULLS LAST")
     end
 
+    transcoding_settings = get_deploy_setting("sites/#{$site.id}/transcoding", false)
+    if transcoding_settings
+      @original_media_path = "#{transcoding_settings[:s3_output_folder]}/original/"
+    end
     @page_size = @ctas.num_pages
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
