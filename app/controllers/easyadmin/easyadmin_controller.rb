@@ -60,7 +60,7 @@ class Easyadmin::EasyadminController < ApplicationController
 
       @properties = []
       property_tag = Tag.find_by_name("property")
-      (property_tag.extra_fields["ordering"] rescue "").split(",").each do |ordered_property_name|
+      ((property_tag.extra_fields["ordering"] || "") rescue "").split(",").each do |ordered_property_name|
         @properties << ordered_property_name
       end
       TagsTag.where(:other_tag_id => property_tag.id).pluck(:tag_id).each do |tag_id|
@@ -111,32 +111,37 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def get_counters_hashes(from_date, to_date, properties)
-    migration_date = UserReward.where("period_id IS NOT NULL").minimum(:created_at).to_date
-    counter_values_hash = {}
-    if to_date > migration_date
-      from_date = migration_date if from_date < migration_date
-      EasyadminStats.where("date >= '#{from_date}' AND date <= '#{to_date}'").each_with_index do |stats, i|
-        next_values_hash = stats.values
-        counter_values_hash = i == 0 ? next_values_hash : sum_hashes_values(counter_values_hash, next_values_hash)
+    first_user_reward = UserReward.where("period_id IS NOT NULL").minimum(:created_at)
+    if first_user_reward
+      migration_date = first_user_reward.to_date
+      counter_values_hash = {}
+      if to_date > migration_date
+        from_date = migration_date if from_date < migration_date
+        EasyadminStats.where("date >= '#{from_date}' AND date <= '#{to_date}'").each_with_index do |stats, i|
+          next_values_hash = stats.values
+          counter_values_hash = i == 0 ? next_values_hash : sum_hashes_values(counter_values_hash, next_values_hash)
+        end
+      else
+        counter_values_hash = EasyadminStats.find_by_date(migration_date).values
       end
-    else
-      counter_values_hash = EasyadminStats.find_by_date(migration_date).values
-    end
-    counter_names = get_keys_with_simple_value(counter_values_hash)
-    counter_extra_fields_hash = {}
-    Reward.where(:name => counter_names).each do |r|
-      counter_extra_fields_hash[r.name] = r.extra_fields
-    end
-    # For levels and badges total count
-    levels_extra_fields = Tag.find_by_name("level").extra_fields || {}
-    badges_extra_fields = Tag.find_by_name("badge").extra_fields || {}
-    properties.each do |property|
-      assigned_prefix = property == $site.default_property ? "" : "#{property}-"
-      counter_extra_fields_hash["#{assigned_prefix}assigned-levels"] = levels_extra_fields
-      counter_extra_fields_hash["#{assigned_prefix}assigned-badges"] = badges_extra_fields
-    end
+      counter_names = get_keys_with_simple_value(counter_values_hash)
+      counter_extra_fields_hash = {}
+      Reward.where(:name => counter_names).each do |r|
+        counter_extra_fields_hash[r.name] = r.extra_fields
+      end
+      # For levels and badges total count
+      levels_extra_fields = Tag.find_by_name("level").extra_fields || {}
+      badges_extra_fields = Tag.find_by_name("badge").extra_fields || {}
+      properties.each do |property|
+        assigned_prefix = property == $site.default_property ? "" : "#{property}-"
+        counter_extra_fields_hash["#{assigned_prefix}assigned-levels"] = levels_extra_fields
+        counter_extra_fields_hash["#{assigned_prefix}assigned-badges"] = badges_extra_fields
+      end
 
-    return counter_values_hash, counter_extra_fields_hash
+      return counter_values_hash, counter_extra_fields_hash
+    else
+      return {}, {}
+    end
   end
 
   def build_line_chart_values(from, to, hash_total_users, hash_social_reg_users, days_interval)

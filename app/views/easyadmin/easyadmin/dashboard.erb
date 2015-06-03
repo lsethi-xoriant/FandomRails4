@@ -141,22 +141,24 @@
       <%= hidden_field_tag :property, @property_tag_name || $site.default_property.gsub("-", " ").split.map(&:capitalize).join(' ') %>
     <% end %> <!-- form-post -->
 
-    <div class="row">
-      <% @property_values.each do |key, value| %>
-      <div class="col-md-3 col-sm-6" style="margin: 20px 0">
-      <h4 style="text-align:center;"><%= "#{(@extra_fields[key]['title'] || key) rescue key} #{@property_tag_name}" %></h4>
-        <div class="dashboard-stat primary" style="background-color: <%= (@extra_fields[key]["background_color"] || "#CCC") rescue "#CCC" %>;">
-          <div class="details">
-            <span class="content"> CONTATORE <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
-            <span class="value-sm"><%= value %></span>
-          </div>
-          <div class="visual">
-            <i class="<%= (@extra_fields[key]["icon"] || "fa fa-line-chart") rescue "fa fa-line-chart" %>" style="color: #FFF"></i>
+    <% if @property_values %>
+      <div class="row">
+        <% @property_values.each do |key, value| %>
+        <div class="col-md-3 col-sm-6" style="margin: 20px 0">
+        <h4 style="text-align:center;"><%= "#{(@extra_fields[key]['title'] || key) rescue key} #{@property_tag_name}" %></h4>
+          <div class="dashboard-stat primary" style="background-color: <%= (@extra_fields[key]["background_color"] || "#CCC") rescue "#CCC" %>;">
+            <div class="details">
+              <span class="content"> CONTATORE <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %></span>
+              <span class="value-sm"><%= value %></span>
+            </div>
+            <div class="visual">
+              <i class="<%= (@extra_fields[key]["icon"] || "fa fa-line-chart") rescue "fa fa-line-chart" %>" style="color: #FFF"></i>
+            </div>
           </div>
         </div>
-      </div>
-      <% end %>
-    </div> <!-- /.row -->
+        <% end %>
+      </div> <!-- /.row -->
+    <% end %>
 
   </div>
 </div>
