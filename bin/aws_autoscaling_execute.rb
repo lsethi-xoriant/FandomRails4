@@ -1,8 +1,22 @@
-require "aws-sdk"
+require "aws-sdk-v1"
 require "open3"
-require "colorize"
 require_relative "../lib/cli_utils"
 include CliUtils
+
+TERMINAL_COLORS = {
+  :black    => 30,
+  :red      => 31,
+  :green    => 32,
+  :yellow   => 33,
+  :blue     => 34,
+  :magenta  => 35,
+  :cyan     => 36,
+  :white    => 37
+}
+
+def colorize(text, color)
+  "\033[#{TERMINAL_COLORS[color]}m#{text}\033[0m"
+end
 
 def main
   if ARGV.size < 2
@@ -34,17 +48,17 @@ EOF
         
         input, output, error_output, thread = Open3::popen3("ssh -tt -oStrictHostKeyChecking=no #{user}@#{instance.dns_name} \"#{command}\"")
         if thread.value.exitstatus == 0
-          puts "ok.".green
+          puts colorize("ok.", :green)
         else
-          puts "failed!".red
+          puts colorize("failed!", :red)
         end
         output_buf = output.read
         error_output_buf = error_output.read
         unless output_buf.empty?
-          puts "command output:\n".yellow + output_buf
+          puts colorize("command output:\n", :yellow) + output_buf
         end
         unless error_output_buf.empty?
-          puts "command error output:\n".red + error_output_buf
+          puts colorize("command error output:\n", :red) + error_output_buf
         end
       end
     end
