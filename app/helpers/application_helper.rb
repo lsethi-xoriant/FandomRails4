@@ -414,7 +414,7 @@ module ApplicationHelper
 
   def user_avatar user, size = "normal"
     begin
-      user.avatar_selected_url.present? ? user.avatar_selected_url : anon_avatar()
+      user.avatar_selected_url.present? && !user.avatar_selected_url.include?("anon.png") ? user.avatar_selected_url : anon_avatar()
     rescue
       anon_avatar()
     end
