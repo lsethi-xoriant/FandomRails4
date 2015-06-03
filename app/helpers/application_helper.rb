@@ -724,6 +724,44 @@ module ApplicationHelper
     cta_info_list
   end
 
+  def build_evidence_ctas_info_list(property)
+    cache_key = property.present? ? "in_#{property.name}" : "without_property"
+    cache_timestamp = get_cta_max_updated_at()
+    
+    evidence_ctas_info_list = cache_forever(get_evidence_ctas_cache_key(cache_key, cache_timestamp)) do
+      highlight_ctas = get_highlight_ctas(property)
+      ctas = get_ctas(property)
+
+      # TODO: remove 3 hardcoded
+      if highlight_ctas.any?
+        highlight_cta_ids = highlight_ctas.map { |cta| cta.id }
+        evidence_ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_cta_ids).limit(3).to_a
+        evidence_ctas = evidence_ctas + highlight_ctas
+      else
+        evidence_ctas = ctas.limit(3).to_a
+      end
+
+      evidence_ctas_info_list = []
+      evidence_ctas.each do |cta|
+        evidence_ctas_info_list << build_thumb_cta(cta)
+      end
+
+      evidence_ctas_info_list
+    end
+
+    max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
+    max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
+    user_cache_key = get_user_interactions_in_evidence_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
+
+    if current_user
+      evidence_ctas_info_list = cache_forever(user_cache_key) do
+        adjust_thumb_cta_for_current_user(evidence_ctas_info_list)
+      end
+    end
+
+    adjust_thumb_ctas(evidence_ctas_info_list)
+  end
+
   def default_aux(other, calltoaction_info_list = nil)
     property = get_property()
 
@@ -746,42 +784,7 @@ module ApplicationHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      cache_key = property.present? ? "in_#{property.name}" : "without_property"
-      cache_timestamp = get_cta_max_updated_at()
-      
-      evidence_ctas_info_list = cache_forever(get_evidence_ctas_cache_key(cache_key, cache_timestamp)) do
-        highlight_ctas = get_highlight_ctas(property)
-        ctas = get_ctas(property)
-
-        # TODO: remove 3 hardcoded
-        if highlight_ctas.any?
-          highlight_cta_ids = highlight_ctas.map { |cta| cta.id }
-          evidence_ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_cta_ids).limit(3).to_a
-          evidence_ctas = evidence_ctas + highlight_ctas
-        else
-          evidence_ctas = ctas.limit(3).to_a
-        end
-
-        evidence_ctas_info_list = []
-        evidence_ctas.each do |cta|
-          evidence_ctas_info_list << build_thumb_cta(cta)
-        end
-
-        evidence_ctas_info_list
-      end
-
-      max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
-      max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
-      user_cache_key = get_user_interactions_in_evidence_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
-
-      if current_user
-        evidence_ctas_info_list = cache_forever(user_cache_key) do
-          adjust_thumb_cta_for_current_user(evidence_ctas_info_list)
-        end
-      end
-
-      adjust_thumb_ctas(evidence_ctas_info_list)
-
+      evidence_ctas_info_list = build_evidence_ctas_info_list(property)
     else
       evidence_ctas_info_list = nil
     end
