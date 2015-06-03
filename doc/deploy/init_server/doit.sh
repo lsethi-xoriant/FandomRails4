@@ -45,7 +45,9 @@ apt-get install vim \
   supervisor \
   traceroute \
   autoconf \
-  bison
+  bison \
+  libreadline-dev
+
   
 #
 # Add the user running rails
