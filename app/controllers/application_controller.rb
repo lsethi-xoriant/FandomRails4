@@ -229,7 +229,7 @@ class ApplicationController < ActionController::Base
     calltoactions.each do |calltoaction|
 
       interactions = cache_short("calltoaction_#{calltoaction.id}_comment_interactions") do
-        calltoaction.interactions.includes(:resource).where("resource_type = 'Comment' AND when_show_interaction <> 'MAI_VISIBILE'").references(:resource).to_a
+        calltoaction.interactions.where("resource_type = 'Comment' AND when_show_interaction <> 'MAI_VISIBILE'").to_a
       end  
 
       calltoaction_comment_interaction = Hash.new

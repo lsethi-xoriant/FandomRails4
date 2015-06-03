@@ -192,11 +192,7 @@ class CallToAction < ActiveRecordWithJSON
   end
 
   def enable_for_current_user?
-    if aux
-      JSON.parse(aux)["enable_for_current_user"] == "1"
-    else
-      false
-    end
+    aux && aux["enable_for_current_user"] == "1"
   end
   
   def set_extra_options

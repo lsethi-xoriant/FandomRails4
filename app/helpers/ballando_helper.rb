@@ -70,9 +70,9 @@ module BallandoHelper
       period = get_current_periodicities[ranking.period]
 
       if period.blank?
-        rankings = UserReward.includes(:user).where("user_rewards.reward_id = ? and user_rewards.period_id IS NULL and user_id <> ?", ranking.reward_id, anonymous_user.id).references(:users).order("counter DESC, updated_at ASC, user_id ASC").to_a
+        rankings = UserReward.includes(:user).where("user_rewards.reward_id = ? and user_rewards.period_id IS NULL and user_id <> ?", ranking.reward_id, anonymous_user.id).references(:users).order("counter DESC, user_rewards.updated_at ASC, user_id ASC").to_a
       else
-        rankings = UserReward.includes(:user).where("reward_id = ? and period_id = ? and user_id <> ?", ranking.reward_id, period.id, anonymous_user.id).references(:users).order("counter DESC, updated_at ASC, user_id ASC").to_a
+        rankings = UserReward.includes(:user).where("reward_id = ? and period_id = ? and user_id <> ?", ranking.reward_id, period.id, anonymous_user.id).references(:users).order("counter DESC, user_rewards.updated_at ASC, user_id ASC").to_a
       end
       user_position_hash = cache_short("#{ranking.id}_user_position") { ballando_generate_user_position_hash(rankings) }
       rank = RankingElement.new(

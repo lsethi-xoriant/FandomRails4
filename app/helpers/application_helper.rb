@@ -549,8 +549,8 @@ module ApplicationHelper
   end
   
   def get_cta_button_label(cta)
-    if cta.aux && JSON.parse(cta.aux)['button_label'] && !JSON.parse(cta.aux)['button_label'].blank?
-      JSON.parse(cta.aux)['button_label']
+    if cta.aux && cta.aux['button_label'] && !cta.aux['button_label'].blank?
+      cta.aux['button_label']
     else
       CTA_DEFAULT_BUTTON_LABEL
     end
@@ -568,7 +568,7 @@ module ApplicationHelper
     share_interaction = cta.interactions.find_by_resource_type("Share")
     if share_interaction
       share_resource = share_interaction.resource
-      share_info = JSON.parse(share_resource.providers)
+      share_info = share_resource.providers
       if share_info['twitter']['message'].present?
         share_info['twitter']['message']
       else

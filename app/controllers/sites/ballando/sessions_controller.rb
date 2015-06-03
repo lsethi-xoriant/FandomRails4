@@ -33,7 +33,7 @@ class Sites::Ballando::SessionsController < SessionsController
         end
 
         if rai_response_user["authMyRaiTv"] == "OK"
-          user = User.find(:first, conditions: ["lower(username) = ?", rai_response_user["UID"].downcase])
+          user = User.where("lower(username) = ?", rai_response_user["UID"].downcase).first
 
           unless user
             password = Devise.friendly_token.first(8)
