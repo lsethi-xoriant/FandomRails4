@@ -119,6 +119,7 @@ class ApplicationController < ActionController::Base
     @aux_other_params = { 
       calltoaction_evidence_info: true,
       featured_content_previews: featured_content_previews,
+      sidebar_tag: "sidebar-home",
       tag_menu_item: "home"
     }
   end
@@ -228,7 +229,7 @@ class ApplicationController < ActionController::Base
     calltoactions.each do |calltoaction|
 
       interactions = cache_short("calltoaction_#{calltoaction.id}_comment_interactions") do
-        calltoaction.interactions.includes(:resource).where("resource_type = 'Comment' AND when_show_interaction <> 'MAI_VISIBILE'").references(:resource).to_a
+        calltoaction.interactions.where("resource_type = 'Comment' AND when_show_interaction <> 'MAI_VISIBILE'").to_a
       end  
 
       calltoaction_comment_interaction = Hash.new
@@ -255,7 +256,7 @@ class ApplicationController < ActionController::Base
   def init_calltoactions_during_video_interactions_second(calltoactions)
     calltoactions_during_video_interactions_second = Hash.new
     calltoactions.each do |calltoaction|
-      interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")
+      interactions_overvideo_during = calltoaction.interactions.where("when_show_interaction = 'OVERVIDEO_DURING'")
       if(interactions_overvideo_during.any?)
         calltoactions_during_video_interactions_second[calltoaction.id] = Hash.new
         interactions_overvideo_during.each do |interaction|

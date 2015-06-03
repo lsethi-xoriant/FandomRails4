@@ -1,35 +1,4 @@
 module DisneyHelper
-
-  def get_ctas_most_viewed_widget()
-    property = get_tag_from_params(get_disney_property())
-    result = cache_huge(get_ctas_most_viewed_cache_key(property.id)) do
-
-      ctas = get_disney_ctas(property)
-      cta_ids = from_ctas_to_cta_ids_sql(ctas)
-
-      result = []
-      gets_ctas_ordered_by_views(cta_ids, 4).each do |cta|
-        result << {
-          "id" => cta.id,
-          "slug" => cta.slug,
-          "title" => cta.title,
-          "thumb_url" => cta.thumbnail(:thumb)
-        }
-      end 
-      result
-    end
-  end
-
-  def get_disney_calltoactions_count(calltoactions_in_page, aux)
-    if calltoactions_in_page < $site.init_ctas
-      calltoactions_in_page
-    else
-      cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
-        CallToAction.active.count
-      end
-    end
-  end
-
   def get_disney_property
     $context_root || "disney-channel"
   end
@@ -74,21 +43,6 @@ module DisneyHelper
     # Cached in index
     tag_calltoactions = CallToAction.includes(:call_to_action_tags).active.where("call_to_action_tags.tag_id = ?", tag.id).references(:call_to_action_tags)
     get_disney_ctas(property).where("call_to_actions.id IN (?)", tag_calltoactions.map { |calltoaction| calltoaction.id }).order("activated_at #{order}")
-  end
-
-  def get_disney_calltoactions_count_in_property(calltoactions_in_page, aux)
-    if aux && aux["gallery_calltoactions_count"]
-      aux["gallery_calltoactions_count"]
-    else
-      if calltoactions_in_page < $site.init_ctas
-        calltoactions_in_page
-      else
-        property = get_tag_from_params(get_disney_property())
-        cache_short(get_calltoactions_count_in_property_cache_key(property.id)) do
-          get_disney_ctas(property).count
-        end
-      end
-    end
   end
 
   def compute_property_path(property)
@@ -176,50 +130,6 @@ module DisneyHelper
 
   end
 
-  def get_disney_sidebar_info(sidebar_tag_name, property)
-
-    property_tag = property.present? ? [property] : []
-    sidebar_content_previews = get_content_previews(sidebar_tag_name, property_tag)
-    
-    # if gallery_cta
-    #   gallery_tag = get_tag_with_tag_about_call_to_action(gallery_cta, "gallery").first
-    #   gallery_tag_id = gallery_tag.id
-    #   gallery_rank, total  = cache_short(get_sidebar_gallery_rank_cache_key(gallery_tag.id)) do
-    #     get_vote_ranking(gallery_tag.name, 1)
-    #   end
-    # end
-    
-    # if other && other[:rank_widget] # TODO: change this when property_rank will be activate
-    #   rank = Ranking.find_by_name("#{get_disney_property}-general-chart")
-    #   property_rank = { rank: get_ranking(rank, 1), rank_id: rank.id }
-    # end
-
-    # {
-    #   "calltoaction_info_list" => cta_info_list,
-    #   "tag_info_list" => tag_info_list,
-    #   "gallery_rank" => { rank_list: gallery_rank, gallery_id: gallery_tag_id  },
-    #   "property_rank" => property_rank,
-    #   "fan_of_the_day" => winner
-    # }
-
-    sidebar_content_previews.contents.each do |content|
-      if content.title == "fan-of-the-day-widget"
-        content.type = content.title
-        winner_of_the_day = get_winner_of_day(Date.yesterday)
-        if winner_of_the_day
-          content.extra_fields["widget_info"] = {
-            avatar: user_avatar(winner_of_the_day.user), 
-            username: winner_of_the_day.user.username, 
-            counter: winner_of_the_day.counter
-          }
-        end
-      end
-    end
-
-    sidebar_content_previews
-
-  end
-
   def disney_default_aux(other)
     current_property = get_tag_from_params(get_disney_property())
     property = get_tag_from_params("property")
@@ -236,6 +146,7 @@ module DisneyHelper
         gallery_calltoaction = CallToAction.find(in_gallery)
         
         main_related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
+        gallery_tag = main_related_tag
 
         if main_related_tag.present?
           params = {
@@ -344,7 +255,8 @@ module DisneyHelper
     end
 
     if other && other.has_key?(:sidebar_tag)
-      sidebar_info = get_disney_sidebar_info(other[:sidebar_tag], current_property)
+      _env = gallery_tag.present? ? gallery_tag : current_property
+      sidebar_info = get_sidebar_info(other[:sidebar_tag], _env)
     end
 
     aux = {

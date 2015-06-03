@@ -3,7 +3,7 @@
   <%= light_link_to("{{content.detail_url}}", "ng-if" => "content.type == 'cta'") do %>
     <div class="row text-left">
       <div class="col-xs-12">
-        <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
+        <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
           <p class="cta__sidebar-panel__header-title">In evidenza</p>
         </div>
       </div>
@@ -53,7 +53,7 @@
   <!-- FAN OF THE DAY -->
   <div class="row text-left" ng-if="content.type == 'fan-of-the-day-widget'">
     <div class="col-xs-12">
-      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
         <p class="cta__sidebar-panel__header-title">Fan del giorno</p>
       </div>
     </div>
@@ -84,7 +84,7 @@
   <!-- RANKING -->
   <div class="row text-left" ng-if="content.type == 'ranking-widget'">
     <div class="col-xs-12">
-      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
         <p class="cta__sidebar-panel__header-title">{{content.extra_fields.widget_info.rank.attributes.title}}</p>
       </div>
     </div>
@@ -118,7 +118,7 @@
 
   <div ng-if="content.type == 'gallery-ranking-widget'" class="row text-left">
     <div class="col-xs-12">
-      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.current_property_info.background}">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
         <p class="cta__sidebar-panel__header-title">Classifica gallery</p>
       </div>
     </div>
@@ -150,9 +150,6 @@
       </div>
     </div>
   </div>  
-
-
-
  
 </div>
 

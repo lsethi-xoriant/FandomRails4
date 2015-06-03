@@ -29,22 +29,8 @@ class Sites::Forte::CallToActionController < CallToActionController
       render_calltoactions_str = render_calltoactions_str + (render_to_string "/call_to_action/_stream_single_calltoaction", locals: { calltoaction: calltoaction, calltoaction_comment_interaction: calltoactions_comment_interaction[calltoaction.id], active_calltoaction_id: nil, calltoaction_active_interaction: Hash.new, aux: nil }, layout: false, formats: :html)
     end
 
-=begin
-    calltoactions_during_video_interactions_second = Hash.new
-    calltoactions.each do |calltoaction|
-      interactions_overvideo_during = calltoaction.interactions.find_all_by_when_show_interaction("OVERVIDEO_DURING")
-      if(interactions_overvideo_during.any?)
-        calltoactions_during_video_interactions_second[calltoaction.id] = Hash.new
-        interactions_overvideo_during.each do |interaction|
-          calltoactions_during_video_interactions_second[calltoaction.id][interaction.id] = interaction.seconds
-        end
-      end
-    end
-=end
-
     response = Hash.new
     response = {
-      #calltoactions_during_video_interactions_second: calltoactions_during_video_interactions_second,
       calltoactions: calltoactions,
       html_to_append: render_calltoactions_str,
       calltoaction_info_list: build_cta_info_list_and_cache_with_max_updated_at(calltoactions),

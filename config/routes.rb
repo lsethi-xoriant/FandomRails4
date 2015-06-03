@@ -185,8 +185,8 @@ Fandom::Application.routes.draw do
           get "/refresh_top_window", :to => "application#refresh_top_window"
   
           get "/users/rai/sign_out", :to => "sessions#ballando_destroy"
-          get "/users/rai/sign_up/create", :to => "registrations#ballando_create"
-          get "/users/rai/sign_in/create", :to => "sessions#ballando_create"
+          post "/users/rai/sign_up/create", :to => "registrations#ballando_create"
+          post "/users/rai/sign_in/create", :to => "sessions#ballando_create"
           get "/users/rai/sign_in_from_provider/create", :to => "sessions#ballando_create_from_provider", defaults: { format: 'json' }
   
           get "/profile/widget", :to => "iframe_profile#show"
@@ -198,7 +198,7 @@ Fandom::Application.routes.draw do
           get "/iframe/do_check", :to => "iframe_check#do_check"
 
           get "/upload_interaction/new", :to => "upload_interaction#new"
-          get "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
+          post "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
 
           get "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
           post "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
@@ -245,8 +245,8 @@ Fandom::Application.routes.draw do
           get "/refresh_top_window", :to => "application#refresh_top_window"
   
           get "/users/rai/sign_out", :to => "sessions#forte_destroy"
-          get "/users/rai/sign_up/create", :to => "registrations#forte_create"
-          get "/users/rai/sign_in/create", :to => "sessions#forte_create"
+          post "/users/rai/sign_up/create", :to => "registrations#forte_create"
+          post "/users/rai/sign_in/create", :to => "sessions#forte_create"
           get "/users/rai/sign_in_from_provider/create", :to => "sessions#forte_create_from_provider", defaults: { format: 'json' }
   
           get "/profile/widget", :to => "iframe_profile#show"
@@ -258,7 +258,7 @@ Fandom::Application.routes.draw do
           get "/iframe/do_check", :to => "iframe_check#do_check"
 
           get "/upload_interaction/new", :to => "upload_interaction#new"
-          get "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
+          post "/upload_interaction/create/:interaction_id", :to => "call_to_action#upload"
 
           get "/generate_cover_for_calltoaction", :to => "application#generate_cover_for_calltoaction", defaults: { format: 'json' }
           post "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
@@ -402,7 +402,7 @@ Fandom::Application.routes.draw do
     get "periodicity/new", :to => "easyadmin#new_periodicity"
     post "periodicity/save", :to => "easyadmin#save_periodicity"
     get "periodicity", :to => "easyadmin#index_periodicity"
-    get "instantwin/generate/:id", :to => "instantwin#create_wins"
+    post "instantwin/generate/:id", :to => "instantwin#create_wins"
     get "instantwin_prize", :to => "easyadmin#index_prize"
     get "instantwin_prize/new", :to => "easyadmin#new_prize"
     get "instantwin_prize/edit/:id", :to => "easyadmin#edit_prize"

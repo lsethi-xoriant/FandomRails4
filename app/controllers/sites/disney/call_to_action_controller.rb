@@ -23,12 +23,14 @@ class Sites::Disney::CallToActionController < CallToActionController
         step_count = optional_history["optional_total_count"]
       end
 
+      sidebar_tag = calltoaction.user_id.present? ? "sidebar-cta-gallery" : "sidebar-cta"
+
       @aux_other_params = { 
         calltoaction: calltoaction,
         linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
         linked_call_to_actions_count: step_count,
         init_captcha: true,
-        sidebar_tags: ["detail"]
+        sidebar_tag: sidebar_tag
       }
 
       set_seo_info_for_cta(calltoaction)
