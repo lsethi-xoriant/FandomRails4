@@ -277,7 +277,7 @@ Fandom::Application.routes.draw do
 
   post "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
 
-  get "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
+  post "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
 
   get "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
 

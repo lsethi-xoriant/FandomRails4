@@ -1,1 +1,4 @@
-<div ng-bind-html="aux.assets['policy_' + aux.language]">
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+
+<div ng-bind-html="aux.assets['policy_' + aux.language] | unsafe" style="margin-bottom: 30px;"></div>

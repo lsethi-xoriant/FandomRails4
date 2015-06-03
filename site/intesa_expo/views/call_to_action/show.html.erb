@@ -1,4 +1,4 @@
-<% if @calltoaction_info_list.first["calltoaction"]["extra_fields"]["spotlight"].present? %>
+<% if !cookies[:profiling] && @calltoaction_info_list.first["calltoaction"]["extra_fields"]["spotlight"].present? %>
   <%= @calltoaction_info_list.first["calltoaction"]["extra_fields"]["spotlight"].html_safe %>
 <% end %>
 

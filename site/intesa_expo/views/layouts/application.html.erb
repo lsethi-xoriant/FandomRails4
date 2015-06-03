@@ -40,26 +40,28 @@
 
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %> body-{{aux.language}}" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 
-  <% if aux && aux["tag_menu_item"] == "imprese-home" %>
-    <script type="text/javascript">
-      var axel = Math.random() + "";
-      var a = axel * 10000000000000;
-      document.write('<iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p00;ord=' + a + '?" width="1" height="1" frameborder="0" style="display:none"></iframe>');
-    </script>
-    <noscript>
-    <iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p00;ord=1?" width="1" height="1" frameborder="0" style="display:none"></iframe>
-    </noscript>
-  <% elsif aux && aux["tag_menu_item"] == "home" %>
-    <script type="text/javascript">
-      var axel = Math.random() + "";
-      var a = axel * 10000000000000;
-      document.write('<iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p0;ord=' + a + '?" width="1" height="1" frameborder="0" style="display:none"></iframe>');
-    </script>
-    <noscript>
-    <iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p0;ord=1?" width="1" height="1" frameborder="0" style="display:none"></iframe>
-    </noscript>
-  <% elsif has_cta_spotlight?(@calltoaction_info_list.present? ? @calltoaction_info_list.first : nil) %>
-    <%= @calltoaction_info_list.first["calltoaction"]["extra_fields"]["spotlight"].html_safe %>
+  <% if !cookies[:profiling] %>
+    <% if aux && aux["tag_menu_item"] == "imprese-home" %>
+      <script type="text/javascript">
+        var axel = Math.random() + "";
+        var a = axel * 10000000000000;
+        document.write('<iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p00;ord=' + a + '?" width="1" height="1" frameborder="0" style="display:none"></iframe>');
+      </script>
+      <noscript>
+      <iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p00;ord=1?" width="1" height="1" frameborder="0" style="display:none"></iframe>
+      </noscript>
+    <% elsif aux && aux["tag_menu_item"] == "home" %>
+      <script type="text/javascript">
+        var axel = Math.random() + "";
+        var a = axel * 10000000000000;
+        document.write('<iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p0;ord=' + a + '?" width="1" height="1" frameborder="0" style="display:none"></iframe>');
+      </script>
+      <noscript>
+      <iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p0;ord=1?" width="1" height="1" frameborder="0" style="display:none"></iframe>
+      </noscript>
+    <% elsif has_cta_spotlight?(@calltoaction_info_list.present? ? @calltoaction_info_list.first : nil) %>
+      <%= @calltoaction_info_list.first["calltoaction"]["extra_fields"]["spotlight"].html_safe %>
+    <% end %>
   <% end %>
 
   <div ng-cloak>

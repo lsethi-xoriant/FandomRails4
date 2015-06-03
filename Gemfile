@@ -39,20 +39,17 @@ gem 'fastclick-rails' #, '~> 1.0.1'
 gem 'icalendar'
 gem 'ckeditor'
 
-
-#group :assets do
-  #gem 'turbo-sprockets-rails3'
-  gem 'sprockets-rails'
-#  gem 'coffee-rails' #, '~> 3.2.1'
-  gem 'uglifier' #, '>= 1.0.3'
-  gem 'compass-rails' #, '>= 1.0.3'
-  gem 'sass-rails' #, '~> 3.2.3'
-  gem 'bootstrap-sass'
+# group :assets do
+# gem 'turbo-sprockets-rails3'
+gem 'sprockets-rails'
+# gem 'coffee-rails' #, '~> 3.2.1'
+gem 'uglifier' #, '>= 1.0.3'
+gem 'compass-rails' #, '>= 1.0.3'
+gem 'sass-rails' #, '~> 3.2.3'
+gem 'bootstrap-sass'
 gem 'sass-globbing'
-
-#end
+# end
  
-
 gem 'ejs'
 
 group :development do

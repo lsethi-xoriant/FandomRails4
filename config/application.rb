@@ -20,6 +20,8 @@ module Fandom
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    Rack::Utils.multipart_part_limit = 0
+
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/vendor/engines/fandom/experience/app/models)
 
