@@ -136,6 +136,15 @@ module EasyadminHelper
     link_to name, "#", :onclick => h("add_vote_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary", remote: true 
   end
 
+  def link_to_add_random_fields(name, f, association)
+    new_object = Interaction.new
+    new_object.resource = RandomResource.new
+    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
+      render("/easyadmin/call_to_action/random_form", f: builder)
+    end
+    link_to name, "#", :onclick => h("add_random_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
+  end
+
   def link_to_remove_fields(name, resource, template = resource)
     link_to name, "#", :onclick => h("remove_fields(this, \"#{ template }\")"), class: "btn btn-warning btn-xs", remote: true
   end

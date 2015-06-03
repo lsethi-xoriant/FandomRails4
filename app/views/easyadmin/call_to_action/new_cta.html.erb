@@ -90,7 +90,7 @@
 	  	    </div>
 	    </div>
         <div class="col-md-2">
-	  		<input type='button' value='AGGIUNGI CAMPO' id='add-button-for-extra_fields-fields' class='btn btn-primary'>
+	  		<input type='button' value='AGGIUNGI CAMPO' id='add-button-for-extra_fields-fields' class='btn btn-primary btn-block'>
 	  	</div>
 	  </div>
 	  <div class="row">
@@ -120,6 +120,19 @@
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "TEST" %>
           <%= render '/easyadmin/call_to_action/test_form', :f => builder %>
+        <% end %>
+      <% end %>
+
+      <div class="row">
+        <div class="col-md-10"><h3>RANDOM</h3></div>
+        <div class="col-md-2"><%= link_to_add_random_fields "AGGIUNGI RANDOM", f, :interactions %></div>
+      </div>
+
+      <div id="tmp-random-add"></div>
+
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "RandomResource" %>
+          <%= render '/easyadmin/call_to_action/random_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -367,8 +380,8 @@
   var play_counter = false;
   var upload_counter = false;
   var vote_counter = false;
-  
-  
+  var random_counter = false;
+
   $(document).ready(function() {
 
     fillInputWithSlug($('#call_to_action_title'), $('#call_to_action_name'));

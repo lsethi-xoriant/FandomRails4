@@ -90,6 +90,15 @@ function add_vote_fields(link, association, content) {
   }
 }
 
+function add_random_fields(link, association, content) {
+  if(!random_counter){
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g");
+    $("#tmp-random-add").prepend(content.replace(regexp, new_id));
+    random_counter = true;
+  }
+}
+
 function remove_fields(link, resource) {
   switch(resource) {
     case "check":
@@ -133,6 +142,10 @@ function remove_fields(link, resource) {
     case "vote":
       $(link).parent().parent().parent().remove();
       vote_counter = false;
+      break;
+    case "random":
+      $(link).parent().parent().parent().remove();
+      random_counter = false;
       break;
     default:
       $(link).closest(".panel-" + resource).remove();

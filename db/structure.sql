@@ -13586,6 +13586,37 @@ ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
 
 
 --
+-- Name: random_resources; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE random_resources (
+    id integer NOT NULL,
+    tag text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE random_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
+
+
+--
 -- Name: rankings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -16997,6 +17028,13 @@ ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_resources_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY rankings ALTER COLUMN id SET DEFAULT nextval('rankings_id_seq'::regclass);
 
 
@@ -20125,6 +20163,14 @@ ALTER TABLE ONLY quizzes
 
 
 --
+-- Name: random_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY random_resources
+    ADD CONSTRAINT random_resources_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: rankings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -20376,6 +20422,13 @@ CREATE INDEX index_call_to_actions_on_aux_aws_transcoding_media_status ON call_t
 --
 
 CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
 
 
 --
@@ -20766,6 +20819,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -21150,6 +21210,13 @@ CREATE INDEX index_call_to_actions_on_aux_aws_transcoding_media_status ON call_t
 --
 
 CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
 
 
 --
@@ -21540,6 +21607,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -21924,6 +21998,13 @@ CREATE INDEX index_call_to_actions_on_aux_aws_transcoding_media_status ON call_t
 --
 
 CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
 
 
 --
@@ -22314,6 +22395,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -22698,6 +22786,13 @@ CREATE INDEX index_call_to_actions_on_aux_aws_transcoding_media_status ON call_t
 --
 
 CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
 
 
 --
@@ -23787,4 +23882,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150507085715');
 INSERT INTO schema_migrations (version) VALUES ('20150511143302');
 
 INSERT INTO schema_migrations (version) VALUES ('20150528134030');
+
+INSERT INTO schema_migrations (version) VALUES ('20150528162710');
 

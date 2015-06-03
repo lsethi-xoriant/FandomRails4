@@ -530,6 +530,15 @@ class CallToActionController < ApplicationController
 
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
       response["counter_aux"] = counter.aux
+
+    elsif interaction.resource_type.downcase == "randomresource"
+
+      ctas = get_ctas(tag).to_a
+      loop do
+        next_random_cta = ctas.sample
+        break if next_random_cta.id != interaction.id
+      end
+
     else
       if interaction.resource_type.downcase == "download" 
         response["download_interaction_attachment"] = interaction.resource.attachment.url
