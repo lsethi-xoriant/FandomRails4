@@ -68,7 +68,6 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
   
-  gem 'colorize'
   gem 'bullet'
   gem 'byebug'
 end

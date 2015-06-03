@@ -554,7 +554,6 @@ DEPENDENCIES
   capistrano-rvm
   carrierwave
   ckeditor
-  colorize
   compass-rails
   dalli
   dalli-elasticache
@@ -608,6 +607,3 @@ DEPENDENCIES
   twitter
   uglifier
   unicorn
-
-BUNDLED WITH
-   1.10.2
