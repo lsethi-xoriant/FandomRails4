@@ -9,7 +9,7 @@ class Sites::IntesaExpo::CallToActionController < CallToActionController
 
   def go_to_context(cta, context_name)
     assets = get_tag_from_params("assets")
-    assets_extra_fields = JSON.parse(assets.extra_fields)
+    assets_extra_fields = assets.extra_fields
     redirect_to "#{assets_extra_fields[context_name]}/call_to_action/#{cta.slug}"
   end
 
