@@ -36,7 +36,11 @@ class GalleryController < ApplicationController
       }
     end
 
-    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(galleries_user_cta, ["like", "comment", "share", "vote"])
+    params["other_params"] = {}
+    params["other_params"]["gallery"] = "all"
+    
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+
     @aux_other_params = { 
       "gallery" => true, 
       "gallery_index" => true,
