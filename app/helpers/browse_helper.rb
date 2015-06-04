@@ -412,7 +412,46 @@ module BrowseHelper
         content_preview_list
       end
     end
+
+    interaction_id_to_resource_type = {}
+    content_preview_list.contents.each do |content|
+      if content.type == "cta" && content.interactions.present?
+        content.interactions.each do |interaction| 
+          interaction_id_to_resource_type[interaction[:interaction_info][:id]] = interaction[:interaction_info][:resource_type]
+        end
+      end
+    end
+
+    adjust_content_preview_counters(interaction_id_to_resource_type, content_preview_list)
+
     content_preview_list
+  end
+
+  def adjust_content_preview_counters(interaction_id_to_resource_type, content_preview_list)
+    interaction_ids = interaction_id_to_resource_type.keys
+    counters = ViewCounter.where("ref_type = 'interaction' AND ref_id IN (?)", interaction_ids)
+    content_preview_list.contents.each do |content|
+      if content.type == "cta" && content.interactions.present?
+        content.interactions.each do |interaction|
+          interaction_id = interaction[:interaction_info][:id]
+          resource_type = interaction_id_to_resource_type[interaction_id].downcase
+          if resource_type == "vote" || resource_type == "like" || resource_type == "comment"
+            counter = find_interaction_in_counters(counters, interaction_id)
+            counter = counter ? counter.counter : 0
+            case resource_type
+            when "vote"
+              content.votes = counter
+            when "like"
+              content.likes = counter
+            when "comment"
+              content.comments = counter
+            else
+              # Nothing to do
+            end
+          end
+        end
+      end
+    end
   end
   
   # WITH MATCH METHOD

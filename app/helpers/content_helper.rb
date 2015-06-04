@@ -204,10 +204,10 @@ module ContentHelper
     
     content_preview.thumb_wide_url = (cta.thumbnail(:wide) rescue "") 
     content_preview.thumb_medium_url = (cta.thumbnail(:medium) rescue "") 
-    content_preview.comments = get_number_of_interaction_type_for_cta("Comment", cta)
-    content_preview.likes = get_number_of_interaction_type_for_cta("Like", cta)
+    # content_preview.comments = get_number_of_interaction_type_for_cta("Comment", cta)
+    # content_preview.likes = get_number_of_interaction_type_for_cta("Like", cta)
     content_preview.tags = get_tag_ids_for_cta(cta)
-    content_preview.votes = get_number_of_interaction_type_for_cta("Vote", cta)
+    # content_preview.votes = get_number_of_interaction_type_for_cta("Vote", cta)
     content_preview.aux = build_content_preview_aux(cta)
     content_preview.interactions = interactions
     content_preview.valid_from = cta.valid_from
