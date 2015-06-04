@@ -352,6 +352,7 @@
       container.find($(".media-upload-form-group")).show();
     }
     else {
+      container.find($(".media-upload-form-group")).hide();
       switch(media_type) {
         case "YOUTUBE":
         case "KALTURA":
@@ -360,26 +361,22 @@
           container.find($(".media_data-form-group")).show();
           container.find($(".play-interaction")).show();
           container.find($(".media-image-form-group")).hide();
-          container.find($(".media-upload-form-group")).hide();
           break;
         case "IFRAME":
           container.find($(".media-data-label")).html("IFRAME");
           container.find($(".media_data-form-group")).show();
           container.find($(".play-interaction")).hide();
           container.find($(".media-image-form-group")).hide();
-          container.find($(".media-upload-form-group")).hide();
           break;
         case "IMAGE":
           container.find($(".media_data-form-group")).hide();
           container.find($(".play-interaction")).hide();
           container.find($(".media-image-form-group")).show();
-          container.find($(".media-upload-form-group")).hide();
           break;
         default:
           container.find($(".media_data-form-group")).hide();
           container.find($(".media-image-form-group")).hide();
           container.find($(".play-interaction")).hide();
-          container.find($(".media-upload-form-group")).hide();
       }
     }
   }
