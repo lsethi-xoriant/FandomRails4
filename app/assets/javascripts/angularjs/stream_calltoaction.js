@@ -1823,7 +1823,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       interaction_info.interaction.resource.counter_aux = data.counter_aux; 
     }
 
-    // Next calltoaction for test interaction.
+    // Next call to action for test interaction
     if(data.next_call_to_action_info_list) {
       $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
       if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
@@ -1838,6 +1838,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
       }, 200);
 
+    }
+
+    // Next call to action for random interaction
+    if(data.next_random_call_to_action_info_list) {
+      $scope.initCallToActionInfoList(data.next_random_call_to_action_info_list);
     }
   };
 

@@ -478,6 +478,8 @@ class CallToActionController < ApplicationController
       to_redo: false
     }
 
+    calltoaction = interaction.call_to_action
+
     if interaction.resource_type.downcase == "quiz"
       answer = Answer.find(params[:params])
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil, aux.to_json)
@@ -536,11 +538,16 @@ class CallToActionController < ApplicationController
 
     elsif interaction.resource_type.downcase == "randomresource"
 
-      ctas = get_ctas(tag).to_a
-      loop do
-        next_random_cta = ctas.sample
-        break if next_random_cta.id != interaction.id
-      end
+      # TODO: Optimize next random call to action searching (with cache?)
+      tag = Tag.find_by_name(interaction.resource.tag)
+      ctas_without_me = get_ctas(tag).where("call_to_actions.id <> ?", calltoaction.id)
+      next_random_cta = ctas_without_me.offset(rand(ctas_without_me.count)).first
+
+      aux["next_random_cta"] = [next_random_cta.id]
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
+      response[:ga][:label] = interaction.resource_type.downcase
+
+      response["next_random_call_to_action_info_list"] = build_cta_info_list_and_cache_with_max_updated_at([next_random_cta])
 
     else
       if interaction.resource_type.downcase == "download" 
@@ -550,8 +557,6 @@ class CallToActionController < ApplicationController
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
       response[:ga][:label] = interaction.resource_type.downcase
     end
-
-    calltoaction = interaction.call_to_action
 
     if user_interaction
       response["user_interaction"] = build_user_interaction_for_interaction_info(user_interaction)

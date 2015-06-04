@@ -7,4 +7,8 @@ class RandomResource < ActiveRecord::Base
 
   has_one :interaction, as: :resource
 
+  def one_shot
+    false
+  end
+
 end

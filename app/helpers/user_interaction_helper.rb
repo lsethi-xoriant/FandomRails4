@@ -261,6 +261,10 @@ module UserInteractionHelper
         if interaction.resource.quiz_type == "VERSUS"
           adjust_counter!(interaction, answer_id.to_s)
         end
+      when "randomresource"
+        next_random_cta = aux["next_random_cta"]
+        aux = user_interaction.aux
+        aux["next_random_cta"] = (aux["next_random_cta"] || []) + next_random_cta        
       end
 
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)

@@ -22,7 +22,10 @@
   </div> 
   <div ng-if="interaction_info.interaction.resource_type == 'vote'" class="col-sm-12 text-center visible-xs">
     <%= render partial: "/call_to_action/vote_interaction" %>
-  </div>  
+  </div>
+  <div ng-if="interaction_info.interaction.resource_type == 'randomresource'" class="col-sm-12 text-center">
+    <%= render partial: "/call_to_action/random_interaction" %>
+  </div>
 </div>
 
 <!-- TEST -->
