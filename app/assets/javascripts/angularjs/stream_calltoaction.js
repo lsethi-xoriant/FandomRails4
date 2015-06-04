@@ -1741,7 +1741,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
 
     if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
-      
+
       interaction_info.feedback = true;
 
       if(interaction_info.interaction.resource_type == "trivia") {

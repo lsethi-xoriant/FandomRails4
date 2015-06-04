@@ -500,6 +500,9 @@ class CallToActionController < ApplicationController
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
       response["counter_aux"] = counter ? counter.aux : {}
       response["counter"] = counter ? counter.counter : 0
+      if answer.call_to_action_id
+        response["next_call_to_action_info_list"] = build_cta_info_list_and_cache_with_max_updated_at([CallToAction.find(answer.call_to_action_id)])
+      end
 
     elsif interaction.resource_type.downcase == "like"
 
