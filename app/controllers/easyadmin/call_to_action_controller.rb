@@ -238,15 +238,15 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   def index_user_cta_to_be_approved
     get_user_cta_with_status()
   end
-  
+
   def index_user_cta_approved
     get_user_cta_with_status(true)
   end
-  
+
   def index_user_cta_not_approved
     get_user_cta_with_status(false)
   end
-  
+
   def get_user_cta_with_status(approvation_status = nil)
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
