@@ -37,7 +37,8 @@ class GalleryController < ApplicationController
     end
 
     params["other_params"] = {}
-    params["other_params"]["gallery"] = "all"
+    params["other_params"]["gallery"] = {}
+    params["other_params"]["gallery"]["calltoaction_id"] = "all"
     
     @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
 
