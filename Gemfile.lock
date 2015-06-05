@@ -607,6 +607,3 @@ DEPENDENCIES
   twitter
   uglifier
   unicorn
-
-BUNDLED WITH
-   1.10.2
