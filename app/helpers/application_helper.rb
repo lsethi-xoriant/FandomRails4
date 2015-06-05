@@ -724,7 +724,7 @@ module ApplicationHelper
     cta_info_list
   end
 
-  def build_evidence_ctas_info_list(property)
+  def build_evidence_cta_info_list(property)
     cache_key = property.present? ? "in_#{property.name}" : "without_property"
     cache_timestamp = get_cta_max_updated_at()
     
@@ -784,7 +784,7 @@ module ApplicationHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      evidence_ctas_info_list = build_evidence_ctas_info_list(property)
+      evidence_ctas_info_list = build_evidence_cta_info_list(property)
     else
       evidence_ctas_info_list = nil
     end
