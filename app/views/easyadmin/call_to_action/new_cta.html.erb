@@ -171,7 +171,7 @@
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Like" %>
-          <%= render '/easyadmin/call_to_action/like-form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/like_form', :f => builder %>
         <% end %>
       <% end %>
 

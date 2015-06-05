@@ -16,9 +16,11 @@
       params = request.params
       params["page_elements"] = ["like", "comment", "share"]
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
+      ctas_highlighted = get_cta_highlighted_carousel()
   
       result = {
         'call_to_action_info_list' => calltoaction_info_list,
+        'call_to_action_highlight_list' => ctas_highlighted,
         'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
         'call_to_action_info_list_has_more' => has_more,
         # TODO: content section need to have their timestamp
@@ -28,6 +30,10 @@
       respond_with result.to_json
     end
 
+    def get_cta_highlighted_carousel()
+      property = get_property()
+      build_evidence_cta_info_list(property)
+    end
 
     def get_max_updated_at_from_cta_info_list(calltoaction_info_list)
       result = nil
