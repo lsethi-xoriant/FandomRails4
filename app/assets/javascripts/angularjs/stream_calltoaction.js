@@ -1237,25 +1237,34 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     calltoaction_id = $("#" + calltoaction_div_id).attr("calltoaction-id");
 
     current_video_player = getPlayer(calltoaction_id);
-    current_video_player_state = current_video_player.playerManager.getPlayerState();
+    if(current_video_player) {
+      current_video_player_state = current_video_player.playerManager.getPlayerState();
 
-    if(current_video_player_state == 1) {
+      if(current_video_player_state == 1) {
 
-      updateStartVideoInteraction(calltoaction_id);
-      mayStartpolling(calltoaction_id);
+        updateStartVideoInteraction(calltoaction_id);
+        mayStartpolling(calltoaction_id);
 
-    } else if(current_video_player_state == 0) {
+      } else if(current_video_player_state == 0) {
 
-      updateEndVideoInteraction(calltoaction_id);
-      mayStopPolling();
+        calltoaction_info = getCallToActionInfo(calltoaction_id);
+        if(calltoaction_info.answer_with_video_linking_cta) {
+          $scope.initCallToActionInfoList(calltoaction_info.answer_with_video_linking_cta);
+          initializeVideoAfterPageRender();
+        }
+        else {
+          updateEndVideoInteraction(calltoaction_id);
+          mayStopPolling();
+        }
 
-    } else {
-      // Other state.
+      } else {
+        // Other state.
+      }
     }
   }; 
-  
+
   //////////////////////// KALTURA CALLBACK ////////////////////////
-  
+
   function kalturaPlayer(playerId, media_data) {
   	this.playerManager = null;
   	this.playerId = playerId;
@@ -1735,9 +1744,26 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     // Interaction after user response.
     updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
     calltoaction_info.status = JSON.parse(data.calltoaction_status);
-    
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
+    }
+
+    if(data.answer.media_type == "YOUTUBE") {
+      if(calltoaction_info.calltoaction.media_type != "YOUTUBE") {
+        calltoaction_info.calltoaction.media_type = "YOUTUBE";
+        calltoaction_info.calltoaction.vcode = data.answer.media_data;
+        $timeout(function() { 
+          player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, data.answer.media_data);
+        }, 0);
+      }
+      else {
+        $scope.updateYTIframe(calltoaction_info, data.answer.media_data, true);
+      }
+    }
+
+    if(data.answer.media_type == "IMAGE") {
+      calltoaction_info.calltoaction.media_image_from_answer_type = "IMAGE";
+      calltoaction_info.calltoaction.media_image_from_answer = data.answer_media_image_url;
     }
 
     if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
@@ -1825,18 +1851,28 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     // Next call to action for test interaction
     if(data.next_call_to_action_info_list) {
-      $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
-      if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-        updateInteractionsHistory(data.user_interaction.interaction_id);
-      } else {
-        updateInteractionsHistory(data.user_interaction.id);
-      }     
 
-      $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
-      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
-      $timeout(function() { 
-        $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
-      }, 200);
+      if(data.has_answer_media && data.answer.media_type == "YOUTUBE") {
+        // In this case, YouTube video switching is managed by onPlayerStateChange method from YouTube callback methods
+        calltoaction_info.answer_with_video_linking_cta = data.next_call_to_action_info_list;
+      }
+      else {
+        $timeout(function() { 
+          $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
+          if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
+            updateInteractionsHistory(data.user_interaction.interaction_id);
+          } else {
+            updateInteractionsHistory(data.user_interaction.id);
+          }
+
+          $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
+          initializeVideoAfterPageRender();
+          $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
+          $timeout(function() { 
+            $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+          }, 200);
+        }, 4000);
+      }
 
     }
 
@@ -1885,6 +1921,22 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
     }
 
+  }
+
+  function initializeVideoAfterPageRender() {
+    $timeout(function() { 
+
+      if($scope.calltoaction_info.calltoaction.media_type == 'YOUTUBE') {
+        $(".media-youtube iframe").remove();
+        iframe = "<div id=\"main-media-iframe-" + $scope.calltoaction_info.calltoaction.id + "\" main-media=\"main\" calltoaction-id=\"" + $scope.calltoaction_info.calltoaction.id + "\" class=\"embed-responsive-item\"></div>";
+        $(".media-youtube").html(iframe);
+      }
+
+      angular.forEach($scope.calltoactions, function(sc) {
+        appendYTIframe(sc);
+      });
+
+    }, 0); // Code to be executed after page render
   }
 
   function resetRedoUserInteractionsForLoggedUser() {
@@ -2084,14 +2136,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $window.videoPolling = function() {
     angular.forEach($scope.play_event_tracked, function(video_started, calltoaction_id) {
       calltoaction_info = getCallToActionInfo(calltoaction_id);
-      if(calltoaction_info.calltoaction.media_type == "YOUTUBE"){
-      	youtube_player = getPlayer(calltoaction_id);
-      	youtube_player_current_time = Math.floor(youtube_player.playerManager.getCurrentTime()); 
-      	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);
+      if(calltoaction_info) {
+        if(calltoaction_info.answer_with_video_linking_cta) {
+          // Do nothing
+        }
+        else {
+          if(calltoaction_info.calltoaction.media_type == "YOUTUBE"){
+          	youtube_player = getPlayer(calltoaction_id);
+          	youtube_player_current_time = Math.floor(youtube_player.playerManager.getCurrentTime()); 
+          	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);
 
-      	if(video_started && overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
-        	executeInteraction(youtube_player, calltoaction_id, overvideo_interaction);
-      	}
+          	if(video_started && overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
+            	executeInteraction(youtube_player, calltoaction_id, overvideo_interaction);
+          	}
+          }
+        }
       }
     });
   };

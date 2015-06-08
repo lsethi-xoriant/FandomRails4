@@ -1,4 +1,5 @@
-<div ng-if="calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA' || calltoaction_info.calltoaction.media_type == 'FLOWPLAYER'" id="main-media-{{calltoaction_info.calltoaction.id}}">
+{{calltoaction_info.calltoaction.media_type}} -- {{calltoaction_info.calltoaction.media_image}}
+<div ng-if="(calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA' || calltoaction_info.calltoaction.media_type == 'FLOWPLAYER') && calltoaction_info.calltoaction.media_image_from_answer_type != 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}">
   <div class="media-youtube embed-responsive embed-responsive-16by9">             
     
     <!-- IFRAME VIDEO -->
@@ -39,8 +40,13 @@
   </div>
 </div>
 
+<!-- ANSWER MEDIA IMAGE -->
+<div ng-if="calltoaction_info.calltoaction.media_image_from_answer_type == 'IMAGE'" class="media-image">
+  <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image_from_answer}}" style="width: 100%;">
+</div>
+
 <!-- MAIN MEDIA IMAGE -->
-<div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
+<div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE' && calltoaction_info.calltoaction.media_image_from_answer_type != 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
   <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
 
   <!-- DOWNLOAD INTERACTION -->

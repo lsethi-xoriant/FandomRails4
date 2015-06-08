@@ -483,11 +483,11 @@ class CallToActionController < ApplicationController
     if interaction.resource_type.downcase == "quiz"
       answer = Answer.find(params[:params])
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil, aux.to_json)
-      response["have_answer_media"] = answer.answer_with_media?
+      response["has_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
 
       if answer.media_type == "IMAGE" && answer.media_image
-        response["answer"]["media_image"] = answer.media_image
+        response["answer_media_image_url"] = answer.media_image.url
       end
 
       if interaction.resource.quiz_type.downcase == "trivia"
