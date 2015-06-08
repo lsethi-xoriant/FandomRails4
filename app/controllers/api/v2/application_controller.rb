@@ -9,10 +9,15 @@
       cta_chunk_size = 10
       
       tag = get_property()
+      featured_tag_name = "featured"
+      
       if tag
         tag_name = tag.name
+        featured_content_previews = get_content_previews(featured_tag_name, [tag])
+      else
+        featured_content_previews = get_content_previews(featured_tag_name)
       end
-
+      
       params = request.params
       params["page_elements"] = ["like", "comment", "share"]
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
@@ -24,6 +29,8 @@
         'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
         'call_to_action_info_list_has_more' => has_more,
         'menu_items' => get_menu_items(),
+        'featured_content_previews' => featured_content_previews.contents,
+        'properties' => init_property_info_list().contents,
         # TODO: content section need to have their timestamp
         'content_sections' => []
       }
