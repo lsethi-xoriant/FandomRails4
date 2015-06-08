@@ -210,6 +210,11 @@ module CacheKeysHelper
     "cta_to_reward_statuses_#{user_id}"
   end
 
+  def get_cta_ids_by_property_cache_key(property, max_timestamp)
+    property_name = property.nil? ? 'nil' : property.name
+    "cta_of_property_#{property_name}_max_timestamp"
+  end
+
   # CTA and tags
   # ~~~~~~~~~~~~
 
