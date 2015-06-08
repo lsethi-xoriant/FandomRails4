@@ -114,9 +114,9 @@ Fandom::Application.routes.draw do
         
         get "/iur", to: "application#iur"
         get "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
-        get "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
+        post "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         get "/reward/catalogue", :to => "reward#index"
-        
+
         devise_scope :user do
           post "/users", :to => "registrations#create"
           put "/users/edit", :to => "registrations#update"

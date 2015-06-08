@@ -54,11 +54,11 @@ module DisneyHelper
   end
 
   def disney_profile_completed?()
-    JSON.parse(current_user.aux)["profile_completed"] rescue true
+    current_user.aux["profile_completed"] rescue true
   end
 
   def get_disney_membername()
-    JSON.parse(current_user.aux)["membername"] rescue ""
+    current_user.aux["membername"] rescue ""
   end
 
   def build_disney_current_user()
