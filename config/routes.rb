@@ -325,6 +325,7 @@ Fandom::Application.routes.draw do
     namespace :v2 do
       get "/get_stripe/:tag_name", :to => "browse#get_stripe_from_tag", defaults: { format: 'json' }
       get "/index", :to => "application#index", defaults: { format: 'json' }
+      get "/index/load_more", :to => "application#load_more_ctas_in_stream", defaults: { format: 'json' }
     end
   end
 
