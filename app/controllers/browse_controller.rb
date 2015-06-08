@@ -140,7 +140,12 @@ class BrowseController < ApplicationController
   
   # hook for tenant with multiproperty
   def get_tags_for_category(tag)
-    [tag]
+    property = get_property()
+    if property.nil?
+      [tag]
+    else
+      [tag, property]
+    end
   end
   
   def index_category_load_more
