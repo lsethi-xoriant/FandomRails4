@@ -64,15 +64,7 @@ class ProfileController < ApplicationController
   end
 
   def rankings
-    property = get_property()
-    if $site.id == 'ballando' || $site.id == 'forte'
-      rank = Ranking.find_by_name("general_chart")
-    elsif property.present?
-      property_name = property.name
-      rank = Ranking.find_by_name("#{property_name}-general-chart")
-    else
-      rank = Ranking.find_by_name("general-chart")
-    end
+    rank = get_general_ranking()
 
     @property_rank = get_full_rank(rank)
     

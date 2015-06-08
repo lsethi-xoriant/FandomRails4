@@ -10,16 +10,7 @@ module DisneyHelper
   def get_disney_ctas(property, in_gallery = false)
     get_ctas(property, in_gallery)
   end
-  
-  def get_my_general_position_in_property
-    property_ranking = Ranking.find_by_name("#{get_disney_property}-general-chart")
-    if property_ranking && current_user
-      get_my_general_position(property_ranking.name, current_user.id)
-    else
-      [nil, nil]
-    end
-  end
-  
+    
   def get_disney_current_contest_point_name
     unless $context_root.nil?
       "#{$context_root}-point"

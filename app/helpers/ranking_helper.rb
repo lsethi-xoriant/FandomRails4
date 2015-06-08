@@ -52,6 +52,28 @@ module RankingHelper
     end
     [position, total]
   end
+
+  def get_general_ranking
+    property = get_property()
+    if $site.id == 'ballando' || $site.id == 'forte'
+      ranking = Ranking.find_by_name("general_chart")
+    elsif property.present?
+      property_name = property.name
+      ranking = Ranking.find_by_name("#{property_name}-general-chart")
+    else
+      ranking = Ranking.find_by_name("general-chart")
+    end
+    ranking    
+  end
+
+  def get_my_general_position_in_property
+    ranking = get_general_ranking()
+    if ranking && current_user
+      get_my_general_position(ranking.name, current_user.id)
+    else
+      [nil, nil]
+    end
+  end
   
   def get_reward_points_in_period(period_kind, reward_name)    
     reward_points = get_counter_about_user_reward(reward_name, true)
