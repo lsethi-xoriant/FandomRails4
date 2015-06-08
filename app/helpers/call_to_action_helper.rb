@@ -49,8 +49,13 @@ module CallToActionHelper
   end
 
   def get_ctas_most_viewed(property)
-    ctas = get_ctas(property)
-    cta_ids = from_ctas_to_cta_ids_sql(ctas)
+    max_timestamp = get_cta_max_updated_at()
+    cache_key = get_cta_ids_by_property_cache_key(property, max_timestamp)
+
+    cta_ids = cache_forever(cache_key) do
+      ctas = get_ctas(property)
+      cta_ids = from_ctas_to_cta_ids_sql(ctas)
+    end
 
     result = []
     ctas_most_viewed = gets_ctas_ordered_by_views(cta_ids, 4)
