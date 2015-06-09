@@ -20,7 +20,7 @@ class Sites::Ballando::CallToActionController < CallToActionController
       
       answer = Answer.find(params[:params])
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil)
-      response["have_answer_media"] = answer.answer_with_media?
+      response["has_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
 
       if answer.media_type == "IMAGE" && answer.media_image

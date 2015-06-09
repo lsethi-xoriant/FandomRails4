@@ -1,7 +1,7 @@
 <%= render partial: "/easyadmin/easyadmin/left_bar", locals: { page: "calltoaction" } %>
 
 <% @ctas.each do |c| %>
-  <%= render partial: "/easyadmin/call_to_action/reason_for_not_approving", locals: { cta: c, page: "approved" } %>
+  <%= render partial: "/easyadmin/call_to_action/reason_for_not_approving", locals: { cta: c, page: "approved", page_number: params["page"] } %>
 <% end %>
 
   <div id="content">    

@@ -454,6 +454,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     aux = cta.aux || {}
     aux["reason_for_not_approving"] = params[:reason]
     cta.update_attribute(:aux, aux.to_json)
-    redirect_to "/easyadmin/cta/#{params[:page]}"
+    url = "/easyadmin/cta/#{params[:page]}"
+    url += "?page=#{params["page_number"]}" unless params["page_number"].blank?
+    redirect_to url
   end
 end
