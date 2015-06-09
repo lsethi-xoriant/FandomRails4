@@ -1747,17 +1747,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
     }
-
-    if(data.answer.media_type == "YOUTUBE") {
-      if(calltoaction_info.calltoaction.media_type != "YOUTUBE") {
-        calltoaction_info.calltoaction.media_type = "YOUTUBE";
-        calltoaction_info.calltoaction.vcode = data.answer.media_data;
-        $timeout(function() { 
-          player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, data.answer.media_data);
-        }, 0);
-      }
-      else {
-        $scope.updateYTIframe(calltoaction_info, data.answer.media_data, true);
+    if data.answer {
+      if(data.answer.media_type == "YOUTUBE") {
+        if(calltoaction_info.calltoaction.media_type != "YOUTUBE") {
+          calltoaction_info.calltoaction.media_type = "YOUTUBE";
+          calltoaction_info.calltoaction.vcode = data.answer.media_data;
+          $timeout(function() { 
+            player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, data.answer.media_data);
+          }, 0);
+        }
+        else {
+          $scope.updateYTIframe(calltoaction_info, data.answer.media_data, true);
+        }
       }
     }
 
