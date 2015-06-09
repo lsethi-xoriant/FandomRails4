@@ -2,7 +2,7 @@ include PeriodicityHelper
 
 class UserReward < ActiveRecord::Base
   
-  attr_accessible :user_id, :reward_id, :available, :counter, :period_id
+  attr_accessible :user_id, :reward_id, :available, :counter, :period_id, :period, :reward
 
   belongs_to :user
   belongs_to :reward

@@ -5,7 +5,16 @@ require 'fandom_utils'
 
 module ApplicationHelper
 
+  include ActionView::Helpers::SanitizeHelper
+  include AnonymousNavigationHelper
+  include CacheExpireHelper
   include CacheHelper
+  include CalendarHelper
+  include CacheKeysHelper
+  include CallToActionHelper
+  include CaptchaHelper
+  include CommentHelper
+  include ContentHelper
   include RewardingSystemHelper
   include RewardHelper
   include NoticeHelper
@@ -13,25 +22,18 @@ module ApplicationHelper
   include GrafitagHelper
   include LogHelper
   include SeoHelper
-  include EventHandlerHelper
-  include CacheKeysHelper
-  include CommentHelper
-  include CallToActionHelper
-  include CaptchaHelper
-  include CalendarHelper
+  include EventHandlerHelper 
   include ViewHelper
-  include LinkedCallToActionHelper
-  include CacheExpireHelper
+  include LinkedCallToActionHelper 
   include PeriodicityHelper
   include ModelHelper
   include RewardingRuleCheckerHelper
   include RewardingRulesCollectorHelper
   include FandomUtils
-  include FilterHelper
-  include ContentHelper
+  include FilterHelper  
   include UserInteractionHelper
   include TagHelper
-  include ActionView::Helpers::SanitizeHelper
+  
   
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
   # is redefined in TextHelper
@@ -794,12 +796,19 @@ module ApplicationHelper
       sidebar_info = get_sidebar_info(other[:sidebar_tag], _env)
     end
 
+    if property && property.name != $site.default_property
+      property_path_name = property.name
+    else
+      property_path_name = nil;
+    end
+
     @aux = {
+      "site" => $site,
       "tenant" => $site.id,
       "free_provider_share" => $site.free_provider_share,
-      "anonymous_interaction" => $site.anonymous_interaction,
       "property_info" => property_info,
       "property_info_list" => property_info_list,
+      "property_path_name" => property_path_name,
       "calltoaction_evidence_info" => evidence_ctas_info_list,
       "related_calltoaction_info" => related_ctas,
       "mobile" => small_mobile_device?(),

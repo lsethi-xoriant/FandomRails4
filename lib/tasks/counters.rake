@@ -12,6 +12,10 @@ namespace :counters do
         counter_aux = {}
         quiz.answers.each do |answer|
           counter_aux[answer.id] = UserInteraction.where("answer_id = ?", answer.id).count
+          values = user_interaction.aux["counters"]
+          values.each do |key, value|
+            counter_aux[key] = counter_aux[key] ? (counter_aux[key] + value) : value
+          end
         end
 
         #if interaction_answers_count < 1
@@ -38,7 +42,7 @@ namespace :counters do
       counter = user_interactions.count
       user_interactions.each do |user_interaction|
         puts user_interaction.to_json
-        values = JSON.parse(user_interaction.aux)["vote_info_list"]
+        values = user_interaction.aux["vote_info_list"]
         values.each do |key, value|
           counter_aux[key] = counter_aux[key] ? (counter_aux[key] + value) : value
         end
@@ -57,6 +61,12 @@ namespace :counters do
       user_interactions = UserInteraction.where("interaction_id = ?", interaction_id).where("(aux->>'like')::bool")
 
       counter = user_interactions.count
+
+      anonymous_user = User.find_by_email("anonymous@shado.tv")
+      anon_user_interaction =  anonymous_user.user_interactions.find_by_interaction_id(interaction_id)
+      if anon_user_interaction
+        counter = counter + anon_user_interaction.aux["counter"]
+      end
 
       setViewCounter(interaction_id, counter, "{}")
     end

@@ -29,7 +29,7 @@ class Sites::Disney::CallToActionController < CallToActionController
         calltoaction: calltoaction,
         linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
         linked_call_to_actions_count: step_count,
-        init_captcha: true,
+        init_captcha: (current_user.nil? || current_user.anonymous_id.present?),
         sidebar_tag: sidebar_tag
       }
 

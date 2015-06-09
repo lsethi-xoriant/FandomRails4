@@ -1079,6 +1079,37 @@ ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
 
 
 --
+-- Name: random_resources; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE TABLE random_resources (
+    id integer NOT NULL,
+    tag text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE; Schema: ballando; Owner: -
+--
+
+CREATE SEQUENCE random_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+--
+
+ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
+
+
+--
 -- Name: rankings; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -1473,8 +1504,7 @@ CREATE TABLE uploads (
     watermark_content_type character varying(255),
     watermark_file_size integer,
     watermark_updated_at timestamp without time zone,
-    title_needed boolean DEFAULT false,
-    aux json
+    title_needed boolean DEFAULT false
 );
 
 
@@ -2870,6 +2900,37 @@ ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
 
 
 --
+-- Name: random_resources; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE TABLE random_resources (
+    id integer NOT NULL,
+    tag text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE; Schema: coin; Owner: -
+--
+
+CREATE SEQUENCE random_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: coin; Owner: -
+--
+
+ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
+
+
+--
 -- Name: rankings; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -3264,8 +3325,7 @@ CREATE TABLE uploads (
     watermark_content_type character varying(255),
     watermark_file_size integer,
     watermark_updated_at timestamp without time zone,
-    title_needed boolean DEFAULT false,
-    aux json
+    title_needed boolean DEFAULT false
 );
 
 
@@ -4661,6 +4721,37 @@ ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
 
 
 --
+-- Name: random_resources; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE TABLE random_resources (
+    id integer NOT NULL,
+    tag text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE; Schema: disney; Owner: -
+--
+
+CREATE SEQUENCE random_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: disney; Owner: -
+--
+
+ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
+
+
+--
 -- Name: rankings; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -5055,8 +5146,7 @@ CREATE TABLE uploads (
     watermark_content_type character varying(255),
     watermark_file_size integer,
     watermark_updated_at timestamp without time zone,
-    title_needed boolean DEFAULT false,
-    aux json
+    title_needed boolean DEFAULT false
 );
 
 
@@ -6447,6 +6537,37 @@ CREATE SEQUENCE quizzes_id_seq
 --
 
 ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
+
+
+--
+-- Name: random_resources; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE TABLE random_resources (
+    id integer NOT NULL,
+    tag text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE; Schema: fandom; Owner: -
+--
+
+CREATE SEQUENCE random_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: fandom; Owner: -
+--
+
+ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
 
 
 --
@@ -8240,6 +8361,37 @@ ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
 
 
 --
+-- Name: random_resources; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE TABLE random_resources (
+    id integer NOT NULL,
+    tag text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE; Schema: forte; Owner: -
+--
+
+CREATE SEQUENCE random_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: forte; Owner: -
+--
+
+ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
+
+
+--
 -- Name: rankings; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -8634,8 +8786,7 @@ CREATE TABLE uploads (
     watermark_content_type character varying(255),
     watermark_file_size integer,
     watermark_updated_at timestamp without time zone,
-    title_needed boolean DEFAULT false,
-    aux json
+    title_needed boolean DEFAULT false
 );
 
 
@@ -10029,6 +10180,37 @@ ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
 
 
 --
+-- Name: random_resources; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE random_resources (
+    id integer NOT NULL,
+    tag text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE random_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
+
+
+--
 -- Name: rankings; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
 --
 
@@ -10423,8 +10605,7 @@ CREATE TABLE uploads (
     watermark_content_type character varying(255),
     watermark_file_size integer,
     watermark_updated_at timestamp without time zone,
-    title_needed boolean DEFAULT false,
-    aux json
+    title_needed boolean DEFAULT false
 );
 
 
@@ -11820,6 +12001,37 @@ ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
 
 
 --
+-- Name: random_resources; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE TABLE random_resources (
+    id integer NOT NULL,
+    tag text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE; Schema: maxibon; Owner: -
+--
+
+CREATE SEQUENCE random_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: maxibon; Owner: -
+--
+
+ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
+
+
+--
 -- Name: rankings; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -12214,8 +12426,7 @@ CREATE TABLE uploads (
     watermark_content_type character varying(255),
     watermark_file_size integer,
     watermark_updated_at timestamp without time zone,
-    title_needed boolean DEFAULT false,
-    aux json
+    title_needed boolean DEFAULT false
 );
 
 
@@ -13611,6 +13822,37 @@ ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
 
 
 --
+-- Name: random_resources; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE random_resources (
+    id integer NOT NULL,
+    tag text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE random_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: random_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
+
+
+--
 -- Name: rankings; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -14005,8 +14247,7 @@ CREATE TABLE uploads (
     watermark_content_type character varying(255),
     watermark_file_size integer,
     watermark_updated_at timestamp without time zone,
-    title_needed boolean DEFAULT false,
-    aux json
+    title_needed boolean DEFAULT false
 );
 
 
@@ -16067,7 +16308,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -16427,6 +16669,13 @@ ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
 --
 
+ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_resources_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
+--
+
 ALTER TABLE ONLY rankings ALTER COLUMN id SET DEFAULT nextval('rankings_id_seq'::regclass);
 
 
@@ -16766,6 +17015,13 @@ ALTER TABLE ONLY promocodes ALTER COLUMN id SET DEFAULT nextval('promocodes_id_s
 --
 
 ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: coin; Owner: -
+--
+
+ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_resources_id_seq'::regclass);
 
 
 --
@@ -17117,6 +17373,13 @@ ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: disney; Owner: -
 --
 
+ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_resources_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: disney; Owner: -
+--
+
 ALTER TABLE ONLY rankings ALTER COLUMN id SET DEFAULT nextval('rankings_id_seq'::regclass);
 
 
@@ -17456,6 +17719,13 @@ ALTER TABLE ONLY promocodes ALTER COLUMN id SET DEFAULT nextval('promocodes_id_s
 --
 
 ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
+--
+
+ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_resources_id_seq'::regclass);
 
 
 --
@@ -17807,6 +18077,13 @@ ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: forte; Owner: -
 --
 
+ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_resources_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: forte; Owner: -
+--
+
 ALTER TABLE ONLY rankings ALTER COLUMN id SET DEFAULT nextval('rankings_id_seq'::regclass);
 
 
@@ -18146,6 +18423,13 @@ ALTER TABLE ONLY promocodes ALTER COLUMN id SET DEFAULT nextval('promocodes_id_s
 --
 
 ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_resources_id_seq'::regclass);
 
 
 --
@@ -18497,6 +18781,13 @@ ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
 --
 
+ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_resources_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
+--
+
 ALTER TABLE ONLY rankings ALTER COLUMN id SET DEFAULT nextval('rankings_id_seq'::regclass);
 
 
@@ -18836,6 +19127,13 @@ ALTER TABLE ONLY promocodes ALTER COLUMN id SET DEFAULT nextval('promocodes_id_s
 --
 
 ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
+ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_resources_id_seq'::regclass);
 
 
 --
@@ -19564,6 +19862,14 @@ ALTER TABLE ONLY quizzes
 
 
 --
+-- Name: random_resources_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY random_resources
+    ADD CONSTRAINT random_resources_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: rankings_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -19955,6 +20261,14 @@ ALTER TABLE ONLY promocodes
 
 ALTER TABLE ONLY quizzes
     ADD CONSTRAINT quizzes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: random_resources_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY random_resources
+    ADD CONSTRAINT random_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -20352,6 +20666,14 @@ ALTER TABLE ONLY quizzes
 
 
 --
+-- Name: random_resources_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY random_resources
+    ADD CONSTRAINT random_resources_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: rankings_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -20743,6 +21065,14 @@ ALTER TABLE ONLY promocodes
 
 ALTER TABLE ONLY quizzes
     ADD CONSTRAINT quizzes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: random_resources_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY random_resources
+    ADD CONSTRAINT random_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -21140,6 +21470,14 @@ ALTER TABLE ONLY quizzes
 
 
 --
+-- Name: random_resources_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY random_resources
+    ADD CONSTRAINT random_resources_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: rankings_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -21531,6 +21869,14 @@ ALTER TABLE ONLY promocodes
 
 ALTER TABLE ONLY quizzes
     ADD CONSTRAINT quizzes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: random_resources_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY random_resources
+    ADD CONSTRAINT random_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -21928,6 +22274,14 @@ ALTER TABLE ONLY quizzes
 
 
 --
+-- Name: random_resources_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY random_resources
+    ADD CONSTRAINT random_resources_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: rankings_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -22319,6 +22673,14 @@ ALTER TABLE ONLY promocodes
 
 ALTER TABLE ONLY quizzes
     ADD CONSTRAINT quizzes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: random_resources_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY random_resources
+    ADD CONSTRAINT random_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -22978,6 +23340,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -23143,13 +23512,6 @@ CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag
 --
 
 CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
-
-
---
--- Name: index_uploads_on_aux_fields; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
 
 
 --
@@ -23386,6 +23748,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -23551,13 +23920,6 @@ CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag
 --
 
 CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
-
-
---
--- Name: index_uploads_on_aux_fields; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
 
 
 --
@@ -23794,6 +24156,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -23959,13 +24328,6 @@ CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag
 --
 
 CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
-
-
---
--- Name: index_uploads_on_aux_fields; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
 
 
 --
@@ -24199,6 +24561,13 @@ CREATE INDEX index_call_to_actions_on_aux_aws_transcoding_media_status ON call_t
 --
 
 CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree (((aux ->> 'share'::text)));
+
+
+--
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
 
 
 --
@@ -24589,6 +24958,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -24754,13 +25130,6 @@ CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag
 --
 
 CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
-
-
---
--- Name: index_uploads_on_aux_fields; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
 
 
 --
@@ -24997,6 +25366,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
 --
 
@@ -25148,13 +25524,6 @@ CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag
 --
 
 CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
-
-
---
--- Name: index_uploads_on_aux_fields; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
 
 
 --
@@ -25391,6 +25760,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -25556,13 +25932,6 @@ CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag
 --
 
 CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
-
-
---
--- Name: index_uploads_on_aux_fields; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
 
 
 --
@@ -25799,6 +26168,13 @@ CREATE INDEX index_call_to_actions_on_aux_options ON call_to_actions USING btree
 
 
 --
+-- Name: index_call_to_actions_on_instagram_media_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USING btree (((aux ->> 'instagram_media_id'::text)));
+
+
+--
 -- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -25964,13 +26340,6 @@ CREATE INDEX index_tags_tags_on_other_tag_id ON tags_tags USING btree (other_tag
 --
 
 CREATE INDEX index_tags_tags_on_tag_id ON tags_tags USING btree (tag_id);
-
-
---
--- Name: index_uploads_on_aux_fields; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_uploads_on_aux_fields ON uploads USING btree (((aux ->> 'extra_fields'::text)));
 
 
 --
@@ -26452,6 +26821,13 @@ CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING 
 
 
 --
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
+
+
+--
 -- Name: index_users_on_authentication_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -26909,4 +27285,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150511143302');
 INSERT INTO schema_migrations (version) VALUES ('20150528134030');
 
 INSERT INTO schema_migrations (version) VALUES ('20150528162710');
+
+INSERT INTO schema_migrations (version) VALUES ('20150608085400');
 

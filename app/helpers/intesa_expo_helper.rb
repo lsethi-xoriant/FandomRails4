@@ -184,8 +184,8 @@ module IntesaExpoHelper
     end
     
     aux = {
+      "site" => $site,
       "tenant" => $site.id,
-      "anonymous_interaction" => $site.anonymous_interaction,
       "calltoaction_evidence_info" => calltoaction_evidence_info,
       "main_reward_name" => MAIN_REWARD_NAME,
       "mobile" => small_mobile_device?(),

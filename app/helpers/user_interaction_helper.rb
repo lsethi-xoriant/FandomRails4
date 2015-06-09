@@ -229,9 +229,17 @@ module UserInteractionHelper
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
     aux = JSON.parse(aux)
 
-    if !anonymous_user?(user) || interaction.stored_for_anonymous
+    if $site.id == "disney"
+      unless anonymous_user?(user)
+        user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
+      end
+    else
+      if anonymous_user?(user)
+        user = User.new(anonymous_id: session[:session_id])
+        user.save(validate: false)
+        sign_in(user)
+      end
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
-      expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
     end
     
     if user_interaction
@@ -296,7 +304,7 @@ module UserInteractionHelper
       expire_cache_key(get_cta_completed_or_reward_status_cache_key(get_main_reward_name, interaction.call_to_action_id, user.id))
     end
 
-    if anonymous_user?(user) && !$site.anonymous_interaction
+    if anonymous_user?(user) && !interaction_for_anonymous?(interaction.resource_type.downcase)
       outcome = compute_outcome(user_interaction)
     else
       outcome = compute_save_and_notify_outcome(user_interaction)

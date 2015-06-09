@@ -34,7 +34,7 @@ class CallToActionController < ApplicationController
     calltoaction = CallToAction.find(params[:calltoaction_id])
     linked_interaction = calltoaction.interactions.includes(:interaction_call_to_actions).where("interaction_call_to_actions.interaction_id IS NOT NULL").references(:interaction_call_to_actions).first 
 
-    if !current_user && $site.anonymous_interaction 
+    if !current_user && interaction_for_anonymous?("quiz")
       user_interaction_info_list = params[:anonymous_user_interactions]
       
       calltoaction_id_to_return = calltoaction.id
@@ -260,6 +260,7 @@ class CallToActionController < ApplicationController
 
       @aux_other_params = { 
         calltoaction: calltoaction,
+        init_captcha: (current_user.nil? || current_user.anonymous_id.present?),
         linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
         linked_call_to_actions_count: step_count,
         sidebar_tag: sidebar_tag
@@ -351,7 +352,7 @@ class CallToActionController < ApplicationController
     response[:ga][:category] = "UserCommentInteraction"
     response[:ga][:action] = "AddComment"
 
-    if current_user
+    if current_user && current_user.anonymous_id.nil?
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id, aux: aux)
       response[:comment] = build_comment_for_comment_info(user_comment, true)
       if approved && user_comment.errors.blank?
@@ -596,7 +597,7 @@ class CallToActionController < ApplicationController
   def user_history_to_answer_map_fo_condition(current_answer, user_interactions_history, anonymous_user_storage)
     if current_user
       answers_history = UserInteraction.where(id: user_interactions_history).map { |ui| ui.answer_id }
-    elsif $site.anonymous_interaction 
+    elsif interaction_for_anonymous?("quiz") 
       answers_history = []
       anonymous_user_storage["user_interaction_info_list"].each do |index, user_interaction_info|
         if user_interactions_history.include?(user_interaction_info["user_interaction"]["interaction_id"]) # For anonymous the user_interaction id is the interaction id. He must be only one user interaction for interaction.

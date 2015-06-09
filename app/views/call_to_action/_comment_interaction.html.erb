@@ -6,13 +6,13 @@
     <div class="col-sm-11 col-xs-10">
       <textarea ng-model="interaction_info.interaction.resource.comment_info.user_text" class="form-control comment-interaction__textarea" style="resize: none;" rows="1" name="text"></textarea>
     </div>
-    <div ng-if="!current_user" class="col-sm-3 col-sm-offset-1 col-xs-5 col-xs-offset-2 comment-interaction__captcha-img">
+    <div ng-if="aux.init_captcha" class="col-sm-3 col-sm-offset-1 col-xs-5 col-xs-offset-2 comment-interaction__captcha-img">
       <img ng-src="{{interaction_info.interaction.captcha}}" style="width: 100%; max-width: 200px; height: 33px;">
     </div> 
-    <div ng-if="!current_user" class="col-sm-3 col-xs-5 comment-interaction__captcha-code">   
+    <div ng-if="aux.init_captcha" class="col-sm-3 col-xs-5 comment-interaction__captcha-code">   
       <input class="form-control" ng-model="interaction_info.interaction.resource.comment_info.user_captcha" placeholder="codice">
     </div>     
-    <div class="col-sm-5 col-xs-10 col-xs-offset-2 text-right comment-interaction__btn-container" ng-class="{'col-sm-offset-7': current_user, 'col-sm-offset-0': !current_user}">
+    <div class="col-sm-5 col-xs-10 col-xs-offset-2 text-right comment-interaction__btn-container" ng-class="{'col-sm-offset-7': !aux.init_captcha, 'col-sm-offset-0': aux.init_captcha}">
       <button class="btn btn-primary btn-block comment-interaction__btn-submit" ng-click="submitComment(interaction_info)"><span>Commenta</span></button>
     </div> 
   </div>

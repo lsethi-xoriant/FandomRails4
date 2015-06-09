@@ -30,7 +30,7 @@ class RegistrationsController < Devise::RegistrationsController
         set_flash_message :notice, :signed_up
         sign_up(resource_name, resource)
 
-        if $site.anonymous_interaction && params[:user_interaction_info_list].present?
+        if params[:user_interaction_info_list].present? && params[:user_interaction_info_list].any?
           anonymous_interaction_map = {}
 
           JSON.parse(params[:user_interaction_info_list]).each_with_index do |user_interaction_info, index|

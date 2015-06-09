@@ -7,7 +7,7 @@ module Fandom
       periodicity_kinds: [PERIOD_KIND_DAILY],
       allowed_context_roots: ["it", "en", "imprese"],
       default_property: "it",
-      anonymous_interaction: true,
+      interactions_for_anonymous: nil,
       free_provider_share: true,
       init_ctas: 3
     )      
