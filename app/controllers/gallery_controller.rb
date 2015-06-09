@@ -28,7 +28,12 @@ class GalleryController < ApplicationController
 
     @galleries_cta = get_gallery_ctas_carousel
 
+    params["other_params"] = {}
+    params["other_params"]["gallery"] = {}
+    params["other_params"]["gallery"]["calltoaction_id"] = "all"
+
     if params[:user]
+      params["other_params"]["gallery"]["user"] = params[:user]
       galleries_user_cta, galleries_user_cta_count = get_user_gallery_ctas(nil, params[:user])
     else
       galleries_user_cta, galleries_user_cta_count = cache_short(get_index_gallery_ctas_cache_key) { 
@@ -36,10 +41,6 @@ class GalleryController < ApplicationController
       }
     end
 
-    params["other_params"] = {}
-    params["other_params"]["gallery"] = {}
-    params["other_params"]["gallery"]["calltoaction_id"] = "all"
-    
     @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
 
     @aux_other_params = { 
