@@ -1762,10 +1762,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         }
       }
     }
-
-    if(data.answer.media_type == "IMAGE") {
-      calltoaction_info.calltoaction.media_image_from_answer_type = "IMAGE";
-      calltoaction_info.calltoaction.media_image_from_answer = data.answer_media_image_url;
+    if(data.answer) {
+      if(data.answer.media_type == "IMAGE") {
+        calltoaction_info.calltoaction.media_image_from_answer_type = "IMAGE";
+        calltoaction_info.calltoaction.media_image_from_answer = data.answer_media_image_url;
+      }
     }
 
     if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
@@ -1853,29 +1854,35 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     // Next call to action for test interaction
     if(data.next_call_to_action_info_list) {
-
-      if(data.has_answer_media && data.answer.media_type == "YOUTUBE") {
-        // In this case, YouTube video switching is managed by onPlayerStateChange method from YouTube callback methods
-        calltoaction_info.answer_with_video_linking_cta = data.next_call_to_action_info_list;
-      }
-      else {
-        $timeout(function() { 
-          $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
-          if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-            updateInteractionsHistory(data.user_interaction.interaction_id);
-          } else {
-            updateInteractionsHistory(data.user_interaction.id);
+      if(data.answer) {
+        if(data.has_answer_media && data.answer.media_type == "YOUTUBE") {
+          // In this case, YouTube video switching is managed by onPlayerStateChange method from YouTube callback methods
+          calltoaction_info.answer_with_video_linking_cta = data.next_call_to_action_info_list;
+        }
+        else {
+          timeout_time = 0;
+          if(data.answer) {
+            if(data.has_answer_media && data.answer.media_type == "IMAGE") {
+              timeout_time = 4000;
+            }
           }
-
-          $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
-          initializeVideoAfterPageRender();
-          $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
           $timeout(function() { 
-            $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
-          }, 200);
-        }, 4000);
-      }
+            $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
+            if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
+              updateInteractionsHistory(data.user_interaction.interaction_id);
+            } else {
+              updateInteractionsHistory(data.user_interaction.id);
+            }
 
+            $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
+            initializeVideoAfterPageRender();
+            $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
+            $timeout(function() { 
+              $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+            }, 200);
+          }, timeout_time);
+        }
+      }
     }
 
     // Next call to action for random interaction
