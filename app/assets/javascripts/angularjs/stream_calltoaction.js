@@ -1748,7 +1748,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
     }
-    if data.answer {
+    if(data.answer) {
       if(data.answer.media_type == "YOUTUBE") {
         if(calltoaction_info.calltoaction.media_type != "YOUTUBE") {
           calltoaction_info.calltoaction.media_type = "YOUTUBE";
