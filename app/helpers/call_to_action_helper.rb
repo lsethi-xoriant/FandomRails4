@@ -653,9 +653,7 @@ module CallToActionHelper
   end
   
   def interactions_required_to_complete(cta)
-    cache_short get_interactions_required_to_complete_cache_key(cta.id) do
-      cta.interactions.includes(:resource, :call_to_action).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
-    end
+    cta.interactions.includes(:resource, :call_to_action).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
   end
 
   def generate_response_for_interaction(interactions, calltoaction, aux = {}, outcome = nil)
