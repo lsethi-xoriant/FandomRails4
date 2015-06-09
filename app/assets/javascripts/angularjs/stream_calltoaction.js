@@ -1406,6 +1406,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           ],
           swf: "/assets/flowplayer.swf",
           cuepoints: fplayer.cuepoints,
+          key: '$491717716267986',
           plugins: {
             controls: null
           }
