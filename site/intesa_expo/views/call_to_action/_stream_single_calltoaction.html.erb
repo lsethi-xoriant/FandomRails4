@@ -138,11 +138,12 @@
 
         <!-- DESKTOP DESCRIPTION -->
         <div class="col-md-12 hidden-xs"> 
-          <div class="cta__long_description" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></div>
+          <div ng-class="{'cta__long_description': (calltoaction_info.calltoaction.extra_fields.layout != 'press-release')}" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></div>
           <div class="cta__contents" ng-repeat="content in calltoaction_info.calltoaction.contents | orderBy:orderContent">
             <img ng-src="{{content['value']['url']}}" ng-if="content['value']['type'] == 'media'">
             <div ng-if="content['value']['type'] != 'media'" ng-bind-html="content['value'] | unsafe"></div>
           </div>
+        </div>
           <!-- DOWNLOAD INTERACTION
           <div class="row {{calltoaction_info.hide_class}}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterDownloadInteractions">
             <div class="col-xs-12 text-center" >
