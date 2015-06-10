@@ -766,16 +766,33 @@ module CallToActionHelper
   
   def duplicate_user_generated_cta(params, watermark, cta_title, description, cta_template)
     unique_name = generate_unique_name()
-    
+
+    if params["upload"] && params["upload"].content_type.start_with?("video")
+      media_image = params["upload"]
+      thumbnail = nil
+      media_type = "FLOWPLAYER"
+      media_data = nil
+    elsif params["vcode"]
+      media_image = thumbnail = open("http://img.youtube.com/vi/#{params["vcode"]}/0.jpg") rescue cta_template.thumbnail
+      media_type = "YOUTUBE"
+      media_data = params["vcode"]
+    else
+      media_image = cta_template.media_image
+      thumbnail = cta_template.thumbnail
+      media_type = "IMAGE"
+      media_data = nil
+    end
+
     user_calltoaction = CallToAction.new(
         title: cta_title,
         description: description,
         name: unique_name,
         slug: unique_name, 
         user_id: params["user_id"] || current_user.id,
-        media_image: params["upload"],
-        thumbnail: (params["upload"] if params["upload"] && params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}),
-        media_type: params["upload"] && params["upload"].content_type.start_with?("video") ? "FLOWPLAYER" : "IMAGE",
+        media_image: media_image,
+        thumbnail: (params["upload"] && params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}) ? params["upload"] : thumbnail,
+        media_type: media_type,
+        media_data: media_data,
         extra_fields: cta_template.extra_fields.nil? ? "{}" : cta_template.extra_fields 
         )
     if watermark
