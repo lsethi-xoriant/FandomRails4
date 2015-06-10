@@ -92,7 +92,14 @@ module CallToActionHelper
     end
    
     if tag || gallery_info
-      cache_key = gallery_info ? gallery_info["gallery_calltoaction_id"] : tag.name
+      if gallery_info
+        cache_key = "gallery_#{gallery_info["gallery_calltoaction_id"]}"
+        if gallery_info["gallery_user_id"].present?
+          cache_key = "#{cache_key}_user_#{gallery_info["gallery_user_id"]}"
+        end
+      else
+        cache_key = tag.name
+      end
       cache_key = "#{cache_key}_#{ordering}"
     else
       cache_key = "#{ordering}"
