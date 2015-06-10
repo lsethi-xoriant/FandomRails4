@@ -28,7 +28,7 @@ class User < ActiveRecordWithJSON
   has_many :call_to_actions
 
   before_save :set_date_of_birth
-  before_create :set_username_if_not_required
+  before_save :set_username_if_not_required
   before_update :set_current_avatar
   before_create :default_values
 
@@ -52,7 +52,7 @@ class User < ActiveRecordWithJSON
   after_initialize :set_attrs
 
   def set_username_if_not_required
-    unless required_attr?("username")
+    if !required_attr?("username") && self.username.blank?
       self.username = email
     end
   end
@@ -99,9 +99,7 @@ class User < ActiveRecordWithJSON
   end
 
   def required_attr?(attr_name)
-    if required_attrs.present? # COIN
-      required_attrs.include?(attr_name) || $site.required_attrs.include?(attr_name)
-    elsif $site.required_attrs.present?
+    if $site.required_attrs.present?
       $site.required_attrs.include?(attr_name)
     else
       false

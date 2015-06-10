@@ -1746,7 +1746,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -3567,7 +3568,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -5388,7 +5390,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -7207,7 +7210,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -9028,7 +9032,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -10847,7 +10852,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -12668,7 +12674,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -14489,7 +14496,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -15281,7 +15289,8 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    stored_for_anonymous boolean
+    stored_for_anonymous boolean,
+    registration_needed boolean
 );
 
 
@@ -23599,6 +23608,13 @@ CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING 
 
 
 --
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
+
+
+--
 -- Name: index_users_on_authentication_token; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -24004,6 +24020,13 @@ CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id)
 --
 
 CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING btree (((aux ->> 'extra_fields'::text)));
+
+
+--
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
 
 
 --
@@ -24415,6 +24438,13 @@ CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING 
 
 
 --
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
+
+
+--
 -- Name: index_users_on_authentication_token; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -24806,6 +24836,13 @@ CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id)
 --
 
 CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING btree (((aux ->> 'extra_fields'::text)));
+
+
+--
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
 
 
 --
@@ -25217,6 +25254,13 @@ CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING 
 
 
 --
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
+
+
+--
 -- Name: index_users_on_authentication_token; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -25608,6 +25652,13 @@ CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id)
 --
 
 CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING btree (((aux ->> 'extra_fields'::text)));
+
+
+--
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
 
 
 --
@@ -26019,6 +26070,13 @@ CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING 
 
 
 --
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
+
+
+--
 -- Name: index_users_on_authentication_token; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -26424,6 +26482,13 @@ CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id)
 --
 
 CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING btree (((aux ->> 'extra_fields'::text)));
+
+
+--
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
 
 
 --
@@ -27287,4 +27352,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150528134030');
 INSERT INTO schema_migrations (version) VALUES ('20150528162710');
 
 INSERT INTO schema_migrations (version) VALUES ('20150608085400');
+
+INSERT INTO schema_migrations (version) VALUES ('20150610135146');
 

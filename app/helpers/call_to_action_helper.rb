@@ -49,8 +49,13 @@ module CallToActionHelper
   end
 
   def get_ctas_most_viewed(property)
-    ctas = get_ctas(property)
-    cta_ids = from_ctas_to_cta_ids_sql(ctas)
+    max_timestamp = get_cta_max_updated_at()
+    cache_key = get_cta_ids_by_property_cache_key(property, max_timestamp)
+
+    cta_ids = cache_forever(cache_key) do
+      ctas = get_ctas(property)
+      cta_ids = from_ctas_to_cta_ids_sql(ctas)
+    end
 
     result = []
     ctas_most_viewed = gets_ctas_ordered_by_views(cta_ids, 4)
@@ -87,7 +92,14 @@ module CallToActionHelper
     end
    
     if tag || gallery_info
-      cache_key = gallery_info ? gallery_info["gallery_calltoaction_id"] : tag.name
+      if gallery_info
+        cache_key = "gallery_#{gallery_info["gallery_calltoaction_id"]}"
+        if gallery_info["gallery_user_id"].present?
+          cache_key = "#{cache_key}_user_#{gallery_info["gallery_user_id"]}"
+        end
+      else
+        cache_key = tag.name
+      end
       cache_key = "#{cache_key}_#{ordering}"
     else
       cache_key = "#{ordering}"
@@ -510,6 +522,7 @@ module CallToActionHelper
             "id" => interaction.id,
             "when_show_interaction" => when_show_interaction,
             "overvideo_active" => false,
+            "registration_needed" => (interaction.registration_needed || false),
             "seconds" => interaction.seconds,
             "resource_type" => resource_type,
             "resource" => {
@@ -648,9 +661,7 @@ module CallToActionHelper
   end
   
   def interactions_required_to_complete(cta)
-    cache_short get_interactions_required_to_complete_cache_key(cta.id) do
-      cta.interactions.includes(:resource, :call_to_action).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
-    end
+    cta.interactions.includes(:resource, :call_to_action).where("required_to_complete AND when_show_interaction <> 'MAI_VISIBILE'").order("seconds ASC").to_a
   end
 
   def generate_response_for_interaction(interactions, calltoaction, aux = {}, outcome = nil)

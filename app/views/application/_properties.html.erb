@@ -14,12 +14,12 @@
   </div>
 </div>
 
-<div class="col-sm-3 text-left" ng-if="!current_user">
+<div class="col-sm-3 text-left" ng-if="!isRegistrateUser()">
   <p class="properties__right-bar-text">Partecipa<br>alla community</p>
   <a class="btn btn-primary" href="/users/sign_in" style="margin-top: 5px;"><span>Entra</span></a>
 </div>
 
-<div class="col-sm-3 text-left" ng-if="current_user">
+<div class="col-sm-3 text-left" ng-if="isRegistrateUser()">
   <%= light_link_to("/profile") do %>
     <p class="properties__right-bar-text">{{current_user.username}}</p>
   <% end %>  
@@ -29,15 +29,15 @@
   </span>  
 </div>
 
-<div ng-if="current_user && current_user.notifications > 0" class="properties__right-bar-notifications">
+<div ng-if="isRegistrateUser() && current_user.notifications > 0" class="properties__right-bar-notifications">
   <%= light_link_to("/profile/notices") do %>
     {{current_user.notifications}}
   <% end %>
 </div>
 
 <%= light_link_to("/profile") do %>
-  <img ng-src="{{current_user.avatar}}" class="navbar__avatar" ng-if="current_user">
-  <img src="<%= anon_avatar() %>" class="navbar__avatar" ng-if="!current_user">
+  <img ng-src="{{current_user.avatar}}" class="navbar__avatar" ng-if="isRegistrateUser()">
+  <img src="<%= anon_avatar() %>" class="navbar__avatar" ng-if="!isRegistrateUser()">
 <% end %>
 
 <script type="text/javascript">

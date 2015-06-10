@@ -1,18 +1,17 @@
 #!/bin/env ruby
 # encoding: utf-8
 
-class ProfileController < ApplicationController
-  include ProfileHelper
-  include ApplicationHelper
-  include RankingHelper
-  include RewardHelper
-  
+class ProfileController < ApplicationController  
   before_filter :check_user_logged
   
   def check_user_logged
-    unless current_user
+    if current_user.nil? || stored_anonymous_user?
       if cookies[:connect_from_page].blank?
-        profile_path = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["stream_url"] || request.url
+        if $site.id == "ballando"
+          profile_path = Rails.configuration.deploy_settings["sites"][$site.id]["stream_url"] || request.url
+        else
+          profile_path = request.url 
+        end
         cookies[:connect_from_page] = profile_path
       end
       redirect_to "/users/sign_in"
@@ -64,15 +63,7 @@ class ProfileController < ApplicationController
   end
 
   def rankings
-    property = get_property()
-    if $site.id == 'ballando' || $site.id == 'forte'
-      rank = Ranking.find_by_name("general_chart")
-    elsif property.present?
-      property_name = property.name
-      rank = Ranking.find_by_name("#{property_name}-general-chart")
-    else
-      rank = Ranking.find_by_name("general-chart")
-    end
+    rank = get_general_ranking()
 
     @property_rank = get_full_rank(rank)
     
@@ -87,7 +78,7 @@ class ProfileController < ApplicationController
     gallery_tag = Tag.find_by_name("gallery")
     @property_rankings = get_property_rankings()
     
-    gallery_tags = get_gallery_for_property(gallery_tags)
+    gallery_tags = get_gallery_for_ranking_by_property(gallery_tags)
     @galleries = order_elements(gallery_tag, gallery_tags.sort_by{ |tag| tag.created_at }.reverse)
     
     if small_mobile_device?
@@ -97,14 +88,18 @@ class ProfileController < ApplicationController
     end
   end
 
-  def get_gallery_for_property(gallery_tags)
+  def get_gallery_for_ranking_by_property(gallery_tags)
     property = get_property()
+    gallery_tags.delete_if do |gallery_tag| 
+      has_ranking = get_extra_fields!(gallery_tag)["has_ranking"]
+      has_ranking ? (has_ranking["value"] == false) : false
+    end
     if property.present? && property.name == $site.default_property
       gallery_tags
     elsif property.present?
       property_name = property.name
       gallery_tag_ids = gallery_tags.map { |t| t.id }
-      Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ? AND tags.id in (?)", property_name, gallery_tag_ids).references(:tags_tags, :other_tag)
+      Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ? AND tags.id in (?) AND ", property_name, gallery_tag_ids).references(:tags_tags, :other_tag)
     else 
       []
     end

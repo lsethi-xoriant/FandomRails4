@@ -7,6 +7,7 @@ class SessionsController < Devise::SessionsController
   
   prepend_before_filter :anchor_provider_to_current_user, only: :create, :if => proc {|c| current_user && env["omniauth.auth"].present? }
   skip_before_filter :iur_authenticate
+  skip_before_filter :require_no_authentication, :if => :stored_anonymous_user?
 
   def sign_in_as
     authorize! :manage, :users
@@ -46,12 +47,29 @@ class SessionsController < Devise::SessionsController
 
   # Authenticates and log in the user from the standard application form.
   def create_from_form
-    self.resource = warden.authenticate!(auth_options)
-    set_flash_message(:notice, :signed_in) if is_navigational_format?
-    sign_in(resource_name, resource)
-    fandom_play_login(resource)
-    
-    redirect_after_successful_login()
+    if stored_anonymous_user?
+      anonymous_user = current_user
+      sign_out(current_user)
+    end
+
+    self.resource = warden.authenticate(auth_options)
+  
+    if self.resource
+      set_flash_message(:notice, :signed_in) if is_navigational_format?
+
+      sign_in(resource_name, resource)
+      fandom_play_login(resource)
+      
+      redirect_after_successful_login()
+    else
+      if anonymous_user
+        sign_in(anonymous_user)
+      end
+      
+      user = User.new(email: params[:user][:email])
+      @sign_in_error = t("devise.failure.invalid")
+      render template: "/devise/sessions/new", :locals => { resource: user }   
+    end
   end
   
   def valid_credentials?(user)
@@ -64,6 +82,10 @@ class SessionsController < Devise::SessionsController
     if user.errors.any?
       redirect_to_registration_page(user)
     else
+      if stored_anonymous_user?
+        sign_out(current_user)
+      end
+
       sign_in(user)
       fandom_play_login(user)
     
@@ -74,7 +96,7 @@ class SessionsController < Devise::SessionsController
         cookies[:from_registration] = true 
       end
     
-      if request.site.force_facebook_tab && !request_is_from_mobile_device?(request)
+      if $site.force_facebook_tab && !request_is_from_mobile_device?(request)
         redirect_to request.site.force_facebook_tab
       else
         redirect_after_oauth_successful_login()

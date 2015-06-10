@@ -29,7 +29,7 @@ class BrowseController < ApplicationController
   def get_search_tags_for_tenant
     property = get_property()
     if property
-      property.name == $site.default_property ? [] : property.to_a
+      property.name == $site.default_property ? [] : [property]
     else
       []
     end
@@ -140,7 +140,12 @@ class BrowseController < ApplicationController
   
   # hook for tenant with multiproperty
   def get_tags_for_category(tag)
-    [tag]
+    property = get_property()
+    if property.nil?
+      [tag]
+    else
+      [tag, property]
+    end
   end
   
   def index_category_load_more
@@ -230,12 +235,6 @@ class BrowseController < ApplicationController
   
   def get_search_cache_key_params(term)
     term
-  end
-  
-  # Get an array of tags to use to filter contents. 
-  # This is a hook is expected to be override by a multiproperty project   
-  def get_search_tags_for_tenant
-    []
   end
   
   #hook for filter search result in specific property if multiproperty site

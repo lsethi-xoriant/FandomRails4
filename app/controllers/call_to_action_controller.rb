@@ -484,11 +484,11 @@ class CallToActionController < ApplicationController
     if interaction.resource_type.downcase == "quiz"
       answer = Answer.find(params[:params])
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil, aux.to_json)
-      response["have_answer_media"] = answer.answer_with_media?
+      response["has_answer_media"] = answer.answer_with_media?
       response["answer"] = answer
 
       if answer.media_type == "IMAGE" && answer.media_image
-        response["answer"]["media_image"] = answer.media_image
+        response["answer_media_image_url"] = answer.media_image.url
       end
 
       if interaction.resource.quiz_type.downcase == "trivia"
@@ -501,6 +501,9 @@ class CallToActionController < ApplicationController
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
       response["counter_aux"] = counter ? counter.aux : {}
       response["counter"] = counter ? counter.counter : 0
+      if answer.call_to_action_id
+        response["next_call_to_action_info_list"] = build_cta_info_list_and_cache_with_max_updated_at([CallToAction.find(answer.call_to_action_id)])
+      end
 
     elsif interaction.resource_type.downcase == "like"
 
@@ -562,7 +565,10 @@ class CallToActionController < ApplicationController
     if user_interaction
       response["user_interaction"] = build_user_interaction_for_interaction_info(user_interaction)
       response['outcome'] = outcome
-      expire_user_interaction_cache_keys()
+      if stored_anonymous_user? && $site.interactions_for_anonymous_limit.present?
+        user_interactions_count = current_user.user_interactions.count
+        response["notice_anonymous_user"] = user_interactions_count > 0 && user_interactions_count % $site.interactions_for_anonymous_limit == 0
+      end
     end
 
     if anonymous_user?(current_or_anonymous_user)

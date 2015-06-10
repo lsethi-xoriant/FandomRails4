@@ -221,8 +221,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   }
 
-  function is_anonymous_stored_user() {
-    return ($scope.current_user.anonymous_id);
+  function is_registrated_user() {
+    return ($scope.current_user && !$scope.current_user.anonymous_id);
   }
 
   $scope.init = function(current_user, calltoaction_info_list, has_more, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
@@ -307,11 +307,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
     $(function(){ flowplayerReady(); });
 
-    //updateSecondaryVideoPlayers($scope.calltoactions);
-
     $scope.has_more = has_more;
 
-    $scope.initAnonymousUser();
+    // $scope.initAnonymousUser();
     $scope.extraInit();
 
   };
@@ -409,6 +407,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     });
     return overvideo_interactions;
   }
+
+  $scope.isRegistrateUser = function() {
+    return ($scope.current_user && $scope.current_user.anonymous_id == null)
+  };
 
   $scope.currentUserEmptyAndAnonymousInteractionEnable = function() {
     return (!$scope.current_user && isAnonymousNavigationEnable());
@@ -1223,25 +1225,34 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     calltoaction_id = $("#" + calltoaction_div_id).attr("calltoaction-id");
 
     current_video_player = getPlayer(calltoaction_id);
-    current_video_player_state = current_video_player.playerManager.getPlayerState();
+    if(current_video_player) {
+      current_video_player_state = current_video_player.playerManager.getPlayerState();
 
-    if(current_video_player_state == 1) {
+      if(current_video_player_state == 1) {
 
-      updateStartVideoInteraction(calltoaction_id);
-      mayStartpolling(calltoaction_id);
+        updateStartVideoInteraction(calltoaction_id);
+        mayStartpolling(calltoaction_id);
 
-    } else if(current_video_player_state == 0) {
+      } else if(current_video_player_state == 0) {
 
-      updateEndVideoInteraction(calltoaction_id);
-      mayStopPolling();
+        calltoaction_info = getCallToActionInfo(calltoaction_id);
+        if(calltoaction_info.answer_with_video_linking_cta) {
+          $scope.initCallToActionInfoList(calltoaction_info.answer_with_video_linking_cta);
+          initializeVideoAfterPageRender();
+        }
+        else {
+          updateEndVideoInteraction(calltoaction_id);
+          mayStopPolling();
+        }
 
-    } else {
-      // Other state.
+      } else {
+        // Other state.
+      }
     }
   }; 
-  
+
   //////////////////////// KALTURA CALLBACK ////////////////////////
-  
+
   function kalturaPlayer(playerId, media_data) {
   	this.playerManager = null;
   	this.playerId = playerId;
@@ -1384,6 +1395,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           ],
           swf: "/assets/flowplayer.swf",
           cuepoints: fplayer.cuepoints,
+          key: '$491717716267986',
           plugins: {
             controls: null
           }
@@ -1527,41 +1539,42 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.shareFree = function(calltoaction_info, interaction_info, provider) {
-    if(provider == "direct_url") {
-      $("#modal-interaction-" + interaction_info.interaction.id + "-direct_url").modal("show");
+    if(interaction_info.interaction.registration_needed && !is_registrated_user()) {
+      showRegistrateView()
     } else {
-      message = calltoaction_info.calltoaction.title;
-      url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
+      if(provider == "direct_url") {
+        $("#modal-interaction-" + interaction_info.interaction.id + "-direct_url").modal("show");
+      } else {
+        message = calltoaction_info.calltoaction.title;
+        url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
 
-      cta_url = encodeURI(url_to_share);
+        cta_url = encodeURI(url_to_share);
 
-      switch(provider) {
-        case "facebook":    
-          share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url;
-          break;
-        case "twitter":
-          share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(message);
-          break;
-        case "whatsapp":
-          share_url = "whatsapp://send?text=" + encodeURIComponent(message) + " " + cta_url;
-          break;
-        case "gplus":
-          share_url = "https://plus.google.com/share?url=" + cta_url;
-          break;
-        case "linkedin":
-          share_url = "http://www.linkedin.com/shareArticle?mini=true&url=" + cta_url + "&title=" + encodeURIComponent(message) + "&summary=" + encodeURIComponent(stripTags(calltoaction_info.calltoaction.description || ""));
-          break;
+        switch(provider) {
+          case "facebook":    
+            share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url;
+            break;
+          case "twitter":
+            share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(message);
+            break;
+          case "whatsapp":
+            share_url = "whatsapp://send?text=" + encodeURIComponent(message) + " " + cta_url;
+            break;
+          case "gplus":
+            share_url = "https://plus.google.com/share?url=" + cta_url;
+            break;
+          case "linkedin":
+            share_url = "http://www.linkedin.com/shareArticle?mini=true&url=" + cta_url + "&title=" + encodeURIComponent(message) + "&summary=" + encodeURIComponent(stripTags(calltoaction_info.calltoaction.description || ""));
+            break;
+        }
       }
-    }
 
-    if(typeof share_url !== 'undefined') {
-      window.open(share_url);
+      if(typeof share_url !== 'undefined') window.open(share_url);
+ 
+      $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
+        .success(function(data) {
+        });
     }
-    
-    $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
-      .success(function(data) {
-      });
-
   };
 
   $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
@@ -1574,57 +1587,61 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function shareWithApp(calltoaction_info, interaction_info, provider) {
-     if(interaction_info.user_interaction) {
-      share_with_email_address = interaction_info.user_interaction.share_to_email;
-      facebook_message = interaction_info.user_interaction.facebook_message;
+    if(interaction_info.interaction.registration_needed && !is_registrated_user()) {
+      showRegistrateView()
     } else {
-      share_with_email_address = null;
-      facebook_message = null;
+      if(interaction_info.user_interaction) {
+        share_with_email_address = interaction_info.user_interaction.share_to_email;
+        facebook_message = interaction_info.user_interaction.facebook_message;
+      } else {
+        share_with_email_address = null;
+        facebook_message = null;
+      }
+
+      interaction_id = interaction_info.interaction.id;
+      calltoaction_id = calltoaction_info.calltoaction.id;
+
+      button = $("#" + provider + "-interaction-" + interaction_id);
+      button.attr('disabled', true);
+      current_button_html = button.html();
+      button.html("condivisione in corso");
+
+      update_interaction_path = "/update_interaction";
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
+      }
+
+      $http.post(update_interaction_path, { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider, facebook_message: facebook_message })
+        .success(function(data) {
+
+          button.attr('disabled', false);
+          button.html(current_button_html);
+
+          if(!data.share.result) { 
+            interaction_info.user_interaction.errors = data.share.exception;
+            return;
+          }
+
+          adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+          $scope.current_user.main_reward_counter = data.main_reward_counter;  
+          updateUserRewardInView(data.main_reward_counter.general);
+          interaction_info.status = data.interaction_status;
+
+          $scope.aux.share_interaction_daily_done = true;
+
+          $("#modal-interaction-" + interaction_id + "-" + provider).modal("hide");
+
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+              update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+            });
+          }
+
+        }).error(function() {
+          // ERRORE
+        });
     }
-
-    interaction_id = interaction_info.interaction.id;
-    calltoaction_id = calltoaction_info.calltoaction.id;
-
-    button = $("#" + provider + "-interaction-" + interaction_id);
-    button.attr('disabled', true);
-    current_button_html = button.html();
-    button.html("condivisione in corso");
-
-    update_interaction_path = "/update_interaction";
-    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-      update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
-    }
-
-    $http.post(update_interaction_path, { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider, facebook_message: facebook_message })
-      .success(function(data) {
-
-        button.attr('disabled', false);
-        button.html(current_button_html);
-
-        if(!data.share.result) { 
-          interaction_info.user_interaction.errors = data.share.exception;
-          return;
-        }
-
-        adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-        $scope.current_user.main_reward_counter = data.main_reward_counter;  
-        updateUserRewardInView(data.main_reward_counter.general);
-        interaction_info.status = data.interaction_status;
-
-        $scope.aux.share_interaction_daily_done = true;
-
-        $("#modal-interaction-" + interaction_id + "-" + provider).modal("hide");
-
-        if(data.ga) {
-          update_ga_event(data.ga.category, data.ga.action, data.ga.label);
-          angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-            update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-          });
-        }
-
-      }).error(function() {
-        // ERRORE
-      });
   }
 
   function openWindowForDownloadInteraction(resource_type) {
@@ -1666,24 +1683,32 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.updateAnswerAjax = function(calltoaction_info, interaction_info, params, when_show_interaction) {
-    interaction_id = interaction_info.interaction.id;
+    if(interaction_info.interaction.registration_needed && !is_registrated_user()) {
+      showRegistrateView()
+    } else {
+      interaction_id = interaction_info.interaction.id;
 
-    update_interaction_path = "/update_interaction";
-    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-      update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
+      update_interaction_path = "/update_interaction";
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
+      }
+
+      $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.user_interactions_history, anonymous_user_storage: getAnonymousUserStorage() })
+        .success(function(data) {
+          $scope.updateAnswerAjaxSuccess(data, calltoaction_info, interaction_info, when_show_interaction);
+        }).error(function() {
+          $scope.answer_in_progress = false;
+        });
     }
-
-    $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.user_interactions_history, anonymous_user_storage: getAnonymousUserStorage() })
-      .success(function(data) {
-        $scope.updateAnswerAjaxSuccess(data, calltoaction_info, interaction_info, when_show_interaction);
-      }).error(function() {
-        $scope.answer_in_progress = false;
-      });
   };
 
   $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction) {
     calltoaction_id = calltoaction_info.calltoaction.id;
     interaction_id = interaction_info.interaction.id;
+
+    if(data.notice_anonymous_user) {
+      showRegistrateView();
+    }
 
     if(data.counter) {
       interaction_info.interaction.resource.counter = data.counter;
@@ -1714,13 +1739,32 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       // Nothing to do.
     }
-    
+
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
     }
+    if(data.answer) {
+      if(data.answer.media_type == "YOUTUBE") {
+        if(calltoaction_info.calltoaction.media_type != "YOUTUBE") {
+          calltoaction_info.calltoaction.media_type = "YOUTUBE";
+          calltoaction_info.calltoaction.vcode = data.answer.media_data;
+          $timeout(function() { 
+            player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, data.answer.media_data);
+          }, 0);
+        }
+        else {
+          $scope.updateYTIframe(calltoaction_info, data.answer.media_data, true);
+        }
+      }
+    }
+
+    if(data.answer.media_type == "IMAGE") {
+      calltoaction_info.calltoaction.media_image_from_answer_type = "IMAGE";
+      calltoaction_info.calltoaction.media_image_from_answer = data.answer_media_image_url;
+    }
 
     if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
-      
+
       interaction_info.feedback = true;
 
       if(interaction_info.interaction.resource_type == "trivia") {
@@ -1804,18 +1848,28 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     // Next call to action for test interaction
     if(data.next_call_to_action_info_list) {
-      $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
-      if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-        updateInteractionsHistory(data.user_interaction.interaction_id);
-      } else {
-        updateInteractionsHistory(data.user_interaction.id);
-      }     
 
-      $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
-      $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
-      $timeout(function() { 
-        $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
-      }, 200);
+      if(data.has_answer_media && data.answer.media_type == "YOUTUBE") {
+        // In this case, YouTube video switching is managed by onPlayerStateChange method from YouTube callback methods
+        calltoaction_info.answer_with_video_linking_cta = data.next_call_to_action_info_list;
+      }
+      else {
+        $timeout(function() { 
+          $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
+          if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
+            updateInteractionsHistory(data.user_interaction.interaction_id);
+          } else {
+            updateInteractionsHistory(data.user_interaction.id);
+          }
+
+          $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
+          initializeVideoAfterPageRender();
+          $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
+          $timeout(function() { 
+            $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+          }, 200);
+        }, 4000);
+      }
 
     }
 
@@ -1864,6 +1918,22 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
     }
 
+  }
+
+  function initializeVideoAfterPageRender() {
+    $timeout(function() { 
+
+      if($scope.calltoaction_info.calltoaction.media_type == 'YOUTUBE') {
+        $(".media-youtube iframe").remove();
+        iframe = "<div id=\"main-media-iframe-" + $scope.calltoaction_info.calltoaction.id + "\" main-media=\"main\" calltoaction-id=\"" + $scope.calltoaction_info.calltoaction.id + "\" class=\"embed-responsive-item\"></div>";
+        $(".media-youtube").html(iframe);
+      }
+
+      angular.forEach($scope.calltoactions, function(sc) {
+        appendYTIframe(sc);
+      });
+
+    }, 0); // Code to be executed after page render
   }
 
   function resetRedoUserInteractionsForLoggedUser() {
@@ -2063,14 +2133,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $window.videoPolling = function() {
     angular.forEach($scope.play_event_tracked, function(video_started, calltoaction_id) {
       calltoaction_info = getCallToActionInfo(calltoaction_id);
-      if(calltoaction_info.calltoaction.media_type == "YOUTUBE"){
-      	youtube_player = getPlayer(calltoaction_id);
-      	youtube_player_current_time = Math.floor(youtube_player.playerManager.getCurrentTime()); 
-      	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);
+      if(calltoaction_info) {
+        if(calltoaction_info.answer_with_video_linking_cta) {
+          // Do nothing
+        }
+        else {
+          if(calltoaction_info.calltoaction.media_type == "YOUTUBE"){
+          	youtube_player = getPlayer(calltoaction_id);
+          	youtube_player_current_time = Math.floor(youtube_player.playerManager.getCurrentTime()); 
+          	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);
 
-      	if(video_started && overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
-        	executeInteraction(youtube_player, calltoaction_id, overvideo_interaction);
-      	}
+          	if(video_started && overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
+            	executeInteraction(youtube_player, calltoaction_id, overvideo_interaction);
+          	}
+          }
+        }
       }
     });
   };

@@ -18,15 +18,6 @@ class Sites::Disney::BrowseController < BrowseController
     "#{term}_#{get_disney_property}"
   end
   
-  # hook for filter content with current property
-  def get_tags_for_category(tag)
-    if get_disney_property == "disney-channel" 
-      [tag]
-    else
-      [tag, Tag.find_by_name(get_disney_property)]
-    end
-  end
-  
   #hook for filter search result in specific property if multiproperty site
   def get_current_property
     property = get_disney_property

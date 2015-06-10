@@ -470,13 +470,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval) {
             if(when_show_interaction == "SEMPRE_VISIBILE") {
 
               userAnswerInAlwaysVisibleInteraction(interaction_id, data);
-              if(data.have_answer_media) {
+              if(data.has_answer_media) {
                 userAnswerWithMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction);
               }
 
             } else {
 
-              if(data.have_answer_media) {
+              if(data.has_answer_media) {
                 userAnswerWithMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction);
               } else {
                 userAnswerWithoutMedia(data.answer, calltoaction_id, interaction_id, when_show_interaction);

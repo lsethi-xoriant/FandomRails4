@@ -33,8 +33,7 @@ module ApplicationHelper
   include FilterHelper  
   include UserInteractionHelper
   include TagHelper
-  
-  
+   
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
   # is redefined in TextHelper
   class TextHelperNamespace ; include ActionView::Helpers::TextHelper ; end
@@ -50,7 +49,6 @@ module ApplicationHelper
       nil
     end
   end
-
 
   def get_menu_items(property = nil)
     result = []
@@ -84,15 +82,14 @@ module ApplicationHelper
 
   def build_current_user() 
     if current_user
-      profile_completed = disney_profile_completed?()
       current_user_for_view = {
         "facebook" => current_user.facebook($site.id),
         "twitter" => current_user.twitter($site.id),
         "main_reward_counter" => get_point,
         "username" => current_user.username,
-        "level" => nil, # (get_current_level["level"]["name"] rescue "nessun livello"),
         "notifications" => get_unread_notifications_count(),
-        "avatar" => current_avatar
+        "avatar" => current_avatar,
+        "anonymous_id" => current_user.anonymous_id
       }
     else
       current_user_for_view = nil
@@ -726,7 +723,7 @@ module ApplicationHelper
     cta_info_list
   end
 
-  def build_evidence_ctas_info_list(property)
+  def build_evidence_cta_info_list(property)
     cache_key = property.present? ? "in_#{property.name}" : "without_property"
     cache_timestamp = get_cta_max_updated_at()
     
@@ -786,7 +783,7 @@ module ApplicationHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      evidence_ctas_info_list = build_evidence_ctas_info_list(property)
+      evidence_ctas_info_list = build_evidence_cta_info_list(property)
     else
       evidence_ctas_info_list = nil
     end

@@ -234,11 +234,17 @@ module UserInteractionHelper
         user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
       end
     else
-      if anonymous_user?(user)
-        user = User.new(anonymous_id: session[:session_id])
-        user.save(validate: false)
-        sign_in(user)
+      if interaction.registration_needed && (anonymous_user?(user) || stored_anonymous_user?(user))
+        log_error('interaction only for logged user and called by anonymous or not logged user', { user_id: user.id, interaction_id: user_interaction.interaction.id, cta_id: user_interaction.interaction.call_to_action.id })
+        raise Exception.new("interaction only for logged user and called by anonymous or not logged user")
       end
+
+      if anonymous_user?(user)
+        create_and_sign_in_anonymous_user()
+      elsif stored_anonymous_user?(user)
+        user.update_attribute(:updated_at, Time.now)
+      end
+
       user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
     end
     

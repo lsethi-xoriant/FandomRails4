@@ -113,10 +113,10 @@ Fandom::Application.routes.draw do
         end
         
         get "/iur", to: "application#iur"
-        get "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
+        post "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
         post "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         get "/reward/catalogue", :to => "reward#index"
-        
+
         devise_scope :user do
           post "/users", :to => "registrations#create"
           put "/users/edit", :to => "registrations#update"
@@ -288,7 +288,7 @@ Fandom::Application.routes.draw do
   get "/profile/update_avatar", to: "application#update_avatar_image"
 
   get "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
-  get "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
+  post "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
   get "/upload", :to => "call_to_action#upload"
   
   get "/browse", :to => "browse#index"
@@ -325,6 +325,7 @@ Fandom::Application.routes.draw do
     namespace :v2 do
       get "/get_stripe/:tag_name", :to => "browse#get_stripe_from_tag", defaults: { format: 'json' }
       get "/index", :to => "application#index", defaults: { format: 'json' }
+      get "/index/load_more", :to => "application#load_more_ctas_in_stream", defaults: { format: 'json' }
     end
   end
 
