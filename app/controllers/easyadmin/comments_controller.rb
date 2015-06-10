@@ -118,7 +118,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     end
     where_conditions << " AND user_id IN (#{params[:user_id_filter]})" unless params[:user_id_filter].blank?
     where_conditions << " AND comment_id IN (#{ comment_ids.empty? ? "-1" : comment_ids.join(",") })"
-    where_conditions << " AND text ILIKE '%#{params[:text_filter]}%'" unless params[:text_filter].blank?
+    where_conditions << " AND text ILIKE '%#{params[:text_filter].gsub("'", "''")}%'" unless params[:text_filter].blank?
     where_conditions << " AND id in (#{comment_with_profanity_ids.join(",")})" unless comment_with_profanity_ids.blank?
     where_conditions
   end
