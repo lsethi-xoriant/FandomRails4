@@ -116,6 +116,8 @@ Fandom::Application.routes.draw do
         post "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
         post "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         get "/reward/catalogue", :to => "reward#index"
+        post "/browse/full_search", :to => "browse#full_search"
+        get "/browse/full_search_load_more", :to => "browse#full_search_load_more"
 
         devise_scope :user do
           post "/users", :to => "registrations#create"
