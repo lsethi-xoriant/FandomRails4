@@ -38,6 +38,7 @@ EOF
 
   ec2 = AWS::EC2.new(:region => config['region'])  
   auto_scaling = AWS::AutoScaling.new(:region => config['region'])
+  puts "using autoscaling group: " + colorize(config['autoscaling_group'], :cyan) 
   group = auto_scaling.groups[config['autoscaling_group']]
     
   AWS.memoize do

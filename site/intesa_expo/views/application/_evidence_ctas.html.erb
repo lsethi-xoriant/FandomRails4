@@ -40,17 +40,17 @@
     <div class="col-md-3 col-sm-6 cta__evidence-calendar text-center">
       <%= render partial: "/calendar/widget_calendar" %>
     </div>
-	<div class="col-md-3 col-sm-6 cta__evidence-banner">
-    <div class="cta__evidence-banner__img" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'">
-      <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}"> 
-    </div> 
-    <a ng-if="aux.assets['left_logo_' + aux.language] && aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Carousel', 'Acquista', $event)">
-      <div class="cta__evidence-banner__img">
-        <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}">  
-      </div>
-    </a>
+	<div class="col-md-3 col-sm-6 cta__evidence-banner" ng-if="aux.language != 'it'">
+	    <div class="cta__evidence-banner__img" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'">
+	      <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}"> 
+	    </div> 
+	    <a ng-if="aux.assets['left_logo_' + aux.language] && aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Carousel', 'Acquista', $event)">
+	      <div class="cta__evidence-banner__img">
+	        <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}">  
+	      </div>
+	    </a>
 	</div>
-    <div class="col-md-3 col-sm-6 cta__evidence__press-widget" ng-if="aux.language == 'it_xxx'">
+    <div class="col-md-3 col-sm-6 cta__evidence__press-widget" ng-if="aux.language == 'it'">
     	<div class="cta__evidence__press-widget__title-container">
     		<div class="col-xs-8 cta__evidence__press-widget__title">AREA STAMPA</div>
     		<div class="col-xs-4 text-right"><a class="read" href="/browse/category/press-release-it">Leggi</a></div>

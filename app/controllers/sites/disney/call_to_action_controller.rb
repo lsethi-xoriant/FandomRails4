@@ -84,7 +84,9 @@ class Sites::Disney::CallToActionController < CallToActionController
 
   def ordering_ctas
     tag_name = get_disney_property()
-    params[:page_elements] = ["like", "comment", "share"]
+    if params["other_params"]
+      params["other_params"] = JSON.parse(params["other_params"])
+    end    
     calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, $site.init_ctas)
     response = {
       calltoaction_info_list: calltoaction_info_list,
