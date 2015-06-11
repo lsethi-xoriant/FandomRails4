@@ -72,6 +72,7 @@ class GalleryController < ApplicationController
     @cta_id = cta.id
     upload_interaction = cta.interactions.find_by_resource_type("Upload")
     @upload_interaction_id = upload_interaction.id
+    @upload_type = Interaction.find(@upload_interaction_id).aux["configuration"]["type"] rescue "flowplayer"
     @upload_active = upload_interaction.when_show_interaction != "MAI_VISIBILE"
     @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
 
@@ -89,7 +90,7 @@ class GalleryController < ApplicationController
 
     gallery_tag_name = @gallery_tag.name
     @calltoaction_info_list, @has_more = get_ctas_for_stream(gallery_tag_name, params, $site.init_ctas)
-    #@calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(galleries_user_cta, ["like", "comment", "share", "vote"])
+    # @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(galleries_user_cta, ["like", "comment", "share", "vote"])
 
     @aux_other_params = { 
       "upload_interaction_resource" => upload_interaction.resource,
@@ -98,13 +99,13 @@ class GalleryController < ApplicationController
       "gallery_calltoactions_count" => galleries_user_cta_count,
       "gallery_user" => params[:user]
     }
-    
+
     if get_extra_fields!(cta)['form_extra_fields']
       @extra_fields = JSON.parse(get_extra_fields!(cta)['form_extra_fields'].squeeze(" "))['fields']
     else
       @extra_fields = nil
     end
-    
+
     @uploaded = false
     @error = false
     if !flash[:notice].blank?
@@ -113,7 +114,7 @@ class GalleryController < ApplicationController
       @error = true
     end
   end
-  
+
   def get_gallery_ctas(gallery = nil)
     if gallery.nil?
       gallery_tags = get_tags_with_tag("gallery")

@@ -27,8 +27,8 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
       tags_ids = get_tagged_objects(@tags, params[:tag_list], TagsTag, 'tag_id', 'other_tag_id')
 
       where_conditions = "true"
-      where_conditions << " AND title ILIKE '%#{@title_filter}%'" unless @title_filter.blank?
-      where_conditions << " AND description ILIKE '%#{@description_filter}%'" unless @description_filter.blank?
+      where_conditions << " AND title ILIKE '%#{@title_filter.gsub("'", "''")}%'" unless @title_filter.blank?
+      where_conditions << " AND description ILIKE '%#{@description_filter.gsub("'", "''")}%'" unless @description_filter.blank?
       unless @tag_list.blank?
         where_conditions << (tags_ids.blank? ? " AND id IS NULL" : " AND id in (#{tags_ids.inspect[1..-2]})")
       end

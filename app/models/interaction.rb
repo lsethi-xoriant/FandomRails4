@@ -12,7 +12,7 @@ class Interaction < ActiveRecord::Base
   has_many :interaction_call_to_actions
 
   before_create :check_name
-  before_save :default_values
+  before_save :default_values, :set_upload_type
 
   validate :resource_errors
   validate :check_max_one_play_resource
@@ -33,6 +33,16 @@ class Interaction < ActiveRecord::Base
   def default_values
     if self.aux.blank? 
       self.aux = "{}"
+    end
+  end
+
+  def set_upload_type
+    if self.resource_type == "Upload"
+      upload_aux = { "configuration" => { "type" => self.resource.gallery_type } }
+      self.aux.merge!(upload_aux)
+      if self.resource.gallery_type == "instagram"
+        self.when_show_interaction = "MAI_VISIBILE"
+      end
     end
   end
 

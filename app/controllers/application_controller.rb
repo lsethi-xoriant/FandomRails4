@@ -254,7 +254,7 @@ class ApplicationController < ActionController::Base
   def modify_instagram_upload_object
     interaction = Interaction.find(params[:interaction_id])
     aux = interaction.aux || {}
-    if aux["instagram_tag"]
+    if (aux["configuration"]["type"] == "instagram" rescue false)
       res, delete_success = delete_instagram_tag_subscription(interaction)
     end
     delete_success ||= true
@@ -316,7 +316,7 @@ class ApplicationController < ActionController::Base
       #         }
       new_tag = res["data"]
       aux = interaction.aux || {}
-      aux["instagram_tag"] = { "subscription_id" => new_tag["id"], "name" => new_tag["object_id"] }
+      aux["configuration"] = { "type" => "instagram", "instagram_tag" => { "subscription_id" => new_tag["id"], "name" => new_tag["object_id"] } }
       interaction_updated = interaction.update_attribute(:aux, aux.to_json)
 
       if interaction_updated
@@ -337,7 +337,7 @@ class ApplicationController < ActionController::Base
     request_params = { 
       "client_id" => ig_settings["client_id"], 
       "client_secret" => ig_settings["client_secret"], 
-      "id" => interaction.aux["instagram_tag"]["subscription_id"]
+      "id" => interaction.aux["configuration"]["instagram_tag"]["subscription_id"]
     }
 
     headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
@@ -352,9 +352,9 @@ class ApplicationController < ActionController::Base
     success = res["meta"]["code"] == 200 rescue false
 
     if success
-      aux = interaction.aux || {}
-      old_tag_name = aux["instagram_tag"]["name"]
-      aux.delete("instagram_tag")
+      aux = interaction.aux
+      old_tag_name = aux["configuration"]["instagram_tag"]["name"]
+      aux.delete("configuration")
       interaction_updated = interaction.update_attribute(:aux, aux.to_json)
 
       if interaction_updated

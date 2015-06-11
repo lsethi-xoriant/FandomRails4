@@ -196,8 +196,8 @@ module EasyadminHelper
     end
   end
 
-  def instagram_upload?(interaction_id)
-    !Interaction.find(interaction_id).aux["instagram_tag"].nil? rescue false
+  def get_upload_type(interaction_id)
+    Interaction.find(interaction_id).aux["configuration"]["type"] rescue nil
   end
 
   def get_period_ids(from_date, to_date)

@@ -26,7 +26,7 @@ class Easyadmin::EasyadminRewardController < Easyadmin::EasyadminController
       reward_ids = get_tagged_objects(@reward_list, params[:tag_list], RewardTag, 'reward_id', 'tag_id')
 
       where_conditions << "name ILIKE '%#{@name_filter}%'" unless @name_filter.blank?
-      where_conditions << "title ILIKE '%#{@title_filter}%'" unless @title_filter.blank?
+      where_conditions << "title ILIKE '%#{@title_filter.gsub("'", "''")}%'" unless @title_filter.blank?
       where_conditions << "cost = #{@cost_filter}" if ( !@cost_filter.blank? && /\A\d+\z/.match(@cost_filter) )
       where_conditions << "id IN (#{reward_ids.join(",")})" if reward_ids.any?
       @reward_list = Reward.where(where_conditions.join(" AND ")).order("cost ASC")

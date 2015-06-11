@@ -80,7 +80,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           fileFormDataName: file_form_data_params
         }).progress(function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            $scope.form_data.progress = progressPercentage; // evt.config.file[0].progress
+            if(!$scope.form_data['vcode'])
+              $scope.form_data.progress = progressPercentage; // evt.config.file[0].progress
         }).success(function (data, status, headers, config) {
             if(data.errors) {
               $scope.form_data.errors = data.errors;
@@ -119,7 +120,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       errors.push("Titolo non può essere lasciato in bianco");
     }
 
-    if(!files[0]) {
+    if(!files[0] && !$scope.form_data['vcode']) {
       errors.push("Il media deve essere caricato");
     }
 

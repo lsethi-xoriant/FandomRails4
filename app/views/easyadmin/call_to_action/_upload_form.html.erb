@@ -15,15 +15,18 @@
           <div class="form-group">
             <label class="text-input">Seleziona il metodo di upload</label>
             <div class="radio">
-              <%= uploadform.radio_button :gallery_type, "default", :class => "default", :checked => !instagram_upload?(f.object.id), :onchange => "updateInputsForGalleryType($(this))" %> Base
+              <%= uploadform.radio_button :gallery_type, "flowplayer", :class => "flowplayer", :checked => (get_upload_type(f.object.id) == "flowplayer" || get_upload_type(f.object.id) == nil), :onchange => "updateInputsForGalleryType($(this))" %> Upload + Flowplayer
             </div>
             <div class="radio">
-              <%= uploadform.radio_button :gallery_type, "instagram", :class => "instagram", :checked => instagram_upload?(f.object.id), :onchange => "updateInputsForGalleryType($(this))" %> Instagram
+              <%= uploadform.radio_button :gallery_type, "instagram", :class => "instagram", :checked => (get_upload_type(f.object.id) == "instagram"), :onchange => "updateInputsForGalleryType($(this))" %> Instagram
+            </div>
+            <div class="radio">
+              <%= uploadform.radio_button :gallery_type, "youtube", :class => "youtube", :checked => (get_upload_type(f.object.id) == "youtube"), :onchange => "updateInputsForGalleryType($(this))" %> YouTube
             </div>
           </div>
         </div>
       </div>
-      <div class="row default-gallery <%= instagram_upload?(f.object.id) ? 'hidden' : '' %>" style="margin-bottom: 0px;">
+      <div class="row video-gallery <%= (get_upload_type(f.object.id).in? ['flowplayer', 'youtube']) ? '' : 'hidden' %>" style="margin-bottom: 0px;">
         <div class="col-lg-6">
           <div class="form-group">
             <label class="text-input">Visibile</label>
@@ -94,22 +97,22 @@
           </div>
         </div>
       </div>
-      <div class="row instagram-gallery <%= !instagram_upload?(f.object.id) ? 'hidden' : '' %>" style="margin-bottom: 0px;">
+      <div class="row instagram-gallery <%= get_upload_type(f.object.id) == 'instagram' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
         <div class="col-lg-12">
           <div class="form-group col-lg-4">
             <% if f.object.id %>
               <label class="text-input">Tag della gallery (senza #)</label>
               <br/> Dopo la registrazione / modifica, attendere la spunta verde sotto al tag registrato prima di salvare la call to action.
 
-              <% tag_name = Interaction.find(f.object.id).aux["instagram_tag"]["name"] rescue "" %>
-              <% tag_subscription_id = Interaction.find(f.object.id).aux["instagram_tag"]["subscription_id"] rescue "" %>
+              <% tag_name = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"]["name"] rescue "" %>
+              <% tag_subscription_id = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"]["subscription_id"] rescue "" %>
 
               <%= uploadform.text_field :instagram_tag_name, :class => "form-control instagram-tag", :value => tag_name %>
               <%= uploadform.hidden_field :instagram_tag_subscription_id, :class => "subscription-id", :value => tag_subscription_id %>
               <a class="btn btn-primary btn-block clickable" onclick="sendInstagramTagSubscription(<%= f.object.id %>, $(this));"> Registra / aggiorna tag </a>
 
               <p>
-                <% if instagram_upload?(f.object.id) %>
+                <% if get_upload_type(f.object.id) == "instagram" %>
                   Tag registrato: <%= tag_name %> - ID registrazione: <%= tag_subscription_id %> 
                 <% end %>
               </p>
@@ -126,17 +129,28 @@
 
 <script type="text/javascript">
 
+  $(document).ready(function() {
+    elementClass = "<%= get_upload_type(f.object.id) %>";
+    if(elementClass == "")
+      elementClass = "flowplayer";
+    updateInputsForGalleryType($("." + elementClass));
+  });
+
   function updateInputsForGalleryType(el) {
     parentDiv = el.parent().parent().parent().parent();
-    if(el.attr("class") == "default") {
-      selected = parentDiv.siblings(".default-gallery");
-      unselected = parentDiv.siblings(".instagram-gallery");
+    switch(el.attr("class")) {
+      case "flowplayer":
+      case "youtube":
+        selected = parentDiv.siblings(".video-gallery");
+        unselected = parentDiv.siblings(".instagram-gallery");
+        break;
+      case "instagram":
+        selected = parentDiv.siblings(".instagram-gallery");
+        unselected = parentDiv.siblings(".video-gallery");
+        parentDiv.siblings(".video-gallery").children().children("input").val("");
+        break;
     }
-    else {
-      selected = parentDiv.siblings(".instagram-gallery");
-      unselected = parentDiv.siblings(".default-gallery");
-      unselected.children().children("input").val("");
-    }
+
     selected.removeClass("hidden");
     unselected.addClass("hidden");
   };

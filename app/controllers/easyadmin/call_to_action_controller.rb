@@ -288,7 +288,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       cta_ids = get_tagged_objects(@cta_list, params[:tag_list], CallToActionTag, 'call_to_action_id', 'tag_id')
 
       where_conditions = params[:call_to_actions] == "all" ? "user_id IS NULL" : "id in (#{cta_ids_with_tag_template.join(",")})"
-      where_conditions << " AND title ILIKE '%#{@title_filter}%'" unless @title_filter.blank?
+      where_conditions << " AND title ILIKE '%#{@title_filter.gsub("'", "''")}%'" unless @title_filter.blank?
       where_conditions << " AND slug ILIKE '%#{@slug_filter}%'" unless @slug_filter.blank?
       unless @tag_list.blank?
         where_conditions << (cta_ids.blank? ? " AND id IS NULL" : " AND id in (#{cta_ids.inspect[1..-2]})")
@@ -339,7 +339,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
         cta_ids = get_tagged_objects(CallToAction.where(where_conditions), params[:tag_list], CallToActionTag, 'call_to_action_id', 'tag_id')
         where_conditions << (cta_ids.blank? ? " AND id IS NULL" : " AND id in (#{cta_ids.join(', ')})")
       end
-      where_conditions << " AND title ILIKE '%#{@title_filter}%'" unless @title_filter.blank?
+      where_conditions << " AND title ILIKE '%#{@title_filter.gsub("'", "''")}%'" unless @title_filter.blank?
       where_conditions << " AND slug ILIKE '%#{@slug_filter}%'" unless @slug_filter.blank?
       user_where_conditions = "username ILIKE '%#{@username_filter}%'" unless @username_filter.blank?
       unless @email_filter.blank?
