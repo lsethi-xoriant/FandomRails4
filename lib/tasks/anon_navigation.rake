@@ -62,6 +62,10 @@ namespace :anon_navigation do
         end
       when "like"
         adjust_like(user_interaction, anonymous_user)
+      when "share"
+        adjust_share(user_interaction, anonymous_user)
+      else
+        adjust_counter(user_interaction, anonymous_user)
       end
     end
     user_interactions.destroy_all()
@@ -78,22 +82,38 @@ namespace :anon_navigation do
   def adjust_like(user_interaction, anonymous_user)
     aux = { counters: {} }
     anon_user_interaction = find_or_create_anon_user_interaction(user_interaction, anonymous_user, aux)
+    anon_aux = anon_user_interaction.aux
 
     like = user_interaction.aux["like"]
 
     if like
-      value = anon_user_interaction.aux["counter"]
+      value = anon_aux["counter"]
       anon_aux["counter"] = initialize_or_increment_value(value)
       anon_user_interaction.update_attributes(counter: (anon_user_interaction.counter + 1), aux: anon_aux)
     end
   end
 
+  def adjust_share(user_interaction, anonymous_user)
+    aux = { providers: {} }
+    anon_user_interaction = find_or_create_anon_user_interaction(user_interaction, anonymous_user, aux)
+    anon_aux = anon_user_interaction.aux
+
+    providers = user_interaction.aux["providers"]
+    providers.each do |provider, count|
+      value = anon_aux["providers"][provider] 
+      anon_aux["providers"][provider] = initialize_or_increment_value(value, count)
+    end
+
+    anon_user_interaction.update_attributes(counter: (anon_user_interaction.counter + 1), aux: anon_aux)
+  end
+
   def adjust_vote(user_interaction, anonymous_user)
     aux = { vote_info_list: {} }
     anon_user_interaction = find_or_create_anon_user_interaction(user_interaction, anonymous_user, aux)
+    anon_aux = anon_user_interaction.aux
 
     vote = user_interaction.aux["vote"]
-    value = anon_user_interaction.aux["vote_info_list"]["#{vote}"] 
+    value = anon_aux["vote_info_list"]["#{vote}"] 
     anon_aux["vote_info_list"]["#{vote}"] = initialize_or_increment_value(value)
 
     anon_user_interaction.update_attributes(counter: (anon_user_interaction.counter + 1), aux: anon_aux)
@@ -102,16 +122,22 @@ namespace :anon_navigation do
   def adjust_versus(user_interaction, anonymous_user)
     aux = { counters: {} }
     anon_user_interaction = find_or_create_anon_user_interaction(user_interaction, anonymous_user, aux)
+    anon_aux = anon_user_interaction.aux
 
     answer_id = user_interaction.answer_id
-    value = anon_user_interaction.aux["counters"]["#{answer_id}"]
+    value = anon_aux["counters"]["#{answer_id}"]
     anon_aux["counters"]["#{answer_id}"] = initialize_or_increment_value(value)
 
     anon_user_interaction.update_attributes(counter: (anon_user_interaction.counter + 1), aux: anon_aux)
   end
 
-  def initialize_or_increment_value(value)
-    value.present? ? (value + 1) : 1
+  def initialize_or_increment_value(value, increment = 1)
+    value.present? ? (value + increment) : increment
+  end
+
+  def adjust_counter(user_interaction, anonymous_user)
+    anon_user_interaction = find_or_create_anon_user_interaction(user_interaction, anonymous_user, {})
+    anon_user_interaction.update_attribute(:counter, (anon_user_interaction.counter + user_interaction.counter))
   end
 
 end

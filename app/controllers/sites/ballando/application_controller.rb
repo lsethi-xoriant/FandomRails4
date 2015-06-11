@@ -49,6 +49,13 @@ class Sites::Ballando::ApplicationController < ApplicationController
     @home = true
   end
 
+  def init_aux()
+    {
+      "tenant" => $site.id,
+      "main_reward_name" => MAIN_REWARD_NAME
+    }
+  end
+
   def generate_captcha
     response = generate_captcha_response
 

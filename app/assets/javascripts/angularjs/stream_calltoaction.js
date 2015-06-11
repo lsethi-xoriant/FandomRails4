@@ -183,7 +183,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.initCallToActionInfoList = function(calltoaction_info_list) {
     $scope.calltoactions = calltoaction_info_list;
-
     if($scope.calltoactions.length == 1) {
       $scope.calltoaction_info = $scope.calltoactions[0];
 
@@ -195,7 +194,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function getOrigResourceType(resource_type) {
-    if(resource_type == "versus" || resource_type == "quiz") {
+    if(resource_type == "versus" || resource_type == "quiz" || resource_type == "test") {
       return "quiz";
     } else {
       return resource_type;
@@ -205,8 +204,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   function isInteractionForAnonymous(resource_type) {
     resource_type = getOrigResourceType(resource_type);
     interactions_for_anonymous = $scope.aux.site.attributes.interactions_for_anonymous;
-    console.log(interactions_for_anonymous);
-    console.log(resource_type);
     return (interactions_for_anonymous && interactions_for_anonymous.indexOf(resource_type) > -1);
   }
 
@@ -222,6 +219,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   function is_registrated_user() {
+    console.log($scope.current_user);
     return ($scope.current_user && !$scope.current_user.anonymous_id);
   }
 
@@ -430,6 +428,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
 
+  // ORZORO
   $scope.computeAvgForVoteInteraction = function(interaction_info) {
     numerator = 0; denominator = 0;
     if(interaction_info.anonymous_user_interaction_info) {
@@ -1490,6 +1489,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       $http.post(update_interaction_path, { interaction_id: interaction_id })
         .success(function(data) {
+
+          if(data.current_user) $scope.current_user = data.current_user;
     
           // GOOGLE ANALYTICS
           if(data.ga) {
@@ -1573,6 +1574,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
  
       $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
         .success(function(data) {
+          if(data.anonymous_user) $scope.current_user = data.anonymous_user;
+          if(data.notice_anonymous_user) {
+            showRegistrateView();
+          }
         });
     }
   };
@@ -1624,7 +1629,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
           adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
           $scope.current_user.main_reward_counter = data.main_reward_counter;  
-          updateUserRewardInView(data.main_reward_counter.general);
           interaction_info.status = data.interaction_status;
 
           $scope.aux.share_interaction_daily_done = true;
@@ -1655,8 +1659,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if($scope.current_user || isInteractionForAnonymous(resource_type)) {
 
       if(!$scope.answer_in_progress) {
-        $scope.answer_in_progress = true;
-
+        
         enableWaitingAudio("stop");
 
         if(!angular.isUndefined(before_callback)) {
@@ -1686,6 +1689,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(interaction_info.interaction.registration_needed && !is_registrated_user()) {
       showRegistrateView()
     } else {
+      $scope.answer_in_progress = true;
+      
       interaction_id = interaction_info.interaction.id;
 
       update_interaction_path = "/update_interaction";
@@ -1706,6 +1711,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     calltoaction_id = calltoaction_info.calltoaction.id;
     interaction_id = interaction_info.interaction.id;
 
+    if(data.current_user) $scope.current_user = data.current_user;
+
     if(data.notice_anonymous_user) {
       showRegistrateView();
     }
@@ -1723,28 +1730,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
     }
 
-    if($scope.current_user) {
-
-      $scope.current_user.main_reward_counter = data.main_reward_counter;
-      updateUserRewardInView(data.main_reward_counter.general);
-
-      adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-      calltoaction_info.status = JSON.parse(data.calltoaction_status);
-
-    } else if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-
-      user_interaction_for_storage = buildUserInteractionForStorage(data.user_interaction, calltoaction_id, interaction_id);
-      $scope.updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
-
-    } else {
-      // Nothing to do.
-    }
+    adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+    calltoaction_info.status = JSON.parse(data.calltoaction_status);
 
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
     }
+
     if(data.answer) {
-      if(data.answer.media_type == "YOUTUBE") {
+      if(data.answer.media_type == "IMAGE") {
+        calltoaction_info.calltoaction.media_image_from_answer_type = "IMAGE";
+        calltoaction_info.calltoaction.media_image_from_answer = data.answer_media_image_url;
+      } else if(data.answer.media_type == "YOUTUBE") {
         if(calltoaction_info.calltoaction.media_type != "YOUTUBE") {
           calltoaction_info.calltoaction.media_type = "YOUTUBE";
           calltoaction_info.calltoaction.vcode = data.answer.media_data;
@@ -1756,11 +1753,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           $scope.updateYTIframe(calltoaction_info, data.answer.media_data, true);
         }
       }
-    }
-
-    if(data.answer.media_type == "IMAGE") {
-      calltoaction_info.calltoaction.media_image_from_answer_type = "IMAGE";
-      calltoaction_info.calltoaction.media_image_from_answer = data.answer_media_image_url;
     }
 
     if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
@@ -1817,8 +1809,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       interaction_info.user_interaction.feedback = data.user_interaction.outcome;
 
       if(interaction_info.interaction.resource_type == "like") {
-        like_pressed = interaction_info.user_interaction.aux["like"];
-        if(like_pressed) {
+        if($scope.likePressed(interaction_info)) {
           interaction_info.interaction.resource.counter += 1;
         } else {
           interaction_info.interaction.resource.counter -= 1;
@@ -1848,29 +1839,35 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     // Next call to action for test interaction
     if(data.next_call_to_action_info_list) {
-
-      if(data.has_answer_media && data.answer.media_type == "YOUTUBE") {
-        // In this case, YouTube video switching is managed by onPlayerStateChange method from YouTube callback methods
-        calltoaction_info.answer_with_video_linking_cta = data.next_call_to_action_info_list;
-      }
-      else {
-        $timeout(function() { 
-          $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
-          if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-            updateInteractionsHistory(data.user_interaction.interaction_id);
-          } else {
-            updateInteractionsHistory(data.user_interaction.id);
+      if(data.answer) {
+        if(data.has_answer_media && data.answer.media_type == "YOUTUBE") {
+          // In this case, YouTube video switching is managed by onPlayerStateChange method from YouTube callback methods
+          calltoaction_info.answer_with_video_linking_cta = data.next_call_to_action_info_list;
+        }
+        else {
+          timeout_time = 0;
+          if(data.answer) {
+            if(data.has_answer_media && data.answer.media_type == "IMAGE") {
+              timeout_time = 4000;
+            }
           }
-
-          $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
-          initializeVideoAfterPageRender();
-          $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
           $timeout(function() { 
-            $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
-          }, 200);
-        }, 4000);
-      }
+            $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
+            if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
+              updateInteractionsHistory(data.user_interaction.interaction_id);
+            } else {
+              updateInteractionsHistory(data.user_interaction.id);
+            }
 
+            $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
+            initializeVideoAfterPageRender();
+            $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
+            $timeout(function() { 
+              $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+            }, 200);
+          }, timeout_time);
+        }
+      }
     }
 
     // Next call to action for random interaction
@@ -1974,11 +1971,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.resetToRedo = function(interaction_info) {
-    if($scope.current_user) {
-      resetRedoUserInteractionsForLoggedUser(interaction_info);
-    } else {
-      resetRedoUserInteractionsForAnonymousUser(interaction_info);
-    }
+    // if($scope.current_user) {
+    //   resetRedoUserInteractionsForLoggedUser(interaction_info);
+    // } else {
+    //   resetRedoUserInteractionsForAnonymousUser(interaction_info);
+    // }
+    resetRedoUserInteractionsForLoggedUser(interaction_info);
   };
 
   $scope.computePercentageForVersus = function(interaction_info, answer_id) {
@@ -2268,7 +2266,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $window.updateUserRewardInView = function(counter) {
     $scope.current_user.main_reward_counter.general = counter;
-    //$(".user-reward-counter").html("+" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
   };
   
   //////////////////////// COLUMN VIEW HELPER ////////////////////////////////////////
@@ -2404,7 +2401,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.buyReward = function(reward_id){
   	$http.post("/reward/buy" , { reward_id: reward_id })
 	    .success(function(data) { 
-	    	console.log(data);
 	      $(".cta-preview__locked-layer--reward").html(data.html);
 	    }).error(function() {
 	      // ERROR.

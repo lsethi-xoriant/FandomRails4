@@ -116,6 +116,8 @@ Fandom::Application.routes.draw do
         post "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
         post "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
         get "/reward/catalogue", :to => "reward#index"
+        post "/browse/full_search", :to => "browse#full_search"
+        get "/browse/full_search_load_more", :to => "browse#full_search_load_more"
 
         devise_scope :user do
           post "/users", :to => "registrations#create"
@@ -554,7 +556,7 @@ Fandom::Application.routes.draw do
   get "/newsletter_unsubscribe/:email/:security_token", :to => "newsletter#unsubscribe", :constraints => { :email => /.*/ }
   get "email_notifications_unsubscribe/:username/:security_token", :to => "notice#unsubscribe", :constraints => { :username => /.*/ }
 
-  get "/reset_redo_user_interactions", to: "call_to_action#reset_redo_user_interactions", defaults: { format: 'json' }
+  post "/reset_redo_user_interactions", to: "call_to_action#reset_redo_user_interactions", defaults: { format: 'json' }
 
   # ICAL
   get "/ical/:interaction_id/:name", to: "calendar#get_ical", defaults: { format: 'ics' }

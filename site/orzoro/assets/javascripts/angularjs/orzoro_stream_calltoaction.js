@@ -30,10 +30,16 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   };
 
   $scope.nextCallToActionInCategory = function(direction) {
+    if($scope.aux.parent_cta_id) {
+      parent_cta_id = $scope.aux.parent_cta_id;
+    } else {
+      parent_cta_id = $scope.calltoaction_info.calltoaction.id;
+    }
+
     $scope.calltoaction_info.hide_class = "fadeout_animation";
     $timeout(function() { 
       //$http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})   
-      $http.post("/next_calltoaction" , { calltoaction_id: $scope.parent_calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction })  
+      $http.post("/next_calltoaction" , { calltoaction_id: parent_cta_id, category_id: $scope.aux.calltoaction_category.id, direction: direction })  
         .success(function(data) { 
 
           $scope.initCallToActionInfoList(data.calltoaction);
@@ -85,8 +91,6 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     if($scope.calltoaction_info) {
       $scope.menu_field = $scope.calltoaction_info.miniformat.name;
       $scope.calltoaction_ids_shown = $scope.calltoaction_info["calltoaction"]["id"];
-      // Move into main angular
-      // $scope.goToLastLinkedCallToAction();
     } else {
       if($scope.aux.page_tag) {
         $scope.menu_field = $scope.aux.page_tag.miniformat.name;

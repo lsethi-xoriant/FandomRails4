@@ -60,7 +60,7 @@ module UserInteractionHelper
       if next_cta  
         next_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([next_cta], interactions_to_compute)
         next_cta_info = next_cta_info_list.first
-        update_cta_info_optional_history(next_cta_info, prev_cta_info, linked_user_interaction_ids) 
+        update_cta_info_optional_history(cta_info, next_cta_info, prev_cta_info, linked_user_interaction_ids) 
       else
         next_cta_info_list = nil
       end
@@ -84,11 +84,12 @@ module UserInteractionHelper
     [next_cta, linked_user_interaction_id]
   end
 
-  def update_cta_info_optional_history(next_cta_info, prev_cta_info, linked_user_interaction_ids)
+  def update_cta_info_optional_history(parent_cta_info, next_cta_info, prev_cta_info, linked_user_interaction_ids)
     optional_index_count = prev_cta_info["optional_history"]["optional_index_count"]
     optional_total_count = prev_cta_info["optional_history"]["optional_total_count"]
 
     next_cta_info["optional_history"] = {
+      "parent_cta_id" => parent_cta_info["calltoaction"]["id"],
       "user_interactions" => linked_user_interaction_ids,
       "optional_total_count" => optional_total_count,
       "optional_index_count" => optional_index_count
@@ -235,7 +236,7 @@ module UserInteractionHelper
       end
     else
       if interaction.registration_needed && (anonymous_user?(user) || stored_anonymous_user?(user))
-        log_error('interaction only for logged user and called by anonymous or not logged user', { user_id: user.id, interaction_id: user_interaction.interaction.id, cta_id: user_interaction.interaction.call_to_action.id })
+        log_error('interaction only for logged user and called by anonymous or not logged user', { user_id: user.id, interaction_id: interaction.id, cta_id: interaction.call_to_action_id })
         raise Exception.new("interaction only for logged user and called by anonymous or not logged user")
       end
 
@@ -256,7 +257,11 @@ module UserInteractionHelper
 
       case interaction.resource_type.downcase
       when "share"
-        aux = merge_aux(aux, user_interaction.aux)
+        providers = user_interaction.aux["providers"]
+        providers.each do |provider, increment|
+          value = aux["providers"][provider] 
+          aux["providers"][provider] = value.present? ? (value + increment) : increment
+        end
       when "like"
         like_updated = !user_interaction.aux["like"]
         aux = { like: like_updated }.to_json

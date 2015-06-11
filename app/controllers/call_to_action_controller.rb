@@ -250,6 +250,7 @@ class CallToActionController < ApplicationController
       if optional_history
         step_index = optional_history["optional_index_count"]
         step_count = optional_history["optional_total_count"]
+        parent_cta_id = optional_history["parent_cta_id"]
       end
 
       #if current_user
@@ -263,6 +264,7 @@ class CallToActionController < ApplicationController
         init_captcha: (current_user.nil? || current_user.anonymous_id.present?),
         linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
         linked_call_to_actions_count: step_count,
+        parent_cta_id: parent_cta_id,
         sidebar_tag: sidebar_tag
       }
 
@@ -521,7 +523,7 @@ class CallToActionController < ApplicationController
       provider = params[:provider]
       result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address], params[:facebook_message])
       if result
-        aux["#{provider}"] = 1
+        aux["providers"][provider] = 1
         user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
         response[:ga][:label] = interaction.resource_type.downcase
       end
@@ -571,20 +573,9 @@ class CallToActionController < ApplicationController
       end
     end
 
-    if anonymous_user?(current_or_anonymous_user)
+    response["current_user"] = JSON.parse(build_current_user()) if current_user && $site.id != "disney"
 
-      if params["anonymous_user"]
-        anonymous_user_main_reward_count = params["anonymous_user"][get_main_reward_name()] || 0
-      else 
-        anonymous_user_main_reward_count = 0
-      end
-
-      response["main_reward_counter"] = {
-        "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][get_main_reward_name()])
-      }
-      
-    else
-      response["main_reward_counter"] = get_point
+    if !anonymous_user?(current_or_anonymous_user)
       response = setup_update_interaction_response_info(response)
     end    
     

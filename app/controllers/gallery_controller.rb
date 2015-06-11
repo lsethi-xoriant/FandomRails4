@@ -40,7 +40,7 @@ class GalleryController < ApplicationController
         [get_gallery_ctas(), get_gallery_ctas_count()] 
       }
     end
-    
+
     @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
 
     @aux_other_params = { 

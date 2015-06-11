@@ -56,7 +56,7 @@ class BrowseController < ApplicationController
     flash[:notice] = get_not_found_message(query)
     go_to_browse
   end
-  
+
   def full_search
     if params[:query].blank?
       handle_no_result("")
@@ -65,19 +65,19 @@ class BrowseController < ApplicationController
       @query = params[:query]
       log_info('full search', { query: @query })
     end
-    
+
     contents, total = get_contents_with_match(params[:query], 0, get_current_property)
-    
+
     if total == 0
       handle_no_result(params[:query])
       return
     end
-    
+
     @total = total
     contents = prepare_contents(contents)
-    
+
     @contents = compute_cta_status_contents(contents, current_or_anonymous_user)
-    
+
     @aux_other_params = { 
       calltoaction_evidence_info: true,
       page_tag: {
@@ -86,14 +86,14 @@ class BrowseController < ApplicationController
         }
       }
     }
-    
+
     @query = params[:query]
     if @contents.empty?
       redirect_to "/browse"
     end
-    
+
   end
-  
+
   def full_search_load_more
     offset = params[:offset].to_i
     contents, total = get_contents_with_match(params[:query], offset, get_current_property)
