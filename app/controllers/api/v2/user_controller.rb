@@ -3,22 +3,23 @@
     respond_to :json
     
     def sign_in
-      user = may_get_user(params[:username], params[:password])
-      if user.nil?
-        respond_with nil
-      else
+      username = params[:username]
+      password = params[:password]
+      user = User.where(username: username).first
+      if !user.nil? && user.valid_password?(password)
         respond_with user.to_json
+      else
+        respond_with nil
       end
     end
 
-    def may_get_user(username, password)
-      if !username.nil? && !password.nil?
-        user = User.where(username: username).first
-        if !user.nil? && user.valid_password?(password)
-          return user
-        end
+    def sign_up
+      user = User.create(params[:user])
+      if user.errors.blank?
+        respond_with user.to_json
+      else
+        respond_with user.errors.to_json
       end
-      return nil
     end
 
 end
