@@ -337,12 +337,12 @@
 .cta__video-img--about {
   width: 105px; 
   float: left; 
-  margin: 30px 15px 0 15px;
+  margin: 20px 15px 0 15px;
   border: 2px solid #fff;
 }
 
 .cta__video-col--about {
-  height: 117px;
+  height: 100px;
   padding-left: 0;
 }
 
@@ -549,6 +549,10 @@
 @media (min-width: $screen-sm-min) { 
   .cta__media-footer {
     padding: 10px 58px;
+  }
+  .cta__video-col--about-4 {
+    overflow-y: scroll; 
+    height: 351px;
   }
 }
 

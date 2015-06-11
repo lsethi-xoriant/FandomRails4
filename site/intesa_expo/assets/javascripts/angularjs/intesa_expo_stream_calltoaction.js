@@ -371,15 +371,16 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
   $window.appendYTIframe = function(calltoaction_info) {
     if(calltoaction_info.calltoaction.media_type == "YOUTUBE" && $scope.youtube_api_ready) {
 
-      vcode = calltoaction_info.calltoaction.media_data;
-      if(vcode.indexOf(",") > -1) {
-        $scope.$apply(function() {
-          calltoaction_info.calltoaction.vcodes = vcode.split(",");
-          calltoaction_info.calltoaction.vcode = calltoaction_info.calltoaction.vcodes[0];
-        });
-      } else {
-        calltoaction_info.calltoaction.vcode = vcode;
-      }
+      // Moved in RR controller otherwise flexslider not work
+      // vcode = calltoaction_info.calltoaction.media_data;
+      // if(vcode.indexOf(",") > -1) {
+      //   $scope.$apply(function() {
+      //     calltoaction_info.calltoaction.vcodes = vcode.split(",");
+      //     calltoaction_info.calltoaction.vcode = calltoaction_info.calltoaction.vcodes[0];
+      //   });
+      // } else {
+      //   calltoaction_info.calltoaction.vcode = vcode;
+      // }
 
       player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.vcode);
       calltoaction_info.calltoaction["player"] = player;
