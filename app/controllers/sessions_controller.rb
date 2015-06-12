@@ -52,7 +52,7 @@ class SessionsController < Devise::SessionsController
       sign_out(current_user)
     end
 
-    if warden.authenticate(auth_options)
+    if !warden.authenticate(auth_options)
       self.resource = warden.authenticate!(auth_options)
     end
 

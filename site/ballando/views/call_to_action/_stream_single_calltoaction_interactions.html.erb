@@ -10,7 +10,7 @@
             <% end %>
           </div>
         <% else %>
-        	<% extra_options = JSON.parse(calltoaction.aux) %>
+        	<% extra_options = calltoaction.aux %>
       		<div class="row cta-stream-heading">
 			      <div class="col-xs-12 text-center question">
    					  <h4 class="alternative-description"><%= extra_options['alternative_description'] %></h4>
