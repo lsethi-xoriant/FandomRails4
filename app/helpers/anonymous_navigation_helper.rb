@@ -20,6 +20,7 @@ module AnonymousNavigationHelper
       user = new_anonymous_user()
     end
     sign_in(user)
+    user
   end
 
 end

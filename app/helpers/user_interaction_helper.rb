@@ -230,7 +230,7 @@ module UserInteractionHelper
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
     aux = JSON.parse(aux)
 
-    if $site.id == "disney"
+    if $site.id == "disney" || $site.id == "ballando"
       unless anonymous_user?(user)
         user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
       end
@@ -241,7 +241,7 @@ module UserInteractionHelper
       end
 
       if anonymous_user?(user)
-        create_and_sign_in_anonymous_user()
+        user = create_and_sign_in_anonymous_user()
       elsif stored_anonymous_user?(user)
         user.update_attribute(:updated_at, Time.now)
       end
@@ -312,22 +312,18 @@ module UserInteractionHelper
     end
 
     unless anonymous_user?(user)
-      expire_cache_key(get_cta_completed_or_reward_status_cache_key(get_main_reward_name, interaction.call_to_action_id, user.id))
-    end
-
-    if anonymous_user?(user) && !interaction_for_anonymous?(interaction.resource_type.downcase)
-      outcome = compute_outcome(user_interaction)
-    else
       outcome = compute_save_and_notify_outcome(user_interaction)
-    end
-    outcome.info = []
-    outcome.errors = []
-    
-    if user_interaction.outcome.present?
-      interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
-      interaction_outcome.merge!(outcome)
-    else
-      interaction_outcome = outcome
+      outcome.info = []
+      outcome.errors = []
+
+      if user_interaction.outcome.present?
+        if outcome.present?
+          interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
+          interaction_outcome.merge!(outcome)
+        end
+      else
+        interaction_outcome = outcome
+      end
     end
 
     outcome_for_user_interaction = { win: interaction_outcome }
@@ -345,10 +341,8 @@ module UserInteractionHelper
     end
 
     user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
-
-    if !anonymous_user?(user) || interaction.stored_for_anonymous
-      user_interaction.save
-    end
+    
+    user_interaction.save unless anonymous_user?(user)
   
     [user_interaction, outcome]
   
