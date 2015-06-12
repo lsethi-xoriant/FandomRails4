@@ -4,8 +4,7 @@ namespace :anon_navigation do
     switch_tenant(args.tenant)
     anonymous_user = User.find_by_email("anonymous@shado.tv")
 
-    timeout = Time.now.utc - 10.days
-    users = User.where("anonymous_id IS NOT NULL") #.where("updated_at < ?", timeout)
+    users = User.where("anonymous_id IS NOT NULL").where("updated_at < ?", (Time.now.utc - 10.days))
     user_ids = users.map { |user| user.id }
 
     adjust_user_interactions(user_ids, anonymous_user)
@@ -104,7 +103,7 @@ namespace :anon_navigation do
       anon_aux["providers"][provider] = initialize_or_increment_value(value, count)
     end
 
-    anon_user_interaction.update_attributes(counter: (anon_user_interaction.counter + 1), aux: anon_aux)
+    anon_user_interaction.update_attributes(counter: (anon_user_interaction.counter + user_interaction.counter), aux: anon_aux)
   end
 
   def adjust_vote(user_interaction, anonymous_user)

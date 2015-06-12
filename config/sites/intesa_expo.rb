@@ -8,7 +8,6 @@ module Fandom
       interactions_for_anonymous: ["share", "play", "download"],
       allowed_context_roots: ["it", "en", "imprese"],
       default_property: "it",
-      interactions_for_anonymous: nil,
       free_provider_share: true,
       init_ctas: 3
     )      

@@ -29,62 +29,6 @@ class CallToActionController < ApplicationController
     end 
   end
 
-  # For anonymous user
-  def last_linked_calltoaction
-    calltoaction = CallToAction.find(params[:calltoaction_id])
-    linked_interaction = calltoaction.interactions.includes(:interaction_call_to_actions).where("interaction_call_to_actions.interaction_id IS NOT NULL").references(:interaction_call_to_actions).first 
-
-    if !current_user && interaction_for_anonymous?("quiz")
-      user_interaction_info_list = params[:anonymous_user_interactions]
-      
-      calltoaction_id_to_return = calltoaction.id
-      calltoaction_to_evaluate = calltoaction.id
-      linked_call_to_actions_index = 0
-      user_interactions_history = []
-      while calltoaction_to_evaluate.present?
-        calltoaction_id_to_return = calltoaction_to_evaluate
-        linked_call_to_actions_index = linked_call_to_actions_index + 1
-        if user_interaction_info_list["user_interaction_info_list"]
-          user_interaction_info_list["user_interaction_info_list"].each do |index, user_interaction_info|
-            if user_interaction_info["calltoaction_id"] == calltoaction_to_evaluate
-              current_interaction = user_interaction_info["user_interaction"]
-              aux_parse = current_interaction["aux"]
-              if aux_parse["to_redo"] == false
-                user_interactions_history = user_interactions_history + [index]
-                calltoaction_to_evaluate = aux_parse["next_calltoaction_id"]
-              end
-              break
-            end
-          end
-          if calltoaction_to_evaluate == calltoaction_id_to_return
-            break
-          end
-        else
-          calltoaction_id_to_return = calltoaction_to_evaluate
-          break
-        end
-      end
-
-      go_on = calltoaction.id != calltoaction_id_to_return
-      if go_on
-        calltoaction = CallToAction.find(calltoaction_id_to_return)
-      end
-
-      response = {
-        go_on: go_on,
-        linked_call_to_actions_index: linked_call_to_actions_index,
-        calltoaction_info_list: build_cta_info_list_and_cache_with_max_updated_at([calltoaction]),
-        user_interactions_history: user_interactions_history
-      }
-      
-      respond_to do |format|
-        format.json { render json: response.to_json }
-      end 
-
-    end
-
-  end
-
   def random_calltoaction
     except_calltoaction_id = params["except_calltoaction_id"]
     
@@ -594,13 +538,6 @@ class CallToActionController < ApplicationController
   def user_history_to_answer_map_fo_condition(current_answer, user_interactions_history, anonymous_user_storage)
     if current_user
       answers_history = UserInteraction.where(id: user_interactions_history).map { |ui| ui.answer_id }
-    elsif interaction_for_anonymous?("quiz") 
-      answers_history = []
-      anonymous_user_storage["user_interaction_info_list"].each do |index, user_interaction_info|
-        if user_interactions_history.include?(user_interaction_info["user_interaction"]["interaction_id"]) # For anonymous the user_interaction id is the interaction id. He must be only one user interaction for interaction.
-          answers_history = answers_history + [user_interaction_info["user_interaction"]["answer"]["id"]]
-        end
-      end
     else
       throw Exception.new("for linked interactions the user must be logged or the anonymous navigation must be enabled")
     end

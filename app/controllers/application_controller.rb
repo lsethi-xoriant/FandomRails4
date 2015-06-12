@@ -30,7 +30,6 @@ class ApplicationController < ActionController::Base
     interaction = Interaction.find(params[:interaction_id])
 
     aux = {
-      user_interactions_history: params[:user_interactions_history],
       providers: {
         params[:provider] => 1
       }

@@ -202,13 +202,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   }
 
-  function isInteractionForAnonymous(resource_type) {
-    resource_type = getOrigResourceType(resource_type);
-    interactions_for_anonymous = $scope.aux.site.attributes.interactions_for_anonymous;
-    return (interactions_for_anonymous && interactions_for_anonymous.indexOf(resource_type) > -1);
+  function interactionAllowed(interaction_info) {
+    if(isRegistratedUser()) {
+      return true;
+    } else {
+      resource_type = getOrigResourceType(interaction_info.interaction.resource_type);
+      interaction_enabled_for_anonymous = isAnonymousNavigationEnabled() && $scope.aux.site.attributes.interactions_for_anonymous.indexOf(resource_type) > -1;
+      registration_needed = interaction_info.interaction.registration_needed;
+      return interaction_enabled_for_anonymous && !registration_needed;
+    }
   }
 
-  function isAnonymousNavigationEnable() {
+  function isAnonymousNavigationEnabled() {
     return ($scope.aux.site.attributes.interactions_for_anonymous != null);
   }
 
@@ -219,8 +224,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   }
 
-  function is_registrated_user() {
-    console.log($scope.current_user);
+  function isStoredAnonymousUser() {
+    return ($scope.current_user && $scope.current_user.anonymous_id);
+  }
+
+  function isRegistratedUser() {
     return ($scope.current_user && !$scope.current_user.anonymous_id);
   }
 
@@ -308,7 +316,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $scope.has_more = has_more;
 
-    // $scope.initAnonymousUser();
     $scope.extraInit();
 
   };
@@ -411,30 +418,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return ($scope.current_user && $scope.current_user.anonymous_id == null)
   };
 
-  $scope.currentUserEmptyAndAnonymousInteractionEnable = function() {
-    return (!$scope.current_user && isAnonymousNavigationEnable());
-  };
-
   $scope.computeAvgForVote = function(interaction_info) {
     numerator = 0; denominator = 0;
     counter_aux = interaction_info.interaction.resource.counter_aux;
     if(counter_aux && !angular.equals(counter_aux, {})) {
       angular.forEach(counter_aux, function(value, key) {
-        denominator = denominator + value;
-        numerator = numerator + (parseInt(key) * value);
-      });
-      return (numerator/denominator).toFixed(0);
-    } else {
-      return 0;
-    }
-  };
-
-  // ORZORO
-  $scope.computeAvgForVoteInteraction = function(interaction_info) {
-    numerator = 0; denominator = 0;
-    if(interaction_info.anonymous_user_interaction_info) {
-      vote_info_list = interaction_info.anonymous_user_interaction_info.aux.vote_info_list;
-      angular.forEach(vote_info_list, function(value, key) {
         denominator = denominator + value;
         numerator = numerator + (parseInt(key) * value);
       });
@@ -757,96 +745,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
 
-  $window.getAnonymousUserStorage = function() {
-    return $scope.current_user ? null : JSON.parse(localStorage["anonymous_user_storage"]);
-  };
-
-  $window.setAnonymousUserStorageAttr = function(name, value) {
-    anonymous_user = getAnonymousUserStorage();
-    anonymous_user[name] = value; //eval("anonymous_user." + name + " = " + value);
-    localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user));
-  };
-
-  $scope.updateAnonymousUserStorageUserInteractions = function(user_interaction) {
-    anonymous_user_storage = getAnonymousUserStorage();
-
-    anonymous_user_storage.user_interaction_info_list[user_interaction.interaction_id] = user_interaction;
-    localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user_storage));
-
-    user_interaction_info = anonymous_user_storage.user_interaction_info_list[user_interaction.interaction_id]
-    if(user_interaction_info) { 
-      adjustInteractionWithAnonymousUserInteraction(user_interaction_info.calltoaction_id, user_interaction_info.interaction_id, user_interaction)
-    }
-    adjustCtaAnonymousStatus(anonymous_user_storage);
-  };
-
-  function initAnonymousUserStorage() {
-    anonymous_user_storage = { user_interaction_info_list: {} };
-    localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user_storage));
-  }
-
-  $scope.initAnonymousUser = function() {
-
-    if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage["anonymous_user_storage"] == null) {
-      initAnonymousUserStorage();      
-    } else if ($scope.current_user && localStorage["anonymous_user_storage"] != null) {
-      clearAnonymousUserStorage();
-    }
-
-    if(!$scope.current_user && isAnonymousNavigationEnable()) {
-      $scope.updateCallToActionInfoListWithAnonymousUserStorage();
-
-      if($scope.calltoaction_info) {
-        $scope.goToLastLinkedCallToAction();
-      }
-    }
-  };
-
-  function clearAnonymousUserStorage() {
-    localStorage.removeItem("anonymous_user_storage");
-  }
-
-  $scope.updateCallToActionInfoListWithAnonymousUserStorage = function() {
-    anonymous_storage = getAnonymousUserStorage();
-    if(anonymous_storage.user_interaction_info_list) {
-      angular.forEach($scope.calltoactions, function(calltoaction_info) {
-        angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
-          user_interaction_info = anonymous_storage.user_interaction_info_list[interaction_info.interaction.id];
-          adjustInteractionWithAnonymousUserInteraction(calltoaction_info.calltoaction.id, interaction_info.interaction.id, user_interaction_info);
-        });        
-      });
-      adjustCtaAnonymousStatus(anonymous_storage);
-    }
-  };
-
-  function adjustCtaAnonymousStatus(anonymous_storage) {
-    current_point_reward_name = currentPointRewardName();
-    angular.forEach($scope.calltoactions, function(calltoaction_info) { 
-      if(calltoaction_info.status) {
-        winnable_reward_count = calltoaction_info.status.winnable_reward_count;
-        user_interaction_info_list = findInAnonymousStorageCtaUserInteractions(anonymous_storage, calltoaction_info.calltoaction.id);
-        angular.forEach(user_interaction_info_list, function(user_interaction_info) { 
-          winnable_reward_count -= user_interaction_info.user_interaction.outcome.reward_name_to_counter[current_point_reward_name];  
-        });
-        if(winnable_reward_count > 0) {
-          calltoaction_info.status.winnable_reward_count = winnable_reward_count;
-        } else {
-          calltoaction_info.status = null;
-        }
-      }
-    }); 
-  }
-
-  function findInAnonymousStorageCtaUserInteractions(anonymous_storage, calltoaction_id) {
-    user_interaction_info_list = [];
-    angular.forEach(anonymous_storage.user_interaction_info_list, function(user_interaction_info) {
-      if(user_interaction_info.calltoaction_id == calltoaction_id) {
-        user_interaction_info_list.push(user_interaction_info);
-      }
-    });
-    return user_interaction_info_list;
-  }
-
   function currentPointRewardName() {
     if($scope.aux.property_path_name) {
       return ($scope.aux.property_path_name + "-point");
@@ -864,10 +762,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         }
       });
     }
-  }
-
-  function adjustInteractionWithAnonymousUserInteraction(calltoaction_id, interaction_id, user_interaction_info) {
-    adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, user_interaction_info);
   }
 
   function updateAnswersInInteractionInfo(interaction_info, answers) {
@@ -1042,10 +936,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $scope.calltoactions.push(calltoaction_info);
         appendYTIframe(calltoaction_info);
       });
-
-      if(!$scope.current_user && isAnonymousNavigationEnable()) {
-        $scope.updateCallToActionInfoListWithAnonymousUserStorage();
-      }
 
       $scope.has_more = data.has_more;
 
@@ -1501,15 +1391,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             });
           }
 
-          // Update local storage for anonymous user.
-          if(!$scope.current_user && isAnonymousNavigationEnable()) {
-            // TODO: adjust points
-            //setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
-
-            user_interaction_for_storage = buildUserInteractionForStorage(data.user_interaction, calltoaction_id, interaction_id);  
-            $scope.updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
-          } 
-
           // Interaction after user response.
           if($scope.current_user) {           
             play_interaction_info.status = data.interaction_status;
@@ -1541,8 +1422,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.shareFree = function(calltoaction_info, interaction_info, provider) {
-    if(interaction_info.interaction.registration_needed && !is_registrated_user()) {
-      showRegistrateView()
+    if(!interactionAllowed(interaction_info)) {
+      showRegistrateView();
     } else {
       if(provider == "direct_url") {
         $("#modal-interaction-" + interaction_info.interaction.id + "-direct_url").modal("show");
@@ -1575,7 +1456,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
  
       $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
         .success(function(data) {
-          if(data.anonymous_user) $scope.current_user = data.anonymous_user;
+          if(data.current_user) $scope.current_user = data.current_user;
           if(data.notice_anonymous_user) {
             showRegistrateView();
           }
@@ -1593,8 +1474,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function shareWithApp(calltoaction_info, interaction_info, provider) {
-    if(interaction_info.interaction.registration_needed && !is_registrated_user()) {
-      showRegistrateView()
+    if(!interactionAllowed(interaction_info)) {
+      showRegistrateView();
     } else {
       if(interaction_info.user_interaction) {
         share_with_email_address = interaction_info.user_interaction.share_to_email;
@@ -1657,16 +1538,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction, before_callback, before_callback_timeout) {
     
     var resource_type = interaction_info.interaction.resource_type;
-    if($scope.current_user || isInteractionForAnonymous(resource_type)) {
+    if(interactionAllowed(interaction_info)) {
 
       if(!$scope.answer_in_progress) {
         
         enableWaitingAudio("stop");
-
-        if(!angular.isUndefined(before_callback)) {
-          before_callback();
-        }
-
+        if(!angular.isUndefined(before_callback)) before_callback();
         openWindowForDownloadInteraction(resource_type)
 
         if (!angular.isUndefined(before_callback_timeout)) {
@@ -1680,32 +1557,27 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
           
     } else {
-
       showRegistrateView();
-
     }
   };
 
   $scope.updateAnswerAjax = function(calltoaction_info, interaction_info, params, when_show_interaction) {
-    if(interaction_info.interaction.registration_needed && !is_registrated_user()) {
-      showRegistrateView()
-    } else {
-      $scope.answer_in_progress = true;
-      
-      interaction_id = interaction_info.interaction.id;
+    $scope.answer_in_progress = true;
+    
+    interaction_id = interaction_info.interaction.id;
 
-      update_interaction_path = "/update_interaction";
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
-      }
-
-      $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.user_interactions_history, anonymous_user_storage: getAnonymousUserStorage() })
-        .success(function(data) {
-          $scope.updateAnswerAjaxSuccess(data, calltoaction_info, interaction_info, when_show_interaction);
-        }).error(function() {
-          $scope.answer_in_progress = false;
-        });
+    // TODO: adjust with product current_property_info
+    update_interaction_path = "/update_interaction";
+    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+      update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
     }
+
+    $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.user_interactions_history })
+      .success(function(data) {
+        $scope.updateAnswerAjaxSuccess(data, calltoaction_info, interaction_info, when_show_interaction);
+      }).error(function() {
+        $scope.answer_in_progress = false;
+      });
   };
 
   $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction) {
@@ -1713,10 +1585,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     interaction_id = interaction_info.interaction.id;
 
     if(data.current_user) $scope.current_user = data.current_user;
-
-    if(data.notice_anonymous_user) {
-      showRegistrateView();
-    }
+    if(data.notice_anonymous_user) showRegistrateView();
 
     if(data.counter) {
       interaction_info.interaction.resource.counter = data.counter;
@@ -1831,10 +1700,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
 
     if(interaction_info.interaction.resource_type == "vote" || interaction_info.interaction.resource_type == "versus") {
-      if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-        interaction_info.anonymous_user_interaction_info = data.user_interaction;
-      }
-      //interaction_info.interaction.resource.vote_info = data.vote_info;
       interaction_info.interaction.resource.counter_aux = data.counter_aux; 
     }
 
@@ -1854,11 +1719,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           }
           $timeout(function() { 
             $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
-            if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-              updateInteractionsHistory(data.user_interaction.interaction_id);
-            } else {
-              updateInteractionsHistory(data.user_interaction.id);
-            }
+            updateInteractionsHistory(data.user_interaction.id);
 
             $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
             initializeVideoAfterPageRender();
@@ -1884,39 +1745,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     });
     return total;
   };
-
-  $scope.goToLastLinkedCallToAction = function() {
-    $scope.parent_calltoaction_info = $scope.calltoaction_info;
-    $scope.compute_in_progress = true;
-
-    anonymous_user_storage = getAnonymousUserStorage()
-    call_last_linked_calltoaction = false;
-    angular.forEach(anonymous_user_storage.user_interaction_info_list, function(user_interaction_info) {
-      if(user_interaction_info.calltoaction_id == $scope.calltoaction_info.calltoaction.id && user_interaction_info.user_interaction.aux) {
-        aux = user_interaction_info.user_interaction.aux;
-        if(aux["next_calltoaction_id"]) {
-          call_last_linked_calltoaction = true;
-        }
-      }
-    });
-    
-    if(call_last_linked_calltoaction) {
-      // Too long for get.
-      $http.post("/last_linked_calltoaction", { "anonymous_user_interactions": getAnonymousUserStorage(), "calltoaction_id": $scope.calltoaction_info.calltoaction.id })
-      .success(function(data) { 
-        if(data.go_on) {
-          $scope.initCallToActionInfoList(data.calltoaction_info_list);
-          $scope.linked_call_to_actions_index = data.linked_call_to_actions_index;
-          $scope.user_interactions_history = data.user_interactions_history;
-          $scope.updateCallToActionInfoListWithAnonymousUserStorage();
-        }
-        $scope.compute_in_progress = false;
-      }).error(function() {
-        $scope.compute_in_progress = false;
-      });
-    }
-
-  }
 
   function initializeVideoAfterPageRender() {
     $timeout(function() { 
@@ -1972,11 +1800,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.resetToRedo = function(interaction_info) {
-    // if($scope.current_user) {
-    //   resetRedoUserInteractionsForLoggedUser(interaction_info);
-    // } else {
-    //   resetRedoUserInteractionsForAnonymousUser(interaction_info);
-    // }
     resetRedoUserInteractionsForLoggedUser(interaction_info);
   };
 
@@ -2017,12 +1840,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
     showMarkerNearInteraction(interaction_id);
-
-    if(!$scope.current_user && $scope.aux.anonymous_interaction) {
-      updateUserRewardInView(data.main_reward_counter);
-    } else {
-      updateUserRewardInView(data.main_reward_counter.general);
-    }
+    updateUserRewardInView(data.main_reward_counter.general);
 
     $("#home-undervideo-interaction-" + interaction_id).html(data.feedback); 
   };

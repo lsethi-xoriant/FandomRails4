@@ -13,7 +13,7 @@ class RegistrationsController < Devise::RegistrationsController
     resource = current_user
     resource.assign_attributes(email: nil, username: nil)
     resource.assign_attributes(params)
-    if resource.valid?
+    if resource.valid? # TODO: comment this
       resource.assign_attributes(anonymous_id: nil)
       sign_out(current_user)
     end
@@ -49,35 +49,6 @@ class RegistrationsController < Devise::RegistrationsController
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up
         sign_up(resource_name, resource)
-
-        # if params[:user_interaction_info_list].present? && params[:user_interaction_info_list].any?
-        #   anonymous_interaction_map = {}
-
-        #   JSON.parse(params[:user_interaction_info_list]).each_with_index do |user_interaction_info, index|
-        #     begin
-        #       interaction_id = user_interaction_info["interaction_id"]
-        #       md5_to_validate_user_interaction = Digest::MD5.hexdigest("#{MD5_FANDOM_PREFIX}#{interaction_id}")
-        #       if md5_to_validate_user_interaction == user_interaction_info["user_interaction"]["hash"] 
-        #         interaction = Interaction.find(interaction_id)
-        #         answer_id = user_interaction_info["user_interaction"]["answer"]["id"]
-        #         aux = JSON.parse(user_interaction_info["user_interaction"]["aux"])
-        #         if aux.has_key?("user_interactions_history") && aux["user_interactions_history"].present?
-        #           user_interactions_history_updated = []
-        #           aux["user_interactions_history"].each do |user_interaction_history|
-        #             if anonymous_interaction_map.has_key?(user_interaction_history)
-        #               user_interactions_history_updated = user_interactions_history_updated + [anonymous_interaction_map[user_interaction_history]]
-        #             end
-        #           end
-        #           aux["user_interactions_history"] = user_interactions_history_updated
-        #         end
-        #         user_interaction, outcome = create_or_update_interaction(resource, interaction, answer_id, nil, aux.to_json)
-        #         anonymous_interaction_map[index] = user_interaction.id
-        #       end
-        #     rescue Exception => exception
-        #       log_error("registration with storage restore error", { exception: exception.to_s }) 
-        #     end
-        #   end
-        # end
 
         setUpAccount()
         log_audit("registration", { 'form_data' => sign_up_params, 'user_id' => current_user.id })

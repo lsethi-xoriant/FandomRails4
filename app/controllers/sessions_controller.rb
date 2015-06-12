@@ -52,24 +52,16 @@ class SessionsController < Devise::SessionsController
       sign_out(current_user)
     end
 
-    self.resource = warden.authenticate(auth_options)
-  
-    if self.resource
-      set_flash_message(:notice, :signed_in) if is_navigational_format?
-
-      sign_in(resource_name, resource)
-      fandom_play_login(resource)
-      
-      redirect_after_successful_login()
-    else
-      if anonymous_user
-        sign_in(anonymous_user)
-      end
-      
-      user = User.new(email: params[:user][:email])
-      @sign_in_error = t("devise.failure.invalid")
-      render template: "/devise/sessions/new", :locals => { resource: user }   
+    if warden.authenticate(auth_options)
+      self.resource = warden.authenticate!(auth_options)
     end
+
+    set_flash_message(:notice, :signed_in) if is_navigational_format?
+
+    sign_in(resource_name, resource)
+    fandom_play_login(resource)
+      
+    redirect_after_successful_login()
   end
   
   def valid_credentials?(user)
