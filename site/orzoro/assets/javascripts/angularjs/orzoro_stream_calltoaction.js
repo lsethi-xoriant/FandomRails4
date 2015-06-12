@@ -30,16 +30,10 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   };
 
   $scope.nextCallToActionInCategory = function(direction) {
-    if($scope.aux.parent_cta_id) {
-      parent_cta_id = $scope.aux.parent_cta_id;
-    } else {
-      parent_cta_id = $scope.calltoaction_info.calltoaction.id;
-    }
-
     $scope.calltoaction_info.hide_class = "fadeout_animation";
     $timeout(function() { 
       //$http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})   
-      $http.post("/next_calltoaction" , { calltoaction_id: parent_cta_id, category_id: $scope.aux.calltoaction_category.id, direction: direction })  
+      $http.post("/next_calltoaction" , { calltoaction_id: $scope.parent_cta_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction })  
         .success(function(data) { 
 
           $scope.initCallToActionInfoList(data.calltoaction);
@@ -49,8 +43,6 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
 
           document.title = data.seo_info.title;
           $('meta[name=description]').attr('content', data.seo_info.meta_description);
-
-          $scope.initAnonymousUser();
 
           if($scope.calltoaction_info) {
             $scope.linked_call_to_actions_count = $scope.calltoaction_info.calltoaction.extra_fields.linked_call_to_actions_count;
@@ -74,8 +66,6 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
             });
 
           }, 0); // To execute code after page is render
-
-          $scope.goToLastLinkedCallToAction();
 
           $timeout(function() { 
             $scope.calltoaction_info.hide_class = "hide_content fadein_animation";
