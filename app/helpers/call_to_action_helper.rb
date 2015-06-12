@@ -355,10 +355,18 @@ module CallToActionHelper
             end
           end
         end
+
+        if calltoaction.enable_disqus
+          disqus_setting = get_deploy_setting("sites/#{$site.id}/disqus", nil)
+          if disqus_setting
+            disqus = { shortname: disqus_setting["app_shortname"] }
+          end
+        end
         
         calltoaction_info = {
             "calltoaction" => { 
               "id" => calltoaction.id,
+              "disqus" => disqus,
               "name" => calltoaction.name,
               "slug" => calltoaction.slug,
               "detail_url" => cta_url(calltoaction),
@@ -451,6 +459,10 @@ module CallToActionHelper
           end
         end
       end
+    end
+
+    if calltoaction_info_list.length == 1 && calltoaction_info_list[0]["calltoaction"]["disqus"]
+      calltoaction_info_list[0]["calltoaction"]["disqus"]["sso"] = disqus_sso
     end
 
     adjust_counters(interaction_ids, calltoaction_info_list, comments)

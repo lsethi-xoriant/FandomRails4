@@ -110,6 +110,13 @@
       </div>
     </div>
 
+    <div class="row" ng-if="calltoaction_info.calltoaction.disqus">
+      <div class="col-xs-12">
+        <div ng-bind-html="calltoaction_info.calltoaction.disqus.sso | unsafe"></div>
+        <div id="disqus_thread"></div>
+      </div>
+    </div>
+
   </div>
   <div class="col-md-5 text-center adv-square__container">
     <div class="row adv-square__row">

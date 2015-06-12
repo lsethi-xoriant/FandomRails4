@@ -187,6 +187,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if($scope.calltoactions.length == 1) {
       $scope.calltoaction_info = $scope.calltoactions[0];
 
+
+      if($scope.calltoaction_info.calltoaction.disqus) {  
+        $window.disqus_shortname = $scope.calltoaction_info.calltoaction.disqus.shortname; 
+
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js?https';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
       if($scope.calltoaction_info.optional_history.user_interactions) {
         $scope.user_interactions_history = $scope.calltoaction_info.optional_history.user_interactions;
       }

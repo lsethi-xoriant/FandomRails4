@@ -412,7 +412,6 @@ module ApplicationHelper
   end
 
   def user_avatar user, size = "normal"
-    debugger
     begin
       user.avatar_selected_url.present? && !user.avatar_selected_url.include?("anon.png") ? user.avatar_selected_url : anon_avatar()
     rescue
@@ -425,42 +424,39 @@ module ApplicationHelper
   end
 
   def disqus_sso
-    if current_user && ENV['DISQUS_SECRET_KEY'] && ENV['DISQUS_PUBLIC_KEY']
-      user = current_user
+    disqus = get_deploy_setting("sites/#{$site.id}/disqus", nil)
+
+    if registered_user? && disqus
       data = {
-          'id' => user.id,
-          'username' => "#{ user.first_name } #{ user.last_name }",
-          'email' => user.email,
+        'id' => current_user.id,
+        'username' => "#{ current_user.username }",
+        'email' => current_user.email,
         'avatar' =>  current_avatar
-          # 'url' => user.url
       }.to_json
    
       message = Base64.encode64(data).gsub("\n", "") # Encode the data to base64.    
       timestamp = Time.now.to_i # Generate a timestamp for signing the message.
-      sig = OpenSSL::HMAC.hexdigest('sha1', ENV['DISQUS_SECRET_KEY'], '%s %s' % [message, timestamp]) # Generate our HMAC signature
+      sig = OpenSSL::HMAC.hexdigest('sha1', disqus['app_secret'], '%s %s' % [message, timestamp]) # Generate our HMAC signature
    
-      x = 
-        "<script type=\"text/javascript\">" +
-          "var disqus_config = function() {" +
-          "this.page.remote_auth_s3 = \"#{ message } #{ sig } #{ timestamp }\";" +
-          "this.page.api_key = \"#{ ENV['DISQUS_PUBLIC_KEY'] }\";" +
-          "this.sso = {" +
-                  "name:   \"SampleNews\"," +
-                  "button:  \"//placehold.it/50x50\"," +
-                  "icon:     \"//placehold.it/50x50\"," +
-                  "url:        \"http://example.com/login/\"," +
-                  "logout:  \"http://example.com/logout/\"," +
-                  "width:   \"800\"," +
-                  "height:  \"400\"" +
-            "};" +
-          "}" +
-        "</script>"
-      
-      return x
+      "<script type=\"text/javascript\">" +
+        "var disqus_config = function() {" +
+        "this.page.remote_auth_s3 = \"#{ message } #{ sig } #{ timestamp }\";" +
+        "this.page.api_key = \"#{ disqus['app_id'] }\";" +
+        "this.sso = {" +
+                "name:   \"SampleNews\"," +
+                "button:  \"//placehold.it/50x50\"," +
+                "icon:     \"//placehold.it/50x50\"," +
+                "url:        \"http://example.com/login/\"," +
+                "logout:  \"http://example.com/logout/\"," +
+                "width:   \"800\"," +
+                "height:  \"400\"" +
+          "};" +
+        "}" +
+      "</script>"
     else
-      return "DISQUS debugger: user not logged or wrong keys."
+      return "Per commentare registrati in Fandom"
     end
-    end
+  end
 
   def calculate_month_string_ita(month_number)
       case month_number
@@ -762,7 +758,7 @@ module ApplicationHelper
     adjust_thumb_ctas(evidence_ctas_info_list)
   end
 
-  def default_aux(other, calltoaction_info_list = nil)
+  def init_aux(other, calltoaction_info_list = nil)
     property = get_property()
 
     property_info = init_property_info(property)
