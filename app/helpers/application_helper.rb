@@ -412,6 +412,7 @@ module ApplicationHelper
   end
 
   def user_avatar user, size = "normal"
+    debugger
     begin
       user.avatar_selected_url.present? && !user.avatar_selected_url.include?("anon.png") ? user.avatar_selected_url : anon_avatar()
     rescue
