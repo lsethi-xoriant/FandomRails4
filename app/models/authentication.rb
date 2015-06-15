@@ -7,7 +7,7 @@ class Authentication < ActiveRecord::Base
   	before_update :upload_avatar_selected_user_before, :if => proc {|c| user_id_was != user_id }
 
     def share_in_linkedin(comment, oauth_token)
-      data = { comment: comment, visibility: { code: "anyone"} }
+      data = { comment: comment, visibility: { code: "anyone" } }
       HTTParty.post("https://api.linkedin.com/v1/people/~/shares?format=json", headers: { 'Content-Type' => 'application/json'}, query: { oauth2_access_token: oauth_token}, body: data.to_json)
     end
 

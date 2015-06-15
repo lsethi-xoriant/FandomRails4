@@ -827,7 +827,13 @@ module ApplicationHelper
     if instantwin_call_to_action
       instantwin_interaction_id = instantwin_call_to_action.interactions.where(:resource_type => "InstantwinInteraction").first.id
       user_win_info = user_already_won(instantwin_interaction_id)
-      user_win = user_win_info[:win] ? user_win_info[:win] : nil
+
+      instant_win_info = {
+        "interaction_id" => instantwin_interaction_id,
+        "win" => user_win_info[:win],
+        "message" => user_win_info[:message],
+        "in_progress" => false
+      }
     end
 
     if property && property.name != $site.default_property
@@ -851,12 +857,7 @@ module ApplicationHelper
       "sidebar_info" => sidebar_info,
       "ugc_cta" => ugc_cta,
       "menu_items" => get_menu_items(property),
-      "instant_win_info" => {
-        "interaction_id" => instantwin_interaction_id,
-        "win" => user_win,
-        "message" => user_win_info[:message],
-        "in_progress" => false
-      }
+      "instant_win_info" => instant_win_info
     }
 
     if other
