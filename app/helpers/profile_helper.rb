@@ -88,6 +88,7 @@ module ProfileHelper
   end
 
   def not_logged_from_omniauth(auth, provider)  
+    expires_at = provider.include?("facebook") || provider.include?("google_oauth2") ? Time.at(auth.credentials.expires_at) : nil
     user_auth =  Authentication.find_by_provider_and_uid(provider, auth.uid);
     if user_auth
       # Ho gia' agganciato questo PROVIDER, mi basta recuperare l'utente per poi aggiornarlo.
@@ -98,7 +99,7 @@ module ProfileHelper
           name: (provider.include?("instagram") ? auth.info.nickname : auth.info.name),
           oauth_token: auth.credentials.token,
           oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
+          oauth_expires_at: expires_at,
           avatar: auth.info.image,
       )
 
@@ -129,7 +130,7 @@ module ProfileHelper
           name: (provider.include?("instagram") ? auth.info.nickname : auth.info.name),
           oauth_token: auth.credentials.token,
           oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
+          oauth_expires_at: expires_at,
           provider: provider,
           avatar: auth.info.image,
           aux: auth.to_json
